@@ -175,6 +175,8 @@
             .consultoria-section { padding: var(--space-lg) var(--space-md); }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="/lib/supabase-config.js"></script>
 </head>
 <body>
 
@@ -1095,12 +1097,19 @@
                 }
             }
 
-            // Save to localStorage
+            // Save to localStorage (offline cache)
             localStorage.setItem(`alumni-perfil-${slug}`, JSON.stringify(result));
             localStorage.setItem(`alumni-form-${slug}`, JSON.stringify(formData));
 
-            // Also save to server (shared file for team access)
-            try { fetch('/api/save-perfil', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:slug, perfil:result}) }); } catch(e) {}
+            // Save to Supabase (primary shared storage)
+            try {
+                const d = result.dadosFormulario || {};
+                await sb.from('perfis').upsert({
+                    id: slug, data: result, status: result.status || 'rascunho',
+                    nome: d.nome || slug, nivel: d.nivel || '',
+                    num_aulas: parseInt(d.numAulas) || 0, foco: d.foco || ''
+                });
+            } catch(e) { console.error('Supabase save failed:', e); }
 
             // Success — complete progress
             progressTimers.forEach(t => clearTimeout(t));

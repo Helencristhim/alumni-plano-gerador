@@ -1,8 +1,13 @@
 const Anthropic = require('@anthropic-ai/sdk');
 const fs = require('fs');
 const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 const { robustJSONParse, logJSONError } = require('../lib/sanitize-json');
 const { validateAgainstSchema, reportValidation } = require('../lib/profile-schema');
+
+const supabase = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY
+  ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+  : null;
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -485,21 +490,19 @@ REGRAS ABSOLUTAS 138-142:
       });
     }
 
-    // Save profile as JSON file (works locally, silent fail on Vercel serverless)
-    try {
-      const perfisDir = path.join(process.cwd(), 'public', 'perfis');
-      if (!fs.existsSync(perfisDir)) fs.mkdirSync(perfisDir, { recursive: true });
-      fs.writeFileSync(path.join(perfisDir, `${slug}.json`), JSON.stringify(result, null, 2));
-      // Update index
-      const indexPath = path.join(perfisDir, 'index.json');
-      let index = [];
-      try { index = JSON.parse(fs.readFileSync(indexPath, 'utf8')); } catch(e) {}
-      if (!index.find(i => i.id === slug)) {
-        index.push({ id: slug, nome: nome, nivel: result.dadosExtraidos?.nivel?.valor || nivel || '', numAulas: numAulas, criadoEm: result.criadoEm, perfilStatus: result.status || 'rascunho', foco: foco || '' });
-        fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
-      }
-      console.log(`Perfil salvo em public/perfis/${slug}.json`);
-    } catch(e) { console.log('Não foi possível salvar perfil como arquivo:', e.message); }
+    // Save to Supabase (primary shared storage)
+    if (supabase) {
+      try {
+        const d = result.dadosFormulario || {};
+        await supabase.from('perfis').upsert({
+          id: slug, data: result, status: result.status || 'rascunho',
+          nome: d.nome || nome || slug,
+          nivel: result.dadosExtraidos?.nivel?.valor || d.nivel || nivel || '',
+          num_aulas: parseInt(numAulas) || 0, foco: d.foco || foco || ''
+        });
+        console.log(`Perfil salvo no Supabase: ${slug}`);
+      } catch(e) { console.error('Supabase save failed:', e.message); }
+    }
 
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.status(200).json(result);

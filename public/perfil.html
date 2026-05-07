@@ -196,6 +196,8 @@
             .url-row { flex-direction: column; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="/lib/supabase-config.js"></script>
 </head>
 <body>
 
@@ -281,29 +283,26 @@
 
     // ===== LOAD =====
     async function loadPerfil() {
-        // Server JSON is source of truth — try it FIRST
-        let fromServer = false;
+        // 1. Supabase is source of truth
         try {
-            const resp = await fetch('/perfis/' + perfilId + '.json');
-            if (resp.ok) {
-                perfil = await resp.json();
+            var resp = await sb.from('perfis').select('data').eq('id', perfilId).single();
+            if (!resp.error && resp.data && resp.data.data) {
+                perfil = resp.data.data;
                 localStorage.setItem('alumni-perfil-' + perfilId, JSON.stringify(perfil));
-                fromServer = true;
             }
         } catch(e) {}
-        // Fallback to localStorage if server has no file
-        if (!fromServer) {
-            const raw = localStorage.getItem('alumni-perfil-' + perfilId);
-            if (!raw) {
-                showEmpty('Perfil não encontrado', 'Não há dados para o id "' + perfilId + '".');
-                return;
-            }
+        // 2. Fallback to server JSON file
+        if (!perfil) {
             try {
-                perfil = JSON.parse(raw);
-            } catch (e) {
-                showEmpty('Erro ao carregar perfil', 'Os dados estão corrompidos.');
-                return;
-            }
+                var fr = await fetch('/perfis/' + perfilId + '.json');
+                if (fr.ok) { perfil = await fr.json(); localStorage.setItem('alumni-perfil-' + perfilId, JSON.stringify(perfil)); }
+            } catch(e) {}
+        }
+        // 3. Fallback to localStorage
+        if (!perfil) {
+            var raw = localStorage.getItem('alumni-perfil-' + perfilId);
+            if (!raw) { showEmpty('Perfil não encontrado', 'Não há dados para o id "' + perfilId + '".'); return; }
+            try { perfil = JSON.parse(raw); } catch(e) { showEmpty('Erro ao carregar perfil', 'Os dados estão corrompidos.'); return; }
         }
         // Schema validation before rendering
         if (typeof validateAgainstSchema === 'function') {
@@ -338,8 +337,13 @@
         if (!perfil || !perfilId) return;
         perfil.updatedAt = new Date().toISOString();
         localStorage.setItem('alumni-perfil-' + perfilId, JSON.stringify(perfil));
-        // Sync to server (shared file for team access)
-        try { fetch('/api/save-perfil', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:perfilId, perfil:perfil}) }); } catch(e) {}
+        // Save to Supabase (primary)
+        var d = perfil.dadosFormulario || {};
+        sb.from('perfis').upsert({
+            id: perfilId, data: perfil, status: perfil.status || 'rascunho',
+            nome: d.nome || perfilId, nivel: d.nivel || '',
+            num_aulas: parseInt(d.numAulas) || 0, foco: d.foco || ''
+        }).then(function(r){ if(r.error) console.error('Supabase save error:', r.error); });
         showSaveIndicator();
     }
 

@@ -228,6 +228,8 @@
             .filter-btn { flex-shrink: 0; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="/lib/supabase-config.js"></script>
 </head>
 <body>
 
@@ -344,55 +346,60 @@
         try { const d = JSON.parse(localStorage.getItem('alumni-progress-'+id)); if (d && typeof d.concluidas==='number') return d; } catch(e) {} return null;
     }
     function getCountdown(id) {
-        try {
-            const d = JSON.parse(localStorage.getItem('alumni-perfil-'+id))?.dadosFormulario||{};
-            if (d.dataEvento) { const diff = Math.ceil((new Date(d.dataEvento)-new Date())/864e5); if (diff>0) return {days:diff,label:d.tipoEvento||d.foco||'evento'}; }
-        } catch(e) {} return null;
+        var a = allAlunos.find(function(x){return x.id===id;});
+        if (a && a._dataEvento) { var diff = Math.ceil((new Date(a._dataEvento)-new Date())/864e5); if (diff>0) return {days:diff,label:a._tipoEvento||a.foco||'evento'}; }
+        return null;
     }
-    function isDeactivated(id) { try { return (JSON.parse(localStorage.getItem('alumni-deactivated')||'{}'))[id]===true; } catch(e) { return false; } }
-    function setDeactivated(id,v) { const m=JSON.parse(localStorage.getItem('alumni-deactivated')||'{}'); if(v) m[id]=true; else delete m[id]; localStorage.setItem('alumni-deactivated',JSON.stringify(m)); }
+    function isDeactivated(id) { var a=allAlunos.find(function(x){return x.id===id;}); return a&&a._deactivated===true; }
+    function setDeactivated(id,v) { sb.from('perfis').update({deactivated:v}).eq('id',id).then(function(){}); var a=allAlunos.find(function(x){return x.id===id;}); if(a) a._deactivated=v; }
 
     async function loadAlunos() {
-        let reg=[]; try { const r=await fetch('/planos/registry.json'); if(r.ok) reg=await r.json(); } catch(e){}
-        const perfis={};
-        // Load from server-side JSON files (shared between all users)
+        // 1. Load from Supabase (primary source of truth)
+        var supaRows=[];
         try {
-            const pi=await fetch('/perfis/index.json'); if(pi.ok) { const slugs=await pi.json();
-            await Promise.all(slugs.map(async s => { try { const id=s.id||s; const pr=await fetch('/perfis/'+id+'.json'); if(pr.ok) { perfis[id]=await pr.json(); } } catch(e){} }));
-            }
-        } catch(e){}
-        // Load from localStorage (local profiles override server ones)
-        for(let i=0;i<localStorage.length;i++) { const k=localStorage.key(i); if(k.startsWith('alumni-perfil-')) { try { perfis[k.replace('alumni-perfil-','')]=JSON.parse(localStorage.getItem(k)); } catch(e){} } }
-        const merged={};
-        reg.forEach(p => {
+            var resp=await sb.from('perfis').select('id,data,status,nome,nivel,num_aulas,foco,ativo,deactivated,professor,horarios,alocacao,created_at,updated_at').order('created_at',{ascending:false});
+            if(!resp.error&&resp.data) supaRows=resp.data;
+        } catch(e){ console.error('Supabase load failed:',e); }
+
+        // 2. Load registry.json as fallback for legacy entries
+        var reg=[]; try { var r=await fetch('/planos/registry.json'); if(r.ok) reg=await r.json(); } catch(e){}
+
+        // 3. Merge
+        var merged={};
+        reg.forEach(function(p) {
             merged[p.id] = {
                 id: p.id, nome: p.nome, nivel: p.nivel||'', numAulas: p.numAulas||0,
                 criadoEm: p.criadoEm, perfilStatus: p.perfilStatus||'sem_perfil', foco: p.foco||'',
-                // Legacy material URLs
                 legacyUrl: p.externalUrl || '/planos/' + p.id + '.html',
                 externalUrl: p.externalUrl || ''
             };
         });
-        Object.keys(perfis).forEach(s => {
-            const p = perfis[s], d = p.dadosFormulario||{};
-            if (merged[s]) {
-                merged[s].perfilStatus = p.status||'rascunho';
-                merged[s].foco = d.foco||merged[s].foco||'';
-                merged[s].modalidade = d.modalidadeAula||d.modalidade||'';
-                // Update nome: prefer registry name over slug-like localStorage names
-                var rawN = d.nome || '';
-                var isSlugN = rawN && rawN === rawN.toLowerCase() && rawN.indexOf(' ') === -1;
-                if (rawN && !isSlugN && rawN.length > (merged[s].nome||'').length) merged[s].nome = rawN;
-            } else {
-                // Try partial match with registry (e.g. localStorage "zilaudio" matches registry "zilaudio-luiz-pereira")
-                var regMatch = reg.find(function(r) { return r.id.startsWith(s) || s.startsWith(r.id); });
-                // Ignore names that look like slugs (lowercase, no spaces, no accents)
-                var rawName = d.nome || p.nome || '';
-                var isSlug = rawName && rawName === rawName.toLowerCase() && rawName.indexOf(' ') === -1;
-                var bestName = (regMatch ? regMatch.nome : null) || (isSlug ? null : rawName) || rawName || s;
-                merged[s] = { id:s, nome:bestName, nivel:d.nivel||'', numAulas:d.numAulas||0, criadoEm:p.criadoEm, foco:d.foco||'', modalidade:d.modalidadeAula||d.modalidade||'', perfilStatus:p.status||'rascunho', legacyUrl:regMatch?regMatch.externalUrl||'':'', externalUrl:regMatch?regMatch.externalUrl||'':'' };
-            }
+
+        // Supabase rows override registry
+        supaRows.forEach(function(row) {
+            var d = (row.data&&row.data.dadosFormulario)||{};
+            merged[row.id] = {
+                id: row.id,
+                nome: row.nome || d.nome || row.id,
+                nivel: row.nivel || d.nivel || '',
+                numAulas: row.num_aulas || d.numAulas || 0,
+                criadoEm: row.created_at,
+                perfilStatus: row.status || 'rascunho',
+                foco: row.foco || d.foco || '',
+                modalidade: d.modalidadeAula || '',
+                _ativo: row.ativo,
+                _deactivated: row.deactivated,
+                _professor: row.professor || (row.alocacao&&row.alocacao.professor) || '',
+                _horarios: row.horarios || (row.alocacao&&row.alocacao.diasHorarios) || '',
+                _alocacao: row.alocacao || {},
+                _dataEvento: d.dataEvento || '',
+                _tipoEvento: d.tipoEvento || '',
+                _updatedAt: row.updated_at,
+                legacyUrl: (merged[row.id]&&merged[row.id].legacyUrl) || '',
+                externalUrl: (merged[row.id]&&merged[row.id].externalUrl) || ''
+            };
         });
+
         allAlunos=Object.values(merged); updateStats(); filterAlunos();
     }
 
@@ -409,7 +416,7 @@
         document.getElementById('statTotal').textContent=act.length;
         document.getElementById('statCriacao').textContent=act.filter(a=>a.perfilStatus==='rascunho'||a.perfilStatus==='em_revisao').length;
         document.getElementById('statAndamento').textContent=act.filter(a=>a.perfilStatus==='aprovado'||a.perfilStatus==='material_publicado').length;
-        let c=0; act.forEach(a=>{try{var pd=JSON.parse(localStorage.getItem('alumni-perfil-'+a.id)||'{}');if(pd.ativo===true)c++;}catch(e){}}); document.getElementById('statConcluido').textContent=c;
+        document.getElementById('statConcluido').textContent=act.filter(a=>a._ativo===true).length;
     }
 
     function filterAlunos() {
@@ -424,17 +431,16 @@
     function getBadge(st) { return {rascunho:{l:'Rascunho',c:'s-badge--draft'},em_revisao:{l:'Em Revisão',c:'s-badge--review'},aprovado:{l:'Aprovado',c:'s-badge--approved'},material_publicado:{l:'Publicado',c:'s-badge--published'},sem_perfil:{l:'Sem Perfil',c:'s-badge--none'}}[st]||{l:'Sem Perfil',c:'s-badge--none'}; }
 
     function toggleAtivo(id, ativo) {
-        var perfil = {};
-        try { perfil = JSON.parse(localStorage.getItem('alumni-perfil-' + id) || '{}'); } catch(e) {}
-        perfil.ativo = ativo;
-        localStorage.setItem('alumni-perfil-' + id, JSON.stringify(perfil));
+        sb.from('perfis').update({ativo:ativo}).eq('id',id).then(function(){});
+        var a=allAlunos.find(function(x){return x.id===id;}); if(a) a._ativo=ativo;
         filterAlunos();
     }
 
     function salvarCardField(id, field, value) {
-        var data = JSON.parse(localStorage.getItem('alumni-card-' + id) || '{}');
-        data[field] = value;
-        localStorage.setItem('alumni-card-' + id, JSON.stringify(data));
+        var col = field==='professor'?'professor':'horarios';
+        var upd={}; upd[col]=value;
+        sb.from('perfis').update(upd).eq('id',id).then(function(){});
+        var a=allAlunos.find(function(x){return x.id===id;}); if(a) a['_'+field]=value;
     }
 
     function toggleMenu(id,e) { e.stopPropagation(); document.querySelectorAll('.menu-dropdown').forEach(m=>{if(m.id!=='menu-'+id)m.classList.remove('show');}); document.getElementById('menu-'+id).classList.toggle('show'); }
@@ -444,7 +450,7 @@
         document.querySelectorAll('.menu-dropdown.show').forEach(m=>m.classList.remove('show'));
     });
 
-    function excluirAluno(id) { if(!confirm('Excluir permanentemente "'+id+'"? Esta ação não pode ser desfeita.')) return; localStorage.removeItem('alumni-perfil-'+id); localStorage.removeItem('alumni-progress-'+id); setDeactivated(id,false); allAlunos=allAlunos.filter(a=>a.id!==id); updateStats();filterAlunos(); }
+    function excluirAluno(id) { if(!confirm('Excluir permanentemente "'+id+'"? Esta ação não pode ser desfeita.')) return; sb.from('perfis').delete().eq('id',id).then(function(){}); allAlunos=allAlunos.filter(a=>a.id!==id); updateStats();filterAlunos(); }
     function desativarAluno(id) { try { setDeactivated(id,true); updateStats();filterAlunos(); } catch(e) { alert('Erro desativar: '+e.message); } }
     function reativarAluno(id) { setDeactivated(id,false); updateStats();filterAlunos(); }
 
@@ -484,13 +490,9 @@
             const total=parseInt(a.numAulas)||0, done=prog?prog.concluidas:0;
             const hasPerfil=a.perfilStatus!=='sem_perfil';
 
-            // Load saved professor/schedule — from alocação (perfil) first, then card fallback
-            const cardData = JSON.parse(localStorage.getItem('alumni-card-' + a.id) || '{}');
-            var perfilData = {};
-            try { perfilData = JSON.parse(localStorage.getItem('alumni-perfil-' + a.id) || '{}'); } catch(e) {}
-            const aloc = perfilData.alocacao || {};
-            const profName = aloc.professor || cardData.professor || '';
-            const schedule = aloc.diasHorarios || cardData.horarios || '';
+            // Load saved professor/schedule from Supabase data
+            const profName = a._professor || '';
+            const schedule = a._horarios || '';
 
             // Simplify nivel — extract just the CEFR code (e.g. "A1" from "A1 (Iniciante)" or long AI text)
             let nivelSimples = a.nivel || '';
@@ -537,7 +539,7 @@
                 '</div></div>';
 
             // Last updated
-            var updAt = perfilData.updatedAt ? new Date(perfilData.updatedAt) : null;
+            var updAt = a._updatedAt ? new Date(a._updatedAt) : null;
             var updH = updAt
                 ? '<div style="display:flex;align-items:center;gap:5px;margin-top:8px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span style="font:400 11px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#9ca3af;">Atualizado em ' + updAt.toLocaleDateString('pt-BR') + ' às ' + updAt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}) + '</span></div>'
                 : '';
@@ -555,10 +557,10 @@
             const mi=deact
                 ?'<button class="menu-item menu-item--reactivate" onclick="event.stopPropagation();reativarAluno(\''+a.id+'\')">Reativar</button><button class="menu-item menu-item--danger" onclick="event.stopPropagation();excluirAluno(\''+a.id+'\')">Excluir permanentemente</button>'
                 :'<button class="menu-item" onclick="event.stopPropagation();abrirAlocacao(\''+a.id+'\')">Fazer Alocação</button>' +
-                (perfilData.ativo ? '<button class="menu-item" onclick="event.stopPropagation();toggleAtivo(\''+a.id+'\',false)" style="color:#16a34a;font-weight:600;">Desativar Aluno</button>' : '<button class="menu-item" onclick="event.stopPropagation();toggleAtivo(\''+a.id+'\',true)" style="color:#16a34a;font-weight:600;">Tornar Ativo</button>') +
+                (a._ativo ? '<button class="menu-item" onclick="event.stopPropagation();toggleAtivo(\''+a.id+'\',false)" style="color:#16a34a;font-weight:600;">Desativar Aluno</button>' : '<button class="menu-item" onclick="event.stopPropagation();toggleAtivo(\''+a.id+'\',true)" style="color:#16a34a;font-weight:600;">Tornar Ativo</button>') +
                 '<button class="menu-item" onclick="event.stopPropagation();desativarAluno(\''+a.id+'\')">Desativar</button><button class="menu-item menu-item--danger" onclick="event.stopPropagation();excluirAluno(\''+a.id+'\')">Excluir permanentemente</button>';
 
-            var isAtivo = perfilData.ativo === true;
+            var isAtivo = a._ativo === true;
             return '<div class="s-card'+(deact?' deactivated':'')+(isAtivo?' ativo':'')+'" data-id="'+a.id+'" data-foco="'+(a.foco||'')+'" data-legacy="'+(a.legacyUrl||'')+'" data-external="'+(a.externalUrl||'')+'">' +
                 '<div class="s-top">' +
                     '<div class="s-avatar" style="background:'+nameToColor(a.nome)+'">'+esc(getInitials(a.nome))+'</div>' +
@@ -702,17 +704,16 @@
     function fecharAlocacao() { document.getElementById('alocacaoModal').classList.remove('show'); alocacaoAlunoId = null; }
     function salvarAlocacao() {
         if (!alocacaoAlunoId) return;
-        var perfil = {};
-        try { perfil = JSON.parse(localStorage.getItem('alumni-perfil-' + alocacaoAlunoId) || '{}'); } catch(e) {}
-        perfil.alocacao = {
+        var alocacao = {
             professor: document.getElementById('alocProf').value.trim(),
             diasHorarios: document.getElementById('alocDias').value.trim(),
             inicio: document.getElementById('alocInicio').value,
             termino: document.getElementById('alocTermino').value
         };
-        localStorage.setItem('alumni-perfil-' + alocacaoAlunoId, JSON.stringify(perfil));
+        sb.from('perfis').update({alocacao:alocacao,professor:alocacao.professor,horarios:alocacao.diasHorarios}).eq('id',alocacaoAlunoId).then(function(){});
+        var a=allAlunos.find(function(x){return x.id===alocacaoAlunoId;}); if(a){a._alocacao=alocacao;a._professor=alocacao.professor;a._horarios=alocacao.diasHorarios;}
         fecharAlocacao();
-        filterAlunos(); // re-render cards
+        filterAlunos();
     }
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') fecharAlocacao(); });
 
