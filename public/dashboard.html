@@ -211,6 +211,55 @@
         }
         .modal-box .input:focus { outline: none; border-color: var(--alumni-navy); box-shadow: 0 0 0 3px var(--alumni-navy-ring); }
 
+        /* ── Toast notifications ── */
+        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column-reverse; gap: 8px; pointer-events: none; }
+        .toast {
+            pointer-events: auto; padding: 12px 20px; border-radius: var(--radius-md);
+            font: 500 0.88rem/1.4 var(--font-body); color: #fff;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18); transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+            opacity: 0; max-width: 360px;
+        }
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast--success { background: #16803d; }
+        .toast--error { background: #dc2626; }
+        .toast--info { background: var(--alumni-navy); }
+
+        /* ── Loading skeleton ── */
+        .loading-state { text-align: center; padding: var(--space-3xl) var(--space-lg); }
+        .loading-spinner {
+            width: 36px; height: 36px; border: 3px solid var(--border-light);
+            border-top-color: var(--alumni-navy); border-radius: 50%;
+            animation: spin 0.7s linear infinite; margin: 0 auto var(--space-md);
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-state p { font: 500 0.9rem/1.5 var(--font-body); color: var(--text-dim); }
+
+        /* ── Confirm modal ── */
+        .confirm-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+            z-index: 150; align-items: center; justify-content: center;
+        }
+        .confirm-overlay.show { display: flex; }
+        .confirm-box {
+            background: var(--bg-card); border-radius: var(--radius-lg); padding: var(--space-xl);
+            width: 90%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); text-align: center;
+        }
+        .confirm-box h3 { font: 600 1.15rem/1.3 var(--font-body); color: var(--text-primary); margin-bottom: var(--space-sm); }
+        .confirm-box p { font: 400 0.9rem/1.6 var(--font-body); color: var(--text-muted); margin-bottom: var(--space-lg); }
+        .confirm-actions { display: flex; gap: var(--space-sm); justify-content: center; }
+        .confirm-actions button {
+            padding: 10px 24px; font: 600 0.88rem/1.4 var(--font-body);
+            border-radius: var(--radius-md); cursor: pointer; border: 1px solid var(--border);
+            transition: all var(--transition-base); min-width: 100px;
+        }
+        .confirm-cancel { background: var(--bg-card); color: var(--text-muted); }
+        .confirm-cancel:hover { border-color: var(--text-muted); }
+        .confirm-danger { background: #dc2626; color: #fff; border-color: #dc2626; }
+        .confirm-danger:hover { background: #b91c1c; }
+        .confirm-success { background: var(--alumni-navy); color: #fff; border-color: var(--alumni-navy); }
+        .confirm-success:hover { background: var(--alumni-navy-light); }
+
         /* ── Responsive ── */
         @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 640px) {
@@ -226,6 +275,8 @@
             .s-btn { width: 100%; min-width: unset; }
             .filters { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
             .filter-btn { flex-shrink: 0; }
+            .toast-container { bottom: 16px; right: 16px; left: 16px; }
+            .toast { max-width: 100%; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -283,11 +334,27 @@
         <button class="filter-btn" onclick="setFilter('em_revisao',this)">Em Revisão</button>
         <button class="filter-btn" onclick="setFilter('aprovado',this)">Aprovado</button>
         <button class="filter-btn" onclick="setFilter('material_publicado',this)">Publicado</button>
+        <button class="filter-btn" onclick="setFilter('ativo',this)">Ativos</button>
         <button class="filter-btn" onclick="setFilter('sem_perfil',this)">Sem Perfil</button>
     </div>
 
     <div class="count" id="count"></div>
-    <div id="alunosList"></div>
+    <div id="alunosList"><div class="loading-state"><div class="loading-spinner"></div><p>Carregando alunos...</p></div></div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Confirm modal -->
+<div class="confirm-overlay" id="confirmOverlay" onclick="if(event.target===this)closeConfirm(false)">
+    <div class="confirm-box">
+        <h3 id="confirmTitle">Confirmar</h3>
+        <p id="confirmMsg">Tem certeza?</p>
+        <div class="confirm-actions">
+            <button class="confirm-cancel" onclick="closeConfirm(false)">Cancelar</button>
+            <button id="confirmBtn" class="confirm-danger" onclick="closeConfirm(true)">Confirmar</button>
+        </div>
+    </div>
 </div>
 
 <!-- Modal Alocação -->
@@ -331,19 +398,74 @@
     let currentFilter = 'todos';
     const confirmedMaterials = new Set();
 
-    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+    // ══════════════════════════════════════
+    // TOAST NOTIFICATIONS
+    // ══════════════════════════════════════
+    function showToast(msg, type) {
+        type = type || 'info';
+        var container = document.getElementById('toastContainer');
+        var toast = document.createElement('div');
+        toast.className = 'toast toast--' + type;
+        toast.textContent = msg;
+        container.appendChild(toast);
+        requestAnimationFrame(function() { toast.classList.add('show'); });
+        setTimeout(function() {
+            toast.classList.remove('show');
+            setTimeout(function() { toast.remove(); }, 300);
+        }, 3000);
+    }
+
+    // ══════════════════════════════════════
+    // CONFIRM DIALOG (replaces native confirm)
+    // ══════════════════════════════════════
+    var confirmCallback = null;
+    function showConfirm(title, msg, btnLabel, btnClass) {
+        document.getElementById('confirmTitle').textContent = title;
+        document.getElementById('confirmMsg').textContent = msg;
+        var btn = document.getElementById('confirmBtn');
+        btn.textContent = btnLabel || 'Confirmar';
+        btn.className = btnClass || 'confirm-danger';
+        document.getElementById('confirmOverlay').classList.add('show');
+        return new Promise(function(resolve) { confirmCallback = resolve; });
+    }
+    function closeConfirm(result) {
+        document.getElementById('confirmOverlay').classList.remove('show');
+        if (confirmCallback) { confirmCallback(result); confirmCallback = null; }
+    }
+
+    // ══════════════════════════════════════
+    // SUPABASE HELPER — wraps updates with error handling + toast
+    // ══════════════════════════════════════
+    async function supaUpdate(query, successMsg) {
+        try {
+            var resp = await query;
+            if (resp.error) throw new Error(resp.error.message);
+            if (successMsg) showToast(successMsg, 'success');
+            return true;
+        } catch(e) {
+            console.error('Supabase error:', e);
+            showToast('Erro ao salvar: ' + e.message, 'error');
+            return false;
+        }
+    }
+
+    // ══════════════════════════════════════
+    // UTILITIES
+    // ══════════════════════════════════════
+    function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+    function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
     function nameToColor(n) {
-        const c = ['#c8a24e','#60a5fa','#4ade80','#f87171','#c084fc','#fb923c','#fbbf24','#34d399','#a78bfa','#f472b6','#22d3ee','#e879f9','#38bdf8','#a3e635','#fb7185'];
-        let h = 0; for (let i = 0; i < n.length; i++) h = n.charCodeAt(i) + ((h << 5) - h);
+        var c = ['#c8a24e','#60a5fa','#4ade80','#f87171','#c084fc','#fb923c','#fbbf24','#34d399','#a78bfa','#f472b6','#22d3ee','#e879f9','#38bdf8','#a3e635','#fb7185'];
+        var h = 0; for (var i = 0; i < n.length; i++) h = n.charCodeAt(i) + ((h << 5) - h);
         return c[Math.abs(h) % c.length];
     }
     function getInitials(n) {
-        const p = n.trim().split(/\s+/);
+        var p = n.trim().split(/\s+/);
         return p.length >= 2 ? (p[0][0]+p[p.length-1][0]).toUpperCase() : n.substring(0,2).toUpperCase();
     }
     function getProgress(id) {
-        try { const d = JSON.parse(localStorage.getItem('alumni-progress-'+id)); if (d && typeof d.concluidas==='number') return d; } catch(e) {} return null;
+        try { var d = JSON.parse(localStorage.getItem('alumni-progress-'+id)); if (d && typeof d.concluidas==='number') return d; } catch(e) {} return null;
     }
     function getCountdown(id) {
         var a = allAlunos.find(function(x){return x.id===id;});
@@ -351,20 +473,28 @@
         return null;
     }
     function isDeactivated(id) { var a=allAlunos.find(function(x){return x.id===id;}); return a&&a._deactivated===true; }
-    function setDeactivated(id,v) { sb.from('perfis').update({deactivated:v}).eq('id',id).then(function(){}); var a=allAlunos.find(function(x){return x.id===id;}); if(a) a._deactivated=v; }
 
+    async function setDeactivated(id, v) {
+        var ok = await supaUpdate(
+            sb.from('perfis').update({deactivated:v}).eq('id',id),
+            v ? 'Aluno arquivado' : 'Aluno reativado'
+        );
+        if (ok) { var a=allAlunos.find(function(x){return x.id===id;}); if(a) a._deactivated=v; }
+        return ok;
+    }
+
+    // ══════════════════════════════════════
+    // DATA LOADING
+    // ══════════════════════════════════════
     async function loadAlunos() {
-        // 1. Load from Supabase (primary source of truth)
         var supaRows=[];
         try {
             var resp=await sb.from('perfis').select('id,data,status,nome,nivel,num_aulas,foco,ativo,deactivated,professor,horarios,alocacao,created_at,updated_at').order('created_at',{ascending:false});
             if(!resp.error&&resp.data) supaRows=resp.data;
-        } catch(e){ console.error('Supabase load failed:',e); }
+        } catch(e){ console.error('Supabase load failed:',e); showToast('Erro ao carregar dados do servidor','error'); }
 
-        // 2. Load registry.json as fallback for legacy entries
         var reg=[]; try { var r=await fetch('/planos/registry.json'); if(r.ok) reg=await r.json(); } catch(e){}
 
-        // 3. Merge
         var merged={};
         reg.forEach(function(p) {
             merged[p.id] = {
@@ -375,7 +505,6 @@
             };
         });
 
-        // Supabase rows override registry
         supaRows.forEach(function(row) {
             var d = (row.data&&row.data.dadosFormulario)||{};
             merged[row.id] = {
@@ -403,59 +532,98 @@
         allAlunos=Object.values(merged); updateStats(); filterAlunos();
     }
 
+    // ══════════════════════════════════════
+    // SORTING, FILTERING, STATS
+    // ══════════════════════════════════════
     function sortAlunos(list) {
-        const by=document.getElementById('sortSelect')?.value||'date_desc';
-        const so={rascunho:0,em_revisao:1,aprovado:2,material_publicado:3,sem_perfil:4};
-        list.sort((a,b) => { const da=isDeactivated(a.id)?1:0,db=isDeactivated(b.id)?1:0; if(da!==db) return da-db;
+        var by=document.getElementById('sortSelect')?.value||'date_desc';
+        var so={rascunho:0,em_revisao:1,aprovado:2,material_publicado:3,sem_perfil:4};
+        list.sort(function(a,b) { var da=isDeactivated(a.id)?1:0,db=isDeactivated(b.id)?1:0; if(da!==db) return da-db;
             switch(by){ case 'date_desc':return new Date(b.criadoEm||0)-new Date(a.criadoEm||0); case 'date_asc':return new Date(a.criadoEm||0)-new Date(b.criadoEm||0); case 'name_asc':return(a.nome||'').localeCompare(b.nome||'','pt-BR'); case 'name_desc':return(b.nome||'').localeCompare(a.nome||'','pt-BR'); case 'status':return(so[a.perfilStatus]||9)-(so[b.perfilStatus]||9); default:return 0; }
         });
     }
 
     function updateStats() {
-        const act=allAlunos.filter(a=>!isDeactivated(a.id));
+        var act=allAlunos.filter(function(a){return !isDeactivated(a.id);});
         document.getElementById('statTotal').textContent=act.length;
-        document.getElementById('statCriacao').textContent=act.filter(a=>a.perfilStatus==='rascunho'||a.perfilStatus==='em_revisao').length;
-        document.getElementById('statAndamento').textContent=act.filter(a=>a.perfilStatus==='aprovado'||a.perfilStatus==='material_publicado').length;
-        document.getElementById('statConcluido').textContent=act.filter(a=>a._ativo===true).length;
+        document.getElementById('statCriacao').textContent=act.filter(function(a){return a.perfilStatus==='rascunho'||a.perfilStatus==='em_revisao';}).length;
+        document.getElementById('statAndamento').textContent=act.filter(function(a){return a.perfilStatus==='aprovado'||a.perfilStatus==='material_publicado';}).length;
+        document.getElementById('statConcluido').textContent=act.filter(function(a){return a._ativo===true;}).length;
     }
 
     function filterAlunos() {
-        const s=document.getElementById('searchInput').value.toLowerCase();
-        let f=[...allAlunos]; if(s) f=f.filter(a=>a.nome.toLowerCase().includes(s));
-        if(currentFilter!=='todos') f=f.filter(a=>a.perfilStatus===currentFilter);
+        var s=document.getElementById('searchInput').value.toLowerCase();
+        var f=allAlunos.slice(); if(s) f=f.filter(function(a){return a.nome.toLowerCase().includes(s);});
+        if(currentFilter==='ativo') f=f.filter(function(a){return a._ativo===true;});
+        else if(currentFilter!=='todos') f=f.filter(function(a){return a.perfilStatus===currentFilter;});
         sortAlunos(f); renderAlunos(f);
     }
 
-    function setFilter(filter,btn) { currentFilter=filter; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); filterAlunos(); }
+    function setFilter(filter,btn) { currentFilter=filter; document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); filterAlunos(); }
 
     function getBadge(st) { return {rascunho:{l:'Rascunho',c:'s-badge--draft'},em_revisao:{l:'Em Revisão',c:'s-badge--review'},aprovado:{l:'Aprovado',c:'s-badge--approved'},material_publicado:{l:'Publicado',c:'s-badge--published'},sem_perfil:{l:'Sem Perfil',c:'s-badge--none'}}[st]||{l:'Sem Perfil',c:'s-badge--none'}; }
 
-    function toggleAtivo(id, ativo) {
-        sb.from('perfis').update({ativo:ativo}).eq('id',id).then(function(){});
-        var a=allAlunos.find(function(x){return x.id===id;}); if(a) a._ativo=ativo;
-        filterAlunos();
+    // ══════════════════════════════════════
+    // ACTIONS — with error handling + confirmation
+    // ══════════════════════════════════════
+    async function toggleAtivo(id, ativo) {
+        var nome = ''; var a=allAlunos.find(function(x){return x.id===id;}); if(a) nome=a.nome;
+        var label = ativo ? 'Tornar Ativo' : 'Desativar';
+        var msg = ativo
+            ? 'Marcar "' + nome + '" como aluno ativo?'
+            : 'Remover "' + nome + '" da lista de ativos?';
+        var confirmed = await showConfirm(label, msg, label, ativo ? 'confirm-success' : 'confirm-danger');
+        if (!confirmed) return;
+
+        var ok = await supaUpdate(
+            sb.from('perfis').update({ativo:ativo}).eq('id',id),
+            ativo ? nome + ' marcado como ativo' : nome + ' removido dos ativos'
+        );
+        if (ok && a) { a._ativo = ativo; updateStats(); filterAlunos(); }
     }
 
-    function salvarCardField(id, field, value) {
+    async function salvarCardField(id, field, value) {
         var col = field==='professor'?'professor':'horarios';
         var upd={}; upd[col]=value;
-        sb.from('perfis').update(upd).eq('id',id).then(function(){});
-        var a=allAlunos.find(function(x){return x.id===id;}); if(a) a['_'+field]=value;
+        var ok = await supaUpdate(sb.from('perfis').update(upd).eq('id',id), 'Salvo');
+        if (ok) { var a=allAlunos.find(function(x){return x.id===id;}); if(a) a['_'+field]=value; }
     }
 
-    function toggleMenu(id,e) { e.stopPropagation(); document.querySelectorAll('.menu-dropdown').forEach(m=>{if(m.id!=='menu-'+id)m.classList.remove('show');}); document.getElementById('menu-'+id).classList.toggle('show'); }
+    function toggleMenu(id,e) { e.stopPropagation(); document.querySelectorAll('.menu-dropdown').forEach(function(m){if(m.id!=='menu-'+id)m.classList.remove('show');}); document.getElementById('menu-'+id).classList.toggle('show'); }
     document.addEventListener('click',function(e) {
-        // Don't close menu if clicking inside a menu item
         if (e.target.closest('.menu-dropdown')) return;
-        document.querySelectorAll('.menu-dropdown.show').forEach(m=>m.classList.remove('show'));
+        document.querySelectorAll('.menu-dropdown.show').forEach(function(m){m.classList.remove('show');});
     });
 
-    function excluirAluno(id) { if(!confirm('Excluir permanentemente "'+id+'"? Esta ação não pode ser desfeita.')) return; sb.from('perfis').delete().eq('id',id).then(function(){}); allAlunos=allAlunos.filter(a=>a.id!==id); updateStats();filterAlunos(); }
-    function desativarAluno(id) { try { setDeactivated(id,true); updateStats();filterAlunos(); } catch(e) { alert('Erro desativar: '+e.message); } }
-    function reativarAluno(id) { setDeactivated(id,false); updateStats();filterAlunos(); }
+    async function excluirAluno(id) {
+        var nome = ''; var a=allAlunos.find(function(x){return x.id===id;}); if(a) nome=a.nome;
+        var confirmed = await showConfirm(
+            'Excluir permanentemente',
+            'Excluir "' + nome + '"? Esta acao nao pode ser desfeita.',
+            'Excluir', 'confirm-danger'
+        );
+        if (!confirmed) return;
+        var ok = await supaUpdate(sb.from('perfis').delete().eq('id',id), nome + ' excluido');
+        if (ok) { allAlunos=allAlunos.filter(function(a){return a.id!==id;}); updateStats(); filterAlunos(); }
+    }
 
-    // Theme images by foco — royalty-free Unsplash
-    const THEME_IMAGES = {
+    async function desativarAluno(id) {
+        var nome = ''; var a=allAlunos.find(function(x){return x.id===id;}); if(a) nome=a.nome;
+        var confirmed = await showConfirm('Arquivar aluno', 'Arquivar "' + nome + '"? O card ficara esmaecido.', 'Arquivar', 'confirm-danger');
+        if (!confirmed) return;
+        var ok = await setDeactivated(id, true);
+        if (ok) { updateStats(); filterAlunos(); }
+    }
+
+    async function reativarAluno(id) {
+        var ok = await setDeactivated(id, false);
+        if (ok) { updateStats(); filterAlunos(); }
+    }
+
+    // ══════════════════════════════════════
+    // THEME IMAGES
+    // ══════════════════════════════════════
+    var THEME_IMAGES = {
         'travel':     'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=60',
         'business':   'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=60',
         'academic':   'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&q=60',
@@ -467,7 +635,7 @@
     };
     function getThemeImage(foco) {
         if (!foco) return THEME_IMAGES.general;
-        const f = foco.toLowerCase();
+        var f = foco.toLowerCase();
         if (f.includes('travel') || f.includes('viag')) return THEME_IMAGES.travel;
         if (f.includes('business') || f.includes('negoc') || f.includes('corporat')) return THEME_IMAGES.business;
         if (f.includes('academ') || f.includes('universit')) return THEME_IMAGES.academic;
@@ -478,99 +646,108 @@
         return THEME_IMAGES.general;
     }
 
+    // ══════════════════════════════════════
+    // RENDER
+    // ══════════════════════════════════════
     function renderAlunos(alunos) {
-        const container=document.getElementById('alunosList'), countEl=document.getElementById('count');
+        var container=document.getElementById('alunosList'), countEl=document.getElementById('count');
         if(alunos.length===0&&allAlunos.length===0) { container.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>Nenhum aluno cadastrado</h3><p>Comece criando o primeiro perfil de aluno.</p><a href="index.html" class="btn-novo" style="display:inline-flex">Criar Primeiro Aluno</a></div>'; countEl.textContent=''; return; }
         if(alunos.length===0) { container.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><h3>Nenhum resultado</h3><p>Nenhum aluno corresponde aos filtros selecionados.</p></div>'; countEl.textContent=''; return; }
         countEl.textContent=alunos.length+' aluno'+(alunos.length!==1?'s':'');
 
-        container.innerHTML=alunos.map(a => {
-            const badge=getBadge(a.perfilStatus), deact=isDeactivated(a.id);
-            const prog=getProgress(a.id), cd=getCountdown(a.id);
-            const total=parseInt(a.numAulas)||0, done=prog?prog.concluidas:0;
-            const hasPerfil=a.perfilStatus!=='sem_perfil';
+        container.innerHTML=alunos.map(function(a) {
+            var badge=getBadge(a.perfilStatus), deact=isDeactivated(a.id);
+            var prog=getProgress(a.id), cd=getCountdown(a.id);
+            var total=parseInt(a.numAulas)||0, done=prog?prog.concluidas:0;
+            var hasPerfil=a.perfilStatus!=='sem_perfil';
 
-            // Load saved professor/schedule from Supabase data
-            const profName = a._professor || '';
-            const schedule = a._horarios || '';
+            var profName = a._professor || '';
+            var schedule = a._horarios || '';
 
-            // Simplify nivel — extract just the CEFR code (e.g. "A1" from "A1 (Iniciante)" or long AI text)
-            let nivelSimples = a.nivel || '';
-            const nivelMatch = nivelSimples.match(/^(A0|A1|A2|B1|B2|C1\+?|C2)/i);
+            var nivelSimples = a.nivel || '';
+            var nivelMatch = nivelSimples.match(/^(A0|A1|A2|B1|B2|C1\+?|C2)/i);
             if (nivelMatch) nivelSimples = nivelMatch[1].toUpperCase();
             else if (nivelSimples.length > 20) nivelSimples = nivelSimples.substring(0, 20) + '...';
 
-            // Simplify foco — truncate long descriptions to first meaningful phrase
-            let focoSimples = a.foco || '';
+            var focoSimples = a.foco || '';
             if (focoSimples.length > 30) {
-                // Try to extract a short label: take text before first colon, dash, or semicolon
                 var focoShort = focoSimples.match(/^([^:;—–\n]{3,30})/);
                 focoSimples = focoShort ? focoShort[1].trim() : focoSimples.substring(0, 28) + '...';
             }
 
-            // Meta pills
-            const meta=[];
+            var meta=[];
             if(nivelSimples) meta.push(esc(nivelSimples));
             if(total>0) meta.push(total+' aulas');
             if(focoSimples) meta.push(esc(focoSimples));
             if(a.modalidade) meta.push(esc(a.modalidade));
 
-            // Countdown
-            let cdH='';
-            if(cd) cdH='<span class="s-countdown"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'+cd.days+' dias para '+cd.label+'</span>';
+            var cdH='';
+            if(cd) cdH='<span class="s-countdown"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'+cd.days+' dias para '+esc(cd.label)+'</span>';
 
-            // Progress
-            let progH='';
-            if(total>0) { const pct=Math.min(100,Math.round((done/total)*100)); progH='<div class="s-progress"><div class="s-progress-bar"><div class="s-progress-fill" style="width:'+pct+'%"></div></div></div>'; }
+            var progH='';
+            if(total>0) { var pct=Math.min(100,Math.round((done/total)*100)); progH='<div class="s-progress"><div class="s-progress-bar"><div class="s-progress-fill" style="width:'+pct+'%"></div></div></div>'; }
 
-            // Professor + Horários fields — mostra texto se preenchido, input se vazio
-            let fieldsH = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #e5e7eb;">' +
+            var fieldsH = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #e5e7eb;">' +
                 '<div style="display:flex;align-items:center;gap:6px;">' +
                 '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + (profName ? '#003080' : '#9ca3af') + '" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
                 (profName
                     ? '<span style="font:600 13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#1a1a1a;">' + esc(profName) + '</span>'
-                    : '<input type="text" placeholder="Professor(a)" onchange="salvarCardField(\'' + a.id + '\',\'professor\',this.value);filterAlunos();" style="flex:1;border:none;border-bottom:1px solid #e5e7eb;padding:4px 0;font:13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#374151;background:transparent;outline:none;" onfocus="this.style.borderColor=\'#003080\'" onblur="this.style.borderColor=\'#e5e7eb\'">') +
+                    : '<input type="text" placeholder="Professor(a)" onchange="salvarCardField(\'' + escAttr(a.id) + '\',\'professor\',this.value);filterAlunos();" style="flex:1;border:none;border-bottom:1px solid #e5e7eb;padding:4px 0;font:13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#374151;background:transparent;outline:none;" onfocus="this.style.borderColor=\'#003080\'" onblur="this.style.borderColor=\'#e5e7eb\'">') +
                 '</div>' +
                 '<div style="display:flex;align-items:center;gap:6px;">' +
                 '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + (schedule ? '#003080' : '#9ca3af') + '" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
                 (schedule
                     ? '<span style="font:500 13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#4a4a5a;">' + esc(schedule) + '</span>'
-                    : '<input type="text" placeholder="Dias e horários" onchange="salvarCardField(\'' + a.id + '\',\'horarios\',this.value);filterAlunos();" style="flex:1;border:none;border-bottom:1px solid #e5e7eb;padding:4px 0;font:13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#374151;background:transparent;outline:none;" onfocus="this.style.borderColor=\'#003080\'" onblur="this.style.borderColor=\'#e5e7eb\'">') +
+                    : '<input type="text" placeholder="Dias e horarios" onchange="salvarCardField(\'' + escAttr(a.id) + '\',\'horarios\',this.value);filterAlunos();" style="flex:1;border:none;border-bottom:1px solid #e5e7eb;padding:4px 0;font:13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#374151;background:transparent;outline:none;" onfocus="this.style.borderColor=\'#003080\'" onblur="this.style.borderColor=\'#e5e7eb\'">') +
                 '</div></div>';
 
-            // Last updated
             var updAt = a._updatedAt ? new Date(a._updatedAt) : null;
             var updH = updAt
-                ? '<div style="display:flex;align-items:center;gap:5px;margin-top:8px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span style="font:400 11px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#9ca3af;">Atualizado em ' + updAt.toLocaleDateString('pt-BR') + ' às ' + updAt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}) + '</span></div>'
+                ? '<div style="display:flex;align-items:center;gap:5px;margin-top:8px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span style="font:400 11px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#9ca3af;">Atualizado em ' + updAt.toLocaleDateString('pt-BR') + ' as ' + updAt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}) + '</span></div>'
                 : '';
             fieldsH += updH;
 
-            // Buttons
-            const profUrl='/professor/'+a.id+'.html', alunoUrl=location.origin+'/aluno/'+a.id+'.html';
-            let btn1=hasPerfil?'<a href="perfil.html?id='+a.id+'" class="s-btn s-btn--primary">Perfil 360</a>':'<a href="index.html" class="s-btn s-btn--ghost">Criar Perfil</a>';
-            let btn2 = '<a href="'+profUrl+'" class="s-btn s-btn--ghost mat-btn" data-check="'+profUrl+'" target="_blank"'
-                + (!hasPerfil ? ' style="pointer-events:none;opacity:0.35;"' : '')
-                + '>Criar Material</a>';
-            let btn3='<button class="s-btn s-btn--ghost aluno-btn" data-url="'+alunoUrl+'" data-check="/aluno/'+a.id+'.html" disabled>Link do Aluno</button>';
+            var profUrl='/professor/'+escAttr(a.id)+'.html', alunoUrl=location.origin+'/aluno/'+escAttr(a.id)+'.html';
+            var alreadyConfirmed = confirmedMaterials.has(a.id);
+            var btn1=hasPerfil?'<a href="perfil.html?id='+escAttr(a.id)+'" class="s-btn s-btn--primary">Perfil 360</a>':'<a href="index.html" class="s-btn s-btn--ghost">Criar Perfil</a>';
+            var btn2, btn3;
+            if (alreadyConfirmed) {
+                btn2 = '<a href="'+profUrl+'" class="s-btn s-btn--primary mat-btn" data-check="'+profUrl+'" target="_blank">Acessar Material Professor</a>';
+                btn3 = '<button class="s-btn s-btn--primary aluno-btn" data-url="'+escAttr(alunoUrl)+'" data-check="/aluno/'+escAttr(a.id)+'.html" onclick="event.stopPropagation();navigator.clipboard.writeText(\''+escAttr(alunoUrl)+'\');this.textContent=\'Copiado!\';var self=this;setTimeout(function(){self.textContent=\'Acessar Material Aluno\';},1500);">Acessar Material Aluno</button>';
+            } else {
+                btn2 = '<a href="'+profUrl+'" class="s-btn s-btn--ghost mat-btn" data-check="'+profUrl+'" target="_blank"'
+                    + (!hasPerfil ? ' style="pointer-events:none;opacity:0.35;"' : '')
+                    + '>Criar Material</a>';
+                btn3 = '<button class="s-btn s-btn--ghost aluno-btn" data-url="'+escAttr(alunoUrl)+'" data-check="/aluno/'+escAttr(a.id)+'.html" disabled>Link do Aluno</button>';
+            }
 
-            // Menu
-            const mi=deact
-                ?'<button class="menu-item menu-item--reactivate" onclick="event.stopPropagation();reativarAluno(\''+a.id+'\')">Reativar</button><button class="menu-item menu-item--danger" onclick="event.stopPropagation();excluirAluno(\''+a.id+'\')">Excluir permanentemente</button>'
-                :'<button class="menu-item" onclick="event.stopPropagation();abrirAlocacao(\''+a.id+'\')">Fazer Alocação</button>' +
-                (a._ativo ? '<button class="menu-item" onclick="event.stopPropagation();toggleAtivo(\''+a.id+'\',false)" style="color:#16a34a;font-weight:600;">Desativar Aluno</button>' : '<button class="menu-item" onclick="event.stopPropagation();toggleAtivo(\''+a.id+'\',true)" style="color:#16a34a;font-weight:600;">Tornar Ativo</button>') +
-                '<button class="menu-item" onclick="event.stopPropagation();desativarAluno(\''+a.id+'\')">Desativar</button><button class="menu-item menu-item--danger" onclick="event.stopPropagation();excluirAluno(\''+a.id+'\')">Excluir permanentemente</button>';
+            // Menu — simplified: "Tornar Ativo/Remover Ativo" + "Arquivar" + "Excluir"
+            var mi;
+            if (deact) {
+                mi = '<button class="menu-item menu-item--reactivate" onclick="event.stopPropagation();reativarAluno(\''+escAttr(a.id)+'\')">Reativar</button>' +
+                     '<button class="menu-item menu-item--danger" onclick="event.stopPropagation();excluirAluno(\''+escAttr(a.id)+'\')">Excluir permanentemente</button>';
+            } else {
+                mi = '<button class="menu-item" onclick="event.stopPropagation();abrirAlocacao(\''+escAttr(a.id)+'\')">Fazer Alocacao</button>' +
+                    (a._ativo
+                        ? '<button class="menu-item" onclick="event.stopPropagation();toggleAtivo(\''+escAttr(a.id)+'\',false)" style="color:#b45309;">Remover dos Ativos</button>'
+                        : '<button class="menu-item" onclick="event.stopPropagation();toggleAtivo(\''+escAttr(a.id)+'\',true)" style="color:#16a34a;font-weight:600;">Tornar Ativo</button>') +
+                    '<button class="menu-item" onclick="event.stopPropagation();desativarAluno(\''+escAttr(a.id)+'\')" style="color:var(--text-dim);">Arquivar</button>' +
+                    '<button class="menu-item menu-item--danger" onclick="event.stopPropagation();excluirAluno(\''+escAttr(a.id)+'\')">Excluir permanentemente</button>';
+            }
 
             var isAtivo = a._ativo === true;
-            return '<div class="s-card'+(deact?' deactivated':'')+(isAtivo?' ativo':'')+'" data-id="'+a.id+'" data-foco="'+(a.foco||'')+'" data-legacy="'+(a.legacyUrl||'')+'" data-external="'+(a.externalUrl||'')+'">' +
+            var bgImg = (alreadyConfirmed && a.foco) ? '<div class="s-card-bg" style="background-image:url(\'' + getThemeImage(a.foco) + '\')"></div>' : '';
+            return '<div class="s-card'+(deact?' deactivated':'')+(isAtivo?' ativo':'')+'" data-id="'+escAttr(a.id)+'" data-foco="'+escAttr(a.foco)+'" data-legacy="'+escAttr(a.legacyUrl)+'" data-external="'+escAttr(a.externalUrl)+'">' +
+                bgImg +
                 '<div class="s-top">' +
                     '<div class="s-avatar" style="background:'+nameToColor(a.nome)+'">'+esc(getInitials(a.nome))+'</div>' +
                     '<div class="s-info">' +
                         '<div class="s-name-row"><span class="s-name">'+esc(a.nome)+'</span><span class="s-badge '+badge.c+'">'+badge.l+'</span>'+cdH+'</div>' +
-                        '<div class="s-meta">'+meta.map(m=>'<span>'+m+'</span>').join('<span class="s-meta-sep">|</span>')+'</div>' +
+                        '<div class="s-meta">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('<span class="s-meta-sep">|</span>')+'</div>' +
                         progH +
                         fieldsH +
                     '</div>' +
-                    '<div class="menu-wrap"><button class="menu-trigger" onclick="toggleMenu(\''+a.id+'\',event)" title="Opções"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button><div class="menu-dropdown" id="menu-'+a.id+'">'+mi+'</div></div>' +
+                    '<div class="menu-wrap"><button class="menu-trigger" onclick="toggleMenu(\''+escAttr(a.id)+'\',event)" title="Opcoes"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button><div class="menu-dropdown" id="menu-'+escAttr(a.id)+'">'+mi+'</div></div>' +
                 '</div>' +
                 '<div class="s-actions">'+btn1+btn2+btn3+'</div>' +
             '</div>';
@@ -579,130 +756,126 @@
         checkMaterialExists();
     }
 
-    // Check if a URL points to a real generated page (not Vercel's 404)
+    // ══════════════════════════════════════
+    // MATERIAL EXISTENCE CHECK
+    // ══════════════════════════════════════
     async function isRealPage(url) {
         try {
-            const r = await fetch(url + '?_t=' + Date.now(), { cache: 'no-store' });
+            var r = await fetch(url + '?_t=' + Date.now(), { cache: 'no-store' });
             if (!r.ok) return false;
-            const text = await r.text();
+            var text = await r.text();
             return text.length > 5000 && (text.includes('alumni') || text.includes('Alumni'));
         } catch(e) { return false; }
     }
 
+    var checkingMaterials = false;
     async function checkMaterialExists() {
-        const cards = document.querySelectorAll('.s-card[data-id]');
-        const checks = [];
+        if (checkingMaterials) return;
+        checkingMaterials = true;
+        try {
+            var cards = document.querySelectorAll('.s-card[data-id]');
+            var checks = [];
 
-        cards.forEach(card => {
-            const id = card.getAttribute('data-id');
-            // Skip alunos whose materials are already confirmed
-            if (confirmedMaterials.has(id)) return;
+            cards.forEach(function(card) {
+                var id = card.getAttribute('data-id');
+                if (confirmedMaterials.has(id)) return;
 
-            const foco = card.getAttribute('data-foco');
-            const legacy = card.getAttribute('data-legacy');
-            const external = card.getAttribute('data-external');
-            const profBtn = card.querySelector('.mat-btn');
-            const alunoBtn = card.querySelector('.aluno-btn');
+                var foco = card.getAttribute('data-foco');
+                var legacy = card.getAttribute('data-legacy');
+                var external = card.getAttribute('data-external');
+                var profBtn = card.querySelector('.mat-btn');
+                var alunoBtn = card.querySelector('.aluno-btn');
 
-            // New format paths
-            const profUrl = '/professor/' + id + '.html';
-            const alunoPath = '/aluno/' + id + '.html';
-            const alunoFullUrl = location.origin + alunoPath;
+                var profUrl = '/professor/' + id + '.html';
+                var alunoPath = '/aluno/' + id + '.html';
+                var alunoFullUrl = location.origin + alunoPath;
 
-            // Check new format first, then legacy
-            const materialCheck = (async () => {
-                // 1. Check new format (professor + aluno)
-                const [profExists, alunoExists] = await Promise.all([
-                    profBtn ? isRealPage(profUrl) : Promise.resolve(false),
-                    alunoBtn ? isRealPage(alunoPath) : Promise.resolve(false)
-                ]);
+                var materialCheck = (async function() {
+                    var profExists = profBtn ? await isRealPage(profUrl) : false;
+                    var alunoExists = alunoBtn ? await isRealPage(alunoPath) : false;
 
-                if (profExists && profBtn) {
-                    profBtn.textContent = 'Acessar Material Professor';
-                    profBtn.classList.remove('s-btn--ghost'); profBtn.classList.add('s-btn--primary');
-                }
-                if (alunoExists && alunoBtn) {
-                    alunoBtn.disabled = false;
-                    alunoBtn.textContent = 'Acessar Material Aluno';
-                    alunoBtn.classList.remove('s-btn--ghost'); alunoBtn.classList.add('s-btn--primary');
-                    alunoBtn.onclick = function(e) {
-                        e.stopPropagation();
-                        navigator.clipboard.writeText(alunoFullUrl);
-                        this.textContent = 'Copiado!';
-                        setTimeout(() => { this.textContent = 'Acessar Material Aluno'; }, 1500);
-                    };
-                }
-
-                // 2. If no new format, check legacy (/planos/ or external URL)
-                let hasLegacy = false;
-                if (!profExists && !alunoExists && legacy) {
-                    const legacyTarget = external || legacy;
-                    // For external URLs, we trust they exist (they're on other Vercel deployments)
-                    if (external) {
-                        hasLegacy = true;
-                    } else {
-                        hasLegacy = await isRealPage(legacy);
+                    if (profExists && profBtn) {
+                        profBtn.textContent = 'Acessar Material Professor';
+                        profBtn.classList.remove('s-btn--ghost'); profBtn.classList.add('s-btn--primary');
+                    }
+                    if (alunoExists && alunoBtn) {
+                        alunoBtn.disabled = false;
+                        alunoBtn.textContent = 'Acessar Material Aluno';
+                        alunoBtn.classList.remove('s-btn--ghost'); alunoBtn.classList.add('s-btn--primary');
+                        alunoBtn.onclick = function(e) {
+                            e.stopPropagation();
+                            navigator.clipboard.writeText(alunoFullUrl);
+                            this.textContent = 'Copiado!';
+                            var self = this;
+                            setTimeout(function() { self.textContent = 'Acessar Material Aluno'; }, 1500);
+                        };
                     }
 
-                    if (hasLegacy) {
-                        // Activate both buttons pointing to the legacy material
-                        if (profBtn) {
-                            profBtn.textContent = 'Acessar Material';
-                            profBtn.href = legacyTarget;
-                            profBtn.classList.remove('s-btn--ghost'); profBtn.classList.add('s-btn--primary');
-                            profBtn.style.pointerEvents = 'auto'; profBtn.style.opacity = '1';
-                        }
-                        if (alunoBtn) {
-                            alunoBtn.disabled = false;
-                            alunoBtn.textContent = 'Link do Aluno';
-                            alunoBtn.classList.remove('s-btn--ghost'); alunoBtn.classList.add('s-btn--primary');
-                            alunoBtn.onclick = function(e) {
-                                e.stopPropagation();
-                                navigator.clipboard.writeText(legacyTarget);
-                                this.textContent = 'Copiado!';
-                                setTimeout(() => { this.textContent = 'Link do Aluno'; }, 1500);
-                            };
+                    var hasLegacy = false;
+                    if (!profExists && !alunoExists && legacy) {
+                        var legacyTarget = external || legacy;
+                        if (external) { hasLegacy = true; } else { hasLegacy = await isRealPage(legacy); }
+
+                        if (hasLegacy) {
+                            if (profBtn) {
+                                profBtn.textContent = 'Acessar Material';
+                                profBtn.href = legacyTarget;
+                                profBtn.classList.remove('s-btn--ghost'); profBtn.classList.add('s-btn--primary');
+                                profBtn.style.pointerEvents = 'auto'; profBtn.style.opacity = '1';
+                            }
+                            if (alunoBtn) {
+                                alunoBtn.disabled = false;
+                                alunoBtn.textContent = 'Link do Aluno';
+                                alunoBtn.classList.remove('s-btn--ghost'); alunoBtn.classList.add('s-btn--primary');
+                                alunoBtn.onclick = function(e) {
+                                    e.stopPropagation();
+                                    navigator.clipboard.writeText(legacyTarget);
+                                    this.textContent = 'Copiado!';
+                                    var self = this;
+                                    setTimeout(function() { self.textContent = 'Link do Aluno'; }, 1500);
+                                };
+                            }
                         }
                     }
-                }
 
-                // 3. Mark as confirmed so polling skips this aluno
-                const anyMaterial = profExists || alunoExists || hasLegacy;
-                if (anyMaterial) confirmedMaterials.add(id);
-                if (anyMaterial && foco && !card.querySelector('.s-card-bg')) {
-                    const img = getThemeImage(foco);
-                    const bgDiv = document.createElement('div');
-                    bgDiv.className = 's-card-bg';
-                    bgDiv.style.backgroundImage = "url('" + img + "')";
-                    card.insertBefore(bgDiv, card.firstChild);
-                }
-            })();
+                    var anyMaterial = profExists || alunoExists || hasLegacy;
+                    if (anyMaterial) confirmedMaterials.add(id);
+                    if (anyMaterial && foco && !card.querySelector('.s-card-bg')) {
+                        var img = getThemeImage(foco);
+                        var bgDiv = document.createElement('div');
+                        bgDiv.className = 's-card-bg';
+                        bgDiv.style.backgroundImage = "url('" + img + "')";
+                        card.insertBefore(bgDiv, card.firstChild);
+                    }
+                })();
 
-            checks.push(materialCheck);
-        });
+                checks.push(materialCheck);
+            });
 
-        await Promise.all(checks);
+            await Promise.all(checks);
+        } finally { checkingMaterials = false; }
     }
 
-    // Alocação modal
+    // ══════════════════════════════════════
+    // ALOCACAO MODAL — reads from Supabase data (allAlunos), not localStorage
+    // ══════════════════════════════════════
     var alocacaoAlunoId = null;
     function abrirAlocacao(id) {
         alocacaoAlunoId = id;
-        // Load existing data
-        var perfil = {};
-        try { perfil = JSON.parse(localStorage.getItem('alumni-perfil-' + id) || '{}'); } catch(e) {}
-        var aloc = perfil.alocacao || {};
-        var nome = (perfil.dadosFormulario || {}).nome || id;
+        var a = allAlunos.find(function(x){return x.id===id;});
+        var aloc = (a && a._alocacao) || {};
+        var nome = (a && a.nome) || id;
 
         document.getElementById('alocacaoNomeAluno').textContent = nome;
-        document.getElementById('alocProf').value = aloc.professor || '';
-        document.getElementById('alocDias').value = aloc.diasHorarios || '';
+        document.getElementById('alocProf').value = (a && a._professor) || aloc.professor || '';
+        document.getElementById('alocDias').value = (a && a._horarios) || aloc.diasHorarios || '';
         document.getElementById('alocInicio').value = aloc.inicio || '';
         document.getElementById('alocTermino').value = aloc.termino || '';
         document.getElementById('alocacaoModal').classList.add('show');
     }
     function fecharAlocacao() { document.getElementById('alocacaoModal').classList.remove('show'); alocacaoAlunoId = null; }
-    function salvarAlocacao() {
+
+    async function salvarAlocacao() {
         if (!alocacaoAlunoId) return;
         var alocacao = {
             professor: document.getElementById('alocProf').value.trim(),
@@ -710,12 +883,21 @@
             inicio: document.getElementById('alocInicio').value,
             termino: document.getElementById('alocTermino').value
         };
-        sb.from('perfis').update({alocacao:alocacao,professor:alocacao.professor,horarios:alocacao.diasHorarios}).eq('id',alocacaoAlunoId).then(function(){});
-        var a=allAlunos.find(function(x){return x.id===alocacaoAlunoId;}); if(a){a._alocacao=alocacao;a._professor=alocacao.professor;a._horarios=alocacao.diasHorarios;}
+        var ok = await supaUpdate(
+            sb.from('perfis').update({alocacao:alocacao,professor:alocacao.professor,horarios:alocacao.diasHorarios}).eq('id',alocacaoAlunoId),
+            'Alocacao salva'
+        );
+        if (ok) {
+            var a=allAlunos.find(function(x){return x.id===alocacaoAlunoId;});
+            if(a){a._alocacao=alocacao;a._professor=alocacao.professor;a._horarios=alocacao.diasHorarios;}
+        }
         fecharAlocacao();
         filterAlunos();
     }
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') fecharAlocacao(); });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') { fecharAlocacao(); closeConfirm(false); }
+    });
 
     // Auto-sync: upload localStorage profiles to Supabase (one-time migration)
     (async function syncLocalToSupabase(){
@@ -737,10 +919,8 @@
 
     loadAlunos();
 
-    // Poll every 15s for newly deployed materials (e.g. while Claude Code generates in another tab)
-    setInterval(() => {
-        checkMaterialExists();
-    }, 15000);
+    // Poll every 15s for newly deployed materials (skip if already checking)
+    setInterval(function() { checkMaterialExists(); }, 15000);
 </script>
 </body>
 </html>
