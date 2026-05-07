@@ -727,7 +727,9 @@
                     var p=JSON.parse(localStorage.getItem(k));
                     if(!p||!p.dadosFormulario) continue;
                     var d=p.dadosFormulario||{};
-                    await sb.from('perfis').upsert({id:id,data:p,status:p.status||'rascunho',nome:d.nome||id,nivel:d.nivel||'',num_aulas:parseInt(d.numAulas)||0,foco:d.foco||'',ativo:p.ativo||false});
+                    var card={}; try{card=JSON.parse(localStorage.getItem('alumni-card-'+id)||'{}');}catch(e){}
+                    var aloc=p.alocacao||{};
+                    await sb.from('perfis').upsert({id:id,data:p,status:p.status||'rascunho',nome:d.nome||id,nivel:d.nivel||'',num_aulas:parseInt(d.numAulas)||0,foco:d.foco||'',ativo:p.ativo||false,professor:aloc.professor||card.professor||'',horarios:aloc.diasHorarios||card.horarios||'',alocacao:Object.keys(aloc).length?aloc:null});
                 }
             }
         } catch(e){ console.error('Sync failed:',e); }
