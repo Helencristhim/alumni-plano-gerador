@@ -1,7 +1,8 @@
 // Tabs 1 (Planejamento) e 2 (Pre-class) para o professor
 
 const { esc, escForJS } = require('./gabriela-helpers');
-const D = require('./gabriela-data');
+const D = require('./gabriela-data-merged');
+const BLOCK_LESSONS = D.BLOCK_LESSONS;
 
 // Curriculum table — todas as 48 aulas
 const fullCurriculum = [
@@ -294,11 +295,12 @@ function buildSurvivalCard(n) {
 }
 
 function buildPreClassLesson(n) {
+  const padded = String(n).padStart(2, '0');
   return `<div class="lesson-card" id="ex-lesson-${n}">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('${D.lessonHeaderImages[n]}')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 0${n} — Pre-class</div>
+      <div class="lesson-number">Aula ${padded} — Pre-class</div>
       <h3>${esc(D.lessonTitles[n])}</h3>
       <div class="lesson-desc">${esc(D.lessonPromises[n])}</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="${n}" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="${n}">0%</span></div>
@@ -320,24 +322,27 @@ function buildPreClassLesson(n) {
 }
 
 function buildTab2PreClass() {
-  let lessons = '';
-  for (let n = 1; n <= 5; n++) lessons += buildPreClassLesson(n) + '\n';
-
-  // Placeholder for lessons 6-48
-  let placeholders = '';
-  for (let n = 6; n <= 20; n++) {
-    placeholders += `<div class="lesson-card">
+  // Renderiza aulas geradas (Bloco 1 + 2) intercaladas com placeholders das outras
+  const generated = new Set(BLOCK_LESSONS);
+  let allLessonsHTML = '';
+  for (let n = 1; n <= 48; n++) {
+    if (generated.has(n)) {
+      allLessonsHTML += buildPreClassLesson(n) + '\n';
+    } else {
+      const padded = String(n).padStart(2, '0');
+      allLessonsHTML += `<div class="lesson-card">
   <div class="lesson-header" onclick="toggleLesson(this)">
-    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80');opacity:0.4;"></div>
+    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80');opacity:0.35;"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula ${String(n).padStart(2,'0')} — Pre-class</div>
-      <h3 style="opacity:0.7;">${esc(D.lessonTitles[n] || 'Conteúdo do próximo bloco')}</h3>
+      <div class="lesson-number">Aula ${padded} — Pre-class</div>
+      <h3 style="opacity:0.7;">${esc(D.lessonTitles[n] || 'Próximo bloco')}</h3>
       <div class="lesson-desc" style="font-style:italic;color:var(--text-dim);">Conteúdo será adicionado no próximo bloco.</div>
     </div>
     <div class="expand-icon">&#9660;</div>
   </div>
   <div class="lesson-body"><p style="text-align:center;padding:2rem;color:var(--text-dim);font-style:italic;">Conteúdo será adicionado no próximo bloco.</p></div>
 </div>\n`;
+    }
   }
 
   return `<div class="tab-content" id="tab-exercises">
@@ -358,9 +363,7 @@ function buildTab2PreClass() {
   </div>
 </div>
 
-${lessons}
-
-${placeholders}
+${allLessonsHTML}
 </div>`;
 }
 

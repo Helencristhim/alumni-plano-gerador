@@ -380,8 +380,9 @@ ${cssMain}
 </head>`;
 }
 
-// JS comum (audio, exercises, state) — recebe slug e nLessons
-function getCommonJS(slug, nLessons) {
+// JS comum (audio, exercises, state) — recebe slug e lessonNums (array de números das aulas geradas)
+function getCommonJS(slug, lessonNums) {
+  const lessonsArrayStr = JSON.stringify(lessonNums);
   return `
 let audioSpeed = 1;
 let currentAudio = null;
@@ -585,9 +586,10 @@ function toggleChecklist(cb) {
 }
 
 function updateProgress() {
-  const totalLessons = ${nLessons};
+  const lessonNums = ${lessonsArrayStr};
+  const totalLessons = lessonNums.length;
   let completedLessons = 0;
-  for (let l = 1; l <= totalLessons; l++) {
+  for (const l of lessonNums) {
     const cl = document.getElementById('checklist-' + l);
     if (!cl) continue;
     const allChecks = cl.querySelectorAll('input[type="checkbox"]');

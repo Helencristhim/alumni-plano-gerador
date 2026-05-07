@@ -1,7 +1,9 @@
 // Tabs 3 (Plano de Aula), 4 (Material do Professor) e 5 (Atividades)
 
 const { esc, escForJS } = require('./gabriela-helpers');
-const D = require('./gabriela-data');
+const D = require('./gabriela-data-merged');
+const block2 = require('./gabriela-tabs-block2');
+const BLOCK_LESSONS = D.BLOCK_LESSONS;
 
 // ===== TAB 3: PLANO DE AULA =====
 const planTimings = {
@@ -96,7 +98,11 @@ const planTimings = {
   ],
 };
 
+// Merge dados do bloco 2 nas mesmas estruturas locais
+Object.assign(planTimings, block2.planTimings);
+
 function buildPlanLesson(n) {
+  const padded = String(n).padStart(2, '0');
   let rows = '';
   planTimings[n].forEach(t => {
     rows += `<tr><td class="time-cell">${t[0]}</td><td class="activity-cell">${esc(t[1])}</td><td>${t[2]}</td></tr>\n`;
@@ -116,7 +122,7 @@ function buildPlanLesson(n) {
 
   return `<div class="teacher-lesson">
   <div class="teacher-hero" style="background-image:url('${D.lessonImages[n]}')">
-    <h3>Aula 0${n} — ${esc(D.lessonTitles[n].split('—')[0].trim())}</h3>
+    <h3>Aula ${padded} — ${esc(D.lessonTitles[n].split('—')[0].trim())}</h3>
     <div class="hero-sub">${esc(D.lessonTitles[n].split('—').slice(1).join('—').trim())} — 60 min</div>
   </div>
   <div class="teacher-body">
@@ -151,11 +157,11 @@ function buildPlanLesson(n) {
 
 function buildTab3Plan() {
   let lessons = '';
-  for (let n = 1; n <= 5; n++) lessons += buildPlanLesson(n) + '\n';
+  BLOCK_LESSONS.forEach(n => { lessons += buildPlanLesson(n) + '\n'; });
   return `<div class="tab-content" id="tab-plan">
   ${lessons}
   <div style="background:var(--bg-card);border:1px solid var(--border);padding:2rem;border-radius:6px;text-align:center;margin-top:2rem;">
-    <p style="font-style:italic;color:var(--text-dim);">Planos das aulas 6-48 serão adicionados nos próximos blocos.</p>
+    <p style="font-style:italic;color:var(--text-dim);">Planos das aulas restantes serão adicionados nos próximos blocos.</p>
   </div>
 </div>`;
 }
@@ -199,7 +205,11 @@ const warmUpQuestions = {
   ],
 };
 
+// Merge warmUpQuestions com bloco 2
+Object.assign(warmUpQuestions, block2.warmUpQuestions);
+
 function buildMaterialLesson(n) {
+  const padded = String(n).padStart(2, '0');
   let warmHTML = '';
   warmUpQuestions[n].forEach((q, i) => {
     warmHTML += `<p style="font-size:0.9rem;color:var(--text);margin-bottom:0.5rem;">${i+1}. ${esc(q)}</p>\n`;
@@ -225,14 +235,14 @@ function buildMaterialLesson(n) {
     dlgLines += `<div class="dialogue-line"><div class="dialogue-avatar ${avatar}">${esc(l.speaker)}</div><div class="dialogue-bubble ${bubble}"><div class="speaker">${esc(l.name)}</div>${esc(l.text)} <button class="audio-btn" onclick="speakText('${escForJS(l.text)}', this)" style="margin-left:0.5rem;">&#9654;</button></div></div>\n`;
   });
 
-  // Listening questions
-  const listeningQs = {
+  // Listening questions (block 1 + 2 merged)
+  const listeningQs = Object.assign({
     1: ['What is Sarah\'s name?', 'Where is Gabriela from?', 'What is Gabriela\'s dream?'],
     2: ['What is the name of the hotel?', 'How does Gabriela spell her last name?', 'How does she feel after the trip?'],
     3: ['Who is Gabriela\'s best friend?', 'What is at the gym?', 'What is Gabriela\'s favorite place at school?'],
     4: ['What time does Gabriela wake up?', 'How does she go to school?', 'What does she always do before sleeping?'],
     5: ['Who is Gabriela\'s favorite character?', 'Why does she like Blair?', 'Does Gabriela like horror movies?'],
-  };
+  }, block2.listeningQs);
   let listenHTML = '';
   listeningQs[n].forEach((q, i) => {
     listenHTML += `<p style="font-size:0.9rem;color:var(--text);margin-bottom:0.5rem;font-weight:500;">${i+1}. ${esc(q)}</p>\n`;
@@ -265,8 +275,8 @@ function buildMaterialLesson(n) {
     </div>\n`;
   });
 
-  // Substitution drill (simple — based on key sentence per lesson)
-  const subDrills = {
+  // Substitution drill (block 1 + 2 merged)
+  const subDrills = Object.assign({
     1: [
       ['"I am from São Paulo."','"Rio de Janeiro"','"I am from Rio de Janeiro."'],
       ['"My name is Gabriela."','"Helena"','"My name is Helena."'],
@@ -297,7 +307,7 @@ function buildMaterialLesson(n) {
       ['"Blair is my favorite character."','"Rory"','"Rory is my favorite character."'],
       ['"I am obsessed with Friends."','"Gilmore Girls"','"I am obsessed with Gilmore Girls."'],
     ],
-  };
+  }, block2.subDrills);
   let subHTML = '';
   subDrills[n].forEach(s => {
     subHTML += `<div style="background:var(--bg-input);border:1px solid var(--border);padding:1rem;border-radius:4px;margin-bottom:0.5rem;">
@@ -318,7 +328,7 @@ function buildMaterialLesson(n) {
 
   return `<div class="teacher-lesson">
   <div class="teacher-hero" style="background-image:url('${D.lessonImages[n]}')">
-    <h3>Lesson 0${n} — ${esc(D.lessonTitles[n].split('—')[0].trim())}</h3>
+    <h3>Lesson ${padded} — ${esc(D.lessonTitles[n].split('—')[0].trim())}</h3>
     <div class="hero-sub">Screen-share content — ${esc(D.lessonTitles[n].split('—').slice(1).join('—').trim())}</div>
   </div>
   <div class="teacher-body">
@@ -400,7 +410,7 @@ function buildSurvivalCardForMaterial(n, svHTML) {
 
 function buildTab4Material() {
   let lessons = '';
-  for (let n = 1; n <= 5; n++) lessons += buildMaterialLesson(n) + '\n';
+  BLOCK_LESSONS.forEach(n => { lessons += buildMaterialLesson(n) + '\n'; });
   return `<div class="tab-content" id="tab-teacher">
   ${lessons}
 </div>`;

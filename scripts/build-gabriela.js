@@ -6,7 +6,8 @@
 const fs = require('fs');
 const path = require('path');
 const { getHeadHTML, getCommonJS, esc } = require('./gabriela-helpers');
-const D = require('./gabriela-data');
+const D = require('./gabriela-data-merged');
+const BLOCK_LESSONS = D.BLOCK_LESSONS;
 const { buildTab1Planning, buildTab2PreClass } = require('./gabriela-tabs-1-2');
 const { buildTab3Plan, buildTab4Material, buildTab5Activities } = require('./gabriela-tabs-3-4-5');
 
@@ -54,7 +55,7 @@ function buildAudioMap() {
 // ============= MONTAR HTML PROFESSOR =============
 function buildProfessor(audioMapJSON) {
   const head = getHeadHTML('Professor View — Gabriela Pires | Teen English: Paris 2027 | Alumni by Better');
-  const stamps = [1,2,3,4,5].map(n => `<div class="stamp" id="stamp${n}" data-label="${esc(D.stampLabels[n])}" style="background-image:url('${D.stampImages[n]}')"></div>`).join('\n');
+  const stamps = BLOCK_LESSONS.map(n => `<div class="stamp" id="stamp${n}" data-label="${esc(D.stampLabels[n])}" style="background-image:url('${D.stampImages[n]}')"></div>`).join('\n');
 
   const body = `<body>
 
@@ -76,7 +77,7 @@ function buildProfessor(audioMapJSON) {
     </div>
     <div class="progress-passport">
       <div class="progress-label">
-        <span>Bloco 1 &mdash; Aulas 1 a 5</span>
+        <span>Blocos 1 + 2 &mdash; Aulas 1-5 e 21-25</span>
         <span id="progressPercent">0%</span>
       </div>
       <div class="progress-bar-outer">
@@ -119,7 +120,7 @@ function buildProfessor(audioMapJSON) {
 
 <script>
 var audioMap = ${audioMapJSON};
-${getCommonJS(D.studentInfo.slug, 5)}
+${getCommonJS(D.studentInfo.slug, BLOCK_LESSONS)}
 </script>
 </body>
 </html>`;
@@ -130,7 +131,7 @@ ${getCommonJS(D.studentInfo.slug, 5)}
 // ============= MONTAR HTML ALUNO =============
 function buildAluno(audioMapJSON) {
   const head = getHeadHTML('Gabriela Pires — Teen English: Paris 2027 | Alumni by Better');
-  const stamps = [1,2,3,4,5].map(n => `<div class="stamp" id="stamp${n}" data-label="${esc(D.stampLabels[n])}" style="background-image:url('${D.stampImages[n]}')"></div>`).join('\n');
+  const stamps = BLOCK_LESSONS.map(n => `<div class="stamp" id="stamp${n}" data-label="${esc(D.stampLabels[n])}" style="background-image:url('${D.stampImages[n]}')"></div>`).join('\n');
 
   const body = `<body>
 
@@ -150,7 +151,7 @@ function buildAluno(audioMapJSON) {
       <span>48 aulas &middot; 60 min</span>
     </div>
     <div class="progress-passport">
-      <div class="progress-label"><span>Meu progresso &mdash; Bloco 1</span><span id="progressPercent">0%</span></div>
+      <div class="progress-label"><span>Meu progresso &mdash; Blocos 1 + 2</span><span id="progressPercent">0%</span></div>
       <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
     </div>
     <div class="stamps-row">${stamps}</div>
@@ -180,7 +181,7 @@ function buildAluno(audioMapJSON) {
 
 <script>
 var audioMap = ${audioMapJSON};
-${getCommonJS(D.studentInfo.slug + '-aluna', 5)}
+${getCommonJS(D.studentInfo.slug + '-aluna', BLOCK_LESSONS)}
 </script>
 </body>
 </html>`;
