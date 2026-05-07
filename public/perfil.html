@@ -325,6 +325,8 @@
         if (!perfil || !perfilId) return;
         perfil.updatedAt = new Date().toISOString();
         localStorage.setItem('alumni-perfil-' + perfilId, JSON.stringify(perfil));
+        // Sync to server (shared file for team access)
+        try { fetch('/api/save-perfil', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:perfilId, perfil:perfil}) }); } catch(e) {}
         showSaveIndicator();
     }
 

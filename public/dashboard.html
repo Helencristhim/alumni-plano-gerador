@@ -355,6 +355,13 @@
     async function loadAlunos() {
         let reg=[]; try { const r=await fetch('/planos/registry.json'); if(r.ok) reg=await r.json(); } catch(e){}
         const perfis={};
+        // Load from server-side JSON files (shared between all users)
+        try {
+            const pi=await fetch('/perfis/index.json'); if(pi.ok) { const slugs=await pi.json();
+            await Promise.all(slugs.map(async s => { try { const id=s.id||s; const pr=await fetch('/perfis/'+id+'.json'); if(pr.ok) { perfis[id]=await pr.json(); } } catch(e){} }));
+            }
+        } catch(e){}
+        // Load from localStorage (local profiles override server ones)
         for(let i=0;i<localStorage.length;i++) { const k=localStorage.key(i); if(k.startsWith('alumni-perfil-')) { try { perfis[k.replace('alumni-perfil-','')]=JSON.parse(localStorage.getItem(k)); } catch(e){} } }
         const merged={};
         reg.forEach(p => {

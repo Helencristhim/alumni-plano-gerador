@@ -1099,6 +1099,9 @@
             localStorage.setItem(`alumni-perfil-${slug}`, JSON.stringify(result));
             localStorage.setItem(`alumni-form-${slug}`, JSON.stringify(formData));
 
+            // Also save to server (shared file for team access)
+            try { fetch('/api/save-perfil', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id:slug, perfil:result}) }); } catch(e) {}
+
             // Success — complete progress
             progressTimers.forEach(t => clearTimeout(t));
             updateProgress(100, 'Perfil 360 gerado!', 'Redirecionando para a página do perfil...');

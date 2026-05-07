@@ -1,4 +1,6 @@
 const Anthropic = require('@anthropic-ai/sdk');
+const fs = require('fs');
+const path = require('path');
 const { robustJSONParse, logJSONError } = require('../lib/sanitize-json');
 const { validateAgainstSchema, reportValidation } = require('../lib/profile-schema');
 
@@ -482,6 +484,22 @@ REGRAS ABSOLUTAS 138-142:
         retries: schemaRetries,
       });
     }
+
+    // Save profile as JSON file (works locally, silent fail on Vercel serverless)
+    try {
+      const perfisDir = path.join(process.cwd(), 'public', 'perfis');
+      if (!fs.existsSync(perfisDir)) fs.mkdirSync(perfisDir, { recursive: true });
+      fs.writeFileSync(path.join(perfisDir, `${slug}.json`), JSON.stringify(result, null, 2));
+      // Update index
+      const indexPath = path.join(perfisDir, 'index.json');
+      let index = [];
+      try { index = JSON.parse(fs.readFileSync(indexPath, 'utf8')); } catch(e) {}
+      if (!index.find(i => i.id === slug)) {
+        index.push({ id: slug, nome: nome, nivel: result.dadosExtraidos?.nivel?.valor || nivel || '', numAulas: numAulas, criadoEm: result.criadoEm, perfilStatus: result.status || 'rascunho', foco: foco || '' });
+        fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
+      }
+      console.log(`Perfil salvo em public/perfis/${slug}.json`);
+    } catch(e) { console.log('Não foi possível salvar perfil como arquivo:', e.message); }
 
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.status(200).json(result);
