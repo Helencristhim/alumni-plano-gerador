@@ -280,17 +280,31 @@
     }
 
     // ===== LOAD =====
-    function loadPerfil() {
-        const raw = localStorage.getItem('alumni-perfil-' + perfilId);
+    async function loadPerfil() {
+        let raw = localStorage.getItem('alumni-perfil-' + perfilId);
+        // If not in localStorage, try loading from server JSON file
         if (!raw) {
-            showEmpty('Perfil não encontrado', 'Não há dados para o id "' + perfilId + '" no localStorage.');
+            try {
+                const resp = await fetch('/perfis/' + perfilId + '.json');
+                if (resp.ok) {
+                    perfil = await resp.json();
+                    // Cache in localStorage for future use
+                    localStorage.setItem('alumni-perfil-' + perfilId, JSON.stringify(perfil));
+                    raw = 'loaded-from-server';
+                }
+            } catch(e) {}
+        }
+        if (!raw) {
+            showEmpty('Perfil não encontrado', 'Não há dados para o id "' + perfilId + '".');
             return;
         }
-        try {
-            perfil = JSON.parse(raw);
-        } catch (e) {
-            showEmpty('Erro ao carregar perfil', 'Os dados estão corrompidos.');
-            return;
+        if (raw !== 'loaded-from-server') {
+            try {
+                perfil = JSON.parse(raw);
+            } catch (e) {
+                showEmpty('Erro ao carregar perfil', 'Os dados estão corrompidos.');
+                return;
+            }
         }
         // Schema validation before rendering
         if (typeof validateAgainstSchema === 'function') {
