@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Alumni — Vanessa Maluf | Professor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/design-system.css">
+    <script src="/components/exercises.js"></script>
+    <script src="/components/audio-generator.js"></script>
+    <script src="/components/image-validator.js"></script>
+    <style>
+        :root {
+            --accent: #2a7b88;
+            --accent-light: #3a9baa;
+            --accent-dim: rgba(42, 123, 136, 0.08);
+            --accent-ring: rgba(42, 123, 136, 0.15);
+            --black: #1a1a2e;
+            --bg: #f5f5f0;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fafaf7;
+            --bg-elevated: #f0f0eb;
+            --bg-input: #fafaf7;
+            --border: #d4d4cc;
+            --border-light: #c0c0b8;
+            --white: #1a1a2e;
+            --text: #2d2d3a;
+            --text-mid: #555566;
+            --text-dim: #6b6b7b;
+            --success: #16a34a;
+            --success-bg: rgba(22,163,74,0.08);
+            --success-border: rgba(22,163,74,0.25);
+            --danger: #dc2626;
+            --danger-bg: rgba(220,38,38,0.08);
+            --danger-border: rgba(220,38,38,0.25);
+            --warn: #d97706;
+            --warn-bg: rgba(217,119,6,0.08);
+            --warn-border: rgba(217,119,6,0.25);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== LOGO BAR ===== */
+        .logo-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo-bar img { height: 36px; }
+        .logo-bar .prof-badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 0.25rem 0.8rem;
+            border-radius: 3px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            align-items: flex-end;
+            padding: 3rem 2rem;
+            overflow: hidden;
+            background: linear-gradient(135deg, #003080 0%, #2a7b88 50%, #1a5c66 100%);
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+        }
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 960px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+        }
+        .header .subtitle {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+            opacity: 0.9;
+        }
+        .student-info {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+            color: #e8e8e8;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .student-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .student-info span::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--accent-light);
+        }
+
+        /* ===== CONTAINER & TABS ===== */
+        .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+        @media (min-width: 768px) { .container { padding: 2rem 3rem; } }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2.5rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 1rem 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            white-space: nowrap;
+            min-height: 44px;
+            min-width: 44px;
+        }
+        .tab-btn.active { color: var(--white); font-weight: 700; }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+        .tab-btn:hover:not(.active) { color: var(--text-mid); }
+        .tab-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+        .card h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ===== CURRICULUM TABLE ===== */
+        .curriculum-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        .curriculum-table {
+            width: 100%;
+            min-width: 900px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .curriculum-table thead th {
+            background: #003080;
+            color: #ffffff;
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+        }
+        .curriculum-table tbody tr:nth-child(even) { background: #f8f8f5; }
+        .curriculum-table tbody tr:nth-child(odd) { background: #ffffff; }
+        .curriculum-table tbody td {
+            padding: 0.7rem 1rem;
+            vertical-align: top;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.5;
+        }
+        .curriculum-table tbody td:first-child {
+            font-weight: 700;
+            color: var(--accent);
+            text-align: center;
+            width: 40px;
+        }
+
+        /* ===== LESSON CARDS ===== */
+        .lesson-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .lesson-card-header {
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 64px;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .lesson-card-header:hover { background: var(--bg-elevated); }
+        .lesson-card-header h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--white);
+            margin: 0;
+        }
+        .lesson-number-badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+        .lesson-card-body {
+            display: none;
+            padding: 0 1.5rem 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .lesson-card-body.open { display: block; }
+        .expand-icon {
+            color: var(--text-dim);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+        .lesson-card-header.open .expand-icon { transform: rotate(180deg); }
+
+        /* ===== PPP SECTIONS ===== */
+        .ppp-section {
+            margin: 1.5rem 0;
+            padding: 1.2rem;
+            border-left: 3px solid var(--accent);
+            background: var(--accent-dim);
+            border-radius: 0 6px 6px 0;
+        }
+        .ppp-section h4 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.8rem;
+        }
+        .ppp-section .timing {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            background: var(--accent);
+            color: #fff;
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+        }
+
+        /* ===== TEACHER GUIDE ===== */
+        .teacher-guide {
+            background: #fef9e7;
+            border: 1px solid #f0d861;
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+        }
+        .teacher-guide h5 {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #92600a;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.6rem;
+        }
+        .teacher-guide p, .teacher-guide li {
+            font-size: 0.85rem;
+            color: #5c3d00;
+            line-height: 1.6;
+        }
+
+        /* ===== ANSWER KEY ===== */
+        .answer-key {
+            background: #eef7ee;
+            border: 1px solid #b8e0b8;
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+        }
+        .answer-key h5 {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #1a6b1a;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.6rem;
+        }
+
+        /* ===== SURVIVAL CARD ===== */
+        .survival-card {
+            background: linear-gradient(135deg, #003080 0%, #2a7b88 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            color: #ffffff;
+            margin: 2rem 0;
+        }
+        .survival-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+        .survival-card ol {
+            padding-left: 1.2rem;
+        }
+        .survival-card li {
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* ===== ONBOARDING ===== */
+        .onboarding-welcome {
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .onboarding-welcome h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        .onboarding-welcome .quote {
+            font-style: italic;
+            color: var(--text-mid);
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+
+        /* ===== COMPLETION ===== */
+        .completion-card {
+            background: linear-gradient(135deg, #2a7b88 0%, #003080 100%);
+            border-radius: 12px;
+            padding: 2.5rem;
+            color: #ffffff;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .completion-card h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* ===== PLACEHOLDER CARD ===== */
+        .placeholder-card {
+            background: var(--bg-elevated);
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-dim);
+            margin: 1rem 0;
+        }
+        .placeholder-card svg {
+            margin-bottom: 0.5rem;
+            opacity: 0.5;
+        }
+
+        /* ===== PERSONALITY MAP ===== */
+        .personality-map {
+            display: grid;
+            gap: 0.8rem;
+        }
+        .personality-dimension {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .personality-dimension .label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            min-width: 140px;
+            color: var(--text-mid);
+        }
+        .personality-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .personality-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        .personality-score {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 30px;
+        }
+
+        /* ===== MEDIA LIST ===== */
+        .media-list {
+            list-style: none;
+            padding: 0;
+        }
+        .media-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+        }
+        .media-list li:last-child { border-bottom: none; }
+        .media-tag {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* ===== CANCELLATION ===== */
+        .cancellation-rules {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            border-radius: 8px;
+            padding: 1.2rem;
+        }
+        .cancellation-rules h4 { color: var(--danger); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 767px) {
+            .header { min-height: 240px; padding: 2rem 1rem; }
+            .header h1 { font-size: 2rem; }
+            .student-info { gap: 1rem; font-size: 0.7rem; }
+            .container { padding: 1.5rem 1rem; }
+            .tabs { margin-bottom: 1.5rem; }
+            .tab-btn { font-size: 0.55rem; padding: 0.8rem 0.4rem; }
+            .card { padding: 1rem; }
+        }
+        @media (min-width: 1440px) {
+            .container { max-width: 1100px; }
+        }
+
+        /* ===== MATERIAL SLIDES ===== */
+        .slide-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            min-height: 200px;
+        }
+        .slide-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .slide-card .example-sentence {
+            background: var(--bg-elevated);
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent);
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            .tabs, .logo-bar { display: none; }
+            .tab-content { display: block !important; page-break-before: always; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGO BAR -->
+<div class="logo-bar">
+    <img src="/images/alumni-logo.svg" alt="Alumni by Better" onerror="this.style.display='none'">
+    <span class="prof-badge">Professor View</span>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-content">
+        <h1>Vanessa Maluf</h1>
+        <p class="subtitle">Corporate English with Legal Focus — Private Programme</p>
+        <div class="student-info">
+            <span>B2 Upper-Intermediate</span>
+            <span>40 aulas</span>
+            <span>90 min</span>
+            <span>2x/semana</span>
+            <span>Online</span>
+        </div>
+    </div>
+</div>
+
+<!-- TABS -->
+<div class="container">
+    <div class="tabs" role="tablist">
+        <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(0)">Planejamento</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(1)">Pre-Class</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(2)">Plano de Aula</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(3)">Material</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(4)">Atividades</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TAB 1: PLANEJAMENTO PEDAGOGICO
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="tab-content active" id="tab-0">
+
+        <!-- PROGRAM HEADER -->
+        <div class="card">
+            <h3>Programa Private — Corporate English with Legal Focus</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1rem;">
+                <div><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);">Aluna</strong><br>Vanessa Maluf, 35 anos</div>
+                <div><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);">Profissão</strong><br>Advogada Corporativa — Braskem</div>
+                <div><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);">Nivel</strong><br>B2 (Intermediário Superior)</div>
+                <div><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);">Foco</strong><br>Ingles Corporativo + Juridico (70/30)</div>
+                <div><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);">Programa</strong><br>40 aulas | 90 min | 2x/semana</div>
+                <div><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);">Modalidade</strong><br>Online</div>
+                <div><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);">Professor/Horario</strong><br>A definir</div>
+                <div><strong style="font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);">Meta</strong><br>Performance em apresentacoes e reunioes internacionais (UK/US) ate dez/2026</div>
+            </div>
+        </div>
+
+        <!-- OBJECTIVE -->
+        <div class="card">
+            <h3>Objetivo do Programa</h3>
+            <p style="line-height:1.8;font-size:0.9rem;">
+                Este programa Private de 40 aulas foi desenhado exclusivamente para Vanessa Maluf, advogada corporativa da Braskem com nivel B2, que enfrenta um teto de aprendizado caracteristico de quem passou anos em turmas de grupo: tempo de fala reduzido, aulas que nao acompanham seu ritmo profissional e lacunas especificas em pronuncia e compreensão auditiva que persistem por falta de atenção individualizada. O programa resolve essas limitacoes ao oferecer 90 minutos inteiros de produção oral em cada aula, com foco triplo — fala, escuta e pronuncia — em contextos 100% relevantes para sua atuacao: reunioes com stakeholders internacionais, apresentacoes a boards, negociacoes contratuais cross-border e comunicação com escritorios no Reino Unido e EUA. A combinacao de 70% vocabulario corporativo com 30% juridico garante que Vanessa desenvolva fluencia com precisao lexical no seu campo, eliminando a inseguranca que a impede de performar nas interacoes que mais importam para sua carreira na Braskem.
+            </p>
+        </div>
+
+        <!-- TRANSFORMATIVE PROMISE -->
+        <div class="card" style="border-left:4px solid var(--accent);">
+            <h4>Promessa Transformadora</h4>
+            <p style="font-size:1.05rem;font-weight:500;line-height:1.7;color:var(--white);">
+                De "tempo de fala menor e aulas arrastadas" a "pronuncia boa, ouvido bom e ingles fluindo nas reunioes que importam" — em 40 aulas sob medida, para mim.
+            </p>
+        </div>
+
+        <!-- CHARACTER JOURNEY -->
+        <div class="card">
+            <h3>Jornada da Aluna</h3>
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:1.5rem;align-items:center;">
+                <div style="background:var(--danger-bg);padding:1.2rem;border-radius:8px;border:1px solid var(--danger-border);">
+                    <h4 style="color:var(--danger);margin-bottom:0.5rem;">De</h4>
+                    <ul style="font-size:0.85rem;line-height:1.8;list-style:none;padding:0;">
+                        <li>Tempo de fala limitado em turmas de grupo</li>
+                        <li>Pronuncia com fossilizacoes do B2</li>
+                        <li>Dificuldade com sotaque britanico</li>
+                        <li>Inseguranca em reunioes internacionais</li>
+                        <li>Vocabulario juridico fragmentado</li>
+                    </ul>
+                </div>
+                <div style="font-size:1.5rem;color:var(--accent);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </div>
+                <div style="background:var(--success-bg);padding:1.2rem;border-radius:8px;border:1px solid var(--success-border);">
+                    <h4 style="color:var(--success);margin-bottom:0.5rem;">Para</h4>
+                    <ul style="font-size:0.85rem;line-height:1.8;list-style:none;padding:0;">
+                        <li>90 min de produção oral por aula</li>
+                        <li>Pronuncia clara e inteligivel (UK/US)</li>
+                        <li>Compreensão auditiva de nativos rapidos</li>
+                        <li>Confianca para liderar reunioes em ingles</li>
+                        <li>Vocabulario juridico-corporativo preciso</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STRENGTHS -->
+        <div class="card">
+            <h3>Pontos Fortes da Aluna</h3>
+            <ul style="font-size:0.9rem;line-height:2;padding-left:1.2rem;">
+                <li>Base gramatical solida — nivel B2 consolidado com capacidade de estruturar argumentos complexos</li>
+                <li>Alta motivação intrinseca e clareza sobre seus objetivos profissionais</li>
+                <li>Perfil cinestetico-auditivo: aprende melhor praticando e ouvindo, ideal para abordagem comunicativa</li>
+                <li>Consciencia metalinguistica — sabe onde estao suas lacunas ("pronuncia boa, ouvido bom")</li>
+                <li>Contexto profissional rico que fornece material autentico constante para as aulas</li>
+            </ul>
+        </div>
+
+        <!-- AREAS FOR IMPROVEMENT -->
+        <div class="card">
+            <h3>Areas de Desenvolvimento</h3>
+            <ul style="font-size:0.9rem;line-height:2;padding-left:1.2rem;">
+                <li>Pronuncia: fossilizacoes tipicas de falantes brasileiros (th, final consonants, vowel length)</li>
+                <li>Compreensão auditiva: dificuldade com connected speech, especialmente em sotaque britanico</li>
+                <li>Fluencia: pausas longas e hesitacoes em momentos de pressao (reunioes, apresentacoes)</li>
+                <li>Registro: tendencia a usar ingles informal onde o contexto corporativo/juridico exige formalidade</li>
+                <li>Vocabulario especializado: gaps em collocations juridico-corporativas de alta frequencia</li>
+            </ul>
+        </div>
+
+        <!-- PERSONALITY MAP -->
+        <div class="card">
+            <h3>Mapa de Personalidade</h3>
+            <div class="personality-map">
+                <div class="personality-dimension">
+                    <span class="label">Autonomia</span>
+                    <div class="personality-bar"><div class="personality-bar-fill" style="width:75%"></div></div>
+                    <span class="personality-score">7.5</span>
+                </div>
+                <div class="personality-dimension">
+                    <span class="label">Perfeccionismo</span>
+                    <div class="personality-bar"><div class="personality-bar-fill" style="width:85%"></div></div>
+                    <span class="personality-score">8.5</span>
+                </div>
+                <div class="personality-dimension">
+                    <span class="label">Tolerancia ao erro</span>
+                    <div class="personality-bar"><div class="personality-bar-fill" style="width:50%"></div></div>
+                    <span class="personality-score">5.0</span>
+                </div>
+                <div class="personality-dimension">
+                    <span class="label">Extroversao comunicativa</span>
+                    <div class="personality-bar"><div class="personality-bar-fill" style="width:70%"></div></div>
+                    <span class="personality-score">7.0</span>
+                </div>
+                <div class="personality-dimension">
+                    <span class="label">Orientacao a resultado</span>
+                    <div class="personality-bar"><div class="personality-bar-fill" style="width:90%"></div></div>
+                    <span class="personality-score">9.0</span>
+                </div>
+                <div class="personality-dimension">
+                    <span class="label">Abertura a feedback</span>
+                    <div class="personality-bar"><div class="personality-bar-fill" style="width:80%"></div></div>
+                    <span class="personality-score">8.0</span>
+                </div>
+                <div class="personality-dimension">
+                    <span class="label">Estilo cinestetico-auditivo</span>
+                    <div class="personality-bar"><div class="personality-bar-fill" style="width:85%"></div></div>
+                    <span class="personality-score">8.5</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CURRICULUM TABLE -->
+        <div class="card">
+            <h3>Curriculo Completo — 40 Aulas</h3>
+            <div class="curriculum-wrapper">
+                <table class="curriculum-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tema</th>
+                            <th>Foco Linguistico</th>
+                            <th>Atividade em Aula</th>
+                            <th>Homework</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Diagnostic Session + Personal &amp; Professional Introduction</td>
+                            <td>Fluency baseline, self-introduction register, pronunciation awareness (UK/US contrast)</td>
+                            <td>Extended speaking task: Vanessa presents her role at Braskem, a recent project and a professional challenge — teacher maps phonological gaps, lexical gaps, discourse markers and fluency blockers in real time. Brief listening task with one UK and one US speaker on a corporate topic to baseline accent comprehension.</td>
+                            <td>Record a 2-minute audio introducing yourself as if opening a meeting with a British client. Upload to Drive. No script — speak naturally.</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Professional Identity in English: Talking About Your Role</td>
+                            <td>Present simple vs present continuous for routines and ongoing projects; corporate vocabulary (deal with, liaise with, oversee, ensure compliance)</td>
+                            <td>Role-play: Vanessa meets a new British colleague at Braskem and explains her department, responsibilities and current priorities. Teacher models natural UK phrasing. Drilling of high-frequency corporate collocations. Pronunciation focus: word stress in multi-syllable corporate verbs (negotiate, coordinate, represent).</td>
+                            <td>Write a short LinkedIn-style bio paragraph (80 words) describing your role at Braskem in formal English. Record yourself reading it aloud. Upload both to Drive.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Listening Lab 1: Tuning Into British English</td>
+                            <td>Connected speech features in UK English: linking, elision, weak forms; receptive vocabulary in business contexts</td>
+                            <td>Guided listening of a BBC Business Daily podcast excerpt (2-3 min) on a corporate topic. Teacher breaks down connected speech patterns. Vanessa transcribes key sentences, identifies where she lost meaning and why. Repeat-after-me drilling of UK phonemes.</td>
+                            <td>Listen to a curated TED Talk (UK speaker). Note 5 phrases you didn't catch the first time and re-listen until you understand. Bring the phrases to the next class.</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Meetings in English: Opening, Managing and Closing</td>
+                            <td>Functional language for meetings (setting the agenda, inviting contributions, redirecting, summarising, closing); modal verbs for professional suggestion and agreement</td>
+                            <td>Simulated meeting: Vanessa chairs a fictitious internal Braskem meeting (quarterly compliance review). Teacher plays two roles — an engaged UK participant and a reticent US participant. Focus on smooth transitions, formal register and sentence-level pronunciation clarity.</td>
+                            <td>Write a mock meeting agenda (5 items) for a fictitious Braskem board update meeting. Use formal headings and functional language from class. Upload to Drive.</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Pronunciation Deep-Dive 1: Vowel Sounds &amp; Word Stress</td>
+                            <td>Key vowel contrasts (ship/sheep, full/fool, bat/but); primary word stress patterns in corporate vocabulary; sentence stress for clarity and emphasis</td>
+                            <td>Minimal pairs drilling with Vanessa's recorded baseline as reference. Phoneme chart work targeting her identified gaps. Oral reading of a short Braskem press release with real-time feedback on stress and vowel quality. Shadowing exercise with a UK native speaker audio segment.</td>
+                            <td>Shadow a 60-second clip from a TED Talk (UK accent). Record your shadowing and upload to Drive.</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Email &amp; Written Communication</td>
+                            <td>Formal/semi-formal register; opening/closing formulas; hedging language; paragraph structure for clarity</td>
+                            <td>Analyse and rewrite authentic corporate emails. Practice writing responses to client queries with appropriate register. Compare British vs American conventions.</td>
+                            <td>Write 3 emails: a follow-up after a meeting, a request for information, and a soft refusal. Upload to Drive.</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Listening Lab 2: American English</td>
+                            <td>American accent features: flapped t, rhotic r, vowel shifts; fast-speech reductions (gonna, wanna, gotta)</td>
+                            <td>Guided listening of NPR podcast excerpt. Compare with UK patterns from Lesson 3. Transcription and gap-fill exercises. Shadowing of American speaker.</td>
+                            <td>Listen to a 'How I Built This' episode. Note 5 American reductions you identify. Transcribe them.</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>Presenting Data and Results</td>
+                            <td>Language for describing trends, comparisons, and projections; signposting; hedging with modals</td>
+                            <td>Vanessa presents a fictitious quarterly compliance report using charts. Practice describing upward/downward trends, highlighting key findings, and fielding questions from the 'audience'.</td>
+                            <td>Prepare a 3-minute presentation of any data set (can be real Braskem data or fictitious). Record and upload.</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Corporate Law Vocabulary 1: Contracts</td>
+                            <td>Key contract terminology: clause, provision, breach, indemnity, liability, binding, enforceable, terminate</td>
+                            <td>Read and discuss excerpts from a sample contract. Role-play explaining contract terms to a non-legal stakeholder. Practice simplifying legal jargon for executive audiences.</td>
+                            <td>Find a real contract clause (anonymised) and rewrite it in plain English (max 50 words). Upload both versions.</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>Negotiation Language</td>
+                            <td>Conditionals for proposals; language of concession and compromise; diplomatic hedging; power phrases</td>
+                            <td>Extended negotiation simulation: Vanessa negotiates contract terms with a UK-based counterpart (teacher). Multiple rounds with increasing complexity. Focus on maintaining composure and register under pressure.</td>
+                            <td>Write out 5 negotiation phrases you want to memorise. Record yourself using them in context sentences.</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>Pronunciation Deep-Dive 2: Intonation</td>
+                            <td>Rising/falling intonation patterns; intonation for questions, lists, and emphasis; British vs American intonation</td>
+                            <td>Intonation pattern analysis using recorded meeting excerpts. Practice statement vs question intonation. Record and playback exercises with real-time teacher feedback. Contrastive drilling of Portuguese vs English patterns.</td>
+                            <td>Record 5 sentences with correct intonation patterns (2 questions, 2 statements, 1 list). Upload to Drive.</td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td>Handling Difficult Questions</td>
+                            <td>Stalling strategies; reformulation; bridging techniques; diplomatic deflection; buying time phrases</td>
+                            <td>Teacher fires rapid, unexpected questions at Vanessa on corporate topics. Practice stalling, thinking aloud, and delivering composed answers. Debrief on strategies that work best for her style.</td>
+                            <td>List 5 'nightmare questions' you might face at work. Write out prepared frameworks (not scripts) for answering each.</td>
+                        </tr>
+                        <tr>
+                            <td>13</td>
+                            <td>Listening Lab 3: Mixed Accents</td>
+                            <td>Exposure to Indian English, South African English, Australian English; strategies for comprehension across accents</td>
+                            <td>Listen to multi-accent panel discussion. Identify speakers' origins. Focus on comprehension strategies: context clues, predicting content, asking for clarification. Practice note-taking while listening.</td>
+                            <td>Find a YouTube video with a non-UK/US English speaker on a business topic. Summarise the content in 5 sentences.</td>
+                        </tr>
+                        <tr>
+                            <td>14</td>
+                            <td>Business Storytelling</td>
+                            <td>Narrative structure in professional contexts; anecdotes for presentations; hooking an audience; pacing and pausing</td>
+                            <td>Vanessa structures and delivers 3 professional anecdotes: a challenge overcome, a lesson learned, and a success story. Teacher coaches on pacing, pausing, and vocal variety.</td>
+                            <td>Write a 2-minute professional story using the STAR framework. Record it focusing on pausing and pacing.</td>
+                        </tr>
+                        <tr>
+                            <td>15</td>
+                            <td>Corporate Law Vocabulary 2: Due Diligence</td>
+                            <td>Due diligence terminology: disclosure, representation, warranty, material adverse change, red flag, remediation</td>
+                            <td>Simulate a due diligence briefing: Vanessa explains findings to a cross-border team. Practice summarising complex legal findings in accessible English. Role-play Q&A with international colleagues.</td>
+                            <td>Write a 1-page executive summary of a fictitious due diligence finding. Focus on clarity and precision.</td>
+                        </tr>
+                        <tr>
+                            <td>16</td>
+                            <td>Spoken Grammar: B2 Fossilisation Repair</td>
+                            <td>Common B2 fossilised errors for Brazilians: article usage, preposition collocations, third person -s, word order in complex sentences</td>
+                            <td>Analysis of Vanessa's recorded speech samples from previous lessons. Identify patterns of repeated errors. Targeted drilling and reformulation exercises. Self-monitoring strategies.</td>
+                            <td>Record a 3-minute monologue on any topic. Listen back and note any errors you catch yourself making. Bring the list to class.</td>
+                        </tr>
+                        <tr>
+                            <td>17</td>
+                            <td>Telephoning &amp; Video Calls</td>
+                            <td>Telephone/video call conventions; managing technical issues; turn-taking without visual cues; clarification strategies</td>
+                            <td>Simulated video call with camera off (audio-only segment) to practice managing without visual cues. Then camera-on meeting practice. Focus on clear signposting and explicit turn-taking.</td>
+                            <td>Make a real or simulated phone call in English (to a service, colleague, etc.). Note what went well and what was challenging.</td>
+                        </tr>
+                        <tr>
+                            <td>18</td>
+                            <td>Listening Lab 4: TED Talk Deconstruction</td>
+                            <td>Academic/professional monologue comprehension; note-taking strategies; identifying main arguments vs supporting details</td>
+                            <td>Watch a full TED Talk together (12-18 min). Practice Cornell note-taking method. Analyse speaker's use of signposting, repetition for emphasis, and rhetorical questions. Discuss content and delivery.</td>
+                            <td>Watch a second TED Talk independently. Take Cornell notes and prepare to summarise in 2 minutes next class.</td>
+                        </tr>
+                        <tr>
+                            <td>19</td>
+                            <td>Advanced Vocabulary: Precision</td>
+                            <td>Upgrading B2 vocabulary: vague vs precise language; academic word list collocations; nominalisation for formality</td>
+                            <td>Vocabulary upgrade exercises: replace vague words with precise alternatives. Practice nominalisation (decide > decision, implement > implementation). Contextualised usage in Vanessa's professional scenarios.</td>
+                            <td>Take 10 sentences from your recent work emails. Upgrade the vocabulary to be more precise. Upload both versions.</td>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td>Mid-Programme Review</td>
+                            <td>Review of all language areas covered; identification of progress and remaining gaps; recalibration of goals</td>
+                            <td>Recorded speaking assessment (same task as Lesson 1 for comparison). Listening assessment. Feedback session with clear evidence of progress. Goal-setting for lessons 21-40.</td>
+                            <td>Write a self-assessment: What has improved most? What still frustrates you? What do you want to focus on in the second half?</td>
+                        </tr>
+                        <tr>
+                            <td>21</td>
+                            <td>Persuasion &amp; Influence</td>
+                            <td>Rhetorical devices; persuasive language patterns; ethos/pathos/logos in professional communication</td>
+                            <td>Vanessa prepares and delivers a persuasive pitch (e.g., proposing a compliance initiative to the board). Teacher provides feedback on persuasive techniques and delivery. Multiple iterations.</td>
+                            <td>Prepare a 3-minute persuasive argument for a work-related proposal. Record and upload.</td>
+                        </tr>
+                        <tr>
+                            <td>22</td>
+                            <td>Corporate Law Vocabulary 3: M&amp;A</td>
+                            <td>M&A terminology: acquisition, merger, takeover, synergy, valuation, shareholder approval, regulatory clearance</td>
+                            <td>Case study: discuss a real M&A transaction (public information). Vanessa explains the process, timeline, and legal considerations to a non-specialist audience. Practice fielding questions.</td>
+                            <td>Research a recent M&A deal (public). Write a 150-word briefing note explaining it in plain English.</td>
+                        </tr>
+                        <tr>
+                            <td>23</td>
+                            <td>Pronunciation Deep-Dive 3: Consonants</td>
+                            <td>Problematic consonants for Brazilians: th (voiced/voiceless), final consonant clusters, dark L, aspiration of p/t/k</td>
+                            <td>Intensive consonant drilling with mirror feedback. Tongue placement exercises for th sounds. Practice final consonant clusters in legal vocabulary. Shadowing with focus on consonant clarity.</td>
+                            <td>Record 10 sentences containing th sounds and final consonant clusters. Self-evaluate and re-record improved versions.</td>
+                        </tr>
+                        <tr>
+                            <td>24</td>
+                            <td>Cross-Cultural Communication: UK vs US</td>
+                            <td>Pragmatic differences: directness, politeness conventions, humour, meeting etiquette; avoiding miscommunication</td>
+                            <td>Compare UK and US business culture through case studies. Practice adapting the same message for a British and an American audience. Role-play meetings with different cultural expectations.</td>
+                            <td>Write two versions of the same email: one for a UK recipient and one for a US recipient. Note the differences.</td>
+                        </tr>
+                        <tr>
+                            <td>25</td>
+                            <td>Listening Lab 5: Legal Podcasts</td>
+                            <td>Legal English in context; comprehension of specialised vocabulary at natural speed; inference skills</td>
+                            <td>Listen to a legal-themed podcast excerpt (e.g., 'Lawyer 2 Lawyer' or 'Law in Action'). Identify specialised vocabulary, discuss implications, and practice summarising legal arguments orally.</td>
+                            <td>Listen to a full legal podcast episode. Prepare a 2-minute oral summary of the key argument for next class.</td>
+                        </tr>
+                        <tr>
+                            <td>26</td>
+                            <td>Formal Presentations: Structure</td>
+                            <td>Presentation structure (hook, roadmap, body, conclusion, Q&A); transitions; visual aid language; audience engagement</td>
+                            <td>Vanessa builds and delivers a full 10-minute presentation on a Braskem-related topic. Teacher provides real-time coaching on structure, transitions, and audience engagement techniques.</td>
+                            <td>Revise your presentation based on feedback. Re-record the improved version and upload.</td>
+                        </tr>
+                        <tr>
+                            <td>27</td>
+                            <td>Conditionals in Professional English</td>
+                            <td>Zero to third conditionals in business contexts; mixed conditionals; conditional phrases for negotiation and planning</td>
+                            <td>Contextualised conditional practice: contract scenarios (if/unless clauses), hypothetical negotiations, speculating about outcomes. Oral and written exercises combining accuracy with fluency.</td>
+                            <td>Write 10 conditional sentences relevant to your work at Braskem (mix all types). Record yourself saying them naturally.</td>
+                        </tr>
+                        <tr>
+                            <td>28</td>
+                            <td>Handling Conflict Diplomatically</td>
+                            <td>De-escalation language; acknowledging concerns; finding common ground; assertive but professional register</td>
+                            <td>Extended role-play: Vanessa mediates a conflict between two international teams with competing priorities. Practice diplomatic language under pressure. Debrief on tone, word choice, and body language.</td>
+                            <td>Write out 8 diplomatic phrases for disagreeing without being confrontational. Practice saying them with appropriate intonation.</td>
+                        </tr>
+                        <tr>
+                            <td>29</td>
+                            <td>ESG &amp; Corporate Governance Vocabulary</td>
+                            <td>ESG terminology: sustainability, carbon footprint, stakeholder engagement, governance structure, board oversight, transparency</td>
+                            <td>Discuss Braskem's ESG initiatives (public information). Vanessa presents governance structures to an imaginary board. Practice fielding challenging questions from activist investors (teacher role).</td>
+                            <td>Write a 200-word statement on corporate governance best practices suitable for an annual report.</td>
+                        </tr>
+                        <tr>
+                            <td>30</td>
+                            <td>Listening Lab 6: Fast Native Speech</td>
+                            <td>Strategies for fast speech: prediction, chunking, focus on stressed words, letting go of every word; real-time comprehension</td>
+                            <td>Listen to naturally fast conversations (podcast debates, news discussions). Practice extracting key information without understanding every word. Develop comfort with ambiguity and real-time note-taking.</td>
+                            <td>Listen to a fast-paced news discussion (BBC Newsnight or similar). Note your comprehension percentage and the strategies you used.</td>
+                        </tr>
+                        <tr>
+                            <td>31</td>
+                            <td>Professional Small Talk</td>
+                            <td>Networking language; topics for small talk; reading social cues; graceful entry and exit from conversations</td>
+                            <td>Simulate networking scenarios: conference coffee break, pre-meeting chat, dinner with clients. Practice transitioning from small talk to business naturally. Multiple short role-plays.</td>
+                            <td>Prepare 5 small talk topics you could use at an international legal conference. Practice initiating conversations.</td>
+                        </tr>
+                        <tr>
+                            <td>32</td>
+                            <td>Report Writing &amp; Executive Summaries</td>
+                            <td>Executive summary structure; formal written register; concision; hedging in written reports; passive vs active voice</td>
+                            <td>Analyse model executive summaries. Vanessa writes a real-time executive summary from raw data/notes. Peer review exercise (teacher provides alternative versions). Discussion on style choices.</td>
+                            <td>Write an executive summary (max 250 words) of a recent Braskem project or initiative. Upload for feedback.</td>
+                        </tr>
+                        <tr>
+                            <td>33</td>
+                            <td>Advanced Listening: Panel Discussions</td>
+                            <td>Multi-speaker comprehension; tracking arguments across speakers; identifying agreement/disagreement; note-taking in real time</td>
+                            <td>Watch a full panel discussion (corporate governance theme). Practice tracking multiple speakers, noting who agrees with whom, and summarising the discussion outcome. Oral summary exercise.</td>
+                            <td>Watch a panel discussion on YouTube (business/legal theme). Write notes tracking each speaker's position.</td>
+                        </tr>
+                        <tr>
+                            <td>34</td>
+                            <td>Corporate Law Vocabulary 4: Dispute Resolution</td>
+                            <td>Dispute resolution terminology: arbitration, mediation, settlement, litigation, jurisdiction, damages, injunction</td>
+                            <td>Case study role-play: Vanessa advises an international client on dispute resolution options. Practice explaining complex legal concepts in accessible English. Q&A simulation.</td>
+                            <td>Write a comparison of arbitration vs litigation for a non-legal audience (200 words). Focus on plain English.</td>
+                        </tr>
+                        <tr>
+                            <td>35</td>
+                            <td>Pronunciation &amp; Delivery Masterclass</td>
+                            <td>Integration of all pronunciation work; focus on connected speech, rhythm, stress-timing; delivery techniques for impact</td>
+                            <td>Full pronunciation assessment comparing with Lesson 1 baseline. Intensive coaching on remaining gaps. Practice delivery of a prepared speech with all pronunciation tools integrated. Video recording for self-review.</td>
+                            <td>Record yourself delivering a 5-minute professional speech. Watch it back and note 3 pronunciation improvements and 3 areas still to work on.</td>
+                        </tr>
+                        <tr>
+                            <td>36</td>
+                            <td>High-Stakes Simulation 1: Board Presentation</td>
+                            <td>Integration of presentation skills, vocabulary, pronunciation, and Q&A handling under realistic conditions</td>
+                            <td>Full simulation: Vanessa delivers a 15-minute board presentation followed by a 10-minute Q&A. Teacher plays multiple board members (supportive, sceptical, aggressive). Full debrief with recorded playback.</td>
+                            <td>Reflect on the simulation. Write 5 things you did well and 3 specific improvements for the next simulation.</td>
+                        </tr>
+                        <tr>
+                            <td>37</td>
+                            <td>High-Stakes Simulation 2: Cross-Border Negotiation</td>
+                            <td>Integration of negotiation language, cultural awareness, legal vocabulary, and real-time listening under pressure</td>
+                            <td>Extended negotiation simulation (45 min): Vanessa negotiates a cross-border contract with a UK counterpart. Multiple rounds with breaks for coaching. Focus on maintaining register and composure throughout.</td>
+                            <td>Write a post-negotiation debrief: What strategies worked? Where did you feel pressure? What would you do differently?</td>
+                        </tr>
+                        <tr>
+                            <td>38</td>
+                            <td>Autonomy &amp; Continued Growth</td>
+                            <td>Self-study strategies; resource recommendations; self-monitoring techniques; maintaining motivation post-course</td>
+                            <td>Co-create Vanessa's post-programme study plan. Discuss apps, podcasts, routines, and habits for continued growth. Practice self-correction techniques. Set 6-month goals together.</td>
+                            <td>Draft your personal 6-month English development plan. Include specific resources, routines, and measurable goals.</td>
+                        </tr>
+                        <tr>
+                            <td>39</td>
+                            <td>Full Programme Review</td>
+                            <td>Comprehensive review of all 38 lessons; identification of lingering gaps; celebration of progress; final assessment preparation</td>
+                            <td>Portfolio review: listen to recordings from Lesson 1, 20, and 35. Measure progress together. Address any final gaps. Prepare for the final simulation in Lesson 40.</td>
+                            <td>Prepare your best 5-minute professional speech incorporating everything you've learned. This will be your final performance.</td>
+                        </tr>
+                        <tr>
+                            <td>40</td>
+                            <td>Final Simulation &amp; Celebration</td>
+                            <td>Full integration of all skills in a high-stakes, realistic scenario; programme closure and celebration</td>
+                            <td>Final assessment: Vanessa delivers her prepared speech, handles unexpected Q&A, and participates in a spontaneous meeting simulation. Certificate of completion. Discussion of next steps and continued growth path.</td>
+                            <td>No homework. Celebrate your achievement and begin implementing your autonomy plan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CANCELLATION RULES -->
+        <div class="card cancellation-rules">
+            <h4>Regras de Cancelamento e Reagendamento</h4>
+            <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;color:#5c1010;">
+                <li>Cancelamentos com mais de 24h de antecedencia: sem custo, aula reagendada normalmente.</li>
+                <li>Cancelamentos com menos de 24h: aula considerada realizada (sem reposicao).</li>
+                <li>No-show (sem aviso): aula considerada realizada.</li>
+                <li>Reagendamentos: maximo 2 por mes, com 24h de antecedencia.</li>
+                <li>Atrasos superiores a 15 minutos: aula reduzida proporcionalmente, sem extensao.</li>
+                <li>Feriados: aulas em feriados nacionais serao reagendadas automaticamente.</li>
+            </ul>
+        </div>
+
+    </div><!-- /tab-0 -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TAB 2: PRE-CLASS
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="tab-content" id="tab-1">
+
+        <!-- ONBOARDING -->
+        <div class="onboarding-welcome">
+            <h2>Bem-vinda, Vanessa!</h2>
+            <p style="color:var(--text-mid);margin-bottom:1rem;">Seu programa Private de Ingles Corporativo comeca agora.</p>
+            <p class="quote">"Estou ansiosa para o meu curso especial, para mim."</p>
+            <div style="margin-top:1.5rem;text-align:left;max-width:500px;margin-left:auto;margin-right:auto;">
+                <p style="font-weight:600;margin-bottom:0.5rem;color:var(--accent);">5 frases de sobrevivencia — seu kit de emergencia:</p>
+                <ol style="font-size:0.9rem;line-height:2;padding-left:1.2rem;">
+                    <li>"Could you repeat that, please?"</li>
+                    <li>"I'm not sure I understand. Could you rephrase?"</li>
+                    <li>"Could we go back to what you said about...?"</li>
+                    <li>"I'd like to add something to that point."</li>
+                    <li>"Let me make sure I understood correctly..."</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- SURVIVAL CARD -->
+        <div class="survival-card">
+            <h3>Survival Card</h3>
+            <p style="opacity:0.8;margin-bottom:1rem;font-size:0.85rem;">Frases essenciais para usar em qualquer momento da aula ou em reunioes reais.</p>
+            <ol>
+                <li>"Could you repeat that, please?"</li>
+                <li>"I'm not sure I understand. Could you rephrase?"</li>
+                <li>"Could we go back to what you said about...?"</li>
+                <li>"I'd like to add something to that point."</li>
+                <li>"Let me make sure I understood correctly..."</li>
+            </ol>
+        </div>
+
+        <!-- ═══ LESSON 1 PRE-CLASS ═══ -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 01</span> Diagnostic Session + Personal &amp; Professional Introduction</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <p class="lesson-objective" style="font-weight:500;color:var(--accent);margin-bottom:1rem;font-size:0.9rem;">
+                        <strong>Objetivo:</strong> Apos esta aula, Vanessa sera capaz de se apresentar profissionalmente em ingles, descrevendo seu papel na Braskem com vocabulario corporativo apropriado e registro formal.
+                    </p>
+
+                    <div style="background:var(--accent-dim);padding:1rem;border-radius:8px;margin-bottom:1.5rem;">
+                        <h4 style="font-size:0.7rem;letter-spacing:1.5px;margin-bottom:0.5rem;">VOCABULARIO DA AULA</h4>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li><strong>deal with</strong> — lidar com | "I deal with corporate contracts on a daily basis."</li>
+                            <li><strong>liaise with</strong> — fazer interface com | "I liaise with our international partners regularly."</li>
+                            <li><strong>oversee</strong> — supervisionar | "I oversee the compliance department."</li>
+                            <li><strong>ensure compliance</strong> — garantir conformidade | "My primary role is to ensure compliance with regulations."</li>
+                            <li><strong>stakeholder</strong> — parte interessada | "We report directly to key stakeholders."</li>
+                            <li><strong>accountable for</strong> — responsavel por | "I am accountable for all corporate governance matters."</li>
+                            <li><strong>regulatory framework</strong> — arcabouco regulatorio | "We operate within a complex regulatory framework."</li>
+                        </ol>
+                    </div>
+
+                    <div id="lesson1-ex1"></div>
+                    <div id="lesson1-ex2"></div>
+                    <div id="lesson1-ex3"></div>
+                    <div id="lesson1-ex4"></div>
+                    <div id="lesson1-ex5"></div>
+                    <div id="lesson1-ex6"></div>
+                    <div id="lesson1-ex7"></div>
+                    <div id="lesson1-ex8"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ LESSON 2 PRE-CLASS ═══ -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 02</span> Professional Identity in English: Talking About Your Role</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <p class="lesson-objective" style="font-weight:500;color:var(--accent);margin-bottom:1rem;font-size:0.9rem;">
+                        <strong>Objetivo:</strong> Apos esta aula, Vanessa sera capaz de descrever suas responsabilidades e projetos em andamento usando present simple e present continuous com precisao e registro profissional.
+                    </p>
+
+                    <div style="background:var(--accent-dim);padding:1rem;border-radius:8px;margin-bottom:1.5rem;">
+                        <h4 style="font-size:0.7rem;letter-spacing:1.5px;margin-bottom:0.5rem;">VOCABULARIO DA AULA</h4>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li><strong>negotiate</strong> — negociar | "I negotiate contracts with international partners."</li>
+                            <li><strong>coordinate</strong> — coordenar | "I coordinate the legal team across three offices."</li>
+                            <li><strong>represent</strong> — representar | "I represent Braskem in regulatory hearings."</li>
+                            <li><strong>in charge of</strong> — responsavel por | "I'm in charge of corporate governance."</li>
+                            <li><strong>on behalf of</strong> — em nome de | "I act on behalf of the board in legal matters."</li>
+                            <li><strong>ongoing project</strong> — projeto em andamento | "We have several ongoing projects with UK firms."</li>
+                            <li><strong>current priorities</strong> — prioridades atuais | "Our current priorities include ESG compliance."</li>
+                        </ol>
+                    </div>
+
+                    <div id="lesson2-ex1"></div>
+                    <div id="lesson2-ex2"></div>
+                    <div id="lesson2-ex3"></div>
+                    <div id="lesson2-ex4"></div>
+                    <div id="lesson2-ex5"></div>
+                    <div id="lesson2-ex6"></div>
+                    <div id="lesson2-ex7"></div>
+                    <div id="lesson2-ex8"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ LESSON 3 PRE-CLASS ═══ -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 03</span> Listening Lab 1: Tuning Into British English</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <p class="lesson-objective" style="font-weight:500;color:var(--accent);margin-bottom:1rem;font-size:0.9rem;">
+                        <strong>Objetivo:</strong> Apos esta aula, Vanessa sera capaz de identificar e compreender padroes de connected speech em ingles britanico, incluindo linking, elision e weak forms.
+                    </p>
+
+                    <div style="background:var(--accent-dim);padding:1rem;border-radius:8px;margin-bottom:1.5rem;">
+                        <h4 style="font-size:0.7rem;letter-spacing:1.5px;margin-bottom:0.5rem;">VOCABULARIO DA AULA</h4>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li><strong>connected speech</strong> — fala conectada | "In connected speech, words blend together naturally."</li>
+                            <li><strong>linking</strong> — ligacao entre palavras | "Linking makes 'an apple' sound like 'anapple'."</li>
+                            <li><strong>elision</strong> — elisao/omissao de sons | "Elision means some sounds are dropped in fast speech."</li>
+                            <li><strong>weak forms</strong> — formas fracas | "Function words often have weak forms in natural speech."</li>
+                            <li><strong>catch (a phrase)</strong> — captar/entender | "I couldn't catch what he said in the meeting."</li>
+                            <li><strong>gist</strong> — essencia/ideia geral | "I got the gist of the presentation but missed some details."</li>
+                        </ol>
+                    </div>
+
+                    <div id="lesson3-ex1"></div>
+                    <div id="lesson3-ex2"></div>
+                    <div id="lesson3-ex3"></div>
+                    <div id="lesson3-ex4"></div>
+                    <div id="lesson3-ex5"></div>
+                    <div id="lesson3-ex6"></div>
+                    <div id="lesson3-ex7"></div>
+                    <div id="lesson3-ex8"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ LESSON 4 PRE-CLASS ═══ -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 04</span> Meetings in English: Opening, Managing and Closing</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <p class="lesson-objective" style="font-weight:500;color:var(--accent);margin-bottom:1rem;font-size:0.9rem;">
+                        <strong>Objetivo:</strong> Apos esta aula, Vanessa sera capaz de abrir, conduzir e encerrar uma reuniao em ingles com linguagem funcional apropriada e transicoes suaves.
+                    </p>
+
+                    <div style="background:var(--accent-dim);padding:1rem;border-radius:8px;margin-bottom:1.5rem;">
+                        <h4 style="font-size:0.7rem;letter-spacing:1.5px;margin-bottom:0.5rem;">VOCABULARIO DA AULA</h4>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li><strong>set the agenda</strong> — definir a pauta | "Let me set the agenda for today's meeting."</li>
+                            <li><strong>move on to</strong> — passar para | "Let's move on to the next item."</li>
+                            <li><strong>wrap up</strong> — encerrar/concluir | "I think we can wrap up now."</li>
+                            <li><strong>address the issue</strong> — abordar a questao | "We need to address the issue of compliance."</li>
+                            <li><strong>reach a consensus</strong> — chegar a um consenso | "Can we reach a consensus on this point?"</li>
+                            <li><strong>action items</strong> — itens de acao | "Let me summarise the action items."</li>
+                            <li><strong>take the minutes</strong> — redigir a ata | "Who's going to take the minutes today?"</li>
+                        </ol>
+                    </div>
+
+                    <div id="lesson4-ex1"></div>
+                    <div id="lesson4-ex2"></div>
+                    <div id="lesson4-ex3"></div>
+                    <div id="lesson4-ex4"></div>
+                    <div id="lesson4-ex5"></div>
+                    <div id="lesson4-ex6"></div>
+                    <div id="lesson4-ex7"></div>
+                    <div id="lesson4-ex8"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ LESSON 5 PRE-CLASS ═══ -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 05</span> Pronunciation Deep-Dive 1: Vowel Sounds &amp; Word Stress</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <p class="lesson-objective" style="font-weight:500;color:var(--accent);margin-bottom:1rem;font-size:0.9rem;">
+                        <strong>Objetivo:</strong> Apos esta aula, Vanessa sera capaz de produzir contrastes vocalicos-chave e aplicar padroes de word stress corretos em vocabulario corporativo.
+                    </p>
+
+                    <div style="background:var(--accent-dim);padding:1rem;border-radius:8px;margin-bottom:1.5rem;">
+                        <h4 style="font-size:0.7rem;letter-spacing:1.5px;margin-bottom:0.5rem;">VOCABULARIO DA AULA</h4>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li><strong>minimal pairs</strong> — pares minimos | "Ship and sheep are minimal pairs."</li>
+                            <li><strong>word stress</strong> — acento tonico | "The word stress in 'negotiate' falls on the second syllable."</li>
+                            <li><strong>sentence stress</strong> — acento frasal | "Sentence stress highlights the most important words."</li>
+                            <li><strong>vowel sound</strong> — som vocalico | "English has more vowel sounds than Portuguese."</li>
+                            <li><strong>intelligibility</strong> — inteligibilidade | "Intelligibility matters more than a perfect accent."</li>
+                            <li><strong>intonation</strong> — entonacao | "Your intonation affects how your message is perceived."</li>
+                        </ol>
+                    </div>
+
+                    <div id="lesson5-ex1"></div>
+                    <div id="lesson5-ex2"></div>
+                    <div id="lesson5-ex3"></div>
+                    <div id="lesson5-ex4"></div>
+                    <div id="lesson5-ex5"></div>
+                    <div id="lesson5-ex6"></div>
+                    <div id="lesson5-ex7"></div>
+                    <div id="lesson5-ex8"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LESSONS 6-40 PLACEHOLDER -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aulas 06-40</span> Conteudo Progressivo</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div class="placeholder-card">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    <p style="font-size:0.9rem;margin-top:0.5rem;">Conteudo sera adicionado progressivamente conforme o programa avanca.</p>
+                    <p style="font-size:0.8rem;color:var(--text-dim);margin-top:0.5rem;">Aulas 6-40 incluem: Email Writing, American Listening, Data Presentation, Contract Law, Negotiation, Intonation, M&A Vocabulary, Cross-Cultural Communication, ESG Governance, e mais.</p>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /tab-1 -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TAB 3: PLANO DE AULA (Teacher Guide)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="tab-content" id="tab-2">
+
+        <!-- ═══ LESSON 1 PLAN ═══ -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 01</span> Diagnostic Session + Professional Introduction</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <p style="font-weight:600;color:var(--accent);font-size:0.85rem;margin-bottom:0.5rem;">Duracao: 90 minutos | Online</p>
+                    <p style="font-weight:500;margin-bottom:0.5rem;"><strong>Criterio de sucesso:</strong> Ao final, Vanessa sera capaz de se apresentar profissionalmente por 2 minutos sem pausas longas, usando pelo menos 4 dos 7 itens de vocabulario ensinados.</p>
+                    <p style="font-style:italic;color:var(--text-mid);margin-bottom:1.5rem;"><strong>Promessa transformadora:</strong> "Hoje voce vai descobrir exatamente onde esta e para onde vai — e ja vai sair falando."</p>
+
+                    <!-- WARM-UP -->
+                    <div class="ppp-section">
+                        <h4>Warm-up + Lead-in <span class="timing">10 min</span></h4>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Perguntas abertas para criar rapport e ativar ingles:</p>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"Vanessa, tell me about your week at Braskem. What's been keeping you busy?"</li>
+                            <li>"When was the last time you used English at work? How did it feel?"</li>
+                            <li>"If you could wave a magic wand and change one thing about your English, what would it be?"</li>
+                            <li>"Do you interact more with British or American colleagues? Or both?"</li>
+                            <li>"What's the most challenging situation you've faced in English professionally?"</li>
+                        </ol>
+                    </div>
+
+                    <!-- PRESENTATION - PRE-TEACH -->
+                    <div class="ppp-section">
+                        <h4>Presentation — Pre-teach Vocabulary <span class="timing">10 min</span></h4>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Introduza os 7 itens com drilling:</p>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li><strong>deal with</strong> — Drill: /diːl wɪð/ — "Repeat after me: I deal with corporate contracts." (3x)</li>
+                            <li><strong>liaise with</strong> — Drill: /liˈeɪz wɪð/ — ATENÇÃO: brasileiros tendem a pronunciar /liˈaɪz/. Corrija imediatamente.</li>
+                            <li><strong>oversee</strong> — Drill: /ˌəʊvəˈsiː/ — Stress on third syllable. "I oversee the compliance department."</li>
+                            <li><strong>ensure compliance</strong> — Drill: /ɪnˈʃɔːr kəmˈplaɪəns/ — ATENÇÃO: "ensure" nao e "insure".</li>
+                            <li><strong>stakeholder</strong> — Drill: /ˈsteɪkhəʊldər/ — Stress on first syllable.</li>
+                            <li><strong>accountable for</strong> — Drill: /əˈkaʊntəbl fɔːr/ — "I am accountable for..."</li>
+                            <li><strong>regulatory framework</strong> — Drill: /ˈreɡjʊlətɔːri ˈfreɪmwɜːk/ — ATENÇÃO: 6 silabas em "regulatory".</li>
+                        </ul>
+                    </div>
+
+                    <!-- PRESENTATION - TEACH + CCQs -->
+                    <div class="ppp-section">
+                        <h4>Presentation — Teach + CCQs <span class="timing">10 min</span></h4>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Contextualize o vocabulario no cenario profissional de Vanessa. Mostre como essas palavras aparecem em uma self-introduction formal.</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.5rem;">Modelo: "Good morning everyone. I'm Vanessa Maluf, and I oversee corporate governance at Braskem. I deal with regulatory compliance and liaise with our international legal partners. I'm accountable for ensuring we operate within the regulatory framework across all jurisdictions."</p>
+
+                        <div class="teacher-guide">
+                            <h5>CCQs (Concept Checking Questions)</h5>
+                            <ul style="padding-left:1.2rem;">
+                                <li><strong>CCQ 1:</strong> "If you 'deal with' contracts, does that mean you read them once, or you work with them regularly?" <br><em>Resposta esperada: Work with them regularly.</em></li>
+                                <li><strong>CCQ 2:</strong> "If you 'liaise with' international partners, are you their boss, or do you communicate and coordinate with them?" <br><em>Resposta esperada: Communicate and coordinate.</em></li>
+                                <li><strong>CCQ 3:</strong> "If you are 'accountable for' something, can you blame someone else if it goes wrong?" <br><em>Resposta esperada: No, you are responsible.</em></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- PRACTICE -->
+                    <div class="ppp-section">
+                        <h4>Practice <span class="timing">15 min</span></h4>
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">Exercicio 1: Gap-fill oral (5 min)</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Professor le frases com gaps. Vanessa completa oralmente:</p>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"In my role, I ___ corporate contracts daily." (deal with)</li>
+                            <li>"I ___ with our partners in London." (liaise)</li>
+                            <li>"I ___ the legal team of 12 lawyers." (oversee)</li>
+                            <li>"I am ___ all governance matters." (accountable for)</li>
+                        </ul>
+
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;margin-top:1rem;">Exercicio 2: Sentence building (10 min)</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Vanessa constroi frases sobre seu trabalho real usando cada um dos 7 itens. Professor corrige pronunica e registro em tempo real.</p>
+
+                        <div class="teacher-guide">
+                            <h5>Instrucoes ao Professor</h5>
+                            <ul style="padding-left:1.2rem;">
+                                <li>Se Vanessa travar em "liaise", reformule como: "Think of it as 'communicate and coordinate'. Who do you communicate with at work?"</li>
+                                <li>Se usar "responsible for" ao inves de "accountable for", aceite mas mostre a diferenca: "Both work, but 'accountable' is stronger — it means you can't delegate the blame."</li>
+                                <li>Anote todos os erros de pronuncia para feedback no final — NAO interrompa o fluxo durante a produção.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- PRODUCTION -->
+                    <div class="ppp-section">
+                        <h4>Production <span class="timing">20 min</span></h4>
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">Extended Speaking Task (Diagnostic)</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Setup: "Vanessa, imagine you're at a corporate event in London. You've just been introduced to the Head of Legal at a FTSE 100 company. Introduce yourself — your name, your company, your role, what you deal with daily, and one current project or challenge. Speak for at least 2 minutes. I'll listen without interrupting."</p>
+
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;margin-top:1rem;">Listening Diagnostic (10 min)</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Play two short clips (1-2 min each): one UK speaker, one US speaker discussing a corporate topic. After each, ask Vanessa to summarise what she understood. Note comprehension gaps.</p>
+
+                        <div class="teacher-guide">
+                            <h5>O que mapear durante a produção</h5>
+                            <ul style="padding-left:1.2rem;">
+                                <li>Pronuncia: vogais longas/curtas, th sounds, word stress, final consonants</li>
+                                <li>Fluencia: pauses per minute, fillers (uh, um, like), self-corrections</li>
+                                <li>Lexico: range de vocabulario, collocations, false friends</li>
+                                <li>Gramatica: article usage, prepositions, third person -s</li>
+                                <li>Discurso: discourse markers, cohesion, register</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- WRAP-UP -->
+                    <div class="ppp-section">
+                        <h4>Wrap-up + Feedback <span class="timing">5 min</span></h4>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Perguntas de revisão:</p>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"How did it feel to speak for that long? What was easy? What was hard?"</li>
+                            <li>"Which of the new words felt most natural to use?"</li>
+                        </ul>
+                        <p style="font-size:0.85rem;margin-top:0.8rem;"><strong>Delayed feedback:</strong> Compartilhe 3 pontos positivos e 2 areas de melhoria. Foque em padroes, nao erros isolados.</p>
+
+                        <p style="font-size:0.85rem;margin-top:1rem;font-weight:600;">Homework:</p>
+                        <p style="font-size:0.85rem;">Record a 2-minute audio introducing yourself as if opening a meeting with a British client. Upload to Drive. No script — speak naturally.</p>
+                    </div>
+
+                    <!-- ANSWER KEY -->
+                    <div class="answer-key">
+                        <h5>Answer Key — Exercicios de Practice</h5>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"I <strong>deal with</strong> corporate contracts daily."</li>
+                            <li>"I <strong>liaise</strong> with our partners in London."</li>
+                            <li>"I <strong>oversee</strong> the legal team of 12 lawyers."</li>
+                            <li>"I am <strong>accountable for</strong> all governance matters."</li>
+                        </ol>
+                    </div>
+
+                    <!-- TEACHER GUIDE - OBSTACLES -->
+                    <div class="teacher-guide">
+                        <h5>Obstaculos Antecipados</h5>
+                        <ul style="padding-left:1.2rem;">
+                            <li><strong>Pronuncia de "liaise":</strong> Brasileiros frequentemente dizem /liˈaɪz/ (como "lies"). Corrija para /liˈeɪz/. Dica: "Think of 'lay' in the middle."</li>
+                            <li><strong>"Regulatory" com stress errado:</strong> Vanessa pode dizer /reɡulaˈtɔːri/ (stress no 4o). Corrija para /ˈreɡjʊlətɔːri/ (stress no 1o).</li>
+                            <li><strong>Troca de "ensure" por "insure":</strong> Se acontecer, explique: "Ensure = make sure. Insure = buy insurance."</li>
+                            <li><strong>Nervosismo inicial:</strong> E a primeira aula. Se Vanessa parecer ansiosa, normalize: "This is diagnostic — there's no right or wrong. I just want to hear you speak."</li>
+                            <li><strong>Fossilizacao de "I am responsible for" em vez de variar:</strong> Aceite, mas exponha alternativas (accountable for, in charge of, I oversee).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ LESSON 2 PLAN ═══ -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 02</span> Professional Identity: Talking About Your Role</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <p style="font-weight:600;color:var(--accent);font-size:0.85rem;margin-bottom:0.5rem;">Duracao: 90 minutos | Online</p>
+                    <p style="font-weight:500;margin-bottom:0.5rem;"><strong>Criterio de sucesso:</strong> Ao final, Vanessa sera capaz de descrever suas responsabilidades rotineiras (present simple) e projetos atuais (present continuous) com word stress correto em verbos corporativos polissilabicos.</p>
+                    <p style="font-style:italic;color:var(--text-mid);margin-bottom:1.5rem;"><strong>Promessa transformadora:</strong> "Hoje voce vai construir sua identidade profissional em ingles — como voce se apresenta define como te percebem."</p>
+
+                    <!-- WARM-UP -->
+                    <div class="ppp-section">
+                        <h4>Warm-up + Lead-in <span class="timing">10 min</span></h4>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"How did recording the homework feel? Was it hard to speak for 2 minutes without a script?"</li>
+                            <li>"Tell me three things that happened at work since our last class."</li>
+                            <li>"If a British colleague asked 'So, what exactly do you do at Braskem?' — how would you answer in one sentence?"</li>
+                            <li>"What's the difference between what you do every day (routine) and what you're working on right now (project)?"</li>
+                        </ol>
+                    </div>
+
+                    <!-- PRESENTATION - PRE-TEACH -->
+                    <div class="ppp-section">
+                        <h4>Presentation — Pre-teach Vocabulary <span class="timing">10 min</span></h4>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li><strong>negotiate</strong> — /nɪˈɡəʊʃieɪt/ — Stress on 2nd syllable. "ne-GO-tiate". Drill 3x.</li>
+                            <li><strong>coordinate</strong> — /kəʊˈɔːdɪneɪt/ — Stress on 2nd. "co-OR-dinate". ATENÇÃO: nao e /koʊɔːrdiˈneɪt/.</li>
+                            <li><strong>represent</strong> — /ˌreprɪˈzent/ — Stress on 3rd. "re-pre-ZENT".</li>
+                            <li><strong>in charge of</strong> — Natural rhythm: "I'm in CHARGE of..." Drill connected.</li>
+                            <li><strong>on behalf of</strong> — /ɒn bɪˈhɑːf ɒv/ — ATENÇÃO: "behalf" com /hɑːf/ nao /heɪf/.</li>
+                            <li><strong>ongoing project</strong> — Stress: "ON-going PRO-ject". Both first syllable.</li>
+                            <li><strong>current priorities</strong> — "CUR-rent pri-OR-ities". Drill the phrase as a chunk.</li>
+                        </ul>
+                    </div>
+
+                    <!-- TEACH + CCQs -->
+                    <div class="ppp-section">
+                        <h4>Presentation — Teach + CCQs <span class="timing">10 min</span></h4>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Ensine present simple para rotinas vs present continuous para projetos em andamento. Use o contexto de Vanessa:</p>
+                        <ul style="font-size:0.85rem;line-height:1.8;padding-left:1.2rem;margin-bottom:1rem;">
+                            <li>"I <strong>negotiate</strong> contracts with international partners." (routine — present simple)</li>
+                            <li>"I'm currently <strong>negotiating</strong> a new contract with a UK firm." (now/temporary — present continuous)</li>
+                        </ul>
+
+                        <div class="teacher-guide">
+                            <h5>CCQs</h5>
+                            <ul style="padding-left:1.2rem;">
+                                <li><strong>CCQ 1:</strong> "'I negotiate contracts' — is this something you do once, or regularly?" <br><em>Resposta: Regularly (present simple for routine).</em></li>
+                                <li><strong>CCQ 2:</strong> "'I'm negotiating a new contract' — is this finished or still happening?" <br><em>Resposta: Still happening (present continuous for ongoing/temporary).</em></li>
+                                <li><strong>CCQ 3:</strong> "If you say 'I represent Braskem', does it mean only today or in general?" <br><em>Resposta: In general (present simple for permanent role).</em></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- PRACTICE -->
+                    <div class="ppp-section">
+                        <h4>Practice <span class="timing">15 min</span></h4>
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">Exercicio 1: Tense sorting (5 min)</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Diga frases misturadas. Vanessa identifica se e rotina (PS) ou projeto atual (PC) e reformula:</p>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"Review contracts every week" → "I review contracts every week." (PS)</li>
+                            <li>"Work on a new compliance policy" → "I'm working on a new compliance policy." (PC)</li>
+                            <li>"Coordinate the legal team" → "I coordinate the legal team." (PS)</li>
+                            <li>"Prepare for a board meeting next month" → "I'm preparing for a board meeting next month." (PC)</li>
+                        </ul>
+
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;margin-top:1rem;">Exercicio 2: Role description building (10 min)</p>
+                        <p style="font-size:0.85rem;">Vanessa constroi um paragrafo completo sobre seu papel usando ambos os tempos. Professor monitora stress em negotiate, coordinate, represent.</p>
+                    </div>
+
+                    <!-- PRODUCTION -->
+                    <div class="ppp-section">
+                        <h4>Production <span class="timing">20 min</span></h4>
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">Role-play: Meeting a New British Colleague</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Setup: "I'm James, Head of Legal at our UK partner firm. We've just been introduced at a Braskem networking event. Tell me about your department, your responsibilities, and what you're currently working on. Be professional but natural."</p>
+                        <p style="font-size:0.85rem;">Run 2 rounds: Round 1 free, Round 2 with specific focus on incorporating all 7 vocabulary items and correct word stress.</p>
+
+                        <div class="teacher-guide">
+                            <h5>Dicas para o Professor</h5>
+                            <ul style="padding-left:1.2rem;">
+                                <li>Como "James", faca perguntas que forcam Vanessa a usar o vocabulario: "So who do you report to?", "Are you working on anything interesting at the moment?"</li>
+                                <li>Se Vanessa usar "responsible for" repetidamente, guie: "So you're accountable for that? Or in charge of it?"</li>
+                                <li>Monitore word stress silenciosamente. Anote para feedback pos-produção.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- WRAP-UP -->
+                    <div class="ppp-section">
+                        <h4>Wrap-up + Feedback <span class="timing">5 min</span></h4>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"Which verb was hardest to pronounce? Let's drill it one more time."</li>
+                            <li>"When do you think you'll use these phrases in real life this week?"</li>
+                        </ul>
+                        <p style="font-size:0.85rem;margin-top:0.8rem;"><strong>Feedback:</strong> Focus on word stress improvements from Lesson 1 to now.</p>
+                        <p style="font-size:0.85rem;margin-top:0.5rem;"><strong>Homework:</strong> Write a LinkedIn-style bio (80 words) + record yourself reading it.</p>
+                    </div>
+
+                    <div class="answer-key">
+                        <h5>Answer Key — Tense Sorting</h5>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"I review contracts every week." — Present Simple (routine)</li>
+                            <li>"I'm working on a new compliance policy." — Present Continuous (ongoing project)</li>
+                            <li>"I coordinate the legal team." — Present Simple (permanent role)</li>
+                            <li>"I'm preparing for a board meeting next month." — Present Continuous (temporary/current)</li>
+                        </ol>
+                    </div>
+
+                    <div class="teacher-guide">
+                        <h5>Obstaculos Antecipados</h5>
+                        <ul style="padding-left:1.2rem;">
+                            <li><strong>Word stress em "negotiate":</strong> Brasileiros tendem a por stress na ultima silaba. Corrija: ne-GO-shi-ate.</li>
+                            <li><strong>Overuse de present continuous:</strong> B2 Brazilians often overuse "-ing" for everything. Remind: routines = simple.</li>
+                            <li><strong>"On behalf of" com pronuncia errada:</strong> Comum dizer /biˈheɪf/. Corrija para /bɪˈhɑːf/.</li>
+                            <li><strong>Confusao coordinate (verb) vs coordinate (adj):</strong> Verb stress on 2nd, adjective on 1st. Focus on verb form.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ LESSON 3 PLAN ═══ -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 03</span> Listening Lab 1: Tuning Into British English</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <p style="font-weight:600;color:var(--accent);font-size:0.85rem;margin-bottom:0.5rem;">Duracao: 90 minutos | Online</p>
+                    <p style="font-weight:500;margin-bottom:0.5rem;"><strong>Criterio de sucesso:</strong> Ao final, Vanessa sera capaz de identificar pelo menos 3 padroes de connected speech em um audio britanico e explicar por que perdeu compreensão em pontos especificos.</p>
+                    <p style="font-style:italic;color:var(--text-mid);margin-bottom:1.5rem;"><strong>Promessa transformadora:</strong> "Hoje voce vai entender POR QUE nao entende — e isso muda tudo."</p>
+
+                    <div class="ppp-section">
+                        <h4>Warm-up + Lead-in <span class="timing">10 min</span></h4>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"Did you bring the 5 phrases from the TED Talk homework? Tell me about one you found tricky."</li>
+                            <li>"When you listen to British English, what's the hardest part? Speed? Accent? Vocabulary?"</li>
+                            <li>"Have you noticed any difference between understanding Americans vs British people?"</li>
+                        </ol>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Presentation — Pre-teach Vocabulary <span class="timing">10 min</span></h4>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li><strong>connected speech</strong> — Explain: "In real life, people don't speak word... by... word. Words connect."</li>
+                            <li><strong>linking</strong> — Demo: "an apple" → /əˈnæpəl/. Show how final consonant links to next vowel.</li>
+                            <li><strong>elision</strong> — Demo: "next day" → /neksdeɪ/ (the /t/ disappears). "Last night" → /lɑːsnaɪt/.</li>
+                            <li><strong>weak forms</strong> — Demo: "to" in "I want to go" = /tə/, not /tuː/. "Can" = /kən/ not /kæn/.</li>
+                            <li><strong>catch</strong> — "I couldn't catch what he said" = understand in real time.</li>
+                            <li><strong>gist</strong> — /dʒɪst/ — "I got the gist" = I understood the main idea.</li>
+                        </ul>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Presentation — Teach + CCQs <span class="timing">10 min</span></h4>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Play a 30-second BBC clip at normal speed. Then slow it down. Show how linking, elision and weak forms work in that specific clip.</p>
+
+                        <div class="teacher-guide">
+                            <h5>CCQs</h5>
+                            <ul style="padding-left:1.2rem;">
+                                <li><strong>CCQ 1:</strong> "In 'next day', which sound disappears?" <br><em>Resposta: The /t/ — elision.</em></li>
+                                <li><strong>CCQ 2:</strong> "When we say 'an apple' quickly, do we pause between the words?" <br><em>Resposta: No — they link together.</em></li>
+                                <li><strong>CCQ 3:</strong> "In 'I want to go', is 'to' pronounced /tuː/ or /tə/?" <br><em>Resposta: /tə/ — weak form.</em></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Practice <span class="timing">15 min</span></h4>
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">Exercicio 1: Transcription challenge (8 min)</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Play BBC Business Daily excerpt (2-3 min). Vanessa transcribes what she hears. Compare with actual transcript. Identify where connected speech caused comprehension loss.</p>
+
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;margin-top:1rem;">Exercicio 2: Repeat-after-me drilling (7 min)</p>
+                        <p style="font-size:0.85rem;">Take the sentences Vanessa missed. Break down the connected speech pattern. Drill at slow, medium, then natural speed. Focus on her producing the connected forms.</p>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Production <span class="timing">20 min</span></h4>
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">Extended Listening + Discussion</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Play a longer BBC clip (3-4 min) on a corporate topic. Vanessa listens once for gist, then again for detail. After each listen, she summarises orally. Third listen: she notes specific connected speech patterns she now recognizes.</p>
+                        <p style="font-size:0.85rem;">Discussion: "What strategies helped you understand more on the second listen?"</p>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Wrap-up + Feedback <span class="timing">5 min</span></h4>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"What was the most surprising thing you learned today about how English sounds?"</li>
+                            <li>"Which connected speech feature affects your understanding the most?"</li>
+                        </ul>
+                        <p style="font-size:0.85rem;margin-top:0.5rem;"><strong>Homework:</strong> Listen to a TED Talk (UK speaker). Note 5 phrases you didn't catch. Re-listen until you understand. Bring them to class.</p>
+                    </div>
+
+                    <div class="teacher-guide">
+                        <h5>Obstaculos Antecipados</h5>
+                        <ul style="padding-left:1.2rem;">
+                            <li><strong>Frustracao:</strong> Vanessa pode se frustrar ao perceber o quanto perde. Normalize: "This is completely normal at B2. Awareness is the first step to improvement."</li>
+                            <li><strong>Querer entender tudo:</strong> Ensine a estrategia de "let go": "You don't need every word. Focus on stressed words for meaning."</li>
+                            <li><strong>Confusao entre linking e elision:</strong> Use exemplos claros. Linking = adding connection. Elision = removing a sound.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ LESSON 4 PLAN ═══ -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 04</span> Meetings in English: Opening, Managing and Closing</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <p style="font-weight:600;color:var(--accent);font-size:0.85rem;margin-bottom:0.5rem;">Duracao: 90 minutos | Online</p>
+                    <p style="font-weight:500;margin-bottom:0.5rem;"><strong>Criterio de sucesso:</strong> Ao final, Vanessa sera capaz de conduzir uma reuniao completa de 10 minutos em ingles com abertura clara, transicoes suaves entre topicos e encerramento com action items.</p>
+                    <p style="font-style:italic;color:var(--text-mid);margin-bottom:1.5rem;"><strong>Promessa transformadora:</strong> "Hoje voce vai se tornar a pessoa que conduz a reuniao — nao a que so assiste."</p>
+
+                    <div class="ppp-section">
+                        <h4>Warm-up + Lead-in <span class="timing">10 min</span></h4>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"How was writing the meeting agenda for homework? Was it hard to find the right language?"</li>
+                            <li>"Think about meetings you attend at Braskem in Portuguese. What makes a good chair?"</li>
+                            <li>"Have you ever chaired or participated in a meeting in English? How did it go?"</li>
+                            <li>"What's the scariest part about running a meeting in English?"</li>
+                        </ol>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Presentation — Pre-teach Vocabulary <span class="timing">10 min</span></h4>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li><strong>set the agenda</strong> — "Let me set the agenda for today." Drill as a chunk.</li>
+                            <li><strong>move on to</strong> — "Shall we move on to the next point?" Natural linking: "move_on_to".</li>
+                            <li><strong>wrap up</strong> — "I think we can wrap up now." Phrasal verb — stress on "wrap".</li>
+                            <li><strong>address the issue</strong> — /əˈdres/ not /ˈædres/. "We need to address the issue of..."</li>
+                            <li><strong>reach a consensus</strong> — /kənˈsensəs/. "Can we reach a consensus on this?"</li>
+                            <li><strong>action items</strong> — "Let me summarise the action items." Drill plural /aɪtəmz/.</li>
+                            <li><strong>take the minutes</strong> — "Who's going to take the minutes?" Explain: minutes = ata.</li>
+                        </ul>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Presentation — Teach + CCQs <span class="timing">10 min</span></h4>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Teach meeting structure: Opening → Agenda → Discussion → Transition → Summary → Closing. Model each phase with one example phrase.</p>
+
+                        <div class="teacher-guide">
+                            <h5>CCQs</h5>
+                            <ul style="padding-left:1.2rem;">
+                                <li><strong>CCQ 1:</strong> "If you 'wrap up' a meeting, are you starting it or finishing it?" <br><em>Resposta: Finishing it.</em></li>
+                                <li><strong>CCQ 2:</strong> "'Action items' — are these things that already happened, or things people need to do after the meeting?" <br><em>Resposta: Things to do after the meeting.</em></li>
+                                <li><strong>CCQ 3:</strong> "If you 'move on to' the next topic, does it mean the current topic is finished?" <br><em>Resposta: Yes, you're transitioning.</em></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Practice <span class="timing">15 min</span></h4>
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">Exercicio 1: Meeting phase sequencing (5 min)</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Give Vanessa 10 meeting phrases on screen. She categorises them: Opening, Managing, or Closing.</p>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"Thank you all for joining." → Opening</li>
+                            <li>"Let's move on to item three." → Managing</li>
+                            <li>"To summarise the action items..." → Closing</li>
+                            <li>"Could we hear from the legal team?" → Managing</li>
+                            <li>"I'd like to address the compliance issue first." → Opening/Managing</li>
+                        </ul>
+
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;margin-top:1rem;">Exercicio 2: Sentence completion drill (10 min)</p>
+                        <p style="font-size:0.85rem;">Professor starts meeting phrases, Vanessa completes naturally. Build fluency with automatic chunks.</p>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Production <span class="timing">20 min</span></h4>
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">Simulated Meeting: Quarterly Compliance Review</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Setup: "You're chairing Braskem's quarterly compliance review. You have 5 agenda items. I'll play two roles: Sarah (engaged UK participant who contributes actively) and Mike (reticent US participant who needs to be drawn in). Your job: open the meeting, manage the discussion, draw Mike in, handle a disagreement between them, and close with action items."</p>
+                        <p style="font-size:0.85rem;">Run for 10-12 minutes. Then debrief.</p>
+
+                        <div class="teacher-guide">
+                            <h5>Dicas para o Professor</h5>
+                            <ul style="padding-left:1.2rem;">
+                                <li>Como "Sarah": be talkative, occasionally go off-topic to test Vanessa's ability to redirect.</li>
+                                <li>Como "Mike": give one-word answers. Force Vanessa to use phrases like "Mike, what's your take on this?"</li>
+                                <li>If Vanessa freezes during a transition: whisper the first word ("Let's...") to scaffold.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Wrap-up + Feedback <span class="timing">5 min</span></h4>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"How did it feel to be the chair? What was the hardest moment?"</li>
+                            <li>"Which phrases came out naturally? Which felt forced?"</li>
+                        </ul>
+                        <p style="font-size:0.85rem;margin-top:0.5rem;"><strong>Homework:</strong> Write a mock meeting agenda (5 items) for a Braskem board update meeting. Use formal headings and functional language.</p>
+                    </div>
+
+                    <div class="teacher-guide">
+                        <h5>Obstaculos Antecipados</h5>
+                        <ul style="padding-left:1.2rem;">
+                            <li><strong>Medo de ser diretiva:</strong> Em portugues, Vanessa pode ser direta. Em ingles, ela pode hesitar por medo de parecer rude. Ensine: "Being direct is fine in a meeting — you're the chair. 'Let's move on' is perfectly professional."</li>
+                            <li><strong>"Address" com stress errado:</strong> /əˈdres/ nao /ˈædres/. Corrija imediatamente.</li>
+                            <li><strong>Transicoes robticas:</strong> Se Vanessa usar "next point" repetidamente, sugira variacoes: "Shall we turn to...", "Moving on...", "That brings us to..."</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ LESSON 5 PLAN ═══ -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 05</span> Pronunciation Deep-Dive 1: Vowel Sounds &amp; Word Stress</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <p style="font-weight:600;color:var(--accent);font-size:0.85rem;margin-bottom:0.5rem;">Duracao: 90 minutos | Online</p>
+                    <p style="font-weight:500;margin-bottom:0.5rem;"><strong>Criterio de sucesso:</strong> Ao final, Vanessa sera capaz de produzir os contrastes vocalicos ship/sheep, full/fool e bat/but de forma consistente, e aplicar word stress correto em pelo menos 8 de 10 palavras corporativas testadas.</p>
+                    <p style="font-style:italic;color:var(--text-mid);margin-bottom:1.5rem;"><strong>Promessa transformadora:</strong> "Hoje voce vai treinar o ouvido e a boca juntos — pronuncia nao e talento, e tecnica."</p>
+
+                    <div class="ppp-section">
+                        <h4>Warm-up + Lead-in <span class="timing">10 min</span></h4>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"How was the shadowing homework? Was it hard to keep up with the speaker's speed?"</li>
+                            <li>"When you think about your pronunciation in English, what bothers you the most?"</li>
+                            <li>"Do you think pronunciation affects how people perceive you professionally? How?"</li>
+                            <li>"Can you hear the difference between 'ship' and 'sheep'? Let's test." (Play both)</li>
+                        </ol>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Presentation — Pre-teach Vocabulary <span class="timing">10 min</span></h4>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li><strong>minimal pairs</strong> — Explain with examples: ship/sheep, bit/beat, pull/pool.</li>
+                            <li><strong>word stress</strong> — Show on whiteboard: neGOtiate, COMpliance, repreZENT.</li>
+                            <li><strong>sentence stress</strong> — "I DEAL with CORPORATE CONTRACTS" — content words stressed.</li>
+                            <li><strong>vowel sound</strong> — Show the vowel chart. Focus on /ɪ/ vs /iː/, /ʊ/ vs /uː/, /æ/ vs /ʌ/.</li>
+                            <li><strong>intelligibility</strong> — /ɪnˌtelɪdʒəˈbɪlɪti/ — "Your goal is intelligibility, not perfection."</li>
+                            <li><strong>intonation</strong> — Brief intro: "We'll do a whole lesson on this later. Today: awareness."</li>
+                        </ul>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Presentation — Teach + CCQs <span class="timing">10 min</span></h4>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Teach the three key vowel contrasts using Vanessa's Lesson 1 recording as reference. Show where she naturally confuses them. Use mirror work (tongue/lip position).</p>
+
+                        <div class="teacher-guide">
+                            <h5>CCQs</h5>
+                            <ul style="padding-left:1.2rem;">
+                                <li><strong>CCQ 1:</strong> "If I say 'I need a ship', do I mean a boat or an animal?" <br><em>Resposta: A boat. "Sheep" would be the animal.</em></li>
+                                <li><strong>CCQ 2:</strong> "In the word 'negotiate', which syllable is loudest — ne, go, ti, or ate?" <br><em>Resposta: "go" — second syllable.</em></li>
+                                <li><strong>CCQ 3:</strong> "In the sentence 'I deal with contracts', which words are stressed — the content words or the grammar words?" <br><em>Resposta: Content words (deal, contracts).</em></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Practice <span class="timing">15 min</span></h4>
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">Exercicio 1: Minimal pairs identification (5 min)</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Say pairs — Vanessa identifies which she hears (A or B). Then she produces both and teacher gives feedback.</p>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>ship / sheep | bit / beat | full / fool | bat / but | cat / cut</li>
+                        </ul>
+
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;margin-top:1rem;">Exercicio 2: Word stress bingo (5 min)</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Give 10 corporate words. Vanessa marks the stressed syllable. Then pronounces each word.</p>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>negotiate (2nd) | compliance (2nd) | regulatory (1st) | represent (3rd) | coordinate (2nd) | accountable (2nd) | stakeholder (1st) | governance (1st) | acquisition (3rd) | sustainability (4th)</li>
+                        </ul>
+
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;margin-top:1rem;">Exercicio 3: Press release reading (5 min)</p>
+                        <p style="font-size:0.85rem;">Vanessa reads a short Braskem press release aloud. Teacher marks word stress and vowel errors in real time on shared screen.</p>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Production <span class="timing">20 min</span></h4>
+                        <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">Shadowing Exercise</p>
+                        <p style="font-size:0.85rem;margin-bottom:0.8rem;">Play a 60-second UK native speaker audio (TED Talk or BBC). Vanessa shadows simultaneously. Record her. Play back side by side. Identify gaps. Repeat 3x with improvements each time.</p>
+                        <p style="font-size:0.85rem;margin-top:0.5rem;">Final round: Vanessa delivers the same content in her own words, applying learned stress patterns.</p>
+                    </div>
+
+                    <div class="ppp-section">
+                        <h4>Wrap-up + Feedback <span class="timing">5 min</span></h4>
+                        <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>"What's the one sound or pattern you want to keep practising this week?"</li>
+                            <li>"Did anything surprise you about how English vowels work compared to Portuguese?"</li>
+                        </ul>
+                        <p style="font-size:0.85rem;margin-top:0.5rem;"><strong>Homework:</strong> Shadow a 60-second TED Talk clip (UK accent). Record and upload.</p>
+                    </div>
+
+                    <div class="answer-key">
+                        <h5>Answer Key — Word Stress Bingo</h5>
+                        <ol style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                            <li>ne<strong>GO</strong>tiate | com<strong>PLI</strong>ance | <strong>RE</strong>gulatory | repre<strong>ZENT</strong> | co<strong>OR</strong>dinate</li>
+                            <li>a<strong>COUN</strong>table | <strong>STAKE</strong>holder | <strong>GO</strong>vernance | acqui<strong>SI</strong>tion | sustaina<strong>BI</strong>lity</li>
+                        </ol>
+                    </div>
+
+                    <div class="teacher-guide">
+                        <h5>Obstaculos Antecipados</h5>
+                        <ul style="padding-left:1.2rem;">
+                            <li><strong>Confusao /ɪ/ e /iː/:</strong> Portugues nao tem essa distincao. Use: "Short = relax your tongue. Long = smile and stretch."</li>
+                            <li><strong>Frustration com shadowing:</strong> "It's too fast!" Normalize. Start at 0.75x speed, then build up.</li>
+                            <li><strong>Tendency to stress last syllable:</strong> Portuguese influence. Remind: English stress is often earlier in the word.</li>
+                            <li><strong>Avoidance of difficult sounds:</strong> Se Vanessa mumble ou skip sounds, call it out gently: "I noticed you swallowed that last syllable. Let's try it again."</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LESSONS 6-40 PLACEHOLDER -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aulas 06-40</span> Planos de Aula Progressivos</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div class="placeholder-card">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <p style="font-size:0.9rem;margin-top:0.5rem;">Planos de aula detalhados serao adicionados progressivamente.</p>
+                    <p style="font-size:0.8rem;color:var(--text-dim);margin-top:0.5rem;">Cada plano segue o modelo PPP com guia minuto-a-minuto, CCQs, answer keys e obstaculos antecipados.</p>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /tab-2 -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TAB 4: MATERIAL DO PROFESSOR
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="tab-content" id="tab-3">
+
+        <!-- LESSON 1 MATERIAL -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 01</span> Material para Compartilhamento de Tela</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <!-- VOCAB SLIDE -->
+                    <div class="slide-card">
+                        <h3>Corporate Vocabulary — Your Professional Toolkit</h3>
+                        <div class="example-sentence"><strong>deal with</strong> — "I deal with corporate contracts on a daily basis."</div>
+                        <div class="example-sentence"><strong>liaise with</strong> — "I liaise with our international partners regularly."</div>
+                        <div class="example-sentence"><strong>oversee</strong> — "I oversee the compliance department."</div>
+                        <div class="example-sentence"><strong>ensure compliance</strong> — "My primary role is to ensure compliance with regulations."</div>
+                        <div class="example-sentence"><strong>stakeholder</strong> — "We report directly to key stakeholders."</div>
+                        <div class="example-sentence"><strong>accountable for</strong> — "I am accountable for all corporate governance matters."</div>
+                        <div class="example-sentence"><strong>regulatory framework</strong> — "We operate within a complex regulatory framework."</div>
+                    </div>
+
+                    <!-- CONTEXT SLIDE -->
+                    <div class="slide-card">
+                        <h3>Professional Introduction — Model</h3>
+                        <p style="font-size:1rem;line-height:1.9;padding:1rem;background:var(--bg-elevated);border-radius:8px;">
+                            "Good morning everyone. I'm Vanessa Maluf, and I <strong>oversee</strong> corporate governance at Braskem. I <strong>deal with</strong> regulatory compliance and <strong>liaise with</strong> our international legal partners. I'm <strong>accountable for</strong> ensuring we operate within the <strong>regulatory framework</strong> across all jurisdictions. We report directly to key <strong>stakeholders</strong> including the board of directors."
+                        </p>
+                    </div>
+
+                    <!-- PRACTICE PROMPTS -->
+                    <div class="slide-card">
+                        <h3>Speaking Task</h3>
+                        <div style="text-align:center;padding:2rem;">
+                            <p style="font-size:1.1rem;font-weight:500;margin-bottom:1rem;">Introduce yourself as if meeting a senior British colleague for the first time.</p>
+                            <p style="font-size:0.9rem;color:var(--text-mid);">Include: your name, your company, your role, what you deal with daily, and one current project or challenge.</p>
+                            <p style="font-size:0.85rem;color:var(--text-dim);margin-top:1rem;">Speak for at least 2 minutes. Be professional but natural.</p>
+                        </div>
+                    </div>
+
+                    <!-- ROLE PLAY CARD -->
+                    <div class="slide-card">
+                        <h3>Listening Diagnostic</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+                            <div style="padding:1rem;background:var(--bg-elevated);border-radius:8px;text-align:center;">
+                                <p style="font-weight:600;color:var(--accent);margin-bottom:0.5rem;">Clip A — British English</p>
+                                <p style="font-size:0.85rem;">BBC Business Daily excerpt</p>
+                                <p style="font-size:0.8rem;color:var(--text-dim);">Listen for: main topic, key numbers, speaker's opinion</p>
+                            </div>
+                            <div style="padding:1rem;background:var(--bg-elevated);border-radius:8px;text-align:center;">
+                                <p style="font-weight:600;color:var(--accent);margin-bottom:0.5rem;">Clip B — American English</p>
+                                <p style="font-size:0.85rem;">NPR Marketplace excerpt</p>
+                                <p style="font-size:0.8rem;color:var(--text-dim);">Listen for: main topic, key numbers, speaker's opinion</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LESSON 2 MATERIAL -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 02</span> Material para Compartilhamento de Tela</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <div class="slide-card">
+                        <h3>Present Simple vs Present Continuous</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem;">
+                            <div style="padding:1rem;background:#eef7ee;border-radius:8px;">
+                                <p style="font-weight:700;color:#1a6b1a;margin-bottom:0.5rem;">Present Simple = Routine</p>
+                                <p style="font-size:0.9rem;">"I <strong>negotiate</strong> contracts with international partners."</p>
+                                <p style="font-size:0.9rem;">"I <strong>coordinate</strong> the legal team."</p>
+                                <p style="font-size:0.9rem;">"I <strong>represent</strong> Braskem in hearings."</p>
+                            </div>
+                            <div style="padding:1rem;background:#eef0f7;border-radius:8px;">
+                                <p style="font-weight:700;color:#1a3a6b;margin-bottom:0.5rem;">Present Continuous = Now/Temporary</p>
+                                <p style="font-size:0.9rem;">"I'm <strong>negotiating</strong> a new contract this month."</p>
+                                <p style="font-size:0.9rem;">"I'm <strong>coordinating</strong> a cross-border project."</p>
+                                <p style="font-size:0.9rem;">"I'm <strong>representing</strong> us at a conference next week."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slide-card">
+                        <h3>Word Stress — Corporate Verbs</h3>
+                        <div class="example-sentence">ne<strong style="color:var(--accent);font-size:1.2em;">GO</strong>tiate — stress on 2nd syllable</div>
+                        <div class="example-sentence">co<strong style="color:var(--accent);font-size:1.2em;">OR</strong>dinate — stress on 2nd syllable</div>
+                        <div class="example-sentence">repre<strong style="color:var(--accent);font-size:1.2em;">SENT</strong> — stress on 3rd syllable</div>
+                    </div>
+
+                    <div class="slide-card">
+                        <h3>Role-Play: Meeting James at a Networking Event</h3>
+                        <div style="padding:1.5rem;background:var(--bg-elevated);border-radius:8px;">
+                            <p style="font-weight:600;margin-bottom:1rem;">Scenario:</p>
+                            <p style="font-size:0.9rem;line-height:1.8;">You are at a Braskem corporate event. You've just been introduced to <strong>James Patterson</strong>, Head of Legal at a UK partner firm. He's friendly but formal. Tell him about:</p>
+                            <ul style="font-size:0.9rem;line-height:2;padding-left:1.2rem;margin-top:0.5rem;">
+                                <li>Your department and team</li>
+                                <li>Your daily responsibilities (routine)</li>
+                                <li>What you're currently working on (projects)</li>
+                                <li>Your current priorities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LESSON 3 MATERIAL -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 03</span> Material para Compartilhamento de Tela</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <div class="slide-card">
+                        <h3>Connected Speech in British English</h3>
+                        <div class="example-sentence"><strong>Linking:</strong> "an apple" → /əˈnæpəl/ — final consonant connects to next vowel</div>
+                        <div class="example-sentence"><strong>Elision:</strong> "next day" → /neksdeɪ/ — the /t/ disappears</div>
+                        <div class="example-sentence"><strong>Weak forms:</strong> "I want to go" → "I want /tə/ go" — unstressed function words</div>
+                    </div>
+
+                    <div class="slide-card">
+                        <h3>Listening Strategy: Gist Before Detail</h3>
+                        <div style="text-align:center;padding:1.5rem;">
+                            <p style="font-size:1.1rem;font-weight:600;color:var(--accent);margin-bottom:1rem;">First listen: GIST</p>
+                            <p style="font-size:0.9rem;margin-bottom:0.5rem;">What is the main topic?</p>
+                            <p style="font-size:0.9rem;margin-bottom:0.5rem;">What is the speaker's general opinion?</p>
+                            <p style="font-size:1.1rem;font-weight:600;color:var(--accent);margin:1.5rem 0 1rem;">Second listen: DETAIL</p>
+                            <p style="font-size:0.9rem;margin-bottom:0.5rem;">What specific examples does the speaker give?</p>
+                            <p style="font-size:0.9rem;">What numbers or data are mentioned?</p>
+                        </div>
+                    </div>
+
+                    <div class="slide-card">
+                        <h3>Transcription Challenge</h3>
+                        <p style="text-align:center;font-size:0.9rem;color:var(--text-mid);padding:1rem;">Listen to the clip and write exactly what you hear. Don't worry about spelling — focus on capturing the sounds.</p>
+                        <div style="background:var(--bg-elevated);padding:1.5rem;border-radius:8px;margin-top:1rem;">
+                            <p style="font-size:0.85rem;color:var(--text-dim);">[Space for transcription — use shared document or whiteboard]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LESSON 4 MATERIAL -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 04</span> Material para Compartilhamento de Tela</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <div class="slide-card">
+                        <h3>Meeting Structure</h3>
+                        <div style="display:flex;flex-direction:column;gap:0.8rem;margin-top:1rem;">
+                            <div class="example-sentence"><strong>1. Opening:</strong> "Thank you all for joining. Let me set the agenda for today."</div>
+                            <div class="example-sentence"><strong>2. First item:</strong> "I'd like to start by addressing the compliance update."</div>
+                            <div class="example-sentence"><strong>3. Transition:</strong> "Let's move on to the next item on the agenda."</div>
+                            <div class="example-sentence"><strong>4. Inviting input:</strong> "Sarah, what's your take on this? Mike, could we hear from you?"</div>
+                            <div class="example-sentence"><strong>5. Summarising:</strong> "To wrap up, let me summarise the action items."</div>
+                            <div class="example-sentence"><strong>6. Closing:</strong> "Thank you everyone. I'll circulate the minutes by end of day."</div>
+                        </div>
+                    </div>
+
+                    <div class="slide-card">
+                        <h3>Meeting Simulation — Your Agenda</h3>
+                        <div style="padding:1.5rem;background:var(--bg-elevated);border-radius:8px;">
+                            <p style="font-weight:700;margin-bottom:1rem;">Braskem — Quarterly Compliance Review</p>
+                            <ol style="font-size:0.9rem;line-height:2.2;padding-left:1.2rem;">
+                                <li>Q3 compliance metrics overview</li>
+                                <li>Regulatory updates — new UK requirements</li>
+                                <li>Cross-border contract review status</li>
+                                <li>Team capacity and resource allocation</li>
+                                <li>Action items and next steps</li>
+                            </ol>
+                            <p style="font-size:0.8rem;color:var(--text-dim);margin-top:1rem;">Participants: You (Chair), Sarah (UK — engaged), Mike (US — reticent)</p>
+                        </div>
+                    </div>
+
+                    <div class="slide-card">
+                        <h3>Useful Phrases — Quick Reference</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                            <div>
+                                <p style="font-weight:600;color:var(--accent);margin-bottom:0.5rem;">Redirecting</p>
+                                <p style="font-size:0.85rem;line-height:1.8;">"That's a good point, but let's park that for now."<br>"Could we come back to that later?"<br>"I'd like to keep us on track."</p>
+                            </div>
+                            <div>
+                                <p style="font-weight:600;color:var(--accent);margin-bottom:0.5rem;">Drawing people in</p>
+                                <p style="font-size:0.85rem;line-height:1.8;">"Mike, what's your view on this?"<br>"I'd love to hear your perspective."<br>"Does anyone else have input?"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LESSON 5 MATERIAL -->
+        <div class="lesson-card">
+            <div class="lesson-card-header" onclick="toggleLesson(this)">
+                <h3><span class="lesson-number-badge">Aula 05</span> Material para Compartilhamento de Tela</h3>
+                <span class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="lesson-card-body">
+                <div style="margin-top:1rem;">
+                    <div class="slide-card">
+                        <h3>Minimal Pairs — Can You Hear the Difference?</h3>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem;">
+                            <div style="text-align:center;padding:1rem;background:var(--bg-elevated);border-radius:8px;">
+                                <p style="font-size:1.3rem;font-weight:700;">ship / sheep</p>
+                                <p style="font-size:0.8rem;color:var(--text-dim);">/ɪ/ vs /iː/</p>
+                            </div>
+                            <div style="text-align:center;padding:1rem;background:var(--bg-elevated);border-radius:8px;">
+                                <p style="font-size:1.3rem;font-weight:700;">full / fool</p>
+                                <p style="font-size:0.8rem;color:var(--text-dim);">/ʊ/ vs /uː/</p>
+                            </div>
+                            <div style="text-align:center;padding:1rem;background:var(--bg-elevated);border-radius:8px;">
+                                <p style="font-size:1.3rem;font-weight:700;">bat / but</p>
+                                <p style="font-size:0.8rem;color:var(--text-dim);">/ae/ vs /ʌ/</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slide-card">
+                        <h3>Word Stress — Corporate Vocabulary</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:1rem;">
+                            <div class="example-sentence">ne<strong style="color:var(--accent);">GO</strong>.ti.ate</div>
+                            <div class="example-sentence">com<strong style="color:var(--accent);">PLI</strong>.ance</div>
+                            <div class="example-sentence"><strong style="color:var(--accent);">RE</strong>.gu.la.to.ry</div>
+                            <div class="example-sentence">re.pre<strong style="color:var(--accent);">SENT</strong></div>
+                            <div class="example-sentence">co<strong style="color:var(--accent);">OR</strong>.di.nate</div>
+                            <div class="example-sentence">a<strong style="color:var(--accent);">COUN</strong>.ta.ble</div>
+                            <div class="example-sentence"><strong style="color:var(--accent);">STAKE</strong>.hol.der</div>
+                            <div class="example-sentence"><strong style="color:var(--accent);">GO</strong>.ver.nance</div>
+                            <div class="example-sentence">ac.qui<strong style="color:var(--accent);">SI</strong>.tion</div>
+                            <div class="example-sentence">sus.tai.na<strong style="color:var(--accent);">BI</strong>.li.ty</div>
+                        </div>
+                    </div>
+
+                    <div class="slide-card">
+                        <h3>Sentence Stress — Content Words Carry Meaning</h3>
+                        <p style="font-size:1.1rem;line-height:2.5;padding:1rem;text-align:center;">
+                            "I <strong style="color:var(--accent);font-size:1.3em;">DEAL</strong> with <strong style="color:var(--accent);font-size:1.3em;">CORPORATE</strong> <strong style="color:var(--accent);font-size:1.3em;">CONTRACTS</strong> at <strong style="color:var(--accent);font-size:1.3em;">BRASKEM</strong>."
+                        </p>
+                        <p style="text-align:center;font-size:0.85rem;color:var(--text-dim);">Bold = stressed (content words) | Regular = unstressed (function words)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LESSONS 6-40 PLACEHOLDER -->
+        <div class="placeholder-card">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <p style="font-size:0.9rem;margin-top:0.5rem;">Material de compartilhamento de tela para aulas 6-40 sera adicionado progressivamente.</p>
+        </div>
+
+    </div><!-- /tab-3 -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TAB 5: ATIVIDADES COMPLEMENTARES
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="tab-content" id="tab-4">
+
+        <div class="card">
+            <h3>Recomendacoes de Midia por Aula</h3>
+            <p style="font-size:0.9rem;color:var(--text-mid);margin-bottom:1.5rem;">Curadoria personalizada para Vanessa, combinando seus interesses profissionais com exposicao a sotaques britanico e americano.</p>
+
+            <!-- LESSON 1 -->
+            <div style="margin-bottom:2rem;">
+                <h4 style="border-bottom:1px solid var(--border);padding-bottom:0.5rem;">Aula 1 — Diagnostic + Professional Introduction</h4>
+                <ul class="media-list">
+                    <li>
+                        <span class="media-tag">TED Talk</span>
+                        <div>
+                            <strong>Adam Grant — "Are you a giver or a taker?"</strong> (13 min, American)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: observe como Grant se apresenta nos primeiros 60 segundos. Note o vocabulario profissional.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="media-tag">Podcast</span>
+                        <div>
+                            <strong>The Diary of a CEO — "The Psychology of Success"</strong> (British English)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: outraca o sotaque britanico. Nao se preocupe em entender tudo — escute 10 minutos apenas.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="media-tag">Serie</span>
+                        <div>
+                            <strong>Suits — Season 1, Episode 1</strong> (American)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: observe como advogados se apresentam. Note o registro formal em contexto juridico.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- LESSON 2 -->
+            <div style="margin-bottom:2rem;">
+                <h4 style="border-bottom:1px solid var(--border);padding-bottom:0.5rem;">Aula 2 — Professional Identity</h4>
+                <ul class="media-list">
+                    <li>
+                        <span class="media-tag">TED Talk</span>
+                        <div>
+                            <strong>Simon Sinek — "How great leaders inspire action"</strong> (18 min, British-influenced American)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: como Sinek descreve proposito profissional. Observe present simple para verdades gerais.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="media-tag">Podcast</span>
+                        <div>
+                            <strong>How I Built This — "Spanx: Sara Blakely"</strong> (NPR, American English)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: como ela descreve seu papel e responsabilidades na empresa. Vocabulario corporativo.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="media-tag">Serie</span>
+                        <div>
+                            <strong>Industry (HBO) — Season 1, Episode 1</strong> (British)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: observe o registro corporativo britanico. Note como profissionais descrevem seus papeis.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- LESSON 3 -->
+            <div style="margin-bottom:2rem;">
+                <h4 style="border-bottom:1px solid var(--border);padding-bottom:0.5rem;">Aula 3 — Listening Lab: British English</h4>
+                <ul class="media-list">
+                    <li>
+                        <span class="media-tag">Podcast</span>
+                        <div>
+                            <strong>BBC Global News Podcast — qualquer episodio recente</strong> (British)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: escute 5 minutos. Identifique 3 exemplos de connected speech (linking, elision ou weak forms).</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="media-tag">TED Talk</span>
+                        <div>
+                            <strong>Brene Brown — "The power of vulnerability"</strong> (20 min, American with UK comparison)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: compare a clareza de Brene (American) com clips da BBC. Note como connected speech difere.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="media-tag">Documentario</span>
+                        <div>
+                            <strong>Abstract: The Art of Design — Episode 1</strong> (Netflix)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: narracao em ingles americano claro. Bom para "treinar o ouvido" com speech mais lento.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- LESSON 4 -->
+            <div style="margin-bottom:2rem;">
+                <h4 style="border-bottom:1px solid var(--border);padding-bottom:0.5rem;">Aula 4 — Meetings</h4>
+                <ul class="media-list">
+                    <li>
+                        <span class="media-tag">Serie</span>
+                        <div>
+                            <strong>The Morning Show (Apple TV+) — qualquer episodio com cenas de reuniao</strong><br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: observe como personagens conduzem reunioes, fazem transicoes e encerram discussoes.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="media-tag">Podcast</span>
+                        <div>
+                            <strong>The Diary of a CEO — "How to Run a Meeting"</strong> (British English)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: linguagem funcional de reunioes em contexto real britanico.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="media-tag">TED Talk</span>
+                        <div>
+                            <strong>David Grady — "How to save the world (or at least yourself) from bad meetings"</strong> (8 min)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: vocabulario e conceitos de gestao de reunioes. Divertido e informativo.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- LESSON 5 -->
+            <div style="margin-bottom:2rem;">
+                <h4 style="border-bottom:1px solid var(--border);padding-bottom:0.5rem;">Aula 5 — Pronunciation: Vowels &amp; Stress</h4>
+                <ul class="media-list">
+                    <li>
+                        <span class="media-tag">TED Talk</span>
+                        <div>
+                            <strong>Julian Treasure — "How to speak so that people want to listen"</strong> (10 min, British)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: observe a pronuncia clara e deliberada de Treasure. Use para shadowing.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="media-tag">Podcast</span>
+                        <div>
+                            <strong>BBC Learning English — "6 Minute English"</strong> (British, didatico)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: pronuncia clara com velocidade moderada. Bom para praticar shadowing.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="media-tag">YouTube</span>
+                        <div>
+                            <strong>Rachel's English — "English Vowel Sounds"</strong> (American, didatico)<br>
+                            <span style="font-size:0.8rem;color:var(--text-dim);">Foco: treino especifico de sons vocalicos com explicacao da posicao da boca.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GENERAL CURATED LIST -->
+            <div style="margin-top:2rem;padding-top:2rem;border-top:2px solid var(--border);">
+                <h4>Lista Geral Curada — Aulas 6-40</h4>
+                <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:1rem;">Recursos recomendados ao longo de todo o programa, organizados por tipo.</p>
+
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;">
+                    <div>
+                        <h4 style="font-size:0.75rem;margin-bottom:0.5rem;">TED Talks (Apresentacoes)</h4>
+                        <ul style="font-size:0.8rem;line-height:2;padding-left:1rem;">
+                            <li>Brene Brown — "Listening to shame" (British themes)</li>
+                            <li>Adam Grant — "The surprising habits of original thinkers"</li>
+                            <li>Simon Sinek — "Why good leaders make you feel safe"</li>
+                            <li>Amy Cuddy — "Your body language may shape who you are"</li>
+                            <li>Chimamanda Ngozi Adichie — "The danger of a single story"</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.75rem;margin-bottom:0.5rem;">Podcasts (Listening Regular)</h4>
+                        <ul style="font-size:0.8rem;line-height:2;padding-left:1rem;">
+                            <li>How I Built This (NPR) — American, entrepreneurship</li>
+                            <li>The Diary of a CEO — British, leadership</li>
+                            <li>BBC Global News Podcast — British, current affairs</li>
+                            <li>Lawyer 2 Lawyer — American, legal topics</li>
+                            <li>Law in Action (BBC) — British, legal analysis</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.75rem;margin-bottom:0.5rem;">Series (Imersao)</h4>
+                        <ul style="font-size:0.8rem;line-height:2;padding-left:1rem;">
+                            <li>Suits — American, legal drama</li>
+                            <li>Industry (HBO) — British, corporate finance</li>
+                            <li>The Morning Show (Apple TV+) — American, corporate media</li>
+                            <li>Succession (HBO) — American/British, corporate power</li>
+                            <li>The Good Fight — American, legal drama</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.75rem;margin-bottom:0.5rem;">Documentarios</h4>
+                        <ul style="font-size:0.8rem;line-height:2;padding-left:1rem;">
+                            <li>Abstract: The Art of Design (Netflix) — American narration</li>
+                            <li>The Playlist (Netflix) — mixed accents</li>
+                            <li>Inside Bill's Brain (Netflix) — American</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPLETION CARD -->
+        <div class="completion-card">
+            <h2>Programa Concluido</h2>
+            <p style="font-size:1rem;opacity:0.9;margin-bottom:1.5rem;">Parabens, Vanessa! Voce completou 40 aulas de transformacao linguistica.</p>
+            <p style="font-size:0.9rem;opacity:0.8;margin-bottom:1rem;">De "tempo de fala menor e aulas arrastadas" para pronuncia clara, ouvido afiado e ingles fluindo nas reunioes que importam.</p>
+            <div style="background:rgba(255,255,255,0.1);padding:1.5rem;border-radius:8px;margin-top:1.5rem;text-align:left;">
+                <p style="font-weight:600;margin-bottom:0.8rem;">Plano de Continuidade:</p>
+                <ul style="font-size:0.85rem;line-height:2;padding-left:1.2rem;">
+                    <li>Mantenha a rotina de shadowing 3x/semana (10 min)</li>
+                    <li>Escute 1 podcast em ingles por dia (BBC ou NPR)</li>
+                    <li>Participe de 1 reuniao por semana em ingles sem preparacao previa</li>
+                    <li>Grave-se 1x/mes e compare com gravacoes anteriores</li>
+                    <li>Considere exame de proficiencia (Cambridge C1 Advanced) como meta de 2027</li>
+                </ul>
+            </div>
+        </div>
+
+    </div><!-- /tab-4 -->
+
+</div><!-- /container -->
+
+<script>
+// ===== TAB SWITCHING =====
+function switchTab(index) {
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+        btn.setAttribute('aria-selected', i === index);
+    });
+    document.querySelectorAll('.tab-content').forEach((content, i) => {
+        content.classList.toggle('active', i === index);
+    });
+}
+
+// ===== LESSON ACCORDION =====
+function toggleLesson(header) {
+    const body = header.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open');
+    header.classList.toggle('open');
+}
+
+// ===== RENDER EXERCISES =====
+document.addEventListener('DOMContentLoaded', function() {
+
+    // ═══ LESSON 1 EXERCISES ═══
+    document.getElementById('lesson1-ex1').innerHTML = createMatchingDropdown('l1_matching', [
+        {en: "deal with", options: ["lidar com", "negociar", "supervisionar", "garantir"], correct: "lidar com"},
+        {en: "liaise with", options: ["fazer interface com", "lidar com", "responsavel por", "supervisionar"], correct: "fazer interface com"},
+        {en: "oversee", options: ["supervisionar", "negociar", "garantir", "lidar com"], correct: "supervisionar"},
+        {en: "ensure compliance", options: ["garantir conformidade", "supervisionar", "fazer interface com", "parte interessada"], correct: "garantir conformidade"},
+        {en: "stakeholder", options: ["parte interessada", "responsavel por", "arcabouco regulatorio", "lidar com"], correct: "parte interessada"},
+        {en: "accountable for", options: ["responsavel por", "parte interessada", "garantir conformidade", "fazer interface com"], correct: "responsavel por"},
+        {en: "regulatory framework", options: ["arcabouco regulatorio", "garantir conformidade", "supervisionar", "parte interessada"], correct: "arcabouco regulatorio"}
+    ]);
+
+    document.getElementById('lesson1-ex2').innerHTML = createFillBlank('l1_fill', [
+        {sentence: "In my role at Braskem, I ___ corporate contracts on a daily basis.", answer: "deal with"},
+        {sentence: "I ___ our international partners to ensure smooth communication.", answer: "liaise with"},
+        {sentence: "As head of the legal team, I ___ all compliance activities.", answer: "oversee"},
+        {sentence: "My primary responsibility is to ___ with Brazilian and international regulations.", answer: "ensure compliance"},
+        {sentence: "We report quarterly results to all key ___.", answer: "stakeholders"}
+    ]);
+
+    document.getElementById('lesson1-ex3').innerHTML = createFillBlankWithHint('l1_fillhint', [
+        {sentence: "I am ___ all corporate governance decisions at Braskem.", answer: "accountable for", hint: "responsavel por"},
+        {sentence: "We operate within a complex ___.", answer: "regulatory framework", hint: "arcabouco regulatorio"},
+        {sentence: "I ___ the external legal advisors in London.", answer: "liaise with", hint: "fazer interface com"},
+        {sentence: "The board expects us to ___ at all times.", answer: "ensure compliance", hint: "garantir conformidade"},
+        {sentence: "I ___ contract negotiations across three jurisdictions.", answer: "oversee", hint: "supervisionar"}
+    ]);
+
+    document.getElementById('lesson1-ex4').innerHTML = createMultipleChoice('l1_mc',
+        "Which phrase would you use to describe your main responsibility in a formal introduction?",
+        ["I am accountable for corporate governance.", "I do corporate governance stuff.", "I work with corporate governance.", "I am making corporate governance."],
+        0
+    );
+
+    document.getElementById('lesson1-ex5').innerHTML = createOrdering('l1_order',
+        ["I", "oversee", "the", "compliance", "department", "at", "Braskem"],
+        ["department", "at", "I", "Braskem", "oversee", "the", "compliance"]
+    );
+
+    document.getElementById('lesson1-ex6').innerHTML = createPronunciation('l1_pron1',
+        "I deal with corporate contracts at Braskem", null);
+
+    document.getElementById('lesson1-ex7').innerHTML = createPronunciation('l1_pron2',
+        "I oversee regulatory compliance for the legal department", null);
+
+    document.getElementById('lesson1-ex8').innerHTML = createThinkAboutIt('l1_think',
+        "How would you introduce yourself and your role at Braskem to a new British colleague you are meeting for the first time? Think about: your name, your department, what you deal with daily, and one current project.");
+
+    // ═══ LESSON 2 EXERCISES ═══
+    document.getElementById('lesson2-ex1').innerHTML = createMatchingDropdown('l2_matching', [
+        {en: "negotiate", options: ["negociar", "coordenar", "representar", "responsavel por"], correct: "negociar"},
+        {en: "coordinate", options: ["coordenar", "negociar", "representar", "em nome de"], correct: "coordenar"},
+        {en: "represent", options: ["representar", "coordenar", "negociar", "projeto em andamento"], correct: "representar"},
+        {en: "in charge of", options: ["responsavel por", "em nome de", "prioridades atuais", "negociar"], correct: "responsavel por"},
+        {en: "on behalf of", options: ["em nome de", "responsavel por", "projeto em andamento", "coordenar"], correct: "em nome de"},
+        {en: "ongoing project", options: ["projeto em andamento", "prioridades atuais", "em nome de", "representar"], correct: "projeto em andamento"},
+        {en: "current priorities", options: ["prioridades atuais", "projeto em andamento", "responsavel por", "negociar"], correct: "prioridades atuais"}
+    ]);
+
+    document.getElementById('lesson2-ex2').innerHTML = createFillBlank('l2_fill', [
+        {sentence: "I ___ contracts with our international partners every quarter.", answer: "negotiate"},
+        {sentence: "I ___ the legal team across three different offices.", answer: "coordinate"},
+        {sentence: "I ___ Braskem in all regulatory hearings.", answer: "represent"},
+        {sentence: "I'm ___ corporate governance for the entire group.", answer: "in charge of"},
+        {sentence: "I act ___ the board in legal matters.", answer: "on behalf of"}
+    ]);
+
+    document.getElementById('lesson2-ex3').innerHTML = createMultipleChoice('l2_mc',
+        "Which sentence correctly uses Present Continuous for an ongoing project?",
+        ["I negotiate a new contract this month.", "I'm negotiating a new contract this month.", "I negotiated a new contract this month.", "I will negotiate a new contract this month."],
+        1
+    );
+
+    document.getElementById('lesson2-ex4').innerHTML = createFillBlankWithHint('l2_fillhint', [
+        {sentence: "We have several ___ with UK law firms.", answer: "ongoing projects", hint: "projetos em andamento"},
+        {sentence: "Our ___ include ESG compliance and digital transformation.", answer: "current priorities", hint: "prioridades atuais"},
+        {sentence: "I'm ___ a cross-border acquisition at the moment.", answer: "coordinating", hint: "coordenando"},
+        {sentence: "She acts ___ the CEO in board meetings.", answer: "on behalf of", hint: "em nome de"}
+    ]);
+
+    document.getElementById('lesson2-ex5').innerHTML = createOrdering('l2_order',
+        ["I'm", "currently", "negotiating", "a", "new", "contract", "with", "our", "UK", "partners"],
+        ["contract", "I'm", "with", "negotiating", "our", "currently", "UK", "a", "new", "partners"]
+    );
+
+    document.getElementById('lesson2-ex6').innerHTML = createPronunciation('l2_pron1',
+        "I negotiate contracts with international partners on a regular basis", null);
+
+    document.getElementById('lesson2-ex7').innerHTML = createPronunciation('l2_pron2',
+        "I am currently coordinating a cross-border project with our UK team", null);
+
+    document.getElementById('lesson2-ex8').innerHTML = createThinkAboutIt('l2_think',
+        "Imagine you are meeting a new colleague at a Braskem networking event. Describe your department, your daily responsibilities, and one project you are currently working on. Use both present simple and present continuous.");
+
+    // ═══ LESSON 3 EXERCISES ═══
+    document.getElementById('lesson3-ex1').innerHTML = createMatchingDropdown('l3_matching', [
+        {en: "connected speech", options: ["fala conectada", "ligacao entre palavras", "elisao", "formas fracas"], correct: "fala conectada"},
+        {en: "linking", options: ["ligacao entre palavras", "fala conectada", "formas fracas", "captar"], correct: "ligacao entre palavras"},
+        {en: "elision", options: ["elisao/omissao de sons", "ligacao entre palavras", "fala conectada", "essencia"], correct: "elisao/omissao de sons"},
+        {en: "weak forms", options: ["formas fracas", "elisao/omissao de sons", "captar", "fala conectada"], correct: "formas fracas"},
+        {en: "catch (a phrase)", options: ["captar/entender", "formas fracas", "essencia", "ligacao entre palavras"], correct: "captar/entender"},
+        {en: "gist", options: ["essencia/ideia geral", "captar/entender", "fala conectada", "elisao/omissao de sons"], correct: "essencia/ideia geral"}
+    ]);
+
+    document.getElementById('lesson3-ex2').innerHTML = createFillBlank('l3_fill', [
+        {sentence: "In natural British English, words blend together through ___.", answer: "connected speech"},
+        {sentence: "When the final consonant of one word connects to the next vowel, that's called ___.", answer: "linking"},
+        {sentence: "When sounds disappear in fast speech, like the /t/ in 'next day', that's ___.", answer: "elision"},
+        {sentence: "I couldn't ___ what the British speaker said in the meeting.", answer: "catch"},
+        {sentence: "I understood the ___ of the presentation but missed some details.", answer: "gist"}
+    ]);
+
+    document.getElementById('lesson3-ex3').innerHTML = createMultipleChoice('l3_mc',
+        "In the phrase 'next day' spoken quickly by a British speaker, what happens to the /t/ sound?",
+        ["It becomes louder.", "It disappears (elision).", "It becomes a /d/ sound.", "It stays the same."],
+        1
+    );
+
+    document.getElementById('lesson3-ex4').innerHTML = createMultipleChoice('l3_mc2',
+        "In natural speech, 'I want to go' often sounds like 'I want /t@/ go'. This is an example of:",
+        ["Linking", "Elision", "Weak forms", "Intonation"],
+        2
+    );
+
+    document.getElementById('lesson3-ex5').innerHTML = createOrdering('l3_order',
+        ["In", "connected", "speech", "words", "blend", "together", "naturally"],
+        ["together", "In", "blend", "speech", "connected", "naturally", "words"]
+    );
+
+    document.getElementById('lesson3-ex6').innerHTML = createPronunciation('l3_pron1',
+        "I couldn't catch what he said in the meeting", null);
+
+    document.getElementById('lesson3-ex7').innerHTML = createPronunciation('l3_pron2',
+        "I got the gist of the presentation but I missed some details", null);
+
+    document.getElementById('lesson3-ex8').innerHTML = createThinkAboutIt('l3_think',
+        "Think about a time when you listened to a native English speaker and couldn't understand them. What do you think caused the difficulty? Was it speed, accent, vocabulary, or connected speech? How did you handle the situation?");
+
+    // ═══ LESSON 4 EXERCISES ═══
+    document.getElementById('lesson4-ex1').innerHTML = createMatchingDropdown('l4_matching', [
+        {en: "set the agenda", options: ["definir a pauta", "passar para", "encerrar", "abordar a questao"], correct: "definir a pauta"},
+        {en: "move on to", options: ["passar para", "definir a pauta", "chegar a um consenso", "itens de acao"], correct: "passar para"},
+        {en: "wrap up", options: ["encerrar/concluir", "passar para", "definir a pauta", "redigir a ata"], correct: "encerrar/concluir"},
+        {en: "address the issue", options: ["abordar a questao", "encerrar/concluir", "chegar a um consenso", "definir a pauta"], correct: "abordar a questao"},
+        {en: "reach a consensus", options: ["chegar a um consenso", "abordar a questao", "itens de acao", "redigir a ata"], correct: "chegar a um consenso"},
+        {en: "action items", options: ["itens de acao", "redigir a ata", "encerrar/concluir", "chegar a um consenso"], correct: "itens de acao"},
+        {en: "take the minutes", options: ["redigir a ata", "itens de acao", "definir a pauta", "abordar a questao"], correct: "redigir a ata"}
+    ]);
+
+    document.getElementById('lesson4-ex2').innerHTML = createFillBlank('l4_fill', [
+        {sentence: "Let me ___ for today's meeting.", answer: "set the agenda"},
+        {sentence: "Shall we ___ the next item on the agenda?", answer: "move on to"},
+        {sentence: "I think we can ___ now. Thank you all for your input.", answer: "wrap up"},
+        {sentence: "We need to ___ of compliance before we proceed.", answer: "address the issue"},
+        {sentence: "Let me summarise the ___ from today's discussion.", answer: "action items"}
+    ]);
+
+    document.getElementById('lesson4-ex3').innerHTML = createFillBlankWithHint('l4_fillhint', [
+        {sentence: "Can we ___ on this point before moving forward?", answer: "reach a consensus", hint: "chegar a um consenso"},
+        {sentence: "Who's going to ___ today?", answer: "take the minutes", hint: "redigir a ata"},
+        {sentence: "I'd like to ___ of budget allocation first.", answer: "address the issue", hint: "abordar a questao"},
+        {sentence: "Let's ___ item three — the regulatory update.", answer: "move on to", hint: "passar para"}
+    ]);
+
+    document.getElementById('lesson4-ex4').innerHTML = createMultipleChoice('l4_mc',
+        "You want to finish the meeting and summarise next steps. Which phrase is most appropriate?",
+        ["OK let's stop here.", "To wrap up, let me summarise the action items.", "We're done. Bye everyone.", "I think that's enough talking."],
+        1
+    );
+
+    document.getElementById('lesson4-ex5').innerHTML = createOrdering('l4_order',
+        ["Let", "me", "set", "the", "agenda", "for", "today's", "meeting"],
+        ["agenda", "meeting", "Let", "the", "for", "me", "set", "today's"]
+    );
+
+    document.getElementById('lesson4-ex6').innerHTML = createPronunciation('l4_pron1',
+        "Thank you all for joining. Let me set the agenda for today.", null);
+
+    document.getElementById('lesson4-ex7').innerHTML = createPronunciation('l4_pron2',
+        "To wrap up, let me summarise the action items from today's discussion.", null);
+
+    document.getElementById('lesson4-ex8').innerHTML = createThinkAboutIt('l4_think',
+        "Imagine you are chairing a meeting at Braskem with international colleagues. The discussion is going off-topic and one participant has not spoken yet. How would you redirect the conversation and invite the quiet participant to contribute?");
+
+    // ═══ LESSON 5 EXERCISES ═══
+    document.getElementById('lesson5-ex1').innerHTML = createMatchingDropdown('l5_matching', [
+        {en: "minimal pairs", options: ["pares minimos", "acento tonico", "acento frasal", "som vocalico"], correct: "pares minimos"},
+        {en: "word stress", options: ["acento tonico", "pares minimos", "entonacao", "inteligibilidade"], correct: "acento tonico"},
+        {en: "sentence stress", options: ["acento frasal", "acento tonico", "som vocalico", "pares minimos"], correct: "acento frasal"},
+        {en: "vowel sound", options: ["som vocalico", "acento frasal", "inteligibilidade", "entonacao"], correct: "som vocalico"},
+        {en: "intelligibility", options: ["inteligibilidade", "som vocalico", "entonacao", "acento tonico"], correct: "inteligibilidade"},
+        {en: "intonation", options: ["entonacao", "inteligibilidade", "pares minimos", "acento frasal"], correct: "entonacao"}
+    ]);
+
+    document.getElementById('lesson5-ex2').innerHTML = createMultipleChoice('l5_mc',
+        "In the word 'negotiate', which syllable receives the primary stress?",
+        ["First syllable (NE-gotiate)", "Second syllable (ne-GO-tiate)", "Third syllable (nego-TI-ate)", "Fourth syllable (negoti-ATE)"],
+        1
+    );
+
+    document.getElementById('lesson5-ex3').innerHTML = createFillBlank('l5_fill', [
+        {sentence: "'Ship' and 'sheep' are examples of ___.", answer: "minimal pairs"},
+        {sentence: "In English, ___ falls on content words like nouns, verbs, and adjectives.", answer: "sentence stress"},
+        {sentence: "Your goal in pronunciation is ___, not perfection.", answer: "intelligibility"},
+        {sentence: "English has more ___ than Portuguese, which is why some sounds are difficult.", answer: "vowel sounds"}
+    ]);
+
+    document.getElementById('lesson5-ex4').innerHTML = createOrdering('l5_order',
+        ["The", "word", "stress", "in", "negotiate", "falls", "on", "the", "second", "syllable"],
+        ["falls", "The", "second", "stress", "on", "word", "syllable", "in", "negotiate", "the"]
+    );
+
+    document.getElementById('lesson5-ex5').innerHTML = createPronunciation('l5_pron1',
+        "ship sheep ship sheep", null);
+
+    document.getElementById('lesson5-ex6').innerHTML = createPronunciation('l5_pron2',
+        "I negotiate compliance regulations at Braskem", null);
+
+    document.getElementById('lesson5-ex7').innerHTML = createPronunciation('l5_pron3',
+        "The stakeholders are accountable for governance", null);
+
+    document.getElementById('lesson5-ex8').innerHTML = createThinkAboutIt('l5_think',
+        "Think about your own pronunciation in English. Which sounds do you find most difficult? When you speak in meetings, do you feel your pronunciation affects how people perceive your professionalism? What would change if your pronunciation improved?");
+});
+</script>
+
+</body>
+</html>

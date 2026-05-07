@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni — Painel de Alunos</title>
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="stylesheet" href="/styles/design-system.css">
+    <style>
+        /* ══════════════════════════════════════
+           DASHBOARD — LAYOUT & COMPONENTS
+           ══════════════════════════════════════ */
+
+        /* ── Stats grid ── */
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); margin-bottom: var(--space-xl); }
+        .stat { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: var(--space-lg); transition: box-shadow var(--transition-base); }
+        .stat:hover { box-shadow: var(--shadow-md); }
+        .stat-number { font: 700 2.2rem/1 var(--font-body); margin-bottom: 6px; }
+        .stat-label { font: 500 0.85rem/1.4 var(--font-body); color: var(--text-dim); }
+        .stat--navy .stat-number { color: var(--alumni-navy); }
+        .stat--warning .stat-number { color: var(--warning); }
+        .stat--info .stat-number { color: var(--info); }
+        .stat--success .stat-number { color: var(--success); }
+
+        /* ── Toolbar: search + sort + novo aluno ── */
+        .toolbar { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md); flex-wrap: wrap; }
+        .toolbar .search-wrap { flex: 1; min-width: 240px; position: relative; }
+        .toolbar .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
+        .toolbar .search-input {
+            width: 100%; padding: 12px 16px 12px 42px;
+            font: 400 0.95rem/1.5 var(--font-body); color: var(--text-body);
+            background: var(--bg-card); border: 1px solid var(--border-light);
+            border-radius: var(--radius-md); transition: border-color var(--transition-base), box-shadow var(--transition-base);
+        }
+        .toolbar .search-input:focus { outline: none; border-color: var(--alumni-navy); box-shadow: 0 0 0 3px var(--alumni-navy-ring); }
+        .toolbar .search-input::placeholder { color: var(--text-dim); }
+
+        .toolbar .sort-wrap { display: flex; align-items: center; gap: var(--space-sm); }
+        .toolbar .sort-label { font: 500 0.85rem/1 var(--font-body); color: var(--text-dim); white-space: nowrap; }
+        .toolbar .sort-select {
+            padding: 10px 32px 10px 14px; font: 500 0.85rem/1.5 var(--font-body);
+            background: var(--bg-card); border: 1px solid var(--border-light);
+            border-radius: var(--radius-md); color: var(--text-body); cursor: pointer;
+            appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23777788' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 10px center;
+        }
+        .toolbar .sort-select:focus { outline: none; border-color: var(--alumni-navy); box-shadow: 0 0 0 3px var(--alumni-navy-ring); }
+
+        .btn-novo {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 24px; font: 600 0.9rem/1.5 var(--font-body);
+            color: #fff; background: var(--alumni-navy); border: none;
+            border-radius: var(--radius-md); cursor: pointer; white-space: nowrap;
+            transition: background var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+            text-decoration: none;
+        }
+        .btn-novo:hover { background: var(--alumni-navy-light); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .btn-novo svg { width: 16px; height: 16px; }
+
+        /* ── Filters ── */
+        .filters { display: flex; gap: var(--space-sm); margin-bottom: var(--space-lg); flex-wrap: wrap; }
+        .filter-btn {
+            padding: 8px 18px; font: 500 0.85rem/1.4 var(--font-body);
+            background: transparent; border: 1px solid var(--border);
+            color: var(--text-muted); border-radius: var(--radius-md); cursor: pointer;
+            transition: all var(--transition-base);
+        }
+        .filter-btn:hover { border-color: var(--alumni-navy); color: var(--alumni-navy); }
+        .filter-btn.active { border-color: var(--alumni-navy); color: var(--alumni-navy); background: var(--alumni-navy-dim); font-weight: 600; }
+
+        /* ── Count ── */
+        .count { font: 500 0.9rem/1.5 var(--font-body); color: var(--text-dim); margin-bottom: var(--space-md); }
+
+        /* ── Student card ── */
+        .s-card {
+            position: relative; overflow: visible;
+            background: var(--bg-card); border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg); padding: var(--space-lg) var(--space-xl);
+            margin-bottom: var(--space-md);
+            transition: box-shadow var(--transition-base), transform var(--transition-base);
+        }
+        .s-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+        .s-card.deactivated { opacity: 0.4; }
+        .s-card.deactivated:hover { box-shadow: none; transform: none; }
+        .s-card.ativo { background: #f0fdf4; border-color: #86efac; }
+        .s-card.ativo:hover { border-color: #16a34a; }
+
+        /* Theme background image */
+        .s-card-bg {
+            position: absolute; top: 0; right: 0; width: 45%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0.35;
+            mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,1) 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,1) 100%);
+            pointer-events: none; transition: opacity var(--transition-base);
+            border-radius: var(--radius-lg);
+        }
+        .s-card:hover .s-card-bg { opacity: 0.45; }
+
+        /* Card top: avatar + info + menu */
+        .s-top { display: flex; align-items: flex-start; gap: var(--space-md); position: relative; z-index: 1; }
+        .s-actions { position: relative; z-index: 1; }
+        .s-avatar {
+            width: 48px; height: 48px; border-radius: var(--radius-full);
+            display: flex; align-items: center; justify-content: center;
+            font: 700 0.9rem/1 var(--font-body); color: #fff; flex-shrink: 0;
+        }
+        .s-info { flex: 1; min-width: 0; }
+        .s-name-row { display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; margin-bottom: 4px; }
+        .s-name { font: 600 1.15rem/1.3 var(--font-body); color: var(--text-primary); }
+        .s-badge {
+            display: inline-block; padding: 3px 10px; border-radius: var(--radius-sm);
+            font: 600 0.7rem/1.4 var(--font-body); letter-spacing: 0.3px; text-transform: uppercase;
+        }
+        .s-badge--draft { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
+        .s-badge--review { background: var(--info-bg); color: var(--info); border: 1px solid var(--info-border); }
+        .s-badge--approved { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+        .s-badge--published { background: var(--alumni-navy-dim); color: var(--alumni-navy); border: 1px solid var(--alumni-navy-ring); }
+        .s-badge--none { background: var(--bg-subtle); color: var(--text-dim); border: 1px solid var(--border); }
+
+        .s-countdown {
+            display: inline-flex; align-items: center; gap: 4px;
+            font: 600 0.8rem/1 var(--font-body); color: #c2410c;
+        }
+        .s-countdown svg { flex-shrink: 0; }
+
+        .s-meta {
+            font: 400 0.9rem/1.5 var(--font-body); color: var(--text-dim);
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        }
+        .s-meta-sep { color: var(--border); font-size: 0.7rem; }
+
+        /* Progress */
+        .s-progress { margin-top: 10px; max-width: 320px; }
+        .s-progress-bar { height: 4px; background: var(--bg-subtle); border-radius: 2px; overflow: hidden; }
+        .s-progress-fill { height: 100%; background: var(--alumni-navy); border-radius: 2px; transition: width var(--transition-slow); }
+
+        /* Card actions row */
+        .s-actions { display: flex; gap: var(--space-sm); margin-top: var(--space-md); flex-wrap: wrap; }
+        .s-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 9px 20px; font: 500 0.85rem/1.4 var(--font-body);
+            border-radius: var(--radius-md); cursor: pointer;
+            transition: all var(--transition-base); text-decoration: none; white-space: nowrap;
+            min-width: 130px; text-align: center;
+        }
+        .s-btn--ghost {
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+        .s-btn--ghost:hover { border-color: var(--alumni-navy); color: var(--alumni-navy); }
+        .s-btn--primary {
+            background: var(--alumni-navy); border: 1px solid var(--alumni-navy);
+            color: #fff;
+        }
+        .s-btn--primary:hover { background: var(--alumni-navy-light); }
+        .s-btn:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
+
+        /* ── 3-dot menu ── */
+        .menu-wrap { position: relative; flex-shrink: 0; margin-left: auto; }
+        .menu-trigger {
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            background: none; border: 1px solid transparent; border-radius: var(--radius-md);
+            cursor: pointer; color: var(--text-dim); transition: all var(--transition-base);
+        }
+        .menu-trigger:hover { background: var(--bg-subtle); border-color: var(--border-light); color: var(--text-primary); }
+        .menu-dropdown {
+            display: none; position: absolute; right: 0; top: calc(100% + 6px);
+            background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg); z-index: 100; min-width: 180px; overflow: hidden;
+        }
+        .menu-dropdown.show { display: block; }
+        .menu-item {
+            display: block; width: 100%; text-align: left; padding: 11px 18px;
+            font: 500 0.88rem/1.4 var(--font-body); color: var(--text-body);
+            background: none; border: none; cursor: pointer; transition: background var(--transition-fast);
+        }
+        .menu-item:hover { background: var(--bg-subtle); }
+        .menu-item--danger { color: var(--error); }
+        .menu-item--danger:hover { background: var(--error-bg); }
+        .menu-item--reactivate { color: var(--success); }
+        .menu-item--reactivate:hover { background: var(--success-bg); }
+
+        /* ── Empty state ── */
+        .empty { text-align: center; padding: var(--space-3xl) var(--space-lg); }
+        .empty-icon {
+            width: 80px; height: 80px; margin: 0 auto var(--space-lg);
+            border-radius: var(--radius-full); background: var(--bg-subtle);
+            border: 2px dashed var(--border); display: flex; align-items: center; justify-content: center;
+        }
+        .empty-icon svg { width: 32px; height: 32px; stroke: var(--text-dim); fill: none; stroke-width: 1.5; }
+        .empty h3 { font: 600 1.3rem/1.3 var(--font-body); color: var(--text-muted); margin-bottom: var(--space-sm); }
+        .empty p { font: 400 0.95rem/1.6 var(--font-body); color: var(--text-dim); margin-bottom: var(--space-xl); max-width: 380px; margin-left: auto; margin-right: auto; }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+            z-index: 100; align-items: center; justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: var(--bg-card); border-radius: var(--radius-lg);
+            padding: var(--space-xl); width: 90%; max-width: 520px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .modal-box .input {
+            padding: 12px 14px; font: 400 0.95rem/1.5 var(--font-body);
+            border: 1px solid var(--border-light); border-radius: var(--radius-md);
+            background: var(--bg-card); color: var(--text-body);
+        }
+        .modal-box .input:focus { outline: none; border-color: var(--alumni-navy); box-shadow: 0 0 0 3px var(--alumni-navy-ring); }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) {
+            .stats { grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+            .stat { padding: var(--space-md); }
+            .stat-number { font-size: 1.6rem; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar .sort-wrap { width: 100%; }
+            .toolbar .sort-select { flex: 1; }
+            .btn-novo { width: 100%; justify-content: center; }
+            .s-card { padding: var(--space-md); }
+            .s-actions { flex-direction: column; }
+            .s-btn { width: 100%; min-width: unset; }
+            .filters { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+            .filter-btn { flex-shrink: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="alumni-header">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="alumni-header__logo">
+    <h1 class="alumni-header__title">Painel de Alunos</h1>
+    <span class="alumni-header__badge">VISÃO GESTOR</span>
+</header>
+
+<nav class="alumni-nav">
+    <a href="index.html">Novo Aluno</a>
+    <a href="dashboard.html" class="active">Painel de Alunos</a>
+</nav>
+
+<div class="container container--wide">
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat stat--navy"><div class="stat-number" id="statTotal">0</div><div class="stat-label">Total Alunos</div></div>
+        <div class="stat stat--warning"><div class="stat-number" id="statCriacao">0</div><div class="stat-label">Em Criação</div></div>
+        <div class="stat stat--info"><div class="stat-number" id="statAndamento">0</div><div class="stat-label">Em Andamento</div></div>
+        <div class="stat stat--success"><div class="stat-number" id="statConcluido">0</div><div class="stat-label">Ativos</div></div>
+    </div>
+
+    <!-- Toolbar: search + sort + novo aluno -->
+    <div class="toolbar">
+        <div class="search-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nome do aluno..." oninput="filterAlunos()">
+        </div>
+        <div class="sort-wrap">
+            <span class="sort-label">Ordenar</span>
+            <select class="sort-select" id="sortSelect" onchange="filterAlunos()">
+                <option value="date_desc">Mais recente</option>
+                <option value="date_asc">Mais antigo</option>
+                <option value="name_asc">Nome A-Z</option>
+                <option value="name_desc">Nome Z-A</option>
+                <option value="status">Status</option>
+            </select>
+        </div>
+        <a href="index.html" class="btn-novo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo Aluno
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('todos',this)">Todos</button>
+        <button class="filter-btn" onclick="setFilter('rascunho',this)">Rascunho</button>
+        <button class="filter-btn" onclick="setFilter('em_revisao',this)">Em Revisão</button>
+        <button class="filter-btn" onclick="setFilter('aprovado',this)">Aprovado</button>
+        <button class="filter-btn" onclick="setFilter('material_publicado',this)">Publicado</button>
+        <button class="filter-btn" onclick="setFilter('sem_perfil',this)">Sem Perfil</button>
+    </div>
+
+    <div class="count" id="count"></div>
+    <div id="alunosList"></div>
+</div>
+
+<!-- Modal Alocação -->
+<div class="modal-overlay" id="alocacaoModal" onclick="if(event.target===this)fecharAlocacao()">
+    <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-lg);">
+            <h2 style="font:600 1.3rem/1.3 var(--font-body);color:var(--text-primary);">Alocação do Aluno</h2>
+            <button onclick="fecharAlocacao()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-dim);line-height:1;">&times;</button>
+        </div>
+        <div id="alocacaoNomeAluno" style="font:500 0.95rem/1.4 var(--font-body);color:var(--alumni-navy);margin-bottom:var(--space-md);"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin-bottom:var(--space-md);">
+            <div>
+                <label style="font:600 0.75rem/1.4 var(--font-body);color:var(--text-dim);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Professor Designado</label>
+                <input type="text" class="input" id="alocProf" placeholder="Nome do professor" style="width:100%;">
+            </div>
+            <div>
+                <label style="font:600 0.75rem/1.4 var(--font-body);color:var(--text-dim);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Dias e Horários</label>
+                <input type="text" class="input" id="alocDias" placeholder="Ex: Terças e quintas, 8h" style="width:100%;">
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin-bottom:var(--space-xl);">
+            <div>
+                <label style="font:600 0.75rem/1.4 var(--font-body);color:var(--text-dim);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Início das Aulas</label>
+                <input type="date" class="input" id="alocInicio" style="width:100%;">
+            </div>
+            <div>
+                <label style="font:600 0.75rem/1.4 var(--font-body);color:var(--text-dim);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Previsão de Término</label>
+                <input type="date" class="input" id="alocTermino" style="width:100%;">
+            </div>
+        </div>
+        <button class="btn-novo" onclick="salvarAlocacao()" style="width:100%;justify-content:center;">Salvar Alocação</button>
+    </div>
+</div>
+
+<footer class="alumni-footer">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="alumni-footer__logo">
+</footer>
+
+<script>
+    let allAlunos = [];
+    let currentFilter = 'todos';
+    const confirmedMaterials = new Set();
+
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+    function nameToColor(n) {
+        const c = ['#c8a24e','#60a5fa','#4ade80','#f87171','#c084fc','#fb923c','#fbbf24','#34d399','#a78bfa','#f472b6','#22d3ee','#e879f9','#38bdf8','#a3e635','#fb7185'];
+        let h = 0; for (let i = 0; i < n.length; i++) h = n.charCodeAt(i) + ((h << 5) - h);
+        return c[Math.abs(h) % c.length];
+    }
+    function getInitials(n) {
+        const p = n.trim().split(/\s+/);
+        return p.length >= 2 ? (p[0][0]+p[p.length-1][0]).toUpperCase() : n.substring(0,2).toUpperCase();
+    }
+    function getProgress(id) {
+        try { const d = JSON.parse(localStorage.getItem('alumni-progress-'+id)); if (d && typeof d.concluidas==='number') return d; } catch(e) {} return null;
+    }
+    function getCountdown(id) {
+        try {
+            const d = JSON.parse(localStorage.getItem('alumni-perfil-'+id))?.dadosFormulario||{};
+            if (d.dataEvento) { const diff = Math.ceil((new Date(d.dataEvento)-new Date())/864e5); if (diff>0) return {days:diff,label:d.tipoEvento||d.foco||'evento'}; }
+        } catch(e) {} return null;
+    }
+    function isDeactivated(id) { try { return (JSON.parse(localStorage.getItem('alumni-deactivated')||'{}'))[id]===true; } catch(e) { return false; } }
+    function setDeactivated(id,v) { const m=JSON.parse(localStorage.getItem('alumni-deactivated')||'{}'); if(v) m[id]=true; else delete m[id]; localStorage.setItem('alumni-deactivated',JSON.stringify(m)); }
+
+    async function loadAlunos() {
+        let reg=[]; try { const r=await fetch('/planos/registry.json'); if(r.ok) reg=await r.json(); } catch(e){}
+        const perfis={};
+        for(let i=0;i<localStorage.length;i++) { const k=localStorage.key(i); if(k.startsWith('alumni-perfil-')) { try { perfis[k.replace('alumni-perfil-','')]=JSON.parse(localStorage.getItem(k)); } catch(e){} } }
+        const merged={};
+        reg.forEach(p => {
+            merged[p.id] = {
+                id: p.id, nome: p.nome, nivel: p.nivel||'', numAulas: p.numAulas||0,
+                criadoEm: p.criadoEm, perfilStatus: p.perfilStatus||'sem_perfil', foco: p.foco||'',
+                // Legacy material URLs
+                legacyUrl: p.externalUrl || '/planos/' + p.id + '.html',
+                externalUrl: p.externalUrl || ''
+            };
+        });
+        Object.keys(perfis).forEach(s => {
+            const p = perfis[s], d = p.dadosFormulario||{};
+            if (merged[s]) {
+                merged[s].perfilStatus = p.status||'rascunho';
+                merged[s].foco = d.foco||merged[s].foco||'';
+                merged[s].modalidade = d.modalidadeAula||d.modalidade||'';
+                // Update nome: prefer registry name over slug-like localStorage names
+                var rawN = d.nome || '';
+                var isSlugN = rawN && rawN === rawN.toLowerCase() && rawN.indexOf(' ') === -1;
+                if (rawN && !isSlugN && rawN.length > (merged[s].nome||'').length) merged[s].nome = rawN;
+            } else {
+                // Try partial match with registry (e.g. localStorage "zilaudio" matches registry "zilaudio-luiz-pereira")
+                var regMatch = reg.find(function(r) { return r.id.startsWith(s) || s.startsWith(r.id); });
+                // Ignore names that look like slugs (lowercase, no spaces, no accents)
+                var rawName = d.nome || p.nome || '';
+                var isSlug = rawName && rawName === rawName.toLowerCase() && rawName.indexOf(' ') === -1;
+                var bestName = (regMatch ? regMatch.nome : null) || (isSlug ? null : rawName) || rawName || s;
+                merged[s] = { id:s, nome:bestName, nivel:d.nivel||'', numAulas:d.numAulas||0, criadoEm:p.criadoEm, foco:d.foco||'', modalidade:d.modalidadeAula||d.modalidade||'', perfilStatus:p.status||'rascunho', legacyUrl:regMatch?regMatch.externalUrl||'':'', externalUrl:regMatch?regMatch.externalUrl||'':'' };
+            }
+        });
+        allAlunos=Object.values(merged); updateStats(); filterAlunos();
+    }
+
+    function sortAlunos(list) {
+        const by=document.getElementById('sortSelect')?.value||'date_desc';
+        const so={rascunho:0,em_revisao:1,aprovado:2,material_publicado:3,sem_perfil:4};
+        list.sort((a,b) => { const da=isDeactivated(a.id)?1:0,db=isDeactivated(b.id)?1:0; if(da!==db) return da-db;
+            switch(by){ case 'date_desc':return new Date(b.criadoEm||0)-new Date(a.criadoEm||0); case 'date_asc':return new Date(a.criadoEm||0)-new Date(b.criadoEm||0); case 'name_asc':return(a.nome||'').localeCompare(b.nome||'','pt-BR'); case 'name_desc':return(b.nome||'').localeCompare(a.nome||'','pt-BR'); case 'status':return(so[a.perfilStatus]||9)-(so[b.perfilStatus]||9); default:return 0; }
+        });
+    }
+
+    function updateStats() {
+        const act=allAlunos.filter(a=>!isDeactivated(a.id));
+        document.getElementById('statTotal').textContent=act.length;
+        document.getElementById('statCriacao').textContent=act.filter(a=>a.perfilStatus==='rascunho'||a.perfilStatus==='em_revisao').length;
+        document.getElementById('statAndamento').textContent=act.filter(a=>a.perfilStatus==='aprovado'||a.perfilStatus==='material_publicado').length;
+        let c=0; act.forEach(a=>{try{var pd=JSON.parse(localStorage.getItem('alumni-perfil-'+a.id)||'{}');if(pd.ativo===true)c++;}catch(e){}}); document.getElementById('statConcluido').textContent=c;
+    }
+
+    function filterAlunos() {
+        const s=document.getElementById('searchInput').value.toLowerCase();
+        let f=[...allAlunos]; if(s) f=f.filter(a=>a.nome.toLowerCase().includes(s));
+        if(currentFilter!=='todos') f=f.filter(a=>a.perfilStatus===currentFilter);
+        sortAlunos(f); renderAlunos(f);
+    }
+
+    function setFilter(filter,btn) { currentFilter=filter; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); filterAlunos(); }
+
+    function getBadge(st) { return {rascunho:{l:'Rascunho',c:'s-badge--draft'},em_revisao:{l:'Em Revisão',c:'s-badge--review'},aprovado:{l:'Aprovado',c:'s-badge--approved'},material_publicado:{l:'Publicado',c:'s-badge--published'},sem_perfil:{l:'Sem Perfil',c:'s-badge--none'}}[st]||{l:'Sem Perfil',c:'s-badge--none'}; }
+
+    function toggleAtivo(id, ativo) {
+        var perfil = {};
+        try { perfil = JSON.parse(localStorage.getItem('alumni-perfil-' + id) || '{}'); } catch(e) {}
+        perfil.ativo = ativo;
+        localStorage.setItem('alumni-perfil-' + id, JSON.stringify(perfil));
+        filterAlunos();
+    }
+
+    function salvarCardField(id, field, value) {
+        var data = JSON.parse(localStorage.getItem('alumni-card-' + id) || '{}');
+        data[field] = value;
+        localStorage.setItem('alumni-card-' + id, JSON.stringify(data));
+    }
+
+    function toggleMenu(id,e) { e.stopPropagation(); document.querySelectorAll('.menu-dropdown').forEach(m=>{if(m.id!=='menu-'+id)m.classList.remove('show');}); document.getElementById('menu-'+id).classList.toggle('show'); }
+    document.addEventListener('click',function(e) {
+        // Don't close menu if clicking inside a menu item
+        if (e.target.closest('.menu-dropdown')) return;
+        document.querySelectorAll('.menu-dropdown.show').forEach(m=>m.classList.remove('show'));
+    });
+
+    function excluirAluno(id) { if(!confirm('Excluir permanentemente "'+id+'"? Esta ação não pode ser desfeita.')) return; localStorage.removeItem('alumni-perfil-'+id); localStorage.removeItem('alumni-progress-'+id); setDeactivated(id,false); allAlunos=allAlunos.filter(a=>a.id!==id); updateStats();filterAlunos(); }
+    function desativarAluno(id) { try { setDeactivated(id,true); updateStats();filterAlunos(); } catch(e) { alert('Erro desativar: '+e.message); } }
+    function reativarAluno(id) { setDeactivated(id,false); updateStats();filterAlunos(); }
+
+    // Theme images by foco — royalty-free Unsplash
+    const THEME_IMAGES = {
+        'travel':     'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=60',
+        'business':   'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=60',
+        'academic':   'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&q=60',
+        'corporate':  'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=60',
+        'medical':    'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=60',
+        'legal':      'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=60',
+        'tech':       'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=60',
+        'general':    'https://images.unsplash.com/photo-1543269865-cbf427effbad?w=800&q=60',
+    };
+    function getThemeImage(foco) {
+        if (!foco) return THEME_IMAGES.general;
+        const f = foco.toLowerCase();
+        if (f.includes('travel') || f.includes('viag')) return THEME_IMAGES.travel;
+        if (f.includes('business') || f.includes('negoc') || f.includes('corporat')) return THEME_IMAGES.business;
+        if (f.includes('academ') || f.includes('universit')) return THEME_IMAGES.academic;
+        if (f.includes('corporate') || f.includes('profission')) return THEME_IMAGES.corporate;
+        if (f.includes('medic') || f.includes('saude') || f.includes('health')) return THEME_IMAGES.medical;
+        if (f.includes('legal') || f.includes('jurid') || f.includes('law')) return THEME_IMAGES.legal;
+        if (f.includes('tech') || f.includes('ti') || f.includes('software')) return THEME_IMAGES.tech;
+        return THEME_IMAGES.general;
+    }
+
+    function renderAlunos(alunos) {
+        const container=document.getElementById('alunosList'), countEl=document.getElementById('count');
+        if(alunos.length===0&&allAlunos.length===0) { container.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>Nenhum aluno cadastrado</h3><p>Comece criando o primeiro perfil de aluno.</p><a href="index.html" class="btn-novo" style="display:inline-flex">Criar Primeiro Aluno</a></div>'; countEl.textContent=''; return; }
+        if(alunos.length===0) { container.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><h3>Nenhum resultado</h3><p>Nenhum aluno corresponde aos filtros selecionados.</p></div>'; countEl.textContent=''; return; }
+        countEl.textContent=alunos.length+' aluno'+(alunos.length!==1?'s':'');
+
+        container.innerHTML=alunos.map(a => {
+            const badge=getBadge(a.perfilStatus), deact=isDeactivated(a.id);
+            const prog=getProgress(a.id), cd=getCountdown(a.id);
+            const total=parseInt(a.numAulas)||0, done=prog?prog.concluidas:0;
+            const hasPerfil=a.perfilStatus!=='sem_perfil';
+
+            // Load saved professor/schedule — from alocação (perfil) first, then card fallback
+            const cardData = JSON.parse(localStorage.getItem('alumni-card-' + a.id) || '{}');
+            var perfilData = {};
+            try { perfilData = JSON.parse(localStorage.getItem('alumni-perfil-' + a.id) || '{}'); } catch(e) {}
+            const aloc = perfilData.alocacao || {};
+            const profName = aloc.professor || cardData.professor || '';
+            const schedule = aloc.diasHorarios || cardData.horarios || '';
+
+            // Simplify nivel — extract just the CEFR code (e.g. "A1" from "A1 (Iniciante)" or long AI text)
+            let nivelSimples = a.nivel || '';
+            const nivelMatch = nivelSimples.match(/^(A0|A1|A2|B1|B2|C1\+?|C2)/i);
+            if (nivelMatch) nivelSimples = nivelMatch[1].toUpperCase();
+            else if (nivelSimples.length > 20) nivelSimples = nivelSimples.substring(0, 20) + '...';
+
+            // Simplify foco — truncate long descriptions to first meaningful phrase
+            let focoSimples = a.foco || '';
+            if (focoSimples.length > 30) {
+                // Try to extract a short label: take text before first colon, dash, or semicolon
+                var focoShort = focoSimples.match(/^([^:;—–\n]{3,30})/);
+                focoSimples = focoShort ? focoShort[1].trim() : focoSimples.substring(0, 28) + '...';
+            }
+
+            // Meta pills
+            const meta=[];
+            if(nivelSimples) meta.push(esc(nivelSimples));
+            if(total>0) meta.push(total+' aulas');
+            if(focoSimples) meta.push(esc(focoSimples));
+            if(a.modalidade) meta.push(esc(a.modalidade));
+
+            // Countdown
+            let cdH='';
+            if(cd) cdH='<span class="s-countdown"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'+cd.days+' dias para '+cd.label+'</span>';
+
+            // Progress
+            let progH='';
+            if(total>0) { const pct=Math.min(100,Math.round((done/total)*100)); progH='<div class="s-progress"><div class="s-progress-bar"><div class="s-progress-fill" style="width:'+pct+'%"></div></div></div>'; }
+
+            // Professor + Horários fields — mostra texto se preenchido, input se vazio
+            let fieldsH = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #e5e7eb;">' +
+                '<div style="display:flex;align-items:center;gap:6px;">' +
+                '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + (profName ? '#003080' : '#9ca3af') + '" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+                (profName
+                    ? '<span style="font:600 13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#1a1a1a;">' + esc(profName) + '</span>'
+                    : '<input type="text" placeholder="Professor(a)" onchange="salvarCardField(\'' + a.id + '\',\'professor\',this.value);filterAlunos();" style="flex:1;border:none;border-bottom:1px solid #e5e7eb;padding:4px 0;font:13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#374151;background:transparent;outline:none;" onfocus="this.style.borderColor=\'#003080\'" onblur="this.style.borderColor=\'#e5e7eb\'">') +
+                '</div>' +
+                '<div style="display:flex;align-items:center;gap:6px;">' +
+                '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + (schedule ? '#003080' : '#9ca3af') + '" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                (schedule
+                    ? '<span style="font:500 13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#4a4a5a;">' + esc(schedule) + '</span>'
+                    : '<input type="text" placeholder="Dias e horários" onchange="salvarCardField(\'' + a.id + '\',\'horarios\',this.value);filterAlunos();" style="flex:1;border:none;border-bottom:1px solid #e5e7eb;padding:4px 0;font:13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#374151;background:transparent;outline:none;" onfocus="this.style.borderColor=\'#003080\'" onblur="this.style.borderColor=\'#e5e7eb\'">') +
+                '</div></div>';
+
+            // Last updated
+            var updAt = perfilData.updatedAt ? new Date(perfilData.updatedAt) : null;
+            var updH = updAt
+                ? '<div style="display:flex;align-items:center;gap:5px;margin-top:8px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span style="font:400 11px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#9ca3af;">Atualizado em ' + updAt.toLocaleDateString('pt-BR') + ' às ' + updAt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}) + '</span></div>'
+                : '';
+            fieldsH += updH;
+
+            // Buttons
+            const profUrl='/professor/'+a.id+'.html', alunoUrl=location.origin+'/aluno/'+a.id+'.html';
+            let btn1=hasPerfil?'<a href="perfil.html?id='+a.id+'" class="s-btn s-btn--primary">Perfil 360</a>':'<a href="index.html" class="s-btn s-btn--ghost">Criar Perfil</a>';
+            let btn2 = '<a href="'+profUrl+'" class="s-btn s-btn--ghost mat-btn" data-check="'+profUrl+'" target="_blank"'
+                + (!hasPerfil ? ' style="pointer-events:none;opacity:0.35;"' : '')
+                + '>Criar Material</a>';
+            let btn3='<button class="s-btn s-btn--ghost aluno-btn" data-url="'+alunoUrl+'" data-check="/aluno/'+a.id+'.html" disabled>Link do Aluno</button>';
+
+            // Menu
+            const mi=deact
+                ?'<button class="menu-item menu-item--reactivate" onclick="event.stopPropagation();reativarAluno(\''+a.id+'\')">Reativar</button><button class="menu-item menu-item--danger" onclick="event.stopPropagation();excluirAluno(\''+a.id+'\')">Excluir permanentemente</button>'
+                :'<button class="menu-item" onclick="event.stopPropagation();abrirAlocacao(\''+a.id+'\')">Fazer Alocação</button>' +
+                (perfilData.ativo ? '<button class="menu-item" onclick="event.stopPropagation();toggleAtivo(\''+a.id+'\',false)" style="color:#16a34a;font-weight:600;">Desativar Aluno</button>' : '<button class="menu-item" onclick="event.stopPropagation();toggleAtivo(\''+a.id+'\',true)" style="color:#16a34a;font-weight:600;">Tornar Ativo</button>') +
+                '<button class="menu-item" onclick="event.stopPropagation();desativarAluno(\''+a.id+'\')">Desativar</button><button class="menu-item menu-item--danger" onclick="event.stopPropagation();excluirAluno(\''+a.id+'\')">Excluir permanentemente</button>';
+
+            var isAtivo = perfilData.ativo === true;
+            return '<div class="s-card'+(deact?' deactivated':'')+(isAtivo?' ativo':'')+'" data-id="'+a.id+'" data-foco="'+(a.foco||'')+'" data-legacy="'+(a.legacyUrl||'')+'" data-external="'+(a.externalUrl||'')+'">' +
+                '<div class="s-top">' +
+                    '<div class="s-avatar" style="background:'+nameToColor(a.nome)+'">'+esc(getInitials(a.nome))+'</div>' +
+                    '<div class="s-info">' +
+                        '<div class="s-name-row"><span class="s-name">'+esc(a.nome)+'</span><span class="s-badge '+badge.c+'">'+badge.l+'</span>'+cdH+'</div>' +
+                        '<div class="s-meta">'+meta.map(m=>'<span>'+m+'</span>').join('<span class="s-meta-sep">|</span>')+'</div>' +
+                        progH +
+                        fieldsH +
+                    '</div>' +
+                    '<div class="menu-wrap"><button class="menu-trigger" onclick="toggleMenu(\''+a.id+'\',event)" title="Opções"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button><div class="menu-dropdown" id="menu-'+a.id+'">'+mi+'</div></div>' +
+                '</div>' +
+                '<div class="s-actions">'+btn1+btn2+btn3+'</div>' +
+            '</div>';
+        }).join('');
+
+        checkMaterialExists();
+    }
+
+    // Check if a URL points to a real generated page (not Vercel's 404)
+    async function isRealPage(url) {
+        try {
+            const r = await fetch(url + '?_t=' + Date.now(), { cache: 'no-store' });
+            if (!r.ok) return false;
+            const text = await r.text();
+            return text.length > 5000 && (text.includes('alumni') || text.includes('Alumni'));
+        } catch(e) { return false; }
+    }
+
+    async function checkMaterialExists() {
+        const cards = document.querySelectorAll('.s-card[data-id]');
+        const checks = [];
+
+        cards.forEach(card => {
+            const id = card.getAttribute('data-id');
+            // Skip alunos whose materials are already confirmed
+            if (confirmedMaterials.has(id)) return;
+
+            const foco = card.getAttribute('data-foco');
+            const legacy = card.getAttribute('data-legacy');
+            const external = card.getAttribute('data-external');
+            const profBtn = card.querySelector('.mat-btn');
+            const alunoBtn = card.querySelector('.aluno-btn');
+
+            // New format paths
+            const profUrl = '/professor/' + id + '.html';
+            const alunoPath = '/aluno/' + id + '.html';
+            const alunoFullUrl = location.origin + alunoPath;
+
+            // Check new format first, then legacy
+            const materialCheck = (async () => {
+                // 1. Check new format (professor + aluno)
+                const [profExists, alunoExists] = await Promise.all([
+                    profBtn ? isRealPage(profUrl) : Promise.resolve(false),
+                    alunoBtn ? isRealPage(alunoPath) : Promise.resolve(false)
+                ]);
+
+                if (profExists && profBtn) {
+                    profBtn.textContent = 'Acessar Material Professor';
+                    profBtn.classList.remove('s-btn--ghost'); profBtn.classList.add('s-btn--primary');
+                }
+                if (alunoExists && alunoBtn) {
+                    alunoBtn.disabled = false;
+                    alunoBtn.textContent = 'Acessar Material Aluno';
+                    alunoBtn.classList.remove('s-btn--ghost'); alunoBtn.classList.add('s-btn--primary');
+                    alunoBtn.onclick = function(e) {
+                        e.stopPropagation();
+                        navigator.clipboard.writeText(alunoFullUrl);
+                        this.textContent = 'Copiado!';
+                        setTimeout(() => { this.textContent = 'Acessar Material Aluno'; }, 1500);
+                    };
+                }
+
+                // 2. If no new format, check legacy (/planos/ or external URL)
+                let hasLegacy = false;
+                if (!profExists && !alunoExists && legacy) {
+                    const legacyTarget = external || legacy;
+                    // For external URLs, we trust they exist (they're on other Vercel deployments)
+                    if (external) {
+                        hasLegacy = true;
+                    } else {
+                        hasLegacy = await isRealPage(legacy);
+                    }
+
+                    if (hasLegacy) {
+                        // Activate both buttons pointing to the legacy material
+                        if (profBtn) {
+                            profBtn.textContent = 'Acessar Material';
+                            profBtn.href = legacyTarget;
+                            profBtn.classList.remove('s-btn--ghost'); profBtn.classList.add('s-btn--primary');
+                            profBtn.style.pointerEvents = 'auto'; profBtn.style.opacity = '1';
+                        }
+                        if (alunoBtn) {
+                            alunoBtn.disabled = false;
+                            alunoBtn.textContent = 'Link do Aluno';
+                            alunoBtn.classList.remove('s-btn--ghost'); alunoBtn.classList.add('s-btn--primary');
+                            alunoBtn.onclick = function(e) {
+                                e.stopPropagation();
+                                navigator.clipboard.writeText(legacyTarget);
+                                this.textContent = 'Copiado!';
+                                setTimeout(() => { this.textContent = 'Link do Aluno'; }, 1500);
+                            };
+                        }
+                    }
+                }
+
+                // 3. Mark as confirmed so polling skips this aluno
+                const anyMaterial = profExists || alunoExists || hasLegacy;
+                if (anyMaterial) confirmedMaterials.add(id);
+                if (anyMaterial && foco && !card.querySelector('.s-card-bg')) {
+                    const img = getThemeImage(foco);
+                    const bgDiv = document.createElement('div');
+                    bgDiv.className = 's-card-bg';
+                    bgDiv.style.backgroundImage = "url('" + img + "')";
+                    card.insertBefore(bgDiv, card.firstChild);
+                }
+            })();
+
+            checks.push(materialCheck);
+        });
+
+        await Promise.all(checks);
+    }
+
+    // Alocação modal
+    var alocacaoAlunoId = null;
+    function abrirAlocacao(id) {
+        alocacaoAlunoId = id;
+        // Load existing data
+        var perfil = {};
+        try { perfil = JSON.parse(localStorage.getItem('alumni-perfil-' + id) || '{}'); } catch(e) {}
+        var aloc = perfil.alocacao || {};
+        var nome = (perfil.dadosFormulario || {}).nome || id;
+
+        document.getElementById('alocacaoNomeAluno').textContent = nome;
+        document.getElementById('alocProf').value = aloc.professor || '';
+        document.getElementById('alocDias').value = aloc.diasHorarios || '';
+        document.getElementById('alocInicio').value = aloc.inicio || '';
+        document.getElementById('alocTermino').value = aloc.termino || '';
+        document.getElementById('alocacaoModal').classList.add('show');
+    }
+    function fecharAlocacao() { document.getElementById('alocacaoModal').classList.remove('show'); alocacaoAlunoId = null; }
+    function salvarAlocacao() {
+        if (!alocacaoAlunoId) return;
+        var perfil = {};
+        try { perfil = JSON.parse(localStorage.getItem('alumni-perfil-' + alocacaoAlunoId) || '{}'); } catch(e) {}
+        perfil.alocacao = {
+            professor: document.getElementById('alocProf').value.trim(),
+            diasHorarios: document.getElementById('alocDias').value.trim(),
+            inicio: document.getElementById('alocInicio').value,
+            termino: document.getElementById('alocTermino').value
+        };
+        localStorage.setItem('alumni-perfil-' + alocacaoAlunoId, JSON.stringify(perfil));
+        fecharAlocacao();
+        filterAlunos(); // re-render cards
+    }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') fecharAlocacao(); });
+
+    loadAlunos();
+
+    // Poll every 15s for newly deployed materials (e.g. while Claude Code generates in another tab)
+    setInterval(() => {
+        checkMaterialExists();
+    }, 15000);
+</script>
+</body>
+</html>

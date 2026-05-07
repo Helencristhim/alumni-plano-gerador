@@ -1,0 +1,2361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Aluno View — Daniela Feitoza | Professional English | Alumni by Better</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <style>
+        :root {
+            --accent: #0d7377;
+            --accent-light: #14919b;
+            --accent-dim: rgba(13,115,119,0.08);
+            --accent-glow: rgba(13,115,119,0.05);
+            --black: #1a1a2e;
+            --bg: #f5f5f0;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fafaf7;
+            --bg-elevated: #f0f0eb;
+            --bg-input: #fafaf7;
+            --border: #d4d4cc;
+            --border-light: #c0c0b8;
+            --white: #1a1a2e;
+            --text: #2d2d3a;
+            --text-mid: #4a4a5a;
+            --text-dim: #5c5c6c;
+            --success: #16a34a;
+            --success-bg: rgba(22,163,74,0.08);
+            --success-border: rgba(22,163,74,0.25);
+            --danger: #dc2626;
+            --danger-bg: rgba(220,38,38,0.08);
+            --danger-border: rgba(220,38,38,0.25);
+            --warn: #d97706;
+            --warn-bg: rgba(217,119,6,0.08);
+            --warn-border: rgba(217,119,6,0.25);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .logo-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo-bar img { height: 36px; }
+        .logo-bar .prof-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #fff;
+            background: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 0.35rem 0.9rem;
+            border-radius: 4px;
+        }
+
+        .header {
+            position: relative;
+            min-height: 340px;
+            display: flex;
+            align-items: flex-end;
+            padding: 3rem 2rem;
+            overflow: hidden;
+            background: url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1400&q=80') center/cover no-repeat;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26,26,46,0.92) 0%, rgba(26,26,46,0.75) 40%, rgba(26,26,46,0.6) 100%);
+        }
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .passport-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--accent);
+            padding: 0.5rem 1.2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-bottom: 1.2rem;
+            border-radius: 4px;
+            border: none;
+        }
+        .header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+        }
+        .header .subtitle {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+        }
+        .student-info {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.875rem;
+            color: #e8e8e8;
+            font-weight: 500;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            letter-spacing: 0.5px;
+        }
+        .student-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .student-info span::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--accent-light);
+        }
+        .progress-passport {
+            margin-top: 2rem;
+            background: rgba(0,0,0,0.35);
+            padding: 1.2rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+        }
+        .progress-passport .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .progress-bar-outer {
+            background: rgba(255,255,255,0.2);
+            height: 6px;
+            overflow: hidden;
+            border-radius: 3px;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            background: var(--accent-light);
+            transition: width 0.6s ease;
+            width: 0%;
+            border-radius: 3px;
+        }
+        .stamps-row {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .stamp {
+            width: 64px;
+            height: 64px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            position: relative;
+            opacity: 0.3;
+            transition: all 0.4s ease;
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%);
+        }
+        .stamp::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 0.15rem 0.2rem;
+            font-size: 0.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            color: #d4d4d4;
+        }
+        .stamp.earned {
+            opacity: 1;
+            border-color: var(--accent-light);
+            filter: grayscale(0%);
+            box-shadow: 0 0 20px rgba(13,115,119,0.3);
+        }
+        .stamp.earned::after { color: #fff; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 2rem 3rem; }
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2.5rem;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 1rem 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            transition: all 0.2s ease-out;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            white-space: nowrap;
+            min-height: 44px;
+        }
+        .tab-btn.active { color: var(--white); }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+        .tab-btn:hover:not(.active) { color: var(--text-mid); }
+        .tab-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: -2px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(13,115,119,0.3); } 50% { box-shadow: 0 0 0 8px rgba(13,115,119,0); } }
+
+        .lesson-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            border-radius: 6px;
+        }
+        .lesson-card:hover { border-color: var(--border-light); }
+        .lesson-header {
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: stretch;
+            position: relative;
+            user-select: none;
+            min-height: 140px;
+            overflow: hidden;
+        }
+        .lesson-header-img {
+            width: 200px;
+            min-height: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .lesson-header-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent 50%, rgba(255,255,255,0.85) 100%);
+        }
+        .lesson-header-content {
+            flex: 1;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .lesson-number {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.4rem;
+        }
+        .lesson-header-content h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.3rem;
+            line-height: 1.2;
+        }
+        .lesson-desc {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+        .lesson-progress-mini {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+        }
+        .mini-bar {
+            flex: 1;
+            height: 5px;
+            background: var(--border);
+            max-width: 120px;
+            overflow: hidden;
+            border-radius: 3px;
+        }
+        .mini-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+        .mini-percent {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+        .expand-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            transition: transform 0.3s ease;
+        }
+        .lesson-card.open .expand-icon { transform: translateY(-50%) rotate(180deg); }
+        .lesson-body { display: none; padding: 2rem 2.5rem; border-top: 1px solid var(--border); }
+        .lesson-card.open .lesson-body { display: block; animation: fadeIn 0.3s ease; }
+
+        .exercise-section {
+            background: var(--bg-elevated);
+            padding: 1.5rem 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+        @media (min-width: 376px) {
+            .exercise-section { padding: 2rem; }
+        }
+        .exercise-section h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--text);
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--accent);
+            flex-wrap: wrap;
+        }
+        .exercise-section h4 .badge {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            padding: 0.3rem 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            border-radius: 3px;
+        }
+        .badge-vocab { background: rgba(139,105,20,0.15); color: #5c4a08; border: 1px solid rgba(139,105,20,0.35); }
+        .badge-speak { background: rgba(120,40,200,0.12); color: #581c87; border: 1px solid rgba(120,40,200,0.35); }
+        .badge-practice { background: rgba(20,130,60,0.12); color: #166534; border: 1px solid rgba(20,130,60,0.35); }
+        .badge-quiz { background: rgba(200,40,60,0.12); color: #991b1b; border: 1px solid rgba(200,40,60,0.35); }
+        .badge-media { background: rgba(55,48,163,0.12); color: #3730a3; border: 1px solid rgba(55,48,163,0.35); }
+        .badge-order { background: rgba(13,115,119,0.12); color: #065f60; border: 1px solid rgba(13,115,119,0.35); }
+        .badge-think { background: rgba(180,130,20,0.15); color: #6b4c0a; border: 1px solid rgba(180,130,20,0.4); }
+
+        .microcopy {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .vocab-cards { display: grid; gap: 0.6rem; margin-bottom: 1rem; }
+        .vocab-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: border-color 0.2s ease;
+        }
+        .vocab-card:hover { border-color: var(--accent); }
+        .vocab-card-content { flex: 1; }
+        .vocab-card-header {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+        .vocab-card-word { font-weight: 700; font-size: 1rem; color: var(--white); }
+        .vocab-card-dot { color: var(--accent); font-weight: 700; }
+        .vocab-card-translation { font-weight: 500; font-size: 0.88rem; color: var(--text-mid); }
+        .vocab-card-example { font-size: 0.875rem; color: var(--text-dim); font-style: italic; margin-top: 0.2rem; line-height: 1.5; }
+        .vocab-card .audio-btn { flex-shrink: 0; align-self: center; }
+
+        .section-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .section-header-row h4 { margin-bottom: 0; }
+        .listen-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: var(--accent-dim);
+            color: var(--accent);
+            border: 1.5px solid var(--accent);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border-radius: 20px;
+            font-weight: 600;
+            transition: all 0.2s ease-out;
+            letter-spacing: 0.3px;
+            min-height: 44px;
+        }
+        .listen-all-btn:hover { background: var(--accent); color: #fff; }
+        .listen-all-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+        .verify-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 1rem;
+            padding: 0.6rem 1.5rem;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+            min-height: 44px;
+        }
+        .verify-all-btn:hover { background: var(--accent-light); }
+        .verify-all-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+        .match-grid { display: grid; gap: 0.6rem; }
+        .match-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .match-row .match-word {
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--white);
+            min-width: 160px;
+            padding: 0.5rem 0.8rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .match-row select {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            background: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text);
+            border-radius: 4px;
+            min-height: 44px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s ease-out;
+        }
+        .match-row select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13,115,119,0.15); }
+        .match-row.correct { border-color: var(--success); background: var(--success-bg); }
+        .match-row.correct select { border-color: var(--success); color: var(--success); pointer-events: none; }
+        .match-row.wrong { border-color: var(--danger); background: var(--danger-bg); animation: shake 0.4s ease; }
+
+        .speech-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            padding: 1.2rem;
+            margin-bottom: 0.6rem;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .speech-card:hover { border-color: var(--border-light); }
+        .speech-phrase {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.2rem;
+        }
+        .speech-translation {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+        .speech-controls { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            color: var(--text);
+            letter-spacing: 0.5px;
+            min-height: 44px;
+            border-radius: 4px;
+        }
+        .btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+        .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .btn-listen { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .btn-listen:hover { background: var(--accent-light); border-color: var(--accent-light); }
+        .btn-record { background: var(--danger); color: #fff; border-color: var(--danger); }
+        .btn-record:hover { background: #b91c1c; border-color: #b91c1c; }
+        .btn-stop { background: #f59e0b; color: #fff; border-color: #f59e0b; display: none; }
+        .btn-stop:hover { background: #d97706; border-color: #d97706; }
+        .btn-stop.visible { display: inline-flex; }
+        .btn-record.recording { background: #b91c1c; border-color: #b91c1c; animation: pulse 1.2s infinite; }
+        .btn-record.hidden { display: none; }
+
+        .speech-result {
+            margin-top: 0.8rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            font-size: 0.875rem;
+            display: none;
+            border-radius: 4px;
+        }
+        .speech-result.show { display: block; animation: fadeIn 0.3s ease; }
+        .speech-result.good { background: var(--success-bg); border-color: var(--success-border); color: var(--success); }
+        .speech-result.try-again { background: var(--warn-bg); border-color: var(--warn-border); color: var(--warn); }
+        .speech-result.bad { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger); }
+        .word-comparison { margin-top: 0.8rem; }
+        .word-comparison .comp-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.4rem; opacity: 0.8; }
+        .word-comparison .comp-words { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.6rem; }
+        .word-box { display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.25rem 0.6rem; font-size: 0.8rem; font-weight: 500; border: 1px solid; border-radius: 3px; }
+        .word-box.word-correct { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
+        .word-box.word-wrong { background: var(--danger-bg); color: var(--danger); border-color: var(--danger-border); text-decoration: line-through; }
+        .word-box.word-missing { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); font-style: italic; }
+        .word-box.word-extra { background: rgba(168,85,247,0.1); color: #7c3aed; border-color: rgba(168,85,247,0.25); }
+        .word-box .word-icon { font-size: 0.7rem; }
+        .speech-suggestion { margin-top: 0.6rem; padding: 0.6rem 0.8rem; background: rgba(255,255,255,0.5); border: 1px solid var(--border); font-size: 0.875rem; border-radius: 3px; }
+        .speech-suggestion strong { color: var(--accent); }
+
+        .fill-blank-item {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            padding: 1.2rem;
+            margin-bottom: 0.6rem;
+            border-radius: 4px;
+        }
+        .fill-blank-sentence { font-size: 0.95rem; margin-bottom: 0.8rem; line-height: 2; color: var(--text); }
+        .blank-input {
+            display: inline-block;
+            border: none;
+            border-bottom: 1px solid var(--accent);
+            background: transparent;
+            padding: 0.2rem 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent);
+            width: 140px;
+            text-align: center;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .blank-input:focus { border-bottom-color: var(--white); color: var(--white); outline: none; box-shadow: 0 2px 0 0 var(--accent); }
+        .blank-input.correct { border-bottom-color: var(--success); color: var(--success); }
+        .blank-input.wrong { border-bottom-color: var(--danger); color: var(--danger); }
+        .hint-text { font-size: 0.82rem; color: var(--text-dim); font-style: italic; margin-top: 0.3rem; }
+        .blank-hint-feedback { font-size: 0.75rem; color: var(--danger); font-style: italic; margin-top: 0.4rem; display: none; }
+        .blank-hint-feedback.visible { display: block; }
+        .listen-blank-btn { background: var(--accent-dim); border: 1px solid var(--accent); color: var(--accent); font-size: 0.8rem; padding: 0.5rem 0.8rem; border-radius: 4px; cursor: pointer; margin-left: 0.5rem; min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; font-weight: 500; transition: all 0.2s ease-out; }
+        .listen-blank-btn:hover { background: var(--accent); color: #fff; }
+        .listen-blank-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .check-btn { background: var(--accent); color: #fff; border-color: var(--accent); margin-top: 0.6rem; }
+        .check-btn:hover { background: var(--accent-light); border-color: var(--accent-light); }
+
+        .quiz-item { margin-bottom: 1.5rem; }
+        .quiz-question { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.6rem; color: var(--text); }
+        .quiz-options { display: grid; gap: 0.4rem; }
+        .quiz-option {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--text);
+            min-height: 44px;
+            border-radius: 3px;
+        }
+        .quiz-option:hover { border-color: var(--accent); }
+        .quiz-option:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .quiz-option.correct { border-color: var(--success); background: var(--success-bg); color: var(--success); pointer-events: none; }
+        .quiz-option.wrong { border-color: var(--danger); background: var(--danger-bg); color: var(--danger); }
+        .quiz-option .option-letter {
+            width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.7rem; flex-shrink: 0;
+            border: 1px solid var(--border); color: var(--text-dim); border-radius: 3px;
+        }
+        .quiz-option.correct .option-letter { background: var(--success); color: #fff; border-color: var(--success); }
+        .quiz-option.wrong .option-letter { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+        .order-container { display: flex; flex-direction: column; gap: 0.4rem; }
+        .order-item {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            padding: 0.9rem 1.2rem;
+            cursor: grab;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            min-height: 44px;
+            user-select: none;
+        }
+        .order-item:hover { border-color: var(--accent); }
+        .order-item .order-num {
+            width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.7rem;
+            border: 1px solid var(--border); color: var(--text-dim); border-radius: 3px;
+            flex-shrink: 0;
+        }
+        .order-item.correct-order { border-color: var(--success); background: var(--success-bg); }
+        .order-item.correct-order .order-num { background: var(--success); color: #fff; border-color: var(--success); }
+        .order-item .order-text { flex: 1; }
+        .order-item .order-arrows { display: flex; flex-direction: column; gap: 2px; margin-left: auto; flex-shrink: 0; }
+        .order-item .arrow-btn {
+            background: transparent; border: 1px solid var(--border); color: var(--text-dim);
+            width: 24px; height: 20px; font-size: 0.6rem; cursor: pointer; border-radius: 3px;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;
+            padding: 0; line-height: 1;
+        }
+        .order-item .arrow-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .order-item .arrow-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+        .order-item.dragging { opacity: 0.5; border: 2px dashed var(--accent); }
+        .order-item.drag-over { border-top: 3px solid var(--accent); }
+
+        .think-card {
+            background: var(--accent-glow);
+            border: 1px solid rgba(13,115,119,0.15);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        .think-card .think-prompt { font-size: 0.92rem; color: var(--text); margin-bottom: 1rem; line-height: 1.8; }
+        .think-card .think-note { font-size: 0.75rem; color: var(--text-dim); font-style: italic; }
+
+        .survival-card {
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            padding: 2rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+        }
+        .survival-card h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        .survival-card .sc-category {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin: 1rem 0 0.5rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .survival-phrase {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        .survival-phrase .sp-num { font-size: 0.65rem; font-weight: 700; color: var(--accent); min-width: 20px; }
+        .survival-phrase .sp-en { font-weight: 600; color: var(--white); font-size: 0.88rem; flex: 1; }
+        .survival-phrase .sp-pt { font-size: 0.82rem; color: var(--text-dim); font-style: italic; }
+
+        .welcome-card, .celebration-card {
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            padding: 2.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .welcome-card h3, .celebration-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+        }
+        .welcome-card p, .celebration-card p { font-size: 0.9rem; color: var(--text-mid); margin-bottom: 0.6rem; line-height: 1.8; }
+        .welcome-card blockquote, .celebration-card blockquote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--accent);
+            padding: 1rem 1.5rem;
+            border-left: 3px solid var(--accent);
+            margin: 1rem auto;
+            max-width: 600px;
+            text-align: left;
+        }
+        .emergency-phrases { text-align: left; max-width: 600px; margin: 1.5rem auto; }
+        .emergency-phrases h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.8rem;
+        }
+
+        .audio-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+            min-height: 36px;
+            min-width: 36px;
+            justify-content: center;
+        }
+        .audio-btn:hover { background: var(--accent-light); }
+        .audio-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+        .media-grid { display: grid; gap: 0.6rem; }
+        .media-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+            align-items: stretch;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .media-card:hover { border-color: var(--border-light); transform: translateY(-1px); }
+        .media-thumb {
+            width: 80px; min-height: 80px;
+            background-size: cover; background-position: center;
+            flex-shrink: 0; position: relative;
+        }
+        .media-thumb::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.3); }
+        .media-thumb.movie { background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=200&q=80'); }
+        .media-thumb.series { background-image: url('https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=200&q=80'); }
+        .media-thumb.podcast { background-image: url('https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=200&q=80'); }
+        .media-thumb.youtube { background-image: url('https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=200&q=80'); }
+        .media-thumb.documentary { background-image: url('https://images.unsplash.com/photo-1485846234645-a62644f84728?w=200&q=80'); }
+        .media-thumb.platform { background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=200&q=80'); }
+        .media-info { padding: 0.8rem 0.8rem 0.8rem 0; }
+        .media-info h5 { font-size: 0.88rem; font-weight: 600; color: var(--white); margin-bottom: 0.1rem; }
+        .media-info .media-type { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); }
+        .media-info p { font-size: 0.82rem; color: var(--text-dim); margin-top: 0.2rem; }
+        .media-info .media-tip { font-size: 0.8rem; color: var(--accent); font-weight: 500; margin-top: 0.3rem; }
+
+        .media-card-wrapper { display: flex; align-items: stretch; gap: 0; }
+        .media-check {
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 0.8rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            cursor: pointer;
+        }
+        .media-check input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+        .media-card-wrapper .media-card { border-radius: 0 4px 4px 0; flex: 1; }
+        .media-card-wrapper.done .media-card { opacity: 0.6; }
+        .media-card-wrapper.done .media-check { background: var(--success-bg); border-color: var(--success-border); }
+
+        .reset-btn {
+            display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+            width: auto; padding: 0.8rem;
+            background: transparent; border: 1px solid var(--border);
+            cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.75rem;
+            color: var(--text-dim); margin: 2rem 0.5rem 0; transition: all 0.2s ease;
+            letter-spacing: 0.5px; border-radius: 4px;
+        }
+        .reset-btn:hover { border-color: var(--danger); color: var(--danger); }
+        .reset-btn:focus-visible { outline: 3px solid var(--danger); outline-offset: 2px; }
+
+        @media (max-width: 1024px) { .container { padding: 2rem 2rem; } }
+        @media (max-width: 768px) {
+            .container { padding: 1.5rem 1rem; }
+        }
+        @media (max-width: 480px) {
+            .header { min-height: 280px; padding: 2rem 1rem; }
+            .header h1 { font-size: 2rem; }
+            .lesson-header-img { width: 100px; }
+            .lesson-header-content h3 { font-size: 1.2rem; }
+            .match-row { flex-direction: column; align-items: stretch; }
+            .match-row .match-word { min-width: auto; }
+            .student-info { flex-direction: column; gap: 0.4rem; }
+            .speech-controls { flex-direction: column; align-items: stretch; }
+            .btn { justify-content: center; width: 100%; }
+            .stamps-row { gap: 0.5rem; }
+            .stamp { width: 50px; height: 50px; }
+            .tabs { gap: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .tab-btn { font-size: 0.68rem; letter-spacing: 0.8px; padding: 0.8rem 0.4rem; min-height: 44px; }
+            .verify-all-btn { width: 100%; justify-content: center; }
+            .listen-all-btn { width: 100%; justify-content: center; }
+            .section-header-row { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+        }
+
+        @media print {
+            .logo-bar, .tabs, .stamps-row, .progress-passport, .btn-record, .btn-stop, .btn-listen, .reset-btn { display: none !important; }
+            .tab-content { display: block !important; }
+            .lesson-body { display: block !important; }
+            .lesson-card { break-inside: avoid; }
+            body { font-size: 12px; background: #fff; }
+            .header { min-height: auto; padding: 1rem; }
+            .header::before { background: rgba(26,26,46,0.8); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+    <script src="/components/exercises.js"></script>
+    <script src="/components/activity-tracker.js"></script>
+</head>
+<body>
+
+<!-- LOGO BAR -->
+<div class="logo-bar">
+    <img src="../assets/logo-alumni.png" alt="Alumni by Better">
+    <span class="prof-badge">Aluno</span>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-content">
+        <div class="passport-badge">Professional English Program</div>
+        <h1>Daniela Feitoza</h1>
+        <div class="subtitle">Conversational English for International Professional Events &mdash; 43 Aulas</div>
+        <div class="student-info">
+            <span>S&atilde;o Paulo, SP</span>
+            <span>N&iacute;vel A2+ (Pre-Intermediate)</span>
+            <span>IT Manager &mdash; SPF Group</span>
+            <span>43 aulas de 90 min</span>
+        </div>
+        <div class="progress-passport">
+            <div class="progress-label">
+                <span>Progresso Pre-class</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-outer">
+                <div class="progress-bar-inner" id="progressBar"></div>
+            </div>
+        </div>
+        <div class="stamps-row">
+            <div class="stamp" id="stamp1" data-label="Intro" style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&q=80')"></div>
+            <div class="stamp" id="stamp2" data-label="Ice Break" style="background-image:url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=200&q=80')"></div>
+            <div class="stamp" id="stamp3" data-label="Job Pitch" style="background-image:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=200&q=80')"></div>
+            <div class="stamp" id="stamp4" data-label="Articles" style="background-image:url('https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=200&q=80')"></div>
+            <div class="stamp" id="stamp5" data-label="Company" style="background-image:url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=200&q=80')"></div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTAINER -->
+<div class="container">
+
+    <!-- Audio Speed Control -->
+    <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:var(--space-sm);padding:8px 0;">
+        <span style="font-size:0.8rem;color:var(--text-dim);font-weight:500;">Velocidade do &aacute;udio:</span>
+        <button class="speed-btn" data-speed="0.5" onclick="setAudioSpeed(0.5,this)" style="padding:4px 10px;font-size:0.75rem;border:1px solid var(--border);background:var(--bg-card);border-radius:4px;cursor:pointer;">0.5x</button>
+        <button class="speed-btn" data-speed="0.75" onclick="setAudioSpeed(0.75,this)" style="padding:4px 10px;font-size:0.75rem;border:1px solid var(--border);background:var(--bg-card);border-radius:4px;cursor:pointer;">0.75x</button>
+        <button class="speed-btn active" data-speed="1" onclick="setAudioSpeed(1,this)" style="padding:4px 10px;font-size:0.75rem;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:4px;cursor:pointer;font-weight:600;">1x</button>
+        <button class="speed-btn" data-speed="1.25" onclick="setAudioSpeed(1.25,this)" style="padding:4px 10px;font-size:0.75rem;border:1px solid var(--border);background:var(--bg-card);border-radius:4px;cursor:pointer;">1.25x</button>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('exercises')">Pre-class</button>
+        <button class="tab-btn" onclick="switchTab('complementary')">Complementares</button>
+    </div>
+
+    <!-- ==================== TAB 1: PRE-CLASS ==================== -->
+    <div class="tab-content active" id="tab-exercises">
+
+        <!-- ONBOARDING -->
+        <div class="welcome-card">
+            <h3>Bem-vinda, Daniela!</h3>
+            <p>Seu programa Professional English come&ccedil;a aqui. Em 43 aulas, voc&ecirc; vai transformar o &ldquo;ai meu Deus, e agora?&rdquo; em confian&ccedil;a real.</p>
+            <blockquote>&ldquo;Quero criar conex&otilde;es genu&iacute;nas em eventos internacionais e me candidatar a vagas globais sem medo de falar ingl&ecirc;s.&rdquo;</blockquote>
+            <div class="emergency-phrases">
+                <h4>5 Frases de Emerg&ecirc;ncia para Eventos</h4>
+                <p class="microcopy">Essas frases salvam qualquer situa&ccedil;&atilde;o em eventos internacionais. Ou&ccedil;a cada uma e tente repetir em voz alta.</p>
+                <div class="speech-card" data-phrase="Hi, I'm Daniela. Nice to meet you.">
+                    <div class="speech-phrase">Hi, I'm Daniela. Nice to meet you.</div>
+                    <div class="speech-translation">Oi, eu sou a Daniela. Prazer em conhecer voc&ecirc;.</div>
+                    <div class="speech-controls">
+                        <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+                    </div>
+                </div>
+                <div class="speech-card" data-phrase="Sorry, could you say that again?">
+                    <div class="speech-phrase">Sorry, could you say that again?</div>
+                    <div class="speech-translation">Desculpe, pode repetir?</div>
+                    <div class="speech-controls">
+                        <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+                    </div>
+                </div>
+                <div class="speech-card" data-phrase="What do you do?">
+                    <div class="speech-phrase">What do you do?</div>
+                    <div class="speech-translation">O que voc&ecirc; faz? (profissionalmente)</div>
+                    <div class="speech-controls">
+                        <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+                    </div>
+                </div>
+                <div class="speech-card" data-phrase="That's really interesting. Tell me more.">
+                    <div class="speech-phrase">That's really interesting. Tell me more.</div>
+                    <div class="speech-translation">Que interessante. Me conte mais.</div>
+                    <div class="speech-controls">
+                        <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+                    </div>
+                </div>
+                <div class="speech-card" data-phrase="It was great talking to you. Let's keep in touch.">
+                    <div class="speech-phrase">It was great talking to you. Let's keep in touch.</div>
+                    <div class="speech-translation">Foi &oacute;timo conversar com voc&ecirc;. Vamos manter contato.</div>
+                    <div class="speech-controls">
+                        <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+                    </div>
+                </div>
+                <p style="margin-top:1rem;font-size:0.82rem;color:var(--accent);font-weight:500;">Desafio: Ou&ccedil;a cada frase e tente repetir em voz alta antes da primeira aula.</p>
+            </div>
+        </div>
+
+        <!-- ===== AULA 1 PRE-CLASS ===== -->
+        <div class="lesson-card" id="ex-lesson-1">
+            <div class="lesson-header" onclick="toggleLesson(this)">
+                <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=80')"></div>
+                <div class="lesson-header-content">
+                    <div class="lesson-number">Aula 01 &mdash; Pre-class</div>
+                    <h3>Who is Daniela? Diagnostic + Personal Introduction</h3>
+                    <div class="lesson-desc">Depois desta aula, voc&ecirc; vai saber se apresentar com confian&ccedil;a em qualquer evento profissional.</div>
+                    <div class="lesson-progress-mini">
+                        <div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="1" style="width:0%"></div></div>
+                        <span class="mini-percent" data-lesson-pct="1">0%</span>
+                    </div>
+                </div>
+                <div class="expand-icon">&#9660;</div>
+            </div>
+            <div class="lesson-body">
+                <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:1.5rem;">Ao final desta aula, Daniela ser&aacute; capaz de se apresentar profissionalmente em ingl&ecirc;s, incluindo nome, cargo, empresa, cidade e interesses.</p>
+
+                <!-- Vocabulary Cards -->
+                <div class="exercise-section">
+                    <div class="section-header-row">
+                        <h4>Vocabul&aacute;rio &mdash; Personal Introduction <span class="badge badge-vocab">Vocabul&aacute;rio</span></h4>
+                        <button class="listen-all-btn" onclick="listenAllVocab(this)" aria-label="Ouvir todas as palavras">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                            Ouvir todos
+                        </button>
+                    </div>
+                    <p class="microcopy">Veja a palavra, a tradu&ccedil;&atilde;o e o exemplo. Toque em Ouvir &mdash; o som ajuda a memorizar.</p>
+                    <div class="vocab-cards">
+                        <div class="vocab-card">
+                            <div class="vocab-card-content">
+                                <div class="vocab-card-header"><span class="vocab-card-word">introduction</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">apresenta&ccedil;&atilde;o</span></div>
+                                <div class="vocab-card-example">&ldquo;Let me give you a quick introduction about myself.&rdquo;</div>
+                            </div>
+                            <button class="audio-btn" onclick="speakText('Let me give you a quick introduction about myself.', this)" aria-label="Ouvir">&#9654; Ouvir</button>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-card-content">
+                                <div class="vocab-card-header"><span class="vocab-card-word">manage</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">gerenciar</span></div>
+                                <div class="vocab-card-example">&ldquo;I manage the IT department at SPF Group.&rdquo;</div>
+                            </div>
+                            <button class="audio-btn" onclick="speakText('I manage the IT department at SPF Group.', this)" aria-label="Ouvir">&#9654; Ouvir</button>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-card-content">
+                                <div class="vocab-card-header"><span class="vocab-card-word">based in</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">sediado em</span></div>
+                                <div class="vocab-card-example">&ldquo;I'm based in S&atilde;o Paulo, Brazil.&rdquo;</div>
+                            </div>
+                            <button class="audio-btn" onclick="speakText('I am based in Sao Paulo, Brazil.', this)" aria-label="Ouvir">&#9654; Ouvir</button>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-card-content">
+                                <div class="vocab-card-header"><span class="vocab-card-word">responsible for</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">respons&aacute;vel por</span></div>
+                                <div class="vocab-card-example">&ldquo;I'm responsible for all IT operations.&rdquo;</div>
+                            </div>
+                            <button class="audio-btn" onclick="speakText('I am responsible for all IT operations.', this)" aria-label="Ouvir">&#9654; Ouvir</button>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-card-content">
+                                <div class="vocab-card-header"><span class="vocab-card-word">background</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">experi&ecirc;ncia/forma&ccedil;&atilde;o</span></div>
+                                <div class="vocab-card-example">&ldquo;My background is in information technology.&rdquo;</div>
+                            </div>
+                            <button class="audio-btn" onclick="speakText('My background is in information technology.', this)" aria-label="Ouvir">&#9654; Ouvir</button>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-card-content">
+                                <div class="vocab-card-header"><span class="vocab-card-word">enjoy</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">gostar de/apreciar</span></div>
+                                <div class="vocab-card-example">&ldquo;I enjoy working with technology and people.&rdquo;</div>
+                            </div>
+                            <button class="audio-btn" onclick="speakText('I enjoy working with technology and people.', this)" aria-label="Ouvir">&#9654; Ouvir</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- V1: Matching Dropdown -->
+                <div class="exercise-section">
+                    <h4>V1. Match the words to their meanings <span class="badge badge-vocab">Vocabulary</span></h4>
+                    <p class="microcopy">Selecione a tradu&ccedil;&atilde;o correta para cada palavra.</p>
+                    <div class="match-grid" id="match-l1">
+                        <div class="match-row" data-answer="apresenta&ccedil;&atilde;o"><span class="match-word">introduction</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="gerenciar">gerenciar</option><option value="apresenta&ccedil;&atilde;o">apresenta&ccedil;&atilde;o</option><option value="experi&ecirc;ncia">experi&ecirc;ncia</option></select></div>
+                        <div class="match-row" data-answer="gerenciar"><span class="match-word">manage</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="gerenciar">gerenciar</option><option value="apreciar">apreciar</option><option value="sediado em">sediado em</option></select></div>
+                        <div class="match-row" data-answer="sediado em"><span class="match-word">based in</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="respons&aacute;vel por">respons&aacute;vel por</option><option value="sediado em">sediado em</option><option value="apresenta&ccedil;&atilde;o">apresenta&ccedil;&atilde;o</option></select></div>
+                        <div class="match-row" data-answer="respons&aacute;vel por"><span class="match-word">responsible for</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="respons&aacute;vel por">respons&aacute;vel por</option><option value="gerenciar">gerenciar</option><option value="apreciar">apreciar</option></select></div>
+                        <div class="match-row" data-answer="experi&ecirc;ncia"><span class="match-word">background</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="experi&ecirc;ncia">experi&ecirc;ncia</option><option value="sediado em">sediado em</option><option value="apresenta&ccedil;&atilde;o">apresenta&ccedil;&atilde;o</option></select></div>
+                        <div class="match-row" data-answer="apreciar"><span class="match-word">enjoy</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="apreciar">apreciar</option><option value="gerenciar">gerenciar</option><option value="experi&ecirc;ncia">experi&ecirc;ncia</option></select></div>
+                    </div>
+                    <button class="verify-all-btn" onclick="verifyAllMatches('match-l1')">Check Answers</button>
+                </div>
+
+                <!-- V2: Fill-in with Hint -->
+                <div class="exercise-section">
+                    <h4>V2. Complete with the correct word <span class="badge badge-practice">Practice</span></h4>
+                    <p class="microcopy">Preencha com a palavra certa. Use a dica em ingl&ecirc;s se precisar de ajuda.</p>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;Let me give you a quick <input class="blank-input" data-answer="introduction" data-hint="Hint: this word means a formal presentation of yourself to someone new" data-phrase="Let me give you a quick introduction about myself." placeholder="___"> about myself.&rdquo;</div>
+                        <div class="hint-text">Hint: a formal presentation of yourself to someone new</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button>
+                        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;I <input class="blank-input" data-answer="manage" data-hint="Hint: this verb means to be in charge of a team or department" data-phrase="I manage the IT department." placeholder="___"> the IT department at SPF Group.&rdquo;</div>
+                        <div class="hint-text">Hint: to be in charge of a team or department</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button>
+                        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;I'm <input class="blank-input" data-answer="based" data-hint="Hint: this word means located or situated in a place" data-phrase="I am based in Sao Paulo." placeholder="___"> in S&atilde;o Paulo, Brazil.&rdquo;</div>
+                        <div class="hint-text">Hint: located or situated in a place</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button>
+                        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;My <input class="blank-input" data-answer="background" data-hint="Hint: this means your education and experience in a particular field" data-phrase="My background is in information technology." placeholder="___"> is in information technology.&rdquo;</div>
+                        <div class="hint-text">Hint: your education and experience in a particular field</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button>
+                        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                </div>
+
+                <!-- P1: Fill blank -->
+                <div class="exercise-section">
+                    <h4>P1. Complete the sentences <span class="badge badge-practice">Practice</span></h4>
+                    <p class="microcopy">Complete as frases de mem&oacute;ria, sem olhar o vocabul&aacute;rio.</p>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;I'm <input class="blank-input" data-answer="responsible" data-hint="Hint: this adjective means having the duty to deal with something" data-phrase="I am responsible for all IT operations." placeholder="___"> for all IT operations.&rdquo;</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button>
+                        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;I <input class="blank-input" data-answer="enjoy" data-hint="Hint: this verb means to take pleasure in doing something" data-phrase="I enjoy working with technology and people." placeholder="___"> working with technology and people.&rdquo;</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button>
+                        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;Nice to <input class="blank-input" data-answer="meet" data-hint="Hint: this is the standard greeting when you see someone for the first time" data-phrase="Nice to meet you." placeholder="___"> you.&rdquo;</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button>
+                        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                </div>
+
+                <!-- P2: Multiple Choice -->
+                <div class="exercise-section">
+                    <h4>P2. Choose the best answer <span class="badge badge-quiz">Quiz</span></h4>
+                    <div class="quiz-item">
+                        <div class="quiz-question">You are at an SAP conference and someone asks &ldquo;What do you do?&rdquo;. The best answer is:</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;I do computer things.&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;I'm an IT Manager at SPF Group. We distribute Centauro and Nike in Brazil.&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;I work.&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">D</span> &ldquo;My job is very complicated to explain.&rdquo;</div>
+                        </div>
+                    </div>
+                    <div class="quiz-item">
+                        <div class="quiz-question">Which sentence correctly uses &ldquo;based in&rdquo;?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;I am based from S&atilde;o Paulo.&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;Our company is based in S&atilde;o Paulo.&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;I based in S&atilde;o Paulo since 2020.&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">D</span> &ldquo;S&atilde;o Paulo is based me.&rdquo;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- P3: Ordering -->
+                <div class="exercise-section">
+                    <h4>P3. Put the introduction in order <span class="badge badge-order">Practice</span></h4>
+                    <p class="microcopy">Organize esta apresenta&ccedil;&atilde;o pessoal na ordem correta.</p>
+                    <div class="order-container" id="order-l1">
+                        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">&ldquo;I'm responsible for SAP implementation and IT infrastructure.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l1')">&#9660;</button></span></div>
+                        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">&ldquo;Hi, I'm Daniela Feitoza. Nice to meet you.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l1')">&#9660;</button></span></div>
+                        <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">&ldquo;In my free time, I enjoy going to the beach in Ubatuba.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l1')">&#9660;</button></span></div>
+                        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">&ldquo;I'm an IT Manager at SPF Group, based in S&atilde;o Paulo.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l1')">&#9660;</button></span></div>
+                        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">&ldquo;My background is in information technology and I've been in this field for over 15 years.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l1')">&#9660;</button></span></div>
+                    </div>
+                    <button class="btn check-btn" onclick="checkOrder('order-l1')" style="margin-top:1rem;">Check Order</button>
+                </div>
+
+                <!-- P4: Pronunciation -->
+                <div class="exercise-section">
+                    <h4>P4. Read aloud <span class="badge badge-speak">Speaking</span></h4>
+                    <p class="microcopy">Ou&ccedil;a a frase, depois grave voc&ecirc; falando. O sistema vai comparar sua pron&uacute;ncia.</p>
+                    <div class="speech-card" data-phrase="Hi, I'm Daniela. I'm an IT Manager at SPF Group.">
+                        <div class="speech-phrase">Hi, I'm Daniela. I'm an IT Manager at SPF Group.</div>
+                        <div class="speech-translation">Oi, eu sou a Daniela. Sou gerente de TI no SPF Group.</div>
+                        <div class="speech-controls">
+                            <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+                            <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+                            <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+                        </div>
+                        <div class="speech-result"></div>
+                    </div>
+                    <div class="speech-card" data-phrase="I'm based in Sao Paulo and I'm responsible for SAP implementation.">
+                        <div class="speech-phrase">I'm based in S&atilde;o Paulo and I'm responsible for SAP implementation.</div>
+                        <div class="speech-translation">Sou de S&atilde;o Paulo e respons&aacute;vel pela implementa&ccedil;&atilde;o do SAP.</div>
+                        <div class="speech-controls">
+                            <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+                            <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+                            <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+                        </div>
+                        <div class="speech-result"></div>
+                    </div>
+                    <div class="speech-card" data-phrase="My background is in information technology.">
+                        <div class="speech-phrase">My background is in information technology.</div>
+                        <div class="speech-translation">Minha forma&ccedil;&atilde;o &eacute; em tecnologia da informa&ccedil;&atilde;o.</div>
+                        <div class="speech-controls">
+                            <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+                            <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+                            <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+                        </div>
+                        <div class="speech-result"></div>
+                    </div>
+                </div>
+
+                <!-- T1: Think About It -->
+                <div class="exercise-section">
+                    <h4>T1. Think and respond <span class="badge badge-think">Reflection</span></h4>
+                    <div class="think-card">
+                        <div class="think-question" style="font-size:0.92rem;color:var(--text);margin-bottom:1rem;line-height:1.8;">Imagine you are at an SAP conference in Orlando. Someone approaches you and says &ldquo;Hi there! What brings you to the conference?&rdquo;. How would you respond? Record your answer &mdash; there is no right or wrong here.</div>
+                        <div class="speech-card" data-phrase="Hi! I'm Daniela, an IT Manager from Brazil. I'm here to learn about new SAP solutions for our retail operations." style="margin-top:1rem; background:var(--accent-dim); border:1px solid rgba(13,115,119,0.25); border-radius:6px; padding:1rem;">
+                            <div style="font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent); margin-bottom:0.5rem;">Sugest&atilde;o de resposta</div>
+                            <div style="font-weight:600; font-size:0.95rem; color:var(--text); margin-bottom:0.3rem;">&ldquo;Hi! I'm Daniela, an IT Manager from Brazil. I'm here to learn about new SAP solutions for our retail operations.&rdquo;</div>
+                            <div style="font-size:0.78rem; color:var(--text-dim); font-style:italic; margin-bottom:0.8rem;">Oi! Sou a Daniela, gerente de TI do Brasil. Estou aqui para aprender sobre novas solu&ccedil;&otilde;es SAP para nossas opera&ccedil;&otilde;es de varejo.</div>
+                            <div class="speech-controls">
+                                <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+                                <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar e Comparar</button>
+                                <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+                            </div>
+                            <div class="speech-result"></div>
+                        </div>
+                        <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+                            <div style="font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-dim); margin-bottom:0.5rem;">Ou grave sua pr&oacute;pria resposta</div>
+                            <div class="speech-controls">
+                                <button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Gravar Livre</button>
+                                <button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Parar</button>
+                            </div>
+                            <div id="think-result-1" style="margin-top:0.5rem;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Survival Card Lesson 1 -->
+                <div class="survival-card">
+                    <h4>Survival Card &mdash; Lesson 1: Personal Introduction</h4>
+                    <div class="survival-phrase"><span class="sp-num">1</span><span class="sp-en">Hi, I'm Daniela. Nice to meet you.</span><span class="sp-pt">Oi, sou a Daniela. Prazer.</span><button class="btn btn-listen" onclick="speakText('Hi, I am Daniela. Nice to meet you.', this)" style="flex-shrink:0;">&#9654;</button></div>
+                    <div class="survival-phrase"><span class="sp-num">2</span><span class="sp-en">I'm an IT Manager at SPF Group.</span><span class="sp-pt">Sou gerente de TI no SPF Group.</span><button class="btn btn-listen" onclick="speakText('I am an IT Manager at SPF Group.', this)" style="flex-shrink:0;">&#9654;</button></div>
+                    <div class="survival-phrase"><span class="sp-num">3</span><span class="sp-en">We distribute Centauro and Nike in Brazil.</span><span class="sp-pt">Distribu&iacute;mos Centauro e Nike no Brasil.</span><button class="btn btn-listen" onclick="speakText('We distribute Centauro and Nike in Brazil.', this)" style="flex-shrink:0;">&#9654;</button></div>
+                    <div class="survival-phrase"><span class="sp-num">4</span><span class="sp-en">I'm based in S&atilde;o Paulo.</span><span class="sp-pt">Sou de S&atilde;o Paulo.</span><button class="btn btn-listen" onclick="speakText('I am based in Sao Paulo.', this)" style="flex-shrink:0;">&#9654;</button></div>
+                    <div class="survival-phrase"><span class="sp-num">5</span><span class="sp-en">My background is in information technology.</span><span class="sp-pt">Minha forma&ccedil;&atilde;o &eacute; em TI.</span><button class="btn btn-listen" onclick="speakText('My background is in information technology.', this)" style="flex-shrink:0;">&#9654;</button></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== AULA 2 PRE-CLASS ===== -->
+        <div class="lesson-card" id="ex-lesson-2">
+            <div class="lesson-header" onclick="toggleLesson(this)">
+                <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80')"></div>
+                <div class="lesson-header-content">
+                    <div class="lesson-number">Aula 02 &mdash; Pre-class</div>
+                    <h3>Breaking the Ice &mdash; First Contact at International Events</h3>
+                    <div class="lesson-desc">Aprenda a iniciar conversas com naturalidade em eventos profissionais.</div>
+                    <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="2" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="2">0%</span></div>
+                </div>
+                <div class="expand-icon">&#9660;</div>
+            </div>
+            <div class="lesson-body">
+                <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:1.5rem;">Ao final desta aula, Daniela ser&aacute; capaz de iniciar e manter uma conversa casual em eventos profissionais usando small talk e question tags.</p>
+
+                <div class="exercise-section">
+                    <div class="section-header-row">
+                        <h4>Vocabul&aacute;rio &mdash; Small Talk <span class="badge badge-vocab">Vocabul&aacute;rio</span></h4>
+                        <button class="listen-all-btn" onclick="listenAllVocab(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg> Ouvir todos</button>
+                    </div>
+                    <p class="microcopy">Palavras essenciais para small talk em eventos.</p>
+                    <div class="vocab-cards">
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">networking</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">networking/fazer contatos</span></div><div class="vocab-card-example">&ldquo;Networking is the best part of any conference.&rdquo;</div></div><button class="audio-btn" onclick="speakText('Networking is the best part of any conference.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">attendee</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">participante</span></div><div class="vocab-card-example">&ldquo;There are over 500 attendees at this event.&rdquo;</div></div><button class="audio-btn" onclick="speakText('There are over 500 attendees at this event.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">approach</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">abordar/se aproximar</span></div><div class="vocab-card-example">&ldquo;Don't be afraid to approach new people.&rdquo;</div></div><button class="audio-btn" onclick="speakText('Do not be afraid to approach new people.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">keynote</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">palestra principal</span></div><div class="vocab-card-example">&ldquo;The keynote speaker was amazing today.&rdquo;</div></div><button class="audio-btn" onclick="speakText('The keynote speaker was amazing today.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">first time</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">primeira vez</span></div><div class="vocab-card-example">&ldquo;Is this your first time at this conference?&rdquo;</div></div><button class="audio-btn" onclick="speakText('Is this your first time at this conference?', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">keep in touch</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">manter contato</span></div><div class="vocab-card-example">&ldquo;Let's keep in touch after the conference.&rdquo;</div></div><button class="audio-btn" onclick="speakText('Let us keep in touch after the conference.', this)">&#9654; Ouvir</button></div>
+                    </div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>V1. Match the words <span class="badge badge-vocab">Vocabulary</span></h4>
+                    <p class="microcopy">Selecione a tradu&ccedil;&atilde;o correta.</p>
+                    <div class="match-grid" id="match-l2">
+                        <div class="match-row" data-answer="fazer contatos"><span class="match-word">networking</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="fazer contatos">fazer contatos</option><option value="participante">participante</option><option value="palestra">palestra</option></select></div>
+                        <div class="match-row" data-answer="participante"><span class="match-word">attendee</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="abordar">abordar</option><option value="participante">participante</option><option value="manter contato">manter contato</option></select></div>
+                        <div class="match-row" data-answer="abordar"><span class="match-word">approach</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="abordar">abordar</option><option value="fazer contatos">fazer contatos</option><option value="primeira vez">primeira vez</option></select></div>
+                        <div class="match-row" data-answer="palestra principal"><span class="match-word">keynote</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="palestra principal">palestra principal</option><option value="participante">participante</option><option value="abordar">abordar</option></select></div>
+                        <div class="match-row" data-answer="primeira vez"><span class="match-word">first time</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="primeira vez">primeira vez</option><option value="manter contato">manter contato</option><option value="fazer contatos">fazer contatos</option></select></div>
+                        <div class="match-row" data-answer="manter contato"><span class="match-word">keep in touch</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="manter contato">manter contato</option><option value="palestra principal">palestra principal</option><option value="primeira vez">primeira vez</option></select></div>
+                    </div>
+                    <button class="verify-all-btn" onclick="verifyAllMatches('match-l2')">Check Answers</button>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>V2. Complete with the correct word <span class="badge badge-practice">Practice</span></h4>
+                    <p class="microcopy">Use a dica em ingl&ecirc;s para encontrar a resposta.</p>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;Is this your <input class="blank-input" data-answer="first" data-hint="Hint: the ordinal number that means before all others, the initial one" data-phrase="Is this your first time at this conference?" placeholder="___"> time at this conference?&rdquo;</div>
+                        <div class="hint-text">Hint: the ordinal number meaning before all others</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;The <input class="blank-input" data-answer="keynote" data-hint="Hint: the most important speech or presentation at a conference" data-phrase="The keynote speaker was amazing today." placeholder="___"> speaker was amazing today.&rdquo;</div>
+                        <div class="hint-text">Hint: the most important speech at a conference</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;Let's <input class="blank-input" data-answer="keep" data-hint="Hint: to maintain or continue something over time" data-phrase="Let us keep in touch after the conference." placeholder="___"> in touch after the conference.&rdquo;</div>
+                        <div class="hint-text">Hint: to maintain or continue something over time</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;Don't be afraid to <input class="blank-input" data-answer="approach" data-hint="Hint: to come near or go up to someone to start a conversation" data-phrase="Do not be afraid to approach new people." placeholder="___"> new people.&rdquo;</div>
+                        <div class="hint-text">Hint: to come near someone to start a conversation</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P1. Complete the small talk openers <span class="badge badge-practice">Practice</span></h4>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;Great <input class="blank-input" data-answer="event" data-hint="Hint: a planned gathering or conference" data-phrase="Great event, isn't it?" placeholder="___">, isn't it?&rdquo;</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                    <div class="fill-blank-item">
+                        <div class="fill-blank-sentence">&ldquo;Where are you <input class="blank-input" data-answer="from" data-hint="Hint: a preposition used when asking about someone's origin" data-phrase="Where are you from?" placeholder="___">?&rdquo;</div>
+                        <button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+                    </div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P2. Choose the best opener <span class="badge badge-quiz">Quiz</span></h4>
+                    <div class="quiz-item">
+                        <div class="quiz-question">You are standing near the coffee station at a conference. The most natural opener is:</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;Tell me about your company now.&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;Hi there! Great conference, isn't it?&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;I don't know anybody here.&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">D</span> &ldquo;What is your salary?&rdquo;</div>
+                        </div>
+                    </div>
+                    <div class="quiz-item">
+                        <div class="quiz-question">A question tag turns a statement into a question. Which is correct?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;This is a great event, is it?&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;This is a great event, isn't it?&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;This is a great event, doesn't it?&rdquo;</div>
+                            <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">D</span> &ldquo;This is a great event, aren't it?&rdquo;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P3. Put the conversation in order <span class="badge badge-order">Practice</span></h4>
+                    <p class="microcopy">Organize este di&aacute;logo de small talk na ordem correta.</p>
+                    <div class="order-container" id="order-l2">
+                        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l2')"><span class="order-num">?</span><span class="order-text">&ldquo;That sounds great. Let's keep in touch!&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l2')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l2')">&#9660;</button></span></div>
+                        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l2')"><span class="order-num">?</span><span class="order-text">&ldquo;It really is! I'm Daniela, by the way. I'm from Brazil.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l2')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l2')">&#9660;</button></span></div>
+                        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l2')"><span class="order-num">?</span><span class="order-text">&ldquo;Great conference, isn't it?&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l2')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l2')">&#9660;</button></span></div>
+                        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l2')"><span class="order-num">?</span><span class="order-text">&ldquo;Nice to meet you, Daniela! I'm Mike, from Chicago. What do you do?&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l2')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l2')">&#9660;</button></span></div>
+                    </div>
+                    <button class="btn check-btn" onclick="checkOrder('order-l2')" style="margin-top:1rem;">Check Order</button>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P4. Read aloud <span class="badge badge-speak">Speaking</span></h4>
+                    <p class="microcopy">Pratique estas frases de small talk.</p>
+                    <div class="speech-card" data-phrase="Great conference, isn't it?">
+                        <div class="speech-phrase">Great conference, isn't it?</div>
+                        <div class="speech-translation">&Oacute;tima confer&ecirc;ncia, n&atilde;o &eacute;?</div>
+                        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button><button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button></div>
+                        <div class="speech-result"></div>
+                    </div>
+                    <div class="speech-card" data-phrase="Is this your first time at this conference?">
+                        <div class="speech-phrase">Is this your first time at this conference?</div>
+                        <div class="speech-translation">&Eacute; sua primeira vez nesta confer&ecirc;ncia?</div>
+                        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button><button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button></div>
+                        <div class="speech-result"></div>
+                    </div>
+                    <div class="speech-card" data-phrase="What brings you to the conference?">
+                        <div class="speech-phrase">What brings you to the conference?</div>
+                        <div class="speech-translation">O que te traz &agrave; confer&ecirc;ncia?</div>
+                        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button><button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button></div>
+                        <div class="speech-result"></div>
+                    </div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>T1. Think and respond <span class="badge badge-think">Reflection</span></h4>
+                    <div class="think-card">
+                        <div class="think-question" style="font-size:0.92rem;color:var(--text);margin-bottom:1rem;line-height:1.8;">You are at an SAP conference in Las Vegas. You see someone standing alone during the coffee break. What are 3 natural conversation starters you could use? Record yourself saying them.</div>
+                        <div style="margin-top:1rem;">
+                            <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Gravar Livre</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Parar</button></div>
+                            <div id="think-result-2" style="margin-top:0.5rem;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="survival-card">
+                    <h4>Survival Card &mdash; Lessons 1-2</h4>
+                    <div class="sc-category">Personal Introduction</div>
+                    <div class="survival-phrase"><span class="sp-num">1</span><span class="sp-en">Hi, I'm Daniela. Nice to meet you.</span><span class="sp-pt">Prazer em conhecer.</span><button class="btn btn-listen" onclick="speakText('Hi, I am Daniela. Nice to meet you.', this)" style="flex-shrink:0;">&#9654;</button></div>
+                    <div class="survival-phrase"><span class="sp-num">2</span><span class="sp-en">I'm an IT Manager at SPF Group.</span><span class="sp-pt">Sou gerente de TI.</span><button class="btn btn-listen" onclick="speakText('I am an IT Manager at SPF Group.', this)" style="flex-shrink:0;">&#9654;</button></div>
+                    <div class="sc-category">Small Talk</div>
+                    <div class="survival-phrase"><span class="sp-num">3</span><span class="sp-en">Great conference, isn't it?</span><span class="sp-pt">&Oacute;tima confer&ecirc;ncia, n&eacute;?</span><button class="btn btn-listen" onclick="speakText('Great conference, is not it?', this)" style="flex-shrink:0;">&#9654;</button></div>
+                    <div class="survival-phrase"><span class="sp-num">4</span><span class="sp-en">What brings you to the conference?</span><span class="sp-pt">O que te traz?</span><button class="btn btn-listen" onclick="speakText('What brings you to the conference?', this)" style="flex-shrink:0;">&#9654;</button></div>
+                    <div class="survival-phrase"><span class="sp-num">5</span><span class="sp-en">Let's keep in touch!</span><span class="sp-pt">Vamos manter contato!</span><button class="btn btn-listen" onclick="speakText('Let us keep in touch!', this)" style="flex-shrink:0;">&#9654;</button></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== AULA 3 PRE-CLASS ===== -->
+        <div class="lesson-card" id="ex-lesson-3">
+            <div class="lesson-header" onclick="toggleLesson(this)">
+                <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=80')"></div>
+                <div class="lesson-header-content">
+                    <div class="lesson-number">Aula 03 &mdash; Pre-class</div>
+                    <h3>Talking About Your Job &mdash; IT Manager at Centauro/Nike</h3>
+                    <div class="lesson-desc">Construa 3 vers&otilde;es do seu job pitch: 10s, 30s e 2min.</div>
+                    <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="3" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="3">0%</span></div>
+                </div>
+                <div class="expand-icon">&#9660;</div>
+            </div>
+            <div class="lesson-body">
+                <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:1.5rem;">Ao final desta aula, Daniela conseguir&aacute; descrever seu trabalho com clareza em diferentes dura&ccedil;&otilde;es.</p>
+
+                <div class="exercise-section">
+                    <div class="section-header-row">
+                        <h4>Vocabul&aacute;rio &mdash; Job Description <span class="badge badge-vocab">Vocabul&aacute;rio</span></h4>
+                        <button class="listen-all-btn" onclick="listenAllVocab(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg> Ouvir todos</button>
+                    </div>
+                    <p class="microcopy">Vocabul&aacute;rio para descrever seu cargo e responsabilidades.</p>
+                    <div class="vocab-cards">
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">oversee</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">supervisionar</span></div><div class="vocab-card-example">&ldquo;I oversee all technology projects in the company.&rdquo;</div></div><button class="audio-btn" onclick="speakText('I oversee all technology projects in the company.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">lead</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">liderar</span></div><div class="vocab-card-example">&ldquo;I lead a team of 12 IT professionals.&rdquo;</div></div><button class="audio-btn" onclick="speakText('I lead a team of 12 IT professionals.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">implement</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">implementar</span></div><div class="vocab-card-example">&ldquo;We implement SAP solutions for retail operations.&rdquo;</div></div><button class="audio-btn" onclick="speakText('We implement SAP solutions for retail operations.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">distribute</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">distribuir</span></div><div class="vocab-card-example">&ldquo;SPF Group distributes Nike and Centauro products in Brazil.&rdquo;</div></div><button class="audio-btn" onclick="speakText('SPF Group distributes Nike and Centauro products in Brazil.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">retail</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">varejo</span></div><div class="vocab-card-example">&ldquo;We work in the retail industry, specifically sportswear.&rdquo;</div></div><button class="audio-btn" onclick="speakText('We work in the retail industry, specifically sportswear.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">infrastructure</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">infraestrutura</span></div><div class="vocab-card-example">&ldquo;I'm in charge of the IT infrastructure.&rdquo;</div></div><button class="audio-btn" onclick="speakText('I am in charge of the IT infrastructure.', this)">&#9654; Ouvir</button></div>
+                    </div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>V1. Match the words <span class="badge badge-vocab">Vocabulary</span></h4>
+                    <div class="match-grid" id="match-l3">
+                        <div class="match-row" data-answer="supervisionar"><span class="match-word">oversee</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="supervisionar">supervisionar</option><option value="liderar">liderar</option><option value="implementar">implementar</option></select></div>
+                        <div class="match-row" data-answer="liderar"><span class="match-word">lead</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="distribuir">distribuir</option><option value="liderar">liderar</option><option value="varejo">varejo</option></select></div>
+                        <div class="match-row" data-answer="implementar"><span class="match-word">implement</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="implementar">implementar</option><option value="supervisionar">supervisionar</option><option value="infraestrutura">infraestrutura</option></select></div>
+                        <div class="match-row" data-answer="distribuir"><span class="match-word">distribute</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="distribuir">distribuir</option><option value="varejo">varejo</option><option value="liderar">liderar</option></select></div>
+                        <div class="match-row" data-answer="varejo"><span class="match-word">retail</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="varejo">varejo</option><option value="infraestrutura">infraestrutura</option><option value="implementar">implementar</option></select></div>
+                        <div class="match-row" data-answer="infraestrutura"><span class="match-word">infrastructure</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="infraestrutura">infraestrutura</option><option value="supervisionar">supervisionar</option><option value="distribuir">distribuir</option></select></div>
+                    </div>
+                    <button class="verify-all-btn" onclick="verifyAllMatches('match-l3')">Check Answers</button>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>V2. Complete with the correct word <span class="badge badge-practice">Practice</span></h4>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;I <input class="blank-input" data-answer="oversee" data-hint="Hint: to watch over and direct work or a project from a higher position" data-phrase="I oversee all technology projects." placeholder="___"> all technology projects in the company.&rdquo;</div><div class="hint-text">Hint: to watch over and direct work from a higher position</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;I <input class="blank-input" data-answer="lead" data-hint="Hint: to guide or be the head of a group of people" data-phrase="I lead a team of 12 IT professionals." placeholder="___"> a team of 12 IT professionals.&rdquo;</div><div class="hint-text">Hint: to guide or be the head of a group of people</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;We <input class="blank-input" data-answer="implement" data-hint="Hint: to put a plan or system into action" data-phrase="We implement SAP solutions for retail operations." placeholder="___"> SAP solutions for retail operations.&rdquo;</div><div class="hint-text">Hint: to put a plan or system into action</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;We work in the <input class="blank-input" data-answer="retail" data-hint="Hint: the sale of goods to the public in shops and stores" data-phrase="We work in the retail industry." placeholder="___"> industry, specifically sportswear.&rdquo;</div><div class="hint-text">Hint: the sale of goods to the public in shops and stores</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P2. Choose the best answer <span class="badge badge-quiz">Quiz</span></h4>
+                    <div class="quiz-item"><div class="quiz-question">Someone asks &ldquo;So what does your company do?&rdquo; The best response is:</div><div class="quiz-options">
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;It's complicated.&rdquo;</div>
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;We're a distributor for Centauro and Nike in Brazil. I manage the IT side of things.&rdquo;</div>
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;We sell shoes.&rdquo;</div>
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">D</span> &ldquo;I don't know how to explain in English.&rdquo;</div>
+                    </div></div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P3. Put the job pitch in order <span class="badge badge-order">Practice</span></h4>
+                    <div class="order-container" id="order-l3">
+                        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l3')"><span class="order-num">?</span><span class="order-text">&ldquo;My main responsibility is implementing SAP solutions for our retail operations.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l3')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l3')">&#9660;</button></span></div>
+                        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l3')"><span class="order-num">?</span><span class="order-text">&ldquo;I'm an IT Manager at SPF Group.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l3')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l3')">&#9660;</button></span></div>
+                        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l3')"><span class="order-num">?</span><span class="order-text">&ldquo;I lead a team of 12 IT professionals.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l3')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l3')">&#9660;</button></span></div>
+                        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l3')"><span class="order-num">?</span><span class="order-text">&ldquo;We distribute Centauro and Nike products across Brazil.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l3')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l3')">&#9660;</button></span></div>
+                    </div>
+                    <button class="btn check-btn" onclick="checkOrder('order-l3')" style="margin-top:1rem;">Check Order</button>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P4. Read aloud <span class="badge badge-speak">Speaking</span></h4>
+                    <div class="speech-card" data-phrase="I oversee all technology projects in the company."><div class="speech-phrase">I oversee all technology projects in the company.</div><div class="speech-translation">Eu supervisiono todos os projetos de tecnologia.</div><div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button><button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button></div><div class="speech-result"></div></div>
+                    <div class="speech-card" data-phrase="We implement SAP solutions for retail operations."><div class="speech-phrase">We implement SAP solutions for retail operations.</div><div class="speech-translation">Implementamos solu&ccedil;&otilde;es SAP para varejo.</div><div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button><button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button></div><div class="speech-result"></div></div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>T1. Think and respond <span class="badge badge-think">Reflection</span></h4>
+                    <div class="think-card">
+                        <div class="think-question" style="font-size:0.92rem;color:var(--text);margin-bottom:1rem;line-height:1.8;">Record a 30-second job pitch. Include: your name, your title, your company, what the company does, and your main responsibility. Try to sound natural and confident.</div>
+                        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Gravar Livre</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Parar</button></div>
+                        <div id="think-result-3" style="margin-top:0.5rem;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== AULA 4 PRE-CLASS ===== -->
+        <div class="lesson-card" id="ex-lesson-4">
+            <div class="lesson-header" onclick="toggleLesson(this)">
+                <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=600&q=80')"></div>
+                <div class="lesson-header-content">
+                    <div class="lesson-number">Aula 04 &mdash; Pre-class</div>
+                    <h3>Articles and English Rhythm</h3>
+                    <div class="lesson-desc">Domine os artigos em ingl&ecirc;s e desenvolva ritmo natural na fala.</div>
+                    <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="4" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="4">0%</span></div>
+                </div>
+                <div class="expand-icon">&#9660;</div>
+            </div>
+            <div class="lesson-body">
+                <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:1.5rem;">Ao final desta aula, Daniela usar&aacute; artigos corretamente e falar&aacute; com ritmo mais natural.</p>
+
+                <div class="exercise-section">
+                    <div class="section-header-row">
+                        <h4>Vocabul&aacute;rio &mdash; Articles &amp; Rhythm <span class="badge badge-vocab">Vocabul&aacute;rio</span></h4>
+                        <button class="listen-all-btn" onclick="listenAllVocab(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg> Ouvir todos</button>
+                    </div>
+                    <div class="vocab-cards">
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">the (definite)</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">o/a (espec&iacute;fico)</span></div><div class="vocab-card-example">&ldquo;The IT department is on the third floor.&rdquo;</div></div><button class="audio-btn" onclick="speakText('The IT department is on the third floor.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">a/an (indefinite)</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">um/uma (geral)</span></div><div class="vocab-card-example">&ldquo;I need a new laptop for the project.&rdquo;</div></div><button class="audio-btn" onclick="speakText('I need a new laptop for the project.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">stress</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">t&ocirc;nica/&ecirc;nfase</span></div><div class="vocab-card-example">&ldquo;The stress falls on the second syllable: im-PLE-ment.&rdquo;</div></div><button class="audio-btn" onclick="speakText('The stress falls on the second syllable: implement.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">rhythm</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">ritmo</span></div><div class="vocab-card-example">&ldquo;English has a different rhythm than Portuguese.&rdquo;</div></div><button class="audio-btn" onclick="speakText('English has a different rhythm than Portuguese.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">syllable</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">s&iacute;laba</span></div><div class="vocab-card-example">&ldquo;The word 'technology' has four syllables.&rdquo;</div></div><button class="audio-btn" onclick="speakText('The word technology has four syllables.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">intonation</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">entona&ccedil;&atilde;o</span></div><div class="vocab-card-example">&ldquo;Rising intonation at the end makes it a question.&rdquo;</div></div><button class="audio-btn" onclick="speakText('Rising intonation at the end makes it a question.', this)">&#9654; Ouvir</button></div>
+                    </div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>V1. Match the words <span class="badge badge-vocab">Vocabulary</span></h4>
+                    <div class="match-grid" id="match-l4">
+                        <div class="match-row" data-answer="espec&iacute;fico"><span class="match-word">the (definite)</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="espec&iacute;fico">espec&iacute;fico</option><option value="geral">geral</option><option value="ritmo">ritmo</option></select></div>
+                        <div class="match-row" data-answer="geral"><span class="match-word">a/an (indefinite)</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="geral">geral</option><option value="s&iacute;laba">s&iacute;laba</option><option value="espec&iacute;fico">espec&iacute;fico</option></select></div>
+                        <div class="match-row" data-answer="t&ocirc;nica"><span class="match-word">stress</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="t&ocirc;nica">t&ocirc;nica</option><option value="entona&ccedil;&atilde;o">entona&ccedil;&atilde;o</option><option value="ritmo">ritmo</option></select></div>
+                        <div class="match-row" data-answer="ritmo"><span class="match-word">rhythm</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="ritmo">ritmo</option><option value="t&ocirc;nica">t&ocirc;nica</option><option value="s&iacute;laba">s&iacute;laba</option></select></div>
+                        <div class="match-row" data-answer="s&iacute;laba"><span class="match-word">syllable</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="s&iacute;laba">s&iacute;laba</option><option value="entona&ccedil;&atilde;o">entona&ccedil;&atilde;o</option><option value="geral">geral</option></select></div>
+                        <div class="match-row" data-answer="entona&ccedil;&atilde;o"><span class="match-word">intonation</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="entona&ccedil;&atilde;o">entona&ccedil;&atilde;o</option><option value="ritmo">ritmo</option><option value="t&ocirc;nica">t&ocirc;nica</option></select></div>
+                    </div>
+                    <button class="verify-all-btn" onclick="verifyAllMatches('match-l4')">Check Answers</button>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>V2. Choose the correct article <span class="badge badge-practice">Practice</span></h4>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;I work at <input class="blank-input" data-answer="the" data-hint="Hint: use 'the' when referring to a specific, known entity" data-phrase="I work at the SPF Group." placeholder="___"> SPF Group.&rdquo;</div><div class="hint-text">Hint: use this article when referring to a specific, known entity</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;I need <input class="blank-input" data-answer="a" data-hint="Hint: use this article before singular countable nouns mentioned for the first time" data-phrase="I need a new server for the project." placeholder="___"> new server for the project.&rdquo;</div><div class="hint-text">Hint: use this before singular countable nouns mentioned for the first time</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;She is <input class="blank-input" data-answer="an" data-hint="Hint: use this article before vowel sounds" data-phrase="She is an experienced IT manager." placeholder="___"> experienced IT manager.&rdquo;</div><div class="hint-text">Hint: use this article before words starting with a vowel sound</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;<input class="blank-input" data-answer="The" data-hint="Hint: use the definite article when both speaker and listener know which one" data-phrase="The conference starts at 9 AM." placeholder="___"> conference starts at 9 AM.&rdquo;</div><div class="hint-text">Hint: both people know which conference is being discussed</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P2. Choose the best answer <span class="badge badge-quiz">Quiz</span></h4>
+                    <div class="quiz-item"><div class="quiz-question">Which sentence uses articles correctly?</div><div class="quiz-options">
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;I am manager at company.&rdquo;</div>
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;I am a manager at the company.&rdquo;</div>
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;I am the manager at a company.&rdquo; (when talking about your specific company)</div>
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">D</span> &ldquo;I am an manager at an company.&rdquo;</div>
+                    </div></div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P4. Read aloud with correct rhythm <span class="badge badge-speak">Speaking</span></h4>
+                    <p class="microcopy">Foque no ritmo e na pron&uacute;ncia dos artigos.</p>
+                    <div class="speech-card" data-phrase="I work at the SPF Group. It's a large distributor in Brazil."><div class="speech-phrase">I work at the SPF Group. It's a large distributor in Brazil.</div><div class="speech-translation">Trabalho no SPF Group. &Eacute; uma grande distribuidora no Brasil.</div><div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button><button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button></div><div class="speech-result"></div></div>
+                    <div class="speech-card" data-phrase="The IT department has an important role in the company."><div class="speech-phrase">The IT department has an important role in the company.</div><div class="speech-translation">O departamento de TI tem um papel importante na empresa.</div><div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button><button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button></div><div class="speech-result"></div></div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>T1. Think and respond <span class="badge badge-think">Reflection</span></h4>
+                    <div class="think-card">
+                        <div class="think-question" style="font-size:0.92rem;color:var(--text);margin-bottom:1rem;line-height:1.8;">Record yourself saying 5 sentences about your daily work routine. Pay special attention to using articles (a, an, the) correctly. Example: &ldquo;I start the day with a team meeting. The meeting usually takes an hour.&rdquo;</div>
+                        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Gravar Livre</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Parar</button></div>
+                        <div id="think-result-4" style="margin-top:0.5rem;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== AULA 5 PRE-CLASS ===== -->
+        <div class="lesson-card" id="ex-lesson-5">
+            <div class="lesson-header" onclick="toggleLesson(this)">
+                <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&q=80')"></div>
+                <div class="lesson-header-content">
+                    <div class="lesson-number">Aula 05 &mdash; Pre-class</div>
+                    <h3>Describing Your Company &mdash; Centauro, Nike Brazil &amp; SPF Group</h3>
+                    <div class="lesson-desc">Apresente sua empresa para um investidor estrangeiro.</div>
+                    <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="5" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="5">0%</span></div>
+                </div>
+                <div class="expand-icon">&#9660;</div>
+            </div>
+            <div class="lesson-body">
+                <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:1.5rem;">Ao final desta aula, Daniela descrever&aacute; sua empresa com vocabul&aacute;rio profissional e superlativos.</p>
+
+                <div class="exercise-section">
+                    <div class="section-header-row">
+                        <h4>Vocabul&aacute;rio &mdash; Company Description <span class="badge badge-vocab">Vocabul&aacute;rio</span></h4>
+                        <button class="listen-all-btn" onclick="listenAllVocab(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg> Ouvir todos</button>
+                    </div>
+                    <div class="vocab-cards">
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">headquartered</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">com sede em</span></div><div class="vocab-card-example">&ldquo;SPF Group is headquartered in S&atilde;o Paulo.&rdquo;</div></div><button class="audio-btn" onclick="speakText('SPF Group is headquartered in Sao Paulo.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">revenue</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">faturamento</span></div><div class="vocab-card-example">&ldquo;The company generates significant annual revenue.&rdquo;</div></div><button class="audio-btn" onclick="speakText('The company generates significant annual revenue.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">market leader</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">l&iacute;der de mercado</span></div><div class="vocab-card-example">&ldquo;Centauro is the market leader in sportswear retail in Brazil.&rdquo;</div></div><button class="audio-btn" onclick="speakText('Centauro is the market leader in sportswear retail in Brazil.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">supply chain</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">cadeia de suprimentos</span></div><div class="vocab-card-example">&ldquo;We manage the entire supply chain for sportswear in Brazil.&rdquo;</div></div><button class="audio-btn" onclick="speakText('We manage the entire supply chain for sportswear in Brazil.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">subsidiary</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">subsidi&aacute;ria</span></div><div class="vocab-card-example">&ldquo;Centauro is a subsidiary of the SBF Group.&rdquo;</div></div><button class="audio-btn" onclick="speakText('Centauro is a subsidiary of the SBF Group.', this)">&#9654; Ouvir</button></div>
+                        <div class="vocab-card"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">the largest</span><span class="vocab-card-dot">&middot;</span><span class="vocab-card-translation">o/a maior</span></div><div class="vocab-card-example">&ldquo;Centauro is the largest sportswear retailer in Latin America.&rdquo;</div></div><button class="audio-btn" onclick="speakText('Centauro is the largest sportswear retailer in Latin America.', this)">&#9654; Ouvir</button></div>
+                    </div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>V1. Match the words <span class="badge badge-vocab">Vocabulary</span></h4>
+                    <div class="match-grid" id="match-l5">
+                        <div class="match-row" data-answer="com sede em"><span class="match-word">headquartered</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="com sede em">com sede em</option><option value="faturamento">faturamento</option><option value="subsidi&aacute;ria">subsidi&aacute;ria</option></select></div>
+                        <div class="match-row" data-answer="faturamento"><span class="match-word">revenue</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="l&iacute;der de mercado">l&iacute;der de mercado</option><option value="faturamento">faturamento</option><option value="cadeia de suprimentos">cadeia de suprimentos</option></select></div>
+                        <div class="match-row" data-answer="l&iacute;der de mercado"><span class="match-word">market leader</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="l&iacute;der de mercado">l&iacute;der de mercado</option><option value="o maior">o maior</option><option value="com sede em">com sede em</option></select></div>
+                        <div class="match-row" data-answer="cadeia de suprimentos"><span class="match-word">supply chain</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="cadeia de suprimentos">cadeia de suprimentos</option><option value="subsidi&aacute;ria">subsidi&aacute;ria</option><option value="faturamento">faturamento</option></select></div>
+                        <div class="match-row" data-answer="subsidi&aacute;ria"><span class="match-word">subsidiary</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="subsidi&aacute;ria">subsidi&aacute;ria</option><option value="l&iacute;der de mercado">l&iacute;der de mercado</option><option value="o maior">o maior</option></select></div>
+                        <div class="match-row" data-answer="o maior"><span class="match-word">the largest</span><select onchange="checkMatch(this)"><option value="">Select...</option><option value="o maior">o maior</option><option value="com sede em">com sede em</option><option value="cadeia de suprimentos">cadeia de suprimentos</option></select></div>
+                    </div>
+                    <button class="verify-all-btn" onclick="verifyAllMatches('match-l5')">Check Answers</button>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>V2. Complete with the correct word <span class="badge badge-practice">Practice</span></h4>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;Centauro is the <input class="blank-input" data-answer="largest" data-hint="Hint: the superlative form of 'large' meaning the biggest" data-phrase="Centauro is the largest sportswear retailer in Latin America." placeholder="___"> sportswear retailer in Latin America.&rdquo;</div><div class="hint-text">Hint: the superlative form of 'large' meaning the biggest</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;SPF Group is <input class="blank-input" data-answer="headquartered" data-hint="Hint: having the main office located in a specific place" data-phrase="SPF Group is headquartered in Sao Paulo." placeholder="___"> in S&atilde;o Paulo.&rdquo;</div><div class="hint-text">Hint: having the main office located in a specific place</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                    <div class="fill-blank-item"><div class="fill-blank-sentence">&ldquo;Centauro is the market <input class="blank-input" data-answer="leader" data-hint="Hint: the company that is in first place or ahead of competitors" data-phrase="Centauro is the market leader in sportswear." placeholder="___"> in sportswear retail.&rdquo;</div><div class="hint-text">Hint: the company in first place ahead of competitors</div><button class="btn check-btn" onclick="checkBlank(this)">Check</button><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button></div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P2. Choose the best answer <span class="badge badge-quiz">Quiz</span></h4>
+                    <div class="quiz-item"><div class="quiz-question">Which superlative is correct?</div><div class="quiz-options">
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;Centauro is the more big retailer.&rdquo;</div>
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;Centauro is the largest retailer in Latin America.&rdquo;</div>
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;Centauro is the most large retailer.&rdquo;</div>
+                        <div class="quiz-option" tabindex="0" role="button" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">D</span> &ldquo;Centauro is the more largest retailer.&rdquo;</div>
+                    </div></div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>P4. Read aloud <span class="badge badge-speak">Speaking</span></h4>
+                    <div class="speech-card" data-phrase="Centauro is the largest sportswear retailer in Latin America."><div class="speech-phrase">Centauro is the largest sportswear retailer in Latin America.</div><div class="speech-translation">A Centauro &eacute; a maior varejista de artigos esportivos da Am&eacute;rica Latina.</div><div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button><button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button></div><div class="speech-result"></div></div>
+                    <div class="speech-card" data-phrase="We manage the entire supply chain for sportswear in Brazil."><div class="speech-phrase">We manage the entire supply chain for sportswear in Brazil.</div><div class="speech-translation">Gerenciamos toda a cadeia de suprimentos de artigos esportivos no Brasil.</div><div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button><button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button></div><div class="speech-result"></div></div>
+                </div>
+
+                <div class="exercise-section">
+                    <h4>T1. Think and respond <span class="badge badge-think">Reflection</span></h4>
+                    <div class="think-card">
+                        <div class="think-question" style="font-size:0.92rem;color:var(--text);margin-bottom:1rem;line-height:1.8;">Imagine a foreign investor asks: &ldquo;Tell me about your company.&rdquo; Record a 6-8 sentence company bio. Include: company name, headquarters, what it does, size/position in market, and your role.</div>
+                        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Gravar Livre</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Parar</button></div>
+                        <div id="think-result-5" style="margin-top:0.5rem;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lessons 6-43 Placeholder -->
+        <div class="lesson-card">
+            <div class="lesson-header" onclick="toggleLesson(this)">
+                <div class="lesson-header-content" style="padding:2rem;">
+                    <div class="lesson-number">Aulas 06&ndash;43</div>
+                    <h3>Conte&uacute;do ser&aacute; adicionado progressivamente</h3>
+                    <div class="lesson-desc">As pr&oacute;ximas aulas ser&atilde;o liberadas conforme o progresso de Daniela no programa.</div>
+                </div>
+                <div class="expand-icon">&#9660;</div>
+            </div>
+            <div class="lesson-body">
+                <p style="font-size:0.9rem;color:var(--text-mid);text-align:center;padding:2rem;">Conte&uacute;do ser&aacute; adicionado progressivamente.</p>
+            </div>
+        </div>
+
+        <!-- Celebration Card -->
+        <div class="celebration-card" id="celebrationCard" style="display:none;">
+            <h3>Parab&eacute;ns, Daniela!</h3>
+            <p>Voc&ecirc; completou todos os exerc&iacute;cios pre-class dispon&iacute;veis. Continue praticando!</p>
+        </div>
+
+    </div>
+
+    <!-- ==================== TAB 2: ATIVIDADES COMPLEMENTARES ==================== -->
+    <div class="tab-content" id="tab-complementary">
+
+        <div style="text-align:center;margin-bottom:2rem;">
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--accent);">Atividades Complementares</h2>
+            <p style="font-size:0.85rem;color:var(--text-dim);">Filmes, series, podcasts e recursos para acelerar seu progresso.</p>
+        </div>
+
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--accent);margin-bottom:1rem;">Networking &amp; Professional English</h3>
+        <div class="media-grid" style="margin-bottom:2rem;">
+            <div class="media-card-wrapper" data-media="media-1">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb movie"></div>
+                    <div class="media-info">
+                        <div class="media-type">Filme</div>
+                        <h5>The Intern (2015)</h5>
+                        <p>Robert De Niro num ambiente corporativo moderno. Otimo para vocabulario profissional.</p>
+                        <div class="media-tip">Assista com legendas em ingles. Anote 5 frases de networking.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="media-card-wrapper" data-media="media-2">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb series"></div>
+                    <div class="media-info">
+                        <div class="media-type">Serie</div>
+                        <h5>Silicon Valley (HBO)</h5>
+                        <p>Startups de tecnologia, pitch meetings, vocabulario tech.</p>
+                        <div class="media-tip">Assista o episodio piloto e anote termos de tecnologia.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="media-card-wrapper" data-media="media-3">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb podcast"></div>
+                    <div class="media-info">
+                        <div class="media-type">Podcast</div>
+                        <h5>Business English Pod</h5>
+                        <p>Episodios curtos sobre reunioes, networking, apresentacoes.</p>
+                        <div class="media-tip">Ouca 1 episodio por semana. Comece pelo de networking.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="media-card-wrapper" data-media="media-4">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb youtube"></div>
+                    <div class="media-info">
+                        <div class="media-type">YouTube</div>
+                        <h5>TED Talks &mdash; Communication</h5>
+                        <p>Palestras sobre comunicação e lideranca em ingles.</p>
+                        <div class="media-tip">Assista 1 TED Talk por semana com legendas em ingles.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--accent);margin-bottom:1rem;">Tecnologia &amp; SAP</h3>
+        <div class="media-grid" style="margin-bottom:2rem;">
+            <div class="media-card-wrapper" data-media="media-5">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb documentary"></div>
+                    <div class="media-info">
+                        <div class="media-type">Documentario</div>
+                        <h5>The Social Dilemma (Netflix)</h5>
+                        <p>Tecnologia e sociedade. Vocabulario tech acessivel.</p>
+                        <div class="media-tip">Assista com legendas em ingles e anote 10 termos tech.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="media-card-wrapper" data-media="media-6">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb podcast"></div>
+                    <div class="media-info">
+                        <div class="media-type">Podcast</div>
+                        <h5>SAP Community Podcast</h5>
+                        <p>Conversas sobre SAP, ERP e transformacao digital.</p>
+                        <div class="media-tip">Ouca episodios sobre retail e supply chain.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="media-card-wrapper" data-media="media-7">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb youtube"></div>
+                    <div class="media-info">
+                        <div class="media-type">YouTube</div>
+                        <h5>SAP Learning &mdash; Official Channel</h5>
+                        <p>Tutoriais e webinars SAP em ingles.</p>
+                        <div class="media-tip">Assista 1 video por semana sobre seu modulo SAP.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--accent);margin-bottom:1rem;">Conversacao &amp; Pronuncia</h3>
+        <div class="media-grid" style="margin-bottom:2rem;">
+            <div class="media-card-wrapper" data-media="media-8">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb podcast"></div>
+                    <div class="media-info">
+                        <div class="media-type">Podcast</div>
+                        <h5>6 Minute English &mdash; BBC</h5>
+                        <p>Curto, claro, otimo para pratica diaria.</p>
+                        <div class="media-tip">Perfeito para 6 minutos diarios.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="media-card-wrapper" data-media="media-9">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb series"></div>
+                    <div class="media-info">
+                        <div class="media-type">Serie</div>
+                        <h5>The Office (US)</h5>
+                        <p>Humor corporativo americano. Otimo para small talk e cultura.</p>
+                        <div class="media-tip">Assista com legendas em ingles. Anote expressoes de escritorio.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="media-card-wrapper" data-media="media-10">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb platform"></div>
+                    <div class="media-info">
+                        <div class="media-type">Plataforma</div>
+                        <h5>Alumni Speed Trainer</h5>
+                        <p>Exercicios de pronuncia diarios personalizados.</p>
+                        <div class="media-tip">Pratique todos os dias, 5-10 minutos.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="media-card-wrapper" data-media="media-11">
+                <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+                <div class="media-card">
+                    <div class="media-thumb movie"></div>
+                    <div class="media-info">
+                        <div class="media-type">Filme</div>
+                        <h5>The Devil Wears Prada (2006)</h5>
+                        <p>Ambiente corporativo, moda, vocabulario profissional.</p>
+                        <div class="media-tip">Foque nas cenas de escritorio e reunioes.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetProgress()">Resetar todo o progresso</button>
+    </div>
+
+</div><!-- end .container -->
+
+<script>
+    // ===== TAB SWITCHING =====
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ===== LESSON EXPAND/COLLAPSE =====
+    function toggleLesson(header) { header.parentElement.classList.toggle('open'); }
+
+    // ===== AUDIO MAP (generated by ElevenLabs - Arthur voice) =====
+    const audioMap = {
+        "A strong supply chain is essential for retail success.": "/audio/daniela-feitoza/a_strong_supply_chain_is_essential_for_retail_success.mp3",
+        "Absolutely! Here is my LinkedIn. It was great talking to you, Lisa. Let us keep in touch!": "/audio/daniela-feitoza/absolutely_here_is_my_linkedin_it_was_great_talking_to_you_l.mp3",
+        "Allow me to make a brief introduction.": "/audio/daniela-feitoza/allow_me_to_make_a_brief_introduction.mp3",
+        "Amazon is the market leader in e-commerce worldwide.": "/audio/daniela-feitoza/amazon_is_the_market_leader_in_ecommerce_worldwide.mp3",
+        "And what makes Centauro different from other retailers?": "/audio/daniela-feitoza/and_what_makes_centauro_different_from_other_retailers.mp3",
+        "Apple is headquartered in Cupertino, California.": "/audio/daniela-feitoza/apple_is_headquartered_in_cupertino_california.mp3",
+        "Centauro is a subsidiary of the SBF Group.": "/audio/daniela-feitoza/centauro_is_a_subsidiary_of_the_sbf_group.mp3",
+        "Centauro is the largest sportswear retailer in Latin America.": "/audio/daniela-feitoza/centauro_is_the_largest_sportswear_retailer_in_latin_america.mp3",
+        "Centauro is the market leader in sportswear retail in Brazil.": "/audio/daniela-feitoza/centauro_is_the_market_leader_in_sportswear_retail_in_brazil.mp3",
+        "Cloud infrastructure has transformed how companies operate.": "/audio/daniela-feitoza/cloud_infrastructure_has_transformed_how_companies_operate.mp3",
+        "Do not be afraid to approach new people.": "/audio/daniela-feitoza/do_not_be_afraid_to_approach_new_people.mp3",
+        "Each attendee received a name badge at registration.": "/audio/daniela-feitoza/each_attendee_received_a_name_badge_at_registration.mp3",
+        "English has a different rhythm than Portuguese.": "/audio/daniela-feitoza/english_has_a_different_rhythm_than_portuguese.mp3",
+        "Global revenue exceeded 2 billion dollars last year.": "/audio/daniela-feitoza/global_revenue_exceeded_2_billion_dollars_last_year.mp3",
+        "Good networking can open many doors in your career.": "/audio/daniela-feitoza/good_networking_can_open_many_doors_in_your_career.mp3",
+        "Great conference, is not it?": "/audio/daniela-feitoza/great_conference_is_not_it.mp3",
+        "He is responsible for the entire supply chain.": "/audio/daniela-feitoza/he_is_responsible_for_the_entire_supply_chain.mp3",
+        "Hello, I am Sarah. I am a Marketing Director at GlobalTech. I am based in New York. I am responsible for brand strategy and digital campaigns. My background is in communications.": "/audio/daniela-feitoza/hello_i_am_sarah_i_am_a_marketing_director_at_globaltech_i_a.mp3",
+        "Her background includes 15 years in technology.": "/audio/daniela-feitoza/her_background_includes_15_years_in_technology.mp3",
+        "Here is my LinkedIn. Let us keep in touch.": "/audio/daniela-feitoza/here_is_my_linkedin_let_us_keep_in_touch.mp3",
+        "Hi, I am Daniela. Nice to meet you.": "/audio/daniela-feitoza/hi_i_am_daniela_nice_to_meet_you.mp3",
+        "I am an IT Manager at SPF Group.": "/audio/daniela-feitoza/i_am_an_it_manager_at_spf_group.mp3",
+        "I am based in Sao Paulo, Brazil.": "/audio/daniela-feitoza/i_am_based_in_sao_paulo_brazil.mp3",
+        "I am based in Sao Paulo.": "/audio/daniela-feitoza/i_am_based_in_sao_paulo.mp3",
+        "I am in charge of the IT infrastructure.": "/audio/daniela-feitoza/i_am_in_charge_of_the_it_infrastructure.mp3",
+        "I am responsible for all IT operations.": "/audio/daniela-feitoza/i_am_responsible_for_all_it_operations.mp3",
+        "I enjoy working with technology and people.": "/audio/daniela-feitoza/i_enjoy_working_with_technology_and_people.mp3",
+        "I lead a team of 12 IT professionals.": "/audio/daniela-feitoza/i_lead_a_team_of_12_it_professionals.mp3",
+        "I manage the IT department at SPF Group.": "/audio/daniela-feitoza/i_manage_the_it_department_at_spf_group.mp3",
+        "I need a new laptop for the project.": "/audio/daniela-feitoza/i_need_a_new_laptop_for_the_project.mp3",
+        "I oversee all technology projects in the company.": "/audio/daniela-feitoza/i_oversee_all_technology_projects_in_the_company.mp3",
+        "I really enjoy solving complex problems.": "/audio/daniela-feitoza/i_really_enjoy_solving_complex_problems.mp3",
+        "Instagram is a subsidiary of Meta Platforms.": "/audio/daniela-feitoza/instagram_is_a_subsidiary_of_meta_platforms.mp3",
+        "Is this your first time at this conference?": "/audio/daniela-feitoza/is_this_your_first_time_at_this_conference.mp3",
+        "Let me give you a quick introduction about myself.": "/audio/daniela-feitoza/let_me_give_you_a_quick_introduction_about_myself.mp3",
+        "Let us keep in touch after the conference.": "/audio/daniela-feitoza/let_us_keep_in_touch_after_the_conference.mp3",
+        "Let us keep in touch!": "/audio/daniela-feitoza/let_us_keep_in_touch.mp3",
+        "My background is in information technology.": "/audio/daniela-feitoza/my_background_is_in_information_technology.mp3",
+        "Networking is the best part of any conference.": "/audio/daniela-feitoza/networking_is_the_best_part_of_any_conference.mp3",
+        "Our headquarters is based in downtown Sao Paulo.": "/audio/daniela-feitoza/our_headquarters_is_based_in_downtown_sao_paulo.mp3",
+        "Rising intonation at the end makes it a question.": "/audio/daniela-feitoza/rising_intonation_at_the_end_makes_it_a_question.mp3",
+        "SPF Group distributes Nike and Centauro products in Brazil.": "/audio/daniela-feitoza/spf_group_distributes_nike_and_centauro_products_in_brazil.mp3",
+        "SPF Group is headquartered in Sao Paulo.": "/audio/daniela-feitoza/spf_group_is_headquartered_in_sao_paulo.mp3",
+        "She decided to approach the speaker after the talk.": "/audio/daniela-feitoza/she_decided_to_approach_the_speaker_after_the_talk.mp3",
+        "She leads cross-functional teams across 3 countries.": "/audio/daniela-feitoza/she_leads_crossfunctional_teams_across_3_countries.mp3",
+        "She manages a team of 20 engineers.": "/audio/daniela-feitoza/she_manages_a_team_of_20_engineers.mp3",
+        "The CEO delivered a powerful keynote about innovation.": "/audio/daniela-feitoza/the_ceo_delivered_a_powerful_keynote_about_innovation.mp3",
+        "The CTO oversees all digital transformation initiatives.": "/audio/daniela-feitoza/the_cto_oversees_all_digital_transformation_initiatives.mp3",
+        "The IT department is on the third floor.": "/audio/daniela-feitoza/the_it_department_is_on_the_third_floor.mp3",
+        "The company distributes products to over 200 stores.": "/audio/daniela-feitoza/the_company_distributes_products_to_over_200_stores.mp3",
+        "The company generates significant annual revenue.": "/audio/daniela-feitoza/the_company_generates_significant_annual_revenue.mp3",
+        "The keynote speaker was amazing today.": "/audio/daniela-feitoza/the_keynote_speaker_was_amazing_today.mp3",
+        "The retail industry is rapidly adopting AI solutions.": "/audio/daniela-feitoza/the_retail_industry_is_rapidly_adopting_ai_solutions.mp3",
+        "The stress falls on the second syllable: implement.": "/audio/daniela-feitoza/the_stress_falls_on_the_second_syllable_implement.mp3",
+        "The team successfully implemented the new ERP system.": "/audio/daniela-feitoza/the_team_successfully_implemented_the_new_erp_system.mp3",
+        "The word technology has four syllables.": "/audio/daniela-feitoza/the_word_technology_has_four_syllables.mp3",
+        "There are over 500 attendees at this event.": "/audio/daniela-feitoza/there_are_over_500_attendees_at_this_event.mp3",
+        "Walmart is the largest employer in the United States.": "/audio/daniela-feitoza/walmart_is_the_largest_employer_in_the_united_states.mp3",
+        "We distribute Centauro and Nike in Brazil.": "/audio/daniela-feitoza/we_distribute_centauro_and_nike_in_brazil.mp3",
+        "We implement SAP solutions for retail operations.": "/audio/daniela-feitoza/we_implement_sap_solutions_for_retail_operations.mp3",
+        "We manage the entire supply chain for sportswear in Brazil.": "/audio/daniela-feitoza/we_manage_the_entire_supply_chain_for_sportswear_in_brazil.mp3",
+        "We work in the retail industry, specifically sportswear.": "/audio/daniela-feitoza/we_work_in_the_retail_industry_specifically_sportswear.mp3",
+        "English rhythm is like music, with strong and weak beats.": "/audio/daniela-feitoza/english_rhythm_is_like_music_with_strong_and_weak_beats.mp3",
+        "Hi John! Nice to meet you. I am Daniela Feitoza. I am an IT Manager at SPF Group.": "/audio/daniela-feitoza/hi_john_nice_to_meet_you_i_am_daniela_feitoza_i_am_an_it_man.mp3",
+        "Hi there! Great conference, is not it?": "/audio/daniela-feitoza/hi_there_great_conference_is_not_it.mp3",
+        "Hi there! I am John, from Microsoft. What brings you to the conference?": "/audio/daniela-feitoza/hi_there_i_am_john_from_microsoft_what_brings_you_to_the_con.mp3",
+        "Hi, I do not think we have met. I am Daniela.": "/audio/daniela-feitoza/hi_i_do_not_think_we_have_met_i_am_daniela.mp3",
+        "I am an IT Manager at SPF Group. We distribute Centauro and Nike products in Brazil.": "/audio/daniela-feitoza/i_am_an_it_manager_at_spf_group_we_distribute_centauro_and_n.mp3",
+        "I am here to learn about new SAP solutions for retail. Our company distributes Centauro and Nike in Brazil.": "/audio/daniela-feitoza/i_am_here_to_learn_about_new_sap_solutions_for_retail_our_co.mp3",
+        "I am responsible for SAP implementation and IT infrastructure.": "/audio/daniela-feitoza/i_am_responsible_for_sap_implementation_and_it_infrastructur.mp3",
+        "I am the IT Manager. I oversee all technology projects and I am responsible for SAP implementation. I lead a team of 12 IT professionals.": "/audio/daniela-feitoza/i_am_the_it_manager_i_oversee_all_technology_projects_and_i_.mp3",
+        "I am very interested in the Brazilian retail market. Tell me about your company.": "/audio/daniela-feitoza/i_am_very_interested_in_the_brazilian_retail_market_tell_me_.mp3",
+        "I lead a team of 12 IT professionals. We are responsible for the entire IT infrastructure.": "/audio/daniela-feitoza/i_lead_a_team_of_12_it_professionals_we_are_responsible_for_.mp3",
+        "I lead a team of twelve IT professionals.": "/audio/daniela-feitoza/i_lead_a_team_of_twelve_it_professionals.mp3",
+        "I oversee all technology projects in the company. My main focus is SAP implementation.": "/audio/daniela-feitoza/i_oversee_all_technology_projects_in_the_company_my_main_foc.mp3",
+        "I work at Deloitte. We do SAP consulting for large companies. What brings you to the conference?": "/audio/daniela-feitoza/i_work_at_deloitte_we_do_sap_consulting_for_large_companies_.mp3",
+        "I work at SPF Group. We are a retail distribution company headquartered in Sao Paulo. Our main brand is Centauro, which is the largest sportswear retailer in Latin America.": "/audio/daniela-feitoza/i_work_at_spf_group_we_are_a_retail_distribution_company_hea.mp3",
+        "I work at the SPF Group in Sao Paulo.": "/audio/daniela-feitoza/i_work_at_the_spf_group_in_sao_paulo.mp3",
+        "I work at the SPF Group. It is a large distributor based in Sao Paulo. The company distributes Centauro and Nike products across Brazil. I am an IT Manager, and I oversee the entire technology infrastructure. We use SAP, which is an enterprise software platform. The IT department has a team of 12 professionals. I enjoy working in the retail industry because it is always changing.": "/audio/daniela-feitoza/i_work_at_the_spf_group_it_is_a_large_distributor_based_in_s.mp3",
+        "Impressive! How many stores does Centauro have?": "/audio/daniela-feitoza/impressive_how_many_stores_does_centauro_have.mp3",
+        "In English, content words receive the main stress in a sentence.": "/audio/daniela-feitoza/in_english_content_words_receive_the_main_stress_in_a_senten.mp3",
+        "It really is! I am really enjoying the sessions. I am Lisa, by the way.": "/audio/daniela-feitoza/it_really_is_i_am_really_enjoying_the_sessions_i_am_lisa_by_.mp3",
+        "My background is in information technology, and I have been in this field for over 15 years. I really enjoy working with technology and people.": "/audio/daniela-feitoza/my_background_is_in_information_technology_and_i_have_been_i.mp3",
+        "Nice to meet you, Lisa! I am Daniela, from Brazil. I work at SPF Group.": "/audio/daniela-feitoza/nice_to_meet_you_lisa_i_am_daniela_from_brazil_i_work_at_spf.mp3",
+        "Oh interesting! What does an IT Manager do exactly?": "/audio/daniela-feitoza/oh_interesting_what_does_an_it_manager_do_exactly.mp3",
+        "Oh, Brazil! That is so cool. Is this your first time at this conference?": "/audio/daniela-feitoza/oh_brazil_that_is_so_cool_is_this_your_first_time_at_this_co.mp3",
+        "SAP? I have heard of it but I am not sure what it does. Can you explain?": "/audio/daniela-feitoza/sap_i_have_heard_of_it_but_i_am_not_sure_what_it_does_can_yo.mp3",
+        "SPF Group? I am not familiar with that name. What does your company do?": "/audio/daniela-feitoza/spf_group_i_am_not_familiar_with_that_name_what_does_your_co.mp3",
+        "So Daniela, what exactly do you do?": "/audio/daniela-feitoza/so_daniela_what_exactly_do_you_do.mp3",
+        "Sure! SAP is enterprise software that helps companies manage their operations. Think of it as the brain of the company. It connects sales, inventory, finance, everything.": "/audio/daniela-feitoza/sure_sap_is_enterprise_software_that_helps_companies_manage_.mp3",
+        "That is a big responsibility. I am impressed!": "/audio/daniela-feitoza/that_is_a_big_responsibility_i_am_impressed.mp3",
+        "That is very compelling. What is your role in all of this?": "/audio/daniela-feitoza/that_is_very_compelling_what_is_your_role_in_all_of_this.mp3",
+        "That makes sense! How big is your team?": "/audio/daniela-feitoza/that_makes_sense_how_big_is_your_team.mp3",
+        "That sounds great. How long have you been with the company?": "/audio/daniela-feitoza/that_sounds_great_how_long_have_you_been_with_the_company.mp3",
+        "That was an amazing keynote, was it not?": "/audio/daniela-feitoza/that_was_an_amazing_keynote_was_it_not.mp3",
+        "The CEO approved the new IT budget yesterday.": "/audio/daniela-feitoza/the_ceo_approved_the_new_it_budget_yesterday.mp3",
+        "The word infrastructure has four syllables.": "/audio/daniela-feitoza/the_word_infrastructure_has_four_syllables.mp3",
+        "This is my first time attending an international conference.": "/audio/daniela-feitoza/this_is_my_first_time_attending_an_international_conference.mp3",
+        "We are the largest sportswear retailer in Latin America.": "/audio/daniela-feitoza/we_are_the_largest_sportswear_retailer_in_latin_america.mp3",
+        "We distribute Centauro and Nike products in Brazil. Centauro is the largest sportswear retailer in Latin America.": "/audio/daniela-feitoza/we_distribute_centauro_and_nike_products_in_brazil_centauro_.mp3",
+        "We have over 200 stores across Brazil. We also distribute Nike products through our supply chain. The company generates significant annual revenue.": "/audio/daniela-feitoza/we_have_over_200_stores_across_brazil_we_also_distribute_nik.mp3",
+        "We hired an experienced SAP consultant last month.": "/audio/daniela-feitoza/we_hired_an_experienced_sap_consultant_last_month.mp3",
+        "What brings you to the conference?": "/audio/daniela-feitoza/what_brings_you_to_the_conference.mp3",
+        "Wow, Centauro! I know that brand. That is really interesting. We should definitely keep in touch!": "/audio/daniela-feitoza/wow_centauro_i_know_that_brand_that_is_really_interesting_we.mp3",
+        "Wow, that is impressive! And you are based in Brazil?": "/audio/daniela-feitoza/wow_that_is_impressive_and_you_are_based_in_brazil.mp3",
+        "Yes, I am based in Sao Paulo. I am responsible for SAP implementation and IT infrastructure.": "/audio/daniela-feitoza/yes_i_am_based_in_sao_paulo_i_am_responsible_for_sap_impleme.mp3",
+        "Yes, it is my first time. I am an IT Manager and we use SAP for our retail operations. What about you?": "/audio/daniela-feitoza/yes_it_is_my_first_time_i_am_an_it_manager_and_we_use_sap_fo.mp3",
+        "Your intonation should go up at the end of a yes or no question.": "/audio/daniela-feitoza/your_intonation_should_go_up_at_the_end_of_a_yes_or_no_quest.mp3",
+        "Centauro is the market leader in sportswear.": "/audio/daniela-feitoza/centauro_is_the_market_leader_in_sportswear.mp3",
+        "Great conference, isn't it?": "/audio/daniela-feitoza/great_conference_isnt_it.mp3",
+        "Great event, isn't it?": "/audio/daniela-feitoza/great_event_isnt_it.mp3",
+        "Hi! I'm Daniela, an IT Manager from Brazil. I'm here to learn about new SAP solutions for our retail operations.": "/audio/daniela-feitoza/hi_im_daniela_an_it_manager_from_brazil_im_here_to_learn_abo.mp3",
+        "Hi, I'm Daniela. I'm an IT Manager at SPF Group.": "/audio/daniela-feitoza/hi_im_daniela_im_an_it_manager_at_spf_group.mp3",
+        "Hi, I'm Daniela. Nice to meet you.": "/audio/daniela-feitoza/hi_im_daniela_nice_to_meet_you.mp3",
+        "I manage the IT department.": "/audio/daniela-feitoza/i_manage_the_it_department.mp3",
+        "I need a new server for the project.": "/audio/daniela-feitoza/i_need_a_new_server_for_the_project.mp3",
+        "I oversee all technology projects.": "/audio/daniela-feitoza/i_oversee_all_technology_projects.mp3",
+        "I work at the SPF Group.": "/audio/daniela-feitoza/i_work_at_the_spf_group.mp3",
+        "I work at the SPF Group. It's a large distributor in Brazil.": "/audio/daniela-feitoza/i_work_at_the_spf_group_its_a_large_distributor_in_brazil.mp3",
+        "I'm based in Sao Paulo and I'm responsible for SAP implementation.": "/audio/daniela-feitoza/im_based_in_sao_paulo_and_im_responsible_for_sap_implementat.mp3",
+        "It was great talking to you. Let's keep in touch.": "/audio/daniela-feitoza/it_was_great_talking_to_you_lets_keep_in_touch.mp3",
+        "Nice to meet you.": "/audio/daniela-feitoza/nice_to_meet_you.mp3",
+        "She is an experienced IT manager.": "/audio/daniela-feitoza/she_is_an_experienced_it_manager.mp3",
+        "Sorry, could you say that again?": "/audio/daniela-feitoza/sorry_could_you_say_that_again.mp3",
+        "That's really interesting. Tell me more.": "/audio/daniela-feitoza/thats_really_interesting_tell_me_more.mp3",
+        "The IT department has an important role in the company.": "/audio/daniela-feitoza/the_it_department_has_an_important_role_in_the_company.mp3",
+        "The conference starts at 9 AM.": "/audio/daniela-feitoza/the_conference_starts_at_9_am.mp3",
+        "We work in the retail industry.": "/audio/daniela-feitoza/we_work_in_the_retail_industry.mp3",
+        "What do you do?": "/audio/daniela-feitoza/what_do_you_do.mp3",
+        "Where are you from?": "/audio/daniela-feitoza/where_are_you_from.mp3",
+        "Centauro is the market leader in sportswear retail in Brazil. We are the only retailer with an exclusive Nike partnership. Our technology infrastructure, including SAP, is one of the most advanced in the industry.": "/audio/daniela-feitoza/centauro_is_the_market_leader_in_sportswear_retail_in_brazil.mp3",
+    };
+
+    // ===== SPEAK TEXT (Audio + Fallback) =====
+    let currentAudio = null;
+    let audioSpeed = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
+
+    function setAudioSpeed(speed, btn) {
+        audioSpeed = speed;
+        localStorage.setItem('alumni-audio-speed', speed);
+        document.querySelectorAll('.speed-btn').forEach(function(b) {
+            b.style.background = 'var(--bg-card)';
+            b.style.color = 'var(--text)';
+            b.style.borderColor = 'var(--border)';
+            b.style.fontWeight = '400';
+        });
+        btn.style.background = 'var(--accent)';
+        btn.style.color = '#fff';
+        btn.style.borderColor = 'var(--accent)';
+        btn.style.fontWeight = '600';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var saved = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
+        var btn = document.querySelector('.speed-btn[data-speed="' + saved + '"]');
+        if (btn) setAudioSpeed(saved, btn);
+    });
+
+    function speakText(text, btn) {
+        if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+        const cleanText = text.replace(/\\'/g, "'");
+        const file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+        if (file) {
+            currentAudio = new Audio(file);
+            currentAudio.playbackRate = audioSpeed;
+            currentAudio.play().catch(() => {
+                if ("speechSynthesis" in window) {
+                    window.speechSynthesis.cancel();
+                    const u = new SpeechSynthesisUtterance(cleanText);
+                    u.lang = "en-US"; u.rate = audioSpeed * 0.85; u.pitch = 1;
+                    window.speechSynthesis.speak(u);
+                }
+            });
+        } else {
+            if ("speechSynthesis" in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(cleanText);
+                u.lang = "en-US"; u.rate = audioSpeed * 0.85; u.pitch = 1;
+                window.speechSynthesis.speak(u);
+            }
+        }
+    }
+
+    function speakPhrase(btn) {
+        const card = btn.closest('.speech-card');
+        if (card) speakText(card.dataset.phrase, btn);
+    }
+
+    // ===== SPEECH RECOGNITION =====
+    let activeRecognition = null;
+
+    function startRecording(btn) {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR) { alert('Please use Google Chrome for voice recognition.'); return; }
+        const card = btn.closest('.speech-card');
+        const target = card.dataset.phrase.toLowerCase().replace(/[^a-z0-9'\s]/g, '');
+        const resultDiv = card.querySelector('.speech-result');
+        const stopBtn = card.querySelector('.btn-stop');
+        if (btn.classList.contains('recording')) return;
+        btn.classList.add('recording', 'hidden');
+        stopBtn.classList.add('visible');
+        const r = new SR();
+        r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 3; r.continuous = true;
+        activeRecognition = { recognition: r, btn: btn, stopBtn: stopBtn, card: card };
+        r.start();
+        function resetButtons() { btn.classList.remove('recording', 'hidden'); stopBtn.classList.remove('visible'); activeRecognition = null; }
+        r.onresult = function(event) {
+            const best = event.results[event.results.length - 1][0].transcript.toLowerCase().replace(/[^a-z0-9'\s]/g, '');
+            const analysis = analyzeWords(target, best);
+            const totalWords = analysis.expected.length;
+            const correctWords = analysis.expected.filter(w => w.status === 'correct').length;
+            resultDiv.classList.add('show'); resultDiv.classList.remove('good', 'try-again', 'bad');
+            let html = '';
+            if (analysis.score >= 0.8) { resultDiv.classList.add('good'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Excellent!'; updateProgress(); }
+            else if (analysis.score >= 0.5) { resultDiv.classList.add('try-again'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Almost there!'; }
+            else { resultDiv.classList.add('bad'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Keep practicing!'; }
+            html += '<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';
+            analysis.expected.forEach(w => { html += '<span class="word-box word-' + (w.status === 'correct' ? 'correct' : 'missing') + '"><span class="word-icon">' + (w.status === 'correct' ? '&#10003;' : '&#10007;') + '</span> ' + w.word + '</span>'; });
+            html += '</div><div class="comp-label">You said:</div><div class="comp-words">';
+            analysis.spoken.forEach(w => {
+                const cls = w.status === 'correct' ? 'correct' : w.status === 'extra' ? 'extra' : 'wrong';
+                const icon = w.status === 'correct' ? '&#10003;' : w.status === 'extra' ? '~' : '&#10007;';
+                html += '<span class="word-box word-' + cls + '"><span class="word-icon">' + icon + '</span> ' + w.word + '</span>';
+            });
+            html += '</div>';
+            if (analysis.wrongWords.length > 0) {
+                html += '<div class="speech-suggestion"><strong>Focus on:</strong> ';
+                html += analysis.wrongWords.map(w => '"<strong>' + w.expected + '</strong>"' + (w.got ? ' (you said "' + w.got + '")' : '')).join(' &middot; ');
+                html += '</div>';
+            }
+            html += '</div>';
+            resultDiv.innerHTML = html;
+            resetButtons();
+        };
+        r.onerror = function() { resetButtons(); resultDiv.classList.add('show', 'try-again'); resultDiv.innerHTML = 'Could not hear you. Check your microphone.'; };
+        r.onend = function() { resetButtons(); };
+        setTimeout(() => { if (btn.classList.contains('recording')) { r.stop(); resetButtons(); } }, 30000);
+    }
+
+    function stopRecording(stopBtn) { if (activeRecognition) activeRecognition.recognition.stop(); }
+
+    // ===== WORD ANALYSIS =====
+    function analyzeWords(targetStr, spokenStr) {
+        const tw = targetStr.split(/\s+/).filter(w => w), sw = spokenStr.split(/\s+/).filter(w => w);
+        const m = tw.length, n = sw.length, dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+        for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) dp[i][j] = wordsMatch(tw[i-1], sw[j-1]) ? dp[i-1][j-1] + 1 : Math.max(dp[i-1][j], dp[i][j-1]);
+        const mt = new Set(), ms = new Set(); let i = m, j = n;
+        while (i > 0 && j > 0) { if (wordsMatch(tw[i-1], sw[j-1])) { mt.add(i-1); ms.add(j-1); i--; j--; } else if (dp[i-1][j] > dp[i][j-1]) i--; else j--; }
+        const expected = tw.map((w, i) => ({ word: w, status: mt.has(i) ? 'correct' : 'missing' }));
+        const spoken = sw.map((w, i) => ({ word: w, status: ms.has(i) ? 'correct' : 'wrong' }));
+        const wrongWords = [], missedTW = tw.filter((_, i) => !mt.has(i)), wrongSW = sw.filter((_, i) => !ms.has(i));
+        missedTW.forEach((t, i) => wrongWords.push({ expected: t, got: wrongSW[i] || null }));
+        wrongSW.slice(missedTW.length).forEach(s => { spoken.forEach(sp => { if (sp.word === s && sp.status === 'wrong') sp.status = 'extra'; }); });
+        return { expected, spoken, wrongWords, score: mt.size / Math.max(m, 1) };
+    }
+
+    function wordsMatch(a, b) { if (a === b) return true; const ca = a.replace(/'/g, ''), cb = b.replace(/'/g, ''); if (ca === cb) return true; if (a.length > 3 && b.length > 3 && levenshtein(a, b) <= 1) return true; return false; }
+    function levenshtein(a, b) { const m = []; for (let i = 0; i <= b.length; i++) m[i] = [i]; for (let j = 0; j <= a.length; j++) m[0][j] = j; for (let i = 1; i <= b.length; i++) for (let j = 1; j <= a.length; j++) m[i][j] = b[i-1] === a[j-1] ? m[i-1][j-1] : Math.min(m[i-1][j-1] + 1, m[i][j-1] + 1, m[i-1][j] + 1); return m[b.length][a.length]; }
+
+    // ===== FILL-IN-THE-BLANK =====
+    function checkBlank(btn) {
+        const item = btn.closest('.fill-blank-item'), input = item.querySelector('.blank-input');
+        input.classList.remove('correct', 'wrong');
+        const answer = input.dataset.answer.toLowerCase().trim();
+        const altAnswer = input.dataset.alt ? input.dataset.alt.toLowerCase().trim() : null;
+        const value = input.value.toLowerCase().trim();
+        let hintEl = item.querySelector('.blank-hint-feedback');
+        if (hintEl) hintEl.classList.remove('visible');
+        if (value === answer || (altAnswer && value === altAnswer)) {
+            input.classList.add('correct');
+            if (hintEl) hintEl.classList.remove('visible');
+            updateProgress();
+        } else {
+            input.classList.add('wrong');
+            if (input.dataset.hint) {
+                if (!hintEl) { hintEl = document.createElement('div'); hintEl.className = 'blank-hint-feedback'; item.appendChild(hintEl); }
+                hintEl.textContent = input.dataset.hint;
+                hintEl.classList.add('visible');
+            }
+            setTimeout(() => input.classList.remove('wrong'), 1500);
+        }
+    }
+
+    function listenBlank(btn) {
+        const item = btn.closest('.fill-blank-item'), input = item.querySelector('.blank-input');
+        if (input.dataset.phrase) speakText(input.dataset.phrase, btn);
+    }
+
+    // ===== QUIZ =====
+    function selectQuiz(o) {
+        const p = o.closest('.quiz-options'); if (p.querySelector('.correct')) return;
+        if (o.dataset.correct === 'true') { o.classList.add('correct'); updateProgress(); }
+        else { o.classList.add('wrong'); setTimeout(() => o.classList.remove('wrong'), 800); }
+    }
+
+    // ===== ORDER EXERCISE =====
+    let orderSelection = {};
+    function selectOrderItem(item, containerId) {
+        if (item.classList.contains('correct-order')) return;
+        if (!orderSelection[containerId]) orderSelection[containerId] = [];
+        const idx = orderSelection[containerId].indexOf(item);
+        if (idx > -1) { orderSelection[containerId].splice(idx, 1); item.querySelector('.order-num').textContent = '?'; item.style.borderColor = ''; }
+        else { orderSelection[containerId].push(item); item.querySelector('.order-num').textContent = orderSelection[containerId].length; item.style.borderColor = 'var(--accent)'; }
+    }
+
+    function checkOrder(containerId) {
+        const container = document.getElementById(containerId);
+        const items = container.querySelectorAll('.order-item');
+        const selected = orderSelection[containerId] || [];
+        if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+        let allCorrect = true;
+        selected.forEach((item, idx) => {
+            if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+            else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(() => { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+        });
+        if (!allCorrect) orderSelection[containerId] = [];
+        else updateProgress();
+    }
+
+    function moveItem(btn, direction, containerId) {
+        const item = btn.closest('.order-item');
+        const container = document.getElementById(containerId);
+        const items = Array.from(container.querySelectorAll('.order-item'));
+        const idx = items.indexOf(item);
+        if (direction === -1 && idx > 0) container.insertBefore(item, items[idx - 1]);
+        else if (direction === 1 && idx < items.length - 1) container.insertBefore(items[idx + 1], item);
+    }
+
+    // ===== DRAG AND DROP =====
+    let draggedItem = null;
+    document.querySelectorAll('.order-container').forEach(container => {
+        container.addEventListener('dragstart', e => { const item = e.target.closest('.order-item'); if (!item || item.classList.contains('correct-order')) return; draggedItem = item; item.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+        container.addEventListener('dragend', e => { const item = e.target.closest('.order-item'); if (item) item.classList.remove('dragging'); container.querySelectorAll('.order-item').forEach(i => i.classList.remove('drag-over')); draggedItem = null; });
+        container.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; const target = e.target.closest('.order-item'); if (target && target !== draggedItem) { container.querySelectorAll('.order-item').forEach(i => i.classList.remove('drag-over')); target.classList.add('drag-over'); } });
+        container.addEventListener('drop', e => { e.preventDefault(); const target = e.target.closest('.order-item'); if (target && draggedItem && target !== draggedItem) { const items = Array.from(container.querySelectorAll('.order-item')); if (items.indexOf(draggedItem) < items.indexOf(target)) container.insertBefore(draggedItem, target.nextSibling); else container.insertBefore(draggedItem, target); } container.querySelectorAll('.order-item').forEach(i => i.classList.remove('drag-over')); });
+    });
+
+    // ===== FREE RECORDING =====
+    let freeRecorder = null;
+    let freeChunks = [];
+    function startFreeRecording(btn) {
+        const stopBtn = btn.parentElement.querySelector('.btn-stop');
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            freeRecorder = new MediaRecorder(stream);
+            freeChunks = [];
+            freeRecorder.ondataavailable = e => { if (e.data.size > 0) freeChunks.push(e.data); };
+            freeRecorder.onstop = () => {
+                const blob = new Blob(freeChunks, { type: 'audio/webm' });
+                const url = URL.createObjectURL(blob);
+                const thinkCard = btn.closest('.think-card');
+                const resultDiv = thinkCard.querySelector('[id^="think-result"]');
+                if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Gravacao salva!</p>';
+                saveFreeRecording(blob, thinkCard);
+                stream.getTracks().forEach(t => t.stop());
+            };
+            freeRecorder.start();
+            btn.classList.add('hidden');
+            stopBtn.classList.add('visible');
+        }).catch(() => { alert('Nao foi possivel acessar o microfone.'); });
+    }
+
+    function stopFreeRecording(stopBtn) {
+        if (freeRecorder && freeRecorder.state === 'recording') freeRecorder.stop();
+        const recordBtn = stopBtn.parentElement.querySelector('.btn-record');
+        recordBtn.classList.remove('hidden');
+        stopBtn.classList.remove('visible');
+    }
+
+    function saveFreeRecording(blob, thinkCard) {
+        const id = thinkCard.querySelector('[id^="think-result"]')?.id || 'think-unknown';
+        const dbReq = indexedDB.open('daniela-feitoza-aluno-recordings', 1);
+        dbReq.onupgradeneeded = e => { e.target.result.createObjectStore('recordings'); };
+        dbReq.onsuccess = e => { const db = e.target.result; const tx = db.transaction('recordings', 'readwrite'); tx.objectStore('recordings').put(blob, id); };
+    }
+
+    // ===== PROGRESS TRACKING =====
+    function updateProgress() {
+        const totalLessons = 5;
+        let totalExercises = 0;
+        let completedExercises = 0;
+
+        for (let l = 1; l <= totalLessons; l++) {
+            const lessonEl = document.getElementById('ex-lesson-' + l);
+            if (!lessonEl) continue;
+
+            const blanksAll = lessonEl.querySelectorAll('.blank-input');
+            const blanksCorrect = lessonEl.querySelectorAll('.blank-input.correct');
+            const quizAll = lessonEl.querySelectorAll('.quiz-item');
+            const quizCorrect = lessonEl.querySelectorAll('.quiz-option.correct');
+            const matchAll = lessonEl.querySelectorAll('.match-row');
+            const matchCorrect = lessonEl.querySelectorAll('.match-row.correct');
+            const speechAll = lessonEl.querySelectorAll('.speech-result');
+            const speechGood = lessonEl.querySelectorAll('.speech-result.good');
+            const orderAll = lessonEl.querySelectorAll('.order-container');
+            let orderCorrect = 0;
+            orderAll.forEach(oc => { const items = oc.querySelectorAll('.order-item'); const correct = oc.querySelectorAll('.order-item.correct-order'); if (items.length > 0 && items.length === correct.length) orderCorrect++; });
+
+            const lessonTotal = blanksAll.length + quizAll.length + matchAll.length + speechAll.length + orderAll.length;
+            const lessonDone = blanksCorrect.length + quizCorrect.length + matchCorrect.length + speechGood.length + orderCorrect;
+
+            totalExercises += lessonTotal;
+            completedExercises += lessonDone;
+
+            const lessonPct = lessonTotal > 0 ? Math.round(lessonDone / lessonTotal * 100) : 0;
+            const bar = document.querySelector('[data-lesson-progress="' + l + '"]');
+            const lbl = document.querySelector('[data-lesson-pct="' + l + '"]');
+            if (bar) bar.style.width = lessonPct + '%';
+            if (lbl) lbl.textContent = lessonPct + '%';
+
+            var stampEl = document.getElementById('stamp' + l);
+            if (stampEl) { if (lessonPct === 100) stampEl.classList.add('earned'); else stampEl.classList.remove('earned'); }
+        }
+
+        const overallPct = totalExercises > 0 ? Math.round(completedExercises / totalExercises * 100) : 0;
+        const pb = document.getElementById('progressBar');
+        const pp = document.getElementById('progressPercent');
+        if (pb) pb.style.width = overallPct + '%';
+        if (pp) pp.textContent = overallPct + '%';
+
+        var celCard = document.getElementById('celebrationCard');
+        if (celCard) celCard.style.display = overallPct === 100 ? 'block' : 'none';
+
+        try { localStorage.setItem('alumni-progress-daniela-feitoza-aluno', JSON.stringify({ completed: completedExercises, total: totalExercises })); } catch(e) {}
+        saveState();
+    }
+
+    // ===== STATE PERSISTENCE =====
+    function saveState() {
+        const s = { blanks: [], quiz: [], speech: [], matches: [], mediaChecks: {} };
+        document.querySelectorAll('.media-card-wrapper').forEach(w => { const id = w.dataset.media; const cb = w.querySelector('input[type="checkbox"]'); if (id && cb) s.mediaChecks[id] = cb.checked; });
+        document.querySelectorAll('.match-row.correct select').forEach(sel => { s.matches.push(sel.closest('.match-row').querySelector('.match-word').textContent + '|' + sel.value); });
+        document.querySelectorAll('.blank-input.correct').forEach(e => s.blanks.push(e.dataset.answer));
+        document.querySelectorAll('.quiz-option.correct').forEach(e => s.quiz.push(e.textContent.trim().substring(0, 30)));
+        document.querySelectorAll('.speech-result.good').forEach(e => s.speech.push(e.closest('.speech-card').dataset.phrase));
+        localStorage.setItem('daniela-feitoza-aluno', JSON.stringify(s));
+    }
+
+    function loadState() {
+        const r = localStorage.getItem('daniela-feitoza-aluno'); if (!r) return;
+        const s = JSON.parse(r);
+        if (s.matches) s.matches.forEach(d => { const [word, val] = d.split('|'); document.querySelectorAll('.match-row').forEach(row => { if (row.querySelector('.match-word').textContent === word) { const sel = row.querySelector('select'); sel.value = val; row.classList.add('correct'); sel.disabled = true; } }); });
+        if (s.blanks) s.blanks.forEach(a => { document.querySelectorAll('.blank-input[data-answer="' + a + '"]').forEach(e => { e.value = a; e.classList.add('correct'); }); });
+        if (s.quiz) s.quiz.forEach(t => { document.querySelectorAll('.quiz-option[data-correct="true"]').forEach(e => { if (e.textContent.trim().substring(0, 30) === t) e.classList.add('correct'); }); });
+        if (s.mediaChecks) { document.querySelectorAll('.media-card-wrapper').forEach(w => { const id = w.dataset.media; const cb = w.querySelector('input[type="checkbox"]'); if (id && cb && s.mediaChecks[id]) { cb.checked = true; w.classList.add('done'); } }); }
+        updateProgress();
+    }
+
+    function resetProgress() { if (confirm('Tem certeza que deseja resetar todo o progresso?')) { localStorage.removeItem('daniela-feitoza-aluno'); location.reload(); } }
+
+    // ===== LISTEN ALL VOCAB =====
+    function listenAllVocab(btn) {
+        const section = btn.closest('.exercise-section');
+        const audioBtns = section.querySelectorAll('.vocab-card .audio-btn');
+        let i = 0;
+        function playNext() { if (i < audioBtns.length) { audioBtns[i].click(); i++; setTimeout(playNext, 2500); } }
+        playNext();
+    }
+
+    // ===== VERIFY ALL MATCHES =====
+    function verifyAllMatches(gridId) {
+        const grid = document.getElementById(gridId);
+        const rows = grid.querySelectorAll('.match-row');
+        rows.forEach(row => {
+            const select = row.querySelector('select');
+            const answer = row.dataset.answer;
+            row.classList.remove('correct', 'wrong');
+            if (select.value === answer) { row.classList.add('correct'); }
+            else if (select.value !== '') { row.classList.add('wrong'); setTimeout(() => row.classList.remove('wrong'), 1800); }
+        });
+        updateProgress();
+    }
+
+    function checkMatch(select) {
+        const row = select.closest('.match-row');
+        const answer = row.dataset.answer;
+        row.classList.remove('correct', 'wrong');
+        if (select.value === answer) { row.classList.add('correct'); select.disabled = true; updateProgress(); }
+        else if (select.value !== '') { row.classList.add('wrong'); setTimeout(() => { row.classList.remove('wrong'); select.value = ''; }, 1000); }
+    }
+
+    // ===== MEDIA CHECKBOXES =====
+    function toggleMediaDone(checkbox) {
+        const wrapper = checkbox.closest('.media-card-wrapper');
+        wrapper.classList.toggle('done', checkbox.checked);
+        saveState();
+    }
+
+    // ===== INIT =====
+    loadState();
+
+    // Accessibility
+    document.querySelectorAll('.match-row select').forEach(sel => { const word = sel.closest('.match-row').querySelector('.match-word'); if (word) sel.setAttribute('aria-label', 'Translation of ' + word.textContent); });
+    document.querySelectorAll('.blank-input').forEach(inp => { inp.setAttribute('aria-label', 'Complete the sentence - ' + (inp.dataset.answer || 'answer')); });
+    document.querySelectorAll('.quiz-option').forEach(opt => { opt.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); } }); });
+</script>
+</body>
+</html>

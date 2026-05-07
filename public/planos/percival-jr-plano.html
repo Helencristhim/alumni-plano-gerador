@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano Pedagógico — Percival Jr.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --card: #141414;
+            --elevated: #1e1e1e;
+            --border: #2a2a2a;
+            --border-light: #333;
+            --teal: #2dd4bf;
+            --teal-light: #5eead4;
+            --teal-dim: rgba(45,212,191,0.12);
+            --white: #fff;
+            --text: #e8e8e8;
+            --text-mid: #999;
+            --text-dim: #666;
+            --green: #4ade80;
+            --green-bg: rgba(74,222,128,0.08);
+            --red: #f87171;
+            --red-bg: rgba(248,113,113,0.08);
+            --blue: #60a5fa;
+            --blue-bg: rgba(59,130,246,0.08);
+            --purple: #c084fc;
+            --purple-bg: rgba(168,85,247,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 420px;
+            display: flex;
+            align-items: flex-end;
+            padding: 3rem 2rem;
+            overflow: hidden;
+            background: url('https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1400&q=80') center/cover no-repeat;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; width: 100%; }
+
+        .tag {
+            display: inline-block;
+            border: 1px solid var(--teal);
+            padding: 0.3rem 1rem;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 1.2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .sub {
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--text-mid);
+            max-width: 550px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 3rem 1rem; }
+
+        /* ===== INFO GRID ===== */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .info-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+        }
+
+        .info-card .info-label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.8rem;
+        }
+
+        .info-card .info-value {
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .info-card .info-value strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .info-card.full { grid-column: 1 / -1; }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header .section-tag {
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 0.4rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .section { margin-bottom: 3.5rem; }
+
+        /* ===== OBJECTIVE ===== */
+        .objective-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border-left: 3px solid var(--teal);
+        }
+
+        .objective-card p {
+            font-size: 0.95rem;
+            color: var(--text-mid);
+            line-height: 1.8;
+        }
+
+        .objective-card strong { color: var(--white); }
+
+        /* ===== STRENGTHS / WEAKNESSES ===== */
+        .sw-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .sw-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+        }
+
+        .sw-card .sw-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sw-card.strengths .sw-header { color: var(--green); }
+        .sw-card.weaknesses .sw-header { color: var(--red); }
+
+        .sw-card .sw-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .sw-card.strengths .sw-dot { background: var(--green); }
+        .sw-card.weaknesses .sw-dot { background: var(--red); }
+
+        .sw-card ul {
+            list-style: none;
+        }
+
+        .sw-card li {
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+            color: var(--text-mid);
+            border-bottom: 1px solid var(--border);
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .sw-card li:last-child { border-bottom: none; }
+
+        .sw-card.strengths li::before {
+            content: '+';
+            position: absolute;
+            left: 0;
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .sw-card.weaknesses li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        /* ===== CURRICULUM TABLE ===== */
+        .curriculum-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+
+        .curriculum-table thead th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--teal);
+            background: rgba(45,212,191,0.06);
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .curriculum-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            color: var(--text-mid);
+        }
+
+        .curriculum-table tbody tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .curriculum-table .lesson-num {
+            font-weight: 700;
+            color: var(--teal);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            width: 45px;
+        }
+
+        .curriculum-table .theme-cell {
+            font-weight: 600;
+            color: var(--white);
+            min-width: 160px;
+        }
+
+        .curriculum-table .focus-cell {
+            color: var(--text-mid);
+        }
+
+        .curriculum-table .activity-cell {
+            color: var(--text-mid);
+        }
+
+        .curriculum-table .hw-cell {
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .phase-indicator {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 0.4rem;
+            vertical-align: middle;
+        }
+
+        .phase-foundation { background: var(--blue); }
+        .phase-expansion { background: var(--purple); }
+        .phase-fluency { background: var(--green); }
+
+        /* ===== PHASE LEGEND ===== */
+        .phase-legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .phase-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+        }
+
+        .phase-legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ===== NOTES ===== */
+        .methodology-card {
+            background: var(--teal-dim);
+            border: 1px solid rgba(45,212,191,0.2);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .methodology-card h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--teal);
+            margin-bottom: 0.6rem;
+        }
+
+        .methodology-card p {
+            font-size: 0.85rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+        }
+
+        .methodology-card strong { color: var(--teal-light); }
+
+        /* ===== BACK LINK ===== */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--teal);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover { opacity: 0.7; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .hero { min-height: 300px; padding: 2rem 1rem; }
+            .hero h1 { font-size: 2rem; }
+            .info-grid { grid-template-columns: 1fr; }
+            .sw-grid { grid-template-columns: 1fr; }
+            .curriculum-table { font-size: 0.75rem; }
+            .curriculum-table td, .curriculum-table th { padding: 0.6rem; }
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            body { background: #fff; color: #111; }
+            .hero { min-height: auto; padding: 1rem; background: none !important; }
+            .hero::before { display: none; }
+            .hero h1 { color: #111; font-size: 2rem; }
+            .info-card, .sw-card, .objective-card, .methodology-card { border-color: #ccc; background: #f9f9f9; }
+            .curriculum-table th { background: #f0f0f0; color: #333; }
+            .curriculum-table td { color: #333; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <div class="hero-content">
+        <div class="tag">PLANO PEDAG&Oacute;GICO INDIVIDUALIZADO</div>
+        <h1>Percival Jr.</h1>
+        <div class="sub">Travel English — Programa personalizado para fluência e conexão de ideias em viagens internacionais</div>
+    </div>
+</div>
+
+<div class="container">
+
+    <a class="back-link" href="percival-jr.html">&#8592; Voltar para a plataforma de exercícios</a>
+
+    <!-- ===== INFO DO ALUNO ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-tag">Dados do Aluno</div>
+            <h2>Informações Gerais</h2>
+        </div>
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-label">Nome Completo</div>
+                <div class="info-value"><strong>Percival Jr.</strong></div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Localização</div>
+                <div class="info-value"><strong>São Paulo, SP</strong></div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Profissão</div>
+                <div class="info-value"><strong>Diretor de Riscos e Auditoria Interna</strong> — EGEA Saneamento</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Frequência de Aulas</div>
+                <div class="info-value"><strong>1x por semana</strong> — Sextas-feiras, 8h-9h</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Nível Atual</div>
+                <div class="info-value"><strong>B1 (Intermediário)</strong> — Boa compreensão, produção oral fragmentada</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Histórico</div>
+                <div class="info-value">Curso via WhatsApp + 18 meses com professora particular. Sentiu estagnação. 48 anos, casado com Simone, pai de Natália (26) e Guilherme (23)</div>
+            </div>
+            <div class="info-card full">
+                <div class="info-label">Objetivo Principal</div>
+                <div class="info-value"><strong>Travel English</strong> — Viagem a Nova York e Miami em maio de 2026 (2 semanas de férias com a esposa). Foco em fluência, conectores e pronúncia em situações reais. Quer falar com confiança, conectando ideias de forma natural sem traduzir mentalmente do português.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== OBJETIVO DO PROGRAMA ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-tag">Objetivo do Programa</div>
+            <h2>Meta Pedagógica</h2>
+        </div>
+        <div class="objective-card">
+            <p>
+                Programa de <strong>6 aulas</strong> (com possibilidade de continuidade) focado em desenvolver <strong>fluência conversacional e conexão de ideias em contextos de viagem</strong>. A prioridade é destravar a produção oral através de <strong>conectores, sentence scaffolding e shadowing</strong>, permitindo que o aluno construa frases complexas com naturalidade e ritmo.
+            </p>
+            <p style="margin-top:1rem;">
+                O foco não é vocabulário novo (Percival já possui repertório adequado), mas sim a <strong>capacidade de conectar ideias, manter o fluxo da conversa e falar com ritmo natural</strong> nas situações mais comuns de uma viagem a Nova York e Miami. A abordagem é de <strong>coach — com repetição intensiva, correção direta e prática constante</strong>, não de professor tradicional.
+            </p>
+        </div>
+    </div>
+
+    <!-- ===== FORÇAS E FRAQUEZAS ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-tag">Diagnóstico</div>
+            <h2>Forças e Pontos de Melhoria</h2>
+        </div>
+        <div class="sw-grid">
+            <div class="sw-card strengths">
+                <div class="sw-header"><div class="sw-dot"></div> Pontos Fortes</div>
+                <ul>
+                    <li>Boa compreensão auditiva — entende conversas em velocidade normal</li>
+                    <li>Vocabulário razoável — conhece muitas palavras mas não as conecta fluentemente</li>
+                    <li>Autoconsciência — sabe exatamente onde trava e por quê</li>
+                    <li>Altamente motivado — viagem marcada com data definida</li>
+                    <li>Profissional experiente — sabe se comportar em contextos formais</li>
+                    <li>Curioso e aberto a feedback direto</li>
+                </ul>
+            </div>
+            <div class="sw-card weaknesses">
+                <div class="sw-header"><div class="sw-dot"></div> Pontos de Melhoria</div>
+                <ul>
+                    <li>Fala fragmentada — frases curtas sem conectores (so, because, however, also)</li>
+                    <li>Insegurança na pronúncia causa hesitação extra ao falar</li>
+                    <li>Dificuldade com connected speech — fala palavra por palavra em vez de fluir</li>
+                    <li>Ausência de prática real de conversação nos últimos meses</li>
+                    <li>Tende a traduzir mentalmente do português antes de falar</li>
+                    <li>Pouca experiência com registro informal/coloquial americano</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CURRÍCULO ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-tag">Currículo</div>
+            <h2>Plano de 6 Aulas — Travel English</h2>
+        </div>
+
+        <div class="phase-legend">
+            <div class="phase-legend-item"><div class="phase-legend-dot phase-foundation"></div> Fase 1 — Fundação (Aulas 1-2)</div>
+            <div class="phase-legend-item"><div class="phase-legend-dot phase-expansion"></div> Fase 2 — Expansão (Aulas 3-4)</div>
+            <div class="phase-legend-item"><div class="phase-legend-dot phase-fluency"></div> Fase 3 — Fluência (Aulas 5-6)</div>
+        </div>
+
+        <div style="overflow-x:auto;">
+        <table class="curriculum-table">
+            <thead>
+                <tr>
+                    <th>Aula</th>
+                    <th>Tema</th>
+                    <th>Foco Linguístico</th>
+                    <th>Atividade em Sala</th>
+                    <th>Dever de Casa</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="lesson-num"><span class="phase-indicator phase-foundation"></span>1</td>
+                    <td class="theme-cell">Airport & Immigration</td>
+                    <td class="focus-cell">Conectores: so, because, that's why; frases completas para imigração com justificativas ("I'm here because...", "We're staying for two weeks so we can..."); pronúncia de linked sounds em frases longas</td>
+                    <td class="activity-cell">Warm-up conversacional; shadowing de diálogo de imigração (ritmo e entonação); scaffolding progressivo: frase simples → frase com conector → frase complexa; role-play de imigração com follow-up questions imprevisíveis</td>
+                    <td class="hw-cell">Shadowing de 3 frases longas (áudio enviado); gravar respostas para 5 perguntas de imigração usando conectores; assistir cena de aeroporto em filme/série e anotar 3 connected speech patterns</td>
+                </tr>
+                <tr>
+                    <td class="lesson-num"><span class="phase-indicator phase-foundation"></span>2</td>
+                    <td class="theme-cell">Hotel Check-in & Accommodation</td>
+                    <td class="focus-cell">Conectores: also, and actually, by the way; pedidos compostos ("I'd like a quiet room, and also could you..."); técnica de elaboração — expandir respostas curtas em respostas completas; polite requests encadeados</td>
+                    <td class="activity-cell">Drill de expansão: transformar frase de 3 palavras em frase de 12+; shadowing de check-in real (YouTube); role-play de check-in com 3 pedidos extras + resolver problema no quarto explicando a situação completa</td>
+                    <td class="hw-cell">Shadowing de 4 frases (áudio enviado); escrever 5 pedidos compostos usando "also" e "by the way"; pesquisar hotel real em NYC e preparar check-in completo (gravar áudio de 1 min)</td>
+                </tr>
+                <tr>
+                    <td class="lesson-num"><span class="phase-indicator phase-expansion"></span>3</td>
+                    <td class="theme-cell">Getting Around NYC & Miami</td>
+                    <td class="focus-cell">Conectores: first, then, after that, finally; dar e receber direções com sequência lógica; perguntar alternativas ("If the subway is too far, is there a bus or should I..."); connected speech: wanna, gonna, gotta</td>
+                    <td class="activity-cell">Atividade com mapa real de Manhattan: descrever trajetos usando sequenciadores; drill de contrações informais (wanna/gonna/gotta); role-play: pedir Uber + conversar com motorista + perguntar recomendações locais</td>
+                    <td class="hw-cell">Shadowing de 5 frases com contrações informais; traçar 2 rotas no Google Maps e descrever em inglês (gravar áudio); ouvir podcast de conversação e anotar 5 conectores usados naturalmente</td>
+                </tr>
+                <tr>
+                    <td class="lesson-num"><span class="phase-indicator phase-expansion"></span>4</td>
+                    <td class="theme-cell">Restaurants & Ordering Food</td>
+                    <td class="focus-cell">Conectores: however, on the other hand, instead; expressar preferências com justificativa ("I'd prefer the salmon because... however, if you recommend..."); small talk com garçom; cultura de gorjeta e interação casual americana</td>
+                    <td class="activity-cell">Leitura de menu real de NYC; scaffolding: pedido básico → pedido com justificativa → pedido com mudança de ideia; role-play de jantar completo com small talk, perguntas sobre pratos, e conversa casual com garçom</td>
+                    <td class="hw-cell">Shadowing de 4 frases com "however" e "on the other hand"; escolher restaurante real em Miami, estudar menu e gravar pedido completo (1.5 min); assistir cena de restaurante identificando registro informal</td>
+                </tr>
+                <tr>
+                    <td class="lesson-num"><span class="phase-indicator phase-fluency"></span>5</td>
+                    <td class="theme-cell">Shopping & Everyday</td>
+                    <td class="focus-cell">Conectores combinados: uso livre e natural de todos os conectores trabalhados; negociação e comparação ("This one is nice, but on the other hand... so I think I'll go with..."); registro coloquial de lojas americanas</td>
+                    <td class="activity-cell">Speed drill: conectar duas ideias em 10 segundos (timer); role-play de loja com barganha, troca e devolução; simulação de conversa casual com vendedor (small talk + decisão de compra com justificativa elaborada)</td>
+                    <td class="hw-cell">Gravar 2 minutos de fala contínua descrevendo o que quer comprar em NYC e por quê (usando todos os conectores); shadowing de diálogo de loja; preparar lista de frases de sobrevivência para compras</td>
+                </tr>
+                <tr>
+                    <td class="lesson-num"><span class="phase-indicator phase-fluency"></span>6</td>
+                    <td class="theme-cell">Emergency, Health & Review</td>
+                    <td class="focus-cell">Revisão integrada de todos os conectores; descrever situações com narrativa completa ("First I felt... so I went to... but they said... however..."); fluência sob pressão — cenários aleatórios com tempo limitado</td>
+                    <td class="activity-cell">Role-play de farmácia descrevendo sintomas com contexto completo; Speed Round final: 8 cenários aleatórios de todas as 6 aulas (45s cada); feedback final e mapa de progresso; preparação de "confidence card" para a viagem</td>
+                    <td class="hw-cell">Gravar simulação completa de 3 minutos: chegada no aeroporto até resolver um problema no hotel (narrativa contínua); revisar todos os shadowing das aulas anteriores; preparar frases essenciais no celular para a viagem</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <div class="methodology-card">
+            <h4>Abordagem Metodológica</h4>
+            <p>
+                <strong>1. Coach, Não Professor:</strong> Abordagem de treinador com repetição, correção direta e prática intensiva. Percival não precisa de explicações longas — precisa de reps, feedback imediato e desafio constante para sair da zona de conforto.<br><br>
+                <strong>2. Sentence Scaffolding:</strong> Fornecer estruturas progressivamente mais complexas, reduzindo o apoio gradualmente. Começar com modelo completo → modelo parcial → produção livre. O aluno reconstrói frases cada vez mais longas e conectadas.<br><br>
+                <strong>3. Conectores como Prioridade:</strong> Cada aula trabalha conectores específicos (so, because, however, also, on the other hand). O problema não é vocabulário — é a cola que liga as ideias. Conectores são o atalho para parecer fluente.<br><br>
+                <strong>4. Shadowing para Pronúncia:</strong> Técnica de repetição sincronizada para melhorar ritmo e connected speech. Material enviado antes da aula para que o aluno chegue aquecido. Foco em entonação e linking, não em fonemas isolados.<br><br>
+                <strong>5. Atividades Pré-Aula:</strong> Material preparatório enviado antes de cada sessão para que a aula seja 100% prática oral. Nenhum minuto desperdiçado com explicação que pode ser consumida antes. A aula é para treinar, não para aprender teoria.
+            </p>
+        </div>
+    </div>
+
+    <!-- ===== CONTINUIDADE ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-tag">Após as 6 Aulas</div>
+            <h2>Plano de Continuidade</h2>
+        </div>
+        <div class="objective-card">
+            <p>
+                Após o retorno da viagem, o programa pode ser expandido com foco em:<br><br>
+                <strong>Bloco 2 (Aulas 7-12):</strong> Debriefing da viagem (usar experiências reais como material) + Inglês profissional — apresentar sua área de Riscos e Auditoria Interna em inglês, vocabulário corporativo, reuniões e calls internacionais.<br><br>
+                <strong>Bloco 3 (Aulas 13-18):</strong> Conferências e networking profissional — argumentação avançada, defender posições com nuance, small talk de eventos, apresentações curtas em inglês sobre compliance e auditoria.<br><br>
+                <strong>Bloco 4 (Aulas 19-24):</strong> Consolidação B2 — fluência sob pressão em qualquer contexto, improviso, debate, vocabulário expandido. Preparação para certificação internacional se desejado.<br><br>
+                <em>O plano será reavaliado após a viagem a Nova York e Miami, incorporando as experiências reais do Percival como material de aula e ajustando o foco conforme suas necessidades profissionais.</em>
+            </p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Alumni — Vanessa Maluf</title>
+    <link rel="stylesheet" href="/styles/design-system.css">
+    <script src="/components/exercises.js"></script>
+    <script src="/components/activity-tracker.js"></script>
+    <script src="/components/audio-generator.js"></script>
+    <script src="/components/image-validator.js"></script>
+    <style>
+        :root {
+            --accent: #2a7b88;
+            --accent-light: #3a9baa;
+            --accent-dim: rgba(42, 123, 136, 0.08);
+            --accent-ring: rgba(42, 123, 136, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f0;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .alumni-nav {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .alumni-nav .nav-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .alumni-nav .nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+        }
+
+        .alumni-nav .nav-brand {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+
+        .alumni-nav .nav-student {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .tab-navigation {
+            display: flex;
+            gap: 0;
+            border-bottom: none;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 44px;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Onboarding */
+        .onboarding-welcome {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .onboarding-welcome h2 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .onboarding-welcome .subtitle {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .onboarding-welcome h3 {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .emergency-phrases {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .emergency-phrases li {
+            padding: 0.75rem 1rem;
+            background: var(--accent-dim);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            color: #333;
+            border-left: 3px solid var(--accent);
+        }
+
+        .student-quote {
+            background: var(--accent-dim);
+            border-radius: 8px;
+            padding: 1.25rem;
+            border-left: 4px solid var(--accent);
+            font-style: italic;
+            color: #444;
+        }
+
+        .student-quote::before {
+            content: "\201C";
+            font-size: 2rem;
+            color: var(--accent);
+            line-height: 0;
+            vertical-align: -0.5rem;
+            margin-right: 0.25rem;
+        }
+
+        /* Lesson cards */
+        .lesson-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .lesson-card h2 {
+            color: var(--accent);
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lesson-card .lesson-title {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 1.25rem;
+            font-weight: 400;
+        }
+
+        .lesson-objective {
+            background: var(--accent-dim);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.925rem;
+            color: #333;
+        }
+
+        .lesson-objective strong {
+            color: var(--accent);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Vocabulary section */
+        .vocab-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .vocab-section h3 {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .vocab-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            background: #fafafa;
+            border: 1px solid #eee;
+        }
+
+        .vocab-item .vocab-en {
+            font-weight: 600;
+            color: var(--accent);
+            min-width: 140px;
+        }
+
+        .vocab-item .vocab-pt {
+            color: #666;
+            font-size: 0.875rem;
+        }
+
+        .vocab-item .vocab-example {
+            display: block;
+            font-style: italic;
+            color: #555;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        .audio-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-light);
+        }
+
+        /* Exercises */
+        .exercises-section {
+            margin-top: 1.5rem;
+        }
+
+        .exercises-section h3 {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .exercise-block {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Placeholder */
+        .placeholder-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+            color: #888;
+        }
+
+        .placeholder-card .placeholder-icon {
+            margin-bottom: 0.5rem;
+        }
+
+        .placeholder-card p {
+            font-size: 0.925rem;
+        }
+
+        /* Survival Card */
+        .survival-card {
+            background: linear-gradient(135deg, var(--accent-dim), #fff);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .survival-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .survival-card .survival-phrases {
+            list-style: none;
+            padding: 0;
+        }
+
+        .survival-card .survival-phrases li {
+            padding: 0.625rem 0;
+            border-bottom: 1px solid rgba(42, 123, 136, 0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .survival-card .survival-phrases li:last-child {
+            border-bottom: none;
+        }
+
+        .survival-card .phrase-level {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--accent);
+            color: #fff;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+        }
+
+        /* Complementary Activities */
+        .activity-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .activity-card h3 {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .media-item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            background: #fafafa;
+            border: 1px solid #eee;
+            align-items: flex-start;
+        }
+
+        .media-item .media-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            background: var(--accent-dim);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .media-item .media-info h4 {
+            font-size: 0.9rem;
+            color: #333;
+            margin-bottom: 0.15rem;
+        }
+
+        .media-item .media-info p {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .media-item .media-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+
+        /* Learning Checklist */
+        .learning-checklist {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .learning-checklist h4 {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .learning-checklist label {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+            color: #444;
+            cursor: pointer;
+            min-height: 44px;
+            align-items: center;
+        }
+
+        .learning-checklist input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* Completion Card */
+        .completion-card {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            padding: 2.5rem;
+            text-align: center;
+            color: #fff;
+            margin-top: 2rem;
+        }
+
+        .completion-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-card p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem 0.75rem;
+            }
+
+            .lesson-card, .onboarding-welcome, .activity-card {
+                padding: 1.25rem;
+            }
+
+            .vocab-item {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .vocab-item .vocab-en {
+                min-width: unset;
+            }
+
+            .tab-btn {
+                font-size: 0.8rem;
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="alumni-nav">
+        <div class="nav-content">
+            <div class="nav-header">
+                <span class="nav-brand">Alumni</span>
+                <span class="nav-student">Vanessa Maluf</span>
+            </div>
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="preclass" aria-selected="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    Pre-class
+                </button>
+                <button class="tab-btn" data-tab="complementar" aria-selected="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                    Atividades Complementares
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- TAB 1: PRE-CLASS -->
+    <div class="tab-content active" id="tab-preclass">
+        <div class="container">
+
+            <!-- Onboarding -->
+            <div class="onboarding-welcome">
+                <h2>Bem-vinda, Vanessa!</h2>
+                <p class="subtitle">Este e o seu espaco exclusivo de preparacao para as aulas. Aqui voce vai encontrar exercicios interativos para chegar a aula ja aquecida.</p>
+
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                    Frases de Emergencia
+                </h3>
+                <ol class="emergency-phrases">
+                    <li>"Could you repeat that, please?"</li>
+                    <li>"I'm not sure I understand. Could you rephrase?"</li>
+                    <li>"Could we go back to what you said about...?"</li>
+                    <li>"I'd like to add something to that point."</li>
+                    <li>"Let me make sure I understood correctly..."</li>
+                </ol>
+
+                <div class="student-quote">
+                    Estou ansiosa para o meu curso especial, para mim.
+                </div>
+            </div>
+
+            <!-- LESSON 1 -->
+            <div class="lesson-card" id="lesson-1">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Lesson 1
+                </h2>
+                <p class="lesson-title">Diagnostic Session + Personal & Professional Introduction</p>
+
+                <div class="lesson-objective">
+                    <strong>Objetivo</strong>
+                    Depois desta aula, voce sera capaz de se apresentar profissionalmente em ingles, descrevendo sua funcao na Braskem com vocabulario corporativo adequado.
+                </div>
+
+                <div class="vocab-section">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                        Vocabulario
+                    </h3>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('deal with')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">deal with</span> <span class="vocab-pt">lidar com</span>
+                            <span class="vocab-example">"I deal with corporate contracts on a daily basis."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('liaise with')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">liaise with</span> <span class="vocab-pt">fazer interface com</span>
+                            <span class="vocab-example">"I liaise with our international partners regularly."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('oversee')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">oversee</span> <span class="vocab-pt">supervisionar</span>
+                            <span class="vocab-example">"I oversee the compliance department."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('ensure compliance')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">ensure compliance</span> <span class="vocab-pt">garantir conformidade</span>
+                            <span class="vocab-example">"My primary role is to ensure compliance with regulations."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('stakeholder')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">stakeholder</span> <span class="vocab-pt">parte interessada</span>
+                            <span class="vocab-example">"We report directly to key stakeholders."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('accountable for')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">accountable for</span> <span class="vocab-pt">responsavel por</span>
+                            <span class="vocab-example">"I am accountable for all corporate governance matters."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('regulatory framework')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">regulatory framework</span> <span class="vocab-pt">arcabouco regulatorio</span>
+                            <span class="vocab-example">"We operate within a complex regulatory framework."</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercises-section">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Exercicios
+                    </h3>
+                    <div id="l1-exercises"></div>
+                </div>
+            </div>
+
+            <!-- LESSON 2 -->
+            <div class="lesson-card" id="lesson-2">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Lesson 2
+                </h2>
+                <p class="lesson-title">Professional Identity in English: Talking About Your Role</p>
+
+                <div class="lesson-objective">
+                    <strong>Objetivo</strong>
+                    Depois desta aula, voce sera capaz de descrever suas rotinas profissionais e projetos em andamento usando present simple e present continuous com precisao.
+                </div>
+
+                <div class="vocab-section">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                        Vocabulario
+                    </h3>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('negotiate')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">negotiate</span> <span class="vocab-pt">negociar</span>
+                            <span class="vocab-example">"I negotiate agreements with international partners."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('coordinate')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">coordinate</span> <span class="vocab-pt">coordenar</span>
+                            <span class="vocab-example">"I coordinate cross-border transactions."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('represent')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">represent</span> <span class="vocab-pt">representar</span>
+                            <span class="vocab-example">"I represent the legal department in board meetings."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('in charge of')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">in charge of</span> <span class="vocab-pt">responsavel por</span>
+                            <span class="vocab-example">"I am in charge of the compliance team."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('on behalf of')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">on behalf of</span> <span class="vocab-pt">em nome de</span>
+                            <span class="vocab-example">"I act on behalf of Braskem in negotiations."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('ongoing project')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">ongoing project</span> <span class="vocab-pt">projeto em andamento</span>
+                            <span class="vocab-example">"We have several ongoing projects this quarter."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('current priorities')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">current priorities</span> <span class="vocab-pt">prioridades atuais</span>
+                            <span class="vocab-example">"My current priorities include contract reviews."</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercises-section">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Exercicios
+                    </h3>
+                    <div id="l2-exercises"></div>
+                </div>
+            </div>
+
+            <!-- LESSON 3 -->
+            <div class="lesson-card" id="lesson-3">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Lesson 3
+                </h2>
+                <p class="lesson-title">Listening Lab 1: Tuning Into British English</p>
+
+                <div class="lesson-objective">
+                    <strong>Objetivo</strong>
+                    Depois desta aula, voce sera capaz de identificar padroes de connected speech no ingles britanico e melhorar sua compreensão auditiva em contextos corporativos.
+                </div>
+
+                <div class="vocab-section">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                        Vocabulario
+                    </h3>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('connected speech')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">connected speech</span> <span class="vocab-pt">fala conectada</span>
+                            <span class="vocab-example">"British speakers use a lot of connected speech in meetings."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('linking')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">linking</span> <span class="vocab-pt">ligacao entre palavras</span>
+                            <span class="vocab-example">"Linking makes words flow together naturally."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('elision')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">elision</span> <span class="vocab-pt">elisao</span>
+                            <span class="vocab-example">"Elision is when sounds are dropped in fast speech."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('weak forms')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">weak forms</span> <span class="vocab-pt">formas fracas</span>
+                            <span class="vocab-example">"Function words often have weak forms in natural speech."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('catch a phrase')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">catch (a phrase)</span> <span class="vocab-pt">captar/entender</span>
+                            <span class="vocab-example">"I couldn't catch what he said in the meeting."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('gist')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">gist</span> <span class="vocab-pt">essencia/ideia geral</span>
+                            <span class="vocab-example">"Try to get the gist before focusing on details."</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercises-section">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Exercicios
+                    </h3>
+                    <div id="l3-exercises"></div>
+                </div>
+            </div>
+
+            <!-- LESSON 4 -->
+            <div class="lesson-card" id="lesson-4">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Lesson 4
+                </h2>
+                <p class="lesson-title">Meetings in English: Opening, Managing and Closing</p>
+
+                <div class="lesson-objective">
+                    <strong>Objetivo</strong>
+                    Depois desta aula, voce sera capaz de conduzir uma reuniao em ingles com naturalidade — abrindo, gerenciando e encerrando com linguagem funcional adequada.
+                </div>
+
+                <div class="vocab-section">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                        Vocabulario
+                    </h3>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('set the agenda')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">set the agenda</span> <span class="vocab-pt">definir a pauta</span>
+                            <span class="vocab-example">"Let's set the agenda for today's meeting."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('move on to')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">move on to</span> <span class="vocab-pt">passar para</span>
+                            <span class="vocab-example">"Shall we move on to the next item?"</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('wrap up')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">wrap up</span> <span class="vocab-pt">encerrar/concluir</span>
+                            <span class="vocab-example">"I think we can wrap up here."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('address the issue')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">address the issue</span> <span class="vocab-pt">abordar a questao</span>
+                            <span class="vocab-example">"We need to address the issue of compliance delays."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('reach a consensus')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">reach a consensus</span> <span class="vocab-pt">chegar a um consenso</span>
+                            <span class="vocab-example">"Can we reach a consensus on this matter?"</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('action items')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">action items</span> <span class="vocab-pt">itens de acao</span>
+                            <span class="vocab-example">"Let me summarise the action items from today."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('take the minutes')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">take the minutes</span> <span class="vocab-pt">redigir a ata</span>
+                            <span class="vocab-example">"Who will take the minutes today?"</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercises-section">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Exercicios
+                    </h3>
+                    <div id="l4-exercises"></div>
+                </div>
+            </div>
+
+            <!-- LESSON 5 -->
+            <div class="lesson-card" id="lesson-5">
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Lesson 5
+                </h2>
+                <p class="lesson-title">Pronunciation Deep-Dive 1: Vowel Sounds & Word Stress</p>
+
+                <div class="lesson-objective">
+                    <strong>Objetivo</strong>
+                    Depois desta aula, voce sera capaz de identificar e produzir contrastes vocalicos-chave e aplicar padroes de acentuacao em vocabulario corporativo.
+                </div>
+
+                <div class="vocab-section">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                        Vocabulario
+                    </h3>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('minimal pairs')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">minimal pairs</span> <span class="vocab-pt">pares minimos</span>
+                            <span class="vocab-example">"Ship and sheep are minimal pairs."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('word stress')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">word stress</span> <span class="vocab-pt">acento tonico</span>
+                            <span class="vocab-example">"Word stress can change the meaning of a word."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('sentence stress')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">sentence stress</span> <span class="vocab-pt">acento frasal</span>
+                            <span class="vocab-example">"Sentence stress helps emphasise key information."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('vowel sound')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">vowel sound</span> <span class="vocab-pt">som vocalico</span>
+                            <span class="vocab-example">"English has many more vowel sounds than Portuguese."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('intelligibility')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">intelligibility</span> <span class="vocab-pt">inteligibilidade</span>
+                            <span class="vocab-example">"Good pronunciation improves your intelligibility."</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item">
+                        <button class="audio-btn" onclick="playAudio('intonation')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                        <div>
+                            <span class="vocab-en">intonation</span> <span class="vocab-pt">entonacao</span>
+                            <span class="vocab-example">"Intonation patterns differ between UK and US English."</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercises-section">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Exercicios
+                    </h3>
+                    <div id="l5-exercises"></div>
+                </div>
+            </div>
+
+            <!-- LESSONS 6-40 PLACEHOLDERS -->
+            <div class="placeholder-card">
+                <div class="placeholder-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #aaa;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                </div>
+                <p><strong>Lessons 6-40</strong></p>
+                <p>Conteudo sera adicionado progressivamente</p>
+            </div>
+
+            <!-- SURVIVAL CARD -->
+            <div class="survival-card">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                    Survival Card — Frases Progressivas
+                </h3>
+                <ul class="survival-phrases">
+                    <li><span class="phrase-level">Basico</span><span>"Could you repeat that, please?"</span></li>
+                    <li><span class="phrase-level">Basico</span><span>"I'm sorry, I didn't catch that."</span></li>
+                    <li><span class="phrase-level">Inter.</span><span>"Could you rephrase that? I want to make sure I understand."</span></li>
+                    <li><span class="phrase-level">Inter.</span><span>"Let me check I've understood correctly..."</span></li>
+                    <li><span class="phrase-level">Avanc.</span><span>"I'd like to come back to the point you raised about..."</span></li>
+                    <li><span class="phrase-level">Avanc.</span><span>"If I may, I'd like to add a legal perspective on that."</span></li>
+                    <li><span class="phrase-level">Expert</span><span>"To summarise the key takeaways from a compliance standpoint..."</span></li>
+                    <li><span class="phrase-level">Expert</span><span>"I'd suggest we align on the regulatory implications before proceeding."</span></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TAB 2: ATIVIDADES COMPLEMENTARES -->
+    <div class="tab-content" id="tab-complementar">
+        <div class="container">
+
+            <!-- LESSON 1 -->
+            <div class="activity-card">
+                <h3>Lesson 1 — Introduction</h3>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>TED Talk: "How to speak so that people want to listen"</h4>
+                        <p>Julian Treasure — 7 min, clear British accent</p>
+                        <span class="media-tag">TED Talk</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Podcast: The Diary of a CEO</h4>
+                        <p>Episode with Daniel Pink on work motivation</p>
+                        <span class="media-tag">Podcast</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Series: Industry S1E1 (HBO)</h4>
+                        <p>Corporate British English, first day at work</p>
+                        <span class="media-tag">Serie</span>
+                    </div>
+                </div>
+
+                <div class="learning-checklist">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Checklist de Aprendizado
+                    </h4>
+                    <label><input type="checkbox"> Assisti ao TED Talk e anotei 3 palavras novas</label>
+                    <label><input type="checkbox"> Ouvi o podcast e identifiquei o tema principal</label>
+                    <label><input type="checkbox"> Assisti ao episodio da serie com legendas em ingles</label>
+                    <label><input type="checkbox"> Pratiquei minha apresentação profissional em voz alta</label>
+                </div>
+            </div>
+
+            <!-- LESSON 2 -->
+            <div class="activity-card">
+                <h3>Lesson 2 — Professional Identity</h3>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>TED Talk: "Your body language may shape who you are"</h4>
+                        <p>Amy Cuddy — 21 min</p>
+                        <span class="media-tag">TED Talk</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Podcast: How I Built This</h4>
+                        <p>Sara Blakely (Spanx) episode</p>
+                        <span class="media-tag">Podcast</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Series: Suits S1E1</h4>
+                        <p>Corporate legal English, character introductions</p>
+                        <span class="media-tag">Serie</span>
+                    </div>
+                </div>
+
+                <div class="learning-checklist">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Checklist de Aprendizado
+                    </h4>
+                    <label><input type="checkbox"> Assisti ao TED Talk e refleti sobre linguagem corporal</label>
+                    <label><input type="checkbox"> Ouvi o podcast e anotei expressoes de identidade profissional</label>
+                    <label><input type="checkbox"> Assisti Suits e identifiquei vocabulario juridico</label>
+                    <label><input type="checkbox"> Descrevi minha rotina profissional em ingles (escrita ou oral)</label>
+                </div>
+            </div>
+
+            <!-- LESSON 3 -->
+            <div class="activity-card">
+                <h3>Lesson 3 — British English Listening</h3>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>BBC Global News Podcast</h4>
+                        <p>Any recent episode — focus on British pronunciation and connected speech</p>
+                        <span class="media-tag">Podcast</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>TED Talk: "How to make work-life balance work"</h4>
+                        <p>Nigel Marsh — 10 min, Australian/British accent</p>
+                        <span class="media-tag">TED Talk</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Series: Industry S1E2 (HBO)</h4>
+                        <p>Fast-paced British dialogue</p>
+                        <span class="media-tag">Serie</span>
+                    </div>
+                </div>
+
+                <div class="learning-checklist">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Checklist de Aprendizado
+                    </h4>
+                    <label><input type="checkbox"> Ouvi o BBC Podcast e anotei palavras conectadas</label>
+                    <label><input type="checkbox"> Assisti ao TED Talk sem legendas pelo menos uma vez</label>
+                    <label><input type="checkbox"> Identifiquei 3 exemplos de connected speech na serie</label>
+                    <label><input type="checkbox"> Pratiquei shadowing com um trecho de 30 segundos</label>
+                </div>
+            </div>
+
+            <!-- LESSON 4 -->
+            <div class="activity-card">
+                <h3>Lesson 4 — Meetings</h3>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>TED Talk: "How great leaders inspire action"</h4>
+                        <p>Simon Sinek — 18 min</p>
+                        <span class="media-tag">TED Talk</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Podcast: The Diary of a CEO</h4>
+                        <p>Steven Bartlett episode on leadership</p>
+                        <span class="media-tag">Podcast</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Series: The Morning Show S1E1 (Apple TV+)</h4>
+                        <p>Boardroom dynamics</p>
+                        <span class="media-tag">Serie</span>
+                    </div>
+                </div>
+
+                <div class="learning-checklist">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Checklist de Aprendizado
+                    </h4>
+                    <label><input type="checkbox"> Assisti ao TED Talk e anotei frases de lideranca</label>
+                    <label><input type="checkbox"> Ouvi o podcast e identifiquei expressoes de reuniao</label>
+                    <label><input type="checkbox"> Assisti ao episodio e anotei como abrem/fecham reunioes</label>
+                    <label><input type="checkbox"> Pratiquei abrir e fechar uma reuniao ficticia em voz alta</label>
+                </div>
+            </div>
+
+            <!-- LESSON 5 -->
+            <div class="activity-card">
+                <h3>Lesson 5 — Pronunciation</h3>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>TED Talk: "The secrets of learning a new language"</h4>
+                        <p>Lydia Machova — 10 min</p>
+                        <span class="media-tag">TED Talk</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Documentary: Abstract: The Art of Design S1E1 (Netflix)</h4>
+                        <p>Clear narration for shadowing practice</p>
+                        <span class="media-tag">Documentario</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>BBC Global News Podcast</h4>
+                        <p>Focus on British pronunciation patterns</p>
+                        <span class="media-tag">Podcast</span>
+                    </div>
+                </div>
+
+                <div class="learning-checklist">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Checklist de Aprendizado
+                    </h4>
+                    <label><input type="checkbox"> Assisti ao TED Talk e anotei dicas de pronuncia</label>
+                    <label><input type="checkbox"> Pratiquei shadowing com o documentario (2 minutos)</label>
+                    <label><input type="checkbox"> Identifiquei 5 palavras com word stress diferente do portugues</label>
+                    <label><input type="checkbox"> Gravei minha voz lendo um paragrafo e comparei com o original</label>
+                </div>
+            </div>
+
+            <!-- LESSONS 6-40 -->
+            <div class="activity-card">
+                <h3>Lessons 6-40 — Recomendacoes Gerais</h3>
+
+                <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">Recursos adicionais curados por tema, para explorar ao longo do curso:</p>
+
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>TED Talks — Business & Law</h4>
+                        <p>Search: "corporate law", "negotiation", "leadership"</p>
+                        <span class="media-tag">Video</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Podcasts Recomendados</h4>
+                        <p>The Diary of a CEO | How I Built This | BBC Business Daily | Freakonomics Radio</p>
+                        <span class="media-tag">Podcast</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Series Recomendadas</h4>
+                        <p>Suits | Industry | The Morning Show | Succession | The Good Fight</p>
+                        <span class="media-tag">Serie</span>
+                    </div>
+                </div>
+                <div class="media-item">
+                    <div class="media-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                    </div>
+                    <div class="media-info">
+                        <h4>Leitura Recomendada</h4>
+                        <p>Financial Times | The Economist | Harvard Business Review</p>
+                        <span class="media-tag">Leitura</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPLETION CARD -->
+            <div class="completion-card">
+                <h3>Parabens pela conclusão!</h3>
+                <p>Ao completar as 40 aulas e atividades complementares, voce tera desenvolvido fluencia corporativa e juridica em ingles com confianca e naturalidade.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                btn.classList.add('active');
+                btn.setAttribute('aria-selected', 'true');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Audio playback
+        function playAudio(text) {
+            if (typeof createAudioButton === 'function') {
+                createAudioButton(text);
+            } else if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-GB';
+                utterance.rate = 0.85;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Render exercises on load
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // LESSON 1 EXERCISES
+            const l1Container = document.getElementById('l1-exercises');
+            if (l1Container && typeof createMatchingDropdown !== 'undefined') {
+
+                createMatchingDropdown("l1_match", [
+                    {en: "deal with", options: ["lidar com", "negociar", "supervisionar", "garantir"], correct: "lidar com"},
+                    {en: "liaise with", options: ["supervisionar", "fazer interface com", "responsavel por", "lidar com"], correct: "fazer interface com"},
+                    {en: "oversee", options: ["garantir conformidade", "parte interessada", "supervisionar", "arcabouco"], correct: "supervisionar"},
+                    {en: "ensure compliance", options: ["garantir conformidade", "lidar com", "supervisionar", "fazer interface"], correct: "garantir conformidade"},
+                    {en: "stakeholder", options: ["arcabouco regulatorio", "responsavel por", "parte interessada", "conformidade"], correct: "parte interessada"},
+                    {en: "accountable for", options: ["fazer interface com", "responsavel por", "lidar com", "supervisionar"], correct: "responsavel por"},
+                    {en: "regulatory framework", options: ["arcabouco regulatorio", "parte interessada", "conformidade", "supervisionar"], correct: "arcabouco regulatorio"}
+                ]);
+
+                createFillBlank("l1_fill", [
+                    {sentence: "I ___ corporate contracts at Braskem on a daily basis.", answer: "deal with"},
+                    {sentence: "My primary role is to ___ with international regulations.", answer: "ensure compliance"},
+                    {sentence: "I ___ the compliance department and report to the board.", answer: "oversee"},
+                    {sentence: "We ___ our UK and US counterparts on cross-border matters.", answer: "liaise with"}
+                ]);
+
+                createFillBlankWithHint("l1_fillhint", [
+                    {sentence: "I am ___ all corporate governance matters.", answer: "accountable for", hint: "responsavel por"},
+                    {sentence: "We operate within a complex ___.", answer: "regulatory framework", hint: "arcabouco regulatorio"},
+                    {sentence: "We report directly to key ___.", answer: "stakeholders", hint: "partes interessadas"}
+                ]);
+
+                createMultipleChoice("l1_mc", "Which phrase would you use to describe your main area of responsibility at work?", ["I deal with corporate law and compliance.", "I want corporate law.", "I make corporate law.", "I do corporate law."], 0);
+
+                createOrdering("l1_order", ["I", "deal", "with", "corporate", "contracts", "at", "Braskem"], ["corporate", "I", "at", "deal", "Braskem", "with", "contracts"]);
+
+                createPronunciation("l1_pron1", "I deal with corporate contracts at Braskem.", null);
+
+                createPronunciation("l1_pron2", "I oversee regulatory compliance for the legal department.", null);
+
+                createThinkAboutIt("l1_think", "How would you introduce yourself and your role at Braskem to a new British colleague you are meeting for the first time?");
+            }
+
+            // LESSON 2 EXERCISES
+            const l2Container = document.getElementById('l2-exercises');
+            if (l2Container && typeof createMatchingDropdown !== 'undefined') {
+
+                createMatchingDropdown("l2_match", [
+                    {en: "negotiate", options: ["negociar", "coordenar", "representar", "supervisionar"], correct: "negociar"},
+                    {en: "coordinate", options: ["representar", "coordenar", "negociar", "garantir"], correct: "coordenar"},
+                    {en: "represent", options: ["representar", "negociar", "coordenar", "liderar"], correct: "representar"},
+                    {en: "in charge of", options: ["em nome de", "responsavel por", "em favor de", "a cargo de"], correct: "responsavel por"},
+                    {en: "on behalf of", options: ["em nome de", "responsavel por", "em favor de", "por causa de"], correct: "em nome de"},
+                    {en: "ongoing project", options: ["projeto finalizado", "projeto em andamento", "projeto cancelado", "projeto futuro"], correct: "projeto em andamento"}
+                ]);
+
+                createFillBlank("l2_fill", [
+                    {sentence: "I ___ agreements with international partners.", answer: "negotiate"},
+                    {sentence: "She ___ the legal department in board meetings.", answer: "represents"},
+                    {sentence: "I am ___ the compliance team.", answer: "in charge of"},
+                    {sentence: "Currently, I am ___ a cross-border transaction.", answer: "coordinating"}
+                ]);
+
+                createMultipleChoice("l2_mc1", "Which sentence correctly uses the present continuous for an ongoing project?", ["I am currently coordinating a cross-border deal.", "I currently coordinate a cross-border deal.", "I have currently coordinated a cross-border deal.", "I was currently coordinating a cross-border deal."], 0);
+
+                createMultipleChoice("l2_mc2", "Complete: 'I act ___ Braskem in all international negotiations.'", ["on behalf of", "in charge of", "deal with", "accountable for"], 0);
+
+                createOrdering("l2_order", ["I", "represent", "the", "legal", "department", "in", "board", "meetings"], ["department", "I", "in", "legal", "represent", "board", "the", "meetings"]);
+
+                createPronunciation("l2_pron1", "I negotiate agreements on behalf of Braskem.", null);
+
+                createPronunciation("l2_pron2", "Currently, I am coordinating a cross-border project.", null);
+
+                createThinkAboutIt("l2_think", "Describe your current role and one ongoing project at Braskem as if you were introducing yourself at a corporate networking event.");
+            }
+
+            // LESSON 3 EXERCISES
+            const l3Container = document.getElementById('l3-exercises');
+            if (l3Container && typeof createMatchingDropdown !== 'undefined') {
+
+                createMatchingDropdown("l3_match", [
+                    {en: "connected speech", options: ["fala conectada", "discurso formal", "fala lenta", "pronuncia clara"], correct: "fala conectada"},
+                    {en: "linking", options: ["elisao", "ligacao entre palavras", "forma fraca", "entonacao"], correct: "ligacao entre palavras"},
+                    {en: "elision", options: ["ligacao", "elisao", "acento", "ritmo"], correct: "elisao"},
+                    {en: "weak forms", options: ["formas fracas", "formas fortes", "formas neutras", "formas longas"], correct: "formas fracas"},
+                    {en: "gist", options: ["detalhe", "essencia", "conclusao", "introducao"], correct: "essencia"}
+                ]);
+
+                createFillBlank("l3_fill", [
+                    {sentence: "I couldn't ___ what he said during the conference call.", answer: "catch"},
+                    {sentence: "Try to get the ___ of the conversation before taking notes.", answer: "gist"},
+                    {sentence: "British English uses a lot of ___ speech, which makes it harder to understand.", answer: "connected"},
+                    {sentence: "___ is when sounds are dropped in fast, natural speech.", answer: "Elision"}
+                ]);
+
+                createMultipleChoice("l3_mc", "In British English, the phrase 'want to' often sounds like:", ["wanna", "want too", "wan to", "wanting"], 0);
+
+                createMultipleChoice("l3_mc2", "What is the best strategy when you don't catch everything in a meeting?", ["Focus on the gist first, then ask for clarification on specific points.", "Ask the speaker to repeat everything from the beginning.", "Pretend you understood and move on.", "Switch to Portuguese immediately."], 0);
+
+                createOrdering("l3_order", ["Could", "you", "repeat", "that", "last", "point", "please"], ["that", "Could", "please", "repeat", "last", "you", "point"]);
+
+                createPronunciation("l3_pron1", "Could you repeat that last point, please?", null);
+
+                createPronunciation("l3_pron2", "I didn't quite catch what you said about the contract.", null);
+
+                createThinkAboutIt("l3_think", "Think about a recent meeting or call in English where you struggled to understand something. What made it difficult \u2014 the accent, the speed, or specific vocabulary?");
+            }
+
+            // LESSON 4 EXERCISES
+            const l4Container = document.getElementById('l4-exercises');
+            if (l4Container && typeof createMatchingDropdown !== 'undefined') {
+
+                createMatchingDropdown("l4_match", [
+                    {en: "set the agenda", options: ["definir a pauta", "encerrar a reuniao", "redigir a ata", "abordar a questao"], correct: "definir a pauta"},
+                    {en: "move on to", options: ["voltar para", "passar para", "encerrar", "iniciar"], correct: "passar para"},
+                    {en: "wrap up", options: ["encerrar", "iniciar", "pausar", "adiar"], correct: "encerrar"},
+                    {en: "address the issue", options: ["ignorar o problema", "abordar a questao", "encerrar a discussao", "definir a pauta"], correct: "abordar a questao"},
+                    {en: "reach a consensus", options: ["chegar a um consenso", "iniciar um debate", "encerrar a reuniao", "definir a pauta"], correct: "chegar a um consenso"},
+                    {en: "action items", options: ["itens de acao", "pontos da pauta", "ata da reuniao", "questoes pendentes"], correct: "itens de acao"},
+                    {en: "take the minutes", options: ["redigir a ata", "definir a pauta", "itens de acao", "encerrar a reuniao"], correct: "redigir a ata"}
+                ]);
+
+                createFillBlank("l4_fill", [
+                    {sentence: "Let's ___ for today's meeting. We have three items to cover.", answer: "set the agenda"},
+                    {sentence: "Shall we ___ the next item on the agenda?", answer: "move on to"},
+                    {sentence: "I think we can ___ here. Thank you all for your time.", answer: "wrap up"},
+                    {sentence: "We need to ___ of compliance delays before the board meeting.", answer: "address the issue"}
+                ]);
+
+                createFillBlankWithHint("l4_fillhint", [
+                    {sentence: "Let me summarise the ___ from today's discussion.", answer: "action items", hint: "itens de acao"},
+                    {sentence: "Can we ___ on the new timeline?", answer: "reach a consensus", hint: "chegar a um consenso"},
+                    {sentence: "Who will ___ today?", answer: "take the minutes", hint: "redigir a ata"}
+                ]);
+
+                createMultipleChoice("l4_mc", "Which phrase is most appropriate for transitioning between agenda items in a formal meeting?", ["Shall we move on to the next point?", "OK, next thing.", "Let's do the next one.", "What's next?"], 0);
+
+                createOrdering("l4_order", ["Shall", "we", "move", "on", "to", "the", "next", "item"], ["on", "Shall", "item", "move", "the", "we", "next", "to"]);
+
+                createPronunciation("l4_pron1", "Let me set the agenda for today's meeting.", null);
+
+                createPronunciation("l4_pron2", "I think we can wrap up here. Let me summarise the action items.", null);
+
+                createThinkAboutIt("l4_think", "Imagine you are chairing a quarterly compliance review meeting at Braskem with British and American colleagues. How would you open the meeting and set the agenda?");
+            }
+
+            // LESSON 5 EXERCISES
+            const l5Container = document.getElementById('l5-exercises');
+            if (l5Container && typeof createMatchingDropdown !== 'undefined') {
+
+                createMatchingDropdown("l5_match", [
+                    {en: "minimal pairs", options: ["pares minimos", "acento tonico", "som vocalico", "entonacao"], correct: "pares minimos"},
+                    {en: "word stress", options: ["acento frasal", "acento tonico", "inteligibilidade", "entonacao"], correct: "acento tonico"},
+                    {en: "sentence stress", options: ["acento tonico", "acento frasal", "pares minimos", "som vocalico"], correct: "acento frasal"},
+                    {en: "vowel sound", options: ["som vocalico", "acento tonico", "entonacao", "inteligibilidade"], correct: "som vocalico"},
+                    {en: "intelligibility", options: ["entonacao", "inteligibilidade", "pares minimos", "acento frasal"], correct: "inteligibilidade"}
+                ]);
+
+                createMultipleChoice("l5_mc1", "In the word 'negotiate', which syllable receives the primary stress?", ["ne-GO-ti-ate", "NE-go-ti-ate", "ne-go-TI-ate", "ne-go-ti-ATE"], 0);
+
+                createMultipleChoice("l5_mc2", "Which pair of words are minimal pairs (they differ by only one vowel sound)?", ["ship / sheep", "cat / dog", "run / walk", "big / large"], 0);
+
+                createFillBlank("l5_fill", [
+                    {sentence: "Good pronunciation improves your ___ in international meetings.", answer: "intelligibility"},
+                    {sentence: "English has many more ___ than Portuguese.", answer: "vowel sounds"},
+                    {sentence: "___ helps you emphasise the most important words in a sentence.", answer: "Sentence stress"}
+                ]);
+
+                createOrdering("l5_order", ["Good", "pronunciation", "improves", "your", "intelligibility", "in", "meetings"], ["intelligibility", "Good", "in", "pronunciation", "your", "meetings", "improves"]);
+
+                createPronunciation("l5_pron1", "negotiate coordinate represent", null);
+
+                createPronunciation("l5_pron2", "Good pronunciation improves your intelligibility in meetings.", null);
+
+                createPronunciation("l5_pron3", "I need to negotiate this contract on behalf of Braskem.", null);
+
+                createThinkAboutIt("l5_think", "Which English sounds do you find most challenging to pronounce? Think of a specific word or phrase from your work that you would like to say more clearly.");
+            }
+        });
+    </script>
+</body>
+</html>

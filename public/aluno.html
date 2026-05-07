@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni — Pasta do Aluno</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/styles/design-system.css">
+    <style>
+        /* ── PAGE-SPECIFIC: Tab content show/hide ── */
+        .tab-content { display: none; animation: fadeIn var(--transition-slow); }
+        .tab-content.active { display: block; }
+
+        /* ── PAGE-SPECIFIC: Tabs (inline nav variant) ── */
+        .tabs-nav {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: var(--space-lg);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-dim);
+            padding: var(--space-sm) var(--space-md);
+            font: var(--text-micro);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            white-space: nowrap;
+        }
+        .tab-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
+        .tab-btn.active { color: var(--alumni-navy); border-bottom-color: var(--alumni-navy); background: var(--bg-card); }
+
+        /* ── PAGE-SPECIFIC: Copy button states ── */
+        .copy-btn.copied { background: var(--success); border-color: var(--success); }
+        .copy-btn.unavailable {
+            background: var(--bg-subtle);
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            cursor: default;
+        }
+        .copy-btn.unavailable:hover { box-shadow: none; background: var(--bg-subtle); }
+
+        /* ── PAGE-SPECIFIC: Info list (what student sees) ── */
+        .info-list { list-style: none; }
+        .info-list li {
+            padding: var(--space-sm) 0;
+            font: var(--text-base);
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            padding-left: 1.4rem;
+            position: relative;
+        }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list li::before { content: '\2713'; position: absolute; left: 0; color: var(--success); font-weight: 700; font-size: 0.8rem; }
+
+        .info-note {
+            font: var(--text-small);
+            color: var(--text-dim);
+            margin-top: var(--space-md);
+            padding: var(--space-sm);
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            border-left: 3px solid var(--error);
+            border-radius: var(--radius-sm);
+        }
+        .info-note strong { color: var(--error); }
+
+        /* ── PAGE-SPECIFIC: Perfil summary ── */
+        .perfil-summary .item { margin-bottom: var(--space-md); }
+        .perfil-summary .item-label { font: var(--text-micro); color: var(--alumni-navy); margin-bottom: var(--space-xs); }
+        .perfil-summary .item-value { font: var(--text-base); color: var(--text-muted); line-height: 1.7; }
+
+        /* ── PAGE-SPECIFIC: Mini personality bars ── */
+        .eixo-mini { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-sm) 0; border-bottom: 1px solid var(--border); }
+        .eixo-mini:last-child { border-bottom: none; }
+        .eixo-mini-name { font: var(--text-base); color: var(--text-primary); min-width: 160px; font-weight: 500; }
+        .eixo-mini-bar { flex: 1; height: 6px; background: var(--bg-subtle); border-radius: 3px; overflow: hidden; }
+        .eixo-mini-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+        .eixo-mini-fill.low { background: #f87171; }
+        .eixo-mini-fill.mid-low { background: #fb923c; }
+        .eixo-mini-fill.mid { background: #fbbf24; }
+        .eixo-mini-fill.mid-high { background: #4ade80; }
+        .eixo-mini-fill.high { background: #60a5fa; }
+        .eixo-mini-val { font: var(--text-small); color: var(--text-dim); min-width: 35px; text-align: right; }
+
+        /* ── PAGE-SPECIFIC: Pre-class lesson checklist ── */
+        .lesson-check { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) 0; border-bottom: 1px solid var(--border); }
+        .lesson-check:last-child { border-bottom: none; }
+        .lesson-check label { font: var(--text-base); color: var(--text-muted); cursor: pointer; flex: 1; }
+        .lesson-check input[type="checkbox"] { accent-color: var(--alumni-navy); width: 16px; height: 16px; cursor: pointer; }
+        .lesson-check .check-date { font: var(--text-small); color: var(--text-dim); }
+
+        /* ── PAGE-SPECIFIC: Placeholder empty state ── */
+        .placeholder { text-align: center; padding: var(--space-3xl) var(--space-lg); color: var(--text-dim); font: var(--text-base); }
+        .placeholder a { color: var(--alumni-navy); text-decoration: none; }
+        .placeholder a:hover { text-decoration: underline; }
+
+        /* ── PAGE-SPECIFIC: Lesson registration cards (collapsible) ── */
+        .registro-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); flex-wrap: wrap; gap: var(--space-sm); }
+
+        .lesson-card { background: var(--bg-card); border: 1px solid var(--border); margin-bottom: var(--space-sm); transition: all var(--transition-base); box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
+        .lesson-card:hover { border-color: var(--border); box-shadow: var(--shadow-md); }
+        .lesson-card-header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-md); cursor: pointer; user-select: none; }
+        .lesson-card-header h4 { font: var(--text-h3); color: var(--text-primary); display: flex; align-items: center; gap: var(--space-sm); }
+        .lesson-card-header .arrow { color: var(--text-dim); font-size: 0.7rem; transition: transform var(--transition-slow); }
+        .lesson-card-header.open .arrow { transform: rotate(180deg); }
+        .lesson-card-body { display: none; padding: 0 var(--space-md) var(--space-md); }
+        .lesson-card-body.show { display: block; animation: fadeIn var(--transition-slow); }
+
+        .lesson-status { font: var(--text-micro); padding: 2px var(--space-sm); border-radius: var(--radius-sm); }
+        .ls-nao_realizada { background: rgba(85,85,102,0.08); color: var(--text-dim); }
+        .ls-realizada { background: var(--success-bg); color: var(--success); }
+        .ls-cancelada { background: var(--error-bg); color: var(--error); }
+
+        .field-group { margin-bottom: var(--space-md); }
+        .field-group label { display: block; font: var(--text-micro); color: var(--text-dim); margin-bottom: var(--space-xs); }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+
+        .save-indicator { font: var(--text-small); color: var(--success); opacity: 0; transition: opacity var(--transition-slow); margin-left: var(--space-sm); }
+        .save-indicator.show { opacity: 1; }
+
+        /* ── PAGE-SPECIFIC: Delete confirmation modal ── */
+        .modal-actions { display: flex; gap: var(--space-sm); justify-content: center; }
+
+        /* ── PAGE-SPECIFIC: Danger zone ── */
+        .danger-zone { margin-top: var(--space-3xl); padding-top: var(--space-xl); border-top: 1px solid var(--border); }
+
+        /* ── PAGE-SPECIFIC: Countdown header ── */
+        .countdown-header { font: var(--text-base); color: var(--text-muted); margin-top: var(--space-sm); }
+        .countdown-header strong { color: var(--alumni-navy); }
+
+        /* ── PAGE-SPECIFIC: Empty state ── */
+        .empty-state { text-align: center; padding: var(--space-3xl) var(--space-xl); }
+        .empty-state h3 { font: var(--text-h1); color: var(--text-dim); margin-bottom: var(--space-sm); }
+        .empty-state p { color: var(--text-dim); font: var(--text-base); margin-bottom: var(--space-lg); }
+        .empty-state a { color: var(--alumni-navy); text-decoration: none; }
+        .empty-state a:hover { text-decoration: underline; }
+
+        /* ── PAGE-SPECIFIC: Breadcrumb ── */
+        .breadcrumb { padding: var(--space-md) var(--space-lg); font: var(--text-small); color: var(--text-dim); max-width: var(--max-width); margin: 0 auto; }
+        .breadcrumb a { color: var(--text-dim); text-decoration: none; transition: color var(--transition-base); }
+        .breadcrumb a:hover { color: var(--alumni-navy); }
+        .breadcrumb span { color: var(--text-muted); }
+
+        @media (max-width: 640px) {
+            .tabs-nav { gap: 0; }
+            .tab-btn { padding: var(--space-sm); font-size: 0.6rem; }
+            .field-row { grid-template-columns: 1fr; }
+            .eixo-mini { flex-wrap: wrap; }
+            .eixo-mini-name { min-width: auto; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="alumni-header">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="alumni-header__logo">
+    <span class="alumni-header__title">Pasta do Aluno</span>
+    <span class="alumni-header__badge">VISÃO PROFESSOR</span>
+</header>
+
+<!-- NAV -->
+<nav class="alumni-nav" id="navArea">
+    <a href="index.html">Novo Aluno</a>
+    <a href="dashboard.html">Painel de Alunos</a>
+    <a href="#" id="navPerfil">Perfil 360</a>
+    <a href="#" class="active">Pasta do Aluno</a>
+</nav>
+
+<!-- HEADER INFO (populated by JS) -->
+<div style="padding:var(--space-lg) var(--space-2xl);text-align:center;border-bottom:1px solid var(--border-light);background:var(--bg-card);" id="headerArea">
+    <h1 class="h1" id="studentName">Carregando...</h1>
+    <p class="text-muted" id="studentSubtitle" style="margin-top:var(--space-xs);"></p>
+    <span class="badge badge--draft" id="statusBadge" style="margin-top:var(--space-sm);display:inline-flex;"></span>
+    <div class="countdown-header" id="countdownArea"></div>
+</div>
+
+<div class="breadcrumb" id="breadcrumb">
+    <a href="dashboard.html">Painel</a> &rsaquo; <span id="breadcrumbName">Carregando...</span>
+</div>
+
+<div class="container" id="mainContent">
+    <!-- Populated by JS -->
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal" style="max-width:440px;text-align:center;">
+        <h3 class="modal__title">Excluir Aluno</h3>
+        <p class="text-muted" style="margin-bottom:var(--space-lg);line-height:1.6;">Tem certeza que deseja excluir este aluno? Todos os dados (perfil, formulário e registro de aulas) serão removidos permanentemente.</p>
+        <div class="modal-actions">
+            <button class="btn btn--ghost" onclick="closeDeleteModal()">Cancelar</button>
+            <button class="btn btn--danger" onclick="confirmDelete()">Excluir</button>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="alumni-footer">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="alumni-footer__logo">
+</footer>
+
+<script>
+    // ===== STATE =====
+    let alunoId = null;
+    let perfil = null;
+    let formData = null;
+    let registryEntry = null;
+    let registros = [];
+    let saveTimeout = null;
+
+    // ===== INIT =====
+    function init() {
+        const params = new URLSearchParams(window.location.search);
+        alunoId = params.get('id');
+        if (!alunoId) {
+            showEmpty('Nenhum aluno selecionado', 'Acesse esta página com ?id=slug-do-aluno');
+            return;
+        }
+        document.getElementById('navPerfil').href = 'perfil.html?id=' + alunoId;
+        loadAluno();
+    }
+
+    // ===== LOAD =====
+    async function loadAluno() {
+        // Load perfil
+        const rawPerfil = localStorage.getItem('alumni-perfil-' + alunoId);
+        if (rawPerfil) {
+            try { perfil = JSON.parse(rawPerfil); } catch(e) { perfil = null; }
+        }
+
+        // Load form data
+        const rawForm = localStorage.getItem('alumni-form-' + alunoId);
+        if (rawForm) {
+            try { formData = JSON.parse(rawForm); } catch(e) { formData = null; }
+        }
+
+        // Load registry entry
+        try {
+            const resp = await fetch('/planos/registry.json');
+            if (resp.ok) {
+                const registry = await resp.json();
+                registryEntry = registry.find(function(r) { return r.id === alunoId; }) || null;
+            }
+        } catch(e) {}
+
+        // Load registros
+        loadRegistro();
+
+        // Check if we have any data
+        if (!perfil && !formData && !registryEntry) {
+            showEmpty('Aluno não encontrado', 'Não há dados para o id "' + alunoId + '" no localStorage.');
+            return;
+        }
+
+        renderPage();
+    }
+
+    function showEmpty(title, msg) {
+        document.getElementById('studentName').textContent = 'Pasta do Aluno';
+        document.getElementById('mainContent').innerHTML =
+            '<div class="empty-state"><h3>' + title + '</h3><p>' + msg + '</p>' +
+            '<p><a href="dashboard.html">Voltar ao Painel de Alunos</a></p></div>';
+    }
+
+    // ===== HELPERS =====
+    function esc(str) {
+        if (!str) return '';
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function getNome() {
+        if (perfil && perfil.nome) return perfil.nome;
+        if (perfil && perfil.dadosFormulario && perfil.dadosFormulario.nome) return perfil.dadosFormulario.nome;
+        if (formData && formData.nome) return formData.nome;
+        if (registryEntry && registryEntry.nome) return registryEntry.nome;
+        return alunoId;
+    }
+
+    function getDados() {
+        var d = {};
+        if (formData) Object.assign(d, formData);
+        if (perfil && perfil.dadosFormulario) Object.assign(d, perfil.dadosFormulario);
+        if (perfil) {
+            if (perfil.nivel) d.nivel = perfil.nivel;
+            if (perfil.foco) d.foco = perfil.foco;
+            if (perfil.modalidade) d.modalidade = perfil.modalidade;
+            if (perfil.numAulas) d.numAulas = perfil.numAulas;
+        }
+        if (registryEntry) {
+            if (registryEntry.nivel) d.nivel = d.nivel || registryEntry.nivel;
+            if (registryEntry.numAulas) d.numAulas = d.numAulas || registryEntry.numAulas;
+        }
+        return d;
+    }
+
+    function getMaterialUrl() {
+        if (registryEntry && registryEntry.externalUrl) return registryEntry.externalUrl;
+        if (perfil && perfil.materialUrl) return perfil.materialUrl;
+        if (registryEntry) return window.location.origin + '/planos/' + registryEntry.id + '.html';
+        return null;
+    }
+
+    function getStatusInfo(status) {
+        var map = {
+            'rascunho': { label: 'Rascunho', css: 'badge--draft' },
+            'em_revisao': { label: 'Em Revisão', css: 'badge--review' },
+            'aprovado': { label: 'Aprovado', css: 'badge--approved' },
+            'material_publicado': { label: 'Publicado', css: 'badge--published' },
+            'sem_perfil': { label: 'Sem Perfil', css: 'badge--none' }
+        };
+        return map[status] || map['sem_perfil'];
+    }
+
+    function getCountdown(dateStr) {
+        if (!dateStr) return null;
+        var target = new Date(dateStr);
+        var now = new Date();
+        var diffDays = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+        return diffDays;
+    }
+
+    // ===== RENDER =====
+    function renderPage() {
+        var nome = getNome();
+        var dados = getDados();
+        var status = perfil ? (perfil.status || 'rascunho') : (registryEntry ? 'material_publicado' : 'sem_perfil');
+        var statusInfo = getStatusInfo(status);
+
+        // Header
+        document.getElementById('studentName').textContent = nome;
+        document.title = 'Pasta do Aluno — ' + nome;
+
+        var subtitleParts = [];
+        if (dados.nivel) subtitleParts.push(dados.nivel);
+        if (dados.foco) subtitleParts.push(dados.foco);
+        if (dados.modalidade) subtitleParts.push(dados.modalidade);
+        if (dados.numAulas) subtitleParts.push(dados.numAulas + ' aulas');
+        document.getElementById('studentSubtitle').textContent = subtitleParts.join(' — ');
+
+        var badge = document.getElementById('statusBadge');
+        badge.className = 'badge ' + statusInfo.css;
+        badge.innerHTML = '<span class="badge__dot"></span>' + statusInfo.label;
+
+        // Countdown
+        var countdownArea = document.getElementById('countdownArea');
+        if (perfil && perfil.eventoData && perfil.eventoAlvo) {
+            var days = getCountdown(perfil.eventoData);
+            if (days !== null && days > 0) {
+                countdownArea.innerHTML = '<strong>' + days + ' dias</strong> para ' + esc(perfil.eventoAlvo);
+            } else if (days === 0) {
+                countdownArea.innerHTML = '<strong>Hoje!</strong> ' + esc(perfil.eventoAlvo);
+            } else {
+                countdownArea.innerHTML = '';
+            }
+        } else {
+            countdownArea.innerHTML = '';
+        }
+
+        // Breadcrumb
+        document.getElementById('breadcrumbName').textContent = nome;
+
+        // Main content
+        var html = '';
+        html += renderLinkPublico();
+        html += renderProfessorTabs();
+        html += renderDangerZone();
+
+        document.getElementById('mainContent').innerHTML = html;
+
+        // Activate first tab
+        switchTab('perfil');
+    }
+
+    // ===== SECTION 1 — LINK PUBLICO =====
+    function renderLinkPublico() {
+        var materialUrl = getMaterialUrl();
+        var btnClass = materialUrl ? 'btn btn--primary btn--full btn--lg copy-btn' : 'btn btn--full btn--lg copy-btn unavailable';
+        var btnText = materialUrl ? 'Copiar Link Público do Aluno' : 'Material não publicado ainda';
+        var btnAction = materialUrl ? 'onclick="copyPublicLink()"' : '';
+
+        var html = '<div style="margin-bottom:var(--space-2xl);">' +
+            '<div class="section-tag">Acesso do Aluno</div>' +
+            '<h2 class="h2">Link Público do Aluno</h2>' +
+            '<button class="' + btnClass + '" id="copyBtn" ' + btnAction + ' style="margin-top:var(--space-md);margin-bottom:var(--space-lg);">' + btnText + '</button>' +
+            '<div class="card">' +
+            '<div class="section-tag" style="margin-bottom:var(--space-sm);">O que o aluno vê:</div>' +
+            '<ul class="info-list">' +
+            '<li>Pre-class exercises</li>' +
+            '<li>Atividades complementares</li>' +
+            '<li>Survival card progressivo</li>' +
+            '<li>Anotações pessoais</li>' +
+            '</ul>' +
+            '<div class="info-note"><strong>O aluno NÃO vê:</strong> Plano de aula, Material do professor, Perfil 360, Indicação de professor</div>' +
+            '</div></div>';
+
+        return html;
+    }
+
+    // ===== SECTION 2 — PROFESSOR TABS =====
+    function renderProfessorTabs() {
+        var html = '<div style="margin-bottom:var(--space-2xl);">' +
+            '<div class="section-tag">Visão do Professor</div>' +
+            '<h2 class="h2">Ferramentas do Professor</h2>' +
+            '<div class="tabs-nav" style="margin-top:var(--space-md);">' +
+            '<button class="tab-btn active" onclick="switchTab(\'perfil\')">Perfil do Aluno</button>' +
+            '<button class="tab-btn" onclick="switchTab(\'preclass\')">Pre-class</button>' +
+            '<button class="tab-btn" onclick="switchTab(\'plano\')">Plano de Aula</button>' +
+            '<button class="tab-btn" onclick="switchTab(\'material\')">Material do Professor</button>' +
+            '<button class="tab-btn" onclick="switchTab(\'atividades\')">Atividades</button>' +
+            '<button class="tab-btn" onclick="switchTab(\'registro\')">Registro de Aulas</button>' +
+            '</div>';
+
+        html += renderTabPerfil();
+        html += renderTabPreclass();
+        html += renderTabPlano();
+        html += renderTabMaterial();
+        html += renderTabAtividades();
+        html += renderTabRegistro();
+
+        html += '</div>';
+        return html;
+    }
+
+    // --- Tab 1: Perfil do Aluno ---
+    function renderTabPerfil() {
+        var html = '<div class="tab-content active" id="tab-perfil">';
+
+        if (!perfil) {
+            html += '<div class="placeholder">Perfil 360 ainda não foi gerado para este aluno.<br><a href="index.html">Criar Perfil 360</a></div>';
+            html += '</div>';
+            return html;
+        }
+
+        html += '<div class="perfil-summary">';
+
+        // Resumo executivo
+        if (perfil.resumoExecutivo) {
+            html += '<div class="item"><div class="item-label">Resumo Executivo</div>' +
+                '<div class="item-value">' + esc(perfil.resumoExecutivo) + '</div></div>';
+        }
+
+        // Promessa transformadora
+        if (perfil.promessaTransformadora) {
+            html += '<div class="item"><div class="item-label">Promessa Transformadora</div>' +
+                '<div class="item-value">' + esc(perfil.promessaTransformadora) + '</div></div>';
+        }
+
+        // Mapa de personalidade (mini)
+        var eixos = perfil.mapaPersonalidade || [];
+        if (eixos.length > 0) {
+            html += '<div class="item"><div class="item-label">Mapa de Personalidade</div>';
+            eixos.forEach(function(eixo) {
+                var val = eixo.valor || 5;
+                var pct = val * 10;
+                var barClass = val <= 2 ? 'low' : val <= 4 ? 'mid-low' : val <= 6 ? 'mid' : val <= 8 ? 'mid-high' : 'high';
+                html += '<div class="eixo-mini">' +
+                    '<span class="eixo-mini-name">' + esc(eixo.nome || 'Eixo') + '</span>' +
+                    '<div class="eixo-mini-bar"><div class="eixo-mini-fill ' + barClass + '" style="width:' + pct + '%"></div></div>' +
+                    '<span class="eixo-mini-val">' + val + '/10</span>' +
+                    '</div>';
+            });
+            html += '</div>';
+        }
+
+        html += '<a href="perfil.html?id=' + alunoId + '" class="btn btn--secondary btn--sm" style="margin-top:var(--space-md);">Ver Perfil 360 completo</a>';
+        html += '</div></div>';
+        return html;
+    }
+
+    // --- Tab 2: Pre-class ---
+    function renderTabPreclass() {
+        var materialUrl = getMaterialUrl();
+        var html = '<div class="tab-content" id="tab-preclass">';
+
+        if (materialUrl) {
+            html += '<div class="card" style="margin-bottom:var(--space-lg);">' +
+                '<p class="text-muted" style="margin-bottom:var(--space-sm);">Acesse o material Pre-class do aluno:</p>' +
+                '<a href="' + esc(materialUrl) + '" target="_blank" class="btn btn--secondary btn--sm">Abrir Material Pre-class</a>' +
+                '</div>';
+        } else {
+            html += '<div class="placeholder">Material não gerado ainda. <a href="perfil.html?id=' + alunoId + '">Gere o prompt no Perfil 360.</a></div>';
+        }
+
+        // Lesson checklist
+        var dados = getDados();
+        var numAulas = parseInt(dados.numAulas) || 10;
+        html += '<div class="card">' +
+            '<div class="section-tag" style="margin-bottom:var(--space-sm);">Status de conclusão do aluno</div>';
+
+        for (var i = 1; i <= numAulas; i++) {
+            var checkKey = 'preclass-' + i;
+            var isChecked = getPreclassCheck(i);
+            var checkDate = getPreclassDate(i);
+            html += '<div class="lesson-check">' +
+                '<input type="checkbox" id="check-' + i + '" ' + (isChecked ? 'checked' : '') + ' onchange="togglePreclass(' + i + ')">' +
+                '<label for="check-' + i + '">Aula ' + i + ' — Pre-class</label>' +
+                '<span class="check-date" id="check-date-' + i + '">' + (checkDate ? checkDate : '') + '</span>' +
+                '</div>';
+        }
+
+        html += '</div></div>';
+        return html;
+    }
+
+    // --- Tab 3: Plano de Aula ---
+    function renderTabPlano() {
+        var materialUrl = getMaterialUrl();
+        var html = '<div class="tab-content" id="tab-plano">';
+
+        if (materialUrl) {
+            html += '<div class="card">' +
+                '<p class="text-muted" style="margin-bottom:var(--space-sm);">Acesse o Plano de Aula completo:</p>' +
+                '<a href="' + esc(materialUrl) + '" target="_blank" class="btn btn--secondary btn--sm">Abrir Plano de Aula</a>' +
+                '</div>';
+        } else {
+            html += '<div class="placeholder">Material não gerado ainda. <a href="perfil.html?id=' + alunoId + '">Gere o prompt no Perfil 360.</a></div>';
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    // --- Tab 4: Material do Professor ---
+    function renderTabMaterial() {
+        var materialUrl = getMaterialUrl();
+        var html = '<div class="tab-content" id="tab-material">';
+
+        if (materialUrl) {
+            html += '<div class="card">' +
+                '<p class="text-muted" style="margin-bottom:var(--space-sm);">Acesse o Material do Professor:</p>' +
+                '<a href="' + esc(materialUrl) + '" target="_blank" class="btn btn--secondary btn--sm">Abrir Material do Professor</a>' +
+                '</div>';
+        } else {
+            html += '<div class="placeholder">Material não gerado ainda. <a href="perfil.html?id=' + alunoId + '">Gere o prompt no Perfil 360.</a></div>';
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    // --- Tab 5: Atividades Complementares ---
+    function renderTabAtividades() {
+        var materialUrl = getMaterialUrl();
+        var html = '<div class="tab-content" id="tab-atividades">';
+
+        if (materialUrl) {
+            html += '<div class="card">' +
+                '<p class="text-muted" style="margin-bottom:var(--space-sm);">Acesse as Atividades Complementares:</p>' +
+                '<a href="' + esc(materialUrl) + '" target="_blank" class="btn btn--secondary btn--sm">Abrir Atividades Complementares</a>' +
+                '</div>';
+        } else {
+            html += '<div class="placeholder">Material não gerado ainda. <a href="perfil.html?id=' + alunoId + '">Gere o prompt no Perfil 360.</a></div>';
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    // --- Tab 6: Registro de Aulas ---
+    function renderTabRegistro() {
+        var dados = getDados();
+        var numAulas = parseInt(dados.numAulas) || 10;
+
+        var html = '<div class="tab-content" id="tab-registro">';
+        html += '<div class="registro-header">' +
+            '<span class="text-muted">' + registros.length + ' aula' + (registros.length !== 1 ? 's' : '') + ' registrada' + (registros.length !== 1 ? 's' : '') + '</span>' +
+            '<span class="save-indicator" id="saveIndicator">Salvo</span>' +
+            '<button class="btn btn--secondary btn--sm" onclick="addLesson()">+ Nova Aula</button>' +
+            '</div>';
+
+        // Ensure we have at least numAulas slots
+        var total = Math.max(registros.length, numAulas);
+        for (var i = 0; i < total; i++) {
+            html += renderLessonCard(i);
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    function renderLessonCard(index) {
+        var r = registros[index] || {};
+        var num = index + 1;
+        var statusClass = r.status === 'realizada' ? 'ls-realizada' : r.status === 'cancelada' ? 'ls-cancelada' : 'ls-nao_realizada';
+        var statusLabel = r.status === 'realizada' ? 'Realizada' : r.status === 'cancelada' ? 'Cancelada' : 'Não realizada';
+        var dateDisplay = r.data ? ' — ' + r.data : '';
+        var isOpen = index === 0 && !r.status ? ' open' : '';
+        var bodyShow = index === 0 && !r.status ? ' show' : '';
+
+        var html = '<div class="lesson-card" id="lesson-' + index + '">' +
+            '<div class="lesson-card-header' + isOpen + '" onclick="toggleLesson(' + index + ')">' +
+            '<h4>Aula ' + num + dateDisplay + ' <span class="lesson-status ' + statusClass + '">' + statusLabel + '</span></h4>' +
+            '<span class="arrow">&#9660;</span>' +
+            '</div>' +
+            '<div class="lesson-card-body' + bodyShow + '" id="lesson-body-' + index + '">';
+
+        html += '<div class="field-row">' +
+            '<div class="field-group">' +
+            '<label>Data da aula</label>' +
+            '<input type="date" class="input" value="' + esc(r.data || '') + '" onchange="updateRegistroField(' + index + ',\'data\',this.value)">' +
+            '</div>' +
+            '<div class="field-group">' +
+            '<label>Status</label>' +
+            '<select class="select" onchange="updateRegistroField(' + index + ',\'status\',this.value)">' +
+            '<option value="nao_realizada"' + ((!r.status || r.status === 'nao_realizada') ? ' selected' : '') + '>Não realizada</option>' +
+            '<option value="realizada"' + (r.status === 'realizada' ? ' selected' : '') + '>Realizada</option>' +
+            '<option value="cancelada"' + (r.status === 'cancelada' ? ' selected' : '') + '>Cancelada</option>' +
+            '</select>' +
+            '</div></div>';
+
+        html += '<div class="field-group">' +
+            '<label>O que foi coberto</label>' +
+            '<textarea class="textarea" placeholder="Conteúdos e tópicos abordados nesta aula..." oninput="updateRegistroField(' + index + ',\'coberto\',this.value)">' + esc(r.coberto || '') + '</textarea>' +
+            '</div>';
+
+        html += '<div class="field-group">' +
+            '<label>O que o aluno avancou bem</label>' +
+            '<textarea class="textarea" placeholder="Pontos positivos, evolução observada..." oninput="updateRegistroField(' + index + ',\'avancos\',this.value)">' + esc(r.avancos || '') + '</textarea>' +
+            '</div>';
+
+        html += '<div class="field-group">' +
+            '<label>O que travou</label>' +
+            '<textarea class="textarea" placeholder="Dificuldades, pontos que precisam de reforço..." oninput="updateRegistroField(' + index + ',\'travou\',this.value)">' + esc(r.travou || '') + '</textarea>' +
+            '</div>';
+
+        html += '<div class="field-group">' +
+            '<label>Observações sobre o aluno — humor, energia, eventos pessoais</label>' +
+            '<textarea class="textarea" placeholder="Como o aluno estava neste dia, contexto pessoal relevante..." oninput="updateRegistroField(' + index + ',\'observacoes\',this.value)">' + esc(r.observacoes || '') + '</textarea>' +
+            '</div>';
+
+        html += '<div class="field-group">' +
+            '<label>Ajustes para próxima aula</label>' +
+            '<textarea class="textarea" placeholder="O que adaptar na próxima aula com base no que aconteceu..." oninput="updateRegistroField(' + index + ',\'ajustes\',this.value)">' + esc(r.ajustes || '') + '</textarea>' +
+            '</div>';
+
+        html += '<div class="field-group">' +
+            '<label>Próximo passo combinado</label>' +
+            '<textarea class="textarea" placeholder="O que foi combinado com o aluno para a próxima aula..." oninput="updateRegistroField(' + index + ',\'proximoPasso\',this.value)">' + esc(r.proximoPasso || '') + '</textarea>' +
+            '</div>';
+
+        html += '</div></div>';
+        return html;
+    }
+
+    // ===== DANGER ZONE =====
+    function renderDangerZone() {
+        return '<div class="danger-zone">' +
+            '<button class="btn btn--danger btn--sm" onclick="deleteAluno()">Excluir aluno</button>' +
+            '</div>';
+    }
+
+    // ===== TAB SWITCHING =====
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(function(el) {
+            el.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        var target = document.getElementById('tab-' + tabId);
+        if (target) target.classList.add('active');
+
+        // Find matching button
+        var tabNames = { perfil: 0, preclass: 1, plano: 2, material: 3, atividades: 4, registro: 5 };
+        var idx = tabNames[tabId];
+        var btns = document.querySelectorAll('.tab-btn');
+        if (btns[idx]) btns[idx].classList.add('active');
+    }
+
+    // ===== COPY PUBLIC LINK =====
+    function copyPublicLink() {
+        var url = getMaterialUrl();
+        if (!url) return;
+
+        navigator.clipboard.writeText(url).then(function() {
+            var btn = document.getElementById('copyBtn');
+            btn.classList.add('copied');
+            btn.textContent = 'Link copiado!';
+            setTimeout(function() {
+                btn.classList.remove('copied');
+                btn.textContent = 'Copiar Link Público do Aluno';
+            }, 2000);
+        });
+    }
+
+    // ===== PRE-CLASS CHECKS =====
+    function getPreclassCheck(lessonNum) {
+        var key = 'alumni-preclass-' + alunoId;
+        try {
+            var data = JSON.parse(localStorage.getItem(key) || '{}');
+            return !!data[lessonNum];
+        } catch(e) { return false; }
+    }
+
+    function getPreclassDate(lessonNum) {
+        var key = 'alumni-preclass-' + alunoId;
+        try {
+            var data = JSON.parse(localStorage.getItem(key) || '{}');
+            return data[lessonNum] || '';
+        } catch(e) { return ''; }
+    }
+
+    function togglePreclass(lessonNum) {
+        var key = 'alumni-preclass-' + alunoId;
+        var data = {};
+        try { data = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) {}
+
+        var checkbox = document.getElementById('check-' + lessonNum);
+        var dateEl = document.getElementById('check-date-' + lessonNum);
+
+        if (checkbox.checked) {
+            var now = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            data[lessonNum] = now;
+            dateEl.textContent = now;
+        } else {
+            delete data[lessonNum];
+            dateEl.textContent = '';
+        }
+
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    // ===== REGISTRO DE AULAS =====
+    function loadRegistro() {
+        var raw = localStorage.getItem('alumni-registro-' + alunoId);
+        if (raw) {
+            try { registros = JSON.parse(raw); } catch(e) { registros = []; }
+        }
+        if (!Array.isArray(registros)) registros = [];
+    }
+
+    function saveRegistro() {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(function() {
+            localStorage.setItem('alumni-registro-' + alunoId, JSON.stringify(registros));
+            showSaveIndicator();
+        }, 400);
+    }
+
+    function showSaveIndicator() {
+        var el = document.getElementById('saveIndicator');
+        if (!el) return;
+        el.classList.add('show');
+        setTimeout(function() { el.classList.remove('show'); }, 1500);
+    }
+
+    function updateRegistroField(index, field, value) {
+        while (registros.length <= index) {
+            registros.push({});
+        }
+        registros[index][field] = value;
+        saveRegistro();
+
+        // Update header display for status and date changes
+        if (field === 'status' || field === 'data') {
+            var card = document.getElementById('lesson-' + index);
+            if (card) {
+                var r = registros[index];
+                var statusClass = r.status === 'realizada' ? 'ls-realizada' : r.status === 'cancelada' ? 'ls-cancelada' : 'ls-nao_realizada';
+                var statusLabel = r.status === 'realizada' ? 'Realizada' : r.status === 'cancelada' ? 'Cancelada' : 'Não realizada';
+                var dateDisplay = r.data ? ' — ' + r.data : '';
+                var h4 = card.querySelector('h4');
+                if (h4) {
+                    h4.innerHTML = 'Aula ' + (index + 1) + dateDisplay + ' <span class="lesson-status ' + statusClass + '">' + statusLabel + '</span>';
+                }
+            }
+        }
+    }
+
+    function toggleLesson(index) {
+        var header = document.querySelector('#lesson-' + index + ' .lesson-card-header');
+        var body = document.getElementById('lesson-body-' + index);
+        if (!header || !body) return;
+        header.classList.toggle('open');
+        body.classList.toggle('show');
+    }
+
+    function addLesson() {
+        registros.push({});
+        saveRegistro();
+
+        var container = document.getElementById('tab-registro');
+        if (!container) return;
+
+        // Find the button area and insert before danger zone
+        var newIndex = registros.length - 1;
+        var lessonHtml = renderLessonCard(newIndex);
+
+        var addBtn = container.querySelector('.registro-header');
+        if (addBtn) {
+            // Update count
+            var countSpan = addBtn.querySelector('span');
+            if (countSpan) {
+                countSpan.textContent = registros.length + ' aula' + (registros.length !== 1 ? 's' : '') + ' registrada' + (registros.length !== 1 ? 's' : '');
+            }
+        }
+
+        // Insert new card at end of tab content
+        container.insertAdjacentHTML('beforeend', lessonHtml);
+
+        // Open the new lesson
+        toggleLesson(newIndex);
+
+        // Scroll to it
+        var newCard = document.getElementById('lesson-' + newIndex);
+        if (newCard) newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // ===== DELETE =====
+    function deleteAluno() {
+        document.getElementById('deleteModal').classList.add('show');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('show');
+    }
+
+    function confirmDelete() {
+        localStorage.removeItem('alumni-perfil-' + alunoId);
+        localStorage.removeItem('alumni-form-' + alunoId);
+        localStorage.removeItem('alumni-registro-' + alunoId);
+        localStorage.removeItem('alumni-preclass-' + alunoId);
+        window.location.href = 'dashboard.html';
+    }
+
+    // ===== INIT =====
+    init();
+</script>
+</body>
+</html>

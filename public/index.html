@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni — Plataforma de Jornadas</title>
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="stylesheet" href="/styles/design-system.css">
+    <script src="/lib/profile-schema.js"></script>
+    <style>
+        /* ── Page-specific styles ── */
+        .consultoria-section {
+            border: 1px solid var(--alumni-navy);
+            background: var(--alumni-navy-dim);
+            padding: var(--space-xl) var(--space-lg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--space-xl);
+        }
+
+        .obs-professor {
+            background: var(--alumni-navy-dim);
+            border-left: 3px solid var(--alumni-navy);
+            padding: var(--space-md) var(--space-lg);
+            margin-top: var(--space-xs);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+        .obs-professor .textarea {
+            background: rgba(0, 48, 128, 0.03);
+            border-color: var(--alumni-navy-ring);
+        }
+
+        .audio-upload-area {
+            border: 1px dashed var(--border);
+            padding: var(--space-lg);
+            text-align: center;
+            transition: border-color var(--transition-base);
+            cursor: pointer;
+            background: var(--bg-subtle);
+            border-radius: var(--radius-md);
+        }
+        .audio-upload-area:hover { border-color: var(--alumni-navy); }
+        .audio-upload-area input[type="file"] { display: none; }
+        .audio-upload-area .upload-label { font: var(--text-small); color: var(--text-dim); }
+        .audio-upload-area .upload-icon { font-size: 1.5rem; color: var(--text-dim); margin-bottom: var(--space-sm); }
+        .audio-preview { margin-top: var(--space-md); display: none; }
+        .audio-preview.show { display: block; }
+        .audio-preview audio { width: 100%; margin-top: var(--space-sm); }
+        .audio-meta { font: var(--text-small); color: var(--text-dim); margin-top: var(--space-sm); }
+
+        .word-count {
+            font: var(--text-small);
+            color: var(--text-dim);
+            margin-top: var(--space-xs);
+            display: flex;
+            justify-content: space-between;
+        }
+        .word-count.warn { color: var(--error); }
+        .word-count.ok { color: var(--success); }
+
+        .transcribe-btn {
+            display: none;
+            padding: 10px var(--space-md);
+            background: transparent;
+            border: 1px solid var(--alumni-navy);
+            color: var(--alumni-navy);
+            font: var(--text-micro);
+            cursor: pointer;
+            margin-top: var(--space-sm);
+            transition: all var(--transition-base);
+            border-radius: var(--radius-sm);
+        }
+        .transcribe-btn:hover { background: var(--alumni-navy-dim); }
+        .transcribe-btn.show { display: inline-block; }
+
+        /* Loading state for submit button */
+        .btn.is-loading .btn__spinner { display: inline-block; }
+        .loading-text { display: none; text-align: center; margin-top: var(--space-md); font: var(--text-base); color: var(--text-muted); }
+        .loading-text.show { display: block; }
+
+        /* Notes / hints */
+        .note { font: var(--text-small); color: var(--text-dim); margin-top: var(--space-xs); line-height: 1.5; }
+        .note.navy { color: var(--alumni-navy); opacity: 0.8; }
+        .warning-msg { font: var(--text-small); color: var(--error); margin-top: var(--space-xs); display: none; }
+        .warning-msg.show { display: block; }
+
+        /* Conditional fields with smooth animation */
+        .platform-group,
+        .evento-fields {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+            margin-bottom: 0;
+        }
+        .platform-group.show { max-height: 120px; opacity: 1; margin-bottom: var(--space-md); }
+        .evento-fields.show { max-height: 400px; opacity: 1; margin-top: var(--space-md); }
+
+        /* Toggle row for evento */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+            cursor: pointer;
+        }
+        .toggle-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--alumni-navy);
+        }
+        .toggle-row label {
+            font: var(--text-base);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* Global error */
+        .global-error {
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            margin-top: var(--space-md);
+            font: var(--text-base);
+            color: var(--error);
+            display: none;
+        }
+        .global-error.show { display: block; }
+
+        /* Recent section */
+        .recent-section { margin-top: var(--space-3xl); padding-top: var(--space-xl); border-top: 1px solid var(--border); }
+        .recent-section h3 { font: var(--text-h2); color: var(--text-primary); margin-bottom: var(--space-md); }
+        .recent-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-sm);
+            text-decoration: none;
+            color: inherit;
+            transition: all var(--transition-base);
+        }
+        .recent-item:hover { border-color: var(--alumni-navy); box-shadow: var(--shadow-md); }
+        .recent-item h4 { font: var(--text-base); font-weight: 600; color: var(--text-primary); }
+        .recent-item .meta { font: var(--text-small); color: var(--text-dim); display: flex; gap: var(--space-sm); margin-top: var(--space-xs); }
+        .recent-item .arrow { color: var(--text-dim); }
+        .recent-item .type-badge {
+            font: var(--text-micro);
+            padding: 2px var(--space-sm);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-dim);
+            margin-left: var(--space-sm);
+        }
+        .recent-item .type-badge.perfil { border-color: var(--alumni-navy); color: var(--alumni-navy); }
+
+        /* Sub-block labels inside consultoria */
+        .sub-block-label {
+            font: var(--text-small);
+            font-weight: 600;
+            color: var(--alumni-navy);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+        .sub-block-label:first-child { margin-top: var(--space-md); }
+
+        @media (max-width: 640px) {
+            .consultoria-section { padding: var(--space-lg) var(--space-md); }
+        }
+    </style>
+</head>
+<body>
+
+<header class="alumni-header">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="alumni-header__logo">
+    <span class="alumni-header__badge">VISÃO GESTOR</span>
+</header>
+
+<nav class="alumni-nav">
+    <a href="index.html" class="active">Novo Aluno</a>
+    <a href="dashboard.html">Planos Gerados</a>
+</nav>
+
+<div class="container container--narrow">
+    <form id="intakeForm" onsubmit="processarConsultoria(event)">
+
+        <!-- ═══════ BLOCO 1 — Perfil Pessoal ═══════ -->
+        <div class="card" style="margin-bottom: var(--space-xl);">
+            <div class="section-tag">Bloco 1</div>
+            <h2 class="h2">Perfil Pessoal</h2>
+
+            <div class="form-group" style="margin-top: var(--space-md);">
+                <label class="form-label">Nome completo <span class="required">*</span></label>
+                <input type="text" id="nome" class="input" placeholder="Ex: Maria Clara Ferreira" required>
+                <div class="form-error" id="err-nome">Nome é obrigatório.</div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Idade <span class="required">*</span></label>
+                    <input type="number" id="idade" class="input" min="5" max="99" placeholder="Ex: 34" required>
+                    <div class="form-error" id="err-idade">Idade é obrigatória (5-99).</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Profissão</label>
+                    <input type="text" id="profissao" class="input" placeholder="Ex: Head TI - Centauro (a IA complementa com detalhes da transcrição)">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Cidade / Estado</label>
+                    <input type="text" id="cidade" class="input" placeholder="Ex: Curitiba / PR">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Modalidade de trabalho</label>
+                    <select id="modalidadeTrabalho" class="select">
+                        <option value="">Selecione...</option>
+                        <option value="Presencial">Presencial</option>
+                        <option value="Remoto">Remoto</option>
+                        <option value="Híbrido">Híbrido</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Email do aluno <span class="required">*</span></label>
+                    <input type="email" id="email" class="input" placeholder="Ex: maria@email.com" required>
+                    <div class="form-error" id="err-email">Email válido é obrigatório.</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">WhatsApp do aluno</label>
+                    <input type="tel" id="whatsapp" class="input" placeholder="Ex: (41) 99999-0000">
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════ BLOCO 2 — Programa Desejado ═══════ -->
+        <div class="card" style="margin-bottom: var(--space-xl);">
+            <div class="section-tag">Bloco 2</div>
+            <h2 class="h2">Programa Desejado</h2>
+
+            <div class="form-group" style="margin-top: var(--space-md);">
+                <label class="form-label">Foco principal <span class="required">*</span></label>
+                <select id="foco" class="select" required>
+                    <option value="">Selecione...</option>
+                    <option value="100% Personalizado">100% Personalizado (extraído da consultoria)</option>
+                    <option value="Travel English">Travel English</option>
+                    <option value="Business English">Business English</option>
+                    <option value="Corporate + Legal">Corporate + Legal</option>
+                    <option value="Conversação">Conversação</option>
+                    <option value="Proficiência">Proficiência</option>
+                    <option value="Apresentações">Apresentações</option>
+                    <option value="Acadêmico">Acadêmico</option>
+                    <option value="Outros">Outros</option>
+                </select>
+                <div class="form-error" id="err-foco">Selecione o foco principal.</div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Número de aulas <span class="required">*</span></label>
+                    <input type="number" id="numAulas" class="input" min="1" max="200" value="5" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Duração da aula <span class="required">*</span></label>
+                    <select id="duracao" class="select" required>
+                        <option value="30 min">30 min</option>
+                        <option value="45 min">45 min</option>
+                        <option value="60 min" selected>60 min</option>
+                        <option value="90 min">90 min</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Frequência semanal <span class="required">*</span></label>
+                    <select id="frequencia" class="select" required>
+                        <option value="">Selecione...</option>
+                        <option value="1x por semana">1x por semana</option>
+                        <option value="2x por semana">2x por semana</option>
+                        <option value="3x por semana">3x por semana</option>
+                    </select>
+                    <div class="form-error" id="err-frequencia">Selecione a frequência.</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Modalidade da aula <span class="required">*</span></label>
+                    <select id="modalidadeAula" class="select" required onchange="togglePlataforma()">
+                        <option value="">Selecione...</option>
+                        <option value="Online">Online</option>
+                        <option value="Presencial">Presencial</option>
+                        <option value="Híbrido">Híbrido</option>
+                    </select>
+                    <div class="form-error" id="err-modalidadeAula">Selecione a modalidade.</div>
+                </div>
+            </div>
+
+            <div class="platform-group" id="plataformaGroup">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label">Plataforma</label>
+                    <select id="plataforma" class="select">
+                        <option value="">Selecione...</option>
+                        <option value="Zoom">Zoom</option>
+                        <option value="Google Meet">Google Meet</option>
+                        <option value="Microsoft Teams">Microsoft Teams</option>
+                        <option value="Outra">Outra</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Horários disponíveis</label>
+                <input type="text" id="horarios" class="input" placeholder="Ex: Seg e Qui 18h-19h">
+            </div>
+        </div>
+
+        <!-- ═══════ BLOCO 3 — Urgência ═══════ -->
+        <div class="card" style="margin-bottom: var(--space-xl);">
+            <div class="section-tag">Bloco 3</div>
+            <h2 class="h2">Urgência</h2>
+
+            <div class="toggle-row">
+                <input type="checkbox" id="existeEvento" onchange="toggleEvento()">
+                <label for="existeEvento">Existe um evento marcado que motiva esse programa?</label>
+            </div>
+
+            <div class="evento-fields" id="eventoFields">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Tipo do evento</label>
+                        <select id="tipoEvento" class="select">
+                            <option value="">Selecione...</option>
+                            <option value="Viagem">Viagem</option>
+                            <option value="Apresentação">Apresentação</option>
+                            <option value="Entrevista">Entrevista</option>
+                            <option value="Conferência">Conferência</option>
+                            <option value="Certificação">Certificação</option>
+                            <option value="Mudança para exterior">Mudança para exterior</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Data do evento</label>
+                        <input type="date" id="dataEvento" class="input">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Local ou contexto</label>
+                    <input type="text" id="localEvento" class="input" placeholder="Ex: Conferência em Miami, entrevista com empresa canadense...">
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════ BLOCO 4 — Motivação Emocional ═══════ -->
+        <div class="card" style="margin-bottom: var(--space-xl);">
+            <div class="section-tag">Bloco 4</div>
+            <h2 class="h2">Motivação Emocional</h2>
+
+            <div class="form-group" style="margin-top: var(--space-md);">
+                <label class="form-label">O que dá errado se não estiver pronto? (Stake)</label>
+                <textarea id="stake" class="textarea" rows="3" placeholder="Opcional — a IA extrai automaticamente da transcrição. Preencha apenas se quiser complementar."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Como vai se sentir quando conseguir? (Vitória)</label>
+                <textarea id="vitoria" class="textarea" rows="3" placeholder="Opcional — a IA extrai automaticamente da transcrição. Preencha apenas se quiser complementar."></textarea>
+            </div>
+
+            <div class="note navy">Essas informações alimentam a promessa transformadora do programa.</div>
+        </div>
+
+        <!-- ═══════ BLOCO 5 — Histórico com Inglês ═══════ -->
+        <div class="card" style="margin-bottom: var(--space-xl);">
+            <div class="section-tag">Bloco 5</div>
+            <h2 class="h2">Histórico com Inglês</h2>
+
+            <div class="form-group" style="margin-top: var(--space-md);">
+                <label class="form-label">Onde já estudou inglês? O que funcionou e o que não funcionou?</label>
+                <textarea id="historicoIngles" class="textarea" rows="4" placeholder="Ex: Fez FISK quando criança, tentou Duolingo, fez curso online por 3 meses mas desistiu porque era muita gramática..."></textarea>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Nível atual <span class="required">*</span></label>
+                    <select id="nivel" class="select" required>
+                        <option value="">— Selecione —</option>
+                        <option value="A0">A0 (Beginner Absoluto)</option>
+                        <option value="A1">A1 (Iniciante)</option>
+                        <option value="A2">A2 (Pré-Intermediário)</option>
+                        <option value="B1">B1 (Intermediário)</option>
+                        <option value="B2">B2 (Intermediário Superior)</option>
+                        <option value="C1">C1 (Avançado)</option>
+                        <option value="C1+">C1+ (Avançado Plus)</option>
+                        <option value="C2">C2 (Proficiente)</option>
+                    </select>
+                    <div class="form-error" id="err-nivel">Selecione o nível atual.</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Quanto tempo pode dedicar por semana fora das aulas?</label>
+                    <select id="tempoForaAula" class="select">
+                        <option value="">Selecione...</option>
+                        <option value="Nenhum">Nenhum</option>
+                        <option value="30 min">30 min</option>
+                        <option value="1 hora">1 hora</option>
+                        <option value="2+ horas">2+ horas</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════ BLOCO 6 — Personalidade e Estilo ═══════ -->
+        <div class="card" style="margin-bottom: var(--space-xl);">
+            <div class="section-tag">Bloco 6</div>
+            <h2 class="h2">Personalidade e Estilo</h2>
+
+            <div class="grid-2" style="margin-top: var(--space-md);">
+                <div class="form-group">
+                    <label class="form-label">Como prefere aprender?</label>
+                    <select id="estiloAprendizagem" class="select">
+                        <option value="">Selecione...</option>
+                        <option value="Visual">Visual</option>
+                        <option value="Auditivo">Auditivo</option>
+                        <option value="Lendo/escrevendo">Lendo/escrevendo</option>
+                        <option value="Praticando">Praticando</option>
+                        <option value="Não sei">Não sei</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Prefere aulas estruturadas ou livres?</label>
+                    <select id="estruturaPreferida" class="select">
+                        <option value="">Selecione...</option>
+                        <option value="Bem estruturadas com roteiro">Bem estruturadas com roteiro</option>
+                        <option value="Mistas">Mistas</option>
+                        <option value="Mais livres e espontâneas">Mais livres e espontâneas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Como lida com erros?</label>
+                    <select id="lidaComErros" class="select">
+                        <option value="">Selecione...</option>
+                        <option value="Fico frustrado">Fico frustrado</option>
+                        <option value="Levo na boa e rio">Levo na boa e rio</option>
+                        <option value="Depende do dia">Depende do dia</option>
+                        <option value="Prefiro não arriscar para não errar">Prefiro não arriscar para não errar</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Que tipo de energia prefere?</label>
+                    <select id="energiaPreferida" class="select">
+                        <option value="">Selecione...</option>
+                        <option value="Calma e organizada">Calma e organizada</option>
+                        <option value="Dinâmica e variada">Dinâmica e variada</option>
+                        <option value="Depende do tema">Depende do tema</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════ BLOCO 7 — Interesses Pessoais ═══════ -->
+        <div class="card" style="margin-bottom: var(--space-xl);">
+            <div class="section-tag">Bloco 7</div>
+            <h2 class="h2">Interesses Pessoais</h2>
+
+            <div class="form-group" style="margin-top: var(--space-md);">
+                <label class="form-label">Séries, filmes ou programas que gosta</label>
+                <textarea id="seriesFilmes" class="textarea" rows="2" placeholder="Ex: The Office, Stranger Things, documentários da Netflix..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Músicas ou podcasts que ouve</label>
+                <textarea id="musicasPodcasts" class="textarea" rows="2" placeholder="Ex: Pop, rock, podcasts de negócios, audiobooks..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Hobbies ou atividades fora do trabalho</label>
+                <textarea id="hobbies" class="textarea" rows="2" placeholder="Ex: Corrida, culinária, jogos, viagens, leitura..."></textarea>
+            </div>
+
+            <div class="note navy">Essas informações são usadas para personalizar atividades complementares.</div>
+        </div>
+
+        <!-- ═══════ BLOCO 8 — Consultoria (Peça Central) ═══════ -->
+        <div class="consultoria-section">
+            <div class="section-tag">Bloco 8 — Peça Central</div>
+            <h2 class="h2">Consultoria</h2>
+
+            <!-- Sub-block 8A — Upload de Áudio -->
+            <div class="sub-block-label">8A — Upload de Áudio</div>
+            <div class="form-group">
+                <label class="form-label">Áudio da consultoria</label>
+                <div class="audio-upload-area" onclick="document.getElementById('audioFile').click()">
+                    <div class="upload-icon">&#127908;</div>
+                    <div class="upload-label">Clique para enviar o áudio da consultoria<br><span style="font-size:0.7rem;color:var(--text-dim);">mp3, wav, m4a, ogg, webm</span></div>
+                    <input type="file" id="audioFile" accept=".mp3,.wav,.m4a,.ogg,.webm,audio/mpeg,audio/wav,audio/mp4,audio/ogg,audio/webm" onchange="handleAudioUpload(event)">
+                </div>
+                <div class="audio-preview" id="audioPreview">
+                    <div class="audio-meta" id="audioMeta"></div>
+                    <audio id="audioPlayer" controls></audio>
+                </div>
+                <div class="note navy">Altamente recomendado — o áudio permite análise prosódica e fica disponível no Perfil 360 para reescuta.</div>
+                <div class="note">Armazenamento local no navegador (IndexedDB).</div>
+            </div>
+
+            <!-- Sub-block 8B — Resumo do Zoom -->
+            <div class="sub-block-label">8B — Resumo do Zoom</div>
+            <div class="form-group">
+                <label class="form-label">Resumo gerado pelo Zoom (AI Companion)</label>
+                <textarea id="resumoZoom" class="textarea" rows="8" placeholder="Cole aqui o resumo gerado automaticamente pelo Zoom (AI Companion Summary). Inclui: pontos principais discutidos, decisões tomadas, próximos passos acordados. Esta é uma fonte complementar à transcrição — a IA usa ambas para criar o perfil mais completo possível."></textarea>
+                <div class="note navy">Fonte complementar — o Zoom AI gera um resumo estruturado com tópicos, decisões e action items que enriquecem a análise do perfil.</div>
+            </div>
+
+            <!-- Sub-block 8C — Transcrição -->
+            <div class="sub-block-label">8C — Transcrição</div>
+            <div class="form-group">
+                <label class="form-label">Transcrição da consultoria <span class="required">*</span></label>
+                <textarea id="transcricao" class="textarea" rows="12" required oninput="countWords()" placeholder="Cole aqui a transcrição completa da consultoria com o aluno. Pode ser gerada por ferramentas como MacWhisper, Otter.ai, Google Recorder, ou YouTube auto-caption. A transcrição é a fonte principal de análise — quanto mais completa, melhor o Perfil 360."></textarea>
+                <div class="word-count" id="wordCount">
+                    <span id="wordCountText">0 palavras</span>
+                    <span id="wordCountMin">Mínimo: 200 palavras</span>
+                </div>
+                <div class="form-error" id="err-transcricao">A transcrição deve ter no mínimo 200 palavras.</div>
+                <button type="button" class="transcribe-btn" id="transcribeBtn" onclick="transcribeWithWebSpeech()">Transcrever com Web Speech API</button>
+                <div class="note" id="transcribeNote" style="display:none;">Qualidade básica — edição manual será necessária após a transcrição.</div>
+            </div>
+
+            <!-- Sub-block 8C — Observações Estruturadas do Professor -->
+            <div class="sub-block-label">8C — Observações Estruturadas do Professor</div>
+            <div class="obs-professor">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" style="color: var(--alumni-navy);">Tom de voz geral</label>
+                        <select id="tomVoz" class="select">
+                            <option value="">Selecione...</option>
+                            <option value="Calmo">Calmo</option>
+                            <option value="Animado">Animado</option>
+                            <option value="Monótono">Monótono</option>
+                            <option value="Variado">Variado</option>
+                            <option value="Hesitante">Hesitante</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" style="color: var(--alumni-navy);">Energia durante a consultoria</label>
+                        <select id="energiaConsultoria" class="select">
+                            <option value="">Selecione...</option>
+                            <option value="Constante">Constante</option>
+                            <option value="Oscilou">Oscilou</option>
+                            <option value="Cresceu ao longo">Cresceu ao longo</option>
+                            <option value="Diminuiu ao longo">Diminuiu ao longo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" style="color: var(--alumni-navy);">Momentos de animação — sobre quais temas?</label>
+                    <textarea id="momentosAnimacao" class="textarea" rows="2" placeholder="Ex: Quando falou de viagens, quando mencionou o trabalho..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" style="color: var(--alumni-navy);">Momentos de hesitação — sobre quais temas?</label>
+                    <textarea id="momentosHesitacao" class="textarea" rows="2" placeholder="Ex: Ao falar sobre experiências anteriores com inglês, ao descrever o nível..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" style="color: var(--alumni-navy);">Observações livres</label>
+                    <textarea id="observacoesLivres" class="textarea" rows="4" placeholder="Anote aqui o que a transcrição NÃO captura: tom de voz do aluno, energia, hesitação, humor, postura, momentos em que travou, momentos em que se animou, sotaque/regionalismos, mudanças de humor durante a consultoria. Quanto mais detalhe sobre COMO ele falou (não só o que falou), melhor a análise de personalidade."></textarea>
+                </div>
+            </div>
+            <div class="warning-msg" id="warnObsAudio">Sem áudio e sem observações, a análise de personalidade fica significativamente limitada.</div>
+        </div>
+
+        <!-- ═══════ Submit ═══════ -->
+        <div class="global-error" id="globalError"></div>
+        <button type="submit" class="btn btn--primary btn--full btn--lg" id="submitBtn">
+            <span class="btn__spinner"></span>
+            <span class="btn-text">Processar Consultoria</span>
+        </button>
+        <div class="loading-text" id="loadingText">
+            <div id="progressContainer" style="display:none;margin-top:var(--space-md);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <span id="progressLabel" style="font:500 0.85rem/1.4 var(--font-body);color:var(--text-body);">Iniciando...</span>
+                    <span id="progressPercent" style="font:600 0.85rem/1.4 var(--font-body);color:var(--alumni-navy);">0%</span>
+                </div>
+                <div style="height:8px;background:var(--bg-subtle);border-radius:4px;overflow:hidden;">
+                    <div id="progressBarFill" style="height:100%;width:0%;background:var(--alumni-navy);border-radius:4px;transition:width 0.5s ease-out;"></div>
+                </div>
+                <p id="progressStep" style="font:400 0.8rem/1.5 var(--font-body);color:var(--text-dim);margin-top:6px;">Preparando dados do formulário...</p>
+            </div>
+        </div>
+        <!-- Error popup -->
+        <div id="errorPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;">
+            <div style="background:#fff;border-radius:12px;padding:32px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">
+                <div style="width:48px;height:48px;background:var(--error-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                </div>
+                <h3 style="font:600 1.1rem/1.3 var(--font-body);color:var(--text-primary);margin-bottom:8px;">Erro ao processar</h3>
+                <p id="errorPopupMsg" style="font:400 0.9rem/1.6 var(--font-body);color:var(--text-muted);margin-bottom:24px;"></p>
+                <button onclick="document.getElementById('errorPopup').style.display='none'" style="padding:10px 32px;background:var(--alumni-navy);color:#fff;border:none;border-radius:8px;font:600 0.9rem/1.4 var(--font-body);cursor:pointer;">Tentar Novamente</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="recent-section" id="recentSection"></div>
+</div>
+
+<footer class="alumni-footer">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="alumni-footer__logo">
+</footer>
+
+<script>
+    // ═══════════════════════════════════════
+    // IndexedDB for Audio Storage
+    // ═══════════════════════════════════════
+    const dbName = 'alumni-audio-storage';
+    const storeName = 'audios';
+
+    function openAudioDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(dbName, 1);
+            request.onupgradeneeded = (e) => {
+                e.target.result.createObjectStore(storeName);
+            };
+            request.onsuccess = (e) => resolve(e.target.result);
+            request.onerror = (e) => reject(e.target.error);
+        });
+    }
+
+    async function saveAudio(slug, file) {
+        const db = await openAudioDB();
+        const tx = db.transaction(storeName, 'readwrite');
+        tx.objectStore(storeName).put(file, slug);
+        return new Promise((resolve) => { tx.oncomplete = resolve; });
+    }
+
+    async function getAudio(slug) {
+        const db = await openAudioDB();
+        const tx = db.transaction(storeName, 'readonly');
+        const request = tx.objectStore(storeName).get(slug);
+        return new Promise((resolve) => { request.onsuccess = () => resolve(request.result); });
+    }
+
+    // ═══════════════════════════════════════
+    // Slug generation
+    // ═══════════════════════════════════════
+    function generateSlug(name) {
+        return name
+            .toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
+    // ═══════════════════════════════════════
+    // Toggle Plataforma (conditional field)
+    // ═══════════════════════════════════════
+    function togglePlataforma() {
+        const modalidade = document.getElementById('modalidadeAula').value;
+        const group = document.getElementById('plataformaGroup');
+        if (modalidade === 'Online' || modalidade === 'Híbrido') {
+            group.classList.add('show');
+        } else {
+            group.classList.remove('show');
+            document.getElementById('plataforma').value = '';
+        }
+    }
+
+    // ═══════════════════════════════════════
+    // Toggle Evento (conditional fields)
+    // ═══════════════════════════════════════
+    function toggleEvento() {
+        const checked = document.getElementById('existeEvento').checked;
+        const fields = document.getElementById('eventoFields');
+        if (checked) {
+            fields.classList.add('show');
+        } else {
+            fields.classList.remove('show');
+            document.getElementById('tipoEvento').value = '';
+            document.getElementById('dataEvento').value = '';
+            document.getElementById('localEvento').value = '';
+        }
+    }
+
+    // ═══════════════════════════════════════
+    // Word Count
+    // ═══════════════════════════════════════
+    function countWords() {
+        const text = document.getElementById('transcricao').value.trim();
+        const words = text ? text.split(/\s+/).length : 0;
+        const el = document.getElementById('wordCount');
+        const textEl = document.getElementById('wordCountText');
+        textEl.textContent = words + ' palavra' + (words !== 1 ? 's' : '');
+
+        el.classList.remove('warn', 'ok');
+        if (words > 0 && words < 200) {
+            el.classList.add('warn');
+        } else if (words >= 200) {
+            el.classList.add('ok');
+        }
+
+        // Update warning for obs + audio
+        updateObsWarning();
+    }
+
+    // ═══════════════════════════════════════
+    // Update observation warning
+    // ═══════════════════════════════════════
+    let audioUploaded = false;
+
+    function updateObsWarning() {
+        const obsLivres = document.getElementById('observacoesLivres').value.trim();
+        const tomVoz = document.getElementById('tomVoz').value;
+        const energiaConsultoria = document.getElementById('energiaConsultoria').value;
+        const momentosAnimacao = document.getElementById('momentosAnimacao').value.trim();
+        const momentosHesitacao = document.getElementById('momentosHesitacao').value.trim();
+        const hasAnyObs = obsLivres || tomVoz || energiaConsultoria || momentosAnimacao || momentosHesitacao;
+        const warn = document.getElementById('warnObsAudio');
+        if (!audioUploaded && !hasAnyObs) {
+            warn.classList.add('show');
+        } else {
+            warn.classList.remove('show');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('observacoesLivres').addEventListener('input', updateObsWarning);
+        document.getElementById('tomVoz').addEventListener('change', updateObsWarning);
+        document.getElementById('energiaConsultoria').addEventListener('change', updateObsWarning);
+        document.getElementById('momentosAnimacao').addEventListener('input', updateObsWarning);
+        document.getElementById('momentosHesitacao').addEventListener('input', updateObsWarning);
+    });
+
+    // ═══════════════════════════════════════
+    // Audio Upload
+    // ═══════════════════════════════════════
+    let uploadedAudioFile = null;
+
+    function handleAudioUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        uploadedAudioFile = file;
+        audioUploaded = true;
+
+        // Preview
+        const preview = document.getElementById('audioPreview');
+        const player = document.getElementById('audioPlayer');
+        const meta = document.getElementById('audioMeta');
+
+        const url = URL.createObjectURL(file);
+        player.src = url;
+        preview.classList.add('show');
+
+        // File info
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        meta.textContent = `${file.name} — ${sizeMB} MB`;
+
+        // Try to get duration
+        player.addEventListener('loadedmetadata', () => {
+            if (player.duration && isFinite(player.duration)) {
+                const mins = Math.floor(player.duration / 60);
+                const secs = Math.floor(player.duration % 60);
+                meta.textContent = `${file.name} — ${sizeMB} MB — ${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+        });
+
+        // Show transcribe button
+        document.getElementById('transcribeBtn').classList.add('show');
+        document.getElementById('transcribeNote').style.display = 'block';
+
+        // Update upload area text
+        const area = document.querySelector('.audio-upload-area .upload-label');
+        area.innerHTML = `<strong style="color:var(--success);">Áudio carregado:</strong> ${file.name}`;
+
+        updateObsWarning();
+    }
+
+    // ═══════════════════════════════════════
+    // Web Speech API Transcription
+    // ═══════════════════════════════════════
+    function transcribeWithWebSpeech() {
+        if (!uploadedAudioFile) return;
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert('Seu navegador não suporta Web Speech API. Use Chrome para essa funcionalidade.');
+            return;
+        }
+
+        const btn = document.getElementById('transcribeBtn');
+        btn.textContent = 'Transcrevendo...';
+        btn.disabled = true;
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'pt-BR';
+        recognition.continuous = true;
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        let transcript = '';
+
+        recognition.onresult = (event) => {
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                    transcript += event.results[i][0].transcript + ' ';
+                }
+            }
+        };
+
+        recognition.onend = () => {
+            const textarea = document.getElementById('transcricao');
+            if (transcript.trim()) {
+                textarea.value = (textarea.value ? textarea.value + '\n\n' : '') + transcript.trim();
+                countWords();
+            }
+            btn.textContent = 'Transcrever com Web Speech API';
+            btn.disabled = false;
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            btn.textContent = 'Transcrever com Web Speech API';
+            btn.disabled = false;
+            if (event.error === 'not-allowed') {
+                alert('Permissão de microfone negada. A Web Speech API requer acesso ao microfone para transcrever em tempo real.');
+            }
+        };
+
+        // Note: Web Speech API transcribes live microphone input, not audio files.
+        // We play the audio through speakers and capture via mic as a workaround.
+        const player = document.getElementById('audioPlayer');
+        player.currentTime = 0;
+        player.play();
+        recognition.start();
+
+        player.addEventListener('ended', () => {
+            setTimeout(() => recognition.stop(), 2000);
+        }, { once: true });
+    }
+
+    // ═══════════════════════════════════════
+    // Form Validation Helpers
+    // ═══════════════════════════════════════
+    function clearErrors() {
+        document.querySelectorAll('.form-error').forEach(el => el.classList.remove('show'));
+        document.getElementById('globalError').classList.remove('show');
+    }
+
+    function showError(id, msg) {
+        const el = document.getElementById(id);
+        if (el) {
+            if (msg) el.textContent = msg;
+            el.classList.add('show');
+        }
+    }
+
+    // ═══════════════════════════════════════
+    // Main Form Handler
+    // ═══════════════════════════════════════
+    async function processarConsultoria(e) {
+        e.preventDefault();
+        clearErrors();
+
+        // ── Bloco 1 — Perfil Pessoal ──
+        const nome = document.getElementById('nome').value.trim();
+        const idade = document.getElementById('idade').value;
+        const profissao = document.getElementById('profissao').value.trim();
+        const cidade = document.getElementById('cidade').value.trim();
+        const modalidadeTrabalho = document.getElementById('modalidadeTrabalho').value;
+        const email = document.getElementById('email').value.trim();
+        const whatsapp = document.getElementById('whatsapp').value.trim();
+
+        // ── Bloco 2 — Programa Desejado ──
+        const foco = document.getElementById('foco').value;
+        const numAulas = document.getElementById('numAulas').value;
+        const duracao = document.getElementById('duracao').value;
+        const frequencia = document.getElementById('frequencia').value;
+        const modalidadeAula = document.getElementById('modalidadeAula').value;
+        const plataforma = document.getElementById('plataforma').value;
+        const horarios = document.getElementById('horarios').value.trim();
+
+        // ── Bloco 3 — Urgência ──
+        const existeEvento = document.getElementById('existeEvento').checked;
+        const tipoEvento = document.getElementById('tipoEvento').value;
+        const dataEvento = document.getElementById('dataEvento').value;
+        const localEvento = document.getElementById('localEvento').value.trim();
+
+        // ── Bloco 4 — Motivação Emocional ──
+        const stake = document.getElementById('stake').value.trim();
+        const vitoria = document.getElementById('vitoria').value.trim();
+
+        // ── Bloco 5 — Histórico com Inglês ──
+        const historicoIngles = document.getElementById('historicoIngles').value.trim();
+        const nivel = document.getElementById('nivel').value;
+        const tempoForaAula = document.getElementById('tempoForaAula').value;
+
+        // ── Bloco 6 — Personalidade e Estilo ──
+        const estiloAprendizagem = document.getElementById('estiloAprendizagem').value;
+        const estruturaPreferida = document.getElementById('estruturaPreferida').value;
+        const lidaComErros = document.getElementById('lidaComErros').value;
+        const energiaPreferida = document.getElementById('energiaPreferida').value;
+
+        // ── Bloco 7 — Interesses Pessoais ──
+        const seriesFilmes = document.getElementById('seriesFilmes').value.trim();
+        const musicasPodcasts = document.getElementById('musicasPodcasts').value.trim();
+        const hobbies = document.getElementById('hobbies').value.trim();
+
+        // ── Bloco 8 — Consultoria ──
+        const resumoZoom = document.getElementById('resumoZoom').value.trim();
+        const transcricao = document.getElementById('transcricao').value.trim();
+        const tomVoz = document.getElementById('tomVoz').value;
+        const energiaConsultoria = document.getElementById('energiaConsultoria').value;
+        const momentosAnimacao = document.getElementById('momentosAnimacao').value.trim();
+        const momentosHesitacao = document.getElementById('momentosHesitacao').value.trim();
+        const observacoesLivres = document.getElementById('observacoesLivres').value.trim();
+
+        // ═══════ Validation ═══════
+        let hasError = false;
+
+        if (!nome) { showError('err-nome'); hasError = true; }
+        if (!idade || idade < 5 || idade > 99) { showError('err-idade'); hasError = true; }
+        if (!email || !email.includes('@')) { showError('err-email'); hasError = true; }
+        if (!foco) { showError('err-foco'); hasError = true; }
+        if (!frequencia) { showError('err-frequencia'); hasError = true; }
+        if (!modalidadeAula) { showError('err-modalidadeAula'); hasError = true; }
+        if (!nivel) { showError('err-nivel'); hasError = true; }
+        // Stake e Vitória são opcionais — a IA extrai da transcrição automaticamente
+
+        // Check transcription word count
+        const wordCount = transcricao ? transcricao.split(/\s+/).length : 0;
+        if (wordCount < 200) {
+            showError('err-transcricao', `A transcrição deve ter no mínimo 200 palavras (atual: ${wordCount}).`);
+            hasError = true;
+        }
+
+        if (hasError) {
+            const firstError = document.querySelector('.form-error.show');
+            if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        // ═══════ Build form data ═══════
+        const slug = generateSlug(nome);
+        const formData = {
+            // Bloco 1
+            nome, idade: parseInt(idade), profissao, cidade, modalidadeTrabalho, email, whatsapp,
+            // Bloco 2
+            foco, numAulas: parseInt(numAulas), duracao, frequencia, modalidadeAula, plataforma, horarios,
+            // Bloco 3
+            existeEvento, tipoEvento, dataEvento, localEvento,
+            // Bloco 4
+            stake, vitoria,
+            // Bloco 5
+            historicoIngles, nivel, tempoForaAula,
+            // Bloco 6
+            estiloAprendizagem, estruturaPreferida, lidaComErros, energiaPreferida,
+            // Bloco 7
+            seriesFilmes, musicasPodcasts, hobbies,
+            // Bloco 8
+            temAudio: audioUploaded,
+            resumoZoom,
+            transcricao,
+            observacoesProfessor: {
+                tomVoz, energiaConsultoria, momentosAnimacao, momentosHesitacao, observacoesLivres
+            },
+            // Meta
+            slug, criadoEm: new Date().toISOString()
+        };
+
+        // Save audio to IndexedDB if uploaded
+        if (uploadedAudioFile) {
+            try {
+                await saveAudio(slug, uploadedAudioFile);
+                formData.audioSaved = true;
+            } catch (err) {
+                console.error('Erro ao salvar áudio:', err);
+            }
+        }
+
+        // Show loading state with progress bar
+        const btn = document.getElementById('submitBtn');
+        const loadingText = document.getElementById('loadingText');
+        btn.classList.add('is-loading');
+        btn.disabled = true;
+        loadingText.classList.add('show');
+
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBarFill = document.getElementById('progressBarFill');
+        const progressLabel = document.getElementById('progressLabel');
+        const progressPercent = document.getElementById('progressPercent');
+        const progressStep = document.getElementById('progressStep');
+        progressContainer.style.display = 'block';
+
+        function updateProgress(pct, label, step) {
+            progressBarFill.style.width = pct + '%';
+            progressPercent.textContent = pct + '%';
+            if (label) progressLabel.textContent = label;
+            if (step) progressStep.textContent = step;
+        }
+
+        // Simulate progress steps while API processes
+        updateProgress(5, 'Preparando dados', 'Validando formulário e organizando informações...');
+        const progressSteps = [
+            { pct: 10, label: 'Enviando dados', step: 'Enviando para a API de análise...', delay: 2000 },
+            { pct: 20, label: 'Analisando transcrição', step: 'Lendo e interpretando a consultoria...', delay: 8000 },
+            { pct: 35, label: 'Extraindo perfil', step: 'Identificando personalidade, forças e pontos de melhoria...', delay: 15000 },
+            { pct: 50, label: 'Gerando mapa de personalidade', step: 'Analisando 7 eixos comportamentais...', delay: 25000 },
+            { pct: 65, label: 'Definindo necessidades pedagógicas', step: 'Cruzando nível, idade e estilo de aprendizagem...', delay: 40000 },
+            { pct: 75, label: 'Construindo promessa transformadora', step: 'Usando frases textuais do aluno para personalizar...', delay: 55000 },
+            { pct: 85, label: 'Montando justificativa do programa', step: 'Conectando perfil com estrutura das aulas...', delay: 70000 },
+            { pct: 92, label: 'Validando coerência', step: 'Verificando consistência de todos os campos...', delay: 90000 },
+            { pct: 96, label: 'Finalizando', step: 'Quase lá — montando resultado final...', delay: 110000 },
+        ];
+
+        const progressTimers = progressSteps.map(s =>
+            setTimeout(() => updateProgress(s.pct, s.label, s.step), s.delay)
+        );
+
+        try {
+            // Build API payload
+            const apiData = {
+                // Bloco 1
+                nome, idade: parseInt(idade), profissao, cidade, modalidadeTrabalho, email, whatsapp,
+                // Bloco 2
+                foco, numAulas: parseInt(numAulas), duracao, frequencia, modalidadeAula, plataforma, horarios,
+                // Bloco 3
+                existeEvento, tipoEvento, dataEvento, localEvento,
+                // Bloco 4
+                stake, vitoria,
+                // Bloco 5
+                historicoIngles, nivel, tempoForaAula,
+                // Bloco 6
+                estiloAprendizagem, estruturaPreferida, lidaComErros, energiaPreferida,
+                // Bloco 7
+                seriesFilmes, musicasPodcasts, hobbies,
+                // Bloco 8
+                temAudio: audioUploaded,
+                audioUrl: uploadedAudioFile ? `indexeddb://${slug}` : null,
+                resumoZoom,
+                transcricao,
+                observacoesProfessor: {
+                    tomVoz, energiaConsultoria, momentosAnimacao, momentosHesitacao, observacoesLivres
+                },
+                // Meta
+                slug
+            };
+
+            // Use AbortController with 5 min timeout (API can take 2+ min with Sonnet)
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 300000);
+
+            const response = await fetch('/api/perfil-360', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(apiData),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                if (errorData.error === 'JSON_PARSE_ERROR') {
+                    throw new Error('Houve um erro técnico na geração do perfil. Por favor, clique em "Processar Consultoria" de novo. Se persistir, tente reduzir o tamanho da transcrição.');
+                }
+                throw new Error(errorData.message || errorData.error || `Erro ${response.status}: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            // Validate result has expected structure
+            if (!result || !result.perfil) {
+                throw new Error('Resposta da API não contém perfil válido. Tente novamente.');
+            }
+            if (!result.perfil.resumoExecutivo) {
+                throw new Error('Perfil gerado está incompleto (sem resumo executivo). Tente novamente.');
+            }
+
+            console.log('Perfil 360 gerado com sucesso:', result.id);
+
+            // Validate against schema before saving
+            if (typeof window.validateAgainstSchema === 'function') {
+                var schemaCheck = window.validateAgainstSchema(result);
+                if (!schemaCheck.valid) {
+                    console.warn('API retornou perfil incompleto:', schemaCheck.errors);
+                }
+            }
+
+            // Save to localStorage
+            localStorage.setItem(`alumni-perfil-${slug}`, JSON.stringify(result));
+            localStorage.setItem(`alumni-form-${slug}`, JSON.stringify(formData));
+
+            // Success — complete progress
+            progressTimers.forEach(t => clearTimeout(t));
+            updateProgress(100, 'Perfil 360 gerado!', 'Redirecionando para a página do perfil...');
+
+            // Brief pause to show 100%
+            await new Promise(r => setTimeout(r, 800));
+
+            // Redirect to perfil page
+            window.location.href = `perfil.html?id=${slug}`;
+
+        } catch (err) {
+            console.error('Erro ao processar consultoria:', err);
+            progressTimers.forEach(t => clearTimeout(t));
+
+            // Show error popup
+            let errorMsg = '';
+            if (err.name === 'AbortError') {
+                errorMsg = 'A geração do perfil excedeu o tempo limite (5 minutos). Tente novamente — se persistir, reduza o tamanho da transcrição.';
+            } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+                errorMsg = 'Erro de conexão com o servidor. Verifique sua internet e tente novamente.';
+            } else {
+                errorMsg = err.message || 'Erro desconhecido ao processar a consultoria.';
+            }
+
+            document.getElementById('errorPopupMsg').textContent = errorMsg;
+            document.getElementById('errorPopup').style.display = 'flex';
+
+            // Reset button
+            btn.classList.remove('is-loading');
+            btn.disabled = false;
+            loadingText.classList.remove('show');
+            progressContainer.style.display = 'none';
+            progressBarFill.style.width = '0%';
+        }
+    }
+
+    // ═══════════════════════════════════════
+    // Load Recent Plans + Perfis
+    // ═══════════════════════════════════════
+    async function loadRecent() {
+        const section = document.getElementById('recentSection');
+        let items = [];
+
+        // Load from registry.json (plans)
+        try {
+            const resp = await fetch('/planos/registry.json');
+            if (resp.ok) {
+                const registry = await resp.json();
+                registry.slice(0, 5).forEach(p => {
+                    items.push({
+                        nome: p.nome,
+                        url: `/planos/${p.id}.html`,
+                        tipo: 'plano',
+                        nivel: p.nivel || '',
+                        numAulas: p.numAulas,
+                        data: p.criadoEm
+                    });
+                });
+            }
+        } catch(e) {}
+
+        // Load from localStorage (perfis)
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('alumni-perfil-')) {
+                try {
+                    const slug = key.replace('alumni-perfil-', '');
+                    const data = JSON.parse(localStorage.getItem(key));
+                    const formKey = `alumni-form-${slug}`;
+                    const formData = localStorage.getItem(formKey) ? JSON.parse(localStorage.getItem(formKey)) : {};
+                    const extraidos = data.dadosExtraidos || (data.perfil && data.perfil.dadosExtraidos) || {};
+                    items.push({
+                        nome: formData.nome || data.nome || slug,
+                        url: `perfil.html?id=${slug}`,
+                        tipo: 'perfil',
+                        nivel: formData.nivel || (extraidos.nivel && extraidos.nivel.valor) || '',
+                        numAulas: formData.numAulas || '',
+                        data: formData.criadoEm || ''
+                    });
+                } catch(e) {}
+            }
+        }
+
+        if (items.length === 0) return;
+
+        // Sort by date descending
+        items.sort((a, b) => {
+            if (!a.data) return 1;
+            if (!b.data) return -1;
+            return new Date(b.data) - new Date(a.data);
+        });
+
+        const recent = items.slice(0, 8);
+        section.innerHTML = `<h3>Recentes</h3>` + recent.map(p => {
+            const data = p.data ? new Date(p.data).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+            const badge = p.tipo === 'perfil'
+                ? '<span class="type-badge perfil">Perfil 360</span>'
+                : '<span class="type-badge">Plano</span>';
+            return `<a href="${p.url}" class="recent-item">
+                <div>
+                    <h4>${p.nome}${badge}</h4>
+                    <div class="meta">
+                        ${p.nivel ? `<span>${p.nivel}</span>` : ''}
+                        ${p.numAulas ? `<span>${p.numAulas} aulas</span>` : ''}
+                        ${data ? `<span>${data}</span>` : ''}
+                    </div>
+                </div>
+                <div class="arrow">&#8594;</div>
+            </a>`;
+        }).join('');
+    }
+
+    loadRecent();
+</script>
+</body>
+</html>
