@@ -281,24 +281,23 @@
 
     // ===== LOAD =====
     async function loadPerfil() {
-        let raw = localStorage.getItem('alumni-perfil-' + perfilId);
-        // If not in localStorage, try loading from server JSON file
-        if (!raw) {
-            try {
-                const resp = await fetch('/perfis/' + perfilId + '.json');
-                if (resp.ok) {
-                    perfil = await resp.json();
-                    // Cache in localStorage for future use
-                    localStorage.setItem('alumni-perfil-' + perfilId, JSON.stringify(perfil));
-                    raw = 'loaded-from-server';
-                }
-            } catch(e) {}
-        }
-        if (!raw) {
-            showEmpty('Perfil não encontrado', 'Não há dados para o id "' + perfilId + '".');
-            return;
-        }
-        if (raw !== 'loaded-from-server') {
+        // Server JSON is source of truth — try it FIRST
+        let fromServer = false;
+        try {
+            const resp = await fetch('/perfis/' + perfilId + '.json');
+            if (resp.ok) {
+                perfil = await resp.json();
+                localStorage.setItem('alumni-perfil-' + perfilId, JSON.stringify(perfil));
+                fromServer = true;
+            }
+        } catch(e) {}
+        // Fallback to localStorage if server has no file
+        if (!fromServer) {
+            const raw = localStorage.getItem('alumni-perfil-' + perfilId);
+            if (!raw) {
+                showEmpty('Perfil não encontrado', 'Não há dados para o id "' + perfilId + '".');
+                return;
+            }
             try {
                 perfil = JSON.parse(raw);
             } catch (e) {
