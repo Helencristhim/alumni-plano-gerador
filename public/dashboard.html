@@ -717,6 +717,22 @@
     }
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') fecharAlocacao(); });
 
+    // Auto-sync: upload localStorage profiles to Supabase (one-time migration)
+    (async function syncLocalToSupabase(){
+        try {
+            for(var i=0;i<localStorage.length;i++){
+                var k=localStorage.key(i);
+                if(k.startsWith('alumni-perfil-')){
+                    var id=k.replace('alumni-perfil-','');
+                    var p=JSON.parse(localStorage.getItem(k));
+                    if(!p||!p.dadosFormulario) continue;
+                    var d=p.dadosFormulario||{};
+                    await sb.from('perfis').upsert({id:id,data:p,status:p.status||'rascunho',nome:d.nome||id,nivel:d.nivel||'',num_aulas:parseInt(d.numAulas)||0,foco:d.foco||'',ativo:p.ativo||false});
+                }
+            }
+        } catch(e){ console.error('Sync failed:',e); }
+    })();
+
     loadAlunos();
 
     // Poll every 15s for newly deployed materials (e.g. while Claude Code generates in another tab)
