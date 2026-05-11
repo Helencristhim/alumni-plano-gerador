@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Elaine's First Day in New York — Version B | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --accent:#B85C38;--accent-light:#D4845C;--accent-dim:rgba(184,92,56,.12);
+  --bg:#f5f2ee;--dark:#1a1a2e;--dark-surface:#232340;
+  --text:#2d2d3a;--text-dim:#6b6b7a;--text-light:#a0a0b0;
+  --white:#fff;--success:#16a34a;--danger:#dc2626;--warn:#d97706;
+  --navy:#003080;--sarah-blue:#5b9bd5;
+  --slide-transition:400ms;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);overflow:hidden;height:100vh;width:100vw}
+
+/* === LOGO BAR === */
+.logo-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.5rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+.logo-bar img{height:28px;filter:brightness(10)}
+.logo-bar .slide-counter{font-size:.75rem;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:2px;font-variant-numeric:tabular-nums}
+
+/* === PHASE PROGRESS BAR === */
+.phase-bar{position:fixed;top:50px;left:0;right:0;z-index:99;display:flex;height:4px;background:rgba(26,26,46,.6)}
+.phase-segment{flex:1;position:relative;transition:background .4s}
+.phase-segment.completed{background:var(--accent)}
+.phase-segment.current{background:var(--accent-light);animation:phasePulse 2s ease infinite}
+.phase-segment.upcoming{background:rgba(255,255,255,.08)}
+@keyframes phasePulse{0%,100%{opacity:1}50%{opacity:.6}}
+.phase-labels{position:fixed;top:54px;left:0;right:0;z-index:98;display:flex;padding:0 1.5rem}
+.phase-label{flex:1;font-size:.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;padding:.3rem 0;transition:color .4s}
+.phase-label.current{color:var(--accent-light)}
+.phase-label.completed{color:var(--accent)}
+
+/* === SLIDE SYSTEM === */
+.slides-container{height:100vh;overflow:hidden;position:relative}
+.slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem}
+.slide.active{opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s}
+.slide-inner{max-width:920px;width:100%;position:relative}
+
+.slide-light{background:var(--bg)}
+.slide-light .slide-inner{color:var(--text)}
+.slide-dark{background:var(--dark)}
+.slide-dark .slide-inner{color:var(--white)}
+.slide-dark .vocab-card, .slide-dark .vocab-card-ic, .slide-dark .fill-item, .slide-dark .challenge-card, .slide-dark .error-card, .slide-dark .roleplay-card, .slide-dark .record-card, .slide-dark .survival-item-ic, .slide-dark .oral-item, .slide-dark .scramble-item, .slide-dark .comp-q, .slide-dark .media-card, .slide-dark .match-row select, .slide-dark .hotel-card, .slide-dark .email-card, .slide-dark .boarding-pass, .slide-dark .boarding-pass-artifact, .slide-dark .business-card-artifact, .slide-dark .linkedin-card, .slide-dark .inclass-lesson-card, .slide-dark .flip-card-front { color:#2d2d3a; }
+.slide-image{background-size:cover;background-position:center}
+.slide-image::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,26,46,.4) 0%,rgba(26,26,46,.78) 100%)}
+.slide-image .slide-inner{color:var(--white);position:relative;z-index:2;text-align:center}
+
+/* === NAV === */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:center;gap:1rem;padding:1rem 2rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06)}
+.nav-btn{width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-size:1.2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.nav-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.nav-btn:disabled{opacity:.2;cursor:default;background:transparent;border-color:rgba(255,255,255,.1)}
+.nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.slide-dots{display:flex;gap:6px;align-items:center}
+.slide-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .3s;cursor:pointer}
+.slide-dot.active{background:var(--accent);width:20px;border-radius:3px}
+
+/* === TYPOGRAPHY === */
+.chapter-label{font-size:.75rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--accent-light);margin-bottom:.5rem}
+.slide-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.15;margin-bottom:1rem}
+.slide-subtitle{font-size:1rem;font-weight:300;opacity:.7;line-height:1.6}
+.slide-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;line-height:1.2;margin-bottom:1.2rem}
+.accent{color:var(--accent)}
+.accent-bold{color:var(--accent);font-weight:700}
+
+/* === WARM-UP === */
+.warm-questions{display:flex;flex-direction:column;gap:1.8rem;margin-top:2rem}
+.warm-q{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;font-style:italic;opacity:0;animation:fadeUp .8s ease forwards;color:var(--white);padding-left:1.5rem;border-left:3px solid var(--accent)}
+.warm-q:nth-child(2){animation-delay:.4s}
+.warm-q:nth-child(3){animation-delay:.8s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* === TEACHER T ICON === */
+.teacher-t{position:fixed;top:5rem;right:1.5rem;z-index:50;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;cursor:default;transition:all .2s}
+.slide-dark .teacher-t,.slide-image .teacher-t{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.15)}
+.slide-light .teacher-t{background:rgba(184,92,56,.08);color:var(--accent);border:1px solid rgba(184,92,56,.15)}
+.teacher-t:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.teacher-t-panel{display:none;position:absolute;top:0;right:calc(100% + 10px);width:340px;background:rgba(26,26,46,.96);color:rgba(255,255,255,.9);padding:1rem 1.2rem;border-radius:10px;font-size:.82rem;line-height:1.65;box-shadow:0 12px 40px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08)}
+.teacher-t:hover .teacher-t-panel{display:block;animation:fadeIn .2s ease}
+.teacher-t-panel strong{color:#D4845C}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* === VOCAB CARDS (2x2 grid) === */
+.vocab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.5rem}
+.vocab-card{background:var(--white);border:2px solid rgba(184,92,56,.12);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .4s;min-height:220px;display:flex;flex-direction:column}
+.vocab-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(184,92,56,.12)}
+.vocab-card.revealed{border-color:var(--accent)}
+.vocab-card .card-icon{width:100%;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;border-radius:11px 11px 0 0;transition:all .5s;padding:.5rem}
+.vocab-card .card-icon svg{width:48px;height:48px;stroke-width:1.5;opacity:.5;transition:opacity .5s}
+.vocab-card.revealed .card-icon svg{opacity:1}
+.vocab-card .card-hint{font-size:.78rem;color:rgba(255,255,255,.75);font-style:italic;text-align:center;line-height:1.3;padding:0 .5rem;max-width:90%}
+.vocab-card.revealed .card-hint{opacity:.5;font-size:.7rem}
+.vocab-card .card-body{padding:.7rem .8rem;display:flex;flex-direction:column;gap:.25rem;flex:1}
+.vocab-card .card-word{font-weight:700;font-size:1.05rem;color:var(--accent);opacity:0;height:0;overflow:hidden;transition:all .4s}
+.vocab-card.revealed .card-word{opacity:1;height:auto}
+.vocab-card .card-def{font-size:.78rem;color:var(--text-dim);line-height:1.3;font-style:italic;opacity:0;height:0;overflow:hidden;transition:all .4s .1s}
+.vocab-card.revealed .card-def{opacity:1;height:auto}
+.vocab-card .card-example{font-size:.82rem;color:var(--text);line-height:1.3;opacity:0;height:0;overflow:hidden;transition:all .4s .2s}
+.vocab-card.revealed .card-example{opacity:1;height:auto}
+.vocab-card .card-audio{margin-top:auto;padding-top:.4rem;opacity:0;transition:opacity .4s .3s}
+.vocab-card.revealed .card-audio{opacity:1}
+.vocab-card .card-placeholder{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--accent);opacity:.3;font-size:1.5rem;font-weight:800}
+.vocab-card.revealed .card-placeholder{display:none}
+
+/* Audio button small */
+.audio-btn-sm{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:.72rem;font-weight:600;font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.5px}
+.audio-btn-sm:hover{background:#a04e2e}
+.audio-btn-sm svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Vocab counter */
+.vocab-counter{text-align:center;margin-top:1.2rem;font-weight:600;color:var(--accent);font-size:1rem}
+.vocab-complete{display:none;text-align:center;margin-top:1rem;font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--accent);font-weight:600}
+.vocab-complete.show{display:block;animation:fadeUp .6s ease}
+
+/* === PRONUNCIATION DRILL === */
+.pron-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}
+.pron-item{display:flex;align-items:center;gap:1rem;background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:.8rem 1rem;cursor:pointer;transition:all .3s}
+.pron-item:hover{border-color:var(--accent);box-shadow:0 4px 12px rgba(184,92,56,.1)}
+.pron-word{font-weight:700;font-size:1.1rem;color:var(--dark);min-width:120px}
+.pron-stress{display:flex;gap:.3rem;align-items:center;flex:1}
+.pron-syl{font-size:.9rem;color:var(--text-dim);padding:.2rem .5rem;border-radius:4px;transition:all .3s}
+.pron-syl.stressed{background:var(--accent);color:#fff;font-weight:700;font-size:1rem;transform:scale(1.1)}
+.pron-audio{margin-left:auto}
+
+/* === BOARDING PASS === */
+.boarding-pass{background:#fff;border-radius:16px;overflow:hidden;max-width:560px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.15);position:relative}
+.bp-header{background:var(--navy);color:#fff;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.bp-airline{font-weight:700;font-size:1.1rem;letter-spacing:1px}
+.bp-class{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;opacity:.8}
+.bp-label{font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:.2rem}
+.bp-value{font-size:1rem;font-weight:600;color:var(--dark)}
+.bp-body{padding:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.bp-route{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding-bottom:1rem;border-bottom:2px dashed #e0e0e0}
+.bp-city{text-align:center}
+.bp-city .bp-code{font-size:2rem;font-weight:800;color:var(--dark)}
+.bp-city .bp-name{font-size:.72rem;color:var(--text-dim)}
+.bp-plane svg{width:28px;height:28px;stroke:var(--accent);fill:none;stroke-width:2}
+.bp-footer{background:#fafafa;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-top:2px dashed #e0e0e0}
+.bp-barcode{font-family:monospace;font-size:.5rem;letter-spacing:2px;color:#ccc}
+
+/* === COMPREHENSION QUESTIONS === */
+.comp-questions{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}
+.comp-q{background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;font-size:.95rem}
+.comp-q:hover{border-color:var(--accent);background:var(--accent-dim)}
+.comp-q .q-text{font-weight:500}
+.comp-q .q-answer{display:none;margin-top:.5rem;color:var(--accent);font-weight:600;font-size:.9rem}
+.comp-q.revealed .q-answer{display:block;animation:fadeUp .3s ease}
+
+/* === GRAMMAR === */
+.grammar-sentences{display:flex;flex-direction:column;gap:1rem;margin:1.5rem 0}
+.grammar-sentence{font-size:1.15rem;text-align:center;line-height:1.6;padding:.6rem;background:rgba(184,92,56,.04);border-radius:8px}
+.grammar-sentence strong{color:var(--accent);font-weight:800;font-size:1.2rem}
+.btn-primary{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif}
+.btn-primary:hover{transform:scale(1.03);box-shadow:0 8px 24px rgba(184,92,56,.3)}
+.btn-secondary{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif}
+.btn-secondary:hover{background:var(--accent);color:#fff}
+
+.grammar-table-wrap{overflow:hidden;max-height:0;transition:max-height .6s ease;margin-top:1rem}
+.grammar-table-wrap.show{max-height:500px}
+.grammar-table{width:100%;max-width:500px;margin:0 auto;border-collapse:collapse}
+.grammar-table th{background:var(--accent);color:#fff;padding:.6rem 1rem;text-align:left;font-size:.85rem}
+.grammar-table td{padding:.6rem 1rem;border-bottom:1px solid #e8e8e8;font-size:.95rem}
+.grammar-table td:nth-child(2){font-weight:700;color:var(--accent)}
+
+/* === GRAMMAR MISTAKE === */
+.mistake-card{display:flex;flex-direction:column;gap:1.5rem;align-items:center;margin-top:2rem}
+.mistake-item{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-radius:12px;font-size:1.2rem;width:100%;max-width:500px}
+.mistake-wrong{background:rgba(220,38,38,.06);border:2px solid rgba(220,38,38,.2);color:var(--danger);text-decoration:line-through;font-weight:600}
+.mistake-right{background:rgba(22,163,74,.06);border:2px solid rgba(22,163,74,.2);color:var(--success);font-weight:700}
+.mistake-icon{width:32px;height:32px;flex-shrink:0}
+.mistake-icon svg{width:32px;height:32px;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* === FILL-IN PRACTICE === */
+.fill-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}
+.fill-item{background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:.8rem}
+.fill-item:hover{border-color:var(--accent)}
+.fill-item .fill-text{font-size:1rem;flex:1}
+.fill-item .fill-blank{color:var(--accent);font-weight:800;border-bottom:2px dashed var(--accent);padding:0 .3rem;min-width:40px;display:inline-block;text-align:center}
+.fill-item .fill-answer{display:none;font-weight:700;color:var(--accent)}
+.fill-item.revealed .fill-blank{display:none}
+.fill-item.revealed .fill-answer{display:inline}
+
+/* === SUBSTITUTION DRILL === */
+.sub-template{font-family:'Cormorant Garamond',serif;font-size:1.6rem;text-align:center;line-height:2;margin:1.5rem 0;color:var(--text)}
+.sub-blank{display:inline-block;min-width:100px;border-bottom:3px solid var(--accent);cursor:pointer;transition:all .3s;padding:0 .3rem;color:var(--accent);font-weight:700}
+.sub-blank:hover{background:var(--accent-dim)}
+.sub-options{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:1rem}
+.sub-opt{padding:.4rem 1rem;border:1.5px solid #e0e0e0;border-radius:20px;cursor:pointer;font-size:.9rem;transition:all .2s}
+.sub-opt:hover{border-color:var(--accent);color:var(--accent)}
+.sub-opt.selected{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* === DIALOGUE === */
+.dialogue-box{display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem;max-height:65vh;overflow-y:auto;padding-right:.5rem}
+.dialogue-line{display:flex;gap:.8rem;align-items:flex-start;opacity:0;transform:translateY(10px);transition:all .4s}
+.dialogue-line.visible{opacity:1;transform:translateY(0)}
+.dialogue-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0}
+.dialogue-avatar.sarah{background:var(--sarah-blue)}
+.dialogue-avatar.elaine{background:var(--accent)}
+.dialogue-bubble{padding:.7rem 1rem;border-radius:12px;font-size:.92rem;line-height:1.5;max-width:80%;position:relative}
+.dialogue-bubble.sarah-bubble{background:rgba(91,155,213,.1);border:1px solid rgba(91,155,213,.2)}
+.dialogue-bubble.elaine-bubble{background:var(--accent-dim);border:1px solid rgba(184,92,56,.2)}
+.dialogue-bubble .vocab-highlight{color:var(--accent);font-weight:700}
+.dialogue-bubble .audio-inline{display:inline-flex;margin-left:.4rem;cursor:pointer;opacity:.5;transition:opacity .2s;vertical-align:middle}
+.dialogue-bubble .audio-inline:hover{opacity:1}
+.dialogue-bubble .audio-inline svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2}
+
+/* === CHALLENGE === */
+.challenge-card{background:var(--white);border:2px solid #e8e4df;border-radius:16px;padding:2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;transition:all .3s}
+.challenge-prompt{font-family:'Cormorant Garamond',serif;font-size:1.4rem;line-height:1.5;color:var(--text)}
+.challenge-answer{display:none;font-size:1.1rem;color:var(--accent);font-weight:600;padding:1rem;background:var(--accent-dim);border-radius:10px;width:100%;animation:fadeUp .3s ease}
+.challenge-answer.show{display:block}
+.challenge-score{position:absolute;top:1rem;right:1rem;background:var(--accent);color:#fff;padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:700}
+.challenge-counter{font-size:.8rem;color:var(--text-dim);font-weight:600}
+
+/* === ERROR CARDS === */
+.error-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}
+.error-card{background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:1rem}
+.error-card:hover{border-color:var(--accent)}
+.error-card .error-sentence{font-size:1rem;color:var(--danger);flex:1}
+.error-card .error-fix{display:none;font-weight:600;color:var(--success);font-size:.95rem}
+.error-card.revealed .error-sentence{text-decoration:line-through;opacity:.5}
+.error-card.revealed .error-fix{display:block;animation:fadeUp .3s ease}
+.error-score{text-align:center;margin-top:1rem;font-weight:700;color:var(--accent);font-size:1.1rem}
+
+/* === ORAL DRILL === */
+.oral-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}
+.oral-item{background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;transition:all .3s}
+.oral-situation{font-size:.95rem;color:var(--text);margin-bottom:.5rem;line-height:1.5}
+.oral-model{display:none;color:var(--accent);font-weight:600;font-size:.9rem;padding:.6rem;background:var(--accent-dim);border-radius:6px;margin-top:.5rem}
+.oral-item.revealed .oral-model{display:block;animation:fadeUp .3s ease}
+
+/* === WAVEFORM === */
+.waveform{display:flex;align-items:end;justify-content:center;gap:3px;height:50px;margin:1.5rem 0}
+.waveform .bar{width:4px;background:var(--accent);border-radius:2px;animation:wave 1.2s ease-in-out infinite}
+@keyframes wave{0%,100%{height:8px}50%{height:100%}}
+.waveform .bar:nth-child(1){animation-delay:0s;height:20px}
+.waveform .bar:nth-child(2){animation-delay:.1s;height:35px}
+.waveform .bar:nth-child(3){animation-delay:.2s;height:50px}
+.waveform .bar:nth-child(4){animation-delay:.15s;height:40px}
+.waveform .bar:nth-child(5){animation-delay:.3s;height:25px}
+.waveform .bar:nth-child(6){animation-delay:.05s;height:45px}
+.waveform .bar:nth-child(7){animation-delay:.25s;height:30px}
+.waveform .bar:nth-child(8){animation-delay:.12s;height:55px}
+.waveform .bar:nth-child(9){animation-delay:.35s;height:20px}
+.waveform .bar:nth-child(10){animation-delay:.08s;height:42px}
+.waveform .bar:nth-child(11){animation-delay:.22s;height:28px}
+.waveform .bar:nth-child(12){animation-delay:.18s;height:48px}
+.waveform-paused .bar{animation-play-state:paused}
+.play-btn{width:64px;height:64px;border-radius:50%;background:var(--accent);border:none;color:#fff;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;margin:1rem auto}
+.play-btn:hover{transform:scale(1.08);box-shadow:0 8px 32px rgba(184,92,56,.4)}
+.play-btn svg{width:24px;height:24px;fill:#fff;stroke:none}
+.play-btn.playing .icon-play{display:none}
+.play-btn.playing .icon-pause{display:block!important}
+
+/* === EMAIL === */
+.email-card{background:#fff;border-radius:12px;max-width:560px;margin:0 auto;box-shadow:0 12px 40px rgba(0,0,0,.1);overflow:hidden}
+.email-header{background:#f7f5f2;padding:1rem 1.5rem;border-bottom:1px solid #e8e4df}
+.email-field{font-size:.8rem;color:var(--text-dim);margin-bottom:.3rem}
+.email-field strong{color:var(--text);font-weight:600}
+.email-body{padding:1.5rem;font-size:.9rem;line-height:1.7;color:var(--text)}
+.email-body p{margin-bottom:.8rem}
+.email-detail{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid #f0f0ea}
+.email-detail:last-child{border:none}
+
+/* === ROLE PLAY === */
+.roleplay-card{background:var(--white);border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:500px;margin:0 auto}
+.roleplay-img{width:100%;height:180px;object-fit:cover}
+.roleplay-body{padding:1.5rem}
+.roleplay-scenario{font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem}
+.roleplay-keywords{display:flex;flex-wrap:wrap;gap:.4rem}
+.roleplay-kw{padding:.3rem .7rem;background:var(--accent-dim);border:1px solid rgba(184,92,56,.2);border-radius:16px;font-size:.8rem;color:var(--accent);font-weight:600}
+
+/* === RECORD CARD === */
+.record-card{background:var(--white);border:2px solid #e8e4df;border-radius:16px;padding:2rem;text-align:center;max-width:500px;margin:0 auto}
+.record-prompt{font-family:'Cormorant Garamond',serif;font-size:1.3rem;line-height:1.5;color:var(--text);margin-bottom:1.5rem}
+.record-btn{width:72px;height:72px;border-radius:50%;background:var(--danger);border:none;color:#fff;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;margin:0 auto}
+.record-btn:hover{transform:scale(1.08);box-shadow:0 8px 32px rgba(220,38,38,.3)}
+.record-btn svg{width:28px;height:28px;fill:#fff}
+.record-btn.recording{animation:recordPulse 1s ease infinite}
+@keyframes recordPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)}50%{box-shadow:0 0 0 12px rgba(220,38,38,0)}}
+
+/* === BADGE / CELEBRATION === */
+.badge-card{text-align:center;padding:2rem}
+.badge-icon{width:120px;height:120px;margin:0 auto 1.5rem;position:relative}
+.badge-icon .badge-circle{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-light));display:flex;align-items:center;justify-content:center;animation:badgePop .6s ease}
+.badge-icon .badge-circle svg{width:48px;height:48px;stroke:#fff;fill:none;stroke-width:2}
+@keyframes badgePop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+.sparkles{position:absolute;inset:-20px;pointer-events:none}
+.sparkle{position:absolute;width:6px;height:6px;background:var(--accent);border-radius:50%;animation:sparkle 1.5s ease infinite}
+@keyframes sparkle{0%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(0) translateY(-20px)}}
+.sparkle:nth-child(1){top:10%;left:20%;animation-delay:0s}
+.sparkle:nth-child(2){top:5%;right:25%;animation-delay:.3s}
+.sparkle:nth-child(3){bottom:15%;left:10%;animation-delay:.6s}
+.sparkle:nth-child(4){bottom:10%;right:15%;animation-delay:.2s}
+.sparkle:nth-child(5){top:40%;left:5%;animation-delay:.8s}
+.sparkle:nth-child(6){top:30%;right:5%;animation-delay:.5s}
+
+/* === SURVIVAL CARD === */
+.survival-grid{display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem}
+.survival-item{display:flex;align-items:center;gap:.8rem;background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:.8rem 1rem;transition:all .2s}
+.survival-item:hover{border-color:var(--accent)}
+.survival-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+.survival-text{flex:1;font-size:.92rem;color:var(--text)}
+
+/* === CHECKLIST === */
+.check-grid{display:flex;flex-direction:column;gap:.5rem;margin-top:1.5rem}
+.check-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:var(--white);border:1px solid #e8e4df;border-radius:8px;cursor:pointer;transition:all .3s;font-size:.92rem;color:var(--text)}
+.check-item:hover{border-color:var(--accent)}
+.check-item.checked{background:rgba(22,163,74,.06);border-color:rgba(22,163,74,.3)}
+.check-item .check-box{width:22px;height:22px;border-radius:6px;border:2px solid #d0d0d0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s}
+.check-item.checked .check-box{background:var(--success);border-color:var(--success)}
+.check-item.checked .check-box svg{opacity:1}
+.check-box svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:3;opacity:0;transition:opacity .3s}
+
+/* === SAY IT ALL === */
+.review-grid{display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem}
+.review-item{display:flex;align-items:center;gap:.8rem;background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:.7rem 1rem}
+.review-word{font-weight:700;font-size:1rem;color:var(--accent);min-width:110px}
+.review-example{font-size:.85rem;color:var(--text-dim);flex:1;line-height:1.4;font-style:italic}
+.review-audio{flex-shrink:0}
+
+/* === CONFETTI === */
+.confetti-container{position:fixed;inset:0;pointer-events:none;z-index:9999}
+.confetti-piece{position:absolute;width:8px;height:8px;top:-10px;animation:confettiFall 3s ease forwards}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(184,92,56,.3);border-radius:3px}
+
+/* === RESPONSIVE === */
+@media(max-width:768px){
+  .slide{padding:5rem 1.2rem 5.5rem}
+  .vocab-grid{grid-template-columns:1fr;gap:.8rem}
+  .vocab-card{min-height:auto}
+  .vocab-card .card-img{height:120px}
+  .bp-body{grid-template-columns:1fr}
+  .bp-route{flex-direction:column;gap:.5rem}
+  .slide-title{font-size:2rem}
+  .slide-heading{font-size:1.6rem}
+  .dialogue-bubble{max-width:85%}
+  .sub-template{font-size:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Logo Bar -->
+<div class="logo-bar">
+  <img src="/assets/logo-alumni.png" alt="Alumni by Better">
+  <span class="slide-counter" id="slideCounter">01 / 30</span>
+</div>
+
+<!-- Phase Progress Bar -->
+<div class="phase-bar" id="phaseBar">
+  <div class="phase-segment current" data-phase="1"></div>
+  <div class="phase-segment upcoming" data-phase="2"></div>
+  <div class="phase-segment upcoming" data-phase="3"></div>
+  <div class="phase-segment upcoming" data-phase="4"></div>
+  <div class="phase-segment upcoming" data-phase="5"></div>
+  <div class="phase-segment upcoming" data-phase="6"></div>
+  <div class="phase-segment upcoming" data-phase="7"></div>
+</div>
+<div class="phase-labels" id="phaseLabels">
+  <span class="phase-label current" data-phase="1">The Dream</span>
+  <span class="phase-label" data-phase="2">Packing Words</span>
+  <span class="phase-label" data-phase="3">The Code</span>
+  <span class="phase-label" data-phase="4">Getting There</span>
+  <span class="phase-label" data-phase="5">Practice</span>
+  <span class="phase-label" data-phase="6">Your Turn</span>
+  <span class="phase-label" data-phase="7">Wrap-Up</span>
+</div>
+
+<!-- ===================== SLIDES ===================== -->
+<div class="slides-container" id="slidesContainer">
+
+<!-- ========== SLIDE 1: TITLE CARD ========== -->
+<div class="slide slide-image active" data-slide="1" data-phase="1" data-teacher="<strong>Abertura:</strong> Compartilhe a tela neste slide. Diga: 'Welcome, Elaine! Today we are going to New York together.' Deixe o slide por 30 segundos enquanto conversa casualmente em ingl&ecirc;s." style="background-image:url('https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1400&q=80')">
+  <div class="slide-inner">
+    <div class="chapter-label">Lesson 1 &mdash; Travel English</div>
+    <h1 class="slide-title">Elaine's First Day<br>in New York</h1>
+    <p class="slide-subtitle">A2 &bull; 120 minutes &bull; Alumni by Better</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 2: WARM-UP 1 ========== -->
+<div class="slide slide-dark" data-slide="2" data-phase="1" data-teacher="<strong>Warm-up (5 min):</strong> Leia cada pergunta em voz alta. Espere 5-8 segundos antes de reformular. Se Elaine responder em portugu&ecirc;s, acolha e reformule em ingl&ecirc;s: 'So you traveled to London! Great!' ZERO corre&ccedil;&otilde;es nesta fase.">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 1: The Dream</div>
+    <h2 class="slide-heading">Let's Talk About Travel</h2>
+    <div class="warm-questions">
+      <div class="warm-q">"Do you like traveling?"</div>
+      <div class="warm-q">"Where was your last trip?"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 3: WARM-UP 2 ========== -->
+<div class="slide slide-dark" data-slide="3" data-phase="1" data-teacher="<strong>Warm-up (5 min):</strong> Estas perguntas conectam com o stake da Elaine &mdash; inseguran&ccedil;a em viagens. Ou&ccedil;a com aten&ccedil;&atilde;o. Se ela mencionar dificuldades, valide: 'That is exactly why we are here.' Encerre com a pergunta positiva sobre o sonho.">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 1: The Dream</div>
+    <h2 class="slide-heading">Your Travel Story</h2>
+    <div class="warm-questions">
+      <div class="warm-q">"What is the hardest part of traveling in English?"</div>
+      <div class="warm-q">"What is one place you dream of visiting?"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 4: PACKING WORDS INTRO ========== -->
+<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transi&ccedil;&atilde;o:</strong> Diga: 'Now let&rsquo;s pack the words you will need for your trip.' Este slide &eacute; s&oacute; transi&ccedil;&atilde;o &mdash; avance em 15 segundos." style="background-image:url('https://images.unsplash.com/photo-1553531384-cc64ac80f931?w=1400&q=80')">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 2: Packing Words</div>
+    <h2 class="slide-title">Let's Pack Your<br><span class="accent">Word Suitcase</span></h2>
+    <p class="slide-subtitle">Eight essential travel words for your journey</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 5: VOCAB 1-4 ========== -->
+<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabul&aacute;rio (8 min):</strong> ANTES de clicar cada card, leia a defini&ccedil;&atilde;o em ingl&ecirc;s e pergunte: 'What word do you think this is?' Espere a tentativa. DEPOIS de revelar: toque o &aacute;udio 2x, Elaine repete. Corrija pron&uacute;ncia gentilmente.">
+  <div class="slide-inner">
+    <div class="chapter-label">Vocabulary</div>
+    <h2 class="slide-heading">Travel Words <span class="accent">1&ndash;4</span></h2>
+    <div class="vocab-grid" id="vocabGrid1">
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 18h10"/><path d="M9 14h6"/></svg><div class="card-hint">An official document for international travel</div></div>
+        <div class="card-body">
+          <div class="card-word">Passport</div>
+          <div class="card-def">An official document for international travel</div>
+          <div class="card-example">"I need my passport to board the plane."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Passport',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#5c4033,#8b6b4a)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="6" y="7" width="12" height="13" rx="1"/><path d="M9 7V5a3 3 0 016 0v2"/><line x1="6" y1="12" x2="18" y2="12"/><circle cx="10" cy="20" r="1"/><circle cx="14" cy="20" r="1"/></svg><div class="card-hint">Your bags and suitcases when you travel</div></div>
+        <div class="card-body">
+          <div class="card-word">Luggage</div>
+          <div class="card-def">Bags and suitcases you carry when traveling</div>
+          <div class="card-example">"My luggage is very heavy."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Luggage',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#4a90d9,#6bb3f0)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg><div class="card-hint">A trip by airplane from one city to another</div></div>
+        <div class="card-body">
+          <div class="card-word">Flight</div>
+          <div class="card-def">A trip by airplane from one place to another</div>
+          <div class="card-example">"My flight is at 9 AM."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Flight',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#2d6a4f,#52b788)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h2"/><path d="M12 15h5"/></svg><div class="card-hint">Registering when you arrive at a hotel or airport</div></div>
+        <div class="card-body">
+          <div class="card-word">Check-in</div>
+          <div class="card-def">The process of registering at the airport or hotel</div>
+          <div class="card-example">"The check-in desk is on the left."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Check-in',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="vocab-counter" id="vocabCount1">0 / 4 words revealed</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 6: VOCAB 5-8 ========== -->
+<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabul&aacute;rio (8 min):</strong> Mesma din&acirc;mica. No card 'Housekeeper': fa&ccedil;a callback da consultoria &mdash; 'You found this word yourself, remember? Now it is yours forever.' Celebre a conquista.">
+  <div class="slide-inner">
+    <div class="chapter-label">Vocabulary</div>
+    <h2 class="slide-heading">Travel Words <span class="accent">5&ndash;8</span></h2>
+    <div class="vocab-grid" id="vocabGrid2">
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/><path d="M9 14l2 2 4-4"/></svg><div class="card-hint">Booking a room, table, or seat in advance</div></div>
+        <div class="card-body">
+          <div class="card-word">Reservation</div>
+          <div class="card-def">An arrangement to have something kept for you</div>
+          <div class="card-example">"I have a reservation for two nights."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Reservation',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#B85C38,#d4845c)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><div class="card-hint">The place where you are going</div></div>
+        <div class="card-body">
+          <div class="card-word">Destination</div>
+          <div class="card-def">The place where you are going</div>
+          <div class="card-example">"New York is my destination."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Destination',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#0891b2,#22d3ee)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M3 22v-2a4 4 0 014-4h2"/><circle cx="8" cy="8" r="4"/><path d="M16 11l2 2 4-4"/><path d="M19 16v6"/><path d="M16 19h6"/></svg><div class="card-hint">The person who cleans your hotel room</div></div>
+        <div class="card-body">
+          <div class="card-word">Housekeeper</div>
+          <div class="card-def">A person who cleans hotel rooms</div>
+          <div class="card-example">"The housekeeper cleaned my room."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Housekeeper',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#dc2626,#f87171)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="card-hint">A serious situation that needs immediate help</div></div>
+        <div class="card-body">
+          <div class="card-word">Emergency</div>
+          <div class="card-def">A serious situation that needs immediate action</div>
+          <div class="card-example">"Call 911 in an emergency."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Emergency',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="vocab-counter" id="vocabCount2">0 / 4 words revealed</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 7: PRONUNCIATION DRILL ========== -->
+<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Pron&uacute;ncia (5 min):</strong> Clique cada palavra. O &aacute;udio toca o padr&atilde;o de stress. Elaine repete 2x cada. Foque em: re-ser-VA-tion e des-ti-NA-tion (stress na pen&uacute;ltima). Se errar, modele sem dizer 'wrong' &mdash; apenas repita corretamente.">
+  <div class="slide-inner">
+    <div class="chapter-label">Pronunciation</div>
+    <h2 class="slide-heading">Stress <span class="accent">Patterns</span></h2>
+    <p style="font-size:.9rem;color:var(--text-dim);margin-bottom:.5rem">Click each word to listen. The orange syllable is the stressed one.</p>
+    <div class="pron-grid">
+      <div class="pron-item" onclick="speakText('Passport',this)">
+        <div class="pron-word">Passport</div>
+        <div class="pron-stress"><span class="pron-syl stressed">PASS</span><span class="pron-syl">port</span></div>
+        <div class="pron-audio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></div>
+      </div>
+      <div class="pron-item" onclick="speakText('Luggage',this)">
+        <div class="pron-word">Luggage</div>
+        <div class="pron-stress"><span class="pron-syl stressed">LUG</span><span class="pron-syl">gage</span></div>
+        <div class="pron-audio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></div>
+      </div>
+      <div class="pron-item" onclick="speakText('Flight',this)">
+        <div class="pron-word">Flight</div>
+        <div class="pron-stress"><span class="pron-syl stressed">FLIGHT</span></div>
+        <div class="pron-audio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></div>
+      </div>
+      <div class="pron-item" onclick="speakText('Check-in',this)">
+        <div class="pron-word">Check-in</div>
+        <div class="pron-stress"><span class="pron-syl stressed">CHECK</span><span class="pron-syl">in</span></div>
+        <div class="pron-audio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></div>
+      </div>
+      <div class="pron-item" onclick="speakText('Reservation',this)">
+        <div class="pron-word">Reservation</div>
+        <div class="pron-stress"><span class="pron-syl">re</span><span class="pron-syl">ser</span><span class="pron-syl stressed">VA</span><span class="pron-syl">tion</span></div>
+        <div class="pron-audio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></div>
+      </div>
+      <div class="pron-item" onclick="speakText('Destination',this)">
+        <div class="pron-word">Destination</div>
+        <div class="pron-stress"><span class="pron-syl">des</span><span class="pron-syl">ti</span><span class="pron-syl stressed">NA</span><span class="pron-syl">tion</span></div>
+        <div class="pron-audio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></div>
+      </div>
+      <div class="pron-item" onclick="speakText('Housekeeper',this)">
+        <div class="pron-word">Housekeeper</div>
+        <div class="pron-stress"><span class="pron-syl stressed">HOUSE</span><span class="pron-syl">keep</span><span class="pron-syl">er</span></div>
+        <div class="pron-audio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></div>
+      </div>
+      <div class="pron-item" onclick="speakText('Emergency',this)">
+        <div class="pron-word">Emergency</div>
+        <div class="pron-stress"><span class="pron-syl">e</span><span class="pron-syl stressed">MER</span><span class="pron-syl">gen</span><span class="pron-syl">cy</span></div>
+        <div class="pron-audio"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 8: SAY IT ALL ========== -->
+<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Revis&atilde;o (3 min):</strong> Passe por todas as 8 palavras rapidamente. Elaine diz a palavra + frase de exemplo. Se travar numa palavra, d&ecirc; a primeira s&iacute;laba. Este slide confirma que todas as palavras est&atilde;o na mem&oacute;ria de curto prazo.">
+  <div class="slide-inner" style="overflow-y:auto;max-height:75vh">
+    <div class="chapter-label">Review</div>
+    <h2 class="slide-heading">Say It <span class="accent">All</span></h2>
+    <div class="review-grid">
+      <div class="review-item">
+        <div class="review-word">Passport</div>
+        <div class="review-example">"I need my passport to board the plane."</div>
+        <div class="review-audio"><button class="audio-btn-sm" onclick="speakText('I need my passport to board the plane.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      </div>
+      <div class="review-item">
+        <div class="review-word">Luggage</div>
+        <div class="review-example">"My luggage is very heavy."</div>
+        <div class="review-audio"><button class="audio-btn-sm" onclick="speakText('My luggage is very heavy.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      </div>
+      <div class="review-item">
+        <div class="review-word">Flight</div>
+        <div class="review-example">"My flight is at 9 AM."</div>
+        <div class="review-audio"><button class="audio-btn-sm" onclick="speakText('My flight is at 9 AM.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      </div>
+      <div class="review-item">
+        <div class="review-word">Check-in</div>
+        <div class="review-example">"The check-in desk is on the left."</div>
+        <div class="review-audio"><button class="audio-btn-sm" onclick="speakText('The check-in desk is on the left.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      </div>
+      <div class="review-item">
+        <div class="review-word">Reservation</div>
+        <div class="review-example">"I have a reservation for two nights."</div>
+        <div class="review-audio"><button class="audio-btn-sm" onclick="speakText('I have a reservation for two nights.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      </div>
+      <div class="review-item">
+        <div class="review-word">Destination</div>
+        <div class="review-example">"New York is my destination."</div>
+        <div class="review-audio"><button class="audio-btn-sm" onclick="speakText('New York is my destination.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      </div>
+      <div class="review-item">
+        <div class="review-word">Housekeeper</div>
+        <div class="review-example">"The housekeeper cleaned my room."</div>
+        <div class="review-audio"><button class="audio-btn-sm" onclick="speakText('The housekeeper cleaned my room.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      </div>
+      <div class="review-item">
+        <div class="review-word">Emergency</div>
+        <div class="review-example">"Call 911 in an emergency."</div>
+        <div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Call 911 in an emergency.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 9: GRAMMAR DISCOVERY ========== -->
+<div class="slide slide-light" data-slide="9" data-phase="3" data-teacher="<strong>Gram&aacute;tica Discovery (5 min):</strong> N&Atilde;O explique a regra. Aponte para as palavras em laranja e pergunte: 'What do these words have in common?' Espere. Se Elaine disser 'to be' ou 'ser/estar' &mdash; celebre. S&oacute; clique 'Reveal' DEPOIS que ela tentar.">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 3: The Code</div>
+    <h2 class="slide-heading">Grammar <span class="accent">Discovery</span></h2>
+    <p style="font-size:.92rem;color:var(--text-dim);margin-bottom:.5rem">Look at the orange words. What do they have in common?</p>
+    <div class="grammar-sentences">
+      <div class="grammar-sentence">I <strong>am</strong> Elaine. I <strong>am</strong> from S&atilde;o Paulo.</div>
+      <div class="grammar-sentence">She <strong>is</strong> a traveler. Her flight <strong>is</strong> at 9 AM.</div>
+      <div class="grammar-sentence">We <strong>are</strong> at the airport. They <strong>are</strong> passengers.</div>
+      <div class="grammar-sentence">My luggage <strong>is</strong> heavy. The rooms <strong>are</strong> clean.</div>
+    </div>
+    <div style="text-align:center">
+      <button class="btn-primary" onclick="revealGrammar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Reveal the Rule
+      </button>
+    </div>
+    <div class="grammar-table-wrap" id="grammarTable">
+      <table class="grammar-table">
+        <thead><tr><th>Subject</th><th>Verb "to be"</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>I</td><td>am</td><td>I am Elaine.</td></tr>
+          <tr><td>You / We / They</td><td>are</td><td>We are travelers.</td></tr>
+          <tr><td>He / She / It</td><td>is</td><td>She is from London.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 10: GRAMMAR COMMON MISTAKE ========== -->
+<div class="slide slide-light" data-slide="10" data-phase="3" data-teacher="<strong>Erro Comum (3 min):</strong> Diga: 'Many Brazilians make this mistake.' Leia o erro em voz alta. Pergunte: 'What is wrong here?' Se ela identificar &mdash; 'Excellent!' Se n&atilde;o &mdash; explique que ingl&ecirc;s usa 'I AM 61' n&atilde;o 'I HAVE 61'. Repita a forma correta 3x juntas.">
+  <div class="slide-inner">
+    <div class="chapter-label">Common Mistake</div>
+    <h2 class="slide-heading">Watch <span class="accent">Out!</span></h2>
+    <div class="mistake-card">
+      <div class="mistake-item mistake-wrong">
+        <div class="mistake-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+        "I have 61 years."
+      </div>
+      <div class="mistake-item mistake-right">
+        <div class="mistake-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        "I am 61 years old."
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:2rem;font-size:.9rem;color:var(--text-dim)">In English, we use <strong>"to be"</strong> for age, not "to have."</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 11: GRAMMAR PRACTICE ========== -->
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Pr&aacute;tica (5 min):</strong> Leia cada frase em voz alta com a lacuna: 'I blank Elaine.' Elaine completa oralmente. DEPOIS clique para revelar e confirmar. Se errar, N&Atilde;O diga 'wrong' &mdash; diga 'Almost! Try again' e d&ecirc; uma dica.">
+  <div class="slide-inner">
+    <div class="chapter-label">Practice</div>
+    <h2 class="slide-heading">Fill in with <span class="accent">am, is, are</span></h2>
+    <div class="fill-grid">
+      <div class="fill-item" onclick="revealFill(this)">
+        <div class="fill-text">"I <span class="fill-blank">___</span><span class="fill-answer">am</span> Elaine."</div>
+      </div>
+      <div class="fill-item" onclick="revealFill(this)">
+        <div class="fill-text">"She <span class="fill-blank">___</span><span class="fill-answer">is</span> from London."</div>
+      </div>
+      <div class="fill-item" onclick="revealFill(this)">
+        <div class="fill-text">"We <span class="fill-blank">___</span><span class="fill-answer">are</span> at the airport."</div>
+      </div>
+      <div class="fill-item" onclick="revealFill(this)">
+        <div class="fill-text">"My flight <span class="fill-blank">___</span><span class="fill-answer">is</span> at 9 AM."</div>
+      </div>
+      <div class="fill-item" onclick="revealFill(this)">
+        <div class="fill-text">"They <span class="fill-blank">___</span><span class="fill-answer">are</span> travelers."</div>
+      </div>
+      <div class="fill-item" onclick="revealFill(this)">
+        <div class="fill-text">"My luggage <span class="fill-blank">___</span><span class="fill-answer">is</span> heavy."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 12: SUBSTITUTION DRILL ========== -->
+<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Drill de Substitui&ccedil;&atilde;o (5 min):</strong> Modelo: 'I am ___.' D&ecirc; prompts orais: 'Elaine' &rarr; 'I am Elaine.' / 'from Brazil' &rarr; 'I am from Brazil.' / '61 years old' &rarr; 'I am 61 years old.' Aumente a velocidade gradualmente. Celebre a flu&ecirc;ncia.">
+  <div class="slide-inner">
+    <div class="chapter-label">Drill</div>
+    <h2 class="slide-heading">Build Your <span class="accent">Sentence</span></h2>
+    <p style="font-size:.9rem;color:var(--text-dim);margin-bottom:1rem">Click each blank to change the word. Build different sentences.</p>
+    <div class="sub-template">
+      I am <span class="sub-blank" id="subBlank1" onclick="cycleSub(this,0)">Elaine</span>.<br>
+      I am from <span class="sub-blank" id="subBlank2" onclick="cycleSub(this,1)">S&atilde;o Paulo</span>.<br>
+      My <span class="sub-blank" id="subBlank3" onclick="cycleSub(this,2)">flight</span> is <span class="sub-blank" id="subBlank4" onclick="cycleSub(this,3)">at 9 AM</span>.
+    </div>
+    <div style="text-align:center;margin-top:1rem">
+      <button class="btn-secondary" onclick="randomizeSubs()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+        Randomize
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 13: CHAPTER 4 TRANSITION ========== -->
+<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transi&ccedil;&atilde;o:</strong> Diga: 'Elaine is at the airport now. Let us see what happens.' Avance em 10 segundos. Este slide muda o ritmo &mdash; estamos entrando na parte pr&aacute;tica." style="background-image:url('https://images.unsplash.com/photo-1529074963764-98f45c47344b?w=1400&q=80')">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 4: Getting There</div>
+    <h2 class="slide-title">Elaine Arrives<br>at the <span class="accent">Airport</span></h2>
+    <p class="slide-subtitle">Time to use your new words in real situations.</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 14: BOARDING PASS ========== -->
+<div class="slide slide-light" data-slide="14" data-phase="4" data-teacher="<strong>Artefato Real (5 min):</strong> Diga: 'Look at this boarding pass. It has YOUR name on it!' Pergunte cada quest&atilde;o oralmente ANTES de clicar para revelar. Elaine l&ecirc; o documento e responde. Isso treina leitura funcional.">
+  <div class="slide-inner">
+    <div class="chapter-label">Artifact</div>
+    <h2 class="slide-heading" style="text-align:center">Boarding <span class="accent">Pass</span></h2>
+    <div class="boarding-pass">
+      <div class="bp-header">
+        <span class="bp-airline">ALUMNI AIRWAYS</span>
+        <span class="bp-class">ECONOMY</span>
+      </div>
+      <div class="bp-body">
+        <div class="bp-route">
+          <div class="bp-city"><div class="bp-code">GRU</div><div class="bp-name">S&atilde;o Paulo</div></div>
+          <div class="bp-plane"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.9.3 1.1l5.4 3.1-3.8 3.8-1.7-.4c-.3-.1-.6 0-.8.2l-.3.3c-.2.3-.1.7.1.9l2.6 1.8 1.8 2.6c.2.3.6.4.9.1l.3-.3c.2-.2.3-.5.2-.8l-.4-1.7 3.8-3.8 3.1 5.4c.2.4.7.5 1.1.3l.5-.3c.4-.2.6-.7.5-1.1z"/></svg></div>
+          <div class="bp-city"><div class="bp-code">JFK</div><div class="bp-name">New York</div></div>
+        </div>
+        <div><div class="bp-label">PASSENGER</div><div class="bp-value">PINHO / ELAINE M</div></div>
+        <div><div class="bp-label">FLIGHT</div><div class="bp-value">AA 2024</div></div>
+        <div><div class="bp-label">GATE</div><div class="bp-value">B12</div></div>
+        <div><div class="bp-label">SEAT</div><div class="bp-value">14A</div></div>
+      </div>
+      <div class="bp-footer">
+        <div class="bp-barcode">|| ||| || | ||| || || ||| | || |||</div>
+        <div style="font-size:.7rem;color:var(--text-dim)">BOARDING TIME 07:30</div>
+      </div>
+    </div>
+    <div class="comp-questions">
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">1. What is Elaine's destination?</div>
+        <div class="q-answer">New York (JFK)</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">2. What is the flight number?</div>
+        <div class="q-answer">AA 2024</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">3. What is her seat number?</div>
+        <div class="q-answer">14A</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 15: AIRPORT ANNOUNCEMENT ========== -->
+<div class="slide slide-dark" data-slide="15" data-phase="4" data-teacher="<strong>Listening (5 min):</strong> Diga: 'Close your eyes and listen.' Toque o &aacute;udio. N&Atilde;O mostre texto. Depois pergunte: 'What did you hear?' Aceite respostas parciais. Clique as perguntas para confirmar. Se precisar, toque novamente.">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Listening</div>
+    <h2 class="slide-heading" style="color:var(--white)">Airport <span class="accent">Announcement</span></h2>
+    <p style="color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:1rem">Listen carefully, then answer the questions.</p>
+    <div class="waveform waveform-paused" id="waveform1">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+    <button class="play-btn" id="announcementPlayBtn" onclick="toggleAnnouncement(this)">
+      <svg class="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg class="icon-pause" viewBox="0 0 24 24" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <div class="comp-questions" id="announcementQs" style="display:none">
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:var(--white)">
+        <div class="q-text">1. What flight is boarding now?</div>
+        <div class="q-answer" style="color:var(--accent-light)">Flight AA 2024</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:var(--white)">
+        <div class="q-text">2. What gate should passengers go to?</div>
+        <div class="q-answer" style="color:var(--accent-light)">Gate B12</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:var(--white)">
+        <div class="q-text">3. What destination is mentioned?</div>
+        <div class="q-answer" style="color:var(--accent-light)">New York JFK</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 16: DIALOGUE ========== -->
+<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Di&aacute;logo (8 min):</strong> Clique 'Next Line' para cada fala. ANTES da fala de Elaine: 'What do you think she says?' Espere a tentativa. DEPOIS: Elaine l&ecirc; em voz alta. Palavras em laranja = vocabul&aacute;rio da aula. Destaque quando aparecerem.">
+  <div class="slide-inner">
+    <div class="chapter-label">Dialogue</div>
+    <h2 class="slide-heading">Meeting <span class="accent">Sarah</span></h2>
+    <div class="dialogue-box" id="dialogueBox">
+      <div class="dialogue-line" data-line="1" data-voice="ellen">
+        <div class="dialogue-avatar sarah">S</div>
+        <div class="dialogue-bubble sarah-bubble">Hi! Is this seat 14B? I am Sarah. <span class="audio-inline" onclick="speakText('Hi! Is this seat 14B? I am Sarah.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
+      </div>
+      <div class="dialogue-line" data-line="2" data-voice="ellen">
+        <div class="dialogue-avatar elaine">E</div>
+        <div class="dialogue-bubble elaine-bubble">Hello! Yes, I am in 14A. I am Elaine. Nice to meet you! <span class="audio-inline" onclick="speakText('Hello! Yes, I am in 14A. I am Elaine. Nice to meet you!',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
+      </div>
+      <div class="dialogue-line" data-line="3" data-voice="ellen">
+        <div class="dialogue-avatar sarah">S</div>
+        <div class="dialogue-bubble sarah-bubble">Nice to meet you too! Where are you from? <span class="audio-inline" onclick="speakText('Nice to meet you too! Where are you from?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
+      </div>
+      <div class="dialogue-line" data-line="4" data-voice="ellen">
+        <div class="dialogue-avatar elaine">E</div>
+        <div class="dialogue-bubble elaine-bubble">I am from S&atilde;o Paulo, Brazil. What about you? <span class="audio-inline" onclick="speakText('I am from Sao Paulo, Brazil. What about you?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
+      </div>
+      <div class="dialogue-line" data-line="5" data-voice="ellen">
+        <div class="dialogue-avatar sarah">S</div>
+        <div class="dialogue-bubble sarah-bubble">I am from London. Is New York your <span class="vocab-highlight">destination</span>? <span class="audio-inline" onclick="speakText('I am from London. Is New York your destination?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
+      </div>
+      <div class="dialogue-line" data-line="6" data-voice="ellen">
+        <div class="dialogue-avatar elaine">E</div>
+        <div class="dialogue-bubble elaine-bubble">Yes! I have a <span class="vocab-highlight">reservation</span> at a hotel in Manhattan. I am very excited! <span class="audio-inline" onclick="speakText('Yes! I have a reservation at a hotel in Manhattan. I am very excited!',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
+      </div>
+      <div class="dialogue-line" data-line="7" data-voice="ellen">
+        <div class="dialogue-avatar sarah">S</div>
+        <div class="dialogue-bubble sarah-bubble">That sounds wonderful! Is your <span class="vocab-highlight">luggage</span> heavy? <span class="audio-inline" onclick="speakText('That sounds wonderful! Is your luggage heavy?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
+      </div>
+      <div class="dialogue-line" data-line="8" data-voice="ellen">
+        <div class="dialogue-avatar elaine">E</div>
+        <div class="dialogue-bubble elaine-bubble">Yes, it is very heavy! I have too many clothes. <span class="audio-inline" onclick="speakText('Yes, it is very heavy! I have too many clothes.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:1rem">
+      <button class="btn-primary" id="nextLineBtn" onclick="nextDialogueLine()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        Next Line
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 17: DIALOGUE COMPREHENSION ========== -->
+<div class="slide slide-light" data-slide="17" data-phase="4" data-teacher="<strong>Compreens&atilde;o (3 min):</strong> Pergunte cada quest&atilde;o oralmente. Elaine responde em frase completa. Clique para confirmar. Se acertar: 'Perfect!' Se errar: 'Let us go back and check.' Volte ao slide do di&aacute;logo se necess&aacute;rio.">
+  <div class="slide-inner">
+    <div class="chapter-label">Comprehension</div>
+    <h2 class="slide-heading">About the <span class="accent">Dialogue</span></h2>
+    <div class="comp-questions">
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">1. What is Elaine's destination?</div>
+        <div class="q-answer">New York. She has a reservation at a hotel in Manhattan.</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">2. Is Sarah from Brazil or London?</div>
+        <div class="q-answer">Sarah is from London.</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">3. Is Elaine's luggage heavy or light?</div>
+        <div class="q-answer">Her luggage is very heavy. She has too many clothes.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 18: QUICK CHALLENGE ========== -->
+<div class="slide slide-light" data-slide="18" data-phase="5" data-teacher="<strong>Quick Fire (8 min):</strong> Leia a situa&ccedil;&atilde;o em voz alta. Elaine responde em ingl&ecirc;s. Se acertar: 'Show Answer' para confirmar + 'Excellent!' Se travar: d&ecirc; a primeira palavra e espere. Ritmo: 30-45 seg por quest&atilde;o. Celebre o 6/6!">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 5: Practice</div>
+    <h2 class="slide-heading">Quick <span class="accent">Challenge</span></h2>
+    <div style="position:relative">
+      <div class="challenge-score" id="challengeScore">0 / 6</div>
+      <div class="challenge-card" id="challengeCard">
+        <div class="challenge-counter" id="challengeCounter">Question 1 of 6</div>
+        <div class="challenge-prompt" id="challengePrompt">You are at the airport. A person asks: "Can I see your passport?" What do you do?</div>
+        <div class="challenge-answer" id="challengeAnswer">You show your passport and say: "Here is my passport."</div>
+        <div style="display:flex;gap:.8rem;margin-top:.5rem">
+          <button class="btn-primary" id="showAnswerBtn" onclick="showChallengeAnswer()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Show Answer
+          </button>
+          <button class="btn-secondary" id="nextChallengeBtn" onclick="nextChallenge()" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            Next Question
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 19: SPOT THE ERROR ========== -->
+<div class="slide slide-light" data-slide="19" data-phase="5" data-teacher="<strong>Spot the Error (5 min):</strong> Leia cada frase. Pergunte: 'Can you find the mistake?' Espere. Se Elaine achar &mdash; celebre. Se n&atilde;o &mdash; d&ecirc; dica: 'Look at the verb.' Clique para revelar. Repita a forma correta 2x juntas.">
+  <div class="slide-inner">
+    <div class="chapter-label">Detective</div>
+    <h2 class="slide-heading">Spot the <span class="accent">Error</span></h2>
+    <p style="font-size:.9rem;color:var(--text-dim);margin-bottom:.5rem">Click each sentence to reveal the correction.</p>
+    <div class="error-grid" id="errorGrid">
+      <div class="error-card" onclick="revealError(this)">
+        <div class="error-sentence">"I have 61 years."</div>
+        <div class="error-fix">"I am 61 years old."</div>
+      </div>
+      <div class="error-card" onclick="revealError(this)">
+        <div class="error-sentence">"My luggages is heavy."</div>
+        <div class="error-fix">"My luggage is heavy." (luggage = uncountable)</div>
+      </div>
+      <div class="error-card" onclick="revealError(this)">
+        <div class="error-sentence">"She are from London."</div>
+        <div class="error-fix">"She is from London."</div>
+      </div>
+      <div class="error-card" onclick="revealError(this)">
+        <div class="error-sentence">"We is travelers."</div>
+        <div class="error-fix">"We are travelers."</div>
+      </div>
+      <div class="error-card" onclick="revealError(this)">
+        <div class="error-sentence">"I am have a reservation."</div>
+        <div class="error-fix">"I have a reservation."</div>
+      </div>
+    </div>
+    <div class="error-score" id="errorScore">0 / 5 errors found</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 20: ORAL DRILLING ========== -->
+<div class="slide slide-light" data-slide="20" data-phase="5" data-teacher="<strong>Oral Drilling (5 min):</strong> Leia a situa&ccedil;&atilde;o em ingl&ecirc;s. Elaine responde oralmente (sem ler). Clique para revelar o modelo. Compare. Se a resposta foi diferente mas correta &mdash; aceite! N&atilde;o existe s&oacute; uma resposta certa. Velocidade: 20-30 seg/item.">
+  <div class="slide-inner" style="overflow-y:auto;max-height:75vh">
+    <div class="chapter-label">Speaking</div>
+    <h2 class="slide-heading">Oral <span class="accent">Drilling</span></h2>
+    <div class="oral-grid">
+      <div class="oral-item" onclick="this.classList.toggle('revealed')">
+        <div class="oral-situation">1. A person asks your name. What do you say?</div>
+        <div class="oral-model">"My name is Elaine." / "I am Elaine."</div>
+      </div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')">
+        <div class="oral-situation">2. Someone asks where you are from. Respond.</div>
+        <div class="oral-model">"I am from S&atilde;o Paulo, Brazil."</div>
+      </div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')">
+        <div class="oral-situation">3. The hotel receptionist asks for your reservation. What do you say?</div>
+        <div class="oral-model">"I have a reservation. My name is Elaine Pinho."</div>
+      </div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')">
+        <div class="oral-situation">4. You need help at the airport. How do you ask?</div>
+        <div class="oral-model">"Excuse me, can you help me? Where is gate B12?"</div>
+      </div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')">
+        <div class="oral-situation">5. Tell someone about your trip destination.</div>
+        <div class="oral-model">"My destination is New York. I am very excited."</div>
+      </div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')">
+        <div class="oral-situation">6. Your luggage is missing. What do you say?</div>
+        <div class="oral-model">"Excuse me, my luggage is missing. Can you help me?"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 21: LISTENING 2 - HOTEL CHECK-IN ========== -->
+<div class="slide slide-dark" data-slide="21" data-phase="5" data-teacher="<strong>Listening 2 (5 min):</strong> Toque o &aacute;udio do hotel check-in. Elaine ouve SEM texto. Depois: 'What happened in this conversation?' Aceite respostas em ingl&ecirc;s simples. Clique as perguntas para verificar. Toque novamente se necess&aacute;rio.">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Listening</div>
+    <h2 class="slide-heading" style="color:var(--white)">Hotel <span class="accent">Check-in</span></h2>
+    <p style="color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:1rem">Listen to the hotel receptionist and Elaine.</p>
+    <div class="waveform waveform-paused" id="waveform2">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+    <button class="play-btn" id="hotelPlayBtn" onclick="toggleHotelCheckin(this)">
+      <svg class="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg class="icon-pause" viewBox="0 0 24 24" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <div class="comp-questions" id="hotelQs" style="display:none">
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:var(--white)">
+        <div class="q-text">1. What name is the reservation under?</div>
+        <div class="q-answer" style="color:var(--accent-light)">Elaine Pinho</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:var(--white)">
+        <div class="q-text">2. How many nights is the reservation?</div>
+        <div class="q-answer" style="color:var(--accent-light)">Five nights</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:var(--white)">
+        <div class="q-text">3. What floor is the room on?</div>
+        <div class="q-answer" style="color:var(--accent-light)">The 12th floor, room 1205</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 22: READING — HOTEL EMAIL ========== -->
+<div class="slide slide-light" data-slide="22" data-phase="5" data-teacher="<strong>Leitura (5 min):</strong> Diga: 'This is a real hotel confirmation email.' Elaine l&ecirc; em voz alta &mdash; ajude com pron&uacute;ncia. Depois pergunte cada quest&atilde;o. Isso treina leitura de documentos reais que ela vai encontrar em viagens.">
+  <div class="slide-inner" style="overflow-y:auto;max-height:75vh">
+    <div class="chapter-label">Reading</div>
+    <h2 class="slide-heading">Hotel <span class="accent">Confirmation</span></h2>
+    <div class="email-card">
+      <div class="email-header">
+        <div class="email-field"><strong>From:</strong> reservations@manhattangrand.com</div>
+        <div class="email-field"><strong>To:</strong> elaine.pinho@email.com</div>
+        <div class="email-field"><strong>Subject:</strong> Your Reservation Confirmation</div>
+      </div>
+      <div class="email-body">
+        <p>Dear Ms. Pinho,</p>
+        <p>Thank you for your reservation at <strong>The Manhattan Grand</strong>. Here are your booking details:</p>
+        <div class="email-detail"><span>Guest Name</span><strong>Elaine Mieko Pinho</strong></div>
+        <div class="email-detail"><span>Check-in</span><strong>May 15, 2026</strong></div>
+        <div class="email-detail"><span>Check-out</span><strong>May 20, 2026</strong></div>
+        <div class="email-detail"><span>Room Type</span><strong>Standard Queen</strong></div>
+        <div class="email-detail"><span>Floor</span><strong>12th Floor</strong></div>
+        <div class="email-detail"><span>Room</span><strong>1205</strong></div>
+        <p style="margin-top:1rem">If you need anything during your stay, please contact the front desk or your housekeeper.</p>
+        <p>We look forward to welcoming you!</p>
+        <p><em>The Manhattan Grand Team</em></p>
+      </div>
+    </div>
+    <div class="comp-questions" style="margin-top:1rem">
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">1. What is the name of the hotel?</div>
+        <div class="q-answer">The Manhattan Grand</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">2. When is the check-in date?</div>
+        <div class="q-answer">May 15, 2026</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">3. How many nights is the stay?</div>
+        <div class="q-answer">5 nights (May 15 to May 20)</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">4. Who can Elaine contact if she needs help?</div>
+        <div class="q-answer">The front desk or her housekeeper.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 23: ROLE-PLAY 1 — AIRPORT ========== -->
+<div class="slide slide-light" data-slide="23" data-phase="6" data-teacher="<strong>Role-Play Guided (5 min):</strong> Voc&ecirc; &eacute; Sarah. Elaine &eacute; ela mesma. As keywords est&atilde;o na tela como apoio. Se travar: 'Start with your name.' Permita que olhe as keywords. Este &eacute; o n&iacute;vel mais seguro.">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 6: Your Turn</div>
+    <h2 class="slide-heading">Role-Play: <span class="accent">Airport</span></h2>
+    <div class="roleplay-card">
+      <div class="roleplay-img" style="background:linear-gradient(135deg,#1e3a5f 0%,#4a90d9 100%);display:flex;align-items:center;justify-content:center;"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></div>
+      <div class="roleplay-body">
+        <div class="roleplay-scenario">You are at the airport. You meet Sarah at gate B12. Introduce yourself, talk about your destination, and ask about her trip.</div>
+        <div class="roleplay-keywords">
+          <span class="roleplay-kw">passport</span>
+          <span class="roleplay-kw">destination</span>
+          <span class="roleplay-kw">flight</span>
+          <span class="roleplay-kw">luggage</span>
+          <span class="roleplay-kw">I am from...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 24: ROLE-PLAY 2 — HOTEL ========== -->
+<div class="slide slide-light" data-slide="24" data-phase="6" data-teacher="<strong>Role-Play Semi-Free (5 min):</strong> Voc&ecirc; &eacute; o recepcionista. Elaine faz check-in. Menos apoio visual. Se travar: d&ecirc; a primeira palavra da frase e espere. Anote erros &mdash; corrija DEPOIS, n&atilde;o durante.">
+  <div class="slide-inner">
+    <div class="chapter-label">Role-Play</div>
+    <h2 class="slide-heading">Role-Play: <span class="accent">Hotel</span></h2>
+    <div class="roleplay-card">
+      <div class="roleplay-img" style="background:linear-gradient(135deg,#7c3aed 0%,#a78bfa 100%);display:flex;align-items:center;justify-content:center;"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M9 17h1"/></svg></div>
+      <div class="roleplay-body">
+        <div class="roleplay-scenario">You arrive at The Manhattan Grand hotel. Check in with the receptionist. Give your name, confirm your reservation, and ask about your room.</div>
+        <div class="roleplay-keywords">
+          <span class="roleplay-kw">reservation</span>
+          <span class="roleplay-kw">check-in</span>
+          <span class="roleplay-kw">housekeeper</span>
+          <span class="roleplay-kw">My name is...</span>
+          <span class="roleplay-kw">I have a reservation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 25: ROLE-PLAY 3 — FREE ========== -->
+<div class="slide slide-light" data-slide="25" data-phase="6" data-teacher="<strong>Role-Play Free (5 min):</strong> Sem keywords, sem script. Voc&ecirc; &eacute; um estranho amig&aacute;vel. Fa&ccedil;a perguntas simples. Deixe Elaine liderar. Se travar: reformule a pergunta mais simples. Celebre QUALQUER produ&ccedil;&atilde;o. Feedback: 3 positivos, 1 melhoria.">
+  <div class="slide-inner">
+    <div class="chapter-label">Free Practice</div>
+    <h2 class="slide-heading">Role-Play: <span class="accent">Free</span></h2>
+    <div class="roleplay-card">
+      <div class="roleplay-img" style="background:linear-gradient(135deg,#B85C38 0%,#d4845c 100%);display:flex;align-items:center;justify-content:center;"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+      <div class="roleplay-body">
+        <div class="roleplay-scenario">You are in New York. A friendly stranger asks about you. Have a conversation. No keywords, no script. Just talk!</div>
+        <p style="font-size:.85rem;color:var(--text-dim);margin-top:.8rem;font-style:italic">Use everything you learned today: your name, age, city, destination, hotel, and travel words.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 26: REFLECTION / RECORD ========== -->
+<div class="slide slide-light" data-slide="26" data-phase="6" data-teacher="<strong>Reflex&atilde;o (3 min):</strong> Diga: 'Record yourself. Introduce yourself in English &mdash; name, age, city, and something about your trip.' Grave usando o bot&atilde;o. Depois ou&ccedil;a juntas. Compare com o warm-up: 'See how much you improved in 60 minutes!'">
+  <div class="slide-inner">
+    <div class="chapter-label">Reflection</div>
+    <h2 class="slide-heading">Record <span class="accent">Yourself</span></h2>
+    <div class="record-card">
+      <div class="record-prompt">Introduce yourself in English. Say your name, your age, your city, and one thing about your trip to New York.</div>
+      <button class="record-btn" id="reflectionRecordBtn" onclick="toggleReflectionRecord(this)">
+        <svg viewBox="0 0 24 24" width="28" height="28"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="#fff"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="19" x2="12" y2="23" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="23" x2="16" y2="23" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.8rem">Click to start recording. Click again to stop.</p>
+      <div id="reflectionResult" style="margin-top:1rem"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 27: BOARDING PASS EARNED ========== -->
+<div class="slide slide-dark" data-slide="27" data-phase="7" data-teacher="<strong>Celebra&ccedil;&atilde;o (1 min):</strong> Diga: 'You earned your first boarding pass, Elaine!' Deixe o momento acontecer. Este &eacute; o pico emocional da aula &mdash; a sensa&ccedil;&atilde;o de conquista. Conecte: 'Eu n&atilde;o desisto &mdash; and today you proved it.'">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Chapter 7: Wrap-Up</div>
+    <div class="badge-card">
+      <div class="badge-icon">
+        <div class="badge-circle">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <div class="sparkles">
+          <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+        </div>
+      </div>
+      <h2 class="slide-heading" style="color:var(--white)">Boarding Pass <span class="accent">Earned!</span></h2>
+      <p style="color:rgba(255,255,255,.6);font-size:1rem;margin-top:.5rem">You are ready for your trip to New York, Elaine.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 28: SURVIVAL CARD ========== -->
+<div class="slide slide-light" data-slide="28" data-phase="7" data-teacher="<strong>Survival Card (3 min):</strong> Leia cada frase com Elaine. Ela repete. Toque o &aacute;udio de cada uma. Diga: 'These 5 phrases are yours forever. Use them on your next trip.' Praticar 2x cada frase.">
+  <div class="slide-inner">
+    <div class="chapter-label">Survival Card</div>
+    <h2 class="slide-heading">5 Key <span class="accent">Phrases</span></h2>
+    <p style="font-size:.9rem;color:var(--text-dim);margin-bottom:.5rem">Remember these phrases for your travels.</p>
+    <div class="survival-grid">
+      <div class="survival-item">
+        <div class="survival-num">1</div>
+        <div class="survival-text">"My name is Elaine. I am from S&atilde;o Paulo."</div>
+        <button class="audio-btn-sm" onclick="speakText('My name is Elaine. I am from Sao Paulo.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button>
+      </div>
+      <div class="survival-item">
+        <div class="survival-num">2</div>
+        <div class="survival-text">"I have a reservation under Pinho."</div>
+        <button class="audio-btn-sm" onclick="speakText('I have a reservation under Pinho.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button>
+      </div>
+      <div class="survival-item">
+        <div class="survival-num">3</div>
+        <div class="survival-text">"Excuse me, where is gate B12?"</div>
+        <button class="audio-btn-sm" onclick="speakText('Excuse me, where is gate B12?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button>
+      </div>
+      <div class="survival-item">
+        <div class="survival-num">4</div>
+        <div class="survival-text">"Can you help me, please?"</div>
+        <button class="audio-btn-sm" onclick="speakText('Can you help me, please?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button>
+      </div>
+      <div class="survival-item">
+        <div class="survival-num">5</div>
+        <div class="survival-text">"This is an emergency. Please call 911."</div>
+        <button class="audio-btn-sm" onclick="speakText('This is an emergency. Please call 911.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 29: WHAT I LEARNED ========== -->
+<div class="slide slide-light" data-slide="29" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item em voz alta. Pergunte: 'Can you say yes to this?' Se sim, clique o checkbox juntas. O &uacute;ltimo item &eacute; emocional: 'You survived 60 minutes of English.' Celebre.">
+  <div class="slide-inner">
+    <div class="chapter-label">Self-Assessment</div>
+    <h2 class="slide-heading">What I <span class="accent">Learned</span></h2>
+    <div class="check-grid" id="checkGrid">
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        I can introduce myself in English.
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        I know 8 travel vocabulary words.
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        I can use "am," "is," and "are" correctly.
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        I can say my age in English (I am... years old).
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        I can read a boarding pass.
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        I can have a short conversation at the airport.
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        I can check in at a hotel.
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        I can ask for help in an emergency.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 30: CLOSING ========== -->
+<div class="slide slide-image" data-slide="30" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Diga: 'Day 1 is complete. Next class we will go to the airport together.' Homework (diga oralmente): 1) Gravar &aacute;udio 60s se apresentando. 2) Escrever as 8 palavras no caderno. 3) Assistir 1 v&iacute;deo de check-in no YouTube." style="background-image:url('https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1400&q=80')">
+  <div class="slide-inner">
+    <div class="chapter-label">Lesson Complete</div>
+    <h2 class="slide-title">Day 1 &mdash; <span class="accent">Complete.</span></h2>
+    <p class="slide-subtitle" style="opacity:.8;margin-top:1rem">Next lesson: Getting There &mdash; Airports &amp; Flights</p>
+  </div>
+</div>
+
+</div><!-- /slides-container -->
+
+<!-- Teacher T Icon -->
+<div class="teacher-t" id="teacherT">T<div class="teacher-t-panel" id="teacherPanel"></div></div>
+
+<!-- Navigation Bar -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="slide-dots" id="slideDots"></div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">
+    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+  </button>
+</div>
+
+<!-- Confetti container -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP (ElevenLabs — Arthur + Ellen alternating) =====
+var audioMap = {
+  "Passport": "/audio/elaine-mieko-pinho/passport.mp3",
+  "Luggage": "/audio/elaine-mieko-pinho/luggage.mp3",
+  "Flight": "/audio/elaine-mieko-pinho/flight.mp3",
+  "Check-in": "/audio/elaine-mieko-pinho/checkin.mp3",
+  "Reservation": "/audio/elaine-mieko-pinho/reservation.mp3",
+  "Destination": "/audio/elaine-mieko-pinho/destination.mp3",
+  "Housekeeper": "/audio/elaine-mieko-pinho/housekeeper.mp3",
+  "Emergency": "/audio/elaine-mieko-pinho/emergency.mp3",
+  "Don't forget your passport!": "/audio/elaine-mieko-pinho/dont_forget_your_passport.mp3",
+  "My luggage is very heavy.": "/audio/elaine-mieko-pinho/my_luggage_is_very_heavy.mp3",
+  "The flight is at 9 AM.": "/audio/elaine-mieko-pinho/the_flight_is_at_9_am.mp3",
+  "Where is the check-in counter?": "/audio/elaine-mieko-pinho/where_is_the_checkin_counter.mp3",
+  "I have a reservation for tonight.": "/audio/elaine-mieko-pinho/i_have_a_reservation_for_tonight.mp3",
+  "My destination is New York.": "/audio/elaine-mieko-pinho/my_destination_is_new_york.mp3",
+  "The housekeeper left extra towels.": "/audio/elaine-mieko-pinho/the_housekeeper_left_extra_towels.mp3",
+  "In case of emergency, call 911.": "/audio/elaine-mieko-pinho/in_case_of_emergency_call_911.mp3",
+  "Passport. PAS-sport.": "/audio/elaine-mieko-pinho/passport_passport.mp3",
+  "Luggage. LUG-gage.": "/audio/elaine-mieko-pinho/luggage_luggage.mp3",
+  "Reservation. Re-ser-VA-tion.": "/audio/elaine-mieko-pinho/reservation_reservation.mp3",
+  "Destination. Des-ti-NA-tion.": "/audio/elaine-mieko-pinho/destination_destination.mp3",
+  "Emergency. E-MER-gen-cy.": "/audio/elaine-mieko-pinho/emergency_emergency.mp3",
+  "Hi there! Are you waiting for a flight too?": "/audio/elaine-mieko-pinho/hi_there_are_you_waiting_for_a_flight_too.mp3",
+  "Nice to meet you! What is your destination?": "/audio/elaine-mieko-pinho/nice_to_meet_you_what_is_your_destination.mp3",
+  "Is your luggage heavy?": "/audio/elaine-mieko-pinho/is_your_luggage_heavy.mp3",
+  "Do you have your passport ready?": "/audio/elaine-mieko-pinho/do_you_have_your_passport_ready.mp3",
+  "Yes! My name is Elaine. I am from Brazil.": "/audio/elaine-mieko-pinho/yes_my_name_is_elaine_i_am_from_brazil.mp3",
+  "My destination is New York. I have a reservation at a hotel.": "/audio/elaine-mieko-pinho/my_destination_is_new_york_i_have_a_reservation_at_a_hotel.mp3",
+  "Yes! My luggage is very heavy!": "/audio/elaine-mieko-pinho/yes_my_luggage_is_very_heavy.mp3",
+  "Yes, my passport is in my bag!": "/audio/elaine-mieko-pinho/yes_my_passport_is_in_my_bag.mp3",
+  "Attention passengers. Flight AA 2024 to New York JFK is now boarding at Gate B12. Please have your boarding pass and passport ready.": "/audio/elaine-mieko-pinho/attention_passengers_flight_aa_2024_to_new_york_jfk_is_now_b.mp3",
+  "My name is Elaine Pinho.": "/audio/elaine-mieko-pinho/my_name_is_elaine_pinho.mp3",
+  "I am from Sao Paulo, Brazil.": "/audio/elaine-mieko-pinho/i_am_from_sao_paulo_brazil.mp3",
+  "I am 61 years old.": "/audio/elaine-mieko-pinho/i_am_61_years_old.mp3",
+  "I have a reservation at the hotel.": "/audio/elaine-mieko-pinho/i_have_a_reservation_at_the_hotel.mp3",
+  "Excuse me, where is the check-in?": "/audio/elaine-mieko-pinho/excuse_me_where_is_the_checkin.mp3",
+  "I am Elaine.": "/audio/elaine-mieko-pinho/i_am_elaine.mp3",
+  "I need my passport to board the plane.": "/audio/elaine-mieko-pinho/i_need_my_passport_to_board_the_plane.mp3",
+  "My flight is at 9 AM.": "/audio/elaine-mieko-pinho/my_flight_is_at_9_am.mp3",
+  "The check-in desk is on the left.": "/audio/elaine-mieko-pinho/the_checkin_desk_is_on_the_left.mp3",
+  "I have a reservation for two nights.": "/audio/elaine-mieko-pinho/i_have_a_reservation_for_two_nights.mp3",
+  "New York is my destination.": "/audio/elaine-mieko-pinho/new_york_is_my_destination.mp3",
+  "The housekeeper cleaned my room.": "/audio/elaine-mieko-pinho/the_housekeeper_cleaned_my_room.mp3",
+  "Call 911 in an emergency.": "/audio/elaine-mieko-pinho/call_911_in_an_emergency.mp3",
+  "Hi! Is this seat 14B? I am Sarah.": "/audio/elaine-mieko-pinho/hi_is_this_seat_14b_i_am_sarah.mp3",
+  "Hello! Yes, I am in 14A. I am Elaine. Nice to meet you!": "/audio/elaine-mieko-pinho/hello_yes_i_am_in_14a_i_am_elaine_nice_to_meet_you.mp3",
+  "Nice to meet you too! Where are you from?": "/audio/elaine-mieko-pinho/nice_to_meet_you_too_where_are_you_from.mp3",
+  "I am from Sao Paulo, Brazil. What about you?": "/audio/elaine-mieko-pinho/i_am_from_sao_paulo_brazil_what_about_you.mp3",
+  "I am from London. Is New York your destination?": "/audio/elaine-mieko-pinho/i_am_from_london_is_new_york_your_destination.mp3",
+  "Yes! I have a reservation at a hotel in Manhattan. I am very excited!": "/audio/elaine-mieko-pinho/yes_i_have_a_reservation_at_a_hotel_in_manhattan_i_am_very_e.mp3",
+  "That sounds wonderful! Is your luggage heavy?": "/audio/elaine-mieko-pinho/that_sounds_wonderful_is_your_luggage_heavy.mp3",
+  "Yes, it is very heavy! I have too many clothes.": "/audio/elaine-mieko-pinho/yes_it_is_very_heavy_i_have_too_many_clothes.mp3",
+  "My name is Elaine. I am from Sao Paulo.": "/audio/elaine-mieko-pinho/my_name_is_elaine_i_am_from_sao_paulo.mp3",
+  "I have a reservation under Pinho.": "/audio/elaine-mieko-pinho/i_have_a_reservation_under_pinho.mp3",
+  "Excuse me, where is gate B12?": "/audio/elaine-mieko-pinho/excuse_me_where_is_gate_b12.mp3",
+  "Can you help me, please?": "/audio/elaine-mieko-pinho/can_you_help_me_please.mp3",
+  "This is an emergency. Please call 911.": "/audio/elaine-mieko-pinho/this_is_an_emergency_please_call_911.mp3",
+  "She is from Brazil.": "/audio/elaine-mieko-pinho/she_is_from_brazil.mp3",
+  "We are travelers.": "/audio/elaine-mieko-pinho/we_are_travelers.mp3",
+  "You are my teacher.": "/audio/elaine-mieko-pinho/you_are_my_teacher.mp3",
+  "Good evening. Welcome to The Manhattan Grand. May I have your name?": "/audio/elaine-mieko-pinho/good_evening_welcome_to_the_manhattan_grand_may_i_have_your_.mp3",
+  "Good evening. My name is Elaine Pinho. I have a reservation.": "/audio/elaine-mieko-pinho/good_evening_my_name_is_elaine_pinho_i_have_a_reservation.mp3",
+  "Of course. Could you spell your last name, please?": "/audio/elaine-mieko-pinho/of_course_could_you_spell_your_last_name_please.mp3",
+  "Yes. P-I-N-H-O. Pinho.": "/audio/elaine-mieko-pinho/yes_pinho_pinho.mp3",
+  "Thank you, Ms. Pinho. You are in room 1204, on the twelfth floor.": "/audio/elaine-mieko-pinho/thank_you_ms_pinho_you_are_in_room_1204_on_the_twelfth_floor.mp3",
+  "Thank you. What time is breakfast?": "/audio/elaine-mieko-pinho/thank_you_what_time_is_breakfast.mp3",
+  "Breakfast is from 7 to 10 AM in the restaurant on the second floor.": "/audio/elaine-mieko-pinho/breakfast_is_from_7_to_10_am_in_the_restaurant_on_the_second.mp3",
+  "Perfect. Thank you very much.": "/audio/elaine-mieko-pinho/perfect_thank_you_very_much.mp3"
+};
+
+// ===== SPEAK TEXT =====
+var currentAudio = null;
+var audioSpeed = 1;
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed;
+    currentAudio.play().catch(function() { ttsSpeak(cleanText); });
+  } else {
+    ttsSpeak(cleanText);
+  }
+}
+
+function ttsSpeak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 1;
+var totalSlides = 30;
+var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:2,9:3,10:3,11:3,12:3,13:4,14:4,15:4,16:4,17:4,18:5,19:5,20:5,21:5,22:5,23:6,24:6,25:6,26:6,27:7,28:7,29:7,30:7};
+
+function changeSlide(dir) {
+  var next = currentSlide + dir;
+  if (next < 1 || next > totalSlides) return;
+  goToSlide(next);
+}
+
+function goToSlide(n) {
+  document.querySelector('.slide[data-slide="' + currentSlide + '"]').classList.remove('active');
+  currentSlide = n;
+  var activeSlide = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
+  activeSlide.classList.add('active');
+  var teacherText = activeSlide.getAttribute('data-teacher') || '';
+  document.getElementById('teacherPanel').innerHTML = teacherText;
+  updateNav();
+  updatePhaseBar();
+}
+
+function updateNav() {
+  document.getElementById('slideCounter').textContent = String(currentSlide).padStart(2,'0') + ' / ' + String(totalSlides).padStart(2,'0');
+  document.getElementById('prevBtn').disabled = currentSlide === 1;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+  var dots = document.querySelectorAll('.slide-dot');
+  dots.forEach(function(d, i) { d.classList.toggle('active', i + 1 === currentSlide); });
+}
+
+function updatePhaseBar() {
+  var cp = slidePhases[currentSlide];
+  document.querySelectorAll('.phase-segment').forEach(function(seg) {
+    var p = parseInt(seg.dataset.phase);
+    seg.classList.remove('completed','current','upcoming');
+    if (p < cp) seg.classList.add('completed');
+    else if (p === cp) seg.classList.add('current');
+    else seg.classList.add('upcoming');
+  });
+  document.querySelectorAll('.phase-label').forEach(function(lbl) {
+    var p = parseInt(lbl.dataset.phase);
+    lbl.classList.remove('completed','current');
+    if (p < cp) lbl.classList.add('completed');
+    else if (p === cp) lbl.classList.add('current');
+  });
+}
+
+// Build dots
+(function() {
+  var dotsEl = document.getElementById('slideDots');
+  for (var i = 1; i <= totalSlides; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'slide-dot' + (i === 1 ? ' active' : '');
+    dot.dataset.slide = i;
+    dot.onclick = (function(n) { return function() { goToSlide(n); }; })(i);
+    dotsEl.appendChild(dot);
+  }
+})();
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); changeSlide(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); changeSlide(-1); }
+});
+
+// ===== VOCAB REVEAL =====
+function revealVocab(card) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  var grid = card.closest('.vocab-grid');
+  var count = grid.querySelectorAll('.vocab-card.revealed').length;
+  var total = grid.querySelectorAll('.vocab-card').length;
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  document.getElementById(counterId).textContent = count + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar() {
+  document.getElementById('grammarTable').classList.add('show');
+}
+
+// ===== FILL REVEAL =====
+function revealFill(item) {
+  item.classList.add('revealed');
+}
+
+// ===== COMPREHENSION REVEAL =====
+function revealComp(q) {
+  q.classList.add('revealed');
+}
+
+// ===== ERROR REVEAL =====
+var errorCount = 0;
+function revealError(card) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  errorCount++;
+  document.getElementById('errorScore').textContent = errorCount + ' / 5 errors found';
+}
+
+// ===== SUBSTITUTION DRILL =====
+var subOptions = [
+  ['Elaine', 'Sarah', 'a traveler', 'a passenger', '61 years old'],
+  ['S\u00e3o Paulo', 'London', 'Brazil', 'New York', 'Manhattan'],
+  ['flight', 'reservation', 'luggage', 'passport', 'destination'],
+  ['at 9 AM', 'for two nights', 'very heavy', 'at gate B12', 'in Manhattan']
+];
+var subIndex = [0, 0, 0, 0];
+
+function cycleSub(el, group) {
+  subIndex[group] = (subIndex[group] + 1) % subOptions[group].length;
+  el.textContent = subOptions[group][subIndex[group]];
+}
+
+function randomizeSubs() {
+  for (var g = 0; g < 4; g++) {
+    subIndex[g] = Math.floor(Math.random() * subOptions[g].length);
+  }
+  document.getElementById('subBlank1').textContent = subOptions[0][subIndex[0]];
+  document.getElementById('subBlank2').textContent = subOptions[1][subIndex[1]];
+  document.getElementById('subBlank3').textContent = subOptions[2][subIndex[2]];
+  document.getElementById('subBlank4').textContent = subOptions[3][subIndex[3]];
+}
+
+// ===== DIALOGUE LINE-BY-LINE =====
+var dialogueLine = 0;
+function nextDialogueLine() {
+  dialogueLine++;
+  var line = document.querySelector('.dialogue-line[data-line="' + dialogueLine + '"]');
+  if (line) {
+    line.classList.add('visible');
+    if (dialogueLine >= 8) {
+      document.getElementById('nextLineBtn').textContent = 'Dialogue Complete';
+      document.getElementById('nextLineBtn').disabled = true;
+      document.getElementById('nextLineBtn').style.opacity = '0.5';
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE =====
+var challenges = [
+  { prompt: 'You are at the airport. A person asks: "Can I see your passport?" What do you do?', answer: 'You show your passport and say: "Here is my passport."' },
+  { prompt: 'You are on the plane. Someone asks: "Where is your destination?" How do you respond?', answer: '"My destination is New York."' },
+  { prompt: 'You are at the hotel. The receptionist asks: "Do you have a reservation?" What do you say?', answer: '"Yes, I have a reservation. My name is Elaine Pinho."' },
+  { prompt: 'Your luggage is very heavy. A stranger offers to help. How do you respond?', answer: '"Thank you very much! Yes, my luggage is very heavy."' },
+  { prompt: 'You need extra towels in your hotel room. What do you say?', answer: '"Excuse me, can I have extra towels, please?"' },
+  { prompt: 'Someone at the airport asks: "Are you a tourist?" How do you respond?', answer: '"Yes, I am a tourist. I am from Brazil."' }
+];
+var challengeIndex = 0;
+var challengeCorrect = 0;
+
+function showChallengeAnswer() {
+  document.getElementById('challengeAnswer').classList.add('show');
+  document.getElementById('showAnswerBtn').style.display = 'none';
+  document.getElementById('nextChallengeBtn').style.display = 'inline-flex';
+  challengeCorrect++;
+  document.getElementById('challengeScore').textContent = challengeCorrect + ' / 6';
+}
+
+function nextChallenge() {
+  challengeIndex++;
+  if (challengeIndex >= challenges.length) {
+    document.getElementById('challengeCard').innerHTML = '<div style="text-align:center"><h3 style="font-family:Cormorant Garamond,serif;font-size:2rem;color:var(--accent)">Challenge Complete!</h3><p style="margin-top:.5rem;color:var(--text-dim)">Score: ' + challengeCorrect + ' / 6</p></div>';
+    triggerConfetti();
+    return;
+  }
+  document.getElementById('challengePrompt').textContent = challenges[challengeIndex].prompt;
+  document.getElementById('challengeAnswer').textContent = challenges[challengeIndex].answer;
+  document.getElementById('challengeAnswer').classList.remove('show');
+  document.getElementById('showAnswerBtn').style.display = 'inline-flex';
+  document.getElementById('nextChallengeBtn').style.display = 'none';
+  document.getElementById('challengeCounter').textContent = 'Question ' + (challengeIndex + 1) + ' of 6';
+}
+
+// ===== ANNOUNCEMENT AUDIO =====
+var announcementPlaying = false;
+var hotelPlaying = false;
+
+function toggleAnnouncement(btn) {
+  if (announcementPlaying) {
+    stopAllAudio();
+    btn.classList.remove('playing');
+    document.getElementById('waveform1').classList.add('waveform-paused');
+    announcementPlaying = false;
+    return;
+  }
+  announcementPlaying = true;
+  btn.classList.add('playing');
+  var wf = document.getElementById('waveform1');
+  wf.classList.remove('waveform-paused');
+  var text1 = 'Attention passengers. Flight AA 2024 to New York JFK is now boarding at Gate B12. Please have your boarding pass and passport ready.';
+  speakText(text1, btn);
+  setTimeout(function() {
+    wf.classList.add('waveform-paused');
+    btn.classList.remove('playing');
+    announcementPlaying = false;
+    document.getElementById('announcementQs').style.display = 'flex';
+  }, 9000);
+}
+
+function toggleHotelCheckin(btn) {
+  if (hotelPlaying) {
+    stopAllAudio();
+    btn.classList.remove('playing');
+    document.getElementById('waveform2').classList.add('waveform-paused');
+    hotelPlaying = false;
+    return;
+  }
+  hotelPlaying = true;
+  btn.classList.add('playing');
+  var wf = document.getElementById('waveform2');
+  wf.classList.remove('waveform-paused');
+  var lines = [
+    'Good evening. Welcome to The Manhattan Grand. May I have your name?',
+    'Good evening. My name is Elaine Pinho. I have a reservation.',
+    'Of course. Could you spell your last name, please?',
+    'Yes. P-I-N-H-O. Pinho.',
+    'Thank you, Ms. Pinho. You are in room 1204, on the twelfth floor.',
+    'Thank you. What time is breakfast?',
+    'Breakfast is from 7 to 10 AM in the restaurant on the second floor.',
+    'Perfect. Thank you very much.'
+  ];
+  var delay = 0;
+  lines.forEach(function(line) {
+    setTimeout(function() { if (hotelPlaying) speakText(line, btn); }, delay);
+    delay += 4000;
+  });
+  setTimeout(function() {
+    wf.classList.add('waveform-paused');
+    btn.classList.remove('playing');
+    hotelPlaying = false;
+    document.getElementById('hotelQs').style.display = 'flex';
+  }, delay + 1000);
+}
+
+function stopAllAudio() {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+// ===== CHECKLIST =====
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+}
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#B85C38','#D4845C','#003080','#16a34a','#d97706','#dc2626','#5b9bd5'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    var size = 4 + Math.random() * 8;
+    piece.style.width = size + 'px';
+    piece.style.height = size + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 5000);
+}
+
+// ===== REFLECTION RECORDING =====
+var reflectionRecording = false;
+var reflectionRecorder = null;
+var reflectionChunks = [];
+
+function toggleReflectionRecord(btn) {
+  if (!reflectionRecording) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+      var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+      reflectionRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+      reflectionChunks = [];
+      reflectionRecorder.ondataavailable = function(e) { if (e.data.size > 0) reflectionChunks.push(e.data); };
+      reflectionRecorder.onstop = function() {
+        var blob = new Blob(reflectionChunks, { type: reflectionRecorder.mimeType });
+        var url = URL.createObjectURL(blob);
+        document.getElementById('reflectionResult').innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:.5rem"></audio><p style="font-size:.8rem;color:var(--success);margin-top:.3rem">Recording saved. Listen to yourself!</p>';
+        stream.getTracks().forEach(function(t) { t.stop(); });
+      };
+      reflectionRecorder.start(100);
+      btn.classList.add('recording');
+      reflectionRecording = true;
+    }).catch(function() { alert('Could not access microphone.'); });
+  } else {
+    if (reflectionRecorder && reflectionRecorder.state === 'recording') reflectionRecorder.stop();
+    btn.classList.remove('recording');
+    reflectionRecording = false;
+  }
+}
+
+// ===== INIT =====
+updatePhaseBar();
+// Initialize teacher panel for slide 1
+var initSlide = document.querySelector('.slide[data-slide="1"]');
+if (initSlide) document.getElementById('teacherPanel').innerHTML = initSlide.getAttribute('data-teacher') || '';
+</script>
+</body>
+</html>

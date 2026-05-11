@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Lesson 1 — Where Are You Going Today? | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #B85C38;
+  --accent-light: #D4845C;
+  --accent-dim: rgba(184,92,56,0.12);
+  --accent-glow: rgba(184,92,56,0.06);
+  --bg: #f5f2ee;
+  --bg-dark: #1a1a2e;
+  --bg-card: #ffffff;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #6b6b7a;
+  --text-light: #f5f2ee;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --navy: #003080;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', -apple-system, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--sans); background: var(--bg-dark); }
+
+/* ========== LOGO BAR ========== */
+.logo-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 1.5rem;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.logo-bar img { height: 30px; }
+.logo-bar-right { display: flex; align-items: center; gap: 1rem; }
+.prof-badge {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: #fff; background: var(--accent); padding: 0.3rem 0.8rem; border-radius: 3px;
+}
+
+/* ========== SLIDE COUNTER ========== */
+.slide-counter {
+  position: fixed; top: 60px; right: 1.5rem; z-index: 90;
+  font-family: var(--sans); font-size: 0.75rem; font-weight: 600;
+  color: rgba(255,255,255,0.5); letter-spacing: 1px;
+  background: rgba(26,26,46,0.7); backdrop-filter: blur(8px);
+  padding: 0.4rem 0.8rem; border-radius: 20px;
+  transition: color 0.3s;
+}
+.slide-counter.light { color: rgba(26,26,46,0.4); background: rgba(245,242,238,0.7); }
+
+/* ========== NAVIGATION ========== */
+.nav-arrows {
+  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 90;
+  display: flex; gap: 1rem; align-items: center;
+}
+.nav-btn {
+  width: 48px; height: 48px; border-radius: 50%; border: none;
+  background: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
+  color: rgba(255,255,255,0.7); font-size: 1.2rem; cursor: pointer;
+  transition: all 0.25s ease; display: flex; align-items: center; justify-content: center;
+}
+.nav-btn:hover { background: var(--accent); color: #fff; transform: scale(1.1); }
+.nav-btn.light { background: rgba(26,26,46,0.08); color: rgba(26,26,46,0.5); }
+.nav-btn.light:hover { background: var(--accent); color: #fff; }
+.nav-btn:disabled { opacity: 0.2; cursor: default; transform: none; }
+.nav-btn:disabled:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); transform: none; }
+
+/* ========== SLIDES CONTAINER ========== */
+.slides-wrapper {
+  width: 100%; height: 100%; position: relative;
+}
+.slide {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0.35s ease;
+  padding-top: 50px;
+}
+.slide.active { opacity: 1; visibility: visible; }
+
+/* ========== SLIDE TYPES ========== */
+
+/* --- Full-screen image slide --- */
+.slide-image-bg {
+  background-size: cover; background-position: center;
+}
+.slide-image-bg .overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(26,26,46,0.3) 0%, rgba(26,26,46,0.7) 100%);
+}
+.slide-image-bg .slide-content {
+  position: relative; z-index: 2; text-align: center; color: #fff;
+  max-width: 800px; padding: 2rem;
+}
+.slide-image-bg .slide-content .lesson-tag {
+  font-family: var(--sans); font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 3px; text-transform: uppercase; opacity: 0.7; margin-bottom: 1rem;
+}
+.slide-image-bg .slide-content h1 {
+  font-family: var(--serif); font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 500; line-height: 1.15; letter-spacing: -0.5px;
+}
+
+/* --- Clean text slide (light bg) --- */
+.slide-clean {
+  background: var(--bg); flex-direction: column; text-align: center; padding: 2rem;
+}
+.slide-clean h2 {
+  font-family: var(--serif); font-size: clamp(2rem, 4.5vw, 3.8rem);
+  font-weight: 500; color: var(--text); line-height: 1.2; max-width: 750px;
+}
+.slide-clean .subtitle {
+  font-family: var(--sans); font-size: 1.1rem; color: var(--text-dim);
+  margin-top: 1rem; font-weight: 400;
+}
+.slide-clean .icon-small {
+  font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4;
+}
+
+/* --- Dark slide --- */
+.slide-dark {
+  background: var(--bg-dark); flex-direction: column; text-align: center; padding: 2rem;
+}
+.slide-dark h2 {
+  font-family: var(--serif); font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-weight: 500; color: var(--text-light); line-height: 1.2; max-width: 750px;
+}
+.slide-dark .subtitle {
+  font-size: 1.1rem; color: rgba(245,242,238,0.6); margin-top: 1rem;
+}
+.slide-dark .vocab-card, .slide-dark .vocab-card-ic, .slide-dark .fill-item, .slide-dark .challenge-card, .slide-dark .error-card, .slide-dark .roleplay-card, .slide-dark .record-card, .slide-dark .survival-item-ic, .slide-dark .oral-item, .slide-dark .scramble-item, .slide-dark .comp-q, .slide-dark .media-card, .slide-dark .match-row select, .slide-dark .hotel-card, .slide-dark .email-card, .slide-dark .boarding-pass, .slide-dark .boarding-pass-artifact, .slide-dark .business-card-artifact, .slide-dark .linkedin-card, .slide-dark .inclass-lesson-card, .slide-dark .flip-card-front { color:#2d2d3a; }
+
+/* ========== VOCAB GRID (slides 6-7) ========== */
+.vocab-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  max-width: 900px; width: 100%; padding: 1rem 2rem;
+}
+.vocab-card-img {
+  position: relative; border-radius: 16px; overflow: hidden;
+  aspect-ratio: 4/3; cursor: pointer;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.vocab-card-img:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+.vocab-card-img img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.vocab-card-img .vocab-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: rgba(26,26,46,0.5); transition: background 0.3s;
+}
+.vocab-card-img.revealed .vocab-overlay {
+  background: rgba(26,26,46,0.75);
+}
+.vocab-card-img .vocab-q {
+  font-size: 3rem; color: #fff; opacity: 0.9;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.vocab-card-img.revealed .vocab-q { opacity: 0; transform: scale(0.5); position: absolute; }
+.vocab-card-img .vocab-word {
+  font-family: var(--serif); font-size: 2rem; color: #fff; font-weight: 600;
+  opacity: 0; transform: translateY(10px); transition: all 0.4s ease;
+}
+.vocab-card-img.revealed .vocab-word { opacity: 1; transform: translateY(0); }
+.vocab-card-img .vocab-audio-btn {
+  margin-top: 0.5rem; background: var(--accent); border: none; color: #fff;
+  padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; cursor: pointer;
+  opacity: 0; transition: opacity 0.4s 0.15s;
+  font-family: var(--sans); font-weight: 500;
+}
+.vocab-card-img.revealed .vocab-audio-btn { opacity: 1; }
+
+/* ========== VOCAB LIST (slide 8) ========== */
+.vocab-list {
+  max-width: 600px; width: 100%; padding: 0 2rem;
+}
+.vocab-list-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 0; border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.vocab-list-item .vl-word {
+  font-family: var(--serif); font-size: 1.8rem; font-weight: 600; color: var(--text);
+}
+.vocab-list-item .vl-listen {
+  background: var(--accent); border: none; color: #fff;
+  padding: 0.5rem 1.2rem; border-radius: 24px; font-size: 0.8rem;
+  cursor: pointer; font-family: var(--sans); font-weight: 500;
+  transition: all 0.2s;
+}
+.vocab-list-item .vl-listen:hover { background: var(--accent-light); transform: scale(1.05); }
+
+/* ========== GRAMMAR (slide 9) ========== */
+.grammar-sentences {
+  max-width: 700px; width: 100%; padding: 0 2rem; text-align: center;
+}
+.grammar-sentences .g-sentence {
+  font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.2rem);
+  color: var(--text); margin-bottom: 1rem; line-height: 1.4;
+}
+.grammar-sentences .g-sentence strong { color: var(--accent); font-weight: 700; }
+.grammar-discovery-q {
+  font-family: var(--sans); font-size: 1rem; color: var(--text-dim);
+  margin-top: 1.5rem; font-style: italic;
+}
+.grammar-reveal-btn {
+  margin-top: 1.5rem; background: var(--accent); border: none; color: #fff;
+  padding: 0.7rem 2rem; border-radius: 8px; font-size: 0.95rem;
+  cursor: pointer; font-family: var(--sans); font-weight: 600;
+  transition: all 0.25s;
+}
+.grammar-reveal-btn:hover { background: var(--accent-light); transform: scale(1.03); }
+.grammar-table {
+  margin-top: 1.5rem; max-width: 400px; width: 100%; margin-left: auto; margin-right: auto;
+  opacity: 0; transform: translateY(15px); transition: all 0.5s ease;
+  pointer-events: none;
+}
+.grammar-table.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.grammar-table table {
+  width: 100%; border-collapse: collapse; font-family: var(--sans);
+}
+.grammar-table th {
+  background: var(--accent); color: #fff; padding: 0.7rem 1rem;
+  font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+}
+.grammar-table td {
+  padding: 0.65rem 1rem; border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: 1.1rem; color: var(--text);
+}
+.grammar-table tr:nth-child(even) td { background: rgba(184,92,56,0.04); }
+
+/* ========== GRAMMAR MISTAKE (slide 10) ========== */
+.mistake-comparison {
+  display: flex; gap: 3rem; align-items: center; max-width: 850px;
+  padding: 0 2rem; flex-wrap: wrap; justify-content: center;
+}
+.mistake-box {
+  flex: 1; min-width: 300px; padding: 2.5rem 2rem; border-radius: 16px;
+  text-align: center;
+}
+.mistake-box.wrong {
+  background: rgba(220,38,38,0.06); border: 2px solid rgba(220,38,38,0.2);
+}
+.mistake-box.right {
+  background: rgba(22,163,74,0.06); border: 2px solid rgba(22,163,74,0.2);
+}
+.mistake-box .mistake-icon { font-size: 3rem; margin-bottom: 1rem; }
+.mistake-box .mistake-text {
+  font-family: var(--serif); font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  line-height: 1.4;
+}
+.mistake-box.wrong .mistake-text { color: var(--danger); text-decoration: line-through; }
+.mistake-box.right .mistake-text { color: var(--success); }
+
+/* ========== DIALOGUE (slide 12) ========== */
+.dialogue-container {
+  max-width: 700px; width: 100%; padding: 0 1.5rem;
+}
+.dialogue-line {
+  display: flex; gap: 0.8rem; margin-bottom: 1rem;
+  opacity: 0; transform: translateY(12px);
+  transition: all 0.4s ease;
+}
+.dialogue-line.visible { opacity: 1; transform: translateY(0); }
+.dialogue-line.sarah { flex-direction: row; }
+.dialogue-line.elaine { flex-direction: row-reverse; }
+.dialogue-avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.75rem; color: #fff;
+}
+.dialogue-line.sarah .dialogue-avatar { background: #6366f1; }
+.dialogue-line.elaine .dialogue-avatar { background: var(--accent); }
+.dialogue-bubble {
+  padding: 0.8rem 1.2rem; border-radius: 16px; max-width: 80%;
+  font-size: 1.05rem; line-height: 1.5; color: var(--text);
+}
+.dialogue-line.sarah .dialogue-bubble {
+  background: #f0eef9; border-bottom-left-radius: 4px;
+}
+.dialogue-line.elaine .dialogue-bubble {
+  background: rgba(184,92,56,0.1); border-bottom-right-radius: 4px;
+}
+.dialogue-bubble strong { color: var(--accent); }
+.dialogue-bubble .d-audio-btn {
+  background: none; border: none; cursor: pointer; font-size: 0.85rem;
+  color: var(--accent); margin-left: 0.3rem; vertical-align: middle;
+  transition: transform 0.2s;
+}
+.dialogue-bubble .d-audio-btn:hover { transform: scale(1.2); }
+.dialogue-next-btn {
+  display: block; margin: 1.5rem auto 0; background: var(--accent); border: none;
+  color: #fff; padding: 0.6rem 2rem; border-radius: 8px; font-size: 0.9rem;
+  cursor: pointer; font-family: var(--sans); font-weight: 600;
+  transition: all 0.25s;
+}
+.dialogue-next-btn:hover { background: var(--accent-light); }
+.dialogue-next-btn:disabled { opacity: 0.3; cursor: default; }
+
+/* ========== FLIP CARDS (slide 13) ========== */
+.flip-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  max-width: 850px; width: 100%; padding: 0 2rem;
+}
+@media (max-width: 700px) { .flip-grid { grid-template-columns: 1fr 1fr; } }
+.flip-card {
+  perspective: 1000px; cursor: pointer; aspect-ratio: 3/2;
+}
+.flip-card-inner {
+  position: relative; width: 100%; height: 100%;
+  transition: transform 0.5s; transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+.flip-card-front, .flip-card-back {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  border-radius: 12px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 1rem;
+  text-align: center;
+}
+.flip-card-front {
+  background: var(--bg-card); border: 2px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.flip-card-front .flip-prompt {
+  font-family: var(--sans); font-size: 0.85rem; color: var(--text-dim);
+  line-height: 1.4;
+}
+.flip-card-front .flip-icon { font-size: 1.5rem; margin-bottom: 0.5rem; opacity: 0.3; }
+.flip-card-back {
+  background: var(--accent); color: #fff; transform: rotateY(180deg);
+}
+.flip-card-back .flip-answer {
+  font-family: var(--serif); font-size: 1.1rem; font-weight: 500; line-height: 1.3;
+}
+
+/* ========== ROLE-PLAY (slide 14) ========== */
+.roleplay-content {
+  position: relative; z-index: 2; text-align: center; color: #fff;
+  max-width: 750px; padding: 2rem;
+}
+.roleplay-content h2 {
+  font-family: var(--serif); font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 700; margin-bottom: 1rem; letter-spacing: -1px;
+}
+.roleplay-content .scenario {
+  font-size: 1.15rem; opacity: 0.85; line-height: 1.6; margin-bottom: 2rem;
+}
+.keyword-chips {
+  display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center;
+}
+.keyword-chip {
+  background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 0.5rem 1.2rem; border-radius: 24px;
+  font-family: var(--sans); font-size: 0.9rem; color: #fff; font-weight: 500;
+}
+
+/* ========== SURVIVAL CARD (slide 15) ========== */
+.survival-slide {
+  max-width: 700px; width: 100%; padding: 0 2rem;
+}
+.survival-header {
+  font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.2rem);
+  color: var(--text-light); text-align: center; margin-bottom: 2rem;
+  font-weight: 500;
+}
+.survival-phrase-row {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.7rem 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.survival-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent); color: #fff; display: flex;
+  align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+}
+.survival-text {
+  font-family: var(--serif); font-size: 1.25rem; color: var(--text-light);
+  flex: 1;
+}
+.survival-audio-btn {
+  background: rgba(255,255,255,0.1); border: none; color: rgba(255,255,255,0.7);
+  padding: 0.4rem 0.8rem; border-radius: 20px; cursor: pointer;
+  font-size: 0.8rem; transition: all 0.2s;
+}
+.survival-audio-btn:hover { background: var(--accent); color: #fff; }
+
+.learned-section {
+  margin-top: 2rem; text-align: left;
+}
+.learned-section h4 {
+  font-family: var(--sans); font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(245,242,238,0.5); margin-bottom: 1rem;
+}
+.learned-section label {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-size: 0.9rem; color: rgba(245,242,238,0.7);
+  padding: 0.35rem 0; cursor: pointer;
+}
+.learned-section input[type="checkbox"] { accent-color: var(--accent); }
+.learned-section label.checked { color: var(--accent-light); }
+
+.final-message {
+  margin-top: 2.5rem; text-align: center;
+  font-family: var(--serif); font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  color: var(--accent-light); font-style: italic; line-height: 1.4;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .vocab-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .mistake-comparison { flex-direction: column; gap: 1.5rem; }
+  .flip-grid { grid-template-columns: 1fr 1fr; }
+  .nav-btn { width: 42px; height: 42px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGO BAR -->
+<div class="logo-bar">
+  <img src="/assets/logo-alumni.png" alt="Alumni by Better">
+  <div class="logo-bar-right">
+    <span class="prof-badge">Professor View</span>
+  </div>
+</div>
+
+<!-- SLIDE COUNTER -->
+<div class="slide-counter" id="slideCounter">1 / 15</div>
+
+<!-- NAVIGATION -->
+<div class="nav-arrows" id="navArrows">
+  <button class="nav-btn" id="btnPrev" onclick="goToSlide(currentSlide - 1)" disabled>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="nav-btn" id="btnNext" onclick="goToSlide(currentSlide + 1)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</div>
+
+<!-- ==================== SLIDES ==================== -->
+<div class="slides-wrapper">
+
+  <!-- SLIDE 1: OPENING -->
+  <div class="slide slide-image-bg active" id="slide-1"
+       style="background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=1400&q=80')">
+    <div class="overlay"></div>
+    <div class="slide-content">
+      <div class="lesson-tag">Lesson 1</div>
+      <h1>Where Are You Going Today?</h1>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: WARM-UP Q1 -->
+  <div class="slide slide-clean" id="slide-2">
+    <h2>Do you like traveling?</h2>
+    <p class="subtitle">Tell me about it.</p>
+  </div>
+
+  <!-- SLIDE 3: WARM-UP Q2 -->
+  <div class="slide slide-clean" id="slide-3">
+    <div class="icon-small">&#9992;</div>
+    <h2>Where was your last trip?</h2>
+  </div>
+
+  <!-- SLIDE 4: WARM-UP Q3 -->
+  <div class="slide slide-clean" id="slide-4">
+    <h2>What is the hardest part of traveling in English?</h2>
+  </div>
+
+  <!-- SLIDE 5: VOCAB INTRO -->
+  <div class="slide slide-image-bg" id="slide-5"
+       style="background-image:url('https://images.unsplash.com/photo-1553531384-cc64ac80f931?w=1400&q=80')">
+    <div class="overlay"></div>
+    <div class="slide-content">
+      <h1>Let's Pack Your Word Suitcase</h1>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: VOCAB IMAGE-FIRST (4 words) -->
+  <div class="slide slide-clean" id="slide-6" style="flex-direction:column;">
+    <div class="vocab-grid">
+      <div class="vocab-card-img" onclick="revealVocab(this)">
+        <img src="https://images.unsplash.com/photo-1544991875-5dc1b05f607d?w=600&q=80" alt="Passport">
+        <div class="vocab-overlay">
+          <span class="vocab-q">?</span>
+          <span class="vocab-word">Passport</span>
+          <button class="vocab-audio-btn" onclick="event.stopPropagation(); speakText('Passport')">&#9654; Listen</button>
+        </div>
+      </div>
+      <div class="vocab-card-img" onclick="revealVocab(this)">
+        <img src="https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=600&q=80" alt="Luggage">
+        <div class="vocab-overlay">
+          <span class="vocab-q">?</span>
+          <span class="vocab-word">Luggage</span>
+          <button class="vocab-audio-btn" onclick="event.stopPropagation(); speakText('Luggage')">&#9654; Listen</button>
+        </div>
+      </div>
+      <div class="vocab-card-img" onclick="revealVocab(this)">
+        <img src="https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=600&q=80" alt="Flight">
+        <div class="vocab-overlay">
+          <span class="vocab-q">?</span>
+          <span class="vocab-word">Flight</span>
+          <button class="vocab-audio-btn" onclick="event.stopPropagation(); speakText('Flight')">&#9654; Listen</button>
+        </div>
+      </div>
+      <div class="vocab-card-img" onclick="revealVocab(this)">
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80" alt="Check-in">
+        <div class="vocab-overlay">
+          <span class="vocab-q">?</span>
+          <span class="vocab-word">Check-in</span>
+          <button class="vocab-audio-btn" onclick="event.stopPropagation(); speakText('Check-in')">&#9654; Listen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: VOCAB IMAGE-FIRST (4 more words) -->
+  <div class="slide slide-clean" id="slide-7" style="flex-direction:column;">
+    <div class="vocab-grid">
+      <div class="vocab-card-img" onclick="revealVocab(this)">
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80" alt="Reservation">
+        <div class="vocab-overlay">
+          <span class="vocab-q">?</span>
+          <span class="vocab-word">Reservation</span>
+          <button class="vocab-audio-btn" onclick="event.stopPropagation(); speakText('Reservation')">&#9654; Listen</button>
+        </div>
+      </div>
+      <div class="vocab-card-img" onclick="revealVocab(this)">
+        <img src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&q=80" alt="Destination">
+        <div class="vocab-overlay">
+          <span class="vocab-q">?</span>
+          <span class="vocab-word">Destination</span>
+          <button class="vocab-audio-btn" onclick="event.stopPropagation(); speakText('Destination')">&#9654; Listen</button>
+        </div>
+      </div>
+      <div class="vocab-card-img" onclick="revealVocab(this)">
+        <img src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80" alt="Housekeeper">
+        <div class="vocab-overlay">
+          <span class="vocab-q">?</span>
+          <span class="vocab-word">Housekeeper</span>
+          <button class="vocab-audio-btn" onclick="event.stopPropagation(); speakText('Housekeeper')">&#9654; Listen</button>
+        </div>
+      </div>
+      <div class="vocab-card-img" onclick="revealVocab(this)">
+        <img src="https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=600&q=80" alt="Emergency">
+        <div class="vocab-overlay">
+          <span class="vocab-q">?</span>
+          <span class="vocab-word">Emergency</span>
+          <button class="vocab-audio-btn" onclick="event.stopPropagation(); speakText('Emergency')">&#9654; Listen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: VOCAB SAY IT -->
+  <div class="slide slide-clean" id="slide-8" style="flex-direction:column;">
+    <h2 style="font-size:1.5rem; margin-bottom:1.5rem; color:var(--text-dim); font-family:var(--sans); font-weight:600; letter-spacing:1px; text-transform:uppercase;">Now say each word out loud.</h2>
+    <div class="vocab-list">
+      <div class="vocab-list-item"><span class="vl-word">Passport</span><button class="vl-listen" onclick="speakText('Passport')">&#9654; Listen</button></div>
+      <div class="vocab-list-item"><span class="vl-word">Luggage</span><button class="vl-listen" onclick="speakText('Luggage')">&#9654; Listen</button></div>
+      <div class="vocab-list-item"><span class="vl-word">Flight</span><button class="vl-listen" onclick="speakText('Flight')">&#9654; Listen</button></div>
+      <div class="vocab-list-item"><span class="vl-word">Check-in</span><button class="vl-listen" onclick="speakText('Check-in')">&#9654; Listen</button></div>
+      <div class="vocab-list-item"><span class="vl-word">Reservation</span><button class="vl-listen" onclick="speakText('Reservation')">&#9654; Listen</button></div>
+      <div class="vocab-list-item"><span class="vl-word">Destination</span><button class="vl-listen" onclick="speakText('Destination')">&#9654; Listen</button></div>
+      <div class="vocab-list-item"><span class="vl-word">Housekeeper</span><button class="vl-listen" onclick="speakText('Housekeeper')">&#9654; Listen</button></div>
+      <div class="vocab-list-item"><span class="vl-word">Emergency</span><button class="vl-listen" onclick="speakText('Emergency')">&#9654; Listen</button></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: GRAMMAR DISCOVERY -->
+  <div class="slide slide-clean" id="slide-9" style="flex-direction:column;">
+    <div class="grammar-sentences">
+      <div class="g-sentence">I <strong>am</strong> Elaine.</div>
+      <div class="g-sentence">She <strong>is</strong> from Brazil.</div>
+      <div class="g-sentence">We <strong>are</strong> travelers.</div>
+      <div class="g-sentence">You <strong>are</strong> my teacher.</div>
+      <p class="grammar-discovery-q">What do the orange words have in common?</p>
+      <button class="grammar-reveal-btn" onclick="revealGrammar()">Show the Rule</button>
+      <div class="grammar-table" id="grammarTable">
+        <table>
+          <tr><th>Subject</th><th>Verb "to be"</th></tr>
+          <tr><td>I</td><td><strong>am</strong></td></tr>
+          <tr><td>You / We / They</td><td><strong>are</strong></td></tr>
+          <tr><td>He / She / It</td><td><strong>is</strong></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: GRAMMAR COMMON MISTAKE -->
+  <div class="slide slide-clean" id="slide-10" style="flex-direction:column;">
+    <div class="mistake-comparison">
+      <div class="mistake-box wrong">
+        <div class="mistake-icon">&#10007;</div>
+        <div class="mistake-text">"I have 61 years."</div>
+      </div>
+      <div class="mistake-box right">
+        <div class="mistake-icon">&#10003;</div>
+        <div class="mistake-text">"I am 61 years old."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: DIALOGUE SCENE SETTING -->
+  <div class="slide slide-image-bg" id="slide-11"
+       style="background-image:url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1400&q=80')">
+    <div class="overlay"></div>
+    <div class="slide-content">
+      <div class="lesson-tag">Dialogue</div>
+      <h1>Meeting Sarah at the Airport</h1>
+      <p style="font-size:1.1rem; opacity:0.8; margin-top:0.8rem;">Listen to the conversation...</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: DIALOGUE LINE BY LINE -->
+  <div class="slide slide-clean" id="slide-12" style="flex-direction:column; justify-content:flex-start; padding-top:80px; overflow-y:auto;">
+    <div class="dialogue-container">
+      <div class="dialogue-line sarah" data-line="1">
+        <div class="dialogue-avatar">S</div>
+        <div class="dialogue-bubble">
+          "Hi! Are you waiting for a <strong>flight</strong> too?"
+          <button class="d-audio-btn" onclick="speakText('Hi! Are you waiting for a flight too?')">&#9654;</button>
+        </div>
+      </div>
+      <div class="dialogue-line elaine" data-line="2">
+        <div class="dialogue-avatar">E</div>
+        <div class="dialogue-bubble">
+          "Yes! My name <strong>is</strong> Elaine. I <strong>am</strong> from Brazil."
+          <button class="d-audio-btn" onclick="speakText('Yes! My name is Elaine. I am from Brazil.')">&#9654;</button>
+        </div>
+      </div>
+      <div class="dialogue-line sarah" data-line="3">
+        <div class="dialogue-avatar">S</div>
+        <div class="dialogue-bubble">
+          "Nice to meet you! What <strong>is</strong> your <strong>destination</strong>?"
+          <button class="d-audio-btn" onclick="speakText('Nice to meet you! What is your destination?')">&#9654;</button>
+        </div>
+      </div>
+      <div class="dialogue-line elaine" data-line="4">
+        <div class="dialogue-avatar">E</div>
+        <div class="dialogue-bubble">
+          "My <strong>destination</strong> <strong>is</strong> New York. I have a <strong>reservation</strong> at a hotel."
+          <button class="d-audio-btn" onclick="speakText('My destination is New York. I have a reservation at a hotel.')">&#9654;</button>
+        </div>
+      </div>
+      <div class="dialogue-line sarah" data-line="5">
+        <div class="dialogue-avatar">S</div>
+        <div class="dialogue-bubble">
+          "<strong>Is</strong> your <strong>luggage</strong> heavy?"
+          <button class="d-audio-btn" onclick="speakText('Is your luggage heavy?')">&#9654;</button>
+        </div>
+      </div>
+      <div class="dialogue-line elaine" data-line="6">
+        <div class="dialogue-avatar">E</div>
+        <div class="dialogue-bubble">
+          "Yes! My <strong>luggage</strong> <strong>is</strong> very heavy."
+          <button class="d-audio-btn" onclick="speakText('Yes! My luggage is very heavy.')">&#9654;</button>
+        </div>
+      </div>
+      <div class="dialogue-line sarah" data-line="7">
+        <div class="dialogue-avatar">S</div>
+        <div class="dialogue-bubble">
+          "Do you have your <strong>passport</strong>?"
+          <button class="d-audio-btn" onclick="speakText('Do you have your passport?')">&#9654;</button>
+        </div>
+      </div>
+      <div class="dialogue-line elaine" data-line="8">
+        <div class="dialogue-avatar">E</div>
+        <div class="dialogue-bubble">
+          "Yes, my <strong>passport</strong> <strong>is</strong> in my bag."
+          <button class="d-audio-btn" onclick="speakText('Yes, my passport is in my bag.')">&#9654;</button>
+        </div>
+      </div>
+    </div>
+    <button class="dialogue-next-btn" id="dialogueNextBtn" onclick="showNextDialogueLine()">Next Line</button>
+  </div>
+
+  <!-- SLIDE 13: QUICK FIRE -->
+  <div class="slide slide-clean" id="slide-13" style="flex-direction:column;">
+    <h2 style="font-size:1.3rem; margin-bottom:1.5rem; color:var(--accent); font-family:var(--sans); font-weight:700; letter-spacing:2px; text-transform:uppercase;">Quick Challenge!</h2>
+    <div class="flip-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><div class="flip-icon">&#128172;</div><div class="flip-prompt">Diga seu nome em ingl&ecirc;s</div></div>
+          <div class="flip-card-back"><div class="flip-answer">"My name is Elaine Pinho."</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><div class="flip-icon">&#127758;</div><div class="flip-prompt">Diga de onde voc&ecirc; &eacute;</div></div>
+          <div class="flip-card-back"><div class="flip-answer">"I am from S&atilde;o Paulo, Brazil."</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><div class="flip-icon">&#127874;</div><div class="flip-prompt">Diga sua idade</div></div>
+          <div class="flip-card-back"><div class="flip-answer">"I am 61 years old."</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><div class="flip-icon">&#128717;</div><div class="flip-prompt">Pergunte onde &eacute; o check-in</div></div>
+          <div class="flip-card-back"><div class="flip-answer">"Excuse me, where is the check-in?"</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><div class="flip-icon">&#127976;</div><div class="flip-prompt">Diga que tem reserva</div></div>
+          <div class="flip-card-back"><div class="flip-answer">"I have a reservation at the hotel."</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><div class="flip-icon">&#128188;</div><div class="flip-prompt">Diga que sua mala est&aacute; pesada</div></div>
+          <div class="flip-card-back"><div class="flip-answer">"My luggage is very heavy."</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: ROLE-PLAY -->
+  <div class="slide slide-image-bg" id="slide-14"
+       style="background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=1400&q=80')">
+    <div class="overlay" style="background:rgba(26,26,46,0.8);"></div>
+    <div class="roleplay-content">
+      <h2>YOUR TURN</h2>
+      <p class="scenario">You are at the airport. Sarah sits next to you.<br>Introduce yourself.</p>
+      <div class="keyword-chips">
+        <span class="keyword-chip">name</span>
+        <span class="keyword-chip">from</span>
+        <span class="keyword-chip">destination</span>
+        <span class="keyword-chip">flight</span>
+        <span class="keyword-chip">reservation</span>
+        <span class="keyword-chip">luggage</span>
+        <span class="keyword-chip">passport</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15: SURVIVAL CARD + CLOSING -->
+  <div class="slide slide-dark" id="slide-15" style="flex-direction:column; justify-content:flex-start; padding-top:80px; overflow-y:auto;">
+    <div class="survival-slide">
+      <div class="survival-header">Elaine's Survival Card &mdash; Lesson 1</div>
+
+      <div class="survival-phrase-row">
+        <span class="survival-num">1</span>
+        <span class="survival-text">"My name is Elaine Pinho."</span>
+        <button class="survival-audio-btn" onclick="speakText('My name is Elaine Pinho.')">&#9654;</button>
+      </div>
+      <div class="survival-phrase-row">
+        <span class="survival-num">2</span>
+        <span class="survival-text">"I am from S&atilde;o Paulo, Brazil."</span>
+        <button class="survival-audio-btn" onclick="speakText('I am from Sao Paulo, Brazil.')">&#9654;</button>
+      </div>
+      <div class="survival-phrase-row">
+        <span class="survival-num">3</span>
+        <span class="survival-text">"I am 61 years old."</span>
+        <button class="survival-audio-btn" onclick="speakText('I am 61 years old.')">&#9654;</button>
+      </div>
+      <div class="survival-phrase-row">
+        <span class="survival-num">4</span>
+        <span class="survival-text">"I have a reservation at the hotel."</span>
+        <button class="survival-audio-btn" onclick="speakText('I have a reservation at the hotel.')">&#9654;</button>
+      </div>
+      <div class="survival-phrase-row">
+        <span class="survival-num">5</span>
+        <span class="survival-text">"Excuse me, where is the check-in?"</span>
+        <button class="survival-audio-btn" onclick="speakText('Excuse me, where is the check-in?')">&#9654;</button>
+      </div>
+
+      <div class="learned-section">
+        <h4>What I Learned Today</h4>
+        <label onclick="this.classList.toggle('checked')"><input type="checkbox"> How to introduce myself in English</label>
+        <label onclick="this.classList.toggle('checked')"><input type="checkbox"> 8 travel vocabulary words</label>
+        <label onclick="this.classList.toggle('checked')"><input type="checkbox"> The verb "to be" (am / is / are)</label>
+        <label onclick="this.classList.toggle('checked')"><input type="checkbox"> The difference between "I have 61 years" and "I am 61 years old"</label>
+        <label onclick="this.classList.toggle('checked')"><input type="checkbox"> How to ask about check-in</label>
+        <label onclick="this.classList.toggle('checked')"><input type="checkbox"> How to talk about luggage and reservations</label>
+        <label onclick="this.classList.toggle('checked')"><input type="checkbox"> How to have a basic airport conversation</label>
+        <label onclick="this.classList.toggle('checked')"><input type="checkbox"> How to introduce myself to a stranger</label>
+      </div>
+
+      <p class="final-message">"You survived 60 minutes of English.<br>You did not give up."</p>
+    </div>
+  </div>
+
+</div><!-- /slides-wrapper -->
+
+<script>
+// ===== AUDIO =====
+var audioMap = {};
+var currentAudio = null;
+var audioSpeed = 1;
+
+function speakText(text) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed;
+    currentAudio.play().catch(function() { fallbackTTS(cleanText); });
+  } else {
+    fallbackTTS(cleanText);
+  }
+}
+
+function fallbackTTS(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 1;
+var totalSlides = 15;
+
+function goToSlide(n) {
+  if (n < 1 || n > totalSlides) return;
+  var oldSlide = document.getElementById('slide-' + currentSlide);
+  var newSlide = document.getElementById('slide-' + n);
+  if (oldSlide) oldSlide.classList.remove('active');
+  if (newSlide) newSlide.classList.add('active');
+  currentSlide = n;
+  updateSlideUI();
+}
+
+function updateSlideUI() {
+  document.getElementById('slideCounter').textContent = currentSlide + ' / ' + totalSlides;
+  document.getElementById('btnPrev').disabled = (currentSlide === 1);
+  document.getElementById('btnNext').disabled = (currentSlide === totalSlides);
+
+  // Determine if current slide is dark or light for UI adaptation
+  var slide = document.getElementById('slide-' + currentSlide);
+  var isDark = slide.classList.contains('slide-image-bg') || slide.classList.contains('slide-dark');
+  var counter = document.getElementById('slideCounter');
+  var navBtns = document.querySelectorAll('.nav-btn');
+
+  if (isDark) {
+    counter.classList.remove('light');
+    navBtns.forEach(function(b) { b.classList.remove('light'); });
+  } else {
+    counter.classList.add('light');
+    navBtns.forEach(function(b) { b.classList.add('light'); });
+  }
+
+  // Reset dialogue lines when entering slide 12
+  if (currentSlide === 12) {
+    dialogueIndex = 0;
+    var lines = document.querySelectorAll('#slide-12 .dialogue-line');
+    lines.forEach(function(l) { l.classList.remove('visible'); });
+    var btn = document.getElementById('dialogueNextBtn');
+    if (btn) { btn.disabled = false; btn.textContent = 'Next Line'; }
+  }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToSlide(currentSlide + 1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goToSlide(currentSlide - 1); }
+});
+
+// ===== VOCAB REVEAL =====
+function revealVocab(card) {
+  card.classList.add('revealed');
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar() {
+  document.getElementById('grammarTable').classList.add('visible');
+}
+
+// ===== DIALOGUE LINE-BY-LINE =====
+var dialogueIndex = 0;
+function showNextDialogueLine() {
+  var lines = document.querySelectorAll('#slide-12 .dialogue-line');
+  if (dialogueIndex < lines.length) {
+    lines[dialogueIndex].classList.add('visible');
+    dialogueIndex++;
+  }
+  if (dialogueIndex >= lines.length) {
+    var btn = document.getElementById('dialogueNextBtn');
+    btn.disabled = true;
+    btn.textContent = 'End of Dialogue';
+  }
+}
+
+// ===== INIT =====
+updateSlideUI();
+</script>
+</body>
+</html>
