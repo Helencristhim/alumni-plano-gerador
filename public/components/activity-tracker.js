@@ -106,7 +106,7 @@ var AlumniTracker = (function() {
     badge.innerHTML =
       '<span style="display:flex;align-items:center;gap:6px;">' +
         icon +
-        '<span>Concluido em ' + dateStr + ' as ' + timeStr + scoreLabel + attemptLabel + '</span>' +
+        '<span>Concluído em ' + dateStr + ' as ' + timeStr + scoreLabel + attemptLabel + '</span>' +
       '</span>' +
       '<button class="tracker-redo-btn" data-exercise-id="' + exerciseId + '" style="' +
         'display:inline-flex;align-items:center;gap:5px;padding:6px 14px;' +

@@ -14,17 +14,17 @@
 
 /* ── Microcopy banco — voz pedagogica FAAP ── */
 const MICROCOPY = {
-  objective: 'Este e o seu objetivo para esta aula. Ao final, voce vai conseguir fazer isso com confianca.',
-  gallery: 'Explore as imagens. Elas mostram o universo que voce vai aprender a navegar em ingles.',
-  intro: 'Leia com calma. Depois toque em <strong>Ouvir</strong> para escutar a pronuncia natural.',
-  vocab: 'Estas sao as palavras-chave da aula. Escute cada uma e repita em voz alta.',
-  vocabPractice: 'Agora vamos praticar. Errou? Sem problema — e assim que se aprende.',
-  context: 'Leia o texto, escute o audio e depois pratique a pronuncia. Sem pressa.',
-  grammar: 'Nao precisa decorar. Precisa entender o padrao para usar na hora certa.',
-  practice: 'Hora de praticar tudo junto. Faca os exercicios no seu ritmo.',
-  thinkAboutIt: 'Aqui nao tem certo ou errado. Use o ingles que voce ja tem.',
-  checklist: 'Marque o que voce ja se sente capaz de fazer. Seja honesto(a) — e para voce.',
-  survivalCard: 'Estas frases sao o seu kit de sobrevivencia. Salve no celular ou tire um print.'
+  objective: 'Este é o seu objetivo para esta aula. Ao final, você vai conseguir fazer isso com confiança.',
+  gallery: 'Explore as imagens. Elas mostram o universo que você vai aprender a navegar em inglês.',
+  intro: 'Leia com calma. Depois toque em <strong>Ouvir</strong> para escutar a pronúncia natural.',
+  vocab: 'Estas são as palavras-chave da aula. Escute cada uma e repita em voz alta.',
+  vocabPractice: 'Agora vamos praticar. Errou? Sem problema — é assim que se aprende.',
+  context: 'Leia o texto, escute o áudio e depois pratique a pronúncia. Sem pressa.',
+  grammar: 'Não precisa decorar. Precisa entender o padrão para usar na hora certa.',
+  practice: 'Hora de praticar tudo junto. Faça os exercícios no seu ritmo.',
+  thinkAboutIt: 'Aqui não tem certo ou errado. Use o inglês que você já tem.',
+  checklist: 'Marque o que você já se sente capaz de fazer. Seja honesto(a) — é para você.',
+  survivalCard: 'Estas frases são o seu kit de sobrevivência. Salve no celular ou tire um print.'
 };
 
 /* ── Lucide SVG icons (inline) ── */
@@ -405,7 +405,7 @@ function renderChecklist(items, studentName) {
       <h2 style="font:var(--text-h2);color:var(--text-primary);margin-bottom:var(--space-sm);">${TPL_ICONS.clipboard} O que eu aprendi</h2>
       <p class="microcopy">${MICROCOPY.checklist}</p>
       <div class="learning-checklist">
-        <div class="learning-checklist__title">${studentName ? _esc(studentName) + ', ' : ''}marque o que voce ja consegue fazer:</div>
+        <div class="learning-checklist__title">${studentName ? _esc(studentName) + ', ' : ''}marque o que você já consegue fazer:</div>
         <ul class="learning-checklist__items">
           ${listItems}
         </ul>

@@ -933,9 +933,11 @@
 
         let cards = '';
         eixos.forEach(function(eixo, i) {
-            const val = eixo.valor || 5;
-            const pct = val * 10;
-            const barClass = val <= 2 ? 'low' : val <= 4 ? 'mid-low' : val <= 6 ? 'mid' : val <= 8 ? 'mid-high' : 'high';
+            const rawVal = eixo.valor;
+            const isNumeric = typeof rawVal === 'number' || (typeof rawVal === 'string' && !isNaN(Number(rawVal)) && rawVal.trim() !== '');
+            const val = isNumeric ? Number(rawVal) : 5;
+            const pct = isNumeric ? val * 10 : 100;
+            const barClass = !isNumeric ? 'mid-high' : val <= 2 ? 'low' : val <= 4 ? 'mid-low' : val <= 6 ? 'mid' : val <= 8 ? 'mid-high' : 'high';
             var s = eixo.selo || '';
             const sealClass = (s === 'verde' || s === '🟢') ? 'seal-green' : (s === 'amarelo' || s === '🟡') ? 'seal-yellow' : (s === 'laranja' || s === '🟠') ? 'seal-orange' : 'seal-red';
             const sealColor = (s === 'verde' || s === '🟢') ? 'var(--success)' : (s === 'amarelo' || s === '🟡') ? 'var(--warning)' : (s === 'laranja' || s === '🟠') ? '#c2410c' : 'var(--error)';
@@ -957,7 +959,7 @@
                 '<span class="eixo-seal ' + sealClass + '">' + sealEmoji + ' ' + esc(eixo.selo || '') + '</span>' +
                 '<span class="eixo-confidence">' + (eixo.confianca || 0) + '% confiança</span>' +
                 '</div></div>' +
-                '<div class="eixo-labels"><span>' + esc(eixo.labelEsquerda || '1') + '</span><span class="eixo-val-center">' + val + '/10</span><span>' + esc(eixo.labelDireita || '10') + '</span></div>' +
+                '<div class="eixo-labels"><span>' + esc(eixo.labelEsquerda || (isNumeric ? '1' : '')) + '</span><span class="eixo-val-center">' + (isNumeric ? val + '/10' : esc(String(rawVal || '').replace(/_/g, ' '))) + '</span><span>' + esc(eixo.labelDireita || (isNumeric ? '10' : '')) + '</span></div>' +
                 '<div class="eixo-bar-container"><div class="eixo-bar-fill ' + barClass + '" style="width:' + pct + '%"></div></div>' +
                 '<div class="eixo-inference">' + esc(eixo.inferencia || '') + '</div>' +
                 evidencesHtml +
@@ -966,8 +968,8 @@
                 '<button class="btn btn--ghost btn--sm" onclick="ajustarEixo(' + i + ')">Discordo, ajustar</button>' +
                 '</div>' +
                 '<div class="ajuste-input" id="ajuste-' + i + '">' +
-                '<input type="range" min="1" max="10" value="' + val + '" oninput="previewAjuste(' + i + ',this.value)" onchange="confirmarAjuste(' + i + ',this.value)">' +
-                '<span id="ajuste-val-' + i + '">' + val + '</span>' +
+                (isNumeric ? '<input type="range" min="1" max="10" value="' + val + '" oninput="previewAjuste(' + i + ',this.value)" onchange="confirmarAjuste(' + i + ',this.value)">' +
+                '<span id="ajuste-val-' + i + '">' + val + '</span>' : '<span style="font-size:13px;color:var(--text-dim);">Eixo qualitativo — ajuste via texto na inferência</span>') +
                 '</div>' +
                 '</div>';
         });
@@ -1288,8 +1290,8 @@
     function getBlocosState(numAulas) {
         var n = parseInt(numAulas) || 0;
         if (n <= 0) return { totalBlocos: 0, blocos: [] };
-        var tam = 5;
-        var totalBlocos = Math.ceil(n / tam);
+        var tam = 1;
+        var totalBlocos = n;
         if (!perfil.blocosGeracoes) perfil.blocosGeracoes = [];
 
         // Auto-recovery: se bloco ficou em "em_geracao" há mais de 5 min, resetar para "disponivel"
@@ -1312,7 +1314,12 @@
             var fim = Math.min((i + 1) * tam, n);
             var existing = perfil.blocosGeracoes[i] || {};
             var status = existing.status || (i === 0 ? 'disponivel' : 'bloqueado');
-            // Unlock next block if previous is done
+            // If programa completo was generated (all themes exist), unlock all
+            var programaGerado = perfil.curriculo && perfil.curriculo.length >= n;
+            if (programaGerado && status === 'bloqueado') {
+                status = 'disponivel';
+            }
+            // Unlock next if previous is done
             if (i > 0 && perfil.blocosGeracoes[i - 1] && perfil.blocosGeracoes[i - 1].status === 'gerado' && status === 'bloqueado') {
                 status = 'disponivel';
             }
@@ -1340,7 +1347,7 @@
         var html = '<div style="margin-top:32px;">' +
             '<h2 style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:28px;font-weight:600;color:#1a1a1a;margin-bottom:8px;">Temas das Aulas</h2>' +
             '<p style="font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:14px;color:#6b7280;margin-bottom:20px;">' +
-                (perfil.dadosFormulario || {}).nome + ' — ' + n + ' aulas em ' + state.totalBlocos + ' bloco' + (state.totalBlocos > 1 ? 's' : '') +
+                (perfil.dadosFormulario || {}).nome + ' — ' + n + ' aulas (geração individual)' +
             '</p>';
 
         // Barra de progresso
@@ -1379,7 +1386,7 @@
                 '<div style="display:flex;align-items:center;gap:12px;">' +
                 icon +
                 '<div>' +
-                '<h3 style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:20px;font-weight:600;color:#1a1a1a;margin:0;">Bloco ' + b.numero + ' — Aulas ' + b.aulaInicio + ' a ' + b.aulaFim + '</h3>' +
+                '<h3 style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:20px;font-weight:600;color:#1a1a1a;margin:0;">Aula ' + b.numero + '</h3>' +
                 (isGerado && b.geradoEm ? '<p style="font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:12px;color:#9ca3af;margin:4px 0 0 0;">Gerado em ' + new Date(b.geradoEm).toLocaleString('pt-BR') + '</p>' : '') +
                 (isGerando ? '<p style="font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:12px;color:#003080;margin:4px 0 0 0;" id="blocoStatusLabel-' + b.numero + '">Preparando dados...</p>' : '') +
                 '</div></div>' +
@@ -1389,13 +1396,19 @@
                 html += '<button onclick="toggleBlocoTemas(' + b.numero + ')" style="background:none;border:1px solid #d1d5db;border-radius:8px;padding:8px 16px;font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:13px;font-weight:500;color:#374151;cursor:pointer;" id="btnToggle-' + b.numero + '">Ver temas ▼</button>' +
                     '<button onclick="regerarBloco(' + b.numero + ')" style="background:none;border:none;padding:8px;cursor:pointer;color:#003080;font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:13px;font-weight:500;display:flex;align-items:center;gap:4px;" title="Regerar bloco"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Regerar</button>';
             } else if (isDisponivel) {
-                html += '<button onclick="gerarBloco(' + b.numero + ')" style="background:#003080;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Gerar Bloco ' + b.numero + '</button>';
+                html += '<button onclick="gerarPromptAula(' + b.numero + ')" style="background:#003080;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Gerar Prompt</button>';
             } else if (isGerando) {
                 html += '<button onclick="cancelarBloco(' + b.numero + ')" style="background:none;border:1px solid #d1d5db;border-radius:8px;padding:8px 16px;font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:13px;font-weight:500;color:#6b7280;cursor:pointer;">Cancelar</button>';
             } else if (isErro) {
                 html += '<button onclick="gerarBloco(' + b.numero + ')" style="background:#dc2626;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Tentar Novamente</button>';
             } else if (isBloqueado) {
-                html += '<span style="font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:13px;color:#9ca3af;">Gere o Bloco ' + (b.numero - 1) + ' primeiro</span>';
+                // If programa completo exists, show Gerar Prompt instead of blocked
+                var _progGerado = perfil.curriculo && perfil.curriculo.length >= n;
+                if (_progGerado) {
+                    html += '<button onclick="gerarPromptAula(' + b.numero + ')" style="background:#003080;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Gerar Prompt</button>';
+                } else {
+                    html += '<span style="font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:13px;color:#9ca3af;">Gere o programa completo primeiro</span>';
+                }
             }
 
             html += '</div></div>';
@@ -1461,6 +1474,117 @@
         }
     }
 
+    async function gerarProgramaCompleto() {
+        var n = parseInt(document.getElementById('geracaoNumAulas').value || getField('numAulas') || '0');
+        if (n <= 0) { alert('Defina o total de aulas primeiro.'); return; }
+        if (!confirm('Gerar o currículo completo de ' + n + ' aulas?\n\nSerá gerado em lotes para garantir qualidade.')) return;
+
+        // Show progress indicator below the button
+        var progDiv = document.getElementById('programaProgress');
+        if (!progDiv) {
+            progDiv = document.createElement('div');
+            progDiv.id = 'programaProgress';
+            progDiv.style.cssText = 'margin-top:16px;padding:20px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;';
+            var btnContainer = document.querySelector('[onclick="gerarProgramaCompleto()"]').parentElement;
+            btnContainer.parentElement.insertBefore(progDiv, btnContainer.nextSibling);
+        }
+
+        // Generate in batches of 10 to avoid timeout
+        var batchSize = 10;
+        var totalBatches = Math.ceil(n / batchSize);
+        var allTemas = [];
+
+        for (var batch = 0; batch < totalBatches; batch++) {
+            var bStart = batch * batchSize + 1;
+            var bEnd = Math.min((batch + 1) * batchSize, n);
+            var pct = Math.round((batch / totalBatches) * 100);
+
+            progDiv.innerHTML = '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">' +
+                '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003080" stroke-width="2" style="animation:spin 1s linear infinite;"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>' +
+                '<span style="font:600 14px/1.5 -apple-system,sans-serif;color:#003080;">Gerando aulas ' + bStart + ' a ' + bEnd + ' de ' + n + '...</span></div>' +
+                '<div style="height:6px;background:#e0e7ff;border-radius:3px;overflow:hidden;">' +
+                '<div style="height:100%;width:' + pct + '%;background:#003080;border-radius:3px;transition:width 0.5s;"></div></div>' +
+                '<p style="font:12px/1.5 -apple-system,sans-serif;color:#6b7280;margin-top:6px;">Lote ' + (batch + 1) + ' de ' + totalBatches + '</p>';
+
+            try {
+                var focoEl = document.getElementById('geracaoFoco');
+                var nivelEl = document.getElementById('geracaoNivel');
+                var foco = (focoEl ? focoEl.value.trim() : '') || getField('foco') || '';
+                var nivel = (nivelEl ? nivelEl.value.trim() : '') || getField('nivel') || '';
+                var formObj = perfil.dadosFormulario || {};
+                var source = (perfil.perfil && perfil.perfil.resumoExecutivo) ? perfil.perfil : perfil;
+
+                var resp = await fetch('/api/gerar-temas', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nome: formObj.nome || perfil.nome || '',
+                        foco: foco,
+                        nivel: nivel,
+                        numAulas: String(n),
+                        bloco: batch + 1,
+                        aulaInicio: bStart,
+                        aulaFim: bEnd,
+                        temasAnteriores: allTemas.map(function(t) { return (t.aula || '') + ': ' + (t.tema || ''); }),
+                        profissao: getField('profissao') || '',
+                        cidade: getField('cidade') || '',
+                        idade: getField('idade') || '',
+                        vitoria: (source.vitoriaAutomatica || {}).texto || formObj.vitoria || '',
+                        historico: getField('historico') || formObj.historicoIngles || '',
+                        forcas: (source.forcas || []).map(function(f) { return f.item || f.texto || ''; }).join(', '),
+                        fraquezas: (source.melhorias || []).map(function(m) { return m.item || m.texto || ''; }).join(', '),
+                        resumo: source.resumoExecutivo || '',
+                        hobbies: formObj.hobbies || '',
+                        modalidade: formObj.modalidadeAula || formObj.modalidade || ''
+                    })
+                });
+
+                if (!resp.ok) throw new Error('API error ' + resp.status);
+                var result = await resp.json();
+                var batchTemas = result.curriculo || [];
+                allTemas = allTemas.concat(batchTemas);
+
+                // Save each aula individually
+                if (!perfil.blocosGeracoes) perfil.blocosGeracoes = [];
+                for (var t = 0; t < batchTemas.length; t++) {
+                    var aulaIdx = bStart - 1 + t;
+                    perfil.blocosGeracoes[aulaIdx] = {
+                        numero: aulaIdx + 1,
+                        aulaInicio: aulaIdx + 1,
+                        aulaFim: aulaIdx + 1,
+                        status: 'gerado',
+                        geradoEm: new Date().toISOString(),
+                        temas: [batchTemas[t]]
+                    };
+                }
+            } catch(e) {
+                progDiv.innerHTML = '<div style="display:flex;align-items:center;gap:12px;">' +
+                    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
+                    '<span style="font:600 14px/1.5 -apple-system,sans-serif;color:#dc2626;">Erro no lote ' + (batch + 1) + ': ' + e.message + '. Tente novamente.</span></div>';
+                // Save what we have so far
+                perfil.curriculo = allTemas;
+                savePerfil();
+                renderAll();
+                return;
+            }
+        }
+
+        // All batches done — save full curriculo
+        perfil.curriculo = allTemas;
+        savePerfil();
+        renderAll();
+
+        progDiv.innerHTML = '<div style="display:flex;align-items:center;gap:12px;">' +
+            '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
+            '<span style="font:600 14px/1.5 -apple-system,sans-serif;color:#16a34a;">Programa completo gerado! ' + allTemas.length + ' aulas prontas.</span></div>';
+    }
+
+    function gerarPromptAula(aulaNum) {
+        window._blocoAulaInicio = aulaNum;
+        window._blocoPromptNum = aulaNum;
+        gerarPrompt();
+    }
+
     async function gerarBloco(num) {
         // Capturar valores dos campos da Seção 8 ANTES de qualquer renderAll
         var focoEl = document.getElementById('geracaoFoco');
@@ -1480,6 +1604,11 @@
         var tam = 5;
         var inicio = (num - 1) * tam + 1;
         var fim = Math.min(num * tam, numAulas);
+        if (window._gerarTudo) {
+            inicio = 1;
+            fim = window._gerarTudoTotal;
+            window._gerarTudo = false;
+        }
         var formObj = perfil.dadosFormulario || {};
         var source = (perfil.perfil && perfil.perfil.resumoExecutivo) ? perfil.perfil : perfil;
 
@@ -1493,15 +1622,18 @@
             }
         }
 
-        // Marcar como em_geracao
+        // Marcar como em_geracao (skip UI update for programa completo)
+        var isProgramaCompleto = (inicio === 1 && fim >= numAulas);
         if (!perfil.blocosGeracoes) perfil.blocosGeracoes = [];
-        if (!perfil.blocosGeracoes[num - 1]) perfil.blocosGeracoes[num - 1] = {};
-        perfil.blocosGeracoes[num - 1].status = 'em_geracao';
-        perfil.blocosGeracoes[num - 1].aulaInicio = inicio;
-        perfil.blocosGeracoes[num - 1].aulaFim = fim;
-        perfil.blocosGeracoes[num - 1]._geracaoInicio = new Date().toISOString();
-        savePerfil();
-        renderAll();
+        if (!isProgramaCompleto) {
+            if (!perfil.blocosGeracoes[num - 1]) perfil.blocosGeracoes[num - 1] = {};
+            perfil.blocosGeracoes[num - 1].status = 'em_geracao';
+            perfil.blocosGeracoes[num - 1].aulaInicio = inicio;
+            perfil.blocosGeracoes[num - 1].aulaFim = fim;
+            perfil.blocosGeracoes[num - 1]._geracaoInicio = new Date().toISOString();
+            savePerfil();
+            renderAll();
+        }
 
         // Restaurar valores nos textareas após re-render
         var focoElPost = document.getElementById('geracaoFoco');
@@ -1524,8 +1656,16 @@
         if (formObj.seriesFilmes) hobbiesArr.push('Séries/filmes: ' + formObj.seriesFilmes);
         if (formObj.musicasPodcasts) hobbiesArr.push('Músicas/podcasts: ' + formObj.musicasPodcasts);
 
-        // Progress animation
+        // Progress animation (skip card update for programa completo)
         function bProg(pct, label) {
+            if (isProgramaCompleto) {
+                // Update the programa progress bar instead
+                var pBar = document.getElementById('programaBar');
+                var pStatus = document.getElementById('programaStatus');
+                if (pBar) pBar.style.width = Math.min(pct, 95) + '%';
+                if (pStatus) pStatus.textContent = label;
+                return;
+            }
             var bar = document.getElementById('blocoProgressBar-' + num);
             var lbl = document.getElementById('blocoProgressLabel-' + num);
             var pctEl = document.getElementById('blocoProgressPct-' + num);
@@ -1577,26 +1717,40 @@
             if (!resp.ok) throw new Error('API retornou ' + resp.status);
             var result = await resp.json();
 
-            bProg(100, 'Bloco ' + num + ' gerado!');
+            bProg(100, 'Programa gerado!');
 
-            // Salvar bloco
-            perfil.blocosGeracoes[num - 1] = {
-                numero: num,
-                aulaInicio: inicio,
-                aulaFim: fim,
-                status: 'gerado',
-                geradoEm: new Date().toISOString(),
-                temas: result.curriculo || []
-            };
-
-            // Desbloquear próximo bloco
-            var totalBlocos = Math.ceil(numAulas / tam);
-            if (num < totalBlocos) {
-                if (!perfil.blocosGeracoes[num]) perfil.blocosGeracoes[num] = {};
-                if (perfil.blocosGeracoes[num].status !== 'gerado') {
-                    perfil.blocosGeracoes[num].status = 'disponivel';
-                    perfil.blocosGeracoes[num].aulaInicio = num * tam + 1;
-                    perfil.blocosGeracoes[num].aulaFim = Math.min((num + 1) * tam, numAulas);
+            // Salvar resultado — distribuir temas em aulas individuais
+            var temas = result.curriculo || [];
+            if (temas.length > 0 && inicio === 1 && fim >= numAulas) {
+                // Programa completo — distribuir cada tema como uma aula individual
+                for (var t = 0; t < temas.length; t++) {
+                    perfil.blocosGeracoes[t] = {
+                        numero: t + 1,
+                        aulaInicio: t + 1,
+                        aulaFim: t + 1,
+                        status: 'gerado',
+                        geradoEm: new Date().toISOString(),
+                        temas: [temas[t]]
+                    };
+                }
+            } else {
+                // Aula individual
+                perfil.blocosGeracoes[num - 1] = {
+                    numero: num,
+                    aulaInicio: inicio,
+                    aulaFim: fim,
+                    status: 'gerado',
+                    geradoEm: new Date().toISOString(),
+                    temas: temas
+                };
+                // Desbloquear próxima aula
+                if (num < numAulas) {
+                    if (!perfil.blocosGeracoes[num]) perfil.blocosGeracoes[num] = {};
+                    if (perfil.blocosGeracoes[num].status !== 'gerado') {
+                        perfil.blocosGeracoes[num].status = 'disponivel';
+                        perfil.blocosGeracoes[num].aulaInicio = num + 1;
+                        perfil.blocosGeracoes[num].aulaFim = num + 1;
+                    }
                 }
             }
 
@@ -1625,7 +1779,7 @@
             popup.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;display:flex;align-items:center;justify-content:center;';
             popup.innerHTML = '<div style="background:#fff;border-radius:16px;padding:32px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;">' +
                 '<div style="width:48px;height:48px;background:#FEF2F2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>' +
-                '<h3 style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;font-weight:600;margin-bottom:8px;">Erro ao gerar Bloco ' + num + '</h3>' +
+                '<h3 style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;font-weight:600;margin-bottom:8px;">Erro ao gerar Aula ' + num + '</h3>' +
                 '<p style="font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:14px;line-height:1.6;color:#6b7280;margin-bottom:24px;">' + esc(e.message || 'Erro desconhecido') + '</p>' +
                 '<div style="display:flex;gap:12px;justify-content:center;">' +
                 '<button onclick="this.closest(\'div[style*=fixed]\').remove();gerarBloco(' + num + ')" style="padding:12px 28px;background:#003080;color:#fff;border:none;border-radius:12px;font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Tentar Novamente</button>' +
@@ -1646,7 +1800,7 @@
     function regerarBloco(num) {
         var blocoInfo = perfil.blocosGeracoes && perfil.blocosGeracoes[num - 1];
         var range = blocoInfo ? 'aulas ' + blocoInfo.aulaInicio + '-' + blocoInfo.aulaFim : 'Bloco ' + num;
-        if (!confirm('Tem certeza que deseja regerar o Bloco ' + num + ' (' + range + ')?\n\nOs temas atuais serão sobrescritos.')) return;
+        if (!confirm('Tem certeza que deseja regerar a Aula ' + num + '?\n\nOs temas atuais serão sobrescritos.')) return;
         gerarBloco(num);
     }
 
@@ -1666,7 +1820,7 @@
             '<div style="margin-bottom:var(--space-lg);">' +
             '<label class="field-label" style="font-weight:600;margin-bottom:var(--space-xs);display:block;">Temas por Aula <span style="font-weight:400;color:var(--text-dim);">(um por linha — obrigatório)</span></label>' +
             '<div style="font:var(--text-small);color:var(--text-muted);margin-bottom:var(--space-md);line-height:1.7;">' +
-                '<strong style="color:var(--text-primary);">Este é o momento mais crítico do programa.</strong> O currículo gerado aqui alimenta todas as aulas — Pre-class, Plano de Aula e Material do Professor. Ele deve ser:<br><br>' +
+                '<strong style="color:var(--text-primary);">Este é o momento mais crítico do programa.</strong> O currículo gerado aqui alimenta todas as aulas — Pre-class e IN CLASS. Ele deve ser:<br><br>' +
                 '<strong>Regras aplicadas automaticamente pela IA:</strong><br>' +
                 '• <strong>CEFR rigoroso</strong> — estruturas gramaticais respeitam o nível do aluno (Regra 82-83)<br>' +
                 '• <strong>Mescla geral + foco</strong> — proporção por nível: A0/A1=70/30, A2=60/40, B1=50/50, B2=40/60 (Regra 84, 123)<br>' +
@@ -1689,6 +1843,22 @@
             '<div style="margin-bottom:var(--space-md);">' +
                 '<label style="font:var(--text-micro);color:var(--text-dim);display:block;margin-bottom:4px;">Total de aulas</label>' +
                 '<input type="number" class="input" id="geracaoNumAulas" value="' + esc(numAulasGeracao || '') + '" style="width:200px;font:var(--text-base);" oninput="perfil._geracaoNumAulas=this.value;">' +
+            '</div>' +
+            '<div style="margin-top:16px;" id="programaBtnContainer">' +
+              (function() {
+                var programaGerado = perfil.curriculo && perfil.curriculo.length >= parseInt(numAulasGeracao || '0');
+                if (programaGerado) {
+                  return '<button disabled style="background:#16a34a;color:#fff;border:none;border-radius:12px;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:15px;font-weight:600;cursor:default;display:flex;align-items:center;gap:8px;opacity:1;">' +
+                    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
+                    'Programa Gerado (' + perfil.curriculo.length + ' aulas)' +
+                  '</button>' +
+                  '<button onclick="if(confirm(\'Tem certeza? Isso vai sobrescrever o currículo atual de ' + perfil.curriculo.length + ' aulas.\'))gerarProgramaCompleto()" style="background:none;border:none;color:#9ca3af;font-size:.78rem;cursor:pointer;margin-top:6px;text-decoration:underline;font-family:-apple-system,sans-serif;">Regerar programa</button>';
+                }
+                return '<button onclick="gerarProgramaCompleto()" style="background:#003080;color:#fff;border:none;border-radius:12px;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;">' +
+                  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>' +
+                  'Gerar Programa Completo' +
+                '</button>';
+              })() +
             '</div>' +
             '</div>' +
             // Seção de Blocos (Regra 121)
@@ -1931,6 +2101,74 @@
             return '';
         }
 
+        // Helper: get personality axis value from mapaPersonalidade
+        function getPersonalidade(axisKey) {
+            var mp = source.mapaPersonalidade || {};
+            // Object format: { introversaoExtroversao: { valor, inferencia, ... } }
+            if (mp[axisKey]) return mp[axisKey].inferencia || mp[axisKey].valor || '';
+            // Array format: [{ nome, valor, inferencia }]
+            if (Array.isArray(mp)) {
+                var found = mp.find(function(e) { return e.nome === axisKey || e.key === axisKey; });
+                if (found) return found.inferencia || found.valor || '';
+            }
+            return '';
+        }
+
+        // Helper: get deep field — searches ALL possible sources
+        function getDeepField(key, fallbackLabel) {
+            // 1. getManagedField (form edits > AI dadosExtraidos > form > source)
+            var v = getManagedField(key);
+            if (v && v !== '') return v;
+
+            // 2. dadosFormulario (raw form input)
+            if (formObj[key] && formObj[key] !== '') return formObj[key];
+
+            // 3. mapaPersonalidade (AI-extracted personality traits)
+            var axisMap = {
+                estiloAprendizagem: 'estiloAprendizagem',
+                energiaPreferida: 'energiaPreferida',
+                lidaComErros: 'toleranciaErro',
+                toleranciaErro: 'toleranciaErro',
+                confianteInseguro: 'confianteInseguro'
+            };
+            if (axisMap[key]) {
+                var pVal = getPersonalidade(axisMap[key]);
+                if (pVal) return pVal;
+            }
+
+            // 4. necessidadesPedagogicas (AI-extracted teaching needs)
+            var nec = source.necessidadesPedagogicas || {};
+            if (nec[key] && nec[key] !== '') return nec[key];
+
+            // 5. Interests from form OR from necessidades mídias
+            var interestMap = {
+                seriesFilmes: function() { return formObj.seriesFilmes || (nec.midiasApropriadas ? extractFromMidias(nec.midiasApropriadas, 'serie') : ''); },
+                musicasPodcasts: function() { return formObj.musicasPodcasts || (nec.midiasApropriadas ? extractFromMidias(nec.midiasApropriadas, 'podcast') : ''); },
+                hobbies: function() { return formObj.hobbies || ''; }
+            };
+            if (interestMap[key]) {
+                var iVal = interestMap[key]();
+                if (iVal) return iVal;
+            }
+
+            // 6. Stake/Vitória from multiple sources
+            if (key === 'stake') {
+                return formObj.stake || (source.stakeAutomatico || {}).texto || getManagedField('stake') || '';
+            }
+            if (key === 'vitoria') {
+                return formObj.vitoria || (source.vitoriaAutomatica || {}).texto || getManagedField('vitoria') || '';
+            }
+
+            return fallbackLabel || '';
+        }
+
+        function extractFromMidias(midiasText, tipo) {
+            if (!midiasText || typeof midiasText !== 'string') return '';
+            // Extract series/podcast mentions from mídias text
+            var lines = midiasText.split(/[,;.\n]/);
+            return lines.filter(function(l) { return l.toLowerCase().indexOf(tipo) > -1; }).map(function(l) { return l.trim(); }).join(', ');
+        }
+
         // Extract concise stake/vitória — if raw field is too long (>200 chars),
         // derive from resumo executivo or promessa transformadora instead
         function getConcisoStake() {
@@ -1999,15 +2237,17 @@
         const necFields = [
             ['Adequação por Nível', nec.adaptacaoNivel || nec.adequacaoNivel],
             ['Adequação por Idade', nec.adaptacaoIdade || nec.adequacaoIdade],
-            ['Estilo de Aprendizagem', nec.estiloAprendizagem],
+            ['Estilo de Aprendizagem', nec.estiloAprendizagem || getPersonalidade('estiloAprendizagem')],
             ['Tolerância a Tradução', nec.toleranciaTraducao],
-            ['Ritmo Ideal', nec.ritmoIdeal],
+            ['Ritmo Ideal', nec.ritmoIdeal || getPersonalidade('energiaPreferida')],
             ['Tipos de Exercício Preferíveis', nec.tiposExercicio],
             ['Mídias Apropriadas', nec.midiasApropriadas],
-            ['Adaptação à Modalidade', nec.adaptacaoModalidade]
+            ['Adaptação à Modalidade', nec.adaptacaoModalidade || formObj.modalidadeAula || formObj.modalidade]
         ];
         necFields.forEach(function(nf) {
-            necessidadesText += '- ' + nf[0] + ': ' + (nf[1] || 'Não definido') + '\n';
+            if (nf[1]) {
+                necessidadesText += '- ' + nf[0] + ': ' + nf[1] + '\n';
+            }
         });
 
         // Professor
@@ -2060,8 +2300,8 @@
             '- Histórico: ' + (getField('historico') || formObj.historicoIngles || '') + '\n' +
             '- Stake: ' + (function() { var s = formObj.stake || (source.stakeAutomatico || {}).texto || ''; return s.length > 300 ? s.substring(0, 300) + '...' : s; })() + '\n' +
             '- Vitória: ' + (function() { var v = formObj.vitoria || (source.vitoriaAutomatica || {}).texto || ''; return v.length > 300 ? v.substring(0, 300) + '...' : v; })() + '\n' +
-            '- Perfil emocional: ' + (formObj.lidaComErros || '') + '\n' +
-            '- Estilo de aprendizagem: ' + (formObj.estiloAprendizagem || getField('estiloAprendizagem') || '') + '\n' +
+            '- Perfil emocional: ' + getDeepField('lidaComErros', '') + '\n' +
+            '- Estilo de aprendizagem: ' + getDeepField('estiloAprendizagem', '') + '\n' +
             '- Observações: ' + (typeof perfil.observacoesProfessor === 'object' ? (perfil.observacoesProfessor.observacoesLivres || '') : (perfil.observacoesProfessor || '')) + '\n\n' +
 
             '══════════════════════════════════════\n' +
@@ -2095,24 +2335,24 @@
 
             (function() {
               var n = parseInt(getField('numAulas') || formObj.numAulas || '0');
-              if (n > 5) {
-                var blocoNum = window._blocoPromptNum || 1;
-                var aulaInicio = window._blocoAulaInicio || 1;
-                var aulaFim = Math.min(aulaInicio + 4, n);
-                return '\n\n══════════════════════════════════════\n' +
-                  'BLOCO DE GERAÇÃO\n' +
-                  '══════════════════════════════════════\n' +
-                  'Este programa tem ' + n + ' aulas. Gerar em BLOCOS DE 5.\n' +
-                  'BLOCO ATUAL: ' + blocoNum + ' (Aulas ' + aulaInicio + ' a ' + aulaFim + ')\n\n' +
-                  'INSTRUÇÕES DO BLOCO:\n' +
-                  '- Aba 1 (Planejamento): tabela do currículo de TODAS as ' + n + ' aulas\n' +
-                  '- Abas 2, 3, 4, 5: conteúdo COMPLETO APENAS para aulas ' + aulaInicio + ' a ' + aulaFim + '\n' +
-                  '- Aulas fora deste bloco: placeholder "Conteúdo será adicionado no próximo bloco"\n' +
-                  '- MÁXIMO 5 aulas com conteúdo denso. Melhor 3 densas que 5 rasas.\n' +
-                  (blocoNum > 1 ? '- CONTINUAÇÃO: Aulas 1-' + (aulaInicio - 1) + ' já foram geradas. NÃO recriar do zero.\n' : '') +
-                  '\n';
-              }
-              return '';
+              var aulaNum = window._blocoAulaInicio || 1;
+              return '\n\n══════════════════════════════════════\n' +
+                'GERAÇÃO POR AULA (UMA DE CADA VEZ)\n' +
+                '══════════════════════════════════════\n' +
+                'Este programa tem ' + n + ' aulas. Gerar UMA AULA POR VEZ para garantir qualidade máxima.\n' +
+                'AULA ATUAL: ' + aulaNum + ' de ' + n + '\n\n' +
+                'INSTRUÇÕES:\n' +
+                '- Aba 1 (Planejamento): tabela do currículo de TODAS as ' + n + ' aulas (visão geral do programa)\n' +
+                '- Aba 2 (Pre-class): exercícios APENAS da Aula ' + aulaNum + '\n' +
+                '- Aba 3 (IN CLASS): slides APENAS da Aula ' + aulaNum + ' (mínimo 25-30 slides para 60 min)\n' +
+                '- Aba 4 (Complementares): recomendações APENAS da Aula ' + aulaNum + '\n' +
+                '- QUALIDADE > QUANTIDADE: Uma aula perfeita vale mais que cinco rasas.\n' +
+                (aulaNum > 1 ? '- CONTINUAÇÃO: Aulas 1-' + (aulaNum - 1) + ' já foram geradas. NÃO recriar. Fazer CALLBACK do vocabulário da aula anterior no warm-up.\n' : '') +
+                '\nTEMPLATE OBRIGATÓRIO:\n' +
+                '- COPIAR CSS/JS do template existente (patricia-ruffo.html ou elaine-v-b.html). NUNCA gerar CSS do zero.\n' +
+                '- IN CLASS: mesma estrutura de slides, navegação, componentes. Só trocar accent color + conteúdo.\n' +
+                '- Pre-class: mesmo padrão de exercícios (checkBlank, selectQuiz, checkMatch). Só trocar conteúdo.\n' +
+                '\n';
             })() +
 
 
@@ -2154,7 +2394,7 @@
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             'REGRAS DE COERÊNCIA INTERNA ABSOLUTA (NÃO-NEGOCIÁVEL)\n' +
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\n' +
-            'Cada aula gera 3 PRODUTOS sincronizados: Pre-class (antes da aula), Material da Aula (durante), Guia do Professor (como conduzir). As 8 regras abaixo garantem coerência absoluta entre eles.\n\n' +
+            'Cada aula gera 3 PRODUTOS sincronizados: Pre-class (antes da aula), IN CLASS com ícone T (durante a aula via Zoom), Complementares (fora da aula). As 8 regras abaixo garantem coerência absoluta entre eles.\n\n' +
             'REGRA 1 — VOCABULÁRIO FECHADO POR AULA\n' +
             'Definir conjunto FECHADO de vocabulário por aula (conforme rulebook de nível). Este conjunto:\n' +
             '- É apresentado PRIMEIRO no pre-class (drilling, matching, fill-in)\n' +
@@ -2180,9 +2420,9 @@
             'A galeria "Explorar o universo" deve ter imagens que ilustram o vocabulário/contexto da aula, não imagens decorativas aleatórias.\n\n' +
             'REGRA 6 — ÁUDIOS COERENTES COM O TEXTO\n' +
             'Todo áudio gerado via ElevenLabs deve corresponder EXATAMENTE ao texto que aparece na tela. Sem variações, paráfrases ou substituições.\n\n' +
-            'REGRA 7 — GUIA DO PROFESSOR REFERENCIA O MATERIAL EXATO\n' +
-            'O Teacher Guide deve referenciar as palavras EXATAS do vocabulário, as estruturas EXATAS sendo trabalhadas, os exercícios EXATOS do material, e os pontos de obstáculo localizados (em qual exercício o aluno provavelmente trava).\n' +
-            'PROIBIDO Teacher Guide genérico que não cita conteúdo específico daquela aula.\n\n' +
+            'REGRA 7 — INSTRUÇÕES NO ÍCONE T REFERENCIAM O MATERIAL EXATO\n' +
+            'As instruções no ícone T de cada slide devem referenciar as palavras EXATAS do vocabulário, as estruturas EXATAS sendo trabalhadas, os exercícios EXATOS do material, e os pontos de obstáculo localizados (em qual slide o aluno provavelmente trava).\n' +
+            'PROIBIDO instruções genéricas no ícone T que não citam conteúdo específico daquela aula.\n\n' +
             'REGRA 8 — PRE-CLASS PREPARA, NÃO SUBSTITUI\n' +
             'Pre-class apresenta vocabulário e dá primeiro contato. Material da aula APROFUNDA com mais contexto, CCQs sobre palavras já vistas, aplicação em diálogos reais, production que exige uso ativo.\n' +
             'Pre-class e material da aula NÃO são iguais. Pre-class é introdução, aula é aprofundamento.\n\n' +
@@ -2193,11 +2433,11 @@
             '10. CRITÉRIO DE SUCESSO MENSURÁVEL: "Ao final desta aula, o aluno será capaz de: [ação verificável]".\n' +
             '11. SURVIVAL CARD PROGRESSIVO: Começa na Aula 1, cresce a cada aula.\n' +
             '12. CALLBACKS ENTRE AULAS: Aula N+1 retoma vocabulário da aula N no warm-up.\n' +
-            '13. ANTECIPAÇÃO DE OBSTÁCULOS LOCALIZADA: Teacher Guide indica EM QUE EXERCÍCIO EXATO o aluno provavelmente trava.\n' +
+            '13. ANTECIPAÇÃO DE OBSTÁCULOS LOCALIZADA: Ícone T indica EM QUE SLIDE EXATO o aluno provavelmente trava.\n' +
             '14. CONTEXTO REAL: Usar profissão (' + (getField('profissao') || '') + '), cidade (' + (getField('cidade') || '') + '), situações reais nos exemplos.\n' +
             '15. LISTA DE BLOCOS DOMINADOS: Cada aula lista os "blocos de linguagem" que o aluno sairá dominando.\n' +
             '16. ADAPTAÇÃO AO FORMATO: ' + (formObj.modalidadeAula || '') + '\n' +
-            '17. PERFIL EMOCIONAL: ' + (formObj.lidaComErros || 'Não informado') + ' \u2014 adaptar rampa de Production.\n' +
+            '17. PERFIL EMOCIONAL: ' + getDeepField('lidaComErros', 'Não informado') + ' \u2014 adaptar rampa de Production.\n' +
             '18. MICROCOPY OBRIGATÓRIO: Cada seção do material deve ter 1-2 linhas guiando o aluno. Voz que autoriza o erro.\n' +
             '19. CHECKLIST "O QUE EU APRENDI": No final de cada aula, bullets verificáveis em primeira pessoa.\n' +
             '20. GALERIA DE IMAGENS: 6-8 imagens reais do tema da aula, conectadas ao vocabulário.\n' +
@@ -2217,15 +2457,15 @@
 
             'PROFISSÃO (' + (getField('profissao') || 'não informada') + ') + CIDADE (' + (getField('cidade') || 'não informada') + '):\n' +
             '- Exemplos nos exercícios usam o contexto profissional e geográfico do aluno\n' +
-            '- Ex: "You are ' + (getField('profissao') || 'a professional') + ' from ' + (getField('cidade') || 'Brazil') + ', checking into a hotel in Miami..."\n' +
+            '- Usar a profissão e cidade do aluno em INGLÊS nos exercícios e role-plays. Adaptar para contexto natural.\n' +
             '- Não usar exemplos genéricos como "John is a student"\n\n' +
 
-            'STAKE (' + (formObj.stake || 'não declarado') + '):\n' +
+            'STAKE (' + getDeepField('stake', 'não declarado') + '):\n' +
             '- O medo real do aluno deve aparecer na PROMESSA de cada aula\n' +
             '- Ex: "Depois desta aula, você NÃO vai mais [stake]"\n' +
-            '- Teacher Guide: antecipar momentos que ativam o stake (ex: exercício de imigração pode gerar ansiedade)\n\n' +
+            '- Ícone T: antecipar momentos que ativam o stake (ex: exercício de imigração pode gerar ansiedade)\n\n' +
 
-            'VITÓRIA (' + (formObj.vitoria || 'não declarada') + '):\n' +
+            'VITÓRIA (' + getDeepField('vitoria', 'não declarada') + '):\n' +
             '- O sonho do aluno deve aparecer no CRITÉRIO DE SUCESSO\n' +
             '- Ex: "Ao final desta aula, ' + nome + ' será capaz de [vitória específica]"\n' +
             '- Encerramento celebra progresso em direção à vitória\n\n' +
@@ -2236,30 +2476,30 @@
             }).join('') : '- Nenhuma frase capturada\n') +
             '- As frases do aluno são mais poderosas que qualquer texto técnico\n\n' +
 
-            'INTERESSES PESSOAIS (séries: ' + (formObj.seriesFilmes || 'não informado') + ', músicas: ' + (formObj.musicasPodcasts || 'não informado') + ', hobbies: ' + (formObj.hobbies || 'não informado') + '):\n' +
+            'INTERESSES PESSOAIS (séries: ' + getDeepField('seriesFilmes', 'não informado') + ', músicas: ' + getDeepField('musicasPodcasts', 'não informado') + ', hobbies: ' + getDeepField('hobbies', 'não informado') + '):\n' +
             '- Atividades Complementares devem incluir conteúdo que o aluno JÁ consome\n' +
             '- Se gosta de documentários, sugerir documentários como material\n' +
             '- Se tem hobby específico, usar vocabulário do hobby nos exemplos quando possível\n\n' +
 
-            'ESTILO DE APRENDIZAGEM (' + (formObj.estiloAprendizagem || getField('estiloAprendizagem') || 'não definido') + '):\n' +
+            'ESTILO DE APRENDIZAGEM (' + getDeepField('estiloAprendizagem', 'não definido') + '):\n' +
             '- Visual: mais flashcards, imagens, galeria temática, diagramas\n' +
             '- Auditivo: mais áudio, repetição oral, podcasts, listening\n' +
             '- Cinestésico: mais role-play, simulação, prática situacional\n' +
             '- Leitura/escrita: mais textos, fill-in-the-blanks, exercícios escritos\n' +
             '- Adaptar o MIX de exercícios ao estilo predominante (mais do tipo preferido, sem eliminar os outros)\n\n' +
 
-            'ENERGIA PREFERIDA (' + (formObj.energiaPreferida || 'não definida') + '):\n' +
+            'ENERGIA PREFERIDA (' + getDeepField('energiaPreferida', 'não definida') + '):\n' +
             '- Calma: blocos mais longos, ritmo pausado, menos transições\n' +
             '- Dinâmica: blocos curtos (15-20min), muita variação, surpresas\n' +
             '- Mista: alternar momentos calmos com momentos dinâmicos\n\n' +
 
-            'COMO LIDA COM ERROS (' + (formObj.lidaComErros || 'não definido') + '):\n' +
+            'COMO LIDA COM ERROS (' + getDeepField('lidaComErros', 'não definido') + '):\n' +
             '- "Fico frustrado": mais scaffolding, exercícios graduais, feedback gentil\n' +
             '- "Levo na boa": pode desafiar mais, exercícios sem script, improvisos\n' +
             '- "Prefiro não arriscar": produção muito guiada, script primeiro, depois semi-livre\n' +
             '- Adaptar a rampa de Production ao perfil emocional\n\n' +
 
-            'HISTÓRICO COM INGLÊS (' + (formObj.historicoIngles || getField('historico') || 'não informado') + '):\n' +
+            'HISTÓRICO COM INGLÊS (' + (getDeepField('historico', '') || formObj.historicoIngles || 'não informado') + '):\n' +
             '- NÃO repetir conteúdo que o aluno já domina\n' +
             '- Se já fez aula de aeroporto, NÃO ensinar vocabulário de aeroporto novamente (apenas callback)\n' +
             '- Se foi autodidata, valorizar a autonomia nas atividades\n' +
@@ -2272,7 +2512,7 @@
                 '- Momentos de animação: ' + ((perfil.observacoesProfessor || {}).momentosAnimacao || 'não observados') + '\n' +
                 '- Momentos de hesitação: ' + ((perfil.observacoesProfessor || {}).momentosHesitacao || 'não observados') + '\n' +
                 '- Usar momentos de ANIMAÇÃO como temas para engajar (exercícios sobre esses tópicos)\n' +
-                '- Usar momentos de HESITAÇÃO para antecipar obstáculos no Teacher Guide\n'
+                '- Usar momentos de HESITAÇÃO para antecipar obstáculos no ícone T da IN CLASS\n'
                 : '- ' + (perfil.observacoesProfessor || 'Nenhuma observação') + '\n') +
             '\n' +
 
@@ -2302,8 +2542,8 @@
             '  Função: generateFAAPLesson(lessonData) gera HTML completo da aula\n\n' +
             'INSTRUÇÃO: Importe estes 4 scripts no HTML gerado e use as funções prontas. NÃO reimplemente exercícios do zero.\n\n' +
             'GERAR DOIS ARQUIVOS HTML SEPARADOS:\n' +
-            '1. /public/professor/' + perfilId + '.html \u2014 Material COMPLETO do professor (5 abas: Planejamento Pedagógico, Pre-class, Plano de Aula com Teacher Guide, Material do Professor, Atividades Complementares)\n' +
-            '2. /public/aluno/' + perfilId + '.html \u2014 Material do ALUNO (apenas Pre-class + Atividades Complementares, SEM Teacher Guide, SEM gabaritos, SEM perfil 360)\n\n' +
+            '1. /public/professor/' + perfilId + '.html \u2014 Material COMPLETO do professor (4 abas: Planejamento Pedagógico, Pre-class, IN CLASS, Atividades Complementares)\n' +
+            '2. /public/aluno/' + perfilId + '.html \u2014 Material do ALUNO (apenas Pre-class + Atividades Complementares, SEM instruções do professor, SEM gabaritos, SEM perfil 360)\n\n' +
             'URLs públicas após deploy:\n' +
             '- Professor: https://alumni-plano-gerador.vercel.app/professor/' + perfilId + '.html\n' +
             '- Aluno: https://alumni-plano-gerador.vercel.app/aluno/' + perfilId + '.html\n\n' +
@@ -2313,56 +2553,38 @@
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             'Gere o material pedagógico completo em DOIS arquivos HTML separados:\n\n' +
             'ARQUIVO 1 \u2014 VISÃO PROFESSOR (/public/professor/' + perfilId + '.html):\n' +
-            '5 abas obrigatórias:\n\n' +
+            '4 abas obrigatórias:\n\n' +
             'ABA 1 — PLANEJAMENTO PEDAGÓGICO:\n' +
             '  Visão geral acadêmica completa do programa. Contém:\n' +
             '  - Cabeçalho: dados do aluno, professor, dias/horários, datas\n' +
             '  - Objetivo do programa (parágrafo)\n' +
             '  - Promessa transformadora + personagem-jornada\n' +
             '  - Forças e pontos de melhoria do aluno\n' +
-            '  - TABELA DO CURRÍCULO COMPLETO: todas as ' + (perfil.curriculo ? perfil.curriculo.length : '?') + ' aulas com # | Tema | Foco Linguístico | Atividade | Homework\n' +
+            '  - TABELA DO CURRÍCULO: APENAS as ' + (perfil.curriculo ? perfil.curriculo.length : '?') + ' aulas deste bloco com # | Tema | Foco Linguístico | Atividade | Homework\n' +
             '  - Regras de cancelamento\n\n' +
             'ABA 2 — PRE-CLASS (exercícios interativos):\n' +
             '  Exercícios que o aluno faz ANTES da aula. Usa exercises.js:\n' +
-            '  createMatchingDropdown, createFillBlank, createMultipleChoice, createOrdering, createPronunciation, createThinkAboutIt\n' +
+            '  HTML manual OBRIGATÓRIO: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(). NUNCA usar data-exercise ou createMatchingDropdown.\n' +
             '  Mínimo 5-8 exercícios variados por aula. Com microcopy que autoriza o erro.\n\n' +
-            'ABA 3 — PLANO DE AULA (roteiro PPP + Teacher Guide):\n' +
-            '  Roteiro minuto a minuto para o professor:\n' +
-            '  Warm-up (10min) → Presentation/Pre-teach (15min) → Teach + CCQs (10min) → Practice (15min) → Semi-free (10min) → Production (15min) → Error Correction (5min) → Wrap-up (5min)\n' +
-            '  Inclui: CCQs escritas, antecipação de obstáculos ("Alerta: o aluno pode travar em..."), timing por bloco.\n' +
-            '  NÃO colocar checklist "O que eu aprendi" nesta aba — o checklist vai APENAS na Aba 4.\n\n' +
-            'ABA 4 — MATERIAL DO PROFESSOR (tela compartilhada):\n' +
-            '  Esta é a tela que o professor COMPARTILHA com o aluno durante a aula via Zoom/Meet.\n' +
-            '  DEVE seguir EXATAMENTE as mesmas fases do Plano de Aula (Aba 3), na mesma ordem:\n' +
-            '  1. WARM-UP: Perguntas na tela para o professor usar como guia visual\n' +
-            '  2. VOCABULARY: Cards com palavra + exemplo + botão Ouvir (SEM tradução PT)\n' +
-            '  3. CONTEXT/DIALOGUE: Diálogo ou texto situacional com áudio\n' +
-            '  4. GRAMMAR FOCUS: Estrutura gramatical com exemplos visuais\n' +
-            '  5. PRACTICE: Exercícios interativos (usa exercises.js) que o professor faz junto com o aluno na tela\n' +
-            '  6. PRODUCTION: Cenário do role-play na tela (imagem + prompt) sem script\n' +
-            '  7. WRAP-UP: Checklist "O que eu aprendi" + Survival Card da aula\n' +
-            '  SEM traduções, SEM respostas, SEM gabaritos — o professor vê as respostas na Aba 3.\n' +
-            '  A conexão entre Aba 3 e Aba 4 é: o professor lê as instruções na Aba 3 e mostra o conteúdo da Aba 4.\n' +
-            '  SINCRONIZAÇÃO OBRIGATÓRIA: O Plano de Aula (Aba 3) deve referenciar EXATAMENTE o mesmo conteúdo que aparece no Material do Professor (Aba 4).\n' +
-            '  Se a Aba 4 usa a frase "I\'d like to confirm my reservation for tonight", a Aba 3 deve citar essa mesma frase nas instruções ao professor — NÃO a frase do Pre-class.\n' +
-            '  Se a Aba 4 tem um exercício de Oral Drilling com 5 situações, a Aba 3 deve descrever essas MESMAS 5 situações com instruções de como conduzir.\n' +
-            '  Aba 3 e Aba 4 são dois lados da mesma moeda: instruções (Aba 3) + conteúdo visual (Aba 4). Nunca podem divergir.\n' +
-            '  REGRA CRÍTICA: O Material do Professor NÃO pode repetir os mesmos exercícios do Pre-class.\n' +
-            '  O Pre-class é INTRODUÇÃO (primeiro contato com vocabulário). O Material do Professor é APROFUNDAMENTO (aplicação em contexto real).\n' +
-            '  DIFERENÇAS OBRIGATÓRIAS:\n' +
-            '  - Pre-class: matching, fill-in, múltipla escolha (exercícios individuais, aluno sozinho)\n' +
-            '  - Material Professor: diálogos situacionais com áudio, exercícios ORAIS guiados pelo professor, gap-fill em textos longos (não frases isoladas), role-play com script parcial, listening comprehension\n' +
-            '  - Se o Pre-class tem "Complete: I have a ___ under the name Pereira", o Material do Professor NÃO pode ter o mesmo. Deve ter um DIÁLOGO COMPLETO onde essa frase aparece em contexto, ou um exercício oral onde o professor fala em PT e o aluno responde em EN.\n' +
-            '  - O vocabulário é o MESMO, mas TODAS as frases-exemplo, exercícios e aplicações devem ser DIFERENTES.\n' +
-            '  - VERIFICAÇÃO OBRIGATÓRIA: depois de escrever o Material do Professor, comparar CADA frase-exemplo com o Pre-class. Se alguma frase for igual, REESCREVER com contexto diferente. Mesma palavra, frase nova.\n' +
-            '  - Exemplo correto: Pre-class tem "I have a reservation under the name Pereira." → Material Professor deve ter "I\'d like to confirm my reservation for tonight." (mesma palavra "reservation", frase diferente).\n' +
-            '  - Exemplo ERRADO: Pre-class tem "Could I see the menu?" → Material Professor tem "Could I see the menu?" (PROIBIDO — mesma frase).\n\n' +
-            'ABA 5 — ATIVIDADES COMPLEMENTARES:\n' +
+            'ABA 3 — IN CLASS (slides interativos para Zoom):\n' +
+            '  Esta aba substitui o antigo Plano de Aula e Material do Professor.\n' +
+            '  É uma APRESENTAÇÃO de slides (100vh por slide, navegação por setas), NÃO uma página com scroll.\n' +
+            '  Instruções ao professor via ícone T (hover) em cada slide.\n' +
+            '  DEVE conter: narrativa com 7 capítulos, reveal cards no vocab, grammar discovery,\n' +
+            '  diálogo line-by-line, 2+ listenings com play/pause, quick fire uma por vez,\n' +
+            '  3 role-plays (guided>semi-free>free), artefatos reais CSS, survival card + checklist checkbox.\n' +
+            '  Zero português na tela. 100% ElevenLabs com alternância Arthur/Ellen.\n' +
+            '  Mínimo 25-30 slides para 60 min, 35-45 para 90 min.\n' +
+            '  REGRA CRÍTICA: A IN CLASS NÃO pode repetir os mesmos exercícios do Pre-class.\n' +
+            '  O Pre-class é INTRODUÇÃO (primeiro contato com vocabulário). A IN CLASS é APROFUNDAMENTO (aplicação em contexto real).\n' +
+            '  O vocabulário é o MESMO, mas TODAS as frases-exemplo, exercícios e aplicações devem ser DIFERENTES.\n' +
+            '  Ver regras detalhadas na seção ESPECIFICAÇÕES DO MATERIAL.\n\n' +
+            'ABA 4 — ATIVIDADES COMPLEMENTARES:\n' +
             '  Filmes, séries, podcasts, canais YouTube recomendados por aula.\n' +
             '  Baseados nos interesses pessoais do aluno.\n\n' +
             'ARQUIVO 2 \u2014 VISÃO ALUNO (/public/aluno/' + perfilId + '.html):\n' +
             '- Apenas 2 abas: Pre-class (exercícios interativos) + Atividades Complementares\n' +
-            '- SEM Teacher Guide, SEM gabaritos, SEM perfil 360, SEM indicação de professor\n' +
+            '- SEM instruções do professor, SEM gabaritos, SEM perfil 360, SEM indicação de professor\n' +
             '- Link público que o aluno recebe\n\n' +
             'Ambos os arquivos devem:\n' +
             '- Usar tema claro Alumni (#f5f5f0), layout centralizado, logo Alumni no header\n' +
@@ -2376,11 +2598,11 @@
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             'ANTES de gerar qualquer exercício, estude este material de referência:\n' +
             'https://faap-english-hub.vercel.app/starter/pop-culture/tv-shows/1\n\n' +
-            'IMPORTANTE: A estrutura das aulas segue o modelo PPP Alumni (5 abas, definido acima). Da FAAP, adotamos APENAS a dinâmica dos exercícios, a UX interativa e o microcopy. NÃO copiar a estrutura de página da FAAP.\n\n' +
+            'IMPORTANTE: A estrutura das aulas segue o modelo Alumni (4 abas com IN CLASS, definido acima). Da FAAP, adotamos APENAS a dinâmica dos exercícios, a UX interativa e o microcopy. NÃO copiar a estrutura de página da FAAP.\n\n' +
             '7 TIPOS DE EXERCÍCIO COM DINÂMICA FAAP (mínimo 5-8 exercícios variados por aula):\n' +
-            '1. Matching dropdown \u2014 palavra em inglês + dropdown com opções de tradução embaralhadas. SEM dica embutida. Feedback imediato.\n' +
+            '1. Matching dropdown \u2014 palavra em inglês + dropdown com opções (definições em inglês para A2+, tradução PT apenas para A0-A1). Feedback imediato.\n' +
             '2. Fill-in-the-blank simples \u2014 frase com lacuna + input. Aluno digita a palavra. Botão Verificar.\n' +
-            '3. Fill-in com dica em português \u2014 mesma mecânica + dica entre parênteses em PT para ajudar.\n' +
+            '3. Fill-in com dica em inglês \u2014 mesma mecânica + dica entre parênteses (definição curta, sinônimo ou pista contextual em INGLÊS). NUNCA dica em português.\n' +
             '4. Múltipla escolha \u2014 4 opções A/B/C/D. Clicou, feedback imediato verde/vermelho.\n' +
             '5. Ordering \u2014 palavras/frases embaralhadas com botões de seta (▲▼) para reordenar. Funciona no mobile.\n' +
             '6. Pronúncia avaliada \u2014 botão de microfone, grava via Web Speech API, compara palavra por palavra (verde = acertou, vermelho = errou). Score X/Y.\n' +
@@ -2430,7 +2652,7 @@
             '- INGLÊS PERFEITO: Todo texto em inglês DEVE ser gramaticalmente perfeito. Zero erros.\n' +
             '- ÁUDIOS VIA ELEVENLABS: Todos os botões de áudio devem ter áudio gerado pela ElevenLabs (voz Arthur, inglês americano).\n' +
             '- MATCHING EMBARALHADO: Nos exercícios de matching, os pares DEVEM estar embaralhados.\n' +
-            '- EXERCÍCIOS SEM RESPOSTAS VISÍVEIS: Na aba Material do Professor, NÃO incluir traduções ou respostas.\n' +
+            '- EXERCÍCIOS SEM RESPOSTAS VISÍVEIS: Na aba IN CLASS, ZERO português na tela. Definições em inglês.\n' +
             '- RESPOSTAS COMPLETAS: Todos os exercícios devem trabalhar respostas completas.\n' +
             '- TEMA CLARO: Usar tema de cores claras (fundo #f5f5f0, texto escuro #2d2d3a).\n' +
             '- LAYOUT CENTRALIZADO: Todas as abas com o mesmo padrão de margens e centralização.\n' +
@@ -2440,7 +2662,7 @@
             '- SURVIVAL CARD PROGRESSIVO: Começa na Aula 1, cresce a cada aula.\n' +
             '- CRITÉRIO DE SUCESSO MENSURÁVEL em cada aula. Toda aula abre com promessa e fecha conferindo.\n' +
             '- CALLBACKS ENTRE AULAS: Aula N+1 retoma vocabulário da aula N no warm-up.\n' +
-            '- ANTECIPAÇÃO DE OBSTÁCULOS LOCALIZADA: Teacher Guide indica QUAL momento da aula provavelmente trava.\n' +
+            '- ANTECIPAÇÃO DE OBSTÁCULOS LOCALIZADA: Ícone T indica QUAL momento da aula provavelmente trava.\n' +
             '- COERÊNCIA INTERNA ABSOLUTA: Vocabulário do pre-teach DEVE aparecer no practice, que DEVE preparar o role-play.\n' +
             '- CCQs ESCRITAS, NÃO DELEGADAS: 2-3 CCQs por aula, escritas no material, prontas para o professor.\n' +
             '- "Could I\u2026" COMO PADRÃO DE CORTESIA: Nunca ensinar "I want" como modelo de pedido educado.\n' +
@@ -2452,7 +2674,7 @@
             'DON\'Ts \u2014 PROIBIDO\n' +
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             '- NÃO gerar textos em português sem acentuação correta\n' +
-            '- NÃO incluir traduções ou respostas na aba Material do Professor\n' +
+            '- ZERO português na tela IN CLASS em qualquer nível\n' +
             '- NÃO usar tema escuro\n' +
             '- NÃO colocar pares de matching na mesma linha\n' +
             '- NÃO usar Web Speech API como método principal de áudio\n' +
@@ -2463,7 +2685,7 @@
             '- NÃO esquecer o survival card progressivo\n' +
             '- NÃO pular a verificação de imagens\n' +
             '- NÃO gerar material sem promessa transformadora e critério de sucesso\n' +
-            '- NÃO colocar botões de áudio na seção Warm-up do Material do Professor\n' +
+            '- Warm-up na IN CLASS: apenas perguntas na tela, sem áudio automático\n' +
             '- NÃO usar "I want" como modelo de pedido educado \u2014 ensinar "Could I...?"\n' +
             '- NÃO sugerir gamificação complexa (badges, leaderboards) \u2014 pode usar rituais simples\n' +
             '- NÃO terceirizar invenção de CCQs para o professor \u2014 escrever CCQs prontas no material\n' +
@@ -2480,11 +2702,11 @@
             '- Fill-in: dica NUNCA em portugu\u00eas \u2014 defini\u00e7\u00e3o curta em ingl\u00eas, sin\u00f4nimo ou pista contextual. Cada item tem bot\u00e3o Listen com frase completa.\n' +
             '- Ao errar: dica em ingl\u00eas ("The correct word is checkout \u2014 it means the time you must leave the hotel")\n' +
             '- Vocab cards: LISTA VERTICAL (1 card por linha, flex-direction:column). NUNCA grid multi-colunas.\n' +
-            '- Checklist "O que eu aprendi" fica APENAS na Aba 4 (Material do Professor). N\u00c3O na Aba 3, N\u00c3O no Pre-class, N\u00c3O no arquivo do aluno.\n' +
-            '- Homework aparece S\u00d3 no professor (Aba 3). NUNCA no arquivo do aluno.\n' +
+            '- Checklist "O que eu aprendi" fica no slide de Wrap-up da IN CLASS (com checkboxes clic\u00e1veis). N\u00c3O no Pre-class, N\u00c3O no arquivo do aluno.\n' +
+            '- Homework: o professor diz ORALMENTE no \u00faltimo slide da IN CLASS (nunca aparece escrito na tela). NUNCA no arquivo do aluno.\n' +
             '- American English: color (n\u00e3o colour), organize (n\u00e3o organise), center (n\u00e3o centre), March 15th.\n' +
             '- Acentua\u00e7\u00e3o PT-BR PERFEITA: tradu\u00e7\u00e3o (n\u00e3o traducao), comunica\u00e7\u00e3o, produ\u00e7\u00e3o, apresenta\u00e7\u00e3o.\n' +
-            '- Capitaliza\u00e7\u00e3o: todo in\u00edcio de frase com MAI\u00daSCULA.\n\n' +
+            '- Capitaliza\u00e7\u00e3o: todo in\u00edcio de frase com MAI\u00daSCULA. Palavras de vocabul\u00e1rio apresentadas sozinhas (vocab cards, matching, survival cards) SEMPRE com primeira letra MAI\u00daSCULA: "Export" (n\u00e3o "export"), "Luxury Goods" (n\u00e3o "luxury goods"), "Board Meeting" (n\u00e3o "board meeting").\n\n' +
 
             '\u00c1UDIO \u2014 VOZES E OPERACIONAL:\n' +
             '- Vozes: Arthur (pNInz6obpgDQGcFmaJgB) para vocab/drilling + Ellen (CwhRBWXzGAHq8TQ4Fs17) para di\u00e1logos/frases-modelo. ALTERNAR \u2014 nunca s\u00f3 uma voz.\n' +
@@ -2492,17 +2714,18 @@
             '- audioMap: usar "var audioMap" (n\u00e3o const). NUNCA tag de fechamento de script literal em strings.\n' +
             '- Arquivos tempor\u00e1rios e scripts: DENTRO do reposit\u00f3rio (/Users/helenmendes/alumni-plano-gerador/), paths ABSOLUTOS. NUNCA em /tmp/.\n\n' +
 
-            'BLOCOS E DENSIDADE:\n' +
-            '- M\u00c1XIMO 5 AULAS POR SESS\u00c3O. Melhor 3 aulas densas que 5 rasas.\n' +
-            '- Aba PLANEJAMENTO = tabela de TODAS as aulas. Demais abas = S\u00d3 as aulas do bloco.\n' +
-            '- Aulas fora do bloco: placeholder "Conte\u00fado ser\u00e1 adicionado no pr\u00f3ximo bloco".\n' +
-            '- NUNCA copy-paste o mesmo Teacher Guide entre aulas. Cada aula tem CCQs, obst\u00e1culos e drilling notes \u00daNICOS.\n\n' +
+            'UMA AULA POR VEZ + TEMPLATE:\n' +
+            '- Gerar UMA aula por vez. NUNCA gerar multiplas aulas juntas. QUALIDADE > QUANTIDADE.\n' +
+            '- COPIAR CSS/JS do template existente (patricia-ruffo.html). NUNCA gerar CSS do zero.\n' +
+            '- Aba PLANEJAMENTO = tabela de TODAS as aulas (visao geral). Demais abas = conteudo de UMA aula.\n' +
+            '- NUNCA copy-paste as mesmas instrucoes do icone T entre aulas. Cada aula tem CCQs, obstaculos e drilling notes UNICOS.\n' +
+            '- Audio OBRIGATORIO: TODAS as frases com speakText() DEVEM ter MP3 no audioMap ANTES do deploy. audioMap vazio = REJEITAR.\n\n' +
 
             'DENSIDADE M\u00cdNIMA POR AULA (N\u00c3O-NEGOCI\u00c1VEL):\n' +
             '- PRE-CLASS: 7-10 vocab cards | 5+ matching | 4+ fill-in | 2+ quiz | 1 ordering (5+ itens) | 2+ speech | 1 think-about-it | 5+ survival\n' +
-            '- PLANO DE AULA: Tabela PPP 9 fases c/ minutagem | 5+ CCQs escritas | 3+ alertas obst\u00e1culo | drilling IPA | frases exatas do professor | homework do curr\u00edculo\n' +
-            '- MATERIAL DO PROFESSOR: 5+ warm-up | vocab frases DIFERENTES do pre-class | gram\u00e1tica visual | di\u00e1logo 8-15 linhas | 3+ listening | 5+ oral drilling | 5+ error correction | 3 role-plays (guided>semi-free>free) | substitution drill | checklist 8+ checks\n' +
-            '- Se UMA aula n\u00e3o cumprir TODOS esses m\u00ednimos: N\u00c3O fa\u00e7a deploy.';
+            '- IN CLASS: 25-30 slides (60 min) ou 35-45 slides (90 min) | narrativa 7 capitulos | reveal cards vocab (2x2 grid) | grammar discovery + common mistake | dialogo line-by-line 8+ linhas | 2+ listenings com play/pause | quick fire 6+ questoes | spot the error 4+ | oral drilling 6+ | 3 role-plays (guided>semi-free>free) | artefato real CSS | survival card 5 frases | checklist checkbox 8+ items | icone T com instrucoes em TODOS os slides | ZERO portugues na tela | 100% audios ElevenLabs no audioMap\n' +
+            '- COMPLEMENTARES: 3 recomendacoes por aula (serie/filme + podcast + YouTube) com checkbox de conclusao\n' +
+            '- Se UMA aula não cumprir TODOS esses mínimos: NÃO faça deploy.';
 
         /* OLD PROMPT BLOCK START — skip */
         if (false) { void('PERFIL 360 DO ALUNO\n' +
@@ -2541,8 +2764,8 @@
             '- Histórico: ' + (getField('historico') || formObj.historicoIngles || '') + '\n' +
             '- Stake: ' + (function() { var s = formObj.stake || (source.stakeAutomatico || {}).texto || ''; return s.length > 300 ? s.substring(0, 300) + '...' : s; })() + '\n' +
             '- Vitória: ' + (function() { var v = formObj.vitoria || (source.vitoriaAutomatica || {}).texto || ''; return v.length > 300 ? v.substring(0, 300) + '...' : v; })() + '\n' +
-            '- Perfil emocional: ' + (formObj.lidaComErros || '') + '\n' +
-            '- Estilo de aprendizagem: ' + (formObj.estiloAprendizagem || getField('estiloAprendizagem') || '') + '\n' +
+            '- Perfil emocional: ' + getDeepField('lidaComErros', '') + '\n' +
+            '- Estilo de aprendizagem: ' + getDeepField('estiloAprendizagem', '') + '\n' +
             '- Observações: ' + (typeof perfil.observacoesProfessor === 'object' ? (perfil.observacoesProfessor.observacoesLivres || '') : (perfil.observacoesProfessor || '')) + '\n\n' +
 
             '══════════════════════════════════════\n' +
@@ -2601,7 +2824,7 @@
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             'REGRAS DE COERÊNCIA INTERNA ABSOLUTA (NÃO-NEGOCIÁVEL)\n' +
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\n' +
-            'Cada aula gera 3 PRODUTOS sincronizados: Pre-class (antes da aula), Material da Aula (durante), Guia do Professor (como conduzir). As 8 regras abaixo garantem coerência absoluta entre eles.\n\n' +
+            'Cada aula gera 3 PRODUTOS sincronizados: Pre-class (antes da aula), IN CLASS com ícone T (durante a aula via Zoom), Complementares (fora da aula). As 8 regras abaixo garantem coerência absoluta entre eles.\n\n' +
             'REGRA 1 — VOCABULÁRIO FECHADO POR AULA\n' +
             'Definir conjunto FECHADO de vocabulário por aula (conforme rulebook de nível). Este conjunto:\n' +
             '- É apresentado PRIMEIRO no pre-class (drilling, matching, fill-in)\n' +
@@ -2627,9 +2850,9 @@
             'A galeria "Explorar o universo" deve ter imagens que ilustram o vocabulário/contexto da aula, não imagens decorativas aleatórias.\n\n' +
             'REGRA 6 — ÁUDIOS COERENTES COM O TEXTO\n' +
             'Todo áudio gerado via ElevenLabs deve corresponder EXATAMENTE ao texto que aparece na tela. Sem variações, paráfrases ou substituições.\n\n' +
-            'REGRA 7 — GUIA DO PROFESSOR REFERENCIA O MATERIAL EXATO\n' +
-            'O Teacher Guide deve referenciar as palavras EXATAS do vocabulário, as estruturas EXATAS sendo trabalhadas, os exercícios EXATOS do material, e os pontos de obstáculo localizados (em qual exercício o aluno provavelmente trava).\n' +
-            'PROIBIDO Teacher Guide genérico que não cita conteúdo específico daquela aula.\n\n' +
+            'REGRA 7 — INSTRUÇÕES NO ÍCONE T REFERENCIAM O MATERIAL EXATO\n' +
+            'As instruções no ícone T de cada slide devem referenciar as palavras EXATAS do vocabulário, as estruturas EXATAS sendo trabalhadas, os exercícios EXATOS do material, e os pontos de obstáculo localizados (em qual slide o aluno provavelmente trava).\n' +
+            'PROIBIDO instruções genéricas no ícone T que não citam conteúdo específico daquela aula.\n\n' +
             'REGRA 8 — PRE-CLASS PREPARA, NÃO SUBSTITUI\n' +
             'Pre-class apresenta vocabulário e dá primeiro contato. Material da aula APROFUNDA com mais contexto, CCQs sobre palavras já vistas, aplicação em diálogos reais, production que exige uso ativo.\n' +
             'Pre-class e material da aula NÃO são iguais. Pre-class é introdução, aula é aprofundamento.\n\n' +
@@ -2640,11 +2863,11 @@
             '10. CRITÉRIO DE SUCESSO MENSURÁVEL: "Ao final desta aula, o aluno será capaz de: [ação verificável]".\n' +
             '11. SURVIVAL CARD PROGRESSIVO: Começa na Aula 1, cresce a cada aula.\n' +
             '12. CALLBACKS ENTRE AULAS: Aula N+1 retoma vocabulário da aula N no warm-up.\n' +
-            '13. ANTECIPAÇÃO DE OBSTÁCULOS LOCALIZADA: Teacher Guide indica EM QUE EXERCÍCIO EXATO o aluno provavelmente trava.\n' +
+            '13. ANTECIPAÇÃO DE OBSTÁCULOS LOCALIZADA: Ícone T indica EM QUE SLIDE EXATO o aluno provavelmente trava.\n' +
             '14. CONTEXTO REAL: Usar profissão (' + (getField('profissao') || '') + '), cidade (' + (getField('cidade') || '') + '), situações reais nos exemplos.\n' +
             '15. LISTA DE BLOCOS DOMINADOS: Cada aula lista os "blocos de linguagem" que o aluno sairá dominando.\n' +
             '16. ADAPTAÇÃO AO FORMATO: ' + (formObj.modalidadeAula || '') + '\n' +
-            '17. PERFIL EMOCIONAL: ' + (formObj.lidaComErros || 'Não informado') + ' \u2014 adaptar rampa de Production.\n' +
+            '17. PERFIL EMOCIONAL: ' + getDeepField('lidaComErros', 'Não informado') + ' \u2014 adaptar rampa de Production.\n' +
             '18. MICROCOPY OBRIGATÓRIO: Cada seção do material deve ter 1-2 linhas guiando o aluno. Voz que autoriza o erro.\n' +
             '19. CHECKLIST "O QUE EU APRENDI": No final de cada aula, bullets verificáveis em primeira pessoa.\n' +
             '20. GALERIA DE IMAGENS: 6-8 imagens reais do tema da aula, conectadas ao vocabulário.\n' +
@@ -2664,15 +2887,15 @@
 
             'PROFISSÃO (' + (getField('profissao') || 'não informada') + ') + CIDADE (' + (getField('cidade') || 'não informada') + '):\n' +
             '- Exemplos nos exercícios usam o contexto profissional e geográfico do aluno\n' +
-            '- Ex: "You are ' + (getField('profissao') || 'a professional') + ' from ' + (getField('cidade') || 'Brazil') + ', checking into a hotel in Miami..."\n' +
+            '- Usar a profissão e cidade do aluno em INGLÊS nos exercícios e role-plays. Adaptar para contexto natural.\n' +
             '- Não usar exemplos genéricos como "John is a student"\n\n' +
 
-            'STAKE (' + (formObj.stake || 'não declarado') + '):\n' +
+            'STAKE (' + getDeepField('stake', 'não declarado') + '):\n' +
             '- O medo real do aluno deve aparecer na PROMESSA de cada aula\n' +
             '- Ex: "Depois desta aula, você NÃO vai mais [stake]"\n' +
-            '- Teacher Guide: antecipar momentos que ativam o stake (ex: exercício de imigração pode gerar ansiedade)\n\n' +
+            '- Ícone T: antecipar momentos que ativam o stake (ex: exercício de imigração pode gerar ansiedade)\n\n' +
 
-            'VITÓRIA (' + (formObj.vitoria || 'não declarada') + '):\n' +
+            'VITÓRIA (' + getDeepField('vitoria', 'não declarada') + '):\n' +
             '- O sonho do aluno deve aparecer no CRITÉRIO DE SUCESSO\n' +
             '- Ex: "Ao final desta aula, ' + nome + ' será capaz de [vitória específica]"\n' +
             '- Encerramento celebra progresso em direção à vitória\n\n' +
@@ -2683,30 +2906,30 @@
             }).join('') : '- Nenhuma frase capturada\n') +
             '- As frases do aluno são mais poderosas que qualquer texto técnico\n\n' +
 
-            'INTERESSES PESSOAIS (séries: ' + (formObj.seriesFilmes || 'não informado') + ', músicas: ' + (formObj.musicasPodcasts || 'não informado') + ', hobbies: ' + (formObj.hobbies || 'não informado') + '):\n' +
+            'INTERESSES PESSOAIS (séries: ' + getDeepField('seriesFilmes', 'não informado') + ', músicas: ' + getDeepField('musicasPodcasts', 'não informado') + ', hobbies: ' + getDeepField('hobbies', 'não informado') + '):\n' +
             '- Atividades Complementares devem incluir conteúdo que o aluno JÁ consome\n' +
             '- Se gosta de documentários, sugerir documentários como material\n' +
             '- Se tem hobby específico, usar vocabulário do hobby nos exemplos quando possível\n\n' +
 
-            'ESTILO DE APRENDIZAGEM (' + (formObj.estiloAprendizagem || getField('estiloAprendizagem') || 'não definido') + '):\n' +
+            'ESTILO DE APRENDIZAGEM (' + getDeepField('estiloAprendizagem', 'não definido') + '):\n' +
             '- Visual: mais flashcards, imagens, galeria temática, diagramas\n' +
             '- Auditivo: mais áudio, repetição oral, podcasts, listening\n' +
             '- Cinestésico: mais role-play, simulação, prática situacional\n' +
             '- Leitura/escrita: mais textos, fill-in-the-blanks, exercícios escritos\n' +
             '- Adaptar o MIX de exercícios ao estilo predominante (mais do tipo preferido, sem eliminar os outros)\n\n' +
 
-            'ENERGIA PREFERIDA (' + (formObj.energiaPreferida || 'não definida') + '):\n' +
+            'ENERGIA PREFERIDA (' + getDeepField('energiaPreferida', 'não definida') + '):\n' +
             '- Calma: blocos mais longos, ritmo pausado, menos transições\n' +
             '- Dinâmica: blocos curtos (15-20min), muita variação, surpresas\n' +
             '- Mista: alternar momentos calmos com momentos dinâmicos\n\n' +
 
-            'COMO LIDA COM ERROS (' + (formObj.lidaComErros || 'não definido') + '):\n' +
+            'COMO LIDA COM ERROS (' + getDeepField('lidaComErros', 'não definido') + '):\n' +
             '- "Fico frustrado": mais scaffolding, exercícios graduais, feedback gentil\n' +
             '- "Levo na boa": pode desafiar mais, exercícios sem script, improvisos\n' +
             '- "Prefiro não arriscar": produção muito guiada, script primeiro, depois semi-livre\n' +
             '- Adaptar a rampa de Production ao perfil emocional\n\n' +
 
-            'HISTÓRICO COM INGLÊS (' + (formObj.historicoIngles || getField('historico') || 'não informado') + '):\n' +
+            'HISTÓRICO COM INGLÊS (' + (getDeepField('historico', '') || formObj.historicoIngles || 'não informado') + '):\n' +
             '- NÃO repetir conteúdo que o aluno já domina\n' +
             '- Se já fez aula de aeroporto, NÃO ensinar vocabulário de aeroporto novamente (apenas callback)\n' +
             '- Se foi autodidata, valorizar a autonomia nas atividades\n' +
@@ -2719,7 +2942,7 @@
                 '- Momentos de animação: ' + ((perfil.observacoesProfessor || {}).momentosAnimacao || 'não observados') + '\n' +
                 '- Momentos de hesitação: ' + ((perfil.observacoesProfessor || {}).momentosHesitacao || 'não observados') + '\n' +
                 '- Usar momentos de ANIMAÇÃO como temas para engajar (exercícios sobre esses tópicos)\n' +
-                '- Usar momentos de HESITAÇÃO para antecipar obstáculos no Teacher Guide\n'
+                '- Usar momentos de HESITAÇÃO para antecipar obstáculos no ícone T da IN CLASS\n'
                 : '- ' + (perfil.observacoesProfessor || 'Nenhuma observação') + '\n') +
             '\n' +
 
@@ -2745,8 +2968,8 @@
             '  Função: generateFAAPLesson(lessonData) gera HTML completo da aula\n\n' +
             'INSTRUÇÃO: Importe estes 4 scripts no HTML gerado e use as funções prontas. NÃO reimplemente exercícios do zero.\n\n' +
             'GERAR DOIS ARQUIVOS HTML SEPARADOS:\n' +
-            '1. /public/professor/' + perfilId + '.html \u2014 Material COMPLETO do professor (5 abas: Planejamento Pedagógico, Pre-class, Plano de Aula com Teacher Guide, Material do Professor, Atividades Complementares)\n' +
-            '2. /public/aluno/' + perfilId + '.html \u2014 Material do ALUNO (apenas Pre-class + Atividades Complementares, SEM Teacher Guide, SEM gabaritos, SEM perfil 360)\n\n' +
+            '1. /public/professor/' + perfilId + '.html \u2014 Material COMPLETO do professor (4 abas: Planejamento Pedagógico, Pre-class, IN CLASS, Atividades Complementares)\n' +
+            '2. /public/aluno/' + perfilId + '.html \u2014 Material do ALUNO (apenas Pre-class + Atividades Complementares, SEM instruções do professor, SEM gabaritos, SEM perfil 360)\n\n' +
             'URLs públicas após deploy:\n' +
             '- Professor: https://alumni-plano-gerador.vercel.app/professor/' + perfilId + '.html\n' +
             '- Aluno: https://alumni-plano-gerador.vercel.app/aluno/' + perfilId + '.html\n\n' +
@@ -2756,56 +2979,38 @@
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             'Gere o material pedagógico completo em DOIS arquivos HTML separados:\n\n' +
             'ARQUIVO 1 \u2014 VISÃO PROFESSOR (/public/professor/' + perfilId + '.html):\n' +
-            '5 abas obrigatórias:\n\n' +
+            '4 abas obrigatórias:\n\n' +
             'ABA 1 — PLANEJAMENTO PEDAGÓGICO:\n' +
             '  Visão geral acadêmica completa do programa. Contém:\n' +
             '  - Cabeçalho: dados do aluno, professor, dias/horários, datas\n' +
             '  - Objetivo do programa (parágrafo)\n' +
             '  - Promessa transformadora + personagem-jornada\n' +
             '  - Forças e pontos de melhoria do aluno\n' +
-            '  - TABELA DO CURRÍCULO COMPLETO: todas as ' + (perfil.curriculo ? perfil.curriculo.length : '?') + ' aulas com # | Tema | Foco Linguístico | Atividade | Homework\n' +
+            '  - TABELA DO CURRÍCULO: APENAS as ' + (perfil.curriculo ? perfil.curriculo.length : '?') + ' aulas deste bloco com # | Tema | Foco Linguístico | Atividade | Homework\n' +
             '  - Regras de cancelamento\n\n' +
             'ABA 2 — PRE-CLASS (exercícios interativos):\n' +
             '  Exercícios que o aluno faz ANTES da aula. Usa exercises.js:\n' +
-            '  createMatchingDropdown, createFillBlank, createMultipleChoice, createOrdering, createPronunciation, createThinkAboutIt\n' +
+            '  HTML manual OBRIGATÓRIO: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(). NUNCA usar data-exercise ou createMatchingDropdown.\n' +
             '  Mínimo 5-8 exercícios variados por aula. Com microcopy que autoriza o erro.\n\n' +
-            'ABA 3 — PLANO DE AULA (roteiro PPP + Teacher Guide):\n' +
-            '  Roteiro minuto a minuto para o professor:\n' +
-            '  Warm-up (10min) → Presentation/Pre-teach (15min) → Teach + CCQs (10min) → Practice (15min) → Semi-free (10min) → Production (15min) → Error Correction (5min) → Wrap-up (5min)\n' +
-            '  Inclui: CCQs escritas, antecipação de obstáculos ("Alerta: o aluno pode travar em..."), timing por bloco.\n' +
-            '  NÃO colocar checklist "O que eu aprendi" nesta aba — o checklist vai APENAS na Aba 4.\n\n' +
-            'ABA 4 — MATERIAL DO PROFESSOR (tela compartilhada):\n' +
-            '  Esta é a tela que o professor COMPARTILHA com o aluno durante a aula via Zoom/Meet.\n' +
-            '  DEVE seguir EXATAMENTE as mesmas fases do Plano de Aula (Aba 3), na mesma ordem:\n' +
-            '  1. WARM-UP: Perguntas na tela para o professor usar como guia visual\n' +
-            '  2. VOCABULARY: Cards com palavra + exemplo + botão Ouvir (SEM tradução PT)\n' +
-            '  3. CONTEXT/DIALOGUE: Diálogo ou texto situacional com áudio\n' +
-            '  4. GRAMMAR FOCUS: Estrutura gramatical com exemplos visuais\n' +
-            '  5. PRACTICE: Exercícios interativos (usa exercises.js) que o professor faz junto com o aluno na tela\n' +
-            '  6. PRODUCTION: Cenário do role-play na tela (imagem + prompt) sem script\n' +
-            '  7. WRAP-UP: Checklist "O que eu aprendi" + Survival Card da aula\n' +
-            '  SEM traduções, SEM respostas, SEM gabaritos — o professor vê as respostas na Aba 3.\n' +
-            '  A conexão entre Aba 3 e Aba 4 é: o professor lê as instruções na Aba 3 e mostra o conteúdo da Aba 4.\n' +
-            '  SINCRONIZAÇÃO OBRIGATÓRIA: O Plano de Aula (Aba 3) deve referenciar EXATAMENTE o mesmo conteúdo que aparece no Material do Professor (Aba 4).\n' +
-            '  Se a Aba 4 usa a frase "I\'d like to confirm my reservation for tonight", a Aba 3 deve citar essa mesma frase nas instruções ao professor — NÃO a frase do Pre-class.\n' +
-            '  Se a Aba 4 tem um exercício de Oral Drilling com 5 situações, a Aba 3 deve descrever essas MESMAS 5 situações com instruções de como conduzir.\n' +
-            '  Aba 3 e Aba 4 são dois lados da mesma moeda: instruções (Aba 3) + conteúdo visual (Aba 4). Nunca podem divergir.\n' +
-            '  REGRA CRÍTICA: O Material do Professor NÃO pode repetir os mesmos exercícios do Pre-class.\n' +
-            '  O Pre-class é INTRODUÇÃO (primeiro contato com vocabulário). O Material do Professor é APROFUNDAMENTO (aplicação em contexto real).\n' +
-            '  DIFERENÇAS OBRIGATÓRIAS:\n' +
-            '  - Pre-class: matching, fill-in, múltipla escolha (exercícios individuais, aluno sozinho)\n' +
-            '  - Material Professor: diálogos situacionais com áudio, exercícios ORAIS guiados pelo professor, gap-fill em textos longos (não frases isoladas), role-play com script parcial, listening comprehension\n' +
-            '  - Se o Pre-class tem "Complete: I have a ___ under the name Pereira", o Material do Professor NÃO pode ter o mesmo. Deve ter um DIÁLOGO COMPLETO onde essa frase aparece em contexto, ou um exercício oral onde o professor fala em PT e o aluno responde em EN.\n' +
-            '  - O vocabulário é o MESMO, mas TODAS as frases-exemplo, exercícios e aplicações devem ser DIFERENTES.\n' +
-            '  - VERIFICAÇÃO OBRIGATÓRIA: depois de escrever o Material do Professor, comparar CADA frase-exemplo com o Pre-class. Se alguma frase for igual, REESCREVER com contexto diferente. Mesma palavra, frase nova.\n' +
-            '  - Exemplo correto: Pre-class tem "I have a reservation under the name Pereira." → Material Professor deve ter "I\'d like to confirm my reservation for tonight." (mesma palavra "reservation", frase diferente).\n' +
-            '  - Exemplo ERRADO: Pre-class tem "Could I see the menu?" → Material Professor tem "Could I see the menu?" (PROIBIDO — mesma frase).\n\n' +
-            'ABA 5 — ATIVIDADES COMPLEMENTARES:\n' +
+            'ABA 3 — IN CLASS (slides interativos para Zoom):\n' +
+            '  Esta aba substitui o antigo Plano de Aula e Material do Professor.\n' +
+            '  É uma APRESENTAÇÃO de slides (100vh por slide, navegação por setas), NÃO uma página com scroll.\n' +
+            '  Instruções ao professor via ícone T (hover) em cada slide.\n' +
+            '  DEVE conter: narrativa com 7 capítulos, reveal cards no vocab, grammar discovery,\n' +
+            '  diálogo line-by-line, 2+ listenings com play/pause, quick fire uma por vez,\n' +
+            '  3 role-plays (guided>semi-free>free), artefatos reais CSS, survival card + checklist checkbox.\n' +
+            '  Zero português na tela. 100% ElevenLabs com alternância Arthur/Ellen.\n' +
+            '  Mínimo 25-30 slides para 60 min, 35-45 para 90 min.\n' +
+            '  REGRA CRÍTICA: A IN CLASS NÃO pode repetir os mesmos exercícios do Pre-class.\n' +
+            '  O Pre-class é INTRODUÇÃO (primeiro contato com vocabulário). A IN CLASS é APROFUNDAMENTO (aplicação em contexto real).\n' +
+            '  O vocabulário é o MESMO, mas TODAS as frases-exemplo, exercícios e aplicações devem ser DIFERENTES.\n' +
+            '  Ver regras detalhadas na seção ESPECIFICAÇÕES DO MATERIAL.\n\n' +
+            'ABA 4 — ATIVIDADES COMPLEMENTARES:\n' +
             '  Filmes, séries, podcasts, canais YouTube recomendados por aula.\n' +
             '  Baseados nos interesses pessoais do aluno.\n\n' +
             'ARQUIVO 2 \u2014 VISÃO ALUNO (/public/aluno/' + perfilId + '.html):\n' +
             '- Apenas 2 abas: Pre-class (exercícios interativos) + Atividades Complementares\n' +
-            '- SEM Teacher Guide, SEM gabaritos, SEM perfil 360, SEM indicação de professor\n' +
+            '- SEM instruções do professor, SEM gabaritos, SEM perfil 360, SEM indicação de professor\n' +
             '- Link público que o aluno recebe\n\n' +
             'Ambos os arquivos devem:\n' +
             '- Usar tema claro Alumni (#f5f5f0), layout centralizado, logo Alumni no header\n' +
@@ -2819,11 +3024,11 @@
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             'ANTES de gerar qualquer exercício, estude este material de referência:\n' +
             'https://faap-english-hub.vercel.app/starter/pop-culture/tv-shows/1\n\n' +
-            'IMPORTANTE: A estrutura das aulas segue o modelo PPP Alumni (5 abas, definido acima). Da FAAP, adotamos APENAS a dinâmica dos exercícios, a UX interativa e o microcopy. NÃO copiar a estrutura de página da FAAP.\n\n' +
+            'IMPORTANTE: A estrutura das aulas segue o modelo Alumni (4 abas com IN CLASS, definido acima). Da FAAP, adotamos APENAS a dinâmica dos exercícios, a UX interativa e o microcopy. NÃO copiar a estrutura de página da FAAP.\n\n' +
             '7 TIPOS DE EXERCÍCIO COM DINÂMICA FAAP (mínimo 5-8 exercícios variados por aula):\n' +
-            '1. Matching dropdown \u2014 palavra em inglês + dropdown com opções de tradução embaralhadas. SEM dica embutida. Feedback imediato.\n' +
+            '1. Matching dropdown \u2014 palavra em inglês + dropdown com opções (definições em inglês para A2+, tradução PT apenas para A0-A1). Feedback imediato.\n' +
             '2. Fill-in-the-blank simples \u2014 frase com lacuna + input. Aluno digita a palavra. Botão Verificar.\n' +
-            '3. Fill-in com dica em português \u2014 mesma mecânica + dica entre parênteses em PT para ajudar.\n' +
+            '3. Fill-in com dica em inglês \u2014 mesma mecânica + dica entre parênteses (definição curta, sinônimo ou pista contextual em INGLÊS). NUNCA dica em português.\n' +
             '4. Múltipla escolha \u2014 4 opções A/B/C/D. Clicou, feedback imediato verde/vermelho.\n' +
             '5. Ordering \u2014 palavras/frases embaralhadas com botões de seta (▲▼) para reordenar. Funciona no mobile.\n' +
             '6. Pronúncia avaliada \u2014 botão de microfone, grava via Web Speech API, compara palavra por palavra (verde = acertou, vermelho = errou). Score X/Y.\n' +
@@ -2873,7 +3078,7 @@
             '- INGLÊS PERFEITO: Todo texto em inglês DEVE ser gramaticalmente perfeito. Zero erros.\n' +
             '- ÁUDIOS VIA ELEVENLABS: Todos os botões de áudio devem ter áudio gerado pela ElevenLabs (voz Arthur, inglês americano).\n' +
             '- MATCHING EMBARALHADO: Nos exercícios de matching, os pares DEVEM estar embaralhados.\n' +
-            '- EXERCÍCIOS SEM RESPOSTAS VISÍVEIS: Na aba Material do Professor, NÃO incluir traduções ou respostas.\n' +
+            '- EXERCÍCIOS SEM RESPOSTAS VISÍVEIS: Na aba IN CLASS, ZERO português na tela. Definições em inglês.\n' +
             '- RESPOSTAS COMPLETAS: Todos os exercícios devem trabalhar respostas completas.\n' +
             '- TEMA CLARO: Usar tema de cores claras (fundo #f5f5f0, texto escuro #2d2d3a).\n' +
             '- LAYOUT CENTRALIZADO: Todas as abas com o mesmo padrão de margens e centralização.\n' +
@@ -2883,7 +3088,7 @@
             '- SURVIVAL CARD PROGRESSIVO: Começa na Aula 1, cresce a cada aula.\n' +
             '- CRITÉRIO DE SUCESSO MENSURÁVEL em cada aula. Toda aula abre com promessa e fecha conferindo.\n' +
             '- CALLBACKS ENTRE AULAS: Aula N+1 retoma vocabulário da aula N no warm-up.\n' +
-            '- ANTECIPAÇÃO DE OBSTÁCULOS LOCALIZADA: Teacher Guide indica QUAL momento da aula provavelmente trava.\n' +
+            '- ANTECIPAÇÃO DE OBSTÁCULOS LOCALIZADA: Ícone T indica QUAL momento da aula provavelmente trava.\n' +
             '- COERÊNCIA INTERNA ABSOLUTA: Vocabulário do pre-teach DEVE aparecer no practice, que DEVE preparar o role-play.\n' +
             '- CCQs ESCRITAS, NÃO DELEGADAS: 2-3 CCQs por aula, escritas no material, prontas para o professor.\n' +
             '- "Could I\u2026" COMO PADRÃO DE CORTESIA: Nunca ensinar "I want" como modelo de pedido educado.\n' +
@@ -2895,7 +3100,7 @@
             'DON\'Ts \u2014 PROIBIDO\n' +
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             '- NÃO gerar textos em português sem acentuação correta\n' +
-            '- NÃO incluir traduções ou respostas na aba Material do Professor\n' +
+            '- ZERO português na tela IN CLASS em qualquer nível\n' +
             '- NÃO usar tema escuro\n' +
             '- NÃO colocar pares de matching na mesma linha\n' +
             '- NÃO usar Web Speech API como método principal de áudio\n' +
@@ -2906,7 +3111,7 @@
             '- NÃO esquecer o survival card progressivo\n' +
             '- NÃO pular a verificação de imagens\n' +
             '- NÃO gerar material sem promessa transformadora e critério de sucesso\n' +
-            '- NÃO colocar botões de áudio na seção Warm-up do Material do Professor\n' +
+            '- Warm-up na IN CLASS: apenas perguntas na tela, sem áudio automático\n' +
             '- NÃO usar "I want" como modelo de pedido educado \u2014 ensinar "Could I...?"\n' +
             '- NÃO sugerir gamificação complexa (badges, leaderboards) \u2014 pode usar rituais simples\n' +
             '- NÃO terceirizar invenção de CCQs para o professor \u2014 escrever CCQs prontas no material\n' +
@@ -3013,27 +3218,27 @@
                   '  - 2-3 perguntas abertas sobre a semana do aluno (em inglês)\n' +
                   '  - Callback: revisar 3-4 palavras/frases da AULA ANTERIOR — professor pergunta, aluno responde sem olhar\n' +
                   '  - Revisão do homework: aluno apresenta brevemente o que fez, professor dá feedback rápido\n' +
-                  '  MATERIAL: perguntas na tela (Tab 4) + instruções no Teacher Guide (Tab 3)\n\n' +
+                  '  MATERIAL: perguntas na tela IN CLASS + instruções no ícone T\n\n' +
 
                   'FASE 2 — VOCABULARY DEEP-DIVE (15 min):\n' +
                   '  - 7-10 palavras/expressões novas para aula de 90 min (não 5)\n' +
                   '  - Para cada palavra: imagem + exemplo em contexto + áudio + drilling (professor fala, aluno repete 3x)\n' +
                   '  - Atividade: professor fala situação em PT, aluno diz a palavra/frase em EN\n' +
                   '  CONEXÃO COM PRE-CLASS: o aluno já viu estas palavras nos exercícios do Pre-class. Aqui o professor APROFUNDA com exemplos DIFERENTES e drilling oral.\n' +
-                  '  MATERIAL: vocab cards com frases NOVAS na tela (Tab 4) + notas de drilling no Teacher Guide (Tab 3)\n\n' +
+                  '  MATERIAL: vocab cards com frases NOVAS na tela IN CLASS + notas de drilling no ícone T\n\n' +
 
                   'FASE 3 — CONTEXT/DIALOGUE (10 min):\n' +
                   '  - Diálogo situacional de 10-15 linhas usando TODO o vocabulário da fase 2\n' +
                   '  - Professor e aluno leem o diálogo em voz alta (professor = personagem A, aluno = personagem B)\n' +
                   '  - Depois: invertem os papéis\n' +
                   '  - Áudio do diálogo completo disponível via ElevenLabs\n' +
-                  '  MATERIAL: diálogo com avatares na tela (Tab 4) + instruções no Teacher Guide (Tab 3)\n\n' +
+                  '  MATERIAL: diálogo com avatares na tela IN CLASS + instruções no ícone T\n\n' +
 
                   'FASE 4 — GRAMMAR FOCUS + CCQs (10 min):\n' +
                   '  - 1-2 estruturas gramaticais em contexto (NÃO aula de gramática abstrata)\n' +
                   '  - Exemplos visuais na tela usando vocabulário da aula\n' +
                   '  - 2-3 CCQs escritas no material, professor faz oralmente\n' +
-                  '  MATERIAL: estrutura visual na tela (Tab 4) + CCQs escritas no Teacher Guide (Tab 3)\n\n' +
+                  '  MATERIAL: estrutura visual na tela IN CLASS + CCQs escritas no ícone T\n\n' +
 
                   'FASE 5 — CONTROLLED PRACTICE (15 min):\n' +
                   '  - 3 exercícios ORAIS guiados pelo professor (NÃO os mesmos do Pre-class):\n' +
@@ -3041,31 +3246,31 @@
                   '    b) Listening Comprehension: professor toca áudio → aluno interpreta e responde (3 áudios)\n' +
                   '    c) Sentence Building: professor dá palavras soltas → aluno monta frase completa (5 frases)\n' +
                   '  CONEXÃO: usa o MESMO vocabulário do Pre-class mas em exercícios DIFERENTES e ORAIS\n' +
-                  '  MATERIAL: situações na tela (Tab 4) + respostas esperadas no Teacher Guide (Tab 3)\n\n' +
+                  '  MATERIAL: situações na tela IN CLASS + respostas esperadas no ícone T\n\n' +
 
                   'FASE 6 — SEMI-FREE PRACTICE (10 min):\n' +
                   '  - Role-play GUIADO com script parcial: aluno tem as primeiras palavras de cada fala\n' +
                   '  - Cenário conectado ao contexto profissional/pessoal do aluno\n' +
                   '  - Professor faz um papel, aluno faz outro\n' +
-                  '  MATERIAL: cenário + script parcial na tela (Tab 4) + dicas no Teacher Guide (Tab 3)\n\n' +
+                  '  MATERIAL: cenário + script parcial na tela IN CLASS + dicas no ícone T\n\n' +
 
                   'FASE 7 — FREE PRODUCTION (15 min):\n' +
                   '  - Role-play LIVRE sem script — mesmo cenário da fase 6 mas sem apoio\n' +
                   '  - Professor NÃO corrige durante a produção (delayed feedback)\n' +
                   '  - Aluno deve usar vocabulário, gramática e frases-modelo da aula inteira\n' +
-                  '  MATERIAL: apenas o cenário/prompt na tela (Tab 4) + observações para anotar no Teacher Guide (Tab 3)\n\n' +
+                  '  MATERIAL: apenas o cenário/prompt na tela IN CLASS + observações para anotar no ícone T\n\n' +
 
                   'FASE 8 — DELAYED ERROR CORRECTION (5 min):\n' +
                   '  - Professor compartilha 3-5 erros anotados durante a produção livre\n' +
                   '  - Para cada erro: o que o aluno disse → o que deveria ter dito\n' +
                   '  - Aluno repete a versão correta\n' +
-                  '  MATERIAL: espaço para anotações no Teacher Guide (Tab 3)\n\n' +
+                  '  MATERIAL: espaço para anotações no ícone T\n\n' +
 
                   'FASE 9 — WRAP-UP + CHECKLIST (5 min):\n' +
                   '  - Survival Card: revisão das frases-chave da aula com áudio\n' +
                   '  - Checklist "O que eu aprendi": professor lê cada item, aluno confirma\n' +
                   '  - Preview da próxima aula + homework\n' +
-                  '  MATERIAL: survival card + checklist na tela (Tab 4) + homework no Teacher Guide (Tab 3)\n\n' +
+                  '  MATERIAL: survival card + checklist na tela IN CLASS + homework no ícone T\n\n' +
 
                   'TOTAL: 95 min de conteúdo planejado para 90 min de aula (margem de segurança).\n' +
                   'NUNCA entregar material insuficiente. Cada fase DEVE ter conteúdo detalhado e específico no HTML.\n' +
@@ -3089,12 +3294,43 @@
               }
             })() +
 
-            '5 ABAS DO MATERIAL DO PROFESSOR:\n' +
-            '1. Planejamento Pedagógico: Visão geral do programa + currículo completo em tabela\n' +
-            '2. Pre-class: Exercícios interativos (usa exercises.js)\n' +
-            '3. Plano de Aula: Roteiro PPP minuto a minuto + Teacher Guide\n' +
-            '4. Material do Professor: Conteúdo PPP para tela compartilhada (sem traduções/respostas). DEVE espelhar EXATAMENTE as fases do Plano de Aula (Tab 3): Warm-up → Vocabulary → Context/Dialogue → Grammar → Practice → Production → Wrap-up. Cada seção do Material do Professor corresponde a um passo do Plano de Aula — o professor abre o Plano de Aula para ver as instruções e compartilha o Material do Professor na tela para o aluno ver o conteúdo.\n' +
-            '5. Atividades Complementares: Filmes, séries e podcasts por aula';
+            '4 ABAS DO MATERIAL DO PROFESSOR:\n' +
+            '1. Planejamento Pedagógico: Visão geral do programa + currículo das aulas do bloco em tabela\n' +
+            '2. Pre-class: Exercícios interativos que o aluno faz ANTES da aula (HTML manual: checkBlank, selectQuiz, checkMatch, etc.)\n' +
+            '3. IN CLASS: Slides interativos para compartilhar via Zoom — a aula acontece AQUI. NÃO é página com scroll, é APRESENTAÇÃO de slides (100vh por slide, navegação por setas). Instruções ao professor via ícone T (hover) em cada slide.\n' +
+            '4. Complementares: Filmes, séries e podcasts por aula\n\n' +
+
+            'ABA IN CLASS — REGRAS DETALHADAS (OBRIGATÓRIO):\n\n' +
+
+            'FORMATO: Sequência de slides (100vh cada). Navegação: setas teclado + botões. Contador "7/30" no canto. Barra de capítulos no topo. Transições fade 400ms. Mínimo 25-30 slides para 60 min, 35-45 para 90 min.\n\n' +
+
+            'NARRATIVA: Toda aula segue uma HISTÓRIA com título e 7 capítulos: The Dream (warm-up) → Packing Words (vocab) → The Code (grammar) → Getting There (contexto) → Practice → Your Turn (produção) → Wrap-up. Slides de transição entre capítulos com imagem de fundo.\n\n' +
+
+            'VOCABULÁRIO — REVEAL CARDS: Grid 2x2 (4 cards por slide, 2 slides = 8 palavras). Card fechado mostra ícone SVG + definição em INGLÊS como pista. Ao clicar: revela palavra + definição + exemplo + Listen. Ícones são SVG inline com gradiente de fundo temático (NUNCA fotos externas). Contador: "3/8 words".\n\n' +
+
+            'GRAMÁTICA — DISCOVERY METHOD: NUNCA mostrar a regra primeiro. Mostrar 3-4 exemplos com estrutura em destaque (cor accent). Pergunta: "What do the orange words have in common?" Botão "Reveal the Rule" → tabela com fade-in. Slide extra "Common Mistake" (X vermelho vs check verde). Slide de Grammar Practice com fill-in clicáveis.\n\n' +
+
+            'DIÁLOGO — LINE BY LINE: Uma troca por vez (botão "Next Line"). Fundo escuro cinema. Avatar colorido por personagem. Vocabulário da aula em negrito accent. Áudio ElevenLabs por linha com data-voice: Ellen para personagens femininos, Arthur para masculinos. Slide extra Dialogue Comprehension.\n\n' +
+
+            'LISTENING — SOUND-FIRST: Slide escuro + waveform CSS + botão PLAY/PAUSE (ícone alterna). Áudio toca PRIMEIRO, aluno ouve SEM texto. Perguntas de compreensão aparecem DEPOIS (fade-in, click-to-reveal). Mínimo 2 listenings por aula.\n\n' +
+
+            'ARTEFATOS REAIS: Mínimo 1 artefato CSS por aula (boarding pass, hotel confirmation, email, menu). Construído em HTML/CSS (NUNCA imagem), personalizado com nome do aluno. Base para comprehension questions.\n\n' +
+
+            'QUICK FIRE: Uma situação completa por tela em INGLÊS. "Show Answer" → "Next Question". Score counter. Confetti CSS ao completar. Perguntas situacionais ("You arrive at the hotel. Tell the receptionist you booked a room.").\n\n' +
+
+            'SPOT THE ERROR: Frases com erro em vermelho (line-through). Click → correção em verde. Score counter.\n\n' +
+
+            'ROLE-PLAY — 3 NÍVEIS: Guided (keywords visíveis) → Semi-free (menos apoio) → Free (sem script). Card com gradiente CSS + ícone SVG + cenário + keyword chips. NUNCA fotos externas.\n\n' +
+
+            'ÍCONE T — INSTRUÇÕES AO PROFESSOR: Cada slide tem "T" fixo no canto superior direito. HOVER mostra painel escuro com instruções em português. Mouse sai → some. DEVE conter: timing, como conduzir, CCQs quando aplicável, obstacle alerts, dicas de pronúncia. É a ÚNICA forma do professor receber instruções — deve ser COMPLETO.\n\n' +
+
+            'WRAP-UP: Survival Card (slide escuro, 5 frases + audio Listen). What I Learned (CHECKBOXES clicáveis, click → verde). Badge celebratório com animação. Closing slide "Day X — Complete" + preview próxima aula.\n\n' +
+
+            'VISUAL: Zero emojis (todos SVG inline Lucide). Zero imagens externas em cards (só em backgrounds full-screen testados). Font mínimo 0.9rem corpo. Dois tipos de botão: primary (filled) + secondary (outlined). Paleta única por aluno.\n\n' +
+
+            'ÁUDIO IN CLASS: 100% ElevenLabs. Arthur (pNInz6obpgDQGcFmaJgB) para personagens masculinos + palavras soltas. Ellen (CwhRBWXzGAHq8TQ4Fs17) para personagens femininos (incluindo a aluna se for mulher). Frases 3+ palavras ALTERNAM Arthur/Ellen. NUNCA voz única. Verificação: ZERO speakText() sem match no audioMap.\n\n' +
+
+            'ZERO PORTUGUÊS NA TELA: Em QUALQUER nível (A0 a C2), a tela IN CLASS é 100% inglês. Definições de vocabulário em inglês simples. O professor traduz oralmente quando necessário.';
     }
 
     // ===== UTILS =====

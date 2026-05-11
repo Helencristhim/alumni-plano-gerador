@@ -265,9 +265,9 @@ function _handlePronRecord(id) {
     score.innerHTML = matched + '/' + targetWords.length + ' palavras corretas';
     score.style.color = matched === targetWords.length ? 'var(--success)' : 'var(--warning, #b45309)';
     if (matched === targetWords.length) {
-      fb.innerHTML = '<span style="color:var(--success);font-weight:600;display:flex;align-items:center;gap:4px;">' + ICONS.check + ' Excelente pronuncia!</span>';
+      fb.innerHTML = '<span style="color:var(--success);font-weight:600;display:flex;align-items:center;gap:4px;">' + ICONS.check + ' Excelente pronúncia!</span>';
     } else {
-      fb.innerHTML = '<span style="color:var(--text-muted, #777)">As palavras em vermelho precisam de mais pratica.</span>';
+      fb.innerHTML = '<span style="color:var(--text-muted, #777)">As palavras em vermelho precisam de mais prática.</span>';
     }
     _resetPronBtn(id);
   };

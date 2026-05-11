@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Governança — Alumni by Better</title>
+<link rel="icon" href="/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#003080;--red:#d70c0c;--bg:#f5f5f0;--white:#fff;
+  --green:#16a34a;--green-bg:#dcfce7;--green-dim:#1B7A3D;
+  --orange:#d97706;--orange-bg:#fef3c7;
+  --red-bg:#fee2e2;
+  --gray:#6b7280;--light-gray:#e5e7eb;--border:#e5e7eb;
+  --card-shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  --radius:12px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6;min-height:100vh}
+
+/* ══ Logo Bar ══ */
+.logo-bar{background:var(--navy);padding:14px 32px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.logo-bar img{height:36px;filter:brightness(0) invert(1)}
+.logo-bar .badge{background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:700;letter-spacing:2.5px;padding:5px 14px;border-radius:4px;text-transform:uppercase;border:1px solid rgba(255,255,255,.25)}
+.logo-bar .spacer{flex:1}
+
+/* ══ Nav ══ */
+.nav-links{display:flex;gap:6px}
+.nav-link{color:rgba(255,255,255,.65);text-decoration:none;font-size:.82rem;font-weight:500;padding:6px 14px;border-radius:6px;transition:all .2s}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,.1)}
+.nav-link.active{color:#fff;background:rgba(255,255,255,.18);font-weight:600}
+
+/* ══ Container ══ */
+.container{max-width:1000px;margin:0 auto;padding:32px 20px 64px}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;color:var(--navy);margin-bottom:4px}
+.page-sub{color:var(--gray);font-size:.95rem;margin-bottom:28px}
+
+/* ══ Summary Bar ══ */
+.summary-bar{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:28px;box-shadow:var(--card-shadow)}
+.summary-stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+.summary-stat .val{font-size:1.5rem;font-weight:700;color:var(--navy)}
+.summary-stat .lbl{font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:.5px}
+.summary-bar .spacer{flex:1}
+.btn-primary{background:var(--navy);color:#fff;border:none;padding:10px 22px;border-radius:6px;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .2s;min-height:44px;min-width:44px}
+.btn-primary:hover{background:#002060}
+.btn-primary:focus-visible{outline:3px solid #60a5fa;outline-offset:2px}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+
+/* ══ Student Card ══ */
+.student-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;box-shadow:var(--card-shadow);overflow:hidden;transition:box-shadow .2s}
+.student-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.student-header{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;user-select:none;transition:background .15s}
+.student-header:hover{background:#fafaf7}
+.student-accent{width:4px;height:40px;border-radius:2px;flex-shrink:0}
+.student-name{font-weight:600;font-size:.95rem;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-level{background:var(--navy);color:#fff;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:.5px;flex-shrink:0}
+.student-lessons{font-size:.8rem;color:var(--gray);flex-shrink:0;min-width:80px;text-align:center}
+.student-score{font-size:.85rem;font-weight:700;min-width:48px;text-align:center;flex-shrink:0;padding:3px 8px;border-radius:4px}
+.score-green{background:var(--green-bg);color:var(--green-dim)}
+.score-orange{background:var(--orange-bg);color:var(--orange)}
+.score-red{background:var(--red-bg);color:var(--red)}
+.score-none{color:var(--gray);font-weight:400;font-size:.8rem}
+.btn-audit{background:var(--white);color:var(--navy);border:1.5px solid var(--navy);padding:8px 18px;border-radius:6px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;flex-shrink:0;min-height:44px}
+.btn-audit:hover{background:var(--navy);color:#fff}
+.btn-audit:focus-visible{outline:3px solid #60a5fa;outline-offset:2px}
+.btn-audit:disabled{opacity:.5;cursor:not-allowed}
+.btn-audit.running{border-color:var(--orange);color:var(--orange)}
+
+/* ══ Chevron ══ */
+.chevron{width:20px;height:20px;flex-shrink:0;transition:transform .25s;color:var(--gray)}
+.student-card.expanded .chevron{transform:rotate(180deg)}
+
+/* ══ Student Body ══ */
+.student-body{max-height:0;overflow:hidden;transition:max-height .5s ease}
+.student-card.expanded .student-body{max-height:20000px}
+.audit-results{padding:0 20px 20px}
+
+/* ══ Status Messages ══ */
+.audit-status{padding:20px;text-align:center;color:var(--gray);font-size:.9rem}
+.audit-status.error{color:var(--red)}
+
+/* ══ Lesson Accordion ══ */
+.lesson-audit{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;background:#fafaf7}
+.lesson-audit-header{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none;transition:background .15s}
+.lesson-audit-header:hover{background:#f0f0eb}
+.lesson-audit-header .lesson-chevron{width:16px;height:16px;transition:transform .25s;color:var(--gray);flex-shrink:0}
+.lesson-audit.open .lesson-chevron{transform:rotate(180deg)}
+.lesson-audit-num{font-weight:700;font-size:.85rem;color:var(--navy);min-width:56px}
+.lesson-audit-name{flex:1;font-size:.85rem;font-weight:500;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lesson-audit-score{font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:4px}
+.lesson-audit-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.lesson-audit.open .lesson-audit-body{max-height:8000px}
+.lesson-audit-body-inner{padding:8px 16px 16px}
+
+/* ══ Not Generated Tag ══ */
+.tag-not-generated{background:#f3f4f6;color:var(--gray);font-size:.75rem;font-weight:600;padding:2px 10px;border-radius:4px;letter-spacing:.5px}
+
+/* ══ Check Row ══ */
+.check-row{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;border-left:3px solid transparent;border-radius:0 6px 6px 0;margin-bottom:5px;background:var(--white);transition:background .15s}
+.check-row:hover{background:#f5f5f0}
+.check-row.pass{border-left-color:var(--green)}
+.check-row.fail{border-left-color:var(--red)}
+.check-row.warn{border-left-color:var(--orange)}
+.check-row.pending{border-left-color:var(--light-gray)}
+.check-icon{width:18px;height:18px;flex-shrink:0;margin-top:1px}
+.check-name{font-weight:600;font-size:.82rem;min-width:170px;flex-shrink:0;color:#333}
+.check-detail{font-size:.8rem;color:var(--gray);flex:1}
+
+/* ══ Fail Details ══ */
+.fail-details{margin-top:12px;background:#fef8f8;border:1px solid #fecaca;border-radius:8px;padding:14px 18px}
+.fail-details h4{font-size:.85rem;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.fail-details ul{list-style:none;padding:0}
+.fail-details li{font-size:.8rem;color:#555;padding:8px 0;border-bottom:1px solid #fef0f0;display:block}
+.fail-details li:last-child{border-bottom:none}
+.fail-details code{font-size:.78rem;background:#fff;padding:1px 5px;border-radius:3px;border:1px solid #eee;word-break:break-all}
+
+/* ══ Responsive ══ */
+/* ══ Focus & Accessibility ══ */
+.student-header:focus-visible,.lesson-audit-header:focus-visible{outline:3px solid #60a5fa;outline-offset:-2px;border-radius:var(--radius)}
+.nav-link:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:4px}
+
+/* ══ Reduced Motion ══ */
+@media(prefers-reduced-motion:reduce){
+  .student-body,.lesson-audit-body,.chevron,.lesson-chevron{transition:none!important}
+  .student-card,.check-row,.student-header,.btn-primary,.btn-audit{transition:none!important}
+}
+
+/* ══ Responsive ══ */
+@media(max-width:640px){
+  .logo-bar{padding:12px 16px;flex-wrap:wrap;gap:10px}
+  .nav-links{width:100%;order:10;justify-content:center}
+  .container{padding:20px 12px 48px}
+  .page-title{font-size:1.6rem}
+  .summary-bar{flex-direction:column;align-items:stretch;gap:12px;padding:16px}
+  .summary-bar .spacer{display:none}
+  .summary-stats-row{display:flex;justify-content:space-around}
+  .student-header{flex-wrap:wrap;gap:8px;padding:12px 14px}
+  .student-name{min-width:100%;order:-1}
+  .check-name{min-width:120px;font-size:.78rem}
+  .check-row{flex-wrap:wrap}
+  .btn-primary{width:100%}
+  .lesson-audit-header{flex-wrap:wrap;gap:6px}
+  .lesson-audit-name{min-width:100%}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+</head>
+<body>
+
+<div class="logo-bar">
+  <img src="/assets/logo-alumni.png" alt="Alumni by Better">
+  <div class="badge">Governança</div>
+  <div class="spacer"></div>
+  <nav class="nav-links">
+    <a href="index.html" class="nav-link">Novo Aluno</a>
+    <a href="dashboard.html" class="nav-link">Painel de Alunos</a>
+    <a href="governanca.html" class="nav-link active">Governança</a>
+  </nav>
+</div>
+
+<div class="container">
+  <h1 class="page-title">Painel de Governança</h1>
+  <p class="page-sub">Auditoria de qualidade dos materiais pedagógicos — resultados por aula</p>
+
+  <div class="summary-bar">
+    <div class="summary-stats-row" style="display:flex;gap:24px">
+      <div class="summary-stat"><span class="val" id="sumScore">--</span><span class="lbl">Score geral</span></div>
+      <div class="summary-stat"><span class="val" id="sumStudents">--</span><span class="lbl">Alunos</span></div>
+      <div class="summary-stat"><span class="val" id="sumAudited">0</span><span class="lbl">Auditados</span></div>
+      <div class="summary-stat"><span class="val" id="sumLessons">0</span><span class="lbl">Aulas auditadas</span></div>
+    </div>
+  </div>
+
+  <div id="studentList"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   GOVERNANCA — Per-Lesson Audit Panel
+   Reads /professor/{slug}.html via fetch, never writes.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ===================== DATA (loaded from Supabase) ===================== */
+var students = [];
+
+async function loadStudentsFromSupabase() {
+  try {
+    var resp = await sb.from('perfis').select('id,data,deactivated').order('id');
+    if (resp.error) throw resp.error;
+    students = (resp.data || []).map(function(row) {
+      var d = row.data || {};
+      var form = d.dadosFormulario || {};
+      var perfil = d.perfil || {};
+      var de = (perfil.dadosExtraidos || d.dadosExtraidos || {});
+      var nome = form.nome || d.nome || row.id;
+      var nivel = (de.nivel && de.nivel.valor) || form.nivel || '';
+      var numAulas = parseInt((de.numAulas && de.numAulas.valor) || form.numAulas || '0') || 0;
+      return {
+        name: nome,
+        slug: row.id,
+        level: nivel,
+        totalLessons: numAulas,
+        accent: '#003080',
+        _deactivated: row.deactivated === true
+      };
+    }).filter(function(s) { return s.name && s.slug && !s._deactivated; });
+    /* Try to detect accent from existing material */
+    for (var i = 0; i < students.length; i++) {
+      try {
+        var r = await fetch('/professor/' + students[i].slug + '.html', { method: 'HEAD' });
+        if (r.ok) students[i]._hasFile = true;
+      } catch(e) {}
+    }
+  } catch(e) {
+    console.error('Erro ao carregar alunos do Supabase:', e);
+    /* Fallback hardcoded */
+    students = [
+      { name: 'Patrícia Ruffo', slug: 'patricia-ruffo', level: 'B1+', totalLessons: 5, accent: '#2D6A4F' },
+      { name: 'Elaine Mieko Pinho', slug: 'elaine-mieko-pinho', level: 'A2', totalLessons: 32, accent: '#B85C38' },
+      { name: 'Maísa de Oliveira Santos', slug: 'maisa-de-oliveira-santos', level: 'B1', totalLessons: 10, accent: '#946B2D' },
+      { name: 'Gabriela Pires', slug: 'gabriela-pires', level: 'A1+', totalLessons: 48, accent: '#d4326a' },
+      { name: 'Daniela Feitoza', slug: 'daniela-feitoza', level: 'A2+', totalLessons: 43, accent: '#0d7377' },
+      { name: 'Milton Sayegh', slug: 'milton-sayegh', level: 'B2', totalLessons: 10, accent: '#1B6B4A' },
+      { name: 'Vanessa Maluf', slug: 'vanessa-maluf', level: 'B1', totalLessons: 10, accent: '#6b21a8' },
+    ];
+  }
+}
+
+var auditResults = {};
+var accentMap = {};
+
+var CHECK_NAMES = [
+  'Estrutura (4 abas)',
+  'Pre-class (etapas)',
+  'IN CLASS (slides)',
+  'IN CLASS (componentes)',
+  'Ícone T',
+  'Áudios (audioMap)',
+  'Áudios (MP3 files)',
+  'Vozes (data-voice)',
+  'Zero Português',
+  'Zero Emojis',
+  'Imagens',
+  'Exercícios (HTML manual)',
+  'Paleta única',
+  'JavaScript completo',
+  'SVGs (overflow/quebrados)'
+];
+
+var CHECK_RULES = {
+  'Estrutura (4 abas)': { regra: 'REGRA 1 + REGRA 2', impacto: 'Sem as 4 abas, o professor não tem acesso ao planejamento, exercícios ou aula interativa. Material inutilizável.' },
+  'Pre-class (etapas)': { regra: 'REGRA 4 — 5 Etapas Obrigatórias', impacto: 'Etapas faltantes significam que o aluno não teve primeiro contato com o vocabulário/gramática antes da aula. A aula perde eficácia.' },
+  'IN CLASS (slides)': { regra: 'REGRA 20 — Mínimo 25 slides (60min)', impacto: 'Menos slides = menos conteúdo = aula rasa. O aluno não sente progressão e o professor fica sem material.' },
+  'IN CLASS (componentes)': { regra: 'REGRA 2 — Aba IN CLASS', impacto: 'Componentes faltantes (reveal cards, grammar discovery, dialogue, etc.) quebram a experiência imersiva da aula.' },
+  'Ícone T': { regra: 'REGRA 20 — Ícone T em TODOS os slides', impacto: 'Sem instruções no T, o professor não sabe como conduzir o slide. Improvisa e perde qualidade.' },
+  'Áudios (audioMap)': { regra: 'REGRA 7 — Audio Map + ElevenLabs', impacto: 'Frases sem MP3 caem no fallback Web Speech API (voz robótica). Experiência auditiva degradada.' },
+  'Áudios (MP3 files)': { regra: 'REGRA 7 — Zero tolerância com Web Speech API', impacto: 'MP3 ausente no servidor = fallback TTS. O aluno ouve voz artificial em vez de pronúncia natural.' },
+  'Vozes (data-voice)': { regra: 'REGRA 7 — Alternância Arthur/Ellen', impacto: 'Sem data-voice, o sistema não sabe qual voz usar. Personagens femininos podem sair com voz masculina.' },
+  'Zero Português': { regra: 'REGRA 20 — Zero PT na tela IN CLASS', impacto: 'Português na tela quebra a imersão. O aluno lê em PT em vez de processar em inglês.' },
+  'Zero Emojis': { regra: 'REGRA 25 — Zero emojis, todos SVG', impacto: 'Emojis renderizam diferente em cada dispositivo/SO. SVGs são consistentes e profissionais.' },
+  'Imagens': { regra: 'REGRA 11 — Imagens funcionais', impacto: 'Imagem quebrada (404) mostra ícone de erro na tela compartilhada via Zoom. Aparência não profissional.' },
+  'Exercícios (HTML manual)': { regra: 'REGRA 5 — Sempre HTML manual', impacto: 'data-exercise causa bugs de renderização. HTML manual garante funcionamento em todos os browsers.' },
+  'Paleta única': { regra: 'REGRA 10 — Paleta de cores única por aluno', impacto: 'Cores repetidas entre alunos confundem a identidade visual. Cada aluno deve ter cor própria.' },
+  'JavaScript completo': { regra: 'REGRA 9 + REGRA 26', impacto: 'Funções JS faltantes causam botões que não funcionam (áudio, exercícios, progresso).' },
+  'SVGs (overflow/quebrados)': { regra: 'REGRA 25 — UI/UX Pro Max', impacto: 'SVG sem dimensões explode o layout do slide. O aluno vê uma tela rosa/quebrada em vez do conteúdo.' }
+};
+
+/* ===================== SVG ICONS ===================== */
+var SVG_PASS = '<svg class="check-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#16a34a" stroke-width="1.5"/><path d="M6 10.5l2.5 2.5L14 7.5" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var SVG_FAIL = '<svg class="check-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#dc2626" stroke-width="1.5"/><path d="M7 7l6 6M13 7l-6 6" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/></svg>';
+var SVG_WARN = '<svg class="check-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#d97706" stroke-width="1.5"/><path d="M10 6v5M10 13.5v.5" stroke="#d97706" stroke-width="2" stroke-linecap="round"/></svg>';
+var SVG_PENDING = '<svg class="check-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#ccc" stroke-width="1.5"/><circle cx="10" cy="10" r="2" fill="#ccc"/></svg>';
+var SVG_CHEVRON = '<svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M6 8l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var SVG_CHEVRON_SM = '<svg class="lesson-chevron" viewBox="0 0 16 16" fill="none"><path d="M5 6l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* ===================== HELPERS ===================== */
+function escHtml(str) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+function escAttr(s) { return String(s||'').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+function generateFixInstruction(checkName, details, slug) {
+  var instructions = {
+    'Estrutura (4 abas)': 'No arquivo /public/professor/' + slug + '.html, verificar que existem as 4 abas: tab-planning, tab-exercises, tab-inclass, tab-complementary. Adicionar as que faltam seguindo o template patricia-ruffo.html.',
+    'Pre-class (etapas)': 'No arquivo /public/professor/' + slug + '.html, na aba Pre-class (tab-exercises), adicionar as etapas faltantes: ' + details + '. Seguir REGRA 4 do CLAUDE.md.',
+    'IN CLASS (slides)': 'No arquivo /public/professor/' + slug + '.html, a aba IN CLASS tem poucos slides. Adicionar mais slides seguindo a estrutura de 7 capítulos. Mínimo 25 para 60min.',
+    'IN CLASS (componentes)': 'No arquivo /public/professor/' + slug + '.html, na aba IN CLASS, adicionar os componentes faltantes: ' + details + '. Copiar estrutura do template.',
+    'Ícone T': 'No arquivo /public/professor/' + slug + '.html, adicionar data-teacher="instrução em PT" nos slides que não têm. ' + details,
+    'Áudios (audioMap)': 'Gerar MP3s via ElevenLabs para as frases faltantes e adicionar ao audioMap em /public/professor/' + slug + '.html. Frases: ' + details,
+    'Áudios (MP3 files)': 'Verificar e regerar os MP3s ausentes em /public/audio/' + slug + '/. ' + details,
+    'Vozes (data-voice)': 'No arquivo /public/professor/' + slug + '.html, adicionar data-voice="ellen" para personagens femininos e data-voice="arthur" para masculinos em todas as linhas de diálogo.',
+    'Zero Português': 'No arquivo /public/professor/' + slug + '.html, na aba IN CLASS, substituir textos em português por inglês. ' + details,
+    'Zero Emojis': 'No arquivo /public/professor/' + slug + '.html, substituir emojis por SVG inline (Lucide style). ' + details,
+    'Imagens': 'No arquivo /public/professor/' + slug + '.html, corrigir URLs de imagens quebradas ou substituir por gradientes CSS + SVG. ' + details,
+    'Exercícios (HTML manual)': 'No arquivo /public/professor/' + slug + '.html, remover data-exercise e usar HTML manual (checkBlank, selectQuiz, checkMatch).',
+    'Paleta única': 'No arquivo /public/professor/' + slug + '.html, alterar --accent para uma cor única que não seja usada por outro aluno. ' + details,
+    'JavaScript completo': 'No arquivo /public/professor/' + slug + '.html, adicionar as funções JS faltantes. Copiar do REGRA 26 no CLAUDE.md. ' + details,
+    'SVGs (overflow/quebrados)': 'No arquivo /public/professor/' + slug + '.html, adicionar width e height explícitos em todos os SVGs que não têm. Ex: width="24" height="24". ' + details
+  };
+  return instructions[checkName] || 'Corrigir ' + checkName + ' em /public/professor/' + slug + '.html: ' + details;
+}
+
+function copyFix(checkName, details, slug) {
+  var text = generateFixInstruction(checkName, details, slug);
+  navigator.clipboard.writeText(text).then(function() {
+    event.target.textContent = 'Copiado!';
+    event.target.style.background = '#16a34a';
+    setTimeout(function() {
+      event.target.textContent = 'Copiar instrução';
+      event.target.style.background = '#003080';
+    }, 2000);
+  });
+}
+
+function scoreClass(pct) {
+  if (pct >= 90) return 'score-green';
+  if (pct >= 70) return 'score-orange';
+  return 'score-red';
+}
+
+/* ===================== RENDER STUDENTS ===================== */
+function renderStudents() {
+  var container = document.getElementById('studentList');
+  var html = '';
+  students.forEach(function(s, i) {
+    html += '<div class="student-card" id="card-' + i + '">' +
+      '<div class="student-header" onclick="toggleCard(' + i + ')">' +
+        '<div class="student-accent" style="background:' + s.accent + '"></div>' +
+        '<span class="student-name">' + escHtml(s.name) + '</span>' +
+        '<span class="student-level">' + s.level + '</span>' +
+        '<span class="student-lessons" id="lessons-' + i + '">0/' + s.totalLessons + ' aulas</span>' +
+        '<span class="student-score score-none" id="score-' + i + '">--</span>' +
+        '<button class="btn-audit" id="btn-' + i + '" onclick="event.stopPropagation();auditStudent(' + i + ')" aria-label="Auditar ' + s.name + '">Auditar</button>' +
+        SVG_CHEVRON +
+      '</div>' +
+      '<div class="student-body" id="body-' + i + '">' +
+        '<div class="audit-status" id="status-' + i + '">Clique em "Auditar" para iniciar a verificação.</div>' +
+      '</div>' +
+    '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function toggleCard(i) {
+  document.getElementById('card-' + i).classList.toggle('expanded');
+}
+
+function toggleLessonAudit(el) {
+  el.closest('.lesson-audit').classList.toggle('open');
+}
+
+/* ===================== LESSON DETECTION ===================== */
+function detectLessons(html) {
+  var lessons = [];
+  /* Strategy 1: Find lesson cards with id="ex-lesson-N" */
+  var lessonCardRegex = /id\s*=\s*["']ex-lesson-(\d+)["']/g;
+  var match;
+  var lessonNums = [];
+  while ((match = lessonCardRegex.exec(html)) !== null) {
+    var num = parseInt(match[1]);
+    if (lessonNums.indexOf(num) === -1) lessonNums.push(num);
+  }
+  lessonNums.sort(function(a, b) { return a - b; });
+
+  if (lessonNums.length > 0) {
+    lessonNums.forEach(function(num) {
+      /* Extract lesson name from lesson-header h3 */
+      var idStr = 'ex-lesson-' + num;
+      var startIdx = html.indexOf('id="' + idStr + '"');
+      if (startIdx === -1) startIdx = html.indexOf("id='" + idStr + "'");
+      if (startIdx === -1) return;
+
+      /* Find next lesson card or end of exercises tab */
+      var nextLesson = html.indexOf('id="ex-lesson-' + (num + 1) + '"', startIdx + 1);
+      if (nextLesson === -1) nextLesson = html.indexOf("id='ex-lesson-" + (num + 1) + "'", startIdx + 1);
+      var endIdx = nextLesson !== -1 ? nextLesson : html.length;
+
+      var lessonHtml = html.substring(startIdx, endIdx);
+
+      /* Extract name from h3 */
+      var nameMatch = lessonHtml.match(/<h3[^>]*>([\s\S]*?)<\/h3>/i);
+      var name = nameMatch ? nameMatch[1].replace(/<[^>]+>/g, '').trim() : 'Aula ' + num;
+      /* Clean up long names */
+      if (name.length > 60) name = name.substring(0, 57) + '...';
+
+      lessons.push({ num: num, name: name, startIdx: startIdx, endIdx: endIdx });
+    });
+    return lessons;
+  }
+
+  /* Strategy 2: Find lesson-card class elements */
+  var classRegex = /class\s*=\s*["'][^"']*lesson-card[^"']*["']/g;
+  var classMatches = [];
+  while ((match = classRegex.exec(html)) !== null) {
+    classMatches.push(match.index);
+  }
+  if (classMatches.length > 0) {
+    classMatches.forEach(function(startIdx, i) {
+      var endIdx = i + 1 < classMatches.length ? classMatches[i + 1] : html.length;
+      var lessonHtml = html.substring(startIdx, endIdx);
+      var nameMatch = lessonHtml.match(/<h3[^>]*>([\s\S]*?)<\/h3>/i);
+      var name = nameMatch ? nameMatch[1].replace(/<[^>]+>/g, '').trim() : 'Aula ' + (i + 1);
+      if (name.length > 60) name = name.substring(0, 57) + '...';
+      lessons.push({ num: i + 1, name: name, startIdx: startIdx, endIdx: endIdx });
+    });
+    return lessons;
+  }
+
+  /* Strategy 3: Count slides — if slides exist, treat as 1 lesson */
+  var slideRegex = /class\s*=\s*["'][^"']*\bslide\b[^"']*["']/gi;
+  var slideCount = (html.match(slideRegex) || []).length;
+  var dataSlideCount = (html.match(/data-slide\s*=/gi) || []).length;
+  if (slideCount > 0 || dataSlideCount > 0) {
+    lessons.push({ num: 1, name: 'Aula 1', startIdx: 0, endIdx: html.length });
+  }
+
+  return lessons;
+}
+
+/* ===================== CHECK FUNCTIONS (FILE-WIDE) ===================== */
+
+function checkStructure(html) {
+  var tabs = ['tab-planning', 'tab-exercises', 'tab-inclass', 'tab-complementary'];
+  var found = [];
+  var missing = [];
+  tabs.forEach(function(t) {
+    if (html.indexOf(t) !== -1) found.push(t);
+    else missing.push(t);
+  });
+  var hasLogo = html.indexOf('logo-bar') !== -1 || html.indexOf('logo-alumni') !== -1;
+  var hasBadge = html.indexOf('PROFESSOR') !== -1 || html.indexOf('view-badge') !== -1 || html.indexOf('badge') !== -1;
+  var issues = [];
+  if (missing.length > 0) issues.push('Faltando abas: ' + missing.join(', '));
+  if (!hasLogo) issues.push('Logo bar não encontrada');
+  if (!hasBadge) issues.push('Badge não encontrado');
+  if (issues.length === 0) {
+    return { pass: true, details: '4/4 abas + logo + badge' };
+  }
+  return { pass: false, details: issues.join(' | ') };
+}
+
+function checkPalette(html, slug) {
+  var accentRegex = /--accent\s*:\s*(#[0-9a-fA-F]{3,8})/;
+  var match = html.match(accentRegex);
+  var accent = match ? match[1].toLowerCase() : null;
+  if (!accent) {
+    return { pass: false, details: '--accent não encontrado no :root' };
+  }
+  var duplicate = null;
+  for (var otherSlug in accentMap) {
+    if (otherSlug !== slug && accentMap[otherSlug] === accent) {
+      duplicate = otherSlug;
+      break;
+    }
+  }
+  accentMap[slug] = accent;
+  if (duplicate) {
+    return { pass: false, details: 'Accent ' + accent + ' duplicada com ' + duplicate };
+  }
+  return { pass: true, details: 'Accent ' + accent + ' (única)' };
+}
+
+function checkJavaScript(html) {
+  var requiredFns = [
+    'switchTab', 'toggleLesson', 'speakText', 'checkBlank',
+    'selectQuiz', 'checkMatch', 'verifyAllMatches', 'checkOrder',
+    'startRecording', 'stopRecording', 'analyzeWords', 'levenshtein'
+  ];
+  var missing = [];
+  requiredFns.forEach(function(fn) {
+    var patterns = ['function ' + fn, fn + ' = function', fn + ' = (', fn + '('];
+    var found = patterns.some(function(p) { return html.indexOf(p) !== -1; });
+    if (!found) missing.push(fn);
+  });
+  /* Check for \\s in regex (forbidden) */
+  var backslashSRegex = /\/[^/\n]*\\s[^/\n]*\//g;
+  var bsMatches = html.match(backslashSRegex) || [];
+  var issues = [];
+  if (missing.length > 0) issues.push('Faltando: ' + missing.join(', '));
+  if (bsMatches.length > 0) issues.push(bsMatches.length + ' regex com \\s (proibido)');
+  if (issues.length === 0) {
+    return { pass: true, details: '12/12 funções + 0 regex com \\s' };
+  }
+  return { pass: false, details: issues.join(' | ') };
+}
+
+function checkExercises(html) {
+  var hasDataExercise = html.indexOf('data-exercise') !== -1;
+  var hasCheckBlank = html.indexOf('checkBlank') !== -1;
+  var hasSelectQuiz = html.indexOf('selectQuiz') !== -1;
+  var hasCheckMatch = html.indexOf('checkMatch') !== -1;
+  var manualCount = [hasCheckBlank, hasSelectQuiz, hasCheckMatch].filter(Boolean).length;
+  var issues = [];
+  if (hasDataExercise) issues.push('data-exercise encontrado (proibido)');
+  if (!hasCheckBlank) issues.push('checkBlank ausente');
+  if (!hasSelectQuiz) issues.push('selectQuiz ausente');
+  if (!hasCheckMatch) issues.push('checkMatch ausente');
+  if (!hasDataExercise && manualCount === 3) {
+    return { pass: true, details: '0 data-exercise + 3 funções manuais' };
+  }
+  return { pass: false, details: issues.join(' | ') };
+}
+
+function checkEmojis(html) {
+  var emojiRegex = /[\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2702}-\u{27B0}\u{FE00}-\u{FE0F}\u{1F1E0}-\u{1F1FF}]/gu;
+  var allowed = ['\u2713', '\u2714', '\u25B6', '\u25C0', '\u2190', '\u2192', '\u2191', '\u2193', '\u2194', '\u21A9', '\u2605'];
+  var matches = html.match(emojiRegex) || [];
+  var filtered = matches.filter(function(e) { return allowed.indexOf(e) === -1; });
+  /* Check HTML entities — but EXCLUDE standard UI symbols: arrows, play, stop, record, checkmark, star */
+  var entityRegex = /&#(\d{4,6});/g;
+  var entityMatches = [];
+  var em2;
+  while ((em2 = entityRegex.exec(html)) !== null) {
+    var code = parseInt(em2[1]);
+    /* Skip standard UI symbols: ▲9650 ▼9660 ▶9654 ●9679 ■9632 ★9733 ✓10003 ✔10004 ←8592 →8594 */
+    var uiSymbols = [8592,8594,8593,8595,9650,9660,9654,9664,9679,9632,9633,9733,9734,10003,10004];
+    if (uiSymbols.indexOf(code) === -1 && code >= 127000) {
+      entityMatches.push(em2[0]);
+    }
+  }
+  var total = filtered.length + entityMatches.length;
+  if (total === 0) {
+    return { pass: true, details: '0 emojis encontrados' };
+  }
+  var examples = filtered.slice(0, 5).map(function(e) { return '"' + e + '"'; }).join(', ');
+  return { pass: false, details: total + ' emojis encontrados: ' + examples };
+}
+
+/* ===================== CHECK FUNCTIONS (PER-LESSON) ===================== */
+
+function checkPreclassLesson(lessonHtml, lessonNum) {
+  var checks = [
+    { name: 'Vocab cards', patterns: ['vocab-card'] },
+    { name: 'Matching (match-grid)', patterns: ['match-grid'] },
+    { name: 'Grammar in Context', patterns: ['Grammar in Context'] },
+    { name: 'Grammar Tip', patterns: ['Grammar Tip'] },
+    { name: 'Fill-in (blank-input)', patterns: ['blank-input'] },
+    { name: 'Pronunciation (speech-card)', patterns: ['speech-card'] },
+    { name: 'Quiz (quiz-item)', patterns: ['quiz-item'] },
+    { name: 'Production (think-card)', patterns: ['think-card'] },
+    { name: 'Survival card', patterns: ['survival-card', 'survival-phrase'] }
+  ];
+  var found = [];
+  var missing = [];
+  checks.forEach(function(c) {
+    var ok = c.patterns.some(function(p) { return lessonHtml.indexOf(p) !== -1; });
+    if (ok) found.push(c.name);
+    else missing.push(c.name);
+  });
+  if (missing.length === 0) {
+    return { pass: true, details: found.length + '/' + checks.length + ' etapas encontradas' };
+  }
+  return { pass: false, details: 'Faltando: ' + missing.join(', ') };
+}
+
+function checkInClassSlides(html) {
+  /* Count ONLY real slides: elements with data-slide="N" attribute (unique numbers) */
+  var dataSlideRegex = /data-slide\s*=\s*["'](\d+)["']/g;
+  var slideNums = {};
+  var dm;
+  while ((dm = dataSlideRegex.exec(html)) !== null) { slideNums[dm[1]] = true; }
+  var count = Object.keys(slideNums).length;
+  /* Fallback: if no data-slide, count class="slide slide-*" but exclude nested elements */
+  if (count === 0) {
+    var slideClassRegex = /<div[^>]+class\s*=\s*["']slide\s/gi;
+    count = (html.match(slideClassRegex) || []).length;
+  }
+  var hasNav = html.indexOf('goSlide') !== -1 || html.indexOf('goToSlide') !== -1 ||
+    html.indexOf('ArrowLeft') !== -1 || html.indexOf('ArrowRight') !== -1 ||
+    html.indexOf('prevSlide') !== -1 || html.indexOf('nextSlide') !== -1;
+  if (count >= 25 && hasNav) {
+    return { pass: true, details: count + ' slides com navegação' };
+  }
+  var issues = [];
+  if (count < 25) issues.push(count + ' slides (mínimo 25)');
+  if (!hasNav) issues.push('navegação não encontrada');
+  return { pass: false, details: issues.join(' | ') };
+}
+
+function checkInClassComponents(html) {
+  var checks = [
+    { name: 'Reveal cards', test: function() { return html.indexOf('vocab-card') !== -1 || html.indexOf('reveal') !== -1 || html.indexOf('flip-card') !== -1; } },
+    { name: 'Grammar discovery', test: function() { return html.indexOf('Reveal the Rule') !== -1 || html.indexOf('grammar-rule') !== -1 || html.indexOf('Grammar Discovery') !== -1; } },
+    { name: 'Dialogue', test: function() { return html.indexOf('dialogue') !== -1 && (html.indexOf('Next Line') !== -1 || html.indexOf('next-line') !== -1 || html.indexOf('nextLine') !== -1); } },
+    { name: 'Quick fire', test: function() { return html.indexOf('Quick') !== -1 || html.indexOf('quick-fire') !== -1 || html.indexOf('qf-') !== -1; } },
+    { name: 'Spot the error', test: function() { return html.indexOf('error') !== -1 && (html.indexOf('correction') !== -1 || html.indexOf('correct') !== -1); } },
+    { name: 'Role-play (3x)', test: function() { var m = html.match(/role-?play/gi); return m && m.length >= 3; } },
+    { name: 'Artefato real', test: function() { return html.indexOf('boarding-pass') !== -1 || html.indexOf('hotel-confirm') !== -1 || html.indexOf('artifact') !== -1 || html.indexOf('email-') !== -1 || html.indexOf('menu-card') !== -1; } },
+    { name: 'Checklist', test: function() { return (html.indexOf('checkbox') !== -1 || html.indexOf('checklist') !== -1 || html.indexOf('check-box') !== -1 || html.indexOf('check-item') !== -1 || html.indexOf('toggleCheck') !== -1) && (html.indexOf('What I Learned') !== -1 || html.indexOf('After today') !== -1 || html.indexOf('checklist-item') !== -1 || html.indexOf('check-label') !== -1 || html.indexOf('check-item') !== -1); } }
+  ];
+  var found = [];
+  var missing = [];
+  checks.forEach(function(c) {
+    if (c.test()) found.push(c.name);
+    else missing.push(c.name);
+  });
+  if (missing.length === 0) {
+    return { pass: true, details: '8/8 componentes encontrados' };
+  }
+  return { pass: false, details: found.length + '/8 — Faltando: ' + missing.join(', ') };
+}
+
+function checkTeacherT(html) {
+  var hasTeacher = html.indexOf('data-teacher') !== -1 || html.indexOf('teacher-t') !== -1 || html.indexOf('teacher-cue') !== -1;
+  if (!hasTeacher) {
+    return { pass: false, details: 'Nenhum ícone T encontrado' };
+  }
+  /* Count real slides (data-slide="N") */
+  var dsRe = /data-slide\s*=\s*["'](\d+)["']/g;
+  var sn = {}; var dm2;
+  while ((dm2 = dsRe.exec(html)) !== null) { sn[dm2[1]] = true; }
+  var totalSlides = Object.keys(sn).length;
+  if (totalSlides === 0) { totalSlides = (html.match(/<div[^>]+class\s*=\s*["']slide\s/gi) || []).length; }
+  /* Count slides that HAVE data-teacher attribute */
+  var teacherMarks = (html.match(/data-teacher\s*=/gi) || []).length;
+  if (totalSlides === 0) {
+    return { pass: false, details: 'Slides não encontrados para comparar com ícone T' };
+  }
+  var coverage = Math.round((teacherMarks / totalSlides) * 100);
+  if (teacherMarks >= totalSlides) {
+    return { pass: true, details: teacherMarks + '/' + totalSlides + ' slides com instruções T' };
+  }
+  /* Find which slides are missing — approximate by checking slide indexes */
+  return { pass: false, details: teacherMarks + '/' + totalSlides + ' slides com ícone T (' + coverage + '%)' };
+}
+
+function checkAudioMap(html) {
+  var speakRegex = /speakText\s*\(\s*['"`]([^'"`]+)['"`]/g;
+  var speakPhrases = [];
+  var m;
+  while ((m = speakRegex.exec(html)) !== null) {
+    speakPhrases.push(m[1]);
+  }
+  /* Also check data-phrase attributes */
+  var phraseRegex = /data-phrase\s*=\s*["']([^"']+)["']/g;
+  while ((m = phraseRegex.exec(html)) !== null) {
+    if (speakPhrases.indexOf(m[1]) === -1) speakPhrases.push(m[1]);
+  }
+
+  var mapRegex = /audioMap\s*=\s*\{([^}]*(?:\{[^}]*\}[^}]*)*)\}/s;
+  var mapMatch = html.match(mapRegex);
+  var audioKeys = [];
+  if (mapMatch) {
+    var keyRegex = /['"`]([^'"`]+)['"`]\s*:/g;
+    var km;
+    while ((km = keyRegex.exec(mapMatch[1])) !== null) {
+      audioKeys.push(km[1]);
+    }
+  }
+
+  var missing = [];
+  speakPhrases.forEach(function(phrase) {
+    var normalised = phrase.trim().replace(/\\'/g, "'");
+    if (audioKeys.indexOf(normalised) !== -1) return;
+    /* Case-insensitive match */
+    var foundCI = audioKeys.some(function(k) { return k.toLowerCase() === normalised.toLowerCase(); });
+    if (foundCI) return;
+    /* Try without/with trailing period */
+    var noPeriod = normalised.replace(/\.$/, '');
+    var withPeriod = normalised + '.';
+    var foundAlt = audioKeys.some(function(k) {
+      var kl = k.toLowerCase();
+      return kl === noPeriod.toLowerCase() || kl === withPeriod.toLowerCase();
+    });
+    if (foundAlt) return;
+    /* Try removing special chars for fuzzy match */
+    var clean = normalised.toLowerCase().replace(/[^a-z0-9 ]/g, '');
+    var foundFuzzy = audioKeys.some(function(k) {
+      return k.toLowerCase().replace(/[^a-z0-9 ]/g, '') === clean;
+    });
+    if (foundFuzzy) return;
+    missing.push(normalised);
+  });
+
+  if (missing.length === 0 && speakPhrases.length > 0) {
+    return { pass: true, details: speakPhrases.length + '/' + speakPhrases.length + ' frases mapeadas', missing: [] };
+  }
+  if (speakPhrases.length === 0 && audioKeys.length === 0) {
+    return { pass: false, details: 'Nenhum speakText ou audioMap encontrado', missing: [] };
+  }
+  if (speakPhrases.length === 0 && audioKeys.length > 0) {
+    return { pass: true, details: audioKeys.length + ' entradas no audioMap (0 speakText)', missing: [] };
+  }
+  return { pass: false, details: missing.length + ' frases sem mapeamento de ' + speakPhrases.length + ' total', missing: missing.slice(0, 20) };
+}
+
+async function checkAudioFiles(html, slug) {
+  var mapRegex = /audioMap\s*=\s*\{([^}]*(?:\{[^}]*\}[^}]*)*)\}/s;
+  var mapMatch = html.match(mapRegex);
+  if (!mapMatch) return { pass: false, details: 'audioMap não encontrado', missing: [] };
+
+  var urlRegex = /['"`]((?:\/)?audio\/[^'"`]+\.mp3)['"`]/g;
+  var urls = [];
+  var um;
+  while ((um = urlRegex.exec(mapMatch[0])) !== null) {
+    var u = um[1];
+    if (u.charAt(0) !== '/') u = '/' + u;
+    if (urls.indexOf(u) === -1) urls.push(u);
+  }
+
+  if (urls.length === 0) return { pass: false, details: 'Nenhuma URL MP3 no audioMap', missing: [] };
+
+  var toCheck = urls.slice(0, 10);
+  var missing = [];
+
+  for (var i = 0; i < toCheck.length; i++) {
+    try {
+      var resp = await fetch(toCheck[i], { method: 'HEAD' });
+      if (!resp.ok) missing.push(toCheck[i]);
+    } catch (e) {
+      missing.push(toCheck[i]);
+    }
+  }
+
+  var extra = urls.length > 10 ? ' (verificados ' + toCheck.length + ' de ' + urls.length + ')' : '';
+  if (missing.length === 0) {
+    return { pass: true, details: toCheck.length + '/' + toCheck.length + ' MP3s OK' + extra, missing: [] };
+  }
+  return { pass: false, details: missing.length + ' MP3s ausentes de ' + toCheck.length + extra, missing: missing };
+}
+
+function checkVoices(html) {
+  var voiceRegex = /data-voice\s*=\s*["'](\w+)["']/gi;
+  var voices = [];
+  var vm;
+  while ((vm = voiceRegex.exec(html)) !== null) {
+    voices.push(vm[1].toLowerCase());
+  }
+  if (voices.length === 0) {
+    return { pass: false, details: 'Nenhum data-voice encontrado' };
+  }
+  var unique = [];
+  voices.forEach(function(v) { if (unique.indexOf(v) === -1) unique.push(v); });
+  var invalid = voices.filter(function(v) { return v !== 'arthur' && v !== 'ellen'; });
+  if (invalid.length > 0) {
+    return { pass: false, details: invalid.length + ' vozes inválidas: ' + invalid.slice(0, 5).join(', ') };
+  }
+  if (unique.length === 1) {
+    return { pass: false, details: voices.length + ' linhas mas apenas voz "' + unique[0] + '" (falta alternância)' };
+  }
+  return { pass: true, details: voices.length + ' data-voice (' + unique.join('/') + ')' };
+}
+
+function checkPortuguese(html) {
+  var ptWords = ['\\bpara\\b', '\\bcom\\b', '\\bnao\\b', '\\bvoce\\b', '\\bcomo\\b',
+    '\\buma\\b', '\\bseu\\b', '\\bsua\\b', '\\beste\\b', '\\besta\\b',
+    '\\baqui\\b', '\\bfazer\\b', '\\bdiga\\b', '\\bfrase\\b', '\\bpalavra\\b',
+    '\\bexercicio\\b', '\\baula\\b', '\\bprofessor\\b', '\\bresponda\\b',
+    '\\bouça\\b', '\\bescute\\b', '\\bescola\\b', '\\btradução\\b'];
+
+  /* Isolate IN CLASS section */
+  var inClassSection = '';
+  var inClassStart = html.indexOf('id="tab-inclass"');
+  if (inClassStart === -1) inClassStart = html.indexOf("id='tab-inclass'");
+  if (inClassStart !== -1) {
+    var nextTab = html.indexOf('id="tab-complementary"', inClassStart);
+    if (nextTab === -1) nextTab = html.indexOf("id='tab-complementary'", inClassStart);
+    if (nextTab === -1) nextTab = html.length;
+    inClassSection = html.substring(inClassStart, nextTab);
+  } else {
+    return { pass: true, details: 'Aba IN CLASS não encontrada (não verificável)', found: [] };
+  }
+
+  /* Strip teacher tooltips and scripts */
+  var cleaned = inClassSection
+    .replace(/<[^>]*class\s*=\s*["'][^"']*teacher-t[^"']*["'][^>]*>[\s\S]*?<\/[^>]+>/gi, '')
+    .replace(/<[^>]*data-teacher[^>]*>[\s\S]*?<\/[^>]+>/gi, '')
+    .replace(/<[^>]*class\s*=\s*["'][^"']*teacher-cue[^"']*["'][^>]*>[\s\S]*?<\/[^>]+>/gi, '')
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '');
+
+  /* Remove known proper nouns / place names */
+  cleaned = cleaned.replace(/Sao Paulo/gi, '').replace(/São Paulo/gi, '');
+
+  var textContent = cleaned.replace(/<[^>]+>/g, ' ');
+
+  var foundItems = [];
+  ptWords.forEach(function(pattern) {
+    var word = pattern.replace(/\\b/g, '');
+    var regex = new RegExp(pattern, 'gi');
+    var matches = textContent.match(regex);
+    if (matches && matches.length > 0) {
+      var idx = textContent.search(regex);
+      var context = textContent.substring(Math.max(0, idx - 25), Math.min(textContent.length, idx + word.length + 25)).trim();
+      foundItems.push({ word: word, count: matches.length, context: context });
+    }
+  });
+
+  if (foundItems.length === 0) {
+    return { pass: true, details: '0 palavras em português na IN CLASS', found: [] };
+  }
+  var total = foundItems.reduce(function(sum, f) { return sum + f.count; }, 0);
+  return { pass: false, details: total + ' ocorrências de português', found: foundItems };
+}
+
+function checkSVGs(html) {
+  /* Find SVGs that might overflow — no width/height AND not inside a sized container */
+  var svgRegex = /<svg[^>]*>/gi;
+  var matches = html.match(svgRegex) || [];
+  var problems = [];
+  matches.forEach(function(tag, idx) {
+    var hasWidth = /width\s*=\s*["']\d/i.test(tag);
+    var hasHeight = /height\s*=\s*["']\d/i.test(tag);
+    var hasViewBox = /viewBox/i.test(tag);
+    var hasClass = /class\s*=/i.test(tag);
+    /* SVG without width AND height AND not inside a known sized class is risky */
+    if (!hasWidth && !hasHeight && hasViewBox) {
+      /* Check if it has a constraining class or style */
+      var hasStyle = /style\s*=.*(?:width|max-width)/i.test(tag);
+      if (!hasClass && !hasStyle) {
+        problems.push('SVG #' + (idx+1) + ' sem width/height (pode estourar layout)');
+      }
+    }
+    /* SVG with viewBox but very large implied size */
+    if (hasViewBox && !hasWidth && !hasHeight) {
+      var vbMatch = tag.match(/viewBox\s*=\s*["']([^"']+)["']/i);
+      if (vbMatch) {
+        var parts = vbMatch[1].trim().split(/\s+/);
+        if (parts.length === 4) {
+          var w = parseFloat(parts[2]);
+          var h = parseFloat(parts[3]);
+          if ((w > 100 || h > 100) && !hasClass) {
+            problems.push('SVG com viewBox grande (' + w + 'x' + h + ') sem dimensões explícitas');
+          }
+        }
+      }
+    }
+  });
+  if (problems.length === 0) {
+    return { pass: true, details: matches.length + ' SVGs verificados, 0 problemas' };
+  }
+  return { pass: false, details: problems.length + ' SVGs com risco de overflow', issues: problems.slice(0, 5) };
+}
+
+async function checkImages(html) {
+  var imgRegex = /<\s*img[^>]+src\s*=\s*["']([^"']+)["']/gi;
+  var urls = [];
+  var im;
+  while ((im = imgRegex.exec(html)) !== null) {
+    if (urls.indexOf(im[1]) === -1) urls.push(im[1]);
+  }
+  var bgRegex = /background-image\s*:\s*url\s*\(\s*["']?([^"')]+)["']?\s*\)/gi;
+  while ((im = bgRegex.exec(html)) !== null) {
+    if (urls.indexOf(im[1]) === -1) urls.push(im[1]);
+  }
+  /* Check lesson cards without background-image */
+  var headerImgRegex = /class\s*=\s*["'][^"']*lesson-header-img[^"']*["'][^>]*>/gi;
+  var headerImgs = html.match(headerImgRegex) || [];
+  var emptyBgs = [];
+  headerImgs.forEach(function(tag) {
+    if (tag.indexOf('background-image') === -1) { emptyBgs.push('lesson-header-img sem background-image'); }
+  });
+  /* Check empty background-image URLs */
+  var emptyBgRegex = /background-image\s*:\s*url\s*\(\s*["']?\s*["']?\s*\)/gi;
+  var emptyBgMatches = html.match(emptyBgRegex) || [];
+  emptyBgs = emptyBgs.concat(emptyBgMatches.map(function() { return 'background-image com URL vazia'; }));
+
+  if (urls.length === 0 && emptyBgs.length === 0) return { pass: true, details: 'Nenhuma imagem referenciada', broken: [] };
+  if (urls.length === 0 && emptyBgs.length > 0) return { pass: false, details: emptyBgs.length + ' imagens sem URL', broken: emptyBgs };
+
+  var toCheck = urls.slice(0, 20);
+  var broken = emptyBgs.slice();
+
+  for (var i = 0; i < toCheck.length; i++) {
+    try {
+      var u = toCheck[i];
+      if (u.indexOf('data:') === 0) continue;
+      if (u.indexOf('http') === 0) continue; /* Skip external URLs to avoid CORS */
+      var resp = await fetch(u, { method: 'HEAD' });
+      if (!resp.ok) broken.push(u);
+    } catch (e) {
+      broken.push(toCheck[i]);
+    }
+  }
+
+  var extra = urls.length > 20 ? ' (verificadas ' + toCheck.length + ' de ' + urls.length + ')' : '';
+  if (broken.length === 0) {
+    return { pass: true, details: toCheck.length + '/' + toCheck.length + ' imagens OK' + extra, broken: [] };
+  }
+  return { pass: false, details: broken.length + ' imagens quebradas de ' + toCheck.length + extra, broken: broken };
+}
+
+/* ===================== MAIN AUDIT ===================== */
+
+async function auditStudent(index) {
+  var s = students[index];
+  var btn = document.getElementById('btn-' + index);
+  var body = document.getElementById('body-' + index);
+  var statusEl = document.getElementById('status-' + index);
+  var card = document.getElementById('card-' + index);
+
+  if (!card.classList.contains('expanded')) card.classList.add('expanded');
+
+  btn.disabled = true;
+  btn.classList.add('running');
+  btn.textContent = 'Auditando...';
+  body.innerHTML = '<div class="audit-status">Buscando material de ' + escHtml(s.name) + '...</div>';
+
+  var html;
+  try {
+    var resp = await fetch('/professor/' + s.slug + '.html');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    html = await resp.text();
+  } catch (e) {
+    body.innerHTML = '<div class="audit-status error">Arquivo /professor/' + s.slug + '.html não encontrado (' + escHtml(e.message) + ')</div>';
+    btn.disabled = false;
+    btn.classList.remove('running');
+    btn.textContent = 'Auditar';
+    updateStudentScore(index, null);
+    /* Render placeholder lessons as NOT GENERATED */
+    renderNotFoundLessons(index, s);
+    return;
+  }
+
+  body.innerHTML = '<div class="audit-status">Detectando aulas e executando verificações...</div>';
+
+  /* Detect lessons */
+  var detectedLessons = detectLessons(html);
+  var detectedCount = detectedLessons.length;
+
+  /* Update lesson count display */
+  document.getElementById('lessons-' + index).textContent = detectedCount + '/' + s.totalLessons + ' aulas';
+
+  /* Run file-wide checks */
+  var fileChecks = {
+    structure: checkStructure(html),
+    palette: checkPalette(html, s.slug),
+    javascript: checkJavaScript(html),
+    svgs: checkSVGs(html),
+    exercises: checkExercises(html),
+    emojis: checkEmojis(html),
+    audioMap: checkAudioMap(html),
+    voices: checkVoices(html),
+    portuguese: checkPortuguese(html)
+  };
+
+  /* Run per-lesson checks */
+  var lessonResults = [];
+
+  for (var li = 0; li < detectedLessons.length; li++) {
+    var lesson = detectedLessons[li];
+    var lessonHtml = html.substring(lesson.startIdx, lesson.endIdx);
+
+    var checks = [];
+
+    /* 1. Structure (file-wide, same for all lessons) */
+    checks.push({ name: CHECK_NAMES[0], result: fileChecks.structure });
+
+    /* 2. Pre-class etapas */
+    checks.push({ name: CHECK_NAMES[1], result: checkPreclassLesson(lessonHtml, lesson.num) });
+
+    /* 3. IN CLASS slides (file-wide for now — all slides belong to the lesson if only 1) */
+    checks.push({ name: CHECK_NAMES[2], result: checkInClassSlides(html) });
+
+    /* 4. IN CLASS components */
+    checks.push({ name: CHECK_NAMES[3], result: checkInClassComponents(html) });
+
+    /* 5. Teacher T icon */
+    checks.push({ name: CHECK_NAMES[4], result: checkTeacherT(html) });
+
+    /* 6. Audio map */
+    checks.push({ name: CHECK_NAMES[5], result: fileChecks.audioMap });
+
+    /* 7. Audio MP3 files (placeholder, async) */
+    checks.push({ name: CHECK_NAMES[6], result: { pass: null, details: 'Verificando...' } });
+
+    /* 8. Voices */
+    checks.push({ name: CHECK_NAMES[7], result: fileChecks.voices });
+
+    /* 9. Zero Portuguese */
+    checks.push({ name: CHECK_NAMES[8], result: fileChecks.portuguese });
+
+    /* 10. Zero Emojis */
+    checks.push({ name: CHECK_NAMES[9], result: fileChecks.emojis });
+
+    /* 11. Images (placeholder, async) */
+    checks.push({ name: CHECK_NAMES[10], result: { pass: null, details: 'Verificando...' } });
+
+    /* 12. Exercises */
+    checks.push({ name: CHECK_NAMES[11], result: fileChecks.exercises });
+
+    /* 13. Palette */
+    checks.push({ name: CHECK_NAMES[12], result: fileChecks.palette });
+
+    /* 14. JavaScript */
+    checks.push({ name: CHECK_NAMES[13], result: fileChecks.javascript });
+
+    /* Check 15: SVG overflow */
+    checks.push({ name: CHECK_NAMES[14], result: fileChecks.svgs });
+
+    /* Calculate score */
+    var passed = checks.filter(function(c) { return c.result.pass === true; }).length;
+    var total = checks.length;
+    var score = Math.round((passed / total) * 100);
+
+    lessonResults.push({
+      num: lesson.num,
+      name: lesson.name,
+      score: score,
+      checks: checks
+    });
+  }
+
+  /* Render initial results */
+  renderLessonResults(index, s, lessonResults, detectedCount);
+
+  /* Run async checks */
+  var audioFilesResult;
+  try {
+    audioFilesResult = await checkAudioFiles(html, s.slug);
+  } catch (e) {
+    audioFilesResult = { pass: false, details: 'Erro: ' + e.message, missing: [] };
+  }
+
+  var imagesResult;
+  try {
+    imagesResult = await checkImages(html);
+  } catch (e) {
+    imagesResult = { pass: false, details: 'Erro: ' + e.message, broken: [] };
+  }
+
+  /* Update async results in each lesson */
+  lessonResults.forEach(function(lr) {
+    lr.checks[6].result = audioFilesResult;  /* Audio MP3 files */
+    lr.checks[10].result = imagesResult;     /* Images */
+    /* Recalculate score */
+    var passed = lr.checks.filter(function(c) { return c.result.pass === true; }).length;
+    lr.score = Math.round((passed / lr.checks.length) * 100);
+  });
+
+  /* Store results */
+  auditResults[s.slug] = lessonResults;
+
+  /* Re-render with complete results */
+  renderLessonResults(index, s, lessonResults, detectedCount);
+  updateStudentScore(index, lessonResults);
+
+  btn.disabled = false;
+  btn.classList.remove('running');
+  btn.textContent = 'Re-auditar';
+  updateSummary();
+}
+
+/* ===================== RENDER ===================== */
+
+function renderNotFoundLessons(index, s) {
+  var body = document.getElementById('body-' + index);
+  var html = '<div class="audit-results">';
+  for (var i = 1; i <= Math.min(s.totalLessons, 10); i++) {
+    html += '<div class="lesson-audit">' +
+      '<div class="lesson-audit-header">' +
+        SVG_CHEVRON_SM +
+        '<span class="lesson-audit-num">Aula ' + i + '</span>' +
+        '<span class="lesson-audit-name"></span>' +
+        '<span class="tag-not-generated">NÃO GERADA</span>' +
+      '</div>' +
+    '</div>';
+  }
+  if (s.totalLessons > 10) {
+    html += '<div style="text-align:center;padding:8px;color:var(--gray);font-size:.8rem;">+ ' + (s.totalLessons - 10) + ' aulas restantes</div>';
+  }
+  html += '</div>';
+  body.innerHTML = html;
+}
+
+function renderLessonResults(index, student, lessonResults, detectedCount) {
+  var body = document.getElementById('body-' + index);
+  var currentSlug = student.slug;
+  var html = '<div class="audit-results">';
+
+  /* Detected lessons with results */
+  lessonResults.forEach(function(lr, lrIdx) {
+    var sClass = scoreClass(lr.score);
+    var isFirst = lrIdx === 0;
+
+    html += '<div class="lesson-audit' + (isFirst ? ' open' : '') + '">' +
+      '<div class="lesson-audit-header" onclick="toggleLessonAudit(this)">' +
+        SVG_CHEVRON_SM +
+        '<span class="lesson-audit-num">Aula ' + lr.num + '</span>' +
+        '<span class="lesson-audit-name">' + escHtml(lr.name) + '</span>' +
+        '<span class="lesson-audit-score ' + sClass + '">' + lr.score + '%</span>' +
+      '</div>' +
+      '<div class="lesson-audit-body"><div class="lesson-audit-body-inner">';
+
+    /* Check rows */
+    var failures = [];
+    lr.checks.forEach(function(c) {
+      var cls, icon;
+      if (c.result.pass === null) {
+        cls = 'pending'; icon = SVG_PENDING;
+      } else if (c.result.pass) {
+        cls = 'pass'; icon = SVG_PASS;
+      } else {
+        cls = 'fail'; icon = SVG_FAIL;
+      }
+
+      html += '<div class="check-row ' + cls + '">' +
+        icon +
+        '<span class="check-name">' + escHtml(c.name) + '</span>' +
+        '<span class="check-detail">' + escHtml(c.result.details) + '</span>' +
+      '</div>';
+
+      /* Collect failures */
+      if (c.result.pass === false) {
+        var detailText = '';
+        if (c.result.missing && c.result.missing.length > 0) {
+          c.result.missing.forEach(function(m) {
+            detailText = m;
+            var rule = CHECK_RULES[c.name] || { regra: 'Ver CLAUDE.md', impacto: 'Verificar manualmente.' };
+            failures.push('<li style="border-bottom:1px solid #fef0f0;padding:8px 0">' +
+              '<div style="font-weight:600;font-size:.82rem;margin-bottom:3px">' + escHtml(c.name) + ': <code>' + escHtml(m) + '</code></div>' +
+              '<div style="font-size:.73rem;color:#666;line-height:1.5;margin-bottom:4px">' +
+              '<strong style="color:#003080">Regra:</strong> ' + escHtml(rule.regra) + ' | ' +
+              '<strong style="color:#dc2626">Impacto:</strong> ' + escHtml(rule.impacto) + '</div>' +
+              '<button onclick="copyFix(\'' + escAttr(c.name) + '\',\'' + escAttr(m) + '\',\'' + escAttr(currentSlug) + '\')" ' +
+              'style="background:#003080;color:#fff;border:none;padding:4px 14px;border-radius:4px;font-size:.72rem;font-weight:600;cursor:pointer;min-height:28px" ' +
+              'aria-label="Copiar instrução de correção">Copiar instrução</button>' +
+              '</li>');
+          });
+        } else if (c.result.broken && c.result.broken.length > 0) {
+          c.result.broken.forEach(function(b) {
+            detailText = b;
+            var rule = CHECK_RULES[c.name] || { regra: 'Ver CLAUDE.md', impacto: 'Verificar manualmente.' };
+            failures.push('<li style="border-bottom:1px solid #fef0f0;padding:8px 0">' +
+              '<div style="font-weight:600;font-size:.82rem;margin-bottom:3px">' + escHtml(c.name) + ': <code>' + escHtml(b) + '</code></div>' +
+              '<div style="font-size:.73rem;color:#666;line-height:1.5;margin-bottom:4px">' +
+              '<strong style="color:#003080">Regra:</strong> ' + escHtml(rule.regra) + ' | ' +
+              '<strong style="color:#dc2626">Impacto:</strong> ' + escHtml(rule.impacto) + '</div>' +
+              '<button onclick="copyFix(\'' + escAttr(c.name) + '\',\'' + escAttr(b) + '\',\'' + escAttr(currentSlug) + '\')" ' +
+              'style="background:#003080;color:#fff;border:none;padding:4px 14px;border-radius:4px;font-size:.72rem;font-weight:600;cursor:pointer;min-height:28px" ' +
+              'aria-label="Copiar instrução de correção">Copiar instrução</button>' +
+              '</li>');
+          });
+        } else if (c.result.found && c.result.found.length > 0) {
+          c.result.found.forEach(function(f) {
+            detailText = '"' + f.word + '" (' + f.count + 'x) — ' + f.context;
+            var rule = CHECK_RULES[c.name] || { regra: 'Ver CLAUDE.md', impacto: 'Verificar manualmente.' };
+            failures.push('<li style="border-bottom:1px solid #fef0f0;padding:8px 0">' +
+              '<div style="font-weight:600;font-size:.82rem;margin-bottom:3px">' + escHtml(c.name) + ': "' + escHtml(f.word) + '" (' + f.count + 'x) — <code>' + escHtml(f.context) + '</code></div>' +
+              '<div style="font-size:.73rem;color:#666;line-height:1.5;margin-bottom:4px">' +
+              '<strong style="color:#003080">Regra:</strong> ' + escHtml(rule.regra) + ' | ' +
+              '<strong style="color:#dc2626">Impacto:</strong> ' + escHtml(rule.impacto) + '</div>' +
+              '<button onclick="copyFix(\'' + escAttr(c.name) + '\',\'' + escAttr(detailText) + '\',\'' + escAttr(currentSlug) + '\')" ' +
+              'style="background:#003080;color:#fff;border:none;padding:4px 14px;border-radius:4px;font-size:.72rem;font-weight:600;cursor:pointer;min-height:28px" ' +
+              'aria-label="Copiar instrução de correção">Copiar instrução</button>' +
+              '</li>');
+          });
+        } else {
+          detailText = c.result.details;
+          var rule = CHECK_RULES[c.name] || { regra: 'Ver CLAUDE.md', impacto: 'Verificar manualmente.' };
+          failures.push('<li style="border-bottom:1px solid #fef0f0;padding:8px 0">' +
+            '<div style="font-weight:600;font-size:.82rem;margin-bottom:3px">' + escHtml(c.name) + ': ' + escHtml(c.result.details) + '</div>' +
+            '<div style="font-size:.73rem;color:#666;line-height:1.5;margin-bottom:4px">' +
+            '<strong style="color:#003080">Regra:</strong> ' + escHtml(rule.regra) + ' | ' +
+            '<strong style="color:#dc2626">Impacto:</strong> ' + escHtml(rule.impacto) + '</div>' +
+            '<button onclick="copyFix(\'' + escAttr(c.name) + '\',\'' + escAttr(detailText) + '\',\'' + escAttr(currentSlug) + '\')" ' +
+            'style="background:#003080;color:#fff;border:none;padding:4px 14px;border-radius:4px;font-size:.72rem;font-weight:600;cursor:pointer;min-height:28px" ' +
+            'aria-label="Copiar instrução de correção">Copiar instrução</button>' +
+            '</li>');
+        }
+      }
+    });
+
+    /* Failures block */
+    if (failures.length > 0) {
+      html += '<div class="fail-details">' +
+        '<h4>' + SVG_FAIL + ' Problemas (' + failures.length + ')</h4>' +
+        '<ul>' + failures.join('') + '</ul>' +
+      '</div>';
+    }
+
+    html += '</div></div></div>';
+  });
+
+  /* Not-generated lessons */
+  var generatedNums = {};
+  lessonResults.forEach(function(lr) { generatedNums[lr.num] = true; });
+
+  var maxToShow = Math.min(student.totalLessons, 20);
+  for (var i = 1; i <= maxToShow; i++) {
+    if (!generatedNums[i]) {
+      html += '<div class="lesson-audit">' +
+        '<div class="lesson-audit-header">' +
+          SVG_CHEVRON_SM +
+          '<span class="lesson-audit-num">Aula ' + i + '</span>' +
+          '<span class="lesson-audit-name"></span>' +
+          '<span class="tag-not-generated">NÃO GERADA</span>' +
+        '</div>' +
+      '</div>';
+    }
+  }
+
+  if (student.totalLessons > maxToShow) {
+    var remaining = student.totalLessons - maxToShow;
+    html += '<div style="text-align:center;padding:8px;color:var(--gray);font-size:.8rem;">+ ' + remaining + ' aulas restantes</div>';
+  }
+
+  html += '</div>';
+  body.innerHTML = html;
+}
+
+/* ===================== SCORES ===================== */
+
+function updateStudentScore(index, lessonResults) {
+  var scoreEl = document.getElementById('score-' + index);
+  if (!lessonResults || lessonResults.length === 0) {
+    scoreEl.className = 'student-score score-none';
+    scoreEl.textContent = 'N/A';
+    return;
+  }
+  var totalChecks = 0;
+  var passedChecks = 0;
+  lessonResults.forEach(function(lr) {
+    lr.checks.forEach(function(c) {
+      totalChecks++;
+      if (c.result.pass === true) passedChecks++;
+    });
+  });
+  var pct = Math.round((passedChecks / totalChecks) * 100);
+  scoreEl.className = 'student-score ' + scoreClass(pct);
+  scoreEl.textContent = pct + '%';
+}
+
+function updateSummary() {
+  var audited = Object.keys(auditResults).length;
+  document.getElementById('sumAudited').textContent = audited;
+
+  var totalLessonsAudited = 0;
+  var totalChecks = 0;
+  var totalPassed = 0;
+
+  for (var slug in auditResults) {
+    var lessons = auditResults[slug];
+    totalLessonsAudited += lessons.length;
+    lessons.forEach(function(lr) {
+      lr.checks.forEach(function(c) {
+        totalChecks++;
+        if (c.result.pass === true) totalPassed++;
+      });
+    });
+  }
+
+  document.getElementById('sumLessons').textContent = totalLessonsAudited;
+
+  if (totalChecks === 0) {
+    document.getElementById('sumScore').textContent = '--';
+    return;
+  }
+  var pct = Math.round((totalPassed / totalChecks) * 100);
+  document.getElementById('sumScore').textContent = pct + '%';
+}
+
+async function auditAll() {
+  var btn = document.getElementById('btnAuditAll');
+  btn.disabled = true;
+  btn.textContent = 'Auditando...';
+
+  for (var i = 0; i < students.length; i++) {
+    await auditStudent(i);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Auditar Todos';
+}
+
+/* ===================== INIT ===================== */
+(async function() {
+  var initContainer = document.getElementById('studentList');
+  if (initContainer) initContainer.innerHTML = '<div class="audit-status">Carregando alunos do Supabase...</div>';
+  await loadStudentsFromSupabase();
+  document.getElementById('sumStudents').textContent = students.length;
+  renderStudents();
+})();
+</script>
+</body>
+</html>
