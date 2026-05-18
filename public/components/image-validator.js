@@ -39,7 +39,7 @@ const FALLBACK_IMAGES = {
   ],
 
   airport: [
-    'https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=800&q=80',
+    'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80',
     'https://images.unsplash.com/photo-1529074325209-97e2d25bf8c6?w=800&q=80',
     'https://images.unsplash.com/photo-1556388158-158ea5ccacbd?w=800&q=80',
     'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&q=80',
