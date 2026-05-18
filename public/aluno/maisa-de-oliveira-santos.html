@@ -764,7 +764,16 @@ var audioMap = {"name":"/audio/maisa-de-oliveira-santos/name.mp3","age":"/audio/
             .btn { justify-content: center; width: 100%; }
             .section-header-row { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
         }
-    </style>
+    .stamps-row { display:flex; gap:0.8rem; margin-top:1.2rem; flex-wrap:wrap; }
+.stamp { width:64px; height:64px; border-radius:4px; overflow:hidden; border:1px solid var(--border); position:relative; opacity:0.3; transition:all 0.4s ease; background-size:cover; background-position:center; filter:grayscale(100%); }
+.stamp::after { content:attr(data-label); position:absolute; bottom:0; left:0; right:0; padding:0.15rem 0.2rem; font-size:0.5rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; text-align:center; background:linear-gradient(transparent,rgba(0,0,0,0.9)); color:#d4d4d4; }
+.stamp.earned { opacity:1; border-color:var(--accent-light); filter:grayscale(0%); box-shadow:0 0 20px rgba(0,0,0,0.25); }
+.stamp.earned::after { color:#fff; }
+@media(max-width:768px){ .stamps-row{gap:0.5rem} .stamp{width:50px;height:50px} }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='maisa-de-oliveira-santos';window.TOTAL_AULAS=20;</script>
 </head>
 <body>
 
@@ -787,6 +796,13 @@ var audioMap = {"name":"/audio/maisa-de-oliveira-santos/name.mp3","age":"/audio/
         <div class="progress-passport">
             <div class="progress-label"><span>Progresso Pre-class</span><span id="progress-pct">0%</span></div>
             <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar"></div></div>
+<div class="stamps-row">
+<div class="stamp" id="stamp1" data-label="Who Is" style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&q=80')"></div>
+<div class="stamp" id="stamp2" data-label="Hello" style="background-image:url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=200&q=80')"></div>
+<div class="stamp" id="stamp3" data-label="What Do" style="background-image:url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=200&q=80')"></div>
+<div class="stamp" id="stamp4" data-label="Numbers" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=200&q=80')"></div>
+<div class="stamp" id="stamp5" data-label="People" style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=200&q=80')"></div>
+</div>
         </div>
     </div>
 </div>
@@ -1647,5 +1663,6 @@ document.querySelectorAll('.match-row select').forEach(function(sel) { var word 
 document.querySelectorAll('.blank-input').forEach(function(inp) { inp.setAttribute('aria-label', 'Complete the sentence - ' + (inp.dataset.answer || 'answer')); });
 document.querySelectorAll('.quiz-option').forEach(function(opt) { opt.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); } }); });
 </script>
+<script src="/lib/lesson-progress.js"></script>
 </body>
 </html>

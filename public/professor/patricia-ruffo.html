@@ -180,7 +180,12 @@ var audioMap = {
   "The moderator asked each delegate to present their abstract.": "/audio/patricia-ruffo/aula5_the_moderator_asked_each_delegate_to_present_their_abs.mp3",
   "We reached a consensus on the recommendation for future studies.": "/audio/patricia-ruffo/aula5_we_reached_a_consensus_on_the_recommendation_for_futur.mp3",
   "Networking at the symposium helped us find new collaborators.": "/audio/patricia-ruffo/aula5_networking_at_the_symposium_helped_us_find_new_collabo.mp3",
-  "Her findings were presented at the keynote session.": "/audio/patricia-ruffo/aula5_her_findings_were_presented_at_the_keynote_session.mp3"
+  "Her findings were presented at the keynote session.": "/audio/patricia-ruffo/aula5_her_findings_were_presented_at_the_keynote_session.mp3",
+  "[order-l1]": "/audio/patricia-ruffo/order_l1_self_introduction.mp3",
+  "[order-l2]": "/audio/patricia-ruffo/order_l2_debate.mp3",
+  "[order-l3]": "/audio/patricia-ruffo/order_l3_conference_questions.mp3",
+  "[order-l4]": "/audio/patricia-ruffo/order_l4_project_update.mp3",
+  "[order-l5]": "/audio/patricia-ruffo/order_l5_summit_presentation.mp3"
 };
 </script>
 <style>
@@ -217,7 +222,18 @@ var audioMap = {
   --slide-transition: 400ms;
 }
 
-*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; touch-action: manipulation; }
+
+/* === FOCUS STATES (Accessibility) === */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 
 body {
   font-family:'Inter',-apple-system,sans-serif;
@@ -570,8 +586,8 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 @keyframes phasePulse { 0%,100%{opacity:1} 50%{opacity:.6} }
 .phase-labels { position:fixed;top:54px;left:0;right:0;z-index:509;display:flex;padding:0 1.5rem; }
 .phase-label { flex:1;font-size:.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;padding:.3rem 0;transition:color .4s; }
-.phase-label.current { color:var(--accent-light); }
-.phase-label.completed { color:var(--accent); }
+.phase-label.current { color:#7BEFB2; }
+.phase-label.completed { color:#52D18A; }
 
 /* Slides */
 .slides-container { height:100vh;overflow:hidden;position:relative; }
@@ -584,13 +600,16 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 .slide-dark .slide-inner { color:#fff; }
 .slide-dark .vocab-card, .slide-dark .vocab-card-ic, .slide-dark .fill-item, .slide-dark .challenge-card, .slide-dark .error-card, .slide-dark .roleplay-card, .slide-dark .record-card, .slide-dark .survival-item-ic, .slide-dark .oral-item, .slide-dark .scramble-item, .slide-dark .comp-q, .slide-dark .media-card, .slide-dark .match-row select, .slide-dark .hotel-card, .slide-dark .email-card, .slide-dark .boarding-pass, .slide-dark .boarding-pass-artifact, .slide-dark .business-card-artifact, .slide-dark .linkedin-card, .slide-dark .inclass-lesson-card, .slide-dark .flip-card-front { color:#2d2d3a; }
 .slide-image { background-size:cover;background-position:center; }
-.slide-image::before { content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,26,46,.4) 0%,rgba(26,26,46,.78) 100%); }
+.slide-image::before { content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,26,46,0.78) 0%,rgba(26,26,46,0.92) 100%); }
 .slide-image .slide-inner { color:#fff;position:relative;z-index:2;text-align:center; }
+.slide-image .accent, .slide-image .accent-bold, .slide-dark .accent, .slide-dark .accent-bold { color: #7BEFB2; }
+.slide-image .slide-title, .slide-dark .slide-title { text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+.slide-image .chapter-label, .slide-dark .chapter-label { color: rgba(255,255,255,0.8); }
 
 /* Slide typography */
 .chapter-label { font-size:.75rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--accent-light);margin-bottom:.5rem; }
 .slide-title { font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.15;margin-bottom:1rem; }
-.slide-subtitle { font-size:1rem;font-weight:300;opacity:.7;line-height:1.6; }
+.slide-subtitle { font-size:1rem;font-weight:300;opacity:.85;line-height:1.6; }
 .slide-heading { font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;line-height:1.2;margin-bottom:1.2rem; }
 .accent { color:var(--accent); }
 .accent-bold { color:var(--accent);font-weight:700; }
@@ -682,17 +701,27 @@ body.slide-mode .teacher-t { display:flex; }
 .dialogue-bubble .audio-inline:hover { opacity:1; }
 .dialogue-bubble .audio-inline svg { width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2; }
 
-/* Waveform */
-.waveform { display:flex;align-items:end;justify-content:center;gap:3px;height:50px;margin:1.5rem 0; }
-.waveform .bar { width:4px;background:var(--accent);border-radius:2px;animation:wave 1.2s ease-in-out infinite; }
-@keyframes wave { 0%,100%{height:8px} 50%{height:100%} }
-.waveform .bar:nth-child(1){animation-delay:0s;height:20px}.waveform .bar:nth-child(2){animation-delay:.1s;height:35px}.waveform .bar:nth-child(3){animation-delay:.2s;height:50px}.waveform .bar:nth-child(4){animation-delay:.15s;height:40px}.waveform .bar:nth-child(5){animation-delay:.3s;height:25px}.waveform .bar:nth-child(6){animation-delay:.05s;height:45px}.waveform .bar:nth-child(7){animation-delay:.25s;height:30px}.waveform .bar:nth-child(8){animation-delay:.12s;height:55px}.waveform .bar:nth-child(9){animation-delay:.35s;height:20px}.waveform .bar:nth-child(10){animation-delay:.08s;height:42px}.waveform .bar:nth-child(11){animation-delay:.22s;height:28px}.waveform .bar:nth-child(12){animation-delay:.18s;height:48px}
-.waveform-paused .bar { animation-play-state:paused; }
-.play-btn { width:64px;height:64px;border-radius:50%;background:var(--accent);border:none;color:#fff;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;margin:1rem auto; }
-.play-btn:hover { transform:scale(1.08);box-shadow:0 8px 32px rgba(45,106,79,.4); }
-.play-btn svg { width:24px;height:24px;fill:#fff;stroke:none; }
-.play-btn.playing .icon-play { display:none; }
-.play-btn.playing .icon-pause { display:block!important; }
+/* Listening Player */
+.listening-player{max-width:420px;margin:1.5rem auto 0}
+.lp-seekbar{height:6px;background:rgba(255,255,255,.3);border-radius:3px;cursor:pointer;margin-bottom:8px;position:relative}
+.lp-seekbar:hover{height:8px}
+.lp-progress{height:100%;background:var(--accent);border-radius:3px;transition:width .1s;width:0%}
+.lp-time{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.75);margin-bottom:16px;font-variant-numeric:tabular-nums}
+.lp-controls{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.lp-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lp-btn:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.lp-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.lp-play{width:64px;height:64px;background:var(--accent);border:none;color:#fff}
+.lp-play:hover{transform:scale(1.05)}
+.lp-play svg{width:24px;height:24px}
+.lp-play.playing .lp-icon-play{display:none}
+.lp-play.playing .lp-icon-pause{display:flex!important}
+.lp-icon-pause{display:none!important}
+.lp-speed{display:flex;justify-content:center;gap:8px}
+.lp-speed-btn{padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.lp-speed-btn:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.lp-speed-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lp-label{font-size:.7rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.5px;text-align:center;margin-bottom:6px}
 
 /* Quick challenge */
 .challenge-card { background:#fff;border:2px solid #e8e4df;border-radius:16px;padding:2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;transition:all .3s; }
@@ -818,7 +847,25 @@ body.slide-mode .nav-bar { display:flex; }
   .tabs { gap:0; }
   .tab-btn { font-size:.55rem;padding:.6rem .3rem; }
 }
+
+/* === REDUCED MOTION (Accessibility) === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+.stamps-row { display:flex; gap:0.8rem; margin-top:1.2rem; flex-wrap:wrap; }
+.stamp { width:64px; height:64px; border-radius:4px; overflow:hidden; border:1px solid var(--border); position:relative; opacity:0.3; transition:all 0.4s ease; background-size:cover; background-position:center; filter:grayscale(100%); }
+.stamp::after { content:attr(data-label); position:absolute; bottom:0; left:0; right:0; padding:0.15rem 0.2rem; font-size:0.5rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; text-align:center; background:linear-gradient(transparent,rgba(0,0,0,0.9)); color:#d4d4d4; }
+.stamp.earned { opacity:1; border-color:var(--accent-light); filter:grayscale(0%); box-shadow:0 0 20px rgba(0,0,0,0.25); }
+.stamp.earned::after { color:#fff; }
+@media(max-width:768px){ .stamps-row{gap:0.5rem} .stamp{width:50px;height:50px} }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='patricia-ruffo';window.TOTAL_AULAS=40;</script>
 </head>
 <body>
 
@@ -847,6 +894,13 @@ body.slide-mode .nav-bar { display:flex; }
     <div class="progress-passport">
       <div class="progress-label"><span>Progresso Geral</span><span id="progressPercent">0%</span></div>
       <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+<div class="stamps-row">
+<div class="stamp" id="stamp1" data-label="Scientist" style="background-image:url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80')"></div>
+<div class="stamp" id="stamp2" data-label="Nutrition" style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&q=80')"></div>
+<div class="stamp" id="stamp3" data-label="Research" style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=200&q=80')"></div>
+<div class="stamp" id="stamp4" data-label="Patients" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=200&q=80')"></div>
+<div class="stamp" id="stamp5" data-label="Results" style="background-image:url('https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=200&q=80')"></div>
+</div>
     </div>
   </div>
 </div>
@@ -1293,6 +1347,10 @@ body.slide-mode .nav-bar { display:flex; }
         <span class="badge badge-order">Order</span>
       </div>
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Organize these self-introduction sentences in the correct order.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l1]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l1">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l1')">
           <span class="order-num">?</span>
@@ -1825,6 +1883,10 @@ body.slide-mode .nav-bar { display:flex; }
         <span class="badge badge-order">Order</span>
       </div>
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Organize these sentences in the correct order for a professional disagreement.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l2]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l2">
         <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l2')">
           <span class="order-num">?</span>
@@ -2358,6 +2420,10 @@ body.slide-mode .nav-bar { display:flex; }
         <span class="badge badge-order">Order</span>
       </div>
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Organize these sentences in the correct order for asking a smart question at a conference.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l3]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l3">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l3')">
           <span class="order-num">?</span>
@@ -2926,6 +2992,10 @@ body.slide-mode .nav-bar { display:flex; }
         <span class="badge badge-order">Order</span>
       </div>
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Organize estas frases na ordem correta para uma atualização de projeto.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l4]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l4">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l4')">
           <span class="order-num">?</span>
@@ -3089,13 +3159,618 @@ body.slide-mode .nav-bar { display:flex; }
   </div><!-- /lesson-body -->
 </div><!-- /lesson-card -->
 
+<div class="lesson-card" id="ex-lesson-5">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=600&q=80')"></div>
+    <div class="lesson-header-content">
+      <div class="lesson-number">Aula 05 -- Pre-class</div>
+      <h3>Abbott Science Summit</h3>
+      <div class="lesson-desc">Full Simulation: All structures integrated</div>
+      <div class="lesson-progress-mini">
+        <div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="5" style="width:0%"></div></div>
+        <span class="mini-percent" data-lesson-pct="5">0%</span>
+      </div>
+    </div>
+    <div class="expand-icon">&#9660;</div>
+  </div>
+  <div class="lesson-body">
+
+    <!-- STAGE 1.1: VOCAB CARDS -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 1.1: Vocabulary Cards</h4>
+        <span class="badge badge-vocab">Vocabulary</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Conhe&ccedil;a as palavras-chave desta aula final. Clique em Listen para ouvir a pron&uacute;ncia.</p>
+      <div class="vocab-cards">
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Panel</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">a group of experts who discuss a topic publicly</span></div>
+            <div class="vocab-card-example">&ldquo;Patricia was invited to join the panel discussion.&rdquo;</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Panel',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Keynote</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">the main speech at a conference or event</span></div>
+            <div class="vocab-card-example">&ldquo;The keynote speaker presented groundbreaking research.&rdquo;</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Keynote',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Moderator</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">a person who leads a discussion or debate</span></div>
+            <div class="vocab-card-example">&ldquo;The moderator asked each delegate to share their findings.&rdquo;</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Moderator',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Consensus</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">a general agreement among a group</span></div>
+            <div class="vocab-card-example">&ldquo;The team reached a consensus on the new methodology.&rdquo;</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Consensus',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Delegate</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">a person chosen to represent a group at a conference</span></div>
+            <div class="vocab-card-example">&ldquo;Every delegate received a copy of the conference abstract.&rdquo;</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Delegate',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Networking</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">the process of meeting people to exchange information and build professional relationships</span></div>
+            <div class="vocab-card-example">&ldquo;Networking at the symposium led to a new collaboration.&rdquo;</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Networking',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Symposium</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">a formal meeting where experts present and discuss a specific topic</span></div>
+            <div class="vocab-card-example">&ldquo;The symposium featured presentations from twelve countries.&rdquo;</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Symposium',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Abstract</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">a short summary of a research paper or presentation</span></div>
+            <div class="vocab-card-example">&ldquo;Her abstract was accepted for the main session.&rdquo;</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Abstract',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Findings</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">the results of research or investigation</span></div>
+            <div class="vocab-card-example">&ldquo;The findings of our study have important implications.&rdquo;</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Findings',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Recommendation</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">a suggestion about the best course of action</span></div>
+            <div class="vocab-card-example">&ldquo;My recommendation is to replicate the study with a larger sample.&rdquo;</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Recommendation',this)">Listen</button>
+        </div>
+      </div>
+      <button class="listen-all-btn" onclick="listenAllVocab(this)" style="margin-top:.8rem">Ouvir todas as palavras</button>
+    </div>
+
+    <!-- STAGE 1.2: MATCHING -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 1.2: Matching</h4>
+        <span class="badge badge-practice">Practice</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Combine cada palavra com sua defini&ccedil;&atilde;o em ingl&ecirc;s.</p>
+      <div class="match-grid" id="match-l5">
+        <div class="match-row" data-answer="a group of experts who discuss a topic publicly">
+          <span class="match-word">Panel</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="a short summary of a research paper or presentation">a short summary of a research paper or presentation</option>
+            <option value="a group of experts who discuss a topic publicly">a group of experts who discuss a topic publicly</option>
+            <option value="the results of research or investigation">the results of research or investigation</option>
+            <option value="a person who leads a discussion or debate">a person who leads a discussion or debate</option>
+            <option value="the main speech at a conference or event">the main speech at a conference or event</option>
+            <option value="a general agreement among a group">a general agreement among a group</option>
+            <option value="a suggestion about the best course of action">a suggestion about the best course of action</option>
+            <option value="a person chosen to represent a group at a conference">a person chosen to represent a group at a conference</option>
+            <option value="the process of meeting people to exchange information and build professional relationships">the process of meeting people to exchange information and build professional relationships</option>
+            <option value="a formal meeting where experts present and discuss a specific topic">a formal meeting where experts present and discuss a specific topic</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="the main speech at a conference or event">
+          <span class="match-word">Keynote</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="a general agreement among a group">a general agreement among a group</option>
+            <option value="the main speech at a conference or event">the main speech at a conference or event</option>
+            <option value="a person chosen to represent a group at a conference">a person chosen to represent a group at a conference</option>
+            <option value="a short summary of a research paper or presentation">a short summary of a research paper or presentation</option>
+            <option value="the process of meeting people to exchange information and build professional relationships">the process of meeting people to exchange information and build professional relationships</option>
+            <option value="a group of experts who discuss a topic publicly">a group of experts who discuss a topic publicly</option>
+            <option value="a formal meeting where experts present and discuss a specific topic">a formal meeting where experts present and discuss a specific topic</option>
+            <option value="a suggestion about the best course of action">a suggestion about the best course of action</option>
+            <option value="the results of research or investigation">the results of research or investigation</option>
+            <option value="a person who leads a discussion or debate">a person who leads a discussion or debate</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="a person who leads a discussion or debate">
+          <span class="match-word">Moderator</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="the results of research or investigation">the results of research or investigation</option>
+            <option value="a formal meeting where experts present and discuss a specific topic">a formal meeting where experts present and discuss a specific topic</option>
+            <option value="a person who leads a discussion or debate">a person who leads a discussion or debate</option>
+            <option value="the main speech at a conference or event">the main speech at a conference or event</option>
+            <option value="a suggestion about the best course of action">a suggestion about the best course of action</option>
+            <option value="a short summary of a research paper or presentation">a short summary of a research paper or presentation</option>
+            <option value="a group of experts who discuss a topic publicly">a group of experts who discuss a topic publicly</option>
+            <option value="a person chosen to represent a group at a conference">a person chosen to represent a group at a conference</option>
+            <option value="the process of meeting people to exchange information and build professional relationships">the process of meeting people to exchange information and build professional relationships</option>
+            <option value="a general agreement among a group">a general agreement among a group</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="a general agreement among a group">
+          <span class="match-word">Consensus</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="a person chosen to represent a group at a conference">a person chosen to represent a group at a conference</option>
+            <option value="the process of meeting people to exchange information and build professional relationships">the process of meeting people to exchange information and build professional relationships</option>
+            <option value="a group of experts who discuss a topic publicly">a group of experts who discuss a topic publicly</option>
+            <option value="a general agreement among a group">a general agreement among a group</option>
+            <option value="the main speech at a conference or event">the main speech at a conference or event</option>
+            <option value="a formal meeting where experts present and discuss a specific topic">a formal meeting where experts present and discuss a specific topic</option>
+            <option value="a short summary of a research paper or presentation">a short summary of a research paper or presentation</option>
+            <option value="a person who leads a discussion or debate">a person who leads a discussion or debate</option>
+            <option value="the results of research or investigation">the results of research or investigation</option>
+            <option value="a suggestion about the best course of action">a suggestion about the best course of action</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="a person chosen to represent a group at a conference">
+          <span class="match-word">Delegate</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="a suggestion about the best course of action">a suggestion about the best course of action</option>
+            <option value="a person who leads a discussion or debate">a person who leads a discussion or debate</option>
+            <option value="a person chosen to represent a group at a conference">a person chosen to represent a group at a conference</option>
+            <option value="the results of research or investigation">the results of research or investigation</option>
+            <option value="a group of experts who discuss a topic publicly">a group of experts who discuss a topic publicly</option>
+            <option value="a formal meeting where experts present and discuss a specific topic">a formal meeting where experts present and discuss a specific topic</option>
+            <option value="the main speech at a conference or event">the main speech at a conference or event</option>
+            <option value="a general agreement among a group">a general agreement among a group</option>
+            <option value="a short summary of a research paper or presentation">a short summary of a research paper or presentation</option>
+            <option value="the process of meeting people to exchange information and build professional relationships">the process of meeting people to exchange information and build professional relationships</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="the process of meeting people to exchange information and build professional relationships">
+          <span class="match-word">Networking</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="a formal meeting where experts present and discuss a specific topic">a formal meeting where experts present and discuss a specific topic</option>
+            <option value="a short summary of a research paper or presentation">a short summary of a research paper or presentation</option>
+            <option value="the main speech at a conference or event">the main speech at a conference or event</option>
+            <option value="the process of meeting people to exchange information and build professional relationships">the process of meeting people to exchange information and build professional relationships</option>
+            <option value="a general agreement among a group">a general agreement among a group</option>
+            <option value="a person who leads a discussion or debate">a person who leads a discussion or debate</option>
+            <option value="a suggestion about the best course of action">a suggestion about the best course of action</option>
+            <option value="a group of experts who discuss a topic publicly">a group of experts who discuss a topic publicly</option>
+            <option value="the results of research or investigation">the results of research or investigation</option>
+            <option value="a person chosen to represent a group at a conference">a person chosen to represent a group at a conference</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="a formal meeting where experts present and discuss a specific topic">
+          <span class="match-word">Symposium</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="the results of research or investigation">the results of research or investigation</option>
+            <option value="a person chosen to represent a group at a conference">a person chosen to represent a group at a conference</option>
+            <option value="a formal meeting where experts present and discuss a specific topic">a formal meeting where experts present and discuss a specific topic</option>
+            <option value="a group of experts who discuss a topic publicly">a group of experts who discuss a topic publicly</option>
+            <option value="a suggestion about the best course of action">a suggestion about the best course of action</option>
+            <option value="the process of meeting people to exchange information and build professional relationships">the process of meeting people to exchange information and build professional relationships</option>
+            <option value="a person who leads a discussion or debate">a person who leads a discussion or debate</option>
+            <option value="the main speech at a conference or event">the main speech at a conference or event</option>
+            <option value="a general agreement among a group">a general agreement among a group</option>
+            <option value="a short summary of a research paper or presentation">a short summary of a research paper or presentation</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="a short summary of a research paper or presentation">
+          <span class="match-word">Abstract</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="a person who leads a discussion or debate">a person who leads a discussion or debate</option>
+            <option value="a general agreement among a group">a general agreement among a group</option>
+            <option value="a short summary of a research paper or presentation">a short summary of a research paper or presentation</option>
+            <option value="the process of meeting people to exchange information and build professional relationships">the process of meeting people to exchange information and build professional relationships</option>
+            <option value="a formal meeting where experts present and discuss a specific topic">a formal meeting where experts present and discuss a specific topic</option>
+            <option value="a group of experts who discuss a topic publicly">a group of experts who discuss a topic publicly</option>
+            <option value="the main speech at a conference or event">the main speech at a conference or event</option>
+            <option value="a suggestion about the best course of action">a suggestion about the best course of action</option>
+            <option value="a person chosen to represent a group at a conference">a person chosen to represent a group at a conference</option>
+            <option value="the results of research or investigation">the results of research or investigation</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="the results of research or investigation">
+          <span class="match-word">Findings</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="a suggestion about the best course of action">a suggestion about the best course of action</option>
+            <option value="a group of experts who discuss a topic publicly">a group of experts who discuss a topic publicly</option>
+            <option value="the main speech at a conference or event">the main speech at a conference or event</option>
+            <option value="the results of research or investigation">the results of research or investigation</option>
+            <option value="a person who leads a discussion or debate">a person who leads a discussion or debate</option>
+            <option value="a short summary of a research paper or presentation">a short summary of a research paper or presentation</option>
+            <option value="a person chosen to represent a group at a conference">a person chosen to represent a group at a conference</option>
+            <option value="the process of meeting people to exchange information and build professional relationships">the process of meeting people to exchange information and build professional relationships</option>
+            <option value="a formal meeting where experts present and discuss a specific topic">a formal meeting where experts present and discuss a specific topic</option>
+            <option value="a general agreement among a group">a general agreement among a group</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="a suggestion about the best course of action">
+          <span class="match-word">Recommendation</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="the main speech at a conference or event">the main speech at a conference or event</option>
+            <option value="a person chosen to represent a group at a conference">a person chosen to represent a group at a conference</option>
+            <option value="a formal meeting where experts present and discuss a specific topic">a formal meeting where experts present and discuss a specific topic</option>
+            <option value="a suggestion about the best course of action">a suggestion about the best course of action</option>
+            <option value="a group of experts who discuss a topic publicly">a group of experts who discuss a topic publicly</option>
+            <option value="a general agreement among a group">a general agreement among a group</option>
+            <option value="the results of research or investigation">the results of research or investigation</option>
+            <option value="a short summary of a research paper or presentation">a short summary of a research paper or presentation</option>
+            <option value="the process of meeting people to exchange information and build professional relationships">the process of meeting people to exchange information and build professional relationships</option>
+            <option value="a person who leads a discussion or debate">a person who leads a discussion or debate</option>
+          </select>
+        </div>
+      </div>
+      <button class="verify-all-btn" onclick="verifyAllMatches('match-l5')">Check Answers</button>
+    </div>
+
+    <!-- STAGE 1.3: GRAMMAR IN CONTEXT -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 1.3: Grammar in Context</h4>
+        <span class="badge badge-vocab">Grammar</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Leia o texto e responda as perguntas de compreens&atilde;o.</p>
+      <div class="context-text" style="background:var(--bg-elevated);padding:1.2rem;border-radius:10px;font-size:.88rem;line-height:1.7;margin-bottom:1.2rem">
+        The Abbott Science Summit <strong>is</strong> the most important <strong>symposium</strong> for nutritional research. Patricia <strong>has been</strong> preparing her <strong>keynote</strong> for weeks. She <strong>presented</strong> her <strong>abstract</strong> to the <strong>panel</strong> last month. The <strong>moderator</strong> <strong>said</strong> that her <strong>findings</strong> <strong>were</strong> groundbreaking. If Patricia <strong>were</strong> the only <strong>delegate</strong> from Brazil, she <strong>would</strong> feel nervous, but three colleagues <strong>are</strong> also attending. She <strong>reported</strong> that the team <strong>had reached</strong> a <strong>consensus</strong> on the <strong>recommendation</strong> for future studies. Dr. Santos <strong>mentioned</strong> that he <strong>disagreed</strong> with her <strong>methodology</strong>, but Patricia <strong>proposed</strong> that they discuss it at the <strong>panel</strong>. If the <strong>delegates</strong> <strong>approve</strong> the <strong>recommendation</strong>, the <strong>symposium</strong> <strong>will</strong> fund a larger study. <strong>Networking</strong> at the summit <strong>has led</strong> to collaborations with researchers from five countries.
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-question">1. Which grammar structure is used in &ldquo;If Patricia were the only delegate, she would feel nervous&rdquo;?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> First Conditional (real possibility)</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Second Conditional (hypothetical situation)</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Reported Speech (backshift)</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">2. In &ldquo;She reported that the team had reached a consensus,&rdquo; which reporting verb is used?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> said</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> told</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> reported</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">3. &ldquo;If the delegates approve the recommendation, the symposium will fund a larger study&rdquo; is an example of:</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> First Conditional (real future possibility)</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Second Conditional (hypothetical)</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Present Perfect</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 1.4: GRAMMAR TIP -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Grammar Tip: Program Review</h4>
+        <span class="badge badge-vocab">Grammar</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Revis&atilde;o de TODAS as estruturas gramaticais do programa.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem;margin-bottom:1rem">
+        <thead>
+          <tr style="background:var(--accent-dim)">
+            <th style="padding:.6rem;text-align:left;border:1px solid var(--border)">Lesson</th>
+            <th style="padding:.6rem;text-align:left;border:1px solid var(--border)">Structure</th>
+            <th style="padding:.6rem;text-align:left;border:1px solid var(--border)">Key Phrases</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:.6rem;border:1px solid var(--border)">1</td>
+            <td style="padding:.6rem;border:1px solid var(--border)">Present Simple / Perfect</td>
+            <td style="padding:.6rem;border:1px solid var(--border)">I work... / I have worked...</td>
+          </tr>
+          <tr>
+            <td style="padding:.6rem;border:1px solid var(--border)">2</td>
+            <td style="padding:.6rem;border:1px solid var(--border)">First Conditional + Opinion Frames</td>
+            <td style="padding:.6rem;border:1px solid var(--border)">If we change... / I see your point...</td>
+          </tr>
+          <tr>
+            <td style="padding:.6rem;border:1px solid var(--border)">3</td>
+            <td style="padding:.6rem;border:1px solid var(--border)">Second Conditional + Question Frames</td>
+            <td style="padding:.6rem;border:1px solid var(--border)">If we had... / Could you elaborate...?</td>
+          </tr>
+          <tr>
+            <td style="padding:.6rem;border:1px solid var(--border)">4</td>
+            <td style="padding:.6rem;border:1px solid var(--border)">Reported Speech</td>
+            <td style="padding:.6rem;border:1px solid var(--border)">She said that... / He told us that...</td>
+          </tr>
+          <tr>
+            <td style="padding:.6rem;border:1px solid var(--border)">5</td>
+            <td style="padding:.6rem;border:1px solid var(--border)">All Integrated</td>
+            <td style="padding:.6rem;border:1px solid var(--border)">Summit simulation</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:1rem;font-size:.85rem;margin-bottom:.5rem">
+        <strong style="color:var(--accent)">Your Complete Toolkit</strong><br><br>
+        <strong>Opinion Frames:</strong><br>
+        <ul style="font-size:.83rem;line-height:1.8;padding-left:1.2rem;margin-bottom:.8rem">
+          <li>I see your point, but...</li>
+          <li>In my opinion...</li>
+          <li>From my perspective...</li>
+          <li>I agree with you on that.</li>
+          <li>I respectfully disagree because...</li>
+        </ul>
+        <strong>Question Frames:</strong><br>
+        <ul style="font-size:.83rem;line-height:1.8;padding-left:1.2rem;margin-bottom:.8rem">
+          <li>Could you elaborate on...?</li>
+          <li>What do you mean by...?</li>
+          <li>How does that compare to...?</li>
+          <li>Would you mind explaining...?</li>
+          <li>Could you give an example of...?</li>
+        </ul>
+        <strong>Reporting Verbs / Verbos de Relato:</strong><br>
+        <ul style="font-size:.83rem;line-height:1.8;padding-left:1.2rem">
+          <li><strong>said (that)</strong> / disse (que)</li>
+          <li><strong>told (someone) that</strong> / disse a (algu&eacute;m) que</li>
+          <li><strong>mentioned (that)</strong> / mencionou (que)</li>
+          <li><strong>reported (that)</strong> / relatou (que)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STAGE 1.5: FILL-IN-THE-BLANK -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 1.5: Fill in the Blank</h4>
+        <span class="badge badge-practice">Practice</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Complete as frases com a palavra correta.</p>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;The <input class="blank-input" data-answer="panel" data-hint="Hint: a group of experts who discuss a topic" data-phrase="The panel discussed the findings of the latest study." placeholder="___"> discussed the findings of the latest study.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;The <input class="blank-input" data-answer="keynote" data-hint="Hint: the main speech at a conference" data-phrase="The keynote speaker highlighted the importance of peer-reviewed research." placeholder="___"> speaker highlighted the importance of peer-reviewed research.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;The <input class="blank-input" data-answer="moderator" data-hint="Hint: the person who leads the discussion" data-phrase="The moderator asked each delegate to present their abstract." placeholder="___"> asked each delegate to present their abstract.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;We reached a <input class="blank-input" data-answer="consensus" data-hint="Hint: a general agreement" data-phrase="We reached a consensus on the recommendation for future studies." placeholder="___"> on the recommendation for future studies.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;<input class="blank-input" data-answer="Networking" data-hint="Hint: meeting people to build relationships" data-phrase="Networking at the symposium helped us find new collaborators." placeholder="___"> at the symposium helped us find new collaborators.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;Her <input class="blank-input" data-answer="findings" data-hint="Hint: results of research" data-phrase="Her findings were presented at the keynote session." placeholder="___"> were presented at the keynote session.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+    </div>
+
+    <!-- STAGE 2: ORDER -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 2: Put in Order</h4>
+        <span class="badge badge-order">Order</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Organize estas frases na ordem correta para uma apresenta&ccedil;&atilde;o no summit.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l5]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
+      <div class="order-container" id="order-l5">
+        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l5')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;Based on the evidence, my recommendation is to continue the current approach.&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l5')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l5')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l5')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;I would like to present our findings on glycemic control to the panel.&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l5')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l5')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l5')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;I would like to thank the moderator and all the delegates for their feedback.&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l5')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l5')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l5')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;Good morning, everyone. Welcome to the Abbott Science Summit.&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l5')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l5')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l5')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;My recommendation is that we reach a consensus on the methodology.&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l5')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l5')">&#9660;</button>
+          </span>
+        </div>
+      </div>
+      <button class="verify-all-btn" onclick="checkOrder('order-l5')">Check Order</button>
+    </div>
+
+    <!-- STAGE 3: PRONUNCIATION -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 3: Pronunciation</h4>
+        <span class="badge badge-speak">Speaking</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Ou&ccedil;a, grave e compare sua pron&uacute;ncia.</p>
+
+      <div class="speech-card" data-phrase="I would like to present our findings to the panel.">
+        <div class="speech-phrase">I would like to present our findings to the panel.</div>
+        <div class="speech-translation">Gostaria de apresentar nossos resultados ao painel.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="The delegates reached a consensus on the next steps.">
+        <div class="speech-phrase">The delegates reached a consensus on the next steps.</div>
+        <div class="speech-translation">Os delegados chegaram a um consenso sobre os pr&oacute;ximos passos.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="The delegates at the symposium discussed the implications of our research.">
+        <div class="speech-phrase">The delegates at the symposium discussed the implications of our research.</div>
+        <div class="speech-translation">Os delegados no simp&oacute;sio discutiram as implica&ccedil;&otilde;es da nossa pesquisa.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+    </div>
+
+    <!-- STAGE 4: QUIZ -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 4: Situational Quiz</h4>
+        <span class="badge badge-quiz">Quiz</span>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">You are at an international symposium and want to present your research findings to the panel. Which is the most appropriate opening?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> &ldquo;I would like to present our findings on glycemic control to the panel.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> &ldquo;So here are the results, everyone.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;I have some things to talk about.&rdquo;</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">After a productive discussion, the moderator asks for a closing remark. Which response integrates reported speech and a recommendation?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;That was great, thanks everyone.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;Dr. Santos mentioned that he disagreed with the methodology. My recommendation is that we reach a consensus on the next steps.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;I think we should just move on.&rdquo;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 5: THINK ABOUT IT -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 5: Think About It</h4>
+        <span class="badge badge-think">Reflection</span>
+      </div>
+      <div class="think-card">
+        <div class="think-question">Record a 2-minute presentation as if you are at the Abbott Science Summit. Integrate: self-introduction, your research findings, an opinion frame, a question for the audience, and a recommendation. This is your final challenge -- show everything you have learned!</div>
+        <div class="speech-controls">
+          <button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Gravar Livre</button>
+          <button class="btn btn-stop" onclick="stopFreeRecording(this)">&#9632; Parar</button>
+        </div>
+        <div id="think-result-5"></div>
+      </div>
+    </div>
+
+    <!-- SURVIVAL CARD -->
+    <div class="survival-card">
+      <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--accent);margin-bottom:.8rem">Survival Card -- Lesson 5 (FINAL)</h4>
+      <div class="survival-phrase">
+        <span class="sp-num">1</span>
+        <span class="sp-en">I would like to present our findings to the panel.</span>
+        <span class="sp-pt">Gostaria de apresentar nossos resultados ao painel.</span>
+        <button class="audio-btn" onclick="speakText('I would like to present our findings to the panel.',this)">Listen</button>
+      </div>
+      <div class="survival-phrase">
+        <span class="sp-num">2</span>
+        <span class="sp-en">Based on the evidence, my recommendation is to continue the current approach.</span>
+        <span class="sp-pt">Com base nas evid&ecirc;ncias, minha recomenda&ccedil;&atilde;o &eacute; continuar a abordagem atual.</span>
+        <button class="audio-btn" onclick="speakText('Based on the evidence, my recommendation is to continue the current approach.',this)">Listen</button>
+      </div>
+      <div class="survival-phrase">
+        <span class="sp-num">3</span>
+        <span class="sp-en">The delegates reached a consensus on the next steps.</span>
+        <span class="sp-pt">Os delegados chegaram a um consenso sobre os pr&oacute;ximos passos.</span>
+        <button class="audio-btn" onclick="speakText('The delegates reached a consensus on the next steps.',this)">Listen</button>
+      </div>
+      <div class="survival-phrase">
+        <span class="sp-num">4</span>
+        <span class="sp-en">If we had more funding, we would replicate the study at a larger symposium.</span>
+        <span class="sp-pt">Se tiv&eacute;ssemos mais financiamento, replicar&iacute;amos o estudo em um simp&oacute;sio maior.</span>
+        <button class="audio-btn" onclick="speakText('If we had more funding, we would replicate the study at a larger symposium.',this)">Listen</button>
+      </div>
+      <div class="survival-phrase">
+        <span class="sp-num">5</span>
+        <span class="sp-en">I would like to thank the moderator and all the delegates for their feedback.</span>
+        <span class="sp-pt">Gostaria de agradecer ao moderador e a todos os delegados pelo feedback.</span>
+        <button class="audio-btn" onclick="speakText('I would like to thank the moderator and all the delegates for their feedback.',this)">Listen</button>
+      </div>
+    </div>
+
+  </div><!-- /lesson-body -->
+</div><!-- /lesson-card -->
+
 </div><!-- /tab-exercises -->
 
 <!-- ========== TAB 3: IN CLASS (placeholder — activates slide mode) ========== -->
 <div class="tab-content" id="tab-inclass">
   <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Select Lesson</h3>
   <div style="display:flex;flex-direction:column;gap:1rem">
-    <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s" onclick="document.body.classList.add('slide-mode');goToSlide(1);" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
+    <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">01</div>
       <div><div style="font-weight:600;font-size:.95rem">Who Is Patricia Ruffo?</div><div style="font-size:.8rem;color:var(--text-dim)">Diagnostic + Self-Introduction -- 27 slides</div></div>
     </div>
@@ -3110,6 +3785,10 @@ body.slide-mode .nav-bar { display:flex; }
     <a href="/professor/patricia-ruffo-aula4.html" target="_blank" style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">04</div>
       <div><div style="font-weight:600;font-size:.95rem">Reporting &amp; Updating</div><div style="font-size:.8rem;color:var(--text-dim)">Team Presentations -- 28 slides</div></div>
+    </a>
+    <a href="/professor/patricia-ruffo-aula5.html" target="_blank" style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
+      <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">05</div>
+      <div><div style="font-weight:600;font-size:.95rem">Abbott Science Summit</div><div style="font-size:.8rem;color:var(--text-dim)">Full Simulation — 28 slides</div></div>
     </a>
   </div>
 </div>
@@ -3288,6 +3967,50 @@ body.slide-mode .nav-bar { display:flex; }
         <h5>Harvard Business Review -- How to Give a Great Project Update</h5>
         <p>Artigos sobre boas práticas de comunicação de progresso em projetos, com foco em stakeholders e feedback.</p>
         <p class="media-tip">Dica: leia o artigo e identifique as palavras do vocabulário desta aula no texto.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem;margin-top:2.5rem">Materiais Complementares -- Aula 5 (FINAL)</h3>
+<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Conte&uacute;dos para consolidar tudo o que voc&ecirc; aprendeu ao longo do programa. Parab&eacute;ns por chegar at&eacute; aqui!</p>
+
+<div class="media-grid">
+  <div class="media-card-wrapper" data-media="l5-ted">
+    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+    <div class="media-card">
+      <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+      <div class="media-info">
+        <div class="media-type">TED Talk</div>
+        <h5>Your body language may shape who you are -- Amy Cuddy</h5>
+        <p>Como a linguagem corporal influencia apresenta&ccedil;&otilde;es em confer&ecirc;ncias. &Oacute;timo para prepara&ccedil;&atilde;o de keynotes e pain&eacute;is.</p>
+        <p class="media-tip">Dica: observe as t&eacute;cnicas de linguagem corporal e pense em como aplic&aacute;-las na sua pr&oacute;xima apresenta&ccedil;&atilde;o em um simp&oacute;sio.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="media-card-wrapper" data-media="l5-podcast">
+    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+    <div class="media-card">
+      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+      <div class="media-info">
+        <div class="media-type">Podcast</div>
+        <h5>The TED Interview -- How to Give a Great Talk</h5>
+        <p>Epis&oacute;dios sobre como preparar e entregar apresenta&ccedil;&otilde;es cient&iacute;ficas impactantes em simp&oacute;sios internacionais.</p>
+        <p class="media-tip">Dica: ou&ccedil;a um epis&oacute;dio e anote as express&otilde;es usadas para estruturar uma apresenta&ccedil;&atilde;o cient&iacute;fica.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="media-card-wrapper" data-media="l5-article">
+    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+    <div class="media-card">
+      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+      <div class="media-info">
+        <div class="media-type">Article</div>
+        <h5>Nature -- How to Network at Scientific Conferences</h5>
+        <p>Guia pr&aacute;tico de networking em confer&ecirc;ncias cient&iacute;ficas, com dicas para delegados e palestrantes.</p>
+        <p class="media-tip">Dica: leia o artigo e identifique o vocabul&aacute;rio de networking e confer&ecirc;ncias que voc&ecirc; aprendeu neste programa.</p>
       </div>
     </div>
   </div>
@@ -3549,15 +4272,26 @@ body.slide-mode .nav-bar { display:flex; }
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">Conference <span class="accent">Introduction</span></h2>
     <p style="color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:1rem">Listen to a researcher introducing herself at a conference.</p>
-    <div class="waveform waveform-paused" id="waveform1"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
-    <button class="play-btn" id="listening1PlayBtn" onclick="toggleListening1(this)">
-      <svg class="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      <svg class="icon-pause" viewBox="0 0 24 24" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-    </button>
-    <div class="comp-questions" id="listening1Qs" style="display:none">
-      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff"><div class="q-text">1. What is the speaker's name and role?</div><div class="q-answer" style="color:var(--accent-light)">Dr. Patricia Ruffo, clinical nutritionist at Abbott</div></div>
-      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff"><div class="q-text">2. What is she currently working on?</div><div class="q-answer" style="color:var(--accent-light)">Glycemic control with functional ingredients</div></div>
-      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff"><div class="q-text">3. How long has she been collaborating with universities?</div><div class="q-answer" style="color:var(--accent-light)">Over ten years</div></div>
+    <div class="listening-player" id="lp-listen1" data-src="/audio/patricia-ruffo/good_afternoon_everyone_my_name_is_patricia_ruffo_i_am_a_cli.mp3">
+      <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen1')"><div class="lp-progress" id="progress-lp-listen1"></div></div>
+      <div class="lp-time"><span id="time-current-lp-listen1">0:00</span><span id="time-total-lp-listen1">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('lp-listen1',-5)" aria-label="Back 5s"><svg viewBox="0 0 24 24"><path d="M12.5 8.14v7.72M10 12l-6-4.5v9l6-4.5"/><path d="M22 12A10 10 0 1112 2" stroke-linecap="round"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('lp-listen1')" aria-label="Play Pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('lp-listen1',5)" aria-label="Forward 5s"><svg viewBox="0 0 24 24"><path d="M11.5 15.86V8.14M14 12l6-4.5v9l-6-4.5"/><path d="M2 12a10 10 0 0010 10" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="lp-label">Speed</div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('lp-listen1',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div class="comp-questions" id="questions-lp-listen1" style="display:none">
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff"><div class="q-text">1. What is the speaker's name and role?</div><div class="q-answer" style="color:#7BEFB2">Dr. Patricia Ruffo, clinical nutritionist at Abbott</div></div>
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff"><div class="q-text">2. What is she currently working on?</div><div class="q-answer" style="color:#7BEFB2">Glycemic control with functional ingredients</div></div>
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff"><div class="q-text">3. How long has she been collaborating with universities?</div><div class="q-answer" style="color:#7BEFB2">Over ten years</div></div>
     </div>
   </div>
 </div>
@@ -3600,14 +4334,25 @@ body.slide-mode .nav-bar { display:flex; }
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">Q&amp;A <span class="accent">Session</span></h2>
     <p style="color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:1rem">Listen to a question from the audience after Patricia's presentation.</p>
-    <div class="waveform waveform-paused" id="waveform2"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
-    <button class="play-btn" id="listening2PlayBtn" onclick="toggleListening2(this)">
-      <svg class="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      <svg class="icon-pause" viewBox="0 0 24 24" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-    </button>
-    <div class="comp-questions" id="listening2Qs" style="display:none">
-      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff"><div class="q-text">1. What does the audience member ask about?</div><div class="q-answer" style="color:var(--accent-light)">The sample size and duration of the clinical trial</div></div>
-      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff"><div class="q-text">2. What verb tense does Patricia use to describe results?</div><div class="q-answer" style="color:var(--accent-light)">Present perfect ("The trial has shown...")</div></div>
+    <div class="listening-player" id="lp-listen2" data-src="/audio/patricia-ruffo/qa_session_thank_you_for_your_presentation_dr_ruffo.mp3">
+      <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen2')"><div class="lp-progress" id="progress-lp-listen2"></div></div>
+      <div class="lp-time"><span id="time-current-lp-listen2">0:00</span><span id="time-total-lp-listen2">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('lp-listen2',-5)" aria-label="Back 5s"><svg viewBox="0 0 24 24"><path d="M12.5 8.14v7.72M10 12l-6-4.5v9l6-4.5"/><path d="M22 12A10 10 0 1112 2" stroke-linecap="round"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('lp-listen2')" aria-label="Play Pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('lp-listen2',5)" aria-label="Forward 5s"><svg viewBox="0 0 24 24"><path d="M11.5 15.86V8.14M14 12l6-4.5v9l-6-4.5"/><path d="M2 12a10 10 0 0010 10" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="lp-label">Speed</div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('lp-listen2',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div class="comp-questions" id="questions-lp-listen2" style="display:none">
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff"><div class="q-text">1. What does the audience member ask about?</div><div class="q-answer" style="color:#7BEFB2">The sample size and duration of the clinical trial</div></div>
+      <div class="comp-q" onclick="revealComp(this)" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff"><div class="q-text">2. What verb tense does Patricia use to describe results?</div><div class="q-answer" style="color:#7BEFB2">Present perfect ("The trial has shown...")</div></div>
     </div>
   </div>
 </div>
@@ -3804,23 +4549,18 @@ body.slide-mode .nav-bar { display:flex; }
 <script>
 // ===== TAB SWITCHING (with slide mode toggle) =====
 function switchTab(tabId) {
-  // Exit slide mode if switching away from inclass
-  if (tabId !== 'inclass') {
-    document.body.classList.remove('slide-mode');
-    document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-    document.getElementById('tab-' + tabId).classList.add('active');
-    event.currentTarget.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } else {
-    // Enter slide mode
-    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-    event.currentTarget.classList.add('active');
-    document.body.classList.add('slide-mode');
-    // Reset to slide 1
-    if (currentSlide) goToSlide(currentSlide);
-    else goToSlide(1);
-  }
+  document.body.classList.remove('slide-mode');
+  document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-' + tabId).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function enterSlideMode() {
+  document.body.classList.add('slide-mode');
+  if (currentSlide) goToSlide(currentSlide);
+  else goToSlide(1);
 }
 
 // ===== LESSON EXPAND/COLLAPSE =====
@@ -4035,31 +4775,93 @@ function nextChallenge() {
   document.getElementById('challengeCounter').textContent = 'Question ' + (challengeIndex + 1) + ' of 6';
 }
 
-// ===== LISTENING AUDIO =====
-var listening1Playing = false;
-var listening2Playing = false;
+// ===== LISTENING PLAYER =====
+var lpPlayers = {};
 
-function toggleListening1(btn) {
-  if (listening1Playing) { stopAllAudio(); btn.classList.remove('playing'); document.getElementById('waveform1').classList.add('waveform-paused'); listening1Playing = false; return; }
-  listening1Playing = true; btn.classList.add('playing');
-  document.getElementById('waveform1').classList.remove('waveform-paused');
-  speakText('Good afternoon, everyone. My name is Patricia Ruffo. I am a clinical nutritionist at Abbott, based in Sao Paulo, Brazil. I am currently working on glycemic control with functional ingredients. I have been collaborating with universities for over ten years, and our latest trial has shown very promising results.', btn);
-  setTimeout(function() { document.getElementById('waveform1').classList.add('waveform-paused'); btn.classList.remove('playing'); listening1Playing = false; document.getElementById('listening1Qs').style.display = 'flex'; }, 15000);
+function initPlayer(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var src = el.getAttribute('data-src');
+  if (!src) return;
+  var file = src;
+  if (src.indexOf('/') === -1 && audioMap[src]) file = audioMap[src];
+  var audio = new Audio(file);
+  lpPlayers[id] = { audio: audio, speed: 1, playing: false };
+  audio.addEventListener('timeupdate', function() { updatePlayerUI(id); });
+  audio.addEventListener('loadedmetadata', function() { updatePlayerUI(id); });
+  audio.addEventListener('ended', function() {
+    lpPlayers[id].playing = false;
+    var playBtn = document.querySelector('#' + id + ' .lp-play');
+    if (playBtn) playBtn.classList.remove('playing');
+    var qs = document.getElementById('questions-' + id);
+    if (qs) qs.style.display = 'flex';
+  });
 }
 
-function toggleListening2(btn) {
-  if (listening2Playing) { stopAllAudio(); btn.classList.remove('playing'); document.getElementById('waveform2').classList.add('waveform-paused'); listening2Playing = false; return; }
-  listening2Playing = true; btn.classList.add('playing');
-  document.getElementById('waveform2').classList.remove('waveform-paused');
-  var lines = [
-    'Thank you for your presentation, Dr. Ruffo. I have a question about your trial.',
-    'Of course. Please go ahead.',
-    'How many participants were in the study, and how long did the trial last?',
-    'We had 120 participants, and the trial has been running for eighteen months. The results have shown significant improvement in glycemic control.'
-  ];
-  var delay = 0;
-  lines.forEach(function(line) { setTimeout(function() { if (listening2Playing) speakText(line, btn); }, delay); delay += 5000; });
-  setTimeout(function() { document.getElementById('waveform2').classList.add('waveform-paused'); btn.classList.remove('playing'); listening2Playing = false; document.getElementById('listening2Qs').style.display = 'flex'; }, delay + 2000);
+function togglePlayer(id) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var p = lpPlayers[id];
+  var playBtn = document.querySelector('#' + id + ' .lp-play');
+  if (p.playing) {
+    p.audio.pause();
+    p.playing = false;
+    if (playBtn) playBtn.classList.remove('playing');
+  } else {
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    p.audio.playbackRate = p.speed;
+    p.audio.play();
+    p.playing = true;
+    if (playBtn) playBtn.classList.add('playing');
+  }
+}
+
+function skipAudio(id, seconds) {
+  if (!lpPlayers[id]) return;
+  var a = lpPlayers[id].audio;
+  a.currentTime = Math.max(0, Math.min(a.duration || 0, a.currentTime + seconds));
+}
+
+function seekAudio(event, id) {
+  if (!lpPlayers[id]) return;
+  var bar = event.currentTarget;
+  var rect = bar.getBoundingClientRect();
+  var pct = (event.clientX - rect.left) / rect.width;
+  lpPlayers[id].audio.currentTime = pct * (lpPlayers[id].audio.duration || 0);
+}
+
+function setPlayerSpeed(id, speed, btn) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  lpPlayers[id].speed = speed;
+  lpPlayers[id].audio.playbackRate = speed;
+  var container = document.getElementById(id);
+  if (container) {
+    container.querySelectorAll('.lp-speed-btn').forEach(function(b) { b.classList.remove('active'); });
+  }
+  if (btn) btn.classList.add('active');
+}
+
+function updatePlayerUI(id) {
+  var p = lpPlayers[id];
+  if (!p) return;
+  var current = p.audio.currentTime || 0;
+  var total = p.audio.duration || 0;
+  var pct = total > 0 ? (current / total * 100) : 0;
+  var bar = document.getElementById('progress-' + id);
+  if (bar) bar.style.width = pct + '%';
+  var tcEl = document.getElementById('time-current-' + id);
+  if (tcEl) tcEl.textContent = fmtTime(current);
+  var ttEl = document.getElementById('time-total-' + id);
+  if (ttEl) ttEl.textContent = fmtTime(total);
+}
+
+function fmtTime(s) {
+  if (isNaN(s)) return '0:00';
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
 }
 
 function stopAllAudio() {
@@ -4364,5 +5166,6 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
   if (word) sel.setAttribute('aria-label', 'Translation of ' + word.textContent);
 });
 </script>
+<script src="/lib/lesson-progress.js"></script>
 </body>
 </html>

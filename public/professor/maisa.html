@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Alumni — Maísa de Oliveira Santos | Professor</title>
-    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');</style>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');.stamps-row { display:flex; gap:0.8rem; margin-top:1.2rem; flex-wrap:wrap; }
+.stamp { width:64px; height:64px; border-radius:4px; overflow:hidden; border:1px solid var(--border); position:relative; opacity:0.3; transition:all 0.4s ease; background-size:cover; background-position:center; filter:grayscale(100%); }
+.stamp::after { content:attr(data-label); position:absolute; bottom:0; left:0; right:0; padding:0.15rem 0.2rem; font-size:0.5rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; text-align:center; background:linear-gradient(transparent,rgba(0,0,0,0.9)); color:#d4d4d4; }
+.stamp.earned { opacity:1; border-color:var(--accent-light); filter:grayscale(0%); box-shadow:0 0 20px rgba(0,0,0,0.25); }
+.stamp.earned::after { color:#fff; }
+@media(max-width:768px){ .stamps-row{gap:0.5rem} .stamp{width:50px;height:50px} }
+</style>
     <link rel="stylesheet" href="/styles/design-system.css">
     <script src="/components/exercises.js"></script>
     <script src="/components/audio-generator.js"></script>
@@ -195,6 +201,9 @@
             .card,.lesson-card{box-shadow:none;border:1px solid #ddd}
         }
     </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='maisa';window.TOTAL_AULAS=72;</script>
 </head>
 <body>
 <div class="logo-bar"><img src="/assets/logo-alumni.png" alt="Alumni by Better"><span class="prof-badge">Professor View</span></div>
@@ -206,6 +215,13 @@
         <div class="progress-passport">
             <div class="progress-label"><span>Progresso Geral</span><span id="progressPercent">0%</span></div>
             <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+<div class="stamps-row">
+<div class="stamp" id="stamp1" data-label="Who Is" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80')"></div>
+<div class="stamp" id="stamp2" data-label="Small Talk" style="background-image:url('https://images.unsplash.com/photo-1543269664-7eef42226a21?w=200&q=80')"></div>
+<div class="stamp" id="stamp3" data-label="Routine" style="background-image:url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=200&q=80')"></div>
+<div class="stamp" id="stamp4" data-label="Numbers" style="background-image:url('https://images.unsplash.com/photo-1523287562758-66c7fc58967f?w=200&q=80')"></div>
+<div class="stamp" id="stamp5" data-label="My World" style="background-image:url('https://images.unsplash.com/photo-1556761175-b413da4baf72?w=200&q=80')"></div>
+</div>
         </div>
     </div>
 </header>
@@ -2987,5 +3003,6 @@ function updateProgress() {
     updateProgress();
 })();
 </script>
+<script src="/lib/lesson-progress.js"></script>
 </body>
 </html>
