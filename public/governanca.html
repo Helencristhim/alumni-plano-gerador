@@ -669,7 +669,8 @@ function checkExercises(html) {
 }
 
 function checkOrdering(html) {
-  var hasOrderContainer = html.indexOf('order-container') !== -1;
+  /* Check for actual ordering HTML elements, not JS function references */
+  var hasOrderContainer = /id\s*=\s*["']order-l\d+["']/.test(html);
   if (!hasOrderContainer) {
     /* No ordering exercises found — not necessarily an error, some lessons may not have them */
     return { pass: true, details: 'Nenhum exercício de ordering encontrado (ok se não aplicável)' };
