@@ -1239,7 +1239,7 @@ function checkAccents(html) {
     'proximo': 'próximo', 'proxima': 'próxima', 'proximos': 'próximos',
     'ultimo': 'último', 'ultima': 'última',
     'diario': 'diário', 'previsao': 'previsão',
-    'farmacia': 'farmácia', 'financeiro': 'financeiro',
+    'farmacia': 'farmácia',
     'concluidos': 'concluídos', 'extraidos': 'extraídos',
     'pos-curso': 'pós-curso',
     'politica': 'política', 'minimo': 'mínimo',
@@ -1369,7 +1369,8 @@ function checkAccents(html) {
   }
 
   /* Special check: "Ja " at start of sentence (should be "Já") */
-  var jaRegex = /(?:^|[.!?""]\s*)Ja\b/gm;
+  /* Exclude "Jaú", "Japão", "Jamaica" etc. — city/country names starting with Ja */
+  var jaRegex = /(?:^|[.!?""]\s*)Ja(?![úùûüpP])\b/gm;
   var jaMatches = textContent.match(jaRegex);
   if (jaMatches && jaMatches.length > 0) {
     foundItems.push({ word: 'Ja → Já', count: jaMatches.length, context: 'Advérbio deve ter acento' });
@@ -1621,7 +1622,9 @@ function checkVoiceAlternation(html) {
         if (!isMaleContent) {
           var firstWords = phrase.split(/\s+/).slice(0, 3).join(' ');
           /* Skip vocative: "James, ..." with Ellen = female talking TO James = correct */
-          isMaleContent = !isAddressingMale && maleNames.test(firstWords) && !femaleNames.test(firstWords);
+          /* Skip greeting: "Hi/Hello/Hey James" = speaker greeting James, not James speaking */
+          var isGreeting = /^(?:Hi|Hello|Hey|Dear|Thank you|Thanks|Good morning|Good afternoon|Good evening|Nice to meet you)\b/i.test(phrase);
+          isMaleContent = !isAddressingMale && !isGreeting && maleNames.test(firstWords) && !femaleNames.test(firstWords);
         }
         var hasFemaleRef = femalePatterns.some(function(p) { return p.test(phrase); }) ||
           (/\bI(?:'m| am)\b/i.test(phrase) && femaleNames.test(phrase));
@@ -1638,7 +1641,9 @@ function checkVoiceAlternation(html) {
         if (!isFemaleContent) {
           var firstWords2 = phrase.split(/\s+/).slice(0, 3).join(' ');
           /* Skip vocative: "Eduarda, ..." with Arthur = male talking TO Eduarda = correct */
-          isFemaleContent = !isAddressingFemale && femaleNames.test(firstWords2) && !maleNames.test(firstWords2);
+          /* Skip greeting: "Hi/Hello/Hey Eduarda" = speaker greeting Eduarda, not Eduarda speaking */
+          var isGreeting2 = /^(?:Hi|Hello|Hey|Dear|Thank you|Thanks|Good morning|Good afternoon|Good evening|Nice to meet you)\b/i.test(phrase);
+          isFemaleContent = !isAddressingFemale && !isGreeting2 && femaleNames.test(firstWords2) && !maleNames.test(firstWords2);
         }
         var hasMaleRef = malePatterns.some(function(p) { return p.test(phrase); }) ||
           (/\bI(?:'m| am)\b/i.test(phrase) && maleNames.test(phrase));
