@@ -2018,8 +2018,34 @@ async function auditStudent(index) {
 
   body.innerHTML = '<div class="audit-status">Detectando aulas e executando verificações...</div>';
 
-  /* Detect lessons */
+  /* Detect lessons from main file */
   var detectedLessons = detectLessons(html);
+
+  /* Also check for individual aula files (e.g. tania-rosa-aula2.html, roberto-pires-aula3.html) */
+  var aulaFiles = [];
+  for (var ai = 2; ai <= Math.min(s.totalLessons, 50); ai++) {
+    aulaFiles.push({ num: ai, url: '/professor/' + s.slug + '-aula' + ai + '.html' });
+  }
+  for (var af = 0; af < aulaFiles.length; af++) {
+    try {
+      var aulaResp = await fetch(aulaFiles[af].url, { method: 'HEAD' });
+      if (aulaResp.ok) {
+        var aulaHtml = await (await fetch(aulaFiles[af].url)).text();
+        var aulaLessons = detectLessons(aulaHtml);
+        if (aulaLessons.length > 0) {
+          aulaLessons.forEach(function(al) {
+            al._sourceFile = aulaFiles[af].url;
+            al._sourceHtml = aulaHtml;
+            /* Only add if not already detected in main file */
+            var exists = detectedLessons.some(function(d) { return d.num === al.num; });
+            if (!exists) detectedLessons.push(al);
+          });
+        }
+      }
+    } catch (e) { /* Individual aula file not found — that's OK */ }
+  }
+  detectedLessons.sort(function(a, b) { return a.num - b.num; });
+
   var detectedCount = detectedLessons.length;
 
   /* Update lesson count display */
@@ -2051,7 +2077,9 @@ async function auditStudent(index) {
 
   for (var li = 0; li < detectedLessons.length; li++) {
     var lesson = detectedLessons[li];
-    var lessonHtml = html.substring(lesson.startIdx, lesson.endIdx);
+    /* Use source HTML from individual aula file if available, otherwise from main file */
+    var sourceHtml = lesson._sourceHtml || html;
+    var lessonHtml = sourceHtml.substring(lesson.startIdx, lesson.endIdx);
 
     var checks = [];
 
@@ -2061,14 +2089,14 @@ async function auditStudent(index) {
     /* 2. Pre-class etapas */
     checks.push({ name: CHECK_NAMES[1], result: checkPreclassLesson(lessonHtml, lesson.num) });
 
-    /* 3. IN CLASS slides (file-wide for now — all slides belong to the lesson if only 1) */
-    checks.push({ name: CHECK_NAMES[2], result: checkInClassSlides(html) });
+    /* 3. IN CLASS slides (use source file if from individual aula) */
+    checks.push({ name: CHECK_NAMES[2], result: checkInClassSlides(sourceHtml) });
 
     /* 4. IN CLASS components */
-    checks.push({ name: CHECK_NAMES[3], result: checkInClassComponents(html, lesson.num) });
+    checks.push({ name: CHECK_NAMES[3], result: checkInClassComponents(sourceHtml, lesson.num) });
 
     /* 5. Teacher T icon */
-    checks.push({ name: CHECK_NAMES[4], result: checkTeacherT(html) });
+    checks.push({ name: CHECK_NAMES[4], result: checkTeacherT(sourceHtml) });
 
     /* 6. Audio map */
     checks.push({ name: CHECK_NAMES[5], result: fileChecks.audioMap });
