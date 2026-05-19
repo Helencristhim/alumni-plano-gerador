@@ -7,7 +7,7 @@ const path = require('path');
 const https = require('https');
 
 const API_KEY = process.env.ELEVENLABS_API_KEY;
-const VOICE_ID = 'pNInz6obpgDQGcFmaJgB'; // Arthur
+const VOICE_ID = 'sfJopaWaOtauCD3HKX6Q'; // Arthur
 const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'audio', 'zilaudio');
 
 const PHRASES = [

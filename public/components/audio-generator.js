@@ -17,7 +17,7 @@
 /* ── Configuration ── */
 const ELEVENLABS_CONFIG = {
   apiUrl: 'https://api.elevenlabs.io/v1/text-to-speech',
-  voiceId: 'pNInz6obpgDQGcFmaJgB',       // Arthur — male, neutral American
+  voiceId: 'sfJopaWaOtauCD3HKX6Q',       // Arthur — male, neutral American
   modelId: 'eleven_monolingual_v1',
   stability: 0.5,
   similarity_boost: 0.75,
@@ -26,13 +26,13 @@ const ELEVENLABS_CONFIG = {
 
 /* Alternate voices for variety */
 const VOICE_OPTIONS = {
-  arthur:  'pNInz6obpgDQGcFmaJgB',  // Male, neutral American (default)
-  ellen:   'CwhRBWXzGAHq8TQ4Fs17',  // Female, calm American conversational
+  arthur:  'sfJopaWaOtauCD3HKX6Q',  // Male, neutral American (default)
+  ellen:   'BIvP0GN1cAtSRTxNHnWS',  // Female, calm American conversational
   rachel:  '21m00Tcm4TlvDq8ikWAM',  // Female, calm American
   domi:    'AZnzlk1XvdvUeBnXmlld',  // Female, energetic
   bella:   'EXAVITQu4vr4xnSDxMaL',  // Female, soft
   josh:    'TxGEqnHWrfWFTfGW9XjX',  // Male, deep
-  adam:    'pNInz6obpgDQGcFmaJgB'    // Alias for Arthur
+  adam:    'sfJopaWaOtauCD3HKX6Q'    // Alias for Arthur
 };
 
 

@@ -8,7 +8,7 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-const VOICE_ID = 'pNInz6obpgDQGcFmaJgB';
+const VOICE_ID = 'sfJopaWaOtauCD3HKX6Q';
 const MODEL_ID = 'eleven_monolingual_v1';
 const OUTPUT_DIR = path.join(__dirname, 'public', 'audio', 'maisa-de-oliveira-santos');
 const DELAY_MS = 150;

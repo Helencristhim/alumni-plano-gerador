@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
     const fim = aulaFim || parseInt(numAulas);
     const totalBloco = fim - inicio + 1;
     const blocoNum = bloco || 1;
-    const totalBlocos = Math.ceil(parseInt(numAulas) / 20) || 1;
+    const totalBlocos = Math.ceil(parseInt(numAulas) / 5) || 1;
 
     // Read CEFR document for level-specific rules
     const fs = require('fs');

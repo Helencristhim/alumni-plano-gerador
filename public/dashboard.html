@@ -519,12 +519,14 @@
                 modalidade: d.modalidadeAula || '',
                 _ativo: row.ativo,
                 _deactivated: row.deactivated,
-                _professor: row.professor || (row.alocacao&&row.alocacao.professor) || '',
-                _horarios: row.horarios || (row.alocacao&&row.alocacao.diasHorarios) || '',
-                _alocacao: row.alocacao || {},
+                _professor: row.professor || (row.alocacao&&row.alocacao.professor) || (row.data&&row.data.professor) || '',
+                _horarios: row.horarios || (row.alocacao&&row.alocacao.diasHorarios) || (row.data&&row.data.horarios) || '',
+                _alocacao: row.alocacao || (row.data&&row.data.alocacao) || {},
                 _dataEvento: d.dataEvento || '',
                 _tipoEvento: d.tipoEvento || '',
                 _updatedAt: row.updated_at,
+                _aulasGeradas: (function() { var bg = (row.data&&row.data.blocosGeracoes)||[]; var c = (row.data&&row.data.curriculo)||[]; return bg.filter(function(b){return b&&b.status==='gerado';}).length || (c.length > 0 ? c.length : 0); })(),
+                _slug: row.id,
                 legacyUrl: (merged[row.id]&&merged[row.id].legacyUrl) || '',
                 externalUrl: (merged[row.id]&&merged[row.id].externalUrl) || ''
             };
@@ -551,6 +553,8 @@
         document.getElementById('statAndamento').textContent=act.filter(function(a){return a.perfilStatus==='aprovado'||a.perfilStatus==='material_publicado';}).length;
         document.getElementById('statConcluido').textContent=act.filter(function(a){return a._ativo===true;}).length;
     }
+
+
 
     function filterAlunos() {
         var s=document.getElementById('searchInput').value.toLowerCase();
@@ -585,9 +589,22 @@
 
     async function salvarCardField(id, field, value) {
         var col = field==='professor'?'professor':'horarios';
-        var upd={}; upd[col]=value;
-        var ok = await supaUpdate(sb.from('perfis').update(upd).eq('id',id), 'Salvo');
-        if (ok) { var a=allAlunos.find(function(x){return x.id===id;}); if(a) a['_'+field]=value; }
+        var payload = { id: id };
+        payload[col] = value;
+        try {
+            var resp = await fetch('/api/save-alocacao', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            var result = await resp.json();
+            if (!resp.ok) throw new Error(result.error || 'Erro ao salvar');
+            showToast('Salvo', 'success');
+            var a=allAlunos.find(function(x){return x.id===id;}); if(a) a['_'+field]=value;
+        } catch(e) {
+            console.error('Erro ao salvar campo:', e);
+            showToast('Erro ao salvar: ' + e.message, 'error');
+        }
     }
 
     function toggleMenu(id,e) { e.stopPropagation(); document.querySelectorAll('.menu-dropdown').forEach(function(m){if(m.id!=='menu-'+id)m.classList.remove('show');}); document.getElementById('menu-'+id).classList.toggle('show'); }
@@ -678,7 +695,9 @@
 
             var meta=[];
             if(nivelSimples) meta.push(esc(nivelSimples));
-            if(total>0) meta.push(total+' aulas');
+            var geradas = a._aulasGeradas || 0;
+            if(total>0) { meta.push(geradas + '/' + total + ' aulas'); }
+            else if(geradas>0) { meta.push(geradas + ' aulas geradas'); }
             if(focoSimples) meta.push(esc(focoSimples));
             if(a.modalidade) meta.push(esc(a.modalidade));
 
@@ -884,13 +903,20 @@
             inicio: document.getElementById('alocInicio').value,
             termino: document.getElementById('alocTermino').value
         };
-        var ok = await supaUpdate(
-            sb.from('perfis').update({alocacao:alocacao,professor:alocacao.professor,horarios:alocacao.diasHorarios}).eq('id',alocacaoAlunoId),
-            'Alocação salva'
-        );
-        if (ok) {
+        try {
+            var resp = await fetch('/api/save-alocacao', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: alocacaoAlunoId, professor: alocacao.professor, horarios: alocacao.diasHorarios, alocacao: alocacao })
+            });
+            var result = await resp.json();
+            if (!resp.ok) throw new Error(result.error || 'Erro ao salvar');
+            showToast('Alocação salva', 'success');
             var a=allAlunos.find(function(x){return x.id===alocacaoAlunoId;});
             if(a){a._alocacao=alocacao;a._professor=alocacao.professor;a._horarios=alocacao.diasHorarios;}
+        } catch(e) {
+            console.error('Erro ao salvar alocação:', e);
+            showToast('Erro ao salvar: ' + e.message, 'error');
         }
         fecharAlocacao();
         filterAlunos();
@@ -909,10 +935,12 @@
                     var id=k.replace('alumni-perfil-','');
                     var p=JSON.parse(localStorage.getItem(k));
                     if(!p||!p.dadosFormulario) continue;
+                    // Skip if already exists in Supabase (one-time migration only)
+                    var exists = await sb.from('perfis').select('id').eq('id',id).maybeSingle();
+                    if(exists.data) { localStorage.removeItem(k); continue; }
                     var d=p.dadosFormulario||{};
-                    var card={}; try{card=JSON.parse(localStorage.getItem('alumni-card-'+id)||'{}');}catch(e){}
-                    var aloc=p.alocacao||{};
-                    await sb.from('perfis').upsert({id:id,data:p,status:p.status||'rascunho',nome:d.nome||id,nivel:d.nivel||'',num_aulas:parseInt(d.numAulas)||0,foco:d.foco||'',ativo:p.ativo||false,professor:aloc.professor||card.professor||'',horarios:aloc.diasHorarios||card.horarios||'',alocacao:Object.keys(aloc).length?aloc:null});
+                    await sb.from('perfis').upsert({id:id,data:p,status:p.status||'rascunho',nome:d.nome||id,nivel:d.nivel||'',num_aulas:parseInt(d.numAulas)||0,foco:d.foco||''});
+                    localStorage.removeItem(k);
                 }
             }
         } catch(e){ console.error('Sync failed:',e); }

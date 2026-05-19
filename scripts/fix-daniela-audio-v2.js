@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const API_URL = 'https://api.elevenlabs.io/v1/text-to-speech';
-const VOICE_ID = 'pNInz6obpgDQGcFmaJgB';
+const VOICE_ID = 'sfJopaWaOtauCD3HKX6Q';
 const API_KEY = process.env.ELEVENLABS_API_KEY;
 const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'audio', 'daniela-feitoza');
 

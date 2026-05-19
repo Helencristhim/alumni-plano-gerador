@@ -2,6 +2,8 @@
 
 > **REGRA ZERO**: Este documento e AUTOCONTIDO. Voce NAO precisa ler nenhum arquivo de aluno existente como referencia. Tudo que voce precisa para gerar material perfeito esta aqui.
 
+> **AVISO CRITICO**: TODAS as regras abaixo sao OBRIGATORIAS e INEGOCIAVEIS. Nenhuma etapa pode ser pulada, simplificada ou omitida por qualquer motivo — incluindo "simplificar", "adaptar ao nivel", "o aluno nao precisa", ou qualquer outra justificativa. Se uma regra diz DEVE, significa que a ausencia e um BUG que BLOQUEIA o deploy. O sistema NAO tem autonomia para decidir quais regras seguir — TODAS se aplicam, SEMPRE, para TODOS os alunos.
+
 ---
 
 ## ARQUITETURA DO PROJETO
@@ -9,7 +11,7 @@
 ```
 alumni-plano-gerador/
 ├── public/
-│   ├── professor/{slug}.html    ← Material do professor (5 abas)
+│   ├── professor/{slug}.html    ← Material do professor (4 abas: Planejamento, Pre-class, IN CLASS, Complementares)
 │   ├── aluno/{slug}.html        ← Material do aluno (2 abas, derivado do professor)
 │   ├── audio/{slug}/            ← MP3s ElevenLabs
 │   ├── styles/design-system.css ← Design system global
@@ -26,19 +28,18 @@ alumni-plano-gerador/
 
 ## REGRA 1 — PROFESSOR E BASE, ALUNO E DERIVADO
 
-1. **Professor tem 5 abas**: Planejamento, Pre-class, Plano de Aula, Material do Professor, Complementares
+1. **Professor tem 4 abas**: Planejamento, Pre-class, IN CLASS, Complementares
 2. **Aluno tem 2 abas**: Pre-class, Complementares (conteudo IDENTICO ao professor)
 3. Sempre criar o professor PRIMEIRO, depois extrair o aluno
 4. NUNCA editar o aluno diretamente — sempre via professor
-5. As 4 abas de conteudo devem ter: MESMO vocabulario, MESMA gramatica, MESMO tema
-   - Pre-class PREPARA (primeiro contato do aluno)
-   - Plano de Aula GUIA (roteiro para o professor)
-   - Material Professor APROFUNDA (tela compartilhada na aula)
+5. As 3 abas de conteudo devem ter: MESMO vocabulario, MESMA gramatica, MESMO tema
+   - Pre-class PREPARA (primeiro contato do aluno, antes da aula)
+   - IN CLASS ENTREGA (slides interativos Zoom — a aula acontece aqui, instrucoes ao professor via icone T)
    - Complementares REFORCAM (exposicao passiva fora de aula)
 
 ---
 
-## REGRA 2 — ESTRUTURA DO ARQUIVO PROFESSOR (5 ABAS)
+## REGRA 2 — ESTRUTURA DO ARQUIVO PROFESSOR (4 ABAS)
 
 ### HTML base do professor:
 
@@ -104,30 +105,42 @@ alumni-plano-gerador/
         </div>
     </div>
 
-    <!-- Container principal -->
-    <div class="container">
+    <!-- Container principal (main-content) -->
+    <div class="container main-content">
         <!-- Speed control -->
-        <div class="speed-control">
-            <button class="speed-btn" onclick="setAudioSpeed(0.5,this)">0.5x</button>
-            <button class="speed-btn" onclick="setAudioSpeed(0.75,this)">0.75x</button>
-            <button class="speed-btn active" onclick="setAudioSpeed(1,this)">1x</button>
-            <button class="speed-btn" onclick="setAudioSpeed(1.25,this)">1.25x</button>
-        </div>
+        <div class="speed-control">...</div>
 
         <!-- Tabs -->
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('planning')">Planejamento</button>
             <button class="tab-btn" onclick="switchTab('exercises')">Pre-class</button>
-            <button class="tab-btn" onclick="switchTab('plan')">Plano de Aula</button>
-            <button class="tab-btn" onclick="switchTab('teacher')">Material do Professor</button>
+            <button class="tab-btn" onclick="switchTab('inclass')">IN CLASS</button>
             <button class="tab-btn" onclick="switchTab('complementary')">Complementares</button>
         </div>
 
-        <!-- 5 tab containers -->
+        <!-- 3 tab containers DENTRO do main-content -->
         <div class="tab-content active" id="tab-planning">...</div>
         <div class="tab-content" id="tab-exercises">...</div>
-        <div class="tab-content" id="tab-plan">...</div>
-        <div class="tab-content" id="tab-teacher">...</div>
+        <div class="tab-content" id="tab-inclass">
+            <!-- APENAS o menu de selecao de aulas -->
+        </div>
+    </div><!-- /main-content FECHA AQUI -->
+
+    <!-- ╔══════════════════════════════════════════════════════════════╗ -->
+    <!-- ║  REGRA CRITICA: slides-wrapper DEVE ficar FORA do          ║ -->
+    <!-- ║  main-content. O CSS faz body.slide-mode .main-content     ║ -->
+    <!-- ║  { display:none }. Se slides-wrapper estiver DENTRO,       ║ -->
+    <!-- ║  ele sera escondido junto e o IN CLASS NAO funciona.        ║ -->
+    <!-- ╚══════════════════════════════════════════════════════════════╝ -->
+    <div class="slides-wrapper" id="slidesWrapper">
+        <!-- phase-bar, phase-labels, slides-container, nav-bar -->
+        <!-- TODOS os slides ficam aqui -->
+    </div>
+
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- Complementares pode ficar em seu proprio main-content -->
+    <div class="container main-content">
         <div class="tab-content" id="tab-complementary">...</div>
     </div>
 
@@ -157,27 +170,163 @@ alumni-plano-gerador/
 - Survival card ao final de cada aula (5 frases-chave com audio)
 - Celebration card (exibido ao atingir 100%)
 
-#### ABA 3 — Plano de Aula (Roteiro do professor)
-- Lesson cards colapsaveis
-- Tabela PPP com colunas: Tempo, Fase, Atividade Detalhada
-- Fases: WARM-UP → VOCAB DEEP-DIVE → CONTEXT/DIALOGUE → GRAMMAR + CCQs → CONTROLLED PRACTICE → SEMI-FREE PRACTICE → FREE PRODUCTION → WRAP-UP
-- CCQ Box: perguntas de verificacao conceitual
-- Obstacle Alerts: 3 alertas pedagogicos com solucoes
-- Teacher Tips: orientacoes de pronuncia com IPA
-- Homework Box: 3 tarefas por aula
-- Duracao padrao: 90 minutos (exceto criancas 5-12: 30 min)
+#### ABA 3 — IN CLASS (Experiencia de aula via Zoom — SLIDES INTERATIVOS)
 
-#### ABA 4 — Material do Professor (Tela compartilhada)
-- Material SEM traducoes (somente ingles na tela)
-- Vocabulario com exemplos + audio
-- Dialogos rotulados por personagem
-- Grammar Focus em formato tabela
-- Oral Drilling (situacoes numeradas)
-- Listening Comprehension
-- Sentence Building
-- Role-Play Scenarios
+> **ESTA ABA SUBSTITUI o antigo "Plano de Aula" e "Material do Professor"**. Tudo que o professor precisa esta aqui: o conteudo visual nos slides + as instrucoes via icone T.
 
-#### ABA 5 — Complementares
+> **PRINCIPIO CENTRAL**: A aba IN CLASS e a SALA DE AULA. E o que o professor compartilha na tela do Zoom. NAO e uma pagina com scroll — e uma APRESENTACAO de slides interativos. O aluno vive uma experiencia imersiva.
+
+**FORMATO: SLIDES, NAO PAGINA**
+- Sequencia de slides (100vh por slide), NAO pagina com scroll
+- Navegacao: setas do teclado (esquerda/direita) + botoes na tela
+- Contador de slides no canto: "7 / 30"
+- Barra de progresso por capitulos no topo (clicavel)
+- Transicoes fade 400ms
+- Cada slide tem UM proposito, UM conceito
+- Minimo 25-30 slides para 60 min, 35-45 para 90 min
+- **MENU DE SELECAO OBRIGATORIO**: A aba IN CLASS NUNCA entra em slide-mode direto. Ao clicar na aba, mostra um menu com cards de cada aula disponivel. O usuario clica na aula desejada e SO ENTAO entra em slide-mode via `enterSlideMode()`. O `switchTab()` SEMPRE faz `document.body.classList.remove('slide-mode')` — NUNCA adiciona slide-mode
+
+**SEPARACAO DE AULAS — REGRAS OBRIGATORIAS (slides multi-aula)**
+
+Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesmo `slides-wrapper`. Para que cada aula funcione de forma independente, TRES mecanismos sao OBRIGATORIOS:
+
+1. **`data-lesson` em CADA slide**: Todo `<div class="slide">` DEVE ter `data-lesson="N"` indicando a qual aula pertence. Exemplo: `<div class="slide slide-dark" data-slide="28" data-lesson="2" data-phase="1">`. Isso permite auditoria estatica e agrupamento por aula.
+
+2. **`lessonRanges` + filtragem JS**: O JavaScript DEVE conter:
+   ```
+   var lessonRanges = { 1: {start:1, end:27}, 2: {start:28, end:54}, ... };
+   var currentLesson = 1;
+   ```
+   - `enterSlideMode(startSlide)` detecta a aula pelo startSlide e seta `currentLesson`
+   - `changeSlide(dir)` respeita os bounds: `if (next < range.start || next > range.end) return;`
+   - `updateNav()` mostra contador RELATIVO a aula ("01 / 27", nao "28 / 135") e esconde dots fora da aula
+
+3. **Menu visual UNIFORME**: Todos os cards do seletor de aula DEVEM seguir o MESMO padrao HTML:
+   ```html
+   <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s" onclick="enterSlideMode(N)">
+     <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">01</div>
+     <div><div style="font-weight:600;font-size:.95rem">Titulo da Aula</div><div style="font-size:.8rem;color:var(--text-dim)">Descricao -- 27 slides</div></div>
+   </div>
+   ```
+   NUNCA misturar formatos (ex: uns com border-radius:8px e outros com 50%, uns com label "Lesson" e outros sem). Numero sempre com 2 digitos ("01", "02"... "10"). Icone SEMPRE quadrado arredondado (border-radius:8px), NUNCA circular.
+
+**CHECKLIST PRE-DEPLOY (slides multi-aula)**:
+- [ ] TODOS os slides tem `data-lesson="N"`?
+- [ ] `lessonRanges` cobre TODAS as aulas?
+- [ ] Setas do teclado param no limite de cada aula?
+- [ ] Contador mostra numero relativo ("01/27"), nao absoluto ("28/135")?
+- [ ] TODOS os cards do menu tem o MESMO formato HTML?
+
+**NARRATIVA OBRIGATORIA**
+- Toda aula segue uma HISTORIA com titulo e capitulos (ex: "Elaine's First Day in New York")
+- 7 capitulos minimos: The Dream (warm-up) > Packing Words (vocab) > The Code (grammar) > Getting There (context) > Practice > Your Turn (production) > Wrap-up
+- Slides de transicao entre capitulos com imagem de fundo + titulo
+
+**VOCABULARIO — REVEAL CARDS**
+- Grid 2x2 (4 cards por slide, 2 slides = 8 palavras)
+- Card FECHADO mostra: icone SVG com gradiente tematico + definicao em INGLES como pista
+- Ao CLICAR: revela palavra + definicao + frase de exemplo + botao Listen
+- Icones sao SVG inline com gradiente de fundo (NUNCA fotos externas)
+- Cada palavra tem cor unica no gradiente (ex: passaporte=azul marinho, emergencia=vermelho)
+- Contador visual: "3 / 8 words revealed"
+
+**GRAMATICA — DISCOVERY METHOD**
+- NUNCA mostrar a regra primeiro
+- Mostrar 3-4 exemplos com estrutura em destaque (cor accent)
+- Pergunta: "What do the orange words have in common?"
+- Botao "Reveal the Rule" → tabela gramatical com fade-in
+- Slide extra "Common Mistake" com comparacao visual (X vermelho vs check verde)
+- Slide de Grammar Practice com fill-in clicaveis (click → revela resposta)
+
+**DIALOGO — LINE BY LINE**
+- Dialogo aparece UMA troca por vez (botao "Next Line")
+- Fundo escuro estilo cinema/legenda
+- Avatar colorido por personagem (ex: Sarah=azul, aluna=terracotta)
+- Vocabulario da aula em negrito cor accent
+- Audio ElevenLabs por linha com `data-voice` no HTML: `data-voice="ellen"` para personagens femininos, `data-voice="arthur"` para masculinos
+- O script de geracao de audio LE o `data-voice` de cada linha para gerar o MP3 com a voz correta automaticamente
+- Slide extra de Dialogue Comprehension com 3 perguntas click-to-reveal
+
+**LISTENING — SOUND-FIRST com PLAYER COMPLETO**
+- Slide escuro com player de audio completo (NAO apenas botao play simples)
+- Player OBRIGATORIO com: seekbar clicavel (barra de progresso), tempo atual/total, botao play/pause, botao voltar 5s, botao avancar 5s
+- Controle de velocidade LOCAL ao slide: botoes 0.5x | 0.75x | 1x | 1.25x (independente do controle global do Pre-class)
+- Audio toca PRIMEIRO, aluno ouve SEM texto. Perguntas de compreensao aparecem apos audio terminar (audio.ended)
+- Audio deve ser MP3 UNICO por listening (nao sequencia de speakText calls). Gerar MP3 completo via ElevenLabs
+- Minimo 2 listenings por aula (contextos diferentes)
+- Cada slide de Listening E Dialogue tem controle de velocidade independente
+- Implementacao: usar `data-src` no container do player apontando para o MP3, inicializar com `initPlayer(id)`, controlar via `togglePlayer(id)`, `skipAudio(id, seconds)`, `seekAudio(event, id)`, `setPlayerSpeed(id, speed)`
+
+**ARTEFATOS REAIS**
+- Minimo 1 artefato CSS por aula (boarding pass, hotel confirmation, email, menu, etc.)
+- Construidos em HTML/CSS (NUNCA imagem) — com nome do aluno personalizado
+- Base para comprehension questions
+
+**QUICK FIRE — UMA PERGUNTA POR VEZ**
+- Uma situacao completa por tela, em INGLES (A2+ = zero portugues)
+- Botao "Show Answer" → revela → botao "Next Question"
+- Score counter: "3 / 6"
+- Confetti CSS ao completar todas
+- Perguntas situacionais: "You arrive at the hotel. Tell the receptionist you booked a room."
+
+**SPOT THE ERROR**
+- Frases com erro em vermelho (line-through)
+- Click → correcao em verde
+- Score counter
+
+**ROLE-PLAY — SITUATION CARDS**
+- 3 niveis obrigatorios: Guided > Semi-free > Free (um slide cada)
+- Card visual com gradiente CSS + icone SVG + cenario + keyword chips
+- NUNCA fotos externas em role-play — sempre gradientes + SVG
+- Keywords como chips com borda accent
+
+**TEACHER CUE SYSTEM (icone "?" flutuante)**
+- Cada slide tem icone "?" no canto superior direito
+- Click → tooltip escuro com instrucao pro professor
+- Click novamente → some
+- Conteudo neutro (nunca gabaritos)
+
+**WRAP-UP**
+- Survival Card: slide escuro, 5 frases com botao Listen (audio ElevenLabs)
+- What I Learned: CHECKBOXES clicaveis (click → verde com checkmark SVG)
+- Boarding Pass Earned: badge celebratorio com animacao sparkle
+- Closing: slide final com "Day X — Complete" + preview proxima aula
+
+**AUDIO NA ABA IN CLASS**
+- 100% ElevenLabs — audioMap deve cobrir TODAS as frases com speakText()
+- Vozes: **Arthur** (sfJopaWaOtauCD3HKX6Q) = male, American neutral + **Ellen** (BIvP0GN1cAtSRTxNHnWS) = female, calm American
+- Regra de alternancia:
+  - Palavras soltas (1-2 palavras) = SEMPRE Arthur
+  - Frases (3+ palavras) = ALTERNAR Arthur/Ellen a cada frase
+  - Dialogos: Arthur para personagens MASCULINOS, Ellen para personagens FEMININOS (incluindo a propria aluna se for mulher)
+  - Survival cards e listening: mesclar ambas vozes
+  - NUNCA usar uma unica voz para todo o material
+- Atribuicao automatica de voz em dialogos:
+  - Todo elemento de dialogo DEVE ter `data-voice="arthur"` ou `data-voice="ellen"`
+  - O nome do personagem define a voz: nomes femininos (Sarah, Maria, receptionist feminina) = `data-voice="ellen"`, nomes masculinos (David, John, waiter masculino) = `data-voice="arthur"`
+  - O script de geracao de audio LE o atributo `data-voice` para saber qual voz ElevenLabs usar
+  - Exemplo: `<div class="dialogue-line" data-voice="ellen">` gera MP3 com Ellen
+  - Se o genero do personagem nao for obvio pelo nome, o material DEVE especificar (ex: "Receptionist — female" no Plano de Aula)
+- Verificacao pre-deploy: script que compara speakText() calls vs audioMap — ZERO missing permitido
+- Web Speech API e EMERGENCIA, nunca principal
+- Botoes Listen: fundo solido accent, icone SVG volume + texto "Listen"
+
+**VISUAL — REGRAS ABSOLUTAS**
+- Zero emojis — TODOS os icones sao SVG inline (Lucide style)
+- Zero imagens externas em cards/componentes — so em backgrounds full-screen (testados 200 OK com gradient overlay fallback)
+- Font minimo 0.9rem corpo, 0.8rem labels (legibilidade Zoom)
+- Dois tipos de botao: primary (filled accent) + secondary (outlined accent)
+- Paleta unica por aluno
+- Zero portugues na tela (A2+). Definicoes de vocabulario em INGLES simples
+
+**ICONE T — INSTRUCOES AO PROFESSOR (SUBSTITUI O ANTIGO PLANO DE AULA)**
+- NAO existe aba separada de Plano de Aula — tudo esta no icone T de cada slide
+- O T DEVE conter para CADA slide: timing sugerido, instrucoes de como conduzir, CCQs quando aplicavel, obstacle alerts, dicas de pronuncia
+- Homework: o professor diz ORALMENTE no ultimo slide (nunca aparece escrito na tela IN CLASS)
+- O icone T e a UNICA forma do professor receber instrucoes durante a aula — deve ser COMPLETO e DETALHADO
+- Cada instrucao e escrita em portugues (para o professor brasileiro)
+
+#### ABA 4 — Complementares
 - Media grid com cards de conteudo
 - 3 recomendacoes por aula (serie/filme + podcast + YouTube)
 - Cada media card tem: checkbox de conclusao, tipo, titulo, descricao, dica de uso
@@ -189,7 +338,7 @@ alumni-plano-gerador/
 
 O aluno recebe APENAS:
 - **Aba 1: Pre-class** (identico a aba 2 do professor)
-- **Aba 2: Complementares** (identico a aba 5 do professor)
+- **Aba 2: Complementares** (identico a aba 4 do professor)
 
 Badge do header: `ALUNO` (em vez de `PROFESSOR VIEW`)
 
@@ -197,14 +346,18 @@ Badge do header: `ALUNO` (em vez de `PROFESSOR VIEW`)
 
 ## REGRA 4 — 5 ETAPAS OBRIGATORIAS POR AULA (Pre-class)
 
+> **ATENCAO**: Esta regra e INVIOLAVEL. TODAS as 5 etapas E TODAS as sub-etapas (1.1 a 1.5) DEVEM existir em CADA aula, para QUALQUER aluno, em QUALQUER nivel. Pular qualquer etapa (especialmente 1.3 e 1.4) e um BUG CRITICO que bloqueia deploy. NAO existe justificativa valida para omitir etapas — nem nivel iniciante, nem falta de tempo, nem "simplificacao". Se o aluno e A1, a gramatica sera simples (to be, present simple) mas DEVE ESTAR LA.
+
 Cada aula no Pre-class DEVE conter estas 5 etapas, nesta ordem:
 
-### Etapa 1: Vocabulario + Expressoes
-- **1.1 Vocab Cards** com audio (`speakText`) + traducao
-- **1.2 Matching** (dropdown `checkMatch`) — opcoes EMBARALHADAS
-- **1.3 Contexto** — texto curto usando o vocabulario + quiz de compreensao (`selectQuiz`)
-- **1.4 Explicacao Gramatical** — bilingue (EN + PT-BR)
-- **1.5 Aplicacao** — fill-in-the-blank (`checkBlank`) com hints e audio
+### Etapa 1: Vocabulario + Expressoes (TODAS as 5 sub-etapas obrigatorias)
+- **1.1 Vocab Cards** com audio (`speakText`) + traducao — **OBRIGATORIO**
+- **1.2 Matching** (dropdown `checkMatch`) — opcoes EMBARALHADAS — **OBRIGATORIO**
+- **1.3 Contexto** — texto curto usando o vocabulario + quiz de compreensao (`selectQuiz`). Formato: "Stage 1.2: Grammar in Context" com badge GRAMMAR, texto narrativo usando a gramatica da aula com palavras em **negrito**, seguido de perguntas de compreensao — **OBRIGATORIO, NUNCA PULAR**
+- **1.4 Explicacao Gramatical** — bilingue (EN + PT-BR). Formato: "Grammar Tip" com tabela/explicacao da estrutura gramatical, exemplos afirmativo/negativo/interrogativo, e traducao — **OBRIGATORIO, NUNCA PULAR**
+- **1.5 Aplicacao** — fill-in-the-blank (`checkBlank`) com hints e audio — **OBRIGATORIO**
+
+> **CHECKLIST DE VERIFICACAO**: Antes de considerar UMA aula pronta, confirmar que existem no HTML: (1) vocab cards com audio, (2) match-grid com dropdown, (3) texto "Grammar in Context" com quiz, (4) "Grammar Tip" com explicacao bilingue, (5) fill-in-the-blank. Se QUALQUER um faltar → a aula NAO esta pronta.
 
 ### Etapa 2: Pratica de Vocabulario
 - Word cloud com fill-in-the-blank avancado
@@ -346,12 +499,17 @@ const audioMap = {
 };
 ```
 
-- **Voz**: Arthur (American English) via ElevenLabs
+- **Vozes ElevenLabs (ALTERNANCIA OBRIGATORIA)**:
+  - **Arthur** (`sfJopaWaOtauCD3HKX6Q`): Male, neutral American — usado para palavras soltas (1-2 palavras)
+  - **Ellen** (`BIvP0GN1cAtSRTxNHnWS`): Female, calm American — usada para frases longas (3+ palavras), ALTERNANDO com Arthur
+  - **Regra de alternancia**: Palavras soltas (1-2 palavras) = SEMPRE Arthur. Frases (3+ palavras) = ALTERNAR Arthur/Ellen a cada frase. Dialogos: voz masculina para personagens masculinos, voz feminina para personagens femininos
+  - **NUNCA usar uma unica voz para todo o material** — a alternancia e OBRIGATORIA para naturalidade
 - **Formato**: MP3
 - **Diretorio**: `/audio/{slug}/`
 - **Nomenclatura**: frase em snake_case sem acentos, max 60 chars
-- **Fallback**: Web Speech API (speechSynthesis) APENAS como fallback, NUNCA como metodo principal
+- **ZERO TOLERANCIA com Web Speech API**: TODOS os audios DEVEM ser gerados via ElevenLabs e existir como MP3 no disco. Web Speech API e APENAS fallback de emergencia, NUNCA metodo principal. Se o diretorio `/audio/{slug}/` nao existir ou estiver vazio, o material NAO esta pronto para deploy
 - **Speed control**: `currentAudio.playbackRate = audioSpeed`
+- **Validacao pre-deploy**: Contar speakText() no HTML e comparar com arquivos em `/audio/{slug}/`. Se houver QUALQUER frase sem MP3 correspondente → BLOQUEAR deploy
 
 ---
 
@@ -433,15 +591,24 @@ Cores fixas Alumni (usadas em TODOS): `#003080` (azul), `#d70c0c` (vermelho), `#
 
 ## REGRA 11 — CHECKLIST FINAL BLOQUEANTE (PRE-DEPLOY)
 
-NENHUM material e "pronto" sem passar por TODOS os 5 checks:
+NENHUM material e "pronto" sem passar por TODOS os 7 checks:
 
 1. **Portugues/Acentuacao** — Zero palavras sem acento correto nas traducoes
 2. **Ingles** — Gramatica perfeita, American English 100%
 3. **Nivel x Aula** — Conteudo adequado ao CEFR do aluno
 4. **Audios ElevenLabs** — TODAS as frases com `speakText`/`data-phrase` tem MP3 no `audioMap`. ZERO fallback Web Speech como metodo principal
 5. **Funcionalidade** — Zero `data-exercise`. HTML manual com checkBlank/selectQuiz/etc.
+6. **Etapas Completas (REGRA 4)** — CADA aula DEVE conter: (a) Vocab Cards, (b) Matching, (c) Grammar in Context com texto + quiz, (d) Grammar Tip com explicacao bilingue, (e) Fill-in-the-blank, (f) Pratica, (g) Pronuncia, (h) Quiz Situacional, (i) Producao Livre. Buscar no HTML por "Grammar in Context" e "Grammar Tip" — se NAO encontrar em TODAS as aulas, REJEITAR.
+
+7. **IN CLASS Completa** — Aba IN CLASS DEVE ter: (a) minimo 25 slides para 60min / 35 para 90min, (b) narrativa com 7 capitulos, (c) reveal cards no vocab, (d) grammar discovery, (e) dialogo line-by-line, (f) 2+ listenings com play/pause, (g) quick fire uma por vez, (h) 3 role-plays (guided>semi-free>free), (i) survival card + checklist checkbox, (j) icone T com instrucoes em TODOS os slides, (k) ZERO portugues na tela, (l) TODOS os audios no audioMap (zero missing), (m) aba IN CLASS DEVE mostrar menu de selecao de aula primeiro — NUNCA entrar em slide-mode direto no switchTab. O switchTab SEMPRE remove slide-mode. Slides so abrem via enterSlideMode() chamado por click explicito no menu
+
+8. **Separacao de Aulas (multi-aula)** — Se o material tem 2+ aulas: (a) TODOS os slides tem `data-lesson="N"`, (b) `lessonRanges` no JS cobre todas as aulas com start/end corretos, (c) `changeSlide()` respeita bounds da aula atual, (d) contador mostra numero relativo ("01/27" nao "28/135"), (e) TODOS os cards do menu IN CLASS tem formato HTML IDENTICO (mesmo border-radius, mesmo layout, mesmo padrao de numero 2 digitos "01"/"02"). NUNCA misturar estilos entre cards.
+
+9. **Uniformidade Visual** — Componentes repetidos (cards de menu, lesson cards, exercise sections) DEVEM ter o MESMO HTML/CSS em TODAS as instancias. Se aula 1 usa border-radius:8px e font-weight:600, aula 5 DEVE usar o mesmo. Verificar: comparar o HTML do primeiro e ultimo item de cada componente repetido — devem ser identicos exceto pelo conteudo.
 
 Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao deploy.
+
+> **LEMBRETE**: O erro mais comum e pular as etapas 1.3 (Grammar in Context) e 1.4 (Grammar Tip) no Pre-class. Isso ja aconteceu antes e NAO pode se repetir. SEMPRE verificar.
 
 ---
 
@@ -563,9 +730,47 @@ NAO perguntar "quer que eu faca deploy?" — apenas faca.
 
 ---
 
-## REGRA 20 — NUNCA ALTERAR MATERIAIS ATIVOS
+## REGRA 20 — UMA AULA POR VEZ + TEMPLATE OBRIGATORIO
+
+> **QUALIDADE > QUANTIDADE**: Gerar UMA aula de cada vez. NUNCA gerar 5 aulas juntas.
+
+**Geracao por aula:**
+- Cada execucao gera material de UMA aula apenas (Pre-class + IN CLASS + Complementares)
+- O Planejamento mostra o curriculo COMPLETO do programa, mas o conteudo e de UMA aula
+- Aula 2 so e gerada apos Aula 1 ser validada e aprovada
+- Aula N+1 faz CALLBACK do vocabulario da aula N no warm-up
+
+**Template obrigatorio:**
+- NUNCA gerar CSS/JS do zero — SEMPRE copiar de um material aprovado existente
+- IN CLASS: copiar estrutura de slides, navegacao, componentes do template (patricia-ruffo.html ou elaine-v-b.html)
+- Pre-class: copiar padrao de exercicios do template (checkBlank, selectQuiz, checkMatch)
+- Trocar APENAS: accent color + conteudo dos slides + audioMap + data-teacher
+- Se nao existir template: usar /public/professor/patricia-ruffo.html como referencia
+
+**Audio OBRIGATORIO em TODA aula:**
+- TODAS as frases com speakText() DEVEM ter MP3 no audioMap ANTES do deploy
+- Script de geracao de audio roda DEPOIS do HTML, populando o audioMap
+- Verificacao pre-deploy: comparar speakText() calls vs audioMap — ZERO missing
+- Se audioMap estiver vazio ou incompleto: NAO fazer deploy
+
+**Checklist por aula (BLOQUEANTE):**
+1. Pre-class tem as 5 etapas obrigatorias (REGRA 4)?
+2. IN CLASS tem minimo 25 slides com todos os componentes?
+3. Icone T tem instrucoes em TODOS os slides?
+4. ZERO portugues na tela IN CLASS?
+5. audioMap cobre 100% dos speakText()?
+6. Vozes Arthur/Ellen alternadas corretamente (feminino=Ellen, masculino=Arthur)?
+7. ZERO emojis, ZERO imagens externas quebradas?
+8. Complementares tem 3 recomendacoes?
+Se QUALQUER item falhar → NAO fazer deploy → corrigir → re-validar.
+
+---
+
+## REGRA 21 — NUNCA ALTERAR MATERIAIS ATIVOS
 
 Materiais de alunos com status ATIVO no dashboard NUNCA podem ser alterados sem pedido EXPLICITO.
+Melhorias sao testadas em materiais novos PRIMEIRO.
+So migrar materiais ativos quando EXPLICITAMENTE pedido.
 Melhorias sao testadas em materiais novos primeiro.
 
 ---
@@ -574,6 +779,20 @@ Melhorias sao testadas em materiais novos primeiro.
 
 Todo conteudo em ingles deve seguir American English: spelling, vocabulary, pronunciation.
 - "color" (nao "colour"), "organize" (nao "organise"), "apartment" (nao "flat")
+
+### Teacher vs Professor — USO CORRETO
+
+| Termo | Significado | Contexto |
+|-------|------------|----------|
+| **Teacher** | Termo GERAL para quem ensina | Escolas, cursos livres, aulas particulares, ensino fundamental/medio. Ex: "English teacher", "math teacher" |
+| **Professor** | Titulo ACADEMICO especifico | Ensino superior (universidades/faculdades), docentes com mestrado/doutorado, cargos de pesquisa. Ex: "Professor Crawford teaches constitutional law at Georgetown" |
+
+**Regras para o material Alumni:**
+- Personagens que ENSINAM INGLES = **teacher** (Helen e a equipe Alumni sao teachers)
+- Personagens em UNIVERSIDADES = **professor** (Professor Crawford, Professor Torres)
+- Na aba Planejamento e data-teacher = ok usar "professor" em portugues (instrucoes internas)
+- Na tela IN CLASS = "Professor" so como titulo academico EN seguido de nome proprio
+- NUNCA usar "professor" como traducao generica de "teacher" na tela IN CLASS
 
 ---
 
@@ -595,9 +814,21 @@ As opcoes do dropdown de matching DEVEM estar em ordem DIFERENTE da ordem das pa
 
 ---
 
-## REGRA 25 — MOBILE-FIRST
+## REGRA 25 — MOBILE-FIRST + UI/UX PRO MAX
 
-Todo material deve ser responsivo e funcional em celular. Touch targets minimos de 44x44px. Ordering deve ter botoes de seta alem de drag-and-drop.
+Todo material e pagina do sistema deve ser responsivo e funcional em celular. Touch targets minimos de 44x44px. Ordering deve ter botoes de seta alem de drag-and-drop.
+
+**UI/UX Pro Max OBRIGATORIO em TODA pagina criada ou modificada:**
+- Contraste WCAG AA minimo (4.5:1) para todo texto
+- Focus states visiveis (outline 3px) em TODOS os elementos interativos (botoes, links, cards clicaveis)
+- `aria-label` em botoes com icone (sem texto visivel)
+- `prefers-reduced-motion`: desativar animacoes para usuarios que preferem
+- `cursor-pointer` em todos os elementos clicaveis
+- Hover states com transicoes suaves (150-300ms)
+- Responsivo em 375px, 768px, 1024px, 1440px
+- Zero emojis — TODOS os icones sao SVG inline
+- Tipografia consistente: Inter (corpo) + Cormorant Garamond (titulos)
+- Paleta Alumni: navy #003080, red #d70c0c, bg #f5f5f0, success #16a34a, danger #dc2626
 
 ---
 
@@ -975,3 +1206,96 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 | `audioMap = {}` | Mapa completo de frases → MP3 |
 | `totalLessons = 5` | Numero de aulas do bloco |
 | `'{SLUG}-professor'` | Chave localStorage (ex: `daniela-feitoza-professor` ou `daniela-feitoza-aluno`) |
+
+---
+
+## REGRA 27 — DESIGN PEDAGOGICO DE SLIDES (IN CLASS)
+
+> Regras derivadas de feedback real de professores em aula. TODAS sao OBRIGATORIAS para novos materiais.
+
+### A. Saudacoes naturais NUNCA no slide
+- Cumprimentos como "Hi [aluno]! How are you today?" acontecem ao vivo, organicamente
+- NUNCA incluir saudacao inicial scriptada no warm-up — a professora ja vai ter feito isso
+- O primeiro prompt do slide deve ir direto ao conteudo (ex: "In one word: what excites you most about...?")
+
+### B. Transicoes entre temas precisam de ponte
+- NUNCA pular de um tema para outro sem pergunta-bridge
+- Se o slide fala de "Paris 2027" e depois vai para "favorite series", incluir uma pergunta intermediaria que conecte os dois (ex: "What do you know about French culture?" antes de perguntar sobre series)
+- A sequencia logica deve ser: tema A → ponte A→B → tema B
+
+### C. Zero redundancia contextual
+- Se a aula inteira e em ingles, NUNCA escrever "in English" na instrucao
+- Se o aluno ja esta praticando, NUNCA escrever "Time to Practice" — usar "More Practice"
+- Se o aluno ja esta participando, NUNCA escrever "Your Turn" como se fosse a primeira vez — contextualizar com subtitulo (ex: "From guided to free — show what you learned")
+- Regra geral: nao dizer o que ja e obvio pelo contexto
+
+### D. Linguagem situacional realista
+- Frases de dialogo e cenarios devem refletir o que alguem REALMENTE diria naquele contexto
+- Num aeroporto: "What's your name?" (nao "Who are you?")
+- Num hotel: "Do you have a reservation?" (nao "Are you staying here?")
+- Sempre validar: "Uma pessoa real falaria isso nessa situacao?"
+
+### E. Elementos interativos DEVEM ser toggle
+- Vocab reveal cards: clicar abre, clicar de novo FECHA (classList.toggle, nao classList.add)
+- Se a professora clica sem querer, DEVE conseguir fechar imediatamente
+- Aplica-se a: vocab cards, hint cards, qualquer elemento que revela resposta
+- NUNCA usar one-way reveal em elementos que a professora controla durante a aula
+
+### F. Comprehension testa o OUTRO, nao o aluno
+- Perguntas de "Did you understand?" apos dialogo devem ser sobre o INTERLOCUTOR (Sarah, receptionist, etc.)
+- NUNCA pedir ao aluno que fale de si mesmo na 3a pessoa (ex: "How old is Gabriela?" para a propria Gabriela = confuso)
+- Perguntas devem verificar compreensao do que o OUTRO disse no dialogo
+- Formato ideal: "Where is [personagem] from?", "Does [personagem] like X?", "What does [personagem] do?"
+- Numero de perguntas = numero de informacoes CONCRETAS sobre o interlocutor no dialogo (nao inventar)
+
+### G. Keywords devem ser produziveis
+- Keywords em role-play semi-free devem ser palavras/valores que o aluno ENCAIXA na frase
+- ERRADO: `age` (ninguem fala "My age is...") → CERTO: `16` (induz "I am 16 years old")
+- ERRADO: `city` (ninguem fala "My city is...") → CERTO: `São Paulo` (induz "I am from São Paulo")
+- CERTO: `name` (induz "My name is...")  — funciona porque a palavra e usada naturalmente
+- Teste: se a keyword NAO aparece literalmente na frase que o aluno diria, trocar pelo valor concreto
+
+### H. Zero redundancia lexical em keywords
+- NUNCA usar "favorite hobby" — hobby ja implica que e favorito
+- NUNCA duplicar conceitos com adjetivos desnecessarios
+- Cada keyword deve ser UMA informacao unica e necessaria
+
+---
+
+## REGRA 28 — LESSON PROGRESS TRACKING (SUPABASE)
+
+> Todo material de aluno DEVE incluir o sistema de progresso via Supabase. Quando o professor marca os 5 checks do "What I Learned" no final de cada aula IN CLASS, a aula e registrada como concluida no Supabase. A barra de avanco e os stamps atualizam automaticamente em AMBAS as paginas (professor e aluno).
+
+### Scripts obrigatorios no `<head>`:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='{SLUG}';window.TOTAL_AULAS={N};</script>
+```
+
+### Script obrigatorio antes de `</body>` (DEPOIS do script principal):
+
+```html
+<script src="/lib/lesson-progress.js"></script>
+</body>
+```
+
+### Como funciona:
+1. `lesson-progress.js` faz wrap automatico do `toggleCheck()` existente
+2. Quando o professor marca 5/5 checks no checklist de uma aula → `inclass_done = true` salva no Supabase
+3. Ao carregar a pagina, busca do Supabase quais aulas estao concluidas → atualiza barra de progresso + acende stamps + restaura checks visuais
+4. Tabela Supabase: `lesson_progress` (student_slug, lesson_number, inclass_done, inclass_marked_at)
+
+### Variaveis para substituir:
+
+| Placeholder | Substituir por |
+|---|---|
+| `{SLUG}` | Slug do aluno (ex: `gabriela-pires`) |
+| `{N}` | Total de aulas no pacote do aluno (ex: `48`) |
+
+### IMPORTANTE:
+- O `lesson-progress.js` DEVE ser carregado DEPOIS do `<script>` principal (que define `toggleCheck`)
+- O `STUDENT_SLUG` DEVE ser o slug PRINCIPAL do aluno (sem sufixo `-aula2` etc.)
+- Nunca editar `lesson-progress.js` para um aluno especifico — ele e GENERICO
+- A barra de progresso mostra: aulas com `inclass_done=true` / TOTAL_AULAS * 100

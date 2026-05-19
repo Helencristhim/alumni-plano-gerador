@@ -195,7 +195,9 @@ async function loadStudentsFromSupabase() {
       var perfil = d.perfil || {};
       var de = (perfil.dadosExtraidos || d.dadosExtraidos || {});
       var nome = form.nome || d.nome || row.id;
-      var nivel = (de.nivel && de.nivel.valor) || form.nivel || '';
+      var nivelFull = (de.nivel && de.nivel.valor) || form.nivel || '';
+      /* Truncate level to just the code: "A2 (Pré-Intermediário — ...)" → "A2" */
+      var nivel = nivelFull.replace(/\s*\(.*$/, '').trim() || nivelFull.substring(0, 10);
       var numAulas = parseInt((de.numAulas && de.numAulas.valor) || form.numAulas || '0') || 0;
       return {
         name: nome,
@@ -246,7 +248,15 @@ var CHECK_NAMES = [
   'Exercícios (HTML manual)',
   'Paleta única',
   'JavaScript completo',
-  'SVGs (overflow/quebrados)'
+  'SVGs (overflow/quebrados)',
+  'Player de Listening',
+  'Capitalização',
+  'Alternância de Vozes',
+  'Layout & Alinhamento',
+  'Seletor de Aula (IN CLASS)',
+  'Contraste & Legibilidade',
+  'Ordering (formato novo + áudio)',
+  'Acentuação PT-BR'
 ];
 
 var CHECK_RULES = {
@@ -264,7 +274,15 @@ var CHECK_RULES = {
   'Exercícios (HTML manual)': { regra: 'REGRA 5 — Sempre HTML manual', impacto: 'data-exercise causa bugs de renderização. HTML manual garante funcionamento em todos os browsers.' },
   'Paleta única': { regra: 'REGRA 10 — Paleta de cores única por aluno', impacto: 'Cores repetidas entre alunos confundem a identidade visual. Cada aluno deve ter cor própria.' },
   'JavaScript completo': { regra: 'REGRA 9 + REGRA 26', impacto: 'Funções JS faltantes causam botões que não funcionam (áudio, exercícios, progresso).' },
-  'SVGs (overflow/quebrados)': { regra: 'REGRA 25 — UI/UX Pro Max', impacto: 'SVG sem dimensões explode o layout do slide. O aluno vê uma tela rosa/quebrada em vez do conteúdo.' }
+  'SVGs (overflow/quebrados)': { regra: 'REGRA 25 — UI/UX Pro Max', impacto: 'SVG sem dimensões explode o layout do slide. O aluno vê uma tela rosa/quebrada em vez do conteúdo.' },
+  'Player de Listening': { regra: 'REGRA IN CLASS — LISTENING com PLAYER COMPLETO', impacto: 'Sem player completo, o professor não pode pausar, voltar ou ajustar velocidade do áudio. Perde controle pedagógico do momento de listening.' },
+  'Capitalização': { regra: 'CLAUDE.md — Regras Adicionais', impacto: 'Início de frase com minúscula passa impressão de material amador. Palavras de vocabulário sem maiúscula confundem o aluno sobre a forma correta.' },
+  'Alternância de Vozes': { regra: 'REGRA 7 — Alternância Arthur/Ellen + Match Semântico', impacto: 'Voz errada para o gênero do conteúdo (ex: "I\'m a businessman" com voz feminina) quebra a imersão e confunde o aluno. Toda frase masculina DEVE usar Arthur, toda feminina DEVE usar Ellen.' },
+  'Layout & Alinhamento': { regra: 'REGRA 5 + REGRA 25 — Mobile-First + UI/UX Pro Max', impacto: 'Layout quebrado ou desalinhado passa impressão de material amador. Matching em 2 colunas, dropdowns em português, ou botões pequenos prejudicam a usabilidade.' },
+  'Seletor de Aula (IN CLASS)': { regra: 'REGRA 20 — Uma aula por vez', impacto: 'Sem seletor, todas as aulas abrem juntas na IN CLASS (100+ slides). O professor se perde navegando e a aula fica impossível de conduzir.' },
+  'Contraste & Legibilidade': { regra: 'REGRA 25 — WCAG AA 4.5:1 + UI/UX Pro Max', impacto: 'Texto ilegível sobre imagens de fundo. O aluno não consegue ler o conteúdo no Zoom, especialmente em projetores.' },
+  'Ordering (formato novo + áudio)': { regra: 'REGRA 5D — Ordering com order-container + áudio', impacto: 'Formato antigo sem áudio impede o aluno de ouvir a sequência correta. Sem setas (moveItem), mobile fica inutilizável. Sem data-order, checkOrder não funciona.' },
+  'Acentuação PT-BR': { regra: 'REGRA 11 check 1 — Português/Acentuação', impacto: 'Texto sem acento passa impressão de material amador e descuidado. "nao" em vez de "não", "ingles" em vez de "inglês" — INACEITÁVEL em material pedagógico profissional.' }
 };
 
 /* ===================== SVG ICONS ===================== */
@@ -300,7 +318,14 @@ function generateFixInstruction(checkName, details, slug) {
     'Exercícios (HTML manual)': 'No arquivo /public/professor/' + slug + '.html, remover data-exercise e usar HTML manual (checkBlank, selectQuiz, checkMatch).',
     'Paleta única': 'No arquivo /public/professor/' + slug + '.html, alterar --accent para uma cor única que não seja usada por outro aluno. ' + details,
     'JavaScript completo': 'No arquivo /public/professor/' + slug + '.html, adicionar as funções JS faltantes. Copiar do REGRA 26 no CLAUDE.md. ' + details,
-    'SVGs (overflow/quebrados)': 'No arquivo /public/professor/' + slug + '.html, adicionar width e height explícitos em todos os SVGs que não têm. Ex: width="24" height="24". ' + details
+    'SVGs (overflow/quebrados)': 'No arquivo /public/professor/' + slug + '.html, adicionar width e height explícitos em todos os SVGs que não têm. Ex: width="24" height="24". ' + details,
+    'Player de Listening': 'No arquivo /public/professor/' + slug + '.html, substituir o botão play simples dos slides de Listening pelo player completo (seekbar, play/pause, voltar 5s, avançar 5s, velocidade 0.5x/0.75x/1x/1.25x). Copiar componente do template elaine-v-b.html. ' + details,
+    'Capitalização': 'No arquivo /public/professor/' + slug + '.html, corrigir capitalização: todo início de frase DEVE ter primeira letra MAIÚSCULA. Palavras de vocabulário apresentadas sozinhas (vocab cards, matching, survival cards) DEVEM ter primeira letra maiúscula. ' + details,
+    'Alternância de Vozes': 'No arquivo /public/professor/' + slug + '.html, corrigir atribuição de vozes nos diálogos e áudios. Personagens femininos DEVEM ter data-voice="ellen". Personagens masculinos DEVEM ter data-voice="arthur". Frases da aluna (se mulher) = Ellen. Verificar audioMap para garantir que os MP3s foram gerados com a voz correta. ' + details,
+    'Layout & Alinhamento': 'No arquivo /public/professor/' + slug + '.html, corrigir problemas de layout: matching DEVE ser coluna única (não 2 colunas), dropdowns DEVEM dizer "Select..." (não "Selecione..."), vocab cards DEVEM ser lista vertical, botões DEVEM ter min-height 44px. ' + details,
+    'Seletor de Aula (IN CLASS)': 'ATENÇÃO: NÃO reescrever nem reconstruir os slides existentes. NÃO gerar aulas novas. APENAS adicionar um SELETOR JS que filtra os slides JÁ EXISTENTES por aula. No arquivo /public/professor/' + slug + '.html: (1) Identificar quais slides pertencem a cada aula (pelo título ou data-lesson), (2) Adicionar tela inicial com cards das aulas ANTES dos slides, (3) Adicionar função JS showLesson(n) que esconde todos os slides e mostra apenas os da aula selecionada, (4) Adicionar botão "Voltar às aulas" em cada aula. Os slides existentes NÃO devem ser alterados — apenas a visibilidade muda via JS. ' + details,
+    'Contraste & Legibilidade': 'No arquivo /public/professor/' + slug + '.html, corrigir problemas de contraste nos slides IN CLASS. ' + details + ' Soluções: (1) Aumentar opacidade do overlay para min 0.55, (2) Adicionar text-shadow em texto sobre imagens, (3) Garantir que cor accent tenha contraste suficiente sobre fundos escuros — se não, usar branco com accent apenas em detalhe decorativo.',
+    'Ordering (formato novo + áudio)': 'No arquivo /public/professor/' + slug + '.html, corrigir exercício(s) de ordering para o formato novo. ' + details + ' Formato correto: (1) Botão Listen ACIMA do container com speakText(\'[order-lN]\', this), (2) div.order-container com id="order-lN", (3) div.order-item com draggable="true" data-order="N" onclick="selectOrderItem(this,\'order-lN\')", (4) Cada item com span.order-num + span.order-text + span.order-arrows com 2 arrow-btn (moveItem ▲▼), (5) Botão "Check Order" com onclick="checkOrder(\'order-lN\')". Ver REGRA 5D no CLAUDE.md.'
   };
   return instructions[checkName] || 'Corrigir ' + checkName + ' em /public/professor/' + slug + '.html: ' + details;
 }
@@ -317,6 +342,72 @@ function copyFix(checkName, details, slug) {
   });
 }
 
+function copyAllFix(key) {
+  var data = (window._auditFailures || {})[key];
+  if (!data || !data.failures || data.failures.length === 0) return;
+
+  var prompt = 'CORREÇÃO OBRIGATÓRIA — Material pedagógico Alumni\n';
+  prompt += '═══════════════════════════════════════\n\n';
+  prompt += 'CONTEXTO (leia antes de agir):\n';
+  prompt += 'Este é um material pedagógico de inglês da escola Alumni by Better.\n';
+  prompt += 'O arquivo é um HTML monolítico com 4 abas: Planejamento, Pre-class, IN CLASS (slides interativos), Complementares.\n';
+  prompt += 'O projeto está em: /Users/helenmendes/alumni-plano-gerador/\n';
+  prompt += 'Arquivos de áudio ficam em: /Users/helenmendes/alumni-plano-gerador/public/audio/' + data.slug + '/\n';
+  prompt += 'O CLAUDE.md na raiz do projeto contém TODAS as regras de implementação. Leia-o antes de qualquer edição.\n\n';
+  prompt += 'ARQUIVO A CORRIGIR: /Users/helenmendes/alumni-plano-gerador/public/professor/' + data.slug + '.html\n';
+  prompt += 'AULA: ' + data.lessonNum + (data.lessonName ? ' — ' + data.lessonName : '') + '\n\n';
+  prompt += '⚠ REGRAS ABSOLUTAS (INEGOCIÁVEIS):\n';
+  prompt += '1. NÃO quebrar NADA que já funciona. Se algo já existe e está correto, NÃO toque\n';
+  prompt += '2. NÃO reescrever, reconstruir ou regenerar conteúdo existente\n';
+  prompt += '3. NÃO gerar aulas novas. NÃO criar conteúdo novo. Só corrigir o que está errado\n';
+  prompt += '4. NÃO remover CSS/JS/HTML que já funciona\n';
+  prompt += '5. NÃO alterar conteúdo de outras aulas além da aula ' + data.lessonNum + '\n';
+  prompt += '6. Fazer edições CIRÚRGICAS. Mudar APENAS o que está listado nos problemas abaixo\n';
+  prompt += '7. Ler o CLAUDE.md e o arquivo INTEIRO antes de qualquer edição\n';
+  prompt += '8. Verificar JS syntax DEPOIS de cada edição: node -e "new Function(code)"\n';
+  prompt += '9. NÃO adicionar features, melhorias, ou refatorações não solicitadas\n';
+  prompt += '10. Deploy final: cd /Users/helenmendes/alumni-plano-gerador && npx vercel --prod --yes\n\n';
+  prompt += 'PROBLEMAS ENCONTRADOS (' + data.failures.length + '):\n';
+  prompt += 'Atue EXCLUSIVAMENTE nos problemas abaixo. Nada mais.\n';
+  prompt += '───────────────────────────────────────\n\n';
+
+  data.failures.forEach(function(f, i) {
+    prompt += (i + 1) + '. ' + f.name + '\n';
+    prompt += '   Detalhe: ' + f.details + '\n';
+    prompt += '   Regra: ' + f.rule + '\n';
+    prompt += '   Impacto: ' + f.impact + '\n';
+    if (f.items && f.items.length > 0) {
+      prompt += '   Itens específicos:\n';
+      f.items.slice(0, 10).forEach(function(item) {
+        prompt += '   — ' + item + '\n';
+      });
+    }
+    prompt += '   Como corrigir: ' + generateFixInstruction(f.name, f.details, data.slug) + '\n';
+    prompt += '\n';
+  });
+
+  prompt += '───────────────────────────────────────\n';
+  prompt += 'INSTRUÇÕES FINAIS:\n';
+  prompt += '- Leia o CLAUDE.md do projeto ANTES de começar (tem todas as regras de implementação)\n';
+  prompt += '- Corrija APENAS os ' + data.failures.length + ' problemas listados acima. NADA mais\n';
+  prompt += '- NÃO altere nenhuma outra funcionalidade, componente ou aula\n';
+  prompt += '- NÃO remova CSS/JS que já funciona\n';
+  prompt += '- Verifique JS syntax após edições\n';
+  prompt += '- Teste que a página carrega corretamente antes do deploy\n';
+  prompt += '- Deploy: cd /Users/helenmendes/alumni-plano-gerador && npx vercel --prod --yes\n';
+
+  navigator.clipboard.writeText(prompt).then(function() {
+    var btn = event.target.closest('button');
+    var origText = btn.innerHTML;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copiado!';
+    btn.style.background = '#16a34a';
+    setTimeout(function() {
+      btn.innerHTML = origText;
+      btn.style.background = '#003080';
+    }, 2500);
+  });
+}
+
 function scoreClass(pct) {
   if (pct >= 90) return 'score-green';
   if (pct >= 70) return 'score-orange';
@@ -324,26 +415,55 @@ function scoreClass(pct) {
 }
 
 /* ===================== RENDER STUDENTS ===================== */
+/* ===================== PERSISTENCE ===================== */
+function getSavedAudit(slug) {
+  try { var d = localStorage.getItem('gov-audit-' + slug); return d ? JSON.parse(d) : null; } catch(e) { return null; }
+}
+function saveAudit(slug, score, lessonsCount) {
+  try { localStorage.setItem('gov-audit-' + slug, JSON.stringify({ score: score, lessons: lessonsCount, date: new Date().toISOString() })); } catch(e) {}
+}
+
 function renderStudents() {
   var container = document.getElementById('studentList');
   var html = '';
+  var totalAuditados = 0;
+  var totalScore = 0;
   students.forEach(function(s, i) {
+    var saved = getSavedAudit(s.slug);
+    var scoreHtml, btnText, scoreVal = null;
+    if (saved) {
+      scoreVal = saved.score;
+      var cls = scoreClass(saved.score);
+      scoreHtml = '<span class="student-score ' + cls + '" id="score-' + i + '">' + saved.score + '%</span>';
+      btnText = 'Re-auditar';
+      totalAuditados++;
+      totalScore += saved.score;
+    } else {
+      scoreHtml = '<span class="student-score score-none" id="score-' + i + '">--</span>';
+      btnText = 'Auditar';
+    }
     html += '<div class="student-card" id="card-' + i + '">' +
       '<div class="student-header" onclick="toggleCard(' + i + ')">' +
         '<div class="student-accent" style="background:' + s.accent + '"></div>' +
         '<span class="student-name">' + escHtml(s.name) + '</span>' +
         '<span class="student-level">' + s.level + '</span>' +
-        '<span class="student-lessons" id="lessons-' + i + '">0/' + s.totalLessons + ' aulas</span>' +
-        '<span class="student-score score-none" id="score-' + i + '">--</span>' +
-        '<button class="btn-audit" id="btn-' + i + '" onclick="event.stopPropagation();auditStudent(' + i + ')" aria-label="Auditar ' + s.name + '">Auditar</button>' +
+        '<span class="student-lessons" id="lessons-' + i + '">' + (saved ? saved.lessons + '/' : '0/') + s.totalLessons + ' aulas</span>' +
+        scoreHtml +
+        '<button class="btn-audit" id="btn-' + i + '" onclick="event.stopPropagation();auditStudent(' + i + ')" aria-label="Auditar ' + s.name + '">' + btnText + '</button>' +
         SVG_CHEVRON +
       '</div>' +
       '<div class="student-body" id="body-' + i + '">' +
-        '<div class="audit-status" id="status-' + i + '">Clique em "Auditar" para iniciar a verificação.</div>' +
+        (saved ? '<div class="audit-status">Último audit: ' + new Date(saved.date).toLocaleDateString('pt-BR') + '. Clique em "Re-auditar" para atualizar.</div>' :
+        '<div class="audit-status" id="status-' + i + '">Clique em "Auditar" para iniciar a verificação.</div>') +
       '</div>' +
     '</div>';
   });
   container.innerHTML = html;
+  /* Update summary */
+  document.getElementById('sumAudited').textContent = totalAuditados;
+  if (totalAuditados > 0) {
+    document.getElementById('sumScore').textContent = Math.round(totalScore / totalAuditados) + '%';
+  }
 }
 
 function toggleCard(i) {
@@ -438,8 +558,50 @@ function checkStructure(html) {
   if (missing.length > 0) issues.push('Faltando abas: ' + missing.join(', '));
   if (!hasLogo) issues.push('Logo bar não encontrada');
   if (!hasBadge) issues.push('Badge não encontrado');
+
+  /* ---- TAB CONTAINMENT CHECK ----
+     All 4 tabs MUST be inside a main-content div.
+     slides-wrapper MUST be OUTSIDE main-content.
+     If tab-inclass or tab-complementary appear AFTER the last </div><!-- /main-content -->,
+     they are orphaned and will render without container padding (broken layout). */
+  var mainContentClose = -1;
+  var mcSearch = html;
+  /* Find the LAST occurrence of main-content closing, which should be after all tabs */
+  var mcClosePatterns = ['</div><!-- /main-content -->', '</div><!--/main-content-->', '</div> <!-- /main-content'];
+  mcClosePatterns.forEach(function(pat) {
+    var idx = mcSearch.lastIndexOf(pat);
+    if (idx > mainContentClose) mainContentClose = idx;
+  });
+  /* Also detect by finding the main-content open and tracking nesting */
+  var mainContentOpen = html.indexOf('class="main-content"');
+  if (mainContentOpen === -1) mainContentOpen = html.indexOf("class='main-content'");
+
+  if (mainContentOpen !== -1 && mainContentClose !== -1) {
+    /* Check each tab is between open and close */
+    var orphanedTabs = [];
+    tabs.forEach(function(t) {
+      var tabPos = html.indexOf('id="' + t + '"');
+      if (tabPos === -1) tabPos = html.indexOf("id='" + t + "'");
+      if (tabPos !== -1) {
+        if (tabPos < mainContentOpen || tabPos > mainContentClose) {
+          orphanedTabs.push(t);
+        }
+      }
+    });
+    if (orphanedTabs.length > 0) {
+      issues.push('LAYOUT QUEBRADO: ' + orphanedTabs.join(', ') + ' fora do main-content (sem padding/container)');
+    }
+
+    /* Check slides-wrapper is OUTSIDE main-content */
+    var slidesPos = html.indexOf('class="slides-wrapper"');
+    if (slidesPos === -1) slidesPos = html.indexOf("class='slides-wrapper'");
+    if (slidesPos !== -1 && slidesPos > mainContentOpen && slidesPos < mainContentClose) {
+      issues.push('slides-wrapper DENTRO do main-content (slide-mode vai esconder tudo)');
+    }
+  }
+
   if (issues.length === 0) {
-    return { pass: true, details: '4/4 abas + logo + badge' };
+    return { pass: true, details: '4/4 abas + logo + badge + layout OK' };
   }
   return { pass: false, details: issues.join(' | ') };
 }
@@ -502,6 +664,56 @@ function checkExercises(html) {
   if (!hasCheckMatch) issues.push('checkMatch ausente');
   if (!hasDataExercise && manualCount === 3) {
     return { pass: true, details: '0 data-exercise + 3 funções manuais' };
+  }
+  return { pass: false, details: issues.join(' | ') };
+}
+
+function checkOrdering(html) {
+  var hasOrderContainer = html.indexOf('order-container') !== -1;
+  if (!hasOrderContainer) {
+    /* No ordering exercises found — not necessarily an error, some lessons may not have them */
+    return { pass: true, details: 'Nenhum exercício de ordering encontrado (ok se não aplicável)' };
+  }
+  var issues = [];
+  /* Check new format: order-container with order-item */
+  var hasOrderItem = html.indexOf('order-item') !== -1;
+  if (!hasOrderItem) issues.push('order-container sem order-item (formato antigo?)');
+  /* Check data-order attribute */
+  var hasDataOrder = /data-order\s*=\s*["']\d+["']/i.test(html);
+  if (!hasDataOrder) issues.push('Faltando data-order nos itens (checkOrder não funciona)');
+  /* Check selectOrderItem function call */
+  var hasSelectOrderItem = html.indexOf('selectOrderItem') !== -1;
+  if (!hasSelectOrderItem) issues.push('selectOrderItem ausente (seleção por clique não funciona)');
+  /* Check moveItem for mobile accessibility */
+  var hasMoveItem = html.indexOf('moveItem') !== -1;
+  if (!hasMoveItem) issues.push('moveItem ausente (setas ▲▼ para mobile)');
+  /* Check arrow buttons */
+  var hasArrowBtns = html.indexOf('arrow-btn') !== -1;
+  if (!hasArrowBtns) issues.push('arrow-btn ausente (botões de seta para acessibilidade)');
+  /* Check draggable */
+  var hasDraggable = /order-item[^>]*draggable\s*=\s*["']true["']/i.test(html);
+  if (!hasDraggable) issues.push('order-item sem draggable="true" (drag-and-drop não funciona)');
+  /* Check audio: Listen button with speakText referencing order container */
+  var orderContainerIds = html.match(/id\s*=\s*["'](order-l\d+)["']/g) || [];
+  var orderIds = orderContainerIds.map(function(m) { return m.replace(/id\s*=\s*["']/, '').replace(/["']$/, ''); });
+  var missingAudio = [];
+  orderIds.forEach(function(id) {
+    /* Check if there's a speakText call referencing this order container.
+       Handles both formats: speakText('[order-l1]',this) and speakText('[order-l1]', this) */
+    var hasAudioForOrder = html.indexOf("speakText('[" + id + "]'") !== -1 ||
+                           html.indexOf('speakText("[' + id + ']"') !== -1 ||
+                           html.indexOf("speakText('" + id + "'") !== -1 ||
+                           /* Also check with space before comma (older format) */
+                           html.indexOf("speakText('[" + id + "]',") !== -1 ||
+                           html.indexOf("speakText('[" + id + "]', ") !== -1;
+    if (!hasAudioForOrder) missingAudio.push(id);
+  });
+  if (missingAudio.length > 0) issues.push('Ordering SEM botão Listen/áudio: ' + missingAudio.join(', '));
+  /* Check checkOrder button */
+  var hasCheckOrderCall = /checkOrder\s*\(\s*['"][^'"]+['"]\s*\)/.test(html);
+  if (!hasCheckOrderCall) issues.push('Botão "Check Order" (checkOrder) ausente');
+  if (issues.length === 0) {
+    return { pass: true, details: orderIds.length + ' ordering(s) — formato novo + áudio + setas ✓' };
   }
   return { pass: false, details: issues.join(' | ') };
 }
@@ -573,6 +785,32 @@ function checkInClassSlides(html) {
   var hasNav = html.indexOf('goSlide') !== -1 || html.indexOf('goToSlide') !== -1 ||
     html.indexOf('ArrowLeft') !== -1 || html.indexOf('ArrowRight') !== -1 ||
     html.indexOf('prevSlide') !== -1 || html.indexOf('nextSlide') !== -1;
+  /* Threshold: 1 aula = até 50 slides (90min pode ter 45). Acima de 50 = múltiplas aulas */
+  if (count > 50) {
+    /* If a functional lesson selector exists, it's OK.
+       Detect BOTH old pattern (data-lesson + startLesson/showLesson/filterSlides)
+       AND new pattern (lessonRanges + currentLessonRange + enterSlideMode) */
+    var hasSelector = (
+      /* Old pattern */
+      (html.indexOf('data-lesson=') !== -1 && (
+        html.indexOf('startLesson(') !== -1 || html.indexOf('showLesson(') !== -1 ||
+        html.indexOf('filterSlides') !== -1 || html.indexOf('showLessonSlides') !== -1
+      )) ||
+      /* New pattern: lesson boundaries via JS ranges */
+      (html.indexOf('lessonRanges') !== -1 &&
+       (html.indexOf('currentLessonRange') !== -1 || html.indexOf('currentLesson') !== -1) &&
+       html.indexOf('enterSlideMode') !== -1) ||
+      /* Multi-file pattern: each lesson in separate HTML, main file has links + enterSlideMode for aula 1 */
+      (html.indexOf('enterSlideMode') !== -1 && (html.match(/enterSlideMode\s*\(/g) || []).length >= 1 &&
+       (html.match(/href\s*=\s*["'][^"']*aula\d/gi) || []).length >= 1)
+    );
+    if (hasSelector && hasNav) {
+      var estAulas2 = Math.round(count / 28);
+      return { pass: true, details: count + ' slides (' + estAulas2 + ' aulas com seletor funcional)' };
+    }
+    var estAulas = Math.round(count / 30);
+    return { pass: false, details: count + ' slides — ' + estAulas + ' aulas juntas sem separação. Cada aula deve ter 25-45 slides. Use seletor de aula.' };
+  }
   if (count >= 25 && hasNav) {
     return { pass: true, details: count + ' slides com navegação' };
   }
@@ -582,7 +820,7 @@ function checkInClassSlides(html) {
   return { pass: false, details: issues.join(' | ') };
 }
 
-function checkInClassComponents(html) {
+function checkInClassComponents(html, lessonNum) {
   var checks = [
     { name: 'Reveal cards', test: function() { return html.indexOf('vocab-card') !== -1 || html.indexOf('reveal') !== -1 || html.indexOf('flip-card') !== -1; } },
     { name: 'Grammar discovery', test: function() { return html.indexOf('Reveal the Rule') !== -1 || html.indexOf('grammar-rule') !== -1 || html.indexOf('Grammar Discovery') !== -1; } },
@@ -590,19 +828,24 @@ function checkInClassComponents(html) {
     { name: 'Quick fire', test: function() { return html.indexOf('Quick') !== -1 || html.indexOf('quick-fire') !== -1 || html.indexOf('qf-') !== -1; } },
     { name: 'Spot the error', test: function() { return html.indexOf('error') !== -1 && (html.indexOf('correction') !== -1 || html.indexOf('correct') !== -1); } },
     { name: 'Role-play (3x)', test: function() { var m = html.match(/role-?play/gi); return m && m.length >= 3; } },
-    { name: 'Artefato real', test: function() { return html.indexOf('boarding-pass') !== -1 || html.indexOf('hotel-confirm') !== -1 || html.indexOf('artifact') !== -1 || html.indexOf('email-') !== -1 || html.indexOf('menu-card') !== -1; } },
+    { name: 'Artefato real', optional: true, optionalUntil: 2, test: function() { return html.indexOf('boarding-pass') !== -1 || html.indexOf('hotel-confirm') !== -1 || html.indexOf('artifact') !== -1 || html.indexOf('email-') !== -1 || html.indexOf('menu-card') !== -1 || html.indexOf('id-card') !== -1 || html.indexOf('schedule-card') !== -1 || html.indexOf('artefato') !== -1; } },
     { name: 'Checklist', test: function() { return (html.indexOf('checkbox') !== -1 || html.indexOf('checklist') !== -1 || html.indexOf('check-box') !== -1 || html.indexOf('check-item') !== -1 || html.indexOf('toggleCheck') !== -1) && (html.indexOf('What I Learned') !== -1 || html.indexOf('After today') !== -1 || html.indexOf('checklist-item') !== -1 || html.indexOf('check-label') !== -1 || html.indexOf('check-item') !== -1); } }
   ];
   var found = [];
   var missing = [];
+  var warnings = [];
   checks.forEach(function(c) {
-    if (c.test()) found.push(c.name);
-    else missing.push(c.name);
+    if (c.test()) { found.push(c.name); }
+    else if (c.optional && lessonNum <= (c.optionalUntil || 1)) { warnings.push(c.name); found.push(c.name + ' (N/A aula ' + lessonNum + ')'); }
+    else { missing.push(c.name); }
   });
+  var total = checks.length;
   if (missing.length === 0) {
-    return { pass: true, details: '8/8 componentes encontrados' };
+    var detail = (found.length - warnings.length) + '/' + total + ' componentes';
+    if (warnings.length > 0) detail += ' (' + warnings.join(', ') + ' opcional em aulas iniciais)';
+    return { pass: true, details: detail };
   }
-  return { pass: false, details: found.length + '/8 — Faltando: ' + missing.join(', ') };
+  return { pass: false, details: (found.length - warnings.length) + '/' + total + ' — Faltando: ' + missing.join(', ') };
 }
 
 function checkTeacherT(html) {
@@ -630,32 +873,59 @@ function checkTeacherT(html) {
 }
 
 function checkAudioMap(html) {
-  var speakRegex = /speakText\s*\(\s*['"`]([^'"`]+)['"`]/g;
+  /* Match speakText calls — handle escaped apostrophes (\\' inside single-quoted onclick attrs) */
+  var speakRegex = /speakText\s*\(\s*'((?:[^'\\]|\\.)*)'/g;
   var speakPhrases = [];
   var m;
   while ((m = speakRegex.exec(html)) !== null) {
-    speakPhrases.push(m[1]);
+    speakPhrases.push(m[1].replace(/\\'/g, "'"));
   }
-  /* Also check data-phrase attributes */
-  var phraseRegex = /data-phrase\s*=\s*["']([^"']+)["']/g;
-  while ((m = phraseRegex.exec(html)) !== null) {
+  /* Also match double-quoted speakText calls */
+  var speakRegex2 = /speakText\s*\(\s*"((?:[^"\\]|\\.)*)"/g;
+  while ((m = speakRegex2.exec(html)) !== null) {
+    var phrase = m[1].replace(/\\"/g, '"');
+    if (speakPhrases.indexOf(phrase) === -1) speakPhrases.push(phrase);
+  }
+  /* Also check data-phrase attributes — handle apostrophes inside double-quoted attrs */
+  var phraseRegexDQ = /data-phrase\s*=\s*"([^"]+)"/g;
+  while ((m = phraseRegexDQ.exec(html)) !== null) {
     if (speakPhrases.indexOf(m[1]) === -1) speakPhrases.push(m[1]);
+  }
+  var phraseRegexSQ = /data-phrase\s*=\s*'((?:[^'\\]|\\.)*)'/g;
+  while ((m = phraseRegexSQ.exec(html)) !== null) {
+    var dp = m[1].replace(/\\'/g, "'");
+    if (speakPhrases.indexOf(dp) === -1) speakPhrases.push(dp);
   }
 
   var mapRegex = /audioMap\s*=\s*\{([^}]*(?:\{[^}]*\}[^}]*)*)\}/s;
   var mapMatch = html.match(mapRegex);
   var audioKeys = [];
   if (mapMatch) {
-    var keyRegex = /['"`]([^'"`]+)['"`]\s*:/g;
+    /* Match double-quoted keys (most common in audioMap) */
+    var keyRegexDQ = /"([^"]+)"\s*:/g;
     var km;
-    while ((km = keyRegex.exec(mapMatch[1])) !== null) {
+    while ((km = keyRegexDQ.exec(mapMatch[1])) !== null) {
       audioKeys.push(km[1]);
     }
+    /* Match single-quoted keys with escaped apostrophes */
+    var keyRegexSQ = /'((?:[^'\\]|\\.)*)'\s*:/g;
+    while ((km = keyRegexSQ.exec(mapMatch[1])) !== null) {
+      audioKeys.push(km[1].replace(/\\'/g, "'"));
+    }
+  }
+
+  /* Decode HTML entities and JS unicode escapes for comparison */
+  function decodeEntities(str) {
+    /* Decode &#NNN; HTML entities */
+    var decoded = str.replace(/&#(\d+);/g, function(_, n) { return String.fromCharCode(parseInt(n, 10)); });
+    /* Decode \\uXXXX JS unicode escapes */
+    decoded = decoded.replace(/\\u([0-9a-fA-F]{4})/g, function(_, hex) { return String.fromCharCode(parseInt(hex, 16)); });
+    return decoded;
   }
 
   var missing = [];
   speakPhrases.forEach(function(phrase) {
-    var normalised = phrase.trim().replace(/\\'/g, "'");
+    var normalised = decodeEntities(phrase.trim().replace(/\\'/g, "'"));
     if (audioKeys.indexOf(normalised) !== -1) return;
     /* Case-insensitive match */
     var foundCI = audioKeys.some(function(k) { return k.toLowerCase() === normalised.toLowerCase(); });
@@ -694,7 +964,7 @@ async function checkAudioFiles(html, slug) {
   var mapMatch = html.match(mapRegex);
   if (!mapMatch) return { pass: false, details: 'audioMap não encontrado', missing: [] };
 
-  var urlRegex = /['"`]((?:\/)?audio\/[^'"`]+\.mp3)['"`]/g;
+  var urlRegex = /['"`]((?:\/)?audio\/[^'"`]+\.mp3)(?:\?[^'"`]*)?['"`]/g;
   var urls = [];
   var um;
   while ((um = urlRegex.exec(mapMatch[0])) !== null) {
@@ -705,23 +975,55 @@ async function checkAudioFiles(html, slug) {
 
   if (urls.length === 0) return { pass: false, details: 'Nenhuma URL MP3 no audioMap', missing: [] };
 
-  var toCheck = urls.slice(0, 10);
+  /* Check ALL MP3s, not just 10. HEAD requests are lightweight. */
+  var MIN_MP3_SIZE = 5000; /* 5KB — ElevenLabs MP3 is always larger than this */
   var missing = [];
+  var tooSmall = [];
+  var checked = 0;
 
-  for (var i = 0; i < toCheck.length; i++) {
-    try {
-      var resp = await fetch(toCheck[i], { method: 'HEAD' });
-      if (!resp.ok) missing.push(toCheck[i]);
-    } catch (e) {
-      missing.push(toCheck[i]);
-    }
+  /* Process in batches of 15 to avoid overwhelming the browser */
+  for (var batch = 0; batch < urls.length; batch += 15) {
+    var batchUrls = urls.slice(batch, batch + 15);
+    var promises = batchUrls.map(function(url) {
+      var fetchUrl = url.split('?')[0];
+      return fetch(fetchUrl, { method: 'HEAD' })
+        .then(function(resp) {
+          checked++;
+          if (!resp.ok) {
+            missing.push(url);
+            return;
+          }
+          /* Check Content-Length to detect empty/corrupt/placeholder files */
+          var size = parseInt(resp.headers.get('content-length') || '0', 10);
+          if (size > 0 && size < MIN_MP3_SIZE) {
+            tooSmall.push(url + ' (' + Math.round(size / 1024 * 10) / 10 + 'KB)');
+          }
+        })
+        .catch(function() {
+          checked++;
+          missing.push(url);
+        });
+    });
+    await Promise.all(promises);
   }
 
-  var extra = urls.length > 10 ? ' (verificados ' + toCheck.length + ' de ' + urls.length + ')' : '';
-  if (missing.length === 0) {
-    return { pass: true, details: toCheck.length + '/' + toCheck.length + ' MP3s OK' + extra, missing: [] };
+  var issues = [];
+  if (missing.length > 0) {
+    issues = issues.concat(missing.map(function(m) { return '404: ' + m; }));
   }
-  return { pass: false, details: missing.length + ' MP3s ausentes de ' + toCheck.length + extra, missing: missing };
+  if (tooSmall.length > 0) {
+    issues = issues.concat(tooSmall.map(function(s) { return 'Suspeito (<5KB): ' + s; }));
+  }
+
+  var totalProblems = missing.length + tooSmall.length;
+  if (totalProblems === 0) {
+    return { pass: true, details: checked + '/' + checked + ' MP3s OK (verificados ' + checked + ' de ' + urls.length + ')', missing: [] };
+  }
+  var details = '';
+  if (missing.length > 0) details += missing.length + ' ausentes';
+  if (tooSmall.length > 0) details += (details ? ' + ' : '') + tooSmall.length + ' suspeitos (<5KB, possível placeholder)';
+  details += ' de ' + urls.length + ' total';
+  return { pass: false, details: details, missing: issues.slice(0, 30) };
 }
 
 function checkVoices(html) {
@@ -732,6 +1034,28 @@ function checkVoices(html) {
     voices.push(vm[1].toLowerCase());
   }
   if (voices.length === 0) {
+    /* Check for dynamic JS voice assignment patterns */
+    var jsVoicePatterns = [
+      /voice\s*:\s*["'](arthur|ellen)["']/i,
+      /voice\s*:\s*['"](\w+)['"]/i,
+      /\.voice\s*=/i,
+      /data-voice\s*=\s*["']\s*'\s*\+\s*\w+\.voice/i,
+      /data-voice=["']?\s*'\s*\+\s*(?:line|item|row)\.voice/i
+    ];
+    var hasDynamicVoices = jsVoicePatterns.some(function(p) { return p.test(html); });
+    if (hasDynamicVoices) {
+      /* Extract JS voice values to check for arthur/ellen */
+      var jsVoiceValues = [];
+      var jvr = /voice\s*:\s*["'](arthur|ellen)["']/gi;
+      var jvm;
+      while ((jvm = jvr.exec(html)) !== null) { jsVoiceValues.push(jvm[1].toLowerCase()); }
+      var uniqueJS = [];
+      jsVoiceValues.forEach(function(v) { if (uniqueJS.indexOf(v) === -1) uniqueJS.push(v); });
+      if (uniqueJS.length >= 2) {
+        return { pass: true, details: 'Vozes atribuídas via JS dinâmico (' + uniqueJS.join('/') + ')' };
+      }
+      return { pass: true, details: 'Vozes atribuídas via JS dinâmico' };
+    }
     return { pass: false, details: 'Nenhum data-voice encontrado' };
   }
   var unique = [];
@@ -747,35 +1071,66 @@ function checkVoices(html) {
 }
 
 function checkPortuguese(html) {
-  var ptWords = ['\\bpara\\b', '\\bcom\\b', '\\bnao\\b', '\\bvoce\\b', '\\bcomo\\b',
-    '\\buma\\b', '\\bseu\\b', '\\bsua\\b', '\\beste\\b', '\\besta\\b',
+  /* Only check words that are EXCLUSIVELY Portuguese (not also English) */
+  var ptWords = ['\\bnão\\b', '\\bvocê\\b', '\\bvocè\\b',
     '\\baqui\\b', '\\bfazer\\b', '\\bdiga\\b', '\\bfrase\\b', '\\bpalavra\\b',
-    '\\bexercicio\\b', '\\baula\\b', '\\bprofessor\\b', '\\bresponda\\b',
-    '\\bouça\\b', '\\bescute\\b', '\\bescola\\b', '\\btradução\\b'];
+    '\\bexercício\\b', '\\bexercicio\\b', '\\baula\\b', '\\bresponda\\b',
+    /* REMOVED: "professor" — also an English academic title (Professor Crawford, Professor Torres).
+       Only flag if NOT followed by a capital letter (proper name). Use dedicated check below. */
+    '\\bouça\\b', '\\bescute\\b', '\\btradução\\b', '\\bpergunt\\b',
+    '\\bclique\\b', '\\bselecione\\b', '\\bpreencha\\b', '\\bcorrija\\b',
+    '\\bobjetivo\\b', '\\bconteúdo\\b', '\\btambém\\b', '\\bentão\\b'];
+  /* REMOVED: "para", "com", "como", "uma", "seu", "sua", "este", "esta", "escola"
+     These words exist in English too or appear in URLs/code and cause false positives */
 
   /* Isolate IN CLASS section */
   var inClassSection = '';
   var inClassStart = html.indexOf('id="tab-inclass"');
   if (inClassStart === -1) inClassStart = html.indexOf("id='tab-inclass'");
-  if (inClassStart !== -1) {
+  /* Also check for slide-based files (no tabs, just slides) */
+  if (inClassStart === -1) {
+    var hasSlides = html.indexOf('data-slide=') !== -1;
+    if (hasSlides) inClassSection = html;
+    else return { pass: true, details: 'Aba IN CLASS não encontrada (não verificável)', found: [] };
+  } else {
     var nextTab = html.indexOf('id="tab-complementary"', inClassStart);
     if (nextTab === -1) nextTab = html.indexOf("id='tab-complementary'", inClassStart);
     if (nextTab === -1) nextTab = html.length;
     inClassSection = html.substring(inClassStart, nextTab);
-  } else {
-    return { pass: true, details: 'Aba IN CLASS não encontrada (não verificável)', found: [] };
   }
 
-  /* Strip teacher tooltips and scripts */
+  /* AGGRESSIVE stripping of non-student-visible content */
   var cleaned = inClassSection
+    /* 1. Remove ALL data-teacher attribute VALUES (PT instructions for professor) */
+    .replace(/data-teacher\s*=\s*"[^"]*"/gi, '')
+    .replace(/data-teacher\s*=\s*'[^']*'/gi, '')
+    /* 2. Remove teacher tooltip elements */
     .replace(/<[^>]*class\s*=\s*["'][^"']*teacher-t[^"']*["'][^>]*>[\s\S]*?<\/[^>]+>/gi, '')
-    .replace(/<[^>]*data-teacher[^>]*>[\s\S]*?<\/[^>]+>/gi, '')
     .replace(/<[^>]*class\s*=\s*["'][^"']*teacher-cue[^"']*["'][^>]*>[\s\S]*?<\/[^>]+>/gi, '')
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[\s\S]*?<\/style>/gi, '');
+    /* 3. Remove scripts and styles */
+    .replace(new RegExp('<scr' + 'ipt[\\s\\S]*?</scr' + 'ipt>', 'gi'), '')
+    .replace(new RegExp('<sty' + 'le[\\s\\S]*?</sty' + 'le>', 'gi'), '')
+    .replace(/<[^>]*class\s*=\s*["'][^"']*inclass-lesson-card[^"']*["'][^>]*>[\s\S]*?<\/[^>]+>/gi, '')
+    .replace(/Selecione a aula[^<]*/gi, '')
+    .replace(/<[^>]*class\s*=\s*["'][^"']*inclass-selector[^"']*["'][^>]*>[\s\S]*?<\/[^>]+>/gi, '')
+    .replace(/<[^>]*onclick\s*=\s*["']startLesson\([^)]*\)["'][^>]*>[\s\S]*?<\/[^>]+>/gi, '');
 
   /* Remove known proper nouns / place names */
   cleaned = cleaned.replace(/Sao Paulo/gi, '').replace(/São Paulo/gi, '');
+
+  /* 4. Remove ALL HTML attributes (onclick, data-*, href, src, etc.) — only keep text content */
+  cleaned = cleaned.replace(/\s(?:onclick|onchange|oninput|onfocus|onblur|onmouseover|onmouseout|href|src|style|class|id|data-[a-z-]+)\s*=\s*["'][^"']*["']/gi, '');
+
+  /* 5. Remove URLs */
+  cleaned = cleaned.replace(/https?:\/\/[^\s<"']+/gi, '');
+
+  /* 6. Remove localStorage/JS identifiers */
+  cleaned = cleaned.replace(/[a-z]+-[a-z]+-(?:professor|aluno|progress)/gi, '');
+
+  /* Remove text BEFORE the first slide (lesson selector / navigation UI) */
+  var firstSlideIdx = cleaned.search(/data-slide\s*=\s*["']1["']/i);
+  if (firstSlideIdx === -1) firstSlideIdx = cleaned.search(/<div[^>]+class\s*=\s*["']slide\s/i);
+  if (firstSlideIdx > 0) cleaned = cleaned.substring(firstSlideIdx);
 
   var textContent = cleaned.replace(/<[^>]+>/g, ' ');
 
@@ -791,6 +1146,23 @@ function checkPortuguese(html) {
     }
   });
 
+  /* Smart check for "professor" vs "teacher":
+     - "Professor + Name" (e.g. Professor Crawford) = English academic title → OK
+     - "professor" standalone or lowercase without name = likely Portuguese → FLAG
+     - "teacher" = always English → OK
+     Per REGRA 21: "Professor" = university faculty, "Teacher" = general educators */
+  var profRegex = /\bprofessor\b/gi;
+  var profMatches = textContent.match(profRegex);
+  if (profMatches && profMatches.length > 0) {
+    /* Count English academic titles: "Professor" followed by uppercase name */
+    var titleRegex = /\bProfessor\s+[A-Z]/g;
+    var titleCount = (textContent.match(titleRegex) || []).length;
+    var ptCount = profMatches.length - titleCount;
+    if (ptCount > 0) {
+      foundItems.push({ word: 'professor', count: ptCount, context: '(excluindo ' + titleCount + ' títulos acadêmicos EN: "Professor + Nome". Restam ' + ptCount + ' usos possivelmente em PT)' });
+    }
+  }
+
   if (foundItems.length === 0) {
     return { pass: true, details: '0 palavras em português na IN CLASS', found: [] };
   }
@@ -798,8 +1170,261 @@ function checkPortuguese(html) {
   return { pass: false, details: total + ' ocorrências de português', found: foundItems };
 }
 
+function checkAccents(html) {
+  /* REGRA 11, check 1: Portuguese text MUST have correct accents.
+     Scans ALL Portuguese-context text: header, Planejamento, Pre-class,
+     Complementares, data-teacher attributes. Skips English content (audioMap,
+     English phrases, slide visible text in IN CLASS). */
+
+  /* Map of unaccented → correct. Comprehensive list. */
+  var ACCENT_MAP = {
+    /* -ção words */
+    'criacao': 'criação', 'revisao': 'revisão', 'aprovacao': 'aprovação',
+    'publicacao': 'publicação', 'informacao': 'informação', 'atencao': 'atenção',
+    'observacao': 'observação', 'indicacao': 'indicação', 'validacao': 'validação',
+    'geracao': 'geração', 'secao': 'seção', 'producao': 'produção',
+    'comunicacao': 'comunicação', 'apresentacao': 'apresentação',
+    'situacao': 'situação', 'motivacao': 'motivação', 'avaliacao': 'avaliação',
+    'compreensao': 'compreensão', 'conclusao': 'conclusão', 'decisao': 'decisão',
+    'consolidacao': 'consolidação', 'gravacao': 'gravação', 'descricao': 'descrição',
+    'imigracao': 'imigração', 'evitacao': 'evitação', 'adivinhacao': 'adivinhação',
+    'celebracao': 'celebração', 'simulacao': 'simulação', 'ligacao': 'ligação',
+    'reposicao': 'reposição', 'reposicoes': 'reposições', 'reflexao': 'reflexão',
+    'introducao': 'introdução', 'traducao': 'tradução', 'conversacao': 'conversação',
+    'organizacao': 'organização', 'pronunciacao': 'pronunciação',
+    'opcao': 'opção', 'opcoes': 'opções',
+    /* -ncia/-ência words */
+    'ausencia': 'ausência', 'consciencia': 'consciência',
+    'autoconsciencia': 'autoconsciência', 'experiencia': 'experiência',
+    'frequencia': 'frequência', 'antecedencia': 'antecedência',
+    'emergencia': 'emergência', 'independencia': 'independência',
+    'competencia': 'competência', 'referencia': 'referência',
+    /* -ão words (non -ção) */
+    'nao': 'não', 'entao': 'então', 'padrao': 'padrão', 'serao': 'serão',
+    /* Accented vowels */
+    'voce': 'você', 'pessimo': 'péssimo', 'ingles': 'inglês',
+    'portugues': 'português', 'nivel': 'nível', 'ninguem': 'ninguém',
+    'tambem': 'também', 'alem': 'além', 'porem': 'porém',
+    'alguem': 'alguém', 'contem': 'contém',
+    /* -ário/-ória/-ório words */
+    'necessario': 'necessário', 'vocabulario': 'vocabulário',
+    'formulario': 'formulário', 'intermediario': 'intermediário',
+    'historico': 'histórico', 'obrigatorio': 'obrigatório',
+    'curriculo': 'currículo',
+    /* -ístico/-ástico */
+    'linguistico': 'linguístico', 'turistico': 'turístico',
+    /* -ício/-ícia */
+    'exercicio': 'exercício', 'ficticio': 'fictício',
+    /* -ica/-ico */
+    'basicas': 'básicas', 'basica': 'básica', 'basico': 'básico',
+    'medica': 'médica', 'medico': 'médico',
+    'automatico': 'automático', 'automatica': 'automática',
+    'pedagogica': 'pedagógica', 'pedagogicas': 'pedagógicas',
+    'academico': 'acadêmico', 'publica': 'pública', 'publico': 'público',
+    'pratica': 'prática', 'pratico': 'prático',
+    'intrinseca': 'intrínseca', 'genuina': 'genuína',
+    'unica': 'única', 'unico': 'único',
+    'telefonico': 'telefônico', 'hipoteticos': 'hipotéticos',
+    'especifico': 'específico', 'especifica': 'específica',
+    /* -ão/-ões plurals */
+    'opinioes': 'opiniões', 'sugestoes': 'sugestões', 'musicas': 'músicas',
+    'experiencias': 'experiências', 'condicoes': 'condições',
+    /* Accented proparoxytone / misc */
+    'profissao': 'profissão', 'seguranca': 'segurança', 'mudanca': 'mudança',
+    'avancado': 'avançado', 'avancada': 'avançada',
+    'preferencias': 'preferências',
+    'forcas': 'forças', 'forca': 'força',
+    'estrategia': 'estratégia', 'serie': 'série',
+    'proprio': 'próprio', 'propria': 'própria',
+    'proximo': 'próximo', 'proxima': 'próxima', 'proximos': 'próximos',
+    'ultimo': 'último', 'ultima': 'última',
+    'diario': 'diário', 'previsao': 'previsão',
+    'farmacia': 'farmácia', 'financeiro': 'financeiro',
+    'concluidos': 'concluídos', 'extraidos': 'extraídos',
+    'pos-curso': 'pós-curso',
+    'politica': 'política', 'minimo': 'mínimo',
+    'previo': 'prévio', 'previos': 'prévios',
+    'capitalizacao': 'capitalização', 'alternancia': 'alternância',
+    'conteudo': 'conteúdo', 'conteudos': 'conteúdos',
+    /* 'audio' removido: ambígua EN/PT, muitos falsos positivos em tabelas curriculares */
+    'acao': 'ação', 'acoes': 'ações',
+    'vitoria': 'vitória',
+    /* Common verbs/words */
+    'faca': 'faça', 'comecou': 'começou',
+    'tambem': 'também',
+    /* City names in PT context */
+    'Jau': 'Jaú'
+  };
+
+  /* Extract Portuguese-context text:
+     1. Everything OUTSIDE script/style tags
+     2. data-teacher attribute values (professor instructions in PT)
+     3. EXCLUDE: audioMap entries, English slide content
+  */
+
+  /* Step 1: Extract data-teacher values (always in Portuguese) */
+  var teacherTexts = [];
+  var teacherRegex = /data-teacher\s*=\s*"([^"]*)"/gi;
+  var tm;
+  while ((tm = teacherRegex.exec(html)) !== null) {
+    /* Decode HTML entities for checking */
+    teacherTexts.push(tm[1].replace(/&[a-z]+;/gi, ' '));
+  }
+
+  /* Step 2: Get Portuguese sections (header, planning, pre-class, complementary) */
+  var ptSections = '';
+
+  /* Header (before first tab) */
+  var firstTab = html.indexOf('id="tab-');
+  if (firstTab > 0) ptSections += html.substring(0, firstTab);
+
+  /* Tab Planning */
+  var planStart = html.indexOf('id="tab-planning"');
+  if (planStart !== -1) {
+    var planEnd = html.indexOf('id="tab-exercises"', planStart);
+    if (planEnd === -1) planEnd = html.indexOf('id="tab-inclass"', planStart);
+    if (planEnd === -1) planEnd = planStart + 5000;
+    ptSections += html.substring(planStart, planEnd);
+  }
+
+  /* Tab Pre-class — Portuguese labels, translations, instructions */
+  var preStart = html.indexOf('id="tab-exercises"');
+  if (preStart !== -1) {
+    var preEnd = html.indexOf('id="tab-inclass"', preStart);
+    if (preEnd === -1) preEnd = html.indexOf('slides-wrapper', preStart);
+    if (preEnd === -1) preEnd = preStart + 10000;
+    ptSections += html.substring(preStart, preEnd);
+  }
+
+  /* Tab Complementary */
+  var compStart = html.indexOf('id="tab-complementary"');
+  if (compStart !== -1) {
+    var compEnd = html.indexOf('<scr' + 'ipt', compStart);
+    if (compEnd === -1) compEnd = html.length;
+    ptSections += html.substring(compStart, compEnd);
+  }
+
+  /* Step 3: Clean — remove scripts, styles, audioMap, English phrases in quotes */
+  var cleaned = ptSections
+    .replace(new RegExp('<scr' + 'ipt[\\s\\S]*?</scr' + 'ipt>', 'gi'), '')
+    .replace(new RegExp('<sty' + 'le[\\s\\S]*?</sty' + 'le>', 'gi'), '')
+    /* Remove audioMap object content (English keys/paths) */
+    .replace(/const\s+audioMap\s*=\s*\{[\s\S]*?\};/gi, '')
+    .replace(/var\s+audioMap\s*=\s*\{[\s\S]*?\};/gi, '')
+    /* Remove English phrases in data-phrase/data-answer attributes */
+    .replace(/data-phrase\s*=\s*"[^"]*"/gi, '')
+    .replace(/data-answer\s*=\s*"[^"]*"/gi, '')
+    /* Remove href/src URLs */
+    .replace(/(?:href|src)\s*=\s*"[^"]*"/gi, '')
+    /* Remove onclick handlers */
+    .replace(/onclick\s*=\s*"[^"]*"/gi, '')
+    .replace(/onchange\s*=\s*"[^"]*"/gi, '');
+
+  /* Add data-teacher texts */
+  cleaned += ' ' + teacherTexts.join(' ');
+
+  /* Extract visible text from HTML */
+  var textContent = cleaned.replace(/<[^>]+>/g, ' ');
+  /* Decode HTML entities */
+  textContent = textContent
+    .replace(/&aacute;/gi, 'á').replace(/&eacute;/gi, 'é')
+    .replace(/&iacute;/gi, 'í').replace(/&oacute;/gi, 'ó')
+    .replace(/&uacute;/gi, 'ú').replace(/&atilde;/gi, 'ã')
+    .replace(/&otilde;/gi, 'õ').replace(/&ccedil;/gi, 'ç')
+    .replace(/&acirc;/gi, 'â').replace(/&ecirc;/gi, 'ê')
+    .replace(/&ocirc;/gi, 'ô').replace(/&agrave;/gi, 'à')
+    .replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+    .replace(/&nbsp;/gi, ' ').replace(/&mdash;/gi, '—').replace(/&ndash;/gi, '–')
+    .replace(/&ldquo;/gi, '"').replace(/&rdquo;/gi, '"')
+    .replace(/&lsquo;/gi, "\u2018").replace(/&rsquo;/gi, "\u2019")
+    .replace(/&#\d+;/gi, ' ');
+
+  /* Step 4: Check for unaccented words */
+  var foundItems = [];
+  Object.keys(ACCENT_MAP).forEach(function(bad) {
+    var good = ACCENT_MAP[bad];
+    /* Case-insensitive word boundary match */
+    var regex = new RegExp('\\b' + bad + '\\b', 'gi');
+    var matches = textContent.match(regex);
+    if (matches && matches.length > 0) {
+      /* Verify these are NOT inside English phrases by checking surrounding context */
+      var idx = textContent.search(regex);
+      var context = textContent.substring(Math.max(0, idx - 30), Math.min(textContent.length, idx + bad.length + 30)).trim().replace(/\s+/g, ' ');
+      foundItems.push({ word: bad + ' → ' + good, count: matches.length, context: context });
+    }
+  });
+
+  /* Special check: "Sao Paulo" in Portuguese context (should be "São Paulo") */
+  var spRegex = /Sao Paulo/g;
+  var spMatches = textContent.match(spRegex);
+  if (spMatches && spMatches.length > 0) {
+    foundItems.push({ word: 'Sao Paulo → São Paulo', count: spMatches.length, context: 'Nome de cidade deve ter acento em contexto PT-BR' });
+  }
+
+  /* Special check: "ne?" should be "né?" */
+  var neRegex = /\bne\?/gi;
+  var neMatches = textContent.match(neRegex);
+  if (neMatches && neMatches.length > 0) {
+    foundItems.push({ word: 'ne? → né?', count: neMatches.length, context: 'Interjeição coloquial' });
+  }
+
+  /* Special check: "Ja " at start of sentence (should be "Já") */
+  var jaRegex = /(?:^|[.!?""]\s*)Ja\b/gm;
+  var jaMatches = textContent.match(jaRegex);
+  if (jaMatches && jaMatches.length > 0) {
+    foundItems.push({ word: 'Ja → Já', count: jaMatches.length, context: 'Advérbio deve ter acento' });
+  }
+
+  /* Special check: " e " as verb "é" — heuristic: after noun/pronoun, before adjective/noun */
+  /* Check pattern: lowercase-word + " e " + lowercase-word in PT context */
+  var eRegex = /\b(?:isso|ele|ela|voce|você|que|qual)\s+e\s+(?:um|uma|o |a |muito|bom|mau|possivel|necessario|importante|incrivel|dificil)/gi;
+  var eMatches = textContent.match(eRegex);
+  if (eMatches && eMatches.length > 0) {
+    foundItems.push({ word: '"e" como verbo → "é"', count: eMatches.length, context: eMatches[0].trim() });
+  }
+
+  if (foundItems.length === 0) {
+    return { pass: true, details: '0 problemas de acentuação PT-BR', found: [] };
+  }
+  var total = foundItems.reduce(function(sum, f) { return sum + f.count; }, 0);
+  return { pass: false, details: total + ' palavras sem acento correto', found: foundItems };
+}
+
+function checkListeningPlayer(html) {
+  /* Check if material has IN CLASS with listening slides */
+  var hasInClass = html.indexOf('tab-inclass') !== -1 || html.indexOf('data-slide') !== -1;
+  if (!hasInClass) return { pass: true, details: 'Sem IN CLASS (não aplicável)' };
+  var hasListening = html.indexOf('LISTENING') !== -1 || html.indexOf('Listen') !== -1;
+  if (!hasListening) return { pass: true, details: 'Sem slides de Listening' };
+  /* Check for new player components */
+  var hasSeekbar = html.indexOf('lp-seekbar') !== -1 || html.indexOf('listening-player') !== -1;
+  var hasSpeedControl = html.indexOf('lp-speed-btn') !== -1;
+  var hasSkipButtons = html.indexOf('skipAudio') !== -1;
+  var hasPlayerJS = html.indexOf('initPlayer') !== -1 || html.indexOf('togglePlayer') !== -1;
+  if (hasSeekbar && hasSpeedControl && hasSkipButtons && hasPlayerJS) {
+    return { pass: true, details: 'Player completo (seekbar + velocidade + skip)' };
+  }
+  var missing = [];
+  if (!hasSeekbar) missing.push('seekbar');
+  if (!hasSpeedControl) missing.push('controle de velocidade');
+  if (!hasSkipButtons) missing.push('botões voltar/avançar 5s');
+  if (!hasPlayerJS) missing.push('funções JS do player');
+  /* Check if material has IN CLASS tab (new format) */
+  var hasInClassTab = html.indexOf('tab-inclass') !== -1;
+  /* Check for old player (waveform + simple play-btn) */
+  /* Only flag old player if waveform is used in HTML (not just CSS definitions) */
+  var waveformInHTML = (html.match(/class\s*=\s*["'][^"']*waveform[^"']*["']/gi) || []).length;
+  var hasOldPlayer = waveformInHTML > 0 || (html.indexOf('play-btn') !== -1 && html.indexOf('lp-play') === -1);
+  /* If material is old format (no tab-inclass), accept old player as functional */
+  if (!hasInClassTab && hasOldPlayer) {
+    return { pass: true, details: 'Formato antigo — player funcional (waveform/play-btn)' };
+  }
+  if (hasOldPlayer) missing.push('usa player ANTIGO (waveform + botão simples)');
+  return { pass: false, details: 'Faltando: ' + missing.join(', ') };
+}
+
 function checkSVGs(html) {
-  /* Find SVGs that might overflow — no width/height AND not inside a sized container */
+  /* Find SVGs that might overflow — only flag truly unconstrained SVGs */
   var svgRegex = /<svg[^>]*>/gi;
   var matches = html.match(svgRegex) || [];
   var problems = [];
@@ -808,33 +1433,501 @@ function checkSVGs(html) {
     var hasHeight = /height\s*=\s*["']\d/i.test(tag);
     var hasViewBox = /viewBox/i.test(tag);
     var hasClass = /class\s*=/i.test(tag);
-    /* SVG without width AND height AND not inside a known sized class is risky */
-    if (!hasWidth && !hasHeight && hasViewBox) {
-      /* Check if it has a constraining class or style */
-      var hasStyle = /style\s*=.*(?:width|max-width)/i.test(tag);
-      if (!hasClass && !hasStyle) {
-        problems.push('SVG #' + (idx+1) + ' sem width/height (pode estourar layout)');
-      }
-    }
-    /* SVG with viewBox but very large implied size */
-    if (hasViewBox && !hasWidth && !hasHeight) {
+    var hasStyle = /style\s*=.*(?:width|max-width)/i.test(tag);
+    /* SVGs with class are typically constrained by CSS parent rules — safe */
+    if (hasClass || hasStyle || (hasWidth && hasHeight)) return;
+    /* SVG without ANY sizing mechanism — check if viewBox is large (non-icon) */
+    if (hasViewBox) {
       var vbMatch = tag.match(/viewBox\s*=\s*["']([^"']+)["']/i);
       if (vbMatch) {
         var parts = vbMatch[1].trim().split(/\s+/);
         if (parts.length === 4) {
           var w = parseFloat(parts[2]);
           var h = parseFloat(parts[3]);
-          if ((w > 100 || h > 100) && !hasClass) {
-            problems.push('SVG com viewBox grande (' + w + 'x' + h + ') sem dimensões explícitas');
-          }
+          /* Small viewBox (≤ 48) = standard icon, safe with viewBox scaling */
+          if (w <= 48 && h <= 48) return;
+          /* Large viewBox without any constraint = real risk */
+          problems.push('SVG #' + (idx+1) + ' viewBox ' + w + 'x' + h + ' sem dimensões (risco de overflow)');
         }
       }
+    } else {
+      /* No viewBox, no width, no height, no class = truly broken */
+      problems.push('SVG #' + (idx+1) + ' sem viewBox nem dimensões');
     }
   });
   if (problems.length === 0) {
     return { pass: true, details: matches.length + ' SVGs verificados, 0 problemas' };
   }
   return { pass: false, details: problems.length + ' SVGs com risco de overflow', issues: problems.slice(0, 5) };
+}
+
+function checkCapitalization(html) {
+  var problems = [];
+  var seen = {};
+  function addProblem(msg) { if (!seen[msg]) { seen[msg] = true; problems.push(msg); } }
+  /* Check if CSS has text-transform:capitalize for vocab-card-word or match-word */
+  var hasVocabCapitalize = /vocab-card-word[^}]*text-transform\s*:\s*capitalize/i.test(html);
+  var hasMatchCapitalize = /match-word[^}]*text-transform\s*:\s*capitalize/i.test(html);
+  /* 1. Check vocab cards — words/expressions should start with uppercase (EXPANDED classes) */
+  var vocabClasses = 'vocab-card-word|slot-word|card-word|match-word|vocab-word|expression|collocation|phrase|word-text|sp-en';
+  var vocabWords = html.match(new RegExp('class\\s*=\\s*["\'][^"\']*(?:' + vocabClasses + ')[^"\']*["\'][^>]*>([^<]+)', 'gi')) || [];
+  vocabWords.forEach(function(m) {
+    var text = m.replace(/^[^>]+>/, '').trim();
+    var classMatch = m.match(/class\s*=\s*["']([^"']+)["']/i);
+    var classes = classMatch ? classMatch[1] : '';
+    var skipCapCheck = (hasVocabCapitalize && /vocab-card-word/.test(classes)) || (hasMatchCapitalize && /match-word/.test(classes));
+    /* Flag standalone vocab words/expressions (1-8 words — includes multi-word expressions like "run a business") */
+    var wordCount = text.split(/\s+/).length;
+    if (text && text.length > 1 && wordCount <= 8 && text[0] === text[0].toLowerCase() && text[0] !== text[0].toUpperCase() && !skipCapCheck) {
+      addProblem('Vocabulário com minúscula: "' + text.substring(0, 50) + '"');
+    }
+  });
+  /* 1b. REMOVED: <strong>/<b> generic check causes false positives.
+     Bold text in sentences = grammar emphasis (is, has worked, deals with), NOT vocab. */
+  /* 1c. Check headings (h3, h4, h5) that start with lowercase */
+  var headings = html.match(/<h[3-5][^>]*>([^<]+)/gi) || [];
+  headings.forEach(function(m) {
+    var text = m.replace(/^<[^>]+>/, '').trim();
+    if (text && text.length > 1 && /^[a-z]/.test(text)) {
+      addProblem('Heading com minúscula: "' + text.substring(0, 50) + '"');
+    }
+  });
+  /* 2. Check survival card phrases — should start with uppercase */
+  var survivalPhrases = html.match(/class\s*=\s*["'][^"']*(?:sp-en|survival-text)[^"']*["'][^>]*>([^<]+)/gi) || [];
+  survivalPhrases.forEach(function(m) {
+    var text = m.replace(/^[^>]+>/, '').trim();
+    if (text && text.length > 2 && text[0] === text[0].toLowerCase() && /[a-z]/.test(text[0])) {
+      addProblem('Survival card com minúscula: "' + text.substring(0, 40) + '..."');
+    }
+  });
+  /* 3. Check exercise prompts and quiz questions */
+  var questions = html.match(/class\s*=\s*["'][^"']*(?:quiz-question|fill-blank-sentence|speech-phrase)[^"']*["'][^>]*>([^<]+)/gi) || [];
+  questions.forEach(function(m) {
+    var text = m.replace(/^[^>]+>/, '').replace(/&[^;]+;/g, ' ').trim();
+    /* Only flag if it's clearly a full sentence (3+ words, starts with lowercase letter, not a code/variable) */
+    var wordCount = text.split(/\s+/).length;
+    if (text && text.length > 10 && wordCount >= 3 && /^[a-z]/.test(text) && text.indexOf('"') !== 0 && text.indexOf('(') !== 0) {
+      addProblem('Frase com minúscula: "' + text.substring(0, 40) + '..."');
+    }
+  });
+  if (problems.length === 0) return { pass: true, details: 'Capitalização OK' };
+  return { pass: false, details: problems.length + ' problemas de capitalização', issues: problems.slice(0, 15) };
+}
+
+function checkVoiceAlternation(html) {
+  /* ================================================================
+     VOICE ALTERNATION + SEMANTIC VOICE MATCH
+     Checks:
+     1. Both Arthur and Ellen are used (alternation)
+     2. data-voice matches the CONTENT gender (semantic check)
+     3. speakText phrases with gendered content have correct voice
+     ================================================================ */
+
+  var issues = [];
+
+  /* ---- 1. Extract ALL data-voice with surrounding content ---- */
+  var voiceLineRegex = /<[^>]*data-voice\s*=\s*["'](\w+)["'][^>]*>([\s\S]*?)(?=<[^>]*data-voice|<\/div>\s*<\/div>\s*<\/div>|$)/gi;
+  var voices = [];
+  var vm;
+
+  /* Simpler extraction: get voice + nearby speakText content */
+  var voiceAttrRegex = /data-voice\s*=\s*["'](\w+)["']/gi;
+  var allVoicePositions = [];
+  while ((vm = voiceAttrRegex.exec(html)) !== null) {
+    var voice = vm[1].toLowerCase();
+    voices.push(voice);
+    /* Grab ~500 chars after the data-voice to find the phrase content */
+    var context = html.substring(vm.index, Math.min(html.length, vm.index + 500));
+    /* Extract speakText phrase from this context */
+    var phraseMatch = context.match(/speakText\s*\(\s*['"]([^'"]{5,})['"]/);
+    var phrase = phraseMatch ? phraseMatch[1].replace(/\\'/g, "'") : '';
+    allVoicePositions.push({ voice: voice, phrase: phrase, position: vm.index });
+  }
+
+  /* Also check JS-based dynamic dialogues with voice property */
+  var jsVoices = html.match(/voice\s*:\s*["'](arthur|ellen)["']/gi) || [];
+  var totalVoices = voices.length + jsVoices.length;
+
+  if (totalVoices === 0) {
+    var hasDialogue = /dialogue/i.test(html);
+    if (!hasDialogue) return { pass: true, details: 'Sem diálogos (não aplicável)' };
+    return { pass: false, details: 'Diálogos encontrados mas nenhum data-voice', issues: [] };
+  }
+
+  var unique = [];
+  voices.forEach(function(v) { if (unique.indexOf(v) === -1) unique.push(v); });
+  jsVoices.forEach(function(m) { var v = m.match(/["'](\w+)["']/)[1].toLowerCase(); if (unique.indexOf(v) === -1) unique.push(v); });
+
+  var invalid = voices.filter(function(v) { return v !== 'arthur' && v !== 'ellen'; });
+  if (invalid.length > 0) {
+    issues.push(invalid.length + ' vozes inválidas: ' + invalid.slice(0, 5).join(', '));
+  }
+
+  if (unique.length === 1 && totalVoices > 2) {
+    issues.push(totalVoices + ' linhas mas apenas voz "' + unique[0] + '" (falta alternância)');
+  }
+
+  /* ---- 2. SEMANTIC VOICE CHECK ---- */
+  /* Phrases that are CLEARLY masculine → should be Arthur
+     IMPORTANT: Mr./Mrs./Ms./Miss are forms of ADDRESS, not speaker identity.
+     "Thank you, Ms. Pinho" said by Arthur (male) is CORRECT — he's addressing a woman.
+     Only flag Mr./Mrs. when the SPEAKER self-identifies: "I'm Mr. Smith" */
+  var malePatterns = [
+    /\bI'?m a (?:business\s*man|man|father|husband|brother|uncle|grandfather|boy|guy|king|prince|sir|waiter|actor|host)\b/i,
+    /\bI am a (?:business\s*man|man|father|husband|brother|uncle|grandfather|boy|guy|king|prince|sir|waiter|actor|host)\b/i,
+    /\bmy (?:wife|girlfriend)\b/i,
+    /\bhe said\b/i,
+    /\bI(?:'m| am)\s+(?:Mr\.|Mister)\s+[A-Z]/i
+  ];
+
+  /* Phrases that are CLEARLY feminine → should be Ellen
+     Same rule: only flag when speaker self-identifies, not when addressing someone */
+  var femalePatterns = [
+    /\bI'?m a (?:business\s*woman|woman|mother|wife|sister|aunt|grandmother|girl|queen|princess|waitress|actress|hostess)\b/i,
+    /\bI am a (?:business\s*woman|woman|mother|wife|sister|aunt|grandmother|girl|queen|princess|waitress|actress|hostess)\b/i,
+    /\bmy (?:husband|boyfriend)\b/i,
+    /\bshe said\b/i,
+    /\bI(?:'m| am)\s+(?:Mrs\.|Miss|Ms\.)\s+[A-Z]/i
+  ];
+
+  /* Common male character names */
+  var maleNames = /\b(?:David|John|James|Robert|Roberto|Michael|William|Daniel|Carlos|Pedro|Lucas|Bruno|Tom|Jack|Mark|Paul|Steve|Chris|Mike|Bob|Joe|Ben|Sam|Leo|Max|Ryan|Milton|Luiz|Rafael|Percival|Ricardo|Eduardo|Fernando|Gustavo|Henrique|Jorge|Marcos|Andre|Antonio|Francisco|Sergio|Mario|Rodrigo|Felipe|Gabriel|Matheus|Diego|Thiago|Leonardo|Cesar|Fabio|Alexandre|Wagner|Ronaldo|Claudio|Marcelo|Alan|Alex|Brian|Kevin|Jason|Justin|Tyler|Matthew|Andrew|Brandon|Scott|Eric|Patrick|Frank|Thomas|Richard|Joseph|Kenneth|Timothy|Larry|Peter|George|Adam|Ian|Nathan|Oliver|Henry|Owen|Charles|Harry|Arthur|Edward|Albert|Raymond)\b/i;
+  /* Common female character names */
+  var femaleNames = /\b(?:Sarah|Maria|Ana|Patricia|Gabriela|Elaine|Helen|Helena|Julia|Laura|Emma|Sophie|Lisa|Mary|Jane|Kate|Anna|Lucy|Amy|Rose|Alice|Diana|Eva|Mia|Nina|Eduarda|Daniela|Maisa|Pricila|Priscila|Vanessa|Tania|Tânia|Fernanda|Camila|Amanda|Beatriz|Larissa|Leticia|Mariana|Natalia|Renata|Tatiana|Juliana|Carolina|Isabela|Bruna|Carla|Sandra|Sonia|Monica|Claudia|Silvia|Andrea|Adriana|Luciana|Cristina|Raquel|Paula|Luana|Bianca|Vivian|Simone|Debora|Rachel|Rebecca|Jessica|Stephanie|Catherine|Elizabeth|Margaret|Susan|Karen|Nancy|Betty|Linda|Barbara|Jennifer|Angela|Melissa|Nicole|Samantha|Victoria|Olivia|Sophia|Emily|Charlotte|Grace|Chloe|Hannah|Ella|Lily|Abigail|Natalie)\b/i;
+
+  var semanticMismatches = [];
+
+  allVoicePositions.forEach(function(vp) {
+    if (!vp.phrase) return;
+    var phrase = vp.phrase;
+    var voice = vp.voice;
+
+    /* Detect speaker identity: "I am [Name]" or "I'm [Name]" reveals WHO is speaking */
+    var speakerNameMatch = phrase.match(/\bI(?:'m| am)\s+([A-Z][a-z]+)\b/);
+    var speakerIsFemale = speakerNameMatch && femaleNames.test(speakerNameMatch[1]);
+    var speakerIsMale = speakerNameMatch && maleNames.test(speakerNameMatch[1]);
+
+    /* Detect VOCATIVE pattern: "Name, ..." means someone is TALKING TO that person,
+       not that person speaking. E.g. "Eduarda, could you..." = male talking TO Eduarda.
+       The name at start + comma = addressee, NOT the speaker. */
+    var vocativeMatch = phrase.match(/^([A-Z][a-z]+)\s*,/);
+    var isAddressingFemale = vocativeMatch && femaleNames.test(vocativeMatch[1]);
+    var isAddressingMale = vocativeMatch && maleNames.test(vocativeMatch[1]);
+
+    /* Check male content with Ellen voice */
+    if (voice === 'ellen') {
+      if (!speakerIsFemale) {
+        var isMaleContent = malePatterns.some(function(p) { return p.test(phrase); });
+        if (!isMaleContent) {
+          var firstWords = phrase.split(/\s+/).slice(0, 3).join(' ');
+          /* Skip vocative: "James, ..." with Ellen = female talking TO James = correct */
+          isMaleContent = !isAddressingMale && maleNames.test(firstWords) && !femaleNames.test(firstWords);
+        }
+        var hasFemaleRef = femalePatterns.some(function(p) { return p.test(phrase); }) ||
+          (/\bI(?:'m| am)\b/i.test(phrase) && femaleNames.test(phrase));
+        if (isMaleContent && !hasFemaleRef) {
+          semanticMismatches.push('Ellen em frase masculina: "' + phrase.substring(0, 60) + '..."');
+        }
+      }
+    }
+
+    /* Check female content with Arthur voice */
+    if (voice === 'arthur') {
+      if (!speakerIsMale) {
+        var isFemaleContent = femalePatterns.some(function(p) { return p.test(phrase); });
+        if (!isFemaleContent) {
+          var firstWords2 = phrase.split(/\s+/).slice(0, 3).join(' ');
+          /* Skip vocative: "Eduarda, ..." with Arthur = male talking TO Eduarda = correct */
+          isFemaleContent = !isAddressingFemale && femaleNames.test(firstWords2) && !maleNames.test(firstWords2);
+        }
+        var hasMaleRef = malePatterns.some(function(p) { return p.test(phrase); }) ||
+          (/\bI(?:'m| am)\b/i.test(phrase) && maleNames.test(phrase));
+        if (isFemaleContent && !hasMaleRef) {
+          semanticMismatches.push('Arthur em frase feminina: "' + phrase.substring(0, 60) + '..."');
+        }
+      }
+    }
+  });
+
+  /* ---- 3. Check NON-DIALOGUE speakText for gendered content without data-voice ---- */
+  /* Find speakText calls NOT inside a data-voice context */
+  var allSpeakRegex = /speakText\s*\(\s*['"]([^'"]{5,})['"]/gi;
+  var sm;
+  while ((sm = allSpeakRegex.exec(html)) !== null) {
+    var speakPhrase = sm[1].replace(/\\'/g, "'");
+    var pos = sm.index;
+
+    /* Check if this speakText is within ~300 chars of a data-voice attribute */
+    var nearVoice = allVoicePositions.some(function(vp) {
+      return Math.abs(vp.position - pos) < 300;
+    });
+    if (nearVoice) continue; /* Already covered by dialogue check */
+
+    /* Check for strongly gendered content that should have specific voice */
+    var isMale = malePatterns.some(function(p) { return p.test(speakPhrase); });
+    var isFemale = femalePatterns.some(function(p) { return p.test(speakPhrase); });
+
+    if (isMale || isFemale) {
+      var expectedVoice = isMale ? 'Arthur' : 'Ellen';
+      semanticMismatches.push('Frase sem data-voice (deveria ser ' + expectedVoice + '): "' + speakPhrase.substring(0, 60) + '"');
+    }
+  }
+
+  if (semanticMismatches.length > 0) {
+    issues = issues.concat(semanticMismatches);
+  }
+
+  if (issues.length > 0) {
+    return { pass: false, details: issues.length + ' problema(s) de voz', issues: issues.slice(0, 15) };
+  }
+  return { pass: true, details: totalVoices + ' data-voice (' + unique.join('/') + ') — conteúdo semântico OK' };
+}
+
+function checkLayout(html) {
+  var problems = [];
+  /* 1. Check matching grid — should be single column (not 2-column) per CLAUDE.md */
+  var matchGrids = html.match(/class\s*=\s*["'][^"']*match-grid[^"']*["']/gi) || [];
+  /* Check if match-row uses grid/flex that puts 2 items per row */
+  var hasMultiColMatch = /match-grid[^{]*\{[^}]*grid-template-columns\s*:\s*repeat\s*\(\s*2/i.test(html) ||
+    /match-row[^{]*\{[^}]*display\s*:\s*inline/i.test(html);
+  if (hasMultiColMatch && matchGrids.length > 0) {
+    problems.push('Matching em 2 colunas (REGRA: deve ser coluna única)');
+  }
+  /* 2. Check for "Selecione..." in Portuguese (should be "Select..." in matching) */
+  var ptSelects = html.match(/Selecione\.\.\./gi) || [];
+  if (ptSelects.length > 0) {
+    problems.push(ptSelects.length + ' dropdowns com "Selecione..." em português (deve ser "Select...")');
+  }
+  /* 2b. Check match-grid — only flag if it has a multi-column grid definition */
+  /* display:grid without grid-template-columns defaults to single column, which is fine */
+  /* 3. Check vocab cards layout — should be vertical (flex-direction:column), NOT multi-column grid */
+  var vocabMultiCol = /vocab-cards?[^{]*\{[^}]*grid-template-columns\s*:\s*repeat\s*\(\s*[2-9]/i.test(html);
+  if (vocabMultiCol) {
+    problems.push('Vocab cards em grid multi-colunas (REGRA: lista vertical, 1 por linha)');
+  }
+  /* 4. Check for overflow issues — elements wider than container */
+  var overflowHidden = /overflow\s*:\s*hidden/gi.test(html);
+  var hasHScroll = /overflow-x\s*:\s*scroll|overflow-x\s*:\s*auto/gi.test(html);
+  /* 5. Check buttons without min-height 44px */
+  var smallButtons = html.match(/\.btn[^{]*\{[^}]*(?!min-height)[^}]*height\s*:\s*(\d+)px/gi) || [];
+  smallButtons.forEach(function(m) {
+    var h = m.match(/height\s*:\s*(\d+)px/i);
+    if (h && parseInt(h[1]) < 44) problems.push('Botão com altura < 44px (touch target pequeno)');
+  });
+
+  /* 6. Check for invisible text (white text on white/light background) */
+  var invisibleCount = 0;
+  /* 6a. CSS rules: color:#fff with background:#fff in SAME CSS rule block (run on CSS only, not full HTML) */
+  var styleBlocks6a = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi) || [];
+  var cssOnly = styleBlocks6a.join(' ');
+  var whiteOnWhite = cssOnly.match(/color\s*:\s*#fff[^;]*;[^}]*background\s*:\s*#fff/gi) || [];
+  var whiteOnWhite2 = cssOnly.match(/background\s*:\s*#fff[^;]*;[^}]*color\s*:\s*#fff/gi) || [];
+  invisibleCount += whiteOnWhite.length + whiteOnWhite2.length;
+  /* 6b. REMOVED — comp-q/question/answer with inline color:white are inside dark IN CLASS slides */
+  /* 6c. REMOVED — too many false positives. White text with color:#fff is normal in:
+     - IN CLASS slides (dark backgrounds)
+     - Elements with background:var(--accent), var(--navy), var(--black), gradients
+     - Buttons, badges, headers with colored backgrounds
+     The 6d/6e checks below catch the real problems (CSS rules for question/answer
+     components that set white color without a dark background). */
+  /* 6d. CSS rules where comp-q, question-card, q-text have color:#fff */
+  var styleBlocks = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi) || [];
+  var allCSS = styleBlocks.join(' ');
+  var suspectRules = allCSS.match(/(?:comp-q|question-card|q-text|question|answer)[^{]*\{[^}]*color\s*:\s*(?:#fff|white)[^}]*/gi) || [];
+  suspectRules.forEach(function(rule) {
+    /* Only flag if the rule doesn't also set a dark background */
+    if (!/background(?:-color)?\s*:\s*(?:#[0-3][0-9a-f]{5}|var\(--black\)|var\(--navy\)|rgba?\s*\(\s*\d{1,2})/i.test(rule)) {
+      invisibleCount++;
+      problems.push('CSS com cor branca sem fundo escuro: "' + rule.substring(0, 80).trim() + '..."');
+    }
+  });
+  /* 6e. INHERITED COLOR: elements with light background inside dark slides without explicit dark text */
+  var lightBgClasses = html.match(/\.(?:comp-q|question-card|q-text|comprehension|answer-card)[^{]*\{[^}]*\}/gi) || [];
+  lightBgClasses.forEach(function(rule) {
+    /* Note: var(--white) in Alumni materials = #1a1a2e (dark text), NOT white background */
+    var hasLightBg = /background\s*:\s*(?:#fff(?!f)|white|#fafafa|var\(--bg-card\))/i.test(rule);
+    var hasDarkColor = /color\s*:\s*(?:#[0-3][0-9a-f]{5}|#[0-3][0-9a-f]{2}|var\(--text\)|var\(--dark\)|var\(--black\)|#1a1a|#2d2d|#333|#374)/i.test(rule);
+    var hasWhiteColor = /color\s*:\s*(?:#fff|white|#e[0-9a-f]|#f[0-9a-f])/i.test(rule);
+    if (hasLightBg && (!hasDarkColor || hasWhiteColor)) {
+      invisibleCount++;
+      problems.push('CSS com fundo claro e sem cor escura explícita — texto herda branco do pai e fica invisível');
+    }
+  });
+  /* 6f. REMOVED — inline background:#fff inside dark slides is a valid pattern
+     (cards, comprehension boxes). The card's CSS class handles text color. */
+  if (invisibleCount > 0) {
+    problems.push('Texto potencialmente invisível — ' + invisibleCount + ' elementos com fundo claro dentro de contexto escuro sem cor de texto definida');
+  }
+  /* 7. Check for text overflow in slides (content wider than slide) */
+  var overflowText = html.match(/class\s*=\s*["'][^"']*(?:mistake|error|wrong|common-mistake)[^"']*["'][^>]*style\s*=\s*["'][^"']*(?:display\s*:\s*flex|display\s*:\s*grid)[^"']*["']/gi) || [];
+  /* Check for very long inline text without word-break */
+  var longInlineText = html.match(/<(?:span|div|p)[^>]+style\s*=\s*["'][^"']*(?:white-space\s*:\s*nowrap)[^"']*["'][^>]*>[^<]{80,}/gi) || [];
+  if (longInlineText.length > 0) {
+    problems.push(longInlineText.length + ' textos longos com nowrap (podem estourar o slide)');
+  }
+  /* 7b. REMOVED: Long text in slides check — too many false positives.
+     Dialogues, explanations, and descriptions legitimately have 200+ chars. */
+
+  if (problems.length === 0) return { pass: true, details: 'Layout OK' };
+  return { pass: false, details: problems.length + ' problemas de layout', issues: problems.slice(0, 10) };
+}
+
+function checkLessonSelector(html) {
+  /* Check if IN CLASS has multiple lessons' slides without a selector */
+  var hasInClass = html.indexOf('tab-inclass') !== -1 || html.indexOf('data-slide=') !== -1;
+  if (!hasInClass) return { pass: true, details: 'Sem IN CLASS (não aplicável)' };
+
+  /* Count total slides */
+  var dsRe = /data-slide\s*=\s*["'](\d+)["']/g;
+  var sn = {}; var dm;
+  while ((dm = dsRe.exec(html)) !== null) sn[dm[1]] = true;
+  var totalSlides = Object.keys(sn).length;
+
+  /* If 50 or fewer slides, it's 1 lesson (90min can have up to 45) — OK */
+  if (totalSlides <= 50) return { pass: true, details: totalSlides + ' slides (1 aula — OK)' };
+
+  /* Multiple lessons — check if there's a FUNCTIONAL lesson selector
+     Needs BOTH: visual selector UI AND JS logic that filters/hides slides per lesson */
+  var hasSelectorUI = html.indexOf('Select Lesson') !== -1 ||
+    html.indexOf('inclass-lesson-card') !== -1 ||
+    html.indexOf('lesson-selector') !== -1;
+
+  var hasSelectorJS = html.indexOf('showLessonSlides') !== -1 ||
+    html.indexOf('filterSlides') !== -1 ||
+    html.indexOf('hideAllSlides') !== -1 ||
+    html.indexOf('showLesson(') !== -1 ||
+    html.indexOf('startLesson(') !== -1 ||
+    /* Check for slide visibility toggling by lesson */
+    html.indexOf('data-lesson=') !== -1 ||
+    /* New pattern: lesson boundary navigation (lessonRanges + currentLessonRange) */
+    (html.indexOf('lessonRanges') !== -1 && html.indexOf('currentLessonRange') !== -1);
+
+  if (hasSelectorUI && hasSelectorJS) {
+    return { pass: true, details: totalSlides + ' slides com seletor funcional' };
+  }
+  if (hasSelectorUI && !hasSelectorJS) {
+    /* Has UI but no JS — selector exists but doesn't work */
+    return { pass: false, details: totalSlides + ' slides — seletor visual existe mas NÃO filtra slides (falta JS)' };
+  }
+
+  /* Count approximate number of lessons (slides / ~25-30 per lesson) */
+  var approxLessons = Math.round(totalSlides / 28);
+  return { pass: false, details: totalSlides + ' slides (~' + approxLessons + ' aulas) SEM seletor — todas abrem juntas' };
+}
+
+function checkContrast(html) {
+  var problems = [];
+
+  /* ── 1. Extract accent color ── */
+  var accentMatch = html.match(/--accent\s*:\s*(#[0-9a-fA-F]{3,8})/);
+  var accent = accentMatch ? accentMatch[1] : null;
+
+  /* ── Helper: parse hex to RGB ── */
+  function hexToRGB(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    return { r: parseInt(hex.substring(0,2),16), g: parseInt(hex.substring(2,4),16), b: parseInt(hex.substring(4,6),16) };
+  }
+
+  /* ── Helper: relative luminance (WCAG 2.1) ── */
+  function luminance(rgb) {
+    var a = [rgb.r, rgb.g, rgb.b].map(function(v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+  }
+
+  /* ── Helper: contrast ratio ── */
+  function contrastRatio(l1, l2) {
+    var lighter = Math.max(l1, l2), darker = Math.min(l1, l2);
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  /* ── 2. Check accent color contrast against dark overlay (only if slides use background images) ── */
+  var whiteLum = luminance({ r: 255, g: 255, b: 255 });
+  if (accent) {
+    var accentRGB = hexToRGB(accent);
+    var accentLum = luminance(accentRGB);
+    /* Dark overlay ~ rgba(0,0,0,0.45) over mid-brightness image ≈ #4a4a4a effective */
+    var darkOverlayLum = luminance({ r: 74, g: 74, b: 74 });
+    var ratioOnDark = contrastRatio(accentLum, darkOverlayLum);
+
+    /* Only check if there are actual slides with background images */
+    var hasBgImageSlides = /background-image\s*:\s*url/i.test(html) || /data-bg\s*=/i.test(html);
+    if (hasBgImageSlides) {
+      var accentOverriddenToWhite = /\.slide-image\s+\.accent\s*\{[^}]*color\s*:\s*#fff/i.test(html) ||
+        /\.slide-image\s+\.accent\s*\{[^}]*color\s*:\s*white/i.test(html) ||
+        /\.slide-image\s+\.accent\s*\{[^}]*color\s*:\s*rgba\(255/i.test(html);
+      var hasAnyShadow = html.indexOf('text-shadow') !== -1;
+      if (ratioOnDark < 3 && !hasAnyShadow && !accentOverriddenToWhite) {
+        problems.push('Cor accent ' + accent + ' tem contraste ' + ratioOnDark.toFixed(1) + ':1 sobre overlay escuro (mín 3:1 para texto grande). Texto accent fica ilegível sobre imagens de fundo.');
+      }
+    }
+  }
+
+  /* ── 3. Slides with background-image: check overlay opacity ── */
+  var inClassStart = html.indexOf('id="tab-inclass"');
+  if (inClassStart === -1) inClassStart = html.indexOf("id='tab-inclass'");
+  if (inClassStart !== -1) {
+    var inClassEnd = html.indexOf('id="tab-complementary"', inClassStart);
+    if (inClassEnd === -1) inClassEnd = html.length;
+    var inClassHtml = html.substring(inClassStart, inClassEnd);
+
+    /* Find slides that have background-image */
+    var slideRegex = /<div[^>]*class\s*=\s*["'][^"']*slide[^"']*["'][^>]*style\s*=\s*["'][^"']*background-image[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi;
+    var bgSlides = inClassHtml.match(/<div[^>]*(?:background-image\s*:\s*url|data-bg)[^>]*>/gi) || [];
+    /* Also count overlay elements */
+    var overlayRegex = /(?:overlay|header-overlay)[^{]*\{[^}]*(?:background|rgba)[^}]*\}/gi;
+    var styleBlock = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi) || [];
+    var allStyles = styleBlock.join(' ');
+
+    /* Check for overlay opacity in inline styles within slides */
+    var overlayOpacityRegex = /rgba\s*\(\s*0\s*,\s*0\s*,\s*0\s*,\s*([\d.]+)\s*\)/g;
+    var overlayMatches = [];
+    var om;
+    while ((om = overlayOpacityRegex.exec(inClassHtml)) !== null) {
+      overlayMatches.push(parseFloat(om[1]));
+    }
+    /* Also check named overlay classes in style blocks */
+    while ((om = overlayOpacityRegex.exec(allStyles)) !== null) {
+      overlayMatches.push(parseFloat(om[1]));
+    }
+
+    /* Check if any overlays are too light — but compensate if text-shadow is present */
+    var hasTextShadowCompensation = inClassHtml.indexOf('text-shadow') !== -1 || allStyles.indexOf('text-shadow') !== -1;
+    var highOverlays = overlayMatches.filter(function(op) { return op >= 0.5; });
+    var lightOverlays = overlayMatches.filter(function(op) { return op < 0.5 && op > 0; });
+    /* If text-shadow exists or a high-opacity overlay exists, consider it compensated */
+    if (bgSlides.length > 0 && lightOverlays.length > 0 && !hasTextShadowCompensation && highOverlays.length === 0) {
+      var minOpacity = Math.min.apply(null, lightOverlays);
+      problems.push('Overlay com opacidade ' + minOpacity.toFixed(2) + ' sobre background-image (mín recomendado: 0.50). Texto pode ficar ilegível dependendo da foto.');
+    }
+
+    /* ── 4. Check for text-shadow on text over images ── */
+    /* Only flag if no text-shadow AND no high-opacity overlay to compensate */
+    var hasTextShadow = inClassHtml.indexOf('text-shadow') !== -1 || allStyles.indexOf('text-shadow') !== -1;
+    if (bgSlides.length > 0 && !hasTextShadow && highOverlays.length === 0) {
+      problems.push('Slides com imagem de fundo sem text-shadow. Adicionar text-shadow: 0 2px 8px rgba(0,0,0,0.6) para garantir legibilidade.');
+    }
+
+    /* ── 5. Check accent color used in headings on image slides ── */
+    if (accent) {
+      var accentInSlides = inClassHtml.indexOf('color:' + accent) !== -1 ||
+        inClassHtml.indexOf('color: ' + accent) !== -1 ||
+        inClassHtml.indexOf('color:var(--accent)') !== -1 ||
+        inClassHtml.indexOf('color: var(--accent)') !== -1;
+      var accentRGB2 = hexToRGB(accent);
+      var accentLum2 = luminance(accentRGB2);
+      /* Check accent against white — only flag if below 3:1 (severe) */
+      var ratioOnWhite = contrastRatio(accentLum2, whiteLum);
+      if (ratioOnWhite < 3 && accentInSlides) {
+        problems.push('Cor accent ' + accent + ' tem contraste ' + ratioOnWhite.toFixed(1) + ':1 sobre fundo branco (mín 3:1 para legibilidade).');
+      }
+    }
+  }
+
+  if (problems.length === 0) {
+    return { pass: true, details: 'Contraste e legibilidade OK', issues: [] };
+  }
+  return { pass: false, details: problems.length + ' problemas de contraste/legibilidade', issues: problems };
 }
 
 async function checkImages(html) {
@@ -932,11 +2025,19 @@ async function auditStudent(index) {
     palette: checkPalette(html, s.slug),
     javascript: checkJavaScript(html),
     svgs: checkSVGs(html),
+    listeningPlayer: checkListeningPlayer(html),
+    capitalization: checkCapitalization(html),
+    voiceAlternation: checkVoiceAlternation(html),
+    layout: checkLayout(html),
+    lessonSelector: checkLessonSelector(html),
     exercises: checkExercises(html),
     emojis: checkEmojis(html),
     audioMap: checkAudioMap(html),
     voices: checkVoices(html),
-    portuguese: checkPortuguese(html)
+    portuguese: checkPortuguese(html),
+    contrast: checkContrast(html),
+    ordering: checkOrdering(html),
+    accents: checkAccents(html)
   };
 
   /* Run per-lesson checks */
@@ -958,7 +2059,7 @@ async function auditStudent(index) {
     checks.push({ name: CHECK_NAMES[2], result: checkInClassSlides(html) });
 
     /* 4. IN CLASS components */
-    checks.push({ name: CHECK_NAMES[3], result: checkInClassComponents(html) });
+    checks.push({ name: CHECK_NAMES[3], result: checkInClassComponents(html, lesson.num) });
 
     /* 5. Teacher T icon */
     checks.push({ name: CHECK_NAMES[4], result: checkTeacherT(html) });
@@ -992,6 +2093,20 @@ async function auditStudent(index) {
 
     /* Check 15: SVG overflow */
     checks.push({ name: CHECK_NAMES[14], result: fileChecks.svgs });
+    checks.push({ name: CHECK_NAMES[15], result: fileChecks.listeningPlayer });
+    checks.push({ name: CHECK_NAMES[16], result: fileChecks.capitalization });
+    checks.push({ name: CHECK_NAMES[17], result: fileChecks.voiceAlternation });
+    checks.push({ name: CHECK_NAMES[18], result: fileChecks.layout });
+    checks.push({ name: CHECK_NAMES[19], result: fileChecks.lessonSelector });
+
+    /* Check 16: Contrast & Readability */
+    checks.push({ name: CHECK_NAMES[20], result: fileChecks.contrast });
+
+    /* Check 17: Ordering (new format + audio) */
+    checks.push({ name: CHECK_NAMES[21], result: fileChecks.ordering });
+
+    /* Check 18: Acentuação PT-BR */
+    checks.push({ name: CHECK_NAMES[22], result: fileChecks.accents });
 
     /* Calculate score */
     var passed = checks.filter(function(c) { return c.result.pass === true; }).length;
@@ -1136,6 +2251,20 @@ function renderLessonResults(index, student, lessonResults, detectedCount) {
               'aria-label="Copiar instrução de correção">Copiar instrução</button>' +
               '</li>');
           });
+        } else if (c.result.issues && c.result.issues.length > 0) {
+          c.result.issues.forEach(function(issue) {
+            detailText = issue;
+            var rule = CHECK_RULES[c.name] || { regra: 'Ver CLAUDE.md', impacto: 'Verificar manualmente.' };
+            failures.push('<li style="border-bottom:1px solid #fef0f0;padding:8px 0">' +
+              '<div style="font-weight:600;font-size:.82rem;margin-bottom:3px">' + escHtml(c.name) + ': <code>' + escHtml(issue) + '</code></div>' +
+              '<div style="font-size:.73rem;color:#666;line-height:1.5;margin-bottom:4px">' +
+              '<strong style="color:#003080">Regra:</strong> ' + escHtml(rule.regra) + ' | ' +
+              '<strong style="color:#dc2626">Impacto:</strong> ' + escHtml(rule.impacto) + '</div>' +
+              '<button onclick="copyFix(\'' + escAttr(c.name) + '\',\'' + escAttr(issue) + '\',\'' + escAttr(currentSlug) + '\')" ' +
+              'style="background:#003080;color:#fff;border:none;padding:4px 14px;border-radius:4px;font-size:.72rem;font-weight:600;cursor:pointer;min-height:28px" ' +
+              'aria-label="Copiar instrução de correção">Copiar instrução</button>' +
+              '</li>');
+          });
         } else if (c.result.found && c.result.found.length > 0) {
           c.result.found.forEach(function(f) {
             detailText = '"' + f.word + '" (' + f.count + 'x) — ' + f.context;
@@ -1168,8 +2297,31 @@ function renderLessonResults(index, student, lessonResults, detectedCount) {
 
     /* Failures block */
     if (failures.length > 0) {
+      /* Store failure data for "Copy All" */
+      var failData = [];
+      lr.checks.forEach(function(c) {
+        if (c.result.pass === false) {
+          var rule = CHECK_RULES[c.name] || { regra: 'Ver CLAUDE.md', impacto: 'Verificar manualmente.' };
+          var details = c.result.details || '';
+          var items = [];
+          if (c.result.missing) items = c.result.missing;
+          else if (c.result.broken) items = c.result.broken;
+          else if (c.result.issues) items = c.result.issues;
+          failData.push({ name: c.name, details: details, rule: rule.regra, impact: rule.impacto, items: items });
+        }
+      });
+      /* Store in global for copyAllFix */
+      if (!window._auditFailures) window._auditFailures = {};
+      window._auditFailures[currentSlug + '-' + lr.num] = { slug: currentSlug, lessonNum: lr.num, lessonName: lr.name, failures: failData };
+
       html += '<div class="fail-details">' +
-        '<h4>' + SVG_FAIL + ' Problemas (' + failures.length + ')</h4>' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
+        '<h4 style="margin:0">' + SVG_FAIL + ' Problemas (' + failures.length + ')</h4>' +
+        '<button onclick="copyAllFix(\'' + escAttr(currentSlug) + '-' + lr.num + '\')" ' +
+        'style="background:#003080;color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:6px" ' +
+        'aria-label="Copiar todos os problemas como prompt">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>' +
+        'Copiar Todos os Problemas</button></div>' +
         '<ul>' + failures.join('') + '</ul>' +
       '</div>';
     }
@@ -1224,6 +2376,12 @@ function updateStudentScore(index, lessonResults) {
   var pct = Math.round((passedChecks / totalChecks) * 100);
   scoreEl.className = 'student-score ' + scoreClass(pct);
   scoreEl.textContent = pct + '%';
+  /* Persist score */
+  var s = students[index];
+  if (s) saveAudit(s.slug, pct, lessonResults.length);
+  /* Update button text */
+  var btn = document.getElementById('btn-' + index);
+  if (btn) btn.textContent = 'Re-auditar';
 }
 
 function updateSummary() {

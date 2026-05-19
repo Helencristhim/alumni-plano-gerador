@@ -3,8 +3,8 @@ const path = require('path');
 const https = require('https');
 
 const API_KEY = process.env.ELEVENLABS_API_KEY;
-const ARTHUR_VOICE_ID = 'pNInz6obpgDQGcFmaJgB';
-const ELLEN_VOICE_ID = 'CwhRBWXzGAHq8TQ4Fs17';
+const ARTHUR_VOICE_ID = 'sfJopaWaOtauCD3HKX6Q';
+const ELLEN_VOICE_ID = 'BIvP0GN1cAtSRTxNHnWS';
 const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'audio', 'maisa-de-oliveira-santos');
 const MAP_PATH = path.join(OUTPUT_DIR, 'audioMap.json');
 

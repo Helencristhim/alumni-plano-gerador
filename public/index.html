@@ -211,9 +211,19 @@
                     <div class="form-error" id="err-idade">Idade é obrigatória (5-99).</div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Profissão</label>
-                    <input type="text" id="profissao" class="input" placeholder="Ex: Head TI - Centauro (a IA complementa com detalhes da transcrição)">
+                    <label class="form-label">Sexo <span class="required">*</span></label>
+                    <select id="sexo" class="select" required>
+                        <option value="">Selecione...</option>
+                        <option value="Feminino">Feminino</option>
+                        <option value="Masculino">Masculino</option>
+                    </select>
+                    <div class="form-error" id="err-sexo">Selecione o sexo do aluno.</div>
                 </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Profissão</label>
+                <input type="text" id="profissao" class="input" placeholder="Ex: Head TI - Centauro (a IA complementa com detalhes da transcrição)">
             </div>
 
             <div class="grid-2">
@@ -876,6 +886,7 @@
         // ── Bloco 1 — Perfil Pessoal ──
         const nome = document.getElementById('nome').value.trim();
         const idade = document.getElementById('idade').value;
+        const sexo = document.getElementById('sexo').value;
         const profissao = document.getElementById('profissao').value.trim();
         const cidade = document.getElementById('cidade').value.trim();
         const modalidadeTrabalho = document.getElementById('modalidadeTrabalho').value;
@@ -931,6 +942,7 @@
 
         if (!nome) { showError('err-nome'); hasError = true; }
         if (!idade || idade < 5 || idade > 99) { showError('err-idade'); hasError = true; }
+        if (!sexo) { showError('err-sexo'); hasError = true; }
         if (!email || !email.includes('@')) { showError('err-email'); hasError = true; }
         if (!foco) { showError('err-foco'); hasError = true; }
         if (!frequencia) { showError('err-frequencia'); hasError = true; }
@@ -955,7 +967,7 @@
         const slug = generateSlug(nome);
         const formData = {
             // Bloco 1
-            nome, idade: parseInt(idade), profissao, cidade, modalidadeTrabalho, email, whatsapp,
+            nome, idade: parseInt(idade), sexo, profissao, cidade, modalidadeTrabalho, email, whatsapp,
             // Bloco 2
             foco, numAulas: parseInt(numAulas), duracao, frequencia, modalidadeAula, plataforma, horarios,
             // Bloco 3
@@ -1032,7 +1044,7 @@
             // Build API payload
             const apiData = {
                 // Bloco 1
-                nome, idade: parseInt(idade), profissao, cidade, modalidadeTrabalho, email, whatsapp,
+                nome, idade: parseInt(idade), sexo, profissao, cidade, modalidadeTrabalho, email, whatsapp,
                 // Bloco 2
                 foco, numAulas: parseInt(numAulas), duracao, frequencia, modalidadeAula, plataforma, horarios,
                 // Bloco 3

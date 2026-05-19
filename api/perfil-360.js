@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
   try {
     const {
       // Bloco 1 — Perfil Pessoal
-      nome, idade, profissao, cidade, modalidadeTrabalho, email, whatsapp,
+      nome, idade, sexo, profissao, cidade, modalidadeTrabalho, email, whatsapp,
       // Bloco 2 — Programa Desejado
       foco, numAulas, duracao, frequencia, modalidadeAula, plataforma, horarios,
       // Bloco 3 — Urgência
@@ -58,6 +58,7 @@ DADOS COMPLETOS DO ALUNO (8 blocos informados pelo gestor)
 
 BLOCO 1 — PERFIL PESSOAL:
 - Nome: ${nome}
+- Sexo: ${sexo || 'Não informado'} (usado para atribuição de vozes nos áudios: Feminino = Ellen, Masculino = Arthur)
 - Idade: ${idade || 'Não informada'}
 - Profissão (gestor preencheu): ${profissao || 'Não informada'} — COMPLEMENTAR com detalhes da transcrição: empresa, cargo exato, área de atuação, contexto de uso do inglês no trabalho
 - Cidade: ${cidade || 'Não informada'}
@@ -423,7 +424,7 @@ REGRAS ABSOLUTAS 138-142:
       dadosExtraidos: perfil.dadosExtraidos || null,
       dadosFormulario: {
         // Bloco 1
-        nome, idade, profissao, cidade, modalidadeTrabalho, email, whatsapp,
+        nome, idade, sexo, profissao, cidade, modalidadeTrabalho, email, whatsapp,
         // Bloco 2
         foco, numAulas, duracao, frequencia, modalidadeAula, plataforma, horarios,
         // Bloco 3

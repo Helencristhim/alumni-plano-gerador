@@ -9,7 +9,7 @@
 <style>
 :root {
   --accent: #2D6A4F;
-  --accent-light: #40916C;
+  --accent-light: #7BEFB2;
   --accent-dim: rgba(45,106,79,0.08);
   --accent-glow: rgba(45,106,79,0.05);
   --black: #1a1a2e;
@@ -34,7 +34,19 @@
   --dark-elevated: #2d2d4a;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+* { margin:0; padding:0; box-sizing:border-box; touch-action: manipulation; }
+
+/* === FOCUS STATES (Accessibility) === */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-serif; background:#0a0a1a; color:var(--text); }
 
 /* ===== SLIDE SYSTEM ===== */
@@ -58,17 +70,17 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 }
 .top-bar-left { display:flex; align-items:center; gap:0.8rem; }
 .top-bar-logo { height:26px; opacity:0.9; }
-.slide-counter { font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.5); letter-spacing:1px; }
+.slide-counter { font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.75); letter-spacing:1px; }
 .top-bar-right { display:flex; align-items:center; gap:0.6rem; }
 
 /* Chapter progress */
 .chapter-bar { display:flex; gap:2px; flex:1; max-width:360px; margin:0 1rem; }
 .chapter-dot {
-  flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,0.12);
+  flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,0.2);
   cursor:pointer; transition:background 0.3s;
 }
-.chapter-dot.active { background:var(--accent); }
-.chapter-dot.completed { background:var(--accent-light); }
+.chapter-dot.active { background:#52D18A; }
+.chapter-dot.completed { background:#7BEFB2; }
 
 /* Dot navigation */
 .dot-nav {
@@ -76,7 +88,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   display:flex; flex-direction:column; gap:4px;
 }
 .dot-nav-item {
-  width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.15);
+  width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.3);
   cursor:pointer; transition:all 0.3s; border:none;
 }
 .dot-nav-item.active { background:var(--accent); transform:scale(1.4); }
@@ -101,7 +113,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   position:fixed; top:3.5rem; right:1.5rem; z-index:200;
   width:36px; height:36px; border-radius:50%;
   background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
-  color:rgba(255,255,255,0.5); font-weight:700; font-size:0.8rem;
+  color:rgba(255,255,255,0.75); font-weight:700; font-size:0.8rem;
   cursor:pointer; display:flex; align-items:center; justify-content:center;
   transition:all 0.25s;
 }
@@ -129,8 +141,12 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   line-height:1.2; margin-bottom:0.8rem; max-width:750px; text-align:center;
 }
 .slide-subtitle {
-  font-size:1rem; font-weight:400; opacity:0.7; max-width:600px; text-align:center; line-height:1.7;
+  font-size:1rem; font-weight:400; opacity:0.85; max-width:600px; text-align:center; line-height:1.7;
 }
+.slide[style*="background-image"] .slide-title { text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+.slide[style*="background-image"] .slide-chapter-label { color: rgba(255,255,255,0.8); }
+.slide.dark .accent, .slide.dark .accent-bold { color: #7BEFB2; }
+.slide.dark .slide-chapter-label { color: rgba(255,255,255,0.8); }
 .slide-content { max-width:800px; width:100%; }
 .section-label {
   font-size:0.7rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
@@ -151,12 +167,12 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   margin-bottom:0.8rem; flex-shrink:0;
 }
 .v-card-icon svg { width:24px; height:24px; }
-.v-card-hint { font-size:0.85rem; color:rgba(255,255,255,0.5); font-style:italic; line-height:1.6; }
+.v-card-hint { font-size:0.85rem; color:rgba(255,255,255,0.75); font-style:italic; line-height:1.6; }
 .v-card-body { display:none; }
 .v-card.revealed .v-card-hint { display:none; }
 .v-card.revealed .v-card-body { display:block; animation:fadeIn 0.35s ease; }
 .v-word { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:#fff; margin-bottom:0.3rem; }
-.v-def { font-size:0.82rem; color:rgba(255,255,255,0.6); margin-bottom:0.3rem; }
+.v-def { font-size:0.82rem; color:rgba(255,255,255,0.85); margin-bottom:0.3rem; }
 .v-example { font-size:0.85rem; color:rgba(255,255,255,0.8); font-style:italic; margin-bottom:0.6rem; }
 .v-listen-btn {
   display:inline-flex; align-items:center; gap:0.4rem;
@@ -166,7 +182,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 }
 .v-listen-btn:hover { background:var(--accent-light); }
 .v-listen-btn svg { width:14px; height:14px; }
-.vocab-counter { text-align:center; margin-top:1rem; font-size:0.8rem; color:rgba(255,255,255,0.4); font-weight:500; }
+.vocab-counter { text-align:center; margin-top:1rem; font-size:0.8rem; color:rgba(255,255,255,0.65); font-weight:500; }
 
 /* ===== GRAMMAR DISCOVERY ===== */
 .grammar-examples { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.2rem; }
@@ -236,7 +252,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   background:linear-gradient(135deg, #1a365d 0%, #2D6A4F 100%);
   padding:1.2rem 1.5rem; color:#fff;
 }
-.artifact-badge-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.7; margin-bottom:0.3rem; }
+.artifact-badge-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; margin-bottom:0.3rem; }
 .artifact-badge-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; }
 .artifact-badge-body { padding:1.5rem; }
 .artifact-badge-body .badge-name { font-size:1.2rem; font-weight:700; color:var(--dark); }
@@ -258,7 +274,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   background:linear-gradient(135deg, #1a365d 0%, #2D6A4F 100%);
   padding:1rem 1.5rem; color:#fff;
 }
-.artifact-email-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.7; margin-bottom:0.3rem; }
+.artifact-email-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; margin-bottom:0.3rem; }
 .artifact-email-body { padding:1.5rem; color:var(--text); font-size:0.88rem; line-height:1.8; }
 .artifact-email-body .email-field { font-size:0.78rem; color:var(--text-dim); margin-bottom:0.2rem; }
 .artifact-email-body .email-field strong { color:var(--text-mid); }
@@ -275,7 +291,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 }
 .d-avatar.blue { background:#2563eb; }
 .d-avatar.green { background:var(--accent); }
-.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.4); margin-bottom:0.15rem; }
+.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.65); margin-bottom:0.15rem; }
 .d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
 .d-text strong { color:var(--accent-light); font-weight:600; }
 .d-text-wrap { flex:1; }
@@ -319,7 +335,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 }
 .lq-item:hover { border-color:var(--accent); }
 .lq-question { font-size:0.9rem; color:rgba(255,255,255,0.8); }
-.lq-answer { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.lq-answer { display:none; margin-top:0.5rem; font-size:0.85rem; color:#7BEFB2; font-weight:500; }
 .lq-item.open .lq-answer { display:block; animation:fadeIn 0.2s ease; }
 
 /* ===== QUICK CHALLENGE ===== */
@@ -349,7 +365,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 }
 .qc-next-btn.show { display:block; }
 .qc-next-btn:hover { background:var(--accent-light); }
-.qc-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-bottom:1rem; font-weight:500; }
+.qc-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.65); margin-bottom:1rem; font-weight:500; }
 
 /* ===== SPOT THE ERROR ===== */
 .error-list { display:flex; flex-direction:column; gap:0.6rem; max-width:700px; width:100%; }
@@ -366,7 +382,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   font-size:0.88rem; color:#86efac; font-weight:600;
 }
 .err-item.open .err-correction { display:block; animation:fadeIn 0.2s ease; }
-.err-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:1rem; font-weight:500; }
+.err-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.65); margin-top:1rem; font-weight:500; }
 
 /* ===== ORAL DRILLING ===== */
 .oral-list { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
@@ -409,12 +425,12 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 .pron-word { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:#fff; font-weight:600; min-width:160px; }
 .pron-stress { font-size:0.88rem; color:var(--accent-light); font-weight:500; flex:1; }
 .pron-play {
-  width:36px; height:36px; border-radius:50%; border:1px solid var(--accent);
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
   background:transparent; color:var(--accent-light); cursor:pointer;
   display:flex; align-items:center; justify-content:center; transition:all 0.2s;
 }
 .pron-play:hover { background:var(--accent); color:#fff; }
-.pron-play svg { width:16px; height:16px; }
+.pron-play svg { width:18px; height:18px; }
 
 /* ===== EXPRESSIONS ===== */
 .expr-list { display:flex; flex-direction:column; gap:0.6rem; max-width:650px; width:100%; }
@@ -426,12 +442,12 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 .expr-item:hover { border-color:var(--accent); }
 .expr-text { flex:1; font-size:1rem; color:rgba(255,255,255,0.85); font-style:italic; }
 .expr-play {
-  width:36px; height:36px; border-radius:50%; border:1px solid var(--accent);
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
   background:transparent; color:var(--accent-light); cursor:pointer;
   display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0;
 }
 .expr-play:hover { background:var(--accent); color:#fff; }
-.expr-play svg { width:16px; height:16px; }
+.expr-play svg { width:18px; height:18px; }
 
 /* ===== SURVIVAL CARD ===== */
 .survival {
@@ -502,6 +518,28 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 
+/* === LISTENING PLAYER (Full) === */
+.listening-player{max-width:420px;margin:1.5rem auto 0}
+.lp-seekbar{height:6px;background:rgba(255,255,255,.3);border-radius:3px;cursor:pointer;margin-bottom:8px;position:relative}
+.lp-seekbar:hover{height:8px}
+.lp-progress{height:100%;background:var(--accent);border-radius:3px;transition:width .1s;width:0%}
+.lp-time{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.75);margin-bottom:16px;font-variant-numeric:tabular-nums}
+.lp-controls{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.lp-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lp-btn:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.lp-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.lp-play{width:64px;height:64px;background:var(--accent);border:none;color:#fff}
+.lp-play:hover{transform:scale(1.05)}
+.lp-play svg{width:24px;height:24px}
+.lp-play.playing .lp-icon-play{display:none}
+.lp-play.playing .lp-icon-pause{display:flex!important}
+.lp-icon-pause{display:none!important}
+.lp-speed{display:flex;justify-content:center;gap:8px}
+.lp-speed-btn{padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.lp-speed-btn:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.lp-speed-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lp-label{font-size:.7rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.5px;text-align:center;margin-bottom:6px}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width:768px) {
   .slide { padding:1.2rem; padding-top:3.5rem; }
@@ -512,7 +550,19 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   .nav-arrows { bottom:1rem; right:1rem; }
   .top-bar { padding:0.5rem 1rem; }
 }
+
+/* === REDUCED MOTION (Accessibility) === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='patricia-ruffo';window.TOTAL_AULAS=40;</script>
 </head>
 <body>
 
@@ -532,7 +582,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
     <div class="chapter-dot" data-chapter="7" title="Chapter 7: Wrap-Up" onclick="goToSlide(24)"></div>
   </div>
   <div class="top-bar-right">
-    <span style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Professor View</span>
+    <span style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);">Professor View</span>
   </div>
 </div>
 
@@ -560,16 +610,16 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 
 <!-- ═══ SLIDE 1 — TITLE ═══ -->
 <div class="slide dark active" data-chapter="1" data-t="<span class='t-timing'>0:00 - 2 min</span>Abertura. Compartilhe a tela. Diga: &quot;Welcome back, Patricia! Last class you introduced yourself. Today you will learn to hold the floor and disagree professionally.&quot; Tom energético. Pergunte como foi a semana antes de avançar." style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1400&q=80');background-size:cover;background-position:center;">
-  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.88) 0%, rgba(15,41,34,0.85) 40%, rgba(26,54,93,0.88) 100%);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(15,41,34,0.9) 40%, rgba(26,54,93,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 1 -- The Meeting</div>
-    <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:1.5rem;">Lesson 2</p>
+    <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:#7BEFB2;margin-bottom:1.5rem;">Lesson 2</p>
     <h1 class="slide-title" style="color:#fff;">Holding the Floor</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.6);">Opinions and Disagreement in Professional Settings</p>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.85);">Opinions and Disagreement in Professional Settings</p>
     <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
-      <span style="padding:0.3rem 0.9rem;background:rgba(45,106,79,0.2);border:1px solid rgba(45,106,79,0.35);border-radius:20px;font-size:0.75rem;color:var(--accent-light);">B1+ Intermediate</span>
-      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.5);">60 min</span>
-      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.5);">Alumni by Better</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(45,106,79,0.2);border:1px solid rgba(45,106,79,0.35);border-radius:20px;font-size:0.75rem;color:#7BEFB2;">B1+ Intermediate</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">60 min</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">Alumni by Better</span>
     </div>
   </div>
 </div>
@@ -581,11 +631,11 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
     <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Callback: Last Class</h2>
     <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
       <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
-        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Reflection</div>
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7BEFB2;margin-bottom:0.4rem;">Reflection</div>
         <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Last class, you introduced yourself at a conference. Tell me about that experience.</p>
       </div>
       <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
-        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Experience</div>
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7BEFB2;margin-bottom:0.4rem;">Experience</div>
         <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Have you ever disagreed with a colleague in English? What happened?</p>
       </div>
     </div>
@@ -610,11 +660,11 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 
 <!-- ═══ SLIDE 4 — TRANSITION: KEY WORDS ═══ -->
 <div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>8:00 - 0.5 min</span>Transição. Diga: &quot;Now let us build your debate vocabulary.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1400&q=80');background-size:cover;background-position:center;">
-  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(15,41,34,0.9) 0%, rgba(26,54,93,0.88) 50%, rgba(45,106,79,0.9) 100%);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(15,41,34,0.92) 0%, rgba(26,54,93,0.92) 50%, rgba(45,106,79,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 2 -- Key Words</div>
     <h1 class="slide-title" style="color:#fff;">Your Opinion Vocabulary</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Ten essential words for professional disagreement</p>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Ten essential words for professional disagreement</p>
     <div style="margin-top:2rem;">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(45,106,79,0.6)" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
     </div>
@@ -624,7 +674,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <!-- ═══ SLIDE 5 — VOCAB 1-5 ═══ -->
 <div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>8:30 - 16 min</span>Vocabulário. ANTES de clicar cada card, leia a definição e pergunte: &quot;What word do you think this is?&quot; Espere. DEPOIS de revelar: toque áudio 2x, Patricia repete. Foque na pronúncia de &quot;disagree&quot; (dis-a-GREE, stress na terceira) e &quot;perspective&quot; (PER-spec-tive, stress na primeira).<div class='t-ccq'><strong>CCQs:</strong> &quot;If you disagree, do you have the same opinion?&quot; (no) / &quot;Is evidence facts or feelings?&quot; (facts) / &quot;If you propose something, are you suggesting it?&quot; (yes)</div>">
   <div class="slide-chapter-label">Chapter 2 -- Key Words</div>
-  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click each card to reveal</p>
+  <p class="section-label" style="color:#7BEFB2;text-align:center;">Click each card to reveal</p>
   <div class="vocab-grid" id="vocabGrid1">
     <!-- Card 1: Disagree -->
     <div class="v-card" onclick="revealVCard(this)">
@@ -713,7 +763,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <!-- ═══ SLIDE 6 — VOCAB 6-10 ═══ -->
 <div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>16:00 - 24 min</span>Vocabulário parte 2. Mesma dinâmica. Destaque &quot;counterargument&quot; como palavra composta (counter + argument). Pergunte: &quot;What is a counter? It means against. So a counterargument is...?&quot; Patricia completa. Foque na pronúncia de &quot;significant&quot; (sig-NIF-i-cant) e &quot;acknowledge&quot; (ac-KNOWL-edge).<div class='t-ccq'><strong>CCQs:</strong> &quot;If you convince someone, do they agree with you?&quot; (yes) / &quot;Is an approach a method or a result?&quot; (method) / &quot;If something is significant, is it important?&quot; (yes)</div>">
   <div class="slide-chapter-label">Chapter 2 -- Key Words</div>
-  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click each card to reveal</p>
+  <p class="section-label" style="color:#7BEFB2;text-align:center;">Click each card to reveal</p>
   <div class="vocab-grid" id="vocabGrid2">
     <!-- Card 6: Convince -->
     <div class="v-card" onclick="revealVCard(this)">
@@ -803,73 +853,73 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>24:00 - 28 min</span>Pronúncia. Clique cada palavra. Foque em: dis-a-GREE (stress na terceira), PER-spec-tive (stress na primeira), sig-NIF-i-cant (stress na segunda), ac-KNOWL-edge (stress na segunda). Para &quot;counterargument&quot;: COUN-ter-AR-gu-ment (dois stress). Toque áudio, ela repete 2x.<div class='t-alert'>Se Patricia pronunciar &quot;significant&quot; como &quot;sig-ni-fi-CANT&quot;, corrija: &quot;The stress is on the second syllable: sig-NIF-i-cant.&quot;</div>">
   <div class="slide-chapter-label">Chapter 2 -- Key Words</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Pronunciation Drill</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen, then repeat. Focus on the stressed syllable.</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen, then repeat. Focus on the stressed syllable.</p>
   <div class="pron-list">
     <div class="pron-item">
-      <div class="pron-word">disagree</div>
+      <div class="pron-word">Disagree</div>
       <div class="pron-stress">dis-a-GREE</div>
       <button class="pron-play" onclick="speakText('disagree',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">evidence</div>
+      <div class="pron-word">Evidence</div>
       <div class="pron-stress">EV-i-dence</div>
       <button class="pron-play" onclick="speakText('evidence',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">perspective</div>
+      <div class="pron-word">Perspective</div>
       <div class="pron-stress">per-SPEC-tive</div>
       <button class="pron-play" onclick="speakText('perspective',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">outcome</div>
+      <div class="pron-word">Outcome</div>
       <div class="pron-stress">OUT-come</div>
       <button class="pron-play" onclick="speakText('outcome',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">propose</div>
+      <div class="pron-word">Propose</div>
       <div class="pron-stress">pro-POSE</div>
       <button class="pron-play" onclick="speakText('propose',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">convince</div>
+      <div class="pron-word">Convince</div>
       <div class="pron-stress">con-VINCE</div>
       <button class="pron-play" onclick="speakText('convince',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">significant</div>
+      <div class="pron-word">Significant</div>
       <div class="pron-stress">sig-NIF-i-cant</div>
       <button class="pron-play" onclick="speakText('significant',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">acknowledge</div>
+      <div class="pron-word">Acknowledge</div>
       <div class="pron-stress">ac-KNOWL-edge</div>
       <button class="pron-play" onclick="speakText('acknowledge',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">approach</div>
+      <div class="pron-word">Approach</div>
       <div class="pron-stress">a-PROACH</div>
       <button class="pron-play" onclick="speakText('approach',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">counterargument</div>
+      <div class="pron-word">Counterargument</div>
       <div class="pron-stress">COUN-ter-AR-gu-ment</div>
       <button class="pron-play" onclick="speakText('counterargument',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -882,7 +932,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>28:00 - 33 min</span>Gramática Discovery. NÃO explique a regra. Aponte para as palavras em verde e pergunte: &quot;What pattern do you see?&quot; Espere. Patricia é B1+ -- ela pode identificar o if + present. Só clique &quot;Reveal&quot; DEPOIS que ela tentar. Se ela disser &quot;if + present + will&quot;, celebre: &quot;Exactly! That is the First Conditional.&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;Is this a real possibility or imaginary?&quot; (real) / &quot;Does the if-clause use 'will'?&quot; (no, present simple) / &quot;Is the result clause about the future?&quot; (yes)</div>">
   <div class="slide-chapter-label">Chapter 3 -- The Code</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Discovery</h2>
-  <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">What do the <span style="color:var(--accent-light);font-weight:600;">green words</span> have in common?</p>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">What do the <span style="color:#7BEFB2;font-weight:600;">green words</span> have in common?</p>
   <div class="slide-content">
     <div class="grammar-examples">
       <div class="g-example">If we <span class="highlight">change</span> the formula, the results <span class="highlight">will improve</span>.</div>
@@ -898,12 +948,12 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
           <tr><th>Structure</th><th>Use</th><th>Example</th></tr>
         </thead>
         <tbody>
-          <tr><td style="color:var(--accent-light);font-weight:600;">If + present simple</td><td>The condition (real possibility)</td><td>If we <strong>change</strong> the formula...</td></tr>
-          <tr><td style="color:var(--accent-light);font-weight:600;">will + base form</td><td>The result (future consequence)</td><td>...the results <strong>will improve</strong>.</td></tr>
+          <tr><td style="color:#7BEFB2;font-weight:600;">If + present simple</td><td>The condition (real possibility)</td><td>If we <strong>change</strong> the formula...</td></tr>
+          <tr><td style="color:#7BEFB2;font-weight:600;">will + base form</td><td>The result (future consequence)</td><td>...the results <strong>will improve</strong>.</td></tr>
         </tbody>
       </table>
       <div style="margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.04);border-radius:6px;">
-        <p style="font-size:0.82rem;color:rgba(255,255,255,0.7);"><strong style="color:var(--accent-light);">Key rule:</strong> After "if", use present simple -- NEVER "will". The "will" goes in the result clause only.</p>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.7);"><strong style="color:#7BEFB2;">Key rule:</strong> After "if", use present simple -- NEVER "will". The "will" goes in the result clause only.</p>
       </div>
     </div>
   </div>
@@ -920,7 +970,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
       </div>
       <div>
         <p style="font-size:1.1rem;line-height:1.6;">"If we <strong>will change</strong> the formula, the results will improve."</p>
-        <p style="font-size:0.78rem;opacity:0.6;margin-top:0.3rem;">will after if = incorrect</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">will after if = incorrect</p>
       </div>
     </div>
     <div class="mistake-right">
@@ -929,7 +979,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
       </div>
       <div>
         <p style="font-size:1.1rem;line-height:1.6;">"If we <strong>change</strong> the formula, the results will improve."</p>
-        <p style="font-size:0.78rem;opacity:0.6;margin-top:0.3rem;">if + present simple = correct</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">if + present simple = correct</p>
       </div>
     </div>
   </div>
@@ -952,7 +1002,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>36:00 - 41 min</span>Prática. Leia cada frase com a lacuna. Patricia completa oralmente. DEPOIS clique para revelar. Se ela errar o First Conditional, relembre: &quot;After if, what tense?&quot; Após todas, releia as corretas em sequência rápida para fixar.<div class='t-ccq'><strong>CCQs por item:</strong> 1) &quot;change&quot; = present simple after if. 2) &quot;disagree&quot; no present + &quot;from&quot; my perspective. 3) &quot;proposes&quot; = present simple after if. 4) &quot;but&quot; + &quot;argue&quot; = opinion frame. 5) &quot;acknowledge&quot; present + &quot;will be&quot; result. 6) &quot;Based&quot; on + &quot;convinced&quot; = opinion frame.</div>">
   <div class="slide-chapter-label">Chapter 3 -- The Code</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Practice</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Click to reveal the correct answer</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Click to reveal the correct answer</p>
   <div class="fill-practice">
     <div class="fp-item" onclick="this.classList.toggle('open')">
       <div class="fp-sentence">If we <span class="fp-blank">___</span> the approach, the outcome <span class="fp-blank">___</span> more significant.</div>
@@ -983,11 +1033,11 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 
 <!-- ═══ SLIDE 11 — TRANSITION: THE DEBATE ═══ -->
 <div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>41:00 - 0.5 min</span>Transição. Diga: &quot;Now let us see Patricia in action -- defending her position at an Abbott meeting.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1400&q=80');background-size:cover;background-position:center;">
-  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,54,93,0.9) 0%, rgba(45,106,79,0.88) 50%, rgba(15,41,34,0.9) 100%);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,54,93,0.92) 0%, rgba(45,106,79,0.92) 50%, rgba(15,41,34,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 4 -- The Debate</div>
     <h1 class="slide-title" style="color:#fff;">Patricia at the Abbott Team Meeting</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Time to use your vocabulary in a real professional debate.</p>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Time to use your vocabulary in a real professional debate.</p>
     <div style="margin-top:2rem;">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(45,106,79,0.6)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
     </div>
@@ -1038,35 +1088,25 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>46:00 - 51 min</span>Listening. Diga: &quot;Close your eyes and listen.&quot; Toque o áudio. NÃO mostre texto. Depois pergunte: &quot;What did you hear?&quot; Aceite respostas parciais. Pergunte cada questão de compreensão oralmente ANTES de clicar.<div class='t-alert'>Se Patricia pedir para ver o texto, diga: &quot;Let us listen one more time first. Focus on the key words we learned.&quot; Só mostre texto se ela realmente não entender após 2x.</div>">
   <div class="slide-chapter-label">Chapter 4 -- The Debate</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Meeting Presentation</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen to Patricia presenting her position at the Abbott meeting.</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to Patricia presenting her position at the Abbott meeting.</p>
   <div class="listening-card">
-    <div class="waveform" id="waveform1">
-      <div class="waveform-bar" style="animation-delay:0s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.1s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.2s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.3s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.4s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.5s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.6s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.7s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.8s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.9s;"></div>
-      <div class="waveform-bar" style="animation-delay:1.0s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.15s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.25s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.35s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.45s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.55s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.65s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.75s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.85s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.95s;"></div>
+    <div class="listening-player" id="lp-listen1" data-src="/audio/patricia-ruffo/aula2_good_morning_everyone_i_would_like_to_address_the_prop.mp3">
+      <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen1')"><div class="lp-progress" id="progress-lp-listen1"></div></div>
+      <div class="lp-time"><span id="time-current-lp-listen1">0:00</span><span id="time-total-lp-listen1">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('lp-listen1',-5)" aria-label="Back 5s"><svg viewBox="0 0 24 24"><path d="M12.5 8.14v7.72M10 12l-6-4.5v9l6-4.5"/><path d="M22 12A10 10 0 1112 2" stroke-linecap="round"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('lp-listen1')" aria-label="Play Pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('lp-listen1',5)" aria-label="Forward 5s"><svg viewBox="0 0 24 24"><path d="M11.5 15.86V8.14M14 12l6-4.5v9l-6-4.5"/><path d="M2 12a10 10 0 0010 10" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="lp-label">Speed</div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('lp-listen1',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',1.25,this)">1.25x</button>
+      </div>
     </div>
-    <button class="play-pause-btn" id="playBtn1" onclick="toggleListening('listening1',this,'waveform1','lq1')">
-      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-    </button>
-    <div class="listening-questions" id="lq1">
+    <div class="listening-questions" id="questions-lp-listen1">
       <div class="lq-item" onclick="this.classList.toggle('open')">
         <div class="lq-question">1. What is Patricia's opinion about changing the formula?</div>
         <div class="lq-answer">She believes they should not change the formula at this point.</div>
@@ -1087,7 +1127,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>51:00 - 59 min</span>Diálogo. Clique &quot;Next Line&quot; para cada fala. ANTES da fala de Patricia: &quot;What do you think she says?&quot; Espere. Palavras em verde = vocabulário da aula. Destaque os opinion frames: &quot;Notice she used 'I see your point, but...' -- that is polite disagreement.&quot; Patricia lê cada fala em voz alta após revelar.<div class='t-alert'>Se Patricia quiser pular linhas, segure: &quot;Let us go one at a time so you can hear each opinion frame.&quot;</div>">
   <div class="slide-chapter-label">Chapter 4 -- The Debate</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">The Abbott Debate</h2>
-  <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:1rem;text-align:center;">Click "Next Line" to reveal each part of the conversation</p>
+  <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1rem;text-align:center;">Click "Next Line" to reveal each part of the conversation</p>
   <div class="dialogue-container" id="dialogue1">
     <div class="d-line visible" data-voice="arthur" style="border-left-color:#2563eb;">
       <div class="d-avatar blue">DS</div>
@@ -1176,35 +1216,25 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>62:00 - 67 min</span>Listening 2. Toque. Patricia ouve SEM texto. Depois pergunte o que entendeu. Perguntas de compreensão uma por vez, oralmente ANTES de clicar.">
   <div class="slide-chapter-label">Chapter 4 -- The Debate</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Q&amp;A After the Meeting</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen to a short exchange after the team meeting.</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to a short exchange after the team meeting.</p>
   <div class="listening-card">
-    <div class="waveform" id="waveform2">
-      <div class="waveform-bar" style="animation-delay:0s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.12s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.24s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.36s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.48s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.6s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.72s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.84s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.96s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.08s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.2s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.32s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.44s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.56s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.68s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.8s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.92s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.04s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.16s;"></div>
-      <div class="waveform-bar" style="animation-delay:0.28s;"></div>
+    <div class="listening-player" id="lp-listen2" data-src="">
+      <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen2')"><div class="lp-progress" id="progress-lp-listen2"></div></div>
+      <div class="lp-time"><span id="time-current-lp-listen2">0:00</span><span id="time-total-lp-listen2">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('lp-listen2',-5)" aria-label="Back 5s"><svg viewBox="0 0 24 24"><path d="M12.5 8.14v7.72M10 12l-6-4.5v9l6-4.5"/><path d="M22 12A10 10 0 1112 2" stroke-linecap="round"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('lp-listen2')" aria-label="Play Pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('lp-listen2',5)" aria-label="Forward 5s"><svg viewBox="0 0 24 24"><path d="M11.5 15.86V8.14M14 12l6-4.5v9l-6-4.5"/><path d="M2 12a10 10 0 0010 10" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="lp-label">Speed</div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('lp-listen2',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',1.25,this)">1.25x</button>
+      </div>
     </div>
-    <button class="play-pause-btn" id="playBtn2" onclick="toggleListening('listening2',this,'waveform2','lq2')">
-      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-    </button>
-    <div class="listening-questions" id="lq2">
+    <div class="listening-questions" id="questions-lp-listen2">
       <div class="lq-item" onclick="this.classList.toggle('open')">
         <div class="lq-question">1. What did the team decide about the formula?</div>
         <div class="lq-answer">They decided to extend the trial for three more months before making changes.</div>
@@ -1266,7 +1296,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>75:00 - 80 min</span>Spot the Error. Leia cada frase. Pergunte: &quot;Can you find the mistake?&quot; Clique para revelar. Todos os erros são sobre First Conditional ou preposições comuns.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Spot the Error</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Click each sentence to see the correction</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Click each sentence to see the correction</p>
   <div class="error-list" id="errorList">
     <div class="err-item" onclick="this.classList.toggle('open')">
       <div class="err-sentence">"If we <span class="wrong">will change</span> the formula, the results will improve."</div>
@@ -1295,7 +1325,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>80:00 - 85 min</span>Oral Drilling. Leia a situação. Patricia responde oralmente. Clique para revelar o modelo. Se a resposta dela foi diferente mas correta, valide: &quot;That works too! Here is another way to say it.&quot; 30 segundos por item.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Oral Drilling</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Respond to each situation, then click to see a model answer</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Respond to each situation, then click to see a model answer</p>
   <div class="oral-list">
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation</div>
@@ -1329,30 +1359,30 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>85:00 - 88 min</span>Opinion Frames. Dê uma afirmação. Patricia responde usando cada frame diferente. Ex: &quot;The formula should change.&quot; Patricia responde: &quot;In my opinion,...&quot; / &quot;I see your point, but...&quot; / &quot;Based on the evidence,...&quot; etc. Incentive variedade.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Opinion Frames Practice</h2>
-  <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Respond to the statement below using each opinion frame</p>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Respond to the statement below using each opinion frame</p>
   <div style="max-width:600px;width:100%;">
     <div style="padding:1.5rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:12px;margin-bottom:1.5rem;text-align:center;">
       <p style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:#fff;">"The current formula should be changed immediately."</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:0.6rem;">
       <div class="fp-item" onclick="this.classList.toggle('open')">
-        <div class="fp-sentence" style="color:var(--accent-light);font-weight:600;">"In my opinion,..."</div>
+        <div class="fp-sentence" style="color:#7BEFB2;font-weight:600;">"In my opinion,..."</div>
         <div class="fp-answer">"In my opinion, we should wait for more data before making any changes."</div>
       </div>
       <div class="fp-item" onclick="this.classList.toggle('open')">
-        <div class="fp-sentence" style="color:var(--accent-light);font-weight:600;">"I see your point, but..."</div>
+        <div class="fp-sentence" style="color:#7BEFB2;font-weight:600;">"I see your point, but..."</div>
         <div class="fp-answer">"I see your point, but changing the formula now would mean losing months of progress."</div>
       </div>
       <div class="fp-item" onclick="this.classList.toggle('open')">
-        <div class="fp-sentence" style="color:var(--accent-light);font-weight:600;">"Based on the evidence,..."</div>
+        <div class="fp-sentence" style="color:#7BEFB2;font-weight:600;">"Based on the evidence,..."</div>
         <div class="fp-answer">"Based on the evidence, the current formula is showing gradual improvement."</div>
       </div>
       <div class="fp-item" onclick="this.classList.toggle('open')">
-        <div class="fp-sentence" style="color:var(--accent-light);font-weight:600;">"I would argue that..."</div>
+        <div class="fp-sentence" style="color:#7BEFB2;font-weight:600;">"I would argue that..."</div>
         <div class="fp-answer">"I would argue that extending the trial is a more significant step than changing the formula."</div>
       </div>
       <div class="fp-item" onclick="this.classList.toggle('open')">
-        <div class="fp-sentence" style="color:var(--accent-light);font-weight:600;">"From my perspective,..."</div>
+        <div class="fp-sentence" style="color:#7BEFB2;font-weight:600;">"From my perspective,..."</div>
         <div class="fp-answer">"From my perspective, we should acknowledge the progress and continue the current approach."</div>
       </div>
     </div>
@@ -1427,9 +1457,9 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
     </div>
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.8rem;">Record Yourself</h2>
-    <p style="font-size:1rem;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:1.5rem;">Imagine you are at an Abbott meeting. Record yourself disagreeing with a proposed change, presenting your evidence, and proposing an alternative.</p>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:1.5rem;">Imagine you are at an Abbott meeting. Record yourself disagreeing with a proposed change, presenting your evidence, and proposing an alternative.</p>
     <div style="display:flex;flex-direction:column;gap:0.5rem;text-align:left;padding:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
-      <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);">Include:</p>
+      <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);">Include:</p>
       <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">1. At least 3 opinion frames</p>
       <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">2. At least 1 first conditional sentence</p>
       <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">3. Vocabulary from this lesson</p>
@@ -1446,7 +1476,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
     </div>
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:#fff;margin-bottom:0.5rem;">Debater Badge Earned!</h2>
-    <p style="font-size:1rem;color:rgba(255,255,255,0.6);line-height:1.7;">You can now hold the floor and disagree professionally, Patricia.</p>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.85);line-height:1.7;">You can now hold the floor and disagree professionally, Patricia.</p>
   </div>
 </div>
 
@@ -1498,7 +1528,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
   <div style="max-width:550px;text-align:center;">
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.3rem;">What I Learned Today</h2>
-    <p style="font-size:0.85rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;">Click each item to check it off</p>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;">Click each item to check it off</p>
     <div class="checklist-wrap" style="text-align:left;">
       <div class="cl-item" onclick="toggleCheck(this)">
         <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -1538,12 +1568,12 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 
 <!-- ═══ SLIDE 28 — CLOSING ═══ -->
 <div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>113:00 - 115 min</span>Encerramento. Diga: &quot;Day 2 is complete. Next class we will practice asking smart questions at conferences.&quot;<br><br><strong>Homework (diga oralmente, NÃO está na tela):</strong><br>1. Escrever um email discordando educadamente de uma proposta (150 palavras).<br>2. Escrever as 10 palavras no caderno com exemplos próprios." style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1400&q=80');background-size:cover;background-position:center;">
-  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.9) 0%, rgba(45,106,79,0.85) 50%, rgba(26,54,93,0.9) 100%);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(45,106,79,0.92) 50%, rgba(26,54,93,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
     <div style="margin-top:1rem;padding:1.5rem 2rem;background:rgba(45,106,79,0.08);border:1px solid rgba(45,106,79,0.2);border-radius:12px;">
       <p style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#fff;">Day 2 -- Complete.</p>
-      <p style="font-size:0.95rem;color:rgba(255,255,255,0.5);margin-top:0.8rem;">Next lesson: Smart Questions -- Conference Discussions</p>
+      <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);margin-top:0.8rem;">Next lesson: Smart Questions -- Conference Discussions</p>
     </div>
   </div>
 </div>
@@ -1845,8 +1875,97 @@ function triggerBadgeConfetti() {
   // Will fire when navigating to badge slide (slide 25, index 24)
 }
 
+// ===== LISTENING PLAYER (Full) =====
+var lpPlayers = {};
+
+function initPlayer(id) {
+  var container = document.getElementById(id);
+  if (!container) return;
+  var src = container.dataset.src;
+  if (!src) return;
+  var file = src;
+  if (src.indexOf('/') === -1 && audioMap[src]) file = audioMap[src];
+  var audio = new Audio(file);
+  lpPlayers[id] = { audio: audio, speed: 1, playing: false };
+  audio.addEventListener('timeupdate', function() { updatePlayerUI(id); });
+  audio.addEventListener('loadedmetadata', function() { updatePlayerUI(id); });
+  audio.addEventListener('ended', function() {
+    lpPlayers[id].playing = false;
+    var playBtn = document.querySelector('#' + id + ' .lp-play');
+    if (playBtn) playBtn.classList.remove('playing');
+    var qs = document.getElementById('questions-' + id);
+    if (qs) qs.style.display = 'flex';
+  });
+}
+
+function togglePlayer(id) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var p = lpPlayers[id];
+  var playBtn = document.querySelector('#' + id + ' .lp-play');
+  if (p.playing) {
+    p.audio.pause();
+    p.playing = false;
+    if (playBtn) playBtn.classList.remove('playing');
+  } else {
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    p.audio.playbackRate = p.speed;
+    p.audio.play();
+    p.playing = true;
+    if (playBtn) playBtn.classList.add('playing');
+  }
+}
+
+function skipAudio(id, seconds) {
+  if (!lpPlayers[id]) return;
+  var a = lpPlayers[id].audio;
+  a.currentTime = Math.max(0, Math.min(a.duration || 0, a.currentTime + seconds));
+}
+
+function seekAudio(event, id) {
+  if (!lpPlayers[id]) return;
+  var bar = event.currentTarget;
+  var rect = bar.getBoundingClientRect();
+  var pct = (event.clientX - rect.left) / rect.width;
+  lpPlayers[id].audio.currentTime = pct * (lpPlayers[id].audio.duration || 0);
+}
+
+function setPlayerSpeed(id, speed, btn) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  lpPlayers[id].speed = speed;
+  lpPlayers[id].audio.playbackRate = speed;
+  var container = document.getElementById(id);
+  if (container) {
+    container.querySelectorAll('.lp-speed-btn').forEach(function(b) { b.classList.remove('active'); });
+  }
+  if (btn) btn.classList.add('active');
+}
+
+function updatePlayerUI(id) {
+  var p = lpPlayers[id];
+  if (!p) return;
+  var current = p.audio.currentTime || 0;
+  var total = p.audio.duration || 0;
+  var pct = total > 0 ? (current / total) * 100 : 0;
+  var progressEl = document.getElementById('progress-' + id);
+  if (progressEl) progressEl.style.width = pct + '%';
+  var curEl = document.getElementById('time-current-' + id);
+  var totEl = document.getElementById('time-total-' + id);
+  if (curEl) curEl.textContent = formatTime(current);
+  if (totEl) totEl.textContent = formatTime(total);
+}
+
+function formatTime(s) {
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', initSlides);
 </script>
+<script src="/lib/lesson-progress.js"></script>
 </body>
 </html>

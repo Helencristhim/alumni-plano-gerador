@@ -1,16 +1,16 @@
 /**
  * Regenerate 2 remaining audio files with wrong "Maísa" pronunciation.
  * Uses ElevenLabs API:
- *   - Ellen (CwhRBWXzGAHq8TQ4Fs17) for phrases where Maísa speaks
- *   - Arthur (pNInz6obpgDQGcFmaJgB) for descriptions about Maísa
+ *   - Ellen (BIvP0GN1cAtSRTxNHnWS) for phrases where Maísa speaks
+ *   - Arthur (sfJopaWaOtauCD3HKX6Q) for descriptions about Maísa
  */
 
 const fs = require('fs');
 const path = require('path');
 
 const API_KEY = process.env.ELEVENLABS_API_KEY;
-const VOICE_ARTHUR = 'pNInz6obpgDQGcFmaJgB';
-const VOICE_ELLEN = 'CwhRBWXzGAHq8TQ4Fs17';
+const VOICE_ARTHUR = 'sfJopaWaOtauCD3HKX6Q';
+const VOICE_ELLEN = 'BIvP0GN1cAtSRTxNHnWS';
 const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'audio', 'maisa-de-oliveira-santos');
 
 const PHRASES = [

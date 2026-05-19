@@ -2528,19 +2528,14 @@
             '- Integração ElevenLabs: /docs/INTEGRACAO-ELEVENLABS.md\n' +
             '- Rulebook Pedagógico: /docs/RULEBOOK-PEDAGOGICO.md\n\n' +
             '- CEFR Alumni: /docs/CEFR-ALUMNI.md — estruturas gramaticais por nível, vocabulário core, proporção geral/foco. SIGA ABSOLUTAMENTE.\n' +
-            '- Regras 138-143: /docs/REGRAS-138-A-143.md — 90 min universal, Vocabulary+Expressions obrigatórios, ElevenLabs, American English.\n' +
+            '- Regras 138-146: /docs/REGRAS-138-A-146.md — 90 min universal, Vocabulary+Expressions obrigatórios, ElevenLabs, American English.\n' +
             '- Design System Visual: /DESIGN.md — Liquid Glass, cores, tipografia, componentes. FONTE DE VERDADE para UI/UX.\n' +
-            'COMPONENTES REUTILIZÁVEIS (OBRIGATÓRIO usar estes, NÃO reinventar):\n' +
-            '- /public/components/exercises.js \u2014 7 tipos de exercício FAAP prontos (importar com <script src>)\n' +
-            '  Funções: createMatchingDropdown(), createFillBlank(), createFillBlankWithHint(), createMultipleChoice(), createOrdering(), createPronunciation(), createThinkAboutIt()\n' +
-            '  Funções fallback (HTML manual): checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(), listenBlank(), playAllVocab(), toggleLesson()\n' +
-            '- /public/components/audio-generator.js \u2014 integração ElevenLabs + fallback Web Speech API\n' +
-            '  Funções: generateLessonAudios(), speakWithFallback(), buildAudioMap()\n' +
-            '- /public/components/image-validator.js \u2014 validação de imagens + fallbacks por tema\n' +
-            '  Funções: validateAndFixImages(), FALLBACK_IMAGES por tema\n' +
-            '- /public/components/faap-template.js \u2014 template engine FAAP (10 etapas da aula)\n' +
-            '  Função: generateFAAPLesson(lessonData) gera HTML completo da aula\n\n' +
-            'INSTRUÇÃO: Importe estes 4 scripts no HTML gerado e use as funções prontas. NÃO reimplemente exercícios do zero.\n\n' +
+            'EXERCÍCIOS — ABORDAGEM OBRIGATÓRIA:\n' +
+            '- SEMPRE HTML manual com funções inline: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(), listenBlank(), playAllVocab(), toggleLesson()\n' +
+            '- NUNCA usar funções geradoras (createMatchingDropdown, createFillBlank, etc.) — SEMPRE montar o HTML manualmente\n' +
+            '- NUNCA usar atributo data-exercise — SEMPRE HTML manual com as funções acima\n' +
+            '- COPIAR o bloco completo de JavaScript do template existente (patricia-ruffo.html) conforme CLAUDE.md REGRA 26\n' +
+            '- Trocar APENAS: audioMap, slug no localStorage, e totalLessons\n\n' +
             'GERAR DOIS ARQUIVOS HTML SEPARADOS:\n' +
             '1. /public/professor/' + perfilId + '.html \u2014 Material COMPLETO do professor (4 abas: Planejamento Pedagógico, Pre-class, IN CLASS, Atividades Complementares)\n' +
             '2. /public/aluno/' + perfilId + '.html \u2014 Material do ALUNO (apenas Pre-class + Atividades Complementares, SEM instruções do professor, SEM gabaritos, SEM perfil 360)\n\n' +
@@ -2560,11 +2555,11 @@
             '  - Objetivo do programa (parágrafo)\n' +
             '  - Promessa transformadora + personagem-jornada\n' +
             '  - Forças e pontos de melhoria do aluno\n' +
-            '  - TABELA DO CURRÍCULO: APENAS as ' + (perfil.curriculo ? perfil.curriculo.length : '?') + ' aulas deste bloco com # | Tema | Foco Linguístico | Atividade | Homework\n' +
+            '  - TABELA DO CURRÍCULO: todas as aulas do programa (usar os temas da seção DIVISÃO DE AULAS acima) com # | Tema | Foco Linguístico | Atividade | Homework\n' +
             '  - Regras de cancelamento\n\n' +
             'ABA 2 — PRE-CLASS (exercícios interativos):\n' +
-            '  Exercícios que o aluno faz ANTES da aula. Usa exercises.js:\n' +
-            '  HTML manual OBRIGATÓRIO: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(). NUNCA usar data-exercise ou createMatchingDropdown.\n' +
+            '  Exercícios que o aluno faz ANTES da aula.\n' +
+            '  HTML manual OBRIGATÓRIO: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(). NUNCA usar data-exercise.\n' +
             '  Mínimo 5-8 exercícios variados por aula. Com microcopy que autoriza o erro.\n\n' +
             'ABA 3 — IN CLASS (slides interativos para Zoom):\n' +
             '  Esta aba substitui o antigo Plano de Aula e Material do Professor.\n' +
@@ -2629,15 +2624,15 @@
             '- Microinterações 150-300ms ease-out em todos os componentes interativos\n' +
             '- Mobile-first responsivo (375px, 768px, 1024px, 1440px)\n' +
             '- Zero emojis — usar Lucide Icons (SVG inline)\n\n' +
-            'ESTILO VISUAL: LIQUID GLASS — aplicar em TODOS os materiais:\n' +
-            '- Cards e containers com efeito frosted glass: backdrop-filter: blur(15px) saturate(180%); background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px;\n' +
-            '- Transições fluidas 400-600ms com ease-out para elementos interativos\n' +
-            '- Profundidade via box-shadow: 0 8px 32px rgba(0,0,0,0.08)\n' +
-            '- Manter contraste WCAG 4.5:1 — usar texto escuro sobre glass claro\n' +
-            '- prefers-reduced-motion: desativar blur e animações fluidas\n\n' +
+            'ESTILO VISUAL:\n' +
+            '- Consultar /DESIGN.md para o design system visual completo (cores, tipografia, componentes)\n' +
+            '- COPIAR CSS do template existente (patricia-ruffo.html) + /public/styles/material.css — NUNCA gerar CSS do zero\n' +
+            '- Trocar APENAS: variáveis :root (--accent, --accent-light, --accent-dim, --accent-glow) para a paleta única do aluno\n' +
+            '- Manter contraste WCAG 4.5:1, touch targets 44x44px, focus states visíveis\n' +
+            '- prefers-reduced-motion: desativar animações\n\n' +
             'ÁUDIOS VIA ELEVENLABS (regra permanente para TODOS os alunos):\n' +
             '- TODOS os botões "Ouvir" devem ter áudio gerado pela ElevenLabs\n' +
-            '- Vozes: Arthur (male, American) e Ellen (female, calm American conversational). ALTERNAR entre as duas para trazer variedade — nunca usar só uma voz no material inteiro. Arthur para vocabulário e drilling, Ellen para diálogos e frases-modelo. Em survival cards e listening, mesclar ambas. Voice IDs: arthur="pNInz6obpgDQGcFmaJgB", ellen="CwhRBWXzGAHq8TQ4Fs17".\n' +
+            '- Vozes: Arthur (male, American) e Ellen (female, calm American conversational). ALTERNAR entre as duas para trazer variedade — nunca usar só uma voz no material inteiro. Arthur para vocabulário e drilling, Ellen para diálogos e frases-modelo. Em survival cards e listening, mesclar ambas. Voice IDs: arthur="sfJopaWaOtauCD3HKX6Q", ellen="BIvP0GN1cAtSRTxNHnWS".\n' +
             '- Formato: .mp3\n' +
             '- Gerar durante criação do material (não em runtime)\n' +
             '- Mapear em audioMap do JavaScript (var audioMap, não const)\n' +
@@ -2709,7 +2704,7 @@
             '- Capitaliza\u00e7\u00e3o: todo in\u00edcio de frase com MAI\u00daSCULA. Palavras de vocabul\u00e1rio apresentadas sozinhas (vocab cards, matching, survival cards) SEMPRE com primeira letra MAI\u00daSCULA: "Export" (n\u00e3o "export"), "Luxury Goods" (n\u00e3o "luxury goods"), "Board Meeting" (n\u00e3o "board meeting").\n\n' +
 
             '\u00c1UDIO \u2014 VOZES E OPERACIONAL:\n' +
-            '- Vozes: Arthur (pNInz6obpgDQGcFmaJgB) para vocab/drilling + Ellen (CwhRBWXzGAHq8TQ4Fs17) para di\u00e1logos/frases-modelo. ALTERNAR \u2014 nunca s\u00f3 uma voz.\n' +
+            '- Vozes: Arthur (sfJopaWaOtauCD3HKX6Q) para vocab/drilling + Ellen (BIvP0GN1cAtSRTxNHnWS) para di\u00e1logos/frases-modelo. ALTERNAR \u2014 nunca s\u00f3 uma voz.\n' +
             '- Contra\u00e7\u00f5es no audioMap: incluir AMBAS vers\u00f5es (I\'m + I am, don\'t + do not, can\'t + cannot).\n' +
             '- audioMap: usar "var audioMap" (n\u00e3o const). NUNCA tag de fechamento de script literal em strings.\n' +
             '- Arquivos tempor\u00e1rios e scripts: DENTRO do reposit\u00f3rio (/Users/helenmendes/alumni-plano-gerador/), paths ABSOLUTOS. NUNCA em /tmp/.\n\n' +
@@ -2957,16 +2952,12 @@
             '- Padrões UX: /docs/PADROES-UX-ALUMNI.md\n' +
             '- Integração ElevenLabs: /docs/INTEGRACAO-ELEVENLABS.md\n' +
             '- Rulebook Pedagógico: /docs/RULEBOOK-PEDAGOGICO.md\n\n' +
-            'COMPONENTES REUTILIZÁVEIS (OBRIGATÓRIO usar estes, NÃO reinventar):\n' +
-            '- /public/components/exercises.js \u2014 7 tipos de exercício FAAP prontos (importar com <script src>)\n' +
-            '  Funções: createMatchingDropdown(), createFillBlank(), createFillBlankWithHint(), createMultipleChoice(), createOrdering(), createPronunciation(), createThinkAboutIt()\n' +
-            '- /public/components/audio-generator.js \u2014 integração ElevenLabs + fallback Web Speech API\n' +
-            '  Funções: generateLessonAudios(), speakWithFallback(), buildAudioMap()\n' +
-            '- /public/components/image-validator.js \u2014 validação de imagens + fallbacks por tema\n' +
-            '  Funções: validateAndFixImages(), FALLBACK_IMAGES por tema\n' +
-            '- /public/components/faap-template.js \u2014 template engine FAAP (10 etapas da aula)\n' +
-            '  Função: generateFAAPLesson(lessonData) gera HTML completo da aula\n\n' +
-            'INSTRUÇÃO: Importe estes 4 scripts no HTML gerado e use as funções prontas. NÃO reimplemente exercícios do zero.\n\n' +
+            'EXERCÍCIOS — ABORDAGEM OBRIGATÓRIA:\n' +
+            '- SEMPRE HTML manual com funções inline: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(), listenBlank(), playAllVocab(), toggleLesson()\n' +
+            '- NUNCA usar funções geradoras (createMatchingDropdown, createFillBlank, etc.) — SEMPRE montar o HTML manualmente\n' +
+            '- NUNCA usar atributo data-exercise — SEMPRE HTML manual com as funções acima\n' +
+            '- COPIAR o bloco completo de JavaScript do template existente (patricia-ruffo.html) conforme CLAUDE.md REGRA 26\n' +
+            '- Trocar APENAS: audioMap, slug no localStorage, e totalLessons\n\n' +
             'GERAR DOIS ARQUIVOS HTML SEPARADOS:\n' +
             '1. /public/professor/' + perfilId + '.html \u2014 Material COMPLETO do professor (4 abas: Planejamento Pedagógico, Pre-class, IN CLASS, Atividades Complementares)\n' +
             '2. /public/aluno/' + perfilId + '.html \u2014 Material do ALUNO (apenas Pre-class + Atividades Complementares, SEM instruções do professor, SEM gabaritos, SEM perfil 360)\n\n' +
@@ -2986,11 +2977,11 @@
             '  - Objetivo do programa (parágrafo)\n' +
             '  - Promessa transformadora + personagem-jornada\n' +
             '  - Forças e pontos de melhoria do aluno\n' +
-            '  - TABELA DO CURRÍCULO: APENAS as ' + (perfil.curriculo ? perfil.curriculo.length : '?') + ' aulas deste bloco com # | Tema | Foco Linguístico | Atividade | Homework\n' +
+            '  - TABELA DO CURRÍCULO: todas as aulas do programa (usar os temas da seção DIVISÃO DE AULAS acima) com # | Tema | Foco Linguístico | Atividade | Homework\n' +
             '  - Regras de cancelamento\n\n' +
             'ABA 2 — PRE-CLASS (exercícios interativos):\n' +
-            '  Exercícios que o aluno faz ANTES da aula. Usa exercises.js:\n' +
-            '  HTML manual OBRIGATÓRIO: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(). NUNCA usar data-exercise ou createMatchingDropdown.\n' +
+            '  Exercícios que o aluno faz ANTES da aula.\n' +
+            '  HTML manual OBRIGATÓRIO: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(). NUNCA usar data-exercise.\n' +
             '  Mínimo 5-8 exercícios variados por aula. Com microcopy que autoriza o erro.\n\n' +
             'ABA 3 — IN CLASS (slides interativos para Zoom):\n' +
             '  Esta aba substitui o antigo Plano de Aula e Material do Professor.\n' +
@@ -3055,15 +3046,15 @@
             '- Microinterações 150-300ms ease-out em todos os componentes interativos\n' +
             '- Mobile-first responsivo (375px, 768px, 1024px, 1440px)\n' +
             '- Zero emojis — usar Lucide Icons (SVG inline)\n\n' +
-            'ESTILO VISUAL: LIQUID GLASS — aplicar em TODOS os materiais:\n' +
-            '- Cards e containers com efeito frosted glass: backdrop-filter: blur(15px) saturate(180%); background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px;\n' +
-            '- Transições fluidas 400-600ms com ease-out para elementos interativos\n' +
-            '- Profundidade via box-shadow: 0 8px 32px rgba(0,0,0,0.08)\n' +
-            '- Manter contraste WCAG 4.5:1 — usar texto escuro sobre glass claro\n' +
-            '- prefers-reduced-motion: desativar blur e animações fluidas\n\n' +
+            'ESTILO VISUAL:\n' +
+            '- Consultar /DESIGN.md para o design system visual completo (cores, tipografia, componentes)\n' +
+            '- COPIAR CSS do template existente (patricia-ruffo.html) + /public/styles/material.css — NUNCA gerar CSS do zero\n' +
+            '- Trocar APENAS: variáveis :root (--accent, --accent-light, --accent-dim, --accent-glow) para a paleta única do aluno\n' +
+            '- Manter contraste WCAG 4.5:1, touch targets 44x44px, focus states visíveis\n' +
+            '- prefers-reduced-motion: desativar animações\n\n' +
             'ÁUDIOS VIA ELEVENLABS (regra permanente para TODOS os alunos):\n' +
             '- TODOS os botões "Ouvir" devem ter áudio gerado pela ElevenLabs\n' +
-            '- Vozes: Arthur (male, American) e Ellen (female, calm American conversational). ALTERNAR entre as duas para trazer variedade — nunca usar só uma voz no material inteiro. Arthur para vocabulário e drilling, Ellen para diálogos e frases-modelo. Em survival cards e listening, mesclar ambas. Voice IDs: arthur="pNInz6obpgDQGcFmaJgB", ellen="CwhRBWXzGAHq8TQ4Fs17".\n' +
+            '- Vozes: Arthur (male, American) e Ellen (female, calm American conversational). ALTERNAR entre as duas para trazer variedade — nunca usar só uma voz no material inteiro. Arthur para vocabulário e drilling, Ellen para diálogos e frases-modelo. Em survival cards e listening, mesclar ambas. Voice IDs: arthur="sfJopaWaOtauCD3HKX6Q", ellen="BIvP0GN1cAtSRTxNHnWS".\n' +
             '- Formato: .mp3\n' +
             '- Gerar durante criação do material (não em runtime)\n' +
             '- Mapear em audioMap do JavaScript (var audioMap, não const)\n' +
@@ -3328,7 +3319,7 @@
 
             'VISUAL: Zero emojis (todos SVG inline Lucide). Zero imagens externas em cards (só em backgrounds full-screen testados). Font mínimo 0.9rem corpo. Dois tipos de botão: primary (filled) + secondary (outlined). Paleta única por aluno.\n\n' +
 
-            'ÁUDIO IN CLASS: 100% ElevenLabs. Arthur (pNInz6obpgDQGcFmaJgB) para personagens masculinos + palavras soltas. Ellen (CwhRBWXzGAHq8TQ4Fs17) para personagens femininos (incluindo a aluna se for mulher). Frases 3+ palavras ALTERNAM Arthur/Ellen. NUNCA voz única. Verificação: ZERO speakText() sem match no audioMap.\n\n' +
+            'ÁUDIO IN CLASS: 100% ElevenLabs. Arthur (sfJopaWaOtauCD3HKX6Q) para personagens masculinos + palavras soltas. Ellen (BIvP0GN1cAtSRTxNHnWS) para personagens femininos (incluindo a aluna se for mulher). Frases 3+ palavras ALTERNAM Arthur/Ellen. NUNCA voz única. Verificação: ZERO speakText() sem match no audioMap.\n\n' +
 
             'ZERO PORTUGUÊS NA TELA: Em QUALQUER nível (A0 a C2), a tela IN CLASS é 100% inglês. Definições de vocabulário em inglês simples. O professor traduz oralmente quando necessário.';
     }

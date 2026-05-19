@@ -131,6 +131,41 @@ files.forEach(file => {
   } else if (dataExCount === 0) {
     console.log('  PASS (com avisos) — HTML manual OK, ' + funcMissing + ' funções ausentes');
   }
+
+  // CHECK 6 — Hierarquia HTML (slides-wrapper FORA do main-content)
+  // Bug crítico maio/2026: se slides-wrapper estiver dentro de main-content,
+  // body.slide-mode .main-content { display:none } esconde os slides.
+  if (label.includes('professor') || html.includes('slides-wrapper')) {
+    console.log('\n✦ CHECK 6 — Hierarquia HTML (slides-wrapper)');
+    const hasSlides = html.includes('slides-wrapper');
+    if (hasSlides) {
+      // Verificar se main-content FECHA antes de slides-wrapper ABRIR
+      const mainContentOpen = html.indexOf('class="container main-content"');
+      const slidesWrapperOpen = html.indexOf('class="slides-wrapper"');
+      const mainContentCloseBeforeSlides = html.lastIndexOf('<!-- /container main-content -->', slidesWrapperOpen);
+
+      if (slidesWrapperOpen === -1) {
+        console.log('  SKIP — sem slides-wrapper (aluno?)');
+      } else if (mainContentCloseBeforeSlides > mainContentOpen && mainContentCloseBeforeSlides < slidesWrapperOpen) {
+        console.log('  PASS — slides-wrapper está FORA do main-content');
+      } else {
+        // Teste extra: verificar se há um </div> com comentário main-content antes do slides-wrapper
+        const beforeSlides = html.substring(0, slidesWrapperOpen);
+        const mainOpens = (beforeSlides.match(/class="container main-content"/g) || []).length;
+        const mainCloses = (beforeSlides.match(/\/container main-content/g) || []).length;
+        if (mainOpens > 0 && mainCloses >= mainOpens) {
+          console.log('  PASS — main-content fechado antes de slides-wrapper');
+        } else {
+          console.log('  FAIL — slides-wrapper está DENTRO do main-content!');
+          console.log('    O CSS body.slide-mode .main-content { display:none } vai esconder os slides.');
+          console.log('    FIX: fechar </div><!-- /container main-content --> ANTES do slides-wrapper.');
+          totalFails++;
+        }
+      }
+    } else {
+      console.log('  SKIP — sem slides-wrapper neste arquivo');
+    }
+  }
 });
 
 console.log('\n' + '═'.repeat(60));

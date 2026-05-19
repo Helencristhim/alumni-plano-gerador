@@ -23,14 +23,16 @@ Justificativa: aula de 90 minutos exige densidade pedagógica suficiente para pr
 ## REGRAS DE DISTRIBUIÇÃO DE AULAS POR PACOTE
 
 ### REGRA 121 — DISTRIBUIÇÃO DE AULAS POR TAMANHO DE PACOTE
-- PACOTE ≤ 10 AULAS: gera todas as aulas completas em uma chamada
-- PACOTE 11-20 AULAS: gera bloco único completo
-- PACOTE 21+ AULAS: blocos sequenciais de 20 aulas
-  - 30 aulas → bloco de 20 + bloco de 10
-  - 40 aulas → 2 blocos de 20
-  - 50 aulas → 2 blocos de 20 + bloco de 10
+- PACOTE ≤ 5 AULAS: gera todas as aulas completas em uma chamada
+- PACOTE 6+ AULAS: blocos sequenciais de 5 aulas
+  - 10 aulas → 2 blocos de 5
+  - 32 aulas → 6 blocos de 5 + 1 bloco de 2
+  - 48 aulas → 9 blocos de 5 + 1 bloco de 3
+  - 50 aulas → 10 blocos de 5
 
 REGRA: o número total gerado é EXATAMENTE o contratado, não arredondado.
+REGRA: cada bloco gera temas APENAS para suas 5 aulas (ou menos no último bloco).
+REGRA: o prompt para Claude Code inclui APENAS os temas do bloco atual, não de todos os blocos.
 
 ---
 

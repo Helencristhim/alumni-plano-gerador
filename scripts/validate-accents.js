@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ACCENT_MAP = {
+  /* -ção words */
   'criacao': 'criação', 'revisao': 'revisão', 'aprovacao': 'aprovação',
   'publicacao': 'publicação', 'informacao': 'informação', 'atencao': 'atenção',
   'observacao': 'observação', 'indicacao': 'indicação', 'validacao': 'validação',
@@ -16,12 +17,63 @@ const ACCENT_MAP = {
   'comunicacao': 'comunicação', 'imigracao': 'imigração', 'apresentacao': 'apresentação',
   'situacao': 'situação', 'motivacao': 'motivação', 'avaliacao': 'avaliação',
   'compreensao': 'compreensão', 'conclusao': 'conclusão', 'decisao': 'decisão',
-  'necessario': 'necessário', 'profissao': 'profissão', 'automatico': 'automático',
-  'automatica': 'automática', 'pedagogicas': 'pedagógicas', 'pedagogica': 'pedagógica',
-  'academico': 'acadêmico', 'intermediario': 'intermediário', 'avancado': 'avançado',
-  'publico': 'público', 'concluidos': 'concluídos', 'extraidos': 'extraídos',
-  'historico': 'histórico', 'ultimo': 'último', 'proximo': 'próximo',
-  'proxima': 'próxima', 'formulario': 'formulário', 'vitoria': 'vitória',
+  'consolidacao': 'consolidação', 'gravacao': 'gravação', 'descricao': 'descrição',
+  'evitacao': 'evitação', 'adivinhacao': 'adivinhação', 'celebracao': 'celebração',
+  'simulacao': 'simulação', 'ligacao': 'ligação', 'reflexao': 'reflexão',
+  'introducao': 'introdução', 'traducao': 'tradução', 'conversacao': 'conversação',
+  'organizacao': 'organização', 'pronunciacao': 'pronunciação',
+  'opcao': 'opção', 'opcoes': 'opções', 'reposicoes': 'reposições',
+  'capitalizacao': 'capitalização',
+  /* -ncia/-ência words */
+  'ausencia': 'ausência', 'consciencia': 'consciência',
+  'autoconsciencia': 'autoconsciência', 'experiencia': 'experiência',
+  'frequencia': 'frequência', 'antecedencia': 'antecedência',
+  'emergencia': 'emergência', 'alternancia': 'alternância',
+  'competencia': 'competência', 'referencia': 'referência',
+  /* -ão words (non -ção) */
+  'nao': 'não', 'entao': 'então', 'padrao': 'padrão', 'serao': 'serão',
+  /* Accented vowels */
+  'voce': 'você', 'pessimo': 'péssimo', 'ingles': 'inglês',
+  'portugues': 'português', 'nivel': 'nível', 'ninguem': 'ninguém',
+  'tambem': 'também', 'alem': 'além', 'porem': 'porém',
+  'alguem': 'alguém', 'contem': 'contém',
+  /* -ário/-ória/-ório words */
+  'necessario': 'necessário', 'vocabulario': 'vocabulário',
+  'formulario': 'formulário', 'intermediario': 'intermediário',
+  'historico': 'histórico', 'obrigatorio': 'obrigatório',
+  'curriculo': 'currículo',
+  /* -ístico/-ástico */
+  'linguistico': 'linguístico', 'turistico': 'turístico',
+  /* -ício/-ícia */
+  'exercicio': 'exercício', 'ficticio': 'fictício',
+  /* -ica/-ico */
+  'basicas': 'básicas', 'basica': 'básica', 'basico': 'básico',
+  'medica': 'médica', 'medico': 'médico',
+  'automatico': 'automático', 'automatica': 'automática',
+  'pedagogicas': 'pedagógicas', 'pedagogica': 'pedagógica',
+  'academico': 'acadêmico', 'publica': 'pública', 'publico': 'público',
+  'pratica': 'prática', 'pratico': 'prático',
+  'intrinseca': 'intrínseca', 'genuina': 'genuína',
+  'unica': 'única', 'unico': 'único',
+  'telefonico': 'telefônico', 'hipoteticos': 'hipotéticos',
+  'especifico': 'específico', 'especifica': 'específica',
+  /* -ões plurals */
+  'opinioes': 'opiniões', 'sugestoes': 'sugestões', 'musicas': 'músicas',
+  'experiencias': 'experiências', 'condicoes': 'condições',
+  /* Misc accented */
+  'profissao': 'profissão', 'seguranca': 'segurança', 'mudanca': 'mudança',
+  'avancado': 'avançado', 'avancada': 'avançada',
+  'preferencias': 'preferências', 'forcas': 'forças', 'forca': 'força',
+  'estrategia': 'estratégia', 'serie': 'série',
+  'proprio': 'próprio', 'propria': 'própria',
+  'proximo': 'próximo', 'proxima': 'próxima', 'proximos': 'próximos',
+  'ultimo': 'último', 'ultima': 'última',
+  'diario': 'diário', 'previsao': 'previsão',
+  'farmacia': 'farmácia', 'politica': 'política',
+  'minimo': 'mínimo', 'previo': 'prévio',
+  'conteudo': 'conteúdo', 'conteudos': 'conteúdos',
+  'acao': 'ação', 'acoes': 'ações',
+  'vitoria': 'vitória', 'concluidos': 'concluídos', 'extraidos': 'extraídos',
 };
 
 // Only check PURE HTML text content — extract text between > and <

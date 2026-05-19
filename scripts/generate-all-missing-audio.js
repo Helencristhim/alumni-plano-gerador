@@ -3,8 +3,8 @@ const path = require('path');
 const https = require('https');
 
 const API_KEY = process.env.ELEVENLABS_API_KEY;
-const ARTHUR_ID = 'pNInz6obpgDQGcFmaJgB';
-const ELLEN_ID = 'CwhRBWXzGAHq8TQ4Fs17';
+const ARTHUR_ID = 'sfJopaWaOtauCD3HKX6Q';
+const ELLEN_ID = 'BIvP0GN1cAtSRTxNHnWS';
 const BASE_DIR = path.join(__dirname, '..', 'public');
 
 if (!API_KEY) { console.error('ELEVENLABS_API_KEY not set'); process.exit(1); }
