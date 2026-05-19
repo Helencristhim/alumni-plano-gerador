@@ -27,6 +27,36 @@ if [ "$UNTRACKED_AUDIO" -gt 0 ]; then
     echo ""
 fi
 
+# 1c. CRITICAL: Check for empty or near-empty HTML files (corruption protection)
+for f in public/professor/*.html public/aluno/*.html; do
+    [ ! -f "$f" ] && continue
+    BASENAME=$(basename "$f")
+    case "$BASENAME" in
+        *backup*|*test*|elaine-v-*) continue ;;
+    esac
+    LINES=$(wc -l < "$f" | tr -d ' ')
+    SIZE=$(wc -c < "$f" | tr -d ' ')
+    if [ "$LINES" -lt 10 ] || [ "$SIZE" -lt 500 ]; then
+        echo "ERRO CRITICO: $f esta VAZIO ou CORROMPIDO ($LINES linhas, $SIZE bytes)"
+        ERRORS=$((ERRORS + 1))
+    fi
+done
+
+# 1d. Check staged files for corruption (files about to be committed)
+STAGED=$(git diff --cached --name-only 2>/dev/null | grep -E "public/(professor|aluno)/.*\.html$")
+if [ -n "$STAGED" ]; then
+    for f in $STAGED; do
+        [ ! -f "$f" ] && continue
+        LINES=$(wc -l < "$f" | tr -d ' ')
+        # Compare with previous version
+        PREV_LINES=$(git show HEAD:"$f" 2>/dev/null | wc -l | tr -d ' ')
+        if [ "$PREV_LINES" -gt 100 ] && [ "$LINES" -lt 50 ]; then
+            echo "ERRO CRITICO: $f encolheu de $PREV_LINES para $LINES linhas! Possivel corrupcao."
+            ERRORS=$((ERRORS + 1))
+        fi
+    done
+fi
+
 # 2. Check for deleted files still referenced
 DELETED=$(git status public/professor/ public/aluno/ --short 2>/dev/null | grep "^ D" | grep "\.html$")
 if [ -n "$DELETED" ]; then
