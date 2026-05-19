@@ -19,6 +19,14 @@ if [ -n "$UNTRACKED" ]; then
     echo ""
 fi
 
+# 1b. Check for untracked audio files
+UNTRACKED_AUDIO=$(git status public/audio/ --short 2>/dev/null | grep "^??" | grep "\.mp3$" | wc -l | tr -d ' ')
+if [ "$UNTRACKED_AUDIO" -gt 0 ]; then
+    echo "ERRO: $UNTRACKED_AUDIO arquivos MP3 nao commitados (audios vao falhar na Vercel)"
+    ERRORS=$((ERRORS + 1))
+    echo ""
+fi
+
 # 2. Check for deleted files still referenced
 DELETED=$(git status public/professor/ public/aluno/ --short 2>/dev/null | grep "^ D" | grep "\.html$")
 if [ -n "$DELETED" ]; then
