@@ -2036,9 +2036,14 @@ async function auditStudent(index) {
           aulaLessons.forEach(function(al) {
             al._sourceFile = aulaFiles[af].url;
             al._sourceHtml = aulaHtml;
-            /* Only add if not already detected in main file */
-            var exists = detectedLessons.some(function(d) { return d.num === al.num; });
-            if (!exists) detectedLessons.push(al);
+            /* Individual aula file REPLACES placeholder from main file */
+            var existingIdx = -1;
+            detectedLessons.forEach(function(d, idx) { if (d.num === al.num) existingIdx = idx; });
+            if (existingIdx !== -1) {
+              detectedLessons[existingIdx] = al;
+            } else {
+              detectedLessons.push(al);
+            }
           });
         }
       }
