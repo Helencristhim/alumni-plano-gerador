@@ -2086,13 +2086,32 @@ async function auditStudent(index) {
     var sourceHtml = lesson._sourceHtml || html;
     var lessonHtml = sourceHtml.substring(lesson.startIdx, lesson.endIdx);
 
+    /* For Pre-class: if individual aula file has empty/redirect Pre-class, use main file instead */
+    var preclassHtml = lessonHtml;
+    if (lesson._sourceHtml) {
+      var preclassCheck = checkPreclassLesson(lessonHtml, lesson.num);
+      if (!preclassCheck.pass) {
+        /* Try main file's lesson HTML for Pre-class */
+        var mainLesson = null;
+        var mainLessonRegex = new RegExp('id=["\']ex-lesson-' + lesson.num + '["\']');
+        var mainStartIdx = html.search(mainLessonRegex);
+        if (mainStartIdx !== -1) {
+          var mainNextLesson = html.indexOf('id="ex-lesson-' + (lesson.num + 1) + '"', mainStartIdx + 1);
+          var mainEndIdx = mainNextLesson !== -1 ? mainNextLesson : html.length;
+          var mainLessonHtml = html.substring(mainStartIdx, mainEndIdx);
+          var mainCheck = checkPreclassLesson(mainLessonHtml, lesson.num);
+          if (mainCheck.pass) preclassHtml = mainLessonHtml;
+        }
+      }
+    }
+
     var checks = [];
 
     /* 1. Structure (file-wide, same for all lessons) */
     checks.push({ name: CHECK_NAMES[0], result: fileChecks.structure });
 
-    /* 2. Pre-class etapas */
-    checks.push({ name: CHECK_NAMES[1], result: checkPreclassLesson(lessonHtml, lesson.num) });
+    /* 2. Pre-class etapas (use main file Pre-class if individual has redirect) */
+    checks.push({ name: CHECK_NAMES[1], result: checkPreclassLesson(preclassHtml, lesson.num) });
 
     /* 3. IN CLASS slides (use source file if from individual aula) */
     checks.push({ name: CHECK_NAMES[2], result: checkInClassSlides(sourceHtml) });
