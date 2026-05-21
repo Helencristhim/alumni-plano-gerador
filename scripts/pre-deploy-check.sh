@@ -10,6 +10,15 @@ echo "  GOVERNANCA PRE-DEPLOY"
 echo "========================================"
 echo ""
 
+# 0. Check for untracked critical JS files in lib/
+UNTRACKED_LIB=$(git status public/lib/ public/styles/ --short 2>/dev/null | grep "^??" | grep -E "\.(js|css)$")
+if [ -n "$UNTRACKED_LIB" ]; then
+    echo "ERRO: Arquivos JS/CSS criticos nao commitados (vao dar 404 na Vercel):"
+    echo "$UNTRACKED_LIB" | sed 's/^/  /'
+    ERRORS=$((ERRORS + 1))
+    echo ""
+fi
+
 # 1. Check for untracked HTML files in professor/ and aluno/
 UNTRACKED=$(git status public/professor/ public/aluno/ --short 2>/dev/null | grep "^??" | grep -v backup | grep "\.html$")
 if [ -n "$UNTRACKED" ]; then
