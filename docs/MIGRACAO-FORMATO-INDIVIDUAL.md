@@ -177,13 +177,13 @@ done
 | Arquivo | Linhas (antes da migração) |
 |---------|---------------------------|
 | gabriela-pires.html | 8085 |
-| elaine-mieko-pinho.html | 6697 |
-| eduarda-gabriel.html | 8557 |
-| luiz-bressane.html | 8866 |
-| maisa-de-oliveira-santos.html | 5835 |
-| milton-sayegh.html | 8272 |
+| elaine-mieko-pinho.html | 7358 |
+| eduarda-gabriel.html | 7547 |
+| luiz-bressane.html | 8499 |
+| maisa-de-oliveira-santos.html | 5530 |
+| milton-sayegh.html | 6906 |
 | rafael-gasparelli-lima.html | 6364 |
-| vanessa-maluf.html | 8490 |
-| daniela-feitoza.html | 5277 |
+| vanessa-maluf.html | 8729 |
+| daniela-feitoza.html | 4087 |
 
 Esses números DEVEM permanecer iguais após a migração. Se mudarem, algo foi alterado indevidamente.
