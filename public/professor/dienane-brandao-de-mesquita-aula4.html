@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Dienane Orders Breakfast &mdash; Lesson 4 | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --accent: #0D7377;
+  --accent-light: #14A3A8;
+  --accent-dim: rgba(13, 115, 119, 0.12);
+  --accent-glow: rgba(13, 115, 119, 0.05);
+  --black: #1a1a2e;
+  --bg: #f5f5f0;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0f0eb;
+  --bg-input: #fafaf7;
+  --border: #d4d4cc;
+  --border-light: #c0c0b8;
+  --white: #1a1a2e;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #5c5c6c;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --success-border: rgba(22,163,74,0.25);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --danger-border: rgba(220,38,38,0.25);
+  --warn: #d97706;
+  --warn-bg: rgba(217,119,6,0.08);
+  --warn-border: rgba(217,119,6,0.25);
+  --navy: #003080;
+  --marco-blue: #5b9bd5;
+  --slide-transition: 400ms;
+}
+
+/* Standalone slide file — always in slide mode */
+body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; width: 100vw; background: var(--black); }
+.header { display: none !important; }
+
+/* === LOGO BAR === */
+.logo-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: .6rem 1.5rem; background: rgba(26,26,46,.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,.06); }
+.logo-bar img { height: 28px; filter: brightness(10); }
+.logo-bar .slide-counter { font-size: .75rem; font-weight: 600; color: rgba(255,255,255,.5); letter-spacing: 2px; font-variant-numeric: tabular-nums; }
+
+/* === PHASE BAR === */
+.phase-bar { position: fixed; top: 50px; left: 0; right: 0; z-index: 99; display: flex; height: 4px; background: rgba(26,26,46,.6); }
+.phase-segment { flex: 1; position: relative; transition: background .4s; }
+.phase-segment.completed { background: var(--accent); }
+.phase-segment.current { background: var(--accent-light); animation: phasePulse 2s ease infinite; }
+.phase-segment.upcoming { background: rgba(255,255,255,.08); }
+@keyframes phasePulse { 0%,100% { opacity: 1; } 50% { opacity: .6; } }
+.phase-labels { position: fixed; top: 54px; left: 0; right: 0; z-index: 98; display: flex; padding: 0 1.5rem; }
+.phase-label { flex: 1; font-size: .6rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.25); text-align: center; padding: .3rem 0; transition: color .4s; }
+.phase-label.current { color: var(--accent-light); }
+.phase-label.completed { color: var(--accent); }
+
+/* === SLIDES === */
+.slides-container { height: 100vh; overflow: hidden; position: relative; }
+.slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; transition: opacity var(--slide-transition) ease, visibility 0s var(--slide-transition); display: flex; align-items: center; justify-content: center; padding: 5rem 2rem 5.5rem; }
+.slide.active { opacity: 1; visibility: visible; transition: opacity var(--slide-transition) ease, visibility 0s 0s; }
+.slide-inner { max-width: 920px; width: 100%; position: relative; max-height: calc(100vh - 10.5rem); overflow-y: auto; }
+.slide-light { background: var(--bg); }
+.slide-light .slide-inner { color: var(--text); }
+.slide-dark { background: var(--black); }
+.slide-dark .slide-inner { color: #fff; }
+.slide-dark .vocab-card-ic, .slide-dark .fill-item, .slide-dark .challenge-card, .slide-dark .error-card, .slide-dark .roleplay-card, .slide-dark .record-card, .slide-dark .oral-item, .slide-dark .comp-q, .slide-dark .business-card-artifact, .slide-dark .check-item { color: #2d2d3a; }
+.slide-image { background-size: cover; background-position: center; }
+.slide-image::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(26,26,46,.4) 0%, rgba(26,26,46,.78) 100%); }
+.slide-image .slide-inner { color: #fff; position: relative; z-index: 2; text-align: center; }
+
+/* === NAV BAR === */
+.nav-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1rem 2rem; background: rgba(26,26,46,.92); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,.06); }
+.nav-btn { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.2); background: transparent; color: rgba(255,255,255,.7); font-size: 1.2rem; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; }
+.nav-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.nav-btn:disabled { opacity: .2; cursor: default; background: transparent; border-color: rgba(255,255,255,.1); }
+.nav-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.slide-dots { display: flex; gap: 6px; align-items: center; }
+.slide-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.2); transition: all .3s; cursor: pointer; }
+.slide-dot.active { background: var(--accent); width: 20px; border-radius: 3px; }
+
+/* === Typography === */
+.chapter-label { font-size: .75rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--accent-light); margin-bottom: .5rem; }
+.slide-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem,5vw,4rem); font-weight: 600; line-height: 1.15; margin-bottom: 1rem; }
+.slide-subtitle { font-size: 1rem; font-weight: 300; opacity: .7; line-height: 1.6; }
+.slide-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 600; line-height: 1.2; margin-bottom: 1.2rem; }
+.accent { color: var(--accent); }
+
+/* === Warm-up === */
+.warm-questions { display: flex; flex-direction: column; gap: 1.8rem; margin-top: 2rem; }
+.warm-q { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; font-style: italic; opacity: 0; animation: fadeUp .8s ease forwards; color: #fff; padding-left: 1.5rem; border-left: 3px solid var(--accent); }
+.warm-q:nth-child(2) { animation-delay: .4s; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* === Teacher T === */
+.teacher-t { position: fixed; top: 5rem; right: 1.5rem; z-index: 50; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; cursor: default; transition: all .2s; background: rgba(255,255,255,.1); color: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.15); }
+.teacher-t:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.teacher-t-panel { display: none; position: absolute; top: 0; right: calc(100% + 10px); width: 340px; background: rgba(26,26,46,.96); color: rgba(255,255,255,.9); padding: 1rem 1.2rem; border-radius: 10px; font-size: .82rem; line-height: 1.65; box-shadow: 0 12px 40px rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.08); }
+.teacher-t:hover .teacher-t-panel { display: block; animation: fadeIn .2s ease; }
+.teacher-t-panel strong { color: var(--accent-light); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* === Vocab Cards (IN CLASS 2x2) === */
+.vocab-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; margin-top: 1.5rem; }
+.vocab-card { background: #fff; border: 2px solid var(--accent-dim); border-radius: 12px; overflow: hidden; cursor: pointer; transition: all .4s; min-height: 220px; display: flex; flex-direction: column; }
+.vocab-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,148,136,.12); }
+.vocab-card.revealed { border-color: var(--accent); }
+.vocab-card .card-icon { width: 100%; height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem; border-radius: 11px 11px 0 0; transition: all .5s; padding: .5rem; }
+.vocab-card .card-icon svg { width: 48px; height: 48px; stroke-width: 1.5; opacity: .5; transition: opacity .5s; }
+.vocab-card.revealed .card-icon svg { opacity: 1; }
+.vocab-card .card-hint { font-size: .78rem; color: rgba(255,255,255,.75); font-style: italic; text-align: center; line-height: 1.3; padding: 0 .5rem; max-width: 90%; }
+.vocab-card.revealed .card-hint { opacity: .5; font-size: .7rem; }
+.vocab-card .card-body { padding: .7rem .8rem; display: flex; flex-direction: column; gap: .25rem; flex: 1; }
+.vocab-card .card-word { font-weight: 700; font-size: 1.05rem; color: var(--accent); opacity: 0; height: 0; overflow: hidden; transition: all .4s; }
+.vocab-card.revealed .card-word { opacity: 1; height: auto; }
+.vocab-card .card-def { font-size: .78rem; color: var(--text-dim); line-height: 1.3; font-style: italic; opacity: 0; height: 0; overflow: hidden; transition: all .4s .1s; }
+.vocab-card.revealed .card-def { opacity: 1; height: auto; }
+.vocab-card .card-example { font-size: .82rem; color: var(--text); line-height: 1.3; opacity: 0; height: 0; overflow: hidden; transition: all .4s .2s; }
+.vocab-card.revealed .card-example { opacity: 1; height: auto; }
+.vocab-card .card-audio { margin-top: auto; padding-top: .4rem; opacity: 0; transition: opacity .4s .3s; }
+.vocab-card.revealed .card-audio { opacity: 1; }
+
+.audio-btn-sm { display: inline-flex; align-items: center; gap: .3rem; padding: .3rem .7rem; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; font-size: .72rem; font-weight: 600; font-family: 'Inter', sans-serif; transition: all .2s; letter-spacing: .5px; }
+.audio-btn-sm:hover { filter: brightness(.9); }
+.audio-btn-sm svg { width: 12px; height: 12px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.vocab-counter { text-align: center; margin-top: 1.2rem; font-weight: 600; color: var(--accent); font-size: 1rem; }
+.vocab-complete { display: none; text-align: center; margin-top: 1rem; font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--accent); font-weight: 600; }
+.vocab-complete.show { display: block; animation: fadeUp .6s ease; }
+
+/* === Pronunciation Drill === */
+.pron-grid { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+.pron-item { display: flex; align-items: center; gap: 1rem; background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: .8rem 1rem; cursor: pointer; transition: all .3s; }
+.pron-item:hover { border-color: var(--accent); box-shadow: 0 4px 12px rgba(13,148,136,.1); }
+.pron-word { font-weight: 700; font-size: 1.1rem; color: var(--black); min-width: 120px; }
+.pron-stress { display: flex; gap: .3rem; align-items: center; flex: 1; }
+.pron-syl { font-size: .9rem; color: var(--text-dim); padding: .2rem .5rem; border-radius: 4px; transition: all .3s; }
+.pron-syl.stressed { background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem; transform: scale(1.1); }
+.pron-audio { margin-left: auto; }
+
+/* === Grammar === */
+.grammar-sentences { display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0; }
+.grammar-sentence { font-size: 1.15rem; text-align: center; line-height: 1.6; padding: .6rem; background: rgba(13,148,136,.04); border-radius: 8px; }
+.grammar-sentence strong { color: var(--accent); font-weight: 800; font-size: 1.2rem; }
+.btn-primary { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 2rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: .95rem; font-weight: 600; cursor: pointer; transition: all .3s; font-family: 'Inter', sans-serif; }
+.btn-primary:hover { transform: scale(1.03); box-shadow: 0 8px 24px rgba(13,148,136,.3); }
+.grammar-table-wrap { overflow: hidden; max-height: 0; transition: max-height .6s ease; margin-top: 1rem; }
+.grammar-table-wrap.show { max-height: 500px; }
+.grammar-table { width: 100%; max-width: 500px; margin: 0 auto; border-collapse: collapse; }
+.grammar-table th { background: var(--accent); color: #fff; padding: .6rem 1rem; text-align: left; font-size: .85rem; }
+.grammar-table td { padding: .6rem 1rem; border-bottom: 1px solid #e8e8e8; font-size: .95rem; }
+.grammar-table td:nth-child(2) { font-weight: 700; color: var(--accent); }
+
+/* === Mistake === */
+.mistake-card { display: flex; flex-direction: column; gap: 1.5rem; align-items: center; margin-top: 2rem; }
+.mistake-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; font-size: 1.2rem; width: 100%; max-width: 500px; }
+.mistake-wrong { background: rgba(220,38,38,.06); border: 2px solid rgba(220,38,38,.2); color: var(--danger); text-decoration: line-through; font-weight: 600; }
+.mistake-right { background: rgba(22,163,74,.06); border: 2px solid rgba(22,163,74,.2); color: var(--success); font-weight: 700; }
+.mistake-icon { width: 32px; height: 32px; flex-shrink: 0; }
+.mistake-icon svg { width: 32px; height: 32px; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* === Fill-in Practice === */
+.fill-grid { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+.fill-item { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: all .3s; display: flex; align-items: center; gap: .8rem; }
+.fill-item:hover { border-color: var(--accent); }
+.fill-item .fill-text { font-size: 1rem; flex: 1; }
+.fill-item .fill-blank { color: var(--accent); font-weight: 800; border-bottom: 2px dashed var(--accent); padding: 0 .3rem; min-width: 40px; display: inline-block; text-align: center; }
+.fill-item .fill-answer { display: none; font-weight: 700; color: var(--accent); }
+.fill-item.revealed .fill-blank { display: none; }
+.fill-item.revealed .fill-answer { display: inline; }
+
+/* === Substitution Drill === */
+.sub-template { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; text-align: center; line-height: 2; margin: 1.5rem 0; color: var(--text); }
+.sub-blank { display: inline-block; min-width: 100px; border-bottom: 3px solid var(--accent); cursor: pointer; transition: all .3s; padding: 0 .3rem; color: var(--accent); font-weight: 700; }
+.sub-blank:hover { background: var(--accent-dim); }
+.sub-options { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin-top: 1rem; }
+
+/* === Dialogue === */
+.dialogue-box { display: flex; flex-direction: column; gap: .6rem; margin-top: 1.5rem; max-height: 65vh; overflow-y: auto; padding-right: .5rem; }
+.dialogue-line { display: flex; gap: .8rem; align-items: flex-start; opacity: 0; transform: translateY(10px); transition: all .4s; }
+.dialogue-line.visible { opacity: 1; transform: translateY(0); }
+.dialogue-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .8rem; color: #fff; flex-shrink: 0; }
+.dialogue-avatar.waiter { background: var(--marco-blue); }
+.dialogue-avatar.dienane { background: var(--accent); }
+.dialogue-bubble { padding: .7rem 1rem; border-radius: 12px; font-size: .92rem; line-height: 1.5; max-width: 80%; position: relative; }
+.dialogue-bubble.waiter-bubble { background: rgba(91,155,213,.1); border: 1px solid rgba(91,155,213,.2); }
+.dialogue-bubble.dienane-bubble { background: var(--accent-dim); border: 1px solid rgba(13,148,136,.2); }
+.dialogue-bubble .vocab-highlight { color: var(--accent); font-weight: 700; }
+.dialogue-bubble .audio-inline { display: inline-flex; margin-left: .4rem; cursor: pointer; opacity: .5; transition: opacity .2s; vertical-align: middle; }
+.dialogue-bubble .audio-inline:hover { opacity: 1; }
+.dialogue-bubble .audio-inline svg { width: 14px; height: 14px; stroke: var(--accent); fill: none; stroke-width: 2; }
+
+/* === Comprehension === */
+.comp-questions { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+.comp-q { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: all .3s; font-size: .95rem; }
+.comp-q:hover { border-color: var(--accent); background: var(--accent-dim); }
+.comp-q .q-text { font-weight: 500; }
+.comp-q .q-answer { display: none; margin-top: .5rem; color: var(--accent); font-weight: 600; font-size: .9rem; }
+.comp-q.revealed .q-answer { display: block; animation: fadeUp .3s ease; }
+
+/* === Challenge === */
+.challenge-card { background: #fff; border: 2px solid #e8e4df; border-radius: 16px; padding: 2rem; text-align: center; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2rem; transition: all .3s; }
+.challenge-prompt { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; line-height: 1.5; color: var(--text); }
+.challenge-answer { display: none; font-size: 1.1rem; color: var(--accent); font-weight: 600; padding: 1rem; background: var(--accent-dim); border-radius: 10px; width: 100%; animation: fadeUp .3s ease; }
+.challenge-answer.show { display: block; }
+.challenge-score { position: absolute; top: 1rem; right: 1rem; background: var(--accent); color: #fff; padding: .3rem .8rem; border-radius: 20px; font-size: .8rem; font-weight: 700; }
+.challenge-counter { font-size: .8rem; color: var(--text-dim); font-weight: 600; }
+
+/* === Error Cards === */
+.error-grid { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+.error-card { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: all .3s; display: flex; align-items: center; gap: 1rem; }
+.error-card:hover { border-color: var(--accent); }
+.error-card .error-sentence { font-size: 1rem; color: var(--danger); flex: 1; }
+.error-card .error-fix { display: none; font-weight: 600; color: var(--success); font-size: .95rem; }
+.error-card.revealed .error-sentence { text-decoration: line-through; opacity: .5; }
+.error-card.revealed .error-fix { display: block; animation: fadeUp .3s ease; }
+.error-score { text-align: center; margin-top: 1rem; font-weight: 700; color: var(--accent); font-size: 1.1rem; }
+
+/* === Oral Drill === */
+.oral-grid { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+.oral-item { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: all .3s; }
+.oral-situation { font-size: .95rem; color: var(--text); margin-bottom: .5rem; line-height: 1.5; }
+.oral-model { display: none; color: var(--accent); font-weight: 600; font-size: .9rem; padding: .6rem; background: var(--accent-dim); border-radius: 6px; margin-top: .5rem; }
+.oral-item.revealed .oral-model { display: block; animation: fadeUp .3s ease; }
+
+/* === Listening Player === */
+.listening-player { max-width: 420px; margin: 1.5rem auto 0; }
+.lp-seekbar { height: 6px; background: rgba(255,255,255,.15); border-radius: 3px; cursor: pointer; margin-bottom: 8px; position: relative; }
+.lp-seekbar:hover { height: 8px; }
+.lp-progress { height: 100%; background: var(--accent); border-radius: 3px; transition: width .1s; width: 0%; }
+.lp-time { display: flex; justify-content: space-between; font-size: .75rem; color: rgba(255,255,255,.5); margin-bottom: 16px; font-variant-numeric: tabular-nums; }
+.lp-controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; }
+.lp-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); background: transparent; color: rgba(255,255,255,.7); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+.lp-btn:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+.lp-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+.lp-play { width: 64px; height: 64px; background: var(--accent); border: none; color: #fff; }
+.lp-play:hover { transform: scale(1.05); }
+.lp-play svg { width: 24px; height: 24px; }
+.lp-play.playing .lp-icon-play { display: none; }
+.lp-play.playing .lp-icon-pause { display: flex !important; }
+.lp-icon-pause { display: none !important; }
+.lp-speed { display: flex; justify-content: center; gap: 8px; }
+.lp-speed-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: rgba(255,255,255,.5); font-size: .75rem; font-weight: 600; cursor: pointer; transition: all .2s; font-family: 'Inter', sans-serif; }
+.lp-speed-btn:hover { color: #fff; border-color: rgba(255,255,255,.4); }
+.lp-speed-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.lp-label { font-size: .7rem; color: rgba(255,255,255,.35); text-transform: uppercase; letter-spacing: 1.5px; text-align: center; margin-bottom: 6px; }
+
+/* === Role Play === */
+.roleplay-card { background: #fff; border: 2px solid var(--accent); border-radius: 16px; overflow: hidden; max-width: 500px; margin: 0 auto; }
+.roleplay-header { width: 100%; height: 100px; display: flex; align-items: center; justify-content: center; }
+.roleplay-header svg { width: 48px; height: 48px; stroke: #fff; fill: none; stroke-width: 1.5; }
+.roleplay-body { padding: 1.5rem; }
+.roleplay-scenario { font-size: 1rem; line-height: 1.6; color: var(--text); margin-bottom: 1rem; }
+.roleplay-keywords { display: flex; flex-wrap: wrap; gap: .4rem; }
+.roleplay-kw { padding: .3rem .7rem; background: var(--accent-dim); border: 1px solid rgba(13,148,136,.2); border-radius: 16px; font-size: .8rem; color: var(--accent); font-weight: 600; }
+
+/* === Record Card === */
+.record-card { background: #fff; border: 2px solid #e8e4df; border-radius: 16px; padding: 2rem; text-align: center; max-width: 500px; margin: 0 auto; }
+.record-prompt { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; line-height: 1.5; color: var(--text); margin-bottom: 1.5rem; }
+.record-btn { width: 72px; height: 72px; border-radius: 50%; background: var(--danger); border: none; color: #fff; cursor: pointer; transition: all .3s; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+.record-btn:hover { transform: scale(1.08); box-shadow: 0 8px 32px rgba(220,38,38,.3); }
+.record-btn svg { width: 28px; height: 28px; fill: #fff; }
+.record-btn.recording { animation: recordPulse 1s ease infinite; }
+@keyframes recordPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,.4); } 50% { box-shadow: 0 0 0 12px rgba(220,38,38,0); } }
+
+/* === Badge / Celebration === */
+.badge-card { text-align: center; padding: 2rem; }
+.badge-icon { width: 120px; height: 120px; margin: 0 auto 1.5rem; position: relative; }
+.badge-icon .badge-circle { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg,var(--accent),var(--accent-light)); display: flex; align-items: center; justify-content: center; animation: badgePop .6s ease; }
+.badge-icon .badge-circle svg { width: 48px; height: 48px; stroke: #fff; fill: none; stroke-width: 2; }
+@keyframes badgePop { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+.sparkles { position: absolute; inset: -20px; pointer-events: none; }
+.sparkle { position: absolute; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: sparkle 1.5s ease infinite; }
+@keyframes sparkle { 0% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0) translateY(-20px); } }
+.sparkle:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+.sparkle:nth-child(2) { top: 5%; right: 25%; animation-delay: .3s; }
+.sparkle:nth-child(3) { bottom: 15%; left: 10%; animation-delay: .6s; }
+.sparkle:nth-child(4) { bottom: 10%; right: 15%; animation-delay: .2s; }
+.sparkle:nth-child(5) { top: 40%; left: 5%; animation-delay: .8s; }
+.sparkle:nth-child(6) { top: 30%; right: 5%; animation-delay: .5s; }
+
+/* === Review Grid === */
+.review-grid { display: flex; flex-direction: column; gap: .6rem; margin-top: 1.5rem; }
+.review-item { display: flex; align-items: center; gap: .8rem; background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: .7rem 1rem; }
+.review-word { font-weight: 700; font-size: 1rem; color: var(--accent); min-width: 110px; }
+.review-example { font-size: .85rem; color: var(--text-dim); flex: 1; line-height: 1.4; font-style: italic; }
+.review-audio { flex-shrink: 0; }
+
+/* === Checklist === */
+.check-grid { display: flex; flex-direction: column; gap: .5rem; margin-top: 1.5rem; }
+.check-item { display: flex; align-items: center; gap: .8rem; padding: .7rem 1rem; background: #fff; border: 1px solid #e8e4df; border-radius: 8px; cursor: pointer; transition: all .3s; font-size: .92rem; color: var(--text); }
+.check-item:hover { border-color: var(--accent); }
+.check-item.checked { background: rgba(22,163,74,.06); border-color: rgba(22,163,74,.3); }
+.check-item .check-box { width: 22px; height: 22px; border-radius: 6px; border: 2px solid #d0d0d0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .3s; }
+.check-item.checked .check-box { background: var(--success); border-color: var(--success); }
+.check-item.checked .check-box svg { opacity: 1; }
+.check-box svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 3; opacity: 0; transition: opacity .3s; }
+
+/* === Delayed Error Correction === */
+.error-slots { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+.error-slot { display: flex; gap: 1rem; align-items: center; }
+.error-slot-label { font-size: .8rem; color: rgba(255,255,255,.4); font-weight: 600; min-width: 20px; }
+.error-slot-input { flex: 1; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); border-radius: 8px; padding: .8rem 1rem; color: #fff; font-size: .9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color .2s; }
+.error-slot-input:focus { border-color: var(--accent); }
+.error-slot-arrow { color: var(--accent-light); font-size: 1.2rem; }
+.error-slot-fix { flex: 1; background: rgba(22,163,74,.08); border: 1px solid rgba(22,163,74,.2); border-radius: 8px; padding: .8rem 1rem; color: #fff; font-size: .9rem; font-family: 'Inter', sans-serif; outline: none; }
+.error-slot-fix:focus { border-color: var(--success); }
+
+/* === Menu Artifact === */
+.menu-artifact { background: #fff; border-radius: 12px; max-width: 460px; margin: 0 auto; box-shadow: 0 16px 48px rgba(0,0,0,.12); overflow: hidden; border: 1px solid #e0e0e0; }
+.menu-header { background: var(--accent); padding: .8rem 1.5rem; text-align: center; }
+.menu-header-title { color: #fff; font-weight: 800; font-size: .9rem; letter-spacing: 3px; text-transform: uppercase; }
+.menu-header-sub { color: rgba(255,255,255,.7); font-size: .7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: .2rem; }
+.menu-section { padding: .8rem 1.5rem; border-bottom: 1px solid #f0f0eb; }
+.menu-section:last-child { border-bottom: none; }
+.menu-section-title { font-weight: 700; font-size: .75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: .5rem; }
+.menu-row { display: flex; justify-content: space-between; align-items: center; padding: .3rem 0; }
+.menu-row-left { display: flex; align-items: center; gap: .5rem; font-size: .9rem; color: var(--text); }
+.menu-row-left svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+.menu-row-price { font-weight: 700; font-size: .9rem; color: var(--text-mid); }
+
+/* === Sort Columns === */
+.sort-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top: 1.5rem; }
+.sort-col { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem; text-align: center; }
+.sort-col h4 { font-size: .85rem; font-weight: 700; color: var(--accent); margin-bottom: .8rem; letter-spacing: 1px; text-transform: uppercase; }
+.sort-item { font-size: .9rem; padding: .3rem 0; border-bottom: 1px solid #f0f0eb; cursor: pointer; transition: all .3s; }
+.sort-item:last-child { border-bottom: none; }
+.sort-item:hover { color: var(--accent); }
+
+/* === Build Order === */
+.order-scenarios { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+.order-scenario { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: all .3s; }
+.order-scenario:hover { border-color: var(--accent); }
+.order-scenario .os-title { font-weight: 600; font-size: 1rem; color: var(--accent); margin-bottom: .3rem; }
+.order-scenario .os-prompt { font-size: .9rem; color: var(--text-dim); line-height: 1.4; }
+.order-scenario .os-model { display: none; color: var(--accent); font-weight: 600; font-size: .9rem; padding: .6rem; background: var(--accent-dim); border-radius: 6px; margin-top: .5rem; }
+.order-scenario.revealed .os-model { display: block; animation: fadeUp .3s ease; }
+
+/* === Confetti === */
+.confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
+.confetti-piece { position: absolute; width: 8px; height: 8px; top: -10px; animation: confettiFall 3s ease forwards; }
+@keyframes confettiFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+/* === Scrollbar === */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(13,148,136,.3); border-radius: 3px; }
+
+/* === Contrast fix === */
+.slide-dark .checklist li,.slide-dark .check-item,.slide-dark .check-label,.slide-dark .roleplay-body,.slide-dark .roleplay-body p,.slide-dark .roleplay-scenario,.slide-dark .comp-q,.slide-dark .comp-q p,.slide-dark .fill-item label,.slide-dark .fill-item p,.slide-dark .error-card p,.slide-dark .oral-item p,.slide-dark .email-card p,.slide-dark .boarding-pass p,.slide-dark .student-id-card p{color:#1a1a2e!important}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .slide { padding: 5rem 1.2rem 5.5rem; }
+  .vocab-grid { grid-template-columns: 1fr; gap: .8rem; }
+  .vocab-card { min-height: auto; }
+  .slide-title { font-size: 2rem; }
+  .slide-heading { font-size: 1.6rem; }
+  .dialogue-bubble { max-width: 85%; }
+  .sub-template { font-size: 1.2rem; }
+  .teacher-t-panel { width: 260px; }
+  .sort-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='dienane-brandao-de-mesquita';window.TOTAL_AULAS=71;</script>
+</head>
+<body>
+
+<!-- Logo Bar -->
+<div class="logo-bar">
+  <img src="/assets/logo-alumni.png" alt="Alumni by Better">
+  <span class="slide-counter" id="slideCounter">01 / 35</span>
+</div>
+
+<!-- Phase Bar -->
+<div class="phase-bar" id="phaseBar">
+  <div class="phase-segment current" data-phase="1"></div>
+  <div class="phase-segment upcoming" data-phase="2"></div>
+  <div class="phase-segment upcoming" data-phase="3"></div>
+  <div class="phase-segment upcoming" data-phase="4"></div>
+  <div class="phase-segment upcoming" data-phase="5"></div>
+  <div class="phase-segment upcoming" data-phase="6"></div>
+  <div class="phase-segment upcoming" data-phase="7"></div>
+</div>
+<div class="phase-labels" id="phaseLabels">
+  <span class="phase-label current" data-phase="1">The Dream</span>
+  <span class="phase-label" data-phase="2">Packing Words</span>
+  <span class="phase-label" data-phase="3">The Code</span>
+  <span class="phase-label" data-phase="4">Getting There</span>
+  <span class="phase-label" data-phase="5">Practice</span>
+  <span class="phase-label" data-phase="6">Your Turn</span>
+  <span class="phase-label" data-phase="7">Wrap-Up</span>
+</div>
+
+<div class="slides-container" id="slidesContainer">
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 1: THE DREAM (Warm-up + Callback) — slides 1-4      -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+
+<!-- ========== SLIDE 1: TITLE ========== -->
+<div class="slide slide-image active" data-slide="1" data-phase="1" data-teacher="<strong>Abertura (2 min):</strong> 'Today we go to a restaurant! You will learn to order food in English.' Compartilhe a tela." style="background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1400&q=80')">
+  <div class="slide-inner">
+    <div class="chapter-label">Lesson 4 &mdash; General English</div>
+    <h1 class="slide-title">Dienane Orders Breakfast</h1>
+    <p class="slide-subtitle">A1+ &bull; 90 minutes &bull; Alumni by Better</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 2: WARM-UP ========== -->
+<div class="slide slide-dark" data-slide="2" data-phase="1" data-teacher="<strong>Warm-up (3 min):</strong> Tema leve e divertido. Dienane provavelmente vai dizer nomes em PT. Reformule: 'Ah, you like rice! Great word!'">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 1: The Dream</div>
+    <h2 class="slide-heading">Let's Talk About Food</h2>
+    <div class="warm-questions">
+      <div class="warm-q">"What is your favorite food?"</div>
+      <div class="warm-q">"What do you eat for breakfast?"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 3: CALLBACK ========== -->
+<div class="slide slide-dark" data-slide="3" data-phase="1" data-teacher="<strong>Callback (3 min):</strong> Revis&atilde;o de possessivos da Aula 3. Se lembrar: celebre! Conecte: 'Last class was your FAMILY. Today is FOOD!'">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 1: The Dream</div>
+    <h2 class="slide-heading">Do You Remember?</h2>
+    <div class="comp-questions">
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">"Who is in your family?"</div>
+        <div class="q-answer">I have a brother and a sister. My mother and father live in Bel&eacute;m.</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">"Where does your mother live?"</div>
+        <div class="q-answer">My mother lives in Bel&eacute;m.</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">"Use 'his' in a sentence."</div>
+        <div class="q-answer">His name is Carlos.</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)">
+        <div class="q-text">"Use 'her' in a sentence."</div>
+        <div class="q-answer">Her husband is a teacher.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 4: LESSON PROMISE ========== -->
+<div class="slide slide-dark" data-slide="4" data-phase="1" data-teacher="<strong>Promessa (1 min):</strong> 'By the end of today, you will order food at a restaurant in English.'">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Today's Promise</div>
+    <h2 class="slide-heading" style="color:#fff">By the end of this lesson,<br>you will be able to...</h2>
+    <div class="check-grid" style="max-width:500px;margin:1.5rem auto 0">
+      <div class="check-item" style="cursor:default;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)"><div class="check-box" style="border-color:var(--accent);background:var(--accent)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span style="color:#fff">Order food at a restaurant</span></div>
+      <div class="check-item" style="cursor:default;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)"><div class="check-box" style="border-color:var(--accent);background:var(--accent)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span style="color:#fff">Use a, an, and some correctly</span></div>
+      <div class="check-item" style="cursor:default;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)"><div class="check-box" style="border-color:var(--accent);background:var(--accent)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span style="color:#fff">Ask politely for food and drinks</span></div>
+      <div class="check-item" style="cursor:default;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)"><div class="check-box" style="border-color:var(--accent);background:var(--accent)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span style="color:#fff">Read a restaurant menu</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 2: PACKING WORDS (Vocabulary) — slides 5-10          -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+
+<!-- ========== SLIDE 5: TRANSITION ========== -->
+<div class="slide slide-image" data-slide="5" data-phase="2" data-teacher="<strong>Transi&ccedil;&atilde;o (15 seg):</strong> Avance." style="background-image:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80')">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 2</div>
+    <h1 class="slide-title">Packing Words</h1>
+    <p class="slide-subtitle">Eight words for food and drinks</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 6: VOCAB 1-4 ========== -->
+<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabul&aacute;rio (8 min):</strong> 'Coffee' &mdash; Dienane toma caf&eacute; todo dia (rotina). Conecte: 'You have coffee every morning, right?' Drilling: water = WA-ter (stress 1st).">
+  <div class="slide-inner">
+    <div class="chapter-label">Packing Words</div>
+    <h2 class="slide-heading">New Vocabulary <span class="accent">(1-4)</span></h2>
+    <div class="vocab-grid" id="vocabGrid1">
+      <!-- Water -->
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#0891b2,#22d3ee)">
+          <svg viewBox="0 0 24 24" stroke="#fff" fill="none"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>
+          <span class="card-hint">A clear drink your body needs</span>
+        </div>
+        <div class="card-body">
+          <div class="card-word">Water</div>
+          <div class="card-def">A clear drink your body needs</div>
+          <div class="card-example">"Can I have some water, please?"</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Water',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <!-- Coffee -->
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#5c4033,#8b6b4a)">
+          <svg viewBox="0 0 24 24" stroke="#fff" fill="none"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          <span class="card-hint">A hot brown drink</span>
+        </div>
+        <div class="card-body">
+          <div class="card-word">Coffee</div>
+          <div class="card-def">A hot brown drink</div>
+          <div class="card-example">"I have coffee every morning."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Coffee',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <!-- Bread -->
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#d97706,#f59e0b)">
+          <svg viewBox="0 0 24 24" stroke="#fff" fill="none"><path d="M2 12s3-7 10-7 10 7 10 7"/><path d="M2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6"/></svg>
+          <span class="card-hint">A basic food made from flour</span>
+        </div>
+        <div class="card-body">
+          <div class="card-word">Bread</div>
+          <div class="card-def">A basic food made from flour</div>
+          <div class="card-example">"I eat bread for breakfast."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Bread',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <!-- Rice -->
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#2D6A4F,#52b788)">
+          <svg viewBox="0 0 24 24" stroke="#fff" fill="none"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>
+          <span class="card-hint">Small white grains, a staple food</span>
+        </div>
+        <div class="card-body">
+          <div class="card-word">Rice</div>
+          <div class="card-def">Small white grains, a staple food</div>
+          <div class="card-example">"We have rice for lunch."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Rice',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="vocab-counter" id="vocabCount1">0 / 4 words revealed</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 7: VOCAB 5-8 ========== -->
+<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabul&aacute;rio (8 min):</strong> 'Order' &mdash; verbo E substantivo. 'I would like to order' (verbo). 'Your order is ready' (substantivo). Foque no verbo por agora.">
+  <div class="slide-inner">
+    <div class="chapter-label">Packing Words</div>
+    <h2 class="slide-heading">New Vocabulary <span class="accent">(5-8)</span></h2>
+    <div class="vocab-grid" id="vocabGrid2">
+      <!-- Chicken -->
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#dc2626,#f87171)">
+          <svg viewBox="0 0 24 24" stroke="#fff" fill="none"><path d="M15 11l-1 9"/><path d="M19 11l-1 9"/><path d="M12 20h8"/><path d="M12 11a4 4 0 01-4-4V5a2 2 0 014 0v2a4 4 0 014 4"/><circle cx="10" cy="5" r="1" fill="#fff"/></svg>
+          <span class="card-hint">A common meat from a bird</span>
+        </div>
+        <div class="card-body">
+          <div class="card-word">Chicken</div>
+          <div class="card-def">A common meat from a bird</div>
+          <div class="card-example">"I cook chicken for dinner."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Chicken',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <!-- Fruit -->
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">
+          <svg viewBox="0 0 24 24" stroke="#fff" fill="none"><path d="M12 2c3 0 6 2 6 6s-3 10-6 14C9 18 6 10 6 8s3-6 6-6z"/><path d="M12 2c-1-1-4 0-4 2s2 3 4 3 4-1 4-3-3-3-4-2z"/></svg>
+          <span class="card-hint">Natural sweet food like apples</span>
+        </div>
+        <div class="card-body">
+          <div class="card-word">Fruit</div>
+          <div class="card-def">Natural sweet food like apples</div>
+          <div class="card-example">"I eat fruit every day."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Fruit',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <!-- Menu -->
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#0D7377,#14A3A8)">
+          <svg viewBox="0 0 24 24" stroke="#fff" fill="none"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>
+          <span class="card-hint">A list of food at a restaurant</span>
+        </div>
+        <div class="card-body">
+          <div class="card-word">Menu</div>
+          <div class="card-def">A list of food at a restaurant</div>
+          <div class="card-example">"Can I see the menu, please?"</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Menu',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+      <!-- Order -->
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e)">
+          <svg viewBox="0 0 24 24" stroke="#fff" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
+          <span class="card-hint">To ask for food or drinks</span>
+        </div>
+        <div class="card-body">
+          <div class="card-word">Order</div>
+          <div class="card-def">To ask for food or drinks</div>
+          <div class="card-example">"I would like to order, please."</div>
+          <div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Order',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="vocab-counter" id="vocabCount2">0 / 4 words revealed</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 8: PRONUNCIATION DRILL ========== -->
+<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pron&uacute;ncia (5 min):</strong> 'chicken' = CHICK-en (n&atilde;o 'shi-KEN'). 'menu' = MEN-u (stress 1st, n&atilde;o 'me-NU'). 'water' = WA-ter, T quase como D (American).">
+  <div class="slide-inner">
+    <div class="chapter-label">Packing Words</div>
+    <h2 class="slide-heading">Pronunciation Drill</h2>
+    <div class="pron-grid">
+      <div class="pron-item" onclick="speakText('Water',this)"><div class="pron-word">Water</div><div class="pron-stress"><span class="pron-syl stressed">WA</span><span class="pron-syl">ter</span></div><div class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Water',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="pron-item" onclick="speakText('Coffee',this)"><div class="pron-word">Coffee</div><div class="pron-stress"><span class="pron-syl stressed">COF</span><span class="pron-syl">fee</span></div><div class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Coffee',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="pron-item" onclick="speakText('Bread',this)"><div class="pron-word">Bread</div><div class="pron-stress"><span class="pron-syl stressed">BREAD</span></div><div class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Bread',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="pron-item" onclick="speakText('Rice',this)"><div class="pron-word">Rice</div><div class="pron-stress"><span class="pron-syl stressed">RICE</span></div><div class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Rice',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="pron-item" onclick="speakText('Chicken',this)"><div class="pron-word">Chicken</div><div class="pron-stress"><span class="pron-syl stressed">CHICK</span><span class="pron-syl">en</span></div><div class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Chicken',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="pron-item" onclick="speakText('Fruit',this)"><div class="pron-word">Fruit</div><div class="pron-stress"><span class="pron-syl stressed">FRUIT</span></div><div class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Fruit',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="pron-item" onclick="speakText('Menu',this)"><div class="pron-word">Menu</div><div class="pron-stress"><span class="pron-syl stressed">MEN</span><span class="pron-syl">u</span></div><div class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Menu',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="pron-item" onclick="speakText('Order',this)"><div class="pron-word">Order</div><div class="pron-stress"><span class="pron-syl stressed">OR</span><span class="pron-syl">der</span></div><div class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Order',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 9: SAY IT ALL ========== -->
+<div class="slide slide-light" data-slide="9" data-phase="2" data-teacher="<strong>Revis&atilde;o (3 min):</strong> Passe rapidamente. Dienane diz palavra + frase.">
+  <div class="slide-inner">
+    <div class="chapter-label">Packing Words</div>
+    <h2 class="slide-heading">Say It All</h2>
+    <div class="review-grid">
+      <div class="review-item"><span class="review-word">Water</span><span class="review-example">"Can I have some water, please?"</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Can I have some water, please?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word">Coffee</span><span class="review-example">"I have coffee every morning."</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('I have coffee every morning.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word">Bread</span><span class="review-example">"I eat bread for breakfast."</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('I eat bread for breakfast.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word">Rice</span><span class="review-example">"We have rice for lunch."</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('We have rice for lunch.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word">Chicken</span><span class="review-example">"I cook chicken for dinner."</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('I cook chicken for dinner.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word">Fruit</span><span class="review-example">"I eat fruit every day."</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('I eat fruit every day.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word">Menu</span><span class="review-example">"Can I see the menu, please?"</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Can I see the menu, please?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word">Order</span><span class="review-example">"I would like to order, please."</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('I would like to order, please.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 10: KEY EXPRESSIONS ========== -->
+<div class="slide slide-light" data-slide="10" data-phase="2" data-teacher="<strong>Express&otilde;es (5 min):</strong> 'Can I have' &eacute; a frase mais importante desta aula. Drilling: 'Can I have some water?' 5x acelerando.">
+  <div class="slide-inner">
+    <div class="chapter-label">Packing Words</div>
+    <h2 class="slide-heading">Key Expressions</h2>
+    <div class="review-grid">
+      <div class="review-item"><span class="review-word" style="min-width:180px">Can I have...?</span><span class="review-example">"Can I have some water, please?"</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Can I have some water, please?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word" style="min-width:180px">I would like...</span><span class="review-example">"I would like a coffee, please."</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('I would like a coffee and some bread.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word" style="min-width:180px">Some water, please.</span><span class="review-example">"Some water, please."</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Can I have some water, please?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word" style="min-width:180px">An orange, please.</span><span class="review-example">"Can I have an orange juice?"</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Can I have an orange juice?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+      <div class="review-item"><span class="review-word" style="min-width:180px">Do you have any...?</span><span class="review-example">"Do you have any fruit?"</span><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Do you have any fruit?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 3: THE CODE (Grammar) — slides 11-15                 -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+
+<!-- ========== SLIDE 11: GRAMMAR DISCOVERY ========== -->
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Grammar Discovery (5 min):</strong> Pergunte: 'A coffee, AN orange. Why A and why AN?' Se Dienane notar o som: celebre! CCQ: 'A or AN before apple?' (an). 'A or AN before banana?' (a).">
+  <div class="slide-inner">
+    <div class="chapter-label">The Code</div>
+    <h2 class="slide-heading">What Do You Notice?</h2>
+    <div class="grammar-sentences">
+      <div class="grammar-sentence">I would like <strong>a</strong> coffee.</div>
+      <div class="grammar-sentence">Can I have <strong>an</strong> orange?</div>
+      <div class="grammar-sentence">I want <strong>some</strong> water.</div>
+      <div class="grammar-sentence">She eats <strong>a</strong> sandwich.</div>
+      <div class="grammar-sentence">We need <strong>some</strong> rice.</div>
+      <div class="grammar-sentence">Can I have <strong>an</strong> egg?</div>
+    </div>
+    <p style="text-align:center;font-size:1.1rem;color:var(--text-mid);margin:1.5rem 0;font-style:italic">When do we use <span class="accent" style="font-weight:700">a</span>, <span class="accent" style="font-weight:700">an</span>, or <span class="accent" style="font-weight:700">some</span>?</p>
+    <div style="text-align:center"><button class="btn-primary" onclick="revealGrammar()">Reveal the Rule</button></div>
+    <div class="grammar-table-wrap" id="grammarTable">
+      <table class="grammar-table">
+        <thead><tr><th>Article</th><th>Rule</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>a</td><td>before consonant sounds</td><td><strong>a</strong> coffee, <strong>a</strong> menu</td></tr>
+          <tr><td>an</td><td>before vowel sounds</td><td><strong>an</strong> apple, <strong>an</strong> orange</td></tr>
+          <tr><td>some</td><td>uncountable or plural</td><td><strong>some</strong> water, <strong>some</strong> rice</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 12: COMMON MISTAKE ========== -->
+<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Erro Comum (3 min):</strong> 'Water' &eacute; incont&aacute;vel &mdash; N&Atilde;O usa 'a'. Usa 'some'. Repita 3x. 'Orange' come&ccedil;a com vogal &mdash; usa 'an', n&atilde;o 'a'.">
+  <div class="slide-inner">
+    <div class="chapter-label">The Code</div>
+    <h2 class="slide-heading">Common Mistake</h2>
+    <div class="mistake-card">
+      <div class="mistake-item mistake-wrong"><div class="mistake-icon"><svg viewBox="0 0 24 24" stroke="#dc2626" fill="none"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>I want a water.</div>
+      <div class="mistake-item mistake-right"><div class="mistake-icon"><svg viewBox="0 0 24 24" stroke="#16a34a" fill="none"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>I want <strong>some</strong> water.</div>
+      <div class="mistake-item mistake-wrong" style="margin-top:1rem"><div class="mistake-icon"><svg viewBox="0 0 24 24" stroke="#dc2626" fill="none"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>Can I have a orange?</div>
+      <div class="mistake-item mistake-right"><div class="mistake-icon"><svg viewBox="0 0 24 24" stroke="#16a34a" fill="none"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>Can I have <strong>an</strong> orange?</div>
+    </div>
+    <p style="text-align:center;font-size:.9rem;color:var(--text-dim);margin-top:1.5rem">Water is uncountable &rarr; use <strong>some</strong>. Orange starts with a vowel sound &rarr; use <strong>an</strong>.</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 13: GRAMMAR PRACTICE ========== -->
+<div class="slide slide-light" data-slide="13" data-phase="3" data-teacher="<strong>Pr&aacute;tica (5 min):</strong> Dienane escolhe a/an/some. Pattern: vowel sound &rarr; an, consonant &rarr; a, uncountable &rarr; some.">
+  <div class="slide-inner">
+    <div class="chapter-label">The Code</div>
+    <h2 class="slide-heading">Complete the Sentence</h2>
+    <div class="fill-grid">
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">I would like <span class="fill-blank">___</span><span class="fill-answer">a</span> coffee.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Can I have <span class="fill-blank">___</span><span class="fill-answer">an</span> orange?</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">I want <span class="fill-blank">___</span><span class="fill-answer">some</span> water.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">She eats <span class="fill-blank">___</span><span class="fill-answer">an</span> apple every day.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">We need <span class="fill-blank">___</span><span class="fill-answer">some</span> bread.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">I have <span class="fill-blank">___</span><span class="fill-answer">a</span> menu here.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 14: POLITE REQUESTS DRILL ========== -->
+<div class="slide slide-light" data-slide="14" data-phase="3" data-teacher="<strong>Drill (5 min):</strong> Dienane pratica pedidos educados. 'Can I have a coffee?' 'I would like some water.' Alternar as duas estruturas.">
+  <div class="slide-inner">
+    <div class="chapter-label">The Code</div>
+    <h2 class="slide-heading">Polite Requests Drill</h2>
+    <div class="sub-template">
+      <span class="sub-blank" id="subBlank1" onclick="cycleSub(this,0)">Can I have</span> <span class="sub-blank" id="subBlank2" onclick="cycleSub(this,1)">a coffee</span> ?
+    </div>
+    <div style="text-align:center;margin-top:1rem"><button class="btn-primary" onclick="randomizeSubs()">Randomize</button></div>
+    <p style="text-align:center;font-size:.85rem;color:var(--text-dim);margin-top:1rem">Click each word to change it. Press Randomize for a new combination.</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 15: A vs AN vs SOME SORT ========== -->
+<div class="slide slide-light" data-slide="15" data-phase="3" data-teacher="<strong>Classifica&ccedil;&atilde;o (5 min):</strong> Dienane categoriza cada item. Se errar: 'Listen to the first sound. Coffee starts with C (consonant) &rarr; A.'">
+  <div class="slide-inner">
+    <div class="chapter-label">The Code</div>
+    <h2 class="slide-heading">A vs An vs Some</h2>
+    <p style="text-align:center;font-size:.95rem;color:var(--text-mid);margin-bottom:1rem">Click each item to check your answer.</p>
+    <div class="sort-grid">
+      <div class="sort-col">
+        <h4>A</h4>
+        <div class="comp-q" onclick="revealComp(this)" style="padding:.6rem .8rem"><div class="q-text">coffee</div><div class="q-answer">a coffee</div></div>
+        <div class="comp-q" onclick="revealComp(this)" style="padding:.6rem .8rem"><div class="q-text">menu</div><div class="q-answer">a menu</div></div>
+        <div class="comp-q" onclick="revealComp(this)" style="padding:.6rem .8rem"><div class="q-text">sandwich</div><div class="q-answer">a sandwich</div></div>
+      </div>
+      <div class="sort-col">
+        <h4>AN</h4>
+        <div class="comp-q" onclick="revealComp(this)" style="padding:.6rem .8rem"><div class="q-text">orange</div><div class="q-answer">an orange</div></div>
+        <div class="comp-q" onclick="revealComp(this)" style="padding:.6rem .8rem"><div class="q-text">egg</div><div class="q-answer">an egg</div></div>
+        <div class="comp-q" onclick="revealComp(this)" style="padding:.6rem .8rem"><div class="q-text">apple</div><div class="q-answer">an apple</div></div>
+      </div>
+      <div class="sort-col">
+        <h4>SOME</h4>
+        <div class="comp-q" onclick="revealComp(this)" style="padding:.6rem .8rem"><div class="q-text">water</div><div class="q-answer">some water</div></div>
+        <div class="comp-q" onclick="revealComp(this)" style="padding:.6rem .8rem"><div class="q-text">bread</div><div class="q-answer">some bread</div></div>
+        <div class="comp-q" onclick="revealComp(this)" style="padding:.6rem .8rem"><div class="q-text">rice</div><div class="q-answer">some rice</div></div>
+        <div class="comp-q" onclick="revealComp(this)" style="padding:.6rem .8rem"><div class="q-text">chicken</div><div class="q-answer">some chicken</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 4: GETTING THERE (Context) — slides 16-20            -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+
+<!-- ========== SLIDE 16: TRANSITION ========== -->
+<div class="slide slide-image" data-slide="16" data-phase="4" data-teacher="<strong>Transi&ccedil;&atilde;o (15 seg):</strong> Avance." style="background-image:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1400&q=80')">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 4</div>
+    <h1 class="slide-title">Dienane at the Restaurant</h1>
+    <p class="slide-subtitle">Time to order food and drinks.</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 17: RESTAURANT MENU ARTIFACT ========== -->
+<div class="slide slide-light" data-slide="17" data-phase="4" data-teacher="<strong>Artefato (5 min):</strong> 'You are at Hotel Bras&iacute;lia for breakfast. Look at the menu!' Pergunte: 'What would YOU order?' Dienane pratica: 'I would like a coffee and some bread.'">
+  <div class="slide-inner">
+    <div class="chapter-label">Getting There</div>
+    <h2 class="slide-heading">Hotel Bras&iacute;lia &mdash; Breakfast Menu</h2>
+    <div class="menu-artifact">
+      <div class="menu-header">
+        <div class="menu-header-title">Hotel Bras&iacute;lia</div>
+        <div class="menu-header-sub">Breakfast Menu</div>
+      </div>
+      <div class="menu-section">
+        <div class="menu-section-title">Hot Drinks</div>
+        <div class="menu-row"><div class="menu-row-left"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg> Coffee</div><div class="menu-row-price">R$ 8</div></div>
+        <div class="menu-row"><div class="menu-row-left"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg> Tea</div><div class="menu-row-price">R$ 7</div></div>
+      </div>
+      <div class="menu-section">
+        <div class="menu-section-title">Cold Drinks</div>
+        <div class="menu-row"><div class="menu-row-left"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="12" y1="8" x2="12" y2="14"/></svg> Orange Juice</div><div class="menu-row-price">R$ 10</div></div>
+        <div class="menu-row"><div class="menu-row-left"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg> Water</div><div class="menu-row-price">R$ 5</div></div>
+      </div>
+      <div class="menu-section">
+        <div class="menu-section-title">Food</div>
+        <div class="menu-row"><div class="menu-row-left"><svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7"/><path d="M2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6"/></svg> Bread &amp; Butter</div><div class="menu-row-price">R$ 12</div></div>
+        <div class="menu-row"><div class="menu-row-left"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="8"/><path d="M12 4c0 0-4 3-4 6s2 4 4 4 4-1 4-4-4-6-4-6z"/></svg> Eggs (2)</div><div class="menu-row-price">R$ 15</div></div>
+        <div class="menu-row"><div class="menu-row-left"><svg viewBox="0 0 24 24"><path d="M12 2c3 0 6 2 6 6s-3 10-6 14C9 18 6 10 6 8s3-6 6-6z"/></svg> Fresh Fruit</div><div class="menu-row-price">R$ 10</div></div>
+        <div class="menu-row"><div class="menu-row-left"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="12" x2="21" y2="12"/></svg> Cheese Sandwich</div><div class="menu-row-price">R$ 14</div></div>
+      </div>
+    </div>
+    <div class="comp-questions" style="margin-top:1.5rem">
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">How much is a coffee?</div><div class="q-answer">R$ 8</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">What cold drinks are available?</div><div class="q-answer">Orange juice and water.</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">How much are the eggs?</div><div class="q-answer">R$ 15</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 18: LISTENING 1 ========== -->
+<div class="slide slide-dark" data-slide="18" data-phase="4" data-teacher="<strong>Listening (5 min):</strong> Toque SEM texto. 'What food items did you hear?' Repita se necess&aacute;rio. Depois revele as perguntas.">
+  <div class="slide-inner">
+    <div class="chapter-label">Getting There</div>
+    <h2 class="slide-heading">Listening &mdash; Waiter Takes an Order</h2>
+    <div class="listening-player" id="player1" data-src="/audio/dienane-brandao-de-mesquita/listening4_1_waiter_order.mp3">
+      <div class="lp-label">Audio Player</div>
+      <div class="lp-seekbar" onclick="seekAudio(event,'player1')"><div class="lp-progress" id="progress-player1"></div></div>
+      <div class="lp-time"><span id="time-current-player1">0:00</span><span id="time-total-player1">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('player1',-5)" aria-label="Back 5 seconds"><svg viewBox="0 0 24 24"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('player1')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" style="align-items:center;justify-content:center"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('player1',5)" aria-label="Forward 5 seconds"><svg viewBox="0 0 24 24"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+      </div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player1',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player1',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('player1',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player1',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div class="comp-questions" id="questions-player1" style="display:none;margin-top:1.5rem">
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">What did the person order?</div><div class="q-answer">Coffee, bread, eggs, and water.</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">How long will the order take?</div><div class="q-answer">Five minutes.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 19: DIALOGUE ========== -->
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>Di&aacute;logo (8 min):</strong> Dienane pratica pedidos reais. ANTES de cada fala dela: 'What would you say?' OBST&Aacute;CULO: 'an orange' &mdash; Dienane pode dizer 'a orange'.">
+  <div class="slide-inner">
+    <div class="chapter-label">Getting There</div>
+    <h2 class="slide-heading">Dialogue &mdash; Dienane Orders Breakfast</h2>
+    <div class="dialogue-box" id="dialogueBox">
+      <div class="dialogue-line visible" data-line="1" data-voice="arthur"><div class="dialogue-avatar waiter">W</div><div class="dialogue-bubble waiter-bubble">Good morning. Welcome to Hotel Bras&iacute;lia. What would you like for breakfast? <span class="audio-inline" onclick="speakText('Good morning. Welcome to Hotel Brasília. What would you like for breakfast?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="2" data-voice="ellen"><div class="dialogue-avatar dienane">D</div><div class="dialogue-bubble dienane-bubble">Good morning! I would like <span class="vocab-highlight">a coffee</span>, please. <span class="audio-inline" onclick="speakText('Good morning! I would like a coffee, please.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="3" data-voice="arthur"><div class="dialogue-avatar waiter">W</div><div class="dialogue-bubble waiter-bubble">Of course. Would you like <span class="vocab-highlight">some bread</span> or <span class="vocab-highlight">fruit</span>? <span class="audio-inline" onclick="speakText('Of course. Would you like some bread or fruit?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="4" data-voice="ellen"><div class="dialogue-avatar dienane">D</div><div class="dialogue-bubble dienane-bubble"><span class="vocab-highlight">Some bread</span> and <span class="vocab-highlight">an orange</span>, please. <span class="audio-inline" onclick="speakText('Some bread and an orange, please.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="5" data-voice="arthur"><div class="dialogue-avatar waiter">W</div><div class="dialogue-bubble waiter-bubble">Would you like <span class="vocab-highlight">some water</span> too? <span class="audio-inline" onclick="speakText('Would you like some water too?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="6" data-voice="ellen"><div class="dialogue-avatar dienane">D</div><div class="dialogue-bubble dienane-bubble">Yes, please. Can I have <span class="vocab-highlight">some water</span>? <span class="audio-inline" onclick="speakText('Yes, please. Can I have some water?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="7" data-voice="arthur"><div class="dialogue-avatar waiter">W</div><div class="dialogue-bubble waiter-bubble">Of course. Anything else? <span class="audio-inline" onclick="speakText('Of course. Anything else?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="8" data-voice="ellen"><div class="dialogue-avatar dienane">D</div><div class="dialogue-bubble dienane-bubble">No, thank you. That is all. <span class="audio-inline" onclick="speakText('No, thank you. That is all.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+    </div>
+    <div style="text-align:center;margin-top:1rem"><button class="btn-primary" id="nextLineBtn" onclick="nextDialogueLine()">Next Line</button></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 20: DIALOGUE COMPREHENSION ========== -->
+<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Compreens&atilde;o (3 min):</strong> Perguntas sobre o que o garçom e Dienane disseram.">
+  <div class="slide-inner">
+    <div class="chapter-label">Getting There</div>
+    <h2 class="slide-heading">Did You Understand?</h2>
+    <div class="comp-questions">
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">What does Dienane order to drink?</div><div class="q-answer">Coffee and water.</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">Does she want bread or fruit?</div><div class="q-answer">Bread and an orange.</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">What polite phrase does she use?</div><div class="q-answer">"Can I have..." / "I would like..." / "Please"</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 5: PRACTICE — slides 21-26                           -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+
+<!-- ========== SLIDE 21: TRANSITION ========== -->
+<div class="slide slide-image" data-slide="21" data-phase="5" data-teacher="<strong>Transi&ccedil;&atilde;o (15 seg):</strong> Avance." style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=80')">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 5</div>
+    <h1 class="slide-title">More Practice</h1>
+    <p class="slide-subtitle">Show what you learned.</p>
+  </div>
+</div>
+
+<!-- ========== SLIDE 22: QUICK CHALLENGE ========== -->
+<div class="slide slide-light" data-slide="22" data-phase="5" data-teacher="<strong>Quick Fire (8 min):</strong> Uma situa&ccedil;&atilde;o por vez. Dienane deve usar a/an/some e 'Can I have' / 'I would like'.">
+  <div class="slide-inner">
+    <div class="chapter-label">Practice</div>
+    <h2 class="slide-heading">Quick Challenge</h2>
+    <div class="challenge-card" id="challengeCard" style="position:relative">
+      <div class="challenge-score" id="challengeScore">0 / 6</div>
+      <div class="challenge-counter" id="challengeCounter">Question 1 of 6</div>
+      <div class="challenge-prompt" id="challengePrompt">You want coffee. How do you ask?</div>
+      <div class="challenge-answer" id="challengeAnswer">"Can I have a coffee, please?"</div>
+      <button class="btn-primary" id="showAnswerBtn" onclick="showChallengeAnswer()">Show Answer</button>
+      <button class="btn-primary" id="nextChallengeBtn" onclick="nextChallenge()" style="display:none">Next Question</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 23: SPOT THE ERROR ========== -->
+<div class="slide slide-light" data-slide="23" data-phase="5" data-teacher="<strong>Spot the Error (5 min):</strong> Erros 1-3 s&atilde;o a/an/some. Erros 4-5 misturam gram&aacute;tica das aulas anteriores.">
+  <div class="slide-inner">
+    <div class="chapter-label">Practice</div>
+    <h2 class="slide-heading">Spot the Error</h2>
+    <div class="error-grid">
+      <div class="error-card" onclick="revealError(this)"><div class="error-sentence">I want a water.</div><div class="error-fix">I want <strong>some</strong> water.</div></div>
+      <div class="error-card" onclick="revealError(this)"><div class="error-sentence">Can I have a orange?</div><div class="error-fix">Can I have <strong>an</strong> orange?</div></div>
+      <div class="error-card" onclick="revealError(this)"><div class="error-sentence">I would like a rice.</div><div class="error-fix">I would like <strong>some</strong> rice.</div></div>
+      <div class="error-card" onclick="revealError(this)"><div class="error-sentence">She eat bread every day.</div><div class="error-fix">She <strong>eats</strong> bread every day.</div></div>
+      <div class="error-card" onclick="revealError(this)"><div class="error-sentence">I like to order, please.</div><div class="error-fix">I <strong>would like</strong> to order, please.</div></div>
+    </div>
+    <div class="error-score" id="errorScore">0 / 5 errors found</div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 24: ORAL DRILLING ========== -->
+<div class="slide slide-light" data-slide="24" data-phase="5" data-teacher="<strong>Oral Drilling (5 min):</strong> Dienane pratica frases completas. Item 4 testa 'we would like'. Item 6 produz m&uacute;ltiplas frases.">
+  <div class="slide-inner">
+    <div class="chapter-label">Practice</div>
+    <h2 class="slide-heading">Oral Drilling</h2>
+    <div class="oral-grid">
+      <div class="oral-item" onclick="this.classList.toggle('revealed')"><div class="oral-situation">Order a coffee at a restaurant.</div><div class="oral-model">"I would like a coffee, please."</div></div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')"><div class="oral-situation">Ask for water politely.</div><div class="oral-model">"Can I have some water, please?"</div></div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')"><div class="oral-situation">Tell someone what you eat for breakfast.</div><div class="oral-model">"I eat bread and fruit for breakfast."</div></div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')"><div class="oral-situation">Order lunch for two people.</div><div class="oral-model">"We would like some rice and chicken, please."</div></div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')"><div class="oral-situation">Ask to see the menu.</div><div class="oral-model">"Can I see the menu, please?"</div></div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')"><div class="oral-situation">Describe your breakfast routine.</div><div class="oral-model">"Every morning, I have coffee and bread. I also eat some fruit."</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 25: LISTENING 2 ========== -->
+<div class="slide slide-dark" data-slide="25" data-phase="5" data-teacher="<strong>Listening 2 (5 min):</strong> Ana pede almo&ccedil;o. Toque SEM texto. 'What food does Ana order?' Ela muda de ideia sobre a bebida &mdash; pergunte se Dienane percebeu.">
+  <div class="slide-inner">
+    <div class="chapter-label">Practice</div>
+    <h2 class="slide-heading">Listening &mdash; Ana Orders Lunch</h2>
+    <div class="listening-player" id="player2" data-src="/audio/dienane-brandao-de-mesquita/listening4_2_ana_lunch.mp3">
+      <div class="lp-label">Audio Player</div>
+      <div class="lp-seekbar" onclick="seekAudio(event,'player2')"><div class="lp-progress" id="progress-player2"></div></div>
+      <div class="lp-time"><span id="time-current-player2">0:00</span><span id="time-total-player2">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('player2',-5)" aria-label="Back 5 seconds"><svg viewBox="0 0 24 24"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('player2')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" style="align-items:center;justify-content:center"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('player2',5)" aria-label="Forward 5 seconds"><svg viewBox="0 0 24 24"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+      </div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player2',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player2',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('player2',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player2',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div class="comp-questions" id="questions-player2" style="display:none;margin-top:1.5rem">
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">What food does Ana order?</div><div class="q-answer">Rice, chicken, and salad.</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">What drink does she change her mind about?</div><div class="q-answer">She changes from water to orange juice.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 26: BUILD YOUR ORDER ========== -->
+<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Build Your Order (5 min):</strong> Dienane monta pedidos para 3 situa&ccedil;&otilde;es. Deve usar 'a/an/some' corretamente.">
+  <div class="slide-inner">
+    <div class="chapter-label">Practice</div>
+    <h2 class="slide-heading">Build Your Order</h2>
+    <p style="font-size:.9rem;color:var(--text-mid);margin-bottom:1rem">What would you order in each situation? Use correct articles.</p>
+    <div class="order-scenarios">
+      <div class="order-scenario" onclick="this.classList.toggle('revealed')">
+        <div class="os-title">Breakfast at Hotel</div>
+        <div class="os-prompt">You wake up at 6 AM at Hotel Bras&iacute;lia. What do you order?</div>
+        <div class="os-model">"I would like a coffee, some bread, and an orange, please."</div>
+      </div>
+      <div class="order-scenario" onclick="this.classList.toggle('revealed')">
+        <div class="os-title">Lunch with Colleague</div>
+        <div class="os-prompt">You and a colleague go to a restaurant for lunch. What do you order?</div>
+        <div class="os-model">"We would like some rice and chicken, please. And some water."</div>
+      </div>
+      <div class="order-scenario" onclick="this.classList.toggle('revealed')">
+        <div class="os-title">Coffee Break</div>
+        <div class="os-prompt">You are at work and want a quick snack. What do you order?</div>
+        <div class="os-model">"Can I have a coffee and some fruit, please?"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 6: YOUR TURN (Production) — slides 27-30             -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+
+<!-- ========== SLIDE 27: ROLE-PLAY 1 GUIDED ========== -->
+<div class="slide slide-light" data-slide="27" data-phase="6" data-teacher="<strong>Role-Play Guided (5 min):</strong> Voc&ecirc; &eacute; o gar&ccedil;om. Pergunte: 'What would you like for breakfast?' Dienane responde. Keywords na tela como apoio.">
+  <div class="slide-inner">
+    <div class="chapter-label">Your Turn</div>
+    <h2 class="slide-heading">Role-Play 1 &mdash; <span class="accent">Guided</span></h2>
+    <div class="roleplay-card">
+      <div class="roleplay-header" style="background:linear-gradient(135deg,var(--accent),var(--accent-light))">
+        <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>
+      </div>
+      <div class="roleplay-body">
+        <p class="roleplay-scenario">You are at Hotel Bras&iacute;lia. Order breakfast from the waiter.</p>
+        <div class="roleplay-keywords">
+          <span class="roleplay-kw">coffee</span>
+          <span class="roleplay-kw">bread</span>
+          <span class="roleplay-kw">water</span>
+          <span class="roleplay-kw">fruit</span>
+          <span class="roleplay-kw">Can I have</span>
+          <span class="roleplay-kw">I would like</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 28: ROLE-PLAY 2 SEMI-FREE ========== -->
+<div class="slide slide-light" data-slide="28" data-phase="6" data-teacher="<strong>Role-Play Semi-Free (5 min):</strong> Dienane pede para duas pessoas. Deve usar 'we would like' e lembrar a/an/some.">
+  <div class="slide-inner">
+    <div class="chapter-label">Your Turn</div>
+    <h2 class="slide-heading">Role-Play 2 &mdash; <span class="accent">Semi-Free</span></h2>
+    <div class="roleplay-card">
+      <div class="roleplay-header" style="background:linear-gradient(135deg,#d97706,#f59e0b)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div class="roleplay-body">
+        <p class="roleplay-scenario">Order lunch for you and a colleague. Use "we would like" and remember a/an/some.</p>
+        <div class="roleplay-keywords">
+          <span class="roleplay-kw">rice</span>
+          <span class="roleplay-kw">chicken</span>
+          <span class="roleplay-kw">some</span>
+          <span class="roleplay-kw">an</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 29: ROLE-PLAY 3 FREE ========== -->
+<div class="slide slide-light" data-slide="29" data-phase="6" data-teacher="<strong>Role-Play Free (5 min):</strong> Conversa livre sobre comida num restaurante. Anote erros para corre&ccedil;&atilde;o.">
+  <div class="slide-inner">
+    <div class="chapter-label">Your Turn</div>
+    <h2 class="slide-heading">Role-Play 3 &mdash; <span class="accent">Free</span></h2>
+    <div class="roleplay-card">
+      <div class="roleplay-header" style="background:linear-gradient(135deg,#dc2626,#f87171)">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="roleplay-body">
+        <p class="roleplay-scenario">You are at a restaurant in Bras&iacute;lia with Marco. Have a conversation about food and order a meal.</p>
+        <p style="font-size:.85rem;color:var(--text-dim);margin-top:.5rem;font-style:italic">No keywords, no script. Just talk!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 30: REFLECTION RECORD ========== -->
+<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Reflex&atilde;o (3 min):</strong> Dienane grava pedindo uma refei&ccedil;&atilde;o completa. Compare com o warm-up: 'You can ORDER FOOD now!'">
+  <div class="slide-inner">
+    <div class="chapter-label">Your Turn</div>
+    <h2 class="slide-heading">Record Your Order</h2>
+    <div class="record-card">
+      <div class="record-prompt">Record yourself ordering a complete meal: breakfast, lunch, or dinner. Use "Can I have," "I would like," and correct articles.</div>
+      <button class="record-btn" onclick="toggleReflectionRecord(this)" aria-label="Record">
+        <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#fff" fill="none" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="#fff" stroke-width="2"/><line x1="8" y1="23" x2="16" y2="23" stroke="#fff" stroke-width="2"/></svg>
+      </button>
+      <div id="reflectionResult" style="margin-top:1rem"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 7: WRAP-UP — slides 31-35                            -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+
+<!-- ========== SLIDE 31: HOMEWORK PREVIEW ========== -->
+<div class="slide slide-light" data-slide="31" data-phase="7" data-teacher="<strong>Homework (2 min):</strong> Diga ORALMENTE: '1) Write 5 sentences ordering food (use a/an/some). 2) Record yourself ordering breakfast at a hotel. 3) Complete the Pre-class exercises.'">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Wrap-Up</div>
+    <h2 class="slide-heading">Before Next Class</h2>
+    <p style="font-size:1.1rem;color:var(--text-mid);line-height:1.8;max-width:500px;margin:0 auto">Your teacher will give you homework now.</p>
+    <div style="margin-top:2rem">
+      <svg viewBox="0 0 24 24" style="width:64px;height:64px;stroke:var(--accent);fill:none;stroke-width:1.5;opacity:.4"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 32: ERROR CORRECTION (DELAYED) ========== -->
+<div class="slide slide-dark" data-slide="32" data-phase="7" data-teacher="<strong>Corre&ccedil;&atilde;o (5 min):</strong> Compartilhe 3-5 erros. Para cada: o que disse &rarr; correto. Dienane repete 2x.">
+  <div class="slide-inner">
+    <div class="chapter-label">Wrap-Up</div>
+    <h2 class="slide-heading">Error Correction</h2>
+    <p style="font-size:.9rem;opacity:.6;margin-bottom:1rem">Type the errors from today's class:</p>
+    <div class="error-slots">
+      <div class="error-slot"><span class="error-slot-label">1</span><input class="error-slot-input" contenteditable="true" placeholder="Student said..."><span class="error-slot-arrow">&rarr;</span><input class="error-slot-fix" contenteditable="true" placeholder="Correct form..."></div>
+      <div class="error-slot"><span class="error-slot-label">2</span><input class="error-slot-input" contenteditable="true" placeholder="Student said..."><span class="error-slot-arrow">&rarr;</span><input class="error-slot-fix" contenteditable="true" placeholder="Correct form..."></div>
+      <div class="error-slot"><span class="error-slot-label">3</span><input class="error-slot-input" contenteditable="true" placeholder="Student said..."><span class="error-slot-arrow">&rarr;</span><input class="error-slot-fix" contenteditable="true" placeholder="Correct form..."></div>
+      <div class="error-slot"><span class="error-slot-label">4</span><input class="error-slot-input" contenteditable="true" placeholder="Student said..."><span class="error-slot-arrow">&rarr;</span><input class="error-slot-fix" contenteditable="true" placeholder="Correct form..."></div>
+      <div class="error-slot"><span class="error-slot-label">5</span><input class="error-slot-input" contenteditable="true" placeholder="Student said..."><span class="error-slot-arrow">&rarr;</span><input class="error-slot-fix" contenteditable="true" placeholder="Correct form..."></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 33: BADGE CELEBRATION ========== -->
+<div class="slide slide-dark" data-slide="33" data-phase="7" data-teacher="<strong>Celebra&ccedil;&atilde;o (1 min):</strong> 'You ordered food in English! From coffee to a complete meal. Amazing progress!'">
+  <div class="slide-inner" style="text-align:center">
+    <div class="badge-card">
+      <div class="badge-icon">
+        <div class="badge-circle">
+          <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/></svg>
+        </div>
+        <div class="sparkles">
+          <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+          <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+        </div>
+      </div>
+      <h2 class="slide-heading" style="color:#fff">Day 4 &mdash; Earned!</h2>
+      <p style="font-size:1.1rem;opacity:.7">You can order food in English, Dienane!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 34: WHAT I LEARNED ========== -->
+<div class="slide slide-light" data-slide="34" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item. 'Can you say yes?' Clique juntas.">
+  <div class="slide-inner">
+    <div class="chapter-label">Wrap-Up</div>
+    <h2 class="slide-heading">What I Learned</h2>
+    <div class="check-grid" id="checklist-4">
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can name food and drinks in English.</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can use a, an, and some correctly.</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can order food at a restaurant.</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can ask politely with "Can I have."</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can use "I would like."</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can read a restaurant menu.</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can describe my meals.</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can order for two people.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 35: CLOSING ========== -->
+<div class="slide slide-image" data-slide="35" data-phase="7" data-teacher="<strong>Encerramento (1 min):</strong> 'Day 4 complete! Next class: numbers and time.'" style="background-image:url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1400&q=80')">
+  <div class="slide-inner">
+    <div class="chapter-label">Lesson Complete</div>
+    <h2 class="slide-title">Day 4 &mdash; <span class="accent">Complete.</span></h2>
+    <p class="slide-subtitle" style="opacity:.8;margin-top:1rem">Next lesson: Numbers and Time</p>
+  </div>
+</div>
+
+</div><!-- /slides-container -->
+
+<!-- Teacher T Icon -->
+<div class="teacher-t" id="teacherT">T<div class="teacher-t-panel" id="teacherPanel"></div></div>
+
+<!-- Navigation Bar -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled aria-label="Previous slide">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="slide-dots" id="slideDots"></div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)" aria-label="Next slide">
+    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+  </button>
+</div>
+
+<!-- Confetti -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP =====
+var audioMap = {
+  "Water": "/audio/dienane-brandao-de-mesquita/water.mp3",
+  "Coffee": "/audio/dienane-brandao-de-mesquita/coffee.mp3",
+  "Bread": "/audio/dienane-brandao-de-mesquita/bread.mp3",
+  "Rice": "/audio/dienane-brandao-de-mesquita/rice.mp3",
+  "Chicken": "/audio/dienane-brandao-de-mesquita/chicken.mp3",
+  "Fruit": "/audio/dienane-brandao-de-mesquita/fruit.mp3",
+  "Menu": "/audio/dienane-brandao-de-mesquita/menu.mp3",
+  "Order": "/audio/dienane-brandao-de-mesquita/order.mp3",
+  "Can I have some water, please?": "/audio/dienane-brandao-de-mesquita/can_i_have_some_water_please.mp3",
+  "I have coffee every morning.": "/audio/dienane-brandao-de-mesquita/i_have_coffee_every_morning.mp3",
+  "I eat bread for breakfast.": "/audio/dienane-brandao-de-mesquita/i_eat_bread_for_breakfast.mp3",
+  "We have rice for lunch.": "/audio/dienane-brandao-de-mesquita/we_have_rice_for_lunch.mp3",
+  "I cook chicken for dinner.": "/audio/dienane-brandao-de-mesquita/i_cook_chicken_for_dinner.mp3",
+  "I eat fruit every day.": "/audio/dienane-brandao-de-mesquita/i_eat_fruit_every_day.mp3",
+  "Can I see the menu, please?": "/audio/dienane-brandao-de-mesquita/can_i_see_the_menu_please.mp3",
+  "I would like to order, please.": "/audio/dienane-brandao-de-mesquita/i_would_like_to_order_please.mp3",
+  "I would like a coffee and some bread.": "/audio/dienane-brandao-de-mesquita/i_would_like_a_coffee_and_some_bread.mp3",
+  "Can I have an orange juice?": "/audio/dienane-brandao-de-mesquita/can_i_have_an_orange_juice.mp3",
+  "I would like some rice and chicken.": "/audio/dienane-brandao-de-mesquita/i_would_like_some_rice_and_chicken.mp3",
+  "Do you have any fruit?": "/audio/dienane-brandao-de-mesquita/do_you_have_any_fruit.mp3",
+  "Good morning. Welcome to Hotel Brasília. What would you like for breakfast?": "/audio/dienane-brandao-de-mesquita/good_morning_welcome_to_hotel_brasilia.mp3",
+  "Good morning! I would like a coffee, please.": "/audio/dienane-brandao-de-mesquita/good_morning_i_would_like_a_coffee_please.mp3",
+  "Of course. Would you like some bread or fruit?": "/audio/dienane-brandao-de-mesquita/of_course_would_you_like_some_bread_or_fruit.mp3",
+  "Some bread and an orange, please.": "/audio/dienane-brandao-de-mesquita/some_bread_and_an_orange_please.mp3",
+  "Would you like some water too?": "/audio/dienane-brandao-de-mesquita/would_you_like_some_water_too.mp3",
+  "Yes, please. Can I have some water?": "/audio/dienane-brandao-de-mesquita/yes_please_can_i_have_some_water.mp3",
+  "Of course. Anything else?": "/audio/dienane-brandao-de-mesquita/of_course_anything_else.mp3",
+  "No, thank you. That is all.": "/audio/dienane-brandao-de-mesquita/no_thank_you_that_is_all.mp3",
+  "Mother": "/audio/dienane-brandao-de-mesquita/mother.mp3",
+  "Father": "/audio/dienane-brandao-de-mesquita/father.mp3",
+  "Brother": "/audio/dienane-brandao-de-mesquita/brother.mp3",
+  "Sister": "/audio/dienane-brandao-de-mesquita/sister.mp3",
+  "My mother lives in Belém.": "/audio/dienane-brandao-de-mesquita/my_mother_lives_in_belem.mp3",
+  "Her husband is a teacher.": "/audio/dienane-brandao-de-mesquita/her_husband_is_a_teacher.mp3"
+};
+
+// ===== SPEAK TEXT =====
+var currentAudio = null;
+var audioSpeed = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed;
+    currentAudio.play().catch(function() { ttsSpeak(cleanText); });
+  } else { ttsSpeak(cleanText); }
+}
+
+function ttsSpeak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 1;
+var totalSlides = 35;
+var slidePhases = {1:1,2:1,3:1,4:1,5:2,6:2,7:2,8:2,9:2,10:2,11:3,12:3,13:3,14:3,15:3,16:4,17:4,18:4,19:4,20:4,21:5,22:5,23:5,24:5,25:5,26:5,27:6,28:6,29:6,30:6,31:7,32:7,33:7,34:7,35:7};
+
+function changeSlide(dir) {
+  var next = currentSlide + dir;
+  if (next < 1 || next > totalSlides) return;
+  goToSlide(next);
+}
+
+function goToSlide(n) {
+  var prev = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
+  if (prev) prev.classList.remove('active');
+  currentSlide = n;
+  var activeSlide = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
+  if (activeSlide) activeSlide.classList.add('active');
+  var teacherText = activeSlide ? activeSlide.getAttribute('data-teacher') || '' : '';
+  document.getElementById('teacherPanel').innerHTML = teacherText;
+  updateNav();
+  updatePhaseBar();
+}
+
+function updateNav() {
+  document.getElementById('slideCounter').textContent = String(currentSlide).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('prevBtn').disabled = currentSlide <= 1;
+  document.getElementById('nextBtn').disabled = currentSlide >= totalSlides;
+  var dots = document.querySelectorAll('.slide-dot');
+  dots.forEach(function(d, i) { d.classList.toggle('active', i + 1 === currentSlide); });
+}
+
+function updatePhaseBar() {
+  var cp = slidePhases[currentSlide];
+  document.querySelectorAll('.phase-segment').forEach(function(seg) {
+    var p = parseInt(seg.dataset.phase);
+    seg.classList.remove('completed', 'current', 'upcoming');
+    if (p < cp) seg.classList.add('completed');
+    else if (p === cp) seg.classList.add('current');
+    else seg.classList.add('upcoming');
+  });
+  document.querySelectorAll('.phase-label').forEach(function(lbl) {
+    var p = parseInt(lbl.dataset.phase);
+    lbl.classList.remove('completed', 'current');
+    if (p < cp) lbl.classList.add('completed');
+    else if (p === cp) lbl.classList.add('current');
+  });
+}
+
+// Build dots
+(function() {
+  var dotsEl = document.getElementById('slideDots');
+  for (var i = 1; i <= totalSlides; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'slide-dot' + (i === 1 ? ' active' : '');
+    dot.dataset.slide = i;
+    dot.onclick = (function(n) { return function() { goToSlide(n); }; })(i);
+    dotsEl.appendChild(dot);
+  }
+})();
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); changeSlide(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); changeSlide(-1); }
+});
+
+// ===== VOCAB REVEAL (toggle) =====
+function revealVocab(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var count = grid.querySelectorAll('.vocab-card.revealed').length;
+  var total = grid.querySelectorAll('.vocab-card').length;
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  document.getElementById(counterId).textContent = count + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
+
+// ===== FILL REVEAL =====
+function revealFill(item) { item.classList.toggle('revealed'); }
+
+// ===== COMPREHENSION REVEAL =====
+function revealComp(q) { q.classList.toggle('revealed'); }
+
+// ===== ERROR REVEAL =====
+var errorCount = 0;
+function revealError(card) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  errorCount++;
+  document.getElementById('errorScore').textContent = errorCount + ' / 5 errors found';
+}
+
+// ===== SUBSTITUTION DRILL =====
+var subOptions = [
+  ['Can I have', 'I would like', 'We would like'],
+  ['a coffee', 'some water', 'an orange', 'some bread', 'a menu', 'some rice', 'some fruit', 'some chicken']
+];
+var subIndex = [0, 0];
+
+function cycleSub(el, group) {
+  subIndex[group] = (subIndex[group] + 1) % subOptions[group].length;
+  el.textContent = subOptions[group][subIndex[group]];
+}
+
+function randomizeSubs() {
+  for (var g = 0; g < 2; g++) subIndex[g] = Math.floor(Math.random() * subOptions[g].length);
+  document.getElementById('subBlank1').textContent = subOptions[0][subIndex[0]];
+  document.getElementById('subBlank2').textContent = subOptions[1][subIndex[1]];
+}
+
+// ===== DIALOGUE LINE-BY-LINE =====
+var dialogueLine = 1;
+function nextDialogueLine() {
+  dialogueLine++;
+  var line = document.querySelector('.dialogue-line[data-line="' + dialogueLine + '"]');
+  if (line) {
+    line.classList.add('visible');
+    if (dialogueLine >= 8) {
+      document.getElementById('nextLineBtn').textContent = 'Dialogue Complete';
+      document.getElementById('nextLineBtn').disabled = true;
+      document.getElementById('nextLineBtn').style.opacity = '0.5';
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE =====
+var challenges = [
+  { prompt: 'You want coffee. How do you ask?', answer: '"Can I have a coffee, please?"' },
+  { prompt: 'You want water. Use "I would like."', answer: '"I would like some water."' },
+  { prompt: 'You see an orange. Use "a" or "an"?', answer: '"An orange (vowel sound)."' },
+  { prompt: 'Order bread for breakfast.', answer: '"I would like some bread, please."' },
+  { prompt: 'The waiter asks "Anything else?" You say...', answer: '"No, thank you. That is all."' },
+  { prompt: 'You want to see the menu.', answer: '"Can I see the menu, please?"' }
+];
+var challengeIndex = 0;
+var challengeCorrect = 0;
+
+function showChallengeAnswer() {
+  document.getElementById('challengeAnswer').classList.add('show');
+  document.getElementById('showAnswerBtn').style.display = 'none';
+  document.getElementById('nextChallengeBtn').style.display = 'inline-flex';
+  challengeCorrect++;
+  document.getElementById('challengeScore').textContent = challengeCorrect + ' / 6';
+}
+
+function nextChallenge() {
+  challengeIndex++;
+  if (challengeIndex >= challenges.length) {
+    document.getElementById('challengeCard').innerHTML = '<div style="text-align:center"><h3 style="font-family:Cormorant Garamond,serif;font-size:2rem;color:var(--accent)">Challenge Complete!</h3><p style="margin-top:.5rem;color:var(--text-dim)">Score: ' + challengeCorrect + ' / 6</p></div>';
+    triggerConfetti();
+    return;
+  }
+  document.getElementById('challengePrompt').textContent = challenges[challengeIndex].prompt;
+  document.getElementById('challengeAnswer').textContent = challenges[challengeIndex].answer;
+  document.getElementById('challengeAnswer').classList.remove('show');
+  document.getElementById('showAnswerBtn').style.display = 'inline-flex';
+  document.getElementById('nextChallengeBtn').style.display = 'none';
+  document.getElementById('challengeCounter').textContent = 'Question ' + (challengeIndex + 1) + ' of 6';
+}
+
+// ===== LISTENING PLAYER =====
+var lpPlayers = {};
+
+function initPlayer(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var src = el.getAttribute('data-src');
+  if (!src) return;
+  var audio = new Audio(src);
+  lpPlayers[id] = { audio: audio, speed: 1, playing: false };
+  audio.addEventListener('timeupdate', function() { updatePlayerUI(id); });
+  audio.addEventListener('loadedmetadata', function() { updatePlayerUI(id); });
+  audio.addEventListener('ended', function() {
+    lpPlayers[id].playing = false;
+    var playBtn = document.querySelector('#' + id + ' .lp-play');
+    if (playBtn) playBtn.classList.remove('playing');
+    var qs = document.getElementById('questions-' + id);
+    if (qs) qs.style.display = 'flex';
+  });
+}
+
+function togglePlayer(id) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var p = lpPlayers[id];
+  var playBtn = document.querySelector('#' + id + ' .lp-play');
+  if (p.playing) {
+    p.audio.pause(); p.playing = false;
+    if (playBtn) playBtn.classList.remove('playing');
+  } else {
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    p.audio.playbackRate = p.speed;
+    p.audio.play();
+    p.playing = true;
+    if (playBtn) playBtn.classList.add('playing');
+  }
+}
+
+function skipAudio(id, seconds) {
+  if (!lpPlayers[id]) return;
+  var a = lpPlayers[id].audio;
+  a.currentTime = Math.max(0, Math.min(a.duration || 0, a.currentTime + seconds));
+}
+
+function seekAudio(event, id) {
+  if (!lpPlayers[id]) return;
+  var bar = event.currentTarget;
+  var rect = bar.getBoundingClientRect();
+  var pct = (event.clientX - rect.left) / rect.width;
+  lpPlayers[id].audio.currentTime = pct * (lpPlayers[id].audio.duration || 0);
+}
+
+function setPlayerSpeed(id, speed, btn) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  lpPlayers[id].speed = speed;
+  lpPlayers[id].audio.playbackRate = speed;
+  var container = document.getElementById(id);
+  if (container) container.querySelectorAll('.lp-speed-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+}
+
+function updatePlayerUI(id) {
+  var p = lpPlayers[id]; if (!p) return;
+  var current = p.audio.currentTime || 0;
+  var total = p.audio.duration || 0;
+  var pct = total > 0 ? (current / total * 100) : 0;
+  var bar = document.getElementById('progress-' + id);
+  if (bar) bar.style.width = pct + '%';
+  var tcEl = document.getElementById('time-current-' + id);
+  if (tcEl) tcEl.textContent = fmtTime(current);
+  var ttEl = document.getElementById('time-total-' + id);
+  if (ttEl) ttEl.textContent = fmtTime(total);
+}
+
+function fmtTime(s) {
+  if (isNaN(s)) return '0:00';
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+// ===== CHECKLIST =====
+function toggleCheck(item) { item.classList.toggle('checked'); }
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#0D7377','#14A3A8','#003080','#16a34a','#d97706','#dc2626','#5b9bd5'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    var size = 4 + Math.random() * 8;
+    piece.style.width = size + 'px'; piece.style.height = size + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 5000);
+}
+
+// ===== REFLECTION RECORDING =====
+var reflectionRecording = false;
+var reflectionRecorder = null;
+var reflectionChunks = [];
+
+function toggleReflectionRecord(btn) {
+  if (!reflectionRecording) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+      var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+      reflectionRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+      reflectionChunks = [];
+      reflectionRecorder.ondataavailable = function(e) { if (e.data.size > 0) reflectionChunks.push(e.data); };
+      reflectionRecorder.onstop = function() {
+        var blob = new Blob(reflectionChunks, { type: reflectionRecorder.mimeType });
+        var url = URL.createObjectURL(blob);
+        document.getElementById('reflectionResult').innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:.5rem"></audio><p style="font-size:.8rem;color:var(--success);margin-top:.3rem">Recording saved. Listen to yourself!</p>';
+        stream.getTracks().forEach(function(t) { t.stop(); });
+      };
+      reflectionRecorder.start(100);
+      btn.classList.add('recording');
+      reflectionRecording = true;
+    }).catch(function() { alert('Could not access microphone.'); });
+  } else {
+    if (reflectionRecorder && reflectionRecorder.state === 'recording') reflectionRecorder.stop();
+    btn.classList.remove('recording');
+    reflectionRecording = false;
+  }
+}
+
+// ===== INIT =====
+updatePhaseBar();
+var initSlide = document.querySelector('.slide[data-slide="1"]');
+if (initSlide) document.getElementById('teacherPanel').innerHTML = initSlide.getAttribute('data-teacher') || '';
+</script>
+
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+</body>
+</html>
