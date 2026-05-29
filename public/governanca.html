@@ -1930,6 +1930,59 @@ function checkContrast(html) {
     }
   }
 
+  /* ── 6. White/light text on white/light background (invisible text) ── */
+  /* Detect patterns like color:#fff or color:white or rgba(255,255,255) on elements inside white-background cards */
+  var whiteTextPatterns = [
+    /* White text in inline styles inside cards/checklist/roleplay with white bg */
+    { regex: /style\s*=\s*["'][^"']*color\s*:\s*(?:#fff(?:fff)?|white|rgba\s*\(\s*255\s*,\s*255\s*,\s*255)[^"']*["'][^>]*>[^<]{1,200}/gi, desc: 'Texto branco (#fff/white) em elemento inline' },
+    /* Light accent-colored text that might be invisible on white cards */
+    { regex: /style\s*=\s*["'][^"']*color\s*:\s*var\(--accent-light\)[^"']*["'][^>]*>[^<]{1,200}/gi, desc: 'Texto com cor accent-light que pode ser ilegível em fundo branco' }
+  ];
+
+  var slidesWrapper = html.indexOf('slides-wrapper') !== -1 ? html.substring(html.indexOf('slides-wrapper')) : '';
+  if (slidesWrapper) {
+    /* Find white-bg cards inside slides that might have invisible text */
+    var whiteCardRegex = /(?:background\s*:\s*(?:#fff|white|rgba\s*\(\s*255\s*,\s*255\s*,\s*255))[^;]*;[^"']*color\s*:\s*(?:#fff|white|rgba\s*\(\s*255\s*,\s*255\s*,\s*255)/gi;
+    var whiteOnWhite = slidesWrapper.match(whiteCardRegex);
+    if (whiteOnWhite && whiteOnWhite.length > 0) {
+      problems.push('TEXTO INVISÍVEL: ' + whiteOnWhite.length + ' ocorrência(s) de texto branco sobre fundo branco detectada. Verificar cards, checklists e role-play nos slides.');
+    }
+
+    /* Check for checklist/check items inside slide-dark with white background and no dark text color */
+    var checklistInSlides = slidesWrapper.match(/(?:checklist|check-item|check-label|toggleCheck)[^}]*/gi) || [];
+    var hasChecklistCards = slidesWrapper.indexOf('checklist') !== -1 || slidesWrapper.indexOf('toggleCheck') !== -1;
+    if (hasChecklistCards) {
+      /* Look for li or label elements with white/near-white background that might have inherited white text from slide-dark */
+      var liInChecklist = (slidesWrapper.match(/<li[^>]*style[^>]*background[^>]*(?:white|#fff|rgba\(255)[^>]*>/gi) || []);
+      var whiteTextInChecklist = (slidesWrapper.match(/<li[^>]*style[^>]*color\s*:\s*(?:#fff|white|rgba\(255)[^>]*>/gi) || []);
+      if (liInChecklist.length > 0 || whiteTextInChecklist.length > 0) {
+        problems.push('CHECKLIST ILEGÍVEL: Cards de checklist com fundo branco podem ter texto branco herdado do slide escuro. Adicionar color:#1a1a2e ou color:var(--text) explícito nos itens.');
+      }
+    }
+
+    /* Generic: any element with both white background AND white/very-light text in same style attr */
+    var inlineStyles = slidesWrapper.match(/style\s*=\s*["'][^"']{20,}["']/gi) || [];
+    var invisibleCount = 0;
+    inlineStyles.forEach(function(styleAttr) {
+      var hasBgWhite = /background\s*:\s*(?:#fff|white|rgba\s*\(\s*255\s*,\s*255\s*,\s*255\s*(?:,\s*(?:0\.\d+|1))?s*\))/i.test(styleAttr);
+      var hasColorWhite = /(?:^|;)\s*color\s*:\s*(?:#fff|white|rgba\s*\(\s*255\s*,\s*255\s*,\s*255)/i.test(styleAttr);
+      if (hasBgWhite && hasColorWhite) invisibleCount++;
+    });
+    if (invisibleCount > 0) {
+      problems.push('TEXTO INVISÍVEL (inline): ' + invisibleCount + ' elemento(s) com background branco E cor de texto branca no mesmo style. Texto completamente ilegível.');
+    }
+  }
+
+  /* ── 7. CSS rules that force white text on elements that might have white bg ── */
+  var styleBlocks = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi) || [];
+  var allCSS = styleBlocks.join(' ');
+  /* Check if slide-dark forces color:#fff or white on cards that have their own white bg */
+  var darkSlideWhiteText = /\.slide-dark[^{]*\{[^}]*color\s*:\s*(?:#fff|white)/gi.test(allCSS);
+  var cardsWithWhiteBg = /(?:checklist|check-item|check-label|roleplay-body|comp-q|vocab-card)\s*\{[^}]*background\s*:\s*(?:#fff|white)/gi.test(allCSS);
+  if (darkSlideWhiteText && cardsWithWhiteBg) {
+    problems.push('RISCO DE CONTRASTE: CSS tem slide-dark forçando texto branco, mas cards internos têm fundo branco. Adicionar regra .slide-dark .checklist li, .slide-dark .check-item { color: #1a1a2e } para garantir legibilidade.');
+  }
+
   if (problems.length === 0) {
     return { pass: true, details: 'Contraste e legibilidade OK', issues: [] };
   }

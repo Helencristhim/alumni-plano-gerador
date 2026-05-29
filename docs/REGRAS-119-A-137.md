@@ -104,15 +104,15 @@ NÃO menos de 4. NÃO mais de 4.
 - Tipo 6 (Pronúncia) e Tipo 7 (Think About It) recomendados em quase todas
 
 ### REGRA 130 — PRE-CLASS PODE TER SEÇÃO DE GRAMÁTICA
-- A0-A2: explicação em PORTUGUÊS, simples e direta
-- B1 em diante: explicação em INGLÊS simples
+- A0-A1: explicação em PORTUGUÊS, simples e direta (Grammar Tip bilingue)
+- A partir do A2: explicação em INGLÊS (ZERO português)
 - 2-3 exemplos com botão "Ouvir" (ElevenLabs)
 - NÃO esgota conteúdo (aula aprofunda)
 
-### REGRA 131 — TRADUÇÃO ACESSÍVEL POR NÍVEL NO PRE-CLASS
-- A0/A1: tradução via tooltip/dica (não invasiva)
-- A2: tradução seletiva (apenas palavras críticas)
-- B1 em diante: sem tradução (contexto ajuda compreensão)
+### REGRA 131 — TRADUÇÃO POR NÍVEL NO PRE-CLASS
+- A0/A1: tradução PT-BR em todo o material (vocab cards, grammar tip, survival card, tooltips)
+- A partir do A2: ZERO português em qualquer parte do material (definições de vocabulário em inglês simples, grammar tip em inglês, survival card sem tradução PT)
+- Única exceção: instruções ao professor (ícone T), invisíveis ao aluno
 
 ---
 

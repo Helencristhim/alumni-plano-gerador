@@ -1,3 +1,9 @@
+/**
+ * @deprecated Esta API NÃO é chamada por nenhum frontend.
+ * O fluxo atual usa: index.html → perfil-360.js → perfil.html → gerar-temas.js
+ * Mantida apenas para referência histórica. NÃO deletar sem confirmar com gestão.
+ * Data: 2026-05-25
+ */
 const Anthropic = require('@anthropic-ai/sdk');
 const { robustJSONParse, logJSONError } = require('../lib/sanitize-json');
 
@@ -28,13 +34,14 @@ MODALIDADE DA AULA: ${modalidade || 'Online'}. Adaptar atividades: Online=tela c
 INGLÊS AMERICANO (Regra 143): TODO material em American English por padrão (spelling, vocabulário, expressões, pronúncia). Exceção apenas se perfil indicar British English — sinalizar com [British English].
 
 ADEQUAÇÃO POR NÍVEL (${nivel}):
-- A1: SEMPRE tradução PT-BR. Vocabulário básico (4-5 palavras/aula). Frases de 2-4 palavras. Drilling intenso. CCQs em português. Practice com matching imagem+palavra. Production muito guiada (5 min). Mídias: desenhos, vídeos curtos com legendas PT.
-- A2: Tradução obrigatória. 5-7 palavras/aula. "Blocos de linguagem" (frases prontas). CCQs em inglês simples. Practice com matching, fill-in-blanks, quiz. Respostas COMPLETAS. Production role-play sem script (10-15 min). Mídias: filmes simples, podcasts para learners.
-- B1: Tradução só para termos técnicos/idiomáticos. 6-8 palavras. Textos mais longos. CCQs com justificativa. Practice variada (reading, ordering, sorting, true/false). Production com imprevistos (15-20 min). Mídias: filmes/séries com legendas EN, TED Talks.
-- B2: Sem tradução (exceto técnicos). Collocations, phrasal verbs. Textos autênticos. Practice com paráfrase e análise de registro. Production com debates e apresentações (20 min). Mídias: sem legenda, podcasts nativos.
-- C1: Zero tradução. Material 100% autêntico. Análise crítica, estilo, tom. Production 20+ min com debates complexos. Mídias: podcasts nativos complexos, stand-up, livros originais.
-- C1+: Refinamento profissional. Domínio de registros (formal, jurídico, jornalístico, literário). Retórica persuasiva avançada. Conteúdo publicável. Mediação cultural. Production 37 min. Precisão extrema.
-- C2: Polimento: sotaque, estilo, humor, escrita acadêmica. Tradução literária, análise de discurso.
+- A0: Tradução PT-BR em tudo. 4-5 palavras novas/aula (10 circulando). Frases 2-4 palavras. Grammar Tip bilingue. CCQs em português. Practice: matching. Production muito guiada (5 min).
+- A1: Tradução PT-BR em tudo. 5-7 palavras novas/aula (10-12 circulando). Frases 4-6 palavras. Grammar Tip bilingue. CCQs em português. Practice: matching. Production guiada (5-10 min).
+- A2: ZERO português. 6-8 palavras novas/aula (10-12 circulando). Frases 5-8 palavras. Grammar Tip em inglês. CCQs em inglês simples. Practice: matching, fill-in-blanks, quiz. Production role-play sem script (10-15 min).
+- B1: ZERO português. 7-9 palavras novas/aula (10-12 circulando). Textos mais longos. CCQs com justificativa em inglês. Practice variada. Production com imprevistos (15-20 min).
+- B2: ZERO português. 10-12 palavras novas/aula (10-13 circulando). Collocations, phrasal verbs. Textos autênticos. Production com debates e apresentações (20 min).
+- C1: ZERO português. 10-12 palavras novas/aula (10-13 circulando). Material 100% autêntico. Análise crítica. Production 20+ min.
+- C1+: ZERO português. 10-12 palavras novas/aula. Refinamento profissional. Production 37 min. Precisão extrema.
+- C2: ZERO português. Polimento: sotaque, estilo, humor, escrita acadêmica.
 
 ADEQUAÇÃO POR IDADE (${idade} anos):
 - Crianças (5-12): Jogos, desenhos, vocabulário visual, atividades lúdicas.
@@ -109,7 +116,7 @@ Gere um JSON com EXATAMENTE esta estrutura (sem markdown, sem backticks, só o J
 
 REGRAS:
 - Todas as ${numAulas} aulas devem ter exercícios correspondentes no array "exercicios"
-- Cada aula deve ter: 6-8 palavras de vocabulário, 3-4 frases de pronúncia, 3-4 frases para completar, 2 perguntas de quiz, 1 diálogo com 4-6 linhas, 2-3 mídias
+- Cada aula deve ter: vocabulário conforme nível CEFR (A0=4-5, A1=5-7, A2=6-8, B1=7-9, B2+=10-12 palavras novas), 3-4 frases de pronúncia, 3-4 frases para completar, 2 perguntas de quiz, 1 diálogo com 4-6 linhas, 2-3 mídias
 - O vocabulário e exercícios DEVEM ser relevantes ao tema específico da aula
 - Frases em inglês devem ser gramaticalmente perfeitas
 - Traduções devem ser precisas e com acentuação correta em português

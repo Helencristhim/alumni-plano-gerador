@@ -8,7 +8,9 @@ module.exports = async (req, res) => {
     const { nome, foco, nivel, numAulas, profissao, cidade, vitoria, historico, idade, forcas, fraquezas, resumo, hobbies,
             modalidade,
             // Novos parâmetros para geração em blocos (Regra 121)
-            bloco, aulaInicio, aulaFim, temasAnteriores } = req.body;
+            bloco, aulaInicio, aulaFim, temasAnteriores,
+            // Programa detalhado extraído da consultoria (novo)
+            programaDetalhado } = req.body;
 
     if (!foco || !numAulas) {
       return res.status(400).json({ error: 'Foco e número de aulas são obrigatórios.' });
@@ -95,9 +97,64 @@ ${blocoNum > 1 && blocoNum < totalBlocos ? 'Este é um bloco intermediário — 
 `;
     }
 
+    // Contexto do programa detalhado (extraído da consultoria pelo perfil-360)
+    let contextoProgramaDetalhado = '';
+    if (programaDetalhado && typeof programaDetalhado === 'object') {
+      const pd = programaDetalhado;
+      let pdText = 'MAPA DO PROGRAMA (extraído da consultoria — USE para distribuir temas):\n\n';
+
+      if (pd.distribuicao && pd.distribuicao.length > 0) {
+        pdText += 'DISTRIBUIÇÃO DE FOCOS (respeitar proporções ao distribuir aulas):\n';
+        pd.distribuicao.forEach(d => { pdText += `- ${d.foco}: ${d.peso}%\n`; });
+        pdText += '\n';
+      }
+
+      if (pd.cenariosPrioritarios && pd.cenariosPrioritarios.length > 0) {
+        pdText += 'CENÁRIOS PRIORITÁRIOS DO ALUNO (ordenados por urgência — CRÍTICA primeiro):\n';
+        pd.cenariosPrioritarios.forEach(c => {
+          pdText += `- [${c.urgencia}] ${c.cenario}`;
+          if (c.habilidades) pdText += ` | Habilidades: ${c.habilidades.join(', ')}`;
+          if (c.evidencia) pdText += ` | Aluno disse: '${c.evidencia}'`;
+          pdText += '\n';
+        });
+        pdText += '\n';
+      }
+
+      if (pd.habilidadesPrioritarias) {
+        const hp = pd.habilidadesPrioritarias;
+        pdText += `HABILIDADES PRIORITÁRIAS: fala ${hp.fala || 0}%, escuta ${hp.escuta || 0}%, leitura ${hp.leitura || 0}%, escrita ${hp.escrita || 0}%\n\n`;
+      }
+
+      if (pd.evitar && pd.evitar.length > 0) {
+        pdText += 'O QUE EVITAR NO CURRÍCULO (experiências negativas do aluno):\n';
+        pd.evitar.forEach(e => { pdText += `- ${e}\n`; });
+        pdText += '\n';
+      }
+
+      if (pd.momentosEnergia && pd.momentosEnergia.length > 0) {
+        pdText += 'TEMAS QUE GERAM ENERGIA (usar como contexto para aulas):\n';
+        pd.momentosEnergia.forEach(m => { pdText += `- ${m.tema} (${m.energia}) → ${m.uso}\n`; });
+        pdText += '\n';
+      }
+
+      if (pd.resumoParaCurriculo) {
+        pdText += 'RESUMO ACIONÁVEL PARA O CURRÍCULO:\n' + pd.resumoParaCurriculo + '\n\n';
+      }
+
+      pdText += 'REGRAS DE USO DO MAPA:\n';
+      pdText += '- Distribuir as aulas do bloco proporcionalmente aos pesos da distribuição\n';
+      pdText += '- Cenários com urgência CRÍTICA devem aparecer nas PRIMEIRAS aulas\n';
+      pdText += '- Cenários com urgência BAIXA podem aparecer nas últimas aulas\n';
+      pdText += '- Temas de alta energia do aluno devem ser usados como CONTEXTO (não como aula separada)\n';
+      pdText += '- NUNCA incluir atividades que o aluno pediu para evitar\n';
+
+      contextoProgramaDetalhado = pdText;
+    }
+
     const prompt = `Você é um designer instrucional sênior especializado em ensino de inglês personalizado, com formação em Cambridge CELTA/DELTA e experiência com o modelo PPP (Presentation-Practice-Production).
 
 ${levelSection ? 'REGRAS CEFR PARA O NÍVEL DO ALUNO:\n' + levelSection + '\n\n' : ''}
+${contextoProgramaDetalhado ? contextoProgramaDetalhado + '\n' : ''}
 ${mixingRules ? 'REGRA DE MESCLA INGLÊS GERAL + FOCO:\n' + mixingRules + '\n\n' : ''}
 ${contextoBlocos}
 ${contextoAnteriores}
@@ -150,10 +207,24 @@ QUANTIDADE PEDAGÓGICA (Regra 119, 120, 139):
 - Vocabulary + Expressions obrigatórios em TODAS as aulas
 - NUNCA repetir vocabulário como novo em aula posterior (Regra 140) — revisão e callback sim
 
+NÃO REPETIÇÃO DE CONTEÚDO (REGRA CRÍTICA):
+- NUNCA reapresentar uma ESTRUTURA GRAMATICAL como conteúdo novo em aula posterior se já foi ensinada antes
+- Se present simple foi ensinado na aula 2, NÃO pode ser "Grammar (new): present simple" na aula 23
+- Estruturas já ensinadas podem ser REVISADAS e INTEGRADAS em atividades, mas o foco gramatical da aula DEVE ser algo NOVO
+- Cada aula deve AVANÇAR na progressão gramatical — nunca voltar para reensinar o que já foi dado
+- Em programas longos (20+ aulas): após cobrir todas as estruturas do nível, focar em APLICAÇÃO, FLUÊNCIA e PRODUÇÃO com as estruturas já aprendidas — não reciclá-las como "novas"
+- Aulas de revisão (milestone) são EXCEÇÃO — podem revisar tudo, mas devem ser marcadas como "Review" no tema
+
 MODALIDADE DA AULA (${modalidade || 'Online'}):
 ${(modalidade || 'Online') === 'Online' ? '- Atividades adaptadas para videoconferência (Zoom/Meet): tela compartilhada, chat, breakout rooms\n- Exercícios visuais na tela, role-play via vídeo, listening com áudio compartilhado\n- Homework digital: gravação de áudio, formulários, documentos compartilhados' : ''}
 ${(modalidade || '') === 'Presencial' ? '- Atividades presenciais: flashcards físicos, movimento pela sala, objetos reais\n- Role-play face a face, dinâmicas em dupla/grupo, board games\n- Homework: caderno, gravação de áudio, leitura impressa' : ''}
 ${(modalidade || '') === 'Híbrido' ? '- Combinar recursos online E presenciais conforme a aula\n- Indicar em cada atividade se é para aula online ou presencial\n- Homework sempre digital (acessível de qualquer lugar)' : ''}
+
+REGRA DE IDIOMA — PORTUGUÊS:
+- A0 e A1: português permitido (traduções, grammar tip bilingue, survival card bilingue)
+- A partir do A2: ZERO português em QUALQUER parte do material (vocab, grammar tip, survival card, exercícios, microcopy)
+- Única exceção: instruções ao professor (ícone T), invisíveis ao aluno
+- Definições de vocabulário a partir do A2: em inglês simples (NUNCA tradução PT)
 
 INGLÊS AMERICANO (Regra 143):
 - TODO material em American English por padrão (spelling, vocabulário, expressões, pronúncia)

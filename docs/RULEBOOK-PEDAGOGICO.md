@@ -7,13 +7,25 @@ Este conteúdo é INSERIDO INTEGRALMENTE no prompt da API (LLM precisa do conte�
 
 ---
 
-## 1. Rulebook de Adequação por Nível (A1 a C2)
+## 1. Rulebook de Adequação por Nível (A0 a C2)
+
+> **REGRA DE IDIOMA**: Português é permitido APENAS nos níveis A0 e A1 (traduções, grammar tip bilingue, survival card bilingue). A partir do A2, ZERO português em QUALQUER parte do material. Única exceção: instruções ao professor via ícone T (invisível ao aluno).
 
 Cada nível define 8 dimensões: vocabulário, tradução, frases, drilling/CCQ, practice, production, wrap-up, mídias.
 
+### A0 (Beginner Absoluto)
+- **Vocabulário:** 4-5 palavras novas por aula (10 circulando), básico e visual
+- **Tradução:** 100% bilingue (EN + PT-BR) — tradução obrigatória em tudo
+- **Frases:** Curtíssimas, 2-4 palavras. Drilling intenso
+- **CCQs:** Em português. Professor modela TUDO
+- **Practice:** Matching imagem+palavra, repetição
+- **Production:** Muito guiada, máximo 5 min
+- **Wrap-up:** Em português
+- **Mídias:** Desenhos animados, vídeos curtos legendados PT
+
 ### A1 (Iniciante)
-- **Vocabulário:** 4-5 palavras por aula, básico e visual
-- **Tradução:** SEMPRE tradução PT-BR ao lado de cada palavra/frase
+- **Vocabulário:** 5-7 palavras novas por aula (10-12 circulando), básico e visual
+- **Tradução:** 100% bilingue (EN + PT-BR) — tradução obrigatória em tudo
 - **Frases:** Curtíssimas, 2-4 palavras. Drilling intenso (repetição)
 - **CCQs:** Em português. Professor modela TUDO antes do aluno tentar
 - **Practice:** Matching imagem+palavra, repetição de frases, fill-in-the-blanks com banco visível. Respostas de 1-2 palavras
@@ -22,8 +34,8 @@ Cada nível define 8 dimensões: vocabulário, tradução, frases, drilling/CCQ,
 - **Mídias:** Desenhos animados, vídeos curtos com legendas PT, canais YouTube para iniciantes
 
 ### A2 (Pré-Intermediário)
-- **Vocabulário:** 5-7 palavras por aula
-- **Tradução:** PT-BR obrigatória em todo vocabulário
+- **Vocabulário:** 6-8 palavras novas por aula (10-12 circulando)
+- **Tradução:** ZERO português. Definições de vocabulário em inglês simples
 - **Frases:** Simples, 5-8 palavras. Drilling de pronúncia. "Blocos de linguagem" (frases prontas para memorizar inteiras)
 - **CCQs:** Em inglês simples
 - **Practice:** Matching, fill-in-blanks, quiz múltipla escolha. Trabalhar respostas COMPLETAS ("Yes, I'm here on vacation." não apenas "Yes")
@@ -32,8 +44,8 @@ Cada nível define 8 dimensões: vocabulário, tradução, frases, drilling/CCQ,
 - **Mídias:** Filmes com linguagem simples, podcasts para learners (Espresso English, 6 Minute English BBC)
 
 ### B1 (Intermediário)
-- **Vocabulário:** 6-8 palavras/expressões por aula
-- **Tradução:** Apenas para termos técnicos ou idiomáticos
+- **Vocabulário:** 7-9 palavras novas por aula (10-12 circulando)
+- **Tradução:** ZERO português
 - **Frases:** Mais elaboradas. Textos e diálogos de 8-12 linhas. Expressões idiomáticas
 - **CCQs:** Em inglês, exigir justificativa nas respostas
 - **Practice:** Reading + interpretação, ordering de sequências, sorting de conceitos, true/false com justificativa. Combinar com áudio quando possível
@@ -42,8 +54,8 @@ Cada nível define 8 dimensões: vocabulário, tradução, frases, drilling/CCQ,
 - **Mídias:** Filmes/séries com legendas EN, podcasts intermediários, TED Talks curtas
 
 ### B2 (Intermediário Superior)
-- **Vocabulário:** Avançado — collocations, phrasal verbs. Definições em inglês
-- **Tradução:** NENHUMA, exceto termos muito técnicos
+- **Vocabulário:** 10-12 palavras novas por aula (10-13 circulando). Collocations, phrasal verbs. Definições em inglês
+- **Tradução:** ZERO português
 - **Frases:** Textos autênticos (artigos, e-mails profissionais, contratos). Análise de registro formal vs informal
 - **CCQs:** Complexas, exigindo análise
 - **Practice:** Paráfrase, análise de registro (transformar informal em formal), gap-fill com múltiplas opções válidas
@@ -52,8 +64,8 @@ Cada nível define 8 dimensões: vocabulário, tradução, frases, drilling/CCQ,
 - **Mídias:** Filmes/séries sem legenda, podcasts nativos, documentários
 
 ### C1 (Avançado)
-- **Vocabulário:** Expressões idiomáticas avançadas, gírias, vocabulário acadêmico/profissional. Zero tradução
-- **Tradução:** NENHUMA
+- **Vocabulário:** 10-12 palavras novas por aula (10-13 circulando). Expressões idiomáticas avançadas, gírias, vocabulário acadêmico/profissional
+- **Tradução:** ZERO português
 - **Frases:** Material 100% autêntico — artigos de jornal, podcasts nativos, trechos de livros, contratos reais. Foco em nuance, tom e registro
 - **CCQs:** Análise crítica
 - **Practice:** Análise crítica de textos, exercícios de estilo, paráfrase avançada, identificação de falácias argumentativas
@@ -62,8 +74,8 @@ Cada nível define 8 dimensões: vocabulário, tradução, frases, drilling/CCQ,
 - **Mídias:** Podcasts nativos complexos (NPR, The Economist), filmes sem legenda, stand-up comedy, livros originais
 
 ### C1+ (Avançado Plus)
-- **Vocabulário:** Refinamento profissional — precisão extrema, domínio de registros (formal acadêmico, jurídico, jornalístico, literário)
-- **Tradução:** NENHUMA
+- **Vocabulário:** 10-12 palavras novas por aula. Refinamento profissional — precisão extrema, domínio de registros (formal acadêmico, jurídico, jornalístico, literário)
+- **Tradução:** ZERO português
 - **Frases:** Capacidade de produzir conteúdo publicável em inglês. Retórica persuasiva avançada
 - **CCQs:** Análise crítica com mediação cultural
 - **Practice:** Paraphrasing techniques, reduced infinitives, adverb collocation refinement, advanced essay writing

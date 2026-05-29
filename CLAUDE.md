@@ -287,7 +287,7 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 - Conteudo neutro (nunca gabaritos)
 
 **WRAP-UP**
-- Survival Card: slide escuro, 5 frases com botao Listen (audio ElevenLabs)
+- Survival Card: NAO incluir no IN CLASS. Survival Card existe APENAS no Pre-class (REGRA 16)
 - What I Learned: CHECKBOXES clicaveis (click → verde com checkmark SVG)
 - Boarding Pass Earned: badge celebratorio com animacao sparkle
 - Closing: slide final com "Day X — Complete" + preview proxima aula
@@ -295,12 +295,14 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 **AUDIO NA ABA IN CLASS**
 - 100% ElevenLabs — audioMap deve cobrir TODAS as frases com speakText()
 - Vozes: **Arthur** (sfJopaWaOtauCD3HKX6Q) = male, American neutral + **Ellen** (BIvP0GN1cAtSRTxNHnWS) = female, calm American
-- Regra de alternancia:
-  - Palavras soltas (1-2 palavras) = SEMPRE Arthur
-  - Frases (3+ palavras) = ALTERNAR Arthur/Ellen a cada frase
-  - Dialogos: Arthur para personagens MASCULINOS, Ellen para personagens FEMININOS (incluindo a propria aluna se for mulher)
+- Regra de atribuicao de voz (baseada no GENERO do aluno e dos personagens):
+  - **Palavras soltas (1-2 palavras)**: voz do GENERO DO ALUNO (aluna=Ellen, aluno=Arthur)
+  - **Exercicios onde o aluno e protagonista** (speech cards, survival phrases, frases de pratica, role-play como aluno): voz do GENERO DO ALUNO
+  - **Personagens em dialogos**: voz do GENERO DO PERSONAGEM (personagem feminina=Ellen, masculino=Arthur)
+  - **Frases gerais sem personagem** (exemplos gramaticais, contexto narrativo): ALTERNAR Arthur/Ellen
   - Survival cards e listening: mesclar ambas vozes
   - NUNCA usar uma unica voz para todo o material
+- O genero do aluno e definido pelo campo `sexo` do Perfil 360. Se nao informado, inferir pelo nome
 - Atribuicao automatica de voz em dialogos:
   - Todo elemento de dialogo DEVE ter `data-voice="arthur"` ou `data-voice="ellen"`
   - O nome do personagem define a voz: nomes femininos (Sarah, Maria, receptionist feminina) = `data-voice="ellen"`, nomes masculinos (David, John, waiter masculino) = `data-voice="arthur"`
@@ -318,6 +320,33 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 - Dois tipos de botao: primary (filled accent) + secondary (outlined accent)
 - Paleta unica por aluno
 - Zero portugues na tela (A2+). Definicoes de vocabulario em INGLES simples
+
+**CONTRASTE — REGRA CRITICA (TEXTO NUNCA INVISIVEL)**
+- Slides escuros (`.slide-dark`) forcam `color:#fff` em todo o conteudo
+- Cards internos com fundo branco (checklist, role-play, vocab, comprehension) HERDAM esse branco e ficam INVISIVEIS
+- O CSS do material DEVE incluir OBRIGATORIAMENTE estas regras para garantir texto legivel em cards brancos dentro de slides escuros:
+```css
+.slide-dark .checklist li,
+.slide-dark .check-item,
+.slide-dark .check-label,
+.slide-dark .roleplay-body p,
+.slide-dark .roleplay-body,
+.slide-dark .roleplay-scenario,
+.slide-dark .comp-q,
+.slide-dark .comp-q p,
+.slide-dark .fill-item label,
+.slide-dark .fill-item p,
+.slide-dark .error-card p,
+.slide-dark .oral-item p,
+.slide-dark .email-card,
+.slide-dark .email-card p,
+.slide-dark .boarding-pass p,
+.slide-dark .student-id-card p {
+    color: #1a1a2e !important;
+}
+```
+- VERIFICACAO PRE-DEPLOY: abrir TODOS os slides no navegador e confirmar que NAO existe texto invisivel (branco sobre branco). Se encontrar → adicionar regra CSS especifica para o componente afetado
+- NUNCA usar `color:rgba(255,255,255,...)` em elementos dentro de cards com fundo branco/claro
 
 **ICONE T — INSTRUCOES AO PROFESSOR (SUBSTITUI O ANTIGO PLANO DE AULA)**
 - NAO existe aba separada de Plano de Aula — tudo esta no icone T de cada slide
@@ -351,13 +380,13 @@ Badge do header: `ALUNO` (em vez de `PROFESSOR VIEW`)
 Cada aula no Pre-class DEVE conter estas 5 etapas, nesta ordem:
 
 ### Etapa 1: Vocabulario + Expressoes (TODAS as 5 sub-etapas obrigatorias)
-- **1.1 Vocab Cards** com audio (`speakText`) + traducao — **OBRIGATORIO**
+- **1.1 Vocab Cards** com audio (`speakText`). A0-A1: com traducao PT. A partir do A2: definicao em ingles simples, ZERO portugues — **OBRIGATORIO**
 - **1.2 Matching** (dropdown `checkMatch`) — opcoes EMBARALHADAS — **OBRIGATORIO**
 - **1.3 Contexto** — texto curto usando o vocabulario + quiz de compreensao (`selectQuiz`). Formato: "Stage 1.2: Grammar in Context" com badge GRAMMAR, texto narrativo usando a gramatica da aula com palavras em **negrito**, seguido de perguntas de compreensao — **OBRIGATORIO, NUNCA PULAR**
-- **1.4 Explicacao Gramatical** — bilingue (EN + PT-BR). Formato: "Grammar Tip" com tabela/explicacao da estrutura gramatical, exemplos afirmativo/negativo/interrogativo, e traducao — **OBRIGATORIO, NUNCA PULAR**
+- **1.4 Explicacao Gramatical** — A0-A1: bilingue (EN + PT-BR). A partir do A2: 100% em ingles. Formato: "Grammar Tip" com tabela/explicacao da estrutura gramatical, exemplos afirmativo/negativo/interrogativo — **OBRIGATORIO, NUNCA PULAR**
 - **1.5 Aplicacao** — fill-in-the-blank (`checkBlank`) com hints e audio — **OBRIGATORIO**
 
-> **CHECKLIST DE VERIFICACAO**: Antes de considerar UMA aula pronta, confirmar que existem no HTML: (1) vocab cards com audio, (2) match-grid com dropdown, (3) texto "Grammar in Context" com quiz, (4) "Grammar Tip" com explicacao bilingue, (5) fill-in-the-blank. Se QUALQUER um faltar → a aula NAO esta pronta.
+> **CHECKLIST DE VERIFICACAO**: Antes de considerar UMA aula pronta, confirmar que existem no HTML: (1) vocab cards com audio, (2) match-grid com dropdown, (3) texto "Grammar in Context" com quiz, (4) "Grammar Tip" com explicacao (bilingue so para A0-A1, ingles para A2 em diante), (5) fill-in-the-blank. Se QUALQUER um faltar → a aula NAO esta pronta.
 
 ### Etapa 2: Pratica de Vocabulario
 - Word cloud com fill-in-the-blank avancado
@@ -499,11 +528,16 @@ const audioMap = {
 };
 ```
 
-- **Vozes ElevenLabs (ALTERNANCIA OBRIGATORIA)**:
-  - **Arthur** (`sfJopaWaOtauCD3HKX6Q`): Male, neutral American — usado para palavras soltas (1-2 palavras)
-  - **Ellen** (`BIvP0GN1cAtSRTxNHnWS`): Female, calm American — usada para frases longas (3+ palavras), ALTERNANDO com Arthur
-  - **Regra de alternancia**: Palavras soltas (1-2 palavras) = SEMPRE Arthur. Frases (3+ palavras) = ALTERNAR Arthur/Ellen a cada frase. Dialogos: voz masculina para personagens masculinos, voz feminina para personagens femininos
-  - **NUNCA usar uma unica voz para todo o material** — a alternancia e OBRIGATORIA para naturalidade
+- **Vozes ElevenLabs (ATRIBUICAO POR GENERO)**:
+  - **Arthur** (`sfJopaWaOtauCD3HKX6Q`): Male, neutral American
+  - **Ellen** (`BIvP0GN1cAtSRTxNHnWS`): Female, calm American
+  - **Regra de atribuicao**:
+    - Palavras soltas (1-2 palavras): voz do GENERO DO ALUNO (aluna=Ellen, aluno=Arthur)
+    - Exercicios onde o aluno e protagonista (speech cards, survival, pratica): voz do GENERO DO ALUNO
+    - Dialogos: voz do GENERO DO PERSONAGEM (personagem feminina=Ellen, masculino=Arthur)
+    - Frases gerais sem personagem (exemplos, contexto): ALTERNAR Arthur/Ellen
+  - **NUNCA usar uma unica voz para todo o material**
+  - O genero do aluno vem do campo `sexo` do Perfil 360 (ou `vozAluno` se disponivel)
 - **Formato**: MP3
 - **Diretorio**: `/audio/{slug}/`
 - **Nomenclatura**: frase em snake_case sem acentos, max 60 chars
@@ -589,6 +623,42 @@ Cores fixas Alumni (usadas em TODOS): `#003080` (azul), `#d70c0c` (vermelho), `#
 
 ---
 
+## REGRA 10.5 — AVISO DE AUTO-VERIFICACAO (OBRIGATORIO)
+
+> **ATENCAO, CLAUDE:** Voce TEM TENDENCIA a esquecer regras durante geracoes longas. Isso ja aconteceu MULTIPLAS VEZES e causou retrabalho. Voce NAO pode confiar que "lembrou de tudo" durante a geracao. ANTES de declarar qualquer aula como completa, voce DEVE executar o checklist abaixo DE FORMA EXPLICITA (rodar grep, contar elementos, verificar arquivos). NAO basta "achar" que esta certo. PROVE com comandos.
+
+### CHECKLIST DE AUTO-VERIFICACAO (rodar ANTES de cada deploy de aula):
+
+```bash
+# 1. ACENTUACAO — grep por palavras PT sem acento (deve retornar 0)
+grep -c "evolucao\|comunicacao\|voce\b\|nao \|ingles\b\|Profissao\|situacao\|correcao\|Transicao\|producao\|gramatica\|pratica" ARQUIVO.html
+
+# 2. STAMPS — contar stamps vs aulas (devem ser iguais)
+grep -c 'class="stamp"' ARQUIVO.html  # deve = numero de aulas
+grep -c 'lesson-card' ARQUIVO.html    # deve = numero de aulas
+
+# 3. AUDIO COVERAGE — zero missing
+python3 -c "import re,os; [print(p) for p in set(re.findall(r'\"/audio/SLUG/[^\"]+\"', open('ARQUIVO.html').read())) if not os.path.exists('public'+p.strip('\"'))]"
+
+# 4. SLIDES — contar slides e data-teacher
+grep -c 'data-slide=' ARQUIVO_INCLASS.html   # deve >= 32 para 90min
+grep -c 'data-teacher=' ARQUIVO_INCLASS.html  # deve = numero de slides
+
+# 5. EXERCICIOS — verificar tipos presentes no Pre-class
+grep -c 'checkBlank\|selectQuiz\|checkMatch\|checkOrder\|startRecording\|startFreeRecording' ARQUIVO.html
+
+# 6. CLASSES CORRETAS — zero classes inventadas no IN CLASS
+grep -c 'vocab-card-ic' ARQUIVO_INCLASS.html  # deve > 0
+grep -c 'data-exercise' ARQUIVO_INCLASS.html   # deve = 0
+
+# 7. ESTRUTURA — slides-wrapper fora do main-content
+grep -n 'main-content\|slides-wrapper' ARQUIVO_INCLASS.html
+```
+
+Se QUALQUER check falhar: PARAR, CORRIGIR, RODAR DE NOVO. So declarar completo quando TODOS passarem.
+
+---
+
 ## REGRA 11 — CHECKLIST FINAL BLOQUEANTE (PRE-DEPLOY)
 
 NENHUM material e "pronto" sem passar por TODOS os 7 checks:
@@ -600,7 +670,7 @@ NENHUM material e "pronto" sem passar por TODOS os 7 checks:
 5. **Funcionalidade** — Zero `data-exercise`. HTML manual com checkBlank/selectQuiz/etc.
 6. **Etapas Completas (REGRA 4)** — CADA aula DEVE conter: (a) Vocab Cards, (b) Matching, (c) Grammar in Context com texto + quiz, (d) Grammar Tip com explicacao bilingue, (e) Fill-in-the-blank, (f) Pratica, (g) Pronuncia, (h) Quiz Situacional, (i) Producao Livre. Buscar no HTML por "Grammar in Context" e "Grammar Tip" — se NAO encontrar em TODAS as aulas, REJEITAR.
 
-7. **IN CLASS Completa** — Aba IN CLASS DEVE ter: (a) minimo 25 slides para 60min / 35 para 90min, (b) narrativa com 7 capitulos, (c) reveal cards no vocab, (d) grammar discovery, (e) dialogo line-by-line, (f) 2+ listenings com play/pause, (g) quick fire uma por vez, (h) 3 role-plays (guided>semi-free>free), (i) survival card + checklist checkbox, (j) icone T com instrucoes em TODOS os slides, (k) ZERO portugues na tela, (l) TODOS os audios no audioMap (zero missing), (m) aba IN CLASS DEVE mostrar menu de selecao de aula primeiro — NUNCA entrar em slide-mode direto no switchTab. O switchTab SEMPRE remove slide-mode. Slides so abrem via enterSlideMode() chamado por click explicito no menu
+7. **IN CLASS Completa** — Aba IN CLASS DEVE ter: (a) minimo 25 slides para 60min / 35 para 90min, (b) narrativa com 7 capitulos, (c) reveal cards no vocab, (d) grammar discovery, (e) dialogo line-by-line, (f) 2+ listenings com play/pause, (g) quick fire uma por vez, (h) 3 role-plays (guided>semi-free>free), (i) What I Learned checklist checkbox (NUNCA survival card no IN CLASS — survival card e APENAS no Pre-class), (j) icone T com instrucoes em TODOS os slides, (k) ZERO portugues na tela, (l) TODOS os audios no audioMap (zero missing), (m) aba IN CLASS DEVE mostrar menu de selecao de aula primeiro — NUNCA entrar em slide-mode direto no switchTab. O switchTab SEMPRE remove slide-mode. Slides so abrem via enterSlideMode() chamado por click explicito no menu
 
 8. **Separacao de Aulas (multi-aula)** — Se o material tem 2+ aulas: (a) TODOS os slides tem `data-lesson="N"`, (b) `lessonRanges` no JS cobre todas as aulas com start/end corretos, (c) `changeSlide()` respeita bounds da aula atual, (d) contador mostra numero relativo ("01/27" nao "28/135"), (e) TODOS os cards do menu IN CLASS tem formato HTML IDENTICO (mesmo border-radius, mesmo layout, mesmo padrao de numero 2 digitos "01"/"02"). NUNCA misturar estilos entre cards.
 
@@ -624,13 +694,16 @@ Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao d
 
 ## REGRA 13 — ADAPTACAO POR NIVEL CEFR
 
-| Nivel | Vocabulario | Traducao | Frases | Gramatica |
-|-------|------------|----------|--------|-----------|
-| A0-A1 | 5-7 palavras/aula | 100% bilingue | 3-5 palavras | Presente simples, to be |
-| A2 | 8-10 palavras/aula | 80% bilingue | 5-7 palavras | Past simple, can/could |
-| B1 | 10-12 palavras/aula | 50% bilingue | 7-10 palavras | Present perfect, modals |
-| B2 | 12-15 palavras/aula | 30% bilingue | 10-15 palavras | Conditionals, passive |
-| C1+ | 15-20 palavras/aula | Minimo | Complexas | Nuances, register |
+> **REGRA DE IDIOMA**: Portugues e permitido APENAS nos niveis A0 e A1 (traducoes, grammar tip bilingue, survival card bilingue). A partir do A2, ZERO portugues em QUALQUER parte do material — vocab cards, grammar tip, survival card, exercicios, microcopy. Unica excecao: instrucoes ao professor via icone T (invisivel ao aluno).
+
+| Nivel | Vocab NOVO | Total circulando | Traducao | Frases | Gramatica |
+|-------|-----------|-----------------|----------|--------|-----------|
+| A0 | 4-5 palavras/aula | 10 | 100% bilingue (EN+PT) | 2-4 palavras | To be, subject pronouns |
+| A1 | 5-7 palavras/aula | 10-12 | 100% bilingue (EN+PT) | 4-6 palavras | Present simple, possessives |
+| A2 | 6-8 palavras/aula | 10-12 | ZERO portugues | 5-8 palavras | Past simple, can/could |
+| B1 | 7-9 palavras/aula | 10-12 | ZERO portugues | 8-12 palavras | Present perfect, modals |
+| B2 | 10-12 palavras/aula | 10-13 | ZERO portugues | Textos completos | Conditionals, passive |
+| C1/C1+ | 10-12 palavras/aula | 10-13 | ZERO portugues | Textos complexos | Nuances, register |
 
 ---
 
@@ -674,8 +747,11 @@ Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao d
 
 ## REGRA 16 — SURVIVAL CARD
 
-Ao final de cada aula, incluir card com 5 frases-chave + audio:
+Ao final de cada aula, incluir card com 5 frases-chave + audio. Survival Card existe em TODOS os niveis.
 
+**Idioma**: A0-A1 = bilingue (EN + PT). A partir do A2 = apenas ingles (sem `sp-pt`).
+
+Exemplo A0-A1 (com traducao):
 ```html
 <div class="survival-card">
     <h4>Survival Card — Lesson {N}</h4>
@@ -684,6 +760,18 @@ Ao final de cada aula, incluir card com 5 frases-chave + audio:
         <span class="sp-en">Hi, I'm Daniela. Nice to meet you.</span>
         <span class="sp-pt">Oi, sou a Daniela. Prazer.</span>
         <button class="btn btn-listen" onclick="speakText('Hi, I am Daniela. Nice to meet you.', this)">&#9835;</button>
+    </div>
+</div>
+```
+
+Exemplo A2 em diante (sem traducao):
+```html
+<div class="survival-card">
+    <h4>Survival Card — Lesson {N}</h4>
+    <div class="survival-phrase">
+        <span class="sp-num">1</span>
+        <span class="sp-en">Could you repeat that, please?</span>
+        <button class="btn btn-listen" onclick="speakText('Could you repeat that, please?', this)">&#9835;</button>
     </div>
 </div>
 ```
@@ -775,7 +863,7 @@ Melhorias sao testadas em materiais novos primeiro.
 
 ---
 
-## REGRA 21 — INGLES AMERICANO
+## REGRA 21B — INGLES AMERICANO
 
 Todo conteudo em ingles deve seguir American English: spelling, vocabulary, pronunciation.
 - "color" (nao "colour"), "organize" (nao "organise"), "apartment" (nao "flat")
@@ -1299,3 +1387,67 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 - O `STUDENT_SLUG` DEVE ser o slug PRINCIPAL do aluno (sem sufixo `-aula2` etc.)
 - Nunca editar `lesson-progress.js` para um aluno especifico — ele e GENERICO
 - A barra de progresso mostra: aulas com `inclass_done=true` / TOTAL_AULAS * 100
+
+---
+
+## REGRA 29 — STAMPS ACOMPANHAM AULAS (OBRIGATORIO)
+
+> Toda vez que uma nova aula e criada, o stamp correspondente DEVE ser adicionado na `stamps-row` do header. Stamps faltando e um BUG que BLOQUEIA deploy.
+
+### Regras:
+
+1. **1 aula = 1 stamp**: Cada `lesson-card` (ex: `ex-lesson-7`) DEVE ter um stamp correspondente (`stamp7`) na `stamps-row` do header
+2. **Mesma imagem**: O stamp DEVE usar a MESMA imagem do `lesson-header-img` da lesson-card do aluno, trocando apenas `w=600` por `w=200`
+3. **Label curta**: O `data-label` do stamp deve ser uma versao curta do tema da aula (1-2 palavras, ex: "Hotel", "Directions", "Paris")
+4. **Ambos os arquivos**: Stamp deve ser adicionado TANTO no arquivo do professor quanto no do aluno
+5. **`totalLessons` atualizado**: O `var totalLessons` no JavaScript DEVE ser atualizado para refletir o numero total de aulas existentes
+6. **Ordem sequencial**: Stamps devem seguir a ordem das aulas (stamp1 = aula 1, stamp2 = aula 2, etc.)
+
+### Formato do stamp:
+```html
+<div class="stamp" id="stamp{N}" data-label="{LABEL_CURTA}" style="background-image:url('{MESMA_URL_DO_LESSON_CARD}?w=200&q=80')"></div>
+```
+
+### Checklist ao criar nova aula (ADICIONAR aos checks existentes):
+- [ ] Stamp adicionado na `stamps-row` do aluno?
+- [ ] Stamp adicionado na `stamps-row` do professor?
+- [ ] Imagem do stamp = mesma do lesson-header-img (com w=200)?
+- [ ] `totalLessons` atualizado nos dois arquivos?
+- [ ] Stamps existentes NAO foram alterados?
+
+---
+
+## REGRA 30 — CONTROLE DE AULAS (OBRIGATORIO)
+
+> Todo material de professor e aluno DEVE incluir o sistema de Controle de Aulas. Ele injeta automaticamente uma aba "CONTROLE DE AULAS" que permite ao professor registrar datas e feedbacks, e ao aluno dar feedback sobre aulas e material. Os dados ficam no Supabase (tabela `controle_aulas`).
+
+### Script obrigatorio antes de `</body>` (DEPOIS do lesson-progress.js):
+
+```html
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+</body>
+```
+
+### Como funciona:
+
+1. O script detecta automaticamente se e pagina de professor ou aluno (pela badge)
+2. Le o curriculo do aluno do Supabase (`perfis.data.curriculo`) para montar a lista de aulas
+3. Injeta a aba "CONTROLE DE AULAS" na barra de tabs existente
+4. **Professor ve**: # | Tema | Data da aula (editavel) | Feedback do aluno (textarea) | Feedback do material (textarea)
+5. **Aluno ve**: # | Tema | Data da aula (somente leitura, propagada do professor) | Feedback da aula (textarea) | Feedback do material (textarea)
+6. Auto-save com debounce 1.5s — salva no Supabase via upsert
+7. Tabela Supabase: `controle_aulas` (student_slug, lesson_number, aula_date, prof_feedback_aluno, prof_feedback_material, aluno_feedback_aula, aluno_feedback_material, updated_at)
+
+### Requisitos no HTML hospedeiro:
+
+- `window.STUDENT_SLUG` definido no `<head>`
+- `supabase-config.js` carregado
+- `switchTab()` existente (generico — ja funciona com qualquer tabId)
+
+### IMPORTANTE:
+
+- O script e 100% aditivo — NAO altera nenhum HTML, CSS ou JS existente
+- NAO requer mudanca no `switchTab()` ou em nenhuma outra funcao
+- DEVE ser incluido em AMBOS os arquivos (professor e aluno)
+- A aba so aparece se o script estiver presente — materiais sem o script continuam identicos

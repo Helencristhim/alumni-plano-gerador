@@ -166,19 +166,23 @@ ${typeof observacoesProfessor === 'object' ?
 RULEBOOK DE ADEQUAÇÃO POR NÍVEL
 ══════════════════════════════════════
 
-A1 (Iniciante): SEMPRE tradução PT-BR. 4-5 palavras/aula. Frases 2-4 palavras. Drilling intenso. CCQs em português. Practice: matching imagem+palavra. Production muito guiada (máx 5 min). Mídias: desenhos, vídeos curtos legendados PT.
+REGRA DE IDIOMA: Português é permitido APENAS nos níveis A0 e A1. A partir do A2, ZERO português em QUALQUER parte do material (vocab, grammar tip, survival card, exercícios, microcopy). Única exceção: instruções ao professor via ícone T.
 
-A2 (Pré-Intermediário): Tradução PT-BR obrigatória. 5-7 palavras/aula. Frases simples 5-8 palavras. "Blocos de linguagem". CCQs em inglês simples. Practice: matching, fill-in-blanks, quiz. Respostas COMPLETAS. Production: role-play sem script (10-15 min). Mídias: filmes simples, podcasts learners.
+A0 (Beginner Absoluto): Tradução PT-BR em tudo. 4-5 palavras novas/aula (10 circulando). Frases 2-4 palavras. Grammar Tip bilingue. Survival Card bilingue. Drilling intenso. CCQs em português. Practice: matching imagem+palavra. Production muito guiada (máx 5 min). Mídias: desenhos, vídeos curtos legendados PT.
 
-B1 (Intermediário): Tradução só termos técnicos/idiomáticos. 6-8 palavras. Textos 8-12 linhas. Expressões idiomáticas. CCQs com justificativa. Practice: reading, ordering, sorting, true/false. Production: role-play com imprevistos (15-20 min). Mídias: legendas EN, TED Talks.
+A1 (Iniciante): Tradução PT-BR em tudo. 5-7 palavras novas/aula (10-12 circulando). Frases 4-6 palavras. Grammar Tip bilingue. Survival Card bilingue. Drilling intenso. CCQs em português. Practice: matching imagem+palavra. Production guiada (5-10 min). Mídias: desenhos, vídeos curtos legendados PT.
 
-B2 (Intermediário Superior): Sem tradução (exceto técnicos). Collocations, phrasal verbs. Textos autênticos. CCQs complexas. Practice: paráfrase, registro. Production: debates, apresentações (20 min). Mídias: sem legenda, podcasts nativos.
+A2 (Pré-Intermediário): ZERO português. 6-8 palavras novas/aula (10-12 circulando). Frases 5-8 palavras. Grammar Tip em inglês. Survival Card em inglês. Definições de vocabulário em inglês simples. CCQs em inglês simples. Practice: matching, fill-in-blanks, quiz. Respostas COMPLETAS. Production: role-play sem script (10-15 min). Mídias: filmes simples, podcasts learners.
 
-C1 (Avançado): Zero tradução. Material 100% autêntico. Análise crítica. Production: debates complexos, escrita argumentativa (20+ min). Mídias: NPR, The Economist, stand-up.
+B1 (Intermediário): ZERO português. 7-9 palavras novas/aula (10-12 circulando). Textos 8-12 linhas. Expressões idiomáticas. CCQs com justificativa em inglês. Practice: reading, ordering, sorting, true/false. Production: role-play com imprevistos (15-20 min). Mídias: legendas EN, TED Talks.
 
-C1+ (Avançado Plus): Refinamento profissional. Domínio de registros (formal, jurídico, jornalístico, literário). Retórica persuasiva avançada. Capacidade de produzir conteúdo publicável. Mediação cultural. Production: 37 min. Mídias: igual C1 com foco em precisão extrema.
+B2 (Intermediário Superior): ZERO português. 10-12 palavras novas/aula (10-13 circulando). Collocations, phrasal verbs. Textos autênticos. CCQs complexas. Practice: paráfrase, registro. Production: debates, apresentações (20 min). Mídias: sem legenda, podcasts nativos.
 
-C2 (Proficiente): Polimento — sotaque, estilo, humor, escrita acadêmica. Tradução literária, análise de discurso.
+C1 (Avançado): ZERO português. 10-12 palavras novas/aula (10-13 circulando). Material 100% autêntico. Análise crítica. Production: debates complexos, escrita argumentativa (20+ min). Mídias: NPR, The Economist, stand-up.
+
+C1+ (Avançado Plus): ZERO português. 10-12 palavras novas/aula. Refinamento profissional. Domínio de registros (formal, jurídico, jornalístico, literário). Retórica persuasiva avançada. Production: 37 min. Mídias: igual C1 com foco em precisão extrema.
+
+C2 (Proficiente): ZERO português. Polimento: sotaque, estilo, humor, escrita acadêmica. Análise de discurso.
 
 ══════════════════════════════════════
 RULEBOOK DE ADEQUAÇÃO POR IDADE
@@ -222,6 +226,23 @@ INSTRUÇÕES DE ANÁLISE
 7. MODALIDADE (${modalidadeAula || 'Não informada'}): Adapte as necessidades pedagógicas. Online: exercícios adaptados para tela compartilhada, chat, breakout rooms. Presencial: objetos físicos, movimento, flashcards na mão.
 
 8. ACENTUAÇÃO: Todo texto em português DEVE ter acentuação perfeita (é, ã, ç, ê, ó, ú, à).
+
+9. PROGRAMA DETALHADO (campo programaDetalhado — CRÍTICO para qualidade do currículo):
+   A consultoria é o momento mais rico de informação sobre o aluno. Analise a transcrição com MÁXIMA atenção para extrair:
+
+   a) DISTRIBUIÇÃO DE FOCOS: O aluno raramente precisa de UM foco só. Identifique TODOS os contextos de uso do inglês mencionados na consultoria e atribua peso (%) a cada um. Ex: se menciona reuniões E viagens E social, distribua proporcionalmente baseado em frequência de menção e urgência.
+
+   b) CENÁRIOS PRIORITÁRIOS: Cada situação REAL que o aluno descreveu onde precisa usar inglês. Ordene por urgência (CRITICA = tem deadline, ALTA = acontece toda semana, MEDIA = ocasional, BAIXA = futuro). Cada cenário DEVE ter evidência (frase do aluno).
+
+   c) HABILIDADES PRIORITÁRIAS: Distribua fala/escuta/leitura/escrita em % baseado no que a consultoria revela. Aluno que precisa de reuniões = fala alta. Aluno que precisa ler contratos = leitura alta.
+
+   d) O QUE EVITAR: Experiências negativas passadas com inglês, preferências declaradas ("odeio gramática solta", "quero algo prático"). CRUCIAL para não repetir erros de escolas anteriores.
+
+   e) MOMENTOS DE ENERGIA: Quando o aluno se animou (tema que gosta, sonho) vs quando ficou tenso (medo, vergonha). Temas de alta energia viram CONTEXTO para aulas. Temas de ansiedade precisam de preparação gradual.
+
+   f) RESUMO PARA CURRÍCULO: NÃO é o resumo executivo. É um resumo ACIONÁVEL focado em: profissão detalhada, contextos de uso, eventos com deadline, cenários do dia a dia. Esse texto vai direto para o gerador de temas.
+
+   REGRA: Se a consultoria menciona MÚLTIPLOS contextos de uso do inglês, a distribuição NUNCA pode ter um foco com 100%. Sempre distribuir proporcionalmente.
 
 ══════════════════════════════════════
 FORMATO DE SAÍDA (JSON puro, sem markdown)
@@ -337,6 +358,47 @@ Retorne APENAS JSON puro com esta estrutura exata:
     "texto": "Como o aluno vai se sentir quando conseguir — extraído da transcrição e observações",
     "evidencia": "Trecho da transcrição ou observação que sustenta esta inferência",
     "selo": "🟢|🟡|🟠|🔴"
+  },
+
+  "vozAluno": {
+    "voz": "arthur|ellen",
+    "voiceId": "sfJopaWaOtauCD3HKX6Q (Arthur) ou BIvP0GN1cAtSRTxNHnWS (Ellen)",
+    "razao": "Baseado no sexo declarado ou inferido do aluno. Feminino=Ellen, Masculino=Arthur."
+  },
+
+  "programaDetalhado": {
+    "focoPrincipal": "Nome do foco dominante (ex: Business English)",
+    "distribuicao": [
+      { "foco": "Descrição do foco com contexto (ex: Business — reuniões e negociação)", "peso": 40 },
+      { "foco": "Segundo foco (ex: Travel — feiras e eventos)", "peso": 30 },
+      { "foco": "Terceiro foco se houver (ex: Social — networking e small talk)", "peso": 20 },
+      { "foco": "Quarto foco se houver", "peso": 10 }
+    ],
+    "cenariosPrioritarios": [
+      {
+        "cenario": "Descrição do cenário real e específico do aluno",
+        "urgencia": "CRITICA|ALTA|MEDIA|BAIXA",
+        "habilidades": ["habilidade 1", "habilidade 2"],
+        "evidencia": "Frase exata ou paráfrase do que o aluno disse na consultoria"
+      }
+    ],
+    "habilidadesPrioritarias": {
+      "fala": 0-100,
+      "escuta": 0-100,
+      "leitura": 0-100,
+      "escrita": 0-100
+    },
+    "evitar": [
+      "O que o aluno NÃO quer — baseado em experiências negativas ou preferências declaradas na consultoria. Ex: 'Gramática descontextualizada — aluno disse que odiava curso anterior por isso'"
+    ],
+    "momentosEnergia": [
+      {
+        "tema": "Tema ou assunto que gerou energia positiva ou negativa",
+        "energia": "alta|media|ansiedade|resistencia",
+        "uso": "Como usar isso no currículo (ex: usar como contexto para aulas de conversação)"
+      }
+    ],
+    "resumoParaCurriculo": "Resumo de 4-8 linhas FOCADO em informações que impactam o currículo: profissão detalhada, contextos de uso do inglês, eventos com deadline, relações pessoais com o idioma, cenários reais do dia a dia. NÃO é o resumo executivo — é um resumo ACIONÁVEL para o gerador de temas."
   }
 }
 
@@ -351,6 +413,7 @@ REGRAS FINAIS CRÍTICAS:
 - TODOS os 8 campos de dadosExtraidos devem estar presentes. Se não encontrado, use encontrado: false, selo "🔴", valor: null.
 - ATENÇÃO COM ASPAS: quando citar falas do aluno dentro de strings JSON, use aspas simples (') em vez de aspas duplas para evitar quebrar o JSON. Exemplo correto: "evidencia": "Aluno disse 'eu travo quando o cara fala rápido'"
 - Seja CONCISO nas evidências — máximo 1-2 frases por evidência. Não copie parágrafos inteiros da transcrição.
+- O campo programaDetalhado é OBRIGATÓRIO. Deve ter: pelo menos 2 itens em distribuicao (soma dos pesos = 100), pelo menos 2 cenariosPrioritarios com evidência, e resumoParaCurriculo com mínimo 100 caracteres.
 
 REGRAS COMPLEMENTARES 119-137 (aplicar ao gerar o perfil):
 - REGRA 119: mínimo 10 palavras circulando por aula no programa recomendado.
@@ -358,7 +421,7 @@ REGRAS COMPLEMENTARES 119-137 (aplicar ao gerar o perfil):
 - REGRA 122: nominalização contextual — usar PRIMEIRO NOME em contextos informais, SOBRENOME em formais. NUNCA nomes genéricos.
 - REGRA 123: mescla geral/foco em 4 dimensões (vocabulário, contexto, production, atividades complementares). Proporção: A0/A1=70/30, A2=60/40, B1=50/50, B2=40/60, C1+=30/70.
 - REGRA 127: NÃO inventar mídia nas recomendações. Toda mídia deve ser REAL e VERIFICÁVEL.
-- REGRA 131: tradução acessível por nível — A0/A1 via tooltip, A2 seletiva, B1/B2/C1/C1+/C2 sem tradução.
+- REGRA 131: tradução por nível — A0/A1 bilingue (EN+PT), a partir do A2 ZERO português em qualquer parte do material.
 - REGRA 135: reconhecer cargas emocionais do nível do aluno e adaptar tom do perfil.
 - REGRA 136: adequar por faixa etária (5-12: lúdico 30min, 13-17: peer-like, 31-50: ROI profissional, 50+: validar experiência).
 - REGRA 137: reconhecer cenário de consultoria (A: aluno fala EN, B: aluno fala só PT, C: sem consultoria).
@@ -367,7 +430,7 @@ REGRAS ABSOLUTAS 138-142:
 - REGRA 138: 90 min universal para adultos em Material Professor e Plano de Aula. Exceção: crianças 5-12 = 30 min.
 - REGRA 139: Vocabulary + Expressions obrigatórios em TODOS os níveis no Pre-class. A0 começa com situações reais (NÃO alfabeto/cores).
 - REGRA 140: NUNCA repetir vocabulário/expressions como novo conteúdo em aulas posteriores. Revisão e callback permitidos.
-- REGRA 141: áudios SEMPRE ElevenLabs. Zero tolerância para Web Speech em material publicado.
+- REGRA 141: áudios SEMPRE ElevenLabs (Arthur + Ellen). Voz baseada no gênero: palavras soltas e exercícios do aluno = voz do gênero do aluno (sexo feminino=Ellen, masculino=Arthur). Diálogos = voz do gênero do personagem. Frases gerais = alternar. Zero tolerância para Web Speech em material publicado.
 - REGRA 142: invocar UX/UI ao criar qualquer nova página HTML. Consistência Alumni, WCAG AAA, mobile-first.
 - REGRA 143: INGLÊS AMERICANO como padrão absoluto. Spelling, pronúncia, vocabulário e expressões sempre em American English. Exceção APENAS quando perfil indicar necessidade de British English — nesse caso, sinalizar explicitamente com [British English].
 - REGRA META: coerência absoluta entre 5 abas — vocabulário idêntico, aplicações diferentes, critério de sucesso alcançável.`;

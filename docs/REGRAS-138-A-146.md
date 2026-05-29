@@ -19,13 +19,14 @@ A distribuição PPP varia por nível mas o tempo total é sempre 90 minutos (ou
 
 Todo Pre-class tem seção de Vocabulary E seção de Expressions, independente do nível CEFR.
 
-ADAPTAÇÃO POR NÍVEL:
-- A0: 6-8 palavras + chunks funcionais simples. NÃO ensina alfabeto/cores/números básicos. Começa com situações reais.
-- A1/A2: 7-10 palavras + chunks funcionais e idiomáticas transparentes.
-- B1: 8-10 palavras + 2-3 idiomatic + 2-3 collocations + 1-2 phrasal verbs.
-- B2: 10-12 palavras + 3-4 collocations + 2-3 phrasal verbs + 1-2 idiomáticas + hedging.
-- C1/C1+: 10-12 palavras + 4-5 collocations + 3-4 phrasal verbs + 2-3 idiomáticas culturais + discourse markers.
-- C2: refinamento, 10 mínimo + variações regionais, slang sofisticado, idioms literários.
+ADAPTAÇÃO POR NÍVEL (palavras NOVAS por aula + total circulando):
+- A0: 4-5 novas (10 circulando) + chunks funcionais simples. NÃO ensina alfabeto/cores/números básicos. Começa com situações reais. Tradução PT-BR em tudo.
+- A1: 5-7 novas (10-12 circulando) + chunks funcionais. Tradução PT-BR em tudo.
+- A2: 6-8 novas (10-12 circulando) + idiomáticas transparentes. ZERO português — definições em inglês simples.
+- B1: 7-9 novas (10-12 circulando) + 2-3 idiomatic + 2-3 collocations + 1-2 phrasal verbs. ZERO português.
+- B2: 10-12 novas (10-13 circulando) + 3-4 collocations + 2-3 phrasal verbs + 1-2 idiomáticas + hedging. ZERO português.
+- C1/C1+: 10-12 novas (10-13 circulando) + 4-5 collocations + 3-4 phrasal verbs + 2-3 idiomáticas culturais + discourse markers. ZERO português.
+- C2: refinamento, 10 mínimo circulando + variações regionais, slang sofisticado, idioms literários. ZERO português.
 
 REGRA: nenhum Pre-class é publicado sem AMBAS as seções (Vocabulary + Expressions).
 
@@ -45,7 +46,7 @@ Sistema rastreia lista cumulativa por aluno/programa. Validação automática ao
 ## REGRA 141 — ÁUDIOS SEMPRE ELEVENLABS, SEM EXCEÇÃO
 
 Todo botão Ouvir/Listen em qualquer página usa ÁUDIO MP3 ELEVENLABS.
-- VOZ: Arthur (inglês americano)
+- VOZES: Arthur (sfJopaWaOtauCD3HKX6Q, masculino) + Ellen (BIvP0GN1cAtSRTxNHnWS, feminino) — alternância OBRIGATÓRIA
 - FORMATO: .mp3
 - LOCAL: /public/audio/{perfilId}/
 - Web Speech API existe APENAS como fallback de emergência.

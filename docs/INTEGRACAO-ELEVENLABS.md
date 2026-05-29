@@ -233,7 +233,7 @@ Cada aula gerada DEVE conter audio nos seguintes pontos:
 1. **Nunca gerar audio de texto em portugues** — Audio e exclusivamente
    para conteudo em ingles (exceto microcopy bilingue quando necessario)
 2. **Testar audio antes de publicar** — Ouvir pelo menos 3 amostras por aula
-3. **Manter consistencia** — Sempre a mesma voz (Arthur) em todo material
+3. **Atribuicao por genero** — Arthur (sfJopaWaOtauCD3HKX6Q) para alunos masculinos e personagens masculinos. Ellen (BIvP0GN1cAtSRTxNHnWS) para alunas femininas e personagens femininos. Palavras soltas e exercicios do aluno = voz do genero do aluno. Dialogos = voz do genero do personagem. Frases gerais = alternar. NUNCA usar so uma voz em todo o material
 4. **Nao editar audio manualmente** — Se precisar corrigir, regenerar via API
 5. **Cache agressivo** — Configurar headers de cache longo para arquivos .mp3
 6. **Prefetch inteligente** — Carregar audio da secao atual + proxima secao

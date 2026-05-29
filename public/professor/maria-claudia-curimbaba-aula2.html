@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>IN CLASS — Maria Claudia Curimbaba | Lesson 2 | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #6B4C8A;
+  --accent-light: #8B6BAA;
+  --accent-dim: rgba(107,76,138,0.08);
+  --accent-glow: rgba(107,76,138,0.05);
+  --black: #1a1a2e;
+  --bg: #f5f2ee;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0ede8;
+  --bg-input: #fafaf7;
+  --border: #d8d1c8;
+  --border-light: #c4bdb3;
+  --white: #ffffff;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #6b6b7a;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --warn: #d97706;
+  --navy: #003080;
+  --dark: #1a1a2e;
+  --dark-surface: #22223a;
+  --dark-elevated: #2d2d4a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-serif; background:#0a0a1a; color:var(--text); }
+
+/* ===== SLIDE SYSTEM ===== */
+.slide-deck { position:relative; width:100%; height:100vh; }
+.slide {
+  position:absolute; inset:0; width:100%; height:100vh;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  opacity:0; visibility:hidden; transition: opacity 400ms ease, visibility 400ms ease;
+  overflow-y:auto; padding:2rem;
+}
+.slide.active { opacity:1; visibility:visible; }
+.slide.dark { background:var(--dark); color:#fff; }
+.slide.light { background:var(--bg); color:var(--text); }
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.6rem 1.5rem; background:rgba(10,10,26,0.85); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.top-bar-left { display:flex; align-items:center; gap:0.8rem; }
+.top-bar-logo { height:26px; opacity:0.9; }
+.slide-counter { font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.5); letter-spacing:1px; }
+.top-bar-right { display:flex; align-items:center; gap:0.6rem; }
+
+/* Chapter progress */
+.chapter-bar { display:flex; gap:2px; flex:1; max-width:360px; margin:0 1rem; }
+.chapter-dot {
+  flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,0.12);
+  cursor:pointer; transition:background 0.3s;
+}
+.chapter-dot.active { background:var(--accent); }
+.chapter-dot.completed { background:var(--accent-light); }
+
+/* Dot navigation */
+.dot-nav {
+  position:fixed; right:1rem; top:50%; transform:translateY(-50%); z-index:100;
+  display:flex; flex-direction:column; gap:4px;
+}
+.dot-nav-item {
+  width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.15);
+  cursor:pointer; transition:all 0.3s; border:none;
+}
+.dot-nav-item.active { background:var(--accent); transform:scale(1.4); }
+.dot-nav-item:hover { background:rgba(255,255,255,0.4); }
+
+/* Nav arrows */
+.nav-arrows {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:100;
+  display:flex; gap:0.5rem;
+}
+.nav-btn {
+  width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
+  background:rgba(10,10,26,0.7); backdrop-filter:blur(8px);
+  color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.nav-btn:hover { background:var(--accent); border-color:var(--accent); }
+.nav-btn svg { width:18px; height:18px; }
+
+/* ===== TEACHER CUE (T icon) ===== */
+.t-cue {
+  position:fixed; top:3.5rem; right:1.5rem; z-index:200;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.5); font-weight:700; font-size:0.8rem;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.25s;
+}
+.t-cue:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.t-panel {
+  display:none; position:fixed; top:6rem; right:1.5rem; z-index:210;
+  width:340px; max-height:60vh; overflow-y:auto;
+  background:rgba(26,26,46,0.97); color:#e0e0e0; padding:1.2rem 1.4rem;
+  border-radius:10px; font-size:0.82rem; line-height:1.7;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08);
+}
+.t-panel.show { display:block; animation:fadeIn 0.2s ease; }
+.t-panel strong { color:var(--accent-light); }
+.t-panel .t-timing { color:#fbbf24; font-weight:600; font-size:0.75rem; display:block; margin-bottom:0.5rem; }
+.t-panel .t-ccq { background:rgba(107,76,138,0.15); border:1px solid rgba(107,76,138,0.3); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; }
+.t-panel .t-alert { background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.25); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; color:#fca5a5; }
+
+/* ===== TYPOGRAPHY ===== */
+.slide-chapter-label {
+  font-size:0.68rem; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.6rem;
+}
+.slide-title {
+  font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:600;
+  line-height:1.2; margin-bottom:0.8rem; max-width:750px; text-align:center;
+}
+.slide-subtitle {
+  font-size:1rem; font-weight:400; opacity:0.7; max-width:600px; text-align:center; line-height:1.7;
+}
+.slide-content { max-width:800px; width:100%; }
+.section-label {
+  font-size:0.7rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+
+/* ===== VOCAB REVEAL CARDS (2x2 grid) ===== */
+.vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:750px; width:100%; }
+.v-card {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px; padding:1.2rem; cursor:pointer; transition:all 0.35s;
+  min-height:160px; display:flex; flex-direction:column; position:relative; overflow:hidden;
+}
+.v-card:hover { border-color:var(--accent); background:rgba(107,76,138,0.06); }
+.v-card.revealed { border-color:var(--accent-light); background:rgba(107,76,138,0.08); }
+.v-card-icon {
+  width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  margin-bottom:0.8rem; flex-shrink:0;
+}
+.v-card-icon svg { width:24px; height:24px; }
+.v-card-hint { font-size:0.85rem; color:rgba(255,255,255,0.5); font-style:italic; line-height:1.6; }
+.v-card-body { display:none; }
+.v-card.revealed .v-card-hint { display:none; }
+.v-card.revealed .v-card-body { display:block; animation:fadeIn 0.35s ease; }
+.v-word { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:#fff; margin-bottom:0.3rem; }
+.v-def { font-size:0.82rem; color:rgba(255,255,255,0.6); margin-bottom:0.3rem; }
+.v-example { font-size:0.85rem; color:rgba(255,255,255,0.8); font-style:italic; margin-bottom:0.6rem; }
+.v-listen-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.35rem 0.9rem; background:var(--accent); color:#fff;
+  border:none; border-radius:5px; font-size:0.75rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.v-listen-btn:hover { background:var(--accent-light); }
+.v-listen-btn svg { width:14px; height:14px; }
+.vocab-counter { text-align:center; margin-top:1rem; font-size:0.8rem; color:rgba(255,255,255,0.4); font-weight:500; }
+
+/* ===== GRAMMAR DISCOVERY ===== */
+.grammar-examples { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.2rem; }
+.g-example {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; font-size:1.05rem; color:rgba(255,255,255,0.9); line-height:1.6;
+}
+.g-example .highlight { color:var(--accent-light); font-weight:700; }
+.g-reveal-btn {
+  width:100%; padding:0.8rem; border:2px dashed var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:10px; font-size:0.9rem; font-weight:600;
+  cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
+}
+.g-reveal-btn:hover { background:rgba(107,76,138,0.1); }
+.g-reveal-btn.used { display:none; }
+.g-rule {
+  display:none; padding:1.5rem; background:rgba(107,76,138,0.08);
+  border:1px solid rgba(107,76,138,0.25); border-radius:10px; margin-top:1rem;
+}
+.g-rule.show { display:block; animation:fadeIn 0.4s ease; }
+.g-rule h4 { color:var(--accent-light); font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:1rem; }
+.g-rule table { width:100%; border-collapse:collapse; font-size:0.88rem; color:rgba(255,255,255,0.85); }
+.g-rule th { text-align:left; padding:0.6rem; border-bottom:2px solid rgba(255,255,255,0.15); color:var(--accent-light); font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; }
+.g-rule td { padding:0.6rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+
+/* ===== COMMON MISTAKE ===== */
+.mistake-box { max-width:600px; width:100%; }
+.mistake-wrong, .mistake-right {
+  padding:1.2rem 1.5rem; border-radius:10px; font-size:1.1rem; margin-bottom:1rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.mistake-wrong { background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.25); color:#fca5a5; }
+.mistake-right { background:rgba(22,163,74,0.08); border:1px solid rgba(22,163,74,0.25); color:#86efac; }
+.mistake-icon { width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+.mistake-wrong .mistake-icon { background:rgba(220,38,38,0.2); }
+.mistake-right .mistake-icon { background:rgba(22,163,74,0.2); }
+
+/* ===== FILL-IN PRACTICE ===== */
+.fill-practice { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.fp-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.fp-item:hover { border-color:var(--accent); }
+.fp-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.fp-sentence .fp-blank { color:var(--accent-light); font-weight:700; border-bottom:2px dashed var(--accent); padding:0 0.3rem; }
+.fp-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(107,76,138,0.12); border-radius:6px; font-size:0.88rem; color:var(--accent-light); font-weight:600; }
+.fp-item.open .fp-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== SUBSTITUTION DRILL ===== */
+.sub-drill { max-width:600px; width:100%; text-align:center; }
+.sub-template { font-family:'Cormorant Garamond',serif; font-size:2rem; color:#fff; margin-bottom:2rem; }
+.sub-template .sub-slot { color:var(--accent-light); border-bottom:3px solid var(--accent); padding:0 0.5rem; }
+.sub-prompts { display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:center; }
+.sub-chip {
+  padding:0.5rem 1.2rem; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+  border-radius:20px; font-size:0.88rem; color:rgba(255,255,255,0.7); cursor:pointer; transition:all 0.2s;
+}
+.sub-chip:hover, .sub-chip.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* ===== ARTIFACT ===== */
+.artifact-org {
+  max-width:600px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15); padding:2rem;
+}
+.org-top { text-align:center; margin-bottom:1.5rem; }
+.org-box {
+  display:inline-block; padding:0.8rem 1.5rem; border-radius:8px; font-weight:600;
+  font-size:0.9rem; color:#fff; text-align:center;
+}
+.org-connector { display:flex; justify-content:center; margin:0.5rem 0; }
+.org-connector-line { width:2px; height:24px; background:#ccc; }
+.org-branches { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+.org-branch {
+  padding:0.6rem 1rem; border:2px solid var(--accent); border-radius:8px;
+  font-size:0.82rem; color:var(--text); text-align:center; min-width:140px;
+}
+.org-branch-label { font-size:0.65rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.2rem; }
+
+/* ===== DIALOGUE ===== */
+.dialogue-container { max-width:650px; width:100%; display:flex; flex-direction:column; gap:0; }
+.d-line { display:none; padding:0.8rem 1rem; border-left:3px solid transparent; animation:slideUp 0.4s ease; }
+.d-line.visible { display:flex; gap:1rem; align-items:flex-start; }
+.d-line:hover { background:rgba(255,255,255,0.03); }
+.d-avatar {
+  width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:0.5px;
+}
+.d-avatar.blue { background:#2563eb; }
+.d-avatar.purple { background:var(--accent); }
+.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.4); margin-bottom:0.15rem; }
+.d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
+.d-text strong { color:var(--accent-light); font-weight:600; }
+.d-text-wrap { flex:1; }
+.next-line-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.5rem 1.2rem; border:1px solid var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:6px; cursor:pointer; font-size:0.82rem;
+  font-weight:600; margin-top:1rem; transition:all 0.2s;
+}
+.next-line-btn:hover { background:var(--accent); color:#fff; }
+
+/* ===== LISTENING ===== */
+.listening-card { max-width:500px; width:100%; text-align:center; }
+.waveform {
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  height:60px; margin-bottom:1.5rem;
+}
+.waveform-bar {
+  width:4px; border-radius:2px; background:var(--accent);
+  animation:wave 1.2s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.waveform.playing .waveform-bar { animation-play-state:running; }
+@keyframes wave {
+  0%, 100% { height:8px; opacity:0.3; }
+  50% { height:40px; opacity:1; }
+}
+.play-pause-btn {
+  width:64px; height:64px; border-radius:50%; border:2px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem;
+  transition:all 0.2s;
+}
+.play-pause-btn:hover { background:var(--accent); color:#fff; }
+.play-pause-btn svg { width:28px; height:28px; }
+.listening-questions { display:none; flex-direction:column; gap:0.6rem; margin-top:1.5rem; text-align:left; }
+.listening-questions.show { display:flex; animation:fadeIn 0.4s ease; }
+.lq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.lq-item:hover { border-color:var(--accent); }
+.lq-question { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.lq-answer { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.lq-item.open .lq-answer { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== QUICK CHALLENGE ===== */
+.qc-container { max-width:600px; width:100%; }
+.qc-card { display:none; }
+.qc-card.active { display:block; animation:fadeIn 0.3s ease; }
+.qc-prompt {
+  font-size:1.15rem; color:#fff; text-align:center; margin-bottom:1.5rem; line-height:1.7;
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+}
+.qc-show-btn {
+  display:block; width:100%; padding:0.8rem; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); border-radius:8px;
+  font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s;
+}
+.qc-show-btn:hover { background:var(--accent); color:#fff; }
+.qc-answer-box {
+  display:none; margin-top:1rem; padding:1rem; background:rgba(107,76,138,0.1);
+  border:1px solid rgba(107,76,138,0.25); border-radius:8px;
+  font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; text-align:center;
+}
+.qc-answer-box.show { display:block; animation:fadeIn 0.3s ease; }
+.qc-next-btn {
+  display:none; margin:1rem auto 0; padding:0.5rem 1.5rem; background:var(--accent);
+  color:#fff; border:none; border-radius:6px; font-size:0.82rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.qc-next-btn.show { display:block; }
+.qc-next-btn:hover { background:var(--accent-light); }
+.qc-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-bottom:1rem; font-weight:500; }
+
+/* ===== SPOT THE ERROR ===== */
+.error-list { display:flex; flex-direction:column; gap:0.6rem; max-width:700px; width:100%; }
+.err-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.err-item:hover { border-color:rgba(220,38,38,0.4); }
+.err-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
+.err-correction {
+  display:none; margin-top:0.6rem; padding:0.5rem 0.8rem;
+  background:rgba(22,163,74,0.1); border-radius:6px;
+  font-size:0.88rem; color:#86efac; font-weight:600;
+}
+.err-item.open .err-correction { display:block; animation:fadeIn 0.2s ease; }
+.err-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:1rem; font-weight:500; }
+
+/* ===== ORAL DRILLING ===== */
+.oral-list { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.oral-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.oral-item:hover { border-color:var(--accent); }
+.oral-situation { font-size:0.92rem; color:rgba(255,255,255,0.7); margin-bottom:0.3rem; }
+.oral-situation-label { font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent-light); margin-bottom:0.4rem; }
+.oral-model { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(107,76,138,0.1); border-radius:6px; font-size:0.92rem; color:rgba(255,255,255,0.9); font-style:italic; line-height:1.6; }
+.oral-item.open .oral-model { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== ROLE-PLAY CARDS ===== */
+.rp-card {
+  max-width:600px; width:100%; border-radius:16px; overflow:hidden;
+  position:relative; min-height:280px; display:flex; flex-direction:column; justify-content:flex-end;
+}
+.rp-bg { position:absolute; inset:0; }
+.rp-bg-gradient { position:absolute; inset:0; }
+.rp-content { position:relative; z-index:1; padding:2rem; }
+.rp-level {
+  font-size:0.68rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.5rem;
+}
+.rp-scenario { font-size:1.05rem; color:#fff; line-height:1.7; margin-bottom:1rem; }
+.rp-keywords { display:flex; gap:0.5rem; flex-wrap:wrap; }
+.rp-keyword {
+  padding:0.3rem 0.8rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px; font-size:0.78rem; color:rgba(255,255,255,0.8); font-weight:500;
+}
+
+/* ===== PRONUNCIATION DRILL ===== */
+.pron-list { display:flex; flex-direction:column; gap:0.8rem; max-width:600px; width:100%; }
+.pron-item {
+  display:flex; align-items:center; gap:1rem; padding:0.8rem 1.2rem;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;
+}
+.pron-word { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:#fff; font-weight:600; min-width:160px; }
+.pron-stress { font-size:0.88rem; color:var(--accent-light); font-weight:500; flex:1; }
+.pron-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.pron-play:hover { background:var(--accent); color:#fff; }
+.pron-play svg { width:18px; height:18px; }
+
+/* ===== EXPRESSIONS ===== */
+.expr-list { display:flex; flex-direction:column; gap:0.6rem; max-width:650px; width:100%; }
+.expr-item {
+  display:flex; align-items:center; gap:1rem; padding:1rem 1.2rem;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; transition:border-color 0.2s;
+}
+.expr-item:hover { border-color:var(--accent); }
+.expr-text { flex:1; font-size:1rem; color:rgba(255,255,255,0.85); font-style:italic; }
+.expr-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0;
+}
+.expr-play:hover { background:var(--accent); color:#fff; }
+.expr-play svg { width:18px; height:18px; }
+
+/* ===== SURVIVAL CARD ===== */
+.survival {
+  max-width:600px; width:100%; background:linear-gradient(135deg, #1a1a2e 0%, #2d2d4a 100%);
+  border-radius:14px; padding:2rem; border:1px solid rgba(255,255,255,0.06);
+}
+.survival h3 { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--accent-light); margin-bottom:1.2rem; text-align:center; }
+.surv-phrase { display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+.surv-phrase:last-child { border-bottom:none; }
+.surv-num {
+  width:26px; height:26px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0;
+}
+.surv-text { flex:1; font-size:0.9rem; color:rgba(255,255,255,0.85); }
+.surv-play {
+  width:34px; height:34px; border-radius:50%; border:none;
+  background:rgba(255,255,255,0.1); color:#fff; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:background 0.2s;
+}
+.surv-play:hover { background:var(--accent); }
+.surv-play svg { width:16px; height:16px; }
+
+/* ===== CHECKLIST ===== */
+.checklist-wrap { max-width:600px; width:100%; }
+.cl-item {
+  display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.06); cursor:pointer;
+}
+.cl-item:last-child { border-bottom:none; }
+.cl-box {
+  width:22px; height:22px; border:2px solid rgba(255,255,255,0.2); border-radius:5px;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.cl-box svg { width:14px; height:14px; opacity:0; transition:opacity 0.2s; }
+.cl-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
+.cl-item.checked .cl-box svg { opacity:1; }
+.cl-text { font-size:0.88rem; color:rgba(255,255,255,0.7); transition:color 0.2s; }
+.cl-item.checked .cl-text { color:rgba(255,255,255,0.9); }
+
+/* ===== CONFETTI ===== */
+.confetti-container { position:fixed; inset:0; pointer-events:none; z-index:9999; }
+.confetti-piece {
+  position:absolute; width:10px; height:10px; opacity:0;
+  animation:confettiFall 3s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { opacity:1; transform:translateY(-100vh) rotate(0deg); }
+  100% { opacity:0; transform:translateY(100vh) rotate(720deg); }
+}
+
+/* ===== COMPREHENSION Q ===== */
+.comp-questions { display:flex; flex-direction:column; gap:0.6rem; margin-top:1.2rem; max-width:600px; width:100%; }
+.cq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.cq-item:hover { border-color:var(--accent); }
+.cq-q { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.cq-a { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.cq-item.open .cq-a { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== CALLBACK CARDS ===== */
+.callback-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; max-width:650px; width:100%; }
+.callback-card {
+  padding:1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px; cursor:pointer; transition:all 0.3s;
+}
+.callback-card:hover { border-color:var(--accent); }
+.callback-word { font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:var(--accent-light); font-weight:600; margin-bottom:0.3rem; }
+.callback-prompt { font-size:0.82rem; color:rgba(255,255,255,0.5); }
+
+/* ===== SCRAMBLE ===== */
+.scramble-list { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.scramble-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.scramble-item:hover { border-color:var(--accent); }
+.scramble-words { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.5rem; }
+.scramble-chip {
+  padding:0.3rem 0.7rem; background:rgba(107,76,138,0.15); border:1px solid rgba(107,76,138,0.3);
+  border-radius:6px; font-size:0.88rem; color:rgba(255,255,255,0.8);
+}
+.scramble-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(107,76,138,0.12); border-radius:6px; font-size:0.92rem; color:var(--accent-light); font-weight:600; font-style:italic; }
+.scramble-item.open .scramble-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== VOCAB MATCH ===== */
+.vmatch-list { display:flex; flex-direction:column; gap:0.6rem; max-width:650px; width:100%; }
+.vmatch-item {
+  display:flex; align-items:center; gap:1rem; padding:0.8rem 1rem;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.vmatch-item:hover { border-color:var(--accent); }
+.vmatch-def { flex:1; font-size:0.9rem; color:rgba(255,255,255,0.7); }
+.vmatch-answer { display:none; font-size:0.9rem; color:var(--accent-light); font-weight:600; }
+.vmatch-item.open .vmatch-answer { display:inline; animation:fadeIn 0.2s ease; }
+.vmatch-item.open .vmatch-def { color:rgba(255,255,255,0.9); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px) {
+  .slide { padding:1.2rem; padding-top:3.5rem; }
+  .slide-title { font-size:1.8rem; }
+  .vocab-grid { grid-template-columns:1fr; }
+  .callback-grid { grid-template-columns:1fr; }
+  .t-panel { width:280px; right:0.5rem; }
+  .dot-nav { display:none; }
+  .nav-arrows { bottom:1rem; right:1rem; }
+  .top-bar { padding:0.5rem 1rem; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='maria-claudia-curimbaba';window.TOTAL_AULAS=60;</script>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="top-bar-logo">
+    <span class="slide-counter" id="slideCounter">1 / 40</span>
+  </div>
+  <div class="chapter-bar" id="chapterBar">
+    <div class="chapter-dot active" data-chapter="1" title="Chapter 1: The Dream" onclick="goToSlide(0)"></div>
+    <div class="chapter-dot" data-chapter="2" title="Chapter 2: Packing Words" onclick="goToSlide(5)"></div>
+    <div class="chapter-dot" data-chapter="3" title="Chapter 3: The Code" onclick="goToSlide(12)"></div>
+    <div class="chapter-dot" data-chapter="4" title="Chapter 4: Getting There" onclick="goToSlide(18)"></div>
+    <div class="chapter-dot" data-chapter="5" title="Chapter 5: Practice" onclick="goToSlide(24)"></div>
+    <div class="chapter-dot" data-chapter="6" title="Chapter 6: Your Turn" onclick="goToSlide(31)"></div>
+    <div class="chapter-dot" data-chapter="7" title="Chapter 7: Wrap-up" onclick="goToSlide(37)"></div>
+  </div>
+  <div class="top-bar-right">
+    <span style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Professor View</span>
+  </div>
+</div>
+
+<!-- ===== TEACHER CUE ===== -->
+<div class="t-cue" id="tCue" onclick="toggleTeacherCue()">T</div>
+<div class="t-panel" id="tPanel"></div>
+
+<!-- ===== DOT NAV ===== -->
+<div class="dot-nav" id="dotNav"></div>
+
+<!-- ===== NAV ARROWS ===== -->
+<div class="nav-arrows">
+  <button class="nav-btn" onclick="prevSlide()" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="nav-btn" onclick="nextSlide()" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<!-- ================================================================ -->
+<!-- SLIDE DECK                                                        -->
+<!-- ================================================================ -->
+<div class="slide-deck" id="slideDeck">
+
+<!-- ====== SLIDE 1 -- TITLE ====== -->
+<div class="slide dark active" data-chapter="1" data-t="<span class='t-timing'>0:00 - 1 min</span>Compartilhe a tela. A Maria Claudia ja conhece o formato da aula 1. Cumprimente naturalmente e diga que hoje vamos falar sobre a estrutura da holding dela em ingles. <strong>Objetivo</strong>: ela sair capaz de descrever o imperio empresarial dela para qualquer parceiro internacional." style="background:linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 40%, #1a365d 100%);">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:1.5rem;">Lesson 2</p>
+  <h1 class="slide-title" style="color:#fff;">Maria Claudia's Business Empire</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.6);">Describing Your Holding Structure to International Partners</p>
+  <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+    <span style="padding:0.3rem 0.9rem;background:rgba(107,76,138,0.2);border:1px solid rgba(107,76,138,0.35);border-radius:20px;font-size:0.75rem;color:var(--accent-light);">B1+ / B2 Initial</span>
+    <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.5);">90 min</span>
+    <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.5);">Business English</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 2 -- CALLBACK FROM AULA 1 ====== -->
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>1:00 - 5 min</span>Revisao rapida da Aula 1. Mostre as 4 palavras na tela. Pergunte uma por vez: &quot;What does 'oversee' mean?&quot; Maria Claudia explica de memoria. Se ela travar, de pista mas NAO de a resposta. Celebre o que ela lembrar. Pergunte tambem: &quot;Can you name three stakeholders in your company?&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;If you oversee something, do you do it yourself?&quot; (not necessarily, you manage it) / &quot;Is a subsidiary bigger or smaller than a holding?&quot; (smaller, it is owned by the holding)</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Review from Lesson 1</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Explain each word from memory</p>
+  <div class="callback-grid">
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Oversee</div>
+      <div class="callback-prompt">What does it mean?</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Subsidiary</div>
+      <div class="callback-prompt">Give an example from your holding.</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Stakeholder</div>
+      <div class="callback-prompt">Name three stakeholders in your company.</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Joint Venture</div>
+      <div class="callback-prompt">Have you ever been in one?</div>
+    </div>
+  </div>
+  <div style="margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center;">
+    <span style="padding:0.25rem 0.7rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:15px;font-size:0.75rem;color:rgba(255,255,255,0.4);">holding</span>
+    <span style="padding:0.25rem 0.7rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:15px;font-size:0.75rem;color:rgba(255,255,255,0.4);">counterpart</span>
+    <span style="padding:0.25rem 0.7rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:15px;font-size:0.75rem;color:rgba(255,255,255,0.4);">procurement</span>
+    <span style="padding:0.25rem 0.7rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:15px;font-size:0.75rem;color:rgba(255,255,255,0.4);">revenue</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 3 -- WARM-UP ====== -->
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>5:00 - 9 min</span>Peca para Maria Claudia desenhar (no papel ou descrever oralmente) a estrutura da holding dela. Quantas empresas? Onde ficam? Deixe ela falar livremente. Anote vocabulario que ela ja usa e o que falta. Este e o diagnostico de entrada para a aula.<div class='t-alert'>Maria Claudia e executiva experiente. Ela provavelmente tem opiniao forte sobre a estrutura. Deixe-a liderar a conversa.</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <div style="max-width:650px;text-align:center;">
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Draw your holding structure</h2>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
+      <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Structure</div>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">How many companies does your holding have?</p>
+      </div>
+      <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Location</div>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Where are your offices? Any international presence?</p>
+      </div>
+      <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">People</div>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Who runs each company? How many people work there?</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 4 -- BRIDGE QUESTION ====== -->
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>9:00 - 11 min</span>Pergunta-ponte para conectar o warm-up ao vocabulario. Deixe Maria Claudia tentar responder. Anote as palavras que faltam (provavelmente headquarters, board, shareholders). Diga: &quot;Great attempt! Now let us learn the exact words you need to describe all of this perfectly.&quot;">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <div style="max-width:650px;text-align:center;">
+    <div style="padding:2rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.5rem;">If someone from Houston asks "What does your company look like?", what would you say?</h2>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.4);margin-top:1rem;">Try to describe your entire holding structure in English.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 5 -- TRANSITION TO VOCAB ====== -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>11:00 - 0.5 min</span>Transicao rapida. Diga: &quot;Now let us build the vocabulary you need to describe your business empire like a CEO at a global board meeting.&quot;" style="background:linear-gradient(135deg, #2d1b4e 0%, #1a365d 50%, #6B4C8A 100%);">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h1 class="slide-title" style="color:#fff;">Let us build your corporate vocabulary.</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">8 words and 3 expressions for describing your business empire</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 6 -- VOCAB 1-4 ====== -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>11:30 - 16 min</span>Antes de clicar cada card, pergunte: &quot;Do you know this word?&quot; Maria Claudia provavelmente conhece &quot;headquarters&quot; e &quot;board&quot; em portugues. Celebre o que ela sabe. Apos revelar: toque o audio 2x, ela repete. Foque na pronuncia de &quot;headquarters&quot; (HEAD-quar-ters, 3 silabas).<div class='t-ccq'><strong>CCQs:</strong> &quot;Is the headquarters a local office or the main office?&quot; (main office) / &quot;Is a shareholder someone who works there or owns part of it?&quot; (owns part)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid1">
+    <!-- Card 1: Headquarters -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #6B4C8A, #8B6BAA);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h1M9 13h1M9 17h1"/></svg>
+      </div>
+      <div class="v-card-hint">The main office where a company is managed from...</div>
+      <div class="v-card-body">
+        <div class="v-word">Headquarters</div>
+        <div class="v-def">the main office where a company is managed from</div>
+        <div class="v-example">"Our headquarters is located in Sao Paulo."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Our headquarters is located in Sao Paulo.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 2: Branch -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #1a365d, #2563eb);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 009 9"/></svg>
+      </div>
+      <div class="v-card-hint">A local office or division of a larger company...</div>
+      <div class="v-card-body">
+        <div class="v-word">Branch</div>
+        <div class="v-def">a local office or division of a larger company</div>
+        <div class="v-example">"We have branches in Houston and Pittsburgh."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We have branches in Houston and Pittsburgh.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 3: Board (of Directors) -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #34d399);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div class="v-card-hint">The group of people who govern a company...</div>
+      <div class="v-card-body">
+        <div class="v-word">Board (of Directors)</div>
+        <div class="v-def">the group of people who govern a company</div>
+        <div class="v-example">"The board meets quarterly to review our strategy."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The board meets quarterly to review our strategy.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 4: Shareholder -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #d97706, #fbbf24);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      </div>
+      <div class="v-card-hint">A person who owns part of a company...</div>
+      <div class="v-card-body">
+        <div class="v-word">Shareholder</div>
+        <div class="v-def">a person who owns part of a company</div>
+        <div class="v-example">"Each shareholder has voting rights at the annual meeting."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Each shareholder has voting rights at the annual meeting.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount1">0 / 4 words revealed</div>
+</div>
+
+<!-- ====== SLIDE 7 -- VOCAB 5-8 ====== -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>16:00 - 21 min</span>Palavras mais tecnicas agora. &quot;Merge&quot; e &quot;acquire&quot; sao cruciais para o contexto de holdings. Pergunte: &quot;Has your company ever merged with or acquired another company?&quot; Conecte com a realidade dela. Para &quot;assets&quot;, pergunte: &quot;What are the most valuable assets in your holding?&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;When two companies merge, do both disappear?&quot; (they become one) / &quot;If you acquire a company, do you buy it or sell it?&quot; (buy it)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid2">
+    <!-- Card 5: Merge -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M8 6l4-4 4 4"/><path d="M12 2v10.3a4 4 0 01-1.172 2.872L4 22"/><path d="M20 22l-5-5"/></svg>
+      </div>
+      <div class="v-card-hint">To combine two companies into one...</div>
+      <div class="v-card-body">
+        <div class="v-word">Merge</div>
+        <div class="v-def">to combine two companies into one</div>
+        <div class="v-example">"The two subsidiaries will merge next quarter."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The two subsidiaries will merge next quarter.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 6: Acquire -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #0ea5e9, #7dd3fc);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </div>
+      <div class="v-card-hint">To buy or take over another company...</div>
+      <div class="v-card-body">
+        <div class="v-word">Acquire</div>
+        <div class="v-def">to buy or take over another company</div>
+        <div class="v-example">"We are looking to acquire a tech company in the US."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We are looking to acquire a tech company in the US.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 7: Division -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #7c3aed, #a78bfa);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </div>
+      <div class="v-card-hint">A major section or department of a company...</div>
+      <div class="v-card-body">
+        <div class="v-word">Division</div>
+        <div class="v-def">a major section or department of a company</div>
+        <div class="v-example">"The logistics division handles all international shipments."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The logistics division handles all international shipments.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 8: Assets -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #6366f1, #a5b4fc);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+      </div>
+      <div class="v-card-hint">Valuable properties or resources owned by a company...</div>
+      <div class="v-card-body">
+        <div class="v-word">Assets</div>
+        <div class="v-def">valuable properties or resources owned by a company</div>
+        <div class="v-example">"The board reviews all company assets at the end of the fiscal year."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The board reviews all company assets at the end of the fiscal year.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount2">0 / 4 words revealed</div>
+</div>
+
+<!-- ====== SLIDE 8 -- PRONUNCIATION DRILL ====== -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>21:00 - 24 min</span>Foque nos pares de stress. Brasileiros erram &quot;headquarters&quot; (3 silabas, nao 4). &quot;Acquire&quot; tem stress na segunda silaba (ac-QUIRE). &quot;Division&quot; = di-VI-sion. Toque o audio, ela repete 2x. Para &quot;shareholder&quot;, cuidado com o &quot;sh&quot; no inicio e o &quot;hold&quot; no meio.<div class='t-alert'>Se ela pronunciar &quot;assets&quot; como &quot;ah-SETS&quot;, corrija: &quot;The stress is on the first syllable: AS-sets.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Pronunciation Drill</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen, then repeat. Focus on the stressed syllable.</p>
+  <div class="pron-list">
+    <div class="pron-item">
+      <div class="pron-word">Headquarters</div>
+      <div class="pron-stress">HEAD-quar-ters (3 syllables)</div>
+      <button class="pron-play" onclick="speakText('headquarters',this)" aria-label="Listen to headquarters">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Shareholder</div>
+      <div class="pron-stress">SHARE-hol-der</div>
+      <button class="pron-play" onclick="speakText('shareholder',this)" aria-label="Listen to shareholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Acquire</div>
+      <div class="pron-stress">ac-QUIRE</div>
+      <button class="pron-play" onclick="speakText('acquire',this)" aria-label="Listen to acquire">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Division</div>
+      <div class="pron-stress">di-VI-sion</div>
+      <button class="pron-play" onclick="speakText('division',this)" aria-label="Listen to division">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Assets</div>
+      <div class="pron-stress">AS-sets</div>
+      <button class="pron-play" onclick="speakText('assets',this)" aria-label="Listen to assets">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Board</div>
+      <div class="pron-stress">BOARD (rhymes with "cord")</div>
+      <button class="pron-play" onclick="speakText('board',this)" aria-label="Listen to board">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Merge</div>
+      <div class="pron-stress">MERGE (one syllable)</div>
+      <button class="pron-play" onclick="speakText('merge',this)" aria-label="Listen to merge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Branch</div>
+      <div class="pron-stress">BRANCH (one syllable)</div>
+      <button class="pron-play" onclick="speakText('branch',this)" aria-label="Listen to branch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 9 -- EXPRESSIONS ====== -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>24:00 - 27 min</span>Leia cada expressao em voz alta. Toque o audio. Maria Claudia repete. Pergunte: &quot;Can you complete this sentence with YOUR company information?&quot; Para cada expressao, ela cria uma frase real. Exemplo: &quot;Our headquarters is located in... where?&quot; Ela responde com o endereco real.<div class='t-ccq'><strong>CCQs:</strong> &quot;Do we say 'headquarters is' or 'headquarters are'?&quot; (both are acceptable, 'is' is more common for one location) / &quot;Can you use 'The board is responsible for' about governance?&quot; (yes)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Key Expressions</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Professional phrases for describing your corporate structure</p>
+  <div class="expr-list">
+    <div class="expr-item">
+      <div class="expr-text">"Our headquarters is located in..."</div>
+      <button class="expr-play" onclick="speakText('Our headquarters is located in Sao Paulo.',this)" aria-label="Listen to expression">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="expr-item">
+      <div class="expr-text">"The board is responsible for..."</div>
+      <button class="expr-play" onclick="speakText('The board is responsible for strategic decisions and governance.',this)" aria-label="Listen to expression">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="expr-item">
+      <div class="expr-text">"We have branches in..."</div>
+      <button class="expr-play" onclick="speakText('We have branches in Houston and Pittsburgh.',this)" aria-label="Listen to expression">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 10 -- EXPRESSION DRILL ====== -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>27:00 - 29 min</span>Drill de expressoes: toque o audio, Maria Claudia repete. Depois, ela substitui com informacao real dela. Ritmo: 20s por expressao. Objetivo: automatizar as 3 estruturas com dados reais da empresa dela.">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Expression Drill</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:2rem;text-align:center;">Listen, repeat, then make it yours with real information</p>
+  <div class="sub-drill">
+    <div class="sub-template">"Our <span class="sub-slot">___</span> is located in <span class="sub-slot">___</span>."</div>
+    <div class="sub-prompts">
+      <div class="sub-chip" onclick="this.classList.toggle('active')">headquarters / Sao Paulo</div>
+      <div class="sub-chip" onclick="this.classList.toggle('active')">branch / Houston</div>
+      <div class="sub-chip" onclick="this.classList.toggle('active')">division / Pittsburgh</div>
+      <div class="sub-chip" onclick="this.classList.toggle('active')">office / downtown</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 11 -- VOCAB CONNECTIONS ====== -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>29:00 - 31 min</span>Match interativo: leia a definicao, Maria Claudia diz a palavra. Clique para revelar. Se ela acertar, celebre. Se errar, releia a definicao e de pista: &quot;It starts with 'sh'...&quot; Ritmo rapido, 15s por item.">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Vocabulary Connections</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Match the definition to the word. Click to reveal.</p>
+  <div class="vmatch-list">
+    <div class="vmatch-item" onclick="this.classList.toggle('open')">
+      <div class="vmatch-def">The main office where a company is managed from</div>
+      <div class="vmatch-answer">Headquarters</div>
+    </div>
+    <div class="vmatch-item" onclick="this.classList.toggle('open')">
+      <div class="vmatch-def">A person who owns part of a company</div>
+      <div class="vmatch-answer">Shareholder</div>
+    </div>
+    <div class="vmatch-item" onclick="this.classList.toggle('open')">
+      <div class="vmatch-def">To buy or take over another company</div>
+      <div class="vmatch-answer">Acquire</div>
+    </div>
+    <div class="vmatch-item" onclick="this.classList.toggle('open')">
+      <div class="vmatch-def">A major section or department of a company</div>
+      <div class="vmatch-answer">Division</div>
+    </div>
+    <div class="vmatch-item" onclick="this.classList.toggle('open')">
+      <div class="vmatch-def">To combine two companies into one</div>
+      <div class="vmatch-answer">Merge</div>
+    </div>
+    <div class="vmatch-item" onclick="this.classList.toggle('open')">
+      <div class="vmatch-def">The group of people who govern a company</div>
+      <div class="vmatch-answer">Board (of Directors)</div>
+    </div>
+    <div class="vmatch-item" onclick="this.classList.toggle('open')">
+      <div class="vmatch-def">Valuable properties or resources owned by a company</div>
+      <div class="vmatch-answer">Assets</div>
+    </div>
+    <div class="vmatch-item" onclick="this.classList.toggle('open')">
+      <div class="vmatch-def">A local office of a larger company</div>
+      <div class="vmatch-answer">Branch</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 12 -- TRANSITION TO GRAMMAR ====== -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>31:00 - 0.5 min</span>Transicao: &quot;Now let us look at how to describe what your company HAS and what it OWNS.&quot;" style="background:linear-gradient(135deg, #1a365d 0%, #6B4C8A 50%, #2d1b4e 100%);">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h1 class="slide-title" style="color:#fff;">The grammar behind your empire</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Possessives and There is / There are</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 13 -- GRAMMAR DISCOVERY: POSSESSIVES ====== -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>31:30 - 35 min</span>Mostre as 4 frases. Pergunte: &quot;Look at the purple words. What do they have in common?&quot; Espere. Maria Claudia e B1+, ela provavelmente vai identificar o apostrofo. Se nao, de pista: &quot;Look at what comes after the name or the noun.&quot; So clique Reveal DEPOIS que ela tentar.<div class='t-ccq'><strong>CCQs:</strong> &quot;Whose revenue is it?&quot; (the company's) / &quot;What is the difference between company's and companies'?&quot; (one company vs multiple companies)</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Discovery</h2>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">What do the <span style="color:var(--accent-light);font-weight:600;">purple words</span> have in common?</p>
+  <div class="slide-content">
+    <div class="grammar-examples">
+      <div class="g-example">The <span class="highlight">company's</span> revenue increased last quarter.</div>
+      <div class="g-example"><span class="highlight">Maria Claudia's</span> holding oversees three subsidiaries.</div>
+      <div class="g-example">The <span class="highlight">board's</span> decision was unanimous.</div>
+      <div class="g-example">Our <span class="highlight">shareholders'</span> meeting is in March.</div>
+    </div>
+    <button class="g-reveal-btn" onclick="revealGrammar(this,'grammarRule1')">Reveal the Rule</button>
+    <div class="g-rule" id="grammarRule1">
+      <h4>Possessives: 's vs s'</h4>
+      <table>
+        <thead>
+          <tr><th>Form</th><th>Use</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="color:var(--accent-light);font-weight:600;">'s</td><td>Singular noun or name</td><td>The <strong>company's</strong> headquarters. <strong>Maria Claudia's</strong> holding.</td></tr>
+          <tr><td style="color:var(--accent-light);font-weight:600;">s'</td><td>Plural noun ending in -s</td><td>The <strong>shareholders'</strong> meeting. The <strong>directors'</strong> vote.</td></tr>
+          <tr><td style="color:var(--accent-light);font-weight:600;">'s (irregular)</td><td>Plural NOT ending in -s</td><td>The <strong>people's</strong> choice. The <strong>children's</strong> school.</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.04);border-radius:6px;">
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.7);"><strong style="color:var(--accent-light);">Key rule:</strong> Add 's to singular nouns and names. Add only ' to plurals ending in -s.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 14 -- POSSESSIVES: QUESTION + REVEAL ====== -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>35:00 - 37 min</span>Reforce a regra com exemplos da empresa dela. Pergunte: &quot;How do you say 'a reuniao dos acionistas' in English?&quot; (The shareholders' meeting). &quot;E 'a decisao do conselho'?&quot; (The board's decision). Corrija gentilmente se ela errar a posicao do apostrofo.">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Practice: Make it possessive</h2>
+  <div class="fill-practice">
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">The holding <span class="fp-blank">___</span> headquarters is in Sao Paulo. (holding)</div>
+      <div class="fp-answer">The <strong>holding's</strong> headquarters is in Sao Paulo.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">All of the <span class="fp-blank">___</span> assets were reviewed. (companies)</div>
+      <div class="fp-answer">All of the <strong>companies'</strong> assets were reviewed.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence"><span class="fp-blank">___</span> division is the most profitable. (Maria Claudia)</div>
+      <div class="fp-answer"><strong>Maria Claudia's</strong> division is the most profitable.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">The <span class="fp-blank">___</span> responsibilities include governance. (board)</div>
+      <div class="fp-answer">The <strong>board's</strong> responsibilities include governance.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 15 -- GRAMMAR DISCOVERY: THERE IS/ARE ====== -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>37:00 - 40 min</span>Segundo ponto gramatical. Mostre as 3 frases. Pergunte: &quot;When do we use 'there is' and when do we use 'there are'?&quot; Maria Claudia provavelmente sabe a regra basica. Confirme e clique Reveal para reforcar.<div class='t-ccq'><strong>CCQs:</strong> &quot;Do we say 'there is three branches' or 'there are three branches'?&quot; (there are) / &quot;And for one headquarters?&quot; (there is)</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Discovery</h2>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">What is the <span style="color:var(--accent-light);font-weight:600;">pattern</span> here?</p>
+  <div class="slide-content">
+    <div class="grammar-examples">
+      <div class="g-example"><span class="highlight">There are</span> three subsidiaries in the holding.</div>
+      <div class="g-example"><span class="highlight">There is</span> one headquarters in Sao Paulo.</div>
+      <div class="g-example"><span class="highlight">There are</span> several branches across Brazil.</div>
+    </div>
+    <button class="g-reveal-btn" onclick="revealGrammar(this,'grammarRule2')">Reveal the Rule</button>
+    <div class="g-rule" id="grammarRule2">
+      <h4>There is / There are</h4>
+      <table>
+        <thead>
+          <tr><th>Form</th><th>Use</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="color:var(--accent-light);font-weight:600;">There is</td><td>Singular / Uncountable</td><td>There <strong>is</strong> one headquarters. There <strong>is</strong> a lot of revenue.</td></tr>
+          <tr><td style="color:var(--accent-light);font-weight:600;">There are</td><td>Plural / Countable</td><td>There <strong>are</strong> three subsidiaries. There <strong>are</strong> many shareholders.</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.04);border-radius:6px;">
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.7);"><strong style="color:var(--accent-light);">Tip:</strong> Look at the noun AFTER "there is/are" to decide. Singular = is. Plural = are.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 16 -- THERE IS/ARE PRACTICE ====== -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>40:00 - 42 min</span>Leia cada frase. Pause no blank. Pergunte: &quot;Is or are?&quot; Espere. Se Maria Claudia acertar, celebre e clique para revelar. Ritmo: 15s por item.">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">There is or There are?</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Click to reveal the correct answer</p>
+  <div class="fill-practice">
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence"><span class="fp-blank">___</span> five shareholders in the holding.</div>
+      <div class="fp-answer"><strong>There are</strong> five shareholders in the holding. (plural -- five)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence"><span class="fp-blank">___</span> a branch in Houston.</div>
+      <div class="fp-answer"><strong>There is</strong> a branch in Houston. (singular -- a)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence"><span class="fp-blank">___</span> many assets to review before the meeting.</div>
+      <div class="fp-answer"><strong>There are</strong> many assets to review before the meeting. (plural -- many)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence"><span class="fp-blank">___</span> one board of directors for the entire group.</div>
+      <div class="fp-answer"><strong>There is</strong> one board of directors for the entire group. (singular -- one)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence"><span class="fp-blank">___</span> two divisions that we want to merge.</div>
+      <div class="fp-answer"><strong>There are</strong> two divisions that we want to merge. (plural -- two)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 17 -- COMMON MISTAKE ====== -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>42:00 - 44 min</span>Mostre os erros. Pergunte: &quot;What is wrong?&quot; Para o primeiro, o erro e duplo: falta 's e &quot;have&quot; deveria ser &quot;has&quot;. Para o segundo, &quot;there is&quot; com plural. Reforce com exemplos da empresa dela.<div class='t-alert'>Estes sao erros comuns de brasileiros. Nao corrija com &quot;wrong&quot; -- use: &quot;Almost! The noun after 'there' tells us if it is 'is' or 'are'.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Common Mistake</h2>
+  <div class="mistake-box">
+    <div class="mistake-wrong">
+      <div class="mistake-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"The <strong>company</strong> have three <strong>branch</strong>."</p>
+        <p style="font-size:0.78rem;opacity:0.6;margin-top:0.3rem;">Missing possessive + wrong verb + missing plural</p>
+      </div>
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"The <strong>company has</strong> three <strong>branches</strong>."</p>
+        <p style="font-size:0.78rem;opacity:0.6;margin-top:0.3rem;">Correct: has (3rd person) + plural noun</p>
+      </div>
+    </div>
+    <div class="mistake-wrong" style="margin-top:0.5rem;">
+      <div class="mistake-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"<strong>There is</strong> many <strong>shareholders</strong>."</p>
+        <p style="font-size:0.78rem;opacity:0.6;margin-top:0.3rem;">Singular "is" with plural "shareholders"</p>
+      </div>
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"<strong>There are</strong> many <strong>shareholders</strong>."</p>
+        <p style="font-size:0.78rem;opacity:0.6;margin-top:0.3rem;">Plural "are" matches plural "shareholders"</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 18 -- GRAMMAR FILL-IN ====== -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>44:00 - 46 min</span>Pratica combinada de possessives + there is/are. Leia cada frase. Maria Claudia completa oralmente. Clique para revelar. Ritmo: 15-20s por item. Se ela acertar todas, celebre: &quot;Perfect! You are ready to describe your empire.&quot;">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Combined Grammar Practice</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Click to reveal the correct answer</p>
+  <div class="fill-practice">
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence"><span class="fp-blank">___</span> four divisions in the <span class="fp-blank">___</span> structure. (there is/are + holding)</div>
+      <div class="fp-answer"><strong>There are</strong> four divisions in the <strong>holding's</strong> structure.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">The <span class="fp-blank">___</span> main asset is the real estate portfolio. (company)</div>
+      <div class="fp-answer">The <strong>company's</strong> main asset is the real estate portfolio.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence"><span class="fp-blank">___</span> a new branch in Texas that we want to <span class="fp-blank">___</span>. (there + acquire)</div>
+      <div class="fp-answer"><strong>There is</strong> a new branch in Texas that we want to <strong>acquire</strong>.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">The <span class="fp-blank">___</span> quarterly review covers all <span class="fp-blank">___</span>. (board + asset)</div>
+      <div class="fp-answer">The <strong>board's</strong> quarterly review covers all <strong>assets</strong>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 19 -- TRANSITION: CONTEXT ====== -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>46:00 - 0.5 min</span>Transicao: &quot;Now let us put everything together. Imagine describing your company to a new partner from Houston.&quot;" style="background:linear-gradient(135deg, #1a365d 0%, #6B4C8A 50%, #2d1b4e 100%);">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h1 class="slide-title" style="color:#fff;">Your company in English</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Putting vocabulary and grammar into real corporate situations</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 20 -- ARTIFACT: ORG CHART ====== -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>46:30 - 50 min</span>Mostre o organograma. Pergunte: &quot;Describe what you see. Use the vocabulary from today.&quot; Maria Claudia deve usar: headquarters, subsidiaries, divisions, board, shareholders, branches. Se ela travar, aponte para cada caixa e pergunte: &quot;What is this called in English?&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;Who is at the top?&quot; / &quot;How many subsidiaries are there?&quot; / &quot;Where are the branches?&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Corporate Structure</h2>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;">
+    <div class="artifact-org">
+      <div class="org-top">
+        <div class="org-box" style="background:linear-gradient(135deg, #6B4C8A, #8B6BAA);">
+          <div style="font-size:0.65rem;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;">Board of Directors</div>
+          Maria Claudia Curimbaba -- CEO
+        </div>
+      </div>
+      <div class="org-connector"><div class="org-connector-line"></div></div>
+      <div style="text-align:center;margin-bottom:0.5rem;">
+        <div class="org-box" style="background:linear-gradient(135deg, #1a365d, #2563eb);font-size:0.82rem;">
+          Curimbaba Holding -- Headquarters (SP)
+        </div>
+      </div>
+      <div class="org-connector"><div class="org-connector-line"></div></div>
+      <div class="org-branches">
+        <div class="org-branch">
+          <div class="org-branch-label">Subsidiary 1</div>
+          <strong>Logistics Division</strong>
+          <div style="font-size:0.75rem;color:var(--text-dim);margin-top:0.2rem;">Branch: Houston, TX</div>
+        </div>
+        <div class="org-branch">
+          <div class="org-branch-label">Subsidiary 2</div>
+          <strong>Technology Division</strong>
+          <div style="font-size:0.75rem;color:var(--text-dim);margin-top:0.2rem;">Branch: Pittsburgh, PA</div>
+        </div>
+        <div class="org-branch">
+          <div class="org-branch-label">Subsidiary 3</div>
+          <strong>Real Estate Division</strong>
+          <div style="font-size:0.75rem;color:var(--text-dim);margin-top:0.2rem;">Sao Paulo, Brazil</div>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding:0.6rem;background:rgba(107,76,138,0.08);border-radius:6px;text-align:center;">
+        <span style="font-size:0.75rem;color:var(--text-dim);">Shareholders: 5 | Total Assets: reviewed quarterly | Employees: 200+</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 21 -- DIALOGUE LINE BY LINE ====== -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>50:00 - 55 min</span>Diga: &quot;Now imagine you are Maria Claudia meeting Sarah Mitchell, a new partner from Houston.&quot; Revele linha por linha. ANTES da fala de Maria Claudia: &quot;What would YOU say here?&quot; DEPOIS: ela le em voz alta. Destaque vocabulario em roxo. Corrija pronuncia gentilmente.<div class='t-alert'>Se Maria Claudia quiser pular linhas, segure: &quot;Let us go one at a time so you can practice each response.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Meeting Sarah Mitchell</h2>
+  <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:1rem;text-align:center;">Click "Next Line" to reveal each part of the conversation</p>
+  <div class="dialogue-container" id="dialogue1">
+    <div class="d-line visible" data-voice="ellen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">SM</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Sarah Mitchell</div>
+        <div class="d-text">Hi Maria Claudia! I have heard a lot about your company. Can you tell me about the <strong>holding</strong> structure?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">Of course, Sarah. Our <strong>headquarters</strong> is located in Sao Paulo. The <strong>board</strong> oversees the entire group from there.</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">SM</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Sarah Mitchell</div>
+        <div class="d-text">And how many companies are in the group?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">There are three subsidiaries, each with its own <strong>division</strong>. We have <strong>branches</strong> in Houston and Pittsburgh.</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">SM</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Sarah Mitchell</div>
+        <div class="d-text">That is impressive. What about the ownership?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">There are five <strong>shareholders</strong>. The <strong>board's</strong> responsibility is to review our <strong>assets</strong> and approve any decision to <strong>merge</strong> or <strong>acquire</strong> a new company.</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">SM</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Sarah Mitchell</div>
+        <div class="d-text">Are you looking to expand further into the US market?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">Yes, we are looking to <strong>acquire</strong> a logistics company in Texas. The <strong>holding's</strong> strategy is focused on growth in the American market.</div>
+      </div>
+    </div>
+  </div>
+  <button class="next-line-btn" id="nextLineBtn1" onclick="revealNextLine('dialogue1','nextLineBtn1')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    Next Line
+  </button>
+</div>
+
+<!-- ====== SLIDE 22 -- DIALOGUE COMPREHENSION ====== -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>55:00 - 57 min</span>Pergunte cada questao oralmente. Maria Claudia responde. Depois clique para revelar. Todas as perguntas sao sobre SARAH (o que Sarah perguntou/entendeu), nao sobre Maria Claudia.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Dialogue Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. What did Sarah want to know about Maria Claudia's company?</div>
+      <div class="cq-a">Sarah wanted to know about the holding structure, the number of companies, and the ownership.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. Did Sarah ask about international expansion?</div>
+      <div class="cq-a">Yes, she asked if Maria Claudia is looking to expand further into the US market.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. Based on the conversation, what is Sarah's likely role?</div>
+      <div class="cq-a">Sarah is likely a potential business partner interested in the holding's US operations.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 23 -- LISTENING 1 ====== -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>57:00 - 60 min</span>Diga: &quot;Now listen to someone describing a Brazilian company expanding to the US. Listen carefully -- I will ask you questions after.&quot; Toque o audio. Depois das perguntas, toque novamente se necessario. Pergunte: &quot;Did you hear any of our vocabulary words?&quot;<div class='t-alert'>Se Maria Claudia pedir para ver o texto, diga: &quot;Let us listen one more time first. Focus on the main idea.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: A Growing Empire</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen to a CEO describing her company structure.</p>
+  <div class="listening-card">
+    <div class="waveform" id="waveform1">
+      <div class="waveform-bar" style="animation-delay:0s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.1s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.2s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.3s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.4s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.5s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.6s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.7s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.8s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.9s;"></div>
+      <div class="waveform-bar" style="animation-delay:1.0s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.15s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.25s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.35s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.45s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.55s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.65s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.75s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.85s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.95s;"></div>
+    </div>
+    <button class="play-pause-btn" id="playBtn1" onclick="toggleListening('listening1',this,'waveform1','lq1')" aria-label="Play or pause audio">
+      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <div class="listening-questions" id="lq1">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. Where is the company's headquarters?</div>
+        <div class="lq-answer">The headquarters is in Sao Paulo, Brazil.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. How many branches does the company have in the US?</div>
+        <div class="lq-answer">There are two branches: one in Houston and one in Pittsburgh.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. What is the company planning to do next?</div>
+        <div class="lq-answer">They are looking to acquire a new company and expand their assets in the US market.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 24 -- LISTENING 2 ====== -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>60:00 - 63 min</span>Segundo listening, diferente contexto: uma reuniao de board. Diga: &quot;Now listen to a board meeting discussion. Pay attention to the decisions being made.&quot; Toque o audio. Perguntas depois. Conecte: &quot;Is this similar to your real board meetings?&quot;">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Board Meeting Update</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen to a board discussing company decisions.</p>
+  <div class="listening-card">
+    <div class="waveform" id="waveform2">
+      <div class="waveform-bar" style="animation-delay:0s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.12s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.24s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.36s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.48s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.6s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.72s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.84s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.96s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.08s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.2s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.32s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.44s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.56s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.68s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.8s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.92s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.04s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.16s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.28s;"></div>
+    </div>
+    <button class="play-pause-btn" id="playBtn2" onclick="toggleListening('listening2',this,'waveform2','lq2')" aria-label="Play or pause audio">
+      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <div class="listening-questions" id="lq2">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. What decision did the board make about the two divisions?</div>
+        <div class="lq-answer">The board decided to merge the two divisions into one to reduce costs.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. What did the shareholders think about the acquisition?</div>
+        <div class="lq-answer">The shareholders approved the acquisition of the logistics company.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. Where will the new branch be located?</div>
+        <div class="lq-answer">The new branch will be located in Dallas, Texas.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 25 -- TRANSITION: PRACTICE ====== -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>63:00 - 0.5 min</span>Transicao: &quot;Now let us practice using all of this together. Can you describe your empire fluently?&quot;" style="background:linear-gradient(135deg, #2d1b4e 0%, #1a365d 50%, #6B4C8A 100%);">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h1 class="slide-title" style="color:#fff;">More Practice</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">From controlled to free production</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 26 -- ORAL DRILLING ====== -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>63:30 - 66 min</span>Leia a situacao. Maria Claudia responde oralmente. Clique para revelar o modelo. Se a resposta dela foi diferente mas correta, valide: &quot;That works too! Here is another way.&quot; Ritmo: 30s por item.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Oral Drilling</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Respond to each situation, then click to see a model answer</p>
+  <div class="oral-list">
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">A new partner asks where your main office is.</div>
+      <div class="oral-model">"Our headquarters is located in Sao Paulo. The board oversees all operations from there."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">An investor wants to know about your company structure.</div>
+      <div class="oral-model">"There are three subsidiaries in the holding, each with its own division. We also have branches in Houston and Pittsburgh."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">Someone asks about ownership.</div>
+      <div class="oral-model">"There are five shareholders. The board's responsibility is to review our assets and make strategic decisions."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">A colleague asks about your expansion plans.</div>
+      <div class="oral-model">"We are looking to acquire a logistics company in Texas and merge two of our divisions."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">Your counterpart asks about the board's role.</div>
+      <div class="oral-model">"The board is responsible for governance. They meet quarterly to review all company assets."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">A Houston partner wants to know about the local branch.</div>
+      <div class="oral-model">"The Houston branch handles our logistics division. There are about fifty employees there."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 27 -- QUICK FIRE ====== -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>66:00 - 69 min</span>Ritmo rapido: leia a pergunta, Maria Claudia responde. Se acertar, &quot;Excellent!&quot; e mostre a resposta. Se travar, de a primeira palavra. 20-30 segundos por item. <strong>Confetti ao completar todas!</strong><div class='t-alert'>Se Maria Claudia ficar insegura, encoraje: &quot;There is no perfect answer. Just tell me using the words from today.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Fire</h2>
+  <div class="qc-score" id="qcScore">0 / 6</div>
+  <div class="qc-container" id="qcContainer">
+    <div class="qc-card active" data-idx="0">
+      <div class="qc-prompt">Where is the holding's headquarters?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"The holding's headquarters is located in Sao Paulo."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="1">
+      <div class="qc-prompt">How many subsidiaries are there?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"There are three subsidiaries in the holding."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="2">
+      <div class="qc-prompt">What does the board do?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"The board is responsible for governance and reviewing our assets."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="3">
+      <div class="qc-prompt">Where are the branches located?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"We have branches in Houston and Pittsburgh."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="4">
+      <div class="qc-prompt">What is the company planning to acquire?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"We are looking to acquire a logistics company in Texas."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="5">
+      <div class="qc-prompt">How many shareholders does the holding have?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"There are five shareholders in the holding."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 28 -- SPOT THE ERROR ====== -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>69:00 - 71 min</span>Leia cada frase. Maria Claudia identifica o erro. Clique para revelar. Todos os erros envolvem possessives e there is/are. Se ela nao encontrar, de pista: &quot;Look at the possessive form&quot; ou &quot;Is it singular or plural?&quot;">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Spot the Error</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Click each sentence to see the correction</p>
+  <div class="error-list" id="errorList">
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"The <span class="wrong">companys</span> headquarters is in Sao Paulo."</div>
+      <div class="err-correction">"The <strong>company's</strong> headquarters is in Sao Paulo." (possessive needs apostrophe)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"<span class="wrong">There is</span> many shareholders in the holding."</div>
+      <div class="err-correction">"<strong>There are</strong> many shareholders in the holding." (plural noun = "are")</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"The <span class="wrong">board decision</span> was to merge the divisions."</div>
+      <div class="err-correction">"The <strong>board's decision</strong> was to merge the divisions." (possessive 's)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"<span class="wrong">There is</span> three branches across the country."</div>
+      <div class="err-correction">"<strong>There are</strong> three branches across the country." (plural = "are")</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"The <span class="wrong">shareholders</span> meeting is next week."</div>
+      <div class="err-correction">"The <strong>shareholders'</strong> meeting is next week." (plural possessive = s')</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 29 -- SENTENCE BUILDING ====== -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>71:00 - 73 min</span>Frases embaralhadas. Maria Claudia reorganiza oralmente. Clique para revelar. Ritmo rapido. Se ela acertar, celebre. Se errar, releia as palavras devagar e de pista sobre a ordem (sujeito + verbo + complemento).">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Sentence Building</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Unscramble the words. Click to see the correct sentence.</p>
+  <div class="scramble-list">
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">located</span><span class="scramble-chip">is</span><span class="scramble-chip">headquarters</span><span class="scramble-chip">Our</span><span class="scramble-chip">in</span><span class="scramble-chip">Sao Paulo</span>
+      </div>
+      <div class="scramble-answer">"Our headquarters is located in Sao Paulo."</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">are</span><span class="scramble-chip">five</span><span class="scramble-chip">There</span><span class="scramble-chip">shareholders</span><span class="scramble-chip">in</span><span class="scramble-chip">the holding</span>
+      </div>
+      <div class="scramble-answer">"There are five shareholders in the holding."</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">meets</span><span class="scramble-chip">The</span><span class="scramble-chip">board</span><span class="scramble-chip">quarterly</span><span class="scramble-chip">to review</span><span class="scramble-chip">assets</span>
+      </div>
+      <div class="scramble-answer">"The board meets quarterly to review assets."</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">acquire</span><span class="scramble-chip">to</span><span class="scramble-chip">looking</span><span class="scramble-chip">We</span><span class="scramble-chip">are</span><span class="scramble-chip">a new company</span>
+      </div>
+      <div class="scramble-answer">"We are looking to acquire a new company."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 30 -- SUBSTITUTION DRILL ====== -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>73:00 - 75 min</span>Mostre o template. Clique em cada chip, Maria Claudia completa a frase oralmente. Ritmo rapido. Se ela completar todas sem hesitar, aumente: &quot;Now try with your OWN company information.&quot;">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Substitution Drill</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:2rem;text-align:center;">Complete the sentence with each option</p>
+  <div class="sub-drill">
+    <div class="sub-template">"There are <span class="sub-slot">___</span> in the holding."</div>
+    <div class="sub-prompts">
+      <div class="sub-chip" onclick="this.classList.toggle('active')">three subsidiaries</div>
+      <div class="sub-chip" onclick="this.classList.toggle('active')">five shareholders</div>
+      <div class="sub-chip" onclick="this.classList.toggle('active')">two branches in the US</div>
+      <div class="sub-chip" onclick="this.classList.toggle('active')">several divisions</div>
+      <div class="sub-chip" onclick="this.classList.toggle('active')">many valuable assets</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 31 -- TRANSITION: YOUR TURN ====== -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>75:00 - 0.5 min</span>Transicao: &quot;From guided to free. Show what you have learned. Describe your empire in your own words.&quot;" style="background:linear-gradient(135deg, #1a365d 0%, #2d1b4e 50%, #6B4C8A 100%);">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <h1 class="slide-title" style="color:#fff;">Your empire, your words</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">From guided to free production</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 32 -- ROLE-PLAY 1: GUIDED ====== -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>75:30 - 78 min</span><strong>Role-play guiado</strong>. Leia o cenario. Mostre as keywords. Diga: &quot;How would you start?&quot; Se travar, de o modelo: &quot;Start with 'Our headquarters is located in...'&quot; Maria Claudia pode olhar a tela. Objetivo: usar as keywords na ordem natural.<div class='t-alert'>Maria Claudia e executiva confiante. Se ela fluir, desafie: &quot;Great! Now add details about the shareholders.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #2d1b4e 0%, #1a365d 50%, #6B4C8A 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Role-Play 1 -- Guided
+      </div>
+      <div class="rp-scenario">A new investor visits your office in Sao Paulo. Explain your holding structure: where the headquarters is, how many subsidiaries, the branches, and who the shareholders are.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">headquarters</span>
+        <span class="rp-keyword">branches</span>
+        <span class="rp-keyword">board</span>
+        <span class="rp-keyword">shareholders</span>
+        <span class="rp-keyword">divisions</span>
+        <span class="rp-keyword">assets</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 33 -- ROLE-PLAY 2: SEMI-FREE ====== -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>78:00 - 80 min</span><strong>Role-play semi-livre</strong>. Diga: &quot;Your Houston partner asks about your company structure. You have 2 minutes. Use fewer keywords this time.&quot; Se Maria Claudia travar, de apenas a primeira palavra. Objetivo: producao com apoio minimo.<div class='t-alert'>Se ela falar mais de 2 min, deixe! O objetivo e fluencia. Anote erros para correcao DEPOIS.</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #6B4C8A 0%, #1a365d 50%, #2d1b4e 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Role-Play 2 -- Semi-Free
+      </div>
+      <div class="rp-scenario">Your Houston partner asks: "Can you walk me through your company structure?" Describe your holding in 2 minutes using fewer keywords.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">merge</span>
+        <span class="rp-keyword">acquire</span>
+        <span class="rp-keyword">three subsidiaries</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 34 -- ROLE-PLAY 3: FREE ====== -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>80:00 - 83 min</span><strong>Role-play livre</strong>. Sem keywords. Sem apoio. Maria Claudia apresenta a empresa para novos membros do board. 2 minutos. Anote erros (especialmente possessives e there is/are). Faca delayed error correction DEPOIS.<div class='t-alert'>Este e o momento mais importante da aula. Maria Claudia precisa SENTIR que consegue se expressar. Valide: &quot;Maria Claudia, you just described your entire business empire in English. That is exactly what you will do at the next international meeting.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #1a1a2e 0%, #6B4C8A 40%, #1a365d 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Role-Play 3 -- Free
+      </div>
+      <div class="rp-scenario">Board meeting: present a complete overview of the holding to new board members who know nothing about the company. Cover everything: structure, locations, people, plans.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">no keywords -- speak freely</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 35 -- DELAYED ERROR CORRECTION ====== -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>83:00 - 85 min</span>Espaco para correcao de erros que voce anotou durante os role-plays. Escreva os erros na tela (ou diga oralmente): &quot;I noticed a few things we can improve...&quot; Corrija com gentileza. Maximo 3 erros para nao desmotivar. Foque nos erros de possessive e there is/are.">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div style="max-width:550px;text-align:center;">
+    <div style="width:64px;height:64px;border-radius:50%;background:rgba(107,76,138,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.8rem;">Delayed Error Correction</h2>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:1.5rem;">Let us refine a few things from the role-plays.</p>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;text-align:left;padding:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+      <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);">Focus areas:</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">1. Possessives: 's vs s' placement</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">2. There is (singular) vs There are (plural)</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">3. Pronunciation of key vocabulary</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 36 -- REFLECTION RECORDING ====== -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>85:00 - 87 min</span>Diga: &quot;Before we finish, I want you to record yourself. Imagine you are recording a voice message for a new board member explaining the holding structure. Cover: headquarters, subsidiaries, branches, board, shareholders, and plans.&quot; Se houver tempo, ouca junto e de feedback positivo.">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div style="max-width:550px;text-align:center;">
+    <div style="width:64px;height:64px;border-radius:50%;background:rgba(107,76,138,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.8rem;">Record Yourself</h2>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:1.5rem;">Describe your holding structure in a voice message to a new board member.</p>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;text-align:left;padding:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+      <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);">Include:</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">1. Where the headquarters is located</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">2. How many subsidiaries and branches</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">3. What the board is responsible for</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">4. Future plans (merge, acquire)</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 37 -- TRANSITION: WRAP-UP ====== -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>87:00 - 0.5 min</span>Transicao para o wrap-up." style="background:linear-gradient(135deg, #2d1b4e 0%, #6B4C8A 50%, #1a365d 100%);">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <h1 class="slide-title" style="color:#fff;">Wrapping up Day 2</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Your key phrases for describing your business empire</p>
+</div>
+
+<!-- ====== SLIDE 38 -- SURVIVAL CARD ====== -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>87:30 - 89 min</span>Mostre o survival card. Leia cada frase com Maria Claudia. Ela repete. Toque o audio. Diga: &quot;These are YOUR five phrases. If you remember nothing else from today, remember these.&quot;">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div class="survival">
+    <h3>Maria Claudia's Corporate Toolkit -- Lesson 2</h3>
+    <div class="surv-phrase">
+      <div class="surv-num">1</div>
+      <div class="surv-text">Our headquarters is located in Sao Paulo.</div>
+      <button class="surv-play" onclick="speakText('Our headquarters is located in Sao Paulo.',this)" aria-label="Listen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="surv-phrase">
+      <div class="surv-num">2</div>
+      <div class="surv-text">The holding has three subsidiaries.</div>
+      <button class="surv-play" onclick="speakText('The holding has three subsidiaries.',this)" aria-label="Listen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="surv-phrase">
+      <div class="surv-num">3</div>
+      <div class="surv-text">The board meets quarterly to review our assets.</div>
+      <button class="surv-play" onclick="speakText('The board meets quarterly to review our assets.',this)" aria-label="Listen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="surv-phrase">
+      <div class="surv-num">4</div>
+      <div class="surv-text">We are looking to acquire a new company.</div>
+      <button class="surv-play" onclick="speakText('We are looking to acquire a new company.',this)" aria-label="Listen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="surv-phrase">
+      <div class="surv-num">5</div>
+      <div class="surv-text">There are branches in Houston and Pittsburgh.</div>
+      <button class="surv-play" onclick="speakText('There are branches in Houston and Pittsburgh.',this)" aria-label="Listen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 39 -- WHAT I LEARNED ====== -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>89:00 - 91 min</span>Mostre o checklist. Pergunte: &quot;Can you say yes to all of these?&quot; Maria Claudia clica cada um. Celebre: &quot;Maria Claudia, you described your entire business empire in English for 90 minutes. You used possessives, there is/are, and corporate vocabulary like a CEO at an international board meeting. Day 2 -- complete.&quot;<br><br><strong>Homework (diga oralmente, NAO esta na tela):</strong><br>1. Gravar audio de 2 min descrevendo a holding (headquarters, subsidiaries, branches, board, shareholders).<br>2. Escrever as 8 palavras no caderno com frase de exemplo propria.<br>3. Ler 1 artigo sobre M&amp;A (mergers and acquisitions) em ingles (10 min).">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.3rem;">What I Learned Today</h2>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;">Click each item to check it off</p>
+    <div class="checklist-wrap" style="text-align:left;">
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can describe my holding structure in English.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I know 8 corporate words: headquarters, branch, board, shareholder, merge, acquire, division, assets.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can use possessives correctly: company's, board's, shareholders'.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can use "there is" for singular and "there are" for plural.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can say "Our headquarters is located in..." and "The board is responsible for..."</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can explain my company to an international partner.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can pronounce "headquarters", "shareholder", "acquire", and "division" correctly.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can present my company overview at a board meeting.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 40 -- DAY 2 COMPLETE ====== -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>91:00 - 92 min</span>Slide final. Celebre o dia. De preview da proxima aula: &quot;Next time, we will learn how to run a meeting in English: opening, agenda, and action items. You will be chairing meetings like a pro.&quot;" style="background:linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 40%, #1a365d 100%);">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;">
+    <div style="margin-top:2rem;padding:1.5rem;background:rgba(107,76,138,0.08);border:1px solid rgba(107,76,138,0.2);border-radius:12px;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;">Day 2 -- Complete.</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);margin-top:0.5rem;">Next: Running the Meeting -- Opening, Agenda, Action Items</p>
+    </div>
+    <div style="margin-top:2rem;">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+  </div>
+</div>
+
+</div><!-- end slide-deck -->
+
+<!-- ===== CONFETTI CONTAINER ===== -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP =====
+var audioMap = {
+  "headquarters": "/audio/maria-claudia-curimbaba/aula2_headquarters.mp3",
+  "shareholder": "/audio/maria-claudia-curimbaba/aula2_shareholder.mp3",
+  "acquire": "/audio/maria-claudia-curimbaba/aula2_acquire.mp3",
+  "division": "/audio/maria-claudia-curimbaba/aula2_division.mp3",
+  "assets": "/audio/maria-claudia-curimbaba/aula2_assets.mp3",
+  "board": "/audio/maria-claudia-curimbaba/aula2_board.mp3",
+  "merge": "/audio/maria-claudia-curimbaba/aula2_merge.mp3",
+  "branch": "/audio/maria-claudia-curimbaba/aula2_branch.mp3",
+  "Our headquarters is located in Sao Paulo.": "/audio/maria-claudia-curimbaba/aula2_our_headquarters_is_located.mp3",
+  "We have branches in Houston and Pittsburgh.": "/audio/maria-claudia-curimbaba/aula2_we_have_branches_in_houston.mp3",
+  "The board meets quarterly to review our strategy.": "/audio/maria-claudia-curimbaba/aula2_the_board_meets_quarterly.mp3",
+  "Each shareholder has voting rights at the annual meeting.": "/audio/maria-claudia-curimbaba/aula2_each_shareholder_has_voting.mp3",
+  "The two subsidiaries will merge next quarter.": "/audio/maria-claudia-curimbaba/aula2_the_two_subsidiaries_will_merge.mp3",
+  "We are looking to acquire a tech company in the US.": "/audio/maria-claudia-curimbaba/aula2_we_are_looking_to_acquire.mp3",
+  "The logistics division handles all international shipments.": "/audio/maria-claudia-curimbaba/aula2_the_logistics_division_handles.mp3",
+  "The board reviews all company assets at the end of the fiscal year.": "/audio/maria-claudia-curimbaba/aula2_the_board_reviews_all_company.mp3",
+  "Our headquarters is located in Sao Paulo.": "/audio/maria-claudia-curimbaba/aula2_our_headquarters_located_sp.mp3",
+  "The board is responsible for strategic decisions and governance.": "/audio/maria-claudia-curimbaba/aula2_the_board_is_responsible.mp3",
+  "We have branches in Houston and Pittsburgh.": "/audio/maria-claudia-curimbaba/aula2_we_have_branches_houston.mp3",
+  "The holding has three subsidiaries.": "/audio/maria-claudia-curimbaba/aula2_the_holding_has_three.mp3",
+  "The board meets quarterly to review our assets.": "/audio/maria-claudia-curimbaba/aula2_board_meets_quarterly_assets.mp3",
+  "We are looking to acquire a new company.": "/audio/maria-claudia-curimbaba/aula2_looking_to_acquire_new.mp3",
+  "There are branches in Houston and Pittsburgh.": "/audio/maria-claudia-curimbaba/aula2_there_are_branches_houston.mp3"
+};
+
+// ===== AUDIO ENGINE =====
+var currentAudio = null;
+var audioSpeed = 1;
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed;
+    currentAudio.play().catch(function() { fallbackTTS(cleanText); });
+  } else {
+    fallbackTTS(cleanText);
+  }
+}
+
+function fallbackTTS(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 0;
+var totalSlides = 40;
+var slides = [];
+var teacherCues = [];
+
+function initSlides() {
+  slides = document.querySelectorAll('.slide');
+  slides.forEach(function(s, i) {
+    teacherCues[i] = s.dataset.t || '';
+  });
+  buildDotNav();
+  updateSlide();
+}
+
+function buildDotNav() {
+  var nav = document.getElementById('dotNav');
+  nav.innerHTML = '';
+  for (var i = 0; i < slides.length; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'dot-nav-item' + (i === 0 ? ' active' : '');
+    dot.dataset.idx = i;
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.onclick = function() { goToSlide(parseInt(this.dataset.idx)); };
+    nav.appendChild(dot);
+  }
+}
+
+function goToSlide(idx) {
+  if (idx < 0 || idx >= slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = idx;
+  slides[currentSlide].classList.add('active');
+  updateSlide();
+}
+
+function nextSlide() { goToSlide(currentSlide + 1); }
+function prevSlide() { goToSlide(currentSlide - 1); }
+
+function updateSlide() {
+  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + slides.length;
+
+  document.querySelectorAll('.dot-nav-item').forEach(function(d, i) {
+    d.classList.toggle('active', i === currentSlide);
+  });
+
+  var currentChapter = slides[currentSlide].dataset.chapter;
+  document.querySelectorAll('.chapter-dot').forEach(function(d) {
+    var ch = d.dataset.chapter;
+    d.classList.remove('active', 'completed');
+    if (ch === currentChapter) d.classList.add('active');
+    else if (parseInt(ch) < parseInt(currentChapter)) d.classList.add('completed');
+  });
+
+  var panel = document.getElementById('tPanel');
+  panel.classList.remove('show');
+  panel.innerHTML = teacherCues[currentSlide] || '<em>No teacher cue for this slide.</em>';
+}
+
+// ===== KEYBOARD NAV =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+});
+
+// ===== TEACHER CUE TOGGLE =====
+function toggleTeacherCue() {
+  var panel = document.getElementById('tPanel');
+  panel.classList.toggle('show');
+}
+
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('tPanel');
+  var cue = document.getElementById('tCue');
+  if (!panel.contains(e.target) && !cue.contains(e.target)) {
+    panel.classList.remove('show');
+  }
+});
+
+// ===== VOCAB REVEAL (TOGGLE) =====
+function revealVCard(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  var revealed = grid.querySelectorAll('.v-card.revealed').length;
+  var total = grid.querySelectorAll('.v-card').length;
+  document.getElementById(counterId).textContent = revealed + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar(btn, ruleId) {
+  btn.classList.add('used');
+  document.getElementById(ruleId).classList.add('show');
+}
+
+// ===== DIALOGUE LINE BY LINE =====
+function revealNextLine(dialogueId, btnId) {
+  var container = document.getElementById(dialogueId);
+  var lines = container.querySelectorAll('.d-line');
+  var btn = document.getElementById(btnId);
+  var nextHidden = null;
+  for (var i = 0; i < lines.length; i++) {
+    if (!lines[i].classList.contains('visible')) { nextHidden = lines[i]; break; }
+  }
+  if (nextHidden) {
+    nextHidden.classList.add('visible');
+    nextHidden.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  var allVisible = container.querySelectorAll('.d-line:not(.visible)').length === 0;
+  if (allVisible) btn.style.display = 'none';
+}
+
+// ===== LISTENING TOGGLE =====
+var listeningState = {};
+
+function toggleListening(id, btn, waveId, questionsId) {
+  var wave = document.getElementById(waveId);
+  var playIcon = btn.querySelector('.play-icon');
+  var pauseIcon = btn.querySelector('.pause-icon');
+  var questions = document.getElementById(questionsId);
+
+  if (!listeningState[id]) listeningState[id] = { playing: false, played: false };
+
+  if (listeningState[id].playing) {
+    wave.classList.remove('playing');
+    playIcon.style.display = '';
+    pauseIcon.style.display = 'none';
+    listeningState[id].playing = false;
+  } else {
+    wave.classList.add('playing');
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = '';
+    listeningState[id].playing = true;
+    if (!listeningState[id].played) {
+      listeningState[id].played = true;
+      setTimeout(function() {
+        questions.classList.add('show');
+        wave.classList.remove('playing');
+        playIcon.style.display = '';
+        pauseIcon.style.display = 'none';
+        listeningState[id].playing = false;
+      }, 8000);
+    }
+  }
+
+  var audioKey = id === 'listening1' ? 'listening_growing_empire' : 'listening_board_meeting';
+  if (audioMap[audioKey]) {
+    speakText(audioKey, btn);
+  }
+}
+
+// ===== QUICK CHALLENGE =====
+var qcCurrent = 0;
+var qcTotal = 6;
+var qcScore = 0;
+
+function showQcAnswer(btn) {
+  var card = btn.closest('.qc-card');
+  var answer = card.querySelector('.qc-answer-box');
+  var next = card.querySelector('.qc-next-btn');
+  answer.classList.add('show');
+  next.classList.add('show');
+  btn.style.display = 'none';
+  qcScore++;
+  document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal;
+
+  if (qcScore === qcTotal) {
+    triggerConfetti();
+  }
+}
+
+function nextQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent++;
+  if (qcCurrent < cards.length) {
+    cards[qcCurrent].classList.add('active');
+  }
+}
+
+// ===== CHECKLIST =====
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+}
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#6B4C8A', '#8B6BAA', '#fbbf24', '#f87171', '#60a5fa', '#a78bfa', '#34d399'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.width = (Math.random() * 8 + 5) + 'px';
+    piece.style.height = (Math.random() * 8 + 5) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 4000);
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', initSlides);
+</script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+</body>
+</html>

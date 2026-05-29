@@ -350,6 +350,116 @@ body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color
 .speed-btn { padding:4px 10px; font-size:0.75rem; border:1px solid var(--border); background:var(--bg-card); border-radius:4px; cursor:pointer; min-height:32px; }
 .speed-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
 
+
+/* === PRONUNCIATION DRILL (IN CLASS) === */
+.pron-grid { display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem; }
+.pron-item { display:flex;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid #e8e4df;border-radius:10px;padding:.8rem 1rem;cursor:pointer;transition:all .3s; }
+.pron-item:hover { border-color:var(--accent);box-shadow:0 4px 12px rgba(212,50,106,.1); }
+.pron-word { font-weight:700;font-size:1.1rem;color:var(--dark);min-width:120px; }
+.pron-stress { display:flex;gap:.3rem;align-items:center;flex:1; }
+.pron-syl { font-size:.9rem;color:var(--text-dim);padding:.2rem .5rem;border-radius:4px;transition:all .3s; }
+.pron-syl.stressed { background:var(--accent);color:#fff;font-weight:700;font-size:1rem;transform:scale(1.1); }
+.pron-audio { margin-left:auto; }
+/* === ERROR CARD (IN CLASS) === */
+.error-card .error-correct { display:none; }
+.error-card.revealed .error-correct { display:block;animation:fadeUp .3s ease; }
+.error-card.revealed .error-wrong { opacity:.5; }
+
+/* === Survival Card IC sub-elements === */
+.survival-num-ic { color:var(--accent);font-weight:800;font-size:1.1rem;flex-shrink:0;min-width:24px; }
+.survival-text-ic { flex:1;font-size:.95rem; }
+
+/* === FIX: Missing CSS for Aulas 6-8 slide classes === */
+/* Dialogue (avatar/bubble variant used in L6-L8) */
+.dialogue-line { display:flex;gap:.8rem;align-items:flex-start;transition:all .4s; }
+.dialogue-line.shown { opacity:1!important;transform:translateY(0)!important; }
+.avatar { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:#fff;flex-shrink:0; }
+.bubble { padding:.7rem 1rem;border-radius:12px;font-size:.92rem;line-height:1.5;max-width:80%;position:relative;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1); }
+.slide-dark .bubble { color:#fff; }
+
+/* Quick Fire items */
+.qf-item { transition:all .3s; }
+
+/* Error card toggle */
+.error-card { cursor:pointer;transition:all .3s; }
+.error-card:hover { border-color:var(--accent); }
+.error-card .error-correct { display:none; }
+.error-card.revealed .error-correct { display:block;animation:fadeUp .3s ease; }
+.error-card.revealed .error-wrong { opacity:.5; }
+.error-card.revealed { border-color:var(--success); }
+
+/* Roleplay card */
+.roleplay-card { color:var(--text); }
+.slide-dark .roleplay-card { color:var(--text); }
+
+/* Record card */
+.record-card { color:var(--text); }
+
+/* Oral drilling items */
+.oral-item { color:var(--text); }
+
+/* Fix: comp-q on dark slides should have white bg */
+.slide-dark .comp-q { background:#fff;color:#2d2d3a; }
+.slide-dark .comp-q .q-answer { color:var(--accent); }
+.slide-dark .comp-q:hover { border-color:var(--accent);background:rgba(255,255,255,.95); }
+
+/* Ensure mistake-item text stays inline */
+.mistake-item > span { display:inline; }
+
+/* Warm-up questions fallback */
+.warm-questions { display:flex;flex-direction:column;gap:1.8rem;margin-top:2rem; }
+.warm-q { font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;font-style:italic;opacity:0;animation:fadeUp .8s ease forwards;padding-left:1.5rem;border-left:3px solid var(--accent); }
+.warm-q:nth-child(2) { animation-delay:.4s; }
+.warm-q:nth-child(3) { animation-delay:.8s; }
+
+/* Grammar practice fill items */
+.fill-item .fill-answer { display:none;font-weight:700;color:var(--accent); }
+.fill-item.revealed .fill-blank { display:none; }
+.fill-item.revealed .fill-answer { display:inline; }
+
+/* Vocab counter */
+.vocab-counter { text-align:center;margin-top:1.2rem;font-weight:600;color:var(--accent);font-size:1rem; }
+
+/* === MASTER FIX: White text for custom elements on dark slides === */
+.slide-dark .checklist li,
+.slide-dark .checklist li span,
+.slide-dark .checklist label,
+.slide-dark .dialogue-line,
+.slide-dark .dialogue-line .bubble,
+.slide-dark .dialogue-line strong,
+.slide-dark .warm-q,
+.slide-dark .qf-item,
+.slide-dark .qf-item p,
+.slide-dark .qf-item strong,
+.slide-dark .error-card .error-wrong,
+.slide-dark .error-card .error-correct,
+.slide-dark .pron-grid .pron-item,
+.slide-dark .pron-word,
+.slide-dark .pron-syl { color:#fff; }
+
+/* Elements WITH white backgrounds keep dark text */
+.slide-dark .comp-q { background:#fff;color:#2d2d3a; }
+.slide-dark .comp-q .q-text { color:#2d2d3a; }
+.slide-dark .comp-q .q-answer { color:var(--accent); }
+
+/* Checklist items need white text + visible checkbox */
+.slide-dark .checklist li { color:#fff!important; }
+.slide-dark .checklist li span { color:#fff!important; }
+.slide-dark .checklist li.checked span { color:var(--success)!important; }
+
+/* Survival items already fixed with proper classes */
+/* Error cards need specific color overrides */
+.slide-dark .error-card .error-wrong { color:var(--danger); }
+.slide-dark .error-card .error-correct { color:var(--success); }
+
+/* Role-play cards on dark slides */
+.slide-dark .roleplay-card p,
+.slide-dark .roleplay-card span { color:rgba(255,255,255,.8); }
+.slide-dark .roleplay-card div[style*="font-weight:700"] { color:#fff; }
+
+/* Pronunciation on dark slides */
+.slide-dark .pron-item { background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15); }
+.slide-dark .pron-item:hover { border-color:var(--accent); }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -387,6 +497,9 @@ body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color
 <div class="stamp" id="stamp3" data-label="My World" style="background-image:url('https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=200&q=80')"></div>
 <div class="stamp" id="stamp4" data-label="Routine" style="background-image:url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=200&q=80')"></div>
 <div class="stamp" id="stamp5" data-label="Likes" style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=200&q=80')"></div>
+<div class="stamp" id="stamp6" data-label="Numbers" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=200&q=80')"></div>
+<div class="stamp" id="stamp7" data-label="Countries" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=200&q=80')"></div>
+<div class="stamp" id="stamp8" data-label="Can Do" style="background-image:url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=200&q=80')"></div>
 <div class="stamp" id="stamp21" data-label="Future" style="background-image:url('https://images.unsplash.com/photo-1523287562758-66c7fc58967f?w=200&q=80')"></div>
 <div class="stamp" id="stamp22" data-label="Airport" style="background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=200&q=80')"></div>
 <div class="stamp" id="stamp23" data-label="Flight" style="background-image:url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=200&q=80')"></div>
@@ -1839,41 +1952,1381 @@ body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color
 </div>
   </div>
 </div>
-<div class="lesson-card">
+<div class="lesson-card" id="ex-lesson-6">
   <div class="lesson-header" onclick="toggleLesson(this)">
-    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80');opacity:0.35;"></div>
+    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 06 — Pre-class</div>
-      <h3 style="opacity:0.7;">Numbers, Time &amp; Dates — Tools to Survive in Paris</h3>
-      <div class="lesson-desc" style="font-style:italic;color:var(--text-dim);">Conteúdo será adicionado no próximo bloco.</div>
+      <div class="lesson-number">Aula 06 &mdash; Pre-class</div>
+      <h3>Numbers, Time &amp; Dates &mdash; The Tools You Need to Survive in Paris</h3>
+      <div class="lesson-desc">Depois desta aula, voc&ecirc; consegue perguntar as horas, entender hor&aacute;rios de voo e comprar ingressos em Paris sem travar.</div>
+      <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="6" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="6">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
   </div>
-  <div class="lesson-body"><p style="text-align:center;padding:2rem;color:var(--text-dim);font-style:italic;">Conteúdo será adicionado no próximo bloco.</p></div>
+  <div class="lesson-body">
+    <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:1.5rem;"><strong style="color:var(--accent);">Objetivo:</strong> Ao final desta aula, Gabriela ser&aacute; capaz de dizer as horas, perguntar pre&ccedil;os e dizer datas em ingl&ecirc;s &mdash; tudo que precisa para sobreviver em Paris.</p>
+
+    <!-- ===== STAGE 1.1: VOCABULARY CARDS ===== -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Vocabul&aacute;rio <span class="badge badge-vocab">Vocabulary</span></h4>
+        <button class="listen-all-btn" onclick="listenAllVocab(this)">&#9654; Ouvir todos</button>
+      </div>
+      <p class="microcopy">Olha a palavra, a tradu&ccedil;&atilde;o e o exemplo juntos. Toca em Ouvir &mdash; o som ajuda muito a mem&oacute;ria.</p>
+
+      <div class="vocab-card">
+        <div class="vocab-word">O&rsquo;clock</div>
+        <div class="vocab-translation">em ponto</div>
+        <div class="vocab-example">&ldquo;It is three <strong>o&rsquo;clock</strong>.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('It is three o\'clock.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Quarter</div>
+        <div class="vocab-translation">quinze minutos (quarto de hora)</div>
+        <div class="vocab-example">&ldquo;It is a <strong>quarter</strong> past two.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('It is a quarter past two.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Half past</div>
+        <div class="vocab-translation">meia hora (e meia)</div>
+        <div class="vocab-example">&ldquo;It is <strong>half past</strong> ten.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('It is half past ten.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Noon</div>
+        <div class="vocab-translation">meio-dia</div>
+        <div class="vocab-example">&ldquo;We have lunch at <strong>noon</strong>.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('We have lunch at noon.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Midnight</div>
+        <div class="vocab-translation">meia-noite</div>
+        <div class="vocab-example">&ldquo;The flight arrives at <strong>midnight</strong>.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('The flight arrives at midnight.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Flight</div>
+        <div class="vocab-translation">voo</div>
+        <div class="vocab-example">&ldquo;My <strong>flight</strong> is at nine o&rsquo;clock.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('My flight is at nine o\'clock.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Ticket</div>
+        <div class="vocab-translation">passagem / ingresso</div>
+        <div class="vocab-example">&ldquo;How much is the <strong>ticket</strong>?&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('How much is the ticket?', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Price</div>
+        <div class="vocab-translation">pre&ccedil;o</div>
+        <div class="vocab-example">&ldquo;What is the <strong>price</strong>?&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('What is the price?', this)">&#9654; Ouvir</button>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 1.2: MATCHING ===== -->
+    <div class="exercise-section">
+      <h4>V2. Match the words <span class="badge badge-vocab">Matching</span></h4>
+      <p class="microcopy">Fa&ccedil;a um de cada vez. Errou? Leia a explica&ccedil;&atilde;o com calma &mdash; &eacute; a&iacute; que voc&ecirc; aprende de verdade.</p>
+      <div class="match-grid" id="match-l6">
+        <div class="match-row" data-answer="em ponto">
+          <span class="match-word">O&rsquo;clock</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="meia hora">meia hora</option>
+            <option value="voo">voo</option>
+            <option value="em ponto">em ponto</option>
+            <option value="meio-dia">meio-dia</option>
+            <option value="pre&ccedil;o">pre&ccedil;o</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="quinze minutos">
+          <span class="match-word">Quarter</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="meia-noite">meia-noite</option>
+            <option value="quinze minutos">quinze minutos</option>
+            <option value="ingresso">ingresso</option>
+            <option value="em ponto">em ponto</option>
+            <option value="voo">voo</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="meia hora">
+          <span class="match-word">Half past</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="pre&ccedil;o">pre&ccedil;o</option>
+            <option value="meia hora">meia hora</option>
+            <option value="quinze minutos">quinze minutos</option>
+            <option value="meio-dia">meio-dia</option>
+            <option value="em ponto">em ponto</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="meio-dia">
+          <span class="match-word">Noon</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="ingresso">ingresso</option>
+            <option value="meia-noite">meia-noite</option>
+            <option value="meio-dia">meio-dia</option>
+            <option value="voo">voo</option>
+            <option value="meia hora">meia hora</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="meia-noite">
+          <span class="match-word">Midnight</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="meio-dia">meio-dia</option>
+            <option value="em ponto">em ponto</option>
+            <option value="meia-noite">meia-noite</option>
+            <option value="pre&ccedil;o">pre&ccedil;o</option>
+            <option value="quinze minutos">quinze minutos</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="voo">
+          <span class="match-word">Flight</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="meia hora">meia hora</option>
+            <option value="voo">voo</option>
+            <option value="ingresso">ingresso</option>
+            <option value="meia-noite">meia-noite</option>
+            <option value="meio-dia">meio-dia</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="ingresso">
+          <span class="match-word">Ticket</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="quinze minutos">quinze minutos</option>
+            <option value="pre&ccedil;o">pre&ccedil;o</option>
+            <option value="em ponto">em ponto</option>
+            <option value="ingresso">ingresso</option>
+            <option value="voo">voo</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="pre&ccedil;o">
+          <span class="match-word">Price</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="ingresso">ingresso</option>
+            <option value="meia hora">meia hora</option>
+            <option value="voo">voo</option>
+            <option value="pre&ccedil;o">pre&ccedil;o</option>
+            <option value="meia-noite">meia-noite</option>
+          </select>
+        </div>
+      </div>
+      <button class="verify-all-btn" onclick="verifyAllMatches('match-l6')">Check Answers</button>
+    </div>
+
+    <!-- ===== STAGE 1.3: GRAMMAR IN CONTEXT ===== -->
+    <div class="exercise-section">
+      <h4>Stage 1.2: Grammar in Context <span class="badge badge-practice">Grammar</span></h4>
+      <p class="microcopy">Leia o texto com calma. As palavras em negrito s&atilde;o do vocabul&aacute;rio de hoje.</p>
+      <div class="context-text" style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.15);border-radius:8px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.9;font-size:0.95rem;">
+        Gabriela is planning her trip to Paris. Her <strong>flight</strong> is on <strong>February 3rd</strong>, 2027. The departure time is <strong>nine fifteen</strong> in the morning. She arrives in Paris at <strong>half past eleven</strong> at night. On February 4th, she visits the Louvre at <strong>ten o&rsquo;clock</strong>. Lunch is at <strong>half past twelve</strong> at a French caf&eacute;. The Eiffel Tower visit is at <strong>a quarter past four</strong>. A <strong>ticket</strong> to the Eiffel Tower costs twenty-six euros. Gabriela asks: &ldquo;<strong>What time</strong> is it?&rdquo; and &ldquo;How much is the <strong>price</strong>?&rdquo;
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">What time does Gabriela visit the Louvre?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> At half past ten</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> At ten o&rsquo;clock</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> At a quarter past ten</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">How much is the Eiffel Tower ticket?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Fifteen euros</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Thirty euros</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> Twenty-six euros</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">What time is the Eiffel Tower visit?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> A quarter past four</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Half past four</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Four o&rsquo;clock</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 1.4: GRAMMAR TIP ===== -->
+    <div class="exercise-section">
+      <h4>Grammar Tip <span class="badge badge-practice">Grammar</span></h4>
+      <div style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.15);border-radius:8px;padding:1.2rem;margin-bottom:1rem;">
+        <p style="font-weight:700;color:var(--accent);margin-bottom:0.8rem;font-size:1rem;">Telling Time in American English / Dizendo as horas em ingl&ecirc;s americano</p>
+        <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">3:00</td><td style="padding:0.5rem;">It is three <strong>o&rsquo;clock</strong>.</td><td style="padding:0.5rem;color:var(--text-dim);">S&atilde;o tr&ecirc;s horas.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">3:15</td><td style="padding:0.5rem;">It is <strong>a quarter past</strong> three.</td><td style="padding:0.5rem;color:var(--text-dim);">S&atilde;o tr&ecirc;s e quinze.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">3:30</td><td style="padding:0.5rem;">It is <strong>half past</strong> three.</td><td style="padding:0.5rem;color:var(--text-dim);">S&atilde;o tr&ecirc;s e meia.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">3:45</td><td style="padding:0.5rem;">It is <strong>a quarter to</strong> four.</td><td style="padding:0.5rem;color:var(--text-dim);">S&atilde;o quinze para as quatro.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">12:00 PM</td><td style="padding:0.5rem;">It is <strong>noon</strong>.</td><td style="padding:0.5rem;color:var(--text-dim);">&Eacute; meio-dia.</td></tr>
+          <tr><td style="padding:0.5rem;font-weight:600;">12:00 AM</td><td style="padding:0.5rem;">It is <strong>midnight</strong>.</td><td style="padding:0.5rem;color:var(--text-dim);">&Eacute; meia-noite.</td></tr>
+        </table>
+      </div>
+      <div style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.15);border-radius:8px;padding:1.2rem;">
+        <p style="font-weight:700;color:var(--accent);margin-bottom:0.8rem;font-size:1rem;">Dates in American English / Datas em ingl&ecirc;s americano</p>
+        <p style="font-size:0.88rem;line-height:1.7;">In American English, the format is: <strong>Month + Day (ordinal) + Year</strong>.<br>
+        Exemplo: <strong>February 3rd, 2027</strong> (n&atilde;o &ldquo;3 February&rdquo;).<br>
+        Ordinals: 1st, 2nd, 3rd, 4th, 5th... 15th... 21st, 22nd, 23rd... 31st.</p>
+        <p style="font-size:0.88rem;line-height:1.7;margin-top:0.5rem;"><strong>Questions / Perguntas:</strong><br>
+        &ldquo;<strong>What time is it?</strong>&rdquo; &mdash; Que horas s&atilde;o?<br>
+        &ldquo;<strong>How much is it?</strong>&rdquo; / &ldquo;<strong>How much does this cost?</strong>&rdquo; &mdash; Quanto custa?<br>
+        &ldquo;<strong>When is your flight?</strong>&rdquo; &mdash; Quando &eacute; o seu voo?</p>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 1.5: FILL-IN-THE-BLANK ===== -->
+    <div class="exercise-section">
+      <h4>P1. Complete with the correct word <span class="badge badge-practice">Practice</span></h4>
+      <p class="microcopy">Fa&ccedil;a um de cada vez. Errou? Leia a dica com calma.</p>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;Excuse me, what
+          <input class="blank-input" data-answer="time" data-hint="Hint: you ask this about the clock" data-phrase="Excuse me, what time is it?" placeholder="___">
+          is it?&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;My
+          <input class="blank-input" data-answer="flight" data-hint="Hint: you take this to travel by airplane" data-phrase="My flight is on February 3rd." placeholder="___">
+          is on February 3rd.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;How much is the
+          <input class="blank-input" data-answer="ticket" data-hint="Hint: you buy this to enter a museum" data-phrase="How much is the ticket?" placeholder="___">
+          ?&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;It is
+          <input class="blank-input" data-answer="half past" data-alt="half past" data-hint="Hint: 30 minutes past the hour" data-phrase="It is half past ten." placeholder="___">
+          ten.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;The museum opens at ten
+          <input class="blank-input" data-answer="o'clock" data-alt="oclock" data-hint="Hint: the word for exact hours" data-phrase="The museum opens at ten o'clock." placeholder="___">
+          .&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 2: ORDERING ===== -->
+    <div class="exercise-section">
+      <h4>P2. Put in order <span class="badge badge-order">Order</span></h4>
+      <p class="microcopy">Coloque as frases na ordem correta para formar um di&aacute;logo no guich&ecirc; do Louvre.</p>
+      <div class="order-container" id="order-l6">
+        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l6')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;It is 15 euros. Here is your ticket.&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l6')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l6')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l6')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;We close at six o&rsquo;clock. Enjoy your visit!&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l6')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l6')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l6')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;Good afternoon! One student ticket, please.&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l6')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l6')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l6')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;Thank you! What time does the museum close?&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l6')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l6')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l6')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;How much is it?&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l6')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l6')">&#9660;</button>
+          </span>
+        </div>
+      </div>
+      <button class="verify-all-btn" onclick="checkOrder('order-l6')">Check Order</button>
+    </div>
+
+    <!-- ===== STAGE 3: PRONUNCIATION ===== -->
+    <div class="exercise-section">
+      <h4>S1. Read aloud <span class="badge badge-speak">Speaking</span></h4>
+      <p class="microcopy">Toque em Ouvir, repita, depois grave e compare. O objetivo &eacute; praticar, n&atilde;o ser perfeito.</p>
+
+      <div class="speech-card" data-phrase="Excuse me, what time is it?">
+        <div class="speech-phrase">Excuse me, what time is it?</div>
+        <div class="speech-translation">Com licen&ccedil;a, que horas s&atilde;o?</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+
+      <div class="speech-card" data-phrase="My flight is on February 3rd, 2027.">
+        <div class="speech-phrase">My flight is on February 3rd, 2027.</div>
+        <div class="speech-translation">Meu voo &eacute; no dia 3 de fevereiro de 2027.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+
+      <div class="speech-card" data-phrase="One ticket, please. How much is it?">
+        <div class="speech-phrase">One ticket, please. How much is it?</div>
+        <div class="speech-translation">Uma entrada, por favor. Quanto custa?</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+
+      <div class="speech-card" data-phrase="The museum opens at ten o'clock.">
+        <div class="speech-phrase">The museum opens at ten o&rsquo;clock.</div>
+        <div class="speech-translation">O museu abre &agrave;s dez horas.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 4: QUIZ ===== -->
+    <div class="exercise-section">
+      <h4>Q1. Choose the best answer <span class="badge badge-quiz">Quiz</span></h4>
+      <p class="microcopy">Imagine a situa&ccedil;&atilde;o e escolha a melhor resposta.</p>
+
+      <div class="quiz-item">
+        <div class="quiz-question">You are at the Louvre and want to buy a ticket. What do you say?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;I want ticket Louvre.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;One ticket, please. How much is it?&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;Give me one ticket now.&rdquo;</div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-question">You need to know the time. What do you ask?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;What is the hour?&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> &ldquo;Tell me the clock.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> &ldquo;Excuse me, what time is it?&rdquo;</div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-question">The clock shows 4:45. How do you say it?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> &ldquo;It is a quarter to five.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> &ldquo;It is a quarter past four.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;It is half past four.&rdquo;</div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-question">Someone asks: &ldquo;When is your flight?&rdquo; What do you answer?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;My flight is 3 February.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;My flight is on February 3rd.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;Flight February three.&rdquo;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 5: THINK ===== -->
+    <div class="exercise-section">
+      <h4>T1. Think and respond <span class="badge badge-think">Reflection</span></h4>
+      <p class="microcopy">Aqui n&atilde;o tem resposta certa &mdash; &eacute; pra voc&ecirc; pensar em ingl&ecirc;s. Toque no microfone e responde como vier.</p>
+      <div class="think-card">
+        <div style="font-size:0.92rem;color:var(--text);margin-bottom:1rem;line-height:1.8;">You are at the Eiffel Tower ticket counter in Paris. Tell the person: your name, when your flight arrived, ask for one ticket, ask the price, and ask what time the tower closes.</div>
+        <div class="speech-card" data-phrase="Hi, my name is Gabriela. My flight arrived on February 3rd. One ticket, please. How much is it? What time does the tower close?" style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.25);">
+          <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:0.5rem;">Sugest&atilde;o de resposta</div>
+          <div class="speech-phrase" style="font-size:1.05rem;">&ldquo;Hi, my name is Gabriela. My flight arrived on February 3rd. One ticket, please. How much is it? What time does the tower close?&rdquo;</div>
+          <div class="speech-translation">Oi, meu nome &eacute; Gabriela. Meu voo chegou dia 3 de fevereiro. Uma entrada, por favor. Quanto custa? Que horas a torre fecha?</div>
+          <div class="speech-controls">
+            <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+            <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar e comparar</button>
+            <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+          </div>
+          <div class="speech-result"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SURVIVAL CARD ===== -->
+    <div class="survival-card">
+      <h4>Survival Card &mdash; Lesson 6: Numbers, Time &amp; Dates</h4>
+      <div class="survival-phrase"><span class="sp-num">1</span><span class="sp-en">Excuse me, what time is it?</span><span class="sp-pt">Com licen&ccedil;a, que horas s&atilde;o?</span><button class="btn btn-listen" onclick="speakText('Excuse me, what time is it?', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">2</span><span class="sp-en">My flight is on February 3rd.</span><span class="sp-pt">Meu voo &eacute; dia 3 de fevereiro.</span><button class="btn btn-listen" onclick="speakText('My flight is on February 3rd.', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">3</span><span class="sp-en">One ticket, please. How much is it?</span><span class="sp-pt">Uma entrada, por favor. Quanto custa?</span><button class="btn btn-listen" onclick="speakText('One ticket, please. How much is it?', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">4</span><span class="sp-en">The museum opens at ten o&rsquo;clock.</span><span class="sp-pt">O museu abre &agrave;s dez horas.</span><button class="btn btn-listen" onclick="speakText('The museum opens at ten o\'clock.', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">5</span><span class="sp-en">It is half past twelve.</span><span class="sp-pt">&Eacute; meio-dia e meia.</span><button class="btn btn-listen" onclick="speakText('It is half past twelve.', this)">&#9654;</button></div>
+    </div>
+
+  </div>
 </div>
-<div class="lesson-card">
+<div class="lesson-card" id="ex-lesson-7">
   <div class="lesson-header" onclick="toggleLesson(this)">
-    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80');opacity:0.35;"></div>
+    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 07 — Pre-class</div>
-      <h3 style="opacity:0.7;">Where Are You From? — Countries, Nationalities &amp; the World</h3>
-      <div class="lesson-desc" style="font-style:italic;color:var(--text-dim);">Conteúdo será adicionado no próximo bloco.</div>
+      <div class="lesson-number">Aula 07 &mdash; Pre-class</div>
+      <h3>Where Are You From? &mdash; Countries, Nationalities &amp; the World Around Gabriela</h3>
+      <div class="lesson-desc">Depois desta aula, voc&ecirc; consegue se apresentar dizendo de onde &eacute;, sua nacionalidade e que idiomas fala &mdash; tudo que precisa ao conhecer viajantes em Paris.</div>
+      <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="7" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="7">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
   </div>
-  <div class="lesson-body"><p style="text-align:center;padding:2rem;color:var(--text-dim);font-style:italic;">Conteúdo será adicionado no próximo bloco.</p></div>
+  <div class="lesson-body">
+    <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:1.5rem;"><strong style="color:var(--accent);">Objetivo:</strong> Ao final desta aula, Gabriela ser&aacute; capaz de dizer de onde &eacute;, perguntar a nacionalidade dos outros e falar sobre idiomas &mdash; perfeito para o hostel em Paris.</p>
+
+    <!-- ===== STAGE 1.1: VOCABULARY CARDS ===== -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Vocabul&aacute;rio <span class="badge badge-vocab">Vocabulary</span></h4>
+        <button class="listen-all-btn" onclick="listenAllVocab(this)">&#9654; Ouvir todos</button>
+      </div>
+      <p class="microcopy">Olha a palavra, a tradu&ccedil;&atilde;o e o exemplo juntos. Toca em Ouvir &mdash; o som ajuda muito a mem&oacute;ria.</p>
+
+      <div class="vocab-card">
+        <div class="vocab-word">Country</div>
+        <div class="vocab-translation">pa&iacute;s</div>
+        <div class="vocab-example">&ldquo;Brazil is a big <strong>country</strong>.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('Brazil is a big country.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Nationality</div>
+        <div class="vocab-translation">nacionalidade</div>
+        <div class="vocab-example">&ldquo;What is your <strong>nationality</strong>?&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('What is your nationality?', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Brazilian</div>
+        <div class="vocab-translation">brasileiro/a</div>
+        <div class="vocab-example">&ldquo;I am <strong>Brazilian</strong>.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('I am Brazilian.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">French</div>
+        <div class="vocab-translation">franc&ecirc;s/francesa</div>
+        <div class="vocab-example">&ldquo;She is <strong>French</strong>.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('She is French.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">American</div>
+        <div class="vocab-translation">americano/a</div>
+        <div class="vocab-example">&ldquo;Blake Lively is <strong>American</strong>.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('Blake Lively is American.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Language</div>
+        <div class="vocab-translation">idioma / l&iacute;ngua</div>
+        <div class="vocab-example">&ldquo;I speak two <strong>languages</strong>.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('I speak two languages.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Passport</div>
+        <div class="vocab-translation">passaporte</div>
+        <div class="vocab-example">&ldquo;My <strong>passport</strong> is Brazilian.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('My passport is Brazilian.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">International</div>
+        <div class="vocab-translation">internacional</div>
+        <div class="vocab-example">&ldquo;Paris is an <strong>international</strong> city.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('Paris is an international city.', this)">&#9654; Ouvir</button>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 1.2: MATCHING ===== -->
+    <div class="exercise-section">
+      <h4>V2. Match the words <span class="badge badge-vocab">Matching</span></h4>
+      <p class="microcopy">Fa&ccedil;a um de cada vez. Errou? Leia a explica&ccedil;&atilde;o com calma &mdash; &eacute; a&iacute; que voc&ecirc; aprende de verdade.</p>
+      <div class="match-grid" id="match-l7">
+        <div class="match-row" data-answer="pa&iacute;s">
+          <span class="match-word">Country</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="nacionalidade">nacionalidade</option>
+            <option value="passaporte">passaporte</option>
+            <option value="pa&iacute;s">pa&iacute;s</option>
+            <option value="idioma">idioma</option>
+            <option value="internacional">internacional</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="nacionalidade">
+          <span class="match-word">Nationality</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="americano/a">americano/a</option>
+            <option value="nacionalidade">nacionalidade</option>
+            <option value="franc&ecirc;s">franc&ecirc;s</option>
+            <option value="pa&iacute;s">pa&iacute;s</option>
+            <option value="brasileiro/a">brasileiro/a</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="brasileiro/a">
+          <span class="match-word">Brazilian</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="internacional">internacional</option>
+            <option value="brasileiro/a">brasileiro/a</option>
+            <option value="passaporte">passaporte</option>
+            <option value="nacionalidade">nacionalidade</option>
+            <option value="idioma">idioma</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="franc&ecirc;s">
+          <span class="match-word">French</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="pa&iacute;s">pa&iacute;s</option>
+            <option value="americano/a">americano/a</option>
+            <option value="franc&ecirc;s">franc&ecirc;s</option>
+            <option value="brasileiro/a">brasileiro/a</option>
+            <option value="passaporte">passaporte</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="americano/a">
+          <span class="match-word">American</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="idioma">idioma</option>
+            <option value="internacional">internacional</option>
+            <option value="pa&iacute;s">pa&iacute;s</option>
+            <option value="americano/a">americano/a</option>
+            <option value="franc&ecirc;s">franc&ecirc;s</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="idioma">
+          <span class="match-word">Language</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="passaporte">passaporte</option>
+            <option value="brasileiro/a">brasileiro/a</option>
+            <option value="idioma">idioma</option>
+            <option value="americano/a">americano/a</option>
+            <option value="nacionalidade">nacionalidade</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="passaporte">
+          <span class="match-word">Passport</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="franc&ecirc;s">franc&ecirc;s</option>
+            <option value="passaporte">passaporte</option>
+            <option value="internacional">internacional</option>
+            <option value="pa&iacute;s">pa&iacute;s</option>
+            <option value="idioma">idioma</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="internacional">
+          <span class="match-word">International</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="brasileiro/a">brasileiro/a</option>
+            <option value="nacionalidade">nacionalidade</option>
+            <option value="americano/a">americano/a</option>
+            <option value="internacional">internacional</option>
+            <option value="pa&iacute;s">pa&iacute;s</option>
+          </select>
+        </div>
+      </div>
+      <button class="verify-all-btn" onclick="verifyAllMatches('match-l7')">Check Answers</button>
+    </div>
+
+    <!-- ===== STAGE 1.3: GRAMMAR IN CONTEXT ===== -->
+    <div class="exercise-section">
+      <h4>Stage 1.2: Grammar in Context <span class="badge badge-practice">Grammar</span></h4>
+      <p class="microcopy">Leia o texto com calma. As palavras em negrito s&atilde;o do vocabul&aacute;rio de hoje.</p>
+      <div class="context-text" style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.15);border-radius:8px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.9;font-size:0.95rem;">
+        Gabriela <strong>is from</strong> Brazil. She <strong>is Brazilian</strong>. She speaks Portuguese and she is learning English. At the hostel in Paris, she meets Liam. He <strong>is from</strong> Australia. He <strong>is Australian</strong>. He speaks English and a little <strong>French</strong>. There is also Yuki. She <strong>is from</strong> Japan. She <strong>is Japanese</strong>. The hostel is very <strong>international</strong> &mdash; there are people from ten different <strong>countries</strong>! Gabriela shows her <strong>passport</strong> at the reception. &ldquo;What <strong>nationality</strong>?&rdquo; asks the receptionist. &ldquo;I am <strong>Brazilian</strong>,&rdquo; says Gabriela. &ldquo;Welcome! You speak good English!&rdquo; &ldquo;Thank you! I am learning. What <strong>languages</strong> do people speak here?&rdquo; &ldquo;English, French, Japanese, Italian... It is truly <strong>international</strong>!&rdquo;
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">Where is Liam from?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> France</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Australia</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Japan</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">What is Gabriela&rsquo;s nationality?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> French</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> American</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> Brazilian</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">How is the hostel described?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> International</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Small</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> French only</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 1.4: GRAMMAR TIP ===== -->
+    <div class="exercise-section">
+      <h4>Grammar Tip <span class="badge badge-practice">Grammar</span></h4>
+      <div style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.15);border-radius:8px;padding:1.2rem;margin-bottom:1rem;">
+        <p style="font-weight:700;color:var(--accent);margin-bottom:0.8rem;font-size:1rem;">Talking About Origin &amp; Nationality / Falando sobre origem e nacionalidade</p>
+        <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">Pergunta</td><td style="padding:0.5rem;"><strong>Where are you from?</strong></td><td style="padding:0.5rem;color:var(--text-dim);">De onde voc&ecirc; &eacute;?</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">Pa&iacute;s</td><td style="padding:0.5rem;">I am <strong>from Brazil</strong>.</td><td style="padding:0.5rem;color:var(--text-dim);">Eu sou do Brasil.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">Nacionalidade</td><td style="padding:0.5rem;">I am <strong>Brazilian</strong>.</td><td style="padding:0.5rem;color:var(--text-dim);">Eu sou brasileira.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">3a pessoa</td><td style="padding:0.5rem;">She <strong>is</strong> French. / He <strong>is from</strong> Australia.</td><td style="padding:0.5rem;color:var(--text-dim);">Ela &eacute; francesa. / Ele &eacute; da Austr&aacute;lia.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">Idioma</td><td style="padding:0.5rem;">I <strong>speak</strong> Portuguese and English.</td><td style="padding:0.5rem;color:var(--text-dim);">Eu falo portugu&ecirc;s e ingl&ecirc;s.</td></tr>
+          <tr><td style="padding:0.5rem;font-weight:600;">Plural</td><td style="padding:0.5rem;">They <strong>are from</strong> Japan.</td><td style="padding:0.5rem;color:var(--text-dim);">Eles s&atilde;o do Jap&atilde;o.</td></tr>
+        </table>
+      </div>
+      <div style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.15);border-radius:8px;padding:1.2rem;">
+        <p style="font-weight:700;color:var(--accent);margin-bottom:0.8rem;font-size:1rem;">Countries &amp; Nationalities / Pa&iacute;ses e nacionalidades</p>
+        <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+          <tr style="border-bottom:1px solid var(--border);"><th style="padding:0.4rem;text-align:left;">Country</th><th style="padding:0.4rem;text-align:left;">Nationality</th><th style="padding:0.4rem;text-align:left;">Celebridade</th></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem;">Brazil</td><td style="padding:0.4rem;">Brazilian</td><td style="padding:0.4rem;color:var(--text-dim);">Gabriela!</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem;">France</td><td style="padding:0.4rem;">French</td><td style="padding:0.4rem;color:var(--text-dim);">Lily Collins (Emily in Paris)</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem;">USA</td><td style="padding:0.4rem;">American</td><td style="padding:0.4rem;color:var(--text-dim);">Blake Lively (Gossip Girl)</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem;">England</td><td style="padding:0.4rem;">English</td><td style="padding:0.4rem;color:var(--text-dim);">Ed Westwick (Gossip Girl)</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem;">Australia</td><td style="padding:0.4rem;">Australian</td><td style="padding:0.4rem;color:var(--text-dim);">Chris Hemsworth</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem;">Japan</td><td style="padding:0.4rem;">Japanese</td><td style="padding:0.4rem;color:var(--text-dim);">Marie Kondo</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.4rem;">Italy</td><td style="padding:0.4rem;">Italian</td><td style="padding:0.4rem;color:var(--text-dim);">Monica Bellucci</td></tr>
+          <tr><td style="padding:0.4rem;">Canada</td><td style="padding:0.4rem;">Canadian</td><td style="padding:0.4rem;color:var(--text-dim);">Ryan Reynolds</td></tr>
+        </table>
+        <p style="font-size:0.82rem;line-height:1.7;margin-top:0.8rem;color:var(--text-mid);"><strong>Dica importante:</strong> Em ingl&ecirc;s, nacionalidades N&Atilde;O mudam para feminino/masculino. &ldquo;Brazilian&rdquo; = ele E ela. Diferente do portugu&ecirc;s (brasileiro/brasileira).</p>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 1.5: FILL-IN-THE-BLANK ===== -->
+    <div class="exercise-section">
+      <h4>P1. Complete with the correct word <span class="badge badge-practice">Practice</span></h4>
+      <p class="microcopy">Fa&ccedil;a um de cada vez. Errou? Leia a dica com calma.</p>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;Where are you
+          <input class="blank-input" data-answer="from" data-hint="Hint: the preposition used with origin" data-phrase="Where are you from?" placeholder="___">
+          ?&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;I am
+          <input class="blank-input" data-answer="Brazilian" data-alt="brazilian" data-hint="Hint: the nationality of someone from Brazil" data-phrase="I am Brazilian." placeholder="___">
+          .&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;Blake Lively is
+          <input class="blank-input" data-answer="American" data-alt="american" data-hint="Hint: the nationality of someone from the USA" data-phrase="Blake Lively is American." placeholder="___">
+          .&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;I speak two
+          <input class="blank-input" data-answer="languages" data-hint="Hint: Portuguese and English are two..." data-phrase="I speak two languages." placeholder="___">
+          .&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;My
+          <input class="blank-input" data-answer="passport" data-hint="Hint: the document you show at the airport" data-phrase="My passport is Brazilian." placeholder="___">
+          is Brazilian.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 2: ORDERING ===== -->
+    <div class="exercise-section">
+      <h4>P2. Put in order <span class="badge badge-order">Order</span></h4>
+      <p class="microcopy">Coloque as frases na ordem correta para formar uma conversa no hostel.</p>
+      <div class="order-container" id="order-l7">
+        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l7')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;I am from Sydney. And you?&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l7')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l7')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l7')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;I am from Australia!&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l7')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l7')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l7')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;I am from S&atilde;o Paulo, Brazil!&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l7')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l7')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l7')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;Hi! Where are you from?&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l7')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l7')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l7')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;Cool! Where in Australia?&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l7')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l7')">&#9660;</button>
+          </span>
+        </div>
+      </div>
+      <button class="verify-all-btn" onclick="checkOrder('order-l7')">Check Order</button>
+    </div>
+
+    <!-- ===== STAGE 3: PRONUNCIATION ===== -->
+    <div class="exercise-section">
+      <h4>S1. Read aloud <span class="badge badge-speak">Speaking</span></h4>
+      <p class="microcopy">Toque em Ouvir, repita, depois grave e compare. O objetivo &eacute; praticar, n&atilde;o ser perfeito.</p>
+
+      <div class="speech-card" data-phrase="Where are you from?">
+        <div class="speech-phrase">Where are you from?</div>
+        <div class="speech-translation">De onde voc&ecirc; &eacute;?</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+
+      <div class="speech-card" data-phrase="I am from Sao Paulo, Brazil.">
+        <div class="speech-phrase">I am from S&atilde;o Paulo, Brazil.</div>
+        <div class="speech-translation">Eu sou de S&atilde;o Paulo, Brasil.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+
+      <div class="speech-card" data-phrase="I am Brazilian. I speak Portuguese.">
+        <div class="speech-phrase">I am Brazilian. I speak Portuguese.</div>
+        <div class="speech-translation">Eu sou brasileira. Eu falo portugu&ecirc;s.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+
+      <div class="speech-card" data-phrase="I speak Portuguese and I am learning English.">
+        <div class="speech-phrase">I speak Portuguese and I am learning English.</div>
+        <div class="speech-translation">Eu falo portugu&ecirc;s e estou aprendendo ingl&ecirc;s.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 4: QUIZ ===== -->
+    <div class="exercise-section">
+      <h4>Q1. Choose the best answer <span class="badge badge-quiz">Quiz</span></h4>
+      <p class="microcopy">Imagine a situa&ccedil;&atilde;o e escolha a melhor resposta.</p>
+
+      <div class="quiz-item">
+        <div class="quiz-question">Someone at the hostel asks: &ldquo;Where are you from?&rdquo; What do you say?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;I from Brazil.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;I am from Brazil.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;My from is Brazil.&rdquo;</div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-question">You want to know someone&rsquo;s nationality. What do you ask?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;What country you?&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;Where are you from?&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;You are from where?&rdquo;</div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-question">Ed Westwick is from England. What is his nationality?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> American</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> English</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Australian</div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-question">Someone says: &ldquo;I speak Japanese and English.&rdquo; They are probably from...</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> France</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Japan</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Italy</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 5: THINK ===== -->
+    <div class="exercise-section">
+      <h4>T1. Think and respond <span class="badge badge-think">Reflection</span></h4>
+      <p class="microcopy">Aqui n&atilde;o tem resposta certa &mdash; &eacute; pra voc&ecirc; pensar em ingl&ecirc;s. Toque no microfone e responde como vier.</p>
+      <div class="think-card">
+        <div style="font-size:0.92rem;color:var(--text);margin-bottom:1rem;line-height:1.8;">You arrive at a youth hostel in Paris. Introduce yourself to a new traveler. Say: your name, where you are from, your nationality, what languages you speak, and how long you are in Paris.</div>
+        <div class="speech-card" data-phrase="Hi, I am Gabriela. I am from Sao Paulo, Brazil. I am Brazilian. I speak Portuguese and I am learning English. My passport is Brazilian. I am in Paris for two weeks!" style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.25);">
+          <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:0.5rem;">Sugest&atilde;o de resposta</div>
+          <div class="speech-phrase" style="font-size:1.05rem;">&ldquo;Hi, I am Gabriela. I am from S&atilde;o Paulo, Brazil. I am Brazilian. I speak Portuguese and I am learning English. My passport is Brazilian. I am in Paris for two weeks!&rdquo;</div>
+          <div class="speech-translation">Oi, eu sou a Gabriela. Eu sou de S&atilde;o Paulo, Brasil. Eu sou brasileira. Eu falo portugu&ecirc;s e estou aprendendo ingl&ecirc;s. Meu passaporte &eacute; brasileiro. Estou em Paris por duas semanas!</div>
+          <div class="speech-controls">
+            <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+            <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar e comparar</button>
+            <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+          </div>
+          <div class="speech-result"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SURVIVAL CARD ===== -->
+    <div class="survival-card">
+      <h4>Survival Card &mdash; Lesson 7: Countries &amp; Nationalities</h4>
+      <div class="survival-phrase"><span class="sp-num">1</span><span class="sp-en">Where are you from?</span><span class="sp-pt">De onde voc&ecirc; &eacute;?</span><button class="btn btn-listen" onclick="speakText('Where are you from?', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">2</span><span class="sp-en">I am from S&atilde;o Paulo, Brazil.</span><span class="sp-pt">Eu sou de S&atilde;o Paulo, Brasil.</span><button class="btn btn-listen" onclick="speakText('I am from Sao Paulo, Brazil.', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">3</span><span class="sp-en">I am Brazilian. I speak Portuguese.</span><span class="sp-pt">Eu sou brasileira. Eu falo portugu&ecirc;s.</span><button class="btn btn-listen" onclick="speakText('I am Brazilian. I speak Portuguese.', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">4</span><span class="sp-en">What is your nationality?</span><span class="sp-pt">Qual &eacute; a sua nacionalidade?</span><button class="btn btn-listen" onclick="speakText('What is your nationality?', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">5</span><span class="sp-en">This city is very international!</span><span class="sp-pt">Esta cidade &eacute; muito internacional!</span><button class="btn btn-listen" onclick="speakText('This city is very international!', this)">&#9654;</button></div>
+    </div>
+
+  </div>
 </div>
-<div class="lesson-card">
+<div class="lesson-card" id="ex-lesson-8">
   <div class="lesson-header" onclick="toggleLesson(this)">
-    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80');opacity:0.35;"></div>
+    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 08 — Pre-class</div>
-      <h3 style="opacity:0.7;">Can You Do That? — Abilities &amp; Asking for Help</h3>
-      <div class="lesson-desc" style="font-style:italic;color:var(--text-dim);">Conteúdo será adicionado no próximo bloco.</div>
+      <div class="lesson-number">Aula 08 &mdash; Pre-class</div>
+      <h3>Can You Do That? &mdash; Abilities, Possibilities &amp; Asking for Help</h3>
+      <div class="lesson-desc">Depois desta aula, voc&ecirc; consegue pedir ajuda, dizer o que pode e n&atilde;o pode fazer, e sobreviver em situa&ccedil;&otilde;es de emerg&ecirc;ncia em Paris.</div>
+      <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="8" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="8">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
   </div>
-  <div class="lesson-body"><p style="text-align:center;padding:2rem;color:var(--text-dim);font-style:italic;">Conteúdo será adicionado no próximo bloco.</p></div>
+  <div class="lesson-body">
+    <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:1.5rem;"><strong style="color:var(--accent);">Objetivo:</strong> Ao final desta aula, Gabriela ser&aacute; capaz de usar &ldquo;can&rdquo; e &ldquo;can&rsquo;t&rdquo; para falar sobre habilidades, pedir ajuda e usar frases de sobreviv&ecirc;ncia em Paris.</p>
+
+    <!-- ===== STAGE 1.1: VOCABULARY CARDS ===== -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Vocabul&aacute;rio <span class="badge badge-vocab">Vocabulary</span></h4>
+        <button class="listen-all-btn" onclick="listenAllVocab(this)">&#9654; Ouvir todos</button>
+      </div>
+      <p class="microcopy">Olha a palavra, a tradu&ccedil;&atilde;o e o exemplo juntos. Toca em Ouvir &mdash; o som ajuda muito a mem&oacute;ria.</p>
+
+      <div class="vocab-card">
+        <div class="vocab-word">Speak</div>
+        <div class="vocab-translation">falar</div>
+        <div class="vocab-example">&ldquo;I <strong>can speak</strong> English.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('I can speak English.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Understand</div>
+        <div class="vocab-translation">entender</div>
+        <div class="vocab-example">&ldquo;I can <strong>understand</strong> you.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('I can understand you.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Help</div>
+        <div class="vocab-translation">ajudar</div>
+        <div class="vocab-example">&ldquo;Can you <strong>help</strong> me?&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('Can you help me?', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Repeat</div>
+        <div class="vocab-translation">repetir</div>
+        <div class="vocab-example">&ldquo;Can you <strong>repeat</strong> that, please?&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('Can you repeat that, please?', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Find</div>
+        <div class="vocab-translation">encontrar</div>
+        <div class="vocab-example">&ldquo;I can&rsquo;t <strong>find</strong> my hotel.&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('I can\'t find my hotel.', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Show</div>
+        <div class="vocab-translation">mostrar</div>
+        <div class="vocab-example">&ldquo;Can you <strong>show</strong> me on the map?&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('Can you show me on the map?', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Slower</div>
+        <div class="vocab-translation">mais devagar</div>
+        <div class="vocab-example">&ldquo;Can you speak <strong>slower</strong>, please?&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('Can you speak slower, please?', this)">&#9654; Ouvir</button>
+      </div>
+      <div class="vocab-card">
+        <div class="vocab-word">Map</div>
+        <div class="vocab-translation">mapa</div>
+        <div class="vocab-example">&ldquo;Do you have a <strong>map</strong>?&rdquo;</div>
+        <button class="audio-btn" onclick="speakText('Do you have a map?', this)">&#9654; Ouvir</button>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 1.2: MATCHING ===== -->
+    <div class="exercise-section">
+      <h4>V2. Match the words <span class="badge badge-vocab">Matching</span></h4>
+      <p class="microcopy">Fa&ccedil;a um de cada vez. Errou? Leia a explica&ccedil;&atilde;o com calma &mdash; &eacute; a&iacute; que voc&ecirc; aprende de verdade.</p>
+      <div class="match-grid" id="match-l8">
+        <div class="match-row" data-answer="falar">
+          <span class="match-word">Speak</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="entender">entender</option>
+            <option value="mapa">mapa</option>
+            <option value="falar">falar</option>
+            <option value="ajudar">ajudar</option>
+            <option value="repetir">repetir</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="entender">
+          <span class="match-word">Understand</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="mostrar">mostrar</option>
+            <option value="entender">entender</option>
+            <option value="falar">falar</option>
+            <option value="mais devagar">mais devagar</option>
+            <option value="encontrar">encontrar</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="ajudar">
+          <span class="match-word">Help</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="mapa">mapa</option>
+            <option value="repetir">repetir</option>
+            <option value="encontrar">encontrar</option>
+            <option value="ajudar">ajudar</option>
+            <option value="falar">falar</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="repetir">
+          <span class="match-word">Repeat</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="ajudar">ajudar</option>
+            <option value="mais devagar">mais devagar</option>
+            <option value="repetir">repetir</option>
+            <option value="entender">entender</option>
+            <option value="mostrar">mostrar</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="encontrar">
+          <span class="match-word">Find</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="falar">falar</option>
+            <option value="encontrar">encontrar</option>
+            <option value="ajudar">ajudar</option>
+            <option value="mapa">mapa</option>
+            <option value="repetir">repetir</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="mostrar">
+          <span class="match-word">Show</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="mais devagar">mais devagar</option>
+            <option value="encontrar">encontrar</option>
+            <option value="falar">falar</option>
+            <option value="mostrar">mostrar</option>
+            <option value="entender">entender</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="mais devagar">
+          <span class="match-word">Slower</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="repetir">repetir</option>
+            <option value="mais devagar">mais devagar</option>
+            <option value="mapa">mapa</option>
+            <option value="ajudar">ajudar</option>
+            <option value="mostrar">mostrar</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="mapa">
+          <span class="match-word">Map</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="encontrar">encontrar</option>
+            <option value="entender">entender</option>
+            <option value="mapa">mapa</option>
+            <option value="falar">falar</option>
+            <option value="mais devagar">mais devagar</option>
+          </select>
+        </div>
+      </div>
+      <button class="verify-all-btn" onclick="verifyAllMatches('match-l8')">Check Answers</button>
+    </div>
+
+    <!-- ===== STAGE 1.3: GRAMMAR IN CONTEXT ===== -->
+    <div class="exercise-section">
+      <h4>Stage 1.2: Grammar in Context <span class="badge badge-practice">Grammar</span></h4>
+      <p class="microcopy">Leia o texto com calma. As palavras em negrito s&atilde;o do vocabul&aacute;rio de hoje.</p>
+      <div class="context-text" style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.15);border-radius:8px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.9;font-size:0.95rem;">
+        Gabriela is walking in Paris. It is her second day. She <strong>can speak</strong> English, but she <strong>can&rsquo;t speak</strong> French. She is lost! She <strong>can&rsquo;t find</strong> her hotel. She sees a man near the metro. She asks: &ldquo;<strong>Can</strong> you <strong>help</strong> me?&rdquo; The man says: &ldquo;Yes, I <strong>can</strong>!&rdquo; Gabriela says: &ldquo;I <strong>can&rsquo;t find</strong> my hotel. <strong>Can</strong> you <strong>show</strong> me on the <strong>map</strong>?&rdquo; The man speaks fast. Gabriela says: &ldquo;<strong>Can</strong> you <strong>speak slower</strong>, please?&rdquo; He <strong>repeats</strong> slowly. Now Gabriela <strong>can understand</strong>! She says: &ldquo;Thank you! I <strong>can find</strong> it now!&rdquo;
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">Can Gabriela speak French?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Yes, she can.</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> No, she can&rsquo;t.</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> She speaks a little French.</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">What can&rsquo;t Gabriela find?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> The metro station</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Her hotel</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> A restaurant</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">What does Gabriela ask the man to do?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Walk with her to the hotel</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Show her on the map and speak slower</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Call a taxi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 1.4: GRAMMAR TIP ===== -->
+    <div class="exercise-section">
+      <h4>Grammar Tip <span class="badge badge-practice">Grammar</span></h4>
+      <div style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.15);border-radius:8px;padding:1.2rem;margin-bottom:1rem;">
+        <p style="font-weight:700;color:var(--accent);margin-bottom:0.8rem;font-size:1rem;">Modal Verb CAN / O verbo modal CAN</p>
+        <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">Afirmativa</td><td style="padding:0.5rem;">I <strong>can speak</strong> English.</td><td style="padding:0.5rem;color:var(--text-dim);">Eu sei/consigo falar ingl&ecirc;s.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">Negativa</td><td style="padding:0.5rem;">I <strong>can&rsquo;t find</strong> my hotel.</td><td style="padding:0.5rem;color:var(--text-dim);">Eu n&atilde;o consigo encontrar meu hotel.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">Pergunta</td><td style="padding:0.5rem;"><strong>Can</strong> you <strong>help</strong> me?</td><td style="padding:0.5rem;color:var(--text-dim);">Voc&ecirc; pode me ajudar?</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">Resp. curta (+)</td><td style="padding:0.5rem;">Yes, I <strong>can</strong>.</td><td style="padding:0.5rem;color:var(--text-dim);">Sim, eu posso.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;font-weight:600;">Resp. curta (&minus;)</td><td style="padding:0.5rem;">No, I <strong>can&rsquo;t</strong>.</td><td style="padding:0.5rem;color:var(--text-dim);">N&atilde;o, eu n&atilde;o posso.</td></tr>
+          <tr><td style="padding:0.5rem;font-weight:600;">Pedido educado</td><td style="padding:0.5rem;"><strong>Could</strong> you help me, <strong>please</strong>?</td><td style="padding:0.5rem;color:var(--text-dim);">Voc&ecirc; poderia me ajudar, por favor?</td></tr>
+        </table>
+      </div>
+      <div style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.15);border-radius:8px;padding:1.2rem;">
+        <p style="font-weight:700;color:var(--accent);margin-bottom:0.8rem;font-size:1rem;">Regras importantes / Important rules</p>
+        <ul style="font-size:0.88rem;line-height:1.8;padding-left:1.2rem;color:var(--text-mid);">
+          <li><strong>CAN + verbo BASE</strong> (sem &ldquo;to&rdquo;!): I can speak &mdash; NUNCA &ldquo;I can to speak&rdquo;</li>
+          <li><strong>CAN n&atilde;o muda</strong> com he/she: She <strong>can</strong> swim (nunca &ldquo;she cans&rdquo;)</li>
+          <li><strong>CAN&rsquo;T</strong> = cannot (pron&uacute;ncia: /k&aelig;nt/ &mdash; vogal curta)</li>
+          <li><strong>COULD</strong> = mais educado que CAN para pedidos</li>
+          <li>Pergunta: <strong>CAN + sujeito + verbo</strong> (Can you help me?)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 1.5: FILL-IN-THE-BLANK ===== -->
+    <div class="exercise-section">
+      <h4>P1. Complete with the correct word <span class="badge badge-practice">Practice</span></h4>
+      <p class="microcopy">Fa&ccedil;a um de cada vez. Errou? Leia a dica com calma.</p>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;I
+          <input class="blank-input" data-answer="can" data-hint="Hint: the modal verb for ability" data-phrase="I can speak English." placeholder="___">
+          speak English.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;I
+          <input class="blank-input" data-answer="can't" data-alt="cannot" data-hint="Hint: negative of can" data-phrase="I can't find my hotel." placeholder="___">
+          find my hotel.&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;Can you
+          <input class="blank-input" data-answer="help" data-hint="Hint: to assist someone" data-phrase="Can you help me?" placeholder="___">
+          me?&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;Can you speak
+          <input class="blank-input" data-answer="slower" data-hint="Hint: less fast" data-phrase="Can you speak slower, please?" placeholder="___">
+          , please?&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">
+          &ldquo;Can you
+          <input class="blank-input" data-answer="show" data-hint="Hint: to point something out visually" data-phrase="Can you show me on the map?" placeholder="___">
+          me on the map?&rdquo;
+        </div>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 2: ORDERING ===== -->
+    <div class="exercise-section">
+      <h4>P2. Put in order <span class="badge badge-order">Order</span></h4>
+      <p class="microcopy">Coloque as frases na ordem correta para formar uma conversa pedindo ajuda.</p>
+      <div class="order-container" id="order-l8">
+        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l8')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;I can&rsquo;t find my hotel. Can you help me?&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l8')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l8')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l8')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;Can you speak slower, please?&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l8')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l8')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l8')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;Excuse me, can you help me?&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l8')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l8')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l8')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;Yes, I can. It is near the metro. Walk straight.&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l8')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l8')">&#9660;</button>
+          </span>
+        </div>
+        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l8')">
+          <span class="order-num">?</span>
+          <span class="order-text">&ldquo;Yes, of course! What is the problem?&rdquo;</span>
+          <span class="order-arrows">
+            <button class="arrow-btn" onclick="moveItem(this,-1,'order-l8')">&#9650;</button>
+            <button class="arrow-btn" onclick="moveItem(this,1,'order-l8')">&#9660;</button>
+          </span>
+        </div>
+      </div>
+      <button class="verify-all-btn" onclick="checkOrder('order-l8')">Check Order</button>
+    </div>
+
+    <!-- ===== STAGE 3: PRONUNCIATION ===== -->
+    <div class="exercise-section">
+      <h4>S1. Read aloud <span class="badge badge-speak">Speaking</span></h4>
+      <p class="microcopy">Toque em Ouvir, repita, depois grave e compare. O objetivo &eacute; praticar, n&atilde;o ser perfeito.</p>
+
+      <div class="speech-card" data-phrase="Can you help me?">
+        <div class="speech-phrase">Can you help me?</div>
+        <div class="speech-translation">Voc&ecirc; pode me ajudar?</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+
+      <div class="speech-card" data-phrase="I can't find my hotel.">
+        <div class="speech-phrase">I can&rsquo;t find my hotel.</div>
+        <div class="speech-translation">Eu n&atilde;o consigo encontrar meu hotel.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+
+      <div class="speech-card" data-phrase="Can you speak slower, please?">
+        <div class="speech-phrase">Can you speak slower, please?</div>
+        <div class="speech-translation">Voc&ecirc; pode falar mais devagar, por favor?</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+
+      <div class="speech-card" data-phrase="Can you show me on the map?">
+        <div class="speech-phrase">Can you show me on the map?</div>
+        <div class="speech-translation">Voc&ecirc; pode me mostrar no mapa?</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 4: QUIZ ===== -->
+    <div class="exercise-section">
+      <h4>Q1. Choose the best answer <span class="badge badge-quiz">Quiz</span></h4>
+      <p class="microcopy">Imagine a situa&ccedil;&atilde;o e escolha a melhor resposta.</p>
+
+      <div class="quiz-item">
+        <div class="quiz-question">You are lost in Paris and need help. What do you say?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;Help me now!&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;Excuse me, can you help me?&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;I help you.&rdquo;</div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-question">Someone speaks too fast. What do you ask?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;Speak more fast!&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;Can you speak slower, please?&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;You can slower?&rdquo;</div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-question">Someone asks: &ldquo;Can you speak French?&rdquo; and you cannot. What do you say?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> &ldquo;No, I can&rsquo;t. But I can speak English.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> &ldquo;No, I not can.&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;I no speak French.&rdquo;</div>
+        </div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-question">You want to ask politely for someone to repeat. What do you say?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;Repeat!&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> &ldquo;You can repeat?&rdquo;</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> &ldquo;Could you repeat that, please?&rdquo;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 5: THINK ===== -->
+    <div class="exercise-section">
+      <h4>T1. Think and respond <span class="badge badge-think">Reflection</span></h4>
+      <p class="microcopy">Aqui n&atilde;o tem resposta certa &mdash; &eacute; pra voc&ecirc; pensar em ingl&ecirc;s. Toque no microfone e responde como vier.</p>
+      <div class="think-card">
+        <div style="font-size:0.92rem;color:var(--text);margin-bottom:1rem;line-height:1.8;">You are lost in Paris. You cannot find your hotel. You see a person on the street. Ask for help: say you are lost, you cannot find your hotel, ask them to show you on the map, and ask them to speak slower.</div>
+        <div class="speech-card" data-phrase="Excuse me, can you help me? I am lost. I can't find my hotel. Can you show me on the map? Can you speak slower, please?" style="background:var(--accent-dim);border:1px solid rgba(212,50,106,0.25);">
+          <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:0.5rem;">Sugest&atilde;o de resposta</div>
+          <div class="speech-phrase" style="font-size:1.05rem;">&ldquo;Excuse me, can you help me? I am lost. I can&rsquo;t find my hotel. Can you show me on the map? Can you speak slower, please?&rdquo;</div>
+          <div class="speech-translation">Com licen&ccedil;a, voc&ecirc; pode me ajudar? Estou perdida. N&atilde;o consigo encontrar meu hotel. Pode me mostrar no mapa? Pode falar mais devagar, por favor?</div>
+          <div class="speech-controls">
+            <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
+            <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar e comparar</button>
+            <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+          </div>
+          <div class="speech-result"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SURVIVAL CARD ===== -->
+    <div class="survival-card">
+      <h4>Survival Card &mdash; Lesson 8: Abilities &amp; Asking for Help</h4>
+      <div class="survival-phrase"><span class="sp-num">1</span><span class="sp-en">Can you help me, please?</span><span class="sp-pt">Voc&ecirc; pode me ajudar, por favor?</span><button class="btn btn-listen" onclick="speakText('Can you help me, please?', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">2</span><span class="sp-en">I can&rsquo;t find my hotel.</span><span class="sp-pt">N&atilde;o consigo encontrar meu hotel.</span><button class="btn btn-listen" onclick="speakText('I can\'t find my hotel.', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">3</span><span class="sp-en">Can you speak slower, please?</span><span class="sp-pt">Pode falar mais devagar, por favor?</span><button class="btn btn-listen" onclick="speakText('Can you speak slower, please?', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">4</span><span class="sp-en">Can you show me on the map?</span><span class="sp-pt">Pode me mostrar no mapa?</span><button class="btn btn-listen" onclick="speakText('Can you show me on the map?', this)">&#9654;</button></div>
+      <div class="survival-phrase"><span class="sp-num">5</span><span class="sp-en">I can speak English.</span><span class="sp-pt">Eu sei falar ingl&ecirc;s.</span><button class="btn btn-listen" onclick="speakText('I can speak English.', this)">&#9654;</button></div>
+    </div>
+
+  </div>
 </div>
 <div class="lesson-card">
   <div class="lesson-header" onclick="toggleLesson(this)">
@@ -3994,6 +5447,187 @@ body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color
 
 <script>
 var audioMap = {
+    "O\'clock": "/audio/gabriela-pires/oclock.mp3?v=2",
+  "It is three o\'clock.": "/audio/gabriela-pires/it_is_three_oclock.mp3?v=2",
+  "Quarter": "/audio/gabriela-pires/quarter.mp3?v=2",
+  "It is a quarter past two.": "/audio/gabriela-pires/it_is_a_quarter_past_two.mp3?v=2",
+  "Half past": "/audio/gabriela-pires/half_past.mp3?v=2",
+  "It is half past ten.": "/audio/gabriela-pires/it_is_half_past_ten.mp3?v=2",
+  "Noon": "/audio/gabriela-pires/noon.mp3?v=2",
+  "We have lunch at noon.": "/audio/gabriela-pires/we_have_lunch_at_noon.mp3?v=2",
+  "Midnight": "/audio/gabriela-pires/midnight.mp3?v=2",
+  "The flight arrives at midnight.": "/audio/gabriela-pires/the_flight_arrives_at_midnight.mp3?v=2",
+  "Flight": "/audio/gabriela-pires/flight.mp3?v=2",
+  "My flight is at nine o\'clock.": "/audio/gabriela-pires/my_flight_is_at_nine_oclock.mp3?v=2",
+  "Ticket": "/audio/gabriela-pires/ticket.mp3?v=2",
+  "How much is the ticket?": "/audio/gabriela-pires/how_much_is_the_ticket.mp3?v=2",
+  "Price": "/audio/gabriela-pires/price.mp3?v=2",
+  "What is the price?": "/audio/gabriela-pires/what_is_the_price.mp3?v=2",
+  "What time is it?": "/audio/gabriela-pires/what_time_is_it.mp3?v=2",
+  "It is a quarter to five.": "/audio/gabriela-pires/it_is_a_quarter_to_five_drill.mp3?v=2",
+  "My flight is on February 3rd.": "/audio/gabriela-pires/my_flight_is_on_february_3rd.mp3?v=2",
+  "How much does this cost?": "/audio/gabriela-pires/how_much_does_this_cost.mp3?v=2",
+  "Excuse me, what time is it?": "/audio/gabriela-pires/excuse_me_what_time_is_it.mp3?v=2",
+  "The museum opens at ten o\'clock.": "/audio/gabriela-pires/the_museum_opens_at_ten_oclock.mp3?v=2",
+  "The Eiffel Tower visit is at a quarter past four.": "/audio/gabriela-pires/the_eiffel_tower_visit_is_at_a_quarter_past_four.mp3?v=2",
+  "Lunch is at half past twelve.": "/audio/gabriela-pires/lunch_is_at_half_past_twelve.mp3?v=2",
+  "The departure time is eight thirty.": "/audio/gabriela-pires/the_departure_time_is_eight_thirty.mp3?v=2",
+  "One ticket, please. How much is it?": "/audio/gabriela-pires/one_ticket_please_how_much_is_it.mp3?v=2",
+  "It is ten euros.": "/audio/gabriela-pires/it_is_ten_euros.mp3?v=2",
+  "Here you go. Thank you!": "/audio/gabriela-pires/here_you_go_thank_you.mp3?v=2",
+  "What time does the next tour start?": "/audio/gabriela-pires/what_time_does_the_next_tour_start.mp3?v=2",
+  "The next tour starts at a quarter past three.": "/audio/gabriela-pires/the_next_tour_starts_at_a_quarter_past_three.mp3?v=2",
+  "When is your flight to Paris?": "/audio/gabriela-pires/when_is_your_flight_to_paris.mp3?v=2",
+  "My flight is on February 3rd, 2027.": "/audio/gabriela-pires/my_flight_is_on_february_3rd_2027.mp3?v=2",
+  "What time does it depart?": "/audio/gabriela-pires/what_time_does_it_depart.mp3?v=2",
+  "It departs at nine fifteen in the morning.": "/audio/gabriela-pires/it_departs_at_nine_fifteen_in_the_morning.mp3?v=2",
+  "And what time does it arrive?": "/audio/gabriela-pires/and_what_time_does_it_arrive.mp3?v=2",
+  "It arrives at eleven thirty at night.": "/audio/gabriela-pires/it_arrives_at_eleven_thirty_at_night.mp3?v=2",
+  "That is a long flight!": "/audio/gabriela-pires/that_is_a_long_flight.mp3?v=2",
+  "Yes! But I am so excited!": "/audio/gabriela-pires/yes_but_i_am_so_excited.mp3?v=2",
+  "Gabriela is planning her trip to Paris. Her flight is on February 3rd, 2027. The departure time is 9:15 AM from São Paulo. She arrives in Paris at 11:30 PM. On February 4th, she visits the Louvre at 10 o\'clock. Lunch is at half past twelve at a French café. The Eiffel Tower visit is at a quarter past four. A ticket to the Eiffel Tower costs 26 euros. On February 5th, she goes to Versailles. The train departs at a quarter to nine.": "/audio/gabriela-pires/gabriela_is_planning_her_trip_to_paris_full_listening.mp3?v=2",
+  "Good afternoon! Welcome to the Louvre. How can I help you?": "/audio/gabriela-pires/good_afternoon_welcome_to_the_louvre.mp3?v=2",
+  "One student ticket, please. How much is it?": "/audio/gabriela-pires/one_student_ticket_please_how_much_is_it.mp3?v=2",
+  "It is 15 euros. Here is your ticket.": "/audio/gabriela-pires/it_is_15_euros_here_is_your_ticket.mp3?v=2",
+  "Thank you! What time does the museum close?": "/audio/gabriela-pires/thank_you_what_time_does_the_museum_close.mp3?v=2",
+  "We close at six o\'clock.": "/audio/gabriela-pires/we_close_at_six_oclock.mp3?v=2",
+  "And what time is the next guided tour?": "/audio/gabriela-pires/and_what_time_is_the_next_guided_tour.mp3?v=2",
+  "The next tour starts at a quarter past three. It is in English.": "/audio/gabriela-pires/the_next_tour_starts_at_a_quarter_past_three_in_english.mp3?v=2",
+  "Perfect! Thank you very much!": "/audio/gabriela-pires/perfect_thank_you_very_much.mp3?v=2",
+  "Enjoy your visit!": "/audio/gabriela-pires/enjoy_your_visit.mp3?v=2",
+  "It is seven o\'clock.": "/audio/gabriela-pires/it_is_seven_oclock.mp3?v=2",
+  "It is a quarter past nine.": "/audio/gabriela-pires/it_is_a_quarter_past_nine.mp3?v=2",
+  "It is half past twelve.": "/audio/gabriela-pires/it_is_half_past_twelve.mp3?v=2",
+  "It is midnight.": "/audio/gabriela-pires/it_is_midnight.mp3?v=2",
+  "It is noon.": "/audio/gabriela-pires/it_is_noon.mp3?v=2",
+  "Excuse me, what time is it? It is half past ten.": "/audio/gabriela-pires/excuse_me_what_time_is_it_half_past_ten.mp3?v=2",
+  "My flight is on February 3rd. What is the price?": "/audio/gabriela-pires/my_flight_is_on_february_3rd_what_is_the_price.mp3?v=2",
+  "One ticket, please. How much does this cost?": "/audio/gabriela-pires/one_ticket_please_how_much_does_this_cost.mp3?v=2",
+  "The museum opens at ten. It closes at six.": "/audio/gabriela-pires/the_museum_opens_at_ten_it_closes_at_six.mp3?v=2",
+  "What time is your English class? My class is at three o\'clock.": "/audio/gabriela-pires/what_time_is_your_english_class_my_class_is_at_three_oclock.mp3?v=2",
+  "February 3rd": "/audio/gabriela-pires/february_3rd.mp3?v=2",
+  "March 15th": "/audio/gabriela-pires/march_15th.mp3?v=2",
+  "It is eight forty-five.": "/audio/gabriela-pires/it_is_eight_fortyfive.mp3?v=2",
+  "The train departs at a quarter to nine.": "/audio/gabriela-pires/the_train_departs_at_a_quarter_to_nine.mp3?v=2",
+  "Departure": "/audio/gabriela-pires/departure.mp3?v=2",
+  "The departure time is 8 AM.": "/audio/gabriela-pires/the_departure_time_is_8_am.mp3?v=2",
+  "Arrival": "/audio/gabriela-pires/arrival.mp3?v=2",
+  "The arrival time is noon.": "/audio/gabriela-pires/the_arrival_time_is_noon.mp3?v=2",
+  "Change": "/audio/gabriela-pires/change.mp3?v=2",
+  "Here is your change.": "/audio/gabriela-pires/here_is_your_change.mp3?v=2",
+  "Total": "/audio/gabriela-pires/total.mp3?v=2",
+  "The total is twenty-six euros.": "/audio/gabriela-pires/the_total_is_twentysix_euros.mp3?v=2",
+  "Hi, my name is Gabriela. My flight arrived on February 3rd. One ticket, please. How much is it? What time does the tower close?": "/audio/gabriela-pires/hi_my_name_is_gabriela_my_flight_arrived_on_february_3rd.mp3?v=2",
+  "We close at six o'clock.": "/audio/gabriela-pires/we_close_at_six_oclock.mp3?v=2",
+  "And what time is the next guided tour?": "/audio/gabriela-pires/and_what_time_is_the_next_guided_tour.mp3?v=2",
+  "Thank you! What time does the museum close?": "/audio/gabriela-pires/thank_you_what_time_does_the_museum_close.mp3?v=2",
+  "One student ticket, please. How much is it?": "/audio/gabriela-pires/one_student_ticket_please_how_much_is_it_dialogue.mp3?v=2",
+  "The next tour starts at a quarter past three. It is in English.": "/audio/gabriela-pires/the_next_tour_starts_at_a_quarter_past_three_in_english.mp3?v=2",
+  "It is 15 euros. Here is your ticket.": "/audio/gabriela-pires/it_is_15_euros_here_is_your_ticket.mp3?v=2",
+      "Speak": "/audio/gabriela-pires/speak.mp3?v=2",
+  "I can speak English.": "/audio/gabriela-pires/i_can_speak_english_correct.mp3?v=2",
+  "Understand": "/audio/gabriela-pires/understand.mp3?v=2",
+  "I can understand you.": "/audio/gabriela-pires/i_can_understand_you.mp3?v=2",
+  "Help": "/audio/gabriela-pires/help.mp3?v=2",
+  "Can you help me?": "/audio/gabriela-pires/can_you_help_me.mp3?v=2",
+  "Repeat": "/audio/gabriela-pires/repeat.mp3?v=2",
+  "Can you repeat that, please?": "/audio/gabriela-pires/can_you_repeat_that_please.mp3?v=2",
+  "Find": "/audio/gabriela-pires/find.mp3?v=2",
+  "I can\'t find my hotel.": "/audio/gabriela-pires/i_cant_find_my_hotel_survival.mp3?v=2",
+  "Show": "/audio/gabriela-pires/show.mp3?v=2",
+  "Can you show me on the map?": "/audio/gabriela-pires/can_you_show_me_on_the_map_survival.mp3?v=2",
+  "Slower": "/audio/gabriela-pires/slower.mp3?v=2",
+  "Can you speak slower, please?": "/audio/gabriela-pires/can_you_speak_slower_please_survival.mp3?v=2",
+  "Map": "/audio/gabriela-pires/map.mp3?v=2",
+  "Do you have a map?": "/audio/gabriela-pires/do_you_have_a_map.mp3?v=2",
+  "I can\'t drive.": "/audio/gabriela-pires/i_cant_drive.mp3?v=2",
+  "Yes, I can.": "/audio/gabriela-pires/yes_i_can.mp3?v=2",
+  "No, I can\'t.": "/audio/gabriela-pires/no_i_cant.mp3?v=2",
+  "Could you help me, please?": "/audio/gabriela-pires/could_you_help_me_please.mp3?v=2",
+  "Excuse me, can you help me?": "/audio/gabriela-pires/excuse_me_can_you_help_me.mp3?v=2",
+  "I am lost. I can\'t find my hotel.": "/audio/gabriela-pires/i_am_lost_i_cant_find_my_hotel.mp3?v=2",
+  "What is the name of your hotel?": "/audio/gabriela-pires/what_is_the_name_of_your_hotel.mp3?v=2",
+  "It is Hotel Le Marais. Can you show me on the map?": "/audio/gabriela-pires/it_is_hotel_le_marais_can_you_show_me_on_the_map.mp3?v=2",
+  "Of course! It is here. You can walk. It is five minutes.": "/audio/gabriela-pires/of_course_it_is_here_you_can_walk.mp3?v=2",
+  "Can you repeat that? Slower, please.": "/audio/gabriela-pires/can_you_repeat_that_slower_please.mp3?v=2",
+  "Yes! Walk straight. Turn left. Your hotel is on the right.": "/audio/gabriela-pires/yes_walk_straight_turn_left.mp3?v=2",
+  "Thank you so much! I can find it now.": "/audio/gabriela-pires/thank_you_so_much_i_can_find_it_now.mp3?v=2",
+  "You are welcome! Your English is very good!": "/audio/gabriela-pires/you_are_welcome_your_english_is_very_good.mp3?v=2",
+  "Gabriela is walking in Paris. It is her second day. She can\'t find her hotel. She is lost. She can speak English, but she can\'t speak French. She sees a man near the metro station. She asks: Can you help me? The man says: Yes, I can. What is the problem? Gabriela says: I can\'t find my hotel. Can you show me on the map? The man shows the map. He speaks fast. Gabriela says: Can you speak slower, please? He speaks slower. Now Gabriela can understand. She can find her hotel. She says: Thank you! I can walk from here.": "/audio/gabriela-pires/gabriela_lost_in_paris_listening_full.mp3?v=2",
+  "Can Gabriela speak French?": "/audio/gabriela-pires/can_gabriela_speak_french.mp3?v=2",
+  "What can\'t Gabriela find?": "/audio/gabriela-pires/what_cant_gabriela_find.mp3?v=2",
+  "What does Gabriela ask the man to do?": "/audio/gabriela-pires/what_does_gabriela_ask_the_man.mp3?v=2",
+  "Hi, I am lost. Can you help me? I can\'t find the Eiffel Tower. Can you show me on the map?": "/audio/gabriela-pires/hi_i_am_lost_can_you_help_me_eiffel.mp3?v=2",
+  "Excuse me. I can\'t understand the menu. Can you help me? Can you speak slower?": "/audio/gabriela-pires/excuse_me_i_cant_understand_the_menu.mp3?v=2",
+  "Hello. I can\'t find the metro station. Can you show me? I can speak English.": "/audio/gabriela-pires/hello_i_cant_find_the_metro_station.mp3?v=2",
+  "Can you help me, please?": "/audio/gabriela-pires/can_you_help_me_please.mp3?v=2",
+  "I can swim.": "/audio/gabriela-pires/i_can_swim.mp3?v=2",
+  "She can\'t cook.": "/audio/gabriela-pires/she_cant_cook.mp3?v=2",
+  "Can he play guitar?": "/audio/gabriela-pires/can_he_play_guitar.mp3?v=2",
+  "They can\'t speak Japanese.": "/audio/gabriela-pires/they_cant_speak_japanese.mp3?v=2",
+  "I can to speak English.": "/audio/gabriela-pires/i_can_to_speak_english_wrong.mp3?v=2",
+  "Can you speaking?": "/audio/gabriela-pires/can_you_speaking_wrong.mp3?v=2",
+  "Can you speak?": "/audio/gabriela-pires/can_you_speak_correct.mp3?v=2",
+  "Country": "/audio/gabriela-pires/country.mp3?v=2",
+  "Brazil is a big country.": "/audio/gabriela-pires/brazil_is_a_big_country.mp3?v=2",
+  "Nationality": "/audio/gabriela-pires/nationality.mp3?v=2",
+  "What is your nationality?": "/audio/gabriela-pires/what_is_your_nationality.mp3?v=2",
+  "Brazilian": "/audio/gabriela-pires/brazilian.mp3?v=2",
+  "I am Brazilian.": "/audio/gabriela-pires/i_am_brazilian.mp3?v=2",
+  "French": "/audio/gabriela-pires/french.mp3?v=2",
+  "She is French.": "/audio/gabriela-pires/she_is_french.mp3?v=2",
+  "American": "/audio/gabriela-pires/american.mp3?v=2",
+  "Blake Lively is American.": "/audio/gabriela-pires/blake_lively_is_american.mp3?v=2",
+  "Language": "/audio/gabriela-pires/language.mp3?v=2",
+  "I speak two languages.": "/audio/gabriela-pires/i_speak_two_languages.mp3?v=2",
+  "Passport": "/audio/gabriela-pires/passport.mp3?v=2",
+  "My passport is Brazilian.": "/audio/gabriela-pires/my_passport_is_brazilian.mp3?v=2",
+  "International": "/audio/gabriela-pires/international.mp3?v=2",
+  "Paris is an international city.": "/audio/gabriela-pires/paris_is_an_international_city.mp3?v=2",
+  "Where are you from?": "/audio/gabriela-pires/where_are_you_from.mp3?v=2",
+  "I am from Brazil.": "/audio/gabriela-pires/i_am_from_brazil.mp3?v=2",
+  "Where is she from?": "/audio/gabriela-pires/where_is_she_from.mp3?v=2",
+  "She is from France.": "/audio/gabriela-pires/she_is_from_france.mp3?v=2",
+  "He is Australian.": "/audio/gabriela-pires/he_is_australian.mp3?v=2",
+  "They are from Japan.": "/audio/gabriela-pires/they_are_from_japan.mp3?v=2",
+  "What language do you speak?": "/audio/gabriela-pires/what_language_do_you_speak.mp3?v=2",
+  "I speak Portuguese and English.": "/audio/gabriela-pires/i_speak_portuguese_and_english.mp3?v=2",
+  "Hi! I am Gabriela. I am from Brazil.": "/audio/gabriela-pires/hi_i_am_gabriela_i_am_from_brazil.mp3?v=2",
+  "Hey! I am Liam. I am from Australia.": "/audio/gabriela-pires/hey_i_am_liam_i_am_from_australia.mp3?v=2",
+  "Nice to meet you! Where in Australia?": "/audio/gabriela-pires/nice_to_meet_you_where_in_australia.mp3?v=2",
+  "I am from Sydney. And you? Where in Brazil?": "/audio/gabriela-pires/i_am_from_sydney_and_you_where_in_brazil.mp3?v=2",
+  "I am from Sao Paulo. It is a huge city!": "/audio/gabriela-pires/i_am_from_sao_paulo_it_is_a_huge_city.mp3?v=2",
+  "Cool! What languages do you speak?": "/audio/gabriela-pires/cool_what_languages_do_you_speak.mp3?v=2",
+  "I speak Portuguese and I am learning English. What about you?": "/audio/gabriela-pires/i_speak_portuguese_and_i_am_learning_english.mp3?v=2",
+  "I speak English and a little bit of French.": "/audio/gabriela-pires/i_speak_english_and_a_little_bit_of_french.mp3?v=2",
+  "That is awesome! How long are you in Paris?": "/audio/gabriela-pires/that_is_awesome_how_long_are_you_in_paris.mp3?v=2",
+  "Two weeks! This hostel is so international!": "/audio/gabriela-pires/two_weeks_this_hostel_is_so_international.mp3?v=2",
+  "Gabriela is at a youth hostel in Paris. She meets travelers from many countries. Liam is from Australia. He is Australian. He speaks English and a little French. Yuki is from Japan. She is Japanese. She speaks Japanese and English. Marco is from Italy. He is Italian. He speaks Italian, English, and French. Gabriela is from Brazil. She is Brazilian. She speaks Portuguese and she is learning English. The hostel is very international. There are people from ten different countries.": "/audio/gabriela-pires/gabriela_hostel_listening_full.mp3?v=2",
+  "Where is Liam from?": "/audio/gabriela-pires/where_is_liam_from.mp3?v=2",
+  "What nationality is Yuki?": "/audio/gabriela-pires/what_nationality_is_yuki.mp3?v=2",
+  "How many languages does Marco speak?": "/audio/gabriela-pires/how_many_languages_does_marco_speak.mp3?v=2",
+  "Hi! My name is Sophie. I am from Canada. I am Canadian. I speak English and French.": "/audio/gabriela-pires/hi_my_name_is_sophie_i_am_from_canada.mp3?v=2",
+  "Hello! I am Kenji. I am from Japan. I am Japanese. I speak Japanese and a little English.": "/audio/gabriela-pires/hello_i_am_kenji_i_am_from_japan.mp3?v=2",
+  "Hey! I am Carlos. I am from Mexico. I am Mexican. I speak Spanish and English.": "/audio/gabriela-pires/hey_i_am_carlos_i_am_from_mexico.mp3?v=2",
+  "I am from Sao Paulo, Brazil.": "/audio/gabriela-pires/i_am_from_sao_paulo_brazil.mp3?v=2",
+  "I am Brazilian. I speak Portuguese.": "/audio/gabriela-pires/i_am_brazilian_i_speak_portuguese.mp3?v=2",
+  "What is your nationality? Where are you from?": "/audio/gabriela-pires/what_is_your_nationality_where_are_you_from.mp3?v=2",
+  "I speak Portuguese and I am learning English.": "/audio/gabriela-pires/i_speak_portuguese_and_i_am_learning_english_short.mp3?v=2",
+  "This city is very international!": "/audio/gabriela-pires/this_city_is_very_international.mp3?v=2",
+  "Hi, I am Gabriela. I am from Sao Paulo, Brazil. I am Brazilian. I speak Portuguese and I am learning English. My passport is Brazilian. I am in Paris for two weeks!": "/audio/gabriela-pires/hi_i_am_gabriela_full_intro.mp3?v=2",
+  "Australia": "/audio/gabriela-pires/australia.mp3?v=2",
+  "Japan": "/audio/gabriela-pires/japan.mp3?v=2",
+  "Italy": "/audio/gabriela-pires/italy.mp3?v=2",
+  "Canada": "/audio/gabriela-pires/canada.mp3?v=2",
+  "Mexico": "/audio/gabriela-pires/mexico.mp3?v=2",
+  "England": "/audio/gabriela-pires/england.mp3?v=2",
+  "Ed Westwick is English.": "/audio/gabriela-pires/ed_westwick_is_english.mp3?v=2",
+  "Australian": "/audio/gabriela-pires/australian.mp3?v=2",
+  "Japanese": "/audio/gabriela-pires/japanese.mp3?v=2",
+  "Italian": "/audio/gabriela-pires/italian.mp3?v=2",
+  "Canadian": "/audio/gabriela-pires/canadian.mp3?v=2",
+  "Mexican": "/audio/gabriela-pires/mexican.mp3?v=2",
+  "English": "/audio/gabriela-pires/english_nationality.mp3?v=2",
   "A gap year sounds amazing.": "/audio/gabriela-pires/a_gap_year_sounds_amazing.mp3?v=2",
   "Amazing. What are you most proud of?": "/audio/gabriela-pires/amazing_what_are_you_most_proud_of.mp3?v=2",
   "And how long will you be staying?": "/audio/gabriela-pires/and_how_long_will_you_be_staying.mp3?v=2",
@@ -4639,7 +6273,7 @@ function toggleChecklist(cb) {
 }
 
 function updateProgress() {
-  var lessonNums = [1,2,3,4,5,21,22,23,24,25];
+  var lessonNums = [1,2,3,4,5,6,7,8,21,22,23,24,25];
   var completedLessons = 0;
   for (var idx = 0; idx < lessonNums.length; idx++) {
     var l = lessonNums[idx];
@@ -4703,5 +6337,6 @@ loadState();
 
 </script>
 <script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
 </body>
 </html>
