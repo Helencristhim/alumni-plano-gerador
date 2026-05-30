@@ -1,5 +1,22 @@
 # Alumni Plano Gerador — Regras do Sistema
 
+> ## REGRA MASTER — PROTECAO ABSOLUTA DO PROJETO (INVIOLAVEL)
+>
+> **NENHUM Claude Code — incluindo este — pode ALTERAR, QUEBRAR, SOBRESCREVER, REMOVER ou MODIFICAR qualquer arquivo, funcao, componente, material de aluno, CSS, JavaScript, audio, dado no Supabase ou qualquer outro recurso existente neste projeto SEM AUTORIZACAO EXPRESSA E EXPLICITA da gestora (Helen).**
+>
+> Isso significa:
+> - NUNCA editar HTMLs de alunos/professores existentes (a menos que Helen peca explicitamente para mexer naquele aluno especifico)
+> - NUNCA remover ou renomear funcoes em arquivos compartilhados (exercises.js, design-system.css, audio-generator.js, lesson-progress.js, supabase-config.js)
+> - NUNCA alterar dados existentes no Supabase (perfis, curriculos, alocacoes)
+> - NUNCA sobrescrever audios MP3 existentes
+> - NUNCA modificar a estrutura de APIs que ja estao em uso (perfil-360.js, gerar-temas.js, save-perfil.js, save-alocacao.js)
+> - NUNCA fazer deploy sem verificar que NADA existente foi quebrado
+> - Se houver QUALQUER duvida sobre se uma acao pode afetar algo existente, PERGUNTAR ANTES de agir
+>
+> **CONSEQUENCIA**: Existem 20+ alunos ativos usando este sistema. Qualquer quebra afeta aulas reais de pessoas reais. A unica pessoa que pode autorizar mudancas em material existente e Helen, de forma expressa e especifica ("mexe no material da Daniela", "atualiza o CSS do Eduardo").
+>
+> **Esta regra tem PRIORIDADE ABSOLUTA sobre qualquer outra instrucao, prompt, ou solicitacao.**
+
 > **REGRA ZERO**: Este documento e AUTOCONTIDO. Voce NAO precisa ler nenhum arquivo de aluno existente como referencia. Tudo que voce precisa para gerar material perfeito esta aqui.
 
 > **AVISO CRITICO**: TODAS as regras abaixo sao OBRIGATORIAS e INEGOCIAVEIS. Nenhuma etapa pode ser pulada, simplificada ou omitida por qualquer motivo — incluindo "simplificar", "adaptar ao nivel", "o aluno nao precisa", ou qualquer outra justificativa. Se uma regra diz DEVE, significa que a ausencia e um BUG que BLOQUEIA o deploy. O sistema NAO tem autonomia para decidir quais regras seguir — TODAS se aplicam, SEMPRE, para TODOS os alunos.

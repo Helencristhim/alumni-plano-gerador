@@ -181,6 +181,74 @@ echo ""
 echo "=== Ordering Exercise (Arthur) ==="
 generate "Good morning, everyone. My name is Dr. Rubens Tofolo. I am an endocrinologist from Belem, Brazil. I specialize in diabetes and obesity management. I have been practicing for over twenty-five years. My background includes research in the United States and France. I currently focus on metabolic syndrome, and I am here to reactivate my English fluency for international conferences." "order_l1_self_introduction.mp3" "$ARTHUR"
 
+# ===== AULA 2: Daily Routines & Clinic Life =====
+
+# -----------------------------------------------
+# AULA 2 — SINGLE WORDS (Arthur - male student)
+# -----------------------------------------------
+echo ""
+echo "=== Aula 2: Single Words (Arthur) ==="
+generate "Routine" "routine.mp3" "$ARTHUR"
+generate "Appointment" "appointment.mp3" "$ARTHUR"
+generate "Commute" "commute.mp3" "$ARTHUR"
+generate "Diagnosis" "diagnosis.mp3" "$ARTHUR"
+generate "Schedule" "schedule.mp3" "$ARTHUR"
+generate "Prescribe" "prescribe.mp3" "$ARTHUR"
+generate "Colleague" "colleague.mp3" "$ARTHUR"
+generate "Follow-up" "follow_up.mp3" "$ARTHUR"
+
+# -----------------------------------------------
+# AULA 2 — STUDENT PHRASES / Rubens speaking (Arthur)
+# -----------------------------------------------
+echo ""
+echo "=== Aula 2: Student Phrases — Rubens (Arthur) ==="
+generate "My morning routine starts at five-thirty." "my_morning_routine_starts_at_five_thirty.mp3" "$ARTHUR"
+generate "I have six appointments every morning." "i_have_six_appointments_every_morning.mp3" "$ARTHUR"
+generate "My commute to the clinic takes thirty minutes." "my_commute_to_the_clinic_takes_thirty_minutes.mp3" "$ARTHUR"
+generate "I usually prescribe metformin for type two diabetes." "i_usually_prescribe_metformin_for_type_two_diabetes.mp3" "$ARTHUR"
+generate "I always schedule a follow-up after the first consultation." "i_always_schedule_a_follow_up_after_first_consultation.mp3" "$ARTHUR"
+generate "I usually wake up at five-thirty and go to the clinic." "i_usually_wake_up_at_five_thirty_and_go_to_the_clinic.mp3" "$ARTHUR"
+generate "I often discuss complex cases with my colleagues." "i_often_discuss_complex_cases_with_my_colleagues.mp3" "$ARTHUR"
+generate "I rarely finish before seven in the evening." "i_rarely_finish_before_seven_in_the_evening.mp3" "$ARTHUR"
+generate "I usually start my day at five-thirty in the morning." "i_usually_start_my_day_at_five_thirty_in_the_morning.mp3" "$ARTHUR"
+generate "I generally see six to eight patients every morning." "i_generally_see_six_to_eight_patients_every_morning.mp3" "$ARTHUR"
+generate "I often discuss cases with my colleagues after lunch." "i_often_discuss_cases_with_my_colleagues_after_lunch.mp3" "$ARTHUR"
+generate "My commute takes about thirty minutes." "my_commute_takes_about_thirty_minutes.mp3" "$ARTHUR"
+generate "The diagnosis usually takes one consultation." "the_diagnosis_usually_takes_one_consultation.mp3" "$ARTHUR"
+generate "I often discuss cases with my colleagues." "i_often_discuss_cases_with_my_colleagues.mp3" "$ARTHUR"
+generate "He never skips his morning exercise." "he_never_skips_his_morning_exercise.mp3" "$ARTHUR"
+generate "My schedule is always full on Mondays." "my_schedule_is_always_full_on_mondays.mp3" "$ARTHUR"
+
+# -----------------------------------------------
+# AULA 2 — ALTERNATING SENTENCES (Ellen)
+# -----------------------------------------------
+echo ""
+echo "=== Aula 2: Alternating Sentences (Ellen) ==="
+generate "The diagnosis confirmed type two diabetes." "the_diagnosis_confirmed_type_two_diabetes.mp3" "$ELLEN"
+generate "He never skips his morning exercise." "he_never_skips_his_morning_exercise_ellen.mp3" "$ELLEN"
+
+# -----------------------------------------------
+# AULA 2 — DIALOGUE 2: Sarah = Ellen, Rubens = Arthur
+# -----------------------------------------------
+echo ""
+echo "=== Aula 2: Dialogue 2 Lines ==="
+generate "So, Rubens, what does a typical day look like at your clinic?" "dialogue2_line1_sarah.mp3" "$ELLEN"
+generate "Well, I always wake up at five-thirty. My commute takes about thirty minutes." "dialogue2_line2_rubens.mp3" "$ARTHUR"
+generate "That is early! How many patients do you see?" "dialogue2_line3_sarah.mp3" "$ELLEN"
+generate "I usually see six to eight patients every morning. Each appointment takes about forty minutes." "dialogue2_line4_rubens.mp3" "$ARTHUR"
+generate "And what do you do in the afternoons?" "dialogue2_line5_sarah.mp3" "$ELLEN"
+generate "I often meet with colleagues to discuss cases. I also schedule follow-ups and review lab results." "dialogue2_line6_rubens.mp3" "$ARTHUR"
+generate "Do you ever finish early?" "dialogue2_line7_sarah.mp3" "$ELLEN"
+generate "I rarely finish before seven. But I never skip my morning exercise. That is my rule!" "dialogue2_line8_rubens.mp3" "$ARTHUR"
+
+# -----------------------------------------------
+# AULA 2 — LISTENING AUDIOS (Arthur - full monologue)
+# -----------------------------------------------
+echo ""
+echo "=== Aula 2: Listening Audios (Arthur) ==="
+generate "I always wake up at five-thirty in the morning. I never skip my exercise. My commute to the clinic takes about thirty minutes. I usually see six to eight patients every morning. Each appointment takes about forty minutes. I often prescribe metformin for type two diabetes, alongside lifestyle changes. After lunch, I sometimes meet with colleagues to discuss complex cases. I always schedule a follow-up after the first consultation. I rarely finish before seven in the evening." "listening_daily_routine.mp3" "$ARTHUR"
+generate "So, Rubens, what does a typical day look like at your clinic? Well, I always wake up at five-thirty. My commute takes about thirty minutes. That is early! How many patients do you see? I usually see six to eight patients every morning. Each appointment takes about forty minutes. And what do you do in the afternoons? I often meet with colleagues to discuss cases. I also schedule follow-ups and review lab results. Do you ever finish early? I rarely finish before seven. But I never skip my morning exercise. That is my rule!" "listening_dialogue_routine.mp3" "$ARTHUR"
+
 echo ""
 echo "============================================"
 echo "=== SUMMARY ==="
