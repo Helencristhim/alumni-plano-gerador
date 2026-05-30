@@ -172,6 +172,74 @@ const PHRASES = [
   // Error sentences (for spot the error)
   { text: "They going to miss the flight.", voice: ARTHUR, file: "they_going_to_miss_the_flight.mp3" },
   { text: "I am go to the airport now.", voice: ELLEN, file: "i_am_go_to_the_airport_now.mp3" },
+
+  // ===== LESSON 3: Have You Ever? — Present Perfect for Life Experiences =====
+
+  // Vocabulary words (1-2 words → Ellen, student is female)
+  { text: "Cuisine", voice: ELLEN, file: "cuisine.mp3" },
+  { text: "Nomadic", voice: ELLEN, file: "nomadic.mp3" },
+  { text: "Diverse", voice: ELLEN, file: "diverse.mp3" },
+  { text: "Unforgettable", voice: ELLEN, file: "unforgettable.mp3" },
+  { text: "Encounter", voice: ELLEN, file: "encounter.mp3" },
+  { text: "Fascinating", voice: ELLEN, file: "fascinating.mp3" },
+  { text: "Connection", voice: ELLEN, file: "connection.mp3" },
+  { text: "Humble", voice: ELLEN, file: "humble.mp3" },
+
+  // Vocabulary example sentences (alternate Arthur/Ellen)
+  { text: "The cuisine in Thailand is spicy and diverse.", voice: ARTHUR, file: "the_cuisine_in_thailand_is_spicy_and_diverse.mp3" },
+  { text: "Some people live a nomadic lifestyle, always moving.", voice: ELLEN, file: "some_people_live_a_nomadic_lifestyle.mp3" },
+  { text: "Brazil is a very diverse country with many cultures.", voice: ARTHUR, file: "brazil_is_a_very_diverse_country.mp3" },
+  { text: "Meeting that family was an unforgettable experience.", voice: ELLEN, file: "meeting_that_family_was_unforgettable.mp3" },
+  { text: "I had a wonderful encounter with a local artist.", voice: ARTHUR, file: "i_had_a_wonderful_encounter.mp3" },
+  { text: "The history of that city is absolutely fascinating.", voice: ELLEN, file: "the_history_of_that_city_is_fascinating.mp3" },
+  { text: "I felt a deep connection with the people there.", voice: ARTHUR, file: "i_felt_a_deep_connection.mp3" },
+  { text: "The family was humble but incredibly generous.", voice: ELLEN, file: "the_family_was_humble_but_generous.mp3" },
+
+  // Fill-in-the-blank / grammar practice phrases (alternate Arthur/Ellen)
+  { text: "Have you ever been to Spain?", voice: ARTHUR, file: "have_you_ever_been_to_spain.mp3" },
+  { text: "I have never tried Japanese food.", voice: ELLEN, file: "i_have_never_tried_japanese_food.mp3" },
+  { text: "She has visited more than 30 countries.", voice: ARTHUR, file: "she_has_visited_more_than_30_countries.mp3" },
+  { text: "We have always wanted to go to Patagonia.", voice: ELLEN, file: "we_have_always_wanted_to_go_to_patagonia.mp3" },
+  { text: "I have been to Morocco, but I have never been to Egypt.", voice: ARTHUR, file: "i_have_been_to_morocco_never_egypt.mp3" },
+  { text: "Have you ever had an encounter that changed your life?", voice: ELLEN, file: "have_you_ever_had_an_encounter.mp3" },
+
+  // Expressions
+  { text: "It is been on my bucket list.", voice: ARTHUR, file: "its_been_on_my_bucket_list.mp3" },
+  { text: "I have always wanted to visit Japan.", voice: ELLEN, file: "i_have_always_wanted_to_visit_japan.mp3" },
+  { text: "That was a once-in-a-lifetime experience.", voice: ARTHUR, file: "that_was_a_once_in_a_lifetime_experience.mp3" },
+
+  // Collocations
+  { text: "Have an experience", voice: ELLEN, file: "have_an_experience.mp3" },
+  { text: "Make a connection", voice: ARTHUR, file: "make_a_connection.mp3" },
+  { text: "Try local cuisine", voice: ELLEN, file: "try_local_cuisine.mp3" },
+
+  // Phrasal verb
+  { text: "I ended up staying three more days.", voice: ARTHUR, file: "i_ended_up_staying_three_more_days.mp3" },
+
+  // Dialogue — Carlos (male) = Arthur, Tuca (female) = Ellen
+  { text: "This is a wonderful event. Have you been to one like this before?", voice: ARTHUR, file: "dialogue_l3_carlos_line1.mp3" },
+  { text: "No, this is my first time. But I have always wanted to attend a cultural festival.", voice: ELLEN, file: "dialogue_l3_tuca_line2.mp3" },
+  { text: "Where are you from? Have you traveled much?", voice: ARTHUR, file: "dialogue_l3_carlos_line3.mp3" },
+  { text: "I am from Brazil. I have visited about 20 countries so far.", voice: ELLEN, file: "dialogue_l3_tuca_line4.mp3" },
+  { text: "That is impressive! Have you ever been to Spain?", voice: ARTHUR, file: "dialogue_l3_carlos_line5.mp3" },
+  { text: "No, I have never been to Spain, but it is on my bucket list!", voice: ELLEN, file: "dialogue_l3_tuca_line6.mp3" },
+  { text: "You should visit! The cuisine is unforgettable. I have tried food from many countries, but Spanish food is special.", voice: ARTHUR, file: "dialogue_l3_carlos_line7.mp3" },
+  { text: "I have always been fascinated by diverse cultures. That is why I travel.", voice: ELLEN, file: "dialogue_l3_tuca_line8.mp3" },
+  { text: "Have you ever had an encounter that changed your perspective?", voice: ARTHUR, file: "dialogue_l3_carlos_line9.mp3" },
+  { text: "Yes! I once ended up staying three extra days in Morocco because I made such a wonderful connection with a local family.", voice: ELLEN, file: "dialogue_l3_tuca_line10.mp3" },
+
+  // Listening 1 — Sofia's travels (Ellen — female narrator)
+  { text: "My name is Sofia. I have traveled to 30 countries in the last ten years. The most unforgettable experience I have ever had was in Peru. I have tried the local cuisine in every country I have visited. I have never been disappointed. The most fascinating encounter I have ever had was with a nomadic family in Mongolia. They were so humble and generous. I have always believed that travel creates connections that nothing else can.", voice: ELLEN, file: "listening_l3_sofia_travel.mp3" },
+
+  // Listening 2 — Interview (Arthur — male interviewer + traveler)
+  { text: "Interviewer: Have you ever been somewhere that completely surprised you? Traveler: Yes, I have. I visited Japan last year and it was nothing like I expected. Interviewer: What was so different? Traveler: The people were incredibly humble and the cuisine was diverse beyond anything I had imagined. I ended up staying two extra weeks. It has been the most unforgettable trip of my life so far.", voice: ARTHUR, file: "listening_l3_interview.mp3" },
+
+  // Speech / Pronunciation cards (Tuca's practice lines → Ellen)
+  { text: "I have visited about 20 countries so far.", voice: ELLEN, file: "i_have_visited_about_20_countries.mp3" },
+  { text: "Have you ever tried local cuisine in Asia?", voice: ELLEN, file: "have_you_ever_tried_local_cuisine.mp3" },
+  { text: "I have never been to a cultural festival before.", voice: ELLEN, file: "i_have_never_been_to_a_cultural_festival.mp3" },
+  { text: "I have always wanted to attend a cultural festival.", voice: ELLEN, file: "i_have_always_wanted_to_attend.mp3" },
+  { text: "I ended up making a wonderful connection with a local family.", voice: ELLEN, file: "i_ended_up_making_a_wonderful_connection.mp3" },
 ];
 
 // Note: "[order-l1]" is a special key for ordering exercise audio — generated separately if needed
