@@ -68,6 +68,11 @@ const ARTHUR_PHRASES = new Set([
   "And then? What do you usually do?",
   "Do you report to anyone?",
   "What is your top priority?",
+  // Aula 4 — Brian (project manager)
+  "Hi Andreia, how is the rollout going right now?",
+  "Great. Are you training the team?",
+  "Are you running a pilot first?",
+  "And how is the project progressing?",
 ]);
 
 // ---- Build audioMap ----
@@ -103,6 +108,12 @@ const LISTEN5 = "Let me tell you about my normal day. My routine starts at seven
 const LISTEN6 = "Andreia, I am new here, so I would love to understand your routine. What time does your day start, and what do you do first? Also, how often do you coordinate the team, and who do you report to?";
 jobs.push({ text: LISTEN5, file: path.join(OUT_DIR, 'listening_aula3_routine.mp3'), voice: ELLEN });
 jobs.push({ text: LISTEN6, file: path.join(OUT_DIR, 'listening_aula3_colleague_questions.mp3'), voice: ARTHUR });
+
+// Aula 4 listenings
+const LISTEN7 = "Let me give you a quick update on what is happening now. Right now, we are implementing the Da Vinci system, and I am training on the new robot. The team is adapting quickly. We are running a pilot in one surgery room first, and we are setting up the new lab. The program is making good progress, and it is expanding to a second hospital.";
+const LISTEN8 = "Hi Andreia, thanks for the update. What are you working on right now? Also, how is the team adapting to the new system, and how is the pilot going?";
+jobs.push({ text: LISTEN7, file: path.join(OUT_DIR, 'listening_aula4_in_progress.mp3'), voice: ELLEN });
+jobs.push({ text: LISTEN8, file: path.join(OUT_DIR, 'listening_aula4_pm_questions.mp3'), voice: ARTHUR });
 
 fs.writeFileSync(path.join(ROOT, '_andreia-audiomap.json'), JSON.stringify(audioMap, null, 2));
 console.log('audioMap entries:', Object.keys(audioMap).length);
