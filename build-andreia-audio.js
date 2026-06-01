@@ -53,10 +53,16 @@ while ((m = reDP.exec(html)) !== null) {
 
 // ---- Arthur (male) phrases: Mark / Medtronic rep lines ----
 const ARTHUR_PHRASES = new Set([
+  // Aula 1 — Mark (Medtronic rep)
   "Hi Andreia, thanks for joining. Could you introduce yourself?",
   "Great. What are you responsible for now?",
   "Perfect. So you are our main stakeholder for this project?",
   "Wonderful. Let us walk you through the system.",
+  // Aula 2 — Dr. Alan (colleague)
+  "Andreia, I would love to hear your story. How did you start in nursing?",
+  "The ICU is tough. What did you do there?",
+  "Impressive. And how did you move into robotic surgery?",
+  "That is a big milestone. What was the hardest part?",
 ]);
 
 // ---- Build audioMap ----
@@ -80,6 +86,12 @@ const LISTEN1 = "Good afternoon, everyone. My name is Andreia Heins. My backgrou
 const LISTEN2 = "Hi Andreia, thank you for joining the call. Before we start, could you introduce yourself and tell us about your role? Also, who do you usually deal with on your team?";
 jobs.push({ text: LISTEN1, file: path.join(OUT_DIR, 'listening1_self_introduction.mp3'), voice: ELLEN });
 jobs.push({ text: LISTEN2, file: path.join(OUT_DIR, 'listening2_meeting_opener.mp3'), voice: ARTHUR });
+
+// Aula 2 listenings
+const LISTEN3 = "Hello. Let me tell you my career story. I graduated from nursing school in 2008, and I started in the ICU, where I worked the night shift for six years. I specialized in intensive care. During the pandemic, I led a small team and I got promoted to coordinator. My biggest challenge was learning a new system for robotic surgery, but I made it work.";
+const LISTEN4 = "Andreia, I would love to understand your journey. Where and when did you start your career? And tell me, what was your biggest challenge along the way, and your proudest achievement?";
+jobs.push({ text: LISTEN3, file: path.join(OUT_DIR, 'listening_aula2_career_story.mp3'), voice: ELLEN });
+jobs.push({ text: LISTEN4, file: path.join(OUT_DIR, 'listening_aula2_mentor_questions.mp3'), voice: ARTHUR });
 
 fs.writeFileSync(path.join(ROOT, '_andreia-audiomap.json'), JSON.stringify(audioMap, null, 2));
 console.log('audioMap entries:', Object.keys(audioMap).length);
