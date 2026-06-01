@@ -249,6 +249,70 @@ echo "=== Aula 2: Listening Audios (Arthur) ==="
 generate "I always wake up at five-thirty in the morning. I never skip my exercise. My commute to the clinic takes about thirty minutes. I usually see six to eight patients every morning. Each appointment takes about forty minutes. I often prescribe metformin for type two diabetes, alongside lifestyle changes. After lunch, I sometimes meet with colleagues to discuss complex cases. I always schedule a follow-up after the first consultation. I rarely finish before seven in the evening." "listening_daily_routine.mp3" "$ARTHUR"
 generate "So, Rubens, what does a typical day look like at your clinic? Well, I always wake up at five-thirty. My commute takes about thirty minutes. That is early! How many patients do you see? I usually see six to eight patients every morning. Each appointment takes about forty minutes. And what do you do in the afternoons? I often meet with colleagues to discuss cases. I also schedule follow-ups and review lab results. Do you ever finish early? I rarely finish before seven. But I never skip my morning exercise. That is my rule!" "listening_dialogue_routine.mp3" "$ARTHUR"
 
+# ===== AULA 3: Talking About the Past =====
+
+# -----------------------------------------------
+# AULA 3 — SINGLE WORDS (Arthur - male student)
+# -----------------------------------------------
+echo ""
+echo "=== Aula 3: Single Words (Arthur) ==="
+generate "Research" "research.mp3" "$ARTHUR"
+generate "Abroad" "abroad.mp3" "$ARTHUR"
+generate "Discover" "discover.mp3" "$ARTHUR"
+generate "Publish" "publish.mp3" "$ARTHUR"
+generate "Experience" "experience.mp3" "$ARTHUR"
+generate "Attend" "attend.mp3" "$ARTHUR"
+generate "Opportunity" "opportunity.mp3" "$ARTHUR"
+generate "Achieve" "achieve.mp3" "$ARTHUR"
+
+# -----------------------------------------------
+# AULA 3 — STUDENT PHRASES / Rubens speaking (Arthur)
+# -----------------------------------------------
+echo ""
+echo "=== Aula 3: Student Phrases — Rubens (Arthur) ==="
+generate "I conducted research at a university in California." "i_conducted_research_at_a_university_in_california.mp3" "$ARTHUR"
+generate "I lived abroad for several years during my training." "i_lived_abroad_for_several_years_during_my_training.mp3" "$ARTHUR"
+generate "I discovered my passion for endocrinology during my residency." "i_discovered_my_passion_for_endocrinology.mp3" "$ARTHUR"
+generate "I published my first paper in nineteen ninety-eight." "i_published_my_first_paper_in_1998.mp3" "$ARTHUR"
+generate "Living in California was an incredible experience." "living_in_california_was_an_incredible_experience.mp3" "$ARTHUR"
+generate "I attended a major conference in San Francisco." "i_attended_a_major_conference_in_san_francisco.mp3" "$ARTHUR"
+generate "The scholarship gave me the opportunity to study in France." "the_scholarship_gave_me_the_opportunity.mp3" "$ARTHUR"
+generate "He achieved his doctorate in France at the age of thirty." "he_achieved_his_doctorate_in_france.mp3" "$ARTHUR"
+generate "I traveled to California in nineteen ninety-five." "i_traveled_to_california_in_1995.mp3" "$ARTHUR"
+generate "I published three papers during that period." "i_published_three_papers_during_that_period.mp3" "$ARTHUR"
+generate "I met researchers from around the world." "i_met_researchers_from_around_the_world.mp3" "$ARTHUR"
+generate "The experience changed my perspective on medicine." "the_experience_changed_my_perspective.mp3" "$ARTHUR"
+generate "I went back to Brazil in nineteen ninety-seven." "i_went_back_to_brazil_in_1997.mp3" "$ARTHUR"
+generate "I discovered new approaches to metabolic syndrome that changed my practice." "i_discovered_new_approaches_to_metabolic_syndrome.mp3" "$ARTHUR"
+generate "I lived abroad for two years and conducted research." "i_lived_abroad_for_two_years_and_conducted_research.mp3" "$ARTHUR"
+generate "I achieved my doctorate in France at the age of thirty." "i_achieved_my_doctorate_in_france.mp3" "$ARTHUR"
+
+# -----------------------------------------------
+# AULA 3 — DIALOGUE 3: Sarah = Ellen, Rubens = Arthur
+# -----------------------------------------------
+echo ""
+echo "=== Aula 3: Dialogue 3 Lines ==="
+generate "You mentioned you lived in California. What was that like?" "dialogue3_line1_sarah.mp3" "$ELLEN"
+generate "It was an incredible experience. I traveled there in nineteen ninety-five for a research program." "dialogue3_line2_rubens.mp3" "$ARTHUR"
+generate "How long did you stay?" "dialogue3_line3_sarah.mp3" "$ELLEN"
+generate "I lived there for two years. I worked at a university hospital and published three papers." "dialogue3_line4_rubens.mp3" "$ARTHUR"
+generate "That sounds amazing! Did you attend any conferences?" "dialogue3_line5_sarah.mp3" "$ELLEN"
+generate "Yes, I attended several. I met researchers from all over the world." "dialogue3_line6_rubens.mp3" "$ARTHUR"
+generate "What did you discover during that time?" "dialogue3_line7_sarah.mp3" "$ELLEN"
+generate "I discovered new approaches to metabolic syndrome. The opportunity changed my entire career." "dialogue3_line8_rubens.mp3" "$ARTHUR"
+
+# -----------------------------------------------
+# AULA 3 — LISTENING AUDIOS (Arthur - full monologue)
+# -----------------------------------------------
+echo ""
+echo "=== Aula 3: Listening Audios (Arthur) ==="
+generate "In nineteen ninety-five, I traveled to California for a research program. I lived there for two years and worked at a university hospital. I attended several international conferences and met researchers from around the world. I published three papers during that period. The experience changed my perspective on medicine. I discovered new approaches to metabolic syndrome. I achieved important results, and the opportunity opened doors for my career. I went back to Brazil in nineteen ninety-seven and brought all that knowledge to my clinic in Belem." "listening_california_story.mp3" "$ARTHUR"
+generate "You mentioned you lived in California. What was that like? It was an incredible experience. I traveled there in nineteen ninety-five for a research program. How long did you stay? I lived there for two years. I worked at a university hospital and published three papers. That sounds amazing! Did you attend any conferences? Yes, I attended several. I met researchers from all over the world. What did you discover during that time? I discovered new approaches to metabolic syndrome. The opportunity changed my entire career." "listening_dialogue_past.mp3" "$ARTHUR"
+
+# Missing survival card phrases
+generate "I achieved my doctorate in France at the age of thirty." "i_achieved_my_doctorate_in_france_at_thirty.mp3" "$ARTHUR"
+generate "I lived abroad for two years and conducted research." "i_lived_abroad_for_two_years_and_conducted_research.mp3" "$ARTHUR"
+
 echo ""
 echo "============================================"
 echo "=== SUMMARY ==="
