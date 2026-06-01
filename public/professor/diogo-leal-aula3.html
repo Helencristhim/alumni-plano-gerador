@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>IN CLASS — Diogo Leal | Lesson 3 | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #4F46E5;
+  --accent-light: #A5B4FC;
+  --accent-dim: rgba(79,70,229,0.08);
+  --accent-glow: rgba(79,70,229,0.05);
+  --black: #1a1a2e;
+  --bg: #f5f2ee;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0ede8;
+  --bg-input: #fafaf7;
+  --border: #d8d1c8;
+  --border-light: #c4bdb3;
+  --white: #ffffff;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #6b6b7a;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --warn: #d97706;
+  --navy: #003080;
+  --dark: #1a1a2e;
+  --dark-surface: #22223a;
+  --dark-elevated: #2d2d4a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; touch-action: manipulation; }
+
+/* === FOCUS STATES (Accessibility) === */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-serif; background:#0a0a1a; color:var(--text); }
+
+/* ===== SLIDE SYSTEM ===== */
+.slide-deck { position:relative; width:100%; height:100vh; }
+.slide {
+  position:absolute; inset:0; width:100%; height:100vh;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  opacity:0; visibility:hidden; transition: opacity 400ms ease, visibility 400ms ease;
+  overflow-y:auto; padding:2rem;
+}
+.slide.active { opacity:1; visibility:visible; }
+.slide.dark { background:var(--dark); color:#fff; }
+.slide.light { background:var(--bg); color:var(--text); }
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.6rem 1.5rem; background:rgba(10,10,26,0.85); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.top-bar-left { display:flex; align-items:center; gap:0.8rem; }
+.top-bar-logo { height:26px; opacity:0.9; }
+.slide-counter { font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.75); letter-spacing:1px; }
+.top-bar-right { display:flex; align-items:center; gap:0.6rem; }
+
+/* Chapter progress */
+.chapter-bar { display:flex; gap:2px; flex:1; max-width:360px; margin:0 1rem; }
+.chapter-dot {
+  flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,0.2);
+  cursor:pointer; transition:background 0.3s;
+}
+.chapter-dot.active { background:#818CF8; }
+.chapter-dot.completed { background:#A5B4FC; }
+
+/* Dot navigation */
+.dot-nav {
+  position:fixed; right:1rem; top:50%; transform:translateY(-50%); z-index:100;
+  display:flex; flex-direction:column; gap:4px;
+}
+.dot-nav-item {
+  width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.3);
+  cursor:pointer; transition:all 0.3s; border:none;
+}
+.dot-nav-item.active { background:var(--accent); transform:scale(1.4); }
+.dot-nav-item:hover { background:rgba(255,255,255,0.4); }
+
+/* Nav arrows */
+.nav-arrows {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:100;
+  display:flex; gap:0.5rem;
+}
+.nav-btn {
+  width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
+  background:rgba(10,10,26,0.7); backdrop-filter:blur(8px);
+  color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.nav-btn:hover { background:var(--accent); border-color:var(--accent); }
+.nav-btn svg { width:18px; height:18px; }
+
+/* ===== TEACHER CUE (T icon) ===== */
+.t-cue {
+  position:fixed; top:3.5rem; right:1.5rem; z-index:200;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.75); font-weight:700; font-size:0.8rem;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.25s;
+}
+.t-cue:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.t-panel {
+  display:none; position:fixed; top:6rem; right:1.5rem; z-index:210;
+  width:340px; max-height:60vh; overflow-y:auto;
+  background:rgba(26,26,46,0.97); color:#e0e0e0; padding:1.2rem 1.4rem;
+  border-radius:10px; font-size:0.82rem; line-height:1.7;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08);
+}
+.t-panel.show { display:block; animation:fadeIn 0.2s ease; }
+.t-panel strong { color:var(--accent-light); }
+.t-panel .t-timing { color:#fbbf24; font-weight:600; font-size:0.75rem; display:block; margin-bottom:0.5rem; }
+.t-panel .t-ccq { background:rgba(79,70,229,0.15); border:1px solid rgba(79,70,229,0.3); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; }
+.t-panel .t-alert { background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.25); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; color:#fca5a5; }
+
+/* ===== TYPOGRAPHY ===== */
+.slide-chapter-label {
+  font-size:0.68rem; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.6rem;
+}
+.slide-title {
+  font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:600;
+  line-height:1.2; margin-bottom:0.8rem; max-width:750px; text-align:center;
+}
+.slide-subtitle {
+  font-size:1rem; font-weight:400; opacity:0.85; max-width:600px; text-align:center; line-height:1.7;
+}
+.slide[style*="background-image"] .slide-title { text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+.slide[style*="background-image"] .slide-chapter-label { color: rgba(255,255,255,0.8); }
+.slide.dark .accent, .slide.dark .accent-bold { color: #A5B4FC; }
+.slide.dark .slide-chapter-label { color: rgba(255,255,255,0.8); }
+.slide-content { max-width:800px; width:100%; }
+.section-label {
+  font-size:0.7rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+
+/* ===== VOCAB REVEAL CARDS (2x2 grid) ===== */
+.vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:750px; width:100%; }
+.v-card {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px; padding:1.2rem; cursor:pointer; transition:all 0.35s;
+  min-height:160px; display:flex; flex-direction:column; position:relative; overflow:hidden;
+}
+.v-card:hover { border-color:var(--accent); background:rgba(79,70,229,0.06); }
+.v-card.revealed { border-color:var(--accent-light); background:rgba(79,70,229,0.08); }
+.v-card-icon {
+  width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  margin-bottom:0.8rem; flex-shrink:0;
+}
+.v-card-icon svg { width:24px; height:24px; }
+.v-card-hint { font-size:0.85rem; color:rgba(255,255,255,0.75); font-style:italic; line-height:1.6; }
+.v-card-body { display:none; }
+.v-card.revealed .v-card-hint { display:none; }
+.v-card.revealed .v-card-body { display:block; animation:fadeIn 0.35s ease; }
+.v-word { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:#fff; margin-bottom:0.3rem; }
+.v-def { font-size:0.82rem; color:rgba(255,255,255,0.85); margin-bottom:0.3rem; }
+.v-example { font-size:0.85rem; color:rgba(255,255,255,0.8); font-style:italic; margin-bottom:0.6rem; }
+.v-listen-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.35rem 0.9rem; background:var(--accent); color:#fff;
+  border:none; border-radius:5px; font-size:0.75rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.v-listen-btn:hover { background:var(--accent-light); }
+.v-listen-btn svg { width:14px; height:14px; }
+.vocab-counter { text-align:center; margin-top:1rem; font-size:0.8rem; color:rgba(255,255,255,0.65); font-weight:500; }
+
+/* ===== GRAMMAR DISCOVERY ===== */
+.grammar-examples { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.2rem; }
+.g-example {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; font-size:1.05rem; color:rgba(255,255,255,0.9); line-height:1.6;
+}
+.g-example .highlight { color:var(--accent-light); font-weight:700; }
+.g-reveal-btn {
+  width:100%; padding:0.8rem; border:2px dashed var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:10px; font-size:0.9rem; font-weight:600;
+  cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
+}
+.g-reveal-btn:hover { background:rgba(79,70,229,0.1); }
+.g-reveal-btn.used { display:none; }
+.g-rule {
+  display:none; padding:1.5rem; background:rgba(79,70,229,0.08);
+  border:1px solid rgba(79,70,229,0.25); border-radius:10px; margin-top:1rem;
+}
+.g-rule.show { display:block; animation:fadeIn 0.4s ease; }
+.g-rule h4 { color:var(--accent-light); font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:1rem; }
+.g-rule table { width:100%; border-collapse:collapse; font-size:0.88rem; color:rgba(255,255,255,0.85); }
+.g-rule th { text-align:left; padding:0.6rem; border-bottom:2px solid rgba(255,255,255,0.15); color:var(--accent-light); font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; }
+.g-rule td { padding:0.6rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+
+/* ===== COMMON MISTAKE ===== */
+.mistake-box { max-width:600px; width:100%; }
+.mistake-wrong, .mistake-right {
+  padding:1.2rem 1.5rem; border-radius:10px; font-size:1.1rem; margin-bottom:1rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.mistake-wrong { background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.25); color:#fca5a5; }
+.mistake-right { background:rgba(22,163,74,0.08); border:1px solid rgba(22,163,74,0.25); color:#86efac; }
+.mistake-icon { width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+.mistake-wrong .mistake-icon { background:rgba(220,38,38,0.2); }
+.mistake-right .mistake-icon { background:rgba(22,163,74,0.2); }
+
+/* ===== FILL-IN PRACTICE ===== */
+.fill-practice { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.fp-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.fp-item:hover { border-color:var(--accent); }
+.fp-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.fp-sentence .fp-blank { color:var(--accent-light); font-weight:700; border-bottom:2px dashed var(--accent); padding:0 0.3rem; }
+.fp-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(79,70,229,0.12); border-radius:6px; font-size:0.88rem; color:var(--accent-light); font-weight:600; }
+.fp-item.open .fp-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== SUBSTITUTION DRILL ===== */
+.sub-drill { max-width:600px; width:100%; text-align:center; }
+.sub-template { font-family:'Cormorant Garamond',serif; font-size:2rem; color:#fff; margin-bottom:2rem; }
+.sub-template .sub-slot { color:var(--accent-light); border-bottom:3px solid var(--accent); padding:0 0.5rem; }
+.sub-prompts { display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:center; }
+.sub-chip {
+  padding:0.5rem 1.2rem; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+  border-radius:20px; font-size:0.88rem; color:rgba(255,255,255,0.7); cursor:pointer; transition:all 0.2s;
+}
+.sub-chip:hover, .sub-chip.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* ===== ARTIFACT (Badge, Bio, Email) ===== */
+.artifact-badge {
+  max-width:420px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15); position:relative;
+}
+.artifact-badge-header {
+  background:linear-gradient(135deg, #1a365d 0%, #4F46E5 100%);
+  padding:1.2rem 1.5rem; color:#fff;
+}
+.artifact-badge-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; margin-bottom:0.3rem; }
+.artifact-badge-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; }
+.artifact-badge-body { padding:1.5rem; }
+.artifact-badge-body .badge-name { font-size:1.2rem; font-weight:700; color:var(--dark); }
+.artifact-badge-body .badge-title { font-size:0.82rem; color:var(--text-mid); margin-top:0.2rem; }
+.artifact-badge-body .badge-affiliation { font-size:0.85rem; color:var(--text); margin-top:0.3rem; }
+.artifact-badge-body .badge-location { font-size:0.78rem; color:var(--text-dim); margin-top:0.2rem; }
+.artifact-badge-photo {
+  width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-light));
+  display:flex; align-items:center; justify-content:center; color:#fff;
+  font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600;
+  position:absolute; top:3.2rem; right:1.5rem; border:3px solid #fff;
+}
+
+.artifact-email {
+  max-width:520px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15);
+}
+.artifact-email-header {
+  background:linear-gradient(135deg, #1a365d 0%, #4F46E5 100%);
+  padding:1rem 1.5rem; color:#fff;
+}
+.artifact-email-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; margin-bottom:0.3rem; }
+.artifact-email-body { padding:1.5rem; color:var(--text); font-size:0.88rem; line-height:1.8; }
+.artifact-email-body .email-field { font-size:0.78rem; color:var(--text-dim); margin-bottom:0.2rem; }
+.artifact-email-body .email-field strong { color:var(--text-mid); }
+.artifact-email-body .email-subject { font-size:0.95rem; font-weight:700; color:var(--dark); margin:0.5rem 0 1rem; padding-bottom:0.8rem; border-bottom:1px solid var(--border); }
+
+/* ===== DIALOGUE ===== */
+.dialogue-container { max-width:650px; width:100%; display:flex; flex-direction:column; gap:0; }
+.d-line { display:none; padding:0.8rem 1rem; border-left:3px solid transparent; animation:slideUp 0.4s ease; }
+.d-line.visible { display:flex; gap:1rem; align-items:flex-start; }
+.d-line:hover { background:rgba(255,255,255,0.03); }
+.d-avatar {
+  width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:0.5px;
+}
+.d-avatar.blue { background:#2563eb; }
+.d-avatar.indigo { background:var(--accent); }
+.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.65); margin-bottom:0.15rem; }
+.d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
+.d-text strong { color:var(--accent-light); font-weight:600; }
+.d-text-wrap { flex:1; }
+.next-line-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.5rem 1.2rem; border:1px solid var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:6px; cursor:pointer; font-size:0.82rem;
+  font-weight:600; margin-top:1rem; transition:all 0.2s;
+}
+.next-line-btn:hover { background:var(--accent); color:#fff; }
+
+/* ===== LISTENING ===== */
+.listening-card { max-width:500px; width:100%; text-align:center; }
+.waveform {
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  height:60px; margin-bottom:1.5rem;
+}
+.waveform-bar {
+  width:4px; border-radius:2px; background:var(--accent);
+  animation:wave 1.2s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.waveform.playing .waveform-bar { animation-play-state:running; }
+@keyframes wave {
+  0%, 100% { height:8px; opacity:0.3; }
+  50% { height:40px; opacity:1; }
+}
+.play-pause-btn {
+  width:64px; height:64px; border-radius:50%; border:2px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem;
+  transition:all 0.2s;
+}
+.play-pause-btn:hover { background:var(--accent); color:#fff; }
+.play-pause-btn svg { width:28px; height:28px; }
+.listening-questions { display:none; flex-direction:column; gap:0.6rem; margin-top:1.5rem; text-align:left; }
+.listening-questions.show { display:flex; animation:fadeIn 0.4s ease; }
+.lq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.lq-item:hover { border-color:var(--accent); }
+.lq-question { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.lq-answer { display:none; margin-top:0.5rem; font-size:0.85rem; color:#A5B4FC; font-weight:500; }
+.lq-item.open .lq-answer { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== QUICK CHALLENGE ===== */
+.qc-container { max-width:600px; width:100%; }
+.qc-card { display:none; }
+.qc-card.active { display:block; animation:fadeIn 0.3s ease; }
+.qc-prompt {
+  font-size:1.15rem; color:#fff; text-align:center; margin-bottom:1.5rem; line-height:1.7;
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+}
+.qc-show-btn {
+  display:block; width:100%; padding:0.8rem; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); border-radius:8px;
+  font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s;
+}
+.qc-show-btn:hover { background:var(--accent); color:#fff; }
+.qc-answer-box {
+  display:none; margin-top:1rem; padding:1rem; background:rgba(79,70,229,0.1);
+  border:1px solid rgba(79,70,229,0.25); border-radius:8px;
+  font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; text-align:center;
+}
+.qc-answer-box.show { display:block; animation:fadeIn 0.3s ease; }
+.qc-next-btn {
+  display:none; margin:1rem auto 0; padding:0.5rem 1.5rem; background:var(--accent);
+  color:#fff; border:none; border-radius:6px; font-size:0.82rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.qc-next-btn.show { display:block; }
+.qc-next-btn:hover { background:var(--accent-light); }
+.qc-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.65); margin-bottom:1rem; font-weight:500; }
+
+/* ===== SPOT THE ERROR ===== */
+.error-list { display:flex; flex-direction:column; gap:0.6rem; max-width:700px; width:100%; }
+.err-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.err-item:hover { border-color:rgba(220,38,38,0.4); }
+.err-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
+.err-correction {
+  display:none; margin-top:0.6rem; padding:0.5rem 0.8rem;
+  background:rgba(22,163,74,0.1); border-radius:6px;
+  font-size:0.88rem; color:#86efac; font-weight:600;
+}
+.err-item.open .err-correction { display:block; animation:fadeIn 0.2s ease; }
+.err-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.65); margin-top:1rem; font-weight:500; }
+
+/* ===== ORAL DRILLING ===== */
+.oral-list { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.oral-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.oral-item:hover { border-color:var(--accent); }
+.oral-situation { font-size:0.92rem; color:rgba(255,255,255,0.7); margin-bottom:0.3rem; }
+.oral-situation-label { font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent-light); margin-bottom:0.4rem; }
+.oral-model { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(79,70,229,0.1); border-radius:6px; font-size:0.92rem; color:rgba(255,255,255,0.9); font-style:italic; line-height:1.6; }
+.oral-item.open .oral-model { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== ROLE-PLAY CARDS ===== */
+.rp-card {
+  max-width:600px; width:100%; border-radius:16px; overflow:hidden;
+  position:relative; min-height:280px; display:flex; flex-direction:column; justify-content:flex-end;
+}
+.rp-bg { position:absolute; inset:0; }
+.rp-bg-gradient { position:absolute; inset:0; }
+.rp-content { position:relative; z-index:1; padding:2rem; }
+.rp-level {
+  font-size:0.68rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.5rem;
+}
+.rp-scenario { font-size:1.05rem; color:#fff; line-height:1.7; margin-bottom:1rem; }
+.rp-keywords { display:flex; gap:0.5rem; flex-wrap:wrap; }
+.rp-keyword {
+  padding:0.3rem 0.8rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px; font-size:0.78rem; color:rgba(255,255,255,0.8); font-weight:500;
+}
+
+/* ===== PRONUNCIATION DRILL ===== */
+.pron-list { display:flex; flex-direction:column; gap:0.8rem; max-width:600px; width:100%; }
+.pron-item {
+  display:flex; align-items:center; gap:1rem; padding:0.8rem 1.2rem;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;
+}
+.pron-word { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:#fff; font-weight:600; min-width:160px; }
+.pron-stress { font-size:0.88rem; color:var(--accent-light); font-weight:500; flex:1; }
+.pron-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.pron-play:hover { background:var(--accent); color:#fff; }
+.pron-play svg { width:18px; height:18px; }
+
+/* ===== CHECKLIST ===== */
+.checklist-wrap { max-width:600px; width:100%; }
+.cl-item {
+  display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.06); cursor:pointer;
+}
+.cl-item:last-child { border-bottom:none; }
+.cl-box {
+  width:22px; height:22px; border:2px solid rgba(255,255,255,0.2); border-radius:5px;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.cl-box svg { width:14px; height:14px; opacity:0; transition:opacity 0.2s; }
+.cl-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
+.cl-item.checked .cl-box svg { opacity:1; }
+.cl-text { font-size:0.88rem; color:rgba(255,255,255,0.7); transition:color 0.2s; }
+.cl-item.checked .cl-text { color:rgba(255,255,255,0.9); }
+
+/* ===== CONFETTI ===== */
+.confetti-container { position:fixed; inset:0; pointer-events:none; z-index:9999; }
+.confetti-piece {
+  position:absolute; width:10px; height:10px; opacity:0;
+  animation:confettiFall 3s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { opacity:1; transform:translateY(-100vh) rotate(0deg); }
+  100% { opacity:0; transform:translateY(100vh) rotate(720deg); }
+}
+
+/* ===== COMPREHENSION Q ===== */
+.comp-questions { display:flex; flex-direction:column; gap:0.6rem; margin-top:1.2rem; max-width:600px; width:100%; }
+.cq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.cq-item:hover { border-color:var(--accent); }
+.cq-q { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.cq-a { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.cq-item.open .cq-a { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* === LISTENING PLAYER (Full) === */
+.listening-player{max-width:420px;margin:1.5rem auto 0}
+.lp-seekbar{height:6px;background:rgba(255,255,255,.3);border-radius:3px;cursor:pointer;margin-bottom:8px;position:relative}
+.lp-seekbar:hover{height:8px}
+.lp-progress{height:100%;background:var(--accent);border-radius:3px;transition:width .1s;width:0%}
+.lp-time{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.75);margin-bottom:16px;font-variant-numeric:tabular-nums}
+.lp-controls{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.lp-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lp-btn:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.lp-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.lp-play{width:64px;height:64px;background:var(--accent);border:none;color:#fff}
+.lp-play:hover{transform:scale(1.05)}
+.lp-play svg{width:24px;height:24px}
+.lp-play.playing .lp-icon-play{display:none}
+.lp-play.playing .lp-icon-pause{display:flex!important}
+.lp-icon-pause{display:none!important}
+.lp-speed{display:flex;justify-content:center;gap:8px}
+.lp-speed-btn{padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.lp-speed-btn:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.lp-speed-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lp-label{font-size:.7rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.5px;text-align:center;margin-bottom:6px}
+
+/* ===== PLANNER ARTIFACT ===== */
+.planner-card {
+  max-width:480px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15);
+}
+.planner-header {
+  background:linear-gradient(135deg, #1a365d 0%, #4F46E5 100%);
+  padding:1.2rem 1.5rem; color:#fff;
+}
+.planner-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; margin-bottom:0.3rem; }
+.planner-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; }
+.planner-body { padding:1.2rem 1.5rem; }
+.planner-row {
+  display:flex; align-items:baseline; gap:1rem; padding:0.5rem 0;
+  border-bottom:1px solid #e5e7eb; font-size:0.88rem; color:#2d2d3a;
+}
+.planner-row:last-child { border-bottom:none; }
+.planner-time { font-weight:700; color:var(--accent); min-width:50px; font-size:0.82rem; }
+.planner-activity { flex:1; }
+
+/* ===== ERROR CORRECTION EDITABLE ===== */
+.error-editable {
+  max-width:600px; width:100%; min-height:160px; padding:1.5rem;
+  background:rgba(255,255,255,0.04); border:2px dashed rgba(255,255,255,0.2);
+  border-radius:12px; color:rgba(255,255,255,0.85); font-size:1rem; line-height:1.8;
+  outline:none;
+}
+.error-editable:focus { border-color:var(--accent); background:rgba(79,70,229,0.06); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px) {
+  .slide { padding:1.2rem; padding-top:3.5rem; }
+  .slide-title { font-size:1.8rem; }
+  .vocab-grid { grid-template-columns:1fr; }
+  .t-panel { width:280px; right:0.5rem; }
+  .dot-nav { display:none; }
+  .nav-arrows { bottom:1rem; right:1rem; }
+  .top-bar { padding:0.5rem 1rem; }
+}
+
+/* === REDUCED MOTION (Accessibility) === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='diogo-leal';window.TOTAL_AULAS=40;</script>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="top-bar-logo">
+    <span class="slide-counter" id="slideCounter">1 / 35</span>
+  </div>
+  <div class="chapter-bar" id="chapterBar">
+    <div class="chapter-dot active" data-chapter="1" title="Chapter 1: The Dream" onclick="goToSlide(0)"></div>
+    <div class="chapter-dot" data-chapter="2" title="Chapter 2: Packing Words" onclick="goToSlide(3)"></div>
+    <div class="chapter-dot" data-chapter="3" title="Chapter 3: The Code" onclick="goToSlide(8)"></div>
+    <div class="chapter-dot" data-chapter="4" title="Chapter 4: Getting There" onclick="goToSlide(13)"></div>
+    <div class="chapter-dot" data-chapter="5" title="Chapter 5: Practice" onclick="goToSlide(19)"></div>
+    <div class="chapter-dot" data-chapter="6" title="Chapter 6: Your Turn" onclick="goToSlide(25)"></div>
+    <div class="chapter-dot" data-chapter="7" title="Chapter 7: Wrap-Up" onclick="goToSlide(29)"></div>
+  </div>
+  <div class="top-bar-right">
+    <span style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);">Professor View</span>
+  </div>
+</div>
+
+<!-- ===== TEACHER CUE ===== -->
+<div class="t-cue" id="tCue" onclick="toggleTeacherCue()">T</div>
+<div class="t-panel" id="tPanel"></div>
+
+<!-- ===== DOT NAV ===== -->
+<div class="dot-nav" id="dotNav"></div>
+
+<!-- ===== NAV ARROWS ===== -->
+<div class="nav-arrows">
+  <button class="nav-btn" onclick="prevSlide()" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="nav-btn" onclick="nextSlide()" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SLIDE DECK                                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="slide-deck" id="slideDeck">
+
+<!-- ═══ SLIDE 1 — TITLE ═══ -->
+<div class="slide dark active" data-chapter="1" data-t="<span class='t-timing'>0:00 - 2 min</span>Abertura. Compartilhe a tela. Cumprimente Diogo pelo nome. Pergunte como foi a semana. Tom energético e leve." style="background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(49,46,129,0.9) 40%, rgba(26,54,93,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+    <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:#A5B4FC;margin-bottom:1.5rem;">Lesson 3</p>
+    <h1 class="slide-title" style="color:#fff;">The Weekly Sprint</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.85);">My Week at Oracle -- Describing Daily Routines</p>
+    <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+      <span style="padding:0.3rem 0.9rem;background:rgba(79,70,229,0.2);border:1px solid rgba(79,70,229,0.35);border-radius:20px;font-size:0.75rem;color:#A5B4FC;">A2+ Pre-Intermediate</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">90 min</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">Alumni by Better</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 2 — WARM-UP: CALLBACK ═══ -->
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>2:00 - 5 min</span>Warm-up. Callback da Aula 2. Pergunte cada questão uma por vez. Observe se ele usa as palavras da aula anterior naturalmente (background, based, oversee, expertise, ambitious, expand, passionate, achieve). Se usar, celebre: &quot;Great memory!&quot;">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <div style="max-width:650px;text-align:center;">
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Callback: Last Class</h2>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
+      <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#A5B4FC;margin-bottom:0.4rem;">Reflection</div>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Tell me about your background. What do you oversee at Oracle?</p>
+      </div>
+      <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#A5B4FC;margin-bottom:0.4rem;">Challenge</div>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">What are you passionate about? What do you want to achieve?</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 3 — OBJECTIVE ═══ -->
+<div class="slide light" data-chapter="1" data-t="<span class='t-timing'>5:00 - 7 min</span>Objetivo. Leia o objetivo. Conecte com a vida real dele: &quot;You have a very structured routine at Oracle. Today you will learn to describe it in English.&quot;">
+  <div class="slide-chapter-label" style="color:var(--accent);">Chapter 1 -- The Dream</div>
+  <div style="max-width:600px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--text);margin-bottom:1rem;">Today's Objective</h2>
+    <p style="font-size:1.1rem;color:var(--text-mid);line-height:1.8;">Today you will learn to describe your daily routine at Oracle and talk about how often you do things using adverbs of frequency.</p>
+    <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+      <span style="padding:0.4rem 1rem;background:var(--accent-dim);border:1px solid rgba(79,70,229,0.2);border-radius:20px;font-size:0.82rem;color:var(--accent);font-weight:600;">Present Simple</span>
+      <span style="padding:0.4rem 1rem;background:var(--accent-dim);border:1px solid rgba(79,70,229,0.2);border-radius:20px;font-size:0.82rem;color:var(--accent);font-weight:600;">Adverbs of Frequency</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 4 — TRANSITION: PACKING WORDS ═══ -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>7:00 - 0.5 min</span>Transição rápida. Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(49,46,129,0.92) 0%, rgba(26,54,93,0.92) 50%, rgba(79,70,229,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+    <h1 class="slide-title" style="color:#fff;">Your Routine Vocabulary</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Eight essential words for describing your work week</p>
+    <div style="margin-top:2rem;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(79,70,229,0.6)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 5 — VOCAB 1-4 ═══ -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>7:30 - 15 min</span>Vocabulário. ANTES de clicar cada card, leia a definição e pergunte: &quot;What word do you think this is?&quot; Espere. DEPOIS de revelar: toque áudio 2x, Diogo repete. Foque na pronúncia de &quot;schedule&quot; (SKED-jool, não SHED-jool) e &quot;prioritize&quot; (pry-OR-ih-tyze, stress na segunda).<div class='t-ccq'><strong>CCQs:</strong> &quot;If you check your schedule, do you look at your plans?&quot; (yes) / &quot;If you prioritize, do you decide what is most important?&quot; (yes) / &quot;If you coordinate, do you work alone?&quot; (no, with others)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:#A5B4FC;text-align:center;">Click each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid1">
+    <!-- Card 1: Schedule -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #1e3a5f, #2d5a8e);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="v-card-hint">A list of planned activities and times...</div>
+      <div class="v-card-body">
+        <div class="v-word">Schedule</div>
+        <div class="v-def">a list of planned activities and times</div>
+        <div class="v-example">"I check my schedule every morning before the first meeting."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I check my schedule every morning before the first meeting.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 2: Deadline -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div class="v-card-hint">The final date for completing something...</div>
+      <div class="v-card-body">
+        <div class="v-word">Deadline</div>
+        <div class="v-def">the final date for completing something</div>
+        <div class="v-example">"The deadline for this project is next Friday."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The deadline for this project is next Friday.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 3: Prioritize -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #d97706, #fbbf24);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>
+      <div class="v-card-hint">To decide what is most important to do first...</div>
+      <div class="v-card-body">
+        <div class="v-word">Prioritize</div>
+        <div class="v-def">to decide what is most important to do first</div>
+        <div class="v-example">"I always prioritize urgent tasks from my stakeholders."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I always prioritize urgent tasks from my stakeholders.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 4: Coordinate -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #34d399);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div class="v-card-hint">To organize people or activities to work together...</div>
+      <div class="v-card-body">
+        <div class="v-word">Coordinate</div>
+        <div class="v-def">to organize people or activities to work together</div>
+        <div class="v-example">"I coordinate with teams in Colombia, Chile, and Mexico every day."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I coordinate with teams in Colombia, Chile, and Mexico every day.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount1">0 / 4 words revealed</div>
+</div>
+
+<!-- ═══ SLIDE 6 — VOCAB 5-8 ═══ -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>15:00 - 22 min</span>Vocabulário parte 2. Mesma dinâmica. Destaque &quot;attend&quot; (a-TEND, não &quot;aTEND&quot;) e &quot;commute&quot; (co-MUTE). Pergunte: &quot;How long is your commute, Diogo?&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;If you attend a meeting, are you there?&quot; (yes) / &quot;If you report to someone, do you give them information?&quot; (yes) / &quot;Is your commute the trip from home to work?&quot; (yes)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:#A5B4FC;text-align:center;">Click each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid2">
+    <!-- Card 5: Attend -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #7c3aed, #a78bfa);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M13.8 12H3"/></svg>
+      </div>
+      <div class="v-card-hint">To go to or be present at an event or meeting...</div>
+      <div class="v-card-body">
+        <div class="v-word">Attend</div>
+        <div class="v-def">to go to or be present at</div>
+        <div class="v-example">"I attend at least three meetings every morning."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I attend at least three meetings every morning.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 6: Report -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #0891b2, #22d3ee);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div class="v-card-hint">To give a formal account of progress or results...</div>
+      <div class="v-card-body">
+        <div class="v-word">Report</div>
+        <div class="v-def">to give a formal account of progress</div>
+        <div class="v-example">"I report to the VP of Operations every Friday."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I report to the VP of Operations every Friday.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 7: Commute -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #4338ca, #818cf8);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      </div>
+      <div class="v-card-hint">To travel regularly between home and work...</div>
+      <div class="v-card-body">
+        <div class="v-word">Commute</div>
+        <div class="v-def">to travel regularly between home and work</div>
+        <div class="v-example">"My commute from Parada Inglesa takes about forty-five minutes."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('My commute from Parada Inglesa takes about forty-five minutes.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 8: Routine -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #4F46E5, #818CF8);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+      </div>
+      <div class="v-card-hint">A regular way of doing things, the same pattern every day...</div>
+      <div class="v-card-body">
+        <div class="v-word">Routine</div>
+        <div class="v-def">a regular way of doing things</div>
+        <div class="v-example">"My routine at Oracle is very structured and organized."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('My routine at Oracle is very structured and organized.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount2">0 / 4 words revealed</div>
+</div>
+
+<!-- ═══ SLIDE 7 — PRONUNCIATION DRILL ═══ -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>22:00 - 26 min</span>Pronúncia. Clique cada palavra. Foque em: SCHED-ule (American: SKED-jool), DEAD-line, PRI-or-i-tize (stress na segunda sílaba), co-OR-di-nate (stress na segunda), at-TEND, re-PORT, com-MUTE, rou-TINE. Toque áudio, ele repete 2x.<div class='t-alert'>Se Diogo pronunciar &quot;schedule&quot; como &quot;SHED-jool&quot;, corrija: &quot;In American English, it is SKED-jool.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Pronunciation Drill</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen, then repeat. Focus on the stressed syllable.</p>
+  <div class="pron-list">
+    <div class="pron-item">
+      <div class="pron-word">Schedule</div>
+      <div class="pron-stress">SCHED-ule</div>
+      <button class="pron-play" onclick="speakText('schedule',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Deadline</div>
+      <div class="pron-stress">DEAD-line</div>
+      <button class="pron-play" onclick="speakText('deadline',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Prioritize</div>
+      <div class="pron-stress">PRI-or-i-tize</div>
+      <button class="pron-play" onclick="speakText('prioritize',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Coordinate</div>
+      <div class="pron-stress">co-OR-di-nate</div>
+      <button class="pron-play" onclick="speakText('coordinate',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Attend</div>
+      <div class="pron-stress">at-TEND</div>
+      <button class="pron-play" onclick="speakText('attend',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Report</div>
+      <div class="pron-stress">re-PORT</div>
+      <button class="pron-play" onclick="speakText('report',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Commute</div>
+      <div class="pron-stress">com-MUTE</div>
+      <button class="pron-play" onclick="speakText('commute',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Routine</div>
+      <div class="pron-stress">rou-TINE</div>
+      <button class="pron-play" onclick="speakText('routine',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 8 — KEY PHRASES ═══ -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>26:00 - 29 min</span>Frases completas. Toque cada frase. Diogo repete 2x. Foque na entonação e ritmo natural.">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Key Phrases</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen and repeat each phrase</p>
+  <div style="display:flex;flex-direction:column;gap:0.6rem;max-width:650px;width:100%;">
+    <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+      <div style="flex:1;font-size:1rem;color:rgba(255,255,255,0.85);font-style:italic;">"I check my schedule every morning before the first meeting."</div>
+      <button class="pron-play" onclick="speakText('I check my schedule every morning before the first meeting.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+      <div style="flex:1;font-size:1rem;color:rgba(255,255,255,0.85);font-style:italic;">"I always prioritize urgent tasks from my stakeholders."</div>
+      <button class="pron-play" onclick="speakText('I always prioritize urgent tasks from my stakeholders.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+      <div style="flex:1;font-size:1rem;color:rgba(255,255,255,0.85);font-style:italic;">"I coordinate with teams in Colombia, Chile, and Mexico every day."</div>
+      <button class="pron-play" onclick="speakText('I coordinate with teams in Colombia, Chile, and Mexico every day.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+      <div style="flex:1;font-size:1rem;color:rgba(255,255,255,0.85);font-style:italic;">"My routine at Oracle is very structured and organized."</div>
+      <button class="pron-play" onclick="speakText('My routine at Oracle is very structured and organized.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 9 — TRANSITION: THE CODE ═══ -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>29:00 - 0.5 min</span>Transição. Diga: &quot;Now let us learn about frequency -- how often you do things.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(49,46,129,0.92) 0%, rgba(26,54,93,0.92) 50%, rgba(79,70,229,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+    <h1 class="slide-title" style="color:#fff;">The Code of Frequency</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">How often do you...?</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 10 — GRAMMAR DISCOVERY ═══ -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>29:30 - 35 min</span>Gramática Discovery. NÃO explique a regra. Aponte para as palavras em destaque e pergunte: &quot;Look at the colored words. What do they have in common?&quot; Espere. Só clique &quot;Reveal&quot; DEPOIS que ele tentar.<div class='t-ccq'><strong>CCQs:</strong> &quot;If you usually do something, do you do it most of the time?&quot; (yes) / &quot;If you rarely miss a deadline, do you miss many deadlines?&quot; (no, almost never) / &quot;Where is 'never' in the sentence -- before or after the verb?&quot; (after 'am')</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Discovery</h2>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">What do the <span style="color:#A5B4FC;font-weight:600;">highlighted words</span> have in common?</p>
+  <div class="slide-content">
+    <div class="grammar-examples">
+      <div class="g-example">I <span class="highlight">usually</span> start my day at seven.</div>
+      <div class="g-example">I <span class="highlight">always</span> check my emails first.</div>
+      <div class="g-example">I <span class="highlight">rarely</span> miss a deadline.</div>
+      <div class="g-example">I am <span class="highlight">never</span> late for meetings.</div>
+    </div>
+    <button class="g-reveal-btn" onclick="revealGrammar(this)">Reveal the Rule</button>
+    <div class="g-rule" id="grammarRule1">
+      <h4>Adverbs of Frequency + Position</h4>
+      <table>
+        <thead>
+          <tr><th>Frequency</th><th>Adverb</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="color:#86efac;font-weight:600;">100%</td><td style="color:#A5B4FC;font-weight:600;">always</td><td>I <strong>always</strong> check my emails first.</td></tr>
+          <tr><td style="color:#86efac;">90%</td><td style="color:#A5B4FC;font-weight:600;">usually</td><td>I <strong>usually</strong> start at seven.</td></tr>
+          <tr><td style="color:#fbbf24;">75%</td><td style="color:#A5B4FC;font-weight:600;">often</td><td>I <strong>often</strong> coordinate with LATAM.</td></tr>
+          <tr><td style="color:#fbbf24;">50%</td><td style="color:#A5B4FC;font-weight:600;">sometimes</td><td>I <strong>sometimes</strong> have five meetings.</td></tr>
+          <tr><td style="color:#f87171;">10%</td><td style="color:#A5B4FC;font-weight:600;">rarely</td><td>I <strong>rarely</strong> miss a deadline.</td></tr>
+          <tr><td style="color:#f87171;font-weight:600;">0%</td><td style="color:#A5B4FC;font-weight:600;">never</td><td>I am <strong>never</strong> late.</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.04);border-radius:6px;">
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.7);"><strong style="color:#A5B4FC;">Position rule:</strong> BEFORE the main verb ("I <strong>usually</strong> start...") but AFTER "to be" ("I am <strong>never</strong> late.").</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 11 — COMMON MISTAKE ═══ -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>35:00 - 38 min</span>Erro Comum. Leia as frases. Pergunte: &quot;Why is the first one wrong?&quot; Reforce a posição do advérbio: antes do verbo principal, depois de 'to be'.<div class='t-alert'>Use: &quot;Almost! The adverb goes BEFORE the main verb.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Watch Out!</h2>
+  <div class="mistake-box" style="margin:0 auto;">
+    <div class="mistake-wrong">
+      <div class="mistake-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"I check <strong>always</strong> my emails."</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">Adverb after the verb = incorrect</p>
+      </div>
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"I <strong>always</strong> check my emails."</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">Adverb BEFORE the main verb = correct</p>
+      </div>
+    </div>
+    <div class="mistake-wrong" style="margin-top:0.5rem;">
+      <div class="mistake-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"<strong>Always</strong> I am busy."</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">Adverb at the start with "to be" = incorrect</p>
+      </div>
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"I am <strong>always</strong> busy."</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">Adverb AFTER "to be" = correct</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 12 — GRAMMAR FILL-IN ═══ -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>38:00 - 42 min</span>Prática. Leia cada frase com a lacuna. Diogo completa oralmente. DEPOIS clique para revelar.<div class='t-ccq'><strong>CCQs por item:</strong> Pergunte: &quot;Is this something you do every time, most times, or almost never?&quot;</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Practice</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Click to reveal the correct answer</p>
+  <div class="fill-practice">
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">I <span class="fp-blank">___</span> start at seven. (most of the time)</div>
+      <div class="fp-answer">I <strong>usually</strong> start at seven.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">She is <span class="fp-blank">___</span> on time. (100%)</div>
+      <div class="fp-answer">She is <strong>always</strong> on time.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">We <span class="fp-blank">___</span> miss deadlines. (almost never)</div>
+      <div class="fp-answer">We <strong>rarely</strong> miss deadlines.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">He <span class="fp-blank">___</span> coordinates with the team. (75%)</div>
+      <div class="fp-answer">He <strong>often</strong> coordinates with the team.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">I am <span class="fp-blank">___</span> busy on Mondays. (most of the time)</div>
+      <div class="fp-answer">I am <strong>usually</strong> busy on Mondays.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 13 — SUBSTITUTION DRILL ═══ -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>42:00 - 45 min</span>Substituição. Diga a frase modelo. Aponte para os chips. Diogo substitui o slot com cada chip e completa a frase. Objetivo: fixar a posição do advérbio na estrutura.">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <div class="sub-drill">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;">Substitution Drill</h2>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;">Replace the slot with each adverb and add a complement</p>
+    <div class="sub-template">I <span class="sub-slot">___</span> [verb] [complement].</div>
+    <div class="sub-prompts">
+      <span class="sub-chip" onclick="this.classList.toggle('active')">always</span>
+      <span class="sub-chip" onclick="this.classList.toggle('active')">usually</span>
+      <span class="sub-chip" onclick="this.classList.toggle('active')">often</span>
+      <span class="sub-chip" onclick="this.classList.toggle('active')">sometimes</span>
+      <span class="sub-chip" onclick="this.classList.toggle('active')">rarely</span>
+      <span class="sub-chip" onclick="this.classList.toggle('active')">never</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 14 — TRANSITION: GETTING THERE ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>45:00 - 0.5 min</span>Transição. Diga: &quot;Now let us see your routine in action.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,54,93,0.92) 0%, rgba(79,70,229,0.92) 50%, rgba(49,46,129,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+    <h1 class="slide-title" style="color:#fff;">A Day at Oracle</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Diogo's routine in action</p>
+    <div style="margin-top:2rem;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(79,70,229,0.6)" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 15 — ARTIFACT: DAILY PLANNER ═══ -->
+<div class="slide light" data-chapter="4" data-t="<span class='t-timing'>45:30 - 49 min</span>Artefato. Diga: &quot;Look at this daily planner. It is YOUR typical Monday!&quot; Pergunte: &quot;Is this similar to your real schedule?&quot; Use para transição ao diálogo.<div class='t-ccq'><strong>CCQs:</strong> &quot;What time does Diogo arrive?&quot; (7:45) / &quot;When does he coordinate with LATAM teams?&quot; (9:00) / &quot;How many hours at the office?&quot; (about 12)</div>">
+  <div class="slide-chapter-label" style="color:var(--accent);">Chapter 4 -- Getting There</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;">
+    <div class="planner-card">
+      <div class="planner-header">
+        <h5>Oracle -- Daily Planner</h5>
+        <h3>Diogo Leal -- Typical Monday</h3>
+      </div>
+      <div class="planner-body">
+        <div class="planner-row"><span class="planner-time">07:00</span><span class="planner-activity">Wake up, commute from Parada Inglesa</span></div>
+        <div class="planner-row"><span class="planner-time">07:45</span><span class="planner-activity">Arrive, check schedule and emails</span></div>
+        <div class="planner-row"><span class="planner-time">08:30</span><span class="planner-activity">Team standup meeting</span></div>
+        <div class="planner-row"><span class="planner-time">09:00</span><span class="planner-activity">Coordinate with LATAM teams</span></div>
+        <div class="planner-row"><span class="planner-time">12:00</span><span class="planner-activity">Lunch</span></div>
+        <div class="planner-row"><span class="planner-time">13:00</span><span class="planner-activity">Project meetings, prioritize deadlines</span></div>
+        <div class="planner-row"><span class="planner-time">16:00</span><span class="planner-activity">Status report preparation</span></div>
+        <div class="planner-row"><span class="planner-time">17:00</span><span class="planner-activity">Wrap-up and review</span></div>
+        <div class="planner-row"><span class="planner-time">19:00</span><span class="planner-activity">Leave office</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 16 — DIALOGUE PART 1 ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>49:00 - 55 min</span>Diálogo parte 1. Clique &quot;Next Line&quot; para cada fala. ANTES da fala de Diogo: &quot;What do you think he says?&quot; Espere. Palavras em destaque = vocabulário da aula. Destaque as estruturas com advérbios.<div class='t-alert'>Se Diogo quiser pular linhas, segure: &quot;Let us go one at a time so you can hear each adverb.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">A New Colleague</h2>
+  <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1rem;text-align:center;">Click "Next Line" to reveal each part of the conversation</p>
+  <div class="dialogue-container" id="dialogue1">
+    <div class="d-line visible" data-voice="ellen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">RA</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Rachel</div>
+        <div class="d-text">Hey Diogo! I just joined the São Paulo team. What does a typical Monday look like for you?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="arthur" style="border-left-color:var(--accent);">
+      <div class="d-avatar indigo">DL</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Diogo Leal</div>
+        <div class="d-text">Well, I <strong>usually</strong> start my day at seven. My <strong>commute</strong> from Parada Inglesa takes about forty-five minutes.</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">RA</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Rachel</div>
+        <div class="d-text">That is early! What do you do first when you arrive?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="arthur" style="border-left-color:var(--accent);">
+      <div class="d-avatar indigo">DL</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Diogo Leal</div>
+        <div class="d-text">I <strong>always</strong> check my <strong>schedule</strong> and emails before the first meeting. Then I <strong>coordinate</strong> with my teams in Colombia and Chile.</div>
+      </div>
+    </div>
+  </div>
+  <button class="next-line-btn" id="nextLineBtn1" onclick="revealNextLine('dialogue1','nextLineBtn1')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    Next Line
+  </button>
+</div>
+
+<!-- ═══ SLIDE 17 — DIALOGUE PART 2 ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>55:00 - 60 min</span>Diálogo parte 2. Mesma dinâmica. Observe como Diogo usa os advérbios. Destaque: &quot;Notice: 'I rarely leave before seven PM' -- rarely = almost never.&quot;">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">A New Colleague (continued)</h2>
+  <div class="dialogue-container" id="dialogue2">
+    <div class="d-line visible" data-voice="ellen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">RA</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Rachel</div>
+        <div class="d-text">How many meetings do you <strong>attend</strong> per day?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="arthur" style="border-left-color:var(--accent);">
+      <div class="d-avatar indigo">DL</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Diogo Leal</div>
+        <div class="d-text">I usually <strong>attend</strong> three or four. I <strong>sometimes</strong> have five when we are close to a <strong>deadline</strong>.</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">RA</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Rachel</div>
+        <div class="d-text">Do you ever work late?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="arthur" style="border-left-color:var(--accent);">
+      <div class="d-avatar indigo">DL</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Diogo Leal</div>
+        <div class="d-text">I <strong>rarely</strong> leave before seven PM. But I never miss a <strong>deadline</strong>, so it is worth it.</div>
+      </div>
+    </div>
+  </div>
+  <button class="next-line-btn" id="nextLineBtn2" onclick="revealNextLine('dialogue2','nextLineBtn2')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    Next Line
+  </button>
+</div>
+
+<!-- ═══ SLIDE 18 — DIALOGUE COMPREHENSION ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>60:00 - 63 min</span>Compreensão. Pergunte cada questão oralmente -- sobre RACHEL, não sobre Diogo. Diogo responde em frase completa. Depois clique para revelar e confirmar.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Dialogue Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. Did Rachel just start or has she been on the team for a long time?</div>
+      <div class="cq-a">She just joined the São Paulo team.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. What does Rachel want to know?</div>
+      <div class="cq-a">What a typical Monday looks like for Diogo.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. Is Rachel surprised that Diogo starts early?</div>
+      <div class="cq-a">Yes, she says "That is early!"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 19 — LISTENING ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>63:00 - 70 min</span>Listening. Diga: &quot;Close your eyes and listen to Marcus describing his routine.&quot; Toque o áudio. NÃO mostre texto. Depois pergunte: &quot;What did you hear?&quot; Aceite respostas parciais. Perguntas de compreensão uma por vez, oralmente ANTES de clicar.<div class='t-alert'>Se Diogo pedir para ver o texto, diga: &quot;Let us listen one more time first. Focus on the adverbs of frequency.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Marcus's Routine</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to Marcus Rivera describing his daily routine at a tech company.</p>
+  <div class="listening-card">
+    <div class="listening-player" id="lp-listen1" data-src="/audio/diogo-leal/aula3_listening_marcus_routine.mp3">
+      <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen1')"><div class="lp-progress" id="progress-lp-listen1"></div></div>
+      <div class="lp-time"><span id="time-current-lp-listen1">0:00</span><span id="time-total-lp-listen1">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('lp-listen1',-5)" aria-label="Back 5s"><svg viewBox="0 0 24 24"><path d="M12.5 8.14v7.72M10 12l-6-4.5v9l6-4.5"/><path d="M22 12A10 10 0 1112 2" stroke-linecap="round"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('lp-listen1')" aria-label="Play Pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('lp-listen1',5)" aria-label="Forward 5s"><svg viewBox="0 0 24 24"><path d="M11.5 15.86V8.14M14 12l6-4.5v9l-6-4.5"/><path d="M2 12a10 10 0 0010 10" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="lp-label">Speed</div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('lp-listen1',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div class="listening-questions" id="questions-lp-listen1">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. What does Marcus always do first?</div>
+        <div class="lq-answer">Check his code reviews.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. How often does Marcus skip lunch?</div>
+        <div class="lq-answer">Rarely.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. What does he sometimes do on Fridays?</div>
+        <div class="lq-answer">Work from home.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 20 — TRANSITION: PRACTICE ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>70:00 - 0.5 min</span>Transição rápida." style="background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(79,70,229,0.92) 0%, rgba(26,54,93,0.92) 50%, rgba(49,46,129,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+    <h1 class="slide-title" style="color:#fff;">More Practice</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">From words to action</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 21 — QUICK FIRE ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>70:30 - 76 min</span>Quick Fire. Leia a situação. Diogo responde em inglês. Se acertar: &quot;Show Answer&quot; para confirmar. Se travar: dê a primeira palavra. 30 segundos por item.<div class='t-alert'>Se Diogo ficar inseguro, encoraje: &quot;There is no perfect answer. Just use the vocabulary!&quot;</div>">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Fire</h2>
+  <div class="qc-score" id="qcScore">0 / 6</div>
+  <div class="qc-container" id="qcContainer">
+    <div class="qc-card active" data-idx="0">
+      <div class="qc-prompt">Your manager asks: How often do you coordinate with the LATAM teams?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I usually coordinate with them every morning."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="1">
+      <div class="qc-prompt">A colleague asks: When do you check your schedule?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I always check my schedule before the first meeting."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="2">
+      <div class="qc-prompt">Someone asks: Do you attend many meetings?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I usually attend three or four meetings per day."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="3">
+      <div class="qc-prompt">Your VP asks: How do you handle deadlines?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I always prioritize urgent deadlines first."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="4">
+      <div class="qc-prompt">A new team member asks: How is your commute?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"My commute takes about forty-five minutes."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="5">
+      <div class="qc-prompt">A client asks: What is your daily routine like?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"My routine is very structured. I usually start at seven and attend several meetings."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 22 — SPOT THE ERROR ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>76:00 - 79 min</span>Spot the Error. Leia cada frase. Pergunte: &quot;Can you find the mistake?&quot; Clique para revelar. Atenção: a frase 4 é CORRETA (pegadinha).">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Spot the Error</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Click each sentence to see the correction</p>
+  <div class="error-list" id="errorList">
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"I check <span class="wrong">always</span> my emails."</div>
+      <div class="err-correction">"I <strong>always check</strong> my emails." (adverb BEFORE the main verb)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"<span class="wrong">Usually I am start</span> at seven."</div>
+      <div class="err-correction">"I <strong>usually start</strong> at seven." (no double verb, adverb before main verb)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"She <span class="wrong">attend</span> three meetings."</div>
+      <div class="err-correction">"She <strong>attends</strong> three meetings." (third person -s)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"I am rarely late."</div>
+      <div class="err-correction">CORRECT! No error. "Am" + adverb after "to be" = perfect.</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"He <span class="wrong">never is</span> on time."</div>
+      <div class="err-correction">"He <strong>is never</strong> on time." (adverb AFTER "to be")</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 23 — ORAL DRILLING ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>79:00 - 82 min</span>Oral Drilling. Leia a situação. Diogo responde oralmente. Objetivo: produção fluente usando vocabulário + advérbios. 30 segundos por item.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Oral Drilling</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Respond to each situation using vocabulary and adverbs of frequency</p>
+  <div class="oral-list">
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">Your VP of Operations asks you to describe your typical morning at Oracle.</div>
+      <div class="oral-model">"I usually start at seven. I always check my schedule and emails first. Then I coordinate with my LATAM teams."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">A colleague from the US team wants to know your weekly routine.</div>
+      <div class="oral-model">"My routine is very structured. I usually attend three or four meetings per day. I often coordinate with teams in Colombia and Chile."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">You are reporting to your manager about how you prioritize tasks.</div>
+      <div class="oral-model">"I always prioritize urgent deadlines first. I rarely miss a deadline because I report progress every Friday."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 24 — ERROR CORRECTION (editable) ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>82:00 - 84 min</span>Correção. Digite os erros que anotou durante a aula. Corrija 2-3 erros principais com Diogo. Sempre comece com o que ele fez BEM.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <div style="max-width:600px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.8rem;">Let us fix these together</h2>
+    <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);line-height:1.7;margin-bottom:1.5rem;">Type the errors you noticed during the class</p>
+    <div class="error-editable" contenteditable="true">Click here and type student errors...</div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 25 — MORE ORAL PRACTICE ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>84:00 - 87 min</span>Prática extra. Diga: &quot;Describe your Monday from 7 AM to 7 PM. Use at least 4 vocabulary words and 3 adverbs of frequency.&quot; Diogo fala livremente. Celebre a produção.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <div style="max-width:550px;text-align:center;">
+    <div style="width:64px;height:64px;border-radius:50%;background:rgba(79,70,229,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.8rem;">Your Monday at Oracle</h2>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:1.5rem;">Describe your Monday from 7 AM to 7 PM using at least 4 vocabulary words and 3 adverbs of frequency.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center;">
+      <span style="padding:0.3rem 0.8rem;background:rgba(79,70,229,0.15);border:1px solid rgba(79,70,229,0.3);border-radius:20px;font-size:0.78rem;color:#A5B4FC;">schedule</span>
+      <span style="padding:0.3rem 0.8rem;background:rgba(79,70,229,0.15);border:1px solid rgba(79,70,229,0.3);border-radius:20px;font-size:0.78rem;color:#A5B4FC;">coordinate</span>
+      <span style="padding:0.3rem 0.8rem;background:rgba(79,70,229,0.15);border:1px solid rgba(79,70,229,0.3);border-radius:20px;font-size:0.78rem;color:#A5B4FC;">attend</span>
+      <span style="padding:0.3rem 0.8rem;background:rgba(79,70,229,0.15);border:1px solid rgba(79,70,229,0.3);border-radius:20px;font-size:0.78rem;color:#A5B4FC;">deadline</span>
+      <span style="padding:0.3rem 0.8rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.78rem;color:rgba(255,255,255,0.7);">usually</span>
+      <span style="padding:0.3rem 0.8rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.78rem;color:rgba(255,255,255,0.7);">always</span>
+      <span style="padding:0.3rem 0.8rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.78rem;color:rgba(255,255,255,0.7);">rarely</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 26 — TRANSITION: YOUR TURN ═══ -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>87:00 - 0.5 min</span>Transição. Diga: &quot;From guided to free -- show what you learned.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(79,70,229,0.92) 0%, rgba(26,54,93,0.92) 50%, rgba(49,46,129,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+    <h1 class="slide-title" style="color:#fff;">Production Time</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">From guided to free -- show what you learned</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 27 — ROLE-PLAY 1: GUIDED ═══ -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>87:30 - 92 min</span><strong>Role-Play Guided</strong>. Você é Rachel (nova colega). Faça perguntas sobre a rotina de Diogo. Keywords na tela como apoio. Se travar: &quot;Start with 'I usually...'&quot;<div class='t-alert'>Se fluir bem, desafie: &quot;Now tell me about your afternoon routine.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #4F46E5 0%, #818CF8 50%, #312e81 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Role-Play 1 -- Guided
+      </div>
+      <div class="rp-scenario">A new colleague at Oracle asks about your daily routine. Answer each question using the vocabulary from this lesson.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">7 AM</span>
+        <span class="rp-keyword">schedule</span>
+        <span class="rp-keyword">emails</span>
+        <span class="rp-keyword">three meetings</span>
+        <span class="rp-keyword">LATAM teams</span>
+        <span class="rp-keyword">deadline</span>
+        <span class="rp-keyword">7 PM</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 28 — ROLE-PLAY 2: SEMI-FREE ═══ -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>92:00 - 97 min</span><strong>Role-Play Semi-Free</strong>. Você é um project manager da AT&T em um almoço de networking. Menos apoio visual. Anote erros -- corrija DEPOIS.<div class='t-alert'>Se ele falar mais de 2 min, deixe! O objetivo é fluência.</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #4338ca 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Role-Play 2 -- Semi-Free
+      </div>
+      <div class="rp-scenario">You meet a project manager from AT&T at a networking lunch. They ask: "What does a typical week look like for someone in your role?" Describe your routine naturally.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">Oracle</span>
+        <span class="rp-keyword">coordinate</span>
+        <span class="rp-keyword">prioritize</span>
+        <span class="rp-keyword">rarely</span>
+        <span class="rp-keyword">usually</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 29 — ROLE-PLAY 3: FREE ═══ -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>97:00 - 102 min</span><strong>Role-Play Free</strong>. Sem keywords, sem script. Você é o entrevistador para uma posição de Senior IT Director. Celebre QUALQUER produção. Delayed correction DEPOIS.<div class='t-alert'>Este é o momento mais importante. Valide: &quot;Diogo, you just described your routine like a true IT leader. That is exactly what you would say in a real interview.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #4F46E5 0%, #0891b2 50%, #1a365d 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Role-Play 3 -- Free
+      </div>
+      <div class="rp-scenario">You are interviewing for a Senior IT Director position. The interviewer says: "Walk me through a typical day." Describe your routine at Oracle, showing your leadership and time management skills.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">no keywords -- speak freely</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 30 — TRANSITION: WRAP-UP ═══ -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>102:00 - 0.5 min</span>Transição. Diga: &quot;Let us wrap up what you accomplished today.&quot;" style="background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(79,70,229,0.92) 50%, rgba(26,54,93,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+    <h1 class="slide-title" style="color:#fff;">Wrap-Up</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">What you accomplished today</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 31 — WHAT I LEARNED ═══ -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>102:30 - 106 min</span>Checklist. Leia cada item. Pergunte: &quot;Can you say yes to this?&quot; Se sim, clique o checkbox juntos. Celebre cada check.">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.3rem;">What I Learned Today</h2>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;">Click each item to check it off</p>
+    <div class="checklist-wrap" style="text-align:left;">
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can describe my daily routine using Present Simple.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can use adverbs of frequency correctly (before verb, after "to be").</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I know 8 new vocabulary words for work routines.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can talk about how often I do things at Oracle.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can describe my schedule to a colleague or manager.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 32 — BADGE EARNED ═══ -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>106:00 - 108 min</span>Celebração. Diga: &quot;You earned your Weekly Sprint badge, Diogo! You are now a Routine Master.&quot; Confetti automático.">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;">
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg, var(--accent), var(--accent-light));display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 0 30px rgba(79,70,229,0.4);">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+    <div class="artifact-badge">
+      <div class="artifact-badge-header">
+        <h5>Oracle Tech Conference</h5>
+        <h3>Attendee Badge</h3>
+      </div>
+      <div class="artifact-badge-body">
+        <div class="badge-name">DIOGO LEAL</div>
+        <div class="badge-title">IT Project Manager</div>
+        <div class="badge-affiliation">Routine Master -- Day 3 Complete</div>
+      </div>
+      <div class="artifact-badge-photo">DL</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 33 — HOMEWORK ═══ -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>108:00 - 110 min</span><strong>Homework (diga oralmente, NÃO está na tela):</strong><br>Diga: &quot;Para a próxima aula, descreva o seu Monday típico em um áudio de 2 minutos no WhatsApp. Use pelo menos 5 das 8 palavras da aula e 3 advérbios de frequência.&quot;">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;">
+    <div style="width:64px;height:64px;border-radius:50%;background:rgba(79,70,229,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.8rem;">Homework</h2>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.85);line-height:1.7;">Complete the Pre-class exercises for Lesson 4 and review today's vocabulary.</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 34 — NEXT LESSON PREVIEW ═══ -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>110:00 - 112 min</span>Preview. Diga: &quot;Next class, we will learn how to start conversations with anyone.&quot; Celebre: &quot;Great work today, Diogo!&quot;">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;">Next Lesson Preview</h2>
+    <div style="padding:1.5rem;background:rgba(79,70,229,0.08);border:1px solid rgba(79,70,229,0.25);border-radius:12px;">
+      <p style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#A5B4FC;margin-bottom:0.5rem;">Coming Up</p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;">Lesson 4: Breaking the Ice</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-top:0.5rem;">Small Talk Strategies for Professional Contexts</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 35 — CLOSING ═══ -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>112:00</span>Encerramento. Pare de compartilhar tela. Diga goodbye naturalmente." style="background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(79,70,229,0.92) 50%, rgba(26,54,93,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+    <div style="margin-top:1rem;padding:1.5rem 2rem;background:rgba(79,70,229,0.08);border:1px solid rgba(79,70,229,0.2);border-radius:12px;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#fff;">Day 3 -- Complete</p>
+      <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);margin-top:0.8rem;">Next: Breaking the Ice -- Small Talk Strategies</p>
+    </div>
+    <div style="margin-top:2rem;">
+      <p style="font-size:0.82rem;color:var(--accent-light);font-weight:600;">Alumni by Better</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end slide-deck -->
+
+<!-- ===== CONFETTI CONTAINER ===== -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP =====
+var audioMap = {
+  "schedule": "/audio/diogo-leal/aula3_schedule.mp3",
+  "deadline": "/audio/diogo-leal/aula3_deadline.mp3",
+  "prioritize": "/audio/diogo-leal/aula3_prioritize.mp3",
+  "coordinate": "/audio/diogo-leal/aula3_coordinate.mp3",
+  "attend": "/audio/diogo-leal/aula3_attend.mp3",
+  "report": "/audio/diogo-leal/aula3_report.mp3",
+  "commute": "/audio/diogo-leal/aula3_commute.mp3",
+  "routine": "/audio/diogo-leal/aula3_routine.mp3",
+  "I check my schedule every morning before the first meeting.": "/audio/diogo-leal/aula3_ic_schedule_morning.mp3",
+  "The deadline for this project is next Friday.": "/audio/diogo-leal/aula3_ic_deadline_next_friday.mp3",
+  "I always prioritize urgent tasks from my stakeholders.": "/audio/diogo-leal/aula3_ic_prioritize_urgent.mp3",
+  "I coordinate with teams in Colombia, Chile, and Mexico every day.": "/audio/diogo-leal/aula3_ic_coordinate_teams.mp3",
+  "I attend at least three meetings every morning.": "/audio/diogo-leal/aula3_ic_attend_meetings.mp3",
+  "I report to the VP of Operations every Friday.": "/audio/diogo-leal/aula3_ic_report_vp.mp3",
+  "My commute from Parada Inglesa takes about forty-five minutes.": "/audio/diogo-leal/aula3_ic_commute_parada.mp3",
+  "My routine at Oracle is very structured and organized.": "/audio/diogo-leal/aula3_ic_routine_oracle.mp3",
+  "Hey Diogo! I just joined the São Paulo team. What does a typical Monday look like for you?": "/audio/diogo-leal/aula3_ic_dlg_rachel_1.mp3",
+  "Well, I usually start my day at seven. My commute from Parada Inglesa takes about forty-five minutes.": "/audio/diogo-leal/aula3_ic_dlg_diogo_1.mp3",
+  "That is early! What do you do first when you arrive?": "/audio/diogo-leal/aula3_ic_dlg_rachel_2.mp3",
+  "I always check my schedule and emails before the first meeting. Then I coordinate with my teams in Colombia and Chile.": "/audio/diogo-leal/aula3_ic_dlg_diogo_2.mp3",
+  "How many meetings do you attend per day?": "/audio/diogo-leal/aula3_ic_dlg_rachel_3.mp3",
+  "I usually attend three or four. I sometimes have five when we are close to a deadline.": "/audio/diogo-leal/aula3_ic_dlg_diogo_3.mp3",
+  "Do you ever work late?": "/audio/diogo-leal/aula3_ic_dlg_rachel_4.mp3",
+  "I rarely leave before seven PM. But I never miss a deadline, so it is worth it.": "/audio/diogo-leal/aula3_ic_dlg_diogo_4.mp3",
+  "My name is Marcus Rivera. I work as a Senior Developer at a tech company in Austin, Texas. I usually start my day at eight thirty. I always prioritize checking my code reviews first. I often coordinate with our team in Berlin because of the time difference. I attend a standup meeting at nine every morning. I rarely skip lunch because it helps me stay focused. My commute is only fifteen minutes by bike. The routine keeps me productive. I sometimes work from home on Fridays.": "/audio/diogo-leal/aula3_listening_marcus_routine.mp3"
+};
+
+// ===== AUDIO ENGINE =====
+var currentAudio = null;
+var audioSpeed = 1;
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed;
+    currentAudio.play().catch(function() { fallbackTTS(cleanText); });
+  } else {
+    fallbackTTS(cleanText);
+  }
+}
+
+function fallbackTTS(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 0;
+var slides = [];
+var teacherCues = [];
+
+function initSlides() {
+  slides = document.querySelectorAll('.slide');
+  slides.forEach(function(s, i) {
+    teacherCues[i] = s.dataset.t || '';
+  });
+  buildDotNav();
+  updateSlide();
+}
+
+function buildDotNav() {
+  var nav = document.getElementById('dotNav');
+  nav.innerHTML = '';
+  for (var i = 0; i < slides.length; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'dot-nav-item' + (i === 0 ? ' active' : '');
+    dot.dataset.idx = i;
+    dot.onclick = function() { goToSlide(parseInt(this.dataset.idx)); };
+    nav.appendChild(dot);
+  }
+}
+
+function goToSlide(idx) {
+  if (idx < 0 || idx >= slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = idx;
+  slides[currentSlide].classList.add('active');
+  updateSlide();
+}
+
+function nextSlide() { goToSlide(currentSlide + 1); }
+function prevSlide() { goToSlide(currentSlide - 1); }
+
+function updateSlide() {
+  // Counter
+  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + slides.length;
+
+  // Dot nav
+  document.querySelectorAll('.dot-nav-item').forEach(function(d, i) {
+    d.classList.toggle('active', i === currentSlide);
+  });
+
+  // Chapter bar
+  var currentChapter = slides[currentSlide].dataset.chapter;
+  document.querySelectorAll('.chapter-dot').forEach(function(d) {
+    var ch = d.dataset.chapter;
+    d.classList.remove('active', 'completed');
+    if (ch === currentChapter) d.classList.add('active');
+    else if (parseInt(ch) < parseInt(currentChapter)) d.classList.add('completed');
+  });
+
+  // Teacher panel
+  var panel = document.getElementById('tPanel');
+  panel.classList.remove('show');
+  panel.innerHTML = teacherCues[currentSlide] || '<em>No teacher cue for this slide.</em>';
+
+  // Badge confetti (slide 32, index 31)
+  if (currentSlide === 31) {
+    setTimeout(triggerConfetti, 500);
+  }
+}
+
+// ===== KEYBOARD NAV =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+});
+
+// ===== TEACHER CUE TOGGLE =====
+function toggleTeacherCue() {
+  var panel = document.getElementById('tPanel');
+  panel.classList.toggle('show');
+}
+
+// Close panel on outside click
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('tPanel');
+  var cue = document.getElementById('tCue');
+  if (!panel.contains(e.target) && !cue.contains(e.target)) {
+    panel.classList.remove('show');
+  }
+});
+
+// ===== VOCAB REVEAL (TOGGLE) =====
+function revealVCard(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  var revealed = grid.querySelectorAll('.v-card.revealed').length;
+  var total = grid.querySelectorAll('.v-card').length;
+  document.getElementById(counterId).textContent = revealed + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar(btn) {
+  btn.classList.add('used');
+  document.getElementById('grammarRule1').classList.add('show');
+}
+
+// ===== DIALOGUE LINE BY LINE =====
+function revealNextLine(dialogueId, btnId) {
+  var container = document.getElementById(dialogueId);
+  var lines = container.querySelectorAll('.d-line');
+  var btn = document.getElementById(btnId);
+  var nextHidden = null;
+  for (var i = 0; i < lines.length; i++) {
+    if (!lines[i].classList.contains('visible')) { nextHidden = lines[i]; break; }
+  }
+  if (nextHidden) {
+    nextHidden.classList.add('visible');
+    nextHidden.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  var allVisible = container.querySelectorAll('.d-line:not(.visible)').length === 0;
+  if (allVisible) btn.style.display = 'none';
+}
+
+// ===== QUICK CHALLENGE =====
+var qcCurrent = 0;
+var qcTotal = 6;
+var qcScore = 0;
+
+function showQcAnswer(btn) {
+  var card = btn.closest('.qc-card');
+  var answer = card.querySelector('.qc-answer-box');
+  var next = card.querySelector('.qc-next-btn');
+  answer.classList.add('show');
+  next.classList.add('show');
+  btn.style.display = 'none';
+  qcScore++;
+  document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal;
+
+  if (qcScore === qcTotal) {
+    triggerConfetti();
+  }
+}
+
+function nextQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent++;
+  if (qcCurrent < cards.length) {
+    cards[qcCurrent].classList.add('active');
+  }
+}
+
+// ===== CHECKLIST =====
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+}
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#4F46E5', '#818CF8', '#fbbf24', '#f87171', '#60a5fa', '#a78bfa', '#34d399'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.width = (Math.random() * 8 + 5) + 'px';
+    piece.style.height = (Math.random() * 8 + 5) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 4000);
+}
+
+// ===== LISTENING PLAYER (Full) =====
+var lpPlayers = {};
+
+function initPlayer(id) {
+  var container = document.getElementById(id);
+  if (!container) return;
+  var src = container.dataset.src;
+  if (!src) return;
+  var file = src;
+  if (src.indexOf('/') === -1 && audioMap[src]) file = audioMap[src];
+  var audio = new Audio(file);
+  lpPlayers[id] = { audio: audio, speed: 1, playing: false };
+  audio.addEventListener('timeupdate', function() { updatePlayerUI(id); });
+  audio.addEventListener('loadedmetadata', function() { updatePlayerUI(id); });
+  audio.addEventListener('ended', function() {
+    lpPlayers[id].playing = false;
+    var playBtn = document.querySelector('#' + id + ' .lp-play');
+    if (playBtn) playBtn.classList.remove('playing');
+    var qs = document.getElementById('questions-' + id);
+    if (qs) qs.style.display = 'flex';
+  });
+}
+
+function togglePlayer(id) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var p = lpPlayers[id];
+  var playBtn = document.querySelector('#' + id + ' .lp-play');
+  if (p.playing) {
+    p.audio.pause();
+    p.playing = false;
+    if (playBtn) playBtn.classList.remove('playing');
+  } else {
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    p.audio.playbackRate = p.speed;
+    p.audio.play();
+    p.playing = true;
+    if (playBtn) playBtn.classList.add('playing');
+  }
+}
+
+function skipAudio(id, seconds) {
+  if (!lpPlayers[id]) return;
+  var a = lpPlayers[id].audio;
+  a.currentTime = Math.max(0, Math.min(a.duration || 0, a.currentTime + seconds));
+}
+
+function seekAudio(event, id) {
+  if (!lpPlayers[id]) return;
+  var bar = event.currentTarget;
+  var rect = bar.getBoundingClientRect();
+  var pct = (event.clientX - rect.left) / rect.width;
+  lpPlayers[id].audio.currentTime = pct * (lpPlayers[id].audio.duration || 0);
+}
+
+function setPlayerSpeed(id, speed, btn) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  lpPlayers[id].speed = speed;
+  lpPlayers[id].audio.playbackRate = speed;
+  var container = document.getElementById(id);
+  if (container) {
+    container.querySelectorAll('.lp-speed-btn').forEach(function(b) { b.classList.remove('active'); });
+  }
+  if (btn) btn.classList.add('active');
+}
+
+function updatePlayerUI(id) {
+  var p = lpPlayers[id];
+  if (!p) return;
+  var current = p.audio.currentTime || 0;
+  var total = p.audio.duration || 0;
+  var pct = total > 0 ? (current / total) * 100 : 0;
+  var progressEl = document.getElementById('progress-' + id);
+  if (progressEl) progressEl.style.width = pct + '%';
+  var curEl = document.getElementById('time-current-' + id);
+  var totEl = document.getElementById('time-total-' + id);
+  if (curEl) curEl.textContent = formatTime(current);
+  if (totEl) totEl.textContent = formatTime(total);
+}
+
+function formatTime(s) {
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', initSlides);
+</script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+</body>
+</html>
