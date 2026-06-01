@@ -63,6 +63,11 @@ const ARTHUR_PHRASES = new Set([
   "The ICU is tough. What did you do there?",
   "Impressive. And how did you move into robotic surgery?",
   "That is a big milestone. What was the hardest part?",
+  // Aula 3 — Tom (new team member)
+  "Andreia, what does a normal day look like for you?",
+  "And then? What do you usually do?",
+  "Do you report to anyone?",
+  "What is your top priority?",
 ]);
 
 // ---- Build audioMap ----
@@ -92,6 +97,12 @@ const LISTEN3 = "Hello. Let me tell you my career story. I graduated from nursin
 const LISTEN4 = "Andreia, I would love to understand your journey. Where and when did you start your career? And tell me, what was your biggest challenge along the way, and your proudest achievement?";
 jobs.push({ text: LISTEN3, file: path.join(OUT_DIR, 'listening_aula2_career_story.mp3'), voice: ELLEN });
 jobs.push({ text: LISTEN4, file: path.join(OUT_DIR, 'listening_aula2_mentor_questions.mp3'), voice: ARTHUR });
+
+// Aula 3 listenings
+const LISTEN5 = "Let me tell you about my normal day. My routine starts at seven. I always check my schedule first. I usually coordinate the surgical team in the morning, and I monitor the equipment before every surgery. I report to the medical director, and I often give her updates. Safety is always my top priority, so we never skip the safety check.";
+const LISTEN6 = "Andreia, I am new here, so I would love to understand your routine. What time does your day start, and what do you do first? Also, how often do you coordinate the team, and who do you report to?";
+jobs.push({ text: LISTEN5, file: path.join(OUT_DIR, 'listening_aula3_routine.mp3'), voice: ELLEN });
+jobs.push({ text: LISTEN6, file: path.join(OUT_DIR, 'listening_aula3_colleague_questions.mp3'), voice: ARTHUR });
 
 fs.writeFileSync(path.join(ROOT, '_andreia-audiomap.json'), JSON.stringify(audioMap, null, 2));
 console.log('audioMap entries:', Object.keys(audioMap).length);
