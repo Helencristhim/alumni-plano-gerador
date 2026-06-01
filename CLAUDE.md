@@ -693,9 +693,21 @@ NENHUM material e "pronto" sem passar por TODOS os 7 checks:
 
 9. **Uniformidade Visual** — Componentes repetidos (cards de menu, lesson cards, exercise sections) DEVEM ter o MESMO HTML/CSS em TODAS as instancias. Se aula 1 usa border-radius:8px e font-weight:600, aula 5 DEVE usar o mesmo. Verificar: comparar o HTML do primeiro e ultimo item de cada componente repetido — devem ser identicos exceto pelo conteudo.
 
+10. **CSS Visual Completo (BLOQUEANTE)** — TODA classe CSS usada nos slides IN CLASS DEVE ter regras CSS definidas no `<style>` do arquivo. Verificar ANTES de declarar qualquer aula como pronta:
+    - `vocab-card-ic` com `.vocab-back { opacity:0; max-height:0 }` (reveal cards)
+    - `primary-btn` com estilo de botao (Next Line, Reveal the Rule)
+    - `lp-player`, `lp-skip`, `lp-seekbar-fill`, `lp-speed-row` (listening player)
+    - `slide-section-title` (titulos de secao nos slides)
+    - `dialogue-name` (nome do personagem no dialogo)
+    - `comp-answer` (resposta escondida em comprehension questions)
+    - `.slide-dark .comp-q { background:#fff!important }` (contraste em slides escuros)
+    - NUNCA inventar classe nova sem CSS correspondente — usar classes do template
+    - **Comando de verificacao**: `grep -oP 'class="[^"]*"' SLIDES_HTML | sort -u` e confirmar que TODAS existem no CSS
+
 Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao deploy.
 
 > **LEMBRETE**: O erro mais comum e pular as etapas 1.3 (Grammar in Context) e 1.4 (Grammar Tip) no Pre-class. Isso ja aconteceu antes e NAO pode se repetir. SEMPRE verificar.
+> **LEMBRETE 2**: O segundo erro mais comum e criar slides IN CLASS com classes CSS que nao tem regras definidas (vocab-card-ic sem CSS de reveal, primary-btn sem estilo, comp-q ilegivel em slides escuros). Isso causou retrabalho massivo em 62 arquivos. NUNCA entregar aula sem verificar renderizacao visual de TODOS os slides.
 
 ---
 
