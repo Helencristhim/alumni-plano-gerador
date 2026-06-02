@@ -1480,3 +1480,85 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 - NAO requer mudanca no `switchTab()` ou em nenhuma outra funcao
 - DEVE ser incluido em AMBOS os arquivos (professor e aluno)
 - A aba so aparece se o script estiver presente — materiais sem o script continuam identicos
+
+---
+
+## REGRA 31 — QA DE PROFESSORES: ERROS RECORRENTES (BLOQUEANTE)
+
+> Regras derivadas de feedback real de professores em aula. TODAS sao OBRIGATORIAS e devem ser verificadas ANTES de declarar qualquer aula como pronta.
+
+### A. Instrucoes de interacao: "Click on" (NUNCA "Click each")
+- ERRADO: "Click each card to reveal"
+- CERTO: "Click on each card to reveal"
+- Verificar TODAS as instrucoes de slide antes de deploy
+
+### B. Personalizacao: "you/your" quando aluno e protagonista
+- Quando o material simula uma situacao PROTAGONIZADA pelo aluno, usar "you/your"
+- NUNCA tratar o aluno em 3a pessoa como se fosse outra pessoa
+- ERRADO: "Listen to Dr. Ruffo delivering her keynote" / "How did Patricia respond?"
+- CERTO: "Listen to you, Dr. Ruffo, delivering your keynote" / "How did you respond?"
+- Aplica-se a: listenings protagonizados, comprehension questions sobre o aluno, instrucoes de role-play
+
+### C. Voz ElevenLabs = genero do aluno quando e protagonista
+- Se o listening/audio simula a fala DO ALUNO (keynote, networking, apresentacao), a voz DEVE ser do genero do aluno
+- Aluna = Ellen, Aluno = Arthur
+- NUNCA voz masculina para simular fala de aluna (e vice-versa)
+- Isso se soma a regra existente de alternancia (frases gerais alternam; protagonista = genero do aluno)
+
+### D. Scroll reset OBRIGATORIO ao navegar slides
+- `goToSlide()` DEVE incluir `slides[currentSlide].scrollTop = 0`
+- Sem isso, ao retornar a um slide ja scrollado, o topo fica cortado
+- Aplica-se a TODOS os materiais IN CLASS
+
+### E. Conteudo NUNCA cortado atras do top-bar
+- Slides com conteudo longo (pronuncia 10 itens, oral drilling, dialogo completo) podem ter o primeiro item escondido
+- `padding-top` DEVE ser >= 4.5rem nos slides
+- Centralizar com `::before/::after { flex:1 }` (NUNCA `justify-content:center` que corta overflow no topo)
+- VERIFICACAO: abrir slides com muito conteudo e confirmar que o PRIMEIRO item e visivel
+
+### F. Spot the Error: erro INVISIVEL antes do click
+- A classe `.wrong` NAO pode ter estilo visual (line-through, cor vermelha) no estado padrao
+- O destaque do erro so aparece DEPOIS do click: `.err-item.open .wrong { text-decoration:line-through; color:#f87171; }`
+- Estado padrao: `.wrong { color:inherit; text-decoration:none; }`
+
+### G. Quick Challenge: navegacao completa
+- Contador de progresso: "Challenge N / total" (alem do score)
+- Botao "Previous" em TODOS os cards exceto o primeiro
+- Ultimo card NAO tem "Next Question" (evita tela vazia 6/6)
+- `nextQc()` DEVE ter guard: `if (qcCurrent >= cards.length - 1) return`
+- `prevQc()` DEVE existir com guard: `if (qcCurrent <= 0) return`
+
+### H. Contexto de aula presencial vs autonoma
+- Se o material e usado com professor (compartilhado no Zoom), instrucoes de "record yourself" ficam deslocadas
+- Preferir: "Deliver your presentation to your teacher" em vez de "Record your presentation"
+- Slides de producao livre devem considerar que o PROFESSOR esta presente
+
+### I. Consistencia de volume entre audios
+- Audios no mesmo slide/secao DEVEM ter volume consistente
+- Quando alternar vozes (Arthur/Ellen), manter MESMOS `voice_settings` (stability, similarity_boost)
+- Se um audio soa mais alto que os demais, regenerar com a voz correta da alternancia
+
+### J. Vocab reveal cards DEVEM ser toggle
+- `classList.toggle('revealed')` — NUNCA `classList.add` sem toggle
+- Clicar abre, clicar de novo FECHA
+- Professora deve conseguir fechar se clicar sem querer
+
+### CHECKLIST PRE-DEPLOY (REGRA 31):
+```bash
+# Verificar "Click each" sem "on"
+grep -n "Click each" ARQUIVO.html  # deve retornar 0
+
+# Verificar nome do aluno em comprehension/listening (3a pessoa)
+grep -n "Listen to.*[NOME]" ARQUIVO.html  # verificar se deveria ser "you"
+grep -n "How did.*[NOME]" ARQUIVO.html    # verificar se deveria ser "you"
+grep -n "What did.*[NOME]" ARQUIVO.html   # verificar se deveria ser "you"
+
+# Verificar scroll reset
+grep -n "scrollTop" ARQUIVO.html  # deve existir no goToSlide
+
+# Verificar erro visivel antes do click
+grep -n "class=\"wrong\"" ARQUIVO.html  # verificar CSS correspondente
+
+# Verificar Quick Challenge guards
+grep -n "nextQc\|prevQc" ARQUIVO.html  # ambos devem existir
+```

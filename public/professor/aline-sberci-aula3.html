@@ -1136,7 +1136,8 @@ function stopAllAudio(){if(currentAudio){currentAudio.pause();currentAudio.curre
 function toggleCheck(item){item.classList.toggle('checked')}
 function triggerConfetti(){var container=document.getElementById('confettiContainer');var colors=['#2563EB','#3B82F6','#003080','#16a34a','#d97706','#dc2626','#059669'];for(var i=0;i<80;i++){var piece=document.createElement('div');piece.className='confetti-piece';piece.style.left=Math.random()*100+'%';piece.style.background=colors[Math.floor(Math.random()*colors.length)];piece.style.animationDelay=Math.random()*2+'s';piece.style.animationDuration=(2+Math.random()*2)+'s';var size=4+Math.random()*8;piece.style.width=size+'px';piece.style.height=size+'px';piece.style.borderRadius=Math.random()>0.5?'50%':'2px';container.appendChild(piece)}setTimeout(function(){container.innerHTML=''},5000)}
 // Auto-enter slide mode on load
-document.addEventListener('DOMContentLoaded', function() { enterSlideMode(); });
+document.addEventListener('DOMContentLoaded', function() {
+  if(new URLSearchParams(window.location.search).get('autostart'))setTimeout(function(){enterSlideMode()},100); enterSlideMode(); });
 var initSlide=document.querySelector('.slide[data-slide="1"]');if(initSlide)document.getElementById('teacherPanel').innerHTML=initSlide.getAttribute('data-teacher')||'';
 </script>
 <script src="/lib/lesson-progress.js"></script>
