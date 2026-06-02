@@ -458,6 +458,9 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 .slides-container { height:100vh;overflow:hidden;position:relative; }
 .slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem; }
 .slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
+.slide { padding-top:4.5rem; padding-bottom:4rem; }
+.slide::before, .slide::after { content:''; flex:1; }
+
 .slide-inner { max-width:920px;width:100%;position:relative; }
 .slide-light { background:var(--bg); }
 .slide-light .slide-inner { color:var(--text); }
@@ -2334,7 +2337,7 @@ function goToSlide(n) {
   if (prev) prev.classList.remove('active');
   currentSlide = n;
   var activeSlide = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
-  if (activeSlide) activeSlide.classList.add('active');
+  if (activeSlide) { activeSlide.classList.add('active'); activeSlide.scrollTop = 0; }
   var teacherText = activeSlide ? activeSlide.getAttribute('data-teacher') || '' : '';
   document.getElementById('teacherPanel').innerHTML = teacherText;
   updateNav();
@@ -2404,16 +2407,14 @@ function revealComp(q) { q.classList.add('revealed'); }
 // ===== ERROR REVEAL =====
 var errorCount = 0;
 function revealError(card) {
-  if (card.classList.contains('revealed')) return;
-  card.classList.add('revealed');
+  card.classList.toggle('revealed');
   errorCount++;
   document.getElementById('errorScore').textContent = errorCount + ' / 5 errors found';
 }
 
 // ===== VOCAB REVEAL (extended for Aula 2 grids) =====
 function revealVocab(card) {
-  if (card.classList.contains('revealed')) return;
-  card.classList.add('revealed');
+  card.classList.toggle('revealed');
   var grid = card.closest('.vocab-grid');
   var count = grid.querySelectorAll('.vocab-card.revealed').length;
   var total = grid.querySelectorAll('.vocab-card').length;
@@ -2428,8 +2429,7 @@ function revealGrammar2() { document.getElementById('grammarTable2').classList.a
 // ===== ERROR REVEAL 2 =====
 var errorCount2 = 0;
 function revealError2(card) {
-  if (card.classList.contains('revealed')) return;
-  card.classList.add('revealed');
+  card.classList.toggle('revealed');
   errorCount2++;
   document.getElementById('errorScore2').textContent = errorCount2 + ' / 5 errors found';
 }
@@ -2519,8 +2519,7 @@ function revealGrammar3() { document.getElementById('grammarTable3').classList.a
 // ===== ERROR REVEAL 3 =====
 var errorCount3 = 0;
 function revealError3(card) {
-  if (card.classList.contains('revealed')) return;
-  card.classList.add('revealed');
+  card.classList.toggle('revealed');
   errorCount3++;
   document.getElementById('errorScore3').textContent = errorCount3 + ' / 5 errors found';
 }
@@ -2610,8 +2609,7 @@ function revealGrammar4() { document.getElementById('grammarTable4').classList.a
 // ===== ERROR REVEAL 4 =====
 var errorCount4 = 0;
 function revealError4(card) {
-  if (card.classList.contains('revealed')) return;
-  card.classList.add('revealed');
+  card.classList.toggle('revealed');
   errorCount4++;
   document.getElementById('errorScore4').textContent = errorCount4 + ' / 5 errors found';
 }
@@ -2702,8 +2700,7 @@ function toggleReflectionRecord4(btn) {
 // Error Reveal 5
 var errorCount5 = 0;
 function revealError5(card) {
-  if (card.classList.contains('revealed')) return;
-  card.classList.add('revealed');
+  card.classList.toggle('revealed');
   var wrongEl = card.querySelector('.error-wrong');
   var rightEl = card.querySelector('.error-right');
   if (wrongEl) wrongEl.style.opacity = '0.5';

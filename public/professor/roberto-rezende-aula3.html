@@ -147,6 +147,9 @@ body {
 .slides-container { height:100vh;overflow:hidden;position:relative; }
 .slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem; }
 .slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
+.slide { padding-top:4.5rem; padding-bottom:4rem; }
+.slide::before, .slide::after { content:''; flex:1; }
+
 .slide-inner { max-width:920px;width:100%;position:relative; }
 .slide-light { background:var(--bg); }
 .slide-light .slide-inner { color:var(--text); }
@@ -1032,7 +1035,7 @@ function goToSlide(n) {
   if (prev) prev.classList.remove('active');
   currentSlide = n;
   var activeSlide = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
-  if (activeSlide) activeSlide.classList.add('active');
+  if (activeSlide) { activeSlide.classList.add('active'); activeSlide.scrollTop = 0; }
   var teacherText = activeSlide ? activeSlide.getAttribute('data-teacher') || '' : '';
   document.getElementById('teacherPanel').innerHTML = teacherText;
   updateNav();
@@ -1104,8 +1107,7 @@ function revealComp(q) { q.classList.add('revealed'); }
 // ===== ERROR REVEAL =====
 var errorCount = 0;
 function revealError(card) {
-  if (card.classList.contains('revealed')) return;
-  card.classList.add('revealed');
+  card.classList.toggle('revealed');
   errorCount++;
   document.getElementById('errorScore').textContent = errorCount + ' / 4 errors found';
 }

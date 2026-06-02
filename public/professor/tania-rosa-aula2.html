@@ -307,6 +307,9 @@ body.slide-mode{overflow:hidden;height:100vh;background:var(--dark)}
 .slides-container{height:100vh;overflow:hidden;position:relative}
 .slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem}
 .slide.active{opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s}
+.slide { padding-top:4.5rem; padding-bottom:4rem; }
+.slide::before, .slide::after { content:''; flex:1; }
+
 .slide-inner{max-width:920px;width:100%;position:relative}
 .slide-light{background:var(--bg)}
 .slide-light .slide-inner{color:var(--text)}
@@ -1368,14 +1371,14 @@ var currentSlide=1;
 var totalSlides=37;
 var slidePhases={1:1,2:1,3:1,4:1,5:2,6:2,7:2,8:2,9:2,10:3,11:3,12:3,13:3,14:3,15:4,16:4,17:4,18:4,19:4,20:4,21:5,22:5,23:5,24:5,25:5,26:6,27:6,28:6,29:6,30:6,31:7,32:7,33:7,34:7,35:7,36:7,37:7};
 function changeSlide(dir){var next=currentSlide+dir;if(next<1||next>totalSlides)return;goToSlide(next)}
-function goToSlide(n){var prev=document.querySelector('.slide[data-slide="'+currentSlide+'"]');if(prev)prev.classList.remove('active');currentSlide=n;var activeSlide=document.querySelector('.slide[data-slide="'+currentSlide+'"]');if(activeSlide)activeSlide.classList.add('active');var teacherText=activeSlide?activeSlide.getAttribute('data-teacher')||'':'';document.getElementById('teacherPanel').innerHTML=teacherText;updateNav();updatePhaseBar()}
+function goToSlide(n){var prev=document.querySelector('.slide[data-slide="'+currentSlide+'"]');if(prev)prev.classList.remove('active');currentSlide=n;var activeSlide=document.querySelector('.slide[data-slide="'+currentSlide+'"]');if(activeSlide){activeSlide.classList.add('active');activeSlide.scrollTop=0;}var teacherText=activeSlide?activeSlide.getAttribute('data-teacher')||'':'';document.getElementById('teacherPanel').innerHTML=teacherText;updateNav();updatePhaseBar()}
 function updateNav(){document.getElementById('slideCounter').textContent=String(currentSlide).padStart(2,'0')+' / '+String(totalSlides).padStart(2,'0');document.getElementById('prevBtn').disabled=currentSlide===1;document.getElementById('nextBtn').disabled=currentSlide===totalSlides;var dots=document.querySelectorAll('.slide-dot');dots.forEach(function(d,i){d.classList.toggle('active',i+1===currentSlide)})}
 function updatePhaseBar(){var cp=slidePhases[currentSlide];document.querySelectorAll('.phase-segment').forEach(function(seg){var p=parseInt(seg.dataset.phase);seg.classList.remove('completed','current','upcoming');if(p<cp)seg.classList.add('completed');else if(p===cp)seg.classList.add('current');else seg.classList.add('upcoming')});document.querySelectorAll('.phase-label').forEach(function(lbl){var p=parseInt(lbl.dataset.phase);lbl.classList.remove('completed','current');if(p<cp)lbl.classList.add('completed');else if(p===cp)lbl.classList.add('current')})}
 (function(){var dotsEl=document.getElementById('slideDots');for(var i=1;i<=totalSlides;i++){var dot=document.createElement('div');dot.className='slide-dot'+(i===1?' active':'');dot.dataset.slide=i;dot.onclick=(function(n){return function(){goToSlide(n)}})(i);dotsEl.appendChild(dot)}})();
 document.addEventListener('keydown',function(e){if(!document.body.classList.contains('slide-mode'))return;if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();changeSlide(1)}if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();changeSlide(-1)}});
 
 // ===== VOCAB REVEAL =====
-function revealVocab(card){if(card.classList.contains('revealed'))return;card.classList.add('revealed');var grid=card.closest('.vocab-grid');var count=grid.querySelectorAll('.vocab-card.revealed').length;var total=grid.querySelectorAll('.vocab-card').length;var counterId=grid.id==='vocabGrid1'?'vocabCount1':'vocabCount2';var el=document.getElementById(counterId);if(el)el.textContent=count+' / '+total+' words revealed'}
+function revealVocab(card){card.classList.toggle('revealed');var grid=card.closest('.vocab-grid');var count=grid.querySelectorAll('.vocab-card.revealed').length;var total=grid.querySelectorAll('.vocab-card').length;var counterId=grid.id==='vocabGrid1'?'vocabCount1':'vocabCount2';var el=document.getElementById(counterId);if(el)el.textContent=count+' / '+total+' words revealed'}
 function revealGrammar(){document.getElementById('grammarTable').classList.add('show')}
 function revealFill(item){item.classList.add('revealed')}
 function revealComp(q){q.classList.add('revealed')}
