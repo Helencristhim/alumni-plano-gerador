@@ -51,7 +51,7 @@ var audioMap = {
   "I am currently working on a cloud solution for the Ministry of Justice.": "/audio/natalie-viegas/i_am_currently_working_on_a_cloud_solution_for_the_ministry_.mp3",
   "I report to the VP of Public Sector for Latin America.": "/audio/natalie-viegas/i_report_to_the_vp_of_public_sector_for_latin_america.mp3",
   "I would love to discuss how our teams can collaborate.": "/audio/natalie-viegas/i_would_love_to_discuss_how_our_teams_can_collaborate.mp3",
-  "[order-l1]": "/audio/natalie-viegas/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/natalie-viegas/order_l1_ordering.mp3",
   "Schedule": "/audio/natalie-viegas/aula2_schedule.mp3",
   "Commute": "/audio/natalie-viegas/aula2_commute.mp3",
   "Attend": "/audio/natalie-viegas/aula2_attend.mp3",
@@ -81,7 +81,7 @@ var audioMap = {
   "I check my schedule every morning and prioritize my tasks for the day.": "/audio/natalie-viegas/aula2_speech_i_check_my_schedule_every_morning.mp3",
   "I usually catch up with my team before I attend any client meetings.": "/audio/natalie-viegas/aula2_speech_i_usually_catch_up_with_my_team.mp3",
   "I always review the contract details and brief my team before the deadline.": "/audio/natalie-viegas/aula2_speech_i_always_review_the_contract.mp3",
-  "[order-l2]": "/audio/natalie-viegas/aula2_order_monday_routine.mp3",
+  "[order-l2]": "/audio/natalie-viegas/order_l2_ordering.mp3",
   "I always check my schedule first thing in the morning.": "/audio/natalie-viegas/aula2_surv_i_always_check_my_schedule.mp3",
   "I need to follow up with the client by Friday.": "/audio/natalie-viegas/aula2_surv_i_need_to_follow_up_by_friday.mp3",
   "Let me brief the team on the pipeline status.": "/audio/natalie-viegas/aula2_surv_let_me_brief_the_team.mp3",
@@ -116,7 +116,7 @@ var audioMap = {
   "I relocated from Rio to São Paulo four years ago and transitioned into technology sales.": "/audio/natalie-viegas/aula3_speech_i_relocated_from_rio.mp3",
   "In my previous role, I gained valuable experience working with government clients.": "/audio/natalie-viegas/aula3_speech_in_my_previous_role.mp3",
   "My greatest achievement was closing a multi-million-dollar deal ahead of schedule.": "/audio/natalie-viegas/aula3_speech_my_greatest_achievement.mp3",
-  "[order-l3]": "/audio/natalie-viegas/aula3_order_career_story.mp3",
+  "[order-l3]": "/audio/natalie-viegas/order_l3_ordering.mp3",
   "I relocated from Rio to São Paulo four years ago.": "/audio/natalie-viegas/aula3_surv_i_relocated_from_rio.mp3",
   "In my previous role, I worked in a completely different industry.": "/audio/natalie-viegas/aula3_surv_in_my_previous_role.mp3",
   "I gained valuable experience working with government clients.": "/audio/natalie-viegas/aula3_surv_i_gained_valuable_experience.mp3",
@@ -2363,9 +2363,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

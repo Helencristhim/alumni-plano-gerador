@@ -37,7 +37,7 @@ var audioMap = {
   "My name is Gleice. I am from Santo Andre, Brazil.": "/audio/gleice-leonardo-rocha-de-souza/my_name_is_gleice_i_am_from_santo_andre.mp3",
   "I work in the pharmaceutical industry.": "/audio/gleice-leonardo-rocha-de-souza/i_work_in_the_pharmaceutical_industry.mp3",
   "My name is Gleice. I am from Santo Andre.": "/audio/gleice-leonardo-rocha-de-souza/my_name_is_gleice_i_am_from_santo_andre_short.mp3",
-  "[order-l1]": "/audio/gleice-leonardo-rocha-de-souza/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/gleice-leonardo-rocha-de-souza/order_l1_ordering.mp3",
   "Department": "/audio/gleice-leonardo-rocha-de-souza/aula2_department.mp3",
   "Responsibility": "/audio/gleice-leonardo-rocha-de-souza/aula2_responsibility.mp3",
   "Report (to)": "/audio/gleice-leonardo-rocha-de-souza/aula2_report_to.mp3",
@@ -62,7 +62,7 @@ var audioMap = {
   "My department is Commercial Excellence. We have thirty-four colleagues.": "/audio/gleice-leonardo-rocha-de-souza/aula2_speech1.mp3",
   "My responsibility is to lead transformation projects.": "/audio/gleice-leonardo-rocha-de-souza/aula2_speech2.mp3",
   "Our team's performance has been strong this year.": "/audio/gleice-leonardo-rocha-de-souza/aula2_speech4.mp3",
-  "[order-l2]": "/audio/gleice-leonardo-rocha-de-souza/aula2_order_team_description.mp3",
+  "[order-l2]": "/audio/gleice-leonardo-rocha-de-souza/order_l2_ordering.mp3",
   "My responsibility is to lead transformation projects.": "/audio/gleice-leonardo-rocha-de-souza/aula2_survival_ic_2.mp3",
   "Our team has thirty-four colleagues.": "/audio/gleice-leonardo-rocha-de-souza/aula2_survival_ic_4.mp3",
   "Our performance is strong this year.": "/audio/gleice-leonardo-rocha-de-souza/aula2_survival_ic_5.mp3",
@@ -91,7 +91,7 @@ var audioMap = {
   "I always prioritize my team's needs.": "/audio/gleice-leonardo-rocha-de-souza/aula3_speech2.mp3",
   "I have three meetings every day.": "/audio/gleice-leonardo-rocha-de-souza/aula3_speech3.mp3",
   "I commute from Santo Andre to the office.": "/audio/gleice-leonardo-rocha-de-souza/aula3_speech4.mp3",
-  "[order-l3]": "/audio/gleice-leonardo-rocha-de-souza/aula3_order_daily_routine.mp3",
+  "[order-l3]": "/audio/gleice-leonardo-rocha-de-souza/order_l3_ordering.mp3",
   "I usually start my day at seven in the morning.": "/audio/gleice-leonardo-rocha-de-souza/aula3_survival_ic_1.mp3",
   "I never miss a deadline.": "/audio/gleice-leonardo-rocha-de-souza/aula3_survival_ic_4.mp3",
   "I commute from Santo Andre to the office.": "/audio/gleice-leonardo-rocha-de-souza/aula3_survival_ic_5.mp3"
@@ -1040,7 +1040,27 @@ function verifyAllMatches(gridId) { var grid = document.getElementById(gridId); 
 
 var orderSelection = {};
 function selectOrderItem(item, containerId) { if (item.classList.contains('correct-order')) return; if (!orderSelection[containerId]) orderSelection[containerId] = []; var idx = orderSelection[containerId].indexOf(item); if (idx > -1) { orderSelection[containerId].splice(idx, 1); item.querySelector('.order-num').textContent = '?'; item.style.borderColor = ''; } else { orderSelection[containerId].push(item); item.querySelector('.order-num').textContent = orderSelection[containerId].length; item.style.borderColor = 'var(--accent)'; } }
-function checkOrder(containerId) { var container = document.getElementById(containerId); var items = container.querySelectorAll('.order-item'); var selected = orderSelection[containerId] || []; if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; } var allCorrect = true; selected.forEach(function(item, idx) { if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; } else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); } }); if (!allCorrect) orderSelection[containerId] = []; else updateProgress(); }
+function checkOrder(containerId) {
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
+}
 function moveItem(btn, direction, containerId) { var item = btn.closest('.order-item'); var container = document.getElementById(containerId); var items = Array.from(container.querySelectorAll('.order-item')); var idx = items.indexOf(item); if (direction === -1 && idx > 0) container.insertBefore(item, items[idx - 1]); else if (direction === 1 && idx < items.length - 1) container.insertBefore(items[idx + 1], item); }
 
 // ===== FREE RECORDING =====

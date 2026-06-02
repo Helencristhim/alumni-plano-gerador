@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <script>
 var audioMap = {
+  "[order-l2]": "/audio/maria-claudia-curimbaba/order_l2_ordering.mp3",
+  "[order-l1]": "/audio/maria-claudia-curimbaba/order_l1_ordering.mp3",
   "Could you repeat that, please?": "/audio/maria-claudia-curimbaba/could_you_repeat_that_please.mp3",
   "I am not sure I understand. Could you explain?": "/audio/maria-claudia-curimbaba/i_am_not_sure_i_understand_could_you_explain.mp3",
   "Let me think about that for a moment.": "/audio/maria-claudia-curimbaba/let_me_think_about_that_for_a_moment.mp3",
@@ -762,6 +764,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
         <span class="badge badge-order">Order</span>
       </div>
       <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem">Put these phrases in the correct order to form a professional meeting introduction.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l1]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l1">
         <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l1')">
           <span class="order-num">?</span>
@@ -1382,6 +1388,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
         <span class="badge badge-order">Order</span>
       </div>
       <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem">Put these sentences in the correct order to form a company description presentation.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l2]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l2">
         <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l2')">
           <span class="order-num">?</span>
@@ -1884,9 +1894,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

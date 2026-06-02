@@ -181,11 +181,11 @@ var audioMap = {
   "We reached a consensus on the recommendation for future studies.": "/audio/patricia-ruffo/aula5_we_reached_a_consensus_on_the_recommendation_for_futur.mp3",
   "Networking at the symposium helped us find new collaborators.": "/audio/patricia-ruffo/aula5_networking_at_the_symposium_helped_us_find_new_collabo.mp3",
   "Her findings were presented at the keynote session.": "/audio/patricia-ruffo/aula5_her_findings_were_presented_at_the_keynote_session.mp3",
-  "[order-l1]": "/audio/patricia-ruffo/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/patricia-ruffo/order_l1_ordering.mp3",
   "[order-l2]": "/audio/patricia-ruffo/order_l2_debate.mp3",
-  "[order-l3]": "/audio/patricia-ruffo/order_l3_conference_questions.mp3",
+  "[order-l3]": "/audio/patricia-ruffo/order_l3_ordering.mp3",
   "[order-l4]": "/audio/patricia-ruffo/order_l4_project_update.mp3",
-  "[order-l5]": "/audio/patricia-ruffo/order_l5_summit_presentation.mp3"
+  "[order-l5]": "/audio/patricia-ruffo/order_l5_ordering.mp3"
 };
 </script>
 <style>
@@ -4536,7 +4536,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- SLIDE 26: WHAT I LEARNED -->
-<div class="slide slide-light" data-slide="26" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item. Pergunte: 'Can you say yes to this?' Se sim, clique o checkbox juntas.">
+<div class="slide slide-light" data-slide="26" data-lesson="1" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item. Pergunte: 'Can you say yes to this?' Se sim, clique o checkbox juntas.">
   <div class="slide-inner">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading">What I <span class="accent">Learned</span></h2>
@@ -5089,9 +5089,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <script>
 var audioMap = {
+  "[order-l8]": "/audio/elaine-mieko-pinho/order_l8_ordering.mp3",
   "Could you repeat that, please?": "/audio/elaine-mieko-pinho/could_you_repeat_that_please.mp3",
   "I am not sure I understand. Could you explain?": "/audio/elaine-mieko-pinho/i_am_not_sure_i_understand_could_you_explain.mp3",
   "Could you speak more slowly, please?": "/audio/elaine-mieko-pinho/could_you_speak_more_slowly_please.mp3",
@@ -258,11 +259,11 @@ var audioMap = {
   "How much is it to Manhattan?": "/audio/elaine-mieko-pinho/how_much_is_it_to_manhattan_v2.mp3",
   "Go straight and turn left at the traffic light.": "/audio/elaine-mieko-pinho/go_straight_turn_left_traffic_light_v2.mp3",
   "Could I have a receipt, please?": "/audio/elaine-mieko-pinho/could_i_have_a_receipt_please_v2.mp3",
-  "[order-l1]": "/audio/elaine-mieko-pinho/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/elaine-mieko-pinho/order_l1_ordering.mp3",
   "[order-l2]": "/audio/elaine-mieko-pinho/order_l2_airport_steps.mp3",
-  "[order-l3]": "/audio/elaine-mieko-pinho/order_l3_on_the_plane.mp3",
-  "[order-l4]": "/audio/elaine-mieko-pinho/order_l4_immigration.mp3",
-  "[order-l5]": "/audio/elaine-mieko-pinho/order_l5_taxi_ride.mp3",
+  "[order-l3]": "/audio/elaine-mieko-pinho/order_l3_ordering.mp3",
+  "[order-l4]": "/audio/elaine-mieko-pinho/order_l4_ordering.mp3",
+  "[order-l5]": "/audio/elaine-mieko-pinho/order_l5_ordering.mp3",
   "Reservation": "/audio/elaine-mieko-pinho/reservation.mp3",
   "Front Desk": "/audio/elaine-mieko-pinho/front_desk.mp3",
   "Key Card": "/audio/elaine-mieko-pinho/key_card.mp3",
@@ -310,7 +311,7 @@ var audioMap = {
   "You enter your room and order room service.": "/audio/elaine-mieko-pinho/you_enter_your_room_and_order_room_service.mp3",
   "Please go to the front desk to check in.": "/audio/elaine-mieko-pinho/please_go_to_the_front_desk_to_check_in.mp3",
   "Here is your key card for room 712.": "/audio/elaine-mieko-pinho/here_is_your_key_card_for_room_712.mp3",
-  "[order-l6]": "/audio/elaine-mieko-pinho/order_l6_hotel_checkin.mp3",
+  "[order-l6]": "/audio/elaine-mieko-pinho/order_l6_ordering.mp3",
   "Towel": "/audio/elaine-mieko-pinho/towel.mp3",
   "Air Conditioning": "/audio/elaine-mieko-pinho/air_conditioning.mp3",
   "Noise": "/audio/elaine-mieko-pinho/noise.mp3",
@@ -361,7 +362,7 @@ var audioMap = {
   "The maintenance worker arrives and fixes the air conditioning.": "/audio/elaine-mieko-pinho/maintenance_worker_arrives_fixes_ac.mp3",
   "You tell the maintenance worker about the leak in the bathroom.": "/audio/elaine-mieko-pinho/you_tell_maintenance_about_leak.mp3",
   "The maintenance worker fixes the leak and you thank him.": "/audio/elaine-mieko-pinho/maintenance_fixes_leak_you_thank_him.mp3",
-  "[order-l7]": "/audio/elaine-mieko-pinho/order_l7_hotel_problems.mp3",
+  "[order-l7]": "/audio/elaine-mieko-pinho/order_l7_ordering.mp3",
   "The shower is not working.": "/audio/elaine-mieko-pinho/the_shower_is_not_working.mp3",
   "There are problems with my room.": "/audio/elaine-mieko-pinho/there_are_problems_with_my_room.mp3",
   "There is no hot water.": "/audio/elaine-mieko-pinho/there_is_no_hot_water.mp3",
@@ -5248,6 +5249,10 @@ body.slide-mode .nav-bar { display:flex; }
         <span class="badge badge-order">Order</span>
       </div>
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the sentences in the correct order.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l8]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l8">
         <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l8')">
           <span class="order-num">?</span>
@@ -10448,9 +10453,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

@@ -67,7 +67,7 @@ var audioMap = {
   "Room": "/audio/tania-rosa-aula3/room.mp3",
   "Checkout": "/audio/tania-rosa-aula3/checkout.mp3",
   "Receptionist": "/audio/tania-rosa-aula3/receptionist.mp3",
-  "[order-l4]": "/audio/tania-rosa-aula4/order_l4.mp3"
+  "[order-l4]": "/audio/tania-rosa/order_l4_ordering.mp3"
 };
 </script>
 <style>
@@ -311,8 +311,6 @@ body.slide-mode{overflow:hidden;height:100vh;background:var(--dark)}
 .slides-container{height:100vh;overflow:hidden;position:relative}
 .slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem}
 .slide.active{opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s}
-.slide { padding-top:4.5rem; padding-bottom:4rem; }
-.slide::before, .slide::after { content:''; flex:1; }
 
 .slide-inner{max-width:920px;width:100%;position:relative}
 .slide-light{background:var(--bg)}
@@ -1300,7 +1298,7 @@ body.slide-mode .nav-bar{display:flex}
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="34" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item. Pergunte: 'Can you say yes to this, Tânia?' Se sim, clique o checkbox juntos. Encerre: 'Look — 8 things you could not do before this class! You are ready to explore any city!'">
+<div class="slide slide-light" data-slide="34" data-lesson="4" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item. Pergunte: 'Can you say yes to this, Tânia?' Se sim, clique o checkbox juntos. Encerre: 'Look — 8 things you could not do before this class! You are ready to explore any city!'">
   <div class="slide-inner" style="overflow-y:auto;max-height:75vh"><div class="chapter-label">Self-Assessment</div><h2 class="slide-heading">What I <span class="accent">Learned</span></h2>
     <div class="check-grid" id="checkGrid">
       <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can ask for directions in English.</div>
@@ -1360,7 +1358,7 @@ function toggleLesson(header){header.parentElement.classList.toggle('open')}
 var currentAudio=null;
 var audioSpeed=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');
 function setAudioSpeed(speed,btn){audioSpeed=speed;localStorage.setItem('alumni-audio-speed',speed);document.querySelectorAll('.speed-btn').forEach(function(b){b.style.background='var(--bg-card)';b.style.color='var(--text)';b.style.borderColor='var(--border)';b.style.fontWeight='400';b.classList.remove('active')});btn.style.background='var(--accent)';btn.style.color='#fff';btn.style.borderColor='var(--accent)';btn.style.fontWeight='600';btn.classList.add('active')}
-document.addEventListener('DOMContentLoaded',function(){var saved=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');var btn=document.querySelector('.speed-btn[data-speed="'+saved+'"]');if(btn)setAudioSpeed(saved,btn)});
+document.addEventListener('DOMContentLoaded',function(){if(new URLSearchParams(window.location.search).get('autostart'))setTimeout(function(){enterSlideMode()},100);var saved=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');var btn=document.querySelector('.speed-btn[data-speed="'+saved+'"]');if(btn)setAudioSpeed(saved,btn)});
 function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0}var cleanText=text.replace(/\\'/g,"'");var file=audioMap[cleanText]||audioMap[cleanText.replace(/\.$/,'')]||audioMap[cleanText+'.'];if(file){currentAudio=new Audio(file);currentAudio.playbackRate=audioSpeed;currentAudio.play().catch(function(){ttsSpeak(cleanText)})}else{ttsSpeak(cleanText)}}
 function ttsSpeak(text){if('speechSynthesis' in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=audioSpeed*0.85;u.pitch=1;window.speechSynthesis.speak(u)}}
 function speakPhrase(btn){var card=btn.closest('.speech-card');if(card)speakText(card.dataset.phrase,btn)}
@@ -1434,7 +1432,27 @@ function verifyAllMatches(gridId){var grid=document.getElementById(gridId);var r
 // ===== ORDER =====
 var orderSelection={};
 function selectOrderItem(item,containerId){if(item.classList.contains('correct-order'))return;if(!orderSelection[containerId])orderSelection[containerId]=[];var idx=orderSelection[containerId].indexOf(item);if(idx>-1){orderSelection[containerId].splice(idx,1);item.querySelector('.order-num').textContent='?';item.style.borderColor=''}else{orderSelection[containerId].push(item);item.querySelector('.order-num').textContent=orderSelection[containerId].length;item.style.borderColor='var(--accent)'}}
-function checkOrder(containerId){var container=document.getElementById(containerId);var items=container.querySelectorAll('.order-item');var selected=orderSelection[containerId]||[];if(selected.length!==items.length){alert('Select all items in the correct order.');return}var allCorrect=true;selected.forEach(function(item,idx){if(parseInt(item.dataset.order)===idx+1){item.classList.add('correct-order');item.querySelector('.order-num').textContent=idx+1}else{allCorrect=false;item.style.borderColor='var(--danger)';item.classList.add('wrong');setTimeout(function(){item.classList.remove('wrong');item.style.borderColor='';item.querySelector('.order-num').textContent='?'},1000)}});if(!allCorrect)orderSelection[containerId]=[];else updateProgress()}
+function checkOrder(containerId) {
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
+}
 function moveItem(btn,direction,containerId){var item=btn.closest('.order-item');var container=document.getElementById(containerId);var items=Array.from(container.querySelectorAll('.order-item'));var idx=items.indexOf(item);if(direction===-1&&idx>0)container.insertBefore(item,items[idx-1]);else if(direction===1&&idx<items.length-1)container.insertBefore(items[idx+1],item)}
 
 // ===== FREE RECORDING =====

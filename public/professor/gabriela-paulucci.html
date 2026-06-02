@@ -157,11 +157,11 @@ var audioMap = {
   "My name is Gabriela. I am from Jaú.": "/audio/gabriela-paulucci/aula5_full_intro.mp3",
   "What color is your pen?": "/audio/gabriela-paulucci/aula2_what_color_is_your_pen.mp3",
   "She speaks Portuguese and English.": "/audio/gabriela-paulucci/aula4_she_speaks_portuguese_and_english.mp3",
-  "[order-l1]": "/audio/gabriela-paulucci/order_l1_intro.mp3",
-  "[order-l2]": "/audio/gabriela-paulucci/order_l2_objects.mp3",
-  "[order-l3]": "/audio/gabriela-paulucci/order_l3_routine.mp3",
-  "[order-l4]": "/audio/gabriela-paulucci/order_l4_family.mp3",
-  "[order-l5]": "/audio/gabriela-paulucci/order_l5_story.mp3"
+  "[order-l1]": "/audio/gabriela-paulucci/order_l1_ordering.mp3",
+  "[order-l2]": "/audio/gabriela-paulucci/order_l2_ordering.mp3",
+  "[order-l3]": "/audio/gabriela-paulucci/order_l3_ordering.mp3",
+  "[order-l4]": "/audio/gabriela-paulucci/order_l4_ordering.mp3",
+  "[order-l5]": "/audio/gabriela-paulucci/order_l5_ordering.mp3"
 };
 </script>
 <style>
@@ -4930,7 +4930,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: WHAT I LEARNED ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Leia cada item. Gabriela clica se consegue fazer. Se marcar todos: 'Parab&eacute;ns! Voc&ecirc; dominou a Aula 1.' Se n&atilde;o: 'Tudo bem! O Pre-class da semana que vem vai refor&ccedil;ar isso.'">
+<div class="slide slide-light" data-slide="31" data-lesson="1" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Leia cada item. Gabriela clica se consegue fazer. Se marcar todos: 'Parab&eacute;ns! Voc&ecirc; dominou a Aula 1.' Se n&atilde;o: 'Tudo bem! O Pre-class da semana que vem vai refor&ccedil;ar isso.'">
   <div class="slide-inner" style="overflow-y:auto;max-height:75vh">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading">What I <span class="accent">Learned</span> Today</h2>
@@ -5103,7 +5103,27 @@ function levenshtein(a,b){var m=[];for(var i=0;i<=b.length;i++)m[i]=[i];for(var 
 function checkBlank(btn){var item=btn.closest('.fill-blank-item'),input=item.querySelector('.blank-input');input.classList.remove('correct','wrong');var answer=input.dataset.answer.toLowerCase().trim();var altAnswer=input.dataset.alt?input.dataset.alt.toLowerCase().trim():null;var value=input.value.toLowerCase().trim();var hintEl=item.querySelector('.blank-hint-feedback');if(hintEl)hintEl.classList.remove('visible');if(value===answer||(altAnswer&&value===altAnswer)){input.classList.add('correct');if(hintEl)hintEl.classList.remove('visible');updateProgress()}else{input.classList.add('wrong');if(input.dataset.hint){if(!hintEl){hintEl=document.createElement('div');hintEl.className='blank-hint-feedback';item.appendChild(hintEl)}hintEl.textContent=input.dataset.hint;hintEl.classList.add('visible')}setTimeout(function(){input.classList.remove('wrong')},1500)}}
 function selectQuiz(o){var p=o.closest('.quiz-options');if(p.querySelector('.correct'))return;if(o.dataset.correct==='true'){o.classList.add('correct');updateProgress()}else{o.classList.add('wrong');setTimeout(function(){o.classList.remove('wrong')},800)}}
 var orderSelection={};function selectOrderItem(item,containerId){if(item.classList.contains('correct-order'))return;if(!orderSelection[containerId])orderSelection[containerId]=[];var idx=orderSelection[containerId].indexOf(item);if(idx>-1){orderSelection[containerId].splice(idx,1);item.querySelector('.order-num').textContent='?';item.style.borderColor=''}else{orderSelection[containerId].push(item);item.querySelector('.order-num').textContent=orderSelection[containerId].length;item.style.borderColor='var(--accent)'}}
-function checkOrder(containerId){var container=document.getElementById(containerId);var items=container.querySelectorAll('.order-item');var selected=orderSelection[containerId]||[];if(selected.length!==items.length){alert('Select all items in the correct order.');return}var allCorrect=true;selected.forEach(function(item,idx){if(parseInt(item.dataset.order)===idx+1){item.classList.add('correct-order');item.querySelector('.order-num').textContent=idx+1}else{allCorrect=false;item.style.borderColor='var(--danger)';item.classList.add('wrong');setTimeout(function(){item.classList.remove('wrong');item.style.borderColor='';item.querySelector('.order-num').textContent='?'},1000)}});if(!allCorrect)orderSelection[containerId]=[];else updateProgress()}
+function checkOrder(containerId) {
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
+}
 function moveItem(btn,direction,containerId){var item=btn.closest('.order-item');var container=document.getElementById(containerId);var items=Array.from(container.querySelectorAll('.order-item'));var idx=items.indexOf(item);if(direction===-1&&idx>0)container.insertBefore(item,items[idx-1]);else if(direction===1&&idx<items.length-1)container.insertBefore(items[idx+1],item)}
 var draggedItem=null;document.querySelectorAll('.order-container').forEach(function(container){container.addEventListener('dragstart',function(e){var item=e.target.closest('.order-item');if(!item||item.classList.contains('correct-order'))return;draggedItem=item;item.classList.add('dragging');e.dataTransfer.effectAllowed='move'});container.addEventListener('dragend',function(e){var item=e.target.closest('.order-item');if(item)item.classList.remove('dragging');container.querySelectorAll('.order-item').forEach(function(i){i.classList.remove('drag-over')});draggedItem=null});container.addEventListener('dragover',function(e){e.preventDefault();e.dataTransfer.dropEffect='move';var target=e.target.closest('.order-item');if(target&&target!==draggedItem){container.querySelectorAll('.order-item').forEach(function(i){i.classList.remove('drag-over')});target.classList.add('drag-over')}});container.addEventListener('drop',function(e){e.preventDefault();var target=e.target.closest('.order-item');if(target&&draggedItem&&target!==draggedItem){var items=Array.from(container.querySelectorAll('.order-item'));if(items.indexOf(draggedItem)<items.indexOf(target))container.insertBefore(draggedItem,target.nextSibling);else container.insertBefore(draggedItem,target)}container.querySelectorAll('.order-item').forEach(function(i){i.classList.remove('drag-over')})})});
 var freeRecorder=null;var freeChunks=[];

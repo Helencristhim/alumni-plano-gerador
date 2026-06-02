@@ -53,7 +53,7 @@ var audioMap = {
   "We are developing an action plan.": "/audio/percival-jr-aula4/we_are_developing_an_action_plan.mp3",
   "It depends on the stakeholders.": "/audio/percival-jr-aula4/it_depends_on_the_stakeholders_short.mp3",
   "We are still working on that.": "/audio/percival-jr-aula4/we_are_still_working_on_that.mp3",
-  "[order-l1]": "/audio/percival-jr-aula4/order_l1_project_update.mp3"
+  "[order-l1]": "/audio/percival-jr/order_l1_ordering.mp3"
 };
 </script>
 <style>
@@ -1211,9 +1211,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

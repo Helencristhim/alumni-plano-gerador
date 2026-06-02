@@ -53,7 +53,7 @@ var audioMap = {
   "We are developing an action plan.": "/audio/percival-jr-aula4/we_are_developing_an_action_plan.mp3",
   "It depends on the stakeholders.": "/audio/percival-jr-aula4/it_depends_on_the_stakeholders_short.mp3",
   "We are still working on that.": "/audio/percival-jr-aula4/we_are_still_working_on_that.mp3",
-  "[order-l1]": "/audio/percival-jr-aula4/order_l1_project_update.mp3"
+  "[order-l1]": "/audio/percival-jr/order_l1_ordering.mp3"
 };
 </script>
 <style>
@@ -424,8 +424,6 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 .slides-container { height:100vh;overflow:hidden;position:relative; }
 .slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem; }
 .slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
-.slide { padding-top:4.5rem; padding-bottom:4rem; }
-.slide::before, .slide::after { content:''; flex:1; }
 
 .slide-inner { max-width:920px;width:100%;position:relative; }
 .slide-light { background:var(--bg); }
@@ -1926,7 +1924,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- SLIDE 32: WHAT I LEARNED -->
-<div class="slide slide-light" data-slide="32" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item. Pergunte: 'Can you say yes to this, Percival?' Se sim, clique o checkbox juntos. Encerre: 'Look -- 10 things you could not do 90 minutes ago!'">
+<div class="slide slide-light" data-slide="32" data-lesson="4" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item. Pergunte: 'Can you say yes to this, Percival?' Se sim, clique o checkbox juntos. Encerre: 'Look -- 10 things you could not do 90 minutes ago!'">
   <div class="slide-inner" style="overflow-y:auto;max-height:75vh">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading">What I <span class="accent">Learned</span></h2>
@@ -2421,9 +2419,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

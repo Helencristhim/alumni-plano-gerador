@@ -60,7 +60,7 @@ var audioMap = {
   "I am the Director of Risk and Internal Audit at EGEA Saneamento.": "/audio/percival-jr-aula3/i_am_the_director_of_risk_and_internal_audit_at_egea.mp3",
   "I lead a team of specialists. We handle risk assessment, compliance, and internal audit.": "/audio/percival-jr-aula3/i_lead_a_team_of_specialists_we_handle.mp3",
   "I report to the executive board and I work closely with operations.": "/audio/percival-jr-aula3/i_report_to_the_executive_board_and_i_work.mp3",
-  "[order-l1]": "/audio/percival-jr-aula3/order_l1_professional_intro.mp3"
+  "[order-l1]": "/audio/percival-jr/order_l1_ordering.mp3"
 };
 </script>
 <style>
@@ -1224,9 +1224,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

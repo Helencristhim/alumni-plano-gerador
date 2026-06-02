@@ -241,11 +241,11 @@ var audioMap = {
   "In addition, I am preparing an update for the board.": "/audio/percival-jr-aula5/in_addition_i_am_preparing_an_update.mp3",
   "First of all, we identified the issue. Then, we developed an action plan. However, we are facing a delay.": "/audio/percival-jr-aula5/first_of_all_then_however.mp3",
   "We are facing a delay. Therefore, compliance is our top priority.": "/audio/percival-jr-aula5/we_are_facing_a_delay_therefore.mp3",
-  "[order-l1]": "/audio/percival-jr/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/percival-jr/order_l1_ordering.mp3",
   "[order-l2]": "/audio/percival-jr/order_l2_arrival_sequence.mp3",
-  "[order-l3]": "/audio/percival-jr/order_l3_professional_intro.mp3",
+  "[order-l3]": "/audio/percival-jr/order_l3_ordering.mp3",
   "[order-l4]": "/audio/percival-jr/order_l4_project_update.mp3",
-  "[order-l5]": "/audio/percival-jr/order_l5_compliance_update.mp3"
+  "[order-l5]": "/audio/percival-jr/order_l5_ordering.mp3"
 };
 </script>
 <style>
@@ -4310,7 +4310,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- SLIDE 33: WHAT I LEARNED -->
-<div class="slide slide-light" data-slide="33" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item. Pergunte: 'Can you say yes to this, Percival?' Se sim, clique o checkbox juntos. Encerre: 'Look -- 10 things you could not do 90 minutes ago!'">
+<div class="slide slide-light" data-slide="33" data-lesson="1" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item. Pergunte: 'Can you say yes to this, Percival?' Se sim, clique o checkbox juntos. Encerre: 'Look -- 10 things you could not do 90 minutes ago!'">
   <div class="slide-inner" style="overflow-y:auto;max-height:75vh">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading">What I <span class="accent">Learned</span></h2>
@@ -4858,9 +4858,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

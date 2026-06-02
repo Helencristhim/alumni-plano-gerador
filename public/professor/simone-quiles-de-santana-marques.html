@@ -44,7 +44,7 @@ var audioMap = {
   "I am responsible for contracts and mergers and acquisitions.": "/audio/simone-quiles-de-santana-marques/speech_i_am_responsible_for_contracts.mp3",
   "I currently deal with international agreements.": "/audio/simone-quiles-de-santana-marques/speech_i_currently_deal_with.mp3",
   "I negotiate terms with partners from the United Kingdom and Germany.": "/audio/simone-quiles-de-santana-marques/speech_i_negotiate_terms_with_partners.mp3",
-  "[order-l1]": "/audio/simone-quiles-de-santana-marques/ordering_full_intro_simone.mp3",
+  "[order-l1]": "/audio/simone-quiles-de-santana-marques/order_l1_ordering.mp3",
   "Good morning! I do not think we have met. I am James Wilson from the London office.": "/audio/simone-quiles-de-santana-marques/james_good_morning_i_do_not_think.mp3",
   "Nice to meet you, James. I am Simone Marques. I work in the legal department here in Brazil.": "/audio/simone-quiles-de-santana-marques/simone_nice_to_meet_you_james.mp3",
   "What do you do exactly in the legal department?": "/audio/simone-quiles-de-santana-marques/james_what_do_you_do_exactly.mp3",
@@ -106,7 +106,7 @@ var audioMap = {
   "Could you send me the report by Friday?": "/audio/simone-quiles-de-santana-marques/aula2_could_you_send_me_the_report.mp3",
   "I need to coordinate with the London office.": "/audio/simone-quiles-de-santana-marques/aula2_i_need_to_coordinate_with_london.mp3",
   "Let me check my schedule.": "/audio/simone-quiles-de-santana-marques/aula2_let_me_check_my_schedule.mp3",
-  "[order-l2]": "/audio/simone-quiles-de-santana-marques/aula2_ordering_daily_routine.mp3"
+  "[order-l2]": "/audio/simone-quiles-de-santana-marques/order_l2_ordering.mp3"
 };
 </script>
 <style>
@@ -2853,7 +2853,27 @@ function verifyAllMatches(gridId) { var grid = document.getElementById(gridId); 
 
 var orderSelection = {};
 function selectOrderItem(item, containerId) { if (item.classList.contains('correct-order')) return; if (!orderSelection[containerId]) orderSelection[containerId] = []; var idx = orderSelection[containerId].indexOf(item); if (idx > -1) { orderSelection[containerId].splice(idx, 1); item.querySelector('.order-num').textContent = '?'; item.style.borderColor = ''; } else { orderSelection[containerId].push(item); item.querySelector('.order-num').textContent = orderSelection[containerId].length; item.style.borderColor = 'var(--accent)'; } }
-function checkOrder(containerId) { var container = document.getElementById(containerId); var items = container.querySelectorAll('.order-item'); var selected = orderSelection[containerId] || []; if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; } var allCorrect = true; selected.forEach(function(item, idx) { if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; } else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); } }); if (!allCorrect) orderSelection[containerId] = []; else updateProgress(); }
+function checkOrder(containerId) {
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
+}
 function moveItem(btn, direction, containerId) { var item = btn.closest('.order-item'); var container = document.getElementById(containerId); var items = Array.from(container.querySelectorAll('.order-item')); var idx = items.indexOf(item); if (direction === -1 && idx > 0) container.insertBefore(item, items[idx - 1]); else if (direction === 1 && idx < items.length - 1) container.insertBefore(items[idx + 1], item); }
 
 var freeRecorder = null; var freeChunks = [];

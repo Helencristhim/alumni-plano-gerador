@@ -59,7 +59,7 @@ var audioMap = {
   "Of course, sir. There is an excellent Italian restaurant two blocks from here. It is called Carbone.": "/audio/percival-jr-aula2/of_course_sir_there_is_an_excellent_italian.mp3",
   "How do I get there?": "/audio/percival-jr-aula2/how_do_i_get_there.mp3",
   "Go right out of the hotel, walk two blocks, and it is on your left.": "/audio/percival-jr-aula2/go_right_out_of_the_hotel_walk_two_blocks.mp3",
-  "[order-l1]": "/audio/percival-jr-aula2/order_l1_arrival_sequence.mp3"
+  "[order-l1]": "/audio/percival-jr/order_l1_ordering.mp3"
 };
 </script>
 <style>
@@ -1283,9 +1283,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

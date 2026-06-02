@@ -38,7 +38,7 @@ var audioMap = {
   "Let me introduce myself. I am Eduardo Chiba, Head of B2B at Quinto Andar.": "/audio/eduardo-chiba/let_me_introduce_myself_i_am_eduardo_chiba.mp3",
   "I am responsible for partnerships with real estate agencies and brokers.": "/audio/eduardo-chiba/i_am_responsible_for_partnerships_with_real_estate.mp3",
   "We are currently scaling our inventory integration platform across Brazil.": "/audio/eduardo-chiba/we_are_currently_scaling_our_inventory_integration.mp3",
-  "[order-l1]": "/audio/eduardo-chiba/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/eduardo-chiba/order_l1_ordering.mp3",
   "Hi! I am Sarah, VP of Partnerships at a PropTech firm in New York. Are you a speaker today?": "/audio/eduardo-chiba/dialogue_sarah_line1.mp3",
   "Nice to meet you, Sarah! I am Eduardo Chiba, Head of B2B at Quinto Andar in Brazil.": "/audio/eduardo-chiba/dialogue_eduardo_line2.mp3",
   "Quinto Andar? I have heard of you! What exactly does your B2B unit do?": "/audio/eduardo-chiba/dialogue_sarah_line3.mp3",
@@ -95,7 +95,7 @@ var audioMap = {
   "Our value proposition is connecting real estate agencies to millions of renters.": "/audio/eduardo-chiba/aula2_pron1.mp3",
   "Quinto Andar is more efficient than traditional listing services.": "/audio/eduardo-chiba/aula2_pron2.mp3",
   "Our competitive advantage comes from seamless technology integration.": "/audio/eduardo-chiba/aula2_pron3.mp3",
-  "[order-l2]": "/audio/eduardo-chiba/aula2_order_pitch.mp3",
+  "[order-l2]": "/audio/eduardo-chiba/order_l2_ordering.mp3",
   "Eduardo, thank you for meeting me. Could you start by describing Quinto Andar's value proposition?": "/audio/eduardo-chiba/aula2_dialogue_rachel_line1.mp3",
   "Of course. Our value proposition is simple: we connect real estate agencies to millions of renters through a digital marketplace.": "/audio/eduardo-chiba/aula2_dialogue_eduardo_line2.mp3",
   "Interesting. What makes your platform different? What is your competitive advantage?": "/audio/eduardo-chiba/aula2_dialogue_rachel_line3.mp3",
@@ -153,7 +153,7 @@ var audioMap = {
   "Could we schedule a call to discuss the partnership terms?": "/audio/eduardo-chiba/aula3_pron1.mp3",
   "We would be happy to negotiate flexible commission rates.": "/audio/eduardo-chiba/aula3_pron2.mp3",
   "Would you mind reviewing our proposal before the next meeting?": "/audio/eduardo-chiba/aula3_pron3.mp3",
-  "[order-l3]": "/audio/eduardo-chiba/aula3_order_partnership.mp3",
+  "[order-l3]": "/audio/eduardo-chiba/order_l3_ordering.mp3",
   "Good morning, Eduardo. Thank you for coming. Could you tell me more about your proposal?": "/audio/eduardo-chiba/aula3_dialogue_ana_line1.mp3",
   "Of course. I would like to present our partnership terms. We believe this could be a great collaboration.": "/audio/eduardo-chiba/aula3_dialogue_eduardo_line2.mp3",
   "Interesting. What kind of commission structure would you offer?": "/audio/eduardo-chiba/aula3_dialogue_ana_line3.mp3",
@@ -211,7 +211,7 @@ var audioMap = {
   "We have grown our partner network by forty percent this year.": "/audio/eduardo-chiba/aula4_pron1.mp3",
   "The conversion rate has improved significantly compared to last quarter.": "/audio/eduardo-chiba/aula4_pron2.mp3",
   "Our ROI forecast for the next quarter is very optimistic.": "/audio/eduardo-chiba/aula4_pron3.mp3",
-  "[order-l4]": "/audio/eduardo-chiba/aula4_order_quarterly.mp3",
+  "[order-l4]": "/audio/eduardo-chiba/order_l4_ordering.mp3",
   "Eduardo, thank you for the update. How has the B2B unit performed this quarter?": "/audio/eduardo-chiba/aula4_dialogue_lisa_line1.mp3",
   "We have had an excellent quarter. Our partner network has grown by forty percent since January.": "/audio/eduardo-chiba/aula4_dialogue_eduardo_line2.mp3",
   "That is impressive growth. What about revenue? Have you hit the forecast?": "/audio/eduardo-chiba/aula4_dialogue_lisa_line3.mp3",
@@ -5322,7 +5322,27 @@ function verifyAllMatches(gridId) { var grid = document.getElementById(gridId); 
 // ===== ORDER =====
 var orderSelection = {};
 function selectOrderItem(item, containerId) { if (item.classList.contains('correct-order')) return; if (!orderSelection[containerId]) orderSelection[containerId] = []; var idx = orderSelection[containerId].indexOf(item); if (idx > -1) { orderSelection[containerId].splice(idx, 1); item.querySelector('.order-num').textContent = '?'; item.style.borderColor = ''; } else { orderSelection[containerId].push(item); item.querySelector('.order-num').textContent = orderSelection[containerId].length; item.style.borderColor = 'var(--accent)'; } }
-function checkOrder(containerId) { var container = document.getElementById(containerId); var items = container.querySelectorAll('.order-item'); var selected = orderSelection[containerId] || []; if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; } var allCorrect = true; selected.forEach(function(item, idx) { if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; } else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); } }); if (!allCorrect) orderSelection[containerId] = []; else updateProgress(); }
+function checkOrder(containerId) {
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
+}
 function moveItem(btn, direction, containerId) { var item = btn.closest('.order-item'); var container = document.getElementById(containerId); var items = Array.from(container.querySelectorAll('.order-item')); var idx = items.indexOf(item); if (direction === -1 && idx > 0) container.insertBefore(item, items[idx - 1]); else if (direction === 1 && idx < items.length - 1) container.insertBefore(items[idx + 1], item); }
 
 // ===== FREE RECORDING =====

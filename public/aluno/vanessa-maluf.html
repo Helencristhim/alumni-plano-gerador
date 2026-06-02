@@ -168,11 +168,11 @@ var audioMap = {
     "to draw the line": "/audio/vanessa-maluf/to_draw_the_line_875251.mp3",
     "to put something on the table": "/audio/vanessa-maluf/to_put_something_on_the_table_9ed28a.mp3",
     "tone": "/audio/vanessa-maluf/tone_f303f9.mp3",
-  "[order-l1]": "/audio/vanessa-maluf/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/vanessa-maluf/order_l1_ordering.mp3",
   "[order-l2]": "/audio/vanessa-maluf/order_l2_meeting_sequence.mp3",
-  "[order-l3]": "/audio/vanessa-maluf/order_l3_legal_presentation.mp3",
+  "[order-l3]": "/audio/vanessa-maluf/order_l3_ordering.mp3",
   "[order-l4]": "/audio/vanessa-maluf/order_l4_negotiation_strategy.mp3",
-  "[order-l5]": "/audio/vanessa-maluf/order_l5_assertive_communication.mp3"
+  "[order-l5]": "/audio/vanessa-maluf/order_l5_ordering.mp3"
 };
 </script>
 <style>
@@ -3850,9 +3850,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

@@ -62,7 +62,7 @@ var audioMap = {
   "I struggle with grammar, but I want to improve. My goal is to feel more confident speaking.": "/audio/carolina-paludetto-rodrigues/dialogue_carolina_3.mp3",
   "That is a great goal! I can help you practice if you want.": "/audio/carolina-paludetto-rodrigues/dialogue_alex_4.mp3",
   "Yes, I would love that! Thanks, Alex!": "/audio/carolina-paludetto-rodrigues/dialogue_carolina_4.mp3",
-  "[order-l1]": "/audio/carolina-paludetto-rodrigues/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/carolina-paludetto-rodrigues/order_l1_ordering.mp3",
   "Carolina plays handball every week.": "/audio/carolina-paludetto-rodrigues/carolina_plays_handball_every_week.mp3",
   "She doesn't like math tests.": "/audio/carolina-paludetto-rodrigues/she_doesnt_like_math_tests.mp3",
   "Do you write stories?": "/audio/carolina-paludetto-rodrigues/do_you_write_stories.mp3",
@@ -110,7 +110,7 @@ var audioMap = {
   "Do you practice handball every day?": "/audio/carolina-paludetto-rodrigues/aula2_dialogue_lucas_3b.mp3",
   "No, I practice three times a week. I sometimes relax and write stories.": "/audio/carolina-paludetto-rodrigues/aula2_dialogue_carolina_3b.mp3",
   "That sounds like a busy schedule! What is your bedtime?": "/audio/carolina-paludetto-rodrigues/aula2_dialogue_lucas_4b.mp3",
-  "[order-l2]": "/audio/carolina-paludetto-rodrigues/aula2_order_morning_routine.mp3",
+  "[order-l2]": "/audio/carolina-paludetto-rodrigues/order_l2_ordering.mp3",
   "Carolina always wakes up at seven.": "/audio/carolina-paludetto-rodrigues/aula2_carolina_always_wakes_up.mp3",
   "She usually has breakfast before school.": "/audio/carolina-paludetto-rodrigues/aula2_she_usually_has_breakfast_before.mp3",
   "I never skip my homework.": "/audio/carolina-paludetto-rodrigues/aula2_i_never_skip_homework.mp3",
@@ -1179,6 +1179,10 @@ body.slide-mode .nav-bar{display:flex}
         <span class="badge badge-order">Order</span>
       </div>
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Put these sentences in the correct order to make a self-introduction. Use the arrows to move sentences up or down.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l1]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l1">
         <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l1')">
           <span class="order-num">?</span>
@@ -1699,6 +1703,10 @@ body.slide-mode .nav-bar{display:flex}
       <span class="badge badge-order">Order</span>
       <h4>Stage 2: Put the Morning Routine in Order</h4>
       <p class="exercise-desc">Arrange these actions in the correct order for a typical morning.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l2]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l2">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l2')">
           <span class="order-num">?</span>
@@ -3954,9 +3962,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

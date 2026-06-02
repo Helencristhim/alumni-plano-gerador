@@ -8,6 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <script>
 var audioMap = {
+  "[order-l4]": "/audio/andreia-heins/order_l4_ordering.mp3",
+  "[order-l3]": "/audio/andreia-heins/order_l3_ordering.mp3",
+  "[order-l2]": "/audio/andreia-heins/order_l2_ordering.mp3",
+  "[order-l1]": "/audio/andreia-heins/order_l1_ordering.mp3",
   "Could you repeat that, please?": "/audio/andreia-heins/could_you_repeat_that_please.mp3",
   "I am not sure I understand. Could you explain?": "/audio/andreia-heins/i_am_not_sure_i_understand_could_you_explain.mp3",
   "Let me think about that for a moment.": "/audio/andreia-heins/let_me_think_about_that_for_a_moment.mp3",
@@ -5749,9 +5753,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

@@ -217,8 +217,6 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 .slides-container { height:100vh;overflow:hidden;position:relative; }
 .slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem; }
 .slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
-.slide { padding-top:4.5rem; padding-bottom:4rem; }
-.slide::before, .slide::after { content:''; flex:1; }
 
 .slide-inner { max-width:920px;width:100%;position:relative; }
 .slide-light { background:var(--bg); }
@@ -1002,7 +1000,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- SLIDE 26: WHAT I LEARNED -->
-<div class="slide slide-light" data-slide="26" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Leia cada item. Pergunte: 'Can you say yes to this, Roberto?' Se sim, clique o checkbox juntos. Encerre: 'Look -- you can navigate the entire airport in English now!'">
+<div class="slide slide-light" data-slide="26" data-lesson="4" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Leia cada item. Pergunte: 'Can you say yes to this, Roberto?' Se sim, clique o checkbox juntos. Encerre: 'Look -- you can navigate the entire airport in English now!'">
   <div class="slide-inner" style="overflow-y:auto;max-height:75vh">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading">What I <span class="accent">Learned</span></h2>
@@ -1508,9 +1506,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

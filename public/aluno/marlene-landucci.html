@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <script>
 var audioMap = {
+  "[order-l2]": "/audio/marlene-landucci/order_l2_ordering.mp3",
   "Could you repeat that, please?": "/audio/marlene-landucci/could_you_repeat_that_please.mp3",
   "I do not understand.": "/audio/marlene-landucci/i_do_not_understand.mp3",
   "How do you say this in English?": "/audio/marlene-landucci/how_do_you_say_this_in_english.mp3",
@@ -49,7 +50,7 @@ var audioMap = {
   "Nice to meet you, Tom! This is my first trip alone.": "/audio/marlene-landucci/nice_to_meet_you_tom_this_is_my_first_trip_alone.mp3",
   "I manage properties in São Paulo. And you?": "/audio/marlene-landucci/i_manage_properties_in_sao_paulo_and_you.mp3",
   "I love traveling! I am currently learning English for my trips.": "/audio/marlene-landucci/i_love_traveling_i_am_currently_learning_english.mp3",
-  "[order-l1]": "/audio/marlene-landucci/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/marlene-landucci/order_l1_ordering.mp3",
   "[lp-listen1]": "/audio/marlene-landucci/lp_listen1_airport_announcement.mp3",
   "[lp-listen2]": "/audio/marlene-landucci/lp_listen2_self_introduction.mp3",
   "She is a teacher.": "/audio/marlene-landucci/she_is_a_teacher.mp3",
@@ -735,6 +736,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
         <span class="badge badge-order">Order</span>
       </div>
       <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem">Organize a self-introduction in the correct order (Organize uma autoapresenta&#231;&#227;o na ordem correta):</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l1]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l1">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l1')">
           <span class="order-num">?</span>
@@ -1219,6 +1224,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
         <span class="badge badge-order">Order</span>
       </div>
       <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem">Organize the daily routine in the correct order (Organize a descri&#231;&#227;o da rotina di&#225;ria na ordem correta):</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l2]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l2">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l2')">
           <span class="order-num">?</span>
@@ -1672,9 +1681,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }

@@ -53,7 +53,7 @@ var audioMap = {
   "They work in the pharmaceutical industry.": "/audio/gleice-leonardo-rocha-de-souza/grammar_they_work_in_pharma.mp3",
   "Good morning. My name is Gleice Leonardo Rocha de Souza. I am from Santo Andre, Brazil. I manage a team of thirty-four people at Sanofi Medley. My role is Commercial Excellence Manager. I lead transformation projects in the pharmaceutical industry. I have a new goal. I want to represent international brands in Brazil. It is a big challenge, but I am ready.": "/audio/gleice-leonardo-rocha-de-souza/listening1_full_introduction.mp3",
   "Hello everyone. My name is Mark Thompson. I work at PharmaTrade UK. We represent pharmaceutical brands in the European market. Our team has twenty people. We manage partnerships with companies in ten countries. My role is Business Development Manager. Our biggest challenge is finding the right partners in new markets.": "/audio/gleice-leonardo-rocha-de-souza/listening2_mark_introduction.mp3",
-  "[order-l1]": "/audio/gleice-leonardo-rocha-de-souza/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/gleice-leonardo-rocha-de-souza/order_l1_ordering.mp3",
   "Let me introduce myself. I am Gleice.": "/audio/gleice-leonardo-rocha-de-souza/survival_ic_1.mp3",
   "I manage the Commercial Excellence team.": "/audio/gleice-leonardo-rocha-de-souza/survival_ic_2.mp3",
   "My role is to lead transformation projects.": "/audio/gleice-leonardo-rocha-de-souza/survival_ic_3.mp3",
@@ -98,7 +98,7 @@ var audioMap = {
   "Our process improves every quarter.": "/audio/gleice-leonardo-rocha-de-souza/aula2_grammar4.mp3",
   "Good morning, David. My name is Gleice. I work at Sanofi Medley here in Brazil. My department is Commercial Excellence. We have thirty-four colleagues on our team. My responsibility is to lead transformation projects. My colleagues and I improve our commercial processes every day. I report to the Commercial Director. His role is to oversee our strategy. Our team's performance has been strong this year. We are meeting all our goals.": "/audio/gleice-leonardo-rocha-de-souza/aula2_listening1.mp3",
   "Hello, Gleice. Thank you for showing me around. Let me tell you about my team. I work at Global Pharma Partners in London. My department is International Business Development. Our team has twelve colleagues. My responsibility is to find new partners in emerging markets. I report to the Managing Director. Her strategy is to expand into Latin America. Our performance has been excellent. We completed five new partnerships this year.": "/audio/gleice-leonardo-rocha-de-souza/aula2_listening2.mp3",
-  "[order-l2]": "/audio/gleice-leonardo-rocha-de-souza/aula2_order_team_description.mp3",
+  "[order-l2]": "/audio/gleice-leonardo-rocha-de-souza/order_l2_ordering.mp3",
   "My department is Commercial Excellence.": "/audio/gleice-leonardo-rocha-de-souza/aula2_survival_ic_1.mp3",
   "My responsibility is to lead transformation projects.": "/audio/gleice-leonardo-rocha-de-souza/aula2_survival_ic_2.mp3",
   "I report to the Commercial Director.": "/audio/gleice-leonardo-rocha-de-souza/aula2_survival_ic_3.mp3",
@@ -143,7 +143,7 @@ var audioMap = {
   "He never misses a deadline.": "/audio/gleice-leonardo-rocha-de-souza/aula3_grammar4.mp3",
   "Good morning. My name is Gleice. I am a Commercial Excellence Manager at Sanofi Medley. Every day, I usually start at seven in the morning. I always review my schedule first. Then I check my emails and prioritize my tasks. I have three meetings every day. I coordinate projects with different departments. I usually commute from Santo Andre. It takes about forty minutes. I never miss a deadline. My routine is very busy, but I love it.": "/audio/gleice-leonardo-rocha-de-souza/aula3_listening1.mp3",
   "Hello, Gleice. Let me tell you about my routine in London. I usually start at eight thirty. I always check my emails first. Then I review the reports from the night before. I have two meetings in the morning and one in the afternoon. I commute by train. It takes about thirty minutes. I sometimes work late on Fridays. I never miss a deadline either. My schedule is busy, but I always prioritize my health.": "/audio/gleice-leonardo-rocha-de-souza/aula3_listening2.mp3",
-  "[order-l3]": "/audio/gleice-leonardo-rocha-de-souza/aula3_order_daily_routine.mp3",
+  "[order-l3]": "/audio/gleice-leonardo-rocha-de-souza/order_l3_ordering.mp3",
   "I usually start my day at seven in the morning.": "/audio/gleice-leonardo-rocha-de-souza/aula3_survival_ic_1.mp3",
   "I always prioritize my team's needs.": "/audio/gleice-leonardo-rocha-de-souza/aula3_survival_ic_2.mp3",
   "I have three meetings every day.": "/audio/gleice-leonardo-rocha-de-souza/aula3_survival_ic_3.mp3",
@@ -3075,7 +3075,27 @@ function verifyAllMatches(gridId) { var grid = document.getElementById(gridId); 
 
 var orderSelection = {};
 function selectOrderItem(item, containerId) { if (item.classList.contains('correct-order')) return; if (!orderSelection[containerId]) orderSelection[containerId] = []; var idx = orderSelection[containerId].indexOf(item); if (idx > -1) { orderSelection[containerId].splice(idx, 1); item.querySelector('.order-num').textContent = '?'; item.style.borderColor = ''; } else { orderSelection[containerId].push(item); item.querySelector('.order-num').textContent = orderSelection[containerId].length; item.style.borderColor = 'var(--accent)'; } }
-function checkOrder(containerId) { var container = document.getElementById(containerId); var items = container.querySelectorAll('.order-item'); var selected = orderSelection[containerId] || []; if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; } var allCorrect = true; selected.forEach(function(item, idx) { if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; } else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); } }); if (!allCorrect) orderSelection[containerId] = []; else updateProgress(); }
+function checkOrder(containerId) {
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
+}
 function moveItem(btn, direction, containerId) { var item = btn.closest('.order-item'); var container = document.getElementById(containerId); var items = Array.from(container.querySelectorAll('.order-item')); var idx = items.indexOf(item); if (direction === -1 && idx > 0) container.insertBefore(item, items[idx - 1]); else if (direction === 1 && idx < items.length - 1) container.insertBefore(items[idx + 1], item); }
 
 // ===== FREE RECORDING =====

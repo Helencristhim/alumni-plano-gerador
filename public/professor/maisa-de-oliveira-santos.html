@@ -5518,25 +5518,24 @@ function moveItem(btn, direction, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
-  var correct = 0;
-  items.forEach(function(item, i) {
-    var expected = parseInt(item.getAttribute('data-order'));
-    if (expected === i + 1) {
-      item.classList.add('correct');
-      item.classList.remove('wrong');
-      var num = item.querySelector('.order-num');
-      if (num) num.textContent = i + 1;
-      correct++;
-    } else {
-      item.classList.add('wrong');
-      item.classList.remove('correct');
-      var num = item.querySelector('.order-num');
-      if (num) num.textContent = i + 1;
-    }
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
   });
-  var scoreEl = document.querySelector('#' + containerId + ' ~ .order-score, #' + containerId + ' + .order-score');
-  if (scoreEl) scoreEl.textContent = correct + ' / ' + items.length;
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
 }
 
 // ===== DRAG AND DROP =====

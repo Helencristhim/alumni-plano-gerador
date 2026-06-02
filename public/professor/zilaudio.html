@@ -2078,7 +2078,11 @@
                 <div class="exercise-section">
                     <h4>P2. Put the dialogue in order <span class="badge badge-order">Practice</span></h4>
                     <p class="microcopy">Arraste ou clique para reordenar este di&aacute;logo de check-in na ordem correta.</p>
-                    <div class="order-container" id="order-hotel">
+                    <button class="btn btn-listen" onclick="speakText('[order-hotel]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
+      <div class="order-container" id="order-hotel">
                         <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this, 'order-hotel')"><span class="order-num">?</span><span class="order-text">&ldquo;That&rsquo;s correct. Could I get a room with a view?&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-hotel')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-hotel')">&#9660;</button></span></div>
                         <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this, 'order-hotel')"><span class="order-num">?</span><span class="order-text">&ldquo;Good evening. Welcome to the Grand Hotel.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-hotel')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-hotel')">&#9660;</button></span></div>
                         <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this, 'order-hotel')"><span class="order-num">?</span><span class="order-text">&ldquo;Of course. Here is your room key. Room 412.&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-hotel')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-hotel')">&#9660;</button></span></div>
@@ -2503,7 +2507,11 @@
                 <div class="exercise-section">
                     <h4>P2. Put the dialogue in order <span class="badge badge-order">Practice</span></h4>
                     <p class="microcopy">Reordene este di&aacute;logo de restaurante na ordem correta.</p>
-                    <div class="order-container" id="order-restaurant">
+                    <button class="btn btn-listen" onclick="speakText('[order-restaurant]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
+      <div class="order-container" id="order-restaurant">
                         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this, 'order-restaurant')"><span class="order-num">?</span><span class="order-text">&ldquo;Are you ready to order?&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-restaurant')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-restaurant')">&#9660;</button></span></div>
                         <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this, 'order-restaurant')"><span class="order-num">?</span><span class="order-text">&ldquo;Could I have the check, please?&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-restaurant')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-restaurant')">&#9660;</button></span></div>
                         <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this, 'order-restaurant')"><span class="order-num">?</span><span class="order-text">&ldquo;Hi! Welcome. How many in your party?&rdquo;</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-restaurant')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-restaurant')">&#9660;</button></span></div>
@@ -3750,6 +3758,8 @@
 
     // ===== AUDIO MAP =====
                 const audioMap = {
+  "[order-restaurant]": "/audio/zilaudio/order_restaurant_ordering.mp3",
+  "[order-hotel]": "/audio/zilaudio/order_hotel_ordering.mp3",
         "I have a reservation under the name Pereira": "/audio/zilaudio/i_have_a_reservation_under_the_name_pereira.mp3",
         "Call the front desk": "/audio/zilaudio/call_the_front_desk.mp3",
         "Can I get a new room key?": "/audio/zilaudio/can_i_get_a_new_room_key.mp3",
@@ -4022,26 +4032,26 @@
     }
 
     function checkOrder(containerId) {
-        const container = document.getElementById(containerId);
-        const items = container.querySelectorAll('.order-item');
-        const selected = orderSelection[containerId] || [];
-        if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
-        let allCorrect = true;
-        selected.forEach((item, idx) => {
-            const expectedOrder = idx + 1;
-            if (parseInt(item.dataset.order) === expectedOrder) {
-                item.classList.add('correct-order');
-                item.querySelector('.order-num').textContent = expectedOrder;
-            } else {
-                allCorrect = false;
-                item.style.borderColor = 'var(--danger)';
-                item.classList.add('wrong');
-                setTimeout(() => { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000);
-            }
-        });
-        if (!allCorrect) { orderSelection[containerId] = []; }
-        else { updateProgress(); }
-    }
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
+}
 
     // ===== ARROW MOVE (fallback for drag) =====
     function moveItem(btn, direction, containerId) {

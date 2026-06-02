@@ -62,11 +62,11 @@ var audioMap = {
   "He has went to Australia twice.": "/audio/pricila-adamo/error_he_has_went_to_australia.mp3",
   "[listening-1]": "/audio/pricila-adamo/hi_my_name_is_pricila_adamo_i_am_a_dentist_from_araras_a_sma.mp3",
   "[listening-2]": "/audio/pricila-adamo/gday_my_name_is_david_and_i_am_from_sydney_australia_sydney_.mp3",
-  "[order-l1]": "/audio/pricila-adamo/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/pricila-adamo/order_l1_ordering.mp3",
   "[order-l2]": "/audio/pricila-adamo/order_l2_life_chapters.mp3",
-  "[order-l3]": "/audio/pricila-adamo/order_l3_retirement_plans.mp3",
+  "[order-l3]": "/audio/pricila-adamo/order_l3_ordering.mp3",
   "[order-l4]": "/audio/pricila-adamo/order_l4_travel_description.mp3",
-  "[order-l5]": "/audio/pricila-adamo/order_l5_wellness_advice.mp3",
+  "[order-l5]": "/audio/pricila-adamo/order_l5_ordering.mp3",
   "I have been studying English for...": "/audio/pricila-adamo/expression_i_have_been_studying.mp3",
   "I grew up in...": "/audio/pricila-adamo/expression_i_grew_up_in.mp3",
   "I have always wanted to...": "/audio/pricila-adamo/expression_i_have_always_wanted_to.mp3",
@@ -2050,7 +2050,27 @@ function verifyAllMatches(gridId) { var grid = document.getElementById(gridId); 
 
 var orderSelection = {};
 function selectOrderItem(item, containerId) { if (item.classList.contains('correct-order')) return; if (!orderSelection[containerId]) orderSelection[containerId] = []; var idx = orderSelection[containerId].indexOf(item); if (idx > -1) { orderSelection[containerId].splice(idx, 1); item.querySelector('.order-num').textContent = '?'; item.style.borderColor = ''; } else { orderSelection[containerId].push(item); item.querySelector('.order-num').textContent = orderSelection[containerId].length; item.style.borderColor = 'var(--accent)'; } }
-function checkOrder(containerId) { var container = document.getElementById(containerId); var items = container.querySelectorAll('.order-item'); var selected = orderSelection[containerId] || []; if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; } var allCorrect = true; selected.forEach(function(item, idx) { if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; } else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); } }); if (!allCorrect) orderSelection[containerId] = []; else updateProgress(); }
+function checkOrder(containerId) {
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
+}
 function moveItem(btn, direction, containerId) { var item = btn.closest('.order-item'); var container = document.getElementById(containerId); var items = Array.from(container.querySelectorAll('.order-item')); var idx = items.indexOf(item); if (direction === -1 && idx > 0) container.insertBefore(item, items[idx - 1]); else if (direction === 1 && idx < items.length - 1) container.insertBefore(items[idx + 1], item); }
 
 // ===== FREE RECORDING =====

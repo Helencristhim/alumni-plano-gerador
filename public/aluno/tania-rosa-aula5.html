@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <script>
 var audioMap = {
+  "[order-l3]": "/audio/tania-rosa/order_l3_ordering.mp3",
   "Menu": "/audio/tania-rosa-aula5/menu.mp3",
   "Order": "/audio/tania-rosa-aula5/order.mp3",
   "Appetizer": "/audio/tania-rosa-aula5/appetizer.mp3",
@@ -57,7 +58,7 @@ var audioMap = {
   "Street": "/audio/tania-rosa-aula4/street.mp3",
   "Corner": "/audio/tania-rosa-aula4/corner.mp3",
   "Subway": "/audio/tania-rosa-aula4/subway.mp3",
-  "[order-l5]": "/audio/tania-rosa-aula5/order_l5.mp3"
+  "[order-l5]": "/audio/tania-rosa/order_l5_ordering.mp3"
 };
 </script>
 <style>
@@ -1459,6 +1460,10 @@ body.slide-mode .nav-bar{display:flex}
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put in Order</h4><span class="badge badge-order">Order</span></div>
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Coloque as frases na ordem certa para montar um check-in completo no hotel.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l3]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
       <div class="order-container" id="order-l3">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l3')"><span class="order-num">?</span><span class="order-text">"I would like a room with a view, please."</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l3')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l3')">&#9660;</button></span></div>
         <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l3')"><span class="order-num">?</span><span class="order-text">"What time is checkout?"</span><span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l3')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l3')">&#9660;</button></span></div>
@@ -1617,7 +1622,27 @@ function checkMatch(select){var row=select.closest('.match-row');var answer=row.
 function verifyAllMatches(gridId){var grid=document.getElementById(gridId);var rows=grid.querySelectorAll('.match-row');rows.forEach(function(row){var select=row.querySelector('select');var answer=row.dataset.answer;row.classList.remove('correct','wrong');if(select.value===answer){row.classList.add('correct')}else if(select.value!==''){row.classList.add('wrong');setTimeout(function(){row.classList.remove('wrong')},1800)}});updateProgress()}
 var orderSelection={};
 function selectOrderItem(item,containerId){if(item.classList.contains('correct-order'))return;if(!orderSelection[containerId])orderSelection[containerId]=[];var idx=orderSelection[containerId].indexOf(item);if(idx>-1){orderSelection[containerId].splice(idx,1);item.querySelector('.order-num').textContent='?';item.style.borderColor=''}else{orderSelection[containerId].push(item);item.querySelector('.order-num').textContent=orderSelection[containerId].length;item.style.borderColor='var(--accent)'}}
-function checkOrder(containerId){var container=document.getElementById(containerId);var items=container.querySelectorAll('.order-item');var selected=orderSelection[containerId]||[];if(selected.length!==items.length){alert('Select all items in the correct order.');return}var allCorrect=true;selected.forEach(function(item,idx){if(parseInt(item.dataset.order)===idx+1){item.classList.add('correct-order');item.querySelector('.order-num').textContent=idx+1}else{allCorrect=false;item.style.borderColor='var(--danger)';item.classList.add('wrong');setTimeout(function(){item.classList.remove('wrong');item.style.borderColor='';item.querySelector('.order-num').textContent='?'},1000)}});if(!allCorrect)orderSelection[containerId]=[];else updateProgress()}
+function checkOrder(containerId) {
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
+}
 function moveItem(btn,direction,containerId){var item=btn.closest('.order-item');var container=document.getElementById(containerId);var items=Array.from(container.querySelectorAll('.order-item'));var idx=items.indexOf(item);if(direction===-1&&idx>0)container.insertBefore(item,items[idx-1]);else if(direction===1&&idx<items.length-1)container.insertBefore(items[idx+1],item)}
 var activeRecognition=null;
 function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Please use Google Chrome for voice recognition.');return}var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');var r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=3;r.continuous=true;activeRecognition={recognition:r,btn:btn,stopBtn:stopBtn,card:card};r.start();function resetButtons(){btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');activeRecognition=null}r.onresult=function(event){var best=event.results[event.results.length-1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g,'');var analysis=analyzeWords(target,best);var totalWords=analysis.expected.length;var correctWords=analysis.expected.filter(function(w){return w.status==='correct'}).length;resultDiv.classList.add('show');resultDiv.classList.remove('good','try-again','bad');var html='';if(analysis.score>=0.8){resultDiv.classList.add('good');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Excellent!';updateProgress()}else if(analysis.score>=0.5){resultDiv.classList.add('try-again');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Almost there!'}else{resultDiv.classList.add('bad');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Keep practicing!'}html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';analysis.expected.forEach(function(w){html+='<span class="word-box word-'+(w.status==='correct'?'correct':'missing')+'">'+w.word+'</span>'});html+='</div></div>';resultDiv.innerHTML=html;resetButtons()};r.onerror=function(){resetButtons();resultDiv.classList.add('show','try-again');resultDiv.innerHTML='Could not hear you. Check your microphone.'};r.onend=function(){resetButtons()};setTimeout(function(){if(btn.classList.contains('recording')){r.stop();resetButtons()}},30000)}

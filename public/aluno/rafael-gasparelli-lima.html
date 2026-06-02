@@ -352,11 +352,11 @@ var audioMap = {
 "There are many employees in the building.":"/audio/rafael-gasparelli-lima/there_are_many_employees.mp3",
 "There is a conference room on this floor.":"/audio/rafael-gasparelli-lima/there_is_conf_room_this_floor.mp3",
 "The cafeteria is on the first floor.":"/audio/rafael-gasparelli-lima/the_cafeteria_on_first_floor.mp3",
-  "[order-l1]": "/audio/rafael-gasparelli-lima/order_l1_self_introduction.mp3",
+  "[order-l1]": "/audio/rafael-gasparelli-lima/order_l1_ordering.mp3",
   "[order-l2]": "/audio/rafael-gasparelli-lima/order_l2_company_profile.mp3",
-  "[order-l3]": "/audio/rafael-gasparelli-lima/order_l3_daily_routine.mp3",
+  "[order-l3]": "/audio/rafael-gasparelli-lima/order_l3_ordering.mp3",
   "[order-l4]": "/audio/rafael-gasparelli-lima/order_l4_networking.mp3",
-  "[order-l5]": "/audio/rafael-gasparelli-lima/order_l5_office_tour.mp3"
+  "[order-l5]": "/audio/rafael-gasparelli-lima/order_l5_ordering.mp3"
 };
 </script>
 <style>
@@ -2472,17 +2472,25 @@ function selectOrderItem(item, containerId) {
 }
 
 function checkOrder(containerId) {
-    var container = document.getElementById(containerId);
-    var items = container.querySelectorAll('.order-item');
-    var selected = orderSelection[containerId] || [];
-    if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
     var allCorrect = true;
-    selected.forEach(function(item, idx) {
-        if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
-        else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
     });
-    if (!allCorrect) orderSelection[containerId] = [];
-    else updateProgress();
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
 }
 
 function moveItem(btn, direction, containerId) {

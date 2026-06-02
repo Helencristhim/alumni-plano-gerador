@@ -41,7 +41,7 @@ var audioMap = {
   "We estimate the deal value at approximately two hundred million.": "/audio/eduarda-gabriel/aula3_surv3.mp3",
   "The forecast shows a decline in the second half.": "/audio/eduarda-gabriel/aula3_surv4.mp3",
   "Let me walk you through the numbers.": "/audio/eduarda-gabriel/aula3_surv5.mp3",
-  "[order-l3]": "/audio/eduarda-gabriel/aula3_order_l3.mp3",
+  "[order-l3]": "/audio/eduarda-gabriel-new/order_l3_ordering.mp3",
   "One hundred and fifty million dollars, or one-five-zero million.": "/audio/eduarda-gabriel/aula3_oral1.mp3",
   "Revenue declined by ten percent, or twenty million dollars.": "/audio/eduarda-gabriel/aula3_oral2.mp3",
   "The margin increased by five percentage points, from fifteen to twenty percent.": "/audio/eduarda-gabriel/aula3_oral3.mp3",
@@ -450,8 +450,6 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 .slides-container { height:100vh;overflow:hidden;position:relative; }
 .slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem; }
 .slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
-.slide { padding-top:4.5rem; padding-bottom:4rem; }
-.slide::before, .slide::after { content:''; flex:1; }
 
 .slide-inner { max-width:920px;width:100%;position:relative; }
 .slide-light { background:var(--bg); }
@@ -3007,9 +3005,17 @@ function selectOrderItem(item, containerId) {
 
 function checkOrder(containerId) {
   var container = document.getElementById(containerId);
-  var items = container.querySelectorAll('.order-item');
+  var items = Array.from(container.querySelectorAll('.order-item'));
   var selected = orderSelection[containerId] || [];
-  if (selected.length !== items.length) { alert('Select all items in the correct order.'); return; }
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
   var allCorrect = true;
   selected.forEach(function(item, idx) {
     if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
