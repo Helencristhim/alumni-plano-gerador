@@ -19,9 +19,9 @@ const PHRASES = [
   { text: "Findings", voice: ARTHUR },
   { text: "Recommendation", voice: ARTHUR },
   { text: "Patricia was invited to join the panel discussion.", voice: ELLEN },
-  { text: "The keynote speaker presented groundbreaking research.", voice: ARTHUR },
+  { text: "The keynote speaker presented groundbreaking research.", voice: ELLEN },
   { text: "The moderator asked each delegate to share their findings.", voice: ELLEN },
-  { text: "The team reached a consensus on the new methodology.", voice: ARTHUR },
+  { text: "The team reached a consensus on the new methodology.", voice: ELLEN },
   { text: "Every delegate received a copy of the conference abstract.", voice: ELLEN },
   { text: "Networking at the symposium led to a new collaboration.", voice: ARTHUR },
   { text: "The symposium featured presentations from twelve countries.", voice: ELLEN },
@@ -37,9 +37,9 @@ const PHRASES = [
   { text: "My recommendation is that we reach a consensus on extending the trial. If we had more time, we would be able to replicate the study with a larger sample.", voice: ELLEN },
   { text: "In conclusion, I would like to highlight that our findings have important implications for nutritional therapy. I propose that the delegates consider funding a larger symposium next year.", voice: ELLEN },
   { text: "I would like to present our findings to the panel.", voice: ELLEN },
-  { text: "Based on the evidence, my recommendation is to continue the current approach.", voice: ARTHUR },
+  { text: "Based on the evidence, my recommendation is to continue the current approach.", voice: ELLEN },
   { text: "The delegates reached a consensus on the next steps.", voice: ELLEN },
-  { text: "If we had more funding, we would replicate the study at a larger symposium.", voice: ARTHUR },
+  { text: "If we had more funding, we would replicate the study at a larger symposium.", voice: ELLEN },
   { text: "I would like to thank the moderator and all the delegates for their feedback.", voice: ELLEN },
   { text: "I would like to present our findings on glycemic control to the panel.", voice: ELLEN },
   { text: "My recommendation is that we reach a consensus on the methodology.", voice: ARTHUR },
@@ -51,6 +51,7 @@ const PHRASES = [
   { text: "Networking at the symposium helped us find new collaborators.", voice: ARTHUR },
   { text: "Her findings were presented at the keynote session.", voice: ELLEN },
   { text: "Good morning, delegates. Welcome to the Abbott Science Summit. My name is Patricia Ruffo, and I am honored to deliver the keynote presentation today. Over the past year, our team has made significant progress on glycemic control research. I reported to the stakeholders last month that we had completed the first phase of our trial. Dr. Nakamura said that the preliminary findings were very promising. He mentioned that the correlation between supplement dosage and glycemic response was significant. Today, I would like to present our complete findings and share my recommendations for the next phase. If we had more funding, we would replicate this study across five countries. I propose that this symposium consider establishing a consensus on international collaboration for nutritional research.", voice: ELLEN },
+  { text: "Dr. Ruffo, I really enjoyed your keynote. Your findings on glycemic control were fascinating. I have been working on a similar project in Tokyo. Dr. Nakamura mentioned that your methodology was very innovative. I was wondering if you would be open to a collaboration. If we combined our data, we would have the largest sample in this field. Could you elaborate on how you selected your control group? I would argue that a multi-center approach could strengthen the results. My recommendation is that we set up a meeting next month to discuss the details.", voice: ARTHUR },
 ];
 
 function toFilename(text) {

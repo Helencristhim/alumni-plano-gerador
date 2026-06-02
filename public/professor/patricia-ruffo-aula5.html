@@ -53,11 +53,14 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 .slide-deck { position:relative; width:100%; height:100vh; }
 .slide {
   position:absolute; inset:0; width:100%; height:100vh;
-  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  display:flex; flex-direction:column; align-items:center;
   opacity:0; visibility:hidden; transition: opacity 400ms ease, visibility 400ms ease;
   overflow-y:auto; padding:2rem;
 }
 .slide.active { opacity:1; visibility:visible; }
+.slide { padding-top:4.5rem; padding-bottom:4rem; }
+.slide::before, .slide::after { content:''; flex:1; }
+
 .slide.dark { background:var(--dark); color:#fff; }
 .slide.light { background:var(--bg); color:var(--text); }
 
@@ -375,7 +378,8 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 }
 .err-item:hover { border-color:rgba(220,38,38,0.4); }
 .err-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
-.err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
+.err-sentence .wrong { color:rgba(255,255,255,0.85); font-weight:400; text-decoration:none; transition:all 0.3s; }
+.err-item.open .err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
 .err-correction {
   display:none; margin-top:0.6rem; padding:0.5rem 0.8rem;
   background:rgba(22,163,74,0.1); border-radius:6px;
@@ -674,7 +678,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <!-- ═══ SLIDE 5 — VOCAB 1-5 ═══ -->
 <div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>7:30 - 14 min</span>Vocabulário. ANTES de clicar cada card, leia a definição e pergunte: &quot;What word do you think this is?&quot; Espere. DEPOIS de revelar: toque áudio 2x, Patricia repete. Foque na pronúncia de &quot;consensus&quot; (con-SEN-sus, stress na segunda) e &quot;delegate&quot; (DEL-e-gate, stress na primeira).<div class='t-ccq'><strong>CCQs:</strong> &quot;Is a panel one person or a group?&quot; (a group) / &quot;Is a keynote a small talk or the main presentation?&quot; (the main one) / &quot;Does a moderator present research or lead the discussion?&quot; (leads the discussion)</div>">
   <div class="slide-chapter-label">Chapter 2 -- Key Words</div>
-  <p class="section-label" style="color:#7BEFB2;text-align:center;">Click each card to reveal</p>
+  <p class="section-label" style="color:#7BEFB2;text-align:center;">Click on each card to reveal</p>
   <div class="vocab-grid" id="vocabGrid1">
     <!-- Card 1: Panel -->
     <div class="v-card" onclick="revealVCard(this)">
@@ -763,7 +767,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <!-- ═══ SLIDE 6 — VOCAB 6-10 ═══ -->
 <div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>14:00 - 20 min</span>Vocabulário parte 2. Mesma dinâmica. Destaque &quot;symposium&quot; como sinônimo formal de conference. Pergunte: &quot;What is the difference between a symposium and a regular meeting?&quot; Patricia reflete. Foque na pronúncia de &quot;symposium&quot; (sym-PO-si-um) e &quot;recommendation&quot; (rec-om-men-DA-tion).<div class='t-ccq'><strong>CCQs:</strong> &quot;Is networking about making friends or building professional relationships?&quot; (professional relationships) / &quot;Is an abstract the full paper or a summary?&quot; (a summary) / &quot;Are findings the same as opinions?&quot; (no, they are results of research)</div>">
   <div class="slide-chapter-label">Chapter 2 -- Key Words</div>
-  <p class="section-label" style="color:#7BEFB2;text-align:center;">Click each card to reveal</p>
+  <p class="section-label" style="color:#7BEFB2;text-align:center;">Click on each card to reveal</p>
   <div class="vocab-grid" id="vocabGrid2">
     <!-- Card 6: Networking -->
     <div class="v-card" onclick="revealVCard(this)">
@@ -1057,7 +1061,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>33:00 - 38 min</span>Listening. Diga: &quot;Close your eyes and listen to Dr. Ruffo's keynote.&quot; Toque o áudio. NÃO mostre texto. Depois pergunte: &quot;What did you hear?&quot; Aceite respostas parciais. Pergunte cada questão de compreensão oralmente ANTES de clicar.<div class='t-alert'>Se Patricia pedir para ver o texto, diga: &quot;Let us listen one more time first. Focus on the structures you recognize from our lessons.&quot;</div>">
   <div class="slide-chapter-label">Chapter 4 -- The Simulation</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Patricia's Keynote</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to Dr. Ruffo delivering her keynote at the Abbott Science Summit.</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to you, Dr. Ruffo, delivering your keynote at the Abbott Science Summit.</p>
   <div class="listening-card">
     <div class="listening-player" id="lp-listen1" data-src="/audio/patricia-ruffo/aula5_good_morning_delegates_welcome_to_the_abbott_science_s.mp3">
       <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen1')"><div class="lp-progress" id="progress-lp-listen1"></div></div>
@@ -1167,15 +1171,15 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Dialogue Comprehension</h2>
   <div class="comp-questions" style="margin-top:0;">
     <div class="cq-item" onclick="this.classList.toggle('open')">
-      <div class="cq-q">1. How did Patricia respond to Dr. Santos's criticism?</div>
+      <div class="cq-q">1. How did you respond to Dr. Santos's criticism?</div>
       <div class="cq-a">She used an opinion frame: "I see your point, but based on the evidence, our methodology was peer-reviewed."</div>
     </div>
     <div class="cq-item" onclick="this.classList.toggle('open')">
-      <div class="cq-q">2. What conditional structure did Patricia use when talking about the trial?</div>
+      <div class="cq-q">2. What conditional structure did you use when talking about the trial?</div>
       <div class="cq-a">Second conditional: "If we had more time, we would be able to replicate the study."</div>
     </div>
     <div class="cq-item" onclick="this.classList.toggle('open')">
-      <div class="cq-q">3. What was Patricia's final recommendation?</div>
+      <div class="cq-q">3. What was your final recommendation?</div>
       <div class="cq-a">She proposed that the delegates consider funding a larger symposium next year.</div>
     </div>
   </div>
@@ -1185,9 +1189,9 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>48:00 - 52 min</span>Listening 2. Toque. Patricia ouve SEM texto. Depois pergunte o que entendeu. Perguntas de compreensão uma por vez, oralmente ANTES de clicar. Conecte: &quot;This is networking -- building relationships after the presentation.&quot;">
   <div class="slide-chapter-label">Chapter 4 -- The Simulation</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Networking</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to Patricia networking after the panel discussion.</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to you networking after the panel discussion.</p>
   <div class="listening-card">
-    <div class="listening-player" id="lp-listen2" data-src="">
+    <div class="listening-player" id="lp-listen2" data-src="/audio/patricia-ruffo/aula5_dr_ruffo_i_really_enjoyed_your_keynote_your_findings_o.mp3">
       <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen2')"><div class="lp-progress" id="progress-lp-listen2"></div></div>
       <div class="lp-time"><span id="time-current-lp-listen2">0:00</span><span id="time-total-lp-listen2">0:00</span></div>
       <div class="lp-controls">
@@ -1220,43 +1224,60 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>52:00 - 58 min</span>Quick Challenge. Cada pergunta integra uma habilidade diferente das 5 aulas. Patricia responde oralmente. Se acertar: &quot;Show Answer&quot; para confirmar. Se travar: dê a primeira palavra. 30 segundos por item. <strong>Confetti ao completar todas!</strong><div class='t-alert'>Se Patricia ficar insegura, encoraje: &quot;Use the toolkit on the previous slide as reference.&quot;</div>">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Challenge</h2>
-  <div class="qc-score" id="qcScore">0 / 6</div>
+  <div class="qc-score" id="qcProgress">Challenge 1 / 6</div>
+  <div class="qc-score" id="qcScore">0 / 6 completed</div>
   <div class="qc-container" id="qcContainer">
     <div class="qc-card active" data-idx="0">
       <div class="qc-prompt">Lesson 1: Introduce yourself at the summit.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
       <div class="qc-answer-box">"I am Patricia Ruffo, a clinical nutritionist at Abbott. I <strong>have been working</strong> in clinical research for over twenty years."</div>
-      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="qc-next-btn" onclick="nextQc()" style="display:none;">Next Question</button>
+      </div>
     </div>
     <div class="qc-card" data-idx="1">
       <div class="qc-prompt">Lesson 2: Disagree with a colleague's proposal.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
       <div class="qc-answer-box">"<strong>I see your point, but</strong> I would argue that we need more evidence before changing our approach."</div>
-      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="qc-next-btn" onclick="prevQc()">Previous</button>
+        <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      </div>
     </div>
     <div class="qc-card" data-idx="2">
       <div class="qc-prompt">Lesson 3: Ask a smart question about research.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
       <div class="qc-answer-box">"<strong>Could you elaborate</strong> on your methodology? <strong>If you were to</strong> replicate this study, what would you change?"</div>
-      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="qc-next-btn" onclick="prevQc()">Previous</button>
+        <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      </div>
     </div>
     <div class="qc-card" data-idx="3">
       <div class="qc-prompt">Lesson 4: Report what a colleague said.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
       <div class="qc-answer-box">"Dr. Nakamura <strong>reported that</strong> the preliminary findings <strong>were</strong> significant. He <strong>mentioned that</strong> the sample size needed to be larger."</div>
-      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="qc-next-btn" onclick="prevQc()">Previous</button>
+        <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      </div>
     </div>
     <div class="qc-card" data-idx="4">
       <div class="qc-prompt">Lesson 5: Present your recommendation at the panel.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
       <div class="qc-answer-box">"My <strong>recommendation</strong> is that we reach a <strong>consensus</strong> on extending the trial for three more months."</div>
-      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="qc-next-btn" onclick="prevQc()">Previous</button>
+        <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      </div>
     </div>
     <div class="qc-card" data-idx="5">
       <div class="qc-prompt">All Lessons: Deliver a 30-second closing statement.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
       <div class="qc-answer-box">"In conclusion, our <strong>findings</strong> have important implications. I would like to thank the <strong>moderator</strong> and all the <strong>delegates</strong>. I propose that we continue collaborating."</div>
-      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
+        <button class="qc-next-btn" onclick="prevQc()">Previous</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1265,7 +1286,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>58:00 - 62 min</span>Spot the Error. Leia cada frase. Pergunte: &quot;Can you find the mistake?&quot; Clique para revelar. Erros são de TODAS as aulas: present perfect (L1), first conditional (L2), second conditional (L3), reported speech (L4), e vocabulário (L5).">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Spot the Error</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Click each sentence to see the correction</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Click on each sentence to see the correction</p>
   <div class="error-list" id="errorList">
     <div class="err-item" onclick="this.classList.toggle('open')">
       <div class="err-sentence">"I <span class="wrong">work</span> here since 2005."</div>
@@ -1420,8 +1441,8 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
     <div style="width:64px;height:64px;border-radius:50%;background:rgba(45,106,79,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
     </div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.8rem;">Final Reflection Recording</h2>
-    <p style="font-size:1rem;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:1.5rem;">Record your final 2-minute presentation. Use ALL structures from the entire program.</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.8rem;">Final Presentation</h2>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:1.5rem;">Deliver your final 2-minute presentation to your teacher. Use ALL structures from the entire program.</p>
     <div style="display:flex;flex-direction:column;gap:0.5rem;text-align:left;padding:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
       <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);">Include:</p>
       <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">1. Introduce yourself using Present Perfect (L1)</p>
@@ -1589,7 +1610,8 @@ var audioMap = {
   "I would like to present our findings on glycemic control to the panel.": "/audio/patricia-ruffo/aula5_i_would_like_to_present_our_findings_on_glycemic_contr.mp3",
   "My recommendation is that we reach a consensus on the methodology.": "/audio/patricia-ruffo/aula5_my_recommendation_is_that_we_reach_a_consensus_on_the_.mp3",
   "The delegates at the symposium discussed the implications of our research.": "/audio/patricia-ruffo/aula5_the_delegates_at_the_symposium_discussed_the_implicati.mp3",
-  "Good morning, delegates. Welcome to the Abbott Science Summit. My name is Patricia Ruffo, and I am honored to deliver the keynote presentation today. Over the past year, our team has made significant progress on glycemic control research. I reported to the stakeholders last month that we had completed the first phase of our trial. Dr. Nakamura said that the preliminary findings were very promising. He mentioned that the correlation between supplement dosage and glycemic response was significant. Today, I would like to present our complete findings and share my recommendations for the next phase. If we had more funding, we would replicate this study across five countries. I propose that this symposium consider establishing a consensus on international collaboration for nutritional research.": "/audio/patricia-ruffo/aula5_good_morning_delegates_welcome_to_the_abbott_science_s.mp3"
+  "Good morning, delegates. Welcome to the Abbott Science Summit. My name is Patricia Ruffo, and I am honored to deliver the keynote presentation today. Over the past year, our team has made significant progress on glycemic control research. I reported to the stakeholders last month that we had completed the first phase of our trial. Dr. Nakamura said that the preliminary findings were very promising. He mentioned that the correlation between supplement dosage and glycemic response was significant. Today, I would like to present our complete findings and share my recommendations for the next phase. If we had more funding, we would replicate this study across five countries. I propose that this symposium consider establishing a consensus on international collaboration for nutritional research.": "/audio/patricia-ruffo/aula5_good_morning_delegates_welcome_to_the_abbott_science_s.mp3",
+  "Dr. Ruffo, I really enjoyed your keynote. Your findings on glycemic control were fascinating. I have been working on a similar project in Tokyo. Dr. Nakamura mentioned that your methodology was very innovative. I was wondering if you would be open to a collaboration. If we combined our data, we would have the largest sample in this field. Could you elaborate on how you selected your control group? I would argue that a multi-center approach could strengthen the results. My recommendation is that we set up a meeting next month to discuss the details.": "/audio/patricia-ruffo/aula5_dr_ruffo_i_really_enjoyed_your_keynote_your_findings_o.mp3"
 };
 
 // ===== AUDIO ENGINE =====
@@ -1650,6 +1672,7 @@ function goToSlide(idx) {
   slides[currentSlide].classList.remove('active');
   currentSlide = idx;
   slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
   updateSlide();
 }
 
@@ -1708,8 +1731,7 @@ document.addEventListener('click', function(e) {
 
 // ===== VOCAB REVEAL =====
 function revealVCard(card) {
-  if (card.classList.contains('revealed')) return;
-  card.classList.add('revealed');
+  card.classList.toggle('revealed');
   var grid = card.closest('.vocab-grid');
   var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
   var revealed = grid.querySelectorAll('.v-card.revealed').length;
@@ -1788,25 +1810,38 @@ var qcScore = 0;
 function showQcAnswer(btn) {
   var card = btn.closest('.qc-card');
   var answer = card.querySelector('.qc-answer-box');
-  var next = card.querySelector('.qc-next-btn');
+  var nextBtns = card.querySelectorAll('.qc-next-btn');
   answer.classList.add('show');
-  next.classList.add('show');
+  nextBtns.forEach(function(b) { b.classList.add('show'); });
   btn.style.display = 'none';
   qcScore++;
-  document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal;
+  document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal + ' completed';
 
   if (qcScore === qcTotal) {
     triggerConfetti();
   }
 }
 
+function updateQcProgress() {
+  document.getElementById('qcProgress').textContent = 'Challenge ' + (qcCurrent + 1) + ' / ' + qcTotal;
+}
+
 function nextQc() {
   var cards = document.querySelectorAll('.qc-card');
+  if (qcCurrent >= cards.length - 1) return;
   cards[qcCurrent].classList.remove('active');
   qcCurrent++;
-  if (qcCurrent < cards.length) {
-    cards[qcCurrent].classList.add('active');
-  }
+  cards[qcCurrent].classList.add('active');
+  updateQcProgress();
+}
+
+function prevQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  if (qcCurrent <= 0) return;
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent--;
+  cards[qcCurrent].classList.add('active');
+  updateQcProgress();
 }
 
 // ===== CHECKLIST =====
