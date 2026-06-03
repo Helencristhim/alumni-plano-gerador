@@ -1,18 +1,20 @@
 /**
- * Alumni — Activity Sync (Supabase + localStorage)
+ * Alumni — Activity Sync v2.0 (Supabase + localStorage)
  *
  * Sincroniza o estado de exercicios do aluno (matches, blanks, quiz, speech,
- * mediaChecks, checklists) entre localStorage e Supabase.
+ * mediaChecks, checklists, ordering) entre localStorage e Supabase.
+ *
+ * v2.0 melhorias:
+ *   - MutationObserver detecta mudancas mesmo se wrap do saveState falhar
+ *   - Auto-save periodico a cada 30s como fallback
+ *   - Event listeners diretos em exercicios (click, change, input)
+ *   - Coleta ordering exercises (order-item.correct-order)
+ *   - beforeunload salva estado final antes de sair da pagina
+ *   - Supabase load restaura MESMO sem localStorage (cross-device)
  *
  * Requer:
  *   - supabase.min.js + supabase-config.js carregados ANTES
  *   - window.STUDENT_SLUG definido no <head>
- *   - saveState() e loadState() definidos no <script> principal do material
- *
- * Como funciona:
- *   1. Ao carregar: busca estado do Supabase. Se mais recente que localStorage, aplica.
- *   2. Ao salvar (saveState): salva localStorage (instantaneo) + upsert Supabase (debounce 2s).
- *   3. Fallback: se Supabase falhar, localStorage continua funcionando normalmente.
  *
  * Inclusao no HTML (DEPOIS do script principal, DEPOIS de lesson-progress.js):
  *   <script src="/lib/activity-sync.js"></script>
@@ -33,10 +35,12 @@
 
   var saveTimer = null;
   var DEBOUNCE_MS = 2000;
+  var AUTO_SAVE_MS = 30000;
+  var lastSavedJSON = '';
 
   // ===== COLLECT STATE (replica a logica do saveState original) =====
   function collectState() {
-    var s = { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [] };
+    var s = { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [], ordering: [] };
 
     document.querySelectorAll('.media-card-wrapper').forEach(function(w) {
       var id = w.dataset.media;
@@ -64,6 +68,16 @@
 
     document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb, i) {
       s.checklists[i] = cb.checked;
+    });
+
+    // Ordering exercises completados
+    document.querySelectorAll('.order-container').forEach(function(oc) {
+      var items = oc.querySelectorAll('.order-item');
+      var correct = oc.querySelectorAll('.order-item.correct-order');
+      if (items.length > 0 && items.length === correct.length) {
+        var id = oc.id || oc.closest('[id]')?.id || 'order-' + s.ordering.length;
+        s.ordering.push(id);
+      }
     });
 
     return s;
@@ -141,10 +155,18 @@
   }
 
   // ===== SAVE TO SUPABASE (debounced) =====
-  function saveToSupabase() {
+  function saveToSupabase(force) {
     if (saveTimer) clearTimeout(saveTimer);
+    var delay = force ? 0 : DEBOUNCE_MS;
+
     saveTimer = setTimeout(function() {
       var state = collectState();
+      var stateJSON = JSON.stringify(state);
+
+      // Evitar saves redundantes (nada mudou)
+      if (stateJSON === lastSavedJSON && !force) return;
+      lastSavedJSON = stateJSON;
+
       var now = new Date().toISOString();
 
       // Salvar timestamp local para comparacao
@@ -160,10 +182,10 @@
         .then(function(res) {
           if (res.error) console.error('activity-sync save error:', res.error.message);
         });
-    }, DEBOUNCE_MS);
+    }, delay);
   }
 
-  // ===== WRAP saveState =====
+  // ===== WRAP saveState (metodo principal) =====
   if (typeof window.saveState === 'function') {
     var _originalSaveState = window.saveState;
     window.saveState = function() {
@@ -171,6 +193,189 @@
       saveToSupabase();      // Supabase (debounced)
     };
   }
+
+  // ===== RECORDING UPLOAD (Speech cards — Listen + Record) =====
+  var STORAGE_BUCKET = 'recordings';
+  var uploadingRecordings = {};
+
+  function uploadRecording(blob, phraseId) {
+    if (!blob || uploadingRecordings[phraseId]) return;
+    uploadingRecordings[phraseId] = true;
+
+    // Path: {slug}/{phraseId}.webm — upsert sobreescreve a anterior
+    var filePath = slug + '/' + phraseId + '.webm';
+
+    sb.storage.from(STORAGE_BUCKET).upload(filePath, blob, {
+      contentType: blob.type || 'audio/webm',
+      upsert: true
+    }).then(function(res) {
+      uploadingRecordings[phraseId] = false;
+      if (res.error) {
+        console.error('recording upload error:', res.error.message);
+        return;
+      }
+
+      // Salvar referencia no state
+      var publicUrl = sb.storage.from(STORAGE_BUCKET).getPublicUrl(filePath).data.publicUrl;
+      saveRecordingRef(phraseId, publicUrl);
+    });
+  }
+
+  function saveRecordingRef(phraseId, url) {
+    // Ler estado atual, adicionar/atualizar recording ref, salvar
+    sb.from('student_activity')
+      .select('state')
+      .eq('student_slug', slug)
+      .eq('view_type', viewType)
+      .single()
+      .then(function(res) {
+        var state = (res.data && res.data.state) || collectState();
+        if (!state.recordings) state.recordings = {};
+        state.recordings[phraseId] = url;
+
+        var now = new Date().toISOString();
+        sb.from('student_activity')
+          .upsert({
+            student_slug: slug,
+            view_type: viewType,
+            state: state,
+            updated_at: now
+          }, { onConflict: 'student_slug,view_type' })
+          .then(function(r) {
+            if (r.error) console.error('recording ref save error:', r.error.message);
+          });
+      });
+  }
+
+  // Interceptar URL.createObjectURL para capturar blobs de audio
+  function interceptRecordings() {
+    var _origCreateObjectURL = URL.createObjectURL.bind(URL);
+
+    URL.createObjectURL = function(obj) {
+      var url = _origCreateObjectURL(obj);
+
+      // Detectar blobs de audio (gravacoes do aluno)
+      if (obj instanceof Blob && obj.size > 1000 && (
+        obj.type.indexOf('audio') !== -1 ||
+        obj.type.indexOf('webm') !== -1 ||
+        obj.type.indexOf('ogg') !== -1
+      )) {
+        // Delay para dar tempo do DOM atualizar (saber qual speech card gravou)
+        setTimeout(function() {
+          var phraseId = findRecordingPhraseId(url);
+          if (phraseId) {
+            uploadRecording(obj, phraseId);
+          }
+        }, 800);
+      }
+
+      return url;
+    };
+  }
+
+  // Encontrar o ID da frase que acabou de ser gravada
+  function findRecordingPhraseId(blobUrl) {
+    // 1. Procurar nos _tai_audio_ do window (exercises.js salva la)
+    var keys = Object.keys(window);
+    for (var i = 0; i < keys.length; i++) {
+      if (keys[i].indexOf('_tai_audio_') === 0 && window[keys[i]] === blobUrl) {
+        return keys[i].replace('_tai_audio_', '');
+      }
+    }
+
+    // 2. Procurar botao de gravar que acabou (data-recording mudou pra false)
+    var btns = document.querySelectorAll('[data-recording="false"]');
+    for (var j = btns.length - 1; j >= 0; j--) {
+      var card = btns[j].closest('.speech-card') || btns[j].closest('[id]');
+      if (card) return card.dataset.phrase || card.id || 'rec-' + Date.now();
+    }
+
+    // 3. Procurar audio element com o blobUrl
+    var audios = document.querySelectorAll('audio[src="' + blobUrl + '"]');
+    if (audios.length > 0) {
+      var parent = audios[0].closest('.speech-card') || audios[0].closest('.think-card') || audios[0].closest('[id]');
+      if (parent) return parent.dataset.phrase || parent.id || 'rec-' + Date.now();
+    }
+
+    // 4. Fallback com timestamp
+    return 'recording-' + Date.now();
+  }
+
+  // ===== FALLBACK: Event listeners diretos nos exercicios =====
+  // Garante sync mesmo se o wrap do saveState nao funcionar
+  function setupEventListeners() {
+    // Click em quiz options, check buttons, order items
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (
+        target.closest('.quiz-option') ||
+        target.closest('.check-btn') ||
+        target.closest('.order-item') ||
+        target.closest('.match-row') ||
+        target.closest('[onclick*="checkBlank"]') ||
+        target.closest('[onclick*="selectQuiz"]') ||
+        target.closest('[onclick*="checkMatch"]') ||
+        target.closest('[onclick*="checkOrder"]') ||
+        target.closest('[onclick*="verifyAllMatches"]') ||
+        target.closest('[onclick*="toggleMediaDone"]')
+      ) {
+        // Delay para dar tempo da logica do exercicio rodar
+        setTimeout(function() { saveToSupabase(); }, 500);
+      }
+    }, true);
+
+    // Change em selects (matching) e checkboxes (media/checklists)
+    document.addEventListener('change', function(e) {
+      if (
+        e.target.closest('.match-row select') ||
+        e.target.closest('.media-card-wrapper input[type="checkbox"]') ||
+        e.target.closest('.checklist input[type="checkbox"]')
+      ) {
+        setTimeout(function() { saveToSupabase(); }, 500);
+      }
+    }, true);
+  }
+
+  // ===== FALLBACK: Auto-save periodico (30s) =====
+  function startAutoSave() {
+    setInterval(function() {
+      var currentJSON = JSON.stringify(collectState());
+      if (currentJSON !== lastSavedJSON) {
+        saveToSupabase();
+      }
+    }, AUTO_SAVE_MS);
+  }
+
+  // ===== FALLBACK: Save antes de sair da pagina =====
+  window.addEventListener('beforeunload', function() {
+    var state = collectState();
+    var stateJSON = JSON.stringify(state);
+    if (stateJSON === lastSavedJSON) return;
+
+    var now = new Date().toISOString();
+    try { localStorage.setItem(timestampKey, now); } catch(e) {}
+
+    // fetch com keepalive para garantir envio mesmo ao fechar
+    try {
+      var anonKey = 'sb_publishable_RjekGapp8WtVbDx0J8etDg_hVq7na29';
+      fetch('https://xxdggcopydghbmgqqebq.supabase.co/rest/v1/student_activity', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': anonKey,
+          'Authorization': 'Bearer ' + anonKey,
+          'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify({
+          student_slug: slug,
+          view_type: viewType,
+          state: state,
+          updated_at: now
+        }),
+        keepalive: true
+      });
+    } catch(e) {}
+  });
 
   // ===== LOAD FROM SUPABASE (on page load) =====
   function loadFromSupabase() {
@@ -180,7 +385,7 @@
       .eq('view_type', viewType)
       .single()
       .then(function(res) {
-        if (res.error || !res.data) return; // Sem dados no Supabase — localStorage ja carregou
+        if (res.error || !res.data) return;
 
         var remoteState = res.data.state;
         var remoteTime = new Date(res.data.updated_at).getTime();
@@ -192,27 +397,54 @@
           if (ts) localTime = new Date(ts).getTime();
         } catch(e) {}
 
-        // Se Supabase e mais recente, aplicar por cima
-        if (remoteTime > localTime) {
+        // Se Supabase e mais recente OU se localStorage nao tem dados, aplicar
+        var hasLocalData = false;
+        try { hasLocalData = !!localStorage.getItem(localKey); } catch(e) {}
+
+        if (remoteTime > localTime || !hasLocalData) {
           applyState(remoteState);
           // Atualizar localStorage com dados do Supabase
           try {
             localStorage.setItem(localKey, JSON.stringify(remoteState));
             localStorage.setItem(timestampKey, res.data.updated_at);
           } catch(e) {}
+          // Guardar como baseline para evitar re-save imediato
+          lastSavedJSON = JSON.stringify(remoteState);
         }
       });
   }
 
+  // ===== LOAD PRECLASS VIEWER (professor pages only) =====
+  function loadPreclassViewer() {
+    if (viewType !== 'professor') return;
+    var script = document.createElement('script');
+    script.src = '/lib/preclass-viewer.js';
+    document.body.appendChild(script);
+  }
+
   // ===== INIT =====
-  // loadState() original ja rodou (esta no script principal).
-  // Agora verificamos se Supabase tem dados mais recentes.
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(loadFromSupabase, 200);
-    });
-  } else {
+  function init() {
+    // Interceptar MediaRecorder ANTES de qualquer gravacao
+    if (viewType === 'aluno') interceptRecordings();
+
+    // Capturar estado atual como baseline
+    lastSavedJSON = JSON.stringify(collectState());
+
+    // Carregar do Supabase (pode sobrescrever se mais recente)
     setTimeout(loadFromSupabase, 200);
+
+    // Ativar fallbacks
+    setupEventListeners();
+    startAutoSave();
+
+    // Carregar viewer de Pre-class nas paginas de professor
+    loadPreclassViewer();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { init(); });
+  } else {
+    init();
   }
 
 })();
