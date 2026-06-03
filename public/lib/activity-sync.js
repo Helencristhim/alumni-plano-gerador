@@ -389,8 +389,148 @@
       });
   }
 
-  // Apos upload de gravacao, injetar botao imediatamente
-  var _origSaveRecordingRef = null;
+  // ===== RESET BUTTON (per lesson, injected at bottom of each lesson-body) =====
+  function injectResetButtons() {
+    if (viewType !== 'aluno') return;
+
+    var style = document.createElement('style');
+    style.textContent =
+      '.reset-lesson-wrap{display:flex;justify-content:center;padding:24px 0 8px;margin-top:20px;border-top:1px dashed var(--border-light,#d4d4cc)}' +
+      '.btn-reset-lesson{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;' +
+      'font:500 0.8rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;' +
+      'color:var(--text-dim,#888);background:transparent;border:1px solid var(--border,#d4d4cc);' +
+      'border-radius:8px;cursor:pointer;transition:all 150ms ease}' +
+      '.btn-reset-lesson:hover{color:#dc2626;border-color:#dc2626;background:rgba(220,38,38,0.05)}' +
+      '.btn-reset-lesson svg{flex-shrink:0}';
+    document.head.appendChild(style);
+
+    var trashIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+
+    document.querySelectorAll('.lesson-card[id^="ex-lesson-"]').forEach(function(card) {
+      var lessonBody = card.querySelector('.lesson-body');
+      if (!lessonBody) return;
+
+      // Evitar duplicar
+      if (lessonBody.querySelector('.reset-lesson-wrap')) return;
+
+      var lessonNum = card.id.replace('ex-lesson-', '');
+
+      var wrap = document.createElement('div');
+      wrap.className = 'reset-lesson-wrap';
+
+      var btn = document.createElement('button');
+      btn.className = 'btn-reset-lesson';
+      btn.innerHTML = trashIcon + ' Reset Lesson ' + lessonNum;
+      btn.setAttribute('data-lesson', lessonNum);
+      btn.onclick = function(e) {
+        e.preventDefault();
+        if (!confirm('Reset all progress for Lesson ' + lessonNum + '?\n\nThis will erase exercises, recordings, and progress for this lesson.\n\nThis action cannot be undone.')) return;
+        resetLesson(card, lessonNum);
+      };
+
+      wrap.appendChild(btn);
+      lessonBody.appendChild(wrap);
+    });
+  }
+
+  function resetLesson(lessonCard, lessonNum) {
+    // 1. Reset visual state de todos os exercicios DENTRO desta aula
+    lessonCard.querySelectorAll('.blank-input').forEach(function(el) {
+      el.value = ''; el.classList.remove('correct', 'wrong'); el.readOnly = false;
+    });
+    lessonCard.querySelectorAll('.quiz-option').forEach(function(el) {
+      el.classList.remove('correct', 'wrong'); el.style.pointerEvents = '';
+    });
+    lessonCard.querySelectorAll('.match-row').forEach(function(el) {
+      el.classList.remove('correct', 'wrong');
+      var sel = el.querySelector('select');
+      if (sel) { sel.value = ''; sel.disabled = false; }
+    });
+    lessonCard.querySelectorAll('.order-item').forEach(function(el) {
+      el.classList.remove('correct-order', 'wrong');
+      var num = el.querySelector('.order-num');
+      if (num) num.textContent = '?';
+    });
+    lessonCard.querySelectorAll('.speech-result').forEach(function(el) {
+      el.classList.remove('show', 'good', 'try-again', 'bad'); el.innerHTML = '';
+    });
+    lessonCard.querySelectorAll('.media-card-wrapper').forEach(function(el) {
+      el.classList.remove('done');
+      var cb = el.querySelector('input[type="checkbox"]');
+      if (cb) cb.checked = false;
+    });
+    lessonCard.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb) {
+      cb.checked = false;
+      var li = cb.closest('li');
+      if (li) li.classList.remove('checked');
+    });
+    // Remove My Recording buttons desta aula
+    lessonCard.querySelectorAll('.btn-my-rec').forEach(function(el) { el.remove(); });
+    // Remove tracker badges
+    lessonCard.querySelectorAll('.tracker-badge').forEach(function(el) { el.remove(); });
+
+    // 2. Atualizar progress bar e stamp
+    if (typeof updateProgress === 'function') updateProgress();
+
+    // 3. Salvar estado limpo no localStorage
+    if (typeof saveState === 'function') saveState();
+
+    // 4. Limpar gravacoes desta aula no Supabase Storage
+    var phrasesInLesson = [];
+    lessonCard.querySelectorAll('.speech-card[data-phrase]').forEach(function(card) {
+      phrasesInLesson.push(card.dataset.phrase);
+    });
+
+    // 5. Atualizar Supabase: remover recordings desta aula do state
+    sb.from('student_activity')
+      .select('state')
+      .eq('student_slug', slug)
+      .eq('view_type', 'aluno')
+      .single()
+      .then(function(res) {
+        var state = (res.data && res.data.state) || {};
+        if (state.recordings && phrasesInLesson.length > 0) {
+          phrasesInLesson.forEach(function(phrase) {
+            delete state.recordings[phrase];
+            // Deletar audio do Storage
+            var filePath = slug + '/' + phrase + '.webm';
+            sb.storage.from(STORAGE_BUCKET).remove([filePath]);
+          });
+        }
+
+        // Recoletar estado limpo
+        var cleanState = collectState();
+        cleanState.recordings = state.recordings || {};
+
+        var now = new Date().toISOString();
+        try { localStorage.setItem(timestampKey, now); } catch(e) {}
+
+        sb.from('student_activity')
+          .upsert({
+            student_slug: slug,
+            view_type: 'aluno',
+            state: cleanState,
+            updated_at: now
+          }, { onConflict: 'student_slug,view_type' })
+          .then(function(r) {
+            if (r.error) console.error('reset save error:', r.error.message);
+            lastSavedJSON = JSON.stringify(cleanState);
+          });
+      });
+
+    // 6. Feedback visual
+    var btn = lessonCard.querySelector('.btn-reset-lesson');
+    if (btn) {
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Reset done!';
+      btn.style.color = '#16a34a';
+      btn.style.borderColor = '#16a34a';
+      setTimeout(function() {
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Reset Lesson ' + lessonCard.id.replace('ex-lesson-', '');
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 2000);
+    }
+  }
 
   // ===== FALLBACK: Event listeners diretos nos exercicios =====
   // Garante sync mesmo se o wrap do saveState nao funcionar
@@ -526,6 +666,9 @@
 
     // Carregar botoes "My Recording" para gravacoes salvas
     setTimeout(loadSavedRecordings, 600);
+
+    // Injetar botoes Reset no final de cada aula
+    setTimeout(injectResetButtons, 400);
 
     // Ativar fallbacks
     setupEventListeners();
