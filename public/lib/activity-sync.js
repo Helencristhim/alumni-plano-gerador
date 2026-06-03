@@ -243,6 +243,12 @@
           }, { onConflict: 'student_slug,view_type' })
           .then(function(r) {
             if (r.error) console.error('recording ref save error:', r.error.message);
+            else {
+              // Injetar botao "My Recording" imediatamente apos salvar
+              var recs = {};
+              recs[phraseId] = url;
+              injectMyRecordingButtons(recs);
+            }
           });
       });
   }
@@ -300,6 +306,91 @@
     // 4. Fallback com timestamp
     return 'recording-' + Date.now();
   }
+
+  // ===== MY RECORDING BUTTON (injected into speech cards) =====
+  var myRecCSS = false;
+  function injectMyRecordingCSS() {
+    if (myRecCSS) return;
+    myRecCSS = true;
+    var style = document.createElement('style');
+    style.textContent =
+      '.btn-my-rec{display:inline-flex;align-items:center;gap:5px;padding:0.55rem 1.2rem;' +
+      'font:600 0.85rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;' +
+      'color:#fff;background:#16a34a;border:2px solid #16a34a;border-radius:8px;cursor:pointer;' +
+      'transition:all 150ms ease;white-space:nowrap}' +
+      '.btn-my-rec:hover{background:#15803d;border-color:#15803d}' +
+      '.btn-my-rec svg{flex-shrink:0}';
+    document.head.appendChild(style);
+  }
+
+  function injectMyRecordingButtons(recordings) {
+    if (!recordings || typeof recordings !== 'object') return;
+    injectMyRecordingCSS();
+
+    var headphoneIcon = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/></svg>';
+
+    document.querySelectorAll('.speech-card[data-phrase]').forEach(function(card) {
+      var phrase = card.dataset.phrase;
+      var audioUrl = recordings[phrase];
+      if (!audioUrl) return;
+
+      // Evitar duplicar botao
+      if (card.querySelector('.btn-my-rec')) return;
+
+      var controls = card.querySelector('.speech-controls');
+      if (!controls) return;
+
+      var btn = document.createElement('button');
+      btn.className = 'btn btn-my-rec';
+      btn.innerHTML = headphoneIcon + ' My Recording';
+      btn.onclick = function(e) {
+        e.preventDefault();
+        // Parar qualquer audio anterior
+        document.querySelectorAll('.my-rec-audio-active').forEach(function(a) {
+          a.pause(); a.currentTime = 0; a.remove();
+        });
+
+        var audio = new Audio(audioUrl);
+        audio.className = 'my-rec-audio-active';
+        audio.style.display = 'none';
+        document.body.appendChild(audio);
+
+        btn.innerHTML = headphoneIcon + ' Playing...';
+        btn.style.background = '#15803d';
+        audio.play();
+        audio.onended = function() {
+          btn.innerHTML = headphoneIcon + ' My Recording';
+          btn.style.background = '';
+          audio.remove();
+        };
+        audio.onerror = function() {
+          btn.innerHTML = headphoneIcon + ' My Recording';
+          btn.style.background = '';
+          audio.remove();
+        };
+      };
+
+      controls.appendChild(btn);
+    });
+  }
+
+  // Carregar gravacoes salvas do Supabase e injetar botoes
+  function loadSavedRecordings() {
+    if (viewType !== 'aluno') return;
+
+    sb.from('student_activity')
+      .select('state')
+      .eq('student_slug', slug)
+      .eq('view_type', 'aluno')
+      .single()
+      .then(function(res) {
+        if (res.error || !res.data || !res.data.state || !res.data.state.recordings) return;
+        injectMyRecordingButtons(res.data.state.recordings);
+      });
+  }
+
+  // Apos upload de gravacao, injetar botao imediatamente
+  var _origSaveRecordingRef = null;
 
   // ===== FALLBACK: Event listeners diretos nos exercicios =====
   // Garante sync mesmo se o wrap do saveState nao funcionar
@@ -432,6 +523,9 @@
 
     // Carregar do Supabase (pode sobrescrever se mais recente)
     setTimeout(loadFromSupabase, 200);
+
+    // Carregar botoes "My Recording" para gravacoes salvas
+    setTimeout(loadSavedRecordings, 600);
 
     // Ativar fallbacks
     setupEventListeners();
