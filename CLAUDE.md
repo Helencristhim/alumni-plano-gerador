@@ -826,7 +826,7 @@ Exemplo A2 em diante (sem traducao):
 ```
 6. **Idioma dos links**: SEMPRE em ingles ("Watch on YouTube", "Listen on Spotify"). NUNCA em portugues
 7. **Conteudo em INGLES**: Todos os videos e podcasts recomendados DEVEM ser em ingles. NUNCA conteudo em portugues
-8. **Videos REAIS**: NUNCA inventar titulo de video. Verificar que o video EXISTE no YouTube antes de incluir. Se nao encontrar o video exato, buscar um SIMILAR real sobre o mesmo tema
+8. **CONTEUDO 100% REAL (REGRA BLOQUEANTE)**: NUNCA inventar titulo de video, nome de podcast, numero de episodio, ou qualquer conteudo que nao exista. TUDO deve ser verificado com WebSearch ANTES de incluir no material. Se o video/episodio nao for encontrado, buscar um SIMILAR real sobre o mesmo tema. Se nao encontrar NADA real, NAO incluir — e melhor sem link do que com link falso. Isso vale para: titulos de videos YouTube, nomes de episodios de podcast, numeros de episodios (BEP 171, Episode 1496, etc.), nomes de canais, e qualquer outra referencia externa. O aluno vai clicar — se nao existir, perde credibilidade
 
 **Formato do subtitulo por bloco:**
 ```html
