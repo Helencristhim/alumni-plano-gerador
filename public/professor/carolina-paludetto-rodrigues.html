@@ -3070,7 +3070,7 @@ body.slide-mode .nav-bar{display:flex}
     <div class="chapter-label">Chapter 7 — Wrap-up</div>
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:.5rem;text-align:center">What I Learned Today</h2>
     <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.2rem;text-align:center">Click each item to check it off</p>
-    <div class="check-grid" style="max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:.5rem">
+    <div class="check-grid" id="checklist-1" style="max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:.5rem">
       <div class="check-item" onclick="toggleCheck(this)" style="cursor:pointer;display:flex;align-items:center;gap:.8rem;padding:.6rem .8rem;background:var(--bg-elevated);border-radius:8px;transition:all .3s;border:1px solid var(--border)">
         <div class="check-box" style="width:24px;height:24px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" style="opacity:0;transition:opacity .2s"><polyline points="20 6 9 17 4 12"/></svg></div>
         <span style="font-size:.88rem">I can introduce myself in English.</span>
@@ -4918,7 +4918,7 @@ function toggleCheck(item) {
     box.style.borderColor = 'var(--border)';
     if (svg) svg.style.opacity = '0';
   }
-  saveState();
+  updateProgress();
 }
 
 // ===== AULA 2: GRAMMAR REVEAL 2 =====
@@ -5392,6 +5392,14 @@ function updateProgress() {
     var doneEx = lessonCard.querySelectorAll('.blank-input.correct, .quiz-option.correct, .match-row.correct, .speech-result.good, .order-item.correct-order');
     var total = allEx.length || 1;
     var done = doneEx.length;
+    // Also count IN CLASS checklist items for this lesson
+    var checklistEl = document.getElementById('checklist-' + l);
+    if (checklistEl) {
+      var allChecks = checklistEl.querySelectorAll('.check-item');
+      var doneChecks = checklistEl.querySelectorAll('.check-item.checked');
+      total += allChecks.length;
+      done += doneChecks.length;
+    }
     var lessonPct = Math.round(done / total * 100);
     var bar = document.querySelector('[data-lesson-progress="' + l + '"]');
     var lbl = document.querySelector('[data-lesson-pct="' + l + '"]');
