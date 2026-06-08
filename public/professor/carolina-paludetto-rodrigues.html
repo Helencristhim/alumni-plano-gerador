@@ -5392,15 +5392,18 @@ function updateProgress() {
     var doneEx = lessonCard.querySelectorAll('.blank-input.correct, .quiz-option.correct, .match-row.correct, .speech-result.good, .order-item.correct-order');
     var total = allEx.length || 1;
     var done = doneEx.length;
-    // Also count IN CLASS checklist items for this lesson
+    var lessonPct = Math.round(done / total * 100);
+    // IN CLASS checklist: if ALL 5 checks are done, lesson is 100% complete
     var checklistEl = document.getElementById('checklist-' + l);
+    var checklistComplete = false;
     if (checklistEl) {
       var allChecks = checklistEl.querySelectorAll('.check-item');
       var doneChecks = checklistEl.querySelectorAll('.check-item.checked');
-      total += allChecks.length;
-      done += doneChecks.length;
+      if (allChecks.length > 0 && doneChecks.length === allChecks.length) {
+        checklistComplete = true;
+        lessonPct = 100;
+      }
     }
-    var lessonPct = Math.round(done / total * 100);
     var bar = document.querySelector('[data-lesson-progress="' + l + '"]');
     var lbl = document.querySelector('[data-lesson-pct="' + l + '"]');
     if (bar) bar.style.width = lessonPct + '%';
