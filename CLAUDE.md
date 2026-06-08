@@ -811,22 +811,71 @@ Exemplo A2 em diante (sem traducao):
 
 3 recomendacoes por aula: serie/filme + podcast + YouTube
 
+**REGRAS OBRIGATORIAS:**
+
+1. **Subtitulo por bloco**: Antes de cada media-grid, incluir `<p>` com o tema da aula para dar contexto ao aluno
+2. **Episodio/video ESPECIFICO**: NUNCA recomendar canal ou show generico. SEMPRE especificar episodio exato (Season X, Episode Y), video especifico (titulo completo), ou numero do episodio do podcast
+3. **Conexao com a aula**: Cada card DEVE explicar O QUE o aluno vai ver/ouvir que se conecta com o vocabulario/gramatica daquela aula especifica. Citar frases ou estruturas que aparecem no conteudo recomendado
+4. **Link clicavel OBRIGATORIO para YouTube**: Todo card de YouTube DEVE ter link direto para o video. Usar WebSearch para encontrar o video REAL no YouTube ANTES de incluir. Link vai DEPOIS do media-tip, ANTES do fechamento do media-info:
+```html
+<a href="https://www.youtube.com/watch?v=REAL_ID" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
+```
+5. **Link clicavel OBRIGATORIO para Podcast**: Todo card de Podcast DEVE ter link do Spotify. Buscar episodio ou show page real:
+```html
+<a href="https://open.spotify.com/episode/REAL_ID" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
+```
+6. **Idioma dos links**: SEMPRE em ingles ("Watch on YouTube", "Listen on Spotify"). NUNCA em portugues
+7. **Conteudo em INGLES**: Todos os videos e podcasts recomendados DEVEM ser em ingles. NUNCA conteudo em portugues
+8. **Videos REAIS**: NUNCA inventar titulo de video. Verificar que o video EXISTE no YouTube antes de incluir. Se nao encontrar o video exato, buscar um SIMILAR real sobre o mesmo tema
+
+**Formato do subtitulo por bloco:**
+```html
+<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Tema da aula: {TEMA}. {Instrucao do que prestar atencao}.</p>
+```
+
+**Formato completo do card:**
 ```html
 <div class="media-card-wrapper" data-media="l1-series">
     <label class="media-check">
         <input type="checkbox" onchange="toggleMediaDone(this)">
     </label>
     <div class="media-card">
-        <div class="media-thumb">{emoji}</div>
+        <div class="media-thumb">{SVG icon}</div>
         <div class="media-info">
             <div class="media-type">Serie</div>
-            <h5>Suits — Season 1, Episode 1</h5>
-            <p>Descricao e por que assistir</p>
-            <p class="media-tip">Dica: assista com legenda em ingles</p>
+            <h5>Emily in Paris -- Season 1, Episode 1: "Emily in Paris"</h5>
+            <p>Emily chega em Paris e se apresenta para a equipe nova. Preste atencao em como ela diz o nome e o cargo: "Hi, I'm Emily. I work at Gilbert Group." Mesmo padrao da aula!</p>
+            <p class="media-tip">Dica: Assista com audio em ingles + legendas em portugues. Anote todas as vezes que alguem se apresenta.</p>
         </div>
     </div>
 </div>
 ```
+
+**Exemplo de card YouTube com link:**
+```html
+<div class="media-card-wrapper" data-media="l1-youtube">
+    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+    <div class="media-card">
+        <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+        <div class="media-info">
+            <div class="media-type">YouTube</div>
+            <h5>English with Lucy -- "How to Describe Your Job in English"</h5>
+            <p>Video (12 min) com frases para descrever sua empresa: "We specialize in...", "Our company was founded in..." Estruturas da Aula 3.</p>
+            <p class="media-tip">Dica: Assista com legendas em ingles. Tente descrever a SUA empresa usando as mesmas frases.</p>
+            <a href="https://www.youtube.com/watch?v=DGvqXvEp9ZA" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
+        </div>
+    </div>
+</div>
+```
+
+**CHECKLIST PRE-DEPLOY (Complementares):**
+- [ ] Cada aula tem subtitulo com tema antes do media-grid?
+- [ ] Cada card tem episodio/video ESPECIFICO (nunca generico)?
+- [ ] Cada card conecta o conteudo com vocabulario/gramatica da aula?
+- [ ] Todo card YouTube tem link clicavel verificado?
+- [ ] Todo card Podcast tem link Spotify verificado?
+- [ ] Links em ingles ("Watch on YouTube" / "Listen on Spotify")?
+- [ ] Conteudo recomendado e 100% em ingles?
 
 ---
 
