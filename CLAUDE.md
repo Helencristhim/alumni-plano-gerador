@@ -338,32 +338,84 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 - Paleta unica por aluno
 - Zero portugues na tela (A2+). Definicoes de vocabulario em INGLES simples
 
-**CONTRASTE — REGRA CRITICA (TEXTO NUNCA INVISIVEL)**
-- Slides escuros (`.slide-dark`) forcam `color:#fff` em todo o conteudo
-- Cards internos com fundo branco (checklist, role-play, vocab, comprehension) HERDAM esse branco e ficam INVISIVEIS
-- O CSS do material DEVE incluir OBRIGATORIAMENTE estas regras para garantir texto legivel em cards brancos dentro de slides escuros:
+**CONTRASTE — REGRA CRITICA BLOQUEANTE (TEXTO NUNCA INVISIVEL)**
+
+> **ERRO MAIS RECORRENTE DO SISTEMA**: Texto branco sobre fundo branco dentro de slides escuros. Ja aconteceu DEZENAS de vezes e continua acontecendo. Esta regra e BLOQUEANTE — material com texto invisivel NAO pode ser publicado sob NENHUMA circunstancia.
+
+**O PROBLEMA**: Slides escuros (`.slide-dark`) forcam `color:#fff` em todo o conteudo via heranca CSS. Quando um card interno tem fundo branco/claro (role-play, dialogue, comprehension, quiz, checklist, etc.), o texto HERDA o branco do slide e fica INVISIVEL. O resultado: cards aparentemente vazios com texto que existe mas ninguem consegue ler.
+
+**A SOLUCAO OBRIGATORIA**: O CSS do material DEVE incluir regras que forcam `color: #1a1a2e !important` em TODO elemento de texto dentro de cards com fundo claro em slides escuros. A lista abaixo e o MINIMO — se o material usar QUALQUER classe adicional com fundo claro, ela DEVE ser adicionada:
+
 ```css
+/* REGRA ANTI-TEXTO-INVISIVEL — OBRIGATORIO EM TODO MATERIAL */
 .slide-dark .checklist li,
 .slide-dark .check-item,
 .slide-dark .check-label,
 .slide-dark .roleplay-body p,
 .slide-dark .roleplay-body,
 .slide-dark .roleplay-scenario,
+.slide-dark .roleplay-card p,
+.slide-dark .roleplay-card,
 .slide-dark .comp-q,
 .slide-dark .comp-q p,
+.slide-dark .comp-answer,
 .slide-dark .fill-item label,
 .slide-dark .fill-item p,
 .slide-dark .error-card p,
+.slide-dark .err-item p,
+.slide-dark .err-item,
 .slide-dark .oral-item p,
+.slide-dark .oral-item,
 .slide-dark .email-card,
 .slide-dark .email-card p,
 .slide-dark .boarding-pass p,
-.slide-dark .student-id-card p {
+.slide-dark .student-id-card p,
+.slide-dark .dialogue-card,
+.slide-dark .dialogue-card p,
+.slide-dark .dialogue-line,
+.slide-dark .dialogue-line p,
+.slide-dark .dialogue-text,
+.slide-dark .dialogue-name,
+.slide-dark .qc-card,
+.slide-dark .qc-card p,
+.slide-dark .qc-scenario,
+.slide-dark .qc-question,
+.slide-dark .grammar-table,
+.slide-dark .grammar-table td,
+.slide-dark .grammar-table th,
+.slide-dark .grammar-box,
+.slide-dark .grammar-box p,
+.slide-dark .vocab-card-ic,
+.slide-dark .vocab-card-ic p,
+.slide-dark .slide-card,
+.slide-dark .slide-card p,
+.slide-dark .slide-card li,
+.slide-dark .slide-card h4,
+.slide-dark .slide-card h5,
+.slide-dark [style*="background:#fff"] p,
+.slide-dark [style*="background:#fff"] li,
+.slide-dark [style*="background:#fff"] h4,
+.slide-dark [style*="background:#fff"] h5,
+.slide-dark [style*="background:white"] p,
+.slide-dark [style*="background:rgba(255"] p {
     color: #1a1a2e !important;
 }
 ```
-- VERIFICACAO PRE-DEPLOY: abrir TODOS os slides no navegador e confirmar que NAO existe texto invisivel (branco sobre branco). Se encontrar → adicionar regra CSS especifica para o componente afetado
-- NUNCA usar `color:rgba(255,255,255,...)` em elementos dentro de cards com fundo branco/claro
+
+**CHECKLIST DE CONTRASTE PRE-DEPLOY (BLOQUEANTE — ZERO TOLERANCIA):**
+1. Abrir CADA slide no navegador
+2. Em CADA slide escuro (fundo escuro/gradiente), verificar TODOS os cards/caixas internas
+3. Se existir QUALQUER texto invisivel (branco sobre branco): PARAR, CORRIGIR, SO ENTAO continuar
+4. Rodar este comando para detectar classes potencialmente afetadas:
+```bash
+# Encontrar todos os elementos com fundo claro dentro de slides
+grep -oP 'class="[^"]*"' ARQUIVO.html | sort -u | while read cls; do echo "$cls"; done
+# Cruzar com as regras .slide-dark no CSS — se faltar alguma, ADICIONAR
+```
+5. NUNCA usar `color:rgba(255,255,255,...)` ou `color:#fff` ou `color:white` em elementos dentro de cards com fundo branco/claro
+6. Na DUVIDA, adicionar a regra `.slide-dark .CLASSE { color: #1a1a2e !important; }` — excesso de regra nao quebra nada, falta de regra cria texto invisivel
+
+> **LEMBRETE FINAL**: Se voce esta gerando um slide com QUALQUER card/caixa de fundo claro dentro de um slide escuro, PARE e pergunte: "o texto deste card vai herdar branco do slide pai?" Se a resposta for sim ou talvez, ADICIONE a regra CSS. SEMPRE. SEM EXCECAO.
 
 **ICONE T — INSTRUCOES AO PROFESSOR (SUBSTITUI O ANTIGO PLANO DE AULA)**
 - NAO existe aba separada de Plano de Aula — tudo esta no icone T de cada slide
@@ -708,6 +760,7 @@ Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao d
 
 > **LEMBRETE**: O erro mais comum e pular as etapas 1.3 (Grammar in Context) e 1.4 (Grammar Tip) no Pre-class. Isso ja aconteceu antes e NAO pode se repetir. SEMPRE verificar.
 > **LEMBRETE 2**: O segundo erro mais comum e criar slides IN CLASS com classes CSS que nao tem regras definidas (vocab-card-ic sem CSS de reveal, primary-btn sem estilo, comp-q ilegivel em slides escuros). Isso causou retrabalho massivo em 62 arquivos. NUNCA entregar aula sem verificar renderizacao visual de TODOS os slides.
+> **LEMBRETE 3 (CRITICO)**: O TERCEIRO erro mais recorrente — e o mais IRRITANTE — e TEXTO BRANCO SOBRE FUNDO BRANCO em cards dentro de slides escuros. Acontece TODA VEZ que um card com background claro (dialogue, role-play, comprehension, quiz, grammar) fica dentro de um `.slide-dark`. O texto herda `color:#fff` do slide pai e fica INVISIVEL. ANTES de declarar qualquer aula pronta, ABRIR CADA SLIDE no navegador e verificar que NAO existe texto invisivel. Se encontrar: adicionar `.slide-dark .CLASSE { color: #1a1a2e !important; }` no CSS. Material com texto invisivel = NAO PUBLICAR.
 
 ---
 
