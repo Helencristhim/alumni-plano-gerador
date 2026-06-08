@@ -51,8 +51,8 @@ var audioMap = {
   "I never work on weekends.": "/audio/rafael-de-andrade-brandao/aula2_err3_correct.mp3",
   "She manages the sales department.": "/audio/rafael-de-andrade-brandao/aula2_err4_correct.mp3",
   "We always have a meeting on Monday.": "/audio/rafael-de-andrade-brandao/aula2_err5_correct.mp3",
-  "[listening1]": "/audio/rafael-de-andrade-brandao/aula2_listening1.mp3",
-  "[listening2]": "/audio/rafael-de-andrade-brandao/aula2_listening2.mp3",
+  "[listening1]": "/audio/rafael-de-andrade-brandao/aula2_listening_intro.mp3",
+  "[listening2]": "/audio/rafael-de-andrade-brandao/aula2_listening_meeting.mp3",
   "I always arrive at the office before 8 AM.": "/audio/rafael-de-andrade-brandao/aula2_grammar_ex1.mp3",
   "She sometimes works from home on Fridays.": "/audio/rafael-de-andrade-brandao/aula2_grammar_ex2.mp3",
   "They never miss the Monday meeting.": "/audio/rafael-de-andrade-brandao/aula2_grammar_ex3.mp3",
@@ -156,6 +156,10 @@ body {
 .phase-label.current { color:#5DADE2; }
 .phase-label.completed { color:#2E86C1; }
 
+/* Standalone slide mode — hide injected elements */
+body { overflow:hidden;height:100vh;background:var(--dark); }
+#preclass-viewer-panel, .main-content, .container, #tab-controle { display:none !important; }
+
 /* Slides */
 .slides-container { height:100vh;overflow:hidden;position:relative; }
 .slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem;overflow-y:auto; }
@@ -185,6 +189,7 @@ body {
 /* Warm-up */
 .warm-questions { display:flex;flex-direction:column;gap:1.8rem;margin-top:2rem; }
 .warm-q { font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;font-style:italic;opacity:0;animation:fadeUp .8s ease forwards;color:#fff;padding-left:1.5rem;border-left:3px solid var(--accent); }
+.slide-light .warm-q { color:var(--text); }
 .warm-q:nth-child(2) { animation-delay:.4s; }
 .warm-q:nth-child(3) { animation-delay:.8s; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
@@ -553,7 +558,7 @@ body {
       </div>
       <!-- Manage -->
       <div class="vocab-card-ic" onclick="revealVocab(this)">
-        <div class="vocab-front" style="background:linear-gradient(135deg,#1A5276,#2E86C1);border-radius:11px 11px 0 0">
+        <div class="vocab-front" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);border-radius:11px 11px 0 0">
           <div class="vocab-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
           <span class="vocab-clue" style="color:rgba(255,255,255,.8)">to be in control of a group</span>
         </div>
@@ -566,7 +571,7 @@ body {
       </div>
       <!-- Department -->
       <div class="vocab-card-ic" onclick="revealVocab(this)">
-        <div class="vocab-front" style="background:linear-gradient(135deg,#154360,#1F618D);border-radius:11px 11px 0 0">
+        <div class="vocab-front" style="background:linear-gradient(135deg,#059669,#34d399);border-radius:11px 11px 0 0">
           <div class="vocab-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
           <span class="vocab-clue" style="color:rgba(255,255,255,.8)">a part of a company</span>
         </div>
@@ -579,7 +584,7 @@ body {
       </div>
       <!-- Colleague -->
       <div class="vocab-card-ic" onclick="revealVocab(this)">
-        <div class="vocab-front" style="background:linear-gradient(135deg,#1B3A4B,#2980B9);border-radius:11px 11px 0 0">
+        <div class="vocab-front" style="background:linear-gradient(135deg,#0891b2,#22d3ee);border-radius:11px 11px 0 0">
           <div class="vocab-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <span class="vocab-clue" style="color:rgba(255,255,255,.8)">a person you work with</span>
         </div>
@@ -833,7 +838,7 @@ body {
   <div class="slide-inner">
     <h2 class="slide-section-title" style="color:#fff">Listening 1 — A Professional's Daily Routine</h2>
     <p style="color:rgba(255,255,255,.7);margin-bottom:.5rem;font-size:.9rem">Listen to Carlos Rivera describe his typical day</p>
-    <div class="lp-player" id="player1" data-src="/audio/rafael-de-andrade-brandao/aula2_listening1.mp3">
+    <div class="lp-player" id="player1" data-src="/audio/rafael-de-andrade-brandao/aula2_listening_intro.mp3">
       <div class="lp-seekbar" onclick="seekAudio(event,'player1')"><div class="lp-seekbar-fill" id="progress-player1"></div></div>
       <div class="lp-time"><span id="time-current-player1">0:00</span><span id="time-total-player1">0:00</span></div>
       <div class="lp-controls">
@@ -926,7 +931,7 @@ body {
   <div class="slide-inner">
     <h2 class="slide-section-title" style="color:#fff">Listening 2 — Head of Sales at NovaTech</h2>
     <p style="color:rgba(255,255,255,.7);margin-bottom:.5rem;font-size:.9rem">Listen to Priya Sharma describe her department</p>
-    <div class="lp-player" id="player2" data-src="/audio/rafael-de-andrade-brandao/aula2_listening2.mp3">
+    <div class="lp-player" id="player2" data-src="/audio/rafael-de-andrade-brandao/aula2_listening_meeting.mp3">
       <div class="lp-seekbar" onclick="seekAudio(event,'player2')"><div class="lp-seekbar-fill" id="progress-player2"></div></div>
       <div class="lp-time"><span id="time-current-player2">0:00</span><span id="time-total-player2">0:00</span></div>
       <div class="lp-controls">

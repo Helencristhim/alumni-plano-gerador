@@ -44,6 +44,13 @@
       panel.innerHTML = buildPanelHTML(data);
     }
 
+    // Esconder durante slide-mode (IN CLASS)
+    function syncVisibility() {
+      panel.style.display = document.body.classList.contains('slide-mode') ? 'none' : '';
+    }
+    syncVisibility();
+    new MutationObserver(syncVisibility).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
     // Inserir antes do primeiro tab-content ou no topo do main-content
     var target = document.querySelector('.main-content') || document.querySelector('.container') || document.body;
     var firstTab = target.querySelector('.tab-content');
@@ -79,6 +86,7 @@
 
     var css = '<style>' +
       '#preclass-viewer-panel{margin:16px 0 24px;font-family:var(--font-body,-apple-system,BlinkMacSystemFont,"Inter",sans-serif)}' +
+      'body.slide-mode #preclass-viewer-panel{display:none!important}' +
       '.pcv-card{background:var(--bg-card,#fff);border:1px solid var(--border-light,#e0e0e0);border-radius:12px;padding:20px 24px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}' +
       '.pcv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}' +
       '.pcv-title{font:600 1rem/1.3 var(--font-body);color:var(--text,#1a1a2e);display:flex;align-items:center;gap:8px}' +

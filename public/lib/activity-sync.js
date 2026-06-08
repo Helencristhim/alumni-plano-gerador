@@ -194,6 +194,46 @@
     };
   }
 
+  // ===== WRAP updateProgress (calculo real da barra de progresso do Pre-class) =====
+  if (typeof window.updateProgress === 'function') {
+    var _originalUpdateProgress = window.updateProgress;
+    window.updateProgress = function() {
+      // Calcular progresso real por lesson card
+      document.querySelectorAll('.lesson-card[id^="ex-lesson-"]').forEach(function(card) {
+        var lessonNum = card.id.replace('ex-lesson-', '');
+        var total = 0, done = 0;
+        // Matching rows
+        total += card.querySelectorAll('.match-row').length;
+        done += card.querySelectorAll('.match-row.correct').length;
+        // Fill-in blanks
+        total += card.querySelectorAll('.blank-input').length;
+        done += card.querySelectorAll('.blank-input.correct').length;
+        // Quiz items (1 por quiz-item)
+        var quizItems = card.querySelectorAll('.quiz-item');
+        total += quizItems.length;
+        quizItems.forEach(function(qi) { if (qi.querySelector('.quiz-option.correct')) done++; });
+        // Speech cards
+        var speechCards = card.querySelectorAll('.speech-card');
+        total += speechCards.length;
+        speechCards.forEach(function(sc) { if (sc.querySelector('.speech-result.good')) done++; });
+        // Ordering containers (1 por container)
+        card.querySelectorAll('.order-container').forEach(function(oc) {
+          var items = oc.querySelectorAll('.order-item');
+          total += 1;
+          if (items.length > 0 && items.length === oc.querySelectorAll('.order-item.correct-order').length) done++;
+        });
+        // Atualizar barra visual
+        var pct = total > 0 ? Math.round(done / total * 100) : 0;
+        var fill = card.querySelector('.mini-bar-fill[data-lesson-progress="' + lessonNum + '"]');
+        if (fill) fill.style.width = pct + '%';
+        var pctEl = card.querySelector('.mini-percent[data-lesson-pct="' + lessonNum + '"]');
+        if (pctEl) pctEl.textContent = pct + '%';
+      });
+      // Chamar original (localStorage + saveState → Supabase)
+      _originalUpdateProgress();
+    };
+  }
+
   // ===== RECORDING UPLOAD (Speech cards — Listen + Record) =====
   var STORAGE_BUCKET = 'recordings';
   var uploadingRecordings = {};
@@ -674,8 +714,8 @@
     setupEventListeners();
     startAutoSave();
 
-    // Carregar viewer de Pre-class nas paginas de professor
-    loadPreclassViewer();
+    // Preclass viewer desativado — quebrava layout do IN CLASS (slide-mode)
+    // loadPreclassViewer();
   }
 
   if (document.readyState === 'loading') {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keynote Practice Lab | Nilo Mesquita Patucci</title>
+    <title>Keynote Practice Lab | Nilo Mesquita Patussi</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,6 +24,55 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .speech-textarea {
+            width: 100%; min-height: 280px; padding: 1.5rem;
+            font-family: 'Inter', sans-serif; font-size: 1rem; line-height: 1.9;
+            background: var(--teleprompter-bg); color: var(--teleprompter-text);
+            border: 2px solid rgba(123,45,59,.2); border-radius: var(--radius);
+            resize: vertical; outline: none; transition: border-color .3s;
+        }
+        .speech-textarea:focus { border-color: var(--accent); }
+        .speech-textarea::placeholder { color: rgba(255,255,255,.3); }
+        .draft-actions { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; }
+        .btn-save {
+            padding: .8rem 2rem; background: var(--accent); color: #fff; border: none;
+            border-radius: 8px; font-size: .95rem; font-weight: 600; cursor: pointer;
+            font-family: 'Inter', sans-serif; transition: all .2s; min-height: 44px;
+        }
+        .btn-save:hover { background: var(--accent-light); transform: translateY(-1px); }
+        .draft-status { font-size: .82rem; color: #16a34a; font-weight: 500; }
+        .draft-saved-card {
+            padding: 1rem 1.2rem; background: rgba(22,163,74,.06); border: 1px solid rgba(22,163,74,.2);
+            border-radius: 8px; margin-bottom: 1rem; font-size: .85rem; color: #166534;
+            display: flex; align-items: center; gap: .8rem;
+        }
+        .calendar-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow);
+        }
+        .calendar-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+        .calendar-table thead th {
+            text-align: left; padding: .6rem .8rem; font-size: .7rem; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase; color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+        .calendar-table thead th:first-child { width: 40px; text-align: center; }
+        .calendar-table tbody td { padding: .5rem .4rem; border-bottom: 1px solid var(--border); }
+        .calendar-table tbody td:first-child { text-align: center; font-weight: 700; color: var(--accent); }
+        .cal-input {
+            width: 100%; padding: .5rem .6rem; border: 1px solid var(--border); border-radius: 6px;
+            font-family: 'Inter', sans-serif; font-size: .85rem; background: var(--bg);
+            outline: none; transition: border-color .2s; min-height: 38px;
+        }
+        .cal-input:focus { border-color: var(--accent); }
+        input[type="date"].cal-input { max-width: 160px; }
+
+        .draft-saved-card button {
+            padding: .4rem .8rem; background: transparent; border: 1px solid rgba(22,163,74,.3);
+            border-radius: 6px; font-size: .75rem; color: #166534; cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -601,6 +650,33 @@
             border-radius: 3px;
         }
 
+        /* ── Speech Tools ── */
+        .speech-tools-section { display: none; margin-bottom: 2rem; }
+        .speech-toolbar { display:flex; gap:8px; flex-wrap:wrap; padding:16px 20px; background:var(--card-bg); border:1px solid var(--border); border-radius:12px; margin-bottom:12px; align-items:center; }
+        .speech-toolbar-group { display:flex; gap:6px; align-items:center; padding-right:12px; border-right:1px solid var(--border); }
+        .speech-toolbar-group:last-child { border-right:none; }
+        .speech-toolbar-label { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#888; white-space:nowrap; }
+        .sp-btn { padding:8px 16px; border-radius:8px; border:1px solid var(--border); background:var(--card-bg); font-family:'Inter',sans-serif; font-size:.8rem; font-weight:600; cursor:pointer; transition:all .2s; color:var(--text); display:flex; align-items:center; gap:6px; }
+        .sp-btn:hover { border-color:#999; }
+        .sp-btn.active { background:var(--text); color:var(--bg); border-color:var(--text); }
+        .sp-btn.rec { border-color:#ef4444; color:#ef4444; }
+        .sp-btn.rec.active { background:#ef4444; color:#fff; animation:recPulse 1.5s infinite; }
+        @keyframes recPulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)} 50%{box-shadow:0 0 0 8px rgba(239,68,68,0)} }
+        .sp-btn.teleprompter.active { background:#8b5cf6; color:#fff; border-color:#8b5cf6; }
+        .speed-slider { width:80px; accent-color:#22c55e; cursor:pointer; }
+        .speed-val { font-size:.75rem; font-weight:700; color:#888; min-width:36px; }
+        .arrow-legend { display:flex; gap:16px; flex-wrap:wrap; padding:14px 20px; background:var(--card-bg); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; font-size:.75rem; }
+        .arrow-legend-item { display:flex; align-items:center; gap:6px; color:#666; }
+        .arrow { font-weight:800; font-size:.85em; }
+        .arrow-flow { color:#3b82f6; }
+        .arrow-drop { color:#ef4444; }
+        .arrow-lift { color:#22c55e; }
+        .arrow-pivot { color:#f59e0b; }
+        .speech-script { background:var(--card-bg); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+        .speech-script-inner { padding:32px 28px; max-height:70vh; overflow-y:auto; scroll-behavior:smooth; font-size:1.05rem; line-height:1.9; white-space:pre-wrap; }
+        .speech-script.teleprompter-mode .speech-script-inner { max-height:80vh; background:#000; padding:40px 32px; color:#fff; font-size:1.3rem; line-height:2.2; }
+        .speech-script.teleprompter-mode { border-color:#333; }
+
         /* ── Responsive ── */
         @media (max-width: 600px) {
             .header-info h1 { font-size: 1.1rem; }
@@ -619,6 +695,11 @@
             .full-controls { padding: 0.75rem; }
             .timer-display { font-size: 1.5rem; }
             .btn { padding: 0.5rem 0.85rem; font-size: 0.8rem; }
+            .speech-toolbar { padding: 12px 14px; gap: 10px; }
+            .speech-toolbar-group { padding-right: 8px; }
+            .arrow-legend { gap: 10px; padding: 10px 14px; }
+            .speech-script-inner { padding: 20px 16px; font-size: .95rem; }
+            .speech-script.teleprompter-mode .speech-script-inner { padding: 24px 18px; font-size: 1.1rem; }
         }
 
         /* ── Print styles ── */
@@ -644,7 +725,7 @@
         <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="header-logo">
         <div class="header-info">
             <h1>Keynote Practice Lab</h1>
-            <p>Nilo Mesquita Patucci</p>
+            <p>Nilo Mesquita Patussi</p>
         </div>
     </div>
 </header>
@@ -656,6 +737,22 @@
 
 <!-- ═══════ MAIN CONTAINER ═══════ -->
 <div class="container">
+
+    <!-- ═══════ PRESENTATION CALENDAR ═══════ -->
+    <div class="calendar-card">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:.3rem">Presentation Calendar</h3>
+        <p style="font-size:.82rem;color:var(--text-light);margin-bottom:1rem">Registre suas palestras e apresentações. Os dados ficam salvos automaticamente.</p>
+        <table class="calendar-table" id="calendarTable">
+            <thead><tr><th>#</th><th>Date</th><th>Location</th><th>Topic</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td><input type="date" class="cal-input" data-cal="1" data-field="date" onchange="saveCalendar()"></td><td><input type="text" class="cal-input" data-cal="1" data-field="location" placeholder="Miami, USA" onchange="saveCalendar()"></td><td><input type="text" class="cal-input" data-cal="1" data-field="topic" placeholder="Compliance in Brazilian Football" onchange="saveCalendar()"></td></tr>
+                <tr><td>2</td><td><input type="date" class="cal-input" data-cal="2" data-field="date" onchange="saveCalendar()"></td><td><input type="text" class="cal-input" data-cal="2" data-field="location" placeholder="Rabat, Morocco" onchange="saveCalendar()"></td><td><input type="text" class="cal-input" data-cal="2" data-field="topic" placeholder="Governance Standards" onchange="saveCalendar()"></td></tr>
+                <tr><td>3</td><td><input type="date" class="cal-input" data-cal="3" data-field="date" onchange="saveCalendar()"></td><td><input type="text" class="cal-input" data-cal="3" data-field="location" placeholder="Zurich, Switzerland" onchange="saveCalendar()"></td><td><input type="text" class="cal-input" data-cal="3" data-field="topic" placeholder="Anti-corruption Measures" onchange="saveCalendar()"></td></tr>
+                <tr><td>4</td><td><input type="date" class="cal-input" data-cal="4" data-field="date" onchange="saveCalendar()"></td><td><input type="text" class="cal-input" data-cal="4" data-field="location" placeholder="" onchange="saveCalendar()"></td><td><input type="text" class="cal-input" data-cal="4" data-field="topic" placeholder="" onchange="saveCalendar()"></td></tr>
+                <tr><td>5</td><td><input type="date" class="cal-input" data-cal="5" data-field="date" onchange="saveCalendar()"></td><td><input type="text" class="cal-input" data-cal="5" data-field="location" placeholder="" onchange="saveCalendar()"></td><td><input type="text" class="cal-input" data-cal="5" data-field="topic" placeholder="" onchange="saveCalendar()"></td></tr>
+            </tbody>
+        </table>
+    </div>
 
     <!-- ── Context Card ── -->
     <div class="context-card">
@@ -673,6 +770,63 @@
         </div>
     </div>
 
+    <!-- ═══════ YOUR SPEECH DRAFT ═══════ -->
+    <div class="draft-section" id="draftSection">
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-number">Step 1</div>
+                <h3>Write Your Speech</h3>
+                <p class="section-purpose">Cole ou escreva o texto da sua palestra abaixo. Depois de salvar, as ferramentas de prática aparecerão.</p>
+            </div>
+            <textarea id="speechDraft" class="speech-textarea" placeholder="Write or paste your keynote speech here...&#10;&#10;Example:&#10;Good afternoon, everyone. My name is Nilo Patussi, and I am the Chief Compliance Officer at Sport Club Corinthians Paulista..."></textarea>
+            <div class="draft-actions">
+                <button class="btn btn-save" onclick="saveDraft()">Salvar e continuar</button>
+                <span class="draft-status" id="draftStatus"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ SPEECH PRACTICE TOOLS (hidden until draft is saved) ═══════ -->
+    <div class="speech-tools-section" id="speechToolsSection">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:.8rem">Speech Practice Tools</h3>
+
+        <div class="arrow-legend">
+            <div class="arrow-legend-item"><span class="arrow arrow-flow">&rarr;</span> Manter ritmo</div>
+            <div class="arrow-legend-item"><span class="arrow arrow-drop">&darr;</span> Desacelerar, peso</div>
+            <div class="arrow-legend-item"><span class="arrow arrow-lift">&uarr;</span> Enumerar, sinalizar</div>
+            <div class="arrow-legend-item"><span class="arrow arrow-pivot">&rArr;</span> Transicao, pivo</div>
+            <div class="arrow-legend-item"><span style="color:#7c3aed;font-weight:700;">[Pause &#9208;]</span> Pausa total</div>
+        </div>
+
+        <div class="speech-toolbar">
+            <div class="speech-toolbar-group">
+                <span class="speech-toolbar-label">Modo</span>
+                <button class="sp-btn teleprompter" id="btnTpMode" onclick="toggleSpeechTeleprompter()">&#9654; Teleprompter</button>
+            </div>
+            <div class="speech-toolbar-group">
+                <span class="speech-toolbar-label">Gravar</span>
+                <button class="sp-btn rec" id="btnSpeechRec" onclick="toggleSpeechRec()">&#9679; Gravar</button>
+                <span id="speechRecTime" style="font-size:.8rem;font-weight:700;color:#888;min-width:50px;">00:00</span>
+            </div>
+            <div class="speech-toolbar-group">
+                <span class="speech-toolbar-label">Velocidade</span>
+                <input type="range" class="speed-slider" min="1" max="10" value="5" oninput="updateTpScrollSpeed(this.value)">
+                <span class="speed-val" id="tpSpeedDisplay">1.0x</span>
+            </div>
+        </div>
+
+        <div class="speech-script" id="userSpeechScript">
+            <div class="speech-script-inner" id="userSpeechInner">
+                <div id="userSpeechText" style="white-space:pre-wrap;"></div>
+            </div>
+        </div>
+
+        <div id="speechRecResult" style="display:none;margin-top:1rem;"></div>
+    </div>
+
+    <!-- ═══════ PRACTICE SECTIONS (hidden until draft is saved) ═══════ -->
+    <div id="practiceSections" style="display:none">
+
     <!-- ── Tips Toggle ── -->
     <div class="tips-global-toggle">
         <button class="tips-toggle-btn" onclick="toggleAllTips(this)" id="globalTipsToggle">
@@ -689,7 +843,7 @@
         </div>
 
         <div class="teleprompter">
-            <p>Good afternoon, everyone. My name is <span class="keyword">Nilo Patucci</span>, and I am the <span class="keyword">Chief Compliance Officer</span> at <span class="keyword">Sport Club Corinthians Paulista</span>, one of the largest football clubs in South America.</p>
+            <p>Good afternoon, everyone. My name is <span class="keyword">Nilo Patussi</span>, and I am the <span class="keyword">Chief Compliance Officer</span> at <span class="keyword">Sport Club Corinthians Paulista</span>, one of the largest football clubs in South America.</p>
             <p>I have been working in <span class="keyword">sports law</span> and <span class="keyword">governance</span> for over fifteen years. Today, I would like to share our experience in building a <span class="keyword">compliance culture</span> at Corinthians, and the lessons we have learned along the way.</p>
         </div>
 
@@ -910,7 +1064,7 @@
         <div class="full-teleprompter">
             <!-- Opening -->
             <div class="section-divider">Opening</div>
-            <p>Good afternoon, everyone. My name is <span class="keyword">Nilo Patucci</span>, and I am the <span class="keyword">Chief Compliance Officer</span> at <span class="keyword">Sport Club Corinthians Paulista</span>, one of the largest football clubs in South America.</p>
+            <p>Good afternoon, everyone. My name is <span class="keyword">Nilo Patussi</span>, and I am the <span class="keyword">Chief Compliance Officer</span> at <span class="keyword">Sport Club Corinthians Paulista</span>, one of the largest football clubs in South America.</p>
             <p>I have been working in <span class="keyword">sports law</span> and <span class="keyword">governance</span> for over fifteen years. Today, I would like to share our experience in building a <span class="keyword">compliance culture</span> at Corinthians, and the lessons we have learned along the way.</p>
 
             <!-- The Challenge -->
@@ -966,7 +1120,8 @@
         </div>
     </div>
 
-</div>
+</div><!-- /practiceSections -->
+</div><!-- /container -->
 
 <!-- ═══════ SCRIPTS ═══════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -1303,6 +1458,328 @@ function toggleAllTips(btn) {
             : '<span>&#128161;</span> Mostrar dicas de apresentacao';
     }
 }
+
+/* ═══════ DRAFT SAVE/LOAD + SUPABASE PERSISTENCE ═══════ */
+var SLUG = 'nilo-mesquita-patussi';
+var STORAGE_KEY = 'palestra-draft-' + SLUG;
+
+function saveDraft() {
+    var textarea = document.getElementById('speechDraft');
+    var text = textarea.value.trim();
+    if (!text) { alert('Please write or paste your speech before saving.'); return; }
+
+    // Save to localStorage
+    localStorage.setItem(STORAGE_KEY, text);
+
+    // Save to Supabase
+    if (typeof sb !== 'undefined') {
+        sb.from('student_activity').upsert({
+            student_slug: SLUG,
+            view_type: 'palestra_draft',
+            state: { text: text, saved_at: new Date().toISOString() },
+            updated_at: new Date().toISOString()
+        }, { onConflict: 'student_slug,view_type' }).then(function() {
+            console.log('Draft saved to Supabase');
+        }).catch(function(e) { console.error('Supabase save error:', e); });
+    }
+
+    // Show practice sections and speech tools
+    document.getElementById('practiceSections').style.display = 'block';
+    document.getElementById('speechToolsSection').style.display = 'block';
+    renderSpeechText();
+    document.getElementById('draftStatus').textContent = 'Salvo!';
+    setTimeout(function() { document.getElementById('draftStatus').textContent = ''; }, 3000);
+
+    // Add "Your draft" card at top of practice sections
+    var existingCard = document.getElementById('savedDraftCard');
+    if (!existingCard) {
+        var card = document.createElement('div');
+        card.className = 'draft-saved-card';
+        card.id = 'savedDraftCard';
+        card.innerHTML = '<span>Seu texto foi salvo. Agora pratique cada seção com os modelos abaixo.</span> <button onclick="editDraft()">Editar texto</button>';
+        document.getElementById('practiceSections').insertBefore(card, document.getElementById('practiceSections').firstChild);
+    }
+}
+
+function editDraft() {
+    document.getElementById('practiceSections').style.display = 'none';
+    document.getElementById('speechToolsSection').style.display = 'none';
+    stopTpScroll();
+    var card = document.getElementById('savedDraftCard');
+    if (card) card.remove();
+    document.getElementById('speechDraft').focus();
+}
+
+function loadDraft() {
+    // Try localStorage first
+    var local = localStorage.getItem(STORAGE_KEY);
+    if (local) {
+        document.getElementById('speechDraft').value = local;
+        document.getElementById('practiceSections').style.display = 'block';
+        document.getElementById('speechToolsSection').style.display = 'block';
+        renderSpeechText();
+        return;
+    }
+
+    // Try Supabase
+    if (typeof sb !== 'undefined') {
+        sb.from('student_activity').select('state').eq('student_slug', SLUG).eq('view_type', 'palestra_draft').single().then(function(res) {
+            if (res.data && res.data.state && res.data.state.text) {
+                document.getElementById('speechDraft').value = res.data.state.text;
+                localStorage.setItem(STORAGE_KEY, res.data.state.text);
+                document.getElementById('practiceSections').style.display = 'block';
+                document.getElementById('speechToolsSection').style.display = 'block';
+                renderSpeechText();
+            }
+        }).catch(function() {});
+    }
+}
+
+/* ═══════ UPLOAD RECORDINGS TO SUPABASE ═══════ */
+function uploadRecording(section, blob) {
+    if (typeof sb === 'undefined') return;
+
+    var ext = blob.type.indexOf('mp4') > -1 ? 'mp4' : 'webm';
+    var filePath = SLUG + '/palestra_' + section + '.' + ext;
+
+    sb.storage.from('recordings').upload(filePath, blob, {
+        cacheControl: '3600',
+        upsert: true,
+        contentType: blob.type
+    }).then(function(res) {
+        if (res.error) { console.error('Upload error:', res.error); return; }
+        console.log('Recording uploaded:', filePath);
+
+        // Save reference in student_activity
+        var recKey = 'palestra_rec_' + section;
+        sb.from('student_activity').upsert({
+            student_slug: SLUG,
+            view_type: recKey,
+            state: { path: filePath, type: blob.type, uploaded_at: new Date().toISOString() },
+            updated_at: new Date().toISOString()
+        }, { onConflict: 'student_slug,view_type' }).then(function() {
+            console.log('Recording reference saved');
+            // Show "saved" indicator
+            var playback = document.getElementById('rec-playback-' + section);
+            if (playback) {
+                var saved = playback.querySelector('.rec-saved-label');
+                if (!saved) {
+                    saved = document.createElement('span');
+                    saved.className = 'rec-saved-label';
+                    saved.style.cssText = 'font-size:.75rem;color:#16a34a;font-weight:600;margin-left:.5rem';
+                    saved.textContent = 'Salvo na nuvem';
+                    playback.appendChild(saved);
+                }
+            }
+        });
+    }).catch(function(e) { console.error('Upload failed:', e); });
+}
+
+// Patch toggleRecording to upload after stop
+var _origToggleRecording = toggleRecording;
+toggleRecording = function(section) {
+    var btn = document.getElementById('rec-btn-' + section);
+    var wasRecording = recorders[section] && recorders[section].state === 'recording';
+
+    if (wasRecording) {
+        // Intercept onstop to also upload
+        var origOnstop = recorders[section].onstop;
+        recorders[section].onstop = function() {
+            var blob = new Blob(recChunks[section], { type: getRecMimeType() || 'audio/webm' });
+            var url = URL.createObjectURL(blob);
+            var audioEl = document.getElementById('rec-audio-' + section);
+            if (audioEl) audioEl.src = url;
+            var playbackEl = document.getElementById('rec-playback-' + section);
+            if (playbackEl) playbackEl.classList.add('visible');
+            // Upload to Supabase
+            uploadRecording(section, blob);
+        };
+    }
+    _origToggleRecording(section);
+};
+
+// Patch toggleFullRecording similarly
+var _origToggleFullRecording = toggleFullRecording;
+toggleFullRecording = function() {
+    var wasRecording = recorders['full'] && recorders['full'].state === 'recording';
+    if (wasRecording) {
+        var origOnstop = recorders['full'].onstop;
+        recorders['full'].onstop = function() {
+            var blob = new Blob(recChunks['full'], { type: getRecMimeType() || 'audio/webm' });
+            var url = URL.createObjectURL(blob);
+            var audioEl = document.getElementById('rec-audio-full');
+            if (audioEl) audioEl.src = url;
+            var playbackEl = document.getElementById('rec-playback-full');
+            if (playbackEl) playbackEl.classList.add('visible');
+            uploadRecording('full', blob);
+        };
+    }
+    _origToggleFullRecording();
+};
+
+/* ═══════ LOAD SAVED RECORDINGS FROM SUPABASE ═══════ */
+function loadSavedRecordings() {
+    if (typeof sb === 'undefined') return;
+    var sections = ['opening', 'challenge', 'approach', 'results', 'closing', 'full'];
+    sections.forEach(function(section) {
+        sb.from('student_activity').select('state').eq('student_slug', SLUG).eq('view_type', 'palestra_rec_' + section).single().then(function(res) {
+            if (res.data && res.data.state && res.data.state.path) {
+                var publicUrl = sb.storage.from('recordings').getPublicUrl(res.data.state.path);
+                if (publicUrl.data && publicUrl.data.publicUrl) {
+                    var audioEl = document.getElementById('rec-audio-' + section);
+                    if (audioEl) {
+                        audioEl.src = publicUrl.data.publicUrl;
+                        var playbackEl = document.getElementById('rec-playback-' + section);
+                        if (playbackEl) {
+                            playbackEl.classList.add('visible');
+                            var saved = document.createElement('span');
+                            saved.className = 'rec-saved-label';
+                            saved.style.cssText = 'font-size:.75rem;color:#16a34a;font-weight:600;margin-left:.5rem';
+                            saved.textContent = 'Salvo na nuvem';
+                            playbackEl.appendChild(saved);
+                        }
+                    }
+                }
+            }
+        }).catch(function() {});
+    });
+}
+
+/* ═══════ CALENDAR SAVE/LOAD ═══════ */
+var CAL_KEY = 'palestra-calendar-' + SLUG;
+
+function saveCalendar() {
+    var data = {};
+    document.querySelectorAll('.cal-input').forEach(function(input) {
+        var n = input.dataset.cal;
+        var f = input.dataset.field;
+        if (!data[n]) data[n] = {};
+        data[n][f] = input.value;
+    });
+    localStorage.setItem(CAL_KEY, JSON.stringify(data));
+    if (typeof sb !== 'undefined') {
+        sb.from('student_activity').upsert({
+            student_slug: SLUG, view_type: 'palestra_calendar',
+            state: data, updated_at: new Date().toISOString()
+        }, { onConflict: 'student_slug,view_type' }).catch(function(e) { console.error(e); });
+    }
+}
+
+function loadCalendar() {
+    var local = localStorage.getItem(CAL_KEY);
+    if (local) { applyCalendarData(JSON.parse(local)); return; }
+    if (typeof sb !== 'undefined') {
+        sb.from('student_activity').select('state').eq('student_slug', SLUG).eq('view_type', 'palestra_calendar').single().then(function(res) {
+            if (res.data && res.data.state) { applyCalendarData(res.data.state); localStorage.setItem(CAL_KEY, JSON.stringify(res.data.state)); }
+        }).catch(function() {});
+    }
+}
+
+function applyCalendarData(data) {
+    Object.keys(data).forEach(function(n) {
+        Object.keys(data[n]).forEach(function(f) {
+            var input = document.querySelector('.cal-input[data-cal="' + n + '"][data-field="' + f + '"]');
+            if (input && data[n][f]) input.value = data[n][f];
+        });
+    });
+}
+
+/* ═══════ SPEECH PRACTICE TOOLS ═══════ */
+var tpMode = false;
+var tpScrollInterval = null;
+var tpSpeed = 1.0;
+var speechRecording = false;
+var speechRecorder = null;
+var speechRecChunks = [];
+var speechRecStream = null;
+var speechRecTimer = null;
+var speechRecSeconds = 0;
+
+function renderSpeechText() {
+    var text = document.getElementById('speechDraft').value;
+    var container = document.getElementById('userSpeechText');
+    if (container && text) {
+        container.textContent = text;
+    }
+}
+
+function toggleSpeechTeleprompter() {
+    var script = document.getElementById('userSpeechScript');
+    var btn = document.getElementById('btnTpMode');
+    tpMode = !tpMode;
+    if (tpMode) {
+        script.classList.add('teleprompter-mode');
+        btn.classList.add('active');
+        startTpScroll();
+    } else {
+        script.classList.remove('teleprompter-mode');
+        btn.classList.remove('active');
+        stopTpScroll();
+    }
+}
+
+function startTpScroll() {
+    stopTpScroll();
+    var inner = document.getElementById('userSpeechInner');
+    tpScrollInterval = setInterval(function() {
+        inner.scrollTop += tpSpeed;
+    }, 50);
+}
+
+function stopTpScroll() {
+    if (tpScrollInterval) { clearInterval(tpScrollInterval); tpScrollInterval = null; }
+}
+
+function updateTpScrollSpeed(val) {
+    tpSpeed = val / 5;
+    document.getElementById('tpSpeedDisplay').textContent = tpSpeed.toFixed(1) + 'x';
+}
+
+function toggleSpeechRec() {
+    var btn = document.getElementById('btnSpeechRec');
+    if (speechRecording) {
+        if (speechRecorder && speechRecorder.state === 'recording') speechRecorder.stop();
+        if (speechRecStream) speechRecStream.getTracks().forEach(function(t) { t.stop(); });
+        btn.classList.remove('active');
+        btn.innerHTML = '&#9679; Gravar';
+        speechRecording = false;
+        clearInterval(speechRecTimer);
+        return;
+    }
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
+        speechRecStream = stream;
+        speechRecChunks = [];
+        var mt = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+        speechRecorder = mt ? new MediaRecorder(stream, {mimeType:mt}) : new MediaRecorder(stream);
+        speechRecorder.ondataavailable = function(e) { if (e.data.size > 0) speechRecChunks.push(e.data); };
+        speechRecorder.onstop = function() {
+            var blob = new Blob(speechRecChunks, {type: speechRecorder.mimeType});
+            var url = URL.createObjectURL(blob);
+            var result = document.getElementById('speechRecResult');
+            result.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:.5rem"></audio><p style="font-size:.75rem;color:#16a34a;margin-top:.3rem">Gravacao salva!</p>';
+            result.style.display = 'block';
+            if (typeof uploadRecording === 'function') uploadRecording('speech_practice', blob);
+        };
+        speechRecorder.start();
+        btn.classList.add('active');
+        btn.innerHTML = '&#9632; Parar';
+        speechRecording = true;
+        speechRecSeconds = 0;
+        speechRecTimer = setInterval(function() {
+            speechRecSeconds++;
+            var m = Math.floor(speechRecSeconds / 60);
+            var s = speechRecSeconds % 60;
+            document.getElementById('speechRecTime').textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+        }, 1000);
+    }).catch(function() { alert('Microphone access required.'); });
+}
+
+// Init on load
+document.addEventListener('DOMContentLoaded', function() {
+    loadDraft();
+    loadCalendar();
+    setTimeout(loadSavedRecordings, 1000);
+});
 </script>
 
 </body>
