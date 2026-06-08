@@ -1562,3 +1562,68 @@ grep -n "class=\"wrong\"" ARQUIVO.html  # verificar CSS correspondente
 # Verificar Quick Challenge guards
 grep -n "nextQc\|prevQc" ARQUIVO.html  # ambos devem existir
 ```
+
+---
+
+## REGRA 32 — PERSISTENCIA PRE-CLASS NO SUPABASE (OBRIGATORIO)
+
+> TUDO que o aluno faz no Pre-class DEVE ser salvo automaticamente no Supabase. Qualquer pessoa, de qualquer lugar, de qualquer dispositivo, DEVE ver o mesmo estado de progresso. Nada pode ficar apenas em localStorage.
+
+### Como funciona:
+
+1. O script `activity-sync.js` intercepta TODA interacao do aluno no Pre-class: matching, fill-in-the-blank, quiz, ordering, gravacao de audio
+2. Cada acao salva no Supabase (tabela `student_activity`) com debounce de 2 segundos
+3. Ao abrir a pagina de qualquer dispositivo, o sistema compara timestamp local vs Supabase — se Supabase e mais recente, restaura de la
+4. Gravacoes de audio fazem upload no Supabase Storage (bucket `recordings`) e ficam acessiveis de qualquer lugar
+5. Fallback: auto-save a cada 30s + `beforeunload` com `keepalive: true`
+
+### Scripts obrigatorios (NESTA ORDEM no final do `<body>`):
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js"></script>
+```
+
+E no `<head>`, ANTES de tudo:
+```html
+<script>window.STUDENT_SLUG='{SLUG}';window.TOTAL_AULAS={N};</script>
+```
+
+### IMPORTANTE:
+- `activity-sync.js` DEVE ser o ULTIMO script (depende de todos os outros)
+- `supabase.min.js` DEVE vir ANTES de `supabase-config.js`
+- Se QUALQUER um dos 5 scripts faltar, o material NAO pode ser publicado — e um BUG BLOQUEANTE
+- O botao "Reset Lesson N" so aparece na view ALUNO, nunca no professor
+- NUNCA confiar apenas em localStorage — o Supabase e a fonte de verdade
+
+---
+
+## REGRA 33 — BARRA DE PROGRESSO PRE-CLASS POR AULA (OBRIGATORIO)
+
+> Cada lesson card do Pre-class DEVE ter uma mini-barra de progresso que reflete o percentual REAL de exercicios concluidos naquela aula. Conforme o aluno completa exercicios, o % sobe automaticamente.
+
+### Como funciona:
+
+1. `activity-sync.js` faz wrap da funcao `updateProgress()` do JS inline
+2. Para cada lesson card, calcula quantos exercicios foram concluidos (matching + fill-in + quiz + speech + ordering) dividido pelo total de exercicios daquela aula
+3. Atualiza visualmente a `mini-bar-fill` e o `mini-percent` com o percentual real
+4. 100% dos exercicios concluidos = aula Pre-class completa
+
+### HTML obrigatorio em cada lesson card:
+
+```html
+<div class="mini-progress-bar" data-lesson-progress="{N}">
+  <div class="mini-bar-fill" style="width:0%"></div>
+  <span class="mini-percent" data-lesson-pct="{N}">0%</span>
+</div>
+```
+
+### Requisitos:
+- Cada lesson card DEVE ter `id="ex-lesson-{N}"` para o calculo funcionar
+- A mini-barra DEVE comecar em 0% e subir conforme o aluno interage
+- O percentual e calculado AUTOMATICAMENTE — nunca hardcoded
+- O estado persiste no Supabase (via REGRA 32) — ao reabrir, a barra mostra o progresso salvo
+- TODOS os tipos de exercicio contam: matching, fill-in-the-blank, quiz, speech recording, ordering

@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keynote Practice Lab | Nilo Mesquita Patucci</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #7B2D3B;
+            --accent-light: #9A4054;
+            --bg: #f5f5f0;
+            --text: #2a2a2a;
+            --text-light: #666;
+            --card-bg: #ffffff;
+            --teleprompter-bg: #1a1a2e;
+            --teleprompter-text: #e0e0e0;
+            --border: #e0ddd5;
+            --shadow: 0 2px 16px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: #fff;
+            padding: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(123,45,59,0.3);
+        }
+
+        .header-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-logo {
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .header-info h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .header-info p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* ── Back link ── */
+        .back-link {
+            max-width: 800px;
+            margin: 1rem auto 0;
+            padding: 0 1rem;
+        }
+
+        .back-link a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .back-link a:hover { opacity: 0.7; }
+
+        /* ── Main container ── */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem 1rem 4rem;
+        }
+
+        /* ── Context Card ── */
+        .context-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent);
+        }
+
+        .context-card h2 {
+            font-size: 1.6rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .context-card .subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .context-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .context-tag {
+            background: rgba(123,45,59,0.08);
+            color: var(--accent);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* ── Section Card ── */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 1.5rem 1.5rem 0.75rem;
+        }
+
+        .section-number {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.4rem;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .section-purpose {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* ── Teleprompter ── */
+        .teleprompter {
+            background: var(--teleprompter-bg);
+            color: var(--teleprompter-text);
+            padding: 2rem 1.5rem;
+            margin: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 1.15rem;
+            line-height: 1.9;
+            font-weight: 300;
+            letter-spacing: 0.01em;
+            position: relative;
+        }
+
+        .teleprompter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light), transparent);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .teleprompter p {
+            margin-bottom: 1.2rem;
+        }
+
+        .teleprompter p:last-child {
+            margin-bottom: 0;
+        }
+
+        .keyword {
+            color: var(--accent-light);
+            font-weight: 500;
+            border-bottom: 1px dotted var(--accent-light);
+        }
+
+        /* ── Controls row ── */
+        .controls-row {
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-listen {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-listen:hover {
+            background: var(--accent-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-listen.playing {
+            background: #333;
+        }
+
+        .btn-record {
+            background: #fff;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-record:hover {
+            background: rgba(123,45,59,0.05);
+            transform: translateY(-1px);
+        }
+
+        .btn-record.recording {
+            background: #e74c3c;
+            color: #fff;
+            border-color: #e74c3c;
+            animation: pulse-rec 1.2s infinite;
+        }
+
+        @keyframes pulse-rec {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .btn-tip {
+            background: rgba(123,45,59,0.08);
+            color: var(--accent);
+        }
+
+        .btn-tip:hover {
+            background: rgba(123,45,59,0.15);
+        }
+
+        .btn-tip.active {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        /* ── Audio Player ── */
+        .audio-player {
+            padding: 0 1.5rem;
+            display: none;
+        }
+
+        .audio-player.visible {
+            display: block;
+            padding-bottom: 0.5rem;
+        }
+
+        .player-inner {
+            background: #f8f7f4;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .player-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .player-btn:hover {
+            background: var(--accent-light);
+        }
+
+        .player-seekbar {
+            flex: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .player-seekbar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        .player-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            min-width: 70px;
+            text-align: right;
+        }
+
+        .player-speed {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(123,45,59,0.08);
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* ── Recording Playback ── */
+        .recording-playback {
+            padding: 0 1.5rem;
+            display: none;
+        }
+
+        .recording-playback.visible {
+            display: block;
+            padding-bottom: 0.5rem;
+        }
+
+        .recording-inner {
+            background: #fef9f0;
+            border: 1px solid #f0e0c0;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .recording-inner audio {
+            flex: 1;
+            height: 32px;
+        }
+
+        .recording-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .btn-discard {
+            background: none;
+            border: none;
+            color: #c0392b;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0.25rem;
+        }
+
+        /* ── Delivery Tips ── */
+        .delivery-tip {
+            padding: 0 1.5rem 1rem;
+            display: none;
+        }
+
+        .delivery-tip.visible {
+            display: block;
+        }
+
+        .tip-content {
+            background: #fdf8f0;
+            border-left: 3px solid #e0a030;
+            border-radius: 0 8px 8px 0;
+            padding: 1rem 1.25rem;
+            font-size: 0.88rem;
+            color: #6a5a3a;
+            line-height: 1.6;
+        }
+
+        .tip-content strong {
+            color: #8a6a2a;
+        }
+
+        /* ── Full Run-through ── */
+        .full-runthrough {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            margin-top: 2rem;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 2px solid var(--accent);
+        }
+
+        .full-header {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: #fff;
+            padding: 1.5rem;
+        }
+
+        .full-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .full-header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .full-teleprompter {
+            background: var(--teleprompter-bg);
+            color: var(--teleprompter-text);
+            padding: 2rem 1.5rem;
+            margin: 1rem;
+            border-radius: 10px;
+            font-size: 1.15rem;
+            line-height: 1.9;
+            font-weight: 300;
+            max-height: 500px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .full-teleprompter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light), transparent);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .full-teleprompter p {
+            margin-bottom: 1.2rem;
+        }
+
+        .full-teleprompter .section-divider {
+            text-align: center;
+            color: var(--accent-light);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin: 2rem 0 1.5rem;
+            padding: 0.5rem 0;
+            border-top: 1px solid rgba(154,64,84,0.3);
+            border-bottom: 1px solid rgba(154,64,84,0.3);
+        }
+
+        .full-controls {
+            padding: 1rem 1.5rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .timer-display {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 100px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            display: block;
+            font-weight: 400;
+        }
+
+        .btn-full-record {
+            background: var(--accent);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-full-record.recording {
+            background: #e74c3c;
+            animation: pulse-rec 1.2s infinite;
+        }
+
+        .btn-full-listen {
+            background: #fff;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .full-recording-playback {
+            padding: 0 1.5rem 1rem;
+            display: none;
+        }
+
+        .full-recording-playback.visible {
+            display: block;
+        }
+
+        /* ── Tips toggle global ── */
+        .tips-global-toggle {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tips-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(123,45,59,0.08);
+            color: var(--accent);
+            border: 1px solid rgba(123,45,59,0.2);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tips-toggle-btn:hover {
+            background: rgba(123,45,59,0.15);
+        }
+
+        .tips-toggle-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        /* ── Scrollbar for teleprompter ── */
+        .full-teleprompter::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .full-teleprompter::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+        }
+
+        .full-teleprompter::-webkit-scrollbar-thumb {
+            background: var(--accent-light);
+            border-radius: 3px;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .header-info h1 { font-size: 1.1rem; }
+            .header-logo { height: 32px; }
+            .context-card { padding: 1.25rem; }
+            .context-card h2 { font-size: 1.3rem; }
+            .teleprompter, .full-teleprompter {
+                padding: 1.25rem 1rem;
+                font-size: 1.05rem;
+                margin: 0.5rem 0.75rem;
+            }
+            .controls-row { padding: 0.75rem; }
+            .section-header { padding: 1.25rem 1rem 0.5rem; }
+            .delivery-tip { padding: 0 0.75rem 0.75rem; }
+            .audio-player, .recording-playback { padding: 0 0.75rem; }
+            .full-controls { padding: 0.75rem; }
+            .timer-display { font-size: 1.5rem; }
+            .btn { padding: 0.5rem 0.85rem; font-size: 0.8rem; }
+        }
+
+        /* ── Print styles ── */
+        @media print {
+            .header { position: static; }
+            .controls-row, .audio-player, .recording-playback,
+            .delivery-tip, .back-link, .tips-global-toggle,
+            .full-controls, .full-recording-playback { display: none !important; }
+            .teleprompter, .full-teleprompter {
+                background: #fff !important;
+                color: #000 !important;
+                border: 1px solid #ccc;
+            }
+            .keyword { color: var(--accent) !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<header class="header">
+    <div class="header-inner">
+        <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="header-logo">
+        <div class="header-info">
+            <h1>Keynote Practice Lab</h1>
+            <p>Nilo Mesquita Patucci</p>
+        </div>
+    </div>
+</header>
+
+<!-- ═══════ BACK LINK ═══════ -->
+<div class="back-link">
+    <a href="/professor/nilo-mesquita-patucci.html">&#8592; Voltar ao material principal</a>
+</div>
+
+<!-- ═══════ MAIN CONTAINER ═══════ -->
+<div class="container">
+
+    <!-- ── Context Card ── -->
+    <div class="context-card">
+        <h2>Compliance in Brazilian Football: Building Trust Through Governance</h2>
+        <p class="subtitle">10-minute keynote at the FIFA Leadership in Football program</p>
+        <p style="font-size:0.9rem; color:var(--text-light); margin-top:0.5rem;">
+            Pratique cada parte da sua palestra separadamente, depois grave o discurso completo.
+            Use os modelos de audio para referencia de ritmo e pronuncia.
+        </p>
+        <div class="context-meta">
+            <span class="context-tag">FIFA Leadership Program</span>
+            <span class="context-tag">10 minutes</span>
+            <span class="context-tag">5 sections</span>
+            <span class="context-tag">Executive Register</span>
+        </div>
+    </div>
+
+    <!-- ── Tips Toggle ── -->
+    <div class="tips-global-toggle">
+        <button class="tips-toggle-btn" onclick="toggleAllTips(this)" id="globalTipsToggle">
+            <span>&#128161;</span> Mostrar dicas de apresentacao
+        </button>
+    </div>
+
+    <!-- ═══════ SECTION: Opening ═══════ -->
+    <div class="section-card" data-section="opening">
+        <div class="section-header">
+            <div class="section-number">Opening &mdash; 60 seconds</div>
+            <h3>Introduction</h3>
+            <p class="section-purpose">Establish credibility and set the agenda</p>
+        </div>
+
+        <div class="teleprompter">
+            <p>Good afternoon, everyone. My name is <span class="keyword">Nilo Patucci</span>, and I am the <span class="keyword">Chief Compliance Officer</span> at <span class="keyword">Sport Club Corinthians Paulista</span>, one of the largest football clubs in South America.</p>
+            <p>I have been working in <span class="keyword">sports law</span> and <span class="keyword">governance</span> for over fifteen years. Today, I would like to share our experience in building a <span class="keyword">compliance culture</span> at Corinthians, and the lessons we have learned along the way.</p>
+        </div>
+
+        <div class="audio-player" id="player-opening">
+            <div class="player-inner">
+                <button class="player-btn" onclick="togglePlayer('opening')">&#9654;</button>
+                <input type="range" class="player-seekbar" id="seekbar-opening" min="0" max="100" value="0" oninput="seekAudio('opening', this.value)">
+                <span class="player-time" id="time-opening">0:00 / 0:00</span>
+                <button class="player-speed" id="speed-opening" onclick="cycleSpeed('opening')">1x</button>
+            </div>
+        </div>
+
+        <div class="recording-playback" id="rec-playback-opening">
+            <div class="recording-inner">
+                <span class="recording-label">Your recording</span>
+                <audio id="rec-audio-opening" controls></audio>
+                <button class="btn-discard" onclick="discardRecording('opening')" title="Discard">&#10005;</button>
+            </div>
+        </div>
+
+        <div class="controls-row">
+            <button class="btn btn-listen" onclick="listenModel('opening')">&#9654; Listen to Model</button>
+            <button class="btn btn-record" id="rec-btn-opening" onclick="toggleRecording('opening')">&#9679; Record Yourself</button>
+            <button class="btn btn-tip" onclick="toggleTip('opening', this)">&#128161; Delivery Tips</button>
+        </div>
+
+        <div class="delivery-tip" id="tip-opening">
+            <div class="tip-content">
+                <strong>Start with a pause.</strong> Make eye contact with three people in the audience before you begin speaking. Speak slowly and clearly. Your opening sets the tone for the entire keynote.
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ SECTION: The Challenge ═══════ -->
+    <div class="section-card" data-section="challenge">
+        <div class="section-header">
+            <div class="section-number">Section 1 &mdash; 2 minutes</div>
+            <h3>The Challenge</h3>
+            <p class="section-purpose">Describe the problem you faced</p>
+        </div>
+
+        <div class="teleprompter">
+            <p>Brazilian football has a long and passionate history. But for many years, <span class="keyword">governance</span> was not a priority. Decisions were made behind closed doors, and <span class="keyword">accountability</span> was limited.</p>
+            <p>When I joined Corinthians as <span class="keyword">Chief Compliance Officer</span>, I inherited a department with limited resources and even more limited <span class="keyword">authority</span>. My first challenge was not technical. It was cultural. I had to convince the leadership that <span class="keyword">compliance</span> was not a threat to their <span class="keyword">autonomy</span>, but a tool to protect the institution.</p>
+            <p>The question I faced every day was simple: How do you <span class="keyword">enforce</span> rules in an organization that is not used to following them?</p>
+        </div>
+
+        <div class="audio-player" id="player-challenge">
+            <div class="player-inner">
+                <button class="player-btn" onclick="togglePlayer('challenge')">&#9654;</button>
+                <input type="range" class="player-seekbar" id="seekbar-challenge" min="0" max="100" value="0" oninput="seekAudio('challenge', this.value)">
+                <span class="player-time" id="time-challenge">0:00 / 0:00</span>
+                <button class="player-speed" id="speed-challenge" onclick="cycleSpeed('challenge')">1x</button>
+            </div>
+        </div>
+
+        <div class="recording-playback" id="rec-playback-challenge">
+            <div class="recording-inner">
+                <span class="recording-label">Your recording</span>
+                <audio id="rec-audio-challenge" controls></audio>
+                <button class="btn-discard" onclick="discardRecording('challenge')" title="Discard">&#10005;</button>
+            </div>
+        </div>
+
+        <div class="controls-row">
+            <button class="btn btn-listen" onclick="listenModel('challenge')">&#9654; Listen to Model</button>
+            <button class="btn btn-record" id="rec-btn-challenge" onclick="toggleRecording('challenge')">&#9679; Record Yourself</button>
+            <button class="btn btn-tip" onclick="toggleTip('challenge', this)">&#128161; Delivery Tips</button>
+        </div>
+
+        <div class="delivery-tip" id="tip-challenge">
+            <div class="tip-content">
+                <strong>Use the rhetorical question at the end.</strong> Pause for 3 seconds after asking it. Let the audience think. Do not rush to the next section. The silence is powerful.
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ SECTION: Our Approach ═══════ -->
+    <div class="section-card" data-section="approach">
+        <div class="section-header">
+            <div class="section-number">Section 2 &mdash; 2 minutes</div>
+            <h3>Our Approach</h3>
+            <p class="section-purpose">Present the three-step strategy</p>
+        </div>
+
+        <div class="teleprompter">
+            <p>We took a <span class="keyword">three-step approach</span>. First, we built a team. I recruited five dedicated <span class="keyword">compliance professionals</span> with backgrounds in law, finance, and <span class="keyword">investigation</span>. Each one reports directly to me, and I report to the <span class="keyword">General Director</span>, not to any department head. This <span class="keyword">independence</span> is critical.</p>
+            <p>Second, we established clear <span class="keyword">procedures</span>. We created a <span class="keyword">compliance manual</span>, a <span class="keyword">whistleblower hotline</span>, and a <span class="keyword">code of conduct</span>. Every employee, from the players to the administrative staff, signed the code.</p>
+            <p>Third, we coordinated with <span class="keyword">external partners</span>. We work closely with the <span class="keyword">Brazilian Football Confederation</span>, <span class="keyword">FIFA</span>, and <span class="keyword">independent auditors</span>. Transparency is our strongest tool.</p>
+        </div>
+
+        <div class="audio-player" id="player-approach">
+            <div class="player-inner">
+                <button class="player-btn" onclick="togglePlayer('approach')">&#9654;</button>
+                <input type="range" class="player-seekbar" id="seekbar-approach" min="0" max="100" value="0" oninput="seekAudio('approach', this.value)">
+                <span class="player-time" id="time-approach">0:00 / 0:00</span>
+                <button class="player-speed" id="speed-approach" onclick="cycleSpeed('approach')">1x</button>
+            </div>
+        </div>
+
+        <div class="recording-playback" id="rec-playback-approach">
+            <div class="recording-inner">
+                <span class="recording-label">Your recording</span>
+                <audio id="rec-audio-approach" controls></audio>
+                <button class="btn-discard" onclick="discardRecording('approach')" title="Discard">&#10005;</button>
+            </div>
+        </div>
+
+        <div class="controls-row">
+            <button class="btn btn-listen" onclick="listenModel('approach')">&#9654; Listen to Model</button>
+            <button class="btn btn-record" id="rec-btn-approach" onclick="toggleRecording('approach')">&#9679; Record Yourself</button>
+            <button class="btn btn-tip" onclick="toggleTip('approach', this)">&#128161; Delivery Tips</button>
+        </div>
+
+        <div class="delivery-tip" id="tip-approach">
+            <div class="tip-content">
+                <strong>Count "first, second, third" on your fingers</strong> as you speak. It helps the audience follow your structure. Physical gestures reinforce verbal organization.
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ SECTION: Results ═══════ -->
+    <div class="section-card" data-section="results">
+        <div class="section-header">
+            <div class="section-number">Section 3 &mdash; 2 minutes</div>
+            <h3>Results</h3>
+            <p class="section-purpose">Share measurable outcomes</p>
+        </div>
+
+        <div class="teleprompter">
+            <p>In the past three years, we have investigated over <span class="keyword">forty potential violations</span>. We have implemented <span class="keyword">fifteen corrective actions</span>. And most importantly, we have changed the culture. Today, employees come to us before problems happen, not after.</p>
+            <p>We have also established a <span class="keyword">quarterly review process</span> with the board, where I present our findings and recommendations. This <span class="keyword">direct access to the board</span> was not easy to achieve, but it is the foundation of our independence.</p>
+            <p>Our work has been recognized by <span class="keyword">FIFA</span> and by the <span class="keyword">Brazilian Football Confederation</span> as a model for other clubs in South America.</p>
+        </div>
+
+        <div class="audio-player" id="player-results">
+            <div class="player-inner">
+                <button class="player-btn" onclick="togglePlayer('results')">&#9654;</button>
+                <input type="range" class="player-seekbar" id="seekbar-results" min="0" max="100" value="0" oninput="seekAudio('results', this.value)">
+                <span class="player-time" id="time-results">0:00 / 0:00</span>
+                <button class="player-speed" id="speed-results" onclick="cycleSpeed('results')">1x</button>
+            </div>
+        </div>
+
+        <div class="recording-playback" id="rec-playback-results">
+            <div class="recording-inner">
+                <span class="recording-label">Your recording</span>
+                <audio id="rec-audio-results" controls></audio>
+                <button class="btn-discard" onclick="discardRecording('results')" title="Discard">&#10005;</button>
+            </div>
+        </div>
+
+        <div class="controls-row">
+            <button class="btn btn-listen" onclick="listenModel('results')">&#9654; Listen to Model</button>
+            <button class="btn btn-record" id="rec-btn-results" onclick="toggleRecording('results')">&#9679; Record Yourself</button>
+            <button class="btn btn-tip" onclick="toggleTip('results', this)">&#128161; Delivery Tips</button>
+        </div>
+
+        <div class="delivery-tip" id="tip-results">
+            <div class="tip-content">
+                <strong>Slow down on the numbers.</strong> "Over forty... fifteen corrective actions..." Let the data land. Numbers are powerful when you give the audience time to absorb them.
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ SECTION: Closing ═══════ -->
+    <div class="section-card" data-section="closing">
+        <div class="section-header">
+            <div class="section-number">Closing &mdash; 2 minutes</div>
+            <h3>Closing</h3>
+            <p class="section-purpose">Personal reflection and call to action</p>
+        </div>
+
+        <div class="teleprompter">
+            <p>I want to close with a personal reflection. When I was selected for this <span class="keyword">FIFA program</span>, I was honored, but also aware of the responsibility. I am the only representative from Brazil. That means I carry not just my own experience, but the story of an entire <span class="keyword">football nation</span>.</p>
+            <p><span class="keyword">Compliance</span> is not about punishment. It is about <span class="keyword">protection</span>. We protect the players, we protect the fans, and we protect the future of the game we love.</p>
+            <p>I am currently working on expanding our program to include <span class="keyword">youth academies</span> and <span class="keyword">amateur clubs</span>. Because governance does not start at the top. It starts at the <span class="keyword">grassroots</span>.</p>
+            <p>Thank you. I am happy to answer any questions.</p>
+        </div>
+
+        <div class="audio-player" id="player-closing">
+            <div class="player-inner">
+                <button class="player-btn" onclick="togglePlayer('closing')">&#9654;</button>
+                <input type="range" class="player-seekbar" id="seekbar-closing" min="0" max="100" value="0" oninput="seekAudio('closing', this.value)">
+                <span class="player-time" id="time-closing">0:00 / 0:00</span>
+                <button class="player-speed" id="speed-closing" onclick="cycleSpeed('closing')">1x</button>
+            </div>
+        </div>
+
+        <div class="recording-playback" id="rec-playback-closing">
+            <div class="recording-inner">
+                <span class="recording-label">Your recording</span>
+                <audio id="rec-audio-closing" controls></audio>
+                <button class="btn-discard" onclick="discardRecording('closing')" title="Discard">&#10005;</button>
+            </div>
+        </div>
+
+        <div class="controls-row">
+            <button class="btn btn-listen" onclick="listenModel('closing')">&#9654; Listen to Model</button>
+            <button class="btn btn-record" id="rec-btn-closing" onclick="toggleRecording('closing')">&#9679; Record Yourself</button>
+            <button class="btn btn-tip" onclick="toggleTip('closing', this)">&#128161; Delivery Tips</button>
+        </div>
+
+        <div class="delivery-tip" id="tip-closing">
+            <div class="tip-content">
+                <strong>The last three sentences should be delivered with increasing emphasis.</strong> "We protect the players, we protect the fans, and we protect the future of the game we love." Build the energy. End with a genuine smile and confident posture.
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ FULL RUN-THROUGH ═══════ -->
+    <div class="full-runthrough">
+        <div class="full-header">
+            <h2>Full Keynote Run-Through</h2>
+            <p>Pratique o discurso completo de uma vez. Grave e acompanhe o tempo.</p>
+        </div>
+
+        <div class="full-teleprompter">
+            <!-- Opening -->
+            <div class="section-divider">Opening</div>
+            <p>Good afternoon, everyone. My name is <span class="keyword">Nilo Patucci</span>, and I am the <span class="keyword">Chief Compliance Officer</span> at <span class="keyword">Sport Club Corinthians Paulista</span>, one of the largest football clubs in South America.</p>
+            <p>I have been working in <span class="keyword">sports law</span> and <span class="keyword">governance</span> for over fifteen years. Today, I would like to share our experience in building a <span class="keyword">compliance culture</span> at Corinthians, and the lessons we have learned along the way.</p>
+
+            <!-- The Challenge -->
+            <div class="section-divider">The Challenge</div>
+            <p>Brazilian football has a long and passionate history. But for many years, <span class="keyword">governance</span> was not a priority. Decisions were made behind closed doors, and <span class="keyword">accountability</span> was limited.</p>
+            <p>When I joined Corinthians as <span class="keyword">Chief Compliance Officer</span>, I inherited a department with limited resources and even more limited <span class="keyword">authority</span>. My first challenge was not technical. It was cultural. I had to convince the leadership that <span class="keyword">compliance</span> was not a threat to their <span class="keyword">autonomy</span>, but a tool to protect the institution.</p>
+            <p>The question I faced every day was simple: How do you <span class="keyword">enforce</span> rules in an organization that is not used to following them?</p>
+
+            <!-- Our Approach -->
+            <div class="section-divider">Our Approach</div>
+            <p>We took a <span class="keyword">three-step approach</span>. First, we built a team. I recruited five dedicated <span class="keyword">compliance professionals</span> with backgrounds in law, finance, and <span class="keyword">investigation</span>. Each one reports directly to me, and I report to the <span class="keyword">General Director</span>, not to any department head. This <span class="keyword">independence</span> is critical.</p>
+            <p>Second, we established clear <span class="keyword">procedures</span>. We created a <span class="keyword">compliance manual</span>, a <span class="keyword">whistleblower hotline</span>, and a <span class="keyword">code of conduct</span>. Every employee, from the players to the administrative staff, signed the code.</p>
+            <p>Third, we coordinated with <span class="keyword">external partners</span>. We work closely with the <span class="keyword">Brazilian Football Confederation</span>, <span class="keyword">FIFA</span>, and <span class="keyword">independent auditors</span>. Transparency is our strongest tool.</p>
+
+            <!-- Results -->
+            <div class="section-divider">Results</div>
+            <p>In the past three years, we have investigated over <span class="keyword">forty potential violations</span>. We have implemented <span class="keyword">fifteen corrective actions</span>. And most importantly, we have changed the culture. Today, employees come to us before problems happen, not after.</p>
+            <p>We have also established a <span class="keyword">quarterly review process</span> with the board, where I present our findings and recommendations. This <span class="keyword">direct access to the board</span> was not easy to achieve, but it is the foundation of our independence.</p>
+            <p>Our work has been recognized by <span class="keyword">FIFA</span> and by the <span class="keyword">Brazilian Football Confederation</span> as a model for other clubs in South America.</p>
+
+            <!-- Closing -->
+            <div class="section-divider">Closing</div>
+            <p>I want to close with a personal reflection. When I was selected for this <span class="keyword">FIFA program</span>, I was honored, but also aware of the responsibility. I am the only representative from Brazil. That means I carry not just my own experience, but the story of an entire <span class="keyword">football nation</span>.</p>
+            <p><span class="keyword">Compliance</span> is not about punishment. It is about <span class="keyword">protection</span>. We protect the players, we protect the fans, and we protect the future of the game we love.</p>
+            <p>I am currently working on expanding our program to include <span class="keyword">youth academies</span> and <span class="keyword">amateur clubs</span>. Because governance does not start at the top. It starts at the <span class="keyword">grassroots</span>.</p>
+            <p>Thank you. I am happy to answer any questions.</p>
+        </div>
+
+        <div class="full-controls">
+            <div>
+                <span class="timer-display" id="fullTimer">00:00</span>
+                <span class="timer-label">Tempo decorrido</span>
+            </div>
+            <button class="btn btn-full-listen" onclick="listenModel('full')">&#9654; Listen to Full Model</button>
+            <button class="btn btn-full-record" id="rec-btn-full" onclick="toggleFullRecording()">&#9679; Record Full Delivery</button>
+        </div>
+
+        <div class="audio-player" id="player-full" style="padding: 0 1.5rem;">
+            <div class="player-inner">
+                <button class="player-btn" onclick="togglePlayer('full')">&#9654;</button>
+                <input type="range" class="player-seekbar" id="seekbar-full" min="0" max="100" value="0" oninput="seekAudio('full', this.value)">
+                <span class="player-time" id="time-full">0:00 / 0:00</span>
+                <button class="player-speed" id="speed-full" onclick="cycleSpeed('full')">1x</button>
+            </div>
+        </div>
+
+        <div class="full-recording-playback" id="rec-playback-full">
+            <div class="recording-inner">
+                <span class="recording-label">Your full recording</span>
+                <audio id="rec-audio-full" controls></audio>
+                <button class="btn-discard" onclick="discardRecording('full')" title="Discard">&#10005;</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='nilo-mesquita-patucci';window.TOTAL_AULAS=96;</script>
+
+<script>
+/* ═══════ Audio Map ═══════ */
+var audioMap = {
+    opening:   '/audio/nilo-mesquita-patucci/palestra_opening.mp3',
+    challenge: '/audio/nilo-mesquita-patucci/palestra_challenge.mp3',
+    approach:  '/audio/nilo-mesquita-patucci/palestra_approach.mp3',
+    results:   '/audio/nilo-mesquita-patucci/palestra_results.mp3',
+    closing:   '/audio/nilo-mesquita-patucci/palestra_closing.mp3',
+    full:      '/audio/nilo-mesquita-patucci/palestra_full.mp3'
+};
+
+/* ═══════ State ═══════ */
+var audioElements = {};
+var speeds = [0.75, 1, 1.25, 1.5];
+var currentSpeeds = {};
+var recorders = {};
+var recStreams = {};
+var recChunks = {};
+var fullTimerInterval = null;
+var fullTimerSeconds = 0;
+var tipsVisible = false;
+
+/* ═══════ speakText — audioMap + TTS fallback ═══════ */
+function speakText(section) {
+    var src = audioMap[section];
+    if (!src) return;
+
+    if (!audioElements[section]) {
+        audioElements[section] = new Audio(src);
+        currentSpeeds[section] = 1;
+        var audio = audioElements[section];
+
+        audio.addEventListener('timeupdate', function() {
+            updatePlayerUI(section);
+        });
+        audio.addEventListener('ended', function() {
+            var btn = document.querySelector('#player-' + section + ' .player-btn');
+            if (btn) btn.innerHTML = '&#9654;';
+        });
+        audio.addEventListener('error', function() {
+            // TTS fallback
+            if ('speechSynthesis' in window) {
+                var card = document.querySelector('[data-section="' + section + '"] .teleprompter');
+                if (!card && section === 'full') {
+                    card = document.querySelector('.full-teleprompter');
+                }
+                if (card) {
+                    var text = card.innerText || card.textContent;
+                    var utt = new SpeechSynthesisUtterance(text);
+                    utt.lang = 'en-US';
+                    utt.rate = currentSpeeds[section] || 1;
+                    window.speechSynthesis.speak(utt);
+                }
+            }
+        });
+    }
+
+    return audioElements[section];
+}
+
+/* ═══════ Listen to Model ═══════ */
+function listenModel(section) {
+    var audio = speakText(section);
+    if (!audio) return;
+
+    var playerEl = document.getElementById('player-' + section);
+    if (playerEl) {
+        playerEl.classList.add('visible');
+    }
+
+    if (audio.paused) {
+        // Pause all others first
+        Object.keys(audioElements).forEach(function(key) {
+            if (key !== section && audioElements[key]) {
+                audioElements[key].pause();
+                var otherBtn = document.querySelector('#player-' + key + ' .player-btn');
+                if (otherBtn) otherBtn.innerHTML = '&#9654;';
+            }
+        });
+        audio.play();
+        var btn = document.querySelector('#player-' + section + ' .player-btn');
+        if (btn) btn.innerHTML = '&#10074;&#10074;';
+
+        // Update listen button
+        var listenBtns = document.querySelectorAll('.btn-listen');
+        listenBtns.forEach(function(b) { b.classList.remove('playing'); });
+    } else {
+        audio.pause();
+        var btn = document.querySelector('#player-' + section + ' .player-btn');
+        if (btn) btn.innerHTML = '&#9654;';
+    }
+}
+
+/* ═══════ Player Controls ═══════ */
+function togglePlayer(section) {
+    var audio = audioElements[section];
+    if (!audio) return;
+
+    if (audio.paused) {
+        audio.play();
+        var btn = document.querySelector('#player-' + section + ' .player-btn');
+        if (btn) btn.innerHTML = '&#10074;&#10074;';
+    } else {
+        audio.pause();
+        var btn = document.querySelector('#player-' + section + ' .player-btn');
+        if (btn) btn.innerHTML = '&#9654;';
+    }
+}
+
+function seekAudio(section, val) {
+    var audio = audioElements[section];
+    if (!audio || !audio.duration) return;
+    audio.currentTime = (val / 100) * audio.duration;
+}
+
+function cycleSpeed(section) {
+    var audio = audioElements[section];
+    if (!audio) return;
+
+    var idx = speeds.indexOf(currentSpeeds[section] || 1);
+    idx = (idx + 1) % speeds.length;
+    currentSpeeds[section] = speeds[idx];
+    audio.playbackRate = speeds[idx];
+
+    var speedBtn = document.getElementById('speed-' + section);
+    if (speedBtn) speedBtn.textContent = speeds[idx] + 'x';
+}
+
+function updatePlayerUI(section) {
+    var audio = audioElements[section];
+    if (!audio) return;
+
+    var seekbar = document.getElementById('seekbar-' + section);
+    var timeEl = document.getElementById('time-' + section);
+
+    if (seekbar && audio.duration) {
+        seekbar.value = (audio.currentTime / audio.duration) * 100;
+    }
+
+    if (timeEl) {
+        timeEl.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration || 0);
+    }
+}
+
+function formatTime(sec) {
+    if (isNaN(sec)) return '0:00';
+    var m = Math.floor(sec / 60);
+    var s = Math.floor(sec % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+/* ═══════ MediaRecorder ═══════ */
+function getRecMimeType() {
+    if (MediaRecorder.isTypeSupported('audio/mp4')) return 'audio/mp4';
+    if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) return 'audio/webm;codecs=opus';
+    if (MediaRecorder.isTypeSupported('audio/webm')) return 'audio/webm';
+    return '';
+}
+
+function toggleRecording(section) {
+    var btn = document.getElementById('rec-btn-' + section);
+    if (!btn) return;
+
+    if (recorders[section] && recorders[section].state === 'recording') {
+        // Stop recording
+        recorders[section].stop();
+        btn.classList.remove('recording');
+        btn.innerHTML = '&#9679; Record Yourself';
+
+        if (recStreams[section]) {
+            recStreams[section].getTracks().forEach(function(t) { t.stop(); });
+        }
+        return;
+    }
+
+    // Start recording
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+        recStreams[section] = stream;
+        recChunks[section] = [];
+
+        var mimeType = getRecMimeType();
+        var options = mimeType ? { mimeType: mimeType } : {};
+        var recorder = new MediaRecorder(stream, options);
+        recorders[section] = recorder;
+
+        recorder.ondataavailable = function(e) {
+            if (e.data.size > 0) recChunks[section].push(e.data);
+        };
+
+        recorder.onstop = function() {
+            var blob = new Blob(recChunks[section], { type: mimeType || 'audio/webm' });
+            var url = URL.createObjectURL(blob);
+            var audioEl = document.getElementById('rec-audio-' + section);
+            if (audioEl) {
+                audioEl.src = url;
+            }
+            var playbackEl = document.getElementById('rec-playback-' + section);
+            if (playbackEl) playbackEl.classList.add('visible');
+        };
+
+        recorder.start();
+        btn.classList.add('recording');
+        btn.innerHTML = '&#9632; Stop Recording';
+    }).catch(function(err) {
+        console.error('Microphone access denied:', err);
+        alert('Microphone access is required for recording. Please allow access and try again.');
+    });
+}
+
+function discardRecording(section) {
+    var audioEl = document.getElementById('rec-audio-' + section);
+    if (audioEl && audioEl.src) {
+        URL.revokeObjectURL(audioEl.src);
+        audioEl.src = '';
+    }
+    var playbackEl = document.getElementById('rec-playback-' + section);
+    if (playbackEl) playbackEl.classList.remove('visible');
+}
+
+/* ═══════ Full Run-Through Recording + Timer ═══════ */
+function toggleFullRecording() {
+    var btn = document.getElementById('rec-btn-full');
+    if (!btn) return;
+
+    if (recorders['full'] && recorders['full'].state === 'recording') {
+        recorders['full'].stop();
+        btn.classList.remove('recording');
+        btn.innerHTML = '&#9679; Record Full Delivery';
+        stopFullTimer();
+
+        if (recStreams['full']) {
+            recStreams['full'].getTracks().forEach(function(t) { t.stop(); });
+        }
+        return;
+    }
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+        recStreams['full'] = stream;
+        recChunks['full'] = [];
+
+        var mimeType = getRecMimeType();
+        var options = mimeType ? { mimeType: mimeType } : {};
+        var recorder = new MediaRecorder(stream, options);
+        recorders['full'] = recorder;
+
+        recorder.ondataavailable = function(e) {
+            if (e.data.size > 0) recChunks['full'].push(e.data);
+        };
+
+        recorder.onstop = function() {
+            var blob = new Blob(recChunks['full'], { type: mimeType || 'audio/webm' });
+            var url = URL.createObjectURL(blob);
+            var audioEl = document.getElementById('rec-audio-full');
+            if (audioEl) audioEl.src = url;
+            var playbackEl = document.getElementById('rec-playback-full');
+            if (playbackEl) playbackEl.classList.add('visible');
+        };
+
+        recorder.start();
+        btn.classList.add('recording');
+        btn.innerHTML = '&#9632; Stop Recording';
+        startFullTimer();
+    }).catch(function(err) {
+        console.error('Microphone access denied:', err);
+        alert('Microphone access is required for recording. Please allow access and try again.');
+    });
+}
+
+function startFullTimer() {
+    fullTimerSeconds = 0;
+    updateTimerDisplay();
+    fullTimerInterval = setInterval(function() {
+        fullTimerSeconds++;
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function stopFullTimer() {
+    if (fullTimerInterval) {
+        clearInterval(fullTimerInterval);
+        fullTimerInterval = null;
+    }
+}
+
+function updateTimerDisplay() {
+    var el = document.getElementById('fullTimer');
+    if (!el) return;
+    var m = Math.floor(fullTimerSeconds / 60);
+    var s = fullTimerSeconds % 60;
+    el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+/* ═══════ Delivery Tips Toggle ═══════ */
+function toggleTip(section, btn) {
+    var tipEl = document.getElementById('tip-' + section);
+    if (!tipEl) return;
+
+    var isVisible = tipEl.classList.contains('visible');
+    tipEl.classList.toggle('visible');
+    if (btn) btn.classList.toggle('active');
+}
+
+function toggleAllTips(btn) {
+    tipsVisible = !tipsVisible;
+    var tips = document.querySelectorAll('.delivery-tip');
+    var tipBtns = document.querySelectorAll('.btn-tip');
+
+    tips.forEach(function(tip) {
+        if (tipsVisible) {
+            tip.classList.add('visible');
+        } else {
+            tip.classList.remove('visible');
+        }
+    });
+
+    tipBtns.forEach(function(b) {
+        if (tipsVisible) {
+            b.classList.add('active');
+        } else {
+            b.classList.remove('active');
+        }
+    });
+
+    if (btn) {
+        btn.classList.toggle('active', tipsVisible);
+        btn.innerHTML = tipsVisible
+            ? '<span>&#128161;</span> Esconder dicas de apresentacao'
+            : '<span>&#128161;</span> Mostrar dicas de apresentacao';
+    }
+}
+</script>
+
+</body>
+</html>
