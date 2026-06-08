@@ -340,7 +340,7 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 
 **CONTRASTE — REGRA CRITICA BLOQUEANTE (TEXTO NUNCA INVISIVEL)**
 
-> **ERRO MAIS RECORRENTE DO SISTEMA**: Texto branco sobre fundo branco dentro de slides escuros. Ja aconteceu DEZENAS de vezes e continua acontecendo. Esta regra e BLOQUEANTE — material com texto invisivel NAO pode ser publicado sob NENHUMA circunstancia.
+> **ERRO MAIS RECORRENTE E INACEITAVEL DO SISTEMA**: Texto branco sobre fundo branco dentro de slides escuros. Ja aconteceu DEZENAS de vezes e continua acontecendo. NENHUMA aula de NENHUM aluno pode ter esse problema — e o erro mais basico possivel. Esta regra e BLOQUEANTE ABSOLUTA — material com texto invisivel NAO pode ser publicado sob NENHUMA circunstancia. Se um slide tem QUALQUER elemento ilegivel, a aula INTEIRA esta reprovada.
 
 **O PROBLEMA**: Slides escuros (`.slide-dark`) forcam `color:#fff` em todo o conteudo via heranca CSS. Quando um card interno tem fundo branco/claro (role-play, dialogue, comprehension, quiz, checklist, etc.), o texto HERDA o branco do slide e fica INVISIVEL. O resultado: cards aparentemente vazios com texto que existe mas ninguem consegue ler.
 
@@ -372,6 +372,10 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 .slide-dark .student-id-card p,
 .slide-dark .dialogue-card,
 .slide-dark .dialogue-card p,
+.slide-dark .dialogue-bubble,
+.slide-dark .dialogue-bubble p,
+.slide-dark .dialogue-box,
+.slide-dark .dialogue-box p,
 .slide-dark .dialogue-line,
 .slide-dark .dialogue-line p,
 .slide-dark .dialogue-text,
