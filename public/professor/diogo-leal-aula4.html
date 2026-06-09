@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>IN CLASS — Diogo Leal | Lesson 4 | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #4F46E5;
+  --accent-light: #A5B4FC;
+  --accent-dim: rgba(79,70,229,0.08);
+  --accent-glow: rgba(79,70,229,0.05);
+  --black: #1a1a2e;
+  --bg: #f5f2ee;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0ede8;
+  --bg-input: #fafaf7;
+  --border: #d8d1c8;
+  --border-light: #c4bdb3;
+  --white: #ffffff;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #6b6b7a;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --warn: #d97706;
+  --navy: #003080;
+  --dark: #1a1a2e;
+  --dark-surface: #22223a;
+  --dark-elevated: #2d2d4a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; touch-action: manipulation; }
+
+/* === FOCUS STATES (Accessibility) === */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-serif; background:#0a0a1a; color:var(--text); }
+
+/* ===== SLIDE SYSTEM ===== */
+.slide-deck { position:relative; width:100%; height:100vh; }
+.slide {
+  position:absolute; inset:0; width:100%; height:100vh;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  opacity:0; visibility:hidden; transition: opacity 400ms ease, visibility 400ms ease;
+  overflow-y:auto; padding:2rem;
+}
+.slide.active { opacity:1; visibility:visible; }
+
+.slide.dark { background:var(--dark); color:#fff; }
+.slide.dark .checklist li,.slide.dark .check-item,.slide.dark .check-label,.slide.dark .roleplay-body p,.slide.dark .roleplay-body,.slide.dark .roleplay-scenario,.slide.dark .comp-q,.slide.dark .comp-q p,.slide.dark .fill-item label,.slide.dark .fill-item p,.slide.dark .error-card p,.slide.dark .oral-item p,.slide.dark .email-card,.slide.dark .email-card p,.slide.dark .boarding-pass p,.slide.dark .student-id-card p{color:#1a1a2e !important}
+.slide.light { background:var(--bg); color:var(--text); }
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.6rem 1.5rem; background:rgba(10,10,26,0.85); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.top-bar-left { display:flex; align-items:center; gap:0.8rem; }
+.top-bar-logo { height:26px; opacity:0.9; }
+.slide-counter { font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.75); letter-spacing:1px; }
+.top-bar-right { display:flex; align-items:center; gap:0.6rem; }
+
+/* Chapter progress */
+.chapter-bar { display:flex; gap:2px; flex:1; max-width:360px; margin:0 1rem; }
+.chapter-dot {
+  flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,0.2);
+  cursor:pointer; transition:background 0.3s;
+}
+.chapter-dot.active { background:#818CF8; }
+.chapter-dot.completed { background:#A5B4FC; }
+
+/* Dot navigation */
+.dot-nav {
+  position:fixed; right:1rem; top:50%; transform:translateY(-50%); z-index:100;
+  display:flex; flex-direction:column; gap:4px;
+}
+.dot-nav-item {
+  width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.3);
+  cursor:pointer; transition:all 0.3s; border:none;
+}
+.dot-nav-item.active { background:var(--accent); transform:scale(1.4); }
+.dot-nav-item:hover { background:rgba(255,255,255,0.4); }
+
+/* Nav arrows */
+.nav-arrows {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:100;
+  display:flex; gap:0.5rem;
+}
+.nav-btn {
+  width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
+  background:rgba(10,10,26,0.7); backdrop-filter:blur(8px);
+  color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.nav-btn:hover { background:var(--accent); border-color:var(--accent); }
+.nav-btn svg { width:18px; height:18px; }
+
+/* ===== TEACHER CUE (T icon) ===== */
+.t-cue {
+  position:fixed; top:3.5rem; right:1.5rem; z-index:200;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.75); font-weight:700; font-size:0.8rem;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.25s;
+}
+.t-cue:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.t-panel {
+  display:none; position:fixed; top:6rem; right:1.5rem; z-index:210;
+  width:340px; max-height:60vh; overflow-y:auto;
+  background:rgba(26,26,46,0.97); color:#e0e0e0; padding:1.2rem 1.4rem;
+  border-radius:10px; font-size:0.82rem; line-height:1.7;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08);
+}
+.t-panel.show { display:block; animation:fadeIn 0.2s ease; }
+.t-panel strong { color:var(--accent-light); }
+.t-panel .t-timing { color:#fbbf24; font-weight:600; font-size:0.75rem; display:block; margin-bottom:0.5rem; }
+.t-panel .t-ccq { background:rgba(79,70,229,0.15); border:1px solid rgba(79,70,229,0.3); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; }
+.t-panel .t-alert { background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.25); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; color:#fca5a5; }
+
+/* ===== TYPOGRAPHY ===== */
+.slide-chapter-label {
+  font-size:0.68rem; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.6rem;
+}
+.slide-title {
+  font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:600;
+  line-height:1.2; margin-bottom:0.8rem; max-width:750px; text-align:center;
+}
+.slide-subtitle {
+  font-size:1rem; font-weight:400; opacity:0.85; max-width:600px; text-align:center; line-height:1.7;
+}
+.slide[style*="background-image"] .slide-title { text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+.slide[style*="background-image"] .slide-chapter-label { color: rgba(255,255,255,0.8); }
+.slide.dark .accent, .slide.dark .accent-bold { color: #A5B4FC; }
+.slide.dark .slide-chapter-label { color: rgba(255,255,255,0.8); }
+.slide-content { max-width:800px; width:100%; }
+.section-label {
+  font-size:0.7rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+
+/* ===== VOCAB REVEAL CARDS (2x2 grid) ===== */
+.vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:750px; width:100%; }
+.v-card {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px; padding:1.2rem; cursor:pointer; transition:all 0.35s;
+  min-height:160px; display:flex; flex-direction:column; position:relative; overflow:hidden;
+}
+.v-card:hover { border-color:var(--accent); background:rgba(79,70,229,0.06); }
+.v-card.revealed { border-color:var(--accent-light); background:rgba(79,70,229,0.08); }
+.v-card-icon {
+  width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  margin-bottom:0.8rem; flex-shrink:0;
+}
+.v-card-icon svg { width:24px; height:24px; }
+.v-card-hint { font-size:0.85rem; color:rgba(255,255,255,0.75); font-style:italic; line-height:1.6; }
+.v-card-body { display:none; }
+.v-card.revealed .v-card-hint { display:none; }
+.v-card.revealed .v-card-body { display:block; animation:fadeIn 0.35s ease; }
+.v-word { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:#fff; margin-bottom:0.3rem; }
+.v-def { font-size:0.82rem; color:rgba(255,255,255,0.85); margin-bottom:0.3rem; }
+.v-example { font-size:0.85rem; color:rgba(255,255,255,0.8); font-style:italic; margin-bottom:0.6rem; }
+.v-listen-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.35rem 0.9rem; background:var(--accent); color:#fff;
+  border:none; border-radius:5px; font-size:0.75rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.v-listen-btn:hover { background:var(--accent-light); }
+.v-listen-btn svg { width:14px; height:14px; }
+.vocab-counter { text-align:center; margin-top:1rem; font-size:0.8rem; color:rgba(255,255,255,0.65); font-weight:500; }
+
+/* ===== GRAMMAR DISCOVERY ===== */
+.grammar-examples { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.2rem; }
+.g-example {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; font-size:1.05rem; color:rgba(255,255,255,0.9); line-height:1.6;
+}
+.g-example .highlight { color:var(--accent-light); font-weight:700; }
+.g-reveal-btn {
+  width:100%; padding:0.8rem; border:2px dashed var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:10px; font-size:0.9rem; font-weight:600;
+  cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
+}
+.g-reveal-btn:hover { background:rgba(79,70,229,0.1); }
+.g-reveal-btn.used { display:none; }
+.g-rule {
+  display:none; padding:1.5rem; background:rgba(79,70,229,0.08);
+  border:1px solid rgba(79,70,229,0.25); border-radius:10px; margin-top:1rem;
+}
+.g-rule.show { display:block; animation:fadeIn 0.4s ease; }
+.g-rule h4 { color:var(--accent-light); font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:1rem; }
+.g-rule table { width:100%; border-collapse:collapse; font-size:0.88rem; color:rgba(255,255,255,0.85); }
+.g-rule th { text-align:left; padding:0.6rem; border-bottom:2px solid rgba(255,255,255,0.15); color:var(--accent-light); font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; }
+.g-rule td { padding:0.6rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+
+/* ===== COMMON MISTAKE ===== */
+.mistake-box { max-width:600px; width:100%; }
+.mistake-wrong, .mistake-right {
+  padding:1.2rem 1.5rem; border-radius:10px; font-size:1.1rem; margin-bottom:1rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.mistake-wrong { background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.25); color:#fca5a5; }
+.mistake-right { background:rgba(22,163,74,0.08); border:1px solid rgba(22,163,74,0.25); color:#86efac; }
+.mistake-icon { width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+.mistake-wrong .mistake-icon { background:rgba(220,38,38,0.2); }
+.mistake-right .mistake-icon { background:rgba(22,163,74,0.2); }
+
+/* ===== FILL-IN PRACTICE ===== */
+.fill-practice { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.fp-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.fp-item:hover { border-color:var(--accent); }
+.fp-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.fp-sentence .fp-blank { color:var(--accent-light); font-weight:700; border-bottom:2px dashed var(--accent); padding:0 0.3rem; }
+.fp-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(79,70,229,0.12); border-radius:6px; font-size:0.88rem; color:var(--accent-light); font-weight:600; }
+.fp-item.open .fp-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== SUBSTITUTION DRILL ===== */
+.sub-drill { max-width:600px; width:100%; text-align:center; }
+.sub-template { font-family:'Cormorant Garamond',serif; font-size:2rem; color:#fff; margin-bottom:2rem; }
+.sub-template .sub-slot { color:var(--accent-light); border-bottom:3px solid var(--accent); padding:0 0.5rem; }
+.sub-prompts { display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:center; }
+.sub-chip {
+  padding:0.5rem 1.2rem; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+  border-radius:20px; font-size:0.88rem; color:rgba(255,255,255,0.7); cursor:pointer; transition:all 0.2s;
+}
+.sub-chip:hover, .sub-chip.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* ===== ARTIFACT (Badge, Bio, Email) ===== */
+.artifact-badge {
+  max-width:420px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15); position:relative;
+}
+.artifact-badge-header {
+  background:linear-gradient(135deg, #1a365d 0%, #4F46E5 100%);
+  padding:1.2rem 1.5rem; color:#fff;
+}
+.artifact-badge-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; margin-bottom:0.3rem; }
+.artifact-badge-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; }
+.artifact-badge-body { padding:1.5rem; }
+.artifact-badge-body .badge-name { font-size:1.2rem; font-weight:700; color:var(--dark); }
+.artifact-badge-body .badge-title { font-size:0.82rem; color:var(--text-mid); margin-top:0.2rem; }
+.artifact-badge-body .badge-affiliation { font-size:0.85rem; color:var(--text); margin-top:0.3rem; }
+.artifact-badge-body .badge-location { font-size:0.78rem; color:var(--text-dim); margin-top:0.2rem; }
+.artifact-badge-photo {
+  width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-light));
+  display:flex; align-items:center; justify-content:center; color:#fff;
+  font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600;
+  position:absolute; top:3.2rem; right:1.5rem; border:3px solid #fff;
+}
+
+.artifact-email {
+  max-width:520px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15);
+}
+.artifact-email-header {
+  background:linear-gradient(135deg, #1a365d 0%, #4F46E5 100%);
+  padding:1rem 1.5rem; color:#fff;
+}
+.artifact-email-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; margin-bottom:0.3rem; }
+.artifact-email-body { padding:1.5rem; color:var(--text); font-size:0.88rem; line-height:1.8; }
+.artifact-email-body .email-field { font-size:0.78rem; color:var(--text-dim); margin-bottom:0.2rem; }
+.artifact-email-body .email-field strong { color:var(--text-mid); }
+.artifact-email-body .email-subject { font-size:0.95rem; font-weight:700; color:var(--dark); margin:0.5rem 0 1rem; padding-bottom:0.8rem; border-bottom:1px solid var(--border); }
+
+/* ===== DIALOGUE ===== */
+.dialogue-container { max-width:650px; width:100%; display:flex; flex-direction:column; gap:0; }
+.d-line { display:none; padding:0.8rem 1rem; border-left:3px solid transparent; animation:slideUp 0.4s ease; }
+.d-line.visible { display:flex; gap:1rem; align-items:flex-start; }
+.d-line:hover { background:rgba(255,255,255,0.03); }
+.d-avatar {
+  width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:0.5px;
+}
+.d-avatar.blue { background:#2563eb; }
+.d-avatar.indigo { background:var(--accent); }
+.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.65); margin-bottom:0.15rem; }
+.d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
+.d-text strong { color:var(--accent-light); font-weight:600; }
+.d-text-wrap { flex:1; }
+.next-line-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.5rem 1.2rem; border:1px solid var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:6px; cursor:pointer; font-size:0.82rem;
+  font-weight:600; margin-top:1rem; transition:all 0.2s;
+}
+.next-line-btn:hover { background:var(--accent); color:#fff; }
+
+/* ===== LISTENING ===== */
+.listening-card { max-width:500px; width:100%; text-align:center; }
+.waveform {
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  height:60px; margin-bottom:1.5rem;
+}
+.waveform-bar {
+  width:4px; border-radius:2px; background:var(--accent);
+  animation:wave 1.2s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.waveform.playing .waveform-bar { animation-play-state:running; }
+@keyframes wave {
+  0%, 100% { height:8px; opacity:0.3; }
+  50% { height:40px; opacity:1; }
+}
+.play-pause-btn {
+  width:64px; height:64px; border-radius:50%; border:2px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem;
+  transition:all 0.2s;
+}
+.play-pause-btn:hover { background:var(--accent); color:#fff; }
+.play-pause-btn svg { width:28px; height:28px; }
+.listening-questions { display:none; flex-direction:column; gap:0.6rem; margin-top:1.5rem; text-align:left; }
+.listening-questions.show { display:flex; animation:fadeIn 0.4s ease; }
+.lq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.lq-item:hover { border-color:var(--accent); }
+.lq-question { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.lq-answer { display:none; margin-top:0.5rem; font-size:0.85rem; color:#A5B4FC; font-weight:500; }
+.lq-item.open .lq-answer { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== QUICK CHALLENGE ===== */
+.qc-container { max-width:600px; width:100%; }
+.qc-card { display:none; }
+.qc-card.active { display:block; animation:fadeIn 0.3s ease; }
+.qc-prompt {
+  font-size:1.15rem; color:#fff; text-align:center; margin-bottom:1.5rem; line-height:1.7;
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+}
+.qc-show-btn {
+  display:block; width:100%; padding:0.8rem; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); border-radius:8px;
+  font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s;
+}
+.qc-show-btn:hover { background:var(--accent); color:#fff; }
+.qc-answer-box {
+  display:none; margin-top:1rem; padding:1rem; background:rgba(79,70,229,0.1);
+  border:1px solid rgba(79,70,229,0.25); border-radius:8px;
+  font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; text-align:center;
+}
+.qc-answer-box.show { display:block; animation:fadeIn 0.3s ease; }
+.qc-next-btn {
+  display:none; margin:1rem auto 0; padding:0.5rem 1.5rem; background:var(--accent);
+  color:#fff; border:none; border-radius:6px; font-size:0.82rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.qc-next-btn.show { display:block; }
+.qc-next-btn:hover { background:var(--accent-light); }
+.qc-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.65); margin-bottom:1rem; font-weight:500; }
+
+/* ===== SPOT THE ERROR ===== */
+.error-list { display:flex; flex-direction:column; gap:0.6rem; max-width:700px; width:100%; }
+.err-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.err-item:hover { border-color:rgba(220,38,38,0.4); }
+.err-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.err-sentence .wrong { color:rgba(255,255,255,0.85); font-weight:400; text-decoration:none; transition:all 0.3s; }
+.err-item.open .err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
+.err-correction {
+  display:none; margin-top:0.6rem; padding:0.5rem 0.8rem;
+  background:rgba(22,163,74,0.1); border-radius:6px;
+  font-size:0.88rem; color:#86efac; font-weight:600;
+}
+.err-item.open .err-correction { display:block; animation:fadeIn 0.2s ease; }
+.err-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.65); margin-top:1rem; font-weight:500; }
+
+/* ===== ORAL DRILLING ===== */
+.oral-list { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.oral-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.oral-item:hover { border-color:var(--accent); }
+.oral-situation { font-size:0.92rem; color:rgba(255,255,255,0.7); margin-bottom:0.3rem; }
+.oral-situation-label { font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent-light); margin-bottom:0.4rem; }
+.oral-model { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(79,70,229,0.1); border-radius:6px; font-size:0.92rem; color:rgba(255,255,255,0.9); font-style:italic; line-height:1.6; }
+.oral-item.open .oral-model { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== ROLE-PLAY CARDS ===== */
+.rp-card {
+  max-width:600px; width:100%; border-radius:16px; overflow:hidden;
+  position:relative; min-height:280px; display:flex; flex-direction:column; justify-content:flex-end;
+}
+.rp-bg { position:absolute; inset:0; }
+.rp-bg-gradient { position:absolute; inset:0; }
+.rp-content { position:relative; z-index:1; padding:2rem; }
+.rp-level {
+  font-size:0.68rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.5rem;
+}
+.rp-scenario { font-size:1.05rem; color:#fff; line-height:1.7; margin-bottom:1rem; }
+.rp-keywords { display:flex; gap:0.5rem; flex-wrap:wrap; }
+.rp-keyword {
+  padding:0.3rem 0.8rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px; font-size:0.78rem; color:rgba(255,255,255,0.8); font-weight:500;
+}
+
+/* ===== PRONUNCIATION DRILL ===== */
+.pron-list { display:flex; flex-direction:column; gap:0.8rem; max-width:600px; width:100%; }
+.pron-item {
+  display:flex; align-items:center; gap:1rem; padding:0.8rem 1.2rem;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;
+}
+.pron-word { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:#fff; font-weight:600; min-width:160px; }
+.pron-stress { font-size:0.88rem; color:var(--accent-light); font-weight:500; flex:1; }
+.pron-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.pron-play:hover { background:var(--accent); color:#fff; }
+.pron-play svg { width:18px; height:18px; }
+
+/* ===== CHECKLIST ===== */
+.checklist-wrap { max-width:600px; width:100%; }
+.cl-item {
+  display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.06); cursor:pointer;
+}
+.cl-item:last-child { border-bottom:none; }
+.cl-box {
+  width:22px; height:22px; border:2px solid rgba(255,255,255,0.2); border-radius:5px;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.cl-box svg { width:14px; height:14px; opacity:0; transition:opacity 0.2s; }
+.cl-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
+.cl-item.checked .cl-box svg { opacity:1; }
+.cl-text { font-size:0.88rem; color:rgba(255,255,255,0.7); transition:color 0.2s; }
+.cl-item.checked .cl-text { color:rgba(255,255,255,0.9); }
+
+/* ===== CONFETTI ===== */
+.confetti-container { position:fixed; inset:0; pointer-events:none; z-index:9999; }
+.confetti-piece {
+  position:absolute; width:10px; height:10px; opacity:0;
+  animation:confettiFall 3s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { opacity:1; transform:translateY(-100vh) rotate(0deg); }
+  100% { opacity:0; transform:translateY(100vh) rotate(720deg); }
+}
+
+/* ===== COMPREHENSION Q ===== */
+.comp-questions { display:flex; flex-direction:column; gap:0.6rem; margin-top:1.2rem; max-width:600px; width:100%; }
+.cq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.cq-item:hover { border-color:var(--accent); }
+.cq-q { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.cq-a { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.cq-item.open .cq-a { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* === LISTENING PLAYER (Full) === */
+.listening-player{max-width:420px;margin:1.5rem auto 0}
+.lp-seekbar{height:6px;background:rgba(255,255,255,.3);border-radius:3px;cursor:pointer;margin-bottom:8px;position:relative}
+.lp-seekbar:hover{height:8px}
+.lp-progress{height:100%;background:var(--accent);border-radius:3px;transition:width .1s;width:0%}
+.lp-time{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.75);margin-bottom:16px;font-variant-numeric:tabular-nums}
+.lp-controls{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.lp-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lp-btn:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.lp-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.lp-play{width:64px;height:64px;background:var(--accent);border:none;color:#fff}
+.lp-play:hover{transform:scale(1.05)}
+.lp-play svg{width:24px;height:24px}
+.lp-play.playing .lp-icon-play{display:none}
+.lp-play.playing .lp-icon-pause{display:flex!important}
+.lp-icon-pause{display:none!important}
+.lp-speed{display:flex;justify-content:center;gap:8px}
+.lp-speed-btn{padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.lp-speed-btn:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.lp-speed-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lp-label{font-size:.7rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.5px;text-align:center;margin-bottom:6px}
+
+/* ===== PLANNER ARTIFACT ===== */
+.planner-card {
+  max-width:480px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15);
+}
+.planner-header {
+  background:linear-gradient(135deg, #1a365d 0%, #4F46E5 100%);
+  padding:1.2rem 1.5rem; color:#fff;
+}
+.planner-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; margin-bottom:0.3rem; }
+.planner-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; }
+.planner-body { padding:1.2rem 1.5rem; }
+.planner-row {
+  display:flex; align-items:baseline; gap:1rem; padding:0.5rem 0;
+  border-bottom:1px solid #e5e7eb; font-size:0.88rem; color:#2d2d3a;
+}
+.planner-row:last-child { border-bottom:none; }
+.planner-time { font-weight:700; color:var(--accent); min-width:50px; font-size:0.82rem; }
+.planner-activity { flex:1; }
+
+/* ===== ERROR CORRECTION EDITABLE ===== */
+.error-editable {
+  max-width:600px; width:100%; min-height:160px; padding:1.5rem;
+  background:rgba(255,255,255,0.04); border:2px dashed rgba(255,255,255,0.2);
+  border-radius:12px; color:rgba(255,255,255,0.85); font-size:1rem; line-height:1.8;
+  outline:none;
+}
+.error-editable:focus { border-color:var(--accent); background:rgba(79,70,229,0.06); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px) {
+  .slide { padding:1.2rem; padding-top:3.5rem; }
+  .slide-title { font-size:1.8rem; }
+  .vocab-grid { grid-template-columns:1fr; }
+  .t-panel { width:280px; right:0.5rem; }
+  .dot-nav { display:none; }
+  .nav-arrows { bottom:1rem; right:1rem; }
+  .top-bar { padding:0.5rem 1rem; }
+}
+
+/* === REDUCED MOTION (Accessibility) === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='diogo-leal';window.TOTAL_AULAS=36;</script>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="top-bar-logo">
+    <span class="slide-counter" id="slideCounter">1 / 31</span>
+  </div>
+  <div class="chapter-bar" id="chapterBar">
+    <div class="chapter-dot active" data-chapter="1" title="Chapter 1: The Dream" onclick="goToSlide(0)"></div>
+    <div class="chapter-dot" data-chapter="2" title="Chapter 2: Packing Words" onclick="goToSlide(3)"></div>
+    <div class="chapter-dot" data-chapter="3" title="Chapter 3: The Code" onclick="goToSlide(8)"></div>
+    <div class="chapter-dot" data-chapter="4" title="Chapter 4: Getting There" onclick="goToSlide(13)"></div>
+    <div class="chapter-dot" data-chapter="5" title="Chapter 5: Practice" onclick="goToSlide(18)"></div>
+    <div class="chapter-dot" data-chapter="6" title="Chapter 6: Your Turn" onclick="goToSlide(24)"></div>
+    <div class="chapter-dot" data-chapter="7" title="Chapter 7: Wrap-Up" onclick="goToSlide(27)"></div>
+  </div>
+  <div class="top-bar-right">
+    <span style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);">Professor View</span>
+  </div>
+</div>
+
+<!-- ===== TEACHER CUE ===== -->
+<div class="t-cue" id="tCue" onclick="toggleTeacherCue()">T</div>
+<div class="t-panel" id="tPanel"></div>
+
+<!-- ===== DOT NAV ===== -->
+<div class="dot-nav" id="dotNav"></div>
+
+<!-- ===== NAV ARROWS ===== -->
+<div class="nav-arrows">
+  <button class="nav-btn" onclick="prevSlide()" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="nav-btn" onclick="nextSlide()" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SLIDE DECK                                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="slide-deck" id="slideDeck">
+
+<!-- ═══ SLIDE 1 — TITLE ═══ -->
+<div class="slide dark active" data-chapter="1" data-lesson="4" data-t="<span class='t-timing'>0:00 - 2 min</span>Abertura. Compartilhe a tela. Cumprimente Diogo pelo nome. Pergunte como foi a semana. Tom energético. Pergunte se ele já participou de alguma conferência de tecnologia." style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(49,46,129,0.9) 40%, rgba(26,54,93,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+    <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:#A5B4FC;margin-bottom:1.5rem;">Lesson 4</p>
+    <h1 class="slide-title" style="color:#fff;">The Coffee Break</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.85);">Breaking the Ice -- Small Talk Strategies</p>
+    <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+      <span style="padding:0.3rem 0.9rem;background:rgba(79,70,229,0.2);border:1px solid rgba(79,70,229,0.35);border-radius:20px;font-size:0.75rem;color:#A5B4FC;">A2+ Pre-Intermediate</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">60 min</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">Alumni by Better</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 2 — WARM-UP: CALLBACK ═══ -->
+<div class="slide dark" data-chapter="1" data-lesson="4" data-t="<span class='t-timing'>2:00 - 5 min</span>Warm-up. Callback da Aula 3. Pergunte cada questão uma por vez. Observe se ele usa as palavras da aula anterior naturalmente (schedule, deadline, prioritize, coordinate, attend, report, commute, routine). Se usar, celebre: &quot;Great memory!&quot;">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <div style="max-width:650px;text-align:center;">
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Callback: Last Class</h2>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
+      <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#A5B4FC;margin-bottom:0.4rem;">Reflection</div>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Describe your typical Monday routine using at least 3 adverbs of frequency.</p>
+      </div>
+      <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#A5B4FC;margin-bottom:0.4rem;">Challenge</div>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">How do you prioritize your deadlines? What do you coordinate with your teams?</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 3 — OBJECTIVE ═══ -->
+<div class="slide light" data-chapter="1" data-lesson="4" data-t="<span class='t-timing'>5:00 - 7 min</span>Objetivo. Leia o objetivo. Conecte com a vida real dele: &quot;Imagine you are at a tech conference in São Paulo. You meet someone at the coffee break. How do you start a conversation?&quot;">
+  <div class="slide-chapter-label" style="color:var(--accent);">Chapter 1 -- The Dream</div>
+  <div style="max-width:600px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--text);margin-bottom:1rem;">Today's Objective</h2>
+    <p style="font-size:1.1rem;color:var(--text-mid);line-height:1.8;">Learn to start and maintain professional conversations using question formation strategies.</p>
+    <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+      <span style="padding:0.4rem 1rem;background:var(--accent-dim);border:1px solid rgba(79,70,229,0.2);border-radius:20px;font-size:0.82rem;color:var(--accent);font-weight:600;">Question Formation</span>
+      <span style="padding:0.4rem 1rem;background:var(--accent-dim);border:1px solid rgba(79,70,229,0.2);border-radius:20px;font-size:0.82rem;color:var(--accent);font-weight:600;">Small Talk</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 4 — TRANSITION: PACKING WORDS ═══ -->
+<div class="slide dark" data-chapter="2" data-lesson="4" data-t="<span class='t-timing'>7:00 - 0.5 min</span>Transição rápida. Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(49,46,129,0.92) 0%, rgba(26,54,93,0.92) 50%, rgba(79,70,229,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+    <h1 class="slide-title" style="color:#fff;">Your Networking Vocabulary</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Eight essential words for professional conversations</p>
+    <div style="margin-top:2rem;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(79,70,229,0.6)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 5 — VOCAB 1-4 ═══ -->
+<div class="slide dark" data-chapter="2" data-lesson="4" data-t="<span class='t-timing'>7:30 - 15 min</span>Vocabulário. ANTES de clicar cada card, leia a definição e pergunte: &quot;What word do you think this is?&quot; Espere. DEPOIS de revelar: toque áudio 2x, Diogo repete. Foque na pronúncia de &quot;colleague&quot; (COL-eeg, não co-LEE-gue) e &quot;recommend&quot; (re-co-MEND, stress na terceira).<div class='t-ccq'><strong>CCQs:</strong> &quot;Is a colleague a person you work with?&quot; (yes) / &quot;If you recommend a restaurant, do you think it is good?&quot; (yes) / &quot;If you mention something, do you talk about it in detail?&quot; (no, briefly)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:#A5B4FC;text-align:center;">Click on each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid1">
+    <!-- Card 1: Colleague -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #1e3a5f, #2d5a8e);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div class="v-card-hint">A person you work with...</div>
+      <div class="v-card-body">
+        <div class="v-word">Colleague</div>
+        <div class="v-def">a person you work with</div>
+        <div class="v-example">"I introduced my colleague to the speaker after the presentation."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I introduced my colleague to the speaker after the presentation.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 2: Conference -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #7c3aed, #a78bfa);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div class="v-card-hint">A large meeting for discussion and learning...</div>
+      <div class="v-card-body">
+        <div class="v-word">Conference</div>
+        <div class="v-def">a large meeting for discussion and learning</div>
+        <div class="v-example">"I am attending a tech conference in São Paulo next week."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I am attending a tech conference in São Paulo next week.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 3: Recommend -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #34d399);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+      </div>
+      <div class="v-card-hint">To suggest something good to someone...</div>
+      <div class="v-card-body">
+        <div class="v-word">Recommend</div>
+        <div class="v-def">to suggest something good to someone</div>
+        <div class="v-example">"I recommend the keynote session on cloud computing."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I recommend the keynote session on cloud computing.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 4: Mention -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #d97706, #fbbf24);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <div class="v-card-hint">To say something briefly, not in detail...</div>
+      <div class="v-card-body">
+        <div class="v-word">Mention</div>
+        <div class="v-def">to say something briefly, not in detail</div>
+        <div class="v-example">"She mentioned that the next conference is in Singapore."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('She mentioned that the next conference is in Singapore.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount1">0 / 4 words revealed</div>
+</div>
+
+<!-- ═══ SLIDE 6 — VOCAB 5-8 ═══ -->
+<div class="slide dark" data-chapter="2" data-lesson="4" data-t="<span class='t-timing'>15:00 - 22 min</span>Vocabulário parte 2. Mesma dinâmica. Destaque &quot;nowadays&quot; (NOW-a-days, stress na primeira) e &quot;impressed&quot; (im-PRESSED, stress na segunda). Pergunte: &quot;What industry are you in, Diogo?&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;If you do networking, do you meet new people professionally?&quot; (yes) / &quot;If you are impressed, do you think something is bad?&quot; (no, you think it is very good) / &quot;Does nowadays mean in the past or right now?&quot; (right now)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:#A5B4FC;text-align:center;">Click on each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid2">
+    <!-- Card 5: Nowadays -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #0891b2, #22d3ee);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="v-card-hint">At the present time, currently...</div>
+      <div class="v-card-body">
+        <div class="v-word">Nowadays</div>
+        <div class="v-def">at the present time, currently</div>
+        <div class="v-example">"Nowadays, most conferences have a virtual option too."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Nowadays, most conferences have a virtual option too.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 6: Industry -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M2 20h20M5 20V10l7 4V4l7 4v12"/></svg>
+      </div>
+      <div class="v-card-hint">A specific area of business or production...</div>
+      <div class="v-card-body">
+        <div class="v-word">Industry</div>
+        <div class="v-def">a specific area of business or production</div>
+        <div class="v-example">"The tech industry is growing very fast in Brazil."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The tech industry is growing very fast in Brazil.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 7: Networking -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #4338ca, #818cf8);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </div>
+      <div class="v-card-hint">Making professional connections with people...</div>
+      <div class="v-card-body">
+        <div class="v-word">Networking</div>
+        <div class="v-def">making professional connections with people</div>
+        <div class="v-example">"The coffee break is the best time for networking."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The coffee break is the best time for networking.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 8: Impressed -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #4F46E5, #818CF8);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <div class="v-card-hint">Feeling admiration for something good...</div>
+      <div class="v-card-body">
+        <div class="v-word">Impressed</div>
+        <div class="v-def">feeling admiration for something good</div>
+        <div class="v-example">"I was really impressed by the keynote speaker."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I was really impressed by the keynote speaker.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount2">0 / 4 words revealed</div>
+</div>
+
+<!-- ═══ SLIDE 7 — PRONUNCIATION DRILL ═══ -->
+<div class="slide dark" data-chapter="2" data-lesson="4" data-t="<span class='t-timing'>22:00 - 26 min</span>Pronúncia. Clique cada palavra. Foque em: COL-league (2 sílabas, não 3), CON-ference (stress na primeira), re-co-MEND (stress na terceira), IN-dus-try (stress na primeira). Toque áudio, ele repete 2x.<div class='t-alert'>Se Diogo pronunciar &quot;colleague&quot; como &quot;co-LEE-gue&quot; (3 sílabas), corrija: &quot;It is COL-eeg, just two syllables.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Pronunciation Drill</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen, then repeat. Focus on the stressed syllable.</p>
+  <div class="pron-list">
+    <div class="pron-item">
+      <div class="pron-word">Colleague</div>
+      <div class="pron-stress">/ˈkɒliːɡ/ -- COL-eeg</div>
+      <button class="pron-play" onclick="speakText('colleague',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Conference</div>
+      <div class="pron-stress">/ˈkɒnfərəns/ -- CON-fer-ence</div>
+      <button class="pron-play" onclick="speakText('conference',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Recommend</div>
+      <div class="pron-stress">/ˌrekəˈmend/ -- re-co-MEND</div>
+      <button class="pron-play" onclick="speakText('recommend',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Industry</div>
+      <div class="pron-stress">/ˈɪndəstri/ -- IN-dus-try</div>
+      <button class="pron-play" onclick="speakText('industry',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 8 — SUBSTITUTION DRILL ═══ -->
+<div class="slide dark" data-chapter="2" data-lesson="4" data-t="<span class='t-timing'>26:00 - 29 min</span>Substituição. Diga a frase modelo. Aponte para os chips. Diogo substitui o slot e completa a frase naturalmente. Objetivo: fixar vocabulário em contexto de small talk.">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <div class="sub-drill">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;">Substitution Drill</h2>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;">Replace the slot and complete the sentence naturally</p>
+    <div class="sub-template">I <span class="sub-slot">___</span> [complement].</div>
+    <div class="sub-prompts">
+      <span class="sub-chip" onclick="this.classList.toggle('active')">recommend</span>
+      <span class="sub-chip" onclick="this.classList.toggle('active')">mentioned</span>
+      <span class="sub-chip" onclick="this.classList.toggle('active')">was impressed by</span>
+      <span class="sub-chip" onclick="this.classList.toggle('active')">am networking with</span>
+      <span class="sub-chip" onclick="this.classList.toggle('active')">work in the ... industry</span>
+      <span class="sub-chip" onclick="this.classList.toggle('active')">met a colleague</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 9 — TRANSITION: THE CODE ═══ -->
+<div class="slide dark" data-chapter="3" data-lesson="4" data-t="<span class='t-timing'>29:00 - 0.5 min</span>Transição. Diga: &quot;Now let us learn how to ask the right questions -- the key to great small talk.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(49,46,129,0.92) 0%, rgba(26,54,93,0.92) 50%, rgba(79,70,229,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+    <h1 class="slide-title" style="color:#fff;">The Art of Questions</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">How to ask the right questions</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 10 — GRAMMAR DISCOVERY ═══ -->
+<div class="slide dark" data-chapter="3" data-lesson="4" data-t="<span class='t-timing'>29:30 - 35 min</span>Gramática Discovery. NÃO explique a regra. Aponte para as palavras em destaque e pergunte: &quot;Look at the highlighted words. What pattern do you see?&quot; Espere. Só clique &quot;Reveal&quot; DEPOIS que ele tentar.<div class='t-ccq'><strong>CCQs:</strong> &quot;Do we need 'do' in 'Do you work in tech?'&quot; (yes) / &quot;Where does the Wh-word go?&quot; (at the beginning) / &quot;What is the difference between 'Do you...' and 'What do you...'?&quot; (yes/no vs open answer)</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Discovery</h2>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">What do the <span style="color:#A5B4FC;font-weight:600;">highlighted words</span> have in common?</p>
+  <div class="slide-content">
+    <div class="grammar-examples">
+      <div class="g-example"><span class="highlight">Do you</span> work in tech?</div>
+      <div class="g-example"><span class="highlight">What do you</span> do at Oracle?</div>
+      <div class="g-example"><span class="highlight">How long have you</span> been in this industry?</div>
+      <div class="g-example"><span class="highlight">Where are you</span> from?</div>
+    </div>
+    <button class="g-reveal-btn" onclick="revealGrammar(this)">Reveal the Rule</button>
+    <div class="g-rule" id="grammarRule1">
+      <h4>Question Formation in English</h4>
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Structure</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="color:#A5B4FC;font-weight:600;">Yes/No</td><td>Do/Does + subject + verb</td><td><strong>Do you</strong> work in tech?</td></tr>
+          <tr><td style="color:#A5B4FC;font-weight:600;">What</td><td>What + do/does + subject + verb</td><td><strong>What do you</strong> do at Oracle?</td></tr>
+          <tr><td style="color:#A5B4FC;font-weight:600;">How long</td><td>How long + have + subject + past participle</td><td><strong>How long have you</strong> been here?</td></tr>
+          <tr><td style="color:#A5B4FC;font-weight:600;">Where</td><td>Where + are/do + subject + (verb)</td><td><strong>Where are you</strong> from?</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.04);border-radius:6px;">
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.7);"><strong style="color:#A5B4FC;">Key rule:</strong> In questions, the auxiliary verb (do/does/have/are) goes BEFORE the subject. NEVER "Where you work?" -- always "Where <strong>do you</strong> work?"</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 11 — COMMON MISTAKE ═══ -->
+<div class="slide dark" data-chapter="3" data-lesson="4" data-t="<span class='t-timing'>35:00 - 38 min</span>Erro Comum. Leia as frases. Pergunte: &quot;Why is the first one wrong?&quot; Reforce: o auxiliar (do/does/are) DEVE vir antes do sujeito.<div class='t-alert'>Use: &quot;Remember: the auxiliary 'do' goes BEFORE the subject.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Watch Out!</h2>
+  <div class="mistake-box" style="margin:0 auto;">
+    <div class="mistake-wrong">
+      <div class="mistake-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"Where you work?"</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">Missing auxiliary "do"</p>
+      </div>
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"Where <strong>do you</strong> work?"</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">Auxiliary "do" before the subject = correct</p>
+      </div>
+    </div>
+    <div class="mistake-wrong" style="margin-top:0.5rem;">
+      <div class="mistake-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"What you do at Oracle?"</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">Missing auxiliary "do" after Wh-word</p>
+      </div>
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"What <strong>do you</strong> do at Oracle?"</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">Wh-word + do + subject + verb = correct</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 12 — GRAMMAR FILL-IN ═══ -->
+<div class="slide dark" data-chapter="3" data-lesson="4" data-t="<span class='t-timing'>38:00 - 42 min</span>Prática. Leia cada frase com a lacuna. Diogo completa oralmente. DEPOIS clique para revelar.<div class='t-ccq'><strong>CCQs por item:</strong> Pergunte: &quot;Is this a yes/no question or an open question?&quot;</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Practice</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Click to reveal the correct answer</p>
+  <div class="fill-practice">
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence"><span class="fp-blank">___</span> you work in technology?</div>
+      <div class="fp-answer"><strong>Do</strong> you work in technology?</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">What <span class="fp-blank">___</span> you do at your company?</div>
+      <div class="fp-answer">What <strong>do</strong> you do at your company?</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">How long <span class="fp-blank">___</span> you been in this industry?</div>
+      <div class="fp-answer">How long <strong>have</strong> you been in this industry?</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">Where <span class="fp-blank">___</span> you from?</div>
+      <div class="fp-answer">Where <strong>are</strong> you from?</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence"><span class="fp-blank">___</span> she recommend any sessions?</div>
+      <div class="fp-answer"><strong>Did</strong> she recommend any sessions?</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 13 — EXTRA QUESTION TYPES ═══ -->
+<div class="slide dark" data-chapter="3" data-lesson="4" data-t="<span class='t-timing'>42:00 - 45 min</span>Frases de small talk. Toque cada frase. Diogo repete 2x. Foque na entonação: perguntas sobem no final (yes/no) ou descem (wh-questions).">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Small Talk Questions</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen and repeat. Notice the intonation.</p>
+  <div style="display:flex;flex-direction:column;gap:0.6rem;max-width:650px;width:100%;">
+    <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+      <div style="flex:1;font-size:1rem;color:rgba(255,255,255,0.85);font-style:italic;">"Do you work in tech?"</div>
+      <button class="pron-play" onclick="speakText('Do you work in tech?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+      <div style="flex:1;font-size:1rem;color:rgba(255,255,255,0.85);font-style:italic;">"What do you do at Oracle?"</div>
+      <button class="pron-play" onclick="speakText('What do you do at Oracle?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+      <div style="flex:1;font-size:1rem;color:rgba(255,255,255,0.85);font-style:italic;">"How long have you been in this industry?"</div>
+      <button class="pron-play" onclick="speakText('How long have you been in this industry?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+      <div style="flex:1;font-size:1rem;color:rgba(255,255,255,0.85);font-style:italic;">"Where are you from?"</div>
+      <button class="pron-play" onclick="speakText('Where are you from?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 14 — TRANSITION: GETTING THERE ═══ -->
+<div class="slide dark" data-chapter="4" data-lesson="4" data-t="<span class='t-timing'>45:00 - 0.5 min</span>Transição. Diga: &quot;Now let us see small talk in action at a real conference.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,54,93,0.92) 0%, rgba(79,70,229,0.92) 50%, rgba(49,46,129,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+    <h1 class="slide-title" style="color:#fff;">At the Conference</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Diogo meets Sarah Chen during the coffee break</p>
+    <div style="margin-top:2rem;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(79,70,229,0.6)" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 15 — ARTIFACT: CONFERENCE BADGE ═══ -->
+<div class="slide light" data-chapter="4" data-lesson="4" data-t="<span class='t-timing'>45:30 - 49 min</span>Artefato. Diga: &quot;Look at this conference badge. This is Sarah Chen -- you just met her at the coffee break.&quot; Pergunte: &quot;What do you notice about Sarah? What questions would you ask her?&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;What is Sarah's job?&quot; (CTO) / &quot;Where is TechBridge Asia?&quot; (Singapore) / &quot;What kind of company is TechBridge Asia?&quot; (tech company)</div>">
+  <div class="slide-chapter-label" style="color:var(--accent);">Chapter 4 -- Getting There</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;">
+    <div class="artifact-badge">
+      <div class="artifact-badge-header">
+        <h5>São Paulo Tech Summit 2026</h5>
+        <h3>Attendee Badge</h3>
+      </div>
+      <div class="artifact-badge-body">
+        <div class="badge-name">SARAH CHEN</div>
+        <div class="badge-title">Chief Technology Officer</div>
+        <div class="badge-affiliation">TechBridge Asia</div>
+        <div class="badge-location">Singapore</div>
+      </div>
+      <div class="artifact-badge-photo">SC</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 16 — DIALOGUE ═══ -->
+<div class="slide dark" data-chapter="4" data-lesson="4" data-t="<span class='t-timing'>49:00 - 57 min</span>Diálogo. Clique &quot;Next Line&quot; para cada fala. ANTES da fala de Diogo: &quot;What do you think he says?&quot; Espere. Palavras em destaque = vocabulário da aula. Destaque as question formations.<div class='t-alert'>Se Diogo quiser pular linhas, segure: &quot;Let us go one at a time so you can notice each question structure.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">The Coffee Break</h2>
+  <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1rem;text-align:center;">Click "Next Line" to reveal each part of the conversation</p>
+  <div class="dialogue-container" id="dialogue1">
+    <div class="d-line visible" data-voice="ash" style="border-left-color:var(--accent);">
+      <div class="d-avatar indigo">DL</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Diogo Leal</div>
+        <div class="d-text">Hi! Great <strong>conference</strong>, right? I am Diogo. I work at Oracle here in São Paulo.</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="riley" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">SC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Sarah Chen</div>
+        <div class="d-text">Nice to meet you, Diogo! I am Sarah. I am the CTO at TechBridge Asia in Singapore. <strong>Do you</strong> work in tech?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ash" style="border-left-color:var(--accent);">
+      <div class="d-avatar indigo">DL</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Diogo Leal</div>
+        <div class="d-text">Yes, I am an IT Project Manager. <strong>What do you</strong> do at TechBridge?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="riley" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">SC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Sarah Chen</div>
+        <div class="d-text">I lead the engineering team. We build cloud solutions for the healthcare <strong>industry</strong>. <strong>How long have you</strong> been at Oracle?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ash" style="border-left-color:var(--accent);">
+      <div class="d-avatar indigo">DL</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Diogo Leal</div>
+        <div class="d-text">About three years. I really like the <strong>networking</strong> events like this one. <strong>Where are you</strong> from originally?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="riley" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">SC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Sarah Chen</div>
+        <div class="d-text">I am from Taipei, but I live in Singapore <strong>nowadays</strong>. I am really <strong>impressed</strong> by the tech scene in Brazil!</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ash" style="border-left-color:var(--accent);">
+      <div class="d-avatar indigo">DL</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Diogo Leal</div>
+        <div class="d-text">Thank you! Do you <strong>recommend</strong> any sessions this afternoon?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="riley" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">SC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Sarah Chen</div>
+        <div class="d-text">Yes! A <strong>colleague</strong> of mine <strong>mentioned</strong> the AI panel at two. Let me add you on LinkedIn!</div>
+      </div>
+    </div>
+  </div>
+  <button class="next-line-btn" id="nextLineBtn1" onclick="revealNextLine('dialogue1','nextLineBtn1')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    Next Line
+  </button>
+</div>
+
+<!-- ═══ SLIDE 17 — DIALOGUE COMPREHENSION ═══ -->
+<div class="slide dark" data-chapter="4" data-lesson="4" data-t="<span class='t-timing'>57:00 - 60 min</span>Compreensão. Pergunte cada questão oralmente -- sobre SARAH, não sobre Diogo. Diogo responde em frase completa. Depois clique para revelar e confirmar.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Dialogue Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. Where is Sarah from?</div>
+      <div class="cq-a">She is from Taipei originally, but she lives in Singapore nowadays.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. What does Sarah do?</div>
+      <div class="cq-a">She is the CTO at TechBridge Asia. She leads the engineering team and builds cloud solutions for healthcare.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. What does Sarah recommend?</div>
+      <div class="cq-a">She recommends the AI panel at two in the afternoon.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 18 — LISTENING 1 ═══ -->
+<div class="slide dark" data-chapter="4" data-lesson="4" data-t="<span class='t-timing'>60:00 - 66 min</span>Listening 1. Diga: &quot;Close your eyes and listen to two people meeting at a conference.&quot; Toque o áudio. NÃO mostre texto. Depois pergunte: &quot;What did you hear? What questions did they ask?&quot; Aceite respostas parciais. Perguntas de compreensão uma por vez, oralmente ANTES de clicar.<div class='t-alert'>Se Diogo pedir para ver o texto, diga: &quot;Let us listen one more time first. Focus on the questions they ask.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Conference Networking</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to two professionals meeting at a tech conference.</p>
+  <div class="listening-card">
+    <div class="listening-player" id="lp-listen1" data-src="/audio/diogo-leal/aula4_listening_1_conference.mp3">
+      <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen1')"><div class="lp-progress" id="progress-lp-listen1"></div></div>
+      <div class="lp-time"><span id="time-current-lp-listen1">0:00</span><span id="time-total-lp-listen1">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('lp-listen1',-5)" aria-label="Back 5s"><svg viewBox="0 0 24 24"><path d="M12.5 8.14v7.72M10 12l-6-4.5v9l6-4.5"/><path d="M22 12A10 10 0 1112 2" stroke-linecap="round"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('lp-listen1')" aria-label="Play Pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('lp-listen1',5)" aria-label="Forward 5s"><svg viewBox="0 0 24 24"><path d="M11.5 15.86V8.14M14 12l6-4.5v9l-6-4.5"/><path d="M2 12a10 10 0 0010 10" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="lp-label">Speed</div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('lp-listen1',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div class="listening-questions" id="questions-lp-listen1">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. What industry does the woman work in?</div>
+        <div class="lq-answer">She works in the fintech industry.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. What does the man recommend?</div>
+        <div class="lq-answer">He recommends the workshop on data security.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. How long has the man been in the tech industry?</div>
+        <div class="lq-answer">About ten years.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 19 — TRANSITION: PRACTICE ═══ -->
+<div class="slide dark" data-chapter="5" data-lesson="4" data-t="<span class='t-timing'>66:00 - 0.5 min</span>Transição rápida." style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(79,70,229,0.92) 0%, rgba(26,54,93,0.92) 50%, rgba(49,46,129,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+    <h1 class="slide-title" style="color:#fff;">More Practice</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">From words to action</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 20 — LISTENING 2 ═══ -->
+<div class="slide dark" data-chapter="5" data-lesson="4" data-t="<span class='t-timing'>66:30 - 72 min</span>Listening 2. Diga: &quot;Now listen to a different situation -- two colleagues making small talk in the office kitchen.&quot; Mesma dinâmica. Foco nas perguntas usadas.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Office Kitchen</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to two colleagues making small talk in the office kitchen.</p>
+  <div class="listening-card">
+    <div class="listening-player" id="lp-listen2" data-src="/audio/diogo-leal/aula4_listening_2_office.mp3">
+      <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen2')"><div class="lp-progress" id="progress-lp-listen2"></div></div>
+      <div class="lp-time"><span id="time-current-lp-listen2">0:00</span><span id="time-total-lp-listen2">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('lp-listen2',-5)" aria-label="Back 5s"><svg viewBox="0 0 24 24"><path d="M12.5 8.14v7.72M10 12l-6-4.5v9l6-4.5"/><path d="M22 12A10 10 0 1112 2" stroke-linecap="round"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('lp-listen2')" aria-label="Play Pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('lp-listen2',5)" aria-label="Forward 5s"><svg viewBox="0 0 24 24"><path d="M11.5 15.86V8.14M14 12l6-4.5v9l-6-4.5"/><path d="M2 12a10 10 0 0010 10" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="lp-label">Speed</div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('lp-listen2',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div class="listening-questions" id="questions-lp-listen2">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. What does the new colleague ask about?</div>
+        <div class="lq-answer">He asks about the team, the projects, and how long she has worked there.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. What does she recommend for lunch?</div>
+        <div class="lq-answer">She recommends the Italian restaurant around the corner.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. What impresses the new colleague?</div>
+        <div class="lq-answer">He is impressed by the office and the team culture.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 21 — SPOT THE ERROR ═══ -->
+<div class="slide dark" data-chapter="5" data-lesson="4" data-t="<span class='t-timing'>72:00 - 75 min</span>Spot the Error. Leia cada frase. Pergunte: &quot;Can you find the mistake?&quot; Clique para revelar. Todos os erros são sobre question formation.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Spot the Error</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Click on each sentence to see the correction</p>
+  <div class="error-list" id="errorList">
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"<span class="wrong">Where you work</span>?"</div>
+      <div class="err-correction">"Where <strong>do you</strong> work?" (missing auxiliary "do")</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"<span class="wrong">What you do</span> at your company?"</div>
+      <div class="err-correction">"What <strong>do you do</strong> at your company?" (missing auxiliary "do")</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"<span class="wrong">How long you have been</span> in tech?"</div>
+      <div class="err-correction">"How long <strong>have you</strong> been in tech?" (auxiliary before subject)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"Do you recommend any sessions?"</div>
+      <div class="err-correction">CORRECT! No error. Do + subject + verb = perfect question formation.</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"<span class="wrong">You are from</span> Singapore?"</div>
+      <div class="err-correction">"<strong>Are you</strong> from Singapore?" (invert subject and verb for questions)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 22 — QUICK CHALLENGE ═══ -->
+<div class="slide dark" data-chapter="5" data-lesson="4" data-t="<span class='t-timing'>75:00 - 80 min</span>Quick Challenge. Leia a situação. Diogo responde com uma pergunta em inglês. Se acertar: &quot;Show Answer&quot; para confirmar. Se travar: dê a primeira palavra. 30 segundos por item.<div class='t-alert'>Se Diogo ficar inseguro, encoraje: &quot;There is no perfect question. Just try!&quot;</div>">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Challenge</h2>
+  <div class="qc-score" id="qcScore">0 / 6</div>
+  <div class="qc-container" id="qcContainer">
+    <div class="qc-card active" data-idx="0">
+      <div class="qc-prompt">You meet someone at a conference. Ask about their job.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"What do you do?" or "Do you work in tech?"</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="1">
+      <div class="qc-prompt">You want to know where a colleague is from. Ask them.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"Where are you from?"</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="2">
+      <div class="qc-prompt">You want to know how long someone has worked at their company. Ask them.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"How long have you been at your company?"</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="3">
+      <div class="qc-prompt">You want a session recommendation. Ask a colleague.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"Do you recommend any sessions today?"</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="4">
+      <div class="qc-prompt">You want to know what industry someone works in. Ask them.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"What industry do you work in?"</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="5">
+      <div class="qc-prompt">You are impressed by someone's presentation. Tell them and ask a follow-up question.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I was really impressed by your presentation. How long have you been working on this project?"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 23 — ORAL DRILLING ═══ -->
+<div class="slide dark" data-chapter="5" data-lesson="4" data-t="<span class='t-timing'>80:00 - 84 min</span>Oral Drilling. Leia a situação. Diogo responde oralmente com a pergunta correta. Objetivo: produção fluente de perguntas em small talk. 30 segundos por item.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Oral Drilling</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Formulate the right question for each situation</p>
+  <div class="oral-list">
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">You meet a CTO from Japan at a networking event. Start a conversation.</div>
+      <div class="oral-model">"Hi, I am Diogo. What do you do at your company? How long have you been in the tech industry?"</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">A new colleague joins your team at Oracle. Make small talk.</div>
+      <div class="oral-model">"Welcome to Oracle! Where are you from? What did you do before joining us?"</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">You are at a conference coffee break and want to know about someone's projects.</div>
+      <div class="oral-model">"What projects are you working on nowadays? Do you recommend any sessions this afternoon?"</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">A speaker just finished an impressive presentation. Start a conversation.</div>
+      <div class="oral-model">"I was really impressed by your presentation! How long have you been working on cloud solutions?"</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">You meet someone at a company dinner. Ask about their industry and experience.</div>
+      <div class="oral-model">"What industry do you work in? How long have you been in this field? I work in the tech industry at Oracle."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">A colleague mentions a great restaurant. Ask for more details.</div>
+      <div class="oral-model">"What restaurant do you recommend? Where is it? Do you go there often?"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 24 — ERROR CORRECTION (editable) ═══ -->
+<div class="slide dark" data-chapter="5" data-lesson="4" data-t="<span class='t-timing'>84:00 - 86 min</span>Correção. Digite os erros que anotou durante a aula. Corrija 2-3 erros principais com Diogo. Sempre comece com o que ele fez BEM.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <div style="max-width:600px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.8rem;">Let us fix these together</h2>
+    <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);line-height:1.7;margin-bottom:1.5rem;">Type the errors you noticed during the class</p>
+    <div class="error-editable" contenteditable="true">Click here and type student errors...</div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 25 — ROLE-PLAY 1: GUIDED ═══ -->
+<div class="slide dark" data-chapter="6" data-lesson="4" data-t="<span class='t-timing'>86:00 - 91 min</span><strong>Role-Play Guided</strong>. Você é Sarah Chen (CTO de Singapura). Diogo está no coffee break da conferência. Keywords na tela como apoio. Se travar: &quot;Start with 'Do you...' or 'What do you...'&quot;<div class='t-alert'>Se fluir bem, desafie: &quot;Now ask me two more questions about Singapore.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #4F46E5 0%, #818CF8 50%, #312e81 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Role-Play 1 -- Guided
+      </div>
+      <div class="rp-scenario">You are at the coffee break of a tech conference. You meet Sarah Chen, a CTO from Singapore. Start a conversation and ask at least 3 questions.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">Oracle</span>
+        <span class="rp-keyword">São Paulo</span>
+        <span class="rp-keyword">conference</span>
+        <span class="rp-keyword">industry</span>
+        <span class="rp-keyword">projects</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 26 — ROLE-PLAY 2: SEMI-FREE ═══ -->
+<div class="slide dark" data-chapter="6" data-lesson="4" data-t="<span class='t-timing'>91:00 - 96 min</span><strong>Role-Play Semi-Free</strong>. Você é um novo cliente no lobby do escritório. Menos apoio visual. Anote erros -- corrija DEPOIS.<div class='t-alert'>Se ele falar mais de 2 min, deixe! O objetivo é fluência.</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #4338ca 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Role-Play 2 -- Semi-Free
+      </div>
+      <div class="rp-scenario">You are in the office lobby waiting for a meeting. A new client arrives early. Make small talk while you wait.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">impressed</span>
+        <span class="rp-keyword">recommend</span>
+        <span class="rp-keyword">industry</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 27 — ROLE-PLAY 3: FREE ═══ -->
+<div class="slide dark" data-chapter="6" data-lesson="4" data-t="<span class='t-timing'>96:00 - 101 min</span><strong>Role-Play Free</strong>. Sem keywords, sem script. Você é o CEO de uma startup no elevador. Celebre QUALQUER produção. Delayed correction DEPOIS.<div class='t-alert'>Este é o momento mais importante. Valide: &quot;Diogo, you just had a natural conversation in English. That is real networking!&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #4F46E5 0%, #0891b2 50%, #1a365d 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Role-Play 3 -- Free
+      </div>
+      <div class="rp-scenario">You step into an elevator and realize the CEO of a promising startup is standing next to you. You have 60 seconds. Start a conversation.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">no keywords -- speak freely</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 28 — TRANSITION: WRAP-UP ═══ -->
+<div class="slide dark" data-chapter="7" data-lesson="4" data-t="<span class='t-timing'>101:00 - 0.5 min</span>Transição. Diga: &quot;Let us wrap up what you accomplished today.&quot;" style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(79,70,229,0.92) 50%, rgba(26,54,93,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+    <h1 class="slide-title" style="color:#fff;">Wrap-Up</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">What you accomplished today</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 29 — WHAT I LEARNED ═══ -->
+<div class="slide dark" data-chapter="7" data-lesson="4" data-t="<span class='t-timing'>101:30 - 105 min</span>Checklist. Leia cada item. Pergunte: &quot;Can you say yes to this?&quot; Se sim, clique o checkbox juntos. Celebre cada check.">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.3rem;">What I Learned Today</h2>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;">Click on each item to check it off</p>
+    <div class="checklist-wrap" style="text-align:left;">
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can start a conversation with a colleague at a conference.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can form yes/no questions correctly (Do you...?).</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can form Wh-questions correctly (What do you...? Where are you...?).</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I know 8 new vocabulary words for networking and small talk.</div>
+      </div>
+      <div class="cl-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can maintain a professional conversation using question formation.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 30 — BADGE EARNED ═══ -->
+<div class="slide dark" data-chapter="7" data-lesson="4" data-t="<span class='t-timing'>105:00 - 107 min</span>Celebração. Diga: &quot;You earned your Coffee Break badge, Diogo! You are now a Networking Pro.&quot; Confetti automático.">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;">
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg, var(--accent), var(--accent-light));display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 0 30px rgba(79,70,229,0.4);">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+    <div class="artifact-badge">
+      <div class="artifact-badge-header">
+        <h5>São Paulo Tech Summit 2026</h5>
+        <h3>Networking Achievement</h3>
+      </div>
+      <div class="artifact-badge-body">
+        <div class="badge-name">DIOGO LEAL</div>
+        <div class="badge-title">IT Project Manager</div>
+        <div class="badge-affiliation">Networking Pro -- Day 4 Complete</div>
+      </div>
+      <div class="artifact-badge-photo">DL</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 31 — CLOSING ═══ -->
+<div class="slide dark" data-chapter="7" data-lesson="4" data-t="<span class='t-timing'>107:00</span>Encerramento.<br><strong>Homework (diga oralmente, NÃO está na tela):</strong> &quot;Para a próxima aula, pratique 3 perguntas de small talk com um colega no trabalho. Anote as perguntas que você usou.&quot;<br>Pare de compartilhar tela. Diga goodbye naturalmente. Preview: &quot;Next class, we will practice more networking strategies -- The Networking Game!&quot;" style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(79,70,229,0.92) 50%, rgba(26,54,93,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+    <div style="margin-top:1rem;padding:1.5rem 2rem;background:rgba(79,70,229,0.08);border:1px solid rgba(79,70,229,0.2);border-radius:12px;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#fff;">Lesson 4 Complete</p>
+      <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);margin-top:0.8rem;">Next: The Networking Game -- Advanced Small Talk</p>
+    </div>
+    <div style="margin-top:2rem;">
+      <p style="font-size:0.82rem;color:var(--accent-light);font-weight:600;">Alumni by Better</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end slide-deck -->
+
+<!-- ===== CONFETTI CONTAINER ===== -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP =====
+var audioMap = {
+  "colleague": "/audio/diogo-leal/aula4_colleague.mp3",
+  "conference": "/audio/diogo-leal/aula4_conference.mp3",
+  "recommend": "/audio/diogo-leal/aula4_recommend.mp3",
+  "mention": "/audio/diogo-leal/aula4_mention.mp3",
+  "nowadays": "/audio/diogo-leal/aula4_nowadays.mp3",
+  "industry": "/audio/diogo-leal/aula4_industry.mp3",
+  "networking": "/audio/diogo-leal/aula4_networking.mp3",
+  "impressed": "/audio/diogo-leal/aula4_impressed.mp3",
+  "I introduced my colleague to the speaker after the presentation.": "/audio/diogo-leal/aula4_ic_colleague_intro.mp3",
+  "I am attending a tech conference in São Paulo next week.": "/audio/diogo-leal/aula4_ic_conference_sp.mp3",
+  "I recommend the keynote session on cloud computing.": "/audio/diogo-leal/aula4_ic_recommend_keynote.mp3",
+  "She mentioned that the next conference is in Singapore.": "/audio/diogo-leal/aula4_ic_mention_singapore.mp3",
+  "Nowadays, most conferences have a virtual option too.": "/audio/diogo-leal/aula4_ic_nowadays_virtual.mp3",
+  "The tech industry is growing very fast in Brazil.": "/audio/diogo-leal/aula4_ic_industry_brazil.mp3",
+  "The coffee break is the best time for networking.": "/audio/diogo-leal/aula4_ic_networking_coffee.mp3",
+  "I was really impressed by the keynote speaker.": "/audio/diogo-leal/aula4_ic_impressed_keynote.mp3",
+  "Do you work in tech?": "/audio/diogo-leal/aula4_ic_question_tech.mp3",
+  "What do you do at Oracle?": "/audio/diogo-leal/aula4_ic_question_oracle.mp3",
+  "How long have you been in this industry?": "/audio/diogo-leal/aula4_ic_question_howlong.mp3",
+  "Where are you from?": "/audio/diogo-leal/aula4_ic_question_wherefrom.mp3",
+  "Hi! Great conference, right? I am Diogo. I work at Oracle here in São Paulo.": "/audio/diogo-leal/aula4_ic_dlg_diogo_1.mp3",
+  "Nice to meet you, Diogo! I am Sarah. I am the CTO at TechBridge Asia in Singapore. Do you work in tech?": "/audio/diogo-leal/aula4_ic_dlg_sarah_1.mp3",
+  "Yes, I am an IT Project Manager. What do you do at TechBridge?": "/audio/diogo-leal/aula4_ic_dlg_diogo_2.mp3",
+  "I lead the engineering team. We build cloud solutions for the healthcare industry. How long have you been at Oracle?": "/audio/diogo-leal/aula4_ic_dlg_sarah_2.mp3",
+  "About three years. I really like the networking events like this one. Where are you from originally?": "/audio/diogo-leal/aula4_ic_dlg_diogo_3.mp3",
+  "I am from Taipei, but I live in Singapore nowadays. I am really impressed by the tech scene in Brazil!": "/audio/diogo-leal/aula4_ic_dlg_sarah_3.mp3",
+  "Thank you! Do you recommend any sessions this afternoon?": "/audio/diogo-leal/aula4_ic_dlg_diogo_4.mp3",
+  "Yes! A colleague of mine mentioned the AI panel at two. Let me add you on LinkedIn!": "/audio/diogo-leal/aula4_ic_dlg_sarah_4.mp3"
+};
+
+// ===== AUDIO ENGINE =====
+var currentAudio = null;
+var audioSpeed = 1;
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed;
+    currentAudio.play().catch(function() { fallbackTTS(cleanText); });
+  } else {
+    fallbackTTS(cleanText);
+  }
+}
+
+function fallbackTTS(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 0;
+var slides = [];
+var teacherCues = [];
+
+function initSlides() {
+  slides = document.querySelectorAll('.slide');
+  slides.forEach(function(s, i) {
+    teacherCues[i] = s.dataset.t || '';
+  });
+  buildDotNav();
+  updateSlide();
+}
+
+function buildDotNav() {
+  var nav = document.getElementById('dotNav');
+  nav.innerHTML = '';
+  for (var i = 0; i < slides.length; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'dot-nav-item' + (i === 0 ? ' active' : '');
+    dot.dataset.idx = i;
+    dot.onclick = function() { goToSlide(parseInt(this.dataset.idx)); };
+    nav.appendChild(dot);
+  }
+}
+
+function goToSlide(idx) {
+  if (idx < 0 || idx >= slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = idx;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateSlide();
+}
+
+function nextSlide() { goToSlide(currentSlide + 1); }
+function prevSlide() { goToSlide(currentSlide - 1); }
+
+function updateSlide() {
+  // Counter
+  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + slides.length;
+
+  // Dot nav
+  document.querySelectorAll('.dot-nav-item').forEach(function(d, i) {
+    d.classList.toggle('active', i === currentSlide);
+  });
+
+  // Chapter bar
+  var currentChapter = slides[currentSlide].dataset.chapter;
+  document.querySelectorAll('.chapter-dot').forEach(function(d) {
+    var ch = d.dataset.chapter;
+    d.classList.remove('active', 'completed');
+    if (ch === currentChapter) d.classList.add('active');
+    else if (parseInt(ch) < parseInt(currentChapter)) d.classList.add('completed');
+  });
+
+  // Teacher panel
+  var panel = document.getElementById('tPanel');
+  panel.classList.remove('show');
+  panel.innerHTML = teacherCues[currentSlide] || '<em>No teacher cue for this slide.</em>';
+
+  // Badge confetti (slide 30, index 29)
+  if (currentSlide === 29) {
+    setTimeout(triggerConfetti, 500);
+  }
+}
+
+// ===== KEYBOARD NAV =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+});
+
+// ===== TEACHER CUE TOGGLE =====
+function toggleTeacherCue() {
+  var panel = document.getElementById('tPanel');
+  panel.classList.toggle('show');
+}
+
+// Close panel on outside click
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('tPanel');
+  var cue = document.getElementById('tCue');
+  if (!panel.contains(e.target) && !cue.contains(e.target)) {
+    panel.classList.remove('show');
+  }
+});
+
+// ===== VOCAB REVEAL (TOGGLE) =====
+function revealVCard(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  var revealed = grid.querySelectorAll('.v-card.revealed').length;
+  var total = grid.querySelectorAll('.v-card').length;
+  document.getElementById(counterId).textContent = revealed + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar(btn) {
+  btn.classList.add('used');
+  document.getElementById('grammarRule1').classList.add('show');
+}
+
+// ===== DIALOGUE LINE BY LINE =====
+function revealNextLine(dialogueId, btnId) {
+  var container = document.getElementById(dialogueId);
+  var lines = container.querySelectorAll('.d-line');
+  var btn = document.getElementById(btnId);
+  var nextHidden = null;
+  for (var i = 0; i < lines.length; i++) {
+    if (!lines[i].classList.contains('visible')) { nextHidden = lines[i]; break; }
+  }
+  if (nextHidden) {
+    nextHidden.classList.add('visible');
+    nextHidden.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  var allVisible = container.querySelectorAll('.d-line:not(.visible)').length === 0;
+  if (allVisible) btn.style.display = 'none';
+}
+
+// ===== QUICK CHALLENGE =====
+var qcCurrent = 0;
+var qcTotal = 6;
+var qcScore = 0;
+
+function showQcAnswer(btn) {
+  var card = btn.closest('.qc-card');
+  var answer = card.querySelector('.qc-answer-box');
+  var next = card.querySelector('.qc-next-btn');
+  answer.classList.add('show');
+  if (next) next.classList.add('show');
+  btn.style.display = 'none';
+  qcScore++;
+  document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal;
+
+  if (qcScore === qcTotal) {
+    triggerConfetti();
+  }
+}
+
+function nextQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  if (qcCurrent >= cards.length - 1) return;
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent++;
+  if (qcCurrent < cards.length) {
+    cards[qcCurrent].classList.add('active');
+  }
+}
+
+// ===== CHECKLIST =====
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+}
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#4F46E5', '#818CF8', '#fbbf24', '#f87171', '#60a5fa', '#a78bfa', '#34d399'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.width = (Math.random() * 8 + 5) + 'px';
+    piece.style.height = (Math.random() * 8 + 5) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 4000);
+}
+
+// ===== LISTENING PLAYER (Full) =====
+var lpPlayers = {};
+
+function initPlayer(id) {
+  var container = document.getElementById(id);
+  if (!container) return;
+  var src = container.dataset.src;
+  if (!src) return;
+  var file = src;
+  if (src.indexOf('/') === -1 && audioMap[src]) file = audioMap[src];
+  var audio = new Audio(file);
+  lpPlayers[id] = { audio: audio, speed: 1, playing: false };
+  audio.addEventListener('timeupdate', function() { updatePlayerUI(id); });
+  audio.addEventListener('loadedmetadata', function() { updatePlayerUI(id); });
+  audio.addEventListener('ended', function() {
+    lpPlayers[id].playing = false;
+    var playBtn = document.querySelector('#' + id + ' .lp-play');
+    if (playBtn) playBtn.classList.remove('playing');
+    var qs = document.getElementById('questions-' + id);
+    if (qs) qs.style.display = 'flex';
+  });
+}
+
+function togglePlayer(id) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var p = lpPlayers[id];
+  var playBtn = document.querySelector('#' + id + ' .lp-play');
+  if (p.playing) {
+    p.audio.pause();
+    p.playing = false;
+    if (playBtn) playBtn.classList.remove('playing');
+  } else {
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    p.audio.playbackRate = p.speed;
+    p.audio.play();
+    p.playing = true;
+    if (playBtn) playBtn.classList.add('playing');
+  }
+}
+
+function skipAudio(id, seconds) {
+  if (!lpPlayers[id]) return;
+  var a = lpPlayers[id].audio;
+  a.currentTime = Math.max(0, Math.min(a.duration || 0, a.currentTime + seconds));
+}
+
+function seekAudio(event, id) {
+  if (!lpPlayers[id]) return;
+  var bar = event.currentTarget;
+  var rect = bar.getBoundingClientRect();
+  var pct = (event.clientX - rect.left) / rect.width;
+  lpPlayers[id].audio.currentTime = pct * (lpPlayers[id].audio.duration || 0);
+}
+
+function setPlayerSpeed(id, speed, btn) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  lpPlayers[id].speed = speed;
+  lpPlayers[id].audio.playbackRate = speed;
+  var container = document.getElementById(id);
+  if (container) {
+    container.querySelectorAll('.lp-speed-btn').forEach(function(b) { b.classList.remove('active'); });
+  }
+  if (btn) btn.classList.add('active');
+}
+
+function updatePlayerUI(id) {
+  var p = lpPlayers[id];
+  if (!p) return;
+  var current = p.audio.currentTime || 0;
+  var total = p.audio.duration || 0;
+  var pct = total > 0 ? (current / total) * 100 : 0;
+  var progressEl = document.getElementById('progress-' + id);
+  if (progressEl) progressEl.style.width = pct + '%';
+  var curEl = document.getElementById('time-current-' + id);
+  var totEl = document.getElementById('time-total-' + id);
+  if (curEl) curEl.textContent = formatTime(current);
+  if (totEl) totEl.textContent = formatTime(total);
+}
+
+function formatTime(s) {
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', function(){initSlides();});
+</script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js"></script>
+</body>
+</html>
