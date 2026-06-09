@@ -1137,10 +1137,22 @@ Exemplo A2 em diante (sem traducao):
 
 ---
 
-## REGRA 19 — DEPLOY AUTOMATICO
+## REGRA 19 — DEPLOY AUTOMATICO (VIA GITHUB)
 
-Apos qualquer mudanca de codigo, rodar `npx vercel --prod --yes` automaticamente.
+> **IMPORTANTE**: Multiplos contribuidores trabalham neste projeto simultaneamente (Helen, Danilo, etc.), cada um em alunos diferentes. O deploy DEVE passar pelo GitHub para garantir que o trabalho de TODOS esteja presente. NUNCA usar `npx vercel --prod` diretamente — isso sobe apenas os arquivos locais e APAGA o trabalho dos outros contribuidores.
+
+Apos qualquer mudanca de codigo, rodar o deploy automaticamente via GitHub:
+
+```bash
+git add -A
+git commit -m "feat/fix: descricao"
+git pull --rebase origin main   # ← OBRIGATORIO: puxa trabalho dos outros
+git push origin main            # ← Vercel deploya automaticamente do GitHub
+```
+
 NAO perguntar "quer que eu faca deploy?" — apenas faca.
+NAO usar `npx vercel --prod --yes` — isso ignora o GitHub e apaga trabalho de outros contribuidores.
+Se o `git push` falhar por conflito, resolver o conflito e tentar novamente. NUNCA usar `--force`.
 
 ---
 
@@ -2164,18 +2176,20 @@ Survival Card aparece SOMENTE na aba Pre-class. NUNCA incluir Survival Card nos 
 
 ---
 
-### REGRA C12 — GIT ADD ANTES DE DEPLOY (BLOQUEANTE)
+### REGRA C12 — GIT ADD + DEPLOY VIA GITHUB (BLOQUEANTE)
 
-**SEMPRE** rodar `git add` em TODOS os arquivos novos ANTES de `npx vercel --prod`.
+**SEMPRE** rodar `git add` em TODOS os arquivos novos. O deploy e feito via GitHub (REGRA 19):
 
 ```bash
 # OBRIGATORIO antes de deploy
 git add public/professor/*.html public/aluno/*.html public/audio/**/*.mp3 public/lib/*.js public/styles/*.css
 git commit -m "feat: ..."
-npx vercel --prod --yes
+git pull --rebase origin main   # puxa trabalho de outros contribuidores
+git push origin main            # Vercel deploya automaticamente do GitHub
 ```
 
-Sem `git add`, arquivos novos NAO vao para a Vercel = **404 em producao**.
+Sem `git add`, arquivos novos NAO vao para o GitHub/Vercel = **404 em producao**.
+NUNCA usar `npx vercel --prod` diretamente — apaga trabalho de outros contribuidores (ver REGRA 19).
 
 Incidentes reais causados por esquecer git add:
 - lesson-progress.js → 404 → progresso nao salvava
