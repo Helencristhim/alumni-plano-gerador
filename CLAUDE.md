@@ -305,7 +305,19 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 
 **WRAP-UP**
 - Survival Card: NAO incluir no IN CLASS. Survival Card existe APENAS no Pre-class (REGRA 16)
-- What I Learned: CHECKBOXES clicaveis (click → verde com checkmark SVG)
+- **CHECKLIST OBRIGATORIO (REGRA BLOQUEANTE)**: TODA aula IN CLASS DEVE ter um slide de Checklist no WRAP-UP usando o formato `check-grid` + `check-item` + `toggleCheck(this)`. Este checklist integra com `lesson-progress.js` — quando o professor marca TODOS os itens, a aula e salva como concluida no Supabase e o stamp acende. **NUNCA** usar `checklist-ic` ou `this.classList.toggle('checked')` inline — esses formatos NAO integram com o sistema de progresso. Formato OBRIGATORIO:
+```html
+<div class="slide slide-light" data-slide="N" data-phase="7" data-lesson="N" data-teacher="...">
+  <div class="slide-inner">
+    <div class="chapter-label">What I Learned</div>
+    <h2 class="slide-heading">Lesson N <span class="accent">Checklist</span></h2>
+    <div class="check-grid">
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can [skill learned].</div>
+      <!-- 5 items minimum -->
+    </div>
+  </div>
+</div>
+```
 - Boarding Pass Earned: badge celebratorio com animacao sparkle
 - Closing: slide final com "Day X — Complete" + preview proxima aula
 

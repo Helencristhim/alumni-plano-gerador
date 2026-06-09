@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni — Controle de Aulas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="/lib/supabase-config.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --navy: #003080;
+            --navy-light: #004bb5;
+            --red: #d70c0c;
+            --bg: #f5f5f0;
+            --bg-card: #ffffff;
+            --text: #1a1a2e;
+            --text-mid: #4a4a5a;
+            --text-dim: #6b6b7b;
+            --border: #e0e0d8;
+            --success: #16a34a;
+            --success-bg: rgba(22,163,74,0.08);
+            --warn: #d97706;
+            --warn-bg: rgba(217,119,6,0.08);
+            --danger: #dc2626;
+            --danger-bg: rgba(220,38,38,0.08);
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+
+        /* === HEADER === */
+        .header {
+            background: var(--navy);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .header-logo {
+            height: 32px;
+            filter: brightness(0) invert(1);
+        }
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.7);
+        }
+        .refresh-btn {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .refresh-btn:hover { background: rgba(255,255,255,0.2); }
+        .refresh-btn:focus-visible { outline: 3px solid rgba(255,255,255,0.5); outline-offset: 2px; }
+
+        /* === KPI CARDS === */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .kpi-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+        }
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--navy);
+        }
+        .kpi-sub {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+
+        /* === SEARCH === */
+        .controls {
+            padding: 0 2rem;
+            max-width: 1200px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.6rem 1rem 0.6rem 2.4rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            background: var(--bg-card);
+            color: var(--text);
+            transition: border-color 0.2s;
+        }
+        .search-input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,48,128,0.1); }
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: var(--text-dim);
+        }
+        .sort-select {
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-family: inherit;
+            background: var(--bg-card);
+            color: var(--text);
+            cursor: pointer;
+        }
+        .sort-select:focus-visible { outline: 3px solid rgba(0,48,128,0.2); outline-offset: 2px; }
+
+        /* === TABLE === */
+        .table-wrap {
+            padding: 0 2rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        thead {
+            background: #f8f8f4;
+        }
+        th {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+            padding: 0.8rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            background: #f8f8f4;
+            z-index: 2;
+        }
+        th.num { text-align: center; }
+        td {
+            padding: 0.7rem 1rem;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        td.num { text-align: center; font-variant-numeric: tabular-nums; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(0,48,128,0.03); }
+        tr { transition: background 0.15s; }
+
+        .student-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+        .student-link {
+            color: var(--navy);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+        .student-link:hover { color: var(--navy-light); text-decoration: underline; }
+        .student-link:focus-visible { outline: 3px solid rgba(0,48,128,0.2); outline-offset: 2px; border-radius: 2px; }
+
+        /* Progress bar in table */
+        .progress-mini {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .progress-bar-mini {
+            flex: 1;
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+            min-width: 60px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+        .progress-fill.green { background: var(--success); }
+        .progress-fill.yellow { background: var(--warn); }
+        .progress-fill.red { background: var(--danger); }
+        .progress-pct {
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 36px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Status badges */
+        .badge-complete {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .badge-ok { background: var(--success-bg); color: var(--success); }
+        .badge-partial { background: var(--warn-bg); color: var(--warn); }
+        .badge-none { background: var(--danger-bg); color: var(--danger); }
+
+        /* Loading */
+        .loading-row td {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-top-color: var(--navy);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Auto-refresh indicator */
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { padding: 1rem; }
+            .kpi-row { padding: 1rem; }
+            .controls { padding: 0 1rem; }
+            .table-wrap { padding: 0 1rem 2rem; }
+            th, td { padding: 0.5rem 0.6rem; font-size: 0.78rem; }
+            .kpi-value { font-size: 1.6rem; }
+        }
+        @media (max-width: 480px) {
+            .kpi-row { grid-template-columns: 1fr 1fr; }
+            .header-right { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="header-logo">
+            <h1>Controle de Aulas</h1>
+        </div>
+        <div class="header-right">
+            <div class="auto-refresh">
+                <div class="pulse-dot"></div>
+                <span>Atualiza a cada 1h</span>
+            </div>
+            <span id="lastUpdate"></span>
+            <button class="refresh-btn" onclick="loadAll()" aria-label="Atualizar dados">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                Atualizar
+            </button>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-row">
+        <div class="kpi-card">
+            <span class="kpi-label">Total Alunos</span>
+            <span class="kpi-value" id="kpiAlunos">--</span>
+        </div>
+        <div class="kpi-card">
+            <span class="kpi-label">Aulas Criadas</span>
+            <span class="kpi-value" id="kpiCriadas">--</span>
+            <span class="kpi-sub" id="kpiCriadasSub"></span>
+        </div>
+        <div class="kpi-card">
+            <span class="kpi-label">Aulas Concluidas</span>
+            <span class="kpi-value" id="kpiConcluidas">--</span>
+            <span class="kpi-sub" id="kpiConcluidasSub"></span>
+        </div>
+        <div class="kpi-card">
+            <span class="kpi-label">Taxa de Conclusao</span>
+            <span class="kpi-value" id="kpiTaxa">--</span>
+            <span class="kpi-sub">concluidas / criadas</span>
+        </div>
+    </div>
+
+    <!-- Search & Sort -->
+    <div class="controls">
+        <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar aluno..." oninput="filterTable()">
+        </div>
+        <select class="sort-select" id="sortSelect" onchange="sortAndRender()">
+            <option value="name_asc">Nome A-Z</option>
+            <option value="name_desc">Nome Z-A</option>
+            <option value="html_desc">Mais aulas criadas</option>
+            <option value="html_asc">Menos aulas criadas</option>
+            <option value="done_desc">Mais aulas concluidas</option>
+            <option value="pct_desc">Maior % conclusao</option>
+            <option value="pct_asc">Menor % conclusao</option>
+        </select>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Aluno</th>
+                    <th class="num">Pacote</th>
+                    <th class="num">Criadas</th>
+                    <th class="num">Concluidas</th>
+                    <th>Progresso</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr class="loading-row">
+                    <td colspan="6"><span class="spinner"></span>Carregando dados...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+var allData = [];
+
+async function loadAll() {
+    try {
+        var [htmlCounts, perfis, progress] = await Promise.all([
+            fetchHtmlCounts(),
+            fetchPerfis(),
+            fetchProgress()
+        ]);
+
+        // Build merged data
+        var merged = {};
+
+        // 1. Start with HTML counts (source of truth for lesson cards)
+        htmlCounts.forEach(function(s) {
+            merged[s.slug] = {
+                slug: s.slug,
+                name: decodeHtml(s.name),
+                pacote: 0,
+                criadas: s.aulasHtml,
+                concluidas: 0
+            };
+        });
+
+        // 2. Enrich with Supabase perfis (num_aulas = pacote)
+        perfis.forEach(function(p) {
+            var slug = p.id;
+            if (merged[slug]) {
+                merged[slug].pacote = p.num_aulas || 0;
+                if (p.nome) merged[slug].name = p.nome;
+            }
+        });
+
+        // 3. Add completed lessons from lesson_progress
+        progress.forEach(function(lp) {
+            var slug = lp.student_slug;
+            if (merged[slug] && lp.inclass_done) {
+                merged[slug].concluidas++;
+            }
+        });
+
+        allData = Object.values(merged).filter(function(d) { return d.criadas > 0; });
+        updateKPIs();
+        sortAndRender();
+        updateTimestamp();
+    } catch (e) {
+        console.error('Error loading data:', e);
+        document.getElementById('tableBody').innerHTML =
+            '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--danger)">Erro ao carregar dados. Tente atualizar.</td></tr>';
+    }
+}
+
+async function fetchHtmlCounts() {
+    var r = await fetch('/data/lesson-counts.json?t=' + Date.now());
+    if (!r.ok) return [];
+    var d = await r.json();
+    return d.students || [];
+}
+
+async function fetchPerfis() {
+    try {
+        var resp = await sb.from('perfis').select('id,nome,num_aulas,ativo,status');
+        return (resp.data || []);
+    } catch (e) { console.error('Supabase perfis error:', e); return []; }
+}
+
+async function fetchProgress() {
+    try {
+        var resp = await sb.from('lesson_progress').select('student_slug,lesson_number,inclass_done').eq('inclass_done', true);
+        return (resp.data || []);
+    } catch (e) { console.error('Supabase progress error:', e); return []; }
+}
+
+function decodeHtml(str) {
+    var el = document.createElement('textarea');
+    el.innerHTML = str;
+    return el.value;
+}
+
+// ============================================================
+// KPIs
+// ============================================================
+function updateKPIs() {
+    var totalAlunos = allData.length;
+    var totalCriadas = allData.reduce(function(s, d) { return s + d.criadas; }, 0);
+    var totalConcluidas = allData.reduce(function(s, d) { return s + d.concluidas; }, 0);
+    var totalPacote = allData.reduce(function(s, d) { return s + d.pacote; }, 0);
+    var taxa = totalCriadas > 0 ? Math.round(totalConcluidas / totalCriadas * 100) : 0;
+
+    document.getElementById('kpiAlunos').textContent = totalAlunos;
+    document.getElementById('kpiCriadas').textContent = totalCriadas;
+    document.getElementById('kpiCriadasSub').textContent = totalPacote > 0 ? 'de ' + totalPacote + ' no pacote total' : '';
+    document.getElementById('kpiConcluidas').textContent = totalConcluidas;
+    document.getElementById('kpiConcluidasSub').textContent = 'de ' + totalCriadas + ' criadas';
+    document.getElementById('kpiTaxa').textContent = taxa + '%';
+}
+
+// ============================================================
+// SORT & RENDER
+// ============================================================
+function sortAndRender() {
+    var sortBy = document.getElementById('sortSelect').value;
+    var list = allData.slice();
+
+    list.sort(function(a, b) {
+        switch (sortBy) {
+            case 'name_asc': return a.name.localeCompare(b.name, 'pt-BR');
+            case 'name_desc': return b.name.localeCompare(a.name, 'pt-BR');
+            case 'html_desc': return b.criadas - a.criadas || a.name.localeCompare(b.name, 'pt-BR');
+            case 'html_asc': return a.criadas - b.criadas || a.name.localeCompare(b.name, 'pt-BR');
+            case 'done_desc': return b.concluidas - a.concluidas || a.name.localeCompare(b.name, 'pt-BR');
+            case 'pct_desc':
+                var pa = a.criadas > 0 ? a.concluidas / a.criadas : 0;
+                var pb = b.criadas > 0 ? b.concluidas / b.criadas : 0;
+                return pb - pa || a.name.localeCompare(b.name, 'pt-BR');
+            case 'pct_asc':
+                var pa2 = a.criadas > 0 ? a.concluidas / a.criadas : 0;
+                var pb2 = b.criadas > 0 ? b.concluidas / b.criadas : 0;
+                return pa2 - pb2 || a.name.localeCompare(b.name, 'pt-BR');
+            default: return 0;
+        }
+    });
+
+    renderTable(list);
+}
+
+function filterTable() {
+    var q = document.getElementById('searchInput').value.toLowerCase();
+    var rows = document.querySelectorAll('#tableBody tr');
+    rows.forEach(function(row) {
+        if (row.classList.contains('loading-row')) return;
+        var name = row.dataset.name || '';
+        row.style.display = name.includes(q) ? '' : 'none';
+    });
+}
+
+function renderTable(list) {
+    var search = document.getElementById('searchInput').value.toLowerCase();
+    var html = '';
+
+    list.forEach(function(d, i) {
+        var pct = d.criadas > 0 ? Math.round(d.concluidas / d.criadas * 100) : 0;
+        var barClass = pct >= 80 ? 'green' : pct >= 40 ? 'yellow' : 'red';
+        var hidden = search && !d.name.toLowerCase().includes(search) ? ' style="display:none"' : '';
+        var profUrl = '/professor/' + d.slug + '.html';
+
+        html += '<tr data-name="' + d.name.toLowerCase() + '"' + hidden + '>';
+        html += '<td class="num" style="color:var(--text-dim);font-size:.75rem">' + (i + 1) + '</td>';
+        html += '<td><a href="' + profUrl + '" target="_blank" rel="noopener" class="student-link">' + d.name + '</a></td>';
+        html += '<td class="num">' + (d.pacote || '<span style="color:var(--text-dim)">--</span>') + '</td>';
+        html += '<td class="num"><strong>' + d.criadas + '</strong></td>';
+        html += '<td class="num"><strong>' + d.concluidas + '</strong></td>';
+        html += '<td>';
+        html += '<div class="progress-mini">';
+        html += '<div class="progress-bar-mini"><div class="progress-fill ' + barClass + '" style="width:' + pct + '%"></div></div>';
+        html += '<span class="progress-pct" style="color:var(--' + (pct >= 80 ? 'success' : pct >= 40 ? 'warn' : 'danger') + ')">' + pct + '%</span>';
+        html += '</div>';
+        html += '</td>';
+        html += '</tr>';
+    });
+
+    if (!html) {
+        html = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-dim)">Nenhum aluno encontrado.</td></tr>';
+    }
+
+    document.getElementById('tableBody').innerHTML = html;
+}
+
+function updateTimestamp() {
+    var now = new Date();
+    var hh = String(now.getHours()).padStart(2, '0');
+    var mm = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('lastUpdate').textContent = 'Atualizado ' + hh + ':' + mm;
+}
+
+// ============================================================
+// INIT + AUTO-REFRESH
+// ============================================================
+loadAll();
+setInterval(loadAll, 3600000); // 1 hour
+</script>
+
+</body>
+</html>
