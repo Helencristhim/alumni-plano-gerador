@@ -1745,3 +1745,261 @@ E no `<head>`, ANTES de tudo:
 - O percentual e calculado AUTOMATICAMENTE — nunca hardcoded
 - O estado persiste no Supabase (via REGRA 32) — ao reabrir, a barra mostra o progresso salvo
 - TODOS os tipos de exercicio contam: matching, fill-in-the-blank, quiz, speech recording, ordering
+
+---
+
+## REGRA 34 — UM HTML POR AULA (OBRIGATORIO — BLOQUEANTE)
+
+> **REGRA BLOQUEANTE**: Toda aula gerada DEVE ter seu proprio arquivo HTML individual. NUNCA gerar multiplas aulas num unico arquivo monolitico. A ausencia de arquivos individuais BLOQUEIA o deploy.
+
+### Padrao obrigatorio:
+
+```
+public/professor/{slug}.html            → Aula 1 (main file: Planejamento + Pre-class + IN CLASS + Complementares da aula 1)
+public/professor/{slug}-aula2.html      → Aula 2 completa (4 abas SO da aula 2)
+public/professor/{slug}-aula3.html      → Aula 3 completa (4 abas SO da aula 3)
+public/professor/{slug}-aula4.html      → Aula 4 completa (4 abas SO da aula 4)
+public/professor/{slug}-aula5.html      → Aula 5 completa (4 abas SO da aula 5)
+
+public/aluno/{slug}.html                → Aula 1 (main file: Pre-class + Complementares da aula 1)
+public/aluno/{slug}-aula2.html          → Aula 2 (Pre-class + Complementares SO da aula 2)
+public/aluno/{slug}-aula3.html          → Aula 3 (Pre-class + Complementares SO da aula 3)
+...e assim por diante
+```
+
+### Cada arquivo individual DEVE conter:
+
+1. **Planejamento** — curriculo completo (mesmo em todos os arquivos do aluno)
+2. **Pre-class** — exercicios SO daquela aula
+3. **IN CLASS** — slides SO daquela aula, numerados a partir de 1
+4. **Complementares** — recomendacoes SO daquela aula
+5. **audioMap** — filtrado com SO as frases usadas naquela aula
+6. **CSS completo** — copiado do main file (NUNCA gerar CSS do zero)
+7. **JavaScript completo** — copiado integralmente (REGRA 26)
+8. **Supabase** — STUDENT_SLUG + TOTAL_AULAS + lesson-progress.js
+
+### Lesson cards no main file — LINK, NAO ACCORDION
+
+O main file (`{slug}.html`) contem a Aula 1 completa. Para as aulas 2+, o Pre-class do main file mostra apenas um **lesson card com link** para o arquivo individual. NUNCA usar accordion/toggleLesson para aulas 2+.
+
+**HTML obrigatorio do lesson card (aula 2+) no main file:**
+
+```html
+<a href="/professor/{slug}-aula{N}.html" target="_blank"
+   style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit"
+   onmouseover="this.style.borderColor='var(--accent)'"
+   onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
+  <div style="width:48px;height:48px;background:var(--accent-light);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">0{N}</div>
+  <div>
+    <div style="font-weight:600;font-size:.95rem">{Titulo da Aula}</div>
+    <div style="font-size:.8rem;color:var(--text-dim)">{Subtema} — {X} slides</div>
+  </div>
+</a>
+```
+
+O mesmo padrao se aplica ao arquivo do aluno: lesson cards de aulas 2+ linkam para `/aluno/{slug}-aula{N}.html`.
+
+### Workflow ao gerar novas aulas:
+
+1. Ao criar a **primeira aula** de um aluno: gerar `{slug}.html` (main file) com aula 1 completa
+2. Ao criar a **segunda aula em diante**: gerar `{slug}-aula{N}.html` como arquivo separado
+3. No main file, adicionar um **lesson card com link** (modelo acima) — NUNCA accordion
+4. **NUNCA** adicionar conteudo de aula nova dentro de um arquivo existente
+5. **NUNCA** gerar um arquivo monolitico com todas as aulas juntas
+6. Atualizar `TOTAL_AULAS` em TODOS os arquivos daquele aluno (main + individuais)
+7. Atualizar lesson cards/stamps no main file para linkar a nova aula
+
+### Verificacao pre-deploy (BLOQUEANTE):
+
+- [ ] Cada aula tem seu proprio arquivo HTML?
+- [ ] Arquivo individual tem as 4 abas (professor) ou 2 abas (aluno)?
+- [ ] audioMap filtrado so com frases daquela aula?
+- [ ] CSS copiado do main (400+ linhas, NAO gerado do zero)?
+- [ ] STUDENT_SLUG e TOTAL_AULAS presentes?
+- [ ] Slides numerados a partir de 1?
+
+> **CONSEQUENCIA**: Arquivos monoliticos ficam enormes (8000+ linhas), dificeis de manter, e causam bugs de slide-mode. O formato individual e o UNICO aceito para novos materiais.
+
+---
+
+## REGRAS COMPLEMENTARES (OBRIGATORIAS — APRENDIDAS DE INCIDENTES REAIS)
+
+> Estas regras foram adicionadas apos incidentes em producao. Todas sao BLOQUEANTES.
+
+---
+
+### REGRA C1 — VOZES ELEVENLABS ATUALIZADAS
+
+As vozes Arthur e Ellen foram DESCONTINUADAS. Usar as novas vozes:
+
+| Voz | ID | Uso |
+|-----|-----|-----|
+| **Riley** (F) | `cgSgspJ2msm6clMCkdW9` | Neutra feminina (padrao para alunas) |
+| **Ash** (M) | `CWhRBWXzGAHq65xCjsqD` | Neutro masculino (padrao para alunos) |
+| **Kristen** (F) | `JbJ1PBbPbzFxEmB5CPKK` | Animada feminina (dialogos expressivos) |
+| **Mark** (M) | `UgBBYS2sOqTuMpoF3BR0` | Animado masculino (dialogos expressivos) |
+
+- Onde o CLAUDE.md menciona Arthur → usar **Ash** (neutro) ou **Mark** (animado)
+- Onde menciona Ellen → usar **Riley** (neutra) ou **Kristen** (animada)
+- Regra de atribuicao por genero continua identica (REGRA 7)
+- SEMPRE alternar vozes masculina/feminina — NUNCA voz unica para todo o material
+
+---
+
+### REGRA C2 — ORDERING: LISTEN ANTES DE CHECK
+
+Em exercicios de ordering (`checkOrder`), o aluno DEVE ouvir o audio ANTES de ordenar:
+
+1. Botao "Listen" com audio da sequencia completa (ElevenLabs, NAO Web Speech)
+2. So depois: itens para reordenar com setas
+3. Botao "Check Order" por ultimo
+4. Audio das frases = mesmo texto do HTML dos order-items
+5. Vozes: Riley/Ash (NUNCA Arthur/Ellen)
+
+---
+
+### REGRA C3 — MATCHING: CSS FLEXBOX OBRIGATORIO
+
+Layout do matching exercise DEVE seguir este padrao:
+
+```css
+.match-word {
+    flex: 0 0 130px;  /* largura FIXA para a palavra */
+}
+.match-row select {
+    flex: 1;
+    width: 100%;
+}
+```
+
+**NUNCA** usar `flex: 1` na palavra (`.match-word`). Isso causa layout inconsistente entre rows.
+
+---
+
+### REGRA C4 — IN CLASS: vocab-card-ic + revealVocab(this)
+
+Slides IN CLASS usam a classe `vocab-card-ic` com funcao `revealVocab(this)` para revelar o verso do card ao clicar.
+
+- Classe correta: `vocab-card-ic` (NAO `vocab-card`)
+- Funcao: `onclick="revealVocab(this)"`
+- CSS obrigatorio: `.vocab-back { opacity: 0; max-height: 0 }` (estado inicial escondido)
+- A funcao revealVocab faz toggle de `.revealed` no card
+
+**NUNCA** usar `vocab-card` (sem `-ic`) nos slides IN CLASS.
+
+---
+
+### REGRA C5 — NUNCA `<strong>` EM LETRAS ISOLADAS
+
+**PROIBIDO**: Aplicar `<strong>` em letras individuais dentro de uma palavra.
+
+```html
+<!-- ERRADO — causa espaco visual entre letras -->
+<strong>r</strong>un → aparece como "r un"
+
+<!-- CERTO — palavra inteira ou nada -->
+<strong>run</strong>
+```
+
+Se precisa destacar parte de uma palavra (ex: sufixo), usar `<span class="highlight">` com CSS, NUNCA `<strong>` em letras soltas.
+
+---
+
+### REGRA C6 — PORTUGUES: EU vs MIM
+
+Em QUALQUER texto em portugues no sistema:
+
+- **CERTO**: "pra eu ver", "pra eu fazer", "pra eu analisar"
+- **ERRADO**: "pra mim ver", "pra mim fazer", "pra mim analisar"
+
+Regra: antes de VERBO, sempre EU. MIM so antes de substantivo/preposicao ("pra mim, isso e bom").
+
+---
+
+### REGRA C7 — ERROR CORRECTION: contenteditable OBRIGATORIO
+
+O slide de Error Correction (Delayed Feedback) no IN CLASS DEVE ter campo `contenteditable` para o professor digitar os erros dos alunos ao vivo durante a aula:
+
+```html
+<div class="error-correction-area" contenteditable="true" placeholder="Type student errors here..."></div>
+```
+
+NUNCA entregar slide de Error Correction sem contenteditable — o professor PRECISA editar ao vivo.
+
+---
+
+### REGRA C8 — SEM TRAVESSAO EM TEXTOS COMERCIAIS
+
+Em textos comerciais, propostas, landing pages e comunicacao externa:
+
+- **PROIBIDO**: travessao longo (—) — parece texto gerado por IA
+- **USAR**: virgula, ponto, ou reestruturar a frase
+
+Isso NAO se aplica a materiais pedagogicos (onde travessao pode ser necessario em exemplos de ingles).
+
+---
+
+### REGRA C9 — NUNCA DELETAR MP3s
+
+**PROIBIDO** deletar arquivos MP3 do diretorio `/audio/`. Cada MP3 custa credito ElevenLabs.
+
+- Se um audio nao esta mais em uso, MANTER no diretorio (pode ser reutilizado)
+- Se precisa regerar um audio, criar com nome NOVO — NUNCA sobrescrever o existente
+- Ao limpar referencias no audioMap, NUNCA deletar o arquivo fisico
+
+---
+
+### REGRA C10 — SLIDES: NUNCA INVENTAR CLASSES CSS
+
+Slides IN CLASS DEVEM usar EXATAMENTE as classes CSS do template (Aula 1 aprovada). NUNCA inventar classes novas ou usar inline styles em slides.
+
+- Se uma classe nao existe no CSS do template, NAO usar
+- Se precisa de um estilo novo, verificar se ja existe no design-system.css
+- NUNCA criar `<div style="...">` dentro de slides — usar classes existentes
+- Incidente real: 62 arquivos precisaram de retrabalho por classes inventadas sem CSS
+
+---
+
+### REGRA C11 — SURVIVAL CARD: APENAS NO PRE-CLASS
+
+Survival Card aparece SOMENTE na aba Pre-class. NUNCA incluir Survival Card nos slides IN CLASS.
+
+- Pre-class: Survival Card ao final de cada aula (5 frases-chave com audio) ✓
+- IN CLASS: ZERO Survival Cards ✗
+- Complementares: ZERO Survival Cards ✗
+
+---
+
+### REGRA C12 — GIT ADD ANTES DE DEPLOY (BLOQUEANTE)
+
+**SEMPRE** rodar `git add` em TODOS os arquivos novos ANTES de `npx vercel --prod`.
+
+```bash
+# OBRIGATORIO antes de deploy
+git add public/professor/*.html public/aluno/*.html public/audio/**/*.mp3 public/lib/*.js public/styles/*.css
+git commit -m "feat: ..."
+npx vercel --prod --yes
+```
+
+Sem `git add`, arquivos novos NAO vao para a Vercel = **404 em producao**.
+
+Incidentes reais causados por esquecer git add:
+- lesson-progress.js → 404 → progresso nao salvava
+- 4022 MP3s faltando → audios quebrados
+- aula3 do Roberto → pagina nao carregava
+
+---
+
+### REGRA C13 — PRONUNCIA: NUNCA `\s` EM REGEX
+
+Na funcao de pronuncia (`analyzeWords`, comparacao de texto), NUNCA usar `\s` em regex JavaScript para separar palavras.
+
+```javascript
+// ERRADO — \s causa bugs com caracteres especiais
+text.split(/\s+/)
+
+// CERTO — usar espaco literal
+text.split(/ +/)
+```
+
+Usar SEMPRE espaco literal (` `) em vez de `\s` para split de palavras em contexto de pronuncia.

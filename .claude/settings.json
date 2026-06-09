@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.command // \"\"' | grep -q 'git push' && cd /Users/helenmendes/alumni-plano-gerador && bash scripts/pre-deploy-check.sh || true",
+            "command": "jq -r '.tool_input.command // \"\"' | grep -q 'git push' && cd \"$(git rev-parse --show-toplevel 2>/dev/null || pwd)\" && bash scripts/pre-deploy-check.sh || true",
             "timeout": 15,
             "statusMessage": "Rodando governanca pre-deploy..."
           }
