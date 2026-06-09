@@ -46,7 +46,13 @@ var audioMap = {
   "The hotel is next to the cafe.": "/audio/gabriela-pires/the_hotel_is_next_to_the_cafe.mp3",
   "Turn left at the corner.": "/audio/gabriela-pires/turn_left_at_the_corner.mp3",
   "Excuse me, how do I get to my hotel? Is it far? Can you show me on the map?": "/audio/gabriela-pires/excuse_me_how_do_i_get_to_my_hotel_full.mp3",
-  "[order-l9]": "/audio/gabriela-pires/order_l9_ordering.mp3"
+  "[order-l9]": "/audio/gabriela-pires/order_l9_ordering.mp3",
+  "Excuse me, where is the bakery?": "/audio/gabriela-pires/l2_dlg1_q_bakery.mp3",
+  "Go straight and turn left. It is on the corner.": "/audio/gabriela-pires/l2_dlg1_a_corner.mp3",
+  "How do I get to the museum?": "/audio/gabriela-pires/l2_dlg2_q_museum.mp3",
+  "Cross the street. It is in front of the park.": "/audio/gabriela-pires/l2_dlg2_a_park.mp3",
+  "Is the station far?": "/audio/gabriela-pires/l2_dlg3_q_station_far.mp3",
+  "No, it is near. It is behind the hotel.": "/audio/gabriela-pires/l2_dlg3_a_behind_hotel.mp3"
 };
 </script>
 <style>
@@ -2071,9 +2077,9 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
     <h2 class="slide-heading" style="color:#fff">Listen <span class="accent">Again</span></h2>
     <p style="color:rgba(255,255,255,.6);text-align:center;margin-bottom:1.5rem;">Three short directions. Listen and answer.</p>
     <div style="display:flex;flex-direction:column;align-items:center;gap:.5rem;">
-      <button class="btn-primary" onclick="speakText('Where is the bakery? Go straight and turn left. It is on the corner.',this)" style="border-radius:30px;padding:.6rem 1.5rem;font-size:.85rem;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> &nbsp;Situation 1</button>
-      <button class="btn-primary" onclick="speakText('How do I get to the museum? Cross the street. It is in front of the park.',this)" style="border-radius:30px;padding:.6rem 1.5rem;font-size:.85rem;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> &nbsp;Situation 2</button>
-      <button class="btn-primary" onclick="speakText('Is the station far? No, it is near. It is behind the hotel.',this)" style="border-radius:30px;padding:.6rem 1.5rem;font-size:.85rem;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> &nbsp;Situation 3</button>
+      <button class="btn-primary" onclick="playDialogue(['Excuse me, where is the bakery?', 'Go straight and turn left. It is on the corner.'])" style="border-radius:30px;padding:.6rem 1.5rem;font-size:.85rem;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> &nbsp;Situation 1</button>
+      <button class="btn-primary" onclick="playDialogue(['How do I get to the museum?', 'Cross the street. It is in front of the park.'])" style="border-radius:30px;padding:.6rem 1.5rem;font-size:.85rem;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> &nbsp;Situation 2</button>
+      <button class="btn-primary" onclick="playDialogue(['Is the station far?', 'No, it is near. It is behind the hotel.'])" style="border-radius:30px;padding:.6rem 1.5rem;font-size:.85rem;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> &nbsp;Situation 3</button>
     </div>
     <div class="comp-questions" style="margin-top:1.5rem;">
       <div class="comp-q" onclick="this.classList.toggle('revealed')">
@@ -2475,6 +2481,25 @@ function speakText(text, btn) {
     currentAudio.playbackRate = audioSpeed;
     currentAudio.play().catch(function() { fallbackSpeak(cleanText); });
   } else { fallbackSpeak(cleanText); }
+}
+
+// Toca uma sequencia de falas (dialogo) em ordem — cada fala usa a voz do seu MP3 no audioMap
+function playDialogue(lines) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  var i = 0;
+  function next() {
+    if (i >= lines.length) return;
+    var t = lines[i].replace(/\'/g, "'"); i++;
+    var file = audioMap[t] || audioMap[t.replace(/\.$/, '')] || audioMap[t + '.'];
+    if (file) {
+      currentAudio = new Audio(file);
+      currentAudio.playbackRate = audioSpeed;
+      currentAudio.onended = next;
+      currentAudio.play().catch(function() { next(); });
+    } else { next(); }
+  }
+  next();
 }
 
 function fallbackSpeak(text) {
