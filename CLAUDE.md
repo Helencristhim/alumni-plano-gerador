@@ -402,16 +402,6 @@ O CSS do material DEVE incluir regras que forcam `color: #1a1a2e !important` em 
 .slide-dark .email-card p,
 .slide-dark .boarding-pass p,
 .slide-dark .student-id-card p,
-.slide-dark .dialogue-card,
-.slide-dark .dialogue-card p,
-.slide-dark .dialogue-bubble,
-.slide-dark .dialogue-bubble p,
-.slide-dark .dialogue-box,
-.slide-dark .dialogue-box p,
-.slide-dark .dialogue-line,
-.slide-dark .dialogue-line p,
-.slide-dark .dialogue-text,
-.slide-dark .dialogue-name,
 .slide-dark .qc-card,
 .slide-dark .qc-card p,
 .slide-dark .qc-scenario,
@@ -442,34 +432,49 @@ O CSS do material DEVE incluir regras que forcam `color: #1a1a2e !important` em 
 }
 ```
 
-### SOLUCAO OBRIGATORIA — PARTE 2: Dialogue bubbles em slides escuros
+### SOLUCAO OBRIGATORIA — PARTE 2: Dialogue em slides escuros (CAUSA #1 DE RETRABALHO)
 
-Dialogue bubbles com fundo semi-transparente DEVEM ter texto branco puro com opacidade total. NUNCA cinza, NUNCA rgba com opacidade parcial.
+> **ATENCAO MAXIMA**: Este e o erro que MAIS se repete em producao. Dialogue bubbles tem fundo TRANSPARENTE escuro (rgba), NAO fundo branco. Portanto o texto precisa ser BRANCO, nao escuro. A regra ANTI-TEXTO-INVISIVEL da PARTE 1 forca texto escuro (#1a1a2e) em cards com fundo claro — mas dialogue NAO tem fundo claro. Por isso dialogue foi REMOVIDO da lista da PARTE 1 e tem sua PROPRIA regra aqui. NUNCA incluir dialogue-bubble, dialogue-line, dialogue-name, dialogue-box ou dialogue-text na regra da PARTE 1. NUNCA usar [class*="bubble"] na regra da PARTE 1 (pega dialogue-bubble e quebra). SEMPRE incluir a regra abaixo como bloco SEPARADO, DEPOIS da PARTE 1.
 
 ```css
-/* DIALOGUE EM SLIDES ESCUROS — texto DEVE ser legivel */
+/* PARTE 2 — DIALOGUE EM SLIDES ESCUROS — texto BRANCO (OBRIGATORIO) */
 .slide-dark .dialogue-line,
 .slide-dark .dialogue-bubble,
+.slide-dark .dialogue-bubble p,
 .slide-dark .dialogue-text,
-.slide-dark .dialogue-box {
+.slide-dark .dialogue-box,
+.slide-dark .dialogue-box p {
     color: #ffffff !important;
 }
-
-/* Keywords em bold dentro de dialogues — accent-light para destaque visivel */
+.slide-dark .dialogue-name {
+    color: rgba(255,255,255,0.85) !important;
+}
+/* Keywords em bold — accent-light para destaque */
 .slide-dark .dialogue-line strong,
 .slide-dark .dialogue-bubble strong,
-.slide-dark .dialogue-text strong {
+.slide-dark .dialogue-bubble .vocab-highlight {
     color: var(--accent-light) !important;
+}
+/* Icone de audio dentro de dialogue */
+.slide-dark .dialogue-bubble .audio-inline svg {
+    stroke: #fff !important;
 }
 ```
 
-**REGRAS PARA DIALOGUE EM SLIDE ESCURO:**
+**POR QUE ESSE ERRO ACONTECE:**
+A regra generica da PARTE 1 usa `[class*="bubble"]` ou lista `.dialogue-bubble` junto com cards de fundo branco — isso forca `color:#1a1a2e` (texto escuro) no dialogue, que tem fundo TRANSPARENTE escuro. Resultado: texto escuro sobre fundo escuro = INVISIVEL.
+
+**COMO PREVENIR:**
+1. A PARTE 1 NUNCA deve conter: dialogue-bubble, dialogue-line, dialogue-name, dialogue-box, dialogue-text, dialogue-card, [class*="bubble"]
+2. A PARTE 2 SEMPRE deve existir como bloco SEPARADO com `color:#ffffff!important`
+3. Na PARTE 1, se usar wildcard `[class*="..."]`, NUNCA usar "bubble", "dialogue", "line" — essas classes existem em dialogue
+
+**REGRAS VISUAIS:**
 - Fundo da bubble: `rgba(255,255,255,0.08)` a `rgba(255,255,255,0.12)` (sutil, NAO opaco)
-- Texto da fala: `#ffffff` com opacidade 1.0 (NUNCA cinza, NUNCA rgba parcial)
+- Texto da fala: `#ffffff` (NUNCA cinza, NUNCA rgba parcial, NUNCA var(--text))
 - Keywords em bold: `var(--accent-light)` (destaque visivel)
-- Nome do personagem / avatar: `#ffffff` ou `var(--accent-light)`
-- Icone de audio: `#ffffff` ou `var(--accent-light)`
-- NUNCA usar `color: var(--text)` ou `color: var(--text-dim)` ou `color: var(--text-mid)` dentro de dialogue em slide escuro — essas variaveis sao cinza escuro (#2d2d3a, #4a4a5a, #5c5c6c) e ficam INVISIVEIS em fundo escuro
+- Nome do personagem: `rgba(255,255,255,0.85)` ou `var(--accent-light)`
+- Icone de audio SVG: `stroke: #fff`
 
 ### SOLUCAO OBRIGATORIA — PARTE 3: Botoes em slides escuros
 
@@ -489,6 +494,18 @@ Dialogue bubbles com fundo semi-transparente DEVEM ter texto branco puro com opa
 ```
 
 **REGRA PARA BOTOES**: Todo botao em slide escuro DEVE ter `color: #ffffff !important` + fundo solido accent. NUNCA fundo transparente + texto accent em slide escuro (o accent pode ser uma cor que nao contrasta com o fundo escuro).
+
+### REGRA CRITICA AO COPIAR CSS DO TEMPLATE
+
+O template (patricia-ruffo.html) contem uma regra "ANTI-TEXTO-INVISIVEL v3" com wildcards `[class*="bubble"]`, `[class*="item"]` etc. que forca `color:#1a1a2e` em TUDO. Essa regra PEGA dialogue-bubble e MATA a legibilidade do dialogue (texto escuro sobre fundo escuro).
+
+**AO COPIAR O CSS DO TEMPLATE, OBRIGATORIO:**
+1. REMOVER `[class*="bubble"]` e `[class*="bubble"] p` e `[class*="bubble"] span` da regra v3
+2. REMOVER qualquer menção a `.dialogue-bubble`, `.dialogue-line`, `.dialogue-name`, `.dialogue-box`, `.dialogue-text` da regra que forca `color:#1a1a2e`
+3. ADICIONAR a PARTE 2 (dialogue branco) como bloco CSS SEPARADO, DEPOIS da regra v3
+4. Se o template tiver wildcards que casam com dialogue, REMOVER esses wildcards
+
+**TESTE RAPIDO**: Depois de gerar o CSS, rodar mentalmente: "alguma regra .slide-dark forca color:#1a1a2e em dialogue-bubble?" Se SIM, esta ERRADO. Dialogue em slide escuro = BRANCO.
 
 ### CHECKLIST DE CONTRASTE PRE-DEPLOY (BLOQUEANTE — ZERO TOLERANCIA):
 
@@ -819,6 +836,7 @@ Cores fixas Alumni (usadas em TODOS, NAO contar como accent): `#003080` (azul), 
 | Gabriela Pires | #D4326A | Pink |
 | Estephano Ishii | #0891B2 | Ciano |
 | Helen Mendes Teste | #2E4057 | Petroleo verde |
+| Rafael Pelizaro | #0F4C75 | Azul profundo |
 
 ### BANCO DE PALETAS PRE-APROVADAS (para novos alunos)
 
