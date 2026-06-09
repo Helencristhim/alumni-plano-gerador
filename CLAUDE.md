@@ -818,6 +818,7 @@ Cores fixas Alumni (usadas em TODOS, NAO contar como accent): `#003080` (azul), 
 | Karina Macedo | #C2662D | Cobre claro |
 | Gabriela Pires | #D4326A | Pink |
 | Estephano Ishii | #0891B2 | Ciano |
+| Helen Mendes Teste | #2E4057 | Petroleo verde |
 
 ### BANCO DE PALETAS PRE-APROVADAS (para novos alunos)
 
