@@ -1982,13 +1982,21 @@ O mesmo padrao se aplica ao arquivo do aluno: lesson cards de aulas 2+ linkam pa
 
 1. Ao criar a **primeira aula** de um aluno: gerar `{slug}.html` (main file) com aula 1 completa
 2. Ao criar a **segunda aula em diante**: gerar `{slug}-aula{N}.html` como arquivo separado
-3. No main file, adicionar um **lesson card com link** (modelo acima) — NUNCA accordion
+3. No main file do **PROFESSOR**, atualizar **4 LOCAIS OBRIGATORIOS** (esquecer qualquer um = BUG):
+   - **(a) Pre-class** (`tab-exercises`): adicionar lesson card com link `<a href="/professor/{slug}-aula{N}.html">`
+   - **(b) IN CLASS menu** (`tab-inclass`): adicionar card com link `<a href="/professor/{slug}-aula{N}.html">` no menu de selecao de aulas. MESMO formato dos outros cards (numero 2 digitos, border-radius:8px). Para standalone, usar `<a href>` (NUNCA `onclick="enterSlideMode()"`)
+   - **(c) Stamps** (`stamps-row`): adicionar stamp com mesma imagem do lesson card
+   - **(d) totalLessons**: atualizar no JS
+3b. No main file do **ALUNO**, atualizar **3 LOCAIS OBRIGATORIOS** (mesma logica):
+   - **(a) Pre-class** (`tab-exercises`): adicionar lesson card com link `<a href="/aluno/{slug}-aula{N}.html">`
+   - **(b) Stamps** (`stamps-row`): adicionar stamp identico ao do professor
+   - **(c) totalLessons**: atualizar no JS
+   - (Aluno NAO tem aba IN CLASS, entao nao tem menu IN CLASS)
 4. **NUNCA** adicionar conteudo de aula nova dentro de um arquivo existente
 5. **NUNCA** gerar um arquivo monolitico com todas as aulas juntas
 6. Atualizar `TOTAL_AULAS` em TODOS os arquivos daquele aluno (main + individuais)
-7. Atualizar lesson cards/stamps no main file para linkar a nova aula
-8. **SEMPRE criar/atualizar o arquivo do ALUNO** — Para CADA arquivo de professor gerado ou modificado, SEMPRE gerar/atualizar o espelho do aluno (`/aluno/{slug}-aula{N}.html`) com Pre-class + Complementares. Atualizar lesson cards, stamps, totalLessons e audioMap no main do aluno tambem. **Aula ou correcao SEM versao aluno = deploy BLOQUEADO.**
-9. **Correcoes DEVEM espelhar** — Se corrigir stamps, audioMap, lesson cards, totalLessons, TOTAL_AULAS ou imagens no professor, a MESMA correcao DEVE ser aplicada no aluno. TODA edicao no professor que afeta Pre-class, Complementares, header, stamps ou audioMap DEVE ser espelhada no aluno
+7. **SEMPRE criar/atualizar o arquivo do ALUNO** — Para CADA arquivo de professor gerado ou modificado, SEMPRE gerar/atualizar o espelho do aluno (`/aluno/{slug}-aula{N}.html`) com Pre-class + Complementares. Atualizar lesson cards, stamps, totalLessons e audioMap no main do aluno tambem. **Aula ou correcao SEM versao aluno = deploy BLOQUEADO.**
+8. **Correcoes DEVEM espelhar** — Se corrigir stamps, audioMap, lesson cards, totalLessons, TOTAL_AULAS ou imagens no professor, a MESMA correcao DEVE ser aplicada no aluno. TODA edicao no professor que afeta Pre-class, Complementares, header, stamps ou audioMap DEVE ser espelhada no aluno
 
 ### Verificacao pre-deploy (BLOQUEANTE):
 
@@ -2001,6 +2009,8 @@ O mesmo padrao se aplica ao arquivo do aluno: lesson cards de aulas 2+ linkam pa
 - [ ] Arquivo do ALUNO correspondente criado/atualizado?
 - [ ] Stamps, totalLessons, audioMap espelhados no aluno?
 - [ ] Lesson cards no main do aluno linkam para `/aluno/{slug}-aula{N}.html`?
+- [ ] **Menu IN CLASS do main professor** tem card linkando para a aula nova? (tab-inclass)
+- [ ] **Menu IN CLASS do main professor** tem o MESMO numero de cards que o total de aulas existentes?
 
 > **CONSEQUENCIA**: Arquivos monoliticos ficam enormes (8000+ linhas), dificeis de manter, e causam bugs de slide-mode. O formato individual e o UNICO aceito para novos materiais.
 
