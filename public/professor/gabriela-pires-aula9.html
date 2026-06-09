@@ -707,6 +707,10 @@ body.slide-mode .nav-bar { display:flex; }
 .avatar { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:#fff;flex-shrink:0; }
 .bubble { padding:.7rem 1rem;border-radius:12px;font-size:.92rem;line-height:1.5;max-width:80%;position:relative;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1); }
 .slide-dark .bubble { color:#fff; }
+/* Fix contraste: o seletor amplo .slide-dark [class*="bubble"] (mass-fix) forcava texto ESCURO nas bubbles de dialogo, que tem fundo ESCURO. Override por maior especificidade. */
+.slide-dark .dialogue-line .bubble, .slide-dark .dialogue-box .bubble { color:#fff !important; }
+.slide-dark .dialogue-line .bubble strong, .slide-dark .dialogue-box .bubble strong { color:var(--accent-light) !important; }
+.slide-dark .dialogue-line .bubble .audio-btn-sm { color:#fff !important; }
 
 /* Quick Fire items */
 .qf-item { transition:all .3s; }
@@ -2458,9 +2462,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function speakText(text, btn) {
-  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
   var cleanText = text.replace(/\'/g, "'");
   var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  // Toggle: clicar de novo no MESMO audio pausa/retoma em vez de reiniciar
+  if (file && currentAudio && !currentAudio.ended && currentAudio.src.indexOf(file) !== -1) {
+    if (currentAudio.paused) { currentAudio.play(); } else { currentAudio.pause(); }
+    return;
+  }
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
   if (file) {
     currentAudio = new Audio(file);
     currentAudio.playbackRate = audioSpeed;
@@ -2513,6 +2522,13 @@ function changeSlide(dir) {
 }
 
 function goToSlide(n) {
+  // Auto-pausar TODO audio ao trocar de slide (Listen/dialogo + players de listening + TTS)
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  if (typeof lpPlayers === 'object' && lpPlayers) {
+    for (var _pid in lpPlayers) { if (lpPlayers[_pid] && lpPlayers[_pid].audio) { lpPlayers[_pid].audio.pause(); lpPlayers[_pid].playing = false; } }
+    document.querySelectorAll('.lp-play.playing').forEach(function(b) { b.classList.remove('playing'); });
+  }
   var prev = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
   if (prev) prev.classList.remove('active');
   currentSlide = n;
