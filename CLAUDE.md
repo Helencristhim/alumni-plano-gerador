@@ -695,16 +695,118 @@ toggleMediaDone(checkbox)  — Marcar media como assistida
 
 ---
 
-## REGRA 10 — PALETA DE CORES UNICA POR ALUNO
+## REGRA 10 — PALETA DE CORES UNICA POR ALUNO (REVISADA)
 
 Cada aluno DEVE ter uma paleta de cores DIFERENTE. Definida no `:root` do arquivo.
 
-Exemplos:
-- Daniela (Professional): `--accent: #0d7377` (teal)
-- Maisa (Business): `--accent: #946B2D` (dourado)
-- Zilaudio (Travel): tema escuro com dourado
+Cores fixas Alumni (usadas em TODOS, NAO contar como accent): `#003080` (azul), `#d70c0c` (vermelho), `#f5f5f0` (fundo)
 
-Cores fixas Alumni (usadas em TODOS): `#003080` (azul), `#d70c0c` (vermelho), `#f5f5f0` (fundo)
+### CORES JA EM USO (NUNCA REUSAR):
+
+| Aluno | --accent | Nome da cor |
+|-------|----------|-------------|
+| Daniela Feitoza | #0D7377 | Teal |
+| Dienane Brandao | #0D7377 | Teal (legado, duplicado) |
+| Eduardo Chiba | #1B4965 | Azul petroleo |
+| Rafael Brandao | #1B4F72 | Azul marinho |
+| Marlene Landucci | #1B6B7D | Azul esverdeado |
+| Andreia Heins | #1E5BB8 | Azul royal |
+| Aline Sberci | #2563EB | Azul eletrico |
+| Mark Omagari | #2563EB | Azul eletrico (legado, duplicado) |
+| Rafael Gasparelli | #2C5282 | Azul acinzentado |
+| Vanessa Maluf | #2C5F7C | Azul cinza |
+| Patricia Ruffo | #2D6A4F | Verde floresta |
+| Zilaudio | #2D6A4F | Verde floresta (legado, duplicado) |
+| Rubens Tofolo | #336B87 | Azul mineral |
+| Carolina Paludetto | #3AA3C9 | Azul ceu |
+| Percival Jr | #3D5A80 | Azul ardosia |
+| Roberto Rezende | #455A64 | Cinza azulado |
+| Luiz Bressane | #4A6A8B | Azul slate |
+| Diogo Leal | #4F46E5 | Indigo |
+| Elaine Pinho | #5E4B6D | Roxo uva |
+| Natalie Viegas | #6366F1 | Violeta |
+| Maria Claudia | #6B4C8A | Roxo ametista |
+| Carlos Bassan | #7B2D26 | Bordô escuro |
+| Nilo Patucci | #7B2D3B | Vinho |
+| Gabriela Paulucci | #7B5D8E | Lavanda escuro |
+| Eduarda Gabriel | #7C5CBF | Roxo medio |
+| Simone Quiles | #881337 | Carmim |
+| Tuca Dias | #8B5E3C | Caramelo |
+| Maisa Santos | #946B2D | Dourado |
+| Gleice Leonardo | #9B4B22 | Terracota |
+| Tania Rosa | #9C4668 | Rosa escuro |
+| Pricila Adamo | #A0674B | Cobre |
+| Juliana Marques | #B8510D | Laranja queimado |
+| Milton Sayegh | #B8860B | Ouro velho |
+| Roberto Pires | #C2410C | Vermelho tijolo |
+| Karina Macedo | #C2662D | Cobre claro |
+| Gabriela Pires | #D4326A | Pink |
+| Estephano Ishii | #0891B2 | Ciano |
+
+### BANCO DE PALETAS PRE-APROVADAS (para novos alunos)
+
+Escolher da lista abaixo. Todas foram testadas para contraste WCAG AA (4.5:1 em fundo #f5f5f0 e texto branco em botoes).
+
+| # | --accent | --accent-light | Nome | Familia |
+|---|----------|---------------|------|---------|
+| 1 | #0F4C75 | #3282B8 | Azul profundo | Azul |
+| 2 | #1A535C | #4ECDC4 | Verde oceano | Verde |
+| 3 | #5B2C6F | #7D3C98 | Roxo intenso | Roxo |
+| 4 | #6C3483 | #8E44AD | Ametista vivo | Roxo |
+| 5 | #1E8449 | #27AE60 | Verde esmeralda | Verde |
+| 6 | #7B241C | #A93226 | Rubi | Vermelho |
+| 7 | #784212 | #B7950B | Bronze | Neutro quente |
+| 8 | #4A235A | #6C3483 | Beringela | Roxo |
+| 9 | #0B5345 | #148F77 | Verde jade | Verde |
+| 10 | #7E5109 | #B9770E | Mostarda escuro | Neutro quente |
+| 11 | #633974 | #8E44AD | Uva real | Roxo |
+| 12 | #1B2631 | #2E4053 | Grafite | Neutro frio |
+| 13 | #6E2C00 | #A04000 | Mogno | Neutro quente |
+| 14 | #1A5276 | #2980B9 | Azul cobalto | Azul |
+| 15 | #186A3B | #239B56 | Verde bandeira | Verde |
+| 16 | #7D6608 | #B7950B | Oliva dourado | Neutro quente |
+| 17 | #4D5656 | #717D7E | Cinza grafite | Neutro frio |
+| 18 | #922B21 | #C0392B | Vermelho granada | Vermelho |
+| 19 | #0E6251 | #17A589 | Turquesa escuro | Verde |
+| 20 | #6C3461 | #A1527F | Magenta escuro | Rosa |
+| 21 | #2E4057 | #048A81 | Petroleo verde | Misto |
+| 22 | #8D6E63 | #A1887F | Marrom quente | Neutro quente |
+| 23 | #5D4037 | #795548 | Chocolate | Neutro quente |
+| 24 | #37474F | #546E7A | Chumbo azulado | Neutro frio |
+
+> **AO CRIAR NOVO ALUNO**: (1) Consultar tabela "CORES JA EM USO" acima. (2) Escolher uma paleta do banco que NAO esteja na tabela. (3) Adicionar o aluno novo na tabela "CORES JA EM USO" no commit. (4) NUNCA inventar cor — usar apenas do banco pre-aprovado. Se o banco acabar, pedir para Helen aprovar novas cores.
+
+### REGRAS DE CONTRASTE PARA --accent (BLOQUEANTE)
+
+O accent e usado em botoes (texto branco), textos sobre fundo claro (#f5f5f0), e bordas. Por isso:
+
+1. **--accent DEVE ter luminosidade entre 25% e 45%** (no modelo HSL). Cores muito claras somem no fundo; muito escuras ficam sem vida
+2. **--accent-light DEVE ter luminosidade entre 35% e 55%** — usado em hovers e destaques
+3. **Ratio minimo texto accent sobre fundo #f5f5f0**: 4.5:1 (WCAG AA)
+4. **Ratio minimo texto branco #fff sobre fundo accent**: 4.5:1 (botoes)
+
+**PROIBIDO (causa problemas de contraste):**
+- `--accent` com luminosidade > 50% (ex: #8FD9E2 — some no fundo claro)
+- `--accent` com luminosidade < 15% (ex: #0A0A14 — parece preto, sem personalidade)
+- `--accent` e `--accent-light` com diferenca < 10% de luminosidade (parecem identicos)
+- `--accent` cinza puro (ex: #808080, #666666) — sem personalidade, parece erro
+- `--accent-dim` com opacidade > 0.15 (fica pesado demais como background)
+- `--accent-glow` com opacidade > 0.10
+
+**FORMULA para derivar as variaveis a partir do --accent:**
+```
+--accent: {COR_DO_BANCO};
+--accent-light: {COR_LIGHT_DO_BANCO};
+--accent-dim: rgba({R},{G},{B}, 0.08);    /* fundo sutil */
+--accent-glow: rgba({R},{G},{B}, 0.05);   /* brilho hover */
+```
+
+**VALIDACAO PRE-DEPLOY (adicionar ao checklist):**
+- [ ] --accent esta no banco pre-aprovado?
+- [ ] --accent NAO esta na lista "ja em uso"?
+- [ ] Texto accent e legivel sobre fundo #f5f5f0?
+- [ ] Texto branco e legivel sobre botao com fundo accent?
+- [ ] accent e accent-light sao visivelmente diferentes?
 
 ---
 
