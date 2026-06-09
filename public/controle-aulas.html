@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni — Controle de Aulas</title>
+    <title>Alumni — Controle</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="/lib/supabase-config.js"></script>
@@ -86,6 +86,39 @@
         }
         .refresh-btn:hover { background: rgba(255,255,255,0.2); }
         .refresh-btn:focus-visible { outline: 3px solid rgba(255,255,255,0.5); outline-offset: 2px; }
+
+        /* === PAGE TABS === */
+        .page-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            padding: 0;
+            background: rgba(245,245,240,0.85);
+            border-bottom: 1px solid #d4d4cc;
+        }
+        .page-tab {
+            padding: 0.8rem 1.5rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #6b6b7b;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: color 0.2s;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            font-family: inherit;
+        }
+        .page-tab:hover { color: #003080; }
+        .page-tab.active {
+            color: #003080;
+            font-weight: 700;
+            border-bottom-color: #003080;
+        }
 
         /* === KPI CARDS === */
         .kpi-row {
@@ -310,12 +343,73 @@
         }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+        /* === BASE DE ALUNOS BADGES === */
+        .code-badge {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.75rem;
+            background: rgba(0,48,128,0.06);
+            color: #003080;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .pin-badge {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            background: #f5f5f0;
+            border: 1px solid #d4d4cc;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+        .material-yes {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(22,163,74,0.1);
+            color: #16a34a;
+        }
+        .material-yes svg { width: 14px; height: 14px; }
+        .material-no { color: #c0c0b8; font-size: 1.1rem; }
+        .base-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .base-filter-btn {
+            padding: 0.4rem 0.9rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            background: transparent;
+            border: 1px solid #d4d4cc;
+            color: #6b6b7b;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+        .base-filter-btn:hover { border-color: #003080; color: #003080; }
+        .base-filter-btn.active { border-color: #003080; color: #003080; background: rgba(0,48,128,0.06); font-weight: 600; }
+
+        .count-line {
+            padding: 0 2rem;
+            max-width: 1200px;
+            margin: 0 auto 0.8rem;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header { padding: 1rem; }
             .kpi-row { padding: 1rem; }
             .controls { padding: 0 1rem; }
             .table-wrap { padding: 0 1rem 2rem; }
+            .count-line { padding: 0 1rem; }
             th, td { padding: 0.5rem 0.6rem; font-size: 0.78rem; }
             .kpi-value { font-size: 1.6rem; }
         }
@@ -331,7 +425,7 @@
     <div class="header">
         <div class="header-left">
             <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="header-logo">
-            <h1>Controle de Aulas</h1>
+            <h1>Controle</h1>
         </div>
         <div class="header-right">
             <div class="auto-refresh">
@@ -346,72 +440,200 @@
         </div>
     </div>
 
-    <!-- KPI Cards -->
-    <div class="kpi-row">
-        <div class="kpi-card">
-            <span class="kpi-label">Total Alunos</span>
-            <span class="kpi-value" id="kpiAlunos">--</span>
+    <!-- Page Tabs -->
+    <div class="page-tabs">
+        <button class="page-tab active" id="pageTabProgresso" onclick="switchPageTab('progresso')">Progresso de Aulas</button>
+        <button class="page-tab" id="pageTabBase" onclick="switchPageTab('base')">Base de Alunos</button>
+    </div>
+
+    <!-- ============================== -->
+    <!-- TAB 1: Progresso de Aulas      -->
+    <!-- ============================== -->
+    <div id="tab-progresso">
+        <!-- KPI Cards -->
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <span class="kpi-label">Total Alunos</span>
+                <span class="kpi-value" id="kpiAlunos">--</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Aulas Criadas</span>
+                <span class="kpi-value" id="kpiCriadas">--</span>
+                <span class="kpi-sub" id="kpiCriadasSub"></span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Aulas Concluidas</span>
+                <span class="kpi-value" id="kpiConcluidas">--</span>
+                <span class="kpi-sub" id="kpiConcluidasSub"></span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Taxa de Conclusao</span>
+                <span class="kpi-value" id="kpiTaxa">--</span>
+                <span class="kpi-sub">concluidas / criadas</span>
+            </div>
         </div>
-        <div class="kpi-card">
-            <span class="kpi-label">Aulas Criadas</span>
-            <span class="kpi-value" id="kpiCriadas">--</span>
-            <span class="kpi-sub" id="kpiCriadasSub"></span>
+
+        <!-- Search & Sort -->
+        <div class="controls">
+            <div class="search-wrap">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Buscar aluno..." oninput="filterTable()">
+            </div>
+            <select class="sort-select" id="sortSelect" onchange="sortAndRender()">
+                <option value="name_asc">Nome A-Z</option>
+                <option value="name_desc">Nome Z-A</option>
+                <option value="html_desc">Mais aulas criadas</option>
+                <option value="html_asc">Menos aulas criadas</option>
+                <option value="done_desc">Mais aulas concluidas</option>
+                <option value="pct_desc">Maior % conclusao</option>
+                <option value="pct_asc">Menor % conclusao</option>
+            </select>
         </div>
-        <div class="kpi-card">
-            <span class="kpi-label">Aulas Concluidas</span>
-            <span class="kpi-value" id="kpiConcluidas">--</span>
-            <span class="kpi-sub" id="kpiConcluidasSub"></span>
-        </div>
-        <div class="kpi-card">
-            <span class="kpi-label">Taxa de Conclusao</span>
-            <span class="kpi-value" id="kpiTaxa">--</span>
-            <span class="kpi-sub">concluidas / criadas</span>
+
+        <!-- Table -->
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Aluno</th>
+                        <th>Professor</th>
+                        <th class="num">Pacote</th>
+                        <th class="num">Criadas</th>
+                        <th class="num">Concluidas</th>
+                        <th>Progresso</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr class="loading-row">
+                        <td colspan="7"><span class="spinner"></span>Carregando dados...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Search & Sort -->
-    <div class="controls">
-        <div class="search-wrap">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" class="search-input" id="searchInput" placeholder="Buscar aluno..." oninput="filterTable()">
+    <!-- ============================== -->
+    <!-- TAB 2: Base de Alunos          -->
+    <!-- ============================== -->
+    <div id="tab-base" style="display:none">
+        <!-- KPI Cards -->
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <span class="kpi-label">Total Alunos</span>
+                <span class="kpi-value" id="baseKpiTotal">--</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Com Material</span>
+                <span class="kpi-value" id="baseKpiCom">--</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Sem Material</span>
+                <span class="kpi-value" id="baseKpiSem">--</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">PINs Ativos</span>
+                <span class="kpi-value" id="baseKpiPins">--</span>
+            </div>
         </div>
-        <select class="sort-select" id="sortSelect" onchange="sortAndRender()">
-            <option value="name_asc">Nome A-Z</option>
-            <option value="name_desc">Nome Z-A</option>
-            <option value="html_desc">Mais aulas criadas</option>
-            <option value="html_asc">Menos aulas criadas</option>
-            <option value="done_desc">Mais aulas concluidas</option>
-            <option value="pct_desc">Maior % conclusao</option>
-            <option value="pct_asc">Menor % conclusao</option>
-        </select>
-    </div>
 
-    <!-- Table -->
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Aluno</th>
-                    <th class="num">Pacote</th>
-                    <th class="num">Criadas</th>
-                    <th class="num">Concluidas</th>
-                    <th>Progresso</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <tr class="loading-row">
-                    <td colspan="6"><span class="spinner"></span>Carregando dados...</td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Search & Sort & Filters -->
+        <div class="controls">
+            <div class="search-wrap">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" class="search-input" id="baseSearchInput" placeholder="Buscar aluno..." oninput="filterBase()">
+            </div>
+            <select class="sort-select" id="baseSortSelect" onchange="filterBase()">
+                <option value="name_asc">Nome A-Z</option>
+                <option value="name_desc">Nome Z-A</option>
+                <option value="pin_asc">PIN crescente</option>
+                <option value="pin_desc">PIN decrescente</option>
+                <option value="card_asc">Student Card crescente</option>
+                <option value="card_desc">Student Card decrescente</option>
+            </select>
+            <div class="base-filters">
+                <button class="base-filter-btn active" onclick="setBaseFilter('all', this)">Todos</button>
+                <button class="base-filter-btn" onclick="setBaseFilter('com', this)">Com Material</button>
+                <button class="base-filter-btn" onclick="setBaseFilter('sem', this)">Sem Material</button>
+            </div>
+        </div>
+
+        <!-- Count line -->
+        <div class="count-line" id="baseCountLine">Exibindo 0 de 0 alunos</div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Student Card</th>
+                        <th>PIN</th>
+                        <th class="num">Material</th>
+                    </tr>
+                </thead>
+                <tbody id="baseTableBody"></tbody>
+            </table>
+        </div>
     </div>
 
 <script>
 // ============================================================
-// DATA
+// TAB SWITCHING
+// ============================================================
+function switchPageTab(tabId) {
+    document.getElementById('tab-progresso').style.display = tabId === 'progresso' ? 'block' : 'none';
+    document.getElementById('tab-base').style.display = tabId === 'base' ? 'block' : 'none';
+    document.getElementById('pageTabProgresso').classList.toggle('active', tabId === 'progresso');
+    document.getElementById('pageTabBase').classList.toggle('active', tabId === 'base');
+}
+
+// ============================================================
+// TAB 1: PROGRESSO DE AULAS — DATA
 // ============================================================
 var allData = [];
+
+// Fallback professor map (from spreadsheet)
+var profMap = {
+    'aline-sberci': 'Fabio J.',
+    'andreia-heins': 'Vinicius R.',
+    'carlos-vinicius-vale-bassan': 'Rute M.',
+    'carolina-paludetto-rodrigues': 'Polly W.',
+    'daniela-feitoza': 'Malu B.',
+    'dienane-brandao-de-mesquita': 'Mariana R.',
+    'diogo-leal': 'Andrew T.',
+    'eduarda-gabriel': 'Leonardo M.',
+    'eduardo-chiba': 'Alexandre M.',
+    'elaine-mieko-pinho': 'Polly W.',
+    'estephano-akihito-ishii': 'Polly W.',
+    'gabriela-paulucci': 'Polly W.',
+    'gabriela-pires': 'Carol F.',
+    'gleice-leonardo-rocha-de-souza': 'Andrew T.',
+    'juliana-marques': 'Maria L.',
+    'karina-macedo': 'Andrew T.',
+    'luiz-bressane': 'André M.',
+    'maisa-de-oliveira-santos': 'Oddie N.',
+    'maria-claudia-curimbaba': 'João P.',
+    'mark-kazuyoshi-seki-omagari': 'Carol F.',
+    'marlene-landucci': 'Bárbara E.',
+    'milton-sayegh': 'Alexandre M.',
+    'natalie-viegas': 'Eros O.',
+    'nilo-mesquita-patucci': 'Vinicius R.',
+    'patricia-ruffo': 'André M.',
+    'percival-jr': 'Oddie N.',
+    'pricila-adamo': 'André M.',
+    'rafael-de-andrade-brandao': 'Vinicius R.',
+    'rafael-gasparelli-lima': 'Andrew T.',
+    'roberto-pires': 'Andrew T.',
+    'roberto-rezende': 'Andrew T.',
+    'rubens-tofolo': 'Alexandre M.',
+    'simone-quiles-de-santana-marques': 'Lua G.',
+    'tania-rosa': 'Bárbara E.',
+    'tuca-dias': 'Bárbara E.',
+    'vanessa-maluf': 'Oddie N.',
+    'zilaudio': 'Malu B.'
+};
 
 async function loadAll() {
     try {
@@ -431,7 +653,8 @@ async function loadAll() {
                 name: decodeHtml(s.name),
                 pacote: 0,
                 criadas: s.aulasHtml,
-                concluidas: 0
+                concluidas: 0,
+                professor: ''
             };
         });
 
@@ -441,6 +664,7 @@ async function loadAll() {
             if (merged[slug]) {
                 merged[slug].pacote = p.num_aulas || 0;
                 if (p.nome) merged[slug].name = p.nome;
+                merged[slug].professor = p.professor || (p.alocacao && p.alocacao.professor) || (p.data && p.data.professor) || profMap[slug] || '';
             }
         });
 
@@ -459,7 +683,7 @@ async function loadAll() {
     } catch (e) {
         console.error('Error loading data:', e);
         document.getElementById('tableBody').innerHTML =
-            '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--danger)">Erro ao carregar dados. Tente atualizar.</td></tr>';
+            '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--danger)">Erro ao carregar dados. Tente atualizar.</td></tr>';
     }
 }
 
@@ -472,7 +696,7 @@ async function fetchHtmlCounts() {
 
 async function fetchPerfis() {
     try {
-        var resp = await sb.from('perfis').select('id,nome,num_aulas,ativo,status');
+        var resp = await sb.from('perfis').select('id,nome,num_aulas,ativo,status,professor,alocacao,data');
         return (resp.data || []);
     } catch (e) { console.error('Supabase perfis error:', e); return []; }
 }
@@ -491,7 +715,7 @@ function decodeHtml(str) {
 }
 
 // ============================================================
-// KPIs
+// TAB 1: KPIs
 // ============================================================
 function updateKPIs() {
     var totalAlunos = allData.length;
@@ -509,7 +733,7 @@ function updateKPIs() {
 }
 
 // ============================================================
-// SORT & RENDER
+// TAB 1: SORT & RENDER
 // ============================================================
 function sortAndRender() {
     var sortBy = document.getElementById('sortSelect').value;
@@ -560,6 +784,7 @@ function renderTable(list) {
         html += '<tr data-name="' + d.name.toLowerCase() + '"' + hidden + '>';
         html += '<td class="num" style="color:var(--text-dim);font-size:.75rem">' + (i + 1) + '</td>';
         html += '<td><a href="' + profUrl + '" target="_blank" rel="noopener" class="student-link">' + d.name + '</a></td>';
+        html += '<td style="font-size:.82rem;color:var(--text-mid)">' + (d.professor || '<span style="color:var(--text-dim)">--</span>') + '</td>';
         html += '<td class="num">' + (d.pacote || '<span style="color:var(--text-dim)">--</span>') + '</td>';
         html += '<td class="num"><strong>' + d.criadas + '</strong></td>';
         html += '<td class="num"><strong>' + d.concluidas + '</strong></td>';
@@ -573,7 +798,7 @@ function renderTable(list) {
     });
 
     if (!html) {
-        html = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-dim)">Nenhum aluno encontrado.</td></tr>';
+        html = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-dim)">Nenhum aluno encontrado.</td></tr>';
     }
 
     document.getElementById('tableBody').innerHTML = html;
@@ -587,10 +812,290 @@ function updateTimestamp() {
 }
 
 // ============================================================
+// TAB 2: BASE DE ALUNOS — DATA
+// ============================================================
+var studentPins = [
+  { name: "Rubens E. de Moraes", studentCard: "SPVT26100", pin: "1017", hasMaterial: false },
+  { name: "Felipe Bianchi Leone", studentCard: "SPVT26101", pin: "1018", hasMaterial: false },
+  { name: "Livia Seabra", studentCard: "SPVT26102", pin: "1019", hasMaterial: false },
+  { name: "Silvia Angelica De Freitas Oliveira", studentCard: "SPVT26103", pin: "1020", hasMaterial: false },
+  { name: "Marcos Mansour Chebib", studentCard: "SPVT26104", pin: "1021", hasMaterial: false },
+  { name: "Cristiana Han Huei Lin", studentCard: "SPVT26105", pin: "1022", hasMaterial: false },
+  { name: "Adriana Frantz", studentCard: "SPVT26106", pin: "1023", hasMaterial: false },
+  { name: "Milton Sayegh", studentCard: "SPVT26107", pin: "1024", hasMaterial: true },
+  { name: "Rubens Tofolo Junior", studentCard: "SPVT26108", pin: "1025", hasMaterial: true },
+  { name: "Pedro Henrique Andrighetti Borges", studentCard: "SPVT26109", pin: "1026", hasMaterial: false },
+  { name: "Rebecka Lima Hahn", studentCard: "SPVT26110", pin: "1027", hasMaterial: false },
+  { name: "Felipe Martin Bianco Rossi", studentCard: "SPVT26111", pin: "1028", hasMaterial: false },
+  { name: "Elisa Maria Americano Saintive", studentCard: "SPVT26112", pin: "1029", hasMaterial: false },
+  { name: "Andreia Modesto", studentCard: "SPVT26113", pin: "1030", hasMaterial: false },
+  { name: "Sergio Atala Dib", studentCard: "SPVT26114", pin: "1031", hasMaterial: false },
+  { name: "Anthonyo Leao de Souza Neto", studentCard: "SPVT26115", pin: "1032", hasMaterial: false },
+  { name: "Anthonyo Leao de Souza Neto", studentCard: "SPVT26116", pin: "1033", hasMaterial: false },
+  { name: "Karolliny da Silva Fidelix", studentCard: "SPVT26117", pin: "1034", hasMaterial: false },
+  { name: "Patricia Ruffo", studentCard: "SPVT26118", pin: "1035", hasMaterial: true },
+  { name: "Cristian de Almeida Fumagalli", studentCard: "SPVT26119", pin: "1036", hasMaterial: false },
+  { name: "Luiz Antonio Silva Bressane", studentCard: "SPVT26120", pin: "1037", hasMaterial: true },
+  { name: "Pricila Adamo", studentCard: "SPVT26121", pin: "1038", hasMaterial: true },
+  { name: "Julio Ferraz Braga Neto", studentCard: "SPVT26122", pin: "1039", hasMaterial: false },
+  { name: "Danilo De Febba Santos", studentCard: "SPVT26123", pin: "1040", hasMaterial: false },
+  { name: "Gleice Leonardo Rocha de Sousa", studentCard: "SPVT26124", pin: "1041", hasMaterial: true },
+  { name: "Daniel Konder Calixto", studentCard: "SPVT26125", pin: "1042", hasMaterial: false },
+  { name: "Rafael Gasparello Lima", studentCard: "SPVT26126", pin: "1043", hasMaterial: true },
+  { name: "Roberto Rezende Coelho", studentCard: "SPVT26127", pin: "1044", hasMaterial: true },
+  { name: "Karina Macedo", studentCard: "SPVT26128", pin: "1045", hasMaterial: true },
+  { name: "Bianca Precoppe", studentCard: "SPVT26129", pin: "1046", hasMaterial: false },
+  { name: "Marlene Landucci", studentCard: "SPVT26130", pin: "1047", hasMaterial: true },
+  { name: "Pedro Henrique Leite Canedo", studentCard: "SPVT26131", pin: "1048", hasMaterial: false },
+  { name: "Lucca Ferreira Mascaro", studentCard: "SPVT26132", pin: "1049", hasMaterial: false },
+  { name: "Artur Bernardes Duarte", studentCard: "SPVT26133", pin: "1050", hasMaterial: false },
+  { name: "Tania Martins Rosa", studentCard: "SPVT26134", pin: "1051", hasMaterial: true },
+  { name: "Anna Flavia Miranda da Silva", studentCard: "SPVT26135", pin: "1052", hasMaterial: false },
+  { name: "Lucia Maria da Silva Dias", studentCard: "SPVT26136", pin: "1053", hasMaterial: true },
+  { name: "Artur Kazuhiro Tsuda Takata", studentCard: "SPVT26137", pin: "1054", hasMaterial: false },
+  { name: "Victor Malvezi Paschotto", studentCard: "SPVT26138", pin: "1055", hasMaterial: false },
+  { name: "Viviane Rodrigues de Oliveira", studentCard: "SPVT26139", pin: "1056", hasMaterial: false },
+  { name: "Decio Gil de Oliveira", studentCard: "SPVT26140", pin: "1057", hasMaterial: false },
+  { name: "Daniel Calero", studentCard: "SPVT26141", pin: "1058", hasMaterial: false },
+  { name: "Helcio Jose dos Prazeres Filho", studentCard: "SPVT26142", pin: "1059", hasMaterial: false },
+  { name: "Heitor Neves Dumans e Mello", studentCard: "SPVT26143", pin: "1060", hasMaterial: false },
+  { name: "Nathalie Viegas", studentCard: "SPVT26144", pin: "1061", hasMaterial: true },
+  { name: "Braulio Zemel", studentCard: "SPVT26145", pin: "1062", hasMaterial: false },
+  { name: "Carolina Braga Stecca", studentCard: "SPVT26146", pin: "1063", hasMaterial: false },
+  { name: "Alice Xi Wang", studentCard: "SPVT26147", pin: "1064", hasMaterial: false },
+  { name: "Raquel Belluco Pozzani", studentCard: "SPVT26148", pin: "1065", hasMaterial: false },
+  { name: "Aline Sberci Monteiro", studentCard: "SPVT26149", pin: "1066", hasMaterial: true },
+  { name: "Renato Silva Godoi", studentCard: "SPVT26150", pin: "1067", hasMaterial: false },
+  { name: "Cibeli de Souza Izidoro", studentCard: "SPVT26151", pin: "1068", hasMaterial: false },
+  { name: "Luiz Carlos da Silva", studentCard: "SPVT26152", pin: "1069", hasMaterial: false },
+  { name: "David Oliveira", studentCard: "SPVT26153", pin: "1070", hasMaterial: false },
+  { name: "Liana Cristina Bismara Cury", studentCard: "SPVT26154", pin: "1071", hasMaterial: false },
+  { name: "Arthur Zillig de Almeida Camargo", studentCard: "SPVT26155", pin: "1072", hasMaterial: false },
+  { name: "Marcio Barcellos Caldeira", studentCard: "SPVT26156", pin: "1073", hasMaterial: false },
+  { name: "Eduarda Gabriel", studentCard: "SPVT26157", pin: "1074", hasMaterial: true },
+  { name: "Luana Rodrigues Duarte de Siqueira", studentCard: "SPVT26158", pin: "1075", hasMaterial: false },
+  { name: "Johnny William Cruz Borges", studentCard: "SPVT26159", pin: "1076", hasMaterial: false },
+  { name: "Lelis Marino", studentCard: "SPVT26160", pin: "1077", hasMaterial: false },
+  { name: "Simone Quiles de Santana Marques", studentCard: "SPVT26161", pin: "1078", hasMaterial: true },
+  { name: "Percival Gratti Junior", studentCard: "SPVT26162", pin: "1079", hasMaterial: true },
+  { name: "Raimundo Nelo Sobrinho", studentCard: "SPVT26163", pin: "1080", hasMaterial: false },
+  { name: "Zilaudio Luiz Pereira", studentCard: "SPVT26164", pin: "1081", hasMaterial: true },
+  { name: "Petterson Elias", studentCard: "SPVT26165", pin: "1082", hasMaterial: false },
+  { name: "Sandra Harumi Hayasaki", studentCard: "SPVT26166", pin: "1083", hasMaterial: false },
+  { name: "Vanessa Maria da Costa", studentCard: "SPVT26167", pin: "1084", hasMaterial: true },
+  { name: "Daniela Goncalves Feitoza", studentCard: "SPVT26168", pin: "1085", hasMaterial: true },
+  { name: "Juliana Di Cesare Marques Awad", studentCard: "SPVT26169", pin: "1086", hasMaterial: true },
+  { name: "Ana Lucia Trigolo", studentCard: "SPVT26170", pin: "1087", hasMaterial: false },
+  { name: "Rafael Pelizaro Arruda Camargo", studentCard: "SPVT26171", pin: "1088", hasMaterial: false },
+  { name: "Daniel Konder Calixto", studentCard: "SPVT26172", pin: "1089", hasMaterial: false },
+  { name: "Dienane Brandao de Mesquita", studentCard: "SPVT26173", pin: "1090", hasMaterial: true },
+  { name: "Danillo Paulo Couto", studentCard: "SPVT26174", pin: "1091", hasMaterial: false },
+  { name: "Gleice Joliane Costa Delgado", studentCard: "SPVT26175", pin: "1092", hasMaterial: false },
+  { name: "Ivone Ferreira", studentCard: "SPVT26176", pin: "1093", hasMaterial: false },
+  { name: "Renata Fernandes", studentCard: "SPVT26177", pin: "1094", hasMaterial: false },
+  { name: "Felipe Augusto Molina Umezu", studentCard: "SPVT26178", pin: "1095", hasMaterial: false },
+  { name: "Lais Paludetto Rodrigues", studentCard: "SPVT26179", pin: "1096", hasMaterial: false },
+  { name: "Marcelo Magalhaes Peixoto", studentCard: "SPVT26180", pin: "1097", hasMaterial: false },
+  { name: "Priscila Furgeri Morando", studentCard: "SPVT26181", pin: "1098", hasMaterial: false },
+  { name: "Vivianne Braga de Oliveira", studentCard: "SPVT26182", pin: "1099", hasMaterial: false },
+  { name: "Andrea Mozena Galego", studentCard: "SPVT26183", pin: "1100", hasMaterial: false },
+  { name: "Maria Jose Millan Castano", studentCard: "SPVT26184", pin: "1101", hasMaterial: false },
+  { name: "Estephano Akihito Ishii", studentCard: "SPVT26185", pin: "1102", hasMaterial: true },
+  { name: "Gabriela Paulucci", studentCard: "SPVT26186", pin: "1103", hasMaterial: true },
+  { name: "Elaine Mieko Pinho", studentCard: "SPVT26187", pin: "1104", hasMaterial: true },
+  { name: "Carolina Paludetto Rodrigues", studentCard: "SPVT26188", pin: "1105", hasMaterial: true },
+  { name: "Eduardo Nevola - Kids", studentCard: "SPVT26189", pin: "1106", hasMaterial: false },
+  { name: "Lorenzo Gomes da Rocha", studentCard: "SPVT26190", pin: "1107", hasMaterial: false },
+  { name: "Sofia de Almeida Fernandes Carneiro", studentCard: "SPVT26191", pin: "1108", hasMaterial: false },
+  { name: "Carlos Vinicius Vale Bassan", studentCard: "SPVT26192", pin: "1109", hasMaterial: true },
+  { name: "Cassio D'Avoglio", studentCard: "SPVT26193", pin: "1110", hasMaterial: false },
+  { name: "Catarina Mascaro", studentCard: "SPVT26194", pin: "1111", hasMaterial: false },
+  { name: "Patricia Tauany de Jesus", studentCard: "SPVT26195", pin: "1112", hasMaterial: false },
+  { name: "Henrique Monteiro Neto", studentCard: "SPVT26196", pin: "1113", hasMaterial: false },
+  { name: "Nilo Mesquita Patussi", studentCard: "SPVT26197", pin: "1114", hasMaterial: true },
+  { name: "Andreia Maria Heins Vaccari", studentCard: "SPVT26198", pin: "1115", hasMaterial: true },
+  { name: "Fabiana Michelly Silva", studentCard: "SPVT26199", pin: "1116", hasMaterial: false },
+  { name: "Rafael de Andrade Brandao", studentCard: "SPVT26200", pin: "1117", hasMaterial: true },
+  { name: "Gabriela Fortunato da Costa", studentCard: "SPVT26201", pin: "1118", hasMaterial: false },
+  { name: "Isabel Branco de Araujo Zurita", studentCard: "SPVT26202", pin: "1119", hasMaterial: false },
+  { name: "Renata Ayumi Hokama Penteado Alves", studentCard: "SPVT26203", pin: "1120", hasMaterial: false },
+  { name: "Stephanie Sallum", studentCard: "SPVT26204", pin: "1121", hasMaterial: false },
+  { name: "Patricia Tauany de Jesus", studentCard: "SPVT26205", pin: "1122", hasMaterial: false },
+  { name: "Maisa de Oliveira Santos", studentCard: "SPVT26206", pin: "1123", hasMaterial: true },
+  { name: "Luiz Antonio Talarico Barata", studentCard: "SPVT26207", pin: "1124", hasMaterial: false },
+  { name: "Maisa de Oliveira Santos", studentCard: "SPVT26208", pin: "1125", hasMaterial: true },
+  { name: "Vanessa Maluf", studentCard: "SPVT26209", pin: "1126", hasMaterial: true },
+  { name: "Marcela Hagstrom Barreiros dos Santos", studentCard: "SPVT26210", pin: "1127", hasMaterial: false },
+  { name: "Solange Magnani Lobo Alvarez Perez", studentCard: "SPVT26211", pin: "1128", hasMaterial: false },
+  { name: "Marina Coelho da Cunha", studentCard: "SPVT26212", pin: "1129", hasMaterial: false },
+  { name: "Matheus Matos", studentCard: "SPVT26213", pin: "1130", hasMaterial: false },
+  { name: "Javier Garcia Verdou", studentCard: "SPVT26214", pin: "1131", hasMaterial: false },
+  { name: "Cristiani Golin Meroni", studentCard: "SPVT26215", pin: "1132", hasMaterial: false },
+  { name: "Aline Nami Onishi", studentCard: "SPVT26216", pin: "1133", hasMaterial: false },
+  { name: "Loy Wanderley", studentCard: "SPVT26217", pin: "1134", hasMaterial: false },
+  { name: "Miriam de Fatima Cuevas", studentCard: "SPVT26218", pin: "1135", hasMaterial: false },
+  { name: "Vera Parasmo", studentCard: "SPVT26219", pin: "1136", hasMaterial: false },
+  { name: "Silvana Guinalz Carvalho", studentCard: "SPVT26220", pin: "1137", hasMaterial: false },
+  { name: "Anderson da Silva Carvalho", studentCard: "SPVT26221", pin: "1138", hasMaterial: false },
+  { name: "Bruno Karra", studentCard: "SPVT26222", pin: "1139", hasMaterial: false },
+  { name: "Talita de Almeida Licariao", studentCard: "SPVT26223", pin: "1140", hasMaterial: false },
+  { name: "Renato Leonel", studentCard: "SPVT26224", pin: "1141", hasMaterial: false },
+  { name: "Cassia Rodrigues da Silveira", studentCard: "SPVT26225", pin: "1142", hasMaterial: false },
+  { name: "Antonio Flavio Ferraz", studentCard: "SPVT26226", pin: "1143", hasMaterial: false },
+  { name: "Marina Funck", studentCard: "SPVT26227", pin: "1144", hasMaterial: false },
+  { name: "Gianna Tagliari Schiliro", studentCard: "SPVT26228", pin: "1145", hasMaterial: false },
+  { name: "Antonio Fernando Diniz Freire", studentCard: "SPVT26229", pin: "1146", hasMaterial: false },
+  { name: "Arthur Prince de Almeida", studentCard: "SPVT26230", pin: "1147", hasMaterial: false },
+  { name: "Andrea Maria da Silva Mattos", studentCard: "SPVT26231", pin: "1148", hasMaterial: false },
+  { name: "Loyde Jose Goncalves", studentCard: "SPVT26232", pin: "1149", hasMaterial: false },
+  { name: "Herminia B Lucena", studentCard: "SPVT26233", pin: "1150", hasMaterial: false },
+  { name: "Arthur Zillig de Almeida Camargo", studentCard: "SPVT26234", pin: "1151", hasMaterial: false },
+  { name: "Maria de Lourdes Silveira Castro", studentCard: "SPVT26235", pin: "1152", hasMaterial: false },
+  { name: "Samuel Rios", studentCard: "SPVT26236", pin: "1153", hasMaterial: false },
+  { name: "Fernanda Saraiva do Amaral", studentCard: "SPVT26237", pin: "1154", hasMaterial: false },
+  { name: "Marina Salles", studentCard: "SPVT26238", pin: "1155", hasMaterial: false },
+  { name: "Laura Prado Bueno Passarin", studentCard: "SPVT26239", pin: "1156", hasMaterial: false },
+  { name: "Sergio Atala Dib", studentCard: "SPVT26240", pin: "1157", hasMaterial: false },
+  { name: "Ana Paula Nunes Gonsales", studentCard: "SPVT26241", pin: "1158", hasMaterial: false },
+  { name: "Larissa Tosta", studentCard: "SPVT26242", pin: "1159", hasMaterial: false },
+  { name: "Raphael Longo", studentCard: "SPVT26243", pin: "1160", hasMaterial: false },
+  { name: "Cristiani Golin Meroni", studentCard: "SPVT26244", pin: "1161", hasMaterial: false },
+  { name: "Rodrigo Fernandes Garcia", studentCard: "SPVT26245", pin: "1162", hasMaterial: false },
+  { name: "Rogerio Sartori", studentCard: "SPVT26246", pin: "1163", hasMaterial: false },
+  { name: "Marcelo Magalhaes Peixoto", studentCard: "SPVT26247", pin: "1164", hasMaterial: false },
+  { name: "Vitoria Veludo dos Santos", studentCard: "SPVT26248", pin: "1165", hasMaterial: false },
+  { name: "Cynthia Maria Dos Santos Batista", studentCard: "SPVT26249", pin: "1166", hasMaterial: false },
+  { name: "Lorena Del Carmen Herrera Farias De Angeli", studentCard: "SPVT26250", pin: "1167", hasMaterial: false },
+  { name: "Vera Parasmo", studentCard: "SPVT26251", pin: "1168", hasMaterial: false },
+  { name: "Gisele Silva Teodoro", studentCard: "SPVT26252", pin: "1169", hasMaterial: false },
+  { name: "Marina Silami Tuma", studentCard: "SPVT26253", pin: "1170", hasMaterial: false },
+  { name: "Leonardo das Neves Ramos", studentCard: "SPVT26254", pin: "1171", hasMaterial: false },
+  { name: "Sandra Rosa Machado Luz Gimenez", studentCard: "SPVT26255", pin: "1172", hasMaterial: false },
+  { name: "Denis Pedrosa", studentCard: "SPVT26256", pin: "1173", hasMaterial: false },
+  { name: "Maria Isabel Meira de Castro", studentCard: "SPVT26257", pin: "1174", hasMaterial: false },
+  { name: "Kesley Leandro da Silva", studentCard: "SPVT26258", pin: "1175", hasMaterial: false },
+  { name: "Lorenzo Gomes da Rocha", studentCard: "SPVT26259", pin: "1176", hasMaterial: false },
+  { name: "Rafael Cesario Lodi", studentCard: "SPVT26260", pin: "1177", hasMaterial: false },
+  { name: "Decio Gil de Oliveira", studentCard: "SPVT26261", pin: "1178", hasMaterial: false },
+  { name: "Felipe Porlella Lopes", studentCard: "SPVT26262", pin: "1179", hasMaterial: false },
+  { name: "Glauber Gallego", studentCard: "SPVT26263", pin: "1180", hasMaterial: false },
+  { name: "Lelis Marino", studentCard: "SPVT26264", pin: "1181", hasMaterial: false },
+  { name: "Mariangela Lopes", studentCard: "SPVT26265", pin: "1182", hasMaterial: false },
+  { name: "Tatiana Dutra Zequini", studentCard: "SPVT26266", pin: "1183", hasMaterial: false },
+  { name: "Vanessa Rodrigues", studentCard: "SPVT26267", pin: "1184", hasMaterial: false },
+  { name: "Sandra Harumi Hayasaki", studentCard: "SPVT26268", pin: "1185", hasMaterial: false },
+  { name: "Leandro da Silva Bartolassi", studentCard: "SPVT26269", pin: "1186", hasMaterial: false },
+  { name: "Adriana Frantz", studentCard: "SPVT26270", pin: "1187", hasMaterial: false },
+  { name: "Bianca Precoppe", studentCard: "SPVT26271", pin: "1188", hasMaterial: false },
+  { name: "Percival Gratti Junior", studentCard: "SPVT26272", pin: "1189", hasMaterial: true },
+  { name: "Lucia Maria da Silva Dias", studentCard: "SPVT26273", pin: "1190", hasMaterial: true },
+  { name: "Eduardo Chiba", studentCard: "SPVT26274", pin: "1191", hasMaterial: true },
+  { name: "Gleice Joliane Costa Delgado", studentCard: "SPVT26275", pin: "1192", hasMaterial: false },
+  { name: "Carina Azenha", studentCard: "SPVT26276", pin: "1193", hasMaterial: false },
+  { name: "Caio Barbosa Lima Moreno", studentCard: "SPVT26277", pin: "1194", hasMaterial: false },
+  { name: "Daiane Priscila Pazian", studentCard: "SPVT26278", pin: "1195", hasMaterial: false },
+  { name: "Bruna da Silva Henriques", studentCard: "SPVT26279", pin: "1196", hasMaterial: false },
+  { name: "Samuel", studentCard: "SPVT26280", pin: "1197", hasMaterial: false },
+  { name: "Andreia Modesto", studentCard: "SPVT26281", pin: "1198", hasMaterial: false },
+  { name: "Jose Eduardo Freire Santos", studentCard: "SPVT26282", pin: "1199", hasMaterial: false },
+  { name: "Luigi Marcolino Vilela", studentCard: "SPVT26283", pin: "1200", hasMaterial: false },
+  { name: "Ricardo Marian Andrade", studentCard: "SPVT26284", pin: "1201", hasMaterial: false },
+  { name: "Luigi Marcolino Vilela", studentCard: "SPVT26285", pin: "1202", hasMaterial: false },
+  { name: "Natalia Florenzano Leite", studentCard: "SPVT26286", pin: "1203", hasMaterial: false },
+  { name: "Rafael Fernandes Azevedo", studentCard: "SPVT26287", pin: "1204", hasMaterial: false },
+  { name: "Mark Kazuyoshi Seki Omagari", studentCard: "SPVT26288", pin: "1205", hasMaterial: true },
+  { name: "Jose Ricardo Izidoro Galasso", studentCard: "SPVT26289", pin: "1206", hasMaterial: false },
+  { name: "Domingos Variane", studentCard: "SPVT26290", pin: "1207", hasMaterial: false },
+  { name: "Lucas Romano Del Sante - Kids", studentCard: "SPVT26291", pin: "1208", hasMaterial: false },
+  { name: "Adriana Frantz", studentCard: "SPVT26292", pin: "1209", hasMaterial: false },
+  { name: "Luigi Marcolino Vilela", studentCard: "SPVT26293", pin: "1210", hasMaterial: false },
+  { name: "Joao Romano Del Sante - Teens", studentCard: "SPVT26294", pin: "1211", hasMaterial: false },
+  { name: "Ricardo Fasti de Souza", studentCard: "SPVT26295", pin: "1212", hasMaterial: false },
+  { name: "Diogo Leonardo Leal", studentCard: "SPVT26296", pin: "1213", hasMaterial: true },
+  { name: "Danilo De Febba Santos", studentCard: "SPVT26297", pin: "1214", hasMaterial: false },
+  { name: "Roberto Pires", studentCard: "SPVT26298", pin: "1215", hasMaterial: true },
+  { name: "Gabriela Pires", studentCard: "SPVT26299", pin: "1216", hasMaterial: true },
+  { name: "Eduardo Chiba", studentCard: "SPVT26300", pin: "1217", hasMaterial: true },
+  { name: "Maria Claudia Curimbaba", studentCard: "SPVT26301", pin: "1218", hasMaterial: true }
+];
+
+var baseFilterMode = 'all';
+
+function updateBaseStats() {
+    var total = studentPins.length;
+    var com = studentPins.filter(function(s) { return s.hasMaterial; }).length;
+    var sem = total - com;
+    document.getElementById('baseKpiTotal').textContent = total;
+    document.getElementById('baseKpiCom').textContent = com;
+    document.getElementById('baseKpiSem').textContent = sem;
+    document.getElementById('baseKpiPins').textContent = total;
+}
+
+function setBaseFilter(mode, btn) {
+    baseFilterMode = mode;
+    document.querySelectorAll('.base-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    filterBase();
+}
+
+function filterBase() {
+    var q = document.getElementById('baseSearchInput').value.toLowerCase();
+    var sortBy = document.getElementById('baseSortSelect').value;
+
+    var filtered = studentPins.filter(function(s) {
+        if (baseFilterMode === 'com' && !s.hasMaterial) return false;
+        if (baseFilterMode === 'sem' && s.hasMaterial) return false;
+        if (q && s.name.toLowerCase().indexOf(q) === -1 && s.studentCard.toLowerCase().indexOf(q) === -1 && s.pin.indexOf(q) === -1) return false;
+        return true;
+    });
+
+    filtered.sort(function(a, b) {
+        switch (sortBy) {
+            case 'name_asc': return a.name.localeCompare(b.name, 'pt-BR');
+            case 'name_desc': return b.name.localeCompare(a.name, 'pt-BR');
+            case 'pin_asc': return parseInt(a.pin) - parseInt(b.pin);
+            case 'pin_desc': return parseInt(b.pin) - parseInt(a.pin);
+            case 'card_asc': return a.studentCard.localeCompare(b.studentCard);
+            case 'card_desc': return b.studentCard.localeCompare(a.studentCard);
+            default: return 0;
+        }
+    });
+
+    renderBaseTable(filtered);
+}
+
+function renderBaseTable(list) {
+    var html = '';
+    var checkSvg = '<span class="material-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
+    var dash = '<span class="material-no">--</span>';
+
+    list.forEach(function(s, i) {
+        html += '<tr>';
+        html += '<td class="num" style="color:var(--text-dim);font-size:.75rem">' + (i + 1) + '</td>';
+        html += '<td><span class="student-name">' + s.name + '</span></td>';
+        html += '<td><span class="code-badge">' + s.studentCard + '</span></td>';
+        html += '<td><span class="pin-badge">' + s.pin + '</span></td>';
+        html += '<td class="num">' + (s.hasMaterial ? checkSvg : dash) + '</td>';
+        html += '</tr>';
+    });
+
+    if (!html) {
+        html = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-dim)">Nenhum aluno encontrado.</td></tr>';
+    }
+
+    document.getElementById('baseTableBody').innerHTML = html;
+    document.getElementById('baseCountLine').textContent = 'Exibindo ' + list.length + ' de ' + studentPins.length + ' alunos';
+}
+
+// ============================================================
 // INIT + AUTO-REFRESH
 // ============================================================
 loadAll();
 setInterval(loadAll, 3600000); // 1 hour
+
+// Init Base de Alunos
+updateBaseStats();
+filterBase();
 </script>
 
 </body>
