@@ -1987,6 +1987,8 @@ O mesmo padrao se aplica ao arquivo do aluno: lesson cards de aulas 2+ linkam pa
 5. **NUNCA** gerar um arquivo monolitico com todas as aulas juntas
 6. Atualizar `TOTAL_AULAS` em TODOS os arquivos daquele aluno (main + individuais)
 7. Atualizar lesson cards/stamps no main file para linkar a nova aula
+8. **SEMPRE criar/atualizar o arquivo do ALUNO** — Para CADA arquivo de professor gerado ou modificado, SEMPRE gerar/atualizar o espelho do aluno (`/aluno/{slug}-aula{N}.html`) com Pre-class + Complementares. Atualizar lesson cards, stamps, totalLessons e audioMap no main do aluno tambem. **Aula ou correcao SEM versao aluno = deploy BLOQUEADO.**
+9. **Correcoes DEVEM espelhar** — Se corrigir stamps, audioMap, lesson cards, totalLessons, TOTAL_AULAS ou imagens no professor, a MESMA correcao DEVE ser aplicada no aluno. TODA edicao no professor que afeta Pre-class, Complementares, header, stamps ou audioMap DEVE ser espelhada no aluno
 
 ### Verificacao pre-deploy (BLOQUEANTE):
 
@@ -1996,6 +1998,9 @@ O mesmo padrao se aplica ao arquivo do aluno: lesson cards de aulas 2+ linkam pa
 - [ ] CSS copiado do main (400+ linhas, NAO gerado do zero)?
 - [ ] STUDENT_SLUG e TOTAL_AULAS presentes?
 - [ ] Slides numerados a partir de 1?
+- [ ] Arquivo do ALUNO correspondente criado/atualizado?
+- [ ] Stamps, totalLessons, audioMap espelhados no aluno?
+- [ ] Lesson cards no main do aluno linkam para `/aluno/{slug}-aula{N}.html`?
 
 > **CONSEQUENCIA**: Arquivos monoliticos ficam enormes (8000+ linhas), dificeis de manter, e causam bugs de slide-mode. O formato individual e o UNICO aceito para novos materiais.
 
