@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.command // \"\"' | grep -q 'git push' && cd /Users/helenmendes/alumni-plano-gerador && bash scripts/pre-deploy-check.sh || true",
+            "timeout": 15,
+            "statusMessage": "Rodando governanca pre-deploy..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(jq -r '.tool_input.file_path // \"\"'); echo \"$FILE\" | grep -q 'alumni-plano-gerador' && echo '⚠️ LEMBRETE GOVERNANCA: Arquivo do alumni-plano-gerador sendo editado. REGRAS OBRIGATORIAS: (1) NUNCA alterar material de aluno ativo sem autorizacao expressa (2) NUNCA quebrar o existente (3) NUNCA gerar CSS/JS do zero — usar template (4) Checklist visual + funcional ANTES de deploy (5) Verificar portugues acentuado (6) git add antes de deploy (7) Consultar CLAUDE.md para regra especifica da tarefa' || true",
+            "timeout": 5,
+            "statusMessage": "Verificando regras do projeto..."
+          }
+        ]
+      }
+    ]
+  }
+}
