@@ -918,16 +918,22 @@ body.slide-mode .nav-bar { display:flex; }
 .op-speed{display:flex;gap:.3rem;margin-top:.4rem}
 .op-speed button{padding:.2rem .5rem;border:1px solid var(--border);border-radius:5px;background:var(--bg-card);color:var(--text-dim);font-size:.7rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s}
 .op-speed button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-/* === FIX CONTRASTE: o mass-fix .slide-dark [class*="card"] forca texto ESCURO em cards de FUNDO ESCURO (badge, role-play) -> ilegivel. Re-assert branco aqui (override por posicao+especificidade). === */
+/* === FIX CONTRASTE Aula 9 (override final, posicao-ultima) === */
+/* Badge (Navigator Stamp): fundo escuro do slide -> texto branco + accent destacado */
 .slide-dark .badge-card,
 .slide-dark .badge-card h2,
 .slide-dark .badge-card .slide-heading,
-.slide-dark .badge-card p,
+.slide-dark .badge-card p { color:#fff !important; }
+.slide-dark .badge-card .accent { color:var(--accent-light) !important; }
+/* Role-play: cards de FUNDO ESCURO (design inline). Um mass-fix forcou
+   .slide-dark .roleplay-card{background:#fff!important}, deixando o titulo branco
+   invisivel (branco no branco). Restaura fundo escuro + texto branco + chips em destaque. */
+.slide-dark .roleplay-card { background:rgba(255,255,255,.06) !important; }
 .slide-dark .roleplay-card,
-.slide-dark .roleplay-card p,
 .slide-dark .roleplay-card div,
+.slide-dark .roleplay-card p,
 .slide-dark .roleplay-card span { color:#fff !important; }
-.slide-dark .badge-card .accent,
+.slide-dark .roleplay-card span[style*="color:var(--accent)"],
 .slide-dark .roleplay-card .accent { color:var(--accent-light) !important; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
