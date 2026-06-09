@@ -218,6 +218,13 @@
         tr:hover td { background: rgba(0,48,128,0.03); }
         tr { transition: background 0.15s; }
 
+        /* V2 sub-row */
+        tr.v2-row td { background: rgba(0,48,128,0.02); border-bottom: 1px solid var(--border); padding-top: 0.4rem; padding-bottom: 0.4rem; }
+        tr.v2-row:hover td { background: rgba(0,48,128,0.05); }
+        .v2-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.5rem; border-radius: 20px; font-size: 0.68rem; font-weight: 600; background: rgba(0,48,128,0.08); color: var(--navy); }
+        .v2-link { color: var(--navy); text-decoration: none; font-weight: 500; font-size: 0.82rem; transition: color 0.15s; }
+        .v2-link:hover { color: var(--navy-light); text-decoration: underline; }
+
         .student-name {
             font-weight: 600;
             color: var(--text);
@@ -839,6 +846,16 @@ function updateKPIs() {
 // ============================================================
 // NAME MATCHING — match studentPins entry to allData entry
 // ============================================================
+// V2 courses — students with a second course (external Vercel app)
+var v2Courses = {
+    "Percival Gratti Junior": [
+        { label: "Travel English V2", url: "https://percival-travel-english-v2.vercel.app/", slug: "percival-jrV2" }
+    ],
+    "Daniela Goncalves Feitoza": [
+        { label: "Professional English V2", url: "https://daniela-feitoza-v2.vercel.app/", slug: "daniela-feitozaV2" }
+    ]
+};
+
 // Explicit slug map: studentPins name → allData slug
 var pinSlugMap = {
     "Milton Sayegh": "milton-sayegh",
@@ -1015,6 +1032,18 @@ function renderTable(list) {
         html += '</td>';
 
         html += '</tr>';
+
+        // V2 sub-rows
+        var extras = v2Courses[d.name];
+        if (extras) {
+            extras.forEach(function(v2) {
+                html += '<tr class="v2-row">';
+                html += '<td></td>';
+                html += '<td style="padding-left:2.5rem"><span class="v2-badge">V2</span> <a href="' + v2.url + '" target="_blank" rel="noopener" class="v2-link">' + v2.label + '</a></td>';
+                html += '<td colspan="7" style="font-size:.78rem;color:var(--text-dim)">Projeto externo</td>';
+                html += '</tr>';
+            });
+        }
     });
 
     if (!html) {
