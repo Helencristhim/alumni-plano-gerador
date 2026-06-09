@@ -839,11 +839,59 @@ function updateKPIs() {
 // ============================================================
 // NAME MATCHING — match studentPins entry to allData entry
 // ============================================================
+// Explicit slug map: studentPins name → allData slug
+var pinSlugMap = {
+    "Milton Sayegh": "milton-sayegh",
+    "Rubens Tofolo Junior": "rubens-tofolo",
+    "Patricia Ruffo": "patricia-ruffo",
+    "Luiz Antonio Silva Bressane": "luiz-bressane",
+    "Pricila Adamo": "pricila-adamo",
+    "Gleice Leonardo Rocha de Sousa": "gleice-leonardo-rocha-de-souza",
+    "Rafael Gasparello Lima": "rafael-gasparelli-lima",
+    "Roberto Rezende Coelho": "roberto-rezende",
+    "Karina Macedo": "karina-macedo",
+    "Marlene Landucci": "marlene-landucci",
+    "Tania Martins Rosa": "tania-rosa",
+    "Lucia Maria da Silva Dias": "tuca-dias",
+    "Nathalie Viegas": "natalie-viegas",
+    "Aline Sberci Monteiro": "aline-sberci",
+    "Eduarda Gabriel": "eduarda-gabriel",
+    "Simone Quiles de Santana Marques": "simone-quiles-de-santana-marques",
+    "Percival Gratti Junior": "percival-jr",
+    "Zilaudio Luiz Pereira": "zilaudio",
+    "Daniela Goncalves Feitoza": "daniela-feitoza",
+    "Juliana Di Cesare Marques Awad": "juliana-marques",
+    "Dienane Brandao de Mesquita": "dienane-brandao-de-mesquita",
+    "Estephano Akihito Ishii": "estephano-akihito-ishii",
+    "Gabriela Paulucci": "gabriela-paulucci",
+    "Elaine Mieko Pinho": "elaine-mieko-pinho",
+    "Carolina Paludetto Rodrigues": "carolina-paludetto-rodrigues",
+    "Carlos Vinicius Vale Bassan": "carlos-vinicius-vale-bassan",
+    "Nilo Mesquita Patussi": "nilo-mesquita-patucci",
+    "Andreia Maria Heins Vaccari": "andreia-heins",
+    "Rafael de Andrade Brandao": "rafael-de-andrade-brandao",
+    "Maisa de Oliveira Santos": "maisa-de-oliveira-santos",
+    "Vanessa Maluf": "vanessa-maluf",
+    "Mark Kazuyoshi Seki Omagari": "mark-kazuyoshi-seki-omagari",
+    "Diogo Leonardo Leal": "diogo-leal",
+    "Roberto Pires": "roberto-pires",
+    "Gabriela Pires": "gabriela-pires",
+    "Eduardo Chiba": "eduardo-chiba",
+    "Maria Claudia Curimbaba": "maria-claudia-curimbaba"
+};
+
 function findMatch(pinName) {
+    // 1. Try explicit slug map first
+    var slug = pinSlugMap[pinName];
+    if (slug) {
+        for (var i = 0; i < allData.length; i++) {
+            if (allData[i].slug === slug) return allData[i];
+        }
+    }
+    // 2. Fallback: exact name match
     var pn = pinName.toLowerCase();
     for (var i = 0; i < allData.length; i++) {
         var dn = allData[i].name.toLowerCase();
-        // Exact match
         if (pn === dn) return allData[i];
         // Contains match (either direction)
         if (pn.indexOf(dn) !== -1 || dn.indexOf(pn) !== -1) return allData[i];
