@@ -87,39 +87,6 @@
         .refresh-btn:hover { background: rgba(255,255,255,0.2); }
         .refresh-btn:focus-visible { outline: 3px solid rgba(255,255,255,0.5); outline-offset: 2px; }
 
-        /* === PAGE TABS === */
-        .page-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 0;
-            padding: 0;
-            background: rgba(245,245,240,0.85);
-            border-bottom: 1px solid #d4d4cc;
-        }
-        .page-tab {
-            padding: 0.8rem 1.5rem;
-            font-size: 0.78rem;
-            font-weight: 500;
-            color: #6b6b7b;
-            text-decoration: none;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            transition: color 0.2s;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            background: none;
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            font-family: inherit;
-        }
-        .page-tab:hover { color: #003080; }
-        .page-tab.active {
-            color: #003080;
-            font-weight: 700;
-            border-bottom-color: #003080;
-        }
-
         /* === KPI CARDS === */
         .kpi-row {
             display: grid;
@@ -440,159 +407,83 @@
         </div>
     </div>
 
-    <!-- Page Tabs -->
-    <div class="page-tabs">
-        <button class="page-tab active" id="pageTabProgresso" onclick="switchPageTab('progresso')">Progresso de Aulas</button>
-        <button class="page-tab" id="pageTabBase" onclick="switchPageTab('base')">Base de Alunos</button>
-    </div>
-
-    <!-- ============================== -->
-    <!-- TAB 1: Progresso de Aulas      -->
-    <!-- ============================== -->
-    <div id="tab-progresso">
-        <!-- KPI Cards -->
-        <div class="kpi-row">
-            <div class="kpi-card">
-                <span class="kpi-label">Total Alunos</span>
-                <span class="kpi-value" id="kpiAlunos">--</span>
-            </div>
-            <div class="kpi-card">
-                <span class="kpi-label">Aulas Criadas</span>
-                <span class="kpi-value" id="kpiCriadas">--</span>
-                <span class="kpi-sub" id="kpiCriadasSub"></span>
-            </div>
-            <div class="kpi-card">
-                <span class="kpi-label">Aulas Concluidas</span>
-                <span class="kpi-value" id="kpiConcluidas">--</span>
-                <span class="kpi-sub" id="kpiConcluidasSub"></span>
-            </div>
-            <div class="kpi-card">
-                <span class="kpi-label">Taxa de Conclusao</span>
-                <span class="kpi-value" id="kpiTaxa">--</span>
-                <span class="kpi-sub">concluidas / criadas</span>
-            </div>
+    <!-- KPI Cards -->
+    <div class="kpi-row">
+        <div class="kpi-card">
+            <span class="kpi-label">Total Alunos</span>
+            <span class="kpi-value" id="kpiAlunos">202</span>
         </div>
-
-        <!-- Search & Sort -->
-        <div class="controls">
-            <div class="search-wrap">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" class="search-input" id="searchInput" placeholder="Buscar aluno..." oninput="filterTable()">
-            </div>
-            <select class="sort-select" id="sortSelect" onchange="sortAndRender()">
-                <option value="name_asc">Nome A-Z</option>
-                <option value="name_desc">Nome Z-A</option>
-                <option value="html_desc">Mais aulas criadas</option>
-                <option value="html_asc">Menos aulas criadas</option>
-                <option value="done_desc">Mais aulas concluidas</option>
-                <option value="pct_desc">Maior % conclusao</option>
-                <option value="pct_asc">Menor % conclusao</option>
-            </select>
+        <div class="kpi-card">
+            <span class="kpi-label">Aulas Criadas</span>
+            <span class="kpi-value" id="kpiCriadas">--</span>
+            <span class="kpi-sub" id="kpiCriadasSub"></span>
         </div>
-
-        <!-- Table -->
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Aluno</th>
-                        <th>Professor</th>
-                        <th class="num">Pacote</th>
-                        <th class="num">Criadas</th>
-                        <th class="num">Concluidas</th>
-                        <th>Progresso</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr class="loading-row">
-                        <td colspan="7"><span class="spinner"></span>Carregando dados...</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="kpi-card">
+            <span class="kpi-label">Aulas Concluidas</span>
+            <span class="kpi-value" id="kpiConcluidas">--</span>
+            <span class="kpi-sub" id="kpiConcluidasSub"></span>
+        </div>
+        <div class="kpi-card">
+            <span class="kpi-label">Taxa de Conclusao</span>
+            <span class="kpi-value" id="kpiTaxa">--</span>
+            <span class="kpi-sub">concluidas / criadas</span>
         </div>
     </div>
 
-    <!-- ============================== -->
-    <!-- TAB 2: Base de Alunos          -->
-    <!-- ============================== -->
-    <div id="tab-base" style="display:none">
-        <!-- KPI Cards -->
-        <div class="kpi-row">
-            <div class="kpi-card">
-                <span class="kpi-label">Total Alunos</span>
-                <span class="kpi-value" id="baseKpiTotal">--</span>
-            </div>
-            <div class="kpi-card">
-                <span class="kpi-label">Com Material</span>
-                <span class="kpi-value" id="baseKpiCom">--</span>
-            </div>
-            <div class="kpi-card">
-                <span class="kpi-label">Sem Material</span>
-                <span class="kpi-value" id="baseKpiSem">--</span>
-            </div>
-            <div class="kpi-card">
-                <span class="kpi-label">PINs Ativos</span>
-                <span class="kpi-value" id="baseKpiPins">--</span>
-            </div>
+    <!-- Search & Sort & Filters -->
+    <div class="controls">
+        <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar aluno, student card ou PIN..." oninput="filterAndRender()">
         </div>
-
-        <!-- Search & Sort & Filters -->
-        <div class="controls">
-            <div class="search-wrap">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" class="search-input" id="baseSearchInput" placeholder="Buscar aluno..." oninput="filterBase()">
-            </div>
-            <select class="sort-select" id="baseSortSelect" onchange="filterBase()">
-                <option value="name_asc">Nome A-Z</option>
-                <option value="name_desc">Nome Z-A</option>
-                <option value="pin_asc">PIN crescente</option>
-                <option value="pin_desc">PIN decrescente</option>
-                <option value="card_asc">Student Card crescente</option>
-                <option value="card_desc">Student Card decrescente</option>
-            </select>
-            <div class="base-filters">
-                <button class="base-filter-btn active" onclick="setBaseFilter('all', this)">Todos</button>
-                <button class="base-filter-btn" onclick="setBaseFilter('com', this)">Com Material</button>
-                <button class="base-filter-btn" onclick="setBaseFilter('sem', this)">Sem Material</button>
-            </div>
+        <select class="sort-select" id="sortSelect" onchange="filterAndRender()">
+            <option value="name_asc">Nome A-Z</option>
+            <option value="name_desc">Nome Z-A</option>
+            <option value="pin_asc">PIN crescente</option>
+            <option value="pin_desc">PIN decrescente</option>
+            <option value="html_desc">Mais aulas criadas</option>
+            <option value="pct_desc">Maior % conclusao</option>
+        </select>
+        <div class="base-filters">
+            <button class="base-filter-btn active" onclick="setFilter('all', this)">Todos</button>
+            <button class="base-filter-btn" onclick="setFilter('com', this)">Com Material</button>
+            <button class="base-filter-btn" onclick="setFilter('sem', this)">Sem Material</button>
         </div>
+    </div>
 
-        <!-- Count line -->
-        <div class="count-line" id="baseCountLine">Exibindo 0 de 0 alunos</div>
+    <!-- Count line -->
+    <div class="count-line" id="countLine">Exibindo 0 de 202 alunos</div>
 
-        <!-- Table -->
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nome</th>
-                        <th>Student Card</th>
-                        <th>PIN</th>
-                        <th class="num">Material</th>
-                    </tr>
-                </thead>
-                <tbody id="baseTableBody"></tbody>
-            </table>
-        </div>
+    <!-- Table -->
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Aluno</th>
+                    <th>Student Card</th>
+                    <th>PIN</th>
+                    <th>Professor</th>
+                    <th class="num">Pacote</th>
+                    <th class="num">Criadas</th>
+                    <th class="num">Concluidas</th>
+                    <th>Progresso</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr class="loading-row">
+                    <td colspan="9"><span class="spinner"></span>Carregando dados...</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 <script>
 // ============================================================
-// TAB SWITCHING
-// ============================================================
-function switchPageTab(tabId) {
-    document.getElementById('tab-progresso').style.display = tabId === 'progresso' ? 'block' : 'none';
-    document.getElementById('tab-base').style.display = tabId === 'base' ? 'block' : 'none';
-    document.getElementById('pageTabProgresso').classList.toggle('active', tabId === 'progresso');
-    document.getElementById('pageTabBase').classList.toggle('active', tabId === 'base');
-}
-
-// ============================================================
-// TAB 1: PROGRESSO DE AULAS — DATA
+// DATA
 // ============================================================
 var allData = [];
+var filterMode = 'all';
 
 // Fallback professor map (from spreadsheet)
 var profMap = {
@@ -635,184 +526,8 @@ var profMap = {
     'zilaudio': 'Malu B.'
 };
 
-async function loadAll() {
-    try {
-        var [htmlCounts, perfis, progress] = await Promise.all([
-            fetchHtmlCounts(),
-            fetchPerfis(),
-            fetchProgress()
-        ]);
-
-        // Build merged data
-        var merged = {};
-
-        // 1. Start with HTML counts (source of truth for lesson cards)
-        htmlCounts.forEach(function(s) {
-            merged[s.slug] = {
-                slug: s.slug,
-                name: decodeHtml(s.name),
-                pacote: 0,
-                criadas: s.aulasHtml,
-                concluidas: 0,
-                professor: ''
-            };
-        });
-
-        // 2. Enrich with Supabase perfis (num_aulas = pacote)
-        perfis.forEach(function(p) {
-            var slug = p.id;
-            if (merged[slug]) {
-                merged[slug].pacote = p.num_aulas || 0;
-                if (p.nome) merged[slug].name = p.nome;
-                merged[slug].professor = p.professor || (p.alocacao && p.alocacao.professor) || (p.data && p.data.professor) || profMap[slug] || '';
-            }
-        });
-
-        // 3. Add completed lessons from lesson_progress
-        progress.forEach(function(lp) {
-            var slug = lp.student_slug;
-            if (merged[slug] && lp.inclass_done) {
-                merged[slug].concluidas++;
-            }
-        });
-
-        allData = Object.values(merged).filter(function(d) { return d.criadas > 0; });
-        updateKPIs();
-        sortAndRender();
-        updateTimestamp();
-    } catch (e) {
-        console.error('Error loading data:', e);
-        document.getElementById('tableBody').innerHTML =
-            '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--danger)">Erro ao carregar dados. Tente atualizar.</td></tr>';
-    }
-}
-
-async function fetchHtmlCounts() {
-    var r = await fetch('/data/lesson-counts.json?t=' + Date.now());
-    if (!r.ok) return [];
-    var d = await r.json();
-    return d.students || [];
-}
-
-async function fetchPerfis() {
-    try {
-        var resp = await sb.from('perfis').select('id,nome,num_aulas,ativo,status,professor,alocacao,data');
-        return (resp.data || []);
-    } catch (e) { console.error('Supabase perfis error:', e); return []; }
-}
-
-async function fetchProgress() {
-    try {
-        var resp = await sb.from('lesson_progress').select('student_slug,lesson_number,inclass_done').eq('inclass_done', true);
-        return (resp.data || []);
-    } catch (e) { console.error('Supabase progress error:', e); return []; }
-}
-
-function decodeHtml(str) {
-    var el = document.createElement('textarea');
-    el.innerHTML = str;
-    return el.value;
-}
-
 // ============================================================
-// TAB 1: KPIs
-// ============================================================
-function updateKPIs() {
-    var totalAlunos = allData.length;
-    var totalCriadas = allData.reduce(function(s, d) { return s + d.criadas; }, 0);
-    var totalConcluidas = allData.reduce(function(s, d) { return s + d.concluidas; }, 0);
-    var totalPacote = allData.reduce(function(s, d) { return s + d.pacote; }, 0);
-    var taxa = totalCriadas > 0 ? Math.round(totalConcluidas / totalCriadas * 100) : 0;
-
-    document.getElementById('kpiAlunos').textContent = totalAlunos;
-    document.getElementById('kpiCriadas').textContent = totalCriadas;
-    document.getElementById('kpiCriadasSub').textContent = totalPacote > 0 ? 'de ' + totalPacote + ' no pacote total' : '';
-    document.getElementById('kpiConcluidas').textContent = totalConcluidas;
-    document.getElementById('kpiConcluidasSub').textContent = 'de ' + totalCriadas + ' criadas';
-    document.getElementById('kpiTaxa').textContent = taxa + '%';
-}
-
-// ============================================================
-// TAB 1: SORT & RENDER
-// ============================================================
-function sortAndRender() {
-    var sortBy = document.getElementById('sortSelect').value;
-    var list = allData.slice();
-
-    list.sort(function(a, b) {
-        switch (sortBy) {
-            case 'name_asc': return a.name.localeCompare(b.name, 'pt-BR');
-            case 'name_desc': return b.name.localeCompare(a.name, 'pt-BR');
-            case 'html_desc': return b.criadas - a.criadas || a.name.localeCompare(b.name, 'pt-BR');
-            case 'html_asc': return a.criadas - b.criadas || a.name.localeCompare(b.name, 'pt-BR');
-            case 'done_desc': return b.concluidas - a.concluidas || a.name.localeCompare(b.name, 'pt-BR');
-            case 'pct_desc':
-                var pa = a.criadas > 0 ? a.concluidas / a.criadas : 0;
-                var pb = b.criadas > 0 ? b.concluidas / b.criadas : 0;
-                return pb - pa || a.name.localeCompare(b.name, 'pt-BR');
-            case 'pct_asc':
-                var pa2 = a.criadas > 0 ? a.concluidas / a.criadas : 0;
-                var pb2 = b.criadas > 0 ? b.concluidas / b.criadas : 0;
-                return pa2 - pb2 || a.name.localeCompare(b.name, 'pt-BR');
-            default: return 0;
-        }
-    });
-
-    renderTable(list);
-}
-
-function filterTable() {
-    var q = document.getElementById('searchInput').value.toLowerCase();
-    var rows = document.querySelectorAll('#tableBody tr');
-    rows.forEach(function(row) {
-        if (row.classList.contains('loading-row')) return;
-        var name = row.dataset.name || '';
-        row.style.display = name.includes(q) ? '' : 'none';
-    });
-}
-
-function renderTable(list) {
-    var search = document.getElementById('searchInput').value.toLowerCase();
-    var html = '';
-
-    list.forEach(function(d, i) {
-        var pct = d.criadas > 0 ? Math.round(d.concluidas / d.criadas * 100) : 0;
-        var barClass = pct >= 80 ? 'green' : pct >= 40 ? 'yellow' : 'red';
-        var hidden = search && !d.name.toLowerCase().includes(search) ? ' style="display:none"' : '';
-        var profUrl = '/professor/' + d.slug + '.html';
-
-        html += '<tr data-name="' + d.name.toLowerCase() + '"' + hidden + '>';
-        html += '<td class="num" style="color:var(--text-dim);font-size:.75rem">' + (i + 1) + '</td>';
-        html += '<td><a href="' + profUrl + '" target="_blank" rel="noopener" class="student-link">' + d.name + '</a></td>';
-        html += '<td style="font-size:.82rem;color:var(--text-mid)">' + (d.professor || '<span style="color:var(--text-dim)">--</span>') + '</td>';
-        html += '<td class="num">' + (d.pacote || '<span style="color:var(--text-dim)">--</span>') + '</td>';
-        html += '<td class="num"><strong>' + d.criadas + '</strong></td>';
-        html += '<td class="num"><strong>' + d.concluidas + '</strong></td>';
-        html += '<td>';
-        html += '<div class="progress-mini">';
-        html += '<div class="progress-bar-mini"><div class="progress-fill ' + barClass + '" style="width:' + pct + '%"></div></div>';
-        html += '<span class="progress-pct" style="color:var(--' + (pct >= 80 ? 'success' : pct >= 40 ? 'warn' : 'danger') + ')">' + pct + '%</span>';
-        html += '</div>';
-        html += '</td>';
-        html += '</tr>';
-    });
-
-    if (!html) {
-        html = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-dim)">Nenhum aluno encontrado.</td></tr>';
-    }
-
-    document.getElementById('tableBody').innerHTML = html;
-}
-
-function updateTimestamp() {
-    var now = new Date();
-    var hh = String(now.getHours()).padStart(2, '0');
-    var mm = String(now.getMinutes()).padStart(2, '0');
-    document.getElementById('lastUpdate').textContent = 'Atualizado ' + hh + ':' + mm;
-}
-
-// ============================================================
-// TAB 2: BASE DE ALUNOS — DATA
+// STUDENT PINS — BASE DE ALUNOS (202 entries)
 // ============================================================
 var studentPins = [
   { name: "Rubens E. de Moraes", studentCard: "SPVT26100", pin: "1017", hasMaterial: false },
@@ -1019,72 +734,253 @@ var studentPins = [
   { name: "Maria Claudia Curimbaba", studentCard: "SPVT26301", pin: "1218", hasMaterial: true }
 ];
 
-var baseFilterMode = 'all';
-
-function updateBaseStats() {
-    var total = studentPins.length;
-    var com = studentPins.filter(function(s) { return s.hasMaterial; }).length;
-    var sem = total - com;
-    document.getElementById('baseKpiTotal').textContent = total;
-    document.getElementById('baseKpiCom').textContent = com;
-    document.getElementById('baseKpiSem').textContent = sem;
-    document.getElementById('baseKpiPins').textContent = total;
+// ============================================================
+// SUPABASE FETCH FUNCTIONS
+// ============================================================
+async function fetchHtmlCounts() {
+    var r = await fetch('/data/lesson-counts.json?t=' + Date.now());
+    if (!r.ok) return [];
+    var d = await r.json();
+    return d.students || [];
 }
 
-function setBaseFilter(mode, btn) {
-    baseFilterMode = mode;
+async function fetchPerfis() {
+    try {
+        var resp = await sb.from('perfis').select('id,nome,num_aulas,ativo,status,professor,alocacao,data');
+        return (resp.data || []);
+    } catch (e) { console.error('Supabase perfis error:', e); return []; }
+}
+
+async function fetchProgress() {
+    try {
+        var resp = await sb.from('lesson_progress').select('student_slug,lesson_number,inclass_done').eq('inclass_done', true);
+        return (resp.data || []);
+    } catch (e) { console.error('Supabase progress error:', e); return []; }
+}
+
+function decodeHtml(str) {
+    var el = document.createElement('textarea');
+    el.innerHTML = str;
+    return el.value;
+}
+
+// ============================================================
+// LOAD ALL — fetch Supabase data and merge with studentPins
+// ============================================================
+async function loadAll() {
+    try {
+        var [htmlCounts, perfis, progress] = await Promise.all([
+            fetchHtmlCounts(),
+            fetchPerfis(),
+            fetchProgress()
+        ]);
+
+        // Build merged Supabase data keyed by slug
+        var merged = {};
+
+        // 1. Start with HTML counts (source of truth for lesson cards)
+        htmlCounts.forEach(function(s) {
+            merged[s.slug] = {
+                slug: s.slug,
+                name: decodeHtml(s.name),
+                pacote: 0,
+                criadas: s.aulasHtml,
+                concluidas: 0,
+                professor: ''
+            };
+        });
+
+        // 2. Enrich with Supabase perfis (num_aulas = pacote)
+        perfis.forEach(function(p) {
+            var slug = p.id;
+            if (merged[slug]) {
+                merged[slug].pacote = p.num_aulas || 0;
+                if (p.nome) merged[slug].name = p.nome;
+                merged[slug].professor = p.professor || (p.alocacao && p.alocacao.professor) || (p.data && p.data.professor) || profMap[slug] || '';
+            }
+        });
+
+        // 3. Add completed lessons from lesson_progress
+        progress.forEach(function(lp) {
+            var slug = lp.student_slug;
+            if (merged[slug] && lp.inclass_done) {
+                merged[slug].concluidas++;
+            }
+        });
+
+        allData = Object.values(merged).filter(function(d) { return d.criadas > 0; });
+        updateKPIs();
+        filterAndRender();
+        updateTimestamp();
+    } catch (e) {
+        console.error('Error loading data:', e);
+        document.getElementById('tableBody').innerHTML =
+            '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--danger)">Erro ao carregar dados. Tente atualizar.</td></tr>';
+    }
+}
+
+// ============================================================
+// KPIs (from Supabase data only — students with material)
+// ============================================================
+function updateKPIs() {
+    var totalCriadas = allData.reduce(function(s, d) { return s + d.criadas; }, 0);
+    var totalConcluidas = allData.reduce(function(s, d) { return s + d.concluidas; }, 0);
+    var totalPacote = allData.reduce(function(s, d) { return s + d.pacote; }, 0);
+    var taxa = totalCriadas > 0 ? Math.round(totalConcluidas / totalCriadas * 100) : 0;
+
+    document.getElementById('kpiAlunos').textContent = studentPins.length;
+    document.getElementById('kpiCriadas').textContent = totalCriadas;
+    document.getElementById('kpiCriadasSub').textContent = totalPacote > 0 ? 'de ' + totalPacote + ' no pacote total' : '';
+    document.getElementById('kpiConcluidas').textContent = totalConcluidas;
+    document.getElementById('kpiConcluidasSub').textContent = 'de ' + totalCriadas + ' criadas';
+    document.getElementById('kpiTaxa').textContent = taxa + '%';
+}
+
+// ============================================================
+// NAME MATCHING — match studentPins entry to allData entry
+// ============================================================
+function findMatch(pinName) {
+    var pn = pinName.toLowerCase();
+    for (var i = 0; i < allData.length; i++) {
+        var dn = allData[i].name.toLowerCase();
+        // Exact match
+        if (pn === dn) return allData[i];
+        // Contains match (either direction)
+        if (pn.indexOf(dn) !== -1 || dn.indexOf(pn) !== -1) return allData[i];
+    }
+    return null;
+}
+
+// ============================================================
+// FILTER & SORT & RENDER (unified)
+// ============================================================
+function setFilter(mode, btn) {
+    filterMode = mode;
     document.querySelectorAll('.base-filter-btn').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
-    filterBase();
+    filterAndRender();
 }
 
-function filterBase() {
-    var q = document.getElementById('baseSearchInput').value.toLowerCase();
-    var sortBy = document.getElementById('baseSortSelect').value;
+function filterAndRender() {
+    var q = document.getElementById('searchInput').value.toLowerCase();
+    var sortBy = document.getElementById('sortSelect').value;
 
-    var filtered = studentPins.filter(function(s) {
-        if (baseFilterMode === 'com' && !s.hasMaterial) return false;
-        if (baseFilterMode === 'sem' && s.hasMaterial) return false;
-        if (q && s.name.toLowerCase().indexOf(q) === -1 && s.studentCard.toLowerCase().indexOf(q) === -1 && s.pin.indexOf(q) === -1) return false;
-        return true;
+    // Build merged list from studentPins + allData
+    var list = studentPins.map(function(sp) {
+        var match = findMatch(sp.name);
+        return {
+            name: sp.name,
+            studentCard: sp.studentCard,
+            pin: sp.pin,
+            hasMaterial: sp.hasMaterial,
+            slug: match ? match.slug : null,
+            professor: match ? match.professor : '',
+            pacote: match ? match.pacote : 0,
+            criadas: match ? match.criadas : 0,
+            concluidas: match ? match.concluidas : 0
+        };
     });
 
-    filtered.sort(function(a, b) {
+    // Filter by mode
+    if (filterMode === 'com') {
+        list = list.filter(function(s) { return s.hasMaterial; });
+    } else if (filterMode === 'sem') {
+        list = list.filter(function(s) { return !s.hasMaterial; });
+    }
+
+    // Filter by search
+    if (q) {
+        list = list.filter(function(s) {
+            return s.name.toLowerCase().indexOf(q) !== -1 ||
+                   s.studentCard.toLowerCase().indexOf(q) !== -1 ||
+                   s.pin.indexOf(q) !== -1;
+        });
+    }
+
+    // Sort
+    list.sort(function(a, b) {
         switch (sortBy) {
             case 'name_asc': return a.name.localeCompare(b.name, 'pt-BR');
             case 'name_desc': return b.name.localeCompare(a.name, 'pt-BR');
             case 'pin_asc': return parseInt(a.pin) - parseInt(b.pin);
             case 'pin_desc': return parseInt(b.pin) - parseInt(a.pin);
-            case 'card_asc': return a.studentCard.localeCompare(b.studentCard);
-            case 'card_desc': return b.studentCard.localeCompare(a.studentCard);
+            case 'html_desc': return b.criadas - a.criadas || a.name.localeCompare(b.name, 'pt-BR');
+            case 'pct_desc':
+                var pa = a.criadas > 0 ? a.concluidas / a.criadas : 0;
+                var pb = b.criadas > 0 ? b.concluidas / b.criadas : 0;
+                return pb - pa || a.name.localeCompare(b.name, 'pt-BR');
             default: return 0;
         }
     });
 
-    renderBaseTable(filtered);
+    renderTable(list);
+    document.getElementById('countLine').textContent = 'Exibindo ' + list.length + ' de ' + studentPins.length + ' alunos';
 }
 
-function renderBaseTable(list) {
+function renderTable(list) {
     var html = '';
-    var checkSvg = '<span class="material-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
-    var dash = '<span class="material-no">--</span>';
+    var dash = '<span style="color:var(--text-dim)">--</span>';
 
-    list.forEach(function(s, i) {
+    list.forEach(function(d, i) {
+        var hasMat = d.hasMaterial && d.criadas > 0;
+        var pct = hasMat && d.criadas > 0 ? Math.round(d.concluidas / d.criadas * 100) : 0;
+        var barClass = pct >= 80 ? 'green' : pct >= 40 ? 'yellow' : 'red';
+
         html += '<tr>';
         html += '<td class="num" style="color:var(--text-dim);font-size:.75rem">' + (i + 1) + '</td>';
-        html += '<td><span class="student-name">' + s.name + '</span></td>';
-        html += '<td><span class="code-badge">' + s.studentCard + '</span></td>';
-        html += '<td><span class="pin-badge">' + s.pin + '</span></td>';
-        html += '<td class="num">' + (s.hasMaterial ? checkSvg : dash) + '</td>';
+
+        // Name — link if has material/slug
+        if (d.slug) {
+            html += '<td><a href="/professor/' + d.slug + '.html" target="_blank" rel="noopener" class="student-link">' + d.name + '</a></td>';
+        } else {
+            html += '<td><span class="student-name">' + d.name + '</span></td>';
+        }
+
+        // Student Card
+        html += '<td><span class="code-badge">' + d.studentCard + '</span></td>';
+
+        // PIN
+        html += '<td><span class="pin-badge">' + d.pin + '</span></td>';
+
+        // Professor
+        html += '<td style="font-size:.82rem;color:var(--text-mid)">' + (hasMat && d.professor ? d.professor : dash) + '</td>';
+
+        // Pacote
+        html += '<td class="num">' + (hasMat && d.pacote ? d.pacote : dash) + '</td>';
+
+        // Criadas
+        html += '<td class="num">' + (hasMat ? '<strong>' + d.criadas + '</strong>' : dash) + '</td>';
+
+        // Concluidas
+        html += '<td class="num">' + (hasMat ? '<strong>' + d.concluidas + '</strong>' : dash) + '</td>';
+
+        // Progresso
+        html += '<td>';
+        if (hasMat) {
+            html += '<div class="progress-mini">';
+            html += '<div class="progress-bar-mini"><div class="progress-fill ' + barClass + '" style="width:' + pct + '%"></div></div>';
+            html += '<span class="progress-pct" style="color:var(--' + (pct >= 80 ? 'success' : pct >= 40 ? 'warn' : 'danger') + ')">' + pct + '%</span>';
+            html += '</div>';
+        } else {
+            html += dash;
+        }
+        html += '</td>';
+
         html += '</tr>';
     });
 
     if (!html) {
-        html = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-dim)">Nenhum aluno encontrado.</td></tr>';
+        html = '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-dim)">Nenhum aluno encontrado.</td></tr>';
     }
 
-    document.getElementById('baseTableBody').innerHTML = html;
-    document.getElementById('baseCountLine').textContent = 'Exibindo ' + list.length + ' de ' + studentPins.length + ' alunos';
+    document.getElementById('tableBody').innerHTML = html;
+}
+
+function updateTimestamp() {
+    var now = new Date();
+    var hh = String(now.getHours()).padStart(2, '0');
+    var mm = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('lastUpdate').textContent = 'Atualizado ' + hh + ':' + mm;
 }
 
 // ============================================================
@@ -1092,10 +988,6 @@ function renderBaseTable(list) {
 // ============================================================
 loadAll();
 setInterval(loadAll, 3600000); // 1 hour
-
-// Init Base de Alunos
-updateBaseStats();
-filterBase();
 </script>
 
 </body>
