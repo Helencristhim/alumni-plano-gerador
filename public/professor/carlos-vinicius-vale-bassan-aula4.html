@@ -2273,7 +2273,10 @@ function enterSlideMode(startSlide) {
     buildDots();
     goToSlide(currentSlide);
 }
-function exitSlideMode() { document.body.classList.remove('slide-mode'); document.querySelectorAll('.slide').forEach(function(s) { s.classList.remove('active'); }); }
+function exitSlideMode() { document.body.classList.remove('slide-mode'); document.querySelectorAll('.slide').forEach(function(s) { s.classList.remove('active'); }); window.location.href = '/professor/carlos-vinicius-vale-bassan.html#inclass'; }
+
+// Auto-enter slide mode when coming from hub menu
+if (window.location.hash === '#slides') { document.addEventListener('DOMContentLoaded', function() { enterSlideMode(1); }); }
 function changeSlide(dir) { var range = lessonRanges[currentLesson]; var next = currentSlide + dir; if (next < range.start || next > range.end) return; goToSlide(next); }
 function goToSlide(n) { currentSlide = n; document.querySelectorAll('.slide').forEach(function(s) { s.classList.remove('active'); }); var slide = document.querySelector('[data-slide="' + n + '"]'); if (slide) slide.classList.add('active'); if (slide) slide.scrollTop = 0; updateSlideUI(); }
 function buildDots() { var container = document.getElementById('slideDots'); if (!container) return; container.innerHTML = ''; var range = lessonRanges[currentLesson]; for (var i = range.start; i <= range.end; i++) { var dot = document.createElement('div'); dot.className = 'slide-dot'; dot.dataset.slide = i; dot.onclick = (function(idx) { return function() { goToSlide(idx); }; })(i); container.appendChild(dot); } }
