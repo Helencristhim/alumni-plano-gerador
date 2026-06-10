@@ -237,7 +237,17 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 **NARRATIVA OBRIGATORIA**
 - Toda aula segue uma HISTORIA com titulo e capitulos (ex: "Elaine's First Day in New York")
 - 7 capitulos minimos: The Dream (warm-up) > Packing Words (vocab) > The Code (grammar) > Getting There (context) > Practice > Your Turn (production) > Wrap-up
-- Slides de transicao entre capitulos com imagem de fundo + titulo
+- **Slides de transicao entre capitulos — OBRIGATORIAMENTE com IMAGEM DE FUNDO REAL (REGRA BLOQUEANTE)**:
+  - Classe: `slide slide-image` (NUNCA `slide-dark` para transicoes)
+  - Background: `style="background-image:url('https://images.unsplash.com/photo-XXXXX?w=1400&q=80')"` — URL REAL do Unsplash
+  - CADA aula DEVE ter uma imagem tematica do Unsplash (conferencia, reuniao, escritorio, viagem, etc.)
+  - A MESMA imagem e reusada em TODAS as transicoes DAQUELA aula (consistencia visual)
+  - O slide de TITULO (abertura da aula) e TODAS as transicoes de capitulo usam essa imagem
+  - **PROIBIDO**: gradiente escuro sem imagem, fundo solido, fundo generico. Se nao tem imagem de fundo, NAO e transicao
+  - Exemplo correto: `<div class="slide slide-image" data-slide="4" data-phase="2" style="background-image:url('https://images.unsplash.com/photo-1573164713988?w=1400&q=80')">`
+  - Exemplo ERRADO: `<div class="slide slide-dark" data-slide="4" data-phase="2">` (sem imagem = REJEITADO)
+  - O CSS de `.slide-image` ja inclui overlay escuro com gradiente para legibilidade do texto. NAO adicionar overlay extra
+  - Minimo 5-6 slides de transicao por aula de 60 min (titulo + 1 por capitulo)
 
 **VOCABULARIO — REVEAL CARDS**
 - Grid 2x2 (4 cards por slide, 2 slides = 8 palavras)
