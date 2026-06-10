@@ -41,23 +41,29 @@
   window.speakText = function(text, btnEl) {
     var cleanText = text.replace(/\\'/g, "'");
 
-    // Toggle: mesma frase + audio tocando = pausa
-    if (_atAudio && !_atAudio.paused && _atText === cleanText) {
-      _atAudio.pause(); _atAudio.currentTime = 0;
-      _resetBtn(_atBtn);
-      _atAudio = null; _atBtn = null; _atText = null;
-      // Tambem limpar currentAudio global (compatibilidade)
-      if (typeof currentAudio !== 'undefined') window.currentAudio = null;
-      return;
+    // Toggle so funciona para audio-inline (dialogue play/pause)
+    // Para outros botoes (audio-btn, play-btn, playListenSeq), comportamento original
+    var isToggleable = _isInlineAudio(btnEl);
+
+    if (isToggleable) {
+      // Toggle: mesma frase + audio tocando = pausa
+      if (_atAudio && !_atAudio.paused && _atText === cleanText) {
+        _atAudio.pause(); _atAudio.currentTime = 0;
+        _resetBtn(_atBtn);
+        _atAudio = null; _atBtn = null; _atText = null;
+        if (typeof currentAudio !== 'undefined') window.currentAudio = null;
+        return;
+      }
+
+      // Parar audio anterior (toggle)
+      if (_atAudio) {
+        _atAudio.pause(); _atAudio.currentTime = 0;
+        _resetBtn(_atBtn);
+        _atAudio = null; _atBtn = null; _atText = null;
+      }
     }
 
-    // Parar audio anterior
-    if (_atAudio) {
-      _atAudio.pause(); _atAudio.currentTime = 0;
-      _resetBtn(_atBtn);
-      _atAudio = null; _atBtn = null; _atText = null;
-    }
-    // Tambem parar currentAudio do speakText antigo (pode estar tocando)
+    // Parar currentAudio global do speakText antigo (pode estar tocando)
     if (typeof currentAudio !== 'undefined' && currentAudio) {
       currentAudio.pause(); currentAudio.currentTime = 0;
       window.currentAudio = null;
@@ -69,12 +75,12 @@
     if (file) {
       var audio = new Audio(file);
       audio.playbackRate = (typeof audioSpeed !== 'undefined') ? audioSpeed : 1;
-      _atAudio = audio;
-      _atBtn = btnEl;
-      _atText = cleanText;
       window.currentAudio = audio; // compatibilidade
 
-      if (_isInlineAudio(btnEl)) {
+      if (isToggleable) {
+        _atAudio = audio;
+        _atBtn = btnEl;
+        _atText = cleanText;
         btnEl.classList.add('playing');
         btnEl.innerHTML = _pauseSvg;
       } else if (btnEl && btnEl.style) {
@@ -82,19 +88,19 @@
       }
 
       audio.onended = function() {
-        _resetBtn(btnEl);
-        _atAudio = null; _atBtn = null; _atText = null;
+        if (isToggleable) { _resetBtn(btnEl); _atAudio = null; _atBtn = null; _atText = null; }
+        else if (btnEl && btnEl.style) { btnEl.style.opacity = '1'; }
         window.currentAudio = null;
       };
       audio.onerror = function() {
-        _resetBtn(btnEl);
-        _atAudio = null; _atBtn = null; _atText = null;
+        if (isToggleable) { _resetBtn(btnEl); _atAudio = null; _atBtn = null; _atText = null; }
+        else if (btnEl && btnEl.style) { btnEl.style.opacity = '1'; }
         window.currentAudio = null;
         _tts(cleanText);
       };
       audio.play().catch(function() {
-        _resetBtn(btnEl);
-        _atAudio = null; _atBtn = null; _atText = null;
+        if (isToggleable) { _resetBtn(btnEl); _atAudio = null; _atBtn = null; _atText = null; }
+        else if (btnEl && btnEl.style) { btnEl.style.opacity = '1'; }
         window.currentAudio = null;
         _tts(cleanText);
       });
