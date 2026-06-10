@@ -1227,7 +1227,28 @@ Exemplo A2 em diante (sem traducao):
 
 > **IMPORTANTE**: Multiplos contribuidores trabalham neste projeto simultaneamente (Helen, Danilo, etc.), cada um em alunos diferentes. O deploy DEVE passar pelo GitHub para garantir que o trabalho de TODOS esteja presente. NUNCA usar `npx vercel --prod` diretamente — isso sobe apenas os arquivos locais e APAGA o trabalho dos outros contribuidores.
 
-Apos qualquer mudanca de codigo, rodar o deploy automaticamente via GitHub:
+Apos qualquer mudanca de codigo, rodar PRIMEIRO a validacao e DEPOIS o deploy:
+
+**PASSO 1 — VALIDACAO OBRIGATORIA (rodar ANTES de todo git commit em HTMLs de material):**
+
+```bash
+# Rodar este bloco INTEIRO. Se QUALQUER check falhar, NAO commitar.
+FILE="public/professor/SLUG.html"
+echo "=== VALIDACAO PRE-COMMIT ===" && \
+echo -n "style tags: " && echo "$(grep -c '<style' $FILE) open, $(grep -c '</style>' $FILE) close" && \
+echo -n "slides-container height:100vh: " && (grep -q 'slides-container.*height:100vh' $FILE && echo "OK" || echo "FAIL") && \
+echo -n "nav-bar position:fixed;bottom:0: " && (grep -q 'nav-bar.*position:fixed;bottom:0' $FILE && echo "OK" || echo "FAIL") && \
+echo -n "slide position:absolute: " && (grep -q '\.slide.*position:absolute' $FILE && echo "OK" || echo "FAIL") && \
+echo -n "wildcards [class*=]: " && (grep -q 'class\*=' $FILE && echo "FAIL — remover wildcards" || echo "OK — zero wildcards") && \
+echo -n "slides-wrapper fora do main-content: " && node -e "const h=require('fs').readFileSync('$FILE','utf8');const mc=h.lastIndexOf('</div><!-- /main-content -->');const sw=h.indexOf('<div class=\"slides-wrapper\"');console.log(sw>mc?'OK':'FAIL — slides-wrapper DENTRO do main-content!')" && \
+echo "=== FIM ==="
+```
+
+> **SE QUALQUER CHECK MOSTRAR "FAIL"**: PARAR. Encontrar o que quebrou. Corrigir. Rodar de novo. SO commitar quando TODOS mostrarem "OK".
+>
+> **POR QUE ISSO EXISTE**: Historicamente, edicoes CSS corrompem regras estruturais adjacentes (height:100vh, position:fixed, position:absolute). O resultado e: nav-bar sobe pro meio da tela, slides nao preenchem viewport, layout quebra. Isso ja aconteceu DEZENAS de vezes. Esta validacao e a UNICA forma de prevenir.
+
+**PASSO 2 — DEPLOY (so apos validacao passar):**
 
 ```bash
 git add -A
