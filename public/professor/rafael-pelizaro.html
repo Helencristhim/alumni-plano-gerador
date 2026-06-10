@@ -708,9 +708,21 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .fill-ic{background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.1)!important}
 .slide-dark .fill-ic p{color:#fff!important}
 .slide-dark .fill-ic .fill-answer{color:var(--accent-light)!important}
-/* Roleplay cards in dark slides — keep text white */
-.slide-dark .roleplay-card h4{color:var(--accent-light)!important}
-.slide-dark .roleplay-card .roleplay-body p{color:#fff!important}
+/* Roleplay cards in dark slides — card is white, text MUST be dark */
+.slide-dark .roleplay-card h4{color:var(--accent)!important}
+.slide-dark .roleplay-card .roleplay-body p{color:#1a1a2e!important}
+.slide-dark .roleplay-card p{color:#1a1a2e!important}
+.slide-dark .roleplay-card span{color:#1a1a2e!important}
+.slide-dark .roleplay-card div[style*="border"]{border-color:var(--accent)!important}
+.slide-dark .roleplay-card div[style*="border"] span{color:var(--accent)!important}
+/* Error words in dark slides — bright red, always visible */
+.slide-dark .err-item .wrong{color:#ff6b6b!important}
+.slide-dark .err-item span{color:#fff!important}
+.slide-dark .err-item span.wrong{color:#ff6b6b!important}
+.slide-dark .err-item.revealed .wrong{color:#ff6b6b!important;text-decoration:line-through}
+/* Dialogue lines in L2 — fix opacity override */
+.dialogue-line[data-line2]{opacity:0;transform:translateY(10px);transition:all .4s}
+.dialogue-line[data-line2].visible{opacity:1!important;transform:translateY(0)!important;display:flex!important}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -3439,7 +3451,9 @@ function nextDialogueLine2() {
   dialogueLine2++;
   var line = document.querySelector('.dialogue-line[data-line2="' + dialogueLine2 + '"]');
   if (line) {
-    line.style.display = 'block';
+    line.style.display = 'flex';
+    line.style.flexDirection = 'column';
+    line.classList.add('visible');
     if (dialogueLine2 >= 8) {
       document.getElementById('nextLineBtn2').textContent = 'Dialogue Complete';
       document.getElementById('nextLineBtn2').disabled = true;
