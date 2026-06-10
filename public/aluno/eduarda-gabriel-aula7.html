@@ -1,0 +1,2543 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aluno &mdash; Eduarda Gabriel | Aula 7 | Turn-Taking | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+var audioMap = {
+  "Jump In": "/audio/eduarda-gabriel/jump_in.mp3",
+  "Chime In": "/audio/eduarda-gabriel/chime_in.mp3",
+  "Yield the Floor": "/audio/eduarda-gabriel/yield_the_floor.mp3",
+  "Go Ahead": "/audio/eduarda-gabriel/go_ahead.mp3",
+  "Hear Out": "/audio/eduarda-gabriel/hear_out.mp3",
+  "Talk Over": "/audio/eduarda-gabriel/talk_over.mp3",
+  "Wrap Up": "/audio/eduarda-gabriel/wrap_up.mp3",
+  "Hang On": "/audio/eduarda-gabriel/hang_on.mp3",
+  "So, the main question is the timeline. Anna, what do you think?": "/audio/eduarda-gabriel/d1_timeline_anna.mp3",
+  "Well, I believe we need more time for due diligence, and—": "/audio/eduarda-gabriel/d2_more_time_dd.mp3",
+  "Sorry to jump in, but the creditors have a hard deadline.": "/audio/eduarda-gabriel/d3_creditors_deadline.mp3",
+  "Hang on, let me finish my point. We can ask for an extension.": "/audio/eduarda-gabriel/d4_hang_on_extension.mp3",
+  "Of course, please go ahead. I did not mean to talk over you.": "/audio/eduarda-gabriel/d5_go_ahead_talk_over.mp3",
+  "Thank you. Anyway, as I was saying, an extension is possible.": "/audio/eduarda-gabriel/d6_anyway_extension.mp3",
+  "Good points from both of you. Eduarda, would you like to chime in?": "/audio/eduarda-gabriel/d7_chime_in.mp3",
+  "Yes. Let us hear the creditors out first, and then we can wrap up the timeline.": "/audio/eduarda-gabriel/d8_hear_out_wrap_up.mp3",
+  "Sorry to jump in, but I have a quick point.": "/audio/eduarda-gabriel/kp1_jump_in_point.mp3",
+  "Hang on, let me finish my point.": "/audio/eduarda-gabriel/kp2_let_me_finish.mp3",
+  "Please, go ahead.": "/audio/eduarda-gabriel/kp3_go_ahead.mp3",
+  "I did not mean to talk over you.": "/audio/eduarda-gabriel/kp4_talk_over.mp3",
+  "Let us wrap up and move on.": "/audio/eduarda-gabriel/kp5_wrap_up.mp3",
+  "Please, go ahead. I would like to hear your view.": "/audio/eduarda-gabriel/speech_go_ahead_view.mp3",
+  "Let us hear everyone out before we decide.": "/audio/eduarda-gabriel/speech_hear_everyone_out.mp3",
+  "Anyway, as I was saying, the deadline is close.": "/audio/eduarda-gabriel/fb_anyway_deadline.mp3",
+  "Let us hear her out before we react.": "/audio/eduarda-gabriel/fb_hear_her_out.mp3",
+  "I will yield the floor to my colleague.": "/audio/eduarda-gabriel/fb_yield_floor.mp3",
+  "[order-l7]": "/audio/eduarda-gabriel/order_l7_sequence.mp3",
+  "Sorry to jump in, but I have a quick point on the timeline. The creditors have a hard deadline at the end of the month. I think we should hear them out and then wrap up the discussion.": "/audio/eduarda-gabriel/listening_jumping_in.mp3",
+  "Let us keep this organized. Please, one at a time. Anna, go ahead and finish your point. Then Eduarda can chime in. We will wrap up by noon.": "/audio/eduarda-gabriel/listening_chair_turns.mp3"
+};
+</script>
+<style>
+:root {
+  --accent: #7C5CBF;
+  --accent-light: #9B7ED8;
+  --accent-dim: rgba(124,92,191,0.08);
+  --accent-glow: rgba(124,92,191,0.05);
+  --navy: #003080;
+  --black: #1a1a2e;
+  --bg: #f5f5f0;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fafaf7;
+  --bg-elevated: #f0f0eb;
+  --bg-input: #fafaf7;
+  --border: #d4d4cc;
+  --border-light: #c0c0b8;
+  --white: #1a1a2e;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #5c5c6c;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --success-border: rgba(22,163,74,0.25);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --danger-border: rgba(220,38,38,0.25);
+  --warn: #d97706;
+  --warn-bg: rgba(217,119,6,0.08);
+  --warn-border: rgba(217,119,6,0.25);
+  --dark: #1a1a2e;
+  --dark-surface: #232340;
+  --eduarda-purple: #7C5CBF;
+  --james-blue: #5b9bd5;
+  --slide-transition: 400ms;
+}
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; touch-action: manipulation; }
+
+/* === FOCUS STATES (Accessibility) === */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+body {
+  font-family:'Inter',-apple-system,sans-serif;
+  background:linear-gradient(135deg,#e8e4dc 0%,var(--bg) 50%,#e0ddd5 100%);
+  color:var(--text);
+  line-height:1.7;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* === LOGO BAR === */
+.logo-bar {
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.6rem 1.5rem;
+  background:rgba(255,255,255,0.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  transition:background .3s,border .3s;
+}
+.logo-bar img { height:32px; }
+.logo-bar .prof-badge {
+  font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:#fff;background:var(--accent);border:1px solid var(--accent);
+  padding:0.35rem 0.9rem;border-radius:4px;
+}
+.logo-bar .slide-counter {
+  font-size:.75rem;font-weight:600;color:rgba(255,255,255,.5);
+  letter-spacing:2px;font-variant-numeric:tabular-nums;display:none;
+}
+
+body.slide-mode .logo-bar {
+  background:rgba(26,26,46,.92);border-bottom:1px solid rgba(255,255,255,.06);
+}
+body.slide-mode .logo-bar img { filter:brightness(10); }
+body.slide-mode .logo-bar .prof-badge { display:none; }
+body.slide-mode .logo-bar .slide-counter { display:block; }
+
+/* === HEADER HERO === */
+.header {
+  position:relative;min-height:340px;display:flex;align-items:flex-end;padding:3rem 2rem;overflow:hidden;
+  background:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1400&q=80') center/cover no-repeat;
+}
+.header::before {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(26,26,46,.92) 0%,rgba(26,26,46,.75) 40%,rgba(26,26,46,.6) 100%);
+}
+.header-content { position:relative;z-index:1;max-width:900px;margin:0 auto;width:100%; }
+.passport-badge {
+  display:inline-flex;align-items:center;gap:.5rem;background:var(--accent);
+  padding:.5rem 1.2rem;font-size:.75rem;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:#fff;margin-bottom:1.2rem;border-radius:4px;
+}
+.header h1 {
+  font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:700;
+  color:#fff;line-height:1.1;margin-bottom:.5rem;
+}
+.header .subtitle { font-size:1rem;font-weight:400;color:rgba(255,255,255,.9);margin-bottom:1.5rem;max-width:600px; }
+.student-info { display:flex;gap:.8rem;flex-wrap:wrap;font-size:.8rem;color:#fff; }
+.student-info span {
+  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+  padding:.3rem .7rem;border-radius:4px;border:1px solid rgba(255,255,255,.1);
+}
+.progress-passport {
+  margin-top:1.2rem;background:rgba(0,0,0,.35);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:1rem 1.2rem;
+}
+.progress-label { display:flex;justify-content:space-between;font-size:.75rem;color:#e8e8e8;margin-bottom:.4rem; }
+.progress-bar-outer { height:6px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden; }
+.progress-bar-inner { height:100%;background:var(--accent-light);border-radius:3px;width:0%;transition:width .6s ease; }
+
+/* === CONTAINER === */
+.container { max-width:900px;margin:0 auto;padding:2rem 1.5rem; }
+
+/* === SPEED CONTROL === */
+.speed-control {
+  display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-bottom:12px;
+  padding:8px 12px;background:rgba(255,255,255,.8);backdrop-filter:blur(12px);
+  border-radius:20px;border:1px solid var(--border);width:fit-content;margin-left:auto;
+}
+.speed-label { font-size:.75rem;color:#666677; }
+.speed-btn {
+  padding:5px 10px;font-size:.72rem;border:1px solid var(--border);background:transparent;
+  border-radius:12px;cursor:pointer;min-height:32px;transition:all .2s;font-weight:500;color:#555;font-family:'Inter',sans-serif;
+}
+.speed-btn.active { background:var(--navy);color:#fff;border-color:var(--navy); }
+
+/* === TABS === */
+.tabs-wrapper {
+  position:sticky;top:0;z-index:100;
+  background:rgba(245,245,240,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:.5rem 0;border-bottom:1px solid var(--border);
+}
+.tabs { display:flex;gap:0;overflow-x:auto;max-width:900px;margin:0 auto;padding:0 1.5rem; }
+.tab-btn {
+  flex:1;padding:.8rem .4rem;border:none;background:transparent;cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:.62rem;font-weight:500;color:var(--text-dim);
+  letter-spacing:1px;text-transform:uppercase;position:relative;white-space:nowrap;
+  min-height:44px;transition:all .2s ease-out;
+}
+.tab-btn.active { color:var(--navy);font-weight:700; }
+.tab-btn.active::after {
+  content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;
+  background:var(--accent);border-radius:1px;
+}
+.tab-content { display:none; }
+.tab-content.active { display:block;animation:fadeIn .3s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+
+/* === INFO GRID === */
+.info-grid { display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem; }
+.info-item { padding:1rem;background:rgba(255,255,255,.6);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px; }
+.info-item label { font-size:.68rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:.3rem; }
+.info-item span { font-size:.88rem;color:#1a1a1a; }
+
+/* === JOURNEY BOX === */
+.journey-box { padding:1.5rem;background:var(--accent-dim);border:1px solid rgba(124,92,191,.2);border-radius:10px;margin-bottom:1.5rem; }
+.journey-box h4 { font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--accent);margin-bottom:.8rem; }
+
+/* === STRENGTHS/WEAKNESSES === */
+.sw-grid { display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem; }
+.sw-box { padding:1.2rem;border-radius:10px; }
+.sw-box.strengths { background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.2); }
+.sw-box.weaknesses { background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.2); }
+.sw-box h4 { font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:.6rem; }
+.sw-box.strengths h4 { color:#16a34a; }
+.sw-box.weaknesses h4 { color:#dc2626; }
+.sw-box ul { list-style:none;padding:0;font-size:.82rem;line-height:1.7; }
+.sw-box.strengths ul li::before { content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#16a34a;margin-right:.5rem;vertical-align:middle; }
+.sw-box.weaknesses ul li::before { content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#dc2626;margin-right:.5rem;vertical-align:middle; }
+
+/* === CURRICULUM TABLE === */
+.curriculum-wrapper { overflow-x:auto;border:1px solid var(--border);border-radius:10px; }
+.curriculum-table { width:100%;min-width:800px;border-collapse:collapse;font-size:.78rem; }
+.curriculum-table thead th { background:var(--navy);color:#fff;padding:.8rem 1rem;text-align:left;font-weight:600;font-size:.68rem;letter-spacing:.5px;text-transform:uppercase; }
+.curriculum-table tbody tr:nth-child(even) { background:rgba(124,92,191,.03); }
+.curriculum-table tbody td { padding:.7rem 1rem;border-bottom:1px solid #e5e5e0;vertical-align:top;line-height:1.5; }
+
+/* === LESSON CARD === */
+.lesson-card {
+  background:rgba(255,255,255,.3);backdrop-filter:blur(12px) saturate(160%);
+  -webkit-backdrop-filter:blur(12px) saturate(160%);
+  border:1px solid rgba(255,255,255,.25);border-radius:12px;margin-bottom:1.5rem;overflow:hidden;
+  transition:box-shadow .4s ease-out,transform .3s ease-out;
+}
+.lesson-card:hover { box-shadow:0 8px 32px rgba(0,0,0,.08); }
+.lesson-header { display:flex;min-height:140px;cursor:pointer;position:relative; }
+.lesson-header-img { width:200px;min-height:140px;background-size:cover;background-position:center;position:relative;flex-shrink:0; }
+.lesson-header-img::after { content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 60%,rgba(255,255,255,.9) 100%); }
+.lesson-header-content { flex:1;padding:1.5rem;display:flex;flex-direction:column;justify-content:center; }
+.lesson-number { font-size:.72rem;text-transform:uppercase;letter-spacing:3px;color:var(--accent);font-weight:600;margin-bottom:.3rem; }
+.lesson-header-content h3 { font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:#1a1a1a;margin:0 0 .4rem;line-height:1.2; }
+.lesson-desc { font-size:.82rem;color:var(--text-dim);line-height:1.5; }
+.expand-icon { position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-size:.8rem;color:#9ca3af;transition:transform .3s ease; }
+.lesson-card.open .expand-icon { transform:translateY(-50%) rotate(180deg); }
+.lesson-body { display:none;padding:2rem 2.5rem;border-top:1px solid #e5e5e0; }
+.lesson-card.open .lesson-body { display:block;animation:fadeIn .3s ease; }
+.lesson-progress-mini { margin-top:.5rem; }
+.mini-bar { height:4px;background:#e0e0e0;border-radius:2px;overflow:hidden; }
+.mini-bar-fill { height:100%;background:var(--accent);border-radius:2px;transition:width .4s; }
+.mini-percent { font-size:.7rem;color:var(--text-dim); }
+
+/* === EXERCISE SECTION === */
+.exercise-section {
+  background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.3);
+  border-radius:10px;padding:1.5rem;margin-bottom:1.2rem;
+}
+.section-header-row { display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem; }
+.section-header-row h4 { font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:#1a1a1a; }
+.badge { display:inline-flex;padding:3px 8px;font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:4px; }
+.badge-vocab { background:rgba(124,92,191,.15);color:var(--accent);border:1px solid rgba(124,92,191,.35); }
+.badge-practice { background:rgba(124,92,191,.12);color:#581c87;border:1px solid rgba(124,92,191,.35); }
+.badge-quiz { background:rgba(200,40,60,.12);color:#991b1b;border:1px solid rgba(200,40,60,.35); }
+.badge-speak { background:rgba(120,40,200,.12);color:#581c87;border:1px solid rgba(120,40,200,.35); }
+.badge-order { background:rgba(124,92,191,.12);color:var(--accent);border:1px solid rgba(124,92,191,.35); }
+.badge-think { background:rgba(180,130,20,.15);color:#6b4c0a;border:1px solid rgba(180,130,20,.4); }
+.badge-grammar { background:rgba(0,48,128,.12);color:var(--navy);border:1px solid rgba(0,48,128,.3); }
+
+/* === VOCAB CARDS === */
+.vocab-cards { display:flex;flex-direction:column;gap:.6rem; }
+.vocab-card-pc {
+  display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;
+  background:rgba(255,255,255,.4);backdrop-filter:blur(8px);
+  border:1px solid rgba(200,200,190,.5);border-radius:10px;transition:border-color .3s;
+}
+.vocab-card-pc:hover { border-color:var(--accent); }
+.vocab-card-content { flex:1; }
+.vocab-card-header { display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap; }
+.vocab-card-word { font-weight:700;font-size:1rem;color:#1a1a1a; }
+.vocab-card-dot { color:var(--accent);font-weight:700; }
+.vocab-card-def { font-weight:500;font-size:.85rem;color:var(--text-mid); }
+.vocab-card-example { font-size:.82rem;color:var(--text-dim);font-style:italic;line-height:1.5;margin-top:.3rem; }
+.audio-btn {
+  background:rgba(0,48,128,.85);backdrop-filter:blur(10px);color:#fff;
+  border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:8px 14px;
+  cursor:pointer;font-size:.78rem;font-weight:600;min-height:44px;transition:all .2s;font-family:'Inter',sans-serif;
+}
+.audio-btn:hover { background:rgba(0,48,128,1);transform:translateY(-1px); }
+.listen-all-btn {
+  background:var(--accent-dim);border:1.5px solid var(--accent);color:var(--accent);
+  border-radius:20px;padding:8px 16px;cursor:pointer;font-size:.78rem;font-weight:600;
+  min-height:44px;transition:all .2s;font-family:'Inter',sans-serif;
+}
+.listen-all-btn:hover { background:var(--accent);color:#fff; }
+
+/* === MATCHING === */
+.match-grid { display:flex;flex-direction:column;gap:.6rem; }
+.match-row { display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:rgba(255,255,255,.4);border:1px solid rgba(200,200,190,.5);border-radius:8px;transition:all .3s; }
+.match-row.correct { background:var(--success-bg);border-color:var(--success-border); }
+.match-row.wrong { background:var(--danger-bg);border-color:var(--danger-border);animation:shake .3s ease; }
+.match-word { font-weight:600;font-size:.9rem;flex:1;color:#1a1a1a; }
+.match-row select {
+  padding:.5rem .8rem;border:1px solid var(--border);border-radius:6px;font-size:.85rem;
+  font-family:'Inter',sans-serif;background:#fff;min-width:200px;min-height:44px;cursor:pointer;
+}
+
+/* === FILL-IN-THE-BLANK === */
+.fill-blank-item { padding:.8rem 1rem;background:rgba(255,255,255,.4);border:1px solid rgba(200,200,190,.5);border-radius:8px;margin-bottom:.6rem; }
+.fill-blank-sentence { font-size:.95rem;line-height:1.7; }
+.blank-input {
+  border:none;border-bottom:2px dashed var(--accent);background:transparent;
+  font-size:.95rem;font-family:'Inter',sans-serif;color:var(--accent);font-weight:600;
+  padding:2px 4px;min-width:100px;outline:none;text-align:center;
+}
+.blank-input.correct { border-bottom-color:var(--success);color:var(--success); }
+.blank-input.wrong { border-bottom-color:var(--danger);color:var(--danger);animation:shake .3s ease; }
+.blank-hint-feedback { font-size:.78rem;color:var(--warn);margin-top:.4rem;display:none; }
+.blank-hint-feedback.visible { display:block; }
+.check-btn,.listen-blank-btn {
+  margin-top:.5rem;padding:.4rem .8rem;border:1px solid var(--accent);background:var(--accent);
+  color:#fff;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;
+  min-height:36px;font-family:'Inter',sans-serif;transition:all .2s;
+}
+.listen-blank-btn { background:transparent;color:var(--accent); }
+.listen-blank-btn:hover { background:var(--accent);color:#fff; }
+
+/* === QUIZ === */
+.quiz-item { margin-bottom:1rem; }
+.quiz-question { font-weight:600;font-size:.95rem;margin-bottom:.6rem; }
+.quiz-options { display:flex;flex-direction:column;gap:.4rem; }
+.quiz-option {
+  display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;
+  background:rgba(255,255,255,.4);border:1px solid rgba(200,200,190,.5);border-radius:8px;
+  cursor:pointer;font-size:.88rem;transition:all .2s;min-height:44px;
+}
+.quiz-option:hover { border-color:var(--accent);background:var(--accent-dim); }
+.quiz-option.correct { background:var(--success-bg);border-color:var(--success-border);color:var(--success); }
+.quiz-option.wrong { background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger);animation:shake .3s ease; }
+.option-letter { font-weight:700;color:var(--accent);min-width:20px; }
+
+/* === ORDER === */
+.order-container { display:flex;flex-direction:column;gap:.5rem; }
+.order-item {
+  display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;
+  background:rgba(255,255,255,.4);border:1px solid rgba(200,200,190,.5);border-radius:8px;
+  cursor:pointer;transition:all .2s;min-height:44px;
+}
+.order-item:hover { border-color:var(--accent); }
+.order-item.correct-order { background:var(--success-bg);border-color:var(--success-border); }
+.order-item.wrong { animation:shake .3s ease; }
+.order-num { font-weight:700;color:var(--accent);min-width:24px;text-align:center; }
+.order-text { flex:1;font-size:.9rem; }
+.order-arrows { display:flex;flex-direction:column;gap:2px; }
+.arrow-btn { background:transparent;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:2px 6px;font-size:.7rem;min-height:28px;min-width:28px;transition:all .2s; }
+.arrow-btn:hover { background:var(--accent);color:#fff;border-color:var(--accent); }
+.verify-all-btn {
+  margin-top:.8rem;padding:.6rem 1.5rem;background:var(--accent);color:#fff;border:none;
+  border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;
+  min-height:44px;transition:all .2s;
+}
+.verify-all-btn:hover { background:var(--accent-light); }
+
+/* === SPEECH === */
+.speech-card { background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1rem;transition:border-color .2s; }
+.speech-card:hover { border-color:var(--border-light); }
+.speech-phrase { font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:.3rem;line-height:1.4; }
+.speech-translation { font-size:.875rem;color:var(--text-dim);font-style:italic;margin-bottom:.8rem; }
+.speech-controls { display:flex;gap:.5rem;align-items:center;flex-wrap:wrap; }
+.btn { padding:.5rem 1rem;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-weight:600;cursor:pointer;min-height:44px;font-family:'Inter',sans-serif;transition:all .2s; }
+.btn-listen { background:var(--navy);color:#fff;border-color:var(--navy); }
+.btn-listen:hover { background:#1a4a9e;border-color:#1a4a9e; }
+.btn-record { background:#dc2626;color:#fff;border-color:#dc2626; }
+.btn-record:hover { background:#b91c1c;border-color:#b91c1c; }
+.btn-stop { background:#f59e0b;color:#fff;border-color:#f59e0b;display:none; }
+.btn-stop:hover { background:#d97706;border-color:#d97706; }
+.btn-record.recording { animation:pulse 1.2s infinite; }
+.btn-record.hidden { display:none; }
+.btn-stop.visible { display:inline-flex; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+.speech-result { margin-top:.8rem;padding:1rem;border-radius:8px;border:1px solid var(--border);background:var(--bg-input);display:none;font-size:.875rem;line-height:1.6; }
+.speech-result.show { display:block;animation:fadeIn .3s ease; }
+.speech-result.good { background:rgba(22,163,74,.08);border-color:rgba(22,163,74,.25);color:#16a34a; }
+.speech-result.try-again { background:rgba(217,119,6,.08);border-color:rgba(217,119,6,.25);color:#b45309; }
+.speech-result.bad { background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.25);color:#dc2626; }
+.word-comparison { margin-top:.8rem; }
+.word-comparison .comp-label { font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.4rem;margin-top:.6rem;opacity:.8; }
+.word-comparison .comp-words { display:flex;flex-wrap:wrap;gap:4px; }
+.word-box { display:inline-flex;align-items:center;gap:.2rem;padding:.25rem .6rem;font-size:.85rem;font-weight:500;border:1px solid;border-radius:4px;margin:2px; }
+.word-box.word-correct { background:rgba(22,163,74,.08);color:#16a34a;border-color:rgba(22,163,74,.25); }
+.word-box.word-missing { background:rgba(220,38,38,.08);color:#dc2626;border-color:rgba(220,38,38,.25); }
+.word-box.word-wrong { background:rgba(220,38,38,.08);color:#dc2626;border-color:rgba(220,38,38,.25);text-decoration:line-through; }
+.word-box.word-extra { background:rgba(168,85,247,.1);color:#7c3aed;border-color:rgba(168,85,247,.25); }
+.word-box .word-icon { font-size:.7rem; }
+.speech-suggestion { margin-top:.6rem;padding:.6rem .8rem;background:rgba(255,255,255,.5);border:1px solid #d4d4cc;font-size:.875rem;border-radius:4px; }
+.speech-suggestion strong { color:var(--accent); }
+
+/* === THINK CARD === */
+.think-card { background:var(--accent-dim);border:1px solid rgba(124,92,191,.2);border-radius:10px;padding:1.5rem; }
+.think-question { font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--text);margin-bottom:1rem;line-height:1.5; }
+
+/* === SURVIVAL CARD === */
+.survival-card { background:var(--accent-dim);border:1px solid rgba(124,92,191,.2);border-radius:10px;padding:1.2rem;margin-top:1rem; }
+.survival-phrase { display:flex;align-items:center;gap:.8rem;padding:.6rem 0;border-bottom:1px solid rgba(124,92,191,.1); }
+.survival-phrase:last-child { border-bottom:none; }
+.sp-num { font-weight:700;color:var(--accent);font-size:.8rem;min-width:24px; }
+.sp-en { font-weight:600;color:#1a1a1a;flex:1; }
+.sp-pt { font-size:.82rem;color:var(--text-dim);font-style:italic;flex:1; }
+
+/* === MEDIA GRID === */
+.media-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem; }
+.media-card-wrapper { position:relative; }
+.media-card-wrapper.done { opacity:.6; }
+.media-check { position:absolute;top:.8rem;right:.8rem;z-index:1; }
+.media-card { background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:box-shadow .2s; }
+.media-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.06); }
+.media-thumb { height:50px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated); }
+.media-thumb svg { width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:2; }
+.media-info { padding:1rem; }
+.media-type { font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;color:var(--accent);margin-bottom:.3rem; }
+.media-info h5 { font-size:.9rem;font-weight:600;color:#1a1a1a;margin:0 0 .3rem; }
+.media-info p { font-size:.78rem;color:var(--text-dim);line-height:1.5;margin:0; }
+.media-tip { font-size:.72rem;color:#b45309;font-style:italic;margin-top:.4rem; }
+
+/* === SLIDE SYSTEM === */
+.slides-wrapper { display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:500; }
+body.slide-mode .slides-wrapper { display:block; }
+body.slide-mode .main-content { display:none; }
+body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
+
+.phase-bar { position:fixed;top:50px;left:0;right:0;z-index:510;display:flex;height:4px;background:rgba(26,26,46,.6); }
+.phase-segment { flex:1;position:relative;transition:background .4s; }
+.phase-segment.completed { background:var(--accent); }
+.phase-segment.current { background:var(--accent-light);animation:phasePulse 2s ease infinite; }
+.phase-segment.upcoming { background:rgba(255,255,255,.08); }
+@keyframes phasePulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+.phase-labels { position:fixed;top:54px;left:0;right:0;z-index:509;display:flex;padding:0 1.5rem; }
+.phase-label { flex:1;font-size:.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;padding:.3rem 0;transition:color .4s; }
+.phase-label.current { color:#C4A8FF; }
+.phase-label.completed { color:#A387D8; }
+
+.slides-container { height:100vh;overflow:hidden;position:relative; }
+.slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem; }
+.slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
+.slide-inner { max-width:920px;width:100%;position:relative; }
+.slide-light { background:var(--bg); }
+.slide-light .slide-inner { color:var(--text); }
+.slide-dark { background:var(--dark); }
+.slide-dark .slide-inner { color:#fff; }
+.slide-dark .vocab-card, .slide-dark .vocab-card-ic, .slide-dark .fill-item, .slide-dark .challenge-card, .slide-dark .error-card, .slide-dark .roleplay-card, .slide-dark .record-card, .slide-dark .survival-item-ic, .slide-dark .oral-item, .slide-dark .comp-q, .slide-dark .email-card, .slide-dark .inclass-lesson-card { color:#2d2d3a; }
+.slide-image { background-size:cover;background-position:center; }
+.slide-image::before { content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,26,46,0.78) 0%,rgba(26,26,46,0.92) 100%); }
+.slide-image .slide-inner { color:#fff;position:relative;z-index:2;text-align:center; }
+.slide-image .accent, .slide-image .accent-bold, .slide-dark .accent, .slide-dark .accent-bold { color: #C4A8FF; }
+.slide-image .slide-title, .slide-dark .slide-title { text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+.slide-image .chapter-label, .slide-dark .chapter-label { color: rgba(255,255,255,0.8); }
+
+.chapter-label { font-size:.75rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--accent-light);margin-bottom:.5rem; }
+.slide-title { font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.15;margin-bottom:1rem; }
+.slide-subtitle { font-size:1rem;font-weight:300;opacity:.85;line-height:1.6; }
+.slide-heading { font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;line-height:1.2;margin-bottom:1.2rem; }
+.accent { color:var(--accent); }
+.accent-bold { color:var(--accent);font-weight:700; }
+
+.warm-questions { display:flex;flex-direction:column;gap:1.8rem;margin-top:2rem; }
+.warm-q { font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;font-style:italic;opacity:0;animation:fadeUp .8s ease forwards;color:#fff;padding-left:1.5rem;border-left:3px solid var(--accent); }
+.warm-q:nth-child(2) { animation-delay:.4s; }
+.warm-q:nth-child(3) { animation-delay:.8s; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* Teacher T icon */
+.teacher-t { position:fixed;top:5rem;right:1.5rem;z-index:520;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;cursor:default;transition:all .2s;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.15);display:none; }
+body.slide-mode .teacher-t { display:flex; }
+.teacher-t:hover { background:var(--accent);color:#fff;border-color:var(--accent); }
+.teacher-t-panel { display:none;position:absolute;top:0;right:calc(100% + 10px);width:340px;background:rgba(26,26,46,.96);color:rgba(255,255,255,.9);padding:1rem 1.2rem;border-radius:10px;font-size:.82rem;line-height:1.65;box-shadow:0 12px 40px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);max-height:60vh;overflow-y:auto; }
+.teacher-t:hover .teacher-t-panel { display:block;animation:fadeIn .2s ease; }
+.teacher-t-panel strong { color:var(--accent-light); }
+
+/* Vocab cards (IN CLASS 2x2 grid) */
+.vocab-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.5rem; }
+.vocab-card { background:#fff;border:2px solid rgba(124,92,191,.12);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .4s;min-height:220px;display:flex;flex-direction:column; }
+.vocab-card:hover { border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,92,191,.12); }
+.vocab-card.revealed { border-color:var(--accent); }
+.vocab-card .card-icon { width:100%;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;border-radius:11px 11px 0 0;transition:all .5s;padding:.5rem; }
+.vocab-card .card-icon svg { width:48px;height:48px;stroke-width:1.5;opacity:.5;transition:opacity .5s; }
+.vocab-card.revealed .card-icon svg { opacity:1; }
+.vocab-card .card-hint { font-size:.78rem;color:rgba(255,255,255,.75);font-style:italic;text-align:center;line-height:1.3;padding:0 .5rem;max-width:90%; }
+.vocab-card.revealed .card-hint { opacity:.5;font-size:.7rem; }
+.vocab-card .card-body { padding:.7rem .8rem;display:flex;flex-direction:column;gap:.25rem;flex:1; }
+.vocab-card .card-word { font-weight:700;font-size:1.05rem;color:var(--accent);opacity:0;height:0;overflow:hidden;transition:all .4s; }
+.vocab-card.revealed .card-word { opacity:1;height:auto; }
+.vocab-card .card-def { font-size:.78rem;color:var(--text-dim);line-height:1.3;font-style:italic;opacity:0;height:0;overflow:hidden;transition:all .4s .1s; }
+.vocab-card.revealed .card-def { opacity:1;height:auto; }
+.vocab-card .card-example { font-size:.82rem;color:var(--text);line-height:1.3;opacity:0;height:0;overflow:hidden;transition:all .4s .2s; }
+.vocab-card.revealed .card-example { opacity:1;height:auto; }
+.vocab-card .card-audio { margin-top:auto;padding-top:.4rem;opacity:0;transition:opacity .4s .3s; }
+.vocab-card.revealed .card-audio { opacity:1; }
+.audio-btn-sm { display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:.72rem;font-weight:600;font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.5px; }
+.audio-btn-sm:hover { background:#5a3d9e; }
+.audio-btn-sm svg { width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
+.vocab-counter { text-align:center;margin-top:1.2rem;font-weight:600;color:var(--accent);font-size:1rem; }
+
+/* Grammar discovery */
+.grammar-sentences { display:flex;flex-direction:column;gap:1rem;margin:1.5rem 0; }
+.grammar-sentence { font-size:1.15rem;text-align:center;line-height:1.6;padding:.6rem;background:rgba(124,92,191,.04);border-radius:8px; }
+.grammar-sentence strong { color:var(--accent);font-weight:800;font-size:1.2rem; }
+.btn-primary { display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif; }
+.btn-primary:hover { transform:scale(1.03);box-shadow:0 8px 24px rgba(124,92,191,.3); }
+.btn-secondary { display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif; }
+.btn-secondary:hover { background:var(--accent);color:#fff; }
+.grammar-table-wrap { overflow:hidden;max-height:0;transition:max-height .6s ease;margin-top:1rem; }
+.grammar-table-wrap.show { max-height:500px; }
+.grammar-table { width:100%;max-width:500px;margin:0 auto;border-collapse:collapse; }
+.grammar-table th { background:var(--accent);color:#fff;padding:.6rem 1rem;text-align:left;font-size:.85rem; }
+.grammar-table td { padding:.6rem 1rem;border-bottom:1px solid #e8e8e8;font-size:.95rem; }
+.grammar-table td:nth-child(2) { font-weight:700;color:var(--accent); }
+
+/* Common mistake */
+.mistake-card { display:flex;flex-direction:column;gap:1.5rem;align-items:center;margin-top:2rem; }
+.mistake-item { display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-radius:12px;font-size:1.2rem;width:100%;max-width:500px; }
+.mistake-wrong { background:rgba(220,38,38,.06);border:2px solid rgba(220,38,38,.2);color:var(--danger);text-decoration:line-through;font-weight:600; }
+.mistake-right { background:rgba(22,163,74,.06);border:2px solid rgba(22,163,74,.2);color:var(--success);font-weight:700; }
+.mistake-icon { width:32px;height:32px;flex-shrink:0; }
+.mistake-icon svg { width:32px;height:32px;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round; }
+
+/* Fill-in (IN CLASS) */
+.fill-grid { display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem; }
+.fill-item { background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:.8rem; }
+.fill-item:hover { border-color:var(--accent); }
+.fill-item .fill-text { font-size:1rem;flex:1; }
+.fill-item .fill-blank { color:var(--accent);font-weight:800;border-bottom:2px dashed var(--accent);padding:0 .3rem;min-width:40px;display:inline-block;text-align:center; }
+.fill-item .fill-answer { display:none;font-weight:700;color:var(--accent); }
+.fill-item.revealed .fill-blank { display:none; }
+.fill-item.revealed .fill-answer { display:inline; }
+
+/* Dialogue */
+.dialogue-box { display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem;max-height:65vh;overflow-y:auto;padding-right:.5rem; }
+.dialogue-line { display:flex;gap:.8rem;align-items:flex-start;opacity:0;transform:translateY(10px);transition:all .4s; }
+.dialogue-line.visible { opacity:1;transform:translateY(0); }
+.dialogue-avatar { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0; }
+.dialogue-avatar.james { background:var(--james-blue); }
+.dialogue-avatar.eduarda { background:var(--eduarda-purple); }
+.dialogue-bubble { padding:.7rem 1rem;border-radius:12px;font-size:.92rem;line-height:1.5;max-width:80%;position:relative; }
+.dialogue-bubble.james-bubble { background:rgba(91,155,213,.1);border:1px solid rgba(91,155,213,.2); }
+.dialogue-bubble.eduarda-bubble { background:var(--accent-dim);border:1px solid rgba(124,92,191,.2); }
+.dialogue-bubble .vocab-highlight { color:var(--accent);font-weight:700; }
+.dialogue-bubble .audio-inline, .oral-model .audio-inline { display:inline-flex;margin-left:.4rem;cursor:pointer;opacity:.5;transition:opacity .2s;vertical-align:middle; }
+.dialogue-bubble .audio-inline:hover, .oral-model .audio-inline:hover { opacity:1; }
+.dialogue-bubble .audio-inline svg, .oral-model .audio-inline svg { width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2; }
+
+/* Listening Player */
+.listening-player{max-width:420px;margin:1.5rem auto 0}
+.lp-seekbar{height:6px;background:rgba(255,255,255,.3);border-radius:3px;cursor:pointer;margin-bottom:8px;position:relative}
+.lp-seekbar:hover{height:8px}
+.lp-progress{height:100%;background:var(--accent);border-radius:3px;transition:width .1s;width:0%}
+.lp-time{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.75);margin-bottom:16px;font-variant-numeric:tabular-nums}
+.lp-controls{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.lp-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lp-btn:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.lp-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.lp-play{width:64px;height:64px;background:var(--accent);border:none;color:#fff}
+.lp-play:hover{transform:scale(1.05)}
+.lp-play svg{width:24px;height:24px}
+.lp-play.playing .lp-icon-play{display:none}
+.lp-play.playing .lp-icon-pause{display:flex!important}
+.lp-icon-pause{display:none!important}
+.lp-speed{display:flex;justify-content:center;gap:8px}
+.lp-speed-btn{padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.lp-speed-btn:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.lp-speed-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lp-label{font-size:.7rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.5px;text-align:center;margin-bottom:6px}
+
+/* Quick challenge */
+.challenge-card { background:#fff;border:2px solid #e8e4df;border-radius:16px;padding:2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;transition:all .3s; }
+.challenge-prompt { font-family:'Cormorant Garamond',serif;font-size:1.4rem;line-height:1.5;color:var(--text); }
+.challenge-answer { display:none;font-size:1.1rem;color:var(--accent);font-weight:600;padding:1rem;background:var(--accent-dim);border-radius:10px;width:100%;animation:fadeUp .3s ease; }
+.challenge-answer.show { display:block; }
+.challenge-score { position:absolute;top:1rem;right:1rem;background:var(--accent);color:#fff;padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:700; }
+.challenge-counter { font-size:.8rem;color:var(--text-dim);font-weight:600; }
+
+/* Error cards */
+.error-grid { display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem; }
+.error-card { background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:1rem; }
+.error-card:hover { border-color:var(--accent); }
+.error-card .error-sentence { font-size:1rem;color:var(--danger);flex:1; }
+.error-card .error-fix { display:none;font-weight:600;color:var(--success);font-size:.95rem; }
+.error-card.revealed .error-sentence { text-decoration:line-through;opacity:.5; }
+.error-card.revealed .error-fix { display:block;animation:fadeUp .3s ease; }
+.error-score { text-align:center;margin-top:1rem;font-weight:700;color:var(--accent);font-size:1.1rem; }
+
+/* Role-play */
+.roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:500px;margin:0 auto; }
+.roleplay-body { padding:1.5rem; }
+.roleplay-scenario { font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem; }
+.roleplay-keywords { display:flex;flex-wrap:wrap;gap:.4rem; }
+.roleplay-kw { padding:.3rem .7rem;background:var(--accent-dim);border:1px solid rgba(124,92,191,.2);border-radius:16px;font-size:.8rem;color:var(--accent);font-weight:600; }
+
+/* Record card */
+.record-card { background:#fff;border:2px solid #e8e4df;border-radius:16px;padding:2rem;text-align:center;max-width:500px;margin:0 auto; }
+.record-prompt { font-family:'Cormorant Garamond',serif;font-size:1.3rem;line-height:1.5;color:var(--text);margin-bottom:1.5rem; }
+.record-btn { width:72px;height:72px;border-radius:50%;background:var(--danger);border:none;color:#fff;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;margin:0 auto; }
+.record-btn:hover { transform:scale(1.08);box-shadow:0 8px 32px rgba(220,38,38,.3); }
+.record-btn svg { width:28px;height:28px;fill:#fff; }
+.record-btn.recording { animation:recordPulse 1s ease infinite; }
+@keyframes recordPulse { 0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)} 50%{box-shadow:0 0 0 12px rgba(220,38,38,0)} }
+
+/* Badge */
+.badge-card { text-align:center;padding:2rem; }
+.badge-icon { width:120px;height:120px;margin:0 auto 1.5rem;position:relative; }
+.badge-icon .badge-circle { width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-light));display:flex;align-items:center;justify-content:center;animation:badgePop .6s ease; }
+.badge-icon .badge-circle svg { width:48px;height:48px;stroke:#fff;fill:none;stroke-width:2; }
+@keyframes badgePop { 0%{transform:scale(0);opacity:0} 60%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1} }
+.sparkles { position:absolute;inset:-20px;pointer-events:none; }
+.sparkle { position:absolute;width:6px;height:6px;background:var(--accent);border-radius:50%;animation:sparkle 1.5s ease infinite; }
+@keyframes sparkle { 0%{opacity:0;transform:scale(0)} 50%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(0) translateY(-20px)} }
+.sparkle:nth-child(1){top:10%;left:20%;animation-delay:0s}.sparkle:nth-child(2){top:5%;right:25%;animation-delay:.3s}.sparkle:nth-child(3){bottom:15%;left:10%;animation-delay:.6s}.sparkle:nth-child(4){bottom:10%;right:15%;animation-delay:.2s}.sparkle:nth-child(5){top:40%;left:5%;animation-delay:.8s}.sparkle:nth-child(6){top:30%;right:5%;animation-delay:.5s}
+
+/* Survival (IN CLASS) */
+.survival-grid { display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem; }
+.survival-item-ic { display:flex;align-items:center;gap:.8rem;background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:.8rem 1rem;transition:all .2s; }
+.survival-item-ic:hover { border-color:var(--accent); }
+.survival-num-ic { width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0; }
+.survival-text-ic { flex:1;font-size:.92rem;color:var(--text); }
+
+/* Checklist */
+.check-grid { display:flex;flex-direction:column;gap:.5rem;margin-top:1.5rem; }
+.check-item { display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:#fff;border:1px solid #e8e4df;border-radius:8px;cursor:pointer;transition:all .3s;font-size:.92rem;color:var(--text); }
+.check-item:hover { border-color:var(--accent); }
+.check-item.checked { background:rgba(22,163,74,.06);border-color:rgba(22,163,74,.3); }
+.check-item .check-box { width:22px;height:22px;border-radius:6px;border:2px solid #d0d0d0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s; }
+.check-item.checked .check-box { background:var(--success);border-color:var(--success); }
+.check-item.checked .check-box svg { opacity:1; }
+.check-box svg { width:14px;height:14px;stroke:#fff;fill:none;stroke-width:3;opacity:0;transition:opacity .3s; }
+
+/* Comprehension questions */
+.comp-questions { display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem; }
+.comp-q { background:#fff;color:var(--text);border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;font-size:.95rem; }
+.comp-q:hover { border-color:var(--accent);background:var(--accent-dim); }
+.comp-q .q-text { font-weight:500; }
+.comp-q .q-answer { display:none;margin-top:.5rem;color:var(--accent);font-weight:600;font-size:.9rem; }
+.comp-q.revealed .q-answer { display:block;animation:fadeUp .3s ease; }
+
+/* Oral drill */
+.oral-grid { display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem; }
+.oral-item { background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;transition:all .3s;cursor:pointer; }
+.oral-situation { font-size:.95rem;color:var(--text);margin-bottom:.5rem;line-height:1.5; }
+.oral-model { display:none;color:var(--accent);font-weight:600;font-size:.9rem;padding:.6rem;background:var(--accent-dim);border-radius:6px;margin-top:.5rem; }
+.oral-item.revealed .oral-model { display:block;animation:fadeUp .3s ease; }
+
+/* Email artifact */
+.email-card { background:#fff;border-radius:12px;max-width:560px;margin:0 auto;box-shadow:0 12px 40px rgba(0,0,0,.1);overflow:hidden; }
+.email-header { background:#f7f5f2;padding:1rem 1.5rem;border-bottom:1px solid #e8e4df; }
+.email-field { font-size:.8rem;color:var(--text-dim);margin-bottom:.3rem; }
+.email-field strong { color:var(--text);font-weight:600; }
+.email-body-ic { padding:1.5rem;font-size:.9rem;line-height:1.7;color:var(--text); }
+.email-body-ic p { margin-bottom:.8rem; }
+
+/* Confetti */
+.confetti-container { position:fixed;inset:0;pointer-events:none;z-index:9999; }
+.confetti-piece { position:absolute;width:8px;height:8px;top:-10px;animation:confettiFall 3s ease forwards; }
+@keyframes confettiFall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+
+/* Nav bar */
+.nav-bar { position:fixed;bottom:0;left:0;right:0;z-index:520;display:none;align-items:center;justify-content:center;gap:1rem;padding:1rem 2rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06); }
+body.slide-mode .nav-bar { display:flex; }
+.nav-btn { width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-size:1.2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center; }
+.nav-btn:hover { background:var(--accent);border-color:var(--accent);color:#fff; }
+.nav-btn:disabled { opacity:.2;cursor:default;background:transparent;border-color:rgba(255,255,255,.1); }
+.nav-btn svg { width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
+.slide-dots { display:flex;gap:6px;align-items:center; }
+.slide-dot { width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .3s;cursor:pointer; }
+.slide-dot.active { background:var(--accent);width:20px;border-radius:3px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgba(124,92,191,.3);border-radius:3px; }
+
+/* === RESPONSIVE === */
+@media(max-width:768px) {
+  .slide { padding:5rem 1.2rem 5.5rem; }
+  .vocab-grid { grid-template-columns:1fr;gap:.8rem; }
+  .vocab-card { min-height:auto; }
+  .slide-title { font-size:2rem; }
+  .slide-heading { font-size:1.6rem; }
+  .dialogue-bubble { max-width:85%; }
+}
+@media(max-width:600px) {
+  .lesson-header { flex-direction:column; }
+  .lesson-header-img { width:100%;min-height:120px; }
+  .lesson-body { padding:1.2rem; }
+  .info-grid,.sw-grid { grid-template-columns:1fr; }
+  .media-grid { grid-template-columns:1fr; }
+  .tabs { gap:0; }
+  .tab-btn { font-size:.55rem;padding:.6rem .3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+.stamps-row { display:flex; gap:0.8rem; margin-top:1.2rem; flex-wrap:wrap; }
+.stamp { width:64px; height:64px; border-radius:4px; overflow:hidden; border:1px solid var(--border); position:relative; opacity:0.3; transition:all 0.4s ease; background-size:cover; background-position:center; filter:grayscale(100%); }
+.stamp::after { content:attr(data-label); position:absolute; bottom:0; left:0; right:0; padding:0.15rem 0.2rem; font-size:0.5rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; text-align:center; background:linear-gradient(transparent,rgba(0,0,0,0.9)); color:#d4d4d4; }
+.stamp.earned { opacity:1; border-color:var(--accent-light); filter:grayscale(0%); box-shadow:0 0 20px rgba(0,0,0,0.25); }
+.stamp.earned::after { color:#fff; }
+@media(max-width:768px){ .stamps-row{gap:0.5rem} .stamp{width:50px;height:50px} }
+
+.slide-dark .checklist li,.slide-dark .check-item,.slide-dark .check-label,.slide-dark .roleplay-body,.slide-dark .roleplay-body p,.slide-dark .roleplay-scenario,.slide-dark .comp-q,.slide-dark .comp-q p,.slide-dark .fill-item label,.slide-dark .fill-item p,.slide-dark .error-card p,.slide-dark .oral-item p,.slide-dark .email-card p,.slide-dark .boarding-pass p,.slide-dark .student-id-card p{color:#1a1a2e!important}
+
+/* ===== Aula 2+ slide components ===== */
+.slide-section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:600;line-height:1.2;margin-bottom:.5rem}
+.vocab-card-ic{background:#fff;border:2px solid rgba(51,107,135,.12);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .4s;display:flex;flex-direction:column;min-height:200px}
+.vocab-card-ic:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(51,107,135,.12)}
+.vocab-card-ic.revealed{border-color:var(--accent)}
+.vocab-card-ic .vocab-front{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;padding:1.5rem 1rem;flex:1;text-align:center}
+.vocab-card-ic .vocab-icon{display:flex;align-items:center;justify-content:center}
+.vocab-card-ic .vocab-clue{font-size:.82rem;color:var(--text-dim);font-style:italic;line-height:1.4;max-width:90%}
+.vocab-card-ic .vocab-back{padding:.8rem 1rem;display:flex;flex-direction:column;gap:.3rem;opacity:0;max-height:0;overflow:hidden;transition:all .4s ease}
+.vocab-card-ic.revealed .vocab-back{opacity:1;max-height:300px;padding:.8rem 1rem}
+.vocab-card-ic.revealed .vocab-clue{opacity:.4;font-size:.72rem}
+.vocab-card-ic .vocab-back h4{font-weight:700;font-size:1.05rem;color:var(--accent)}
+.vocab-card-ic .vocab-def-ic{font-size:.78rem;color:var(--text-dim);font-style:italic;line-height:1.3}
+.vocab-card-ic .vocab-ex-ic{font-size:.82rem;color:var(--text);line-height:1.3}
+.vocab-card-ic .vocab-back .audio-btn{margin-top:.3rem}
+.primary-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif}
+.primary-btn:hover{transform:scale(1.03);box-shadow:0 8px 24px rgba(51,107,135,.3)}
+.lp-player{max-width:500px;margin:0 auto}
+.lp-player .lp-controls{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.lp-player .lp-play{width:64px;height:64px;border-radius:50%;background:var(--accent);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.lp-player .lp-play:hover{transform:scale(1.05)}
+.lp-player .lp-play svg{width:24px;height:24px}
+.lp-skip{padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.lp-skip:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+.lp-seekbar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .1s;width:0%}
+.lp-speed-row{display:flex;justify-content:center;gap:8px}
+.lp-player .lp-time{font-size:.75rem;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dialogue-name{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem}
+.comp-answer{display:none;margin-top:.5rem;font-weight:600}
+/* NUCLEAR FIX: force white bg + dark text on ALL card elements in dark slides */
+.slide-dark .comp-q,.slide-dark .check-item,.slide-dark .oral-item,.slide-dark .fill-item,.slide-dark .error-card{background:#fff!important;color:#1a1a2e!important;border-color:rgba(200,200,190,.5)!important}
+.slide-dark .comp-q p,.slide-dark .check-item span,.slide-dark .check-item p{color:#1a1a2e!important}
+.slide-dark .comp-q .comp-answer,.slide-dark .comp-q .q-answer{color:var(--accent)!important}
+.slide-dark .check-item .check-box{border-color:#d0d0d0!important}
+.slide-dark .check-item.checked{background:rgba(22,163,74,.1)!important;border-color:rgba(22,163,74,.3)!important}
+/* Role-play: white bg on .roleplay-card, white text on inline glass cards */
+.slide-dark .roleplay-card{background:#fff!important}
+.slide-dark .roleplay-card{background:#fff!important}
+.slide-dark .roleplay-card .roleplay-scenario{color:#1a1a2e!important}
+.slide-dark .roleplay-scenario{color:#fff!important}
+.slide-dark .roleplay-card .roleplay-kw{color:var(--accent)!important;background:var(--accent-dim)!important;border-color:rgba(51,107,135,.3)!important}
+.slide-dark .roleplay-kw{color:#fff!important}
+/* ANTI-TEXTO-INVISIVEL — FIX UNIVERSAL v3 */
+.slide-dark [class*="card"],
+.slide-dark [class*="card"] p,
+.slide-dark [class*="card"] li,
+.slide-dark [class*="card"] h4,
+.slide-dark [class*="card"] h5,
+.slide-dark [class*="card"] span,
+.slide-dark [class*="card"] label,
+.slide-dark [class*="card"] td,
+.slide-dark [class*="card"] th,
+.slide-dark [class*="item"],
+.slide-dark [class*="item"] p,
+.slide-dark [class*="item"] span,
+.slide-dark [class*="item"] label,
+.slide-dark [class*="bubble"],
+.slide-dark [class*="bubble"] p,
+.slide-dark [class*="bubble"] span,
+.slide-dark [class*="box"] p,
+.slide-dark [class*="box"] span,
+.slide-dark [class*="table"] td,
+.slide-dark [class*="table"] th,
+.slide-dark [class*="option"],
+.slide-dark [class*="option"] span,
+.slide-dark [class*="sentence"],
+.slide-dark [class*="sentence"] input,
+.slide-dark [class*="row"] span,
+.slide-dark .comp-q,
+.slide-dark .comp-q p,
+.slide-dark .comp-answer,
+.slide-dark .order-item,
+.slide-dark .order-text,
+.slide-dark .order-num,
+.slide-dark .match-row,
+.slide-dark .match-word,
+.slide-dark .fill-blank-item,
+.slide-dark .fill-blank-sentence,
+.slide-dark .blank-input,
+.slide-dark .grammar-table,
+.slide-dark .grammar-table td,
+.slide-dark .grammar-table th,
+.slide-dark .grammar-box,
+.slide-dark .grammar-box p,
+.slide-dark .dialogue-bubble,
+.slide-dark .dialogue-bubble p,
+.slide-dark .dialogue-line p,
+.slide-dark .dialogue-text,
+.slide-dark .dialogue-name,
+.slide-dark .vocab-card-ic p,
+.slide-dark .vocab-card p,
+.slide-dark .email-card p,
+.slide-dark .boarding-pass p,
+.slide-dark .biz-card p,
+.slide-dark .survival-item-ic,
+.slide-dark .passport-card p,
+.slide-dark .record-card p {
+    color: #1a1a2e !important;
+}
+.secondary-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:"Inter",sans-serif}
+.secondary-btn:hover{background:var(--accent);color:#fff}
+
+/* ORDER PLAYER */
+.order-player{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin-bottom:1rem;max-width:420px}
+.op-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}
+.op-play{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.op-play:hover{opacity:.85}
+.op-play svg{width:16px;height:16px;fill:#fff}
+.op-skip{width:32px;height:32px;border-radius:50%;background:none;border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.65rem;font-weight:700;flex-shrink:0;transition:all .2s}
+.op-skip:hover{border-color:var(--accent);color:var(--accent)}
+.op-seekbar{flex:1;height:6px;background:var(--border);border-radius:3px;cursor:pointer;position:relative;overflow:hidden}
+.op-fill{height:100%;background:var(--accent);border-radius:3px;width:0%;transition:width .1s linear}
+.op-time{font-size:.7rem;color:var(--text-dim);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:70px;text-align:right}
+.op-speed{display:flex;gap:.3rem;margin-top:.4rem}
+.op-speed button{padding:.2rem .5rem;border:1px solid var(--border);border-radius:5px;background:var(--bg-card);color:var(--text-dim);font-size:.7rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s}
+.op-speed button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.exit-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:.78rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
+.exit-btn:hover{opacity:.85}
+.exit-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:.78rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
+.exit-btn:hover{opacity:.85}
+.hub-back{display:inline-flex;align-items:center;gap:.3rem;margin-left:1rem;padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--bg-card);color:var(--accent);font-size:.78rem;font-weight:600;text-decoration:none;font-family:'Inter',sans-serif}
+.hub-back:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+body.slide-mode .hub-back{display:none}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='eduarda-gabriel';window.TOTAL_AULAS=50;</script>
+</head>
+<body>
+
+<div class="logo-bar">
+  <img src="/assets/logo-alumni.png" alt="Alumni by Better">
+  <span class="prof-badge">Aluno</span>
+  <a href="/aluno/eduarda-gabriel.html" class="hub-back" title="Voltar para a lista de aulas">&#8592; Aulas</a>
+  <span class="slide-counter" id="slideCounter">01 / 27</span>
+</div>
+
+<div class="main-content">
+
+<div class="header">
+  <div class="header-content">
+    <div class="passport-badge">Business English -- 50 Aulas</div>
+    <h1>Eduarda Gabriel</h1>
+    <p class="subtitle">De &ldquo;eu travo quando a conversa fica longa&rdquo; a falar com confian&ccedil;a em calls de reestrutura&ccedil;&atilde;o e Chapter 11</p>
+    <div class="student-info">
+      <span>B1+ (Intermedi&aacute;rio)</span>
+      <span>S&atilde;o Paulo, SP</span>
+      <span>Investment Banking Associate / Houlihan Lokey</span>
+      <span>60 min / Online / 1x semana</span>
+    </div>
+    <div class="progress-passport">
+      <div class="progress-label"><span>Aula 7 &mdash; Turn-Taking: Interrupting &amp; Yielding Politely</span><span id="progressPercent">0%</span></div>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+<div class="stamps-row">
+<div class="stamp" id="stamp1" data-label="Who Is" style="background-image:url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=200&q=80')"></div>
+<div class="stamp" id="stamp2" data-label="Floor" style="background-image:url('https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=200&q=80')"></div>
+<div class="stamp" id="stamp3" data-label="Numbers" style="background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200&q=80')"></div>
+<div class="stamp" id="stamp4" data-label="Deal Room" style="background-image:url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=200&q=80')"></div>
+<div class="stamp" id="stamp5" data-label="Client" style="background-image:url('https://images.unsplash.com/photo-1553877522-43269d4ea984?w=200&q=80')"></div>
+<div class="stamp" id="stamp6" data-label="Ice-Break" style="background-image:url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200&q=80')"></div>
+<div class="stamp" id="stamp7" data-label="Turn-Take" style="background-image:url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=200&q=80')"></div>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="speed-control">
+  <span class="speed-label">Velocidade:</span>
+  <button class="speed-btn" data-speed="0.5" onclick="setAudioSpeed(0.5,this)">0.5x</button>
+  <button class="speed-btn" data-speed="0.75" onclick="setAudioSpeed(0.75,this)">0.75x</button>
+  <button class="speed-btn active" data-speed="1" onclick="setAudioSpeed(1,this)">1x</button>
+  <button class="speed-btn" data-speed="1.25" onclick="setAudioSpeed(1.25,this)">1.25x</button>
+</div>
+
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('exercises')">Pre-class</button>
+    <button class="tab-btn" onclick="switchTab('complementary')">Complementares</button>
+  </div>
+</div>
+
+<!-- ========== TAB: PRE-CLASS ========== -->
+<div class="tab-content active" id="tab-exercises">
+<div class="exercise-section" style="margin-bottom:1.5rem">
+  <div class="section-header-row">
+    <h4>Welcome, Eduarda!</h4>
+    <span class="badge badge-vocab">Onboarding</span>
+  </div>
+  <p style="font-size:.88rem;line-height:1.7;margin-bottom:1rem">This week you learn to take your turn in a busy meeting: how to interrupt politely, hold the floor, and yield gracefully using <strong>discourse markers</strong>. Review these emergency turn-taking phrases before class.</p>
+  <div style="display:grid;gap:0.8rem">
+    <div style="background:var(--bg-elevated);padding:0.8rem 1rem;border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:0.8rem;flex-wrap:wrap;"><strong style="font-size:0.9rem">Sorry to jump in, but I have a quick point.</strong><button class="audio-btn" onclick="speakText('Sorry to jump in, but I have a quick point.', this)">Listen</button></div>
+    <div style="background:var(--bg-elevated);padding:0.8rem 1rem;border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:0.8rem;flex-wrap:wrap;"><strong style="font-size:0.9rem">Hang on, let me finish my point.</strong><button class="audio-btn" onclick="speakText('Hang on, let me finish my point.', this)">Listen</button></div>
+    <div style="background:var(--bg-elevated);padding:0.8rem 1rem;border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:0.8rem;flex-wrap:wrap;"><strong style="font-size:0.9rem">Please, go ahead.</strong><button class="audio-btn" onclick="speakText('Please, go ahead.', this)">Listen</button></div>
+    <div style="background:var(--bg-elevated);padding:0.8rem 1rem;border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:0.8rem;flex-wrap:wrap;"><strong style="font-size:0.9rem">Let&rsquo;s wrap up and move on.</strong><button class="audio-btn" onclick="speakText('Let us wrap up and move on.', this)">Listen</button></div>
+  </div>
+</div>
+<div class="lesson-card open" id="ex-lesson-7">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&q=80')"></div>
+    <div class="lesson-header-content">
+      <div class="lesson-number">Aula 07 -- Pre-class</div>
+      <h3>Turn-Taking: Interrupting &amp; Yielding Politely</h3>
+      <div class="lesson-desc">Discourse markers + interruption phrases: get in, hold your turn, give the floor</div>
+      <div class="lesson-progress-mini">
+        <div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="7" style="width:0%"></div></div>
+        <span class="mini-percent" data-lesson-pct="7">0%</span>
+      </div>
+    </div>
+    <div class="expand-icon">&#9660;</div>
+  </div>
+  <div class="lesson-body">
+
+    <!-- STAGE 1.1: VOCAB CARDS -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 1.1: Vocabulary Cards</h4>
+        <span class="badge badge-vocab">Vocabulary</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">These are the key turn-taking expressions for this lesson. Tap Listen to hear the pronunciation.</p>
+      <div class="vocab-cards">
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Jump In</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">to join a conversation quickly when you get the chance</span></div>
+            <div class="vocab-card-example">"Sorry to jump in, but I have a quick point."</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Jump In',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Chime In</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">to add your comment to a discussion</span></div>
+            <div class="vocab-card-example">"Feel free to chime in at any time."</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Chime In',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Yield the Floor</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">to stop speaking and let someone else talk</span></div>
+            <div class="vocab-card-example">"I'll yield the floor to my colleague."</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Yield the Floor',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Go Ahead</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">used to invite someone to speak or continue</span></div>
+            <div class="vocab-card-example">"Please, go ahead. I would like to hear your view."</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Go Ahead',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Hear Out</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">to listen until someone finishes before you respond</span></div>
+            <div class="vocab-card-example">"Let's hear her out before we react."</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Hear Out',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Talk Over</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">to speak at the same time as someone else</span></div>
+            <div class="vocab-card-example">"Sorry, I did not mean to talk over you."</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Talk Over',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Wrap Up</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">to bring a point or a meeting to an end</span></div>
+            <div class="vocab-card-example">"Let's wrap up this topic and move on."</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Wrap Up',this)">Listen</button>
+        </div>
+        <div class="vocab-card-pc">
+          <div class="vocab-card-content">
+            <div class="vocab-card-header"><span class="vocab-card-word">Hang On</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">to ask someone to wait a moment</span></div>
+            <div class="vocab-card-example">"Hang on, let me finish my point."</div>
+          </div>
+          <button class="audio-btn" onclick="speakText('Hang On',this)">Listen</button>
+        </div>
+      </div>
+      <button class="listen-all-btn" onclick="listenAllVocab(this)" style="margin-top:.8rem">Listen to all words</button>
+    </div>
+
+    <!-- STAGE 1.2: MATCHING -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 1.2: Matching</h4>
+        <span class="badge badge-practice">Practice</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each expression with its definition.</p>
+      <div class="match-grid" id="match-l7">
+        <div class="match-row" data-answer="to join a conversation quickly">
+          <span class="match-word">Jump In</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="to bring something to an end">to bring something to an end</option>
+            <option value="to ask someone to wait a moment">to ask someone to wait a moment</option>
+            <option value="to join a conversation quickly">to join a conversation quickly</option>
+            <option value="to listen until someone finishes">to listen until someone finishes</option>
+            <option value="an invitation to speak or continue">an invitation to speak or continue</option>
+            <option value="to add your comment to a discussion">to add your comment to a discussion</option>
+            <option value="to stop and let someone else speak">to stop and let someone else speak</option>
+            <option value="to speak at the same time as someone">to speak at the same time as someone</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="to add your comment to a discussion">
+          <span class="match-word">Chime In</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="to speak at the same time as someone">to speak at the same time as someone</option>
+            <option value="to add your comment to a discussion">to add your comment to a discussion</option>
+            <option value="an invitation to speak or continue">an invitation to speak or continue</option>
+            <option value="to join a conversation quickly">to join a conversation quickly</option>
+            <option value="to ask someone to wait a moment">to ask someone to wait a moment</option>
+            <option value="to stop and let someone else speak">to stop and let someone else speak</option>
+            <option value="to bring something to an end">to bring something to an end</option>
+            <option value="to listen until someone finishes">to listen until someone finishes</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="to stop and let someone else speak">
+          <span class="match-word">Yield the Floor</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="to listen until someone finishes">to listen until someone finishes</option>
+            <option value="to stop and let someone else speak">to stop and let someone else speak</option>
+            <option value="to bring something to an end">to bring something to an end</option>
+            <option value="to add your comment to a discussion">to add your comment to a discussion</option>
+            <option value="to join a conversation quickly">to join a conversation quickly</option>
+            <option value="an invitation to speak or continue">an invitation to speak or continue</option>
+            <option value="to ask someone to wait a moment">to ask someone to wait a moment</option>
+            <option value="to speak at the same time as someone">to speak at the same time as someone</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="an invitation to speak or continue">
+          <span class="match-word">Go Ahead</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="to stop and let someone else speak">to stop and let someone else speak</option>
+            <option value="to join a conversation quickly">to join a conversation quickly</option>
+            <option value="an invitation to speak or continue">an invitation to speak or continue</option>
+            <option value="to bring something to an end">to bring something to an end</option>
+            <option value="to add your comment to a discussion">to add your comment to a discussion</option>
+            <option value="to ask someone to wait a moment">to ask someone to wait a moment</option>
+            <option value="to listen until someone finishes">to listen until someone finishes</option>
+            <option value="to speak at the same time as someone">to speak at the same time as someone</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="to listen until someone finishes">
+          <span class="match-word">Hear Out</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="an invitation to speak or continue">an invitation to speak or continue</option>
+            <option value="to speak at the same time as someone">to speak at the same time as someone</option>
+            <option value="to bring something to an end">to bring something to an end</option>
+            <option value="to listen until someone finishes">to listen until someone finishes</option>
+            <option value="to join a conversation quickly">to join a conversation quickly</option>
+            <option value="to ask someone to wait a moment">to ask someone to wait a moment</option>
+            <option value="to stop and let someone else speak">to stop and let someone else speak</option>
+            <option value="to add your comment to a discussion">to add your comment to a discussion</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="to speak at the same time as someone">
+          <span class="match-word">Talk Over</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="to join a conversation quickly">to join a conversation quickly</option>
+            <option value="to ask someone to wait a moment">to ask someone to wait a moment</option>
+            <option value="to speak at the same time as someone">to speak at the same time as someone</option>
+            <option value="to stop and let someone else speak">to stop and let someone else speak</option>
+            <option value="to add your comment to a discussion">to add your comment to a discussion</option>
+            <option value="to bring something to an end">to bring something to an end</option>
+            <option value="an invitation to speak or continue">an invitation to speak or continue</option>
+            <option value="to listen until someone finishes">to listen until someone finishes</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="to bring something to an end">
+          <span class="match-word">Wrap Up</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="to ask someone to wait a moment">to ask someone to wait a moment</option>
+            <option value="to add your comment to a discussion">to add your comment to a discussion</option>
+            <option value="to bring something to an end">to bring something to an end</option>
+            <option value="to listen until someone finishes">to listen until someone finishes</option>
+            <option value="to join a conversation quickly">to join a conversation quickly</option>
+            <option value="to stop and let someone else speak">to stop and let someone else speak</option>
+            <option value="to speak at the same time as someone">to speak at the same time as someone</option>
+            <option value="an invitation to speak or continue">an invitation to speak or continue</option>
+          </select>
+        </div>
+        <div class="match-row" data-answer="to ask someone to wait a moment">
+          <span class="match-word">Hang On</span>
+          <select onchange="checkMatch(this)">
+            <option value="">Select...</option>
+            <option value="to speak at the same time as someone">to speak at the same time as someone</option>
+            <option value="to join a conversation quickly">to join a conversation quickly</option>
+            <option value="to listen until someone finishes">to listen until someone finishes</option>
+            <option value="to ask someone to wait a moment">to ask someone to wait a moment</option>
+            <option value="to bring something to an end">to bring something to an end</option>
+            <option value="an invitation to speak or continue">an invitation to speak or continue</option>
+            <option value="to stop and let someone else speak">to stop and let someone else speak</option>
+            <option value="to add your comment to a discussion">to add your comment to a discussion</option>
+          </select>
+        </div>
+      </div>
+      <button class="verify-all-btn" onclick="verifyAllMatches('match-l7')">Check Answers</button>
+    </div>
+
+    <!-- STAGE 1.3: GRAMMAR IN CONTEXT -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 1.3: Grammar in Context</h4>
+        <span class="badge badge-grammar">Grammar</span>
+      </div>
+      <p style="font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+        In the weekly committee call, three people are speaking. David, the chair, asks for opinions. Anna starts to explain, but Eduarda has urgent news. "Sorry to <strong>jump in</strong>," she says, "but the creditors have a hard deadline." Anna replies, "<strong>Hang on</strong>, let me finish my point." Eduarda apologizes: "Of course, please <strong>go ahead</strong>. I did not mean to <strong>talk over</strong> you." Later, David invites Eduarda to <strong>chime in</strong>. She suggests they <strong>hear</strong> everyone <strong>out</strong> and then <strong>wrap up</strong> the timeline. Because everyone takes turns and uses polite <strong>discourse markers</strong> like "well", "anyway", and "as I was saying", the meeting stays calm and productive.
+      </p>
+      <div class="quiz-item">
+        <div class="quiz-question">1. Why does Eduarda apologize to Anna?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Because she is late.</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Because she talked over Anna before she finished.</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because she disagrees with the deadline.</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">2. Which phrase invites someone to speak?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "Hang on."</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "Please, go ahead."</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "Sorry to jump in."</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">3. What does Eduarda suggest at the end?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> To hear everyone out and then wrap up the timeline.</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> To end the meeting immediately.</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> To ignore the creditors.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 1.4: GRAMMAR TIP -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 1.4: Grammar Tip</h4>
+        <span class="badge badge-grammar">Grammar</span>
+      </div>
+      <p style="font-size:.88rem;margin-bottom:1rem"><strong>Discourse markers</strong> = small words/phrases that signal your turn in a conversation (palavrinhas que sinalizam DE QUEM é a vez de falar). Each function has its own marker.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem;margin-bottom:1rem">
+        <thead><tr><th style="background:var(--accent);color:#fff;padding:.6rem;text-align:left;border-radius:6px 0 0 0">Function</th><th style="background:var(--accent);color:#fff;padding:.6rem;text-align:left">Phrase</th><th style="background:var(--accent);color:#fff;padding:.6rem;text-align:left;border-radius:0 6px 0 0">Example</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:.6rem;border-bottom:1px solid #e5e5e0;font-weight:600">Interrupt</td><td style="padding:.6rem;border-bottom:1px solid #e5e5e0">Sorry to jump in, but...</td><td style="padding:.6rem;border-bottom:1px solid #e5e5e0">"<strong>Sorry to jump in, but</strong> the deadline is close."</td></tr>
+          <tr><td style="padding:.6rem;border-bottom:1px solid #e5e5e0;font-weight:600">Hold the floor</td><td style="padding:.6rem;border-bottom:1px solid #e5e5e0">Hang on, let me finish...</td><td style="padding:.6rem;border-bottom:1px solid #e5e5e0">"<strong>Hang on</strong>, let me finish my point."</td></tr>
+          <tr><td style="padding:.6rem;border-bottom:1px solid #e5e5e0;font-weight:600">Yield</td><td style="padding:.6rem;border-bottom:1px solid #e5e5e0">Go ahead / Please, you first</td><td style="padding:.6rem;border-bottom:1px solid #e5e5e0">"Please, <strong>go ahead</strong>."</td></tr>
+          <tr><td style="padding:.6rem;border-bottom:1px solid #e5e5e0;font-weight:600">Return</td><td style="padding:.6rem;border-bottom:1px solid #e5e5e0">Anyway, as I was saying...</td><td style="padding:.6rem;border-bottom:1px solid #e5e5e0">"<strong>Anyway, as I was saying</strong>, the timeline is tight."</td></tr>
+        </tbody>
+      </table>
+      <div style="background:rgba(220,38,38,.05);border:1px solid rgba(220,38,38,.15);border-radius:8px;padding:1rem;margin-bottom:.8rem">
+        <p style="font-size:.88rem"><strong style="color:var(--danger)">Common Mistake:</strong></p>
+        <p style="font-size:.88rem;text-decoration:line-through;color:var(--danger)">"Stop! I want to talk." / "No, listen to me."</p>
+        <p style="font-size:.88rem;color:var(--success);font-weight:600">"Sorry to jump in, but..." / "If I could just add one thing..."</p>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.4rem">Tradução direta soa rude em inglês. Um marcador suave abre espaço sem ser agressivo.</p>
+      </div>
+    </div>
+
+    <!-- STAGE 1.5: FILL-IN-THE-BLANK -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 1.5: Fill in the Blanks</h4>
+        <span class="badge badge-practice">Practice</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Complete each turn-taking phrase with the correct word.</p>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">"Sorry to <input class="blank-input" data-answer="jump" data-hint="Hint: phrasal verb for entering a conversation" data-phrase="Sorry to jump in, but I have a quick point." placeholder="___"> in, but I have a quick point."</div>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+      </div>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">"Please, <input class="blank-input" data-answer="go" data-hint="Hint: invite someone to speak" data-phrase="Please, go ahead." placeholder="___"> ahead."</div>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+      </div>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">"<input class="blank-input" data-answer="Hang" data-hint="Hint: ask someone to wait" data-phrase="Hang on, let me finish my point." placeholder="___"> on, let me finish my point."</div>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+      </div>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">"Anyway, as I <input class="blank-input" data-answer="was" data-hint="Hint: past continuous, to return to your point" data-phrase="Anyway, as I was saying, the deadline is close." placeholder="___"> saying, the deadline is close."</div>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+      </div>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">"Let us <input class="blank-input" data-answer="hear" data-hint="Hint: listen until someone finishes" data-phrase="Let us hear her out before we react." placeholder="___"> her out before we react."</div>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+      </div>
+      <div class="fill-blank-item">
+        <div class="fill-blank-sentence">"I will <input class="blank-input" data-answer="yield" data-hint="Hint: give the floor to someone" data-phrase="I will yield the floor to my colleague." placeholder="___"> the floor to my colleague."</div>
+        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
+        <button class="check-btn" onclick="checkBlank(this)">Check</button>
+      </div>
+    </div>
+
+    <!-- STAGE 2: ORDERING -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 2: Put in Order</h4>
+        <span class="badge badge-order">Order</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the polite turn-taking exchange in the correct order. Listen first.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l7]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Listen
+      </button>
+      <div class="order-container" id="order-l7">
+        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l7')">
+          <span class="order-num">?</span>
+          <span class="order-text">"Of course, please go ahead."</span>
+          <span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l7')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l7')">&#9660;</button></span>
+        </div>
+        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l7')">
+          <span class="order-num">?</span>
+          <span class="order-text">"Sorry to jump in, but I have a quick point about the deadline."</span>
+          <span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l7')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l7')">&#9660;</button></span>
+        </div>
+        <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l7')">
+          <span class="order-num">?</span>
+          <span class="order-text">"Good. Let us hear the team out and then wrap up."</span>
+          <span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l7')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l7')">&#9660;</button></span>
+        </div>
+        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l7')">
+          <span class="order-num">?</span>
+          <span class="order-text">"Thank you. Anyway, as I was saying, we need an extension."</span>
+          <span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l7')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l7')">&#9660;</button></span>
+        </div>
+        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l7')">
+          <span class="order-num">?</span>
+          <span class="order-text">"Hang on, let me finish my current point first."</span>
+          <span class="order-arrows"><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,-1,'order-l7')">&#9650;</button><button class="arrow-btn" onclick="event.stopPropagation();moveItem(this,1,'order-l7')">&#9660;</button></span>
+        </div>
+      </div>
+      <button class="verify-all-btn" onclick="checkOrder('order-l7')">Check Order</button>
+    </div>
+
+    <!-- STAGE 3: PRONUNCIATION -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 3: Pronunciation</h4>
+        <span class="badge badge-speak">Speaking</span>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each phrase, then record yourself. Compare word by word.</p>
+      <div class="speech-card" data-phrase="Sorry to jump in, but I have a quick point.">
+        <div class="speech-phrase">Sorry to jump in, but I have a quick point.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Stop</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="Please, go ahead. I would like to hear your view.">
+        <div class="speech-phrase">Please, go ahead. I would like to hear your view.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Stop</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="Let us hear everyone out before we decide.">
+        <div class="speech-phrase">Let us hear everyone out before we decide.</div>
+        <div class="speech-controls">
+          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>
+          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>
+          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Stop</button>
+        </div>
+        <div class="speech-result"></div>
+      </div>
+    </div>
+
+    <!-- STAGE 4: QUIZ -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 4: Situational Quiz</h4>
+        <span class="badge badge-quiz">Quiz</span>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">1. Two colleagues are talking and you have an urgent point. What is the most polite way to interrupt?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "Stop, listen to me."</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "Sorry to jump in, but I have a quick point."</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I talk now."</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">2. Someone interrupts you before you finish. How do you hold the floor politely?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "Be quiet, it is my turn."</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "Hang on, let me finish my point."</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "You always talk."</div>
+        </div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-question">3. You accidentally spoke at the same time as a colleague. What do you say?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> "Sorry, I did not mean to talk over you. Please, go ahead."</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "You started first."</div>
+          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "It does not matter."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 5: THINK ABOUT IT -->
+    <div class="exercise-section">
+      <div class="section-header-row">
+        <h4>Stage 5: Think About It</h4>
+        <span class="badge badge-think">Reflection</span>
+      </div>
+      <div class="think-card">
+        <div class="think-question">Imagine you are in a busy meeting and two colleagues are talking over each other. You need to add an important point and then give the floor back. What do you say? Include: a polite interruption, your point, and an invitation for someone else to speak.</div>
+        <div class="speech-controls">
+          <button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Free Record</button>
+          <button class="btn btn-stop" onclick="stopFreeRecording(this)">&#9632; Stop</button>
+        </div>
+        <div id="think-result-1"></div>
+      </div>
+    </div>
+
+    <!-- SURVIVAL CARD -->
+    <div class="survival-card">
+      <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--accent);margin-bottom:.8rem">Survival Card -- Lesson 7</h4>
+      <div class="survival-phrase">
+        <span class="sp-num">1</span>
+        <span class="sp-en">Sorry to jump in, but I have a quick point.</span>
+        <span class="sp-pt">Desculpa interromper, mas tenho um ponto rápido.</span>
+        <button class="audio-btn" onclick="speakText('Sorry to jump in, but I have a quick point.',this)">Listen</button>
+      </div>
+      <div class="survival-phrase">
+        <span class="sp-num">2</span>
+        <span class="sp-en">Hang on, let me finish my point.</span>
+        <span class="sp-pt">Espera, deixa eu terminar meu ponto.</span>
+        <button class="audio-btn" onclick="speakText('Hang on, let me finish my point.',this)">Listen</button>
+      </div>
+      <div class="survival-phrase">
+        <span class="sp-num">3</span>
+        <span class="sp-en">Please, go ahead.</span>
+        <span class="sp-pt">Por favor, pode falar.</span>
+        <button class="audio-btn" onclick="speakText('Please, go ahead.',this)">Listen</button>
+      </div>
+      <div class="survival-phrase">
+        <span class="sp-num">4</span>
+        <span class="sp-en">I did not mean to talk over you.</span>
+        <span class="sp-pt">Não quis falar por cima de você.</span>
+        <button class="audio-btn" onclick="speakText('I did not mean to talk over you.',this)">Listen</button>
+      </div>
+      <div class="survival-phrase">
+        <span class="sp-num">5</span>
+        <span class="sp-en">Let's wrap up and move on.</span>
+        <span class="sp-pt">Vamos encerrar e seguir em frente.</span>
+        <button class="audio-btn" onclick="speakText('Let us wrap up and move on.',this)">Listen</button>
+      </div>
+    </div>
+
+  </div><!-- /lesson-body -->
+</div><!-- /lesson-card -->
+
+</div>
+
+<!-- ========== TAB: COMPLEMENTARES ========== -->
+<div class="tab-content" id="tab-complementary">
+<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem">Materiais Complementares -- Aula 7</h3>
+<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Tema da aula: Turn-Taking -- Interrupting &amp; Yielding Politely (discourse markers + frases de interrupcao). Em cada conteudo, preste atencao em COMO as pessoas entram na fala, seguram o turno e cedem a palavra. Marque como concluido ao terminar.</p>
+
+<div class="media-grid">
+  <div class="media-card-wrapper" data-media="l7-series">
+    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+    <div class="media-card">
+      <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+      <div class="media-info">
+        <div class="media-type">Série</div>
+        <h5>Succession -- Season 1, Episode 6: "Which Side Are You On?" (HBO)</h5>
+        <p>Assista à cena da reunião do conselho (board): repare em como as pessoas se interrompem, seguram e cedem o turno sob pressão. Note quem domina e quem usa marcadores para entrar ("Sorry to jump in...", "If I could just..."). Contraste com a versão EDUCADA que você treinou nesta aula.</p>
+        <p class="media-tip">Dica: assista com legenda em inglês e anote cada vez que alguém interrompe. A frase foi educada ou agressiva?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="media-card-wrapper" data-media="l7-podcast">
+    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+    <div class="media-card">
+      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+      <div class="media-info">
+        <div class="media-type">Podcast</div>
+        <h5>Business English from All Ears English -- Meetings &amp; turn-taking series</h5>
+        <p>Ouça um episódio sobre reuniões em inglês. Lindsay e Aubrey mostram frases naturais para interromper, segurar o turno e ceder a palavra em calls de trabalho -- exatamente o foco da Aula 7 (jump in, hold the floor, go ahead).</p>
+        <p class="media-tip">Dica: ouça a 0.75x primeiro. Repita em voz alta cada frase de turn-taking que aparecer.</p>
+        <a href="https://open.spotify.com/show/5HFUjaqFFXUiHC5SA6uVEz" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="media-card-wrapper" data-media="l7-youtube">
+    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+    <div class="media-card">
+      <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+      <div class="media-info">
+        <div class="media-type">YouTube</div>
+        <h5>Business English Pod -- "How to Interrupt in Business English Politely"</h5>
+        <p>Vídeo com frases prontas para interromper e ceder a palavra em reuniões ("Sorry to jump in...", "Could I add something?", "Please, go ahead"). Conecta direto com os discourse markers e as frases de turn-taking da aula. Escolha 5 para usar na sua próxima call.</p>
+        <p class="media-tip">Dica: pause após cada frase, repita em voz alta e classifique a função (entrar / segurar / ceder / retomar).</p>
+        <a href="https://www.youtube.com/watch?v=YCwNI9ZbTfk" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /tab-complementary -->
+
+</div><!-- /container -->
+</div><!-- /main-content -->
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== TAB SWITCHING =====
+function switchTab(tabId) {
+  document.body.classList.remove('slide-mode');
+  document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-' + tabId).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function enterSlideMode(startSlide) {
+  document.body.classList.add('slide-mode');
+  if (startSlide) {
+    for (var l in lessonRanges) {
+      if (startSlide >= lessonRanges[l].start && startSlide <= lessonRanges[l].end) {
+        currentLesson = parseInt(l);
+        break;
+      }
+    }
+    goToSlide(startSlide);
+  } else if (currentSlide) {
+    goToSlide(currentSlide);
+  } else {
+    currentLesson = 1;
+    goToSlide(1);
+  }
+  updateNav();
+}
+
+// ===== LESSON EXPAND/COLLAPSE =====
+function toggleLesson(header) { header.parentElement.classList.toggle('open'); }
+
+// ===== SPEAK TEXT =====
+var currentAudio = null;
+var audioSpeed = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
+
+function setAudioSpeed(speed, btn) {
+  audioSpeed = speed;
+  localStorage.setItem('alumni-audio-speed', speed);
+  document.querySelectorAll('.speed-btn').forEach(function(b) {
+    b.style.background = 'var(--bg-card)'; b.style.color = 'var(--text)';
+    b.style.borderColor = 'var(--border)'; b.style.fontWeight = '400';
+    b.classList.remove('active');
+  });
+  btn.style.background = 'var(--accent)'; btn.style.color = '#fff';
+  btn.style.borderColor = 'var(--accent)'; btn.style.fontWeight = '600';
+  btn.classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
+  var btn = document.querySelector('.speed-btn[data-speed="' + saved + '"]');
+  if (btn) setAudioSpeed(saved, btn);
+});
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed;
+    currentAudio.play().catch(function() { ttsSpeak(cleanText); });
+  } else {
+    ttsSpeak(cleanText);
+  }
+}
+
+function ttsSpeak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+function speakPhrase(btn) {
+  var card = btn.closest('.speech-card');
+  if (card) speakText(card.dataset.phrase, btn);
+}
+
+function listenBlank(btn) {
+  var item = btn.closest('.fill-blank-item'), input = item.querySelector('.blank-input');
+  if (input.dataset.phrase) speakText(input.dataset.phrase, btn);
+}
+
+function listenAllVocab(btn) {
+  var section = btn.closest('.exercise-section') || btn.closest('.teacher-section');
+  var audioBtns = section.querySelectorAll('.vocab-card-pc .audio-btn, .vocab-card .audio-btn');
+  var i = 0;
+  function playNext() { if (i < audioBtns.length) { audioBtns[i].click(); i++; setTimeout(playNext, 2500); } }
+  playNext();
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 1;
+var totalSlides = 27;
+var lessonRanges = { 7: {start: 1, end: 27} };
+var currentLesson = 7;
+var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:5,17:5,18:5,19:5,20:5,21:5,22:6,23:6,24:6,25:6,26:7,27:7};
+
+function changeSlide(dir) {
+  var range = lessonRanges[currentLesson];
+  var next = currentSlide + dir;
+  if (next < range.start || next > range.end) return;
+  goToSlide(next);
+}
+
+function goToSlide(n) {
+  var prev = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
+  if (prev) prev.classList.remove('active');
+  currentSlide = n;
+  var activeSlide = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
+  if (activeSlide) activeSlide.classList.add('active');
+  if (activeSlide) activeSlide.scrollTop = 0;
+  var teacherText = activeSlide ? activeSlide.getAttribute('data-teacher') || '' : '';
+  document.getElementById('teacherPanel').innerHTML = teacherText;
+  updateNav();
+  updatePhaseBar();
+}
+
+function updateNav() {
+  var range = lessonRanges[currentLesson];
+  var relSlide = currentSlide - range.start + 1;
+  var totalInLesson = range.end - range.start + 1;
+  document.getElementById('slideCounter').textContent = String(relSlide).padStart(2,'0') + ' / ' + String(totalInLesson).padStart(2,'0');
+  document.getElementById('prevBtn').disabled = currentSlide === range.start;
+  document.getElementById('nextBtn').disabled = currentSlide === range.end;
+  var dots = document.querySelectorAll('.slide-dot');
+  dots.forEach(function(d) {
+    var slideNum = parseInt(d.dataset.slide);
+    d.style.display = (slideNum >= range.start && slideNum <= range.end) ? 'block' : 'none';
+    d.classList.toggle('active', slideNum === currentSlide);
+  });
+}
+
+function updatePhaseBar() {
+  var cp = slidePhases[currentSlide];
+  document.querySelectorAll('.phase-segment').forEach(function(seg) {
+    var p = parseInt(seg.dataset.phase);
+    seg.classList.remove('completed','current','upcoming');
+    if (p < cp) seg.classList.add('completed');
+    else if (p === cp) seg.classList.add('current');
+    else seg.classList.add('upcoming');
+  });
+  document.querySelectorAll('.phase-label').forEach(function(lbl) {
+    var p = parseInt(lbl.dataset.phase);
+    lbl.classList.remove('completed','current');
+    if (p < cp) lbl.classList.add('completed');
+    else if (p === cp) lbl.classList.add('current');
+  });
+}
+
+// Build dots
+(function() {
+  var dotsEl = document.getElementById('slideDots'); if(!dotsEl) return;
+  for (var i = 1; i <= totalSlides; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'slide-dot' + (i === 1 ? ' active' : '');
+    dot.dataset.slide = i;
+    dot.onclick = (function(n) { return function() { goToSlide(n); }; })(i);
+    dotsEl.appendChild(dot);
+  }
+})();
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  if (!document.body.classList.contains('slide-mode')) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); changeSlide(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); changeSlide(-1); }
+});
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
+
+// ===== FILL REVEAL =====
+function revealFill(item) { item.classList.add('revealed'); }
+
+// ===== COMPREHENSION REVEAL =====
+function revealComp(q) { q.classList.add('revealed'); }
+
+// ===== ERROR REVEAL =====
+var errorCount = 0;
+function revealError(card) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  errorCount++;
+  document.getElementById('errorScore').textContent = errorCount + ' / 5 errors found';
+}
+
+// ===== VOCAB REVEAL (extended for Aula 2 grids) =====
+function revealVocab(card) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  var grid = card.closest('.vocab-grid');
+  var count = grid.querySelectorAll('.vocab-card.revealed').length;
+  var total = grid.querySelectorAll('.vocab-card').length;
+  var counterMap = {'vocabGrid1':'vocabCount1','vocabGrid2':'vocabCount2','vocabGrid3':'vocabCount3','vocabGrid4':'vocabCount4','vocabGrid5':'vocabCount5','vocabGrid6':'vocabCount6','vocabGrid7':'vocabCount7','vocabGrid8':'vocabCount8'};
+  var counterId = counterMap[grid.id];
+  if (counterId) document.getElementById(counterId).textContent = count + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL 2 =====
+function revealGrammar2() { document.getElementById('grammarTable2').classList.add('show'); }
+
+// ===== ERROR REVEAL 2 =====
+var errorCount2 = 0;
+function revealError2(card) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  errorCount2++;
+  document.getElementById('errorScore2').textContent = errorCount2 + ' / 5 errors found';
+}
+
+// ===== DIALOGUE LINE-BY-LINE (Aula 2) =====
+var dialogueLine2 = 0;
+function nextDialogueLine2() {
+  dialogueLine2++;
+  var line = document.querySelector('.dialogue-line[data-line2="' + dialogueLine2 + '"]');
+  if (line) {
+    line.classList.add('visible');
+    if (dialogueLine2 >= 8) {
+      document.getElementById('nextLineBtn2').textContent = 'Dialogue Complete';
+      document.getElementById('nextLineBtn2').disabled = true;
+      document.getElementById('nextLineBtn2').style.opacity = '0.5';
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE 2 =====
+var challenges2 = [
+  { prompt: 'The team is discussing something you disagree with. How do you politely interrupt?', answer: '"Sorry to interrupt, but I would like to share a different perspective."' },
+  { prompt: 'A colleague said something complex you did not understand. What do you say?', answer: '"Could you clarify what you mean by that?"' },
+  { prompt: 'You want to add your opinion to the discussion. How do you ask for the floor?', answer: '"If I may, I would like to add something to this point."' },
+  { prompt: 'The meeting is ending without clear next steps. How do you suggest a follow-up?', answer: '"Before we end, could I suggest we follow up on the timeline next week?"' },
+  { prompt: 'Someone asks if the team agrees on the proposal. You agree. What do you say?', answer: '"Yes, from my perspective, we have reached a consensus on this."' },
+  { prompt: 'You want to go back to a previous topic. What do you say?', answer: '"Going back to what you said about the proposal, I think we need to elaborate on the numbers."' }
+];
+var challengeIndex2 = 0;
+var challengeCorrect2 = 0;
+
+function showChallengeAnswer2() {
+  document.getElementById('challengeAnswer2').classList.add('show');
+  document.getElementById('showAnswerBtn2').style.display = 'none';
+  document.getElementById('nextChallengeBtn2').style.display = 'inline-flex';
+  challengeCorrect2++;
+  document.getElementById('challengeScore2').textContent = challengeCorrect2 + ' / 6';
+}
+
+function nextChallenge2() {
+  challengeIndex2++;
+  if (challengeIndex2 >= challenges2.length) {
+    document.getElementById('challengeCard2').innerHTML = '<div style="text-align:center"><h3 style="font-family:Cormorant Garamond,serif;font-size:2rem;color:var(--accent)">Challenge Complete!</h3><p style="margin-top:.5rem;color:var(--text-dim)">Score: ' + challengeCorrect2 + ' / 6</p></div>';
+    triggerConfetti();
+    return;
+  }
+  document.getElementById('challengePrompt2').textContent = challenges2[challengeIndex2].prompt;
+  document.getElementById('challengeAnswer2').textContent = challenges2[challengeIndex2].answer;
+  document.getElementById('challengeAnswer2').classList.remove('show');
+  document.getElementById('showAnswerBtn2').style.display = 'inline-flex';
+  document.getElementById('nextChallengeBtn2').style.display = 'none';
+  document.getElementById('challengeCounter2').textContent = 'Question ' + (challengeIndex2 + 1) + ' of 6';
+}
+
+// ===== REFLECTION RECORDING 2 =====
+var reflectionRecording2 = false;
+var reflectionRecorder2 = null;
+var reflectionChunks2 = [];
+
+function toggleReflectionRecord2(btn) {
+  if (!reflectionRecording2) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+      var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+      reflectionRecorder2 = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+      reflectionChunks2 = [];
+      reflectionRecorder2.ondataavailable = function(e) { if (e.data.size > 0) reflectionChunks2.push(e.data); };
+      reflectionRecorder2.onstop = function() {
+        var blob = new Blob(reflectionChunks2, { type: reflectionRecorder2.mimeType });
+        var url = URL.createObjectURL(blob);
+        document.getElementById('reflectionResult2').innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:.5rem"></audio><p style="font-size:.8rem;color:var(--success);margin-top:.3rem">Recording saved!</p>';
+        stream.getTracks().forEach(function(t) { t.stop(); });
+      };
+      reflectionRecorder2.start(100);
+      btn.classList.add('recording');
+      reflectionRecording2 = true;
+    }).catch(function() { alert('Could not access microphone.'); });
+  } else {
+    if (reflectionRecorder2 && reflectionRecorder2.state === 'recording') reflectionRecorder2.stop();
+    btn.classList.remove('recording');
+    reflectionRecording2 = false;
+  }
+}
+
+// ===== GRAMMAR REVEAL 3 =====
+function revealGrammar3() { document.getElementById('grammarTable3').classList.add('show'); }
+
+// ===== ERROR REVEAL 3 =====
+var errorCount3 = 0;
+function revealError3(card) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  errorCount3++;
+  document.getElementById('errorScore3').textContent = errorCount3 + ' / 5 errors found';
+}
+
+// ===== DIALOGUE LINE-BY-LINE (Aula 3) =====
+var dialogueLine3 = 0;
+function nextDialogueLine3() {
+  dialogueLine3++;
+  var line = document.querySelector('.dialogue-line[data-line3="' + dialogueLine3 + '"]');
+  if (line) {
+    line.classList.add('visible');
+    if (dialogueLine3 >= 8) {
+      document.getElementById('nextLineBtn3').textContent = 'Dialogue Complete';
+      document.getElementById('nextLineBtn3').disabled = true;
+      document.getElementById('nextLineBtn3').style.opacity = '0.5';
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE 3 =====
+var challenges3 = [
+  { prompt: 'Tell me: what is one hundred and fifty million in numbers?', answer: '"$150,000,000 or $150M"' },
+  { prompt: 'Revenue fell from $200M to $180M. Describe the change.', answer: '"Revenue declined by ten percent, or twenty million dollars."' },
+  { prompt: 'The margin went from 15% to 20%. How do you describe this?', answer: '"The margin increased by five percentage points, from fifteen to twenty percent."' },
+  { prompt: 'Compare two quarters: Q2 revenue was $180M, Q3 was $150M.', answer: '"Compared to Q2, Q3 revenue was lower. It declined by approximately seventeen percent."' },
+  { prompt: 'Present an estimate for a deal.', answer: '"We estimate the deal value at approximately two hundred million dollars."' },
+  { prompt: 'Describe the forecast for next quarter.', answer: '"The forecast shows revenue growing by approximately five percent in Q4."' }
+];
+var challengeIndex3 = 0;
+var challengeCorrect3 = 0;
+
+function showChallengeAnswer3() {
+  document.getElementById('challengeAnswer3').classList.add('show');
+  document.getElementById('showAnswerBtn3').style.display = 'none';
+  document.getElementById('nextChallengeBtn3').style.display = 'inline-flex';
+  challengeCorrect3++;
+  document.getElementById('challengeScore3').textContent = challengeCorrect3 + ' / 6';
+}
+
+function nextChallenge3() {
+  challengeIndex3++;
+  if (challengeIndex3 >= challenges3.length) {
+    document.getElementById('challengeCard3').innerHTML = '<div style="text-align:center"><h3 style="font-family:Cormorant Garamond,serif;font-size:2rem;color:var(--accent)">Challenge Complete!</h3><p style="margin-top:.5rem;color:var(--text-dim)">Score: ' + challengeCorrect3 + ' / 6</p></div>';
+    triggerConfetti();
+    return;
+  }
+  document.getElementById('challengePrompt3').textContent = challenges3[challengeIndex3].prompt;
+  document.getElementById('challengeAnswer3').textContent = challenges3[challengeIndex3].answer;
+  document.getElementById('challengeAnswer3').classList.remove('show');
+  document.getElementById('showAnswerBtn3').style.display = 'inline-flex';
+  document.getElementById('nextChallengeBtn3').style.display = 'none';
+  document.getElementById('challengeCounter3').textContent = 'Question ' + (challengeIndex3 + 1) + ' of 6';
+}
+
+// ===== REFLECTION RECORDING 3 =====
+var reflectionRecording3 = false;
+var reflectionRecorder3 = null;
+var reflectionChunks3 = [];
+
+function toggleReflectionRecord3(btn) {
+  if (!reflectionRecording3) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+      var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+      reflectionRecorder3 = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+      reflectionChunks3 = [];
+      reflectionRecorder3.ondataavailable = function(e) { if (e.data.size > 0) reflectionChunks3.push(e.data); };
+      reflectionRecorder3.onstop = function() {
+        var blob = new Blob(reflectionChunks3, { type: reflectionRecorder3.mimeType });
+        var url = URL.createObjectURL(blob);
+        document.getElementById('reflectionResult3').innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:.5rem"></audio><p style="font-size:.8rem;color:var(--success);margin-top:.3rem">Recording saved!</p>';
+        stream.getTracks().forEach(function(t) { t.stop(); });
+      };
+      reflectionRecorder3.start(100);
+      btn.classList.add('recording');
+      reflectionRecording3 = true;
+    }).catch(function() { alert('Could not access microphone.'); });
+  } else {
+    if (reflectionRecorder3 && reflectionRecorder3.state === 'recording') reflectionRecorder3.stop();
+    btn.classList.remove('recording');
+    reflectionRecording3 = false;
+  }
+}
+
+// ===== GRAMMAR REVEAL 4 =====
+function revealGrammar4() { document.getElementById('grammarTable4').classList.add('show'); }
+
+// ===== ERROR REVEAL 4 =====
+var errorCount4 = 0;
+function revealError4(card) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  errorCount4++;
+  document.getElementById('errorScore4').textContent = errorCount4 + ' / 5 errors found';
+}
+
+// ===== DIALOGUE LINE-BY-LINE (Aula 4) =====
+var dialogueLine4 = 0;
+function nextDialogueLine4() {
+  dialogueLine4++;
+  var line = document.querySelector('.dialogue-line[data-line4="' + dialogueLine4 + '"]');
+  if (line) {
+    line.classList.add('visible');
+    if (dialogueLine4 >= 8) {
+      document.getElementById('nextLineBtn4').textContent = 'Dialogue Complete';
+      document.getElementById('nextLineBtn4').disabled = true;
+      document.getElementById('nextLineBtn4').style.opacity = '0.5';
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE 4 =====
+var challenges4 = [
+  { prompt: 'Tell me about a deal your team has completed recently.', answer: '"We have closed a restructuring deal with Brazilian creditors."' },
+  { prompt: 'Has the company filed for bankruptcy?', answer: '"Yes, the company has filed for Chapter 11 bankruptcy protection."' },
+  { prompt: 'What due diligence have you conducted?', answer: '"We have conducted financial and legal due diligence on the target company."' },
+  { prompt: 'Have you reached an agreement with the creditors?', answer: '"Not yet. We have negotiated the main terms but have not reached a final agreement."' },
+  { prompt: 'What has the team submitted to the board?', answer: '"We have submitted a revised proposal with three restructuring scenarios."' },
+  { prompt: 'Describe the capital situation.', answer: '"The company needs to raise approximately fifty million dollars. We have already issued a report to potential investors."' }
+];
+var challengeIndex4 = 0;
+var challengeCorrect4 = 0;
+
+function showChallengeAnswer4() {
+  document.getElementById('challengeAnswer4').classList.add('show');
+  document.getElementById('showAnswerBtn4').style.display = 'none';
+  document.getElementById('nextChallengeBtn4').style.display = 'inline-flex';
+  challengeCorrect4++;
+  document.getElementById('challengeScore4').textContent = challengeCorrect4 + ' / 6';
+}
+
+function nextChallenge4() {
+  challengeIndex4++;
+  if (challengeIndex4 >= challenges4.length) {
+    document.getElementById('challengeCard4').innerHTML = '<div style="text-align:center"><h3 style="font-family:Cormorant Garamond,serif;font-size:2rem;color:var(--accent)">Challenge Complete!</h3><p style="margin-top:.5rem;color:var(--text-dim)">Score: ' + challengeCorrect4 + ' / 6</p></div>';
+    triggerConfetti();
+    return;
+  }
+  document.getElementById('challengePrompt4').textContent = challenges4[challengeIndex4].prompt;
+  document.getElementById('challengeAnswer4').textContent = challenges4[challengeIndex4].answer;
+  document.getElementById('challengeAnswer4').classList.remove('show');
+  document.getElementById('showAnswerBtn4').style.display = 'inline-flex';
+  document.getElementById('nextChallengeBtn4').style.display = 'none';
+  document.getElementById('challengeCounter4').textContent = 'Question ' + (challengeIndex4 + 1) + ' of 6';
+}
+
+// ===== REFLECTION RECORDING 4 =====
+var reflectionRecording4 = false;
+var reflectionRecorder4 = null;
+var reflectionChunks4 = [];
+
+function toggleReflectionRecord4(btn) {
+  if (!reflectionRecording4) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+      var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+      reflectionRecorder4 = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+      reflectionChunks4 = [];
+      reflectionRecorder4.ondataavailable = function(e) { if (e.data.size > 0) reflectionChunks4.push(e.data); };
+      reflectionRecorder4.onstop = function() {
+        var blob = new Blob(reflectionChunks4, { type: reflectionRecorder4.mimeType });
+        var url = URL.createObjectURL(blob);
+        document.getElementById('reflectionResult4').innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:.5rem"></audio><p style="font-size:.8rem;color:var(--success);margin-top:.3rem">Recording saved!</p>';
+        stream.getTracks().forEach(function(t) { t.stop(); });
+      };
+      reflectionRecorder4.start(100);
+      btn.classList.add('recording');
+      reflectionRecording4 = true;
+    }).catch(function() { alert('Could not access microphone.'); });
+  } else {
+    if (reflectionRecorder4 && reflectionRecorder4.state === 'recording') reflectionRecorder4.stop();
+    btn.classList.remove('recording');
+    reflectionRecording4 = false;
+  }
+}
+
+// ===== AULA 5 FUNCTIONS =====
+
+// Grammar Reveal 5 (not needed — uses revealComp/revealFill)
+
+// Error Reveal 5
+var errorCount5 = 0;
+function revealError5(card) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  var wrongEl = card.querySelector('.error-wrong');
+  var rightEl = card.querySelector('.error-right');
+  if (wrongEl) wrongEl.style.opacity = '0.5';
+  if (rightEl) rightEl.style.display = 'block';
+  errorCount5++;
+  document.getElementById('errorScore5').textContent = errorCount5 + ' / 5 errors found';
+}
+
+// Dialogue Line-by-Line (Aula 5 — 10 lines)
+var dialogueLine5 = 0;
+function nextDialogueLine5() {
+  dialogueLine5++;
+  var line = document.querySelector('.dialogue-line[data-line5="' + dialogueLine5 + '"]');
+  if (line) {
+    line.classList.add('visible');
+    if (dialogueLine5 >= 9) {
+      document.getElementById('nextLineBtn5').textContent = 'Dialogue Complete';
+      document.getElementById('nextLineBtn5').disabled = true;
+      document.getElementById('nextLineBtn5').style.opacity = '0.5';
+    }
+  }
+}
+
+// Quick Challenge 5
+var challenges5 = [
+  { prompt: 'Introduce yourself and describe your current project.', answer: '"Good morning. I am Eduarda Gabriel, an associate at Houlihan Lokey. I am currently working on a restructuring deal."' },
+  { prompt: 'Present Q3 revenue data and compare to Q2.', answer: '"Revenue in Q3 was approximately one hundred and fifty million. Compared to Q2, it declined by eight percent."' },
+  { prompt: 'Describe what your team has done on this deal so far.', answer: '"We have conducted due diligence, submitted the proposal, and negotiated the main terms."' },
+  { prompt: 'Politely interrupt to share new information about the forecast.', answer: '"Sorry to interrupt, but the forecast shows revenue growing by approximately five percent in Q4."' },
+  { prompt: 'Answer: Has the team reached a consensus?', answer: '"Not yet. We have negotiated the main terms but have not reached a final consensus."' },
+  { prompt: 'Give a complete 30-second deal status update.', answer: '"We are currently negotiating the final terms. We have submitted a proposal and expect to close the deal by end of quarter."' }
+];
+var challengeIndex5 = 0;
+var challengeCorrect5 = 0;
+
+function showChallengeAnswer5() {
+  document.getElementById('challengeAnswer5').classList.add('show');
+  document.getElementById('showAnswerBtn5').style.display = 'none';
+  document.getElementById('nextChallengeBtn5').style.display = 'inline-flex';
+  challengeCorrect5++;
+  document.getElementById('challengeScore5').textContent = challengeCorrect5 + ' / 6';
+}
+
+function nextChallenge5() {
+  challengeIndex5++;
+  if (challengeIndex5 >= challenges5.length) {
+    document.getElementById('challengeCard5').innerHTML = '<div style="text-align:center"><h3 style="font-family:Cormorant Garamond,serif;font-size:2rem;color:var(--accent)">Challenge Complete!</h3><p style="margin-top:.5rem;color:var(--text-dim)">Score: ' + challengeCorrect5 + ' / 6</p></div>';
+    triggerConfetti();
+    return;
+  }
+  document.getElementById('challengePrompt5').textContent = challenges5[challengeIndex5].prompt;
+  document.getElementById('challengeAnswer5').textContent = challenges5[challengeIndex5].answer;
+  document.getElementById('challengeAnswer5').classList.remove('show');
+  document.getElementById('showAnswerBtn5').style.display = 'inline-flex';
+  document.getElementById('nextChallengeBtn5').style.display = 'none';
+  document.getElementById('challengeCounter5').textContent = 'Question ' + (challengeIndex5 + 1) + ' of 6';
+}
+
+// Reflection Recording 5
+var reflectionRecording5 = false;
+var reflectionRecorder5 = null;
+var reflectionChunks5 = [];
+
+function toggleReflectionRecord5(btn) {
+  if (!reflectionRecording5) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+      var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+      reflectionRecorder5 = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+      reflectionChunks5 = [];
+      reflectionRecorder5.ondataavailable = function(e) { if (e.data.size > 0) reflectionChunks5.push(e.data); };
+      reflectionRecorder5.onstop = function() {
+        var blob = new Blob(reflectionChunks5, { type: reflectionRecorder5.mimeType });
+        var url = URL.createObjectURL(blob);
+        document.getElementById('reflectionResult5').innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:.5rem"></audio><p style="font-size:.8rem;color:var(--success);margin-top:.3rem">Recording saved!</p>';
+        stream.getTracks().forEach(function(t) { t.stop(); });
+      };
+      reflectionRecorder5.start(100);
+      btn.classList.add('recording');
+      reflectionRecording5 = true;
+    }).catch(function() { alert('Could not access microphone.'); });
+  } else {
+    if (reflectionRecorder5 && reflectionRecorder5.state === 'recording') reflectionRecorder5.stop();
+    btn.classList.remove('recording');
+    reflectionRecording5 = false;
+  }
+}
+
+// ===== DIALOGUE LINE-BY-LINE (Aula 1) =====
+var dialogueLine = 0;
+function nextDialogueLine() {
+  dialogueLine++;
+  var line = document.querySelector('.dialogue-line[data-line="' + dialogueLine + '"]');
+  if (line) {
+    line.classList.add('visible');
+    if (dialogueLine >= 8) {
+      document.getElementById('nextLineBtn').textContent = 'Dialogue Complete';
+      document.getElementById('nextLineBtn').disabled = true;
+      document.getElementById('nextLineBtn').style.opacity = '0.5';
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE =====
+var challenges = [
+  { prompt: 'Two people are talking and you have an important point. How do you interrupt politely?', answer: '"Sorry to jump in, but I have a quick point."' },
+  { prompt: 'Someone interrupts you before you finish. How do you hold the floor?', answer: '"Hang on, let me finish my point."' },
+  { prompt: 'A colleague wants to speak. How do you yield the floor?', answer: '"Please, go ahead."' },
+  { prompt: 'You accidentally spoke at the same time as someone. What do you say?', answer: '"Sorry, I did not mean to talk over you."' },
+  { prompt: 'You want to return to your earlier point after a tangent.', answer: '"Anyway, as I was saying, the timeline is tight."' },
+  { prompt: 'The discussion is going long. How do you suggest finishing?', answer: '"Let us wrap up this topic and move on."' }
+];
+var challengeIndex = 0;
+var challengeCorrect = 0;
+
+function showChallengeAnswer() {
+  document.getElementById('challengeAnswer').classList.add('show');
+  document.getElementById('showAnswerBtn').style.display = 'none';
+  document.getElementById('nextChallengeBtn').style.display = 'inline-flex';
+  challengeCorrect++;
+  document.getElementById('challengeScore').textContent = challengeCorrect + ' / 6';
+}
+
+function nextChallenge() {
+  challengeIndex++;
+  if (challengeIndex >= challenges.length) {
+    document.getElementById('challengeCard').innerHTML = '<div style="text-align:center"><h3 style="font-family:Cormorant Garamond,serif;font-size:2rem;color:var(--accent)">Challenge Complete!</h3><p style="margin-top:.5rem;color:var(--text-dim)">Score: ' + challengeCorrect + ' / 6</p></div>';
+    triggerConfetti();
+    return;
+  }
+  document.getElementById('challengePrompt').textContent = challenges[challengeIndex].prompt;
+  document.getElementById('challengeAnswer').textContent = challenges[challengeIndex].answer;
+  document.getElementById('challengeAnswer').classList.remove('show');
+  document.getElementById('showAnswerBtn').style.display = 'inline-flex';
+  document.getElementById('nextChallengeBtn').style.display = 'none';
+  document.getElementById('challengeCounter').textContent = 'Question ' + (challengeIndex + 1) + ' of 6';
+}
+
+// ===== LISTENING PLAYER =====
+var lpPlayers = {};
+
+function initPlayer(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var src = el.getAttribute('data-src');
+  if (!src) return;
+  var file = src;
+  if (src.indexOf('/') === -1 && audioMap[src]) file = audioMap[src];
+  var audio = new Audio(file);
+  lpPlayers[id] = { audio: audio, speed: 1, playing: false };
+  audio.addEventListener('timeupdate', function() { updatePlayerUI(id); });
+  audio.addEventListener('loadedmetadata', function() { updatePlayerUI(id); });
+  audio.addEventListener('ended', function() {
+    lpPlayers[id].playing = false;
+    var playBtn = document.querySelector('#' + id + ' .lp-play');
+    if (playBtn) playBtn.classList.remove('playing');
+    var qs = document.getElementById('questions-' + id);
+    if (qs) qs.style.display = 'flex';
+  });
+}
+
+function togglePlayer(id) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var p = lpPlayers[id];
+  var playBtn = document.querySelector('#' + id + ' .lp-play');
+  if (p.playing) {
+    p.audio.pause();
+    p.playing = false;
+    if (playBtn) playBtn.classList.remove('playing');
+  } else {
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    p.audio.playbackRate = p.speed;
+    p.audio.play();
+    p.playing = true;
+    if (playBtn) playBtn.classList.add('playing');
+  }
+}
+
+function skipAudio(id, seconds) {
+  if (!lpPlayers[id]) return;
+  var a = lpPlayers[id].audio;
+  a.currentTime = Math.max(0, Math.min(a.duration || 0, a.currentTime + seconds));
+}
+
+function seekAudio(event, id) {
+  if (!lpPlayers[id]) return;
+  var bar = event.currentTarget;
+  var rect = bar.getBoundingClientRect();
+  var pct = (event.clientX - rect.left) / rect.width;
+  lpPlayers[id].audio.currentTime = pct * (lpPlayers[id].audio.duration || 0);
+}
+
+function setPlayerSpeed(id, speed, btn) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  lpPlayers[id].speed = speed;
+  lpPlayers[id].audio.playbackRate = speed;
+  var container = document.getElementById(id);
+  if (container) {
+    container.querySelectorAll('.lp-speed-btn').forEach(function(b) { b.classList.remove('active'); });
+  }
+  if (btn) btn.classList.add('active');
+}
+
+function updatePlayerUI(id) {
+  var p = lpPlayers[id];
+  if (!p) return;
+  var current = p.audio.currentTime || 0;
+  var total = p.audio.duration || 0;
+  var pct = total > 0 ? (current / total * 100) : 0;
+  var bar = document.getElementById('progress-' + id);
+  if (bar) bar.style.width = pct + '%';
+  var tcEl = document.getElementById('time-current-' + id);
+  if (tcEl) tcEl.textContent = fmtTime(current);
+  var ttEl = document.getElementById('time-total-' + id);
+  if (ttEl) ttEl.textContent = fmtTime(total);
+}
+
+function fmtTime(s) {
+  if (isNaN(s)) return '0:00';
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function stopAllAudio() {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+// ===== CHECKLIST =====
+function toggleCheck(item) { item.classList.toggle('checked'); }
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#7C5CBF','#9B7ED8','#003080','#16a34a','#d97706','#dc2626','#5b9bd5'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    var size = 4 + Math.random() * 8;
+    piece.style.width = size + 'px'; piece.style.height = size + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 5000);
+}
+
+// ===== REFLECTION RECORDING =====
+var reflectionRecording = false;
+var reflectionRecorder = null;
+var reflectionChunks = [];
+
+function toggleReflectionRecord(btn) {
+  if (!reflectionRecording) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+      var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+      reflectionRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+      reflectionChunks = [];
+      reflectionRecorder.ondataavailable = function(e) { if (e.data.size > 0) reflectionChunks.push(e.data); };
+      reflectionRecorder.onstop = function() {
+        var blob = new Blob(reflectionChunks, { type: reflectionRecorder.mimeType });
+        var url = URL.createObjectURL(blob);
+        document.getElementById('reflectionResult').innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:.5rem"></audio><p style="font-size:.8rem;color:var(--success);margin-top:.3rem">Recording saved!</p>';
+        stream.getTracks().forEach(function(t) { t.stop(); });
+      };
+      reflectionRecorder.start(100);
+      btn.classList.add('recording');
+      reflectionRecording = true;
+    }).catch(function() { alert('Could not access microphone.'); });
+  } else {
+    if (reflectionRecorder && reflectionRecorder.state === 'recording') reflectionRecorder.stop();
+    btn.classList.remove('recording');
+    reflectionRecording = false;
+  }
+}
+
+// ===== SPEECH RECOGNITION =====
+var activeRecognition = null;
+
+function startRecording(btn) {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert('Please use Google Chrome for voice recognition.'); return; }
+  var card = btn.closest('.speech-card');
+  var target = card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g, '');
+  var resultDiv = card.querySelector('.speech-result');
+  var stopBtn = card.querySelector('.btn-stop');
+  if (btn.classList.contains('recording')) return;
+  btn.classList.add('recording', 'hidden');
+  stopBtn.classList.add('visible');
+  var r = new SR();
+  r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 3; r.continuous = true;
+  activeRecognition = { recognition: r, btn: btn, stopBtn: stopBtn, card: card };
+  r.start();
+  function resetButtons() { btn.classList.remove('recording', 'hidden'); stopBtn.classList.remove('visible'); activeRecognition = null; }
+  r.onresult = function(event) {
+    var best = event.results[event.results.length - 1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g, '');
+    var analysis = analyzeWords(target, best);
+    var totalWords = analysis.expected.length;
+    var correctWords = analysis.expected.filter(function(w) { return w.status === 'correct'; }).length;
+    resultDiv.classList.add('show'); resultDiv.classList.remove('good', 'try-again', 'bad');
+    var html = '';
+    if (analysis.score >= 0.8) { resultDiv.classList.add('good'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Excellent!'; }
+    else if (analysis.score >= 0.5) { resultDiv.classList.add('try-again'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Almost there!'; }
+    else { resultDiv.classList.add('bad'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Keep practicing!'; }
+    html += '<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';
+    analysis.expected.forEach(function(w) { html += '<span class="word-box word-' + (w.status === 'correct' ? 'correct' : 'missing') + '"><span class="word-icon">' + (w.status === 'correct' ? '&#10003;' : '&#10007;') + '</span> ' + w.word + '</span>'; });
+    html += '</div><div class="comp-label">You said:</div><div class="comp-words">';
+    analysis.spoken.forEach(function(w) {
+      var cls = w.status === 'correct' ? 'correct' : w.status === 'extra' ? 'extra' : 'wrong';
+      var icon = w.status === 'correct' ? '&#10003;' : w.status === 'extra' ? '~' : '&#10007;';
+      html += '<span class="word-box word-' + cls + '"><span class="word-icon">' + icon + '</span> ' + w.word + '</span>';
+    });
+    html += '</div>';
+    if (analysis.wrongWords.length > 0) {
+      html += '<div class="speech-suggestion"><strong>Focus on:</strong> ';
+      html += analysis.wrongWords.map(function(w) { return '"<strong>' + w.expected + '</strong>"' + (w.got ? ' (you said "' + w.got + '")' : ''); }).join(' &middot; ');
+      html += '</div>';
+    }
+    html += '</div>';
+    resultDiv.innerHTML = html;
+    resetButtons();
+  };
+  r.onerror = function() { resetButtons(); resultDiv.classList.add('show', 'try-again'); resultDiv.innerHTML = 'Could not hear you. Check your microphone.'; };
+  r.onend = function() { resetButtons(); };
+  setTimeout(function() { if (btn.classList.contains('recording')) { r.stop(); resetButtons(); } }, 30000);
+}
+
+function stopRecording(stopBtn) { if (activeRecognition) activeRecognition.recognition.stop(); }
+
+// ===== WORD ANALYSIS =====
+function analyzeWords(targetStr, spokenStr) {
+  var tw = targetStr.split(/ +/).filter(function(w) { return w; });
+  var sw = spokenStr.split(/ +/).filter(function(w) { return w; });
+  var m = tw.length, n = sw.length;
+  var dp = Array.from({ length: m + 1 }, function() { return Array(n + 1).fill(0); });
+  for (var i = 1; i <= m; i++) for (var j = 1; j <= n; j++) dp[i][j] = wordsMatch(tw[i-1], sw[j-1]) ? dp[i-1][j-1] + 1 : Math.max(dp[i-1][j], dp[i][j-1]);
+  var mt = new Set(), ms = new Set(); var i = m, j = n;
+  while (i > 0 && j > 0) { if (wordsMatch(tw[i-1], sw[j-1])) { mt.add(i-1); ms.add(j-1); i--; j--; } else if (dp[i-1][j] > dp[i][j-1]) i--; else j--; }
+  var expected = tw.map(function(w, i) { return { word: w, status: mt.has(i) ? 'correct' : 'missing' }; });
+  var spoken = sw.map(function(w, i) { return { word: w, status: ms.has(i) ? 'correct' : 'wrong' }; });
+  var wrongWords = [], missedTW = tw.filter(function(_, i) { return !mt.has(i); }), wrongSW = sw.filter(function(_, i) { return !ms.has(i); });
+  missedTW.forEach(function(t, i) { wrongWords.push({ expected: t, got: wrongSW[i] || null }); });
+  wrongSW.slice(missedTW.length).forEach(function(s) { spoken.forEach(function(sp) { if (sp.word === s && sp.status === 'wrong') sp.status = 'extra'; }); });
+  return { expected: expected, spoken: spoken, wrongWords: wrongWords, score: mt.size / Math.max(m, 1) };
+}
+
+function wordsMatch(a, b) { if (a === b) return true; var ca = a.replace(/'/g, ''), cb = b.replace(/'/g, ''); if (ca === cb) return true; if (a.length > 3 && b.length > 3 && levenshtein(a, b) <= 1) return true; return false; }
+function levenshtein(a, b) { var m = []; for (var i = 0; i <= b.length; i++) m[i] = [i]; for (var j = 0; j <= a.length; j++) m[0][j] = j; for (var i = 1; i <= b.length; i++) for (var j = 1; j <= a.length; j++) m[i][j] = b[i-1] === a[j-1] ? m[i-1][j-1] : Math.min(m[i-1][j-1] + 1, m[i][j-1] + 1, m[i-1][j] + 1); return m[b.length][a.length]; }
+
+// ===== FILL-IN-THE-BLANK =====
+function checkBlank(btn) {
+  var item = btn.closest('.fill-blank-item'), input = item.querySelector('.blank-input');
+  input.classList.remove('correct', 'wrong');
+  var answer = input.dataset.answer.toLowerCase().trim();
+  var altAnswer = input.dataset.alt ? input.dataset.alt.toLowerCase().trim() : null;
+  var value = input.value.toLowerCase().trim();
+  var hintEl = item.querySelector('.blank-hint-feedback');
+  if (hintEl) hintEl.classList.remove('visible');
+  if (value === answer || (altAnswer && value === altAnswer)) {
+    input.classList.add('correct');
+    if (hintEl) hintEl.classList.remove('visible');
+    updateProgress();
+  } else {
+    input.classList.add('wrong');
+    if (input.dataset.hint) {
+      if (!hintEl) { hintEl = document.createElement('div'); hintEl.className = 'blank-hint-feedback'; item.appendChild(hintEl); }
+      hintEl.textContent = input.dataset.hint; hintEl.classList.add('visible');
+    }
+    setTimeout(function() { input.classList.remove('wrong'); }, 1500);
+  }
+}
+
+// ===== QUIZ =====
+function selectQuiz(o) {
+  var p = o.closest('.quiz-options'); if (p.querySelector('.correct')) return;
+  if (o.dataset.correct === 'true') { o.classList.add('correct'); updateProgress(); }
+  else { o.classList.add('wrong'); setTimeout(function() { o.classList.remove('wrong'); }, 800); }
+}
+
+// ===== MATCHING =====
+function checkMatch(select) {
+  var row = select.closest('.match-row');
+  var answer = row.dataset.answer;
+  row.classList.remove('correct', 'wrong');
+  if (select.value === answer) { row.classList.add('correct'); select.disabled = true; updateProgress(); }
+  else if (select.value !== '') { row.classList.add('wrong'); setTimeout(function() { row.classList.remove('wrong'); select.value = ''; }, 1000); }
+}
+
+function verifyAllMatches(gridId) {
+  var grid = document.getElementById(gridId);
+  var rows = grid.querySelectorAll('.match-row');
+  rows.forEach(function(row) {
+    var select = row.querySelector('select');
+    var answer = row.dataset.answer;
+    row.classList.remove('correct', 'wrong');
+    if (select.value === answer) { row.classList.add('correct'); }
+    else if (select.value !== '') { row.classList.add('wrong'); setTimeout(function() { row.classList.remove('wrong'); }, 1800); }
+  });
+  updateProgress();
+}
+
+// ===== ORDER =====
+var orderSelection = {};
+function selectOrderItem(item, containerId) {
+  if (item.classList.contains('correct-order')) return;
+  if (!orderSelection[containerId]) orderSelection[containerId] = [];
+  var idx = orderSelection[containerId].indexOf(item);
+  if (idx > -1) { orderSelection[containerId].splice(idx, 1); item.querySelector('.order-num').textContent = '?'; item.style.borderColor = ''; }
+  else { orderSelection[containerId].push(item); item.querySelector('.order-num').textContent = orderSelection[containerId].length; item.style.borderColor = 'var(--accent)'; }
+}
+
+function checkOrder(containerId) {
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var selected = orderSelection[containerId] || [];
+  if (selected.length !== items.length) {
+    var allCorrect = true;
+    items.forEach(function(item, idx) {
+      if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+      else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; }, 1000); }
+    });
+    if (allCorrect) updateProgress();
+    return;
+  }
+  var allCorrect = true;
+  selected.forEach(function(item, idx) {
+    if (parseInt(item.dataset.order) === idx + 1) { item.classList.add('correct-order'); item.querySelector('.order-num').textContent = idx + 1; }
+    else { allCorrect = false; item.style.borderColor = 'var(--danger)'; item.classList.add('wrong'); setTimeout(function() { item.classList.remove('wrong'); item.style.borderColor = ''; item.querySelector('.order-num').textContent = '?'; }, 1000); }
+  });
+  if (!allCorrect) orderSelection[containerId] = [];
+  else updateProgress();
+}
+
+function moveItem(btn, direction, containerId) {
+  var item = btn.closest('.order-item');
+  var container = document.getElementById(containerId);
+  var items = Array.from(container.querySelectorAll('.order-item'));
+  var idx = items.indexOf(item);
+  if (direction === -1 && idx > 0) container.insertBefore(item, items[idx - 1]);
+  else if (direction === 1 && idx < items.length - 1) container.insertBefore(items[idx + 1], item);
+}
+
+// ===== FREE RECORDING =====
+var freeRecorder = null;
+var freeChunks = [];
+function startFreeRecording(btn) {
+  var stopBtn = btn.parentElement.querySelector('.btn-stop');
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    freeRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+    freeChunks = [];
+    freeRecorder.ondataavailable = function(e) { if (e.data.size > 0) freeChunks.push(e.data); };
+    freeRecorder.onstop = function() {
+      var blob = new Blob(freeChunks, { type: freeRecorder.mimeType });
+      var url = URL.createObjectURL(blob);
+      var thinkCard = btn.closest('.think-card');
+      var resultDiv = thinkCard.querySelector('[id^="think-result"]');
+      if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Gravação salva!</p>';
+      stream.getTracks().forEach(function(t) { t.stop(); });
+    };
+    freeRecorder.start(100);
+    btn.classList.add('hidden');
+    stopBtn.classList.add('visible');
+  }).catch(function() { alert('Não foi possível acessar o microfone.'); });
+}
+
+function stopFreeRecording(stopBtn) {
+  if (freeRecorder && freeRecorder.state === 'recording') freeRecorder.stop();
+  var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
+  recordBtn.classList.remove('hidden');
+  stopBtn.classList.remove('visible');
+}
+
+// ===== MEDIA CHECKBOXES =====
+function toggleMediaDone(checkbox) {
+  var wrapper = checkbox.closest('.media-card-wrapper');
+  wrapper.classList.toggle('done', checkbox.checked);
+  saveState();
+}
+
+// ===== PROGRESS TRACKING =====
+function updateProgress() {
+  var totalLessons = 6;
+  try { localStorage.setItem('alumni-progress-eduarda-gabriel', JSON.stringify({ concluidas: 0, total: totalLessons })); } catch(e) {}
+  saveState();
+}
+
+// ===== STATE PERSISTENCE =====
+function saveState() {
+  var s = { matches: [], blanks: [], quiz: [], speech: [], mediaChecks: {} };
+  document.querySelectorAll('.media-card-wrapper').forEach(function(w) { var id = w.dataset.media; var cb = w.querySelector('input[type="checkbox"]'); if (id && cb) s.mediaChecks[id] = cb.checked; });
+  document.querySelectorAll('.match-row.correct select').forEach(function(sel) { s.matches.push(sel.closest('.match-row').querySelector('.match-word').textContent + '|' + sel.value); });
+  document.querySelectorAll('.blank-input.correct').forEach(function(e) { s.blanks.push(e.dataset.answer); });
+  document.querySelectorAll('.quiz-option.correct').forEach(function(e) { s.quiz.push(e.textContent.trim().substring(0, 30)); });
+  document.querySelectorAll('.speech-result.good').forEach(function(e) { s.speech.push(e.closest('.speech-card').dataset.phrase); });
+  localStorage.setItem('eduarda-gabriel-professor', JSON.stringify(s));
+}
+
+function loadState() {
+  var r = localStorage.getItem('eduarda-gabriel-professor'); if (!r) return;
+  var s = JSON.parse(r);
+  if (s.matches) s.matches.forEach(function(d) { var parts = d.split('|'); var word = parts[0]; var val = parts[1]; document.querySelectorAll('.match-row').forEach(function(row) { if (row.querySelector('.match-word').textContent === word) { var sel = row.querySelector('select'); sel.value = val; row.classList.add('correct'); sel.disabled = true; } }); });
+  if (s.blanks) s.blanks.forEach(function(a) { document.querySelectorAll('.blank-input[data-answer="' + a + '"]').forEach(function(e) { e.value = a; e.classList.add('correct'); }); });
+  if (s.quiz) s.quiz.forEach(function(t) { document.querySelectorAll('.quiz-option[data-correct="true"]').forEach(function(e) { if (e.textContent.trim().substring(0, 30) === t) e.classList.add('correct'); }); });
+  if (s.mediaChecks) { document.querySelectorAll('.media-card-wrapper').forEach(function(w) { var id = w.dataset.media; var cb = w.querySelector('input[type="checkbox"]'); if (id && cb && s.mediaChecks[id]) { cb.checked = true; w.classList.add('done'); } }); }
+  updateProgress();
+}
+
+// ===== DRAG AND DROP =====
+var draggedItem = null;
+document.querySelectorAll('.order-container').forEach(function(container) {
+  container.addEventListener('dragstart', function(e) { var item = e.target.closest('.order-item'); if (!item || item.classList.contains('correct-order')) return; draggedItem = item; item.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+  container.addEventListener('dragend', function(e) { var item = e.target.closest('.order-item'); if (item) item.classList.remove('dragging'); container.querySelectorAll('.order-item').forEach(function(i) { i.classList.remove('drag-over'); }); draggedItem = null; });
+  container.addEventListener('dragover', function(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; var target = e.target.closest('.order-item'); if (target && target !== draggedItem) { container.querySelectorAll('.order-item').forEach(function(i) { i.classList.remove('drag-over'); }); target.classList.add('drag-over'); } });
+  container.addEventListener('drop', function(e) { e.preventDefault(); var target = e.target.closest('.order-item'); if (target && draggedItem && target !== draggedItem) { var items = Array.from(container.querySelectorAll('.order-item')); if (items.indexOf(draggedItem) < items.indexOf(target)) container.insertBefore(draggedItem, target.nextSibling); else container.insertBefore(draggedItem, target); } container.querySelectorAll('.order-item').forEach(function(i) { i.classList.remove('drag-over'); }); });
+});
+
+// ===== INIT =====
+loadState();
+
+// Init teacher panel for slide 1
+var initSlide = document.querySelector('.slide[data-slide="1"]');
+if (initSlide) document.getElementById('teacherPanel').innerHTML = initSlide.getAttribute('data-teacher') || '';
+
+// Accessibility
+document.querySelectorAll('.match-row select').forEach(function(sel) {
+  var word = sel.closest('.match-row').querySelector('.match-word');
+  if (word) sel.setAttribute('aria-label', 'Translation of ' + word.textContent);
+});
+
+// ===== ORDER PLAYER (replaces Listen buttons with full player) =====
+(function() {
+  function fmt(s) { var m = Math.floor(s/60); var sec = Math.floor(s%60); return m + ':' + (sec < 10 ? '0' : '') + sec; }
+
+  document.querySelectorAll('button[onclick]').forEach(function(btn) {
+    var oc = btn.getAttribute('onclick') || '';
+    if (oc.indexOf('speakText') === -1 || oc.indexOf('order') === -1) return;
+    var m = oc.match(/speakText\(['"](\/?(\[[^\]]+\]))['"]/);
+    if (!m) return;
+    var key = m[1];
+    var src = audioMap[key] || audioMap[key.replace(/\\'/g,"'")];
+    if (!src) return;
+
+    var player = document.createElement('div');
+    player.className = 'order-player';
+    player.innerHTML =
+      '<div class="op-row">' +
+        '<button class="op-skip" onclick="this.parentElement.parentElement._opSkip(-5)" aria-label="Back 5s">&laquo;5</button>' +
+        '<button class="op-play" onclick="this.parentElement.parentElement._opToggle()" aria-label="Play">' +
+          '<svg viewBox="0 0 24 24"><polygon class="op-icon-play" points="6 3 20 12 6 21 6 3"/><g class="op-icon-pause" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></g></svg>' +
+        '</button>' +
+        '<button class="op-skip" onclick="this.parentElement.parentElement._opSkip(5)" aria-label="Forward 5s">5&raquo;</button>' +
+        '<div class="op-seekbar" onclick="this.parentElement.parentElement._opSeek(event)"><div class="op-fill"></div></div>' +
+        '<div class="op-time">0:00 / 0:00</div>' +
+      '</div>' +
+      '<div class="op-speed">' +
+        '<button onclick="this.parentElement.parentElement._opSpeed(0.5,this)">0.5x</button>' +
+        '<button onclick="this.parentElement.parentElement._opSpeed(0.75,this)">0.75x</button>' +
+        '<button class="active" onclick="this.parentElement.parentElement._opSpeed(1,this)">1x</button>' +
+        '<button onclick="this.parentElement.parentElement._opSpeed(1.25,this)">1.25x</button>' +
+      '</div>';
+
+    var audio = new Audio(src);
+    audio.preload = 'metadata';
+    var fill = player.querySelector('.op-fill');
+    var timeEl = player.querySelector('.op-time');
+    var playIcon = player.querySelector('.op-icon-play');
+    var pauseIcon = player.querySelector('.op-icon-pause');
+    var speed = 1;
+
+    audio.addEventListener('loadedmetadata', function() { timeEl.textContent = '0:00 / ' + fmt(audio.duration); });
+    audio.addEventListener('timeupdate', function() {
+      if (audio.duration) {
+        fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+        timeEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
+      }
+    });
+    audio.addEventListener('ended', function() { playIcon.style.display = ''; pauseIcon.style.display = 'none'; });
+
+    player._opToggle = function() {
+      if (audio.paused) { audio.playbackRate = speed; audio.play(); playIcon.style.display = 'none'; pauseIcon.style.display = ''; }
+      else { audio.pause(); playIcon.style.display = ''; pauseIcon.style.display = 'none'; }
+    };
+    player._opSkip = function(s) { audio.currentTime = Math.max(0, Math.min(audio.duration || 0, audio.currentTime + s)); };
+    player._opSeek = function(e) {
+      var bar = player.querySelector('.op-seekbar');
+      var pct = (e.clientX - bar.getBoundingClientRect().left) / bar.offsetWidth;
+      audio.currentTime = pct * (audio.duration || 0);
+    };
+    player._opSpeed = function(s, b) {
+      speed = s; audio.playbackRate = s;
+      player.querySelectorAll('.op-speed button').forEach(function(x) { x.classList.remove('active'); });
+      b.classList.add('active');
+    };
+
+    btn.parentNode.replaceChild(player, btn);
+  });
+})();
+
+// ===== REGRA 38 — Exit volta ao hub (IN CLASS) =====
+function exitSlideMode() {
+  document.body.classList.remove('slide-mode');
+  window.location.href = '/professor/eduarda-gabriel.html#inclass';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.body.classList.contains('slide-mode')) exitSlideMode();
+});
+document.addEventListener('DOMContentLoaded', function() {
+  var first = document.querySelector('.slide[data-slide="1"]');
+  if (first && new URLSearchParams(window.location.search).get('autostart') === '1') enterSlideMode(1);
+});
+</script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js"></script>
+</body>
+</html>
