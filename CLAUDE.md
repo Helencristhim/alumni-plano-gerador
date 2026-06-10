@@ -2041,6 +2041,7 @@ O mesmo padrao se aplica ao arquivo do aluno: lesson cards de aulas 2+ linkam pa
 - [ ] Lesson cards no main do aluno linkam para `/aluno/{slug}-aula{N}.html`?
 - [ ] **Menu IN CLASS do main professor** tem card linkando para a aula nova? (tab-inclass)
 - [ ] **Menu IN CLASS do main professor** tem o MESMO numero de cards que o total de aulas existentes?
+- [ ] **Exit volta ao hub** (REGRA 38): cada arquivo standalone tem `exitSlideMode()` navegando para `/professor/{slug}.html#inclass` e o hub tem o handler de `#inclass`?
 
 > **CONSEQUENCIA**: Arquivos monoliticos ficam enormes (8000+ linhas), dificeis de manter, e causam bugs de slide-mode. O formato individual e o UNICO aceito para novos materiais.
 
@@ -2152,6 +2153,48 @@ Sem esse bloco, a aula NAO esta pronta.
 - Comparar o vocabulario-alvo "novo" da aula N com o vocabulario ja ensinado nas aulas anteriores. QUALQUER item repetido como novo → REJEITAR.
 - Confirmar que o warm-up da aula N cita pelo menos 2 itens da aula N-1.
 - `grep -c "CONTINUIDADE" ARQUIVO.html` deve ser >= 1 em toda aula a partir da 2a.
+
+---
+
+## REGRA 38 — EXIT DA AULA VOLTA PARA O HUB NA ABA IN CLASS (OBRIGATORIO — BLOQUEANTE)
+
+> **CONTEXTO**: Complementa a REGRA 34 (um HTML por aula). Cada aula 2+ vive num arquivo standalone (`{slug}-aula{N}.html`) linkado a partir do menu IN CLASS do hub (`{slug}.html`). Quando o professor termina a aula e da **Exit** (ou aperta **Esc**), o esperado e voltar para o hub do aluno — NAO ficar parado na pagina standalone da aula. Bug real: `exitSlideMode()` so removia a classe `slide-mode` e deixava o professor na propria pagina da aula, sem caminho de volta ao hub.
+
+### Comportamento obrigatorio
+
+**1. Arquivo STANDALONE (`{slug}-aula{N}.html`, professor) — exitSlideMode navega para o hub:**
+
+```javascript
+function exitSlideMode() {
+    document.body.classList.remove('slide-mode');
+    window.location.href = '/professor/{slug}.html#inclass';
+}
+```
+
+**2. Hub / main file (`{slug}.html`, professor) — abre a aba IN CLASS ao receber a hash:**
+
+No `DOMContentLoaded`, adicionar:
+
+```javascript
+if (window.location.hash === '#inclass') {
+    var inclassBtn = document.querySelector('.tab-btn[onclick*="inclass"]');
+    if (inclassBtn) inclassBtn.click();
+}
+```
+
+> Usar `.click()` no botao da aba (NAO chamar `switchTab('inclass')` direto): o `switchTab` depende de `event.currentTarget`, entao precisa do evento real do clique.
+
+### Limites (para NAO conflitar com outras regras)
+
+- **NAO se aplica ao main file/hub em si**: os slides da propria aula 1 (ou aulas embutidas no main file legado) usam `exitSlideMode()` que SO remove `slide-mode` e volta ao menu IN CLASS interno — NUNCA navegam para fora. So os arquivos **standalone** (aula 2+) navegam para o hub.
+- **NAO se aplica ao ALUNO**: arquivos do aluno nao tem aba IN CLASS nem slide-mode (REGRA 3) — nada a fazer.
+- Compativel com a REGRA 2 / REGRA 11: o `switchTab` continua sempre removendo `slide-mode`; o hub abre o **menu** IN CLASS, nunca entra em slide-mode direto.
+
+### Verificacao pre-deploy (BLOQUEANTE)
+
+- [ ] Todo `{slug}-aula{N}.html` (professor) tem `exitSlideMode()` navegando para `/professor/{slug}.html#inclass`?
+- [ ] O hub `{slug}.html` tem o handler de `location.hash === '#inclass'` no `DOMContentLoaded`?
+- `grep -c "milton-sayegh.html#inclass" {slug}-aula{N}.html` (adaptar slug) deve ser >= 1 em todo arquivo standalone.
 
 ---
 
