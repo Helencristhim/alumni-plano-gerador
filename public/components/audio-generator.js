@@ -18,7 +18,7 @@
 const ELEVENLABS_CONFIG = {
   apiUrl: 'https://api.elevenlabs.io/v1/text-to-speech',
   voiceId: 'sfJopaWaOtauCD3HKX6Q',       // Arthur — male, neutral American
-  modelId: 'eleven_monolingual_v1',
+  modelId: 'eleven_multilingual_v2',
   stability: 0.5,
   similarity_boost: 0.75,
   outputFormat: 'mp3_44100_128'

@@ -31,6 +31,7 @@ O aluno precisa ouvir ingles correto desde o primeiro contato com o material.
 - **Endpoint:** `https://api.elevenlabs.io/v1/text-to-speech/{voice_id}`
 - **Autenticacao:** API key via header `xi-api-key`
 - **Modelo:** `eleven_multilingual_v2` (suporta ingles e portugues)
+- **Voz unica por interlocutor (REGRA 35)** — em dialogos/role-play/listening com 2+ falantes, cada falante DEVE ter uma voz DIFERENTE, mesmo do mesmo genero. Roster: masculinas arthur/josh; femininas ellen/rachel/domi/bella. Cada linha leva `data-speaker` + `data-voice` (chave do roster). Mesmo personagem = mesma voz na aula inteira. Duas pessoas com a mesma voz = BUG bloqueante.
 - **Formato de saida:** MP3
 - **Configuracoes de voz:**
   - Stability: 0.5 (equilibrio entre consistencia e naturalidade)

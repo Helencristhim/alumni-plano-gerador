@@ -2046,27 +2046,140 @@ O mesmo padrao se aplica ao arquivo do aluno: lesson cards de aulas 2+ linkam pa
 
 ---
 
+## REGRA 35 — VOZ UNICA POR INTERLOCUTOR (OBRIGATORIO — BLOQUEANTE)
+
+> **PROBLEMA QUE ESTA REGRA RESOLVE**: dialogos saiam com DUAS VOZES IDENTICAS conversando (ex: a aluna e uma recepcionista, as duas com voz feminina). Parecia a mesma pessoa falando sozinha. A causa: a atribuicao de voz era so POR GENERO usando apenas Arthur/Ellen — dois personagens do mesmo genero colapsavam na mesma voz.
+
+**Em QUALQUER dialogo, role-play ou listening com 2 ou mais falantes distintos, cada falante DEVE ter um `voiceId` ElevenLabs DIFERENTE. Dois personagens NUNCA compartilham voz na mesma cena — mesmo sendo do mesmo genero.** Reduzir a Arthur/Ellen quando ha colisao de genero e BUG que BLOQUEIA o deploy.
+
+### Roster de vozes (ja existe em `public/components/audio-generator.js` → `VOICE_OPTIONS`)
+- **Masculinas**: `arthur` (padrao), `josh` (grave)
+- **Femininas**: `ellen` (padrao), `rachel` (calma), `domi` (energetica), `bella` (suave)
+
+### Algoritmo de atribuicao (obrigatorio)
+1. O **aluno/protagonista** mantem a voz do proprio genero (aluna=`ellen`, aluno=`arthur`) — preserva a REGRA 31C.
+2. Cada **outro personagem** recebe uma voz do genero DELE que ainda NAO foi usada naquela cena. Se colidir com o protagonista ou com outro personagem do mesmo genero, pega a proxima livre do roster (2a mulher = `rachel`, 3a = `domi`, 4a = `bella`; 2o homem = `josh`).
+3. O **mesmo personagem mantem a MESMA voz** do inicio ao fim da aula (a recepcionista do slide 12 e a mesma do slide 30).
+4. Frases gerais/narrador continuam alternando (REGRA 7), mas com voz que NAO se confunde com um personagem ativo na cena.
+
+### Marcacao no HTML (expande o `data-voice`)
+Cada linha de dialogo DEVE ter `data-speaker="<nome do personagem>"` alem do `data-voice="<chave do roster>"`. O script de geracao de audio mapeia a chave via `VOICE_OPTIONS`.
+
+```html
+<div class="dialogue-line" data-speaker="Gabriela" data-voice="ellen">Hi, I have a reservation.</div>
+<div class="dialogue-line" data-speaker="Receptionist" data-voice="rachel">Welcome! What is your name?</div>
+```
+
+### Verificacao pre-deploy (BLOQUEANTE — zero colisoes)
+```bash
+python3 - public/professor/SLUG*.html public/aluno/SLUG*.html <<'PY'
+import re,collections,sys,glob
+files=[a for a in sys.argv[1:]] or glob.glob('public/professor/*.html')+glob.glob('public/aluno/*.html')
+falhou=False
+for f in files:
+    html=open(f,encoding='utf-8').read()
+    voz=collections.defaultdict(set)
+    for tag in re.findall(r'<[^>]*data-speaker="[^"]*"[^>]*>', html):
+        s=re.search(r'data-speaker="([^"]+)"',tag); v=re.search(r'data-voice="([^"]+)"',tag)
+        if s and v: voz[s.group(1)].add(v.group(1))
+    for s,vs in voz.items():
+        if len(vs)>1: print(f"{f}: FALHA voz instavel '{s}' -> {sorted(vs)}"); falhou=True
+    inv=collections.defaultdict(list)
+    for s,vs in voz.items():
+        if len(vs)==1: inv[next(iter(vs))].append(s)
+    for v,ss in inv.items():
+        if len(ss)>1: print(f"{f}: FALHA voz '{v}' compartilhada por {ss}"); falhou=True
+print("OK — nenhuma colisao de voz" if not falhou else "REVISAR — corrigir e re-rodar")
+sys.exit(1 if falhou else 0)
+PY
+```
+Se houver QUALQUER colisao (duas pessoas com a mesma voz) ou voz instavel (um personagem com 2 vozes), REJEITAR, corrigir e re-rodar.
+
+---
+
+## REGRA 36 — CENARIO DERIVA DO OBJETIVO LINGUISTICO (OBRIGATORIO — BLOQUEANTE)
+
+> **PROBLEMA QUE ESTA REGRA RESOLVE**: o material usava cenarios sem relacao com o objetivo da aula — ex: numa aula INICIAL de FALAR DE SI (nome, origem, profissao), gerava um listening/dialogo de AEROPORTO (check-in, bagagem). O aluno praticava linguagem de viagem em vez de se apresentar.
+
+**O cenario/narrativa de uma aula (historia do IN CLASS, texto de contexto do Pre-class, role-plays, listenings e complementares) DEVE ser um HABITAT NATURAL do `focoLinguistico` da aula.** O cenario e DERIVADO do objetivo — nunca decorativo. Se a linguagem-alvo nao acontece de verdade naquele cenario, o cenario esta ERRADO e BLOQUEIA o deploy.
+
+### Teste de aderencia (obrigatorio, >=70%)
+Liste os 6 a 8 itens-alvo da aula (vocabulario + estrutura gramatical). Pergunte: *"este cenario OBRIGA o aluno a usar estes itens?"* Se menos de 70% dos itens forem elicitados naturalmente pelo cenario, TROCAR o cenario.
+
+### Regra de arco (ordem do curso)
+- **Aulas iniciais (identidade)**: nome, de onde e, profissao, rotina, familia → cenarios de APRESENTACAO (primeiro dia num curso/empresa, networking, conhecer alguem). **NAO** usar aeroporto, hotel ou restaurante nessas aulas.
+- **Cenarios transacionais de viagem** (aeroporto, check-in, pedido em restaurante) so DEPOIS que o aluno ja sabe falar de si — OU quando o `foco` do aluno e explicitamente Travel/Viagem E a ordem das aulas justifica.
+
+### Tabela de anti-padroes (bloqueante)
+| Objetivo da aula | Cenario CERTO | Cenario ERRADO |
+|---|---|---|
+| Verb to be / falar de si | Primeiro dia, se apresentar a colegas | Check-in de aeroporto |
+| Present simple / rotina | Descrever seu dia a um amigo | Reclamar de hotel |
+| Past simple / fim de semana | Conversa de segunda-feira | Pedido em restaurante |
+
+### Bloco de justificativa (obrigatorio em cada aula)
+O gerador DEVE escrever, na aba Planejamento (ou em comentario HTML `<!-- SCENARIO FIT ... -->`), um bloco:
+```
+SCENARIO FIT — Aula N
+Can-do: "I can introduce myself and say where I'm from."
+Gramatica-alvo: verb to be (am/is/are)
+Vocab-alvo: name, from, job, city, nice to meet you
+Cenario escolhido: primeiro dia em um curso/empresa
+Por que elicita o alvo: a situacao obriga o aluno a dizer nome, origem e profissao.
+```
+Sem esse bloco coerente, a aula NAO esta pronta. Verificacao: `grep -c "SCENARIO FIT" ARQUIVO.html` deve ser >= 1 por aula.
+
+---
+
+## REGRA 37 — VOCABULARIO CUMULATIVO + CALLBACK (OBRIGATORIO — BLOQUEANTE)
+
+> **PROBLEMA QUE ESTA REGRA RESOLVE**: as aulas pareciam isoladas — (1) uma palavra ja ensinada reaparecia como "novidade" numa aula seguinte, e (2) a aula nova nao retomava nada da anterior. O aluno nao sentia que acumulava vocabulario. Reforca e torna VERIFICAVEL as REGRAS 20 e 22.
+
+1. **VOCABULARIO E CUMULATIVO E NAO REPETE**: toda palavra/expressao ensinada como conteudo NOVO em uma aula NUNCA pode ser apresentada de novo como NOVA em aula posterior. Pode (e deve) ser REVISADA, mas nunca reintroduzida como novidade. Repetir como novo = BUG bloqueante.
+2. **CALLBACK OBRIGATORIO**: o warm-up da aula N DEVE retomar, de forma ATIVA, pelo menos 2 itens (vocabulario ou estrutura) da aula N-1 — numa pergunta, frase de reaquecimento ou mini-exercicio. Nao vale so mencionar; o aluno tem que USAR.
+3. **LISTA DE VOCABULARIO ACUMULADO**: ao gerar a aula N, listar primeiro todo o vocabulario-alvo ja ensinado nas aulas 1..N-1 e escolher as palavras novas de FORA dessa lista. A lista acumulada fica registrada (aba Planejamento ou comentario HTML) para auditoria.
+
+### Bloco de continuidade (obrigatorio a partir da 2a aula)
+```
+CONTINUIDADE — Aula N
+Itens novos desta aula: [lista]
+Itens revisados (de aulas anteriores): [lista]
+Callback no warm-up: [quais 2+ itens da aula N-1 sao retomados e como]
+```
+Sem esse bloco, a aula NAO esta pronta.
+
+### Verificacao pre-deploy (BLOQUEANTE)
+- Comparar o vocabulario-alvo "novo" da aula N com o vocabulario ja ensinado nas aulas anteriores. QUALQUER item repetido como novo → REJEITAR.
+- Confirmar que o warm-up da aula N cita pelo menos 2 itens da aula N-1.
+- `grep -c "CONTINUIDADE" ARQUIVO.html` deve ser >= 1 em toda aula a partir da 2a.
+
+---
+
 ## REGRAS COMPLEMENTARES (OBRIGATORIAS — APRENDIDAS DE INCIDENTES REAIS)
 
 > Estas regras foram adicionadas apos incidentes em producao. Todas sao BLOQUEANTES.
 
 ---
 
-### REGRA C1 — VOZES ELEVENLABS ATUALIZADAS
+### REGRA C1 — VOZES ELEVENLABS (ROSTER VALIDO)
 
-As vozes Arthur e Ellen foram DESCONTINUADAS. Usar as novas vozes:
+> **CORRECAO (verificado via API na conta ativa em 09/06/2026)**: Arthur e Ellen NAO foram descontinuadas — existem e funcionam (M/F). As vozes "Ash" e "Kristen" citadas numa versao anterior desta regra NAO existem na conta (retornam HTTP 400) e QUEBRAM a geracao de audio. Use SOMENTE o roster abaixo, todos validados.
 
-| Voz | ID | Uso |
-|-----|-----|-----|
-| **Riley** (F) | `cgSgspJ2msm6clMCkdW9` | Neutra feminina (padrao para alunas) |
-| **Ash** (M) | `CWhRBWXzGAHq65xCjsqD` | Neutro masculino (padrao para alunos) |
-| **Kristen** (F) | `JbJ1PBbPbzFxEmB5CPKK` | Animada feminina (dialogos expressivos) |
-| **Mark** (M) | `UgBBYS2sOqTuMpoF3BR0` | Animado masculino (dialogos expressivos) |
+Roster valido (= `VOICE_OPTIONS` em `public/components/audio-generator.js`):
 
-- Onde o CLAUDE.md menciona Arthur → usar **Ash** (neutro) ou **Mark** (animado)
-- Onde menciona Ellen → usar **Riley** (neutra) ou **Kristen** (animada)
-- Regra de atribuicao por genero continua identica (REGRA 7)
-- SEMPRE alternar vozes masculina/feminina — NUNCA voz unica para todo o material
+| Voz | ID | Genero | Uso |
+|-----|-----|--------|-----|
+| **arthur** | `sfJopaWaOtauCD3HKX6Q` | M | Padrao masculino (aluno) |
+| **ellen** | `BIvP0GN1cAtSRTxNHnWS` | F | Padrao feminino (aluna) |
+| **josh** | `TxGEqnHWrfWFTfGW9XjX` | M | 2o homem distinto na cena |
+| **rachel** | `21m00Tcm4TlvDq8ikWAM` | F | 2a mulher distinta na cena |
+| **domi** | `AZnzlk1XvdvUeBnXmlld` | F | 3a mulher distinta na cena |
+| **bella** | `EXAVITQu4vr4xnSDxMaL` | F | 4a mulher distinta na cena |
+
+- Padrao por genero do aluno: aluna = **ellen**, aluno = **arthur** (REGRA 7).
+- Em dialogo/role-play/listening com 2+ falantes, cada falante recebe uma voz DIFERENTE do roster (REGRA 35) — duas pessoas com a mesma voz e BUG bloqueante.
+- SEMPRE alternar vozes masculina/feminina — NUNCA voz unica para todo o material.
+- Modelo ElevenLabs: `eleven_multilingual_v2` (consistente com o doc e o gerador).
 
 ---
 
