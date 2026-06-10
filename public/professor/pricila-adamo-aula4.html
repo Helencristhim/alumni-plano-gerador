@@ -32,7 +32,7 @@
   --dark: #1a1a2e;
   --dark-surface: #22223a;
   --dark-elevated: #2d2d4a;
-  --mark-blue: #2563eb;
+  --james-blue: #2563eb;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; touch-action: manipulation; }
@@ -51,9 +51,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   overflow-y:auto; padding:2rem;
 }
 .slide.active { opacity:1; visibility:visible; }
-
 .slide.dark { background:var(--dark); color:#fff; }
-.slide.dark .checklist li,.slide.dark .check-item,.slide.dark .check-label,.slide.dark .roleplay-body p,.slide.dark .roleplay-body,.slide.dark .roleplay-scenario,.slide.dark .comp-q,.slide.dark .comp-q p,.slide.dark .fill-item label,.slide.dark .fill-item p,.slide.dark .error-card p,.slide.dark .oral-item p,.slide.dark .email-card,.slide.dark .email-card p,.slide.dark .boarding-pass p,.slide.dark .student-id-card p{color:#1a1a2e !important}
 .slide.light { background:var(--bg); color:var(--text); }
 
 /* ===== TOP BAR ===== */
@@ -237,7 +235,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
   font-size:0.6rem; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:0.5px;
 }
-.d-avatar.blue { background:var(--mark-blue); }
+.d-avatar.blue { background:var(--james-blue); }
 .d-avatar.sienna { background:var(--accent); }
 .d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.65); margin-bottom:0.15rem; }
 .d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
@@ -250,16 +248,6 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   font-weight:600; margin-top:1rem; transition:all 0.2s;
 }
 .next-line-btn:hover { background:var(--accent); color:#fff; }
-
-/* ===== AUDIO INLINE ===== */
-.audio-inline {
-  display:inline-flex; align-items:center; justify-content:center;
-  width:26px; height:26px; border-radius:50%; background:rgba(160,103,75,0.2);
-  cursor:pointer; vertical-align:middle; margin-left:0.4rem; transition:all 0.2s;
-}
-.audio-inline:hover { background:var(--accent); }
-.audio-inline svg { width:14px; height:14px; fill:none; stroke:rgba(255,255,255,0.8); stroke-width:2; }
-.audio-inline:hover svg { stroke:#fff; }
 
 /* ===== LISTENING ===== */
 .listening-card { max-width:500px; width:100%; text-align:center; }
@@ -333,8 +321,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 }
 .err-item:hover { border-color:rgba(220,38,38,0.4); }
 .err-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
-.err-sentence .wrong { color:rgba(255,255,255,0.85); font-weight:400; text-decoration:none; transition:all 0.3s; }
-.err-item.open .err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
+.err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
 .err-correction {
   display:none; margin-top:0.6rem; padding:0.5rem 0.8rem;
   background:rgba(22,163,74,0.1); border-radius:6px;
@@ -430,21 +417,21 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 .surv-play svg { width:16px; height:16px; }
 
 /* ===== CHECKLIST ===== */
-.check-grid { max-width:600px; width:100%; }
-.check-item {
+.checklist-wrap { max-width:600px; width:100%; }
+.cl-item {
   display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0;
   border-bottom:1px solid rgba(255,255,255,0.06); cursor:pointer;
 }
-.check-item:last-child { border-bottom:none; }
+.cl-item:last-child { border-bottom:none; }
 .cl-box {
   width:22px; height:22px; border:2px solid rgba(255,255,255,0.2); border-radius:5px;
   flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
 }
 .cl-box svg { width:14px; height:14px; opacity:0; transition:opacity 0.2s; }
-.check-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
-.check-item.checked .cl-box svg { opacity:1; }
+.cl-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
+.cl-item.checked .cl-box svg { opacity:1; }
 .cl-text { font-size:0.88rem; color:rgba(255,255,255,0.7); transition:color 0.2s; }
-.check-item.checked .cl-text { color:rgba(255,255,255,0.9); }
+.cl-item.checked .cl-text { color:rgba(255,255,255,0.9); }
 
 /* ===== CONFETTI ===== */
 .confetti-container { position:fixed; inset:0; pointer-events:none; z-index:9999; }
@@ -479,36 +466,34 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 .sb-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(160,103,75,0.12); border-radius:6px; font-size:0.92rem; color:var(--accent-light); font-weight:600; }
 .sb-item.open .sb-answer { display:block; animation:fadeIn 0.25s ease; }
 
-/* ===== TRAVEL JOURNAL ARTIFACT ===== */
-.travel-journal-card {
+/* ===== BUCKET LIST ARTIFACT ===== */
+.bucket-list-card {
   max-width:500px; width:100%; border-radius:16px; overflow:hidden;
   background:linear-gradient(135deg, #1a1a2e 0%, #2d2d4a 50%, #A0674B 100%);
   border:1px solid rgba(160,103,75,0.3); position:relative;
 }
-.travel-journal-header {
+.bucket-list-header {
   padding:1.5rem 2rem 1rem; text-align:center;
   border-bottom:1px solid rgba(255,255,255,0.08);
 }
-.travel-journal-header h3 {
+.bucket-list-header h3 {
   font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:#fff; margin-bottom:0.3rem;
 }
-.travel-journal-header p {
+.bucket-list-header p {
   font-size:0.78rem; color:rgba(255,255,255,0.6); letter-spacing:1.5px; text-transform:uppercase; font-weight:600;
 }
-.travel-journal-items { padding:1.2rem 2rem 1.5rem; }
-.tj-item {
-  display:flex; align-items:flex-start; gap:0.8rem; padding:0.6rem 0;
+.bucket-list-items { padding:1.2rem 2rem 1.5rem; }
+.bl-item {
+  display:flex; align-items:center; gap:0.8rem; padding:0.6rem 0;
   border-bottom:1px solid rgba(255,255,255,0.06);
 }
-.tj-item:last-child { border-bottom:none; }
-.tj-icon {
-  width:24px; height:24px; border-radius:50%; background:rgba(160,103,75,0.3);
+.bl-item:last-child { border-bottom:none; }
+.bl-check {
+  width:20px; height:20px; border:2px solid rgba(255,255,255,0.3); border-radius:4px;
   flex-shrink:0; display:flex; align-items:center; justify-content:center;
-  margin-top:0.1rem;
 }
-.tj-text { font-size:0.88rem; color:rgba(255,255,255,0.85); line-height:1.5; }
-.tj-place { font-weight:600; color:var(--accent-light); }
-.travel-journal-footer {
+.bl-text { font-size:0.92rem; color:rgba(255,255,255,0.85); }
+.bucket-list-footer {
   padding:1rem 2rem; background:rgba(0,0,0,0.15); text-align:center;
   font-size:0.72rem; color:rgba(255,255,255,0.5); letter-spacing:1px;
 }
@@ -565,20 +550,6 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 </head>
 <body>
 
-<!-- SCENARIO FIT — Aula 4
-Can-do: "I can describe places I have visited using adjectives, comparatives, and superlatives."
-Gramatica-alvo: adjective order, comparatives (more... than), superlatives (the most...)
-Vocab-alvo: stunning, breathtaking, cozy, crowded, remote, vibrant, scenic, ancient, authentic, unforgettable
-Cenario escolhido: meeting a fellow traveler at a cafe and comparing travel experiences
-Por que elicita o alvo: the situation naturally requires describing places using adjectives, comparatives, and superlatives.
--->
-
-<!-- CONTINUIDADE — Aula 4
-Itens novos desta aula: stunning, breathtaking, cozy, crowded, remote, vibrant, scenic, ancient, authentic, unforgettable
-Itens revisados (de aulas anteriores): goal, dream, bucket list, embrace (from Aula 3)
-Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slides 2-3)
--->
-
 <!-- ===== TOP BAR ===== -->
 <div class="top-bar">
   <div class="top-bar-left">
@@ -586,7 +557,7 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
     <span class="slide-counter" id="slideCounter">1 / 37</span>
   </div>
   <div class="chapter-bar" id="chapterBar">
-    <div class="chapter-dot active" data-chapter="1" title="Chapter 1: The Explorer" onclick="goToSlide(0)"></div>
+    <div class="chapter-dot active" data-chapter="1" title="Chapter 1: The Traveler" onclick="goToSlide(0)"></div>
     <div class="chapter-dot" data-chapter="2" title="Chapter 2: Packing Words" onclick="goToSlide(4)"></div>
     <div class="chapter-dot" data-chapter="3" title="Chapter 3: The Code" onclick="goToSlide(10)"></div>
     <div class="chapter-dot" data-chapter="4" title="Chapter 4: Getting There" onclick="goToSlide(15)"></div>
@@ -622,42 +593,42 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 <div class="slide-deck" id="slideDeck">
 
 <!-- ═══════════════════════════════════════ -->
-<!-- CHAPTER 1 — THE EXPLORER (Warm-up/Callback) -->
+<!-- CHAPTER 1 — THE HORIZON (Warm-up/Callback) -->
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 1 — TITLE ═══ -->
-<div class="slide dark active" data-chapter="1" data-t="<span class='t-timing'>0:00 - 2 min</span>Abertura. Compartilhe a tela. Diga: &quot;Welcome back, Pricila! Last class we talked about your plans and dreams. Today we are going to explore how to describe places. Beautiful places, amazing views, unforgettable experiences!&quot; Tom caloroso e motivador. Pergunte como foi a semana." style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark active" data-chapter="1" data-t="<span class='t-timing'>0:00 - 2 min</span>Abertura. Compartilhe a tela. Diga: &quot;Welcome back, Pricila! Last class we talked about your life in chapters. Today we are going to look ahead — your plans, your dreams, your future!&quot; Tom caloroso e motivador. Pergunte como foi a semana." style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(80,52,38,0.88) 40%, rgba(26,26,46,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
-    <div class="slide-chapter-label">Chapter 1 -- The Explorer</div>
+    <div class="slide-chapter-label">Chapter 1 -- The Traveler</div>
     <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:1.5rem;">Lesson 4</p>
     <h1 class="slide-title" style="color:#fff;">A Life of Travel</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.85);">Describing Places and Experiences</p>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.85);">Talking About Plans and Goals</p>
     <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
       <span style="padding:0.3rem 0.9rem;background:rgba(160,103,75,0.2);border:1px solid rgba(160,103,75,0.35);border-radius:20px;font-size:0.75rem;color:var(--accent-light);">B1+ Intermediate</span>
-      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">60 min</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">90 min</span>
       <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">Alumni by Better</span>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 2 — CALLBACK WARM-UP ═══ -->
-<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>2:00 - 5 min</span>Callback da Aula 3. Pergunte: &quot;Tell me 2 words from last class about plans and dreams.&quot; Espere. Se ela lembrar &quot;goal, dream, bucket list, embrace&quot; — excelente. Se não, dê dicas: &quot;We talked about your retirement plans... what was the word for a list of things you want to do before you die?&quot; Anote quais ela lembrou.<div class='t-ccq'><strong>CCQs:</strong> &quot;What is on your bucket list?&quot; / &quot;What was your number one goal?&quot;</div>">
-  <div class="slide-chapter-label">Chapter 1 -- The Explorer</div>
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>2:00 - 5 min</span>Callback da Aula 2. Pergunte: &quot;Tell me 4 words from last class.&quot; Espere. Se ela lembrar &quot;chapter, milestone, overcome, achievement&quot; — excelente, valide. Se não, dê dicas: &quot;We talked about your autobiography... what was the word for an important event in your life?&quot; Anote quais ela lembrou.<div class='t-ccq'><strong>CCQs:</strong> &quot;What is a chapter of your life?&quot; / &quot;Can you give me an example of a milestone?&quot; / &quot;What did you overcome?&quot;</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Traveler</div>
   <div style="max-width:650px;text-align:center;">
     <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Callback: Last Class</h2>
     <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
       <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
         <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Memory Check</div>
-        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Tell me 2 words you remember from our last lesson about plans and dreams.</p>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Tell me 4 words you remember from our last lesson.</p>
       </div>
       <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
         <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Callback Words</div>
         <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin-top:0.5rem;">
-          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Goal</span>
-          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Dream</span>
-          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Bucket List</span>
-          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Embrace</span>
+          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Chapter</span>
+          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Milestone</span>
+          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Overcome</span>
+          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Achievement</span>
         </div>
       </div>
     </div>
@@ -665,30 +636,30 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 </div>
 
 <!-- ═══ SLIDE 3 — WARM-UP QUESTION ═══ -->
-<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>5:00 - 8 min</span>Warm-up reflexivo. Pergunta aberta sobre viagens. Deixe Pricila falar livremente 2-3 min. Observe se ela tenta usar adjetivos descritivos ou fica nos basicos (good, nice, beautiful). Se ela usar apenas &quot;beautiful&quot; e &quot;nice&quot;, anote — será importante no vocabulary. Se travar, ajude: &quot;Think about a place you visited. Was it big? Small? Hot? Cold? Modern? Old?&quot;<div class='t-alert'>Se Pricila mencionar Araras ou algum lugar emocional, aproveite: &quot;That sounds lovely! How would you describe it to someone who has never been there?&quot;</div>">
-  <div class="slide-chapter-label">Chapter 1 -- The Explorer</div>
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>5:00 - 8 min</span>Warm-up reflexivo. Pergunta aberta sobre o futuro. Deixe Pricila falar livremente 2-3 min. Observe se ela tenta usar futuro ou fica no presente. Se ela usar &quot;I will go&quot; para planos decididos, anote — será importante no grammar discovery. Se travar, ajude: &quot;Close your eyes. Imagine your first day of retirement. What do you see?&quot;<div class='t-alert'>Se Pricila ficar emocionada com aposentadoria (tema sensível), acolha: &quot;It is completely natural to feel this way. Change is exciting and scary at the same time.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Traveler</div>
   <div style="max-width:650px;text-align:center;">
-    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">The Explorer</h2>
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">The Traveler</h2>
     <div style="padding:2rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-top:2rem;">
-      <p style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;line-height:1.5;">Think of the most beautiful place you have ever visited. Describe it in three words.</p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;line-height:1.5;">If you could do anything in your first year of retirement, what would it be?</p>
     </div>
     <div style="display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem;">
-      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Colors</span>
-      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Sounds</span>
-      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Feelings</span>
-      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Smells</span>
+      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Travel</span>
+      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Learn</span>
+      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Rest</span>
+      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Explore</span>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 4 — PROMISE ═══ -->
-<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>8:00 - 9 min</span>Promessa da aula. Leia em voz alta com entusiasmo. Diga: &quot;By the end of today, you will be able to describe any place in the world beautifully in English. You will use comparatives, superlatives, and rich adjectives. Ready to paint with words?&quot; Espere o &quot;yes&quot; antes de avançar.">
-  <div class="slide-chapter-label">Chapter 1 -- The Explorer</div>
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>8:00 - 9 min</span>Promessa da aula. Leia em voz alta com entusiasmo. Diga: &quot;By the end of today, you will be able to talk about your plans and dreams for the future — using the right grammar, the right words, and the right expressions. Ready to dream in English?&quot; Espere o &quot;yes&quot; antes de avançar.">
+  <div class="slide-chapter-label">Chapter 1 -- The Traveler</div>
   <div style="max-width:650px;text-align:center;">
-    <h2 class="slide-title" style="font-size:2.4rem;color:#fff;">Paint the World with Words</h2>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.8);margin-top:1rem;">You will learn to describe places using adjective order, comparatives, and superlatives. By the end, you will be able to tell anyone about the most unforgettable place you have ever visited.</p>
+    <h2 class="slide-title" style="font-size:2.4rem;color:#fff;">Today You Dream in English</h2>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.8);margin-top:1rem;">You will learn to talk about your plans, goals, and dreams for retirement using going to, will, and present continuous for future arrangements.</p>
     <div style="margin-top:2rem;">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(192,128,96,0.6)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(192,128,96,0.6)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     </div>
   </div>
 </div>
@@ -698,12 +669,12 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 5 — TRANSITION: PACKING WORDS ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>9:00 - 0.5 min</span>Transição. Diga: &quot;Now let us pack the words you need to describe places like a poet.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>9:00 - 0.5 min</span>Transição. Diga: &quot;Now let us pack the words you need to talk about your future.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(80,52,38,0.92) 0%, rgba(26,26,46,0.92) 50%, rgba(160,103,75,0.85) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
-    <h1 class="slide-title" style="color:#fff;">Words to Describe the World</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Ten powerful adjectives to paint any place</p>
+    <h1 class="slide-title" style="color:#fff;">Your Future Vocabulary</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Ten essential words to talk about plans and dreams</p>
     <div style="margin-top:2rem;">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(192,128,96,0.6)" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
     </div>
@@ -711,69 +682,69 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 </div>
 
 <!-- ═══ SLIDE 6 — VOCAB 1-4 ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>9:30 - 16 min</span>Vocabulario parte 1. ANTES de clicar cada card, leia a definição e pergunte: &quot;What word do you think this is?&quot; Espere 5 segundos. DEPOIS de revelar: toque audio 2x, Pricila repete. Foque na pronuncia de &quot;stunning&quot; (STUN-ning) e &quot;breathtaking&quot; (BREATH-taking, duas palavras juntas).<div class='t-ccq'><strong>CCQs:</strong> &quot;If a view is stunning, is it ordinary or extraordinary?&quot; (extraordinary) / &quot;If something is breathtaking, can you speak when you see it?&quot; (no, you are speechless) / &quot;Is a cozy place big and cold, or small and warm?&quot; (small and warm) / &quot;If a place is crowded, are there many people or few people?&quot; (many people)</div>">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>9:30 - 16 min</span>Vocabulario parte 1. ANTES de clicar cada card, leia a definição e pergunte: &quot;What word do you think this is?&quot; Espere 5 segundos. DEPOIS de revelar: toque audio 2x, Pricila repete. Foque na pronuncia de &quot;freedom&quot; (FREE-dom, stress na primeira) e &quot;purpose&quot; (PUR-pose, stress na primeira).<div class='t-ccq'><strong>CCQs:</strong> &quot;Is a goal something you want to achieve or something you already achieved?&quot; (want to achieve) / &quot;Is a plan an idea for the future or the past?&quot; (future) / &quot;When you have a dream, is it something real or something you hope for?&quot; (hope for) / &quot;Is freedom the ability to do what you want?&quot; (yes)</div>">
   <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
-  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click each card to reveal</p>
   <div class="vocab-grid" id="vocabGrid1">
-    <!-- Card 1: Stunning -->
+    <!-- Card 1: Goal -->
     <div class="v-card" onclick="revealVCard(this)">
       <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #34d399);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2L2 12l10 10 10-10L12 2z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       </div>
-      <div class="v-card-hint">Extremely impressive or beautiful, almost shocking...</div>
+      <div class="v-card-hint">Something you want to achieve in the future...</div>
       <div class="v-card-body">
-        <div class="v-word">Stunning</div>
-        <div class="v-def">extremely beautiful or impressive, causing great surprise</div>
-        <div class="v-example">"The view from the mountain was absolutely stunning."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The view from the mountain was absolutely stunning.',this)">
+        <div class="v-word">Goal</div>
+        <div class="v-def">something you want to achieve; an aim or desired result</div>
+        <div class="v-example">"My goal is to travel to Australia after I retire."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('My goal is to travel to Australia after I retire.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 2: Breathtaking -->
+    <!-- Card 2: Plan -->
     <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #f59e0b, #fbbf24);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #2563eb, #60a5fa);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
       </div>
-      <div class="v-card-hint">So amazing that it takes your breath away...</div>
+      <div class="v-card-hint">A detailed idea about what you intend to do...</div>
       <div class="v-card-body">
-        <div class="v-word">Breathtaking</div>
-        <div class="v-def">so beautiful or amazing that you feel you cannot breathe for a moment</div>
-        <div class="v-example">"The sunset over the ocean was breathtaking."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The sunset over the ocean was breathtaking.',this)">
+        <div class="v-word">Plan</div>
+        <div class="v-def">a detailed idea or arrangement for something you intend to do</div>
+        <div class="v-example">"I have a plan to learn English fluently before my trip."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I have a plan to learn English fluently before my trip.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 3: Cozy -->
-    <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      </div>
-      <div class="v-card-hint">Small, warm, and comfortable, making you feel safe...</div>
-      <div class="v-card-body">
-        <div class="v-word">Cozy</div>
-        <div class="v-def">warm, comfortable, and small in a pleasant way</div>
-        <div class="v-example">"We stayed in a cozy little hotel near the beach."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We stayed in a cozy little hotel near the beach.',this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
-          Listen
-        </button>
-      </div>
-    </div>
-    <!-- Card 4: Crowded -->
+    <!-- Card 3: Dream -->
     <div class="v-card" onclick="revealVCard(this)">
       <div class="v-card-icon" style="background:linear-gradient(135deg, #7c3aed, #a78bfa);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17.5 19H9a7 7 0 110-14h9.5a4.5 4.5 0 010 9H13a2.5 2.5 0 010-5h6"/></svg>
       </div>
-      <div class="v-card-hint">Full of people, with little space to move...</div>
+      <div class="v-card-hint">A strong wish or hope for the future...</div>
       <div class="v-card-body">
-        <div class="v-word">Crowded</div>
-        <div class="v-def">full of people, uncomfortably packed with many individuals</div>
-        <div class="v-example">"The market was very crowded, but the atmosphere was amazing."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The market was very crowded, but the atmosphere was amazing.',this)">
+        <div class="v-word">Dream</div>
+        <div class="v-def">a strong wish or hope for something you want to happen</div>
+        <div class="v-example">"My dream is to see the Great Barrier Reef in person."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('My dream is to see the Great Barrier Reef in person.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 4: Freedom -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #0891b2, #22d3ee);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </div>
+      <div class="v-card-hint">The state of being free to do what you want...</div>
+      <div class="v-card-body">
+        <div class="v-word">Freedom</div>
+        <div class="v-def">the state of being free to make your own choices</div>
+        <div class="v-example">"Retirement will give me the freedom to travel whenever I want."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Retirement will give me the freedom to travel whenever I want.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
@@ -784,69 +755,69 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 </div>
 
 <!-- ═══ SLIDE 7 — VOCAB 5-8 ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>16:00 - 22 min</span>Vocabulario parte 2. Mesma dinamica. Destaque &quot;remote&quot; (re-MOTE, stress na segunda) e &quot;vibrant&quot; (VI-brant, stress na primeira). Para &quot;scenic&quot;, pergunte: &quot;What is the most scenic road you have ever driven on?&quot; — conecte com a vida dela.<div class='t-ccq'><strong>CCQs:</strong> &quot;If a village is remote, is it easy or difficult to get there?&quot; (difficult) / &quot;If a city is vibrant, is it boring or exciting?&quot; (exciting) / &quot;Is a scenic road ugly or beautiful?&quot; (beautiful) / &quot;If something is ancient, is it new or very old?&quot; (very old)</div>">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>16:00 - 22 min</span>Vocabulario parte 2. Mesma dinamica. Destaque &quot;adventure&quot; (ad-VEN-ture, stress na segunda) e &quot;lifestyle&quot; (LIFE-style, stress na primeira). Para &quot;priority&quot;, pergunte: &quot;What is YOUR priority for retirement?&quot; — conecte com a vida dela.<div class='t-ccq'><strong>CCQs:</strong> &quot;What is your purpose in learning English?&quot; (to communicate when traveling) / &quot;Is an adventure something exciting or boring?&quot; (exciting) / &quot;Does your lifestyle include what you eat, how you exercise, where you live?&quot; (yes, all of that) / &quot;If something is a priority, is it important or not important?&quot; (very important)</div>">
   <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
-  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click each card to reveal</p>
   <div class="vocab-grid" id="vocabGrid2">
-    <!-- Card 5: Remote -->
-    <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #0891b2, #22d3ee);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      </div>
-      <div class="v-card-hint">Far away from cities, difficult to reach...</div>
-      <div class="v-card-body">
-        <div class="v-word">Remote</div>
-        <div class="v-def">far away from cities or towns, difficult to reach</div>
-        <div class="v-example">"The village was so remote that there was no internet."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The village was so remote that there was no internet.',this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
-          Listen
-        </button>
-      </div>
-    </div>
-    <!-- Card 6: Vibrant -->
+    <!-- Card 5: Purpose -->
     <div class="v-card" onclick="revealVCard(this)">
       <div class="v-card-icon" style="background:linear-gradient(135deg, #d97706, #fbbf24);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
       </div>
-      <div class="v-card-hint">Full of energy, color, and excitement...</div>
+      <div class="v-card-hint">The reason why you do something...</div>
       <div class="v-card-body">
-        <div class="v-word">Vibrant</div>
-        <div class="v-def">full of life, energy, color, and excitement</div>
-        <div class="v-example">"The city was vibrant, full of music and color."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The city was vibrant, full of music and color.',this)">
+        <div class="v-word">Purpose</div>
+        <div class="v-def">the reason why you do something; the meaning behind your actions</div>
+        <div class="v-example">"Learning English gives me a sense of purpose."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Learning English gives me a sense of purpose.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 7: Scenic -->
+    <!-- Card 6: Adventure -->
     <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #2563eb, #60a5fa);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
       </div>
-      <div class="v-card-hint">Having beautiful natural views and landscapes...</div>
+      <div class="v-card-hint">An exciting experience that involves risk or new things...</div>
       <div class="v-card-body">
-        <div class="v-word">Scenic</div>
-        <div class="v-def">having beautiful natural views, often of landscapes</div>
-        <div class="v-example">"We drove along the most scenic road I have ever seen."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We drove along the most scenic road I have ever seen.',this)">
+        <div class="v-word">Adventure</div>
+        <div class="v-def">an exciting experience, often involving new places or activities</div>
+        <div class="v-example">"I am going to have many adventures in retirement."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I am going to have many adventures in retirement.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 8: Ancient -->
+    <!-- Card 7: Lifestyle -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #1e3a5f, #2d5a8e);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="v-card-hint">The way a person lives their daily life...</div>
+      <div class="v-card-body">
+        <div class="v-word">Lifestyle</div>
+        <div class="v-def">the way a person lives, including habits, routines, and choices</div>
+        <div class="v-example">"I am planning to change my lifestyle completely after retirement."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I am planning to change my lifestyle completely after retirement.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 8: Priority -->
     <div class="v-card" onclick="revealVCard(this)">
       <div class="v-card-icon" style="background:linear-gradient(135deg, #4338ca, #818cf8);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M2 20h20M5 20V8l7-5 7 5v12"/><path d="M9 20v-6h6v6"/><line x1="9" y1="11" x2="9" y2="11"/><line x1="15" y1="11" x2="15" y2="11"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       </div>
-      <div class="v-card-hint">Extremely old, from a very long time ago...</div>
+      <div class="v-card-hint">Something that is more important than other things...</div>
       <div class="v-card-body">
-        <div class="v-word">Ancient</div>
-        <div class="v-def">very old, belonging to a period of history that was thousands of years ago</div>
-        <div class="v-example">"We visited ancient temples that were over a thousand years old."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We visited ancient temples that were over a thousand years old.',this)">
+        <div class="v-word">Priority</div>
+        <div class="v-def">something that is more important than other things and needs attention first</div>
+        <div class="v-example">"My number one priority is to spend time with my family."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('My number one priority is to spend time with my family.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
@@ -857,37 +828,37 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 </div>
 
 <!-- ═══ SLIDE 8 — VOCAB 9-10 ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>22:00 - 25 min</span>Vocabulario parte 3 — ultimas 2 palavras. Para &quot;authentic&quot;: &quot;Pricila, what is authentic Brazilian food?&quot; Para &quot;unforgettable&quot;: &quot;Tell me about an unforgettable moment in your life.&quot; Conecte sempre com a vida real dela.">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>22:00 - 25 min</span>Vocabulario parte 3 — ultimas 2 palavras. Para &quot;bucket list&quot;: &quot;Pricila, do you have a bucket list? What is on it?&quot; Para &quot;embrace&quot;: &quot;Are you going to embrace retirement or resist it?&quot; Conecte sempre com a vida real dela.">
   <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
-  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click each card to reveal</p>
   <div class="vocab-grid" id="vocabGrid3">
-    <!-- Card 9: Authentic -->
+    <!-- Card 9: Bucket List -->
     <div class="v-card" onclick="revealVCard(this)">
       <div class="v-card-icon" style="background:linear-gradient(135deg, #A0674B, #C08060);">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       </div>
-      <div class="v-card-hint">Real, genuine, not fake or copied...</div>
+      <div class="v-card-hint">A list of experiences or goals you want to achieve in your lifetime...</div>
       <div class="v-card-body">
-        <div class="v-word">Authentic</div>
-        <div class="v-def">genuine, real, true to its origins, not a copy</div>
-        <div class="v-example">"The food was authentic and completely different from what we have at home."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The food was authentic and completely different from what we have at home.',this)">
+        <div class="v-word">Bucket List</div>
+        <div class="v-def">a list of experiences or achievements you want to have in your life</div>
+        <div class="v-example">"Visiting Australia is at the top of my bucket list."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Visiting Australia is at the top of my bucket list.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 10: Unforgettable -->
+    <!-- Card 10: Embrace -->
     <div class="v-card" onclick="revealVCard(this)">
       <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #10b981);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </div>
-      <div class="v-card-hint">So special that you will never forget it...</div>
+      <div class="v-card-hint">To accept something enthusiastically and willingly...</div>
       <div class="v-card-body">
-        <div class="v-word">Unforgettable</div>
-        <div class="v-def">so extraordinary or special that you will always remember it</div>
-        <div class="v-example">"That trip was the most unforgettable experience of my life."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('That trip was the most unforgettable experience of my life.',this)">
+        <div class="v-word">Embrace</div>
+        <div class="v-def">to accept something enthusiastically and with open arms</div>
+        <div class="v-example">"I am going to embrace this new chapter of my life."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I am going to embrace this new chapter of my life.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
@@ -898,50 +869,50 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 </div>
 
 <!-- ═══ SLIDE 9 — PRONUNCIATION DRILL ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>25:00 - 29 min</span>Pronuncia. Clique cada palavra, toque audio, Pricila repete 2x. Foque em: STUN-ning (stress na primeira), BREATH-tak-ing (stress na primeira), CO-zy (stress na primeira), CROWD-ed (stress na primeira), re-MOTE (stress na segunda), VI-brant (stress na primeira), SCE-nic (stress na primeira), AN-cient (stress na primeira), au-THEN-tic (stress na segunda), un-for-GET-ta-ble (stress na terceira).<div class='t-alert'>Se Pricila pronunciar &quot;ancient&quot; como &quot;an-CIENT&quot;, corrija: &quot;The stress is on the first syllable: AN-cient.&quot;</div>">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>25:00 - 29 min</span>Pronuncia. Clique cada palavra, toque audio, Pricila repete 2x. Foque em: GOAL (uma silaba), PLAN (uma silaba), DREAM (uma silaba), FREE-dom (stress na primeira), PUR-pose (stress na primeira), ad-VEN-ture (stress na segunda), LIFE-style (stress na primeira), pri-OR-i-ty (stress na segunda), BUCK-et list (stress na primeira), em-BRACE (stress na segunda).<div class='t-alert'>Se Pricila pronunciar &quot;priority&quot; como &quot;pri-o-ri-TY&quot;, corrija: &quot;The stress is on the second syllable: pri-OR-i-ty.&quot;</div>">
   <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Pronunciation Drill</h2>
   <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen, then repeat. Focus on the stressed syllable.</p>
   <div class="pron-list">
     <div class="pron-item">
-      <div class="pron-word">Stunning</div>
-      <div class="pron-stress">STUN-ning</div>
-      <button class="pron-play" onclick="speakText('Stunning',this)" aria-label="Listen to Stunning">
+      <div class="pron-word">Goal</div>
+      <div class="pron-stress">GOAL</div>
+      <button class="pron-play" onclick="speakText('Goal',this)" aria-label="Listen to Goal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">Breathtaking</div>
-      <div class="pron-stress">BREATH-tak-ing</div>
-      <button class="pron-play" onclick="speakText('Breathtaking',this)" aria-label="Listen to Breathtaking">
+      <div class="pron-word">Freedom</div>
+      <div class="pron-stress">FREE-dom</div>
+      <button class="pron-play" onclick="speakText('Freedom',this)" aria-label="Listen to Freedom">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">Remote</div>
-      <div class="pron-stress">re-MOTE</div>
-      <button class="pron-play" onclick="speakText('Remote',this)" aria-label="Listen to Remote">
+      <div class="pron-word">Purpose</div>
+      <div class="pron-stress">PUR-pose</div>
+      <button class="pron-play" onclick="speakText('Purpose',this)" aria-label="Listen to Purpose">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">Vibrant</div>
-      <div class="pron-stress">VI-brant</div>
-      <button class="pron-play" onclick="speakText('Vibrant',this)" aria-label="Listen to Vibrant">
+      <div class="pron-word">Adventure</div>
+      <div class="pron-stress">ad-VEN-ture</div>
+      <button class="pron-play" onclick="speakText('Adventure',this)" aria-label="Listen to Adventure">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">Ancient</div>
-      <div class="pron-stress">AN-cient</div>
-      <button class="pron-play" onclick="speakText('Ancient',this)" aria-label="Listen to Ancient">
+      <div class="pron-word">Priority</div>
+      <div class="pron-stress">pri-OR-i-ty</div>
+      <button class="pron-play" onclick="speakText('Priority',this)" aria-label="Listen to Priority">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">Unforgettable</div>
-      <div class="pron-stress">un-for-GET-ta-ble</div>
-      <button class="pron-play" onclick="speakText('Unforgettable',this)" aria-label="Listen to Unforgettable">
+      <div class="pron-word">Embrace</div>
+      <div class="pron-stress">em-BRACE</div>
+      <button class="pron-play" onclick="speakText('Embrace',this)" aria-label="Listen to Embrace">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
@@ -949,38 +920,38 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 </div>
 
 <!-- ═══ SLIDE 10 — EXPRESSIONS ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>29:00 - 33 min</span>Expressoes. Toque cada uma, Pricila repete. Para cada expressao, peça que ela complete com algo pessoal. Ex: &quot;The place was...&quot; — &quot;How was Araras? The place was...?&quot; Valide e reformule se necessário.<div class='t-ccq'><strong>CCQs:</strong> &quot;'The place was...' — what adjective can you use?&quot; (stunning, breathtaking, etc.) / &quot;'It was more... than I expected' — is this a comparison?&quot; (yes) / &quot;'It was the most... place I have ever visited' — is this a superlative?&quot; (yes) / &quot;'What I loved most about it was...' — does this express a feeling?&quot; (yes)</div>">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>29:00 - 33 min</span>Expressoes. Toque cada uma, Pricila repete. Para cada expressao, peça que ela complete com algo pessoal. Ex: &quot;I am going to...&quot; — &quot;What are YOU going to do after retirement?&quot; Valide e reformule se necessário.<div class='t-ccq'><strong>CCQs:</strong> &quot;'I am going to' — is this a plan you already decided?&quot; (yes) / &quot;'I am planning to' — is this similar to going to?&quot; (yes) / &quot;'One day, I hope to' — is this certain or uncertain?&quot; (uncertain, it is a wish) / &quot;'My dream is to' — is this something very important to you?&quot; (yes)</div>">
   <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Expressions</h2>
   <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen, repeat, then complete with your own words.</p>
   <div class="expr-list">
     <div class="expr-item">
-      <div class="expr-text">"The place was..."</div>
-      <button class="expr-play" onclick="speakText('The place was...',this)" aria-label="Listen to expression">
+      <div class="expr-text">"I am going to..."</div>
+      <button class="expr-play" onclick="speakText('I am going to...',this)" aria-label="Listen to expression">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="expr-item">
-      <div class="expr-text">"It was more... than I expected."</div>
-      <button class="expr-play" onclick="speakText('It was more... than I expected.',this)" aria-label="Listen to expression">
+      <div class="expr-text">"I am planning to..."</div>
+      <button class="expr-play" onclick="speakText('I am planning to...',this)" aria-label="Listen to expression">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="expr-item">
-      <div class="expr-text">"It was the most... place I have ever visited."</div>
-      <button class="expr-play" onclick="speakText('It was the most... place I have ever visited.',this)" aria-label="Listen to expression">
+      <div class="expr-text">"One day, I hope to..."</div>
+      <button class="expr-play" onclick="speakText('One day, I hope to...',this)" aria-label="Listen to expression">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="expr-item">
-      <div class="expr-text">"What I loved most about it was..."</div>
-      <button class="expr-play" onclick="speakText('What I loved most about it was...',this)" aria-label="Listen to expression">
+      <div class="expr-text">"My dream is to..."</div>
+      <button class="expr-play" onclick="speakText('My dream is to...',this)" aria-label="Listen to expression">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="expr-item">
-      <div class="expr-text">"I would describe it as..."</div>
-      <button class="expr-play" onclick="speakText('I would describe it as...',this)" aria-label="Listen to expression">
+      <div class="expr-text">"The most important thing for me is..."</div>
+      <button class="expr-play" onclick="speakText('The most important thing for me is...',this)" aria-label="Listen to expression">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
@@ -992,40 +963,39 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 11 — TRANSITION: THE CODE ═══ -->
-<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>33:00 - 0.5 min</span>Transição. Diga: &quot;Now let us crack the code. How do we compare places? How do we say which is the best, the biggest, the most beautiful?&quot; Avance rápido." style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>33:00 - 0.5 min</span>Transição. Diga: &quot;Now let us crack the code. How do we talk about plans, predictions, and arrangements for the future?&quot; Avance rápido." style="background-image:url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(80,52,38,0.88) 50%, rgba(26,26,46,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 3 -- The Code</div>
-    <h1 class="slide-title" style="color:#fff;">Comparatives and Superlatives</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Comparing places and finding the best</p>
+    <h1 class="slide-title" style="color:#fff;">Going To vs. Will vs. Present Continuous</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Three ways to talk about the future</p>
   </div>
 </div>
 
 <!-- ═══ SLIDE 12 — GRAMMAR DISCOVERY ═══ -->
-<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>33:30 - 40 min</span>Grammar discovery. NÃO explique a regra ainda. Leia cada exemplo e pergunte: &quot;What do the orange words have in common?&quot; Espere. Guie Pricila: &quot;Look at sentences 1 and 2 — we are comparing two things. Sentences 3 and 4 — we are saying which is the NUMBER ONE.&quot; Quando ela perceber a diferença entre comparativo e superlativo, clique &quot;Reveal the Rule&quot;.<div class='t-ccq'><strong>CCQs apos revelar:</strong> &quot;'Sydney is bigger than Araras' — am I comparing TWO things or saying one is the BEST?&quot; (comparing two) / &quot;'The most scenic road' — am I comparing two things or saying it is number one?&quot; (number one) / &quot;Do we say 'more big' or 'bigger'?&quot; (bigger — short adjective) / &quot;Do we say 'beautifuler' or 'more beautiful'?&quot; (more beautiful — long adjective)</div>">
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>33:30 - 40 min</span>Grammar discovery. NÃO explique a regra ainda. Leia cada exemplo e pergunte: &quot;What do the orange words have in common?&quot; Espere. Guie Pricila: &quot;Look at sentences 1 and 2 — one is a plan you already decided. Sentence 3 is a spontaneous decision. Sentence 4 has a specific date.&quot; Quando ela perceber a diferenca, clique &quot;Reveal the Rule&quot;.<div class='t-ccq'><strong>CCQs apos revelar:</strong> &quot;'I am going to visit Australia' — is this a plan you already decided, or something you just thought of right now?&quot; (already decided) / &quot;'I think it will rain tomorrow' — is this a plan or a prediction?&quot; (prediction) / &quot;'I am meeting my friend on Friday' — is there a date or time for this?&quot; (yes, Friday) / &quot;Can you make a sentence about YOUR plans using going to?&quot;</div>">
   <div class="slide-chapter-label">Chapter 3 -- The Code</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">What do the highlighted words have in common?</h2>
   <div class="slide-content">
     <div class="grammar-examples">
-      <div class="g-example">"Sydney is <span class='highlight'>bigger than</span> Araras." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(comparing two)</span></div>
-      <div class="g-example">"Canada was <span class='highlight'>more beautiful than</span> I expected." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(comparing two)</span></div>
-      <div class="g-example">"It was <span class='highlight'>the most stunning</span> place I have ever visited." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(the best of all)</span></div>
-      <div class="g-example">"That was <span class='highlight'>the coziest</span> hotel I have ever stayed in." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(the best of all)</span></div>
-      <div class="g-example">"A <span class='highlight'>beautiful old Italian</span> church." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(adjective order)</span></div>
+      <div class="g-example">"I <span class='highlight'>am going to</span> visit Australia next year." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(decided plan)</span></div>
+      <div class="g-example">"I <span class='highlight'>am going to</span> change my lifestyle completely." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(decided plan)</span></div>
+      <div class="g-example">"Oh, the phone is ringing! I <span class='highlight'>will</span> answer it." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(spontaneous)</span></div>
+      <div class="g-example">"I think retirement <span class='highlight'>will</span> be amazing." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(prediction)</span></div>
+      <div class="g-example">"I <span class='highlight'>am meeting</span> my travel agent on Friday." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(arrangement)</span></div>
     </div>
     <button class="g-reveal-btn" onclick="revealGrammar(this)" id="grammarRevealBtn">Reveal the Rule</button>
     <div class="g-rule" id="grammarRule1">
       <h4>The Rule</h4>
       <table>
         <thead>
-          <tr><th>Comparative (two things)</th><th>Superlative (the best of all)</th><th>Adjective Order</th></tr>
+          <tr><th>Going to</th><th>Will</th><th>Present Continuous</th></tr>
         </thead>
         <tbody>
-          <tr><td>Short adj: adj + <strong>-er than</strong></td><td>Short adj: <strong>the</strong> adj + <strong>-est</strong></td><td>Opinion > Size > Age > Shape > Color > Origin > Material</td></tr>
-          <tr><td>big<strong>ger than</strong>, old<strong>er than</strong></td><td><strong>the</strong> bigg<strong>est</strong>, <strong>the</strong> old<strong>est</strong></td><td>a <strong>beautiful old Italian</strong> church</td></tr>
-          <tr><td>Long adj: <strong>more</strong> adj <strong>than</strong></td><td>Long adj: <strong>the most</strong> adj</td><td>a <strong>cozy little ancient</strong> village</td></tr>
-          <tr><td><strong>more</strong> beautiful <strong>than</strong></td><td><strong>the most</strong> beautiful</td><td>(opinion, size, age)</td></tr>
-          <tr><td>good > <strong>better than</strong></td><td>good > <strong>the best</strong></td><td></td></tr>
+          <tr><td>Plans already decided</td><td>Predictions / Spontaneous decisions</td><td>Fixed arrangements (date/time)</td></tr>
+          <tr><td>I <strong>am going to</strong> travel to Australia.</td><td>I think it <strong>will</strong> be amazing.</td><td>I <strong>am meeting</strong> Tom on Friday.</td></tr>
+          <tr><td>S + am/is/are + going to + V</td><td>S + will + V</td><td>S + am/is/are + V-ing</td></tr>
+          <tr><td>Decided before speaking</td><td>Decided at the moment / Opinion</td><td>Already arranged with someone</td></tr>
         </tbody>
       </table>
     </div>
@@ -1033,7 +1003,7 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 </div>
 
 <!-- ═══ SLIDE 13 — COMMON MISTAKE ═══ -->
-<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>40:00 - 43 min</span>Erro comum. Leia a frase errada e pergunte: &quot;What is wrong with this sentence?&quot; Espere. A chave é que &quot;more better&quot; é um double comparative — &quot;better&quot; já é a forma comparativa de &quot;good&quot;, então não precisa de &quot;more&quot;. Se Pricila não perceber, dê dica: &quot;Is better already a comparative form?&quot;<div class='t-alert'>Este é o erro mais comum no B1. Reforce: &quot;NEVER say more better. Better already means more good. Same for worse — never more worse.&quot;</div>">
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>40:00 - 43 min</span>Erro comum. Leia a frase errada e pergunte: &quot;What is wrong with this sentence?&quot; Espere. A chave e que &quot;visit Australia next year&quot; e um plano ja decidido, não uma decisão espontânea — exige &quot;going to&quot;, não &quot;will&quot;. Se Pricila não perceber, de dica: &quot;Did you already decide this plan, or did you just think of it right now?&quot;<div class='t-alert'>Este e o erro mais comum no B1. Reforce: &quot;If you already made the decision before speaking, use GOING TO. If you decide right now, use WILL.&quot;</div>">
   <div class="slide-chapter-label">Chapter 3 -- The Code</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Common Mistake</h2>
   <div class="mistake-box">
@@ -1041,84 +1011,84 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
       <div class="mistake-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </div>
-      <div>"Sydney is <strong>more better</strong> than I expected."</div>
+      <div>"I <strong>will</strong> visit Australia next year." (when it is a pre-made plan)</div>
     </div>
     <div class="mistake-right">
       <div class="mistake-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <div>"Sydney is <strong>better</strong> than I expected."</div>
+      <div>"I <strong>am going to</strong> visit Australia next year."</div>
     </div>
     <div style="padding:1rem;background:rgba(160,103,75,0.1);border:1px solid rgba(160,103,75,0.25);border-radius:8px;margin-top:1rem;font-size:0.9rem;color:rgba(255,255,255,0.85);line-height:1.7;">
-      <strong style="color:var(--accent-light);">Why?</strong> "Better" is already the comparative form of "good." Adding "more" creates a double comparative, which is incorrect. The same applies to "worse" (never "more worse") and "best" (never "most best").
+      <strong style="color:var(--accent-light);">Why?</strong> You already decided to visit Australia. It is a plan, not a spontaneous decision. Use <strong>going to</strong> for plans you already made. Use <strong>will</strong> for predictions or instant decisions.
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 14 — FILL-IN PRACTICE ═══ -->
-<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>43:00 - 47 min</span>Pratica de fill-in. Leia cada frase, Pricila escolhe a forma correta (comparative ou superlative). Clique para revelar. Reforce o raciocínio: &quot;Are we comparing two things? Then comparative. Are we saying it is the number one? Then superlative. Is the adjective short or long?&quot;">
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>43:00 - 47 min</span>Pratica de fill-in. Leia cada frase, Pricila escolhe a forma correta. Clique para revelar. Reforce o raciocínio: &quot;Is this a plan you already decided? Then going to. Is it a prediction or spontaneous? Then will. Is there a fixed date? Then present continuous.&quot; Se ela errar mais de 2, volte ao slide anterior para revisar.">
   <div class="slide-chapter-label">Chapter 3 -- The Code</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Fill in the Gaps</h2>
   <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Click each sentence to reveal the answer.</p>
   <div class="fill-practice">
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"The beach in Rio is <span class='fp-blank'>___</span> (crowded) than the beach in Araras."</div>
-      <div class="fp-answer">more crowded than (long adjective = more + adj + than)</div>
+      <div class="fp-sentence">"I <span class='fp-blank'>___</span> (travel) to Australia next year. I already booked the flight."</div>
+      <div class="fp-answer">am going to travel (decided plan, already booked)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"That was <span class='fp-blank'>___</span> (stunning) sunset I have ever seen."</div>
-      <div class="fp-answer">the most stunning (superlative of long adjective)</div>
+      <div class="fp-sentence">"I think retirement <span class='fp-blank'>___</span> (be) the best chapter of my life."</div>
+      <div class="fp-answer">will be (prediction / opinion)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"Canada is <span class='fp-blank'>___</span> (cold) than Brazil."</div>
-      <div class="fp-answer">colder than (short adjective = adj + er + than)</div>
+      <div class="fp-sentence">"I <span class='fp-blank'>___</span> (meet) my travel agent on Thursday at 3 PM."</div>
+      <div class="fp-answer">am meeting (fixed arrangement with date and time)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"It was <span class='fp-blank'>___</span> (remote) village I have ever visited."</div>
-      <div class="fp-answer">the most remote (superlative of long adjective)</div>
+      <div class="fp-sentence">"Oh, the doorbell! Wait, I <span class='fp-blank'>___</span> (get) it."</div>
+      <div class="fp-answer">will get (spontaneous decision)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"The food in Italy is <span class='fp-blank'>___</span> (good) than anywhere else."</div>
-      <div class="fp-answer">better than (irregular: good > better > the best)</div>
+      <div class="fp-sentence">"I <span class='fp-blank'>___</span> (change) my lifestyle. I decided last month."</div>
+      <div class="fp-answer">am going to change (decided plan, decided last month)</div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 15 — ORAL GRAMMAR DRILLING ═══ -->
-<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>47:00 - 51 min</span>Drilling oral. Para cada situação, Pricila forma uma frase usando comparativo ou superlativo. Clique para revelar o modelo. Se ela usar a forma errada, pergunte: &quot;Are you comparing two things or saying it is the best?&quot; Celebre acertos: &quot;Perfect comparison!&quot;">
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>47:00 - 51 min</span>Drilling oral. Para cada situacao, Pricila forma uma frase usando going to, will, ou present continuous. Clique para revelar o modelo. Se ela usar o tempo errado, não corrija direto — pergunte: &quot;Did you already decide this, or is it a prediction?&quot; Celebre acertos: &quot;Excellent! You are mastering this!&quot;">
   <div class="slide-chapter-label">Chapter 3 -- The Code</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Oral Drilling</h2>
   <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Make a sentence. Then click to compare with the model.</p>
   <div class="oral-list">
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 1</div>
-      <div class="oral-situation">Compare Sydney and Araras. Which is bigger?</div>
-      <div class="oral-model">"Sydney is much bigger than Araras."</div>
+      <div class="oral-situation">You decided to learn to cook Italian food. It is a plan.</div>
+      <div class="oral-model">"I am going to learn to cook Italian food."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 2</div>
-      <div class="oral-situation">Talk about the most beautiful place you have ever visited.</div>
-      <div class="oral-model">"It was the most beautiful place I have ever visited."</div>
+      <div class="oral-situation">Someone asks if retirement will be boring. Give your opinion.</div>
+      <div class="oral-model">"No, I think retirement will be an amazing adventure."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 3</div>
-      <div class="oral-situation">Compare the weather in Canada and Brazil.</div>
-      <div class="oral-model">"Canada is colder than Brazil, but the scenery is more breathtaking."</div>
+      <div class="oral-situation">You have an appointment with your English teacher on Monday.</div>
+      <div class="oral-model">"I am having my English class on Monday at 10 AM."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 4</div>
-      <div class="oral-situation">Describe the coziest place you know.</div>
-      <div class="oral-model">"My grandmother's house is the coziest place I know."</div>
+      <div class="oral-situation">A friend needs help. You decide to help right now.</div>
+      <div class="oral-model">"Do not worry, I will help you."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 5</div>
-      <div class="oral-situation">Compare a crowded market and a remote village.</div>
-      <div class="oral-model">"A remote village is quieter than a crowded market."</div>
+      <div class="oral-situation">You have a plan to visit the Great Barrier Reef.</div>
+      <div class="oral-model">"I am going to visit the Great Barrier Reef."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 6</div>
-      <div class="oral-situation">Talk about the most unforgettable experience of your life.</div>
-      <div class="oral-model">"The most unforgettable experience of my life was seeing the Iguazu Falls."</div>
+      <div class="oral-situation">You booked dinner at a restaurant for Saturday night.</div>
+      <div class="oral-model">"I am having dinner at a restaurant on Saturday night."</div>
     </div>
   </div>
 </div>
@@ -1128,90 +1098,74 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 16 — TRANSITION: GETTING THERE ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>51:00 - 0.5 min</span>Transição. Diga: &quot;Excellent! Now let us hear these words in a real conversation. Pricila meets a fellow traveler at a cafe.&quot; Avance rápido." style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>51:00 - 0.5 min</span>Transição. Diga: &quot;Excellent! Now let us see these words and grammar in a real conversation at a travel agency.&quot; Avance rápido." style="background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(80,52,38,0.88) 50%, rgba(26,26,46,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
-    <h1 class="slide-title" style="color:#fff;">At the Cafe</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Pricila meets Lena, a fellow traveler from Germany</p>
+    <h1 class="slide-title" style="color:#fff;">At the Travel Agency</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Pricila meets Tom, a travel agent with great advice</p>
   </div>
 </div>
 
 <!-- ═══ SLIDE 17 — DIALOGUE ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>51:30 - 57 min</span>Dialogo linha a linha. Clique &quot;Next Line&quot; para revelar cada troca. ANTES de revelar a resposta de Pricila, pergunte: &quot;What do you think you say next?&quot; Espere. Depois revele. Destaque as palavras do vocabulario em negrito. Aponte comparativos e superlativos quando aparecerem: &quot;Look! She used a superlative here!&quot;">
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>51:30 - 57 min</span>Dialogo linha a linha. Clique &quot;Next Line&quot; para revelar cada troca. ANTES de revelar a resposta de Pricila, pergunte: &quot;What do you think Pricila says?&quot; Espere. Depois revele. Destaque as palavras do vocabulario em negrito. Palavras callback da Aula 2 (chapter, milestone, overcome, achievement) também aparecem — aponte: &quot;Look! You already know this word from last class!&quot;">
   <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#fff;margin-bottom:1rem;text-align:center;">Pricila and Lena at the Cafe</h2>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#fff;margin-bottom:1rem;text-align:center;">Pricila and Tom at the Travel Agency</h2>
   <div class="dialogue-container" id="dialogue1">
-    <div class="d-line visible" data-speaker="Lena" data-voice="rachel">
-      <div class="d-avatar blue">LN</div>
+    <div class="d-line visible">
+      <div class="d-avatar blue">TM</div>
       <div class="d-text-wrap">
-        <div class="d-speaker">Lena</div>
-        <div class="d-text">"Hi! Is this seat taken? I am Lena, from Germany. I just arrived in Sydney."
-          <span class="audio-inline" onclick="speakText('Hi! Is this seat taken? I am Lena, from Germany. I just arrived in Sydney.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
-        </div>
+        <div class="d-speaker">Tom</div>
+        <div class="d-text" data-voice="arthur">"Good morning! Welcome to Global Travel. How can I help you today?"</div>
       </div>
     </div>
-    <div class="d-line" data-speaker="Pricila" data-voice="ellen">
+    <div class="d-line">
       <div class="d-avatar sienna">PA</div>
       <div class="d-text-wrap">
         <div class="d-speaker">Pricila</div>
-        <div class="d-text">"Hi, Lena! I am Pricila, from Brazil. Please sit down! This city is so <strong class='vocab-highlight'>vibrant</strong>, is it not?"
-          <span class="audio-inline" onclick="speakText('Hi, Lena! I am Pricila, from Brazil. Please sit down! This city is so vibrant, is it not?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
-        </div>
+        <div class="d-text" data-voice="ellen">"Hi! I am retiring soon and I <strong>am going to</strong> travel the world. My biggest <strong class='vocab-highlight'>dream</strong> is to visit Australia."</div>
       </div>
     </div>
-    <div class="d-line" data-speaker="Lena" data-voice="rachel">
-      <div class="d-avatar blue">LN</div>
+    <div class="d-line">
+      <div class="d-avatar blue">TM</div>
       <div class="d-text-wrap">
-        <div class="d-speaker">Lena</div>
-        <div class="d-text">"Absolutely! I have been traveling for three months. Last week I was in New Zealand. The scenery was <strong class='vocab-highlight'>breathtaking</strong> — even <strong>more stunning than</strong> I expected."
-          <span class="audio-inline" onclick="speakText('Absolutely! I have been traveling for three months. Last week I was in New Zealand. The scenery was breathtaking, even more stunning than I expected.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
-        </div>
+        <div class="d-speaker">Tom</div>
+        <div class="d-text" data-voice="arthur">"Australia! That is amazing. Do you have a <strong class='vocab-highlight'>bucket list</strong>? What else is on it?"</div>
       </div>
     </div>
-    <div class="d-line" data-speaker="Pricila" data-voice="ellen">
+    <div class="d-line">
       <div class="d-avatar sienna">PA</div>
       <div class="d-text-wrap">
         <div class="d-speaker">Pricila</div>
-        <div class="d-text">"That sounds amazing! I visited Canada last year. We stayed in a <strong class='vocab-highlight'>cozy</strong> little cabin near the mountains. It was <strong>the most <span class='vocab-highlight'>scenic</span></strong> place I have ever seen."
-          <span class="audio-inline" onclick="speakText('That sounds amazing! I visited Canada last year. We stayed in a cozy little cabin near the mountains. It was the most scenic place I have ever seen.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
-        </div>
+        <div class="d-text" data-voice="ellen">"Yes! I <strong>am going to</strong> see the Great Barrier Reef, <strong class='vocab-highlight'>embrace</strong> a new <strong class='vocab-highlight'>lifestyle</strong>, and I hope to speak fluent English. That is my number one <strong class='vocab-highlight'>goal</strong>."</div>
       </div>
     </div>
-    <div class="d-line" data-speaker="Lena" data-voice="rachel">
-      <div class="d-avatar blue">LN</div>
+    <div class="d-line">
+      <div class="d-avatar blue">TM</div>
       <div class="d-text-wrap">
-        <div class="d-speaker">Lena</div>
-        <div class="d-text">"Canada is wonderful! I went to Japan last year. We visited <strong class='vocab-highlight'>ancient</strong> temples — some were over a thousand years old. The food was completely <strong class='vocab-highlight'>authentic</strong>."
-          <span class="audio-inline" onclick="speakText('Canada is wonderful! I went to Japan last year. We visited ancient temples, some were over a thousand years old. The food was completely authentic.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
-        </div>
+        <div class="d-speaker">Tom</div>
+        <div class="d-text" data-voice="arthur">"I think you <strong>will</strong> love Australia. The people are very friendly. When are you <strong class='vocab-highlight'>planning</strong> to go?"</div>
       </div>
     </div>
-    <div class="d-line" data-speaker="Pricila" data-voice="ellen">
+    <div class="d-line">
       <div class="d-avatar sienna">PA</div>
       <div class="d-text-wrap">
         <div class="d-speaker">Pricila</div>
-        <div class="d-text">"Japan is on my bucket list! <strong class='vocab-highlight'>What I loved most about</strong> Canada was the silence. The village was so <strong class='vocab-highlight'>remote</strong> — no internet, no noise. Just nature."
-          <span class="audio-inline" onclick="speakText('Japan is on my bucket list! What I loved most about Canada was the silence. The village was so remote, no internet, no noise. Just nature.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
-        </div>
+        <div class="d-text" data-voice="ellen">"I <strong>am meeting</strong> with my family next weekend to decide the dates. Retirement is a new <strong class='vocab-highlight'>adventure</strong> and my <strong class='vocab-highlight'>priority</strong> is <strong class='vocab-highlight'>freedom</strong>."</div>
       </div>
     </div>
-    <div class="d-line" data-speaker="Lena" data-voice="rachel">
-      <div class="d-avatar blue">LN</div>
+    <div class="d-line">
+      <div class="d-avatar blue">TM</div>
       <div class="d-text-wrap">
-        <div class="d-speaker">Lena</div>
-        <div class="d-text">"That sounds like the perfect escape. Tokyo was the opposite — <strong class='vocab-highlight'>crowded</strong> but incredibly exciting. <strong class='vocab-highlight'>I would describe it as</strong> the most <strong class='vocab-highlight'>unforgettable</strong> experience of my life."
-          <span class="audio-inline" onclick="speakText('That sounds like the perfect escape. Tokyo was the opposite, crowded but incredibly exciting. I would describe it as the most unforgettable experience of my life.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
-        </div>
+        <div class="d-speaker">Tom</div>
+        <div class="d-text" data-voice="arthur">"That sounds wonderful. I <strong>will</strong> prepare some options for you. Australia in February is perfect — not too hot, great for the reef."</div>
       </div>
     </div>
-    <div class="d-line" data-speaker="Pricila" data-voice="ellen">
+    <div class="d-line">
       <div class="d-avatar sienna">PA</div>
       <div class="d-text-wrap">
         <div class="d-speaker">Pricila</div>
-        <div class="d-text">"I love that! Every trip teaches us something. <strong class='vocab-highlight'>The place was</strong> different from anything I had imagined. I am going to embrace every new destination."
-          <span class="audio-inline" onclick="speakText('I love that! Every trip teaches us something. The place was different from anything I had imagined. I am going to embrace every new destination.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
-        </div>
+        <div class="d-text" data-voice="ellen">"Thank you, Tom! I <strong>am going to</strong> <strong class='vocab-highlight'>embrace</strong> this new chapter. <strong class='vocab-highlight'>My dream is to</strong> watch movies without subtitles and travel with <strong class='vocab-highlight'>purpose</strong>."</div>
       </div>
     </div>
   </div>
@@ -1227,24 +1181,24 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Dialogue Comprehension</h2>
   <div class="comp-questions">
     <div class="cq-item" onclick="this.classList.toggle('open')">
-      <div class="cq-q">1. Where is Lena from and how long has she been traveling?</div>
-      <div class="cq-a">Lena is from Germany and has been traveling for three months.</div>
+      <div class="cq-q">1. What is Pricila's biggest dream?</div>
+      <div class="cq-a">Her biggest dream is to visit Australia and see the Great Barrier Reef.</div>
     </div>
     <div class="cq-item" onclick="this.classList.toggle('open')">
-      <div class="cq-q">2. How does Lena describe her experience in Tokyo?</div>
-      <div class="cq-a">She describes it as crowded but incredibly exciting — the most unforgettable experience of her life.</div>
+      <div class="cq-q">2. What is on Pricila's bucket list?</div>
+      <div class="cq-a">Seeing the Great Barrier Reef, embracing a new lifestyle, speaking fluent English, and watching movies without subtitles.</div>
     </div>
     <div class="cq-item" onclick="this.classList.toggle('open')">
-      <div class="cq-q">3. What did you love most about Canada?</div>
-      <div class="cq-a">You loved the silence — the village was so remote that there was no internet and no noise.</div>
+      <div class="cq-q">3. What does Tom recommend about timing?</div>
+      <div class="cq-a">He recommends February for Australia — not too hot and great for the reef.</div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SLIDE 19 — LISTENING 1 (Pricila's Canada Trip) ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>59:00 - 63 min</span>Listening 1 — Pricila descreve sua viagem mais memorável ao Canadá usando comparativos e superlativos (voz Ellen, pois é a protagonista). Toque o audio PRIMEIRO, sem texto. Depois que acabar, as perguntas aparecem. Se Pricila pedir para ouvir de novo, toque novamente.">
+<!-- ═══ SLIDE 19 — LISTENING 1 (Pricila's Retirement Vision) ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>59:00 - 63 min</span>Listening 1 — a visao de aposentadoria da Pricila narrada em primeira pessoa (voz Ellen). Toque o audio PRIMEIRO, sem texto. Depois que acabar, as perguntas aparecem. Se Pricila pedir para ouvir de novo, toque novamente. Use os controles de velocidade se ela precisar de ritmo mais lento.">
   <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Your Trip to Canada</h2>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Pricila's Retirement Vision</h2>
   <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Listen first, then answer the questions.</p>
   <div class="listening-card">
     <div id="player-listening1" data-src="[listening-1]">
@@ -1279,65 +1233,71 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
     </div>
     <div class="listening-questions" id="questions-player-listening1" style="display:none;">
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">1. What three adjectives do you use to describe Canada?</div>
-        <div class="lq-answer">You describe it as stunning, scenic, and remote.</div>
+        <div class="lq-question">1. What are Pricila's three main goals for retirement?</div>
+        <div class="lq-answer">Travel to Australia, speak fluent English, and embrace a slower lifestyle.</div>
       </div>
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">2. How do you compare Canada to Brazil?</div>
-        <div class="lq-answer">You say Canada is colder than Brazil, but the mountains are more breathtaking than anything you have seen at home.</div>
+        <div class="lq-question">2. What does she want to do at the Great Barrier Reef?</div>
+        <div class="lq-answer">She wants to see it in person and snorkel in the clear water.</div>
       </div>
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">3. What was the most unforgettable moment of the trip?</div>
-        <div class="lq-answer">Seeing the northern lights from a remote cabin — you call it the most unforgettable experience of your life.</div>
+        <div class="lq-question">3. Why is learning English important for her retirement plans?</div>
+        <div class="lq-answer">Because she wants to travel independently and watch movies without subtitles.</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SLIDE 20 — ARTIFACT: TRAVEL JOURNAL ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>63:00 - 66 min</span>Artefato — Travel Journal personalizado da Pricila. Leia cada entrada em voz alta. Pergunte para cada: &quot;Can you find the comparative or superlative?&quot; Use como revisão da gramática aplicada a viagens reais. Pergunte: &quot;Would you add anything to your travel journal?&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;Is 'the most scenic' a comparative or superlative?&quot; (superlative) / &quot;Is 'more crowded than' a comparative or superlative?&quot; (comparative)</div>">
+<!-- ═══ SLIDE 20 — ARTIFACT: BUCKET LIST CARD ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>63:00 - 66 min</span>Artefato — Bucket List Card personalizado da Pricila. Leia cada item em voz alta. Pergunte para cada: &quot;Which future form would you use? Going to, will, or present continuous?&quot; Exemplos: &quot;I am going to visit Australia&quot; (plan), &quot;I think I will love the reef&quot; (prediction). Use como revisao da gramatica aplicada a vida real dela.<div class='t-ccq'><strong>CCQs:</strong> &quot;Is visiting Australia a plan or a prediction?&quot; (plan = going to) / &quot;Speaking fluent English — is this certain or a hope?&quot; (hope = hope to / going to try to)</div>">
   <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Pricila's Travel Journal</h2>
-  <div class="travel-journal-card">
-    <div class="travel-journal-header">
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Pricila's Bucket List</h2>
+  <div class="bucket-list-card">
+    <div class="bucket-list-header">
       <h3>Pricila Adamo</h3>
-      <p>Travel Journal -- Places That Changed Me</p>
+      <p>Retirement Bucket List</p>
     </div>
-    <div class="travel-journal-items">
-      <div class="tj-item">
-        <div class="tj-icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
+    <div class="bucket-list-items">
+      <div class="bl-item">
+        <div class="bl-check">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
         </div>
-        <div class="tj-text"><span class="tj-place">Canada:</span> The most scenic mountains I have ever seen. Colder than Brazil, but breathtaking.</div>
+        <div class="bl-text">Visit Australia and see the Great Barrier Reef</div>
       </div>
-      <div class="tj-item">
-        <div class="tj-icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
+      <div class="bl-item">
+        <div class="bl-check">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
         </div>
-        <div class="tj-text"><span class="tj-place">Foz do Iguacu:</span> More vibrant and stunning than any photo. The sound of the water was unforgettable.</div>
+        <div class="bl-text">Speak fluent English with confidence</div>
       </div>
-      <div class="tj-item">
-        <div class="tj-icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
+      <div class="bl-item">
+        <div class="bl-check">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
         </div>
-        <div class="tj-text"><span class="tj-place">A small village in Minas Gerais:</span> The coziest place I have ever stayed. Authentic food, ancient churches, remote and peaceful.</div>
+        <div class="bl-text">Watch movies and series without subtitles</div>
       </div>
-      <div class="tj-item">
-        <div class="tj-icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
+      <div class="bl-item">
+        <div class="bl-check">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
         </div>
-        <div class="tj-text"><span class="tj-place">Sydney (future):</span> I would describe it as my biggest dream destination. More exciting than anywhere I have been.</div>
+        <div class="bl-text">Embrace a slower, more purposeful lifestyle</div>
+      </div>
+      <div class="bl-item">
+        <div class="bl-check">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        </div>
+        <div class="bl-text">Travel to at least 5 new countries</div>
       </div>
     </div>
-    <div class="travel-journal-footer">Alumni by Better -- Every place tells a story</div>
+    <div class="bucket-list-footer">Alumni by Better -- Dream it, plan it, live it</div>
   </div>
 </div>
 
-<!-- ═══ SLIDE 21 — LISTENING 2 (Sydney Scenic Tour) ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>66:00 - 70 min</span>Listening 2 — narração de um tour cênico por Sydney (voz Arthur, narrador masculino). Mesmo formato: audio primeiro, perguntas depois. Compare: &quot;The first listening was about Canada. This one is about Sydney. Both use comparatives and superlatives to describe places!&quot;">
+<!-- ═══ SLIDE 21 — LISTENING 2 (Tom's Travel Advice) ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>66:00 - 70 min</span>Listening 2 — conselhos de viagem do Tom (voz Arthur). Mesmo formato: audio primeiro, perguntas depois. Compare as perspectivas: &quot;Pricila talked about her dreams. Tom gives practical advice. Both are about the future!&quot;">
   <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: A Sydney Scenic Tour</h2>
-  <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Listen to the tour narration, then answer the questions.</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Tom's Travel Advice</h2>
+  <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Listen to Tom's advice, then answer the questions.</p>
   <div class="listening-card">
     <div id="player-listening2" data-src="[listening-2]">
       <div class="listening-player">
@@ -1371,16 +1331,16 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
     </div>
     <div class="listening-questions" id="questions-player-listening2" style="display:none;">
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">1. How does the narrator describe Sydney Harbour?</div>
-        <div class="lq-answer">He describes it as the most stunning harbor in the world, more vibrant than any other city port.</div>
+        <div class="lq-question">1. What month does Tom recommend for visiting Australia?</div>
+        <div class="lq-answer">He recommends February because the weather is warm but not too hot.</div>
       </div>
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">2. What does he say about Bondi Beach compared to other beaches?</div>
-        <div class="lq-answer">He says Bondi Beach is more crowded than other Australian beaches, but the atmosphere is unforgettable.</div>
+        <div class="lq-question">2. What does Tom suggest about the Great Barrier Reef?</div>
+        <div class="lq-answer">He suggests booking a guided snorkeling tour in advance.</div>
       </div>
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">3. What is the narrator's recommendation for visitors?</div>
-        <div class="lq-answer">He recommends taking the scenic coastal walk — it is the most breathtaking route in Sydney.</div>
+        <div class="lq-question">3. What is Tom's advice for solo travelers?</div>
+        <div class="lq-answer">He advises joining small group tours to meet other travelers and feel safe.</div>
       </div>
     </div>
   </div>
@@ -1391,194 +1351,195 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 22 — TRANSITION: PRACTICE ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>70:00 - 0.5 min</span>Transição. Diga: &quot;More practice! Let us see how well you can describe places.&quot; Avance rápido." style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>70:00 - 0.5 min</span>Transição. Diga: &quot;Time to practice! Let us see how well you can use these words and grammar.&quot; Avance rápido." style="background-image:url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(80,52,38,0.92) 0%, rgba(26,26,46,0.92) 50%, rgba(160,103,75,0.85) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 5 -- Practice</div>
-    <h1 class="slide-title" style="color:#fff;">More Practice</h1>
+    <h1 class="slide-title" style="color:#fff;">Time to Practice</h1>
     <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Quick fire, spot the error, and sentence building</p>
   </div>
 </div>
 
 <!-- ═══ SLIDE 23 — QUICK FIRE ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>70:30 - 75 min</span>Quick Fire. Uma pergunta por vez. Leia a situação, Pricila responde oralmente usando comparativo, superlativo, ou adjetivo descritivo. Depois clique &quot;Show Answer&quot;. Se acertar, clique &quot;Next&quot;. Se errar, pergunte: &quot;Are you comparing two things or saying it is the best?&quot; Score visível — celebre se acertar 5/6 ou mais.">
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>70:30 - 75 min</span>Quick Fire. Uma pergunta por vez. Leia a situacao, Pricila responde oralmente (going to, will, ou present continuous). Depois clique &quot;Show Answer&quot;. Se acertar, clique &quot;Next&quot;. Se errar, pergunte: &quot;Is this a plan, a prediction, or an arrangement?&quot; e espere ela se corrigir. Score visivel — celebre se acertar 5/6 ou mais.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Quick Fire</h2>
   <div class="qc-score" id="qcScore">0 / 6</div>
   <div class="qc-container">
     <div class="qc-card active">
-      <div class="qc-prompt">Describe a beach you visited. Use the word "stunning."</div>
+      <div class="qc-prompt">You decided to visit Australia next year. Tell your friend about it.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"The beach was absolutely stunning. The water was crystal clear."</div>
+      <div class="qc-answer-box">"I am going to visit Australia next year."</div>
       <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
     <div class="qc-card">
-      <div class="qc-prompt">Compare Sydney and your city. Which is bigger?</div>
+      <div class="qc-prompt">You think learning English will change your life. Share your opinion.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"Sydney is much bigger and more vibrant than Araras."</div>
+      <div class="qc-answer-box">"I think learning English will change my life."</div>
       <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
     <div class="qc-card">
-      <div class="qc-prompt">Tell me about the most unforgettable place you have ever been.</div>
+      <div class="qc-prompt">You have a dentist appointment on Wednesday at 2 PM.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"The most unforgettable place I have ever been is Foz do Iguacu."</div>
+      <div class="qc-answer-box">"I am seeing the dentist on Wednesday at 2 PM."</div>
       <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
     <div class="qc-card">
-      <div class="qc-prompt">Describe a cozy place you know. Use "the coziest."</div>
+      <div class="qc-prompt">Someone offers you coffee. You decide to accept right now.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"My living room is the coziest place in my house."</div>
+      <div class="qc-answer-box">"Thank you, I will have a coffee."</div>
       <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
     <div class="qc-card">
-      <div class="qc-prompt">Compare the food in two countries. Use "more authentic."</div>
+      <div class="qc-prompt">You and your daughter planned to change your lifestyle after retirement.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"The food in Italy is more authentic than in any restaurant here."</div>
+      <div class="qc-answer-box">"We are going to change our lifestyle after retirement."</div>
       <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
     <div class="qc-card">
-      <div class="qc-prompt">Describe a remote village. What was it like?</div>
+      <div class="qc-prompt">You booked a flight for March 15th. Tell Tom.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"The village was so remote that we could see a million stars at night."</div>
+      <div class="qc-answer-box">"I am flying to Australia on March 15th."</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 24 — SPOT THE ERROR ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>75:00 - 78 min</span>Spot the Error. Leia cada frase em voz alta. Pergunte: &quot;What is wrong?&quot; Espere Pricila identificar o erro. Depois clique para revelar. Reforce os padrões: short adj = -er/-est, long adj = more/most, irregular = better/best.">
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>75:00 - 78 min</span>Spot the Error. Leia cada frase em voz alta. Pergunte: &quot;What is wrong?&quot; Espere Pricila identificar o erro. Depois clique para revelar. Reforce o padrao: plano decidido = going to, predicao = will, arranjo fixo = present continuous.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Spot the Error</h2>
   <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Click each sentence to reveal the correction.</p>
   <div class="error-list">
     <div class="err-item" onclick="this.classList.toggle('open')">
-      <div class="err-sentence">"Sydney is <span class='wrong'>more bigger</span> than Araras."</div>
-      <div class="err-correction">"Sydney is bigger than Araras." (Short adjective: big > bigger, not more bigger)</div>
+      <div class="err-sentence">"I <span class='wrong'>will travel</span> to Australia next year. I already bought the ticket."</div>
+      <div class="err-correction">"I am going to travel to Australia next year." (Pre-decided plan = going to)</div>
     </div>
     <div class="err-item" onclick="this.classList.toggle('open')">
-      <div class="err-sentence">"It was <span class='wrong'>the most beautifulest</span> place."</div>
-      <div class="err-correction">"It was the most beautiful place." (Long adjective: the most beautiful, not the most beautifulest)</div>
+      <div class="err-sentence">"I <span class='wrong'>am going to</span> think retirement is amazing."</div>
+      <div class="err-correction">"I think retirement will be amazing." (Prediction/opinion = will)</div>
     </div>
     <div class="err-item" onclick="this.classList.toggle('open')">
-      <div class="err-sentence">"The food was <span class='wrong'>more better</span> than I expected."</div>
-      <div class="err-correction">"The food was better than I expected." (Irregular: good > better, never more better)</div>
+      <div class="err-sentence">"I <span class='wrong'>will meet</span> Tom on Friday at 3 PM. It is confirmed."</div>
+      <div class="err-correction">"I am meeting Tom on Friday at 3 PM." (Fixed arrangement = present continuous)</div>
     </div>
     <div class="err-item" onclick="this.classList.toggle('open')">
-      <div class="err-sentence">"It was <span class='wrong'>the most ancientest</span> temple in the city."</div>
-      <div class="err-correction">"It was the most ancient temple in the city." (Long adjective: the most ancient, not the most ancientest)</div>
+      <div class="err-sentence">"Wait, I <span class='wrong'>am going to help</span> you right now!" (spontaneous)</div>
+      <div class="err-correction">"Wait, I will help you right now!" (Spontaneous decision = will)</div>
     </div>
   </div>
   <div class="err-score" id="errScore"></div>
 </div>
 
 <!-- ═══ SLIDE 25 — SENTENCE BUILDING ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>78:00 - 81 min</span>Sentence Building. Mostre as palavras embaralhadas, Pricila organiza oralmente. Clique para revelar a resposta. Se ela travar, dê a primeira palavra como dica. Celebre: &quot;Great sentence building!&quot;">
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>78:00 - 81 min</span>Sentence Building. Mostre as palavras embaralhadas, Pricila organiza oralmente. Clique para revelar a resposta. Se ela travar, de a primeira palavra como dica. Celebre: &quot;Great sentence building!&quot;">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Sentence Building</h2>
   <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Unscramble the words. Click to reveal the answer.</p>
   <div class="sb-list">
     <div class="sb-item" onclick="this.classList.toggle('open')">
-      <div class="sb-scrambled">most / the / was / it / stunning / I / view / ever / have / seen</div>
-      <div class="sb-answer">"It was the most stunning view I have ever seen."</div>
+      <div class="sb-scrambled">going / am / I / to / embrace / this / chapter / new</div>
+      <div class="sb-answer">"I am going to embrace this new chapter."</div>
     </div>
     <div class="sb-item" onclick="this.classList.toggle('open')">
-      <div class="sb-scrambled">than / is / more / Sydney / vibrant / Araras</div>
-      <div class="sb-answer">"Sydney is more vibrant than Araras."</div>
+      <div class="sb-scrambled">dream / my / is / to / visit / Australia</div>
+      <div class="sb-answer">"My dream is to visit Australia."</div>
     </div>
     <div class="sb-item" onclick="this.classList.toggle('open')">
-      <div class="sb-scrambled">coziest / the / place / was / it / I / have / visited / ever</div>
-      <div class="sb-answer">"It was the coziest place I have ever visited."</div>
+      <div class="sb-scrambled">think / I / will / retirement / be / amazing</div>
+      <div class="sb-answer">"I think retirement will be amazing."</div>
     </div>
     <div class="sb-item" onclick="this.classList.toggle('open')">
-      <div class="sb-scrambled">describe / I / it / would / as / breathtaking</div>
-      <div class="sb-answer">"I would describe it as breathtaking."</div>
+      <div class="sb-scrambled">am / I / meeting / travel / my / agent / Friday / on</div>
+      <div class="sb-answer">"I am meeting my travel agent on Friday."</div>
     </div>
     <div class="sb-item" onclick="this.classList.toggle('open')">
-      <div class="sb-scrambled">food / was / the / authentic / completely / and / unforgettable</div>
-      <div class="sb-answer">"The food was completely authentic and unforgettable."</div>
+      <div class="sb-scrambled">priority / my / number / one / is / freedom</div>
+      <div class="sb-answer">"My number one priority is freedom."</div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 26 — ORAL DRILLING (6 situations) ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>81:00 - 84 min</span>Oral Drilling avançado. Para cada situação, Pricila forma uma frase COMPLETA usando vocabulário da aula + gramática correta. Clique para revelar o modelo. Foco na fluência — se ela hesitar muito, dê as primeiras palavras.">
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>81:00 - 84 min</span>Oral Drilling avancado. Para cada situacao, Pricila forma uma frase COMPLETA usando vocabulario da aula + gramatica correta. Clique para revelar o modelo. Foco na fluência — se ela hesitar muito, de as primeiras palavras: &quot;I am going to...&quot;">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Oral Drilling</h2>
   <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Respond to each situation. Click to see the model.</p>
   <div class="oral-list">
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 1</div>
-      <div class="oral-situation">Describe the most breathtaking view you have ever seen.</div>
-      <div class="oral-model">"The most breathtaking view I have ever seen was the sunset over the ocean in Florianopolis."</div>
+      <div class="oral-situation">Talk about your biggest dream for retirement.</div>
+      <div class="oral-model">"My dream is to visit Australia and see the Great Barrier Reef."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 2</div>
-      <div class="oral-situation">Compare a vibrant city and a remote village.</div>
-      <div class="oral-model">"A vibrant city is more exciting than a remote village, but a remote village is more peaceful."</div>
+      <div class="oral-situation">Tell someone about your number one priority.</div>
+      <div class="oral-model">"The most important thing for me is freedom to travel."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 3</div>
-      <div class="oral-situation">Describe a place that was more crowded than you expected.</div>
-      <div class="oral-model">"The market in Sao Paulo was more crowded than I expected, but the atmosphere was vibrant."</div>
+      <div class="oral-situation">Share something on your bucket list.</div>
+      <div class="oral-model">"Watching movies without subtitles is on my bucket list."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 4</div>
-      <div class="oral-situation">Talk about the most authentic food you have ever tasted.</div>
-      <div class="oral-model">"The most authentic food I have ever tasted was in a small restaurant in Minas Gerais."</div>
+      <div class="oral-situation">Talk about how retirement will change your lifestyle.</div>
+      <div class="oral-model">"I am going to change my lifestyle completely and embrace a slower pace."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 5</div>
-      <div class="oral-situation">Tell someone about a cozy place you love.</div>
-      <div class="oral-model">"I would describe my favorite cafe as the coziest place in town."</div>
+      <div class="oral-situation">Say what gives your life purpose now.</div>
+      <div class="oral-model">"Learning English gives me a sense of purpose."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 6</div>
-      <div class="oral-situation">Describe an ancient place you visited or want to visit.</div>
-      <div class="oral-model">"I want to visit the ancient temples in Japan — they are over a thousand years old."</div>
+      <div class="oral-situation">Talk about an adventure you are planning.</div>
+      <div class="oral-model">"I am planning to have many adventures after I retire."</div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 27 — ADDITIONAL PRACTICE: USE THE WORD ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>84:00 - 86 min</span>Pratica adicional — Use the Word. Mostre cada palavra, Pricila faz uma frase PESSOAL com ela. Se ela copiar o exemplo do slide de vocab, peça: &quot;Can you make a sentence about a place YOU visited?&quot; Valide e reformule se necessário. Ritmo rápido — 30 segundos por palavra.">
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>84:00 - 86 min</span>Pratica adicional — Use the Word. Mostre cada palavra, Pricila faz uma frase PESSOAL com ela. Se ela copiar o exemplo do slide de vocab, peça: &quot;Can you make a sentence about YOUR plans?&quot; Valide e reformule se necessário. Ritmo rápido — 30 segundos por palavra.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Use the Word</h2>
   <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Make a personal sentence using each word.</p>
   <div style="display:flex;flex-wrap:wrap;gap:0.8rem;justify-content:center;max-width:650px;">
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Stunning</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Breathtaking</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Remote</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Vibrant</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Ancient</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Authentic</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Unforgettable</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Goal</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Dream</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Freedom</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Adventure</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Bucket List</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Embrace</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Priority</span>
   </div>
 </div>
 
-<!-- ═══ SLIDE 28 — ADDITIONAL PRACTICE: COMPARATIVE OR SUPERLATIVE? ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>86:00 - 88 min</span>Pratica adicional — classificação. Leia cada frase, Pricila diz se é comparative ou superlative e identifica o adjetivo. Clique para revelar. Ritmo rápido.">
+<!-- ═══ SLIDE 28 — ADDITIONAL PRACTICE: FUTURE FORM SORT ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>86:00 - 88 min</span>Pratica adicional — classificação de formas futuras. Leia cada frase, Pricila diz se e going to, will, ou present continuous. Clique para revelar. Ritmo rápido — foco em automatizar o raciocínio.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Comparative or Superlative?</h2>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Going To, Will, or Present Continuous?</h2>
   <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Classify each sentence. Click to reveal.</p>
   <div class="fill-practice">
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"Canada is colder than Brazil."</div>
-      <div class="fp-answer">Comparative (cold > colder than — comparing two countries)</div>
+      <div class="fp-sentence">"I am going to visit the Great Barrier Reef."</div>
+      <div class="fp-answer">Going to (decided plan)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"It was the most stunning view I have ever seen."</div>
-      <div class="fp-answer">Superlative (stunning > the most stunning — the best of all)</div>
+      <div class="fp-sentence">"I think you will love it."</div>
+      <div class="fp-answer">Will (prediction/opinion)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"Tokyo is more crowded than Sydney."</div>
-      <div class="fp-answer">Comparative (crowded > more crowded than — comparing two cities)</div>
+      <div class="fp-sentence">"I am having dinner with my family on Saturday."</div>
+      <div class="fp-answer">Present Continuous (fixed arrangement with date)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"That was the coziest hotel I have ever stayed in."</div>
-      <div class="fp-answer">Superlative (cozy > the coziest — the best of all)</div>
+      <div class="fp-sentence">"Wait, I will open the door for you."</div>
+      <div class="fp-answer">Will (spontaneous decision)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"The food was better than I expected."</div>
-      <div class="fp-answer">Comparative (good > better than — irregular, comparing two)</div>
+      <div class="fp-sentence">"We are going to change our lifestyle completely."</div>
+      <div class="fp-answer">Going to (decided plan)</div>
     </div>
   </div>
 </div>
@@ -1588,66 +1549,66 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 29 — TRANSITION: YOUR TURN ═══ -->
-<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>88:00 - 0.5 min</span>Transição. Diga: &quot;Now it is YOUR turn. You are going to describe places you have visited and places you dream of visiting.&quot; Tom motivador." style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>88:00 - 0.5 min</span>Transição. Diga: &quot;Now it is YOUR turn. You are going to tell me about YOUR plans and dreams for retirement.&quot; Tom motivador." style="background-image:url('https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(80,52,38,0.88) 50%, rgba(26,26,46,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
-    <h1 class="slide-title" style="color:#fff;">Your Places</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">From guided to free -- show what you learned</p>
+    <h1 class="slide-title" style="color:#fff;">Your Dreams</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Tell me about your plans for the future</p>
   </div>
 </div>
 
 <!-- ═══ SLIDE 30 — ROLE-PLAY GUIDED ═══ -->
-<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>88:30 - 92 min</span>Role-play guiado. Pricila usa os keywords e starters para descrever sua viagem favorita. Guie: &quot;Start with where you went. Use 'The place was...' or 'I would describe it as...'&quot; Se ela travar, dê as primeiras 3 palavras. Reformule erros sutilmente. Foco: fluência + adjetivos descritivos + comparativos.">
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>88:30 - 92 min</span>Role-play guiado. Pricila usa os keywords e starters para falar sobre seus planos. Guie: &quot;Start with your biggest dream. Use 'My dream is to...'&quot; Se ela travar, de as primeiras 3 palavras. Reformule erros sutilmente. Foco: fluência + vocabulario correto + forma futura correta.">
   <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
   <div class="rp-card">
     <div class="rp-bg" style="background:linear-gradient(135deg, #A0674B 0%, #1a1a2e 100%);"></div>
     <div class="rp-content">
       <div class="rp-level">Guided</div>
-      <div class="rp-scenario">Describe your favorite trip to your teacher. Use these keywords and sentence starters:</div>
-      <div style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-bottom:0.8rem;font-style:italic;">"The place was..." / "It was more... than I expected." / "I would describe it as..." / "What I loved most about it was..."</div>
+      <div class="rp-scenario">You are at a travel agency and the agent asks about your retirement plans. Tell them your dreams using these keywords and sentence starters:</div>
+      <div style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-bottom:0.8rem;font-style:italic;">"I am going to..." / "My dream is to..." / "I am planning to..." / "The most important thing for me is..."</div>
       <div class="rp-keywords">
-        <span class="rp-keyword">stunning</span>
-        <span class="rp-keyword">breathtaking</span>
-        <span class="rp-keyword">cozy</span>
-        <span class="rp-keyword">scenic</span>
-        <span class="rp-keyword">authentic</span>
-        <span class="rp-keyword">unforgettable</span>
+        <span class="rp-keyword">goal</span>
+        <span class="rp-keyword">dream</span>
+        <span class="rp-keyword">bucket list</span>
+        <span class="rp-keyword">adventure</span>
+        <span class="rp-keyword">freedom</span>
+        <span class="rp-keyword">embrace</span>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 31 — ROLE-PLAY SEMI-FREE ═══ -->
-<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>92:00 - 95 min</span>Role-play semi-livre. Agora sem sentence starters — apenas keywords como apoio. Pricila compara dois lugares que ela visitou. Observe se ela usa comparativos corretamente (more + long adj + than, adj + er + than). Anote erros para feedback no final.">
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>92:00 - 95 min</span>Role-play semi-livre. Agora sem sentence starters — apenas keywords como apoio. Pricila conta seus planos com mais liberdade. Observe se ela usa going to para planos, will para predicoes, e present continuous para arranjos. Anote erros para feedback no final, mas NÃO interrompa a fluência.">
   <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
   <div class="rp-card">
     <div class="rp-bg" style="background:linear-gradient(135deg, #2d2d4a 0%, #A0674B 100%);"></div>
     <div class="rp-content">
       <div class="rp-level">Semi-Free</div>
-      <div class="rp-scenario">Compare two places you have visited. Which was more beautiful? Which was more crowded? Which had better food? Use comparatives and superlatives.</div>
+      <div class="rp-scenario">Now tell me about your retirement plans more freely. Use the keywords below, but create your own sentences. Talk about your goals, dreams, and priorities.</div>
       <div class="rp-keywords">
-        <span class="rp-keyword">more... than</span>
-        <span class="rp-keyword">the most...</span>
-        <span class="rp-keyword">vibrant</span>
-        <span class="rp-keyword">remote</span>
-        <span class="rp-keyword">crowded</span>
-        <span class="rp-keyword">ancient</span>
+        <span class="rp-keyword">purpose</span>
+        <span class="rp-keyword">lifestyle</span>
+        <span class="rp-keyword">priority</span>
+        <span class="rp-keyword">plan</span>
+        <span class="rp-keyword">chapter</span>
+        <span class="rp-keyword">overcome</span>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 32 — ROLE-PLAY FREE ═══ -->
-<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>95:00 - 98 min</span>Role-play livre. SEM keywords, SEM starters. Pricila descreve seu destino dos sonhos (Australia) em detalhes. Deixe falar 2-3 minutos sem interrupção. DEPOIS dê feedback: &quot;I loved how you used 'the most stunning' and 'more vibrant than.' One thing to improve: [erro específico].&quot; Seja específica e positiva.">
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>95:00 - 98 min</span>Role-play livre. SEM keywords, SEM starters. Pricila fala livremente sobre seus planos e sonhos. Deixe falar 2-3 minutos sem interrupcao. DEPOIS de feedback: &quot;I loved how you used 'I am going to' for your plans. One thing to improve: [erro especifico].&quot; Seja especifica e positiva.">
   <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
   <div class="rp-card">
     <div class="rp-bg" style="background:linear-gradient(135deg, #1a1a2e 0%, #C08060 50%, #1a1a2e 100%);"></div>
     <div class="rp-content">
       <div class="rp-level">Free Production</div>
-      <div class="rp-scenario">No keywords. No starters. Describe your dream destination in detail. What will it look like? How will it compare to places you know? What will make it unforgettable? Paint the picture with words.</div>
+      <div class="rp-scenario">No keywords. No starters. Tell me about your complete retirement vision. What are you going to do? What will change? What adventures are you planning? Take your time.</div>
       <div style="margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;">
-        <p style="font-size:0.82rem;color:rgba(255,255,255,0.6);font-style:italic;text-align:center;">Use everything you learned today.</p>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.6);font-style:italic;text-align:center;">Your retirement dream starts now.</p>
       </div>
     </div>
   </div>
@@ -1659,7 +1620,7 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
   <div style="max-width:600px;text-align:center;">
     <h2 class="slide-title" style="font-size:2rem;color:#fff;">Reflection</h2>
     <div style="padding:2rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-top:1.5rem;">
-      <p style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:#fff;line-height:1.5;">"The most unforgettable place I want to visit is... because..."</p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:#fff;line-height:1.5;">"The most important thing for me in this new chapter is..."</p>
     </div>
     <p style="font-size:0.82rem;color:rgba(255,255,255,0.6);margin-top:1.5rem;">Complete the sentence. Speak from the heart.</p>
   </div>
@@ -1670,11 +1631,11 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 34 — TRANSITION: WRAP-UP ═══ -->
-<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>100:00 - 0.5 min</span>Transição. Diga: &quot;What an incredible class! Let us wrap up and see everything you learned today.&quot;" style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>100:00 - 0.5 min</span>Transição. Diga: &quot;What an incredible class! Let us wrap up with your survival phrases and see what you learned today.&quot;" style="background-image:url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(80,52,38,0.88) 50%, rgba(26,26,46,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
-    <h1 class="slide-title" style="color:#fff;">Journey Complete</h1>
+    <h1 class="slide-title" style="color:#fff;">Reaching the Horizon</h1>
     <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Your survival phrases, your checklist, your badge</p>
   </div>
 </div>
@@ -1686,36 +1647,36 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
     <h3>Survival Card — Lesson 4</h3>
     <div class="surv-phrase">
       <div class="surv-num">1</div>
-      <div class="surv-text">The place was absolutely stunning.</div>
-      <button class="surv-play" onclick="speakText('The place was absolutely stunning.',this)" aria-label="Listen">
+      <div class="surv-text">I am going to travel to Australia next year.</div>
+      <button class="surv-play" onclick="speakText('I am going to travel to Australia next year.',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="surv-phrase">
       <div class="surv-num">2</div>
-      <div class="surv-text">It was more beautiful than I expected.</div>
-      <button class="surv-play" onclick="speakText('It was more beautiful than I expected.',this)" aria-label="Listen">
+      <div class="surv-text">My dream is to see the Great Barrier Reef.</div>
+      <button class="surv-play" onclick="speakText('My dream is to see the Great Barrier Reef.',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="surv-phrase">
       <div class="surv-num">3</div>
-      <div class="surv-text">It was the most unforgettable experience of my life.</div>
-      <button class="surv-play" onclick="speakText('It was the most unforgettable experience of my life.',this)" aria-label="Listen">
+      <div class="surv-text">I am planning to change my lifestyle.</div>
+      <button class="surv-play" onclick="speakText('I am planning to change my lifestyle.',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="surv-phrase">
       <div class="surv-num">4</div>
-      <div class="surv-text">I would describe it as breathtaking.</div>
-      <button class="surv-play" onclick="speakText('I would describe it as breathtaking.',this)" aria-label="Listen">
+      <div class="surv-text">The most important thing for me is freedom.</div>
+      <button class="surv-play" onclick="speakText('The most important thing for me is freedom.',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="surv-phrase">
       <div class="surv-num">5</div>
-      <div class="surv-text">What I loved most about it was the scenery.</div>
-      <button class="surv-play" onclick="speakText('What I loved most about it was the scenery.',this)" aria-label="Listen">
+      <div class="surv-text">I am going to embrace this new chapter of my life.</div>
+      <button class="surv-play" onclick="speakText('I am going to embrace this new chapter of my life.',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
@@ -1723,66 +1684,66 @@ Callback no warm-up: "goal" and "bucket list" retomados em quiz de warm-up (slid
 </div>
 
 <!-- ═══ SLIDE 36 — CHECKLIST ═══ -->
-<div class="slide dark" data-chapter="7" data-lesson="4" data-t="<span class='t-timing'>104:00 - 107 min</span>Checklist. Leia cada item em voz alta. Pricila diz &quot;yes&quot; ou &quot;not yet&quot;. Clique nos que ela confirmar. Se algum item ficar sem check, diga: &quot;That is okay! We will practice more next class.&quot; Celebre os checks: &quot;Look at everything you learned today!&quot;">
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>104:00 - 107 min</span>Checklist. Leia cada item em voz alta. Pricila diz &quot;yes&quot; ou &quot;not yet&quot;. Clique nos que ela confirmar. Se algum item ficar sem check, diga: &quot;That is okay! We will practice more next class.&quot; Celebre os checks: &quot;Look at everything you learned today!&quot;">
   <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1.5rem;text-align:center;">What I Learned Today</h2>
-  <div class="check-grid">
-    <div class="check-item" onclick="toggleCheck(this)">
+  <div class="checklist-wrap">
+    <div class="cl-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can use comparatives to compare two places</div>
+      <div class="cl-text">I can use "going to" for plans I already decided</div>
     </div>
-    <div class="check-item" onclick="toggleCheck(this)">
+    <div class="cl-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can use superlatives to say "the best" or "the most"</div>
+      <div class="cl-text">I can use "will" for predictions and spontaneous decisions</div>
     </div>
-    <div class="check-item" onclick="toggleCheck(this)">
+    <div class="cl-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I know the difference between short and long adjective forms</div>
+      <div class="cl-text">I can use present continuous for fixed arrangements</div>
     </div>
-    <div class="check-item" onclick="toggleCheck(this)">
+    <div class="cl-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can say "stunning," "breathtaking," "cozy," and "vibrant" correctly</div>
+      <div class="cl-text">I can say "goal," "dream," "bucket list," and "embrace" correctly</div>
     </div>
-    <div class="check-item" onclick="toggleCheck(this)">
+    <div class="cl-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can describe a place using "The place was..." and "I would describe it as..."</div>
+      <div class="cl-text">I can use "I am going to..." to talk about my retirement plans</div>
     </div>
-    <div class="check-item" onclick="toggleCheck(this)">
+    <div class="cl-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can say "more... than" and "the most..." in sentences</div>
+      <div class="cl-text">I can say "My dream is to..." and talk about my bucket list</div>
     </div>
-    <div class="check-item" onclick="toggleCheck(this)">
+    <div class="cl-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I know that "more better" is wrong — the correct form is "better"</div>
+      <div class="cl-text">I know the difference between going to (plan), will (prediction), and present continuous (arrangement)</div>
     </div>
-    <div class="check-item" onclick="toggleCheck(this)">
+    <div class="cl-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can use "remote," "ancient," "authentic," and "unforgettable" in context</div>
+      <div class="cl-text">I can use "priority," "purpose," and "lifestyle" in sentences</div>
     </div>
-    <div class="check-item" onclick="toggleCheck(this)">
+    <div class="cl-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can compare two places using comparatives and superlatives</div>
+      <div class="cl-text">I can talk about my plans and dreams for retirement</div>
     </div>
-    <div class="check-item" onclick="toggleCheck(this)">
+    <div class="cl-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can describe my dream destination in detail</div>
+      <div class="cl-text">I can say "I am going to embrace this new chapter of my life"</div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 37 — BADGE + PREVIEW ═══ -->
-<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>107:00 - 110 min</span>Badge final. Parabéns! Diga: &quot;Congratulations, Pricila! You earned the Explorer Badge! Next class, we will practice real travel situations — at the airport, checking in, and asking for directions. Your homework: write a short travel journal entry about your favorite place — use at least 3 comparatives and 3 adjectives from today. Have a great week!&quot; Confetti dispara automaticamente.">
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>107:00 - 110 min</span>Badge final. Parabens! Diga: &quot;Congratulations, Pricila! You earned the Dreamer Badge! Next class, we will practice real travel situations — booking flights, hotels, and asking for directions. Your homework: write your bucket list in English — at least 5 items using 'I am going to' and 'My dream is to'. Have a great week!&quot; Confetti dispara automaticamente.">
   <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
   <div style="text-align:center;max-width:500px;">
     <div style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg, #A0674B, #C08060);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 0 40px rgba(160,103,75,0.4);">
-      <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+      <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
     </div>
     <p style="font-size:0.72rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.5rem;">Lesson 4 Complete</p>
-    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Explorer Badge Earned!</h2>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);margin-top:0.5rem;">You can now describe places beautifully using adjectives, comparatives, and superlatives.</p>
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Dreamer Badge Earned!</h2>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);margin-top:0.5rem;">You can now talk about your plans, goals, and dreams for the future in English.</p>
     <div style="margin-top:2rem;padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
       <div style="font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.5rem;">Next Class Preview</div>
-      <p style="font-size:0.95rem;color:rgba(255,255,255,0.8);">Lesson 5: Real Travel Situations</p>
+      <p style="font-size:0.95rem;color:rgba(255,255,255,0.8);">Lesson 4: Real Travel Situations</p>
     </div>
   </div>
 </div>
@@ -1820,21 +1781,16 @@ var audioMap = {
   "It was the most... place I have ever visited.": "/audio/pricila-adamo/aula4_expr_the_most.mp3",
   "What I loved most about it was...": "/audio/pricila-adamo/aula4_expr_loved_most.mp3",
   "I would describe it as...": "/audio/pricila-adamo/aula4_expr_describe_as.mp3",
-  "The place was absolutely stunning.": "/audio/pricila-adamo/aula4_surv_place_stunning.mp3",
-  "It was more beautiful than I expected.": "/audio/pricila-adamo/aula4_surv_more_beautiful.mp3",
-  "It was the most unforgettable experience of my life.": "/audio/pricila-adamo/aula4_surv_most_unforgettable.mp3",
-  "I would describe it as breathtaking.": "/audio/pricila-adamo/aula4_surv_describe_breathtaking.mp3",
-  "What I loved most about it was the scenery.": "/audio/pricila-adamo/aula4_surv_loved_scenery.mp3",
-  "Hi! Is this seat taken? I am Lena, from Germany. I just arrived in Sydney.": "/audio/pricila-adamo/aula4_d_lena_1.mp3",
-  "Hi, Lena! I am Pricila, from Brazil. Please sit down! This city is so vibrant, is it not?": "/audio/pricila-adamo/aula4_d_pricila_1.mp3",
-  "Absolutely! I have been traveling for three months. Last week I was in New Zealand. The scenery was breathtaking, even more stunning than I expected.": "/audio/pricila-adamo/aula4_d_lena_2.mp3",
-  "That sounds amazing! I visited Canada last year. We stayed in a cozy little cabin near the mountains. It was the most scenic place I have ever seen.": "/audio/pricila-adamo/aula4_d_pricila_2.mp3",
-  "Canada is wonderful! I went to Japan last year. We visited ancient temples, some were over a thousand years old. The food was completely authentic.": "/audio/pricila-adamo/aula4_d_lena_3.mp3",
-  "Japan is on my bucket list! What I loved most about Canada was the silence. The village was so remote, no internet, no noise. Just nature.": "/audio/pricila-adamo/aula4_d_pricila_3.mp3",
-  "That sounds like the perfect escape. Tokyo was the opposite, crowded but incredibly exciting. I would describe it as the most unforgettable experience of my life.": "/audio/pricila-adamo/aula4_d_lena_4.mp3",
-  "I love that! Every trip teaches us something. The place was different from anything I had imagined. I am going to embrace every new destination.": "/audio/pricila-adamo/aula4_d_pricila_4.mp3",
+  "Welcome aboard the Sydney Scenic Tour! My name is James, and I will be your guide today.": "/audio/pricila-adamo/aula4_dialogue_james_1.mp3",
+  "This is stunning! The harbour is even more beautiful than in the photos.": "/audio/pricila-adamo/aula4_dialogue_pricila_1.mp3",
+  "On your left, you can see the Opera House. It is the most iconic building in Australia.": "/audio/pricila-adamo/aula4_dialogue_james_2.mp3",
+  "It is breathtaking! I would describe it as the most elegant building I have ever seen.": "/audio/pricila-adamo/aula4_dialogue_pricila_2.mp3",
+  "Now we are entering The Rocks, one of the oldest and most vibrant neighborhoods in Sydney.": "/audio/pricila-adamo/aula4_dialogue_james_3.mp3",
+  "It reminds me of the ancient neighborhoods I visited in Malta. But this is more colorful and more crowded.": "/audio/pricila-adamo/aula4_dialogue_pricila_3.mp3",
+  "If you want authentic Australian food, I recommend the market here. It is cozy and full of local flavors.": "/audio/pricila-adamo/aula4_dialogue_james_4.mp3",
+  "This is already the most unforgettable day of my trip! What I love most about Sydney is how vibrant it feels.": "/audio/pricila-adamo/aula4_dialogue_pricila_4.mp3",
   "[listening-1]": "/audio/pricila-adamo/aula4_listening_1_canada_trip.mp3",
-  "[listening-2]": "/audio/pricila-adamo/aula4_listening_2_sydney_tour.mp3"
+  "[listening-2]": "/audio/pricila-adamo/aula4_listening_2_australia_highlights.mp3"
 };
 
 // ===== AUDIO ENGINE =====
@@ -1895,7 +1851,6 @@ function goToSlide(idx) {
   slides[currentSlide].classList.remove('active');
   currentSlide = idx;
   slides[currentSlide].classList.add('active');
-  slides[currentSlide].scrollTop = 0;
   updateSlide();
 }
 
@@ -1954,7 +1909,8 @@ document.addEventListener('click', function(e) {
 
 // ===== VOCAB REVEAL =====
 function revealVCard(card) {
-  card.classList.toggle('revealed');
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
   var grid = card.closest('.vocab-grid');
   var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : grid.id === 'vocabGrid2' ? 'vocabCount2' : 'vocabCount3';
   var revealed = grid.querySelectorAll('.v-card.revealed').length;
@@ -1995,7 +1951,7 @@ function showQcAnswer(btn) {
   var answer = card.querySelector('.qc-answer-box');
   var next = card.querySelector('.qc-next-btn');
   answer.classList.add('show');
-  if (next) next.classList.add('show');
+  next.classList.add('show');
   btn.style.display = 'none';
   qcScore++;
   document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal;
@@ -2006,7 +1962,6 @@ function showQcAnswer(btn) {
 
 function nextQc() {
   var cards = document.querySelectorAll('.qc-card');
-  if (qcCurrent >= cards.length - 1) return;
   cards[qcCurrent].classList.remove('active');
   qcCurrent++;
   if (qcCurrent < cards.length) {
@@ -2126,11 +2081,8 @@ function formatTime(s) {
 }
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', function(){initSlides();if(new URLSearchParams(window.location.search).get('autostart'))setTimeout(function(){enterSlideMode()},200);});
+document.addEventListener('DOMContentLoaded', initSlides);
 </script>
-<script src="/lib/audio-toggle.js"></script>
 <script src="/lib/lesson-progress.js"></script>
-<script src="/lib/controle-aulas.js"></script>
-<script src="/lib/activity-sync.js"></script>
 </body>
 </html>
