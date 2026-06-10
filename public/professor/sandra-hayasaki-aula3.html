@@ -462,18 +462,20 @@ body.slide-mode .nav-bar{display:flex}
 .slide-dark .grammar-table-wrap{background:#fff;border-radius:8px}
 .slide-dark .grammar-sentence{background:rgba(255,255,255,.12)!important;color:#fff!important}
 .slide-dark .grammar-sentence strong{color:#7BEFB2!important}
-.slide-dark .dialogue-bubble{background:#fff!important;color:#1a1a2e!important;border-color:rgba(200,200,190,.5)!important}
-.slide-dark .dialogue-bubble.mark-bubble{background:#fff!important}
-.slide-dark .dialogue-bubble.sandra-bubble{background:#fff!important}
-.slide-dark .dialogue-name{color:#1a1a2e!important}
-.slide-dark .dialogue-bubble .vocab-highlight{color:var(--accent)!important}
-.slide-dark .dialogue-bubble .audio-inline svg{stroke:var(--accent)!important}
+/* DIALOGUE BUBBLE CONTRAST FIX */
+.slide-dark .dialogue-bubble { background:rgba(255,255,255,0.95) !important;border-color:rgba(255,255,255,.3) !important; }
+.slide-dark .dialogue-bubble,
+.slide-dark .dialogue-bubble * { color:#1a1a2e !important; }
+.slide-dark .dialogue-bubble strong,
+.slide-dark .dialogue-bubble .vocab-highlight { color:var(--accent) !important; }
+.slide-dark .dialogue-name { color:rgba(255,255,255,.85) !important; }
+.slide-dark .audio-inline { color:#1a1a2e !important; }
+.slide-dark .audio-inline svg { stroke:#1a1a2e; }
 .slide-dark .fill-item{background:#fff!important;color:#1a1a2e!important}
 .slide-dark .fill-item .fill-text{color:#1a1a2e!important}
 .slide-dark .mistake-item{color:inherit!important}
 .slide-dark .roleplay-card .roleplay-kw{color:var(--accent)!important;background:var(--accent-dim)!important;border-color:rgba(14,98,81,.3)!important}
 .slide-dark .roleplay-kw{color:#fff!important}
-.slide-dark .dialogue-bubble{background:#fff!important}
 .order-player{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin-bottom:1rem;max-width:420px}
 .op-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}
 .op-play{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
@@ -1142,6 +1144,7 @@ document.querySelectorAll('.match-row select').forEach(function(sel){var word=se
 (function(){function fmt(s){var m=Math.floor(s/60);var sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec}document.querySelectorAll('button[onclick]').forEach(function(btn){var oc=btn.getAttribute('onclick')||'';if(oc.indexOf('speakText')===-1||oc.indexOf('order')===-1)return;var m=oc.match(/speakText\(['"](\/?(\[[^\]]+\]))['"]/);if(!m)return;var key=m[1];var src=audioMap[key]||audioMap[key.replace(/\\'/g,"'")];if(!src)return;var player=document.createElement('div');player.className='order-player';player.innerHTML='<div class="op-row"><button class="op-skip" onclick="this.parentElement.parentElement._opSkip(-5)" aria-label="Back 5s">&laquo;5</button><button class="op-play" onclick="this.parentElement.parentElement._opToggle()" aria-label="Play"><svg viewBox="0 0 24 24"><polygon class="op-icon-play" points="6 3 20 12 6 21 6 3"/><g class="op-icon-pause" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></g></svg></button><button class="op-skip" onclick="this.parentElement.parentElement._opSkip(5)" aria-label="Forward 5s">5&raquo;</button><div class="op-seekbar" onclick="this.parentElement.parentElement._opSeek(event)"><div class="op-fill"></div></div><div class="op-time">0:00 / 0:00</div></div><div class="op-speed"><button onclick="this.parentElement.parentElement._opSpeed(0.5,this)">0.5x</button><button onclick="this.parentElement.parentElement._opSpeed(0.75,this)">0.75x</button><button class="active" onclick="this.parentElement.parentElement._opSpeed(1,this)">1x</button><button onclick="this.parentElement.parentElement._opSpeed(1.25,this)">1.25x</button></div>';var audio=new Audio(src);audio.preload='metadata';var fill=player.querySelector('.op-fill');var timeEl=player.querySelector('.op-time');var playIcon=player.querySelector('.op-icon-play');var pauseIcon=player.querySelector('.op-icon-pause');var speed=1;audio.addEventListener('loadedmetadata',function(){timeEl.textContent='0:00 / '+fmt(audio.duration)});audio.addEventListener('timeupdate',function(){if(audio.duration){fill.style.width=(audio.currentTime/audio.duration*100)+'%';timeEl.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration)}});audio.addEventListener('ended',function(){playIcon.style.display='';pauseIcon.style.display='none'});player._opToggle=function(){if(audio.paused){audio.playbackRate=speed;audio.play();playIcon.style.display='none';pauseIcon.style.display=''}else{audio.pause();playIcon.style.display='';pauseIcon.style.display='none'}};player._opSkip=function(s){audio.currentTime=Math.max(0,Math.min(audio.duration||0,audio.currentTime+s))};player._opSeek=function(e){var bar=player.querySelector('.op-seekbar');var pct=(e.clientX-bar.getBoundingClientRect().left)/bar.offsetWidth;audio.currentTime=pct*(audio.duration||0)};player._opSpeed=function(s,b){speed=s;audio.playbackRate=s;player.querySelectorAll('.op-speed button').forEach(function(x){x.classList.remove('active')});b.classList.add('active')};btn.parentNode.replaceChild(player,btn)})})();
 if(window.location.search.indexOf('autostart=1')!==-1)setTimeout(function(){enterSlideMode()},500);
 </script>
+<script src="/lib/audio-toggle.js"></script>
 <script src="/lib/lesson-progress.js"></script>
 <script src="/lib/controle-aulas.js"></script>
 <script src="/lib/activity-sync.js"></script>

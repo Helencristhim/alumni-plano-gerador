@@ -712,11 +712,10 @@ body.slide-mode .nav-bar { display:flex; }
 .dialogue-line.shown { opacity:1!important;transform:translateY(0)!important; }
 .avatar { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:#fff;flex-shrink:0; }
 .bubble { padding:.7rem 1rem;border-radius:12px;font-size:.92rem;line-height:1.5;max-width:80%;position:relative;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1); }
-.slide-dark .bubble { color:#fff; }
-/* Fix contraste: o seletor amplo .slide-dark [class*="bubble"] (mass-fix) forcava texto ESCURO nas bubbles de dialogo, que tem fundo ESCURO. Override por maior especificidade. */
-.slide-dark .dialogue-line .bubble, .slide-dark .dialogue-box .bubble { color:#fff !important; }
-.slide-dark .dialogue-line .bubble strong, .slide-dark .dialogue-box .bubble strong { color:var(--accent-light) !important; }
-.slide-dark .dialogue-line .bubble .audio-btn-sm { color:#fff !important; }
+.slide-dark .bubble { background:rgba(255,255,255,0.95) !important;border-color:rgba(255,255,255,.3) !important; }
+.slide-dark .bubble, .slide-dark .bubble * { color:#1a1a2e !important; }
+.slide-dark .bubble strong { color:var(--accent) !important; }
+.slide-dark .bubble .audio-btn-sm { color:#1a1a2e !important; }
 
 /* Quick Fire items */
 .qf-item { transition:all .3s; }
@@ -765,9 +764,6 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .checklist li,
 .slide-dark .checklist li span,
 .slide-dark .checklist label,
-.slide-dark .dialogue-line,
-.slide-dark .dialogue-line .bubble,
-.slide-dark .dialogue-line strong,
 .slide-dark .warm-q,
 .slide-dark .qf-item,
 .slide-dark .qf-item p,
@@ -886,11 +882,6 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .grammar-table th,
 .slide-dark .grammar-box,
 .slide-dark .grammar-box p,
-.slide-dark .dialogue-bubble,
-.slide-dark .dialogue-bubble p,
-.slide-dark .dialogue-line p,
-.slide-dark .dialogue-text,
-.slide-dark .dialogue-name,
 .slide-dark .vocab-card-ic p,
 .slide-dark .vocab-card p,
 .slide-dark .email-card p,
@@ -901,6 +892,19 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .record-card p {
     color: #1a1a2e !important;
 }
+/* === DIALOGUE BUBBLE CONTRAST FIX — white solid bg + dark text === */
+.slide-dark .dialogue-bubble, .slide-dark .dialogue-bubble-ic { background:rgba(255,255,255,0.95) !important;border-color:rgba(255,255,255,.3) !important; }
+.slide-dark .dialogue-bubble,
+.slide-dark .dialogue-bubble *,
+.slide-dark .dialogue-bubble-ic,
+.slide-dark .dialogue-bubble-ic * { color:#1a1a2e !important; }
+.slide-dark .dialogue-bubble strong,
+.slide-dark .dialogue-bubble .vocab-highlight,
+.slide-dark .dialogue-bubble-ic strong,
+.slide-dark .dialogue-bubble-ic .vocab-highlight { color:var(--accent) !important; }
+.slide-dark .dialogue-name { color:rgba(255,255,255,.85) !important; }
+.slide-dark .audio-inline { color:#1a1a2e !important; }
+.slide-dark .audio-inline svg { stroke:#1a1a2e; }
 .secondary-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:"Inter",sans-serif}
 .secondary-btn:hover{background:var(--accent);color:#fff}
 
@@ -1701,7 +1705,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 <div class="slides-container" id="slidesContainer">
 
 <!-- ===== CHAPTER 1 — THE DREAM ===== -->
-<div class="slide active slide-image" data-slide="1" data-phase="1" data-lesson="1" data-teacher="<strong>Abertura (2 min):</strong> 'Welcome back, Gabriela! Last class: CAN and asking for help. Today: WHERE IS IT? You can ask for help... but now you need to UNDERSTAND the answer! Directions: left, right, straight. Imagine: you come out of the Paris metro and you must find your hotel. Let us learn how!' Tom animado." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
+<div class="slide active slide-image" data-slide="1" data-phase="1" data-lesson="9" data-teacher="<strong>Abertura (2 min):</strong> 'Welcome back, Gabriela! Last class: CAN and asking for help. Today: WHERE IS IT? You can ask for help... but now you need to UNDERSTAND the answer! Directions: left, right, straight. Imagine: you come out of the Paris metro and you must find your hotel. Let us learn how!' Tom animado." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
   <div class="slide-inner">
     <div class="chapter-label">Chapter 1 &mdash; The Dream</div>
     <h1 class="slide-title">Where <span class="accent">Is It</span>?</h1>
@@ -1710,7 +1714,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- WARM-UP CALLBACK (REGRA 37) -->
-<div class="slide slide-dark" data-slide="2" data-phase="1" data-lesson="1" data-teacher="<strong>Callback Aula 8 (3 min):</strong> Retome ATIVAMENTE 2+ itens da aula passada. Pe&ccedil;a a Gabriela para dizer em voz alta: 'Can you help me?' e 'Can you show me on the map?'. Pergunte: 'You are lost in Paris. You ask for help. The person says YES. Now... what do you need? You need DIRECTIONS!' Ponte natural para o tema de hoje.">
+<div class="slide slide-dark" data-slide="2" data-phase="1" data-lesson="9" data-teacher="<strong>Callback Aula 8 (3 min):</strong> Retome ATIVAMENTE 2+ itens da aula passada. Pe&ccedil;a a Gabriela para dizer em voz alta: 'Can you help me?' e 'Can you show me on the map?'. Pergunte: 'You are lost in Paris. You ask for help. The person says YES. Now... what do you need? You need DIRECTIONS!' Ponte natural para o tema de hoje.">
   <div class="slide-inner">
     <div class="chapter-label">Warm-up</div>
     <h2 class="slide-heading">Quick <span class="accent">Callback</span></h2>
@@ -1723,7 +1727,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- ===== CHAPTER 2 — WORDS ===== -->
-<div class="slide slide-image" data-slide="3" data-phase="2" data-lesson="1" data-teacher="<strong>Transicao (10s):</strong> 'Let us pack the words you need to find your way in Paris!' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
+<div class="slide slide-image" data-slide="3" data-phase="2" data-lesson="9" data-teacher="<strong>Transicao (10s):</strong> 'Let us pack the words you need to find your way in Paris!' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
   <div class="slide-inner">
     <div class="chapter-label">Chapter 2</div>
     <h1 class="slide-title">Packing <span class="accent">Words</span></h1>
@@ -1732,7 +1736,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- VOCAB CARDS 1-4 -->
-<div class="slide slide-light" data-slide="4" data-phase="2" data-lesson="1" data-teacher="<strong>Vocabulario (8 min):</strong> ANTES de clicar, leia a pista: 'What word do you think this is?' DEPOIS de revelar, toque audio 2x. Drill: street /STREET/ &mdash; 1 silaba. corner /COR-ner/ &mdash; stress no COR. turn /TURN/ &mdash; som do R. straight /STRAYT/ &mdash; 1 silaba, NAO 'strait-chi'. Drill cada 3x.">
+<div class="slide slide-light" data-slide="4" data-phase="2" data-lesson="9" data-teacher="<strong>Vocabulario (8 min):</strong> ANTES de clicar, leia a pista: 'What word do you think this is?' DEPOIS de revelar, toque audio 2x. Drill: street /STREET/ &mdash; 1 silaba. corner /COR-ner/ &mdash; stress no COR. turn /TURN/ &mdash; som do R. straight /STRAYT/ &mdash; 1 silaba, NAO 'strait-chi'. Drill cada 3x.">
   <div class="slide-inner">
     <h2 class="slide-heading">Direction <span class="accent">Words</span></h2>
     <div class="vocab-grid">
@@ -1790,7 +1794,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- VOCAB CARDS 5-8 -->
-<div class="slide slide-light" data-slide="5" data-phase="2" data-lesson="1" data-teacher="<strong>Vocabulario (6 min):</strong> left /LEFT/. right /RYTE/ &mdash; som do R. cross /KROSS/ &mdash; atravessar. station /STAY-shun/ &mdash; stress no STAY. Drill cada 3x. Use as maos: aponte LEFT e RIGHT. Pergunte: 'To go to the other side of the street, you...?' &rarr; 'Cross!'">
+<div class="slide slide-light" data-slide="5" data-phase="2" data-lesson="9" data-teacher="<strong>Vocabulario (6 min):</strong> left /LEFT/. right /RYTE/ &mdash; som do R. cross /KROSS/ &mdash; atravessar. station /STAY-shun/ &mdash; stress no STAY. Drill cada 3x. Use as maos: aponte LEFT e RIGHT. Pergunte: 'To go to the other side of the street, you...?' &rarr; 'Cross!'">
   <div class="slide-inner">
     <h2 class="slide-heading">More Direction <span class="accent">Words</span></h2>
     <div class="vocab-grid">
@@ -1848,7 +1852,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- PRONUNCIATION DRILL -->
-<div class="slide slide-light" data-slide="6" data-phase="2" data-lesson="1" data-teacher="<strong>Pronuncia (4 min):</strong> Drill. Foco: straight /STRAYT/ &mdash; 1 silaba, NAO 'es-treit'. right /RYTE/ vs left /LEFT/. corner /COR-ner/ &mdash; stress no COR. station /STAY-shun/ &mdash; o 'ti' vira 'sh'. Repita 3x cada com Gabriela usando as maos.">
+<div class="slide slide-light" data-slide="6" data-phase="2" data-lesson="9" data-teacher="<strong>Pronuncia (4 min):</strong> Drill. Foco: straight /STRAYT/ &mdash; 1 silaba, NAO 'es-treit'. right /RYTE/ vs left /LEFT/. corner /COR-ner/ &mdash; stress no COR. station /STAY-shun/ &mdash; o 'ti' vira 'sh'. Repita 3x cada com Gabriela usando as maos.">
   <div class="slide-inner">
     <h2 class="slide-heading">Say It <span class="accent">Right</span></h2>
     <div class="pron-grid">
@@ -1887,7 +1891,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- ===== CHAPTER 3 — THE CODE ===== -->
-<div class="slide slide-image" data-slide="7" data-phase="3" data-lesson="1" data-teacher="<strong>Transicao (10s):</strong> 'Words packed! Now let us crack the DIRECTIONS code: how to TELL the way and how to SAY where things are.' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
+<div class="slide slide-image" data-slide="7" data-phase="3" data-lesson="9" data-teacher="<strong>Transicao (10s):</strong> 'Words packed! Now let us crack the DIRECTIONS code: how to TELL the way and how to SAY where things are.' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
   <div class="slide-inner">
     <div class="chapter-label">Chapter 3</div>
     <h1 class="slide-title">The <span class="accent">Code</span></h1>
@@ -1896,7 +1900,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- GRAMMAR DISCOVERY -->
-<div class="slide slide-light" data-slide="8" data-phase="3" data-lesson="1" data-teacher="<strong>Grammar Discovery (5 min):</strong> Mostre as 4 frases. Pergunte: 'Look at the pink words. Two are ACTIONS (commands). Two say WHERE. What pattern do you see?' Espere. Se nao perceber: 'Directions = verb FIRST, no subject (Go! Turn! Cross!). Location = It is + preposition + place (next to, across from).' Discovery method.">
+<div class="slide slide-light" data-slide="8" data-phase="3" data-lesson="9" data-teacher="<strong>Grammar Discovery (5 min):</strong> Mostre as 4 frases. Pergunte: 'Look at the pink words. Two are ACTIONS (commands). Two say WHERE. What pattern do you see?' Espere. Se nao perceber: 'Directions = verb FIRST, no subject (Go! Turn! Cross!). Location = It is + preposition + place (next to, across from).' Discovery method.">
   <div class="slide-inner">
     <h2 class="slide-heading">Spot the <span class="accent">Pattern</span></h2>
     <div class="grammar-sentences">
@@ -1923,7 +1927,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- COMMON MISTAKE -->
-<div class="slide slide-light" data-slide="9" data-phase="3" data-lesson="1" data-teacher="<strong>Common Mistake (3 min):</strong> 'Direction = verbo direto, sem TO: Go straight, NUNCA Go TO straight. E sem artigo: Turn left, NUNCA Turn THE left. E preposicao completa: in front OF, NUNCA in front the.' Drill: 'Go straight.' 3x. 'Turn left.' 3x.">
+<div class="slide slide-light" data-slide="9" data-phase="3" data-lesson="9" data-teacher="<strong>Common Mistake (3 min):</strong> 'Direction = verbo direto, sem TO: Go straight, NUNCA Go TO straight. E sem artigo: Turn left, NUNCA Turn THE left. E preposicao completa: in front OF, NUNCA in front the.' Drill: 'Go straight.' 3x. 'Turn left.' 3x.">
   <div class="slide-inner">
     <h2 class="slide-heading">Common <span class="accent">Mistake</span></h2>
     <div class="mistake-card">
@@ -1950,7 +1954,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- GRAMMAR PRACTICE -->
-<div class="slide slide-light" data-slide="10" data-phase="3" data-lesson="1" data-teacher="<strong>Grammar Practice (4 min):</strong> Clique cada item para revelar. Gabriela tenta PRIMEIRO em voz alta. Foco: imperativo (verbo primeiro) e preposicoes de lugar.">
+<div class="slide slide-light" data-slide="10" data-phase="3" data-lesson="9" data-teacher="<strong>Grammar Practice (4 min):</strong> Clique cada item para revelar. Gabriela tenta PRIMEIRO em voz alta. Foco: imperativo (verbo primeiro) e preposicoes de lugar.">
   <div class="slide-inner">
     <h2 class="slide-heading">Find the <span class="accent">Way</span></h2>
     <div class="fill-grid">
@@ -1977,7 +1981,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- ===== CHAPTER 4 — GETTING THERE ===== -->
-<div class="slide slide-image" data-slide="11" data-phase="4" data-lesson="1" data-teacher="<strong>Transicao (10s):</strong> 'Now imagine: you come out of the metro in Paris. You ask a local how to get to the Eiffel Tower.' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
+<div class="slide slide-image" data-slide="11" data-phase="4" data-lesson="9" data-teacher="<strong>Transicao (10s):</strong> 'Now imagine: you come out of the metro in Paris. You ask a local how to get to the Eiffel Tower.' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
   <div class="slide-inner">
     <div class="chapter-label">Chapter 4</div>
     <h1 class="slide-title">Getting <span class="accent">There</span></h1>
@@ -1986,7 +1990,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- DIALOGUE LINE-BY-LINE -->
-<div class="slide slide-dark" data-slide="12" data-phase="4" data-lesson="1" data-teacher="<strong>Dialogo (8 min):</strong> Clique Next Line para cada fala. Professor le o Local (voz masculina), Gabriela le suas falas. Vocabulario da aula em destaque rosa. Foco em 'How do I get to', 'go straight', 'turn left', 'Is it far?'. Depois pergunte: 'Where does Gabriela want to go? Is it far?'">
+<div class="slide slide-dark" data-slide="12" data-phase="4" data-lesson="9" data-teacher="<strong>Dialogo (8 min):</strong> Clique Next Line para cada fala. Professor le o Local (voz masculina), Gabriela le suas falas. Vocabulario da aula em destaque rosa. Foco em 'How do I get to', 'go straight', 'turn left', 'Is it far?'. Depois pergunte: 'Where does Gabriela want to go? Is it far?'">
   <div class="slide-inner">
     <h2 class="slide-heading" style="color:#fff">Lost Near the <span class="accent">Metro</span></h2>
     <div class="dialogue-box" id="dial9">
@@ -2038,7 +2042,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- COMPREHENSION -->
-<div class="slide slide-dark" data-slide="13" data-phase="4" data-lesson="1" data-teacher="<strong>Comprehension (3 min):</strong> Pergunte SEM mostrar respostas. Depois clique para revelar. Foco: as DIRECOES que o Local deu.">
+<div class="slide slide-dark" data-slide="13" data-phase="4" data-lesson="9" data-teacher="<strong>Comprehension (3 min):</strong> Pergunte SEM mostrar respostas. Depois clique para revelar. Foco: as DIRECOES que o Local deu.">
   <div class="slide-inner">
     <h2 class="slide-heading" style="color:#fff">Did You <span class="accent">Catch</span> That?</h2>
     <div class="comp-questions">
@@ -2059,7 +2063,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- LISTENING 1 -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-lesson="1" data-teacher="<strong>Listening 1 (4 min):</strong> Toque o audio PRIMEIRO. Gabriela ouve SEM texto. Depois pergunte: 'Where does she want to go? What does she do at the corner? Is it far?' Toque novamente se preciso.">
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-lesson="9" data-teacher="<strong>Listening 1 (4 min):</strong> Toque o audio PRIMEIRO. Gabriela ouve SEM texto. Depois pergunte: 'Where does she want to go? What does she do at the corner? Is it far?' Toque novamente se preciso.">
   <div class="slide-inner">
     <h2 class="slide-heading" style="color:#fff">Listen <span class="accent">First</span></h2>
     <p style="color:rgba(255,255,255,.6);text-align:center;margin-bottom:1.5rem;">Close your eyes and listen. Follow the directions in your head.</p>
@@ -2089,7 +2093,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- LISTENING 2 -->
-<div class="slide slide-dark" data-slide="15" data-phase="4" data-lesson="1" data-teacher="<strong>Listening 2 (3 min):</strong> 3 mini-direcoes. Toque primeiro sem texto. Perguntas: 'Where is the bakery? Where is the museum? Is the station far?'">
+<div class="slide slide-dark" data-slide="15" data-phase="4" data-lesson="9" data-teacher="<strong>Listening 2 (3 min):</strong> 3 mini-direcoes. Toque primeiro sem texto. Perguntas: 'Where is the bakery? Where is the museum? Is the station far?'">
   <div class="slide-inner">
     <h2 class="slide-heading" style="color:#fff">Listen <span class="accent">Again</span></h2>
     <p style="color:rgba(255,255,255,.6);text-align:center;margin-bottom:1.5rem;">Three short directions. Listen and answer.</p>
@@ -2116,7 +2120,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- ARTIFACT - ROUTE CARD -->
-<div class="slide slide-light" data-slide="16" data-phase="4" data-lesson="1" data-teacher="<strong>Artefato (3 min):</strong> 'Look! This is Gabriela's Route Card &mdash; her steps from the metro to the hotel!' Gabriela le cada passo em voz alta. Pergunte: 'Step 2: what do you do? Where is the hotel?'">
+<div class="slide slide-light" data-slide="16" data-phase="4" data-lesson="9" data-teacher="<strong>Artefato (3 min):</strong> 'Look! This is Gabriela's Route Card &mdash; her steps from the metro to the hotel!' Gabriela le cada passo em voz alta. Pergunte: 'Step 2: what do you do? Where is the hotel?'">
   <div class="slide-inner">
     <h2 class="slide-heading">Gabriela&rsquo;s Route <span class="accent">Card</span></h2>
     <div style="background:#fff;border-radius:16px;overflow:hidden;max-width:420px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.1);border:2px solid var(--accent)">
@@ -2148,7 +2152,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- ===== CHAPTER 5 — PRACTICE ===== -->
-<div class="slide slide-image" data-slide="17" data-phase="5" data-lesson="1" data-teacher="<strong>Transicao (10s):</strong> 'Time to practice! Show me you can ask AND give directions!' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
+<div class="slide slide-image" data-slide="17" data-phase="5" data-lesson="9" data-teacher="<strong>Transicao (10s):</strong> 'Time to practice! Show me you can ask AND give directions!' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
   <div class="slide-inner">
     <div class="chapter-label">Chapter 5</div>
     <h1 class="slide-title"><span class="accent">Practice</span></h1>
@@ -2157,7 +2161,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- QUICK FIRE -->
-<div class="slide slide-light" data-slide="18" data-phase="5" data-lesson="1" data-teacher="<strong>Quick Fire (6 min):</strong> Uma pergunta por vez. Gabriela responde ORALMENTE primeiro, depois clique Show Answer. Se travar: 'Start with a verb: Go... Turn... Cross...' ou 'Start with How do I get to...?' Score: 6 acertos = confetti!">
+<div class="slide slide-light" data-slide="18" data-phase="5" data-lesson="9" data-teacher="<strong>Quick Fire (6 min):</strong> Uma pergunta por vez. Gabriela responde ORALMENTE primeiro, depois clique Show Answer. Se travar: 'Start with a verb: Go... Turn... Cross...' ou 'Start with How do I get to...?' Score: 6 acertos = confetti!">
   <div class="slide-inner">
     <h2 class="slide-heading">Quick <span class="accent">Fire</span></h2>
     <div id="qf9" style="min-height:200px;">
@@ -2212,7 +2216,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- SPOT THE ERROR -->
-<div class="slide slide-light" data-slide="19" data-phase="5" data-lesson="1" data-teacher="<strong>Spot the Error (4 min):</strong> Gabriela identifica o erro PRIMEIRO. Depois clique para revelar. Foco: imperativo sem TO/THE, preposicao completa (in front OF), ordem da pergunta (How do I get to...?).">
+<div class="slide slide-light" data-slide="19" data-phase="5" data-lesson="9" data-teacher="<strong>Spot the Error (4 min):</strong> Gabriela identifica o erro PRIMEIRO. Depois clique para revelar. Foco: imperativo sem TO/THE, preposicao completa (in front OF), ordem da pergunta (How do I get to...?).">
   <div class="slide-inner">
     <h2 class="slide-heading">Spot the <span class="accent">Error</span></h2>
     <div style="display:flex;flex-direction:column;gap:.8rem;">
@@ -2237,7 +2241,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- PREPOSITIONS DRILL -->
-<div class="slide slide-light" data-slide="20" data-phase="5" data-lesson="1" data-teacher="<strong>Prepositions Drill (4 min):</strong> Mostre cada frase. Gabriela ouve e diz a preposicao correta. Clique para revelar. Foco em next to, across from, on the corner, behind. Drill 2x cada.">
+<div class="slide slide-light" data-slide="20" data-phase="5" data-lesson="9" data-teacher="<strong>Prepositions Drill (4 min):</strong> Mostre cada frase. Gabriela ouve e diz a preposicao correta. Clique para revelar. Foco em next to, across from, on the corner, behind. Drill 2x cada.">
   <div class="slide-inner">
     <h2 class="slide-heading">Where Is <span class="accent">It</span>?</h2>
     <p style="text-align:center;font-size:.9rem;color:var(--text-mid);margin-bottom:1.5rem;">Listen and say the preposition. Click to check.</p>
@@ -2267,7 +2271,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- ===== CHAPTER 6 — YOUR TURN ===== -->
-<div class="slide slide-image" data-slide="21" data-phase="6" data-lesson="1" data-teacher="<strong>Transicao (10s):</strong> 'From guided to free &mdash; navigate Paris on your own!' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
+<div class="slide slide-image" data-slide="21" data-phase="6" data-lesson="9" data-teacher="<strong>Transicao (10s):</strong> 'From guided to free &mdash; navigate Paris on your own!' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
   <div class="slide-inner">
     <div class="chapter-label">Chapter 6</div>
     <h1 class="slide-title">Your <span class="accent">Turn</span></h1>
@@ -2276,7 +2280,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- ROLE-PLAY GUIDED -->
-<div class="slide slide-dark" data-slide="22" data-phase="6" data-lesson="1" data-teacher="<strong>Role-play Guided (5 min):</strong> Professor = local na saida do metro. Gabriela pergunta o caminho para a Torre Eiffel. Keywords visiveis. CCQ: 'How do you ask the way?' &rarr; 'How do I get to...? / Where is...?' Se travar: modele e ela repete.">
+<div class="slide slide-dark" data-slide="22" data-phase="6" data-lesson="9" data-teacher="<strong>Role-play Guided (5 min):</strong> Professor = local na saida do metro. Gabriela pergunta o caminho para a Torre Eiffel. Keywords visiveis. CCQ: 'How do you ask the way?' &rarr; 'How do I get to...? / Where is...?' Se travar: modele e ela repete.">
   <div class="slide-inner">
     <h2 class="slide-heading" style="color:#fff">Role-Play: <span class="accent">Guided</span></h2>
     <div class="roleplay-card" style="background:linear-gradient(135deg,rgba(212,50,106,.15),rgba(212,50,106,.05));border:1px solid rgba(212,50,106,.3);border-radius:12px;padding:1.5rem;">
@@ -2299,7 +2303,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- ROLE-PLAY SEMI-FREE -->
-<div class="slide slide-dark" data-slide="23" data-phase="6" data-lesson="1" data-teacher="<strong>Role-play Semi-free (5 min):</strong> Professor = pessoa na rua. MENOS keywords. Gabriela quer chegar a um cafe e descreve onde acha que fica. Se travar em 5s, de 1 palavra de pista. Elogie fluencia.">
+<div class="slide slide-dark" data-slide="23" data-phase="6" data-lesson="9" data-teacher="<strong>Role-play Semi-free (5 min):</strong> Professor = pessoa na rua. MENOS keywords. Gabriela quer chegar a um cafe e descreve onde acha que fica. Se travar em 5s, de 1 palavra de pista. Elogie fluencia.">
   <div class="slide-inner">
     <h2 class="slide-heading" style="color:#fff">Role-Play: <span class="accent">Semi-Free</span></h2>
     <div class="roleplay-card" style="background:linear-gradient(135deg,rgba(0,48,128,.15),rgba(0,48,128,.05));border:1px solid rgba(0,48,128,.3);border-radius:12px;padding:1.5rem;">
@@ -2320,7 +2324,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- ROLE-PLAY FREE -->
-<div class="slide slide-dark" data-slide="24" data-phase="6" data-lesson="1" data-teacher="<strong>Role-play Free (5 min):</strong> Professor = pessoa apressada que da direcoes rapidas. ZERO keywords. Gabriela precisa: perguntar o caminho, pedir para repetir/mostrar no mapa, e confirmar onde fica. Delayed feedback: anote erros e corrija DEPOIS. Elogie muito.">
+<div class="slide slide-dark" data-slide="24" data-phase="6" data-lesson="9" data-teacher="<strong>Role-play Free (5 min):</strong> Professor = pessoa apressada que da direcoes rapidas. ZERO keywords. Gabriela precisa: perguntar o caminho, pedir para repetir/mostrar no mapa, e confirmar onde fica. Delayed feedback: anote erros e corrija DEPOIS. Elogie muito.">
   <div class="slide-inner">
     <h2 class="slide-heading" style="color:#fff">Role-Play: <span class="accent">Free</span></h2>
     <div class="roleplay-card" style="background:linear-gradient(135deg,rgba(22,163,74,.12),rgba(22,163,74,.04));border:1px solid rgba(22,163,74,.3);border-radius:12px;padding:1.5rem;">
@@ -2337,7 +2341,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- ===== CHAPTER 7 — WRAP-UP ===== -->
-<div class="slide slide-image" data-slide="25" data-phase="7" data-lesson="1" data-teacher="<strong>Transicao (10s):</strong> 'Amazing work today! Let us wrap up.' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
+<div class="slide slide-image" data-slide="25" data-phase="7" data-lesson="9" data-teacher="<strong>Transicao (10s):</strong> 'Amazing work today! Let us wrap up.' Avance." style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80')">
   <div class="slide-inner">
     <div class="chapter-label">Chapter 7</div>
     <h1 class="slide-title">Wrap-<span class="accent">Up</span></h1>
@@ -2346,7 +2350,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- SURVIVAL CARD -->
-<div class="slide slide-dark" data-slide="26" data-phase="7" data-lesson="1" data-teacher="<strong>Survival Card (2 min):</strong> Leia cada frase com Gabriela. Toque audio. Ela repete 2x cada. Estas 5 frases sao as que ela PRECISA para se locomover em Paris.">
+<div class="slide slide-dark" data-slide="26" data-phase="7" data-lesson="9" data-teacher="<strong>Survival Card (2 min):</strong> Leia cada frase com Gabriela. Toque audio. Ela repete 2x cada. Estas 5 frases sao as que ela PRECISA para se locomover em Paris.">
   <div class="slide-inner">
     <h2 class="slide-heading" style="color:#fff">Survival <span class="accent">Card</span></h2>
     <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem;">
@@ -2360,7 +2364,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- CHECKLIST -->
-<div class="slide slide-dark" data-slide="27" data-phase="7" data-lesson="1" data-teacher="<strong>What I Learned (2 min):</strong> Gabriela leia cada item em voz alta. Se disser 'sim, eu sei fazer isso' para TODAS &mdash; a licao esta dominada. Marque os checks juntos. 5/5 = aula concluida no sistema.">
+<div class="slide slide-dark" data-slide="27" data-phase="7" data-lesson="9" data-teacher="<strong>What I Learned (2 min):</strong> Gabriela leia cada item em voz alta. Se disser 'sim, eu sei fazer isso' para TODAS &mdash; a licao esta dominada. Marque os checks juntos. 5/5 = aula concluida no sistema.">
   <div class="slide-inner">
     <h2 class="slide-heading" style="color:#fff">What I <span class="accent">Learned</span></h2>
     <ul class="checklist" id="checklist-9" style="list-style:none;display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem;">
@@ -2389,7 +2393,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- BADGE -->
-<div class="slide slide-dark" data-slide="28" data-phase="7" data-lesson="1" data-teacher="<strong>Badge (1 min):</strong> 'You earned your Navigator Stamp!' Confetti. Energia alta. Preview: proxima aula sobre descrever pessoas. Diga o homework ORALMENTE: 1) Desenhe um mapa simples do seu bairro e escreva 5 lugares com preposicoes (The bakery is next to my house). 2) Grave 60s dando o caminho da sua casa ate a escola (go straight, turn left...). 3) Assista 10 min de Emily in Paris e anote toda palavra de direcao (left, right, straight, near).">
+<div class="slide slide-dark" data-slide="28" data-phase="7" data-lesson="9" data-teacher="<strong>Badge (1 min):</strong> 'You earned your Navigator Stamp!' Confetti. Energia alta. Preview: proxima aula sobre descrever pessoas. Diga o homework ORALMENTE: 1) Desenhe um mapa simples do seu bairro e escreva 5 lugares com preposicoes (The bakery is next to my house). 2) Grave 60s dando o caminho da sua casa ate a escola (go straight, turn left...). 3) Assista 10 min de Emily in Paris e anote toda palavra de direcao (left, right, straight, near).">
   <div class="slide-inner">
     <div class="badge-card">
       <div class="badge-icon">
@@ -2403,7 +2407,7 @@ Callback no warm-up (slide 2 + texto Pre-class): retoma ATIVAMENTE 2 itens da Au
 </div>
 
 <!-- CLOSING -->
-<div class="slide slide-dark" data-slide="29" data-phase="7" data-lesson="1" data-teacher="<strong>Fechamento (1 min):</strong> 'Proxima aula: What do you look like? Descrevendo pessoas! See you!' Diga o homework ORALMENTE (ver slide anterior).">
+<div class="slide slide-dark" data-slide="29" data-phase="7" data-lesson="9" data-teacher="<strong>Fechamento (1 min):</strong> 'Proxima aula: What do you look like? Descrevendo pessoas! See you!' Diga o homework ORALMENTE (ver slide anterior).">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Coming Up Next</div>
     <h2 class="slide-heading">Lesson 10: <span class="accent">What Do You Look Like?</span></h2>

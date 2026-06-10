@@ -1440,7 +1440,10 @@ body.slide-mode .nav-bar { display:flex; }
 .dialogue-line.shown { opacity:1!important;transform:translateY(0)!important; }
 .avatar { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:#fff;flex-shrink:0; }
 .bubble { padding:.7rem 1rem;border-radius:12px;font-size:.92rem;line-height:1.5;max-width:80%;position:relative;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1); }
-.slide-dark .bubble { color:#fff; }
+.slide-dark .bubble { background:rgba(255,255,255,0.95) !important;border-color:rgba(255,255,255,.3) !important; }
+.slide-dark .bubble, .slide-dark .bubble * { color:#1a1a2e !important; }
+.slide-dark .bubble strong { color:var(--accent) !important; }
+.slide-dark .bubble .audio-btn-sm { color:#1a1a2e !important; }
 
 /* Quick Fire items */
 .qf-item { transition:all .3s; }
@@ -1489,9 +1492,6 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .checklist li,
 .slide-dark .checklist li span,
 .slide-dark .checklist label,
-.slide-dark .dialogue-line,
-.slide-dark .dialogue-line .bubble,
-.slide-dark .dialogue-line strong,
 .slide-dark .warm-q,
 .slide-dark .qf-item,
 .slide-dark .qf-item p,
@@ -1610,11 +1610,6 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .grammar-table th,
 .slide-dark .grammar-box,
 .slide-dark .grammar-box p,
-.slide-dark .dialogue-bubble,
-.slide-dark .dialogue-bubble p,
-.slide-dark .dialogue-line p,
-.slide-dark .dialogue-text,
-.slide-dark .dialogue-name,
 .slide-dark .vocab-card-ic p,
 .slide-dark .vocab-card p,
 .slide-dark .email-card p,
@@ -1625,6 +1620,19 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .record-card p {
     color: #1a1a2e !important;
 }
+/* === DIALOGUE BUBBLE CONTRAST FIX — white solid bg + dark text === */
+.slide-dark .dialogue-bubble, .slide-dark .dialogue-bubble-ic { background:rgba(255,255,255,0.95) !important;border-color:rgba(255,255,255,.3) !important; }
+.slide-dark .dialogue-bubble,
+.slide-dark .dialogue-bubble *,
+.slide-dark .dialogue-bubble-ic,
+.slide-dark .dialogue-bubble-ic * { color:#1a1a2e !important; }
+.slide-dark .dialogue-bubble strong,
+.slide-dark .dialogue-bubble .vocab-highlight,
+.slide-dark .dialogue-bubble-ic strong,
+.slide-dark .dialogue-bubble-ic .vocab-highlight { color:var(--accent) !important; }
+.slide-dark .dialogue-name { color:rgba(255,255,255,.85) !important; }
+.slide-dark .audio-inline { color:#1a1a2e !important; }
+.slide-dark .audio-inline svg { stroke:#1a1a2e; }
 .secondary-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:"Inter",sans-serif}
 .secondary-btn:hover{background:var(--accent);color:#fff}
 
@@ -13018,6 +13026,7 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
   });
 })();
 </script>
+<script src="/lib/audio-toggle.js"></script>
 <script src="/lib/lesson-progress.js"></script>
 <script src="/lib/controle-aulas.js"></script>
 <script src="/lib/activity-sync.js"></script>
