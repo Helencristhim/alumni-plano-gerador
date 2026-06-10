@@ -87,6 +87,70 @@ const PHRASES = [
   // ===== Survival card (Rafael = ARTHUR) =====
   { text: "We deployed a new payment platform last quarter.", file: "we_deployed_a_new_payment_platform.mp3", voice: ARTHUR },
   { text: "I would love to discuss this further.", file: "i_would_love_to_discuss_this_further.mp3", voice: ARTHUR },
+
+  // ===== LESSON 2: Running the Meeting — Leading Status Updates =====
+
+  // Vocab words (Rafael is male → ARTHUR)
+  { text: "Agenda", file: "l2_agenda.mp3", voice: ARTHUR },
+  { text: "Action item", file: "l2_action_item.mp3", voice: ARTHUR },
+  { text: "Follow up", file: "l2_follow_up.mp3", voice: ARTHUR },
+  { text: "Status update", file: "l2_status_update.mp3", voice: ARTHUR },
+  { text: "Deadline", file: "l2_deadline.mp3", voice: ARTHUR },
+  { text: "Prioritize", file: "l2_prioritize.mp3", voice: ARTHUR },
+  { text: "Reschedule", file: "l2_reschedule.mp3", voice: ARTHUR },
+  { text: "Minutes", file: "l2_minutes.mp3", voice: ARTHUR },
+
+  // Vocab example sentences (alternate Arthur/Ellen)
+  { text: "Let me share the agenda for today's meeting.", file: "l2_let_me_share_the_agenda.mp3", voice: ARTHUR },
+  { text: "We have three action items from last week's meeting.", file: "l2_we_have_three_action_items.mp3", voice: ELLEN },
+  { text: "I will follow up with the vendor about the delivery date.", file: "l2_i_will_follow_up_with_vendor.mp3", voice: ARTHUR },
+  { text: "Can you give us a status update on the deployment?", file: "l2_can_you_give_us_a_status_update.mp3", voice: ELLEN },
+  { text: "The deadline for the new module is next Friday.", file: "l2_the_deadline_for_the_new_module.mp3", voice: ARTHUR },
+  { text: "We need to prioritize the critical bugs before the release.", file: "l2_we_need_to_prioritize_bugs.mp3", voice: ELLEN },
+  { text: "Can we reschedule the meeting to Thursday afternoon?", file: "l2_can_we_reschedule_the_meeting.mp3", voice: ARTHUR },
+  { text: "I will send the meeting minutes by end of day.", file: "l2_i_will_send_the_meeting_minutes.mp3", voice: ELLEN },
+
+  // Grammar context sentences (alternate)
+  { text: "Rafael is leading the status meeting right now.", file: "l2_rafael_is_leading_the_meeting.mp3", voice: ARTHUR },
+  { text: "Lisa is preparing the QA report.", file: "l2_lisa_is_preparing_the_qa_report.mp3", voice: ELLEN },
+  { text: "They are deploying the update this afternoon.", file: "l2_they_are_deploying_the_update.mp3", voice: ARTHUR },
+  { text: "We are rescheduling the demo for Friday.", file: "l2_we_are_rescheduling_the_demo.mp3", voice: ELLEN },
+
+  // Fill-in sentences (alternate)
+  { text: "Rafael is leading a status meeting with his team.", file: "l2_fill_rafael_is_leading.mp3", voice: ARTHUR },
+  { text: "Lisa is testing the payment module right now.", file: "l2_fill_lisa_is_testing.mp3", voice: ELLEN },
+  { text: "The team is working on fixes for the critical bugs.", file: "l2_fill_team_is_working_on_fixes.mp3", voice: ARTHUR },
+  { text: "We are following up with the vendor this week.", file: "l2_fill_we_are_following_up.mp3", voice: ELLEN },
+  { text: "He is prioritizing the tasks before the deadline.", file: "l2_fill_he_is_prioritizing.mp3", voice: ARTHUR },
+
+  // Dialogue — Rafael (male = ARTHUR), Lisa Park (female = ELLEN)
+  { text: "Good morning, everyone. Let me share the agenda for today's meeting. We have three items: the deployment status, the QA report, and next week's deadlines.", file: "l2_dialogue_rafael_1.mp3", voice: ARTHUR },
+  { text: "Good morning, Rafael. Before we start, I have a quick status update on the QA testing.", file: "l2_dialogue_lisa_2.mp3", voice: ELLEN },
+  { text: "Sure, go ahead, Lisa. What is the current status?", file: "l2_dialogue_rafael_3.mp3", voice: ARTHUR },
+  { text: "We are testing the payment module right now. My team is finding some critical bugs. I am prioritizing them, but we might need to reschedule the release.", file: "l2_dialogue_lisa_4.mp3", voice: ELLEN },
+  { text: "I see. How many critical bugs are you finding?", file: "l2_dialogue_rafael_5.mp3", voice: ARTHUR },
+  { text: "Three so far. We are working on fixes, but the deadline is tight. Can we follow up on this tomorrow?", file: "l2_dialogue_lisa_6.mp3", voice: ELLEN },
+  { text: "Absolutely. I will add that as an action item. Let me take the minutes and send them to the team.", file: "l2_dialogue_rafael_7.mp3", voice: ARTHUR },
+  { text: "That sounds great. I will prepare a detailed report for tomorrow's follow-up.", file: "l2_dialogue_lisa_8.mp3", voice: ELLEN },
+
+  // Listening 1 — Full status meeting (ARTHUR — Rafael speaking)
+  { text: "Good afternoon, everyone. This is our weekly status meeting. I am going to go through the agenda quickly. First, the deployment: we are deploying the new payment module this Friday. The team is running the final tests right now. Second, vendor updates: I am following up with the cloud vendor about the service agreement. They are sending us a revised proposal this week. Third, deadlines: we are approaching the end-of-quarter deadline. I need everyone to prioritize their action items. Any questions?", file: "l2_listening1_status_meeting.mp3", voice: ARTHUR },
+
+  // Listening 2 — Follow-up call (ELLEN — Lisa speaking)
+  { text: "Hi Rafael, this is Lisa from QA. I am calling about the Friday deployment. We are still finding bugs in the payment module. My team is working on them, but I do not think we can meet the original deadline. Can we reschedule the deployment to next Tuesday? I will send you the updated status report with all the action items by end of day.", file: "l2_listening2_follow_up_call.mp3", voice: ELLEN },
+
+  // Survival card L2 (Rafael = ARTHUR — student protagonist)
+  { text: "We need to follow up on the action items from last week.", file: "l2_survival_follow_up_action_items.mp3", voice: ARTHUR },
+  { text: "I am prioritizing the critical bugs before the deadline.", file: "l2_survival_prioritizing_bugs.mp3", voice: ARTHUR },
+  { text: "Let me take the minutes and send them after the meeting.", file: "l2_survival_take_minutes.mp3", voice: ARTHUR },
+
+  // Speech practice L2 (ARTHUR — student protagonist)
+  { text: "I am preparing the agenda for our status meeting and following up on last week's action items.", file: "l2_speech_preparing_agenda.mp3", voice: ARTHUR },
+  { text: "We are meeting at 10 AM on Monday via Zoom.", file: "l2_speech_meeting_at_10am.mp3", voice: ARTHUR },
+  { text: "The QA team is testing the payment module right now.", file: "l2_speech_qa_testing.mp3", voice: ARTHUR },
+
+  // Ordering exercise L2 (ARTHUR)
+  { text: "Rafael shares the agenda for the meeting. Rafael asks the team for updates. Lisa gives a status update on the QA testing. They discuss rescheduling the deployment deadline. Rafael takes the minutes and sends them to the team.", file: "l2_order_meeting_sequence.mp3", voice: ARTHUR },
 ];
 
 async function gen(text, voiceId, outPath) {
