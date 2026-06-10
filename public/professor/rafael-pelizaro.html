@@ -707,36 +707,103 @@ body.slide-mode .nav-bar { display:flex; }
 .err-item.revealed .wrong{text-decoration:line-through;color:#f87171}
 .grammar-box.show{display:block!important;animation:fadeUp .3s ease}
 .qc-answer.show{display:block!important}
-/* Ensure slide-card text in dark slides stays white */
-.slide-dark .slide-card p,.slide-dark .slide-card li,.slide-dark .slide-card strong{color:#fff!important}
-.slide-dark .slide-card strong[style*="accent-light"]{color:var(--accent-light)!important}
-/* Oral items in dark slides */
-.slide-dark .oral-item{background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.1)!important}
-.slide-dark .oral-item p{color:#fff!important}
-.slide-dark .oral-item .oral-answer{color:var(--accent-light)!important}
-/* Error items in dark slides */
-.slide-dark .err-item{background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.1)!important}
-.slide-dark .err-item p{color:#fff!important}
-.slide-dark .err-item .err-correction{color:#4ade80!important}
-/* Fill-ic in dark slides */
-.slide-dark .fill-ic{background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.1)!important}
-.slide-dark .fill-ic p{color:#fff!important}
-.slide-dark .fill-ic .fill-answer{color:var(--accent-light)!important}
-/* Roleplay cards in dark slides — gradient header (white text) + white body (dark text) */
-.slide-dark .roleplay-card{background:#fff!important;border-radius:12px!important;overflow:hidden!important;border:none!important}
-.slide-dark .roleplay-body{padding:1.2rem 1.5rem}
-.slide-dark .roleplay-body .roleplay-scenario{color:#1a1a2e!important;font-size:.9rem;line-height:1.7}
-.slide-dark .roleplay-body .roleplay-keywords{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
-.slide-dark .roleplay-card .roleplay-kw{color:var(--accent)!important;border:1px solid var(--accent)!important;background:var(--accent-dim)!important;padding:.3rem .7rem;border-radius:20px;font-size:.75rem;font-weight:600}
-/* Gradient header text stays white */
+/* ═══════════════════════════════════════════════════════════
+   PREMIUM CARD SYSTEM — DARK SLIDES (glassmorphism + depth)
+   ═══════════════════════════════════════════════════════════ */
+
+/* --- Slide-card (warm-up, practice prompts) --- */
+.slide-dark .slide-card{
+  background:rgba(255,255,255,.07)!important;
+  backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  border-radius:16px!important;
+  box-shadow:0 4px 24px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.08)!important;
+  transition:border-color .3s,box-shadow .3s!important;
+}
+.slide-dark .slide-card:hover{border-color:rgba(50,130,184,.4)!important;box-shadow:0 8px 32px rgba(15,76,117,.25),inset 0 1px 0 rgba(255,255,255,.1)!important}
+.slide-dark .slide-card p,.slide-dark .slide-card li{color:rgba(255,255,255,.92)!important;font-size:.95rem}
+.slide-dark .slide-card strong{color:var(--accent-light)!important}
+.slide-dark .slide-card ul{padding-left:1.2rem}
+
+/* --- Oral items (click-to-reveal situations) --- */
+.slide-dark .oral-item{
+  background:rgba(255,255,255,.06)!important;
+  backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;
+  border:1px solid rgba(255,255,255,.1)!important;
+  border-radius:12px!important;padding:1.1rem 1.2rem!important;
+  box-shadow:0 2px 12px rgba(0,0,0,.2)!important;
+  cursor:pointer!important;transition:all .3s!important;
+}
+.slide-dark .oral-item:hover{background:rgba(255,255,255,.1)!important;border-color:rgba(50,130,184,.35)!important;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.3)!important}
+.slide-dark .oral-item p{color:rgba(255,255,255,.9)!important}
+.slide-dark .oral-item .oral-answer,.slide-dark .oral-item .oral-model{color:var(--accent-light)!important;font-weight:600}
+
+/* --- Error items (spot the error) --- */
+.slide-dark .err-item{
+  background:rgba(255,255,255,.06)!important;
+  backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;
+  border:1px solid rgba(255,255,255,.1)!important;
+  border-radius:12px!important;padding:1.1rem 1.2rem!important;
+  box-shadow:0 2px 12px rgba(0,0,0,.2)!important;
+  cursor:pointer!important;transition:all .3s!important;
+}
+.slide-dark .err-item:hover{background:rgba(255,255,255,.1)!important;border-color:rgba(248,113,113,.3)!important;box-shadow:0 6px 20px rgba(0,0,0,.3)!important}
+.slide-dark .err-item p{color:rgba(255,255,255,.9)!important}
+.slide-dark .err-item .wrong{color:#ff6b6b!important}
+.slide-dark .err-item span{color:rgba(255,255,255,.9)!important}
+.slide-dark .err-item span.wrong{color:#ff6b6b!important}
+.slide-dark .err-item.revealed{border-color:rgba(74,222,128,.3)!important;background:rgba(74,222,128,.06)!important}
+.slide-dark .err-item.revealed .wrong{color:#ff6b6b!important;text-decoration:line-through}
+.slide-dark .err-item .err-correction{color:#4ade80!important;font-weight:600}
+
+/* --- Fill-ic (grammar fill in class) --- */
+.slide-dark .fill-ic{
+  background:rgba(255,255,255,.06)!important;
+  backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;
+  border:1px solid rgba(255,255,255,.1)!important;
+  border-radius:12px!important;padding:1rem 1.2rem!important;
+  box-shadow:0 2px 12px rgba(0,0,0,.2)!important;
+  cursor:pointer!important;transition:all .3s!important;
+}
+.slide-dark .fill-ic:hover{background:rgba(255,255,255,.1)!important;border-color:rgba(50,130,184,.35)!important}
+.slide-dark .fill-ic.revealed{border-color:rgba(50,130,184,.4)!important}
+.slide-dark .fill-ic p{color:rgba(255,255,255,.9)!important}
+.slide-dark .fill-ic .fill-answer{color:var(--accent-light)!important;font-weight:700}
+
+/* --- Comp-q (comprehension questions with white bg) --- */
+.slide-dark .comp-q[style*="background:#fff"]{
+  border-radius:12px!important;
+  box-shadow:0 4px 20px rgba(0,0,0,.25)!important;
+  border:1px solid rgba(200,200,190,.3)!important;
+  transition:all .3s!important;cursor:pointer!important;
+}
+.slide-dark .comp-q[style*="background:#fff"]:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.35)!important}
+.slide-dark .comp-q[style*="background:#fff"] p{color:#1a1a2e!important}
+.slide-dark .comp-q .comp-answer,.slide-dark .comp-q .q-answer{color:var(--accent)!important;font-weight:600}
+
+/* --- Roleplay cards (gradient header + white body) --- */
+.slide-dark .roleplay-card{
+  background:#fff!important;border-radius:16px!important;overflow:hidden!important;border:none!important;
+  box-shadow:0 8px 32px rgba(0,0,0,.35),0 2px 8px rgba(0,0,0,.2)!important;
+  transition:transform .3s,box-shadow .3s!important;
+}
+.slide-dark .roleplay-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.25)!important}
 .slide-dark .roleplay-card>div:first-child{color:#fff!important}
 .slide-dark .roleplay-card>div:first-child div{color:#fff!important}
-/* Error words in dark slides — bright red, always visible */
-.slide-dark .err-item .wrong{color:#ff6b6b!important}
-.slide-dark .err-item span{color:#fff!important}
-.slide-dark .err-item span.wrong{color:#ff6b6b!important}
-.slide-dark .err-item.revealed .wrong{color:#ff6b6b!important;text-decoration:line-through}
-/* Dialogue lines in L2 — fix opacity override */
+.slide-dark .roleplay-body{padding:1.4rem 1.8rem}
+.slide-dark .roleplay-body .roleplay-scenario{color:#2d2d3a!important;font-size:.92rem;line-height:1.75}
+.slide-dark .roleplay-body .roleplay-keywords{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem}
+.slide-dark .roleplay-card .roleplay-kw{
+  color:var(--accent)!important;border:1.5px solid var(--accent)!important;
+  background:rgba(15,76,117,.06)!important;padding:.35rem .8rem;border-radius:20px;
+  font-size:.78rem;font-weight:600;transition:all .2s;
+}
+.slide-dark .roleplay-card .roleplay-kw:hover{background:var(--accent)!important;color:#fff!important}
+
+/* --- Challenge card area --- */
+.slide-dark .qc-answer{color:#4ade80!important}
+
+/* --- Dialogue lines L2 --- */
 .dialogue-line[data-line2]{opacity:0;transform:translateY(10px);transition:all .4s}
 .dialogue-line[data-line2].visible{opacity:1!important;transform:translateY(0)!important;display:flex!important}
 </style>
