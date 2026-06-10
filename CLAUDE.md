@@ -301,11 +301,47 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 - Click → correcao em verde
 - Score counter
 
-**ROLE-PLAY — SITUATION CARDS**
-- 3 niveis obrigatorios: Guided > Semi-free > Free (um slide cada)
-- Card visual com gradiente CSS + icone SVG + cenario + keyword chips
-- NUNCA fotos externas em role-play — sempre gradientes + SVG
-- Keywords como chips com borda accent
+**ROLE-PLAY — SITUATION CARDS (FORMATO VISUAL OBRIGATORIO)**
+
+3 niveis obrigatorios: Guided > Semi-free > Free (um slide cada).
+
+**FORMATO VISUAL DO CARD (BLOQUEANTE — card fora desse padrao = aula NAO entregue):**
+
+O card tem DUAS partes verticais:
+1. **TOPO**: area gradient (cor accent do aluno) com SVG icon centralizado. SEM texto no topo. O titulo do cenario vai no `slide-heading`, NAO dentro do card.
+2. **CORPO**: fundo branco (#fff) com descricao do cenario + keyword chips OU call-to-action em italico accent.
+
+```html
+<!-- PADRAO OBRIGATORIO — copiar e trocar APENAS: gradient colors, SVG, texto, keywords -->
+<div class="roleplay-card" style="max-width:560px;margin:1.5rem auto 0;border-radius:16px;overflow:hidden;border:1px solid rgba(200,200,190,.3)">
+  <!-- TOPO: gradient + SVG icon (SEM texto, SEM "Scenario" label) -->
+  <div style="background:linear-gradient(135deg,var(--accent),var(--accent-light));padding:2.5rem 2rem;display:flex;align-items:center;justify-content:center">
+    <svg viewBox="0 0 48 48" width="56" height="56" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.5">
+      <!-- SVG tematico — trocar por icone relevante ao cenario -->
+      <circle cx="24" cy="24" r="18"/><path d="M16 20h16M16 28h16M24 12v24"/>
+    </svg>
+  </div>
+  <!-- CORPO: fundo branco, texto escuro, keywords accent -->
+  <div class="roleplay-body" style="padding:1.5rem 2rem;background:#fff">
+    <p class="roleplay-scenario" style="font-size:.92rem;line-height:1.75;color:#2d2d3a">
+      Descricao do cenario aqui. O que o aluno deve fazer, com quem, em que contexto.
+    </p>
+    <div class="roleplay-keywords" style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:.5rem">
+      <span class="roleplay-kw">keyword1</span>
+      <span class="roleplay-kw">keyword2</span>
+    </div>
+  </div>
+</div>
+```
+
+**REGRAS VISUAIS (INVIOLAVEIS):**
+- Gradients por nivel: Guided = `var(--accent),var(--accent-light)`, Semi-free = `accent-light,accent`, Free = `#1a1a2e,accent`
+- SVG icon: Lucide style, `stroke:rgba(255,255,255,.6)`, 56x56px. Cada cenario tem icone diferente
+- Corpo: `background:#fff`, texto `color:#2d2d3a`, border-radius:16px, max-width:560px centralizado
+- Keywords: classe `roleplay-kw` com borda accent + texto accent. No Free, substituir por `<p>` italico accent ("Use everything you learned today.")
+- NUNCA "Scenario" label no topo — o titulo vai no `slide-heading` do slide
+- NUNCA fotos externas — sempre gradientes + SVG
+- NUNCA card totalmente branco sem area gradient no topo — isso e o erro mais comum e fica generico/feio
 
 **TEACHER CUE SYSTEM (icone "?" flutuante)**
 - Cada slide tem icone "?" no canto superior direito
@@ -359,6 +395,31 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 - Dois tipos de botao: primary (filled accent) + secondary (outlined accent)
 - Paleta unica por aluno
 - Zero portugues na tela (A2+). Definicoes de vocabulario em INGLES simples
+
+**CONTEUDO NUNCA CORTADO — REGRA BLOQUEANTE (ZERO TOLERANCIA)**
+
+> **NENHUM conteudo pode ficar escondido, cortado ou inacessivel dentro de um slide.** O usuario DEVE conseguir acessar 100% do conteudo de cada slide. Se o conteudo nao cabe na area visivel, o slide DEVE ter barra de rolagem (scroll) para que o usuario consiga ler tudo.
+>
+> **POR QUE ESSA REGRA EXISTE:** Artefatos CSS (emails, boarding passes, menus, cards longos) e componentes com muito texto (dialogos, grammar tables, comprehension questions) frequentemente ultrapassam a area visivel do slide. O conteudo fica cortado embaixo e o usuario NAO consegue ler o restante. Isso e um BUG CRITICO — equivale a entregar material incompleto.
+>
+> **PRINCIPIO: SCROLL E PERMITIDO E BEM-VINDO.** Ter uma barra de rolagem no slide NAO e um problema — o problema e conteudo cortado sem forma de acessar. Se o conteudo e longo, adicionar scroll. Melhor um slide com scroll do que um slide com conteudo invisivel.
+>
+> **REGRAS OBRIGATORIAS:**
+> 1. **Slide-inner com conteudo longo**: Quando o conteudo do slide ultrapassa a area visivel, o `.slide-inner` ou o componente principal DEVE ter `overflow-y: auto` + `max-height` adequado para permitir scroll. O usuario DEVE conseguir rolar ate o final.
+> 2. **Artefatos CSS** (email-artifact, badge-card-artifact, boarding-pass, etc.): DEVEM ter `max-height: 60-65vh` + `overflow-y: auto` para garantir scroll interno se o conteudo for longo. Font-size do body do artefato: maximo `0.82rem`. Padding reduzido (`0.8rem 1.2rem`).
+> 3. **Dialogue boxes**: Ja tem `max-height: 65vh; overflow-y: auto` — NUNCA remover.
+> 4. **Grammar tables**: Se tiver mais de 5 linhas, usar `max-height: 50vh; overflow-y: auto` no wrapper.
+> 5. **Comprehension questions**: Se tiver mais de 4 perguntas, usar `max-height: 55vh; overflow-y: auto`.
+> 6. **Listas longas** (survival-grid, fill-grid, error-grid com 5+ itens): Considerar `max-height` com scroll.
+> 7. **NUNCA** usar `overflow: hidden` em elementos que podem ter conteudo longo — isso CORTA o conteudo sem dar acesso ao usuario.
+>
+> **CHECKLIST PRE-DEPLOY (adicionar a verificacao existente):**
+> - [ ] Abrir CADA slide e verificar que NENHUM conteudo fica cortado embaixo
+> - [ ] Artefatos CSS tem max-height + overflow-y: auto?
+> - [ ] Se o conteudo e longo: existe barra de rolagem funcional?
+> - [ ] Rolar ate o final — o ULTIMO elemento (footer, assinatura, ultimo item) e visivel?
+>
+> **REGRA SIMPLES: Se voce nao consegue VER ou ACESSAR (via scroll) o conteudo inteiro no slide, o slide NAO esta pronto.**
 
 **CONTRASTE — REGRA #1 DO SISTEMA. AULA COM TEXTO ILEGIVEL = NAO ENTREGUE.**
 

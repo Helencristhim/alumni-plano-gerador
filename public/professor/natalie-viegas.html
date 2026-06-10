@@ -714,11 +714,16 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 .challenge-scenario { font-size:.9rem;color:var(--text-dim);margin-bottom:.5rem; }
 .challenge-question { font-size:1.3rem;font-weight:600;color:var(--text);font-family:'Cormorant Garamond',serif;line-height:1.4; }
 
-/* Fill grid em slides dark */
-.slide-dark .fill-item { background:rgba(255,255,255,.08) !important;border:1px solid rgba(255,255,255,.15) !important; }
-.slide-dark .fill-text { color:#ffffff !important; }
-.slide-dark .fill-blank { color:#A5B4FC !important;border-bottom:2px dashed #A5B4FC; }
-.slide-dark .fill-answer { color:#86efac !important; }
+/* Fill grid em slides dark — REGRA UNICA DEFINITIVA
+   fill-item em slide-dark = fundo BRANCO + texto ESCURO em TUDO (filhos inclusos)
+   fill-a (resposta) = escondida, revelada em verde accent ao clicar */
+.slide-dark .fill-item { background:#ffffff !important;border:1px solid rgba(200,200,190,.5) !important;color:#1a1a2e !important; }
+.slide-dark .fill-item *:not(.fill-a):not(.fill-a *) { color:#1a1a2e !important; }
+.slide-dark .fill-item .fill-blank { color:var(--accent) !important;border-bottom:2px dashed var(--accent); }
+.slide-dark .fill-item .fill-answer { color:var(--accent) !important; }
+.slide-dark .fill-item .fill-q span[style*="opacity"] { color:#5c5c6c !important; }
+.slide-dark .fill-item .fill-a { color:var(--accent) !important; }
+.slide-dark .fill-item .fill-a strong { color:#1a1a2e !important; }
 
 /* Comp questions em slides dark */
 .slide-dark .comp-q { background:#ffffff !important;color:#1a1a2e !important;border-radius:10px;padding:1rem;margin-bottom:.8rem; }
@@ -998,10 +1003,14 @@ body.slide-mode .nav-bar { display:flex; }
 .lp-player .lp-time{font-size:.75rem;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums;white-space:nowrap}
 .dialogue-name{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem}
 .comp-answer{display:none;margin-top:.5rem;font-weight:600}
-/* NUCLEAR FIX: force white bg + dark text on ALL card elements in dark slides */
+/* NUCLEAR FIX v2: force white bg + dark text on ALL card elements in dark slides
+   REGRA: card branco em slide-dark = fundo #fff + TODOS filhos (#1a1a2e)
+   Exceções explícitas: .fill-a (resposta verde), .comp-answer/.q-answer (accent) */
 .slide-dark .comp-q,.slide-dark .check-item,.slide-dark .oral-item,.slide-dark .fill-item,.slide-dark .error-card{background:#fff!important;color:#1a1a2e!important;border-color:rgba(200,200,190,.5)!important}
-.slide-dark .comp-q p,.slide-dark .check-item span,.slide-dark .check-item p{color:#1a1a2e!important}
+.slide-dark .comp-q *,.slide-dark .check-item *,.slide-dark .oral-item *,.slide-dark .error-card *{color:#1a1a2e!important}
 .slide-dark .comp-q .comp-answer,.slide-dark .comp-q .q-answer{color:var(--accent)!important}
+.slide-dark .error-card .error-fix{color:var(--accent)!important}
+.slide-dark .error-card .error-fix strong{color:var(--accent)!important}
 .slide-dark .check-item .check-box{border-color:#d0d0d0!important}
 .slide-dark .check-item.checked{background:rgba(22,163,74,.1)!important;border-color:rgba(22,163,74,.3)!important}
 /* Keyword chips for role-play */
