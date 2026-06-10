@@ -26,6 +26,7 @@ TAIL_SCRIPTS = (
     '<script src="/lib/lesson-progress.js"></script>\n'
     '<script src="/lib/controle-aulas.js"></script>\n'
     '<script src="/lib/activity-sync.js"></script>\n'
+    '<script src="/lib/contrast-guard.js"></script>\n'
 )
 
 mono     = read(MONO)
@@ -49,9 +50,10 @@ EXIT_CSS = (
 )
 css = css.replace('</style>', EXIT_CSS + '</style>')
 
-# ---- 2. JS block (the last bare <script>...</script>, the main inline engine) ----
-js_start = mono.rfind('<script>')
-js_end   = mono.index('</script>', js_start) + len('</script>')
+# ---- 2. JS block (the inline engine script that defines the slide state) ----
+anchor   = mono.index('var totalSlides =')          # robust: target the engine, not trailing scripts
+js_start = mono.rfind('<script>', 0, anchor)
+js_end   = mono.index('</script>', anchor) + len('</script>')
 js = mono[js_start:js_end]
 
 # ---- 2a. patch slide-engine state for this standalone lesson (slides 1..N) ----
