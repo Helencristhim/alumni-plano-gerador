@@ -1956,7 +1956,9 @@ var audioMap = {
   "The holding has three subsidiaries.": "/audio/maria-claudia-curimbaba/aula2_the_holding_has_three.mp3",
   "The board meets quarterly to review our assets.": "/audio/maria-claudia-curimbaba/aula2_board_meets_quarterly_assets.mp3",
   "We are looking to acquire a new company.": "/audio/maria-claudia-curimbaba/aula2_looking_to_acquire_new.mp3",
-  "There are branches in Houston and Pittsburgh.": "/audio/maria-claudia-curimbaba/aula2_there_are_branches_houston.mp3"
+  "There are branches in Houston and Pittsburgh.": "/audio/maria-claudia-curimbaba/aula2_there_are_branches_houston.mp3",
+  "listening1": "/audio/maria-claudia-curimbaba/listening_1_executive_intro.mp3",
+  "listening2": "/audio/maria-claudia-curimbaba/listening_2_meeting_opening.mp3"
 };
 
 // ===== AUDIO ENGINE =====
@@ -2107,9 +2109,10 @@ function toggleListening(id, btn, waveId, questionsId) {
   var pauseIcon = btn.querySelector('.pause-icon');
   var questions = document.getElementById(questionsId);
 
-  if (!listeningState[id]) listeningState[id] = { playing: false, played: false };
+  if (!listeningState[id]) listeningState[id] = { playing: false, played: false, audio: null };
 
   if (listeningState[id].playing) {
+    if (listeningState[id].audio) listeningState[id].audio.pause();
     wave.classList.remove('playing');
     playIcon.style.display = '';
     pauseIcon.style.display = 'none';
@@ -2119,21 +2122,33 @@ function toggleListening(id, btn, waveId, questionsId) {
     playIcon.style.display = 'none';
     pauseIcon.style.display = '';
     listeningState[id].playing = true;
-    if (!listeningState[id].played) {
-      listeningState[id].played = true;
-      setTimeout(function() {
-        questions.classList.add('show');
+
+    var file = audioMap[id];
+    if (file) {
+      if (!listeningState[id].audio) {
+        listeningState[id].audio = new Audio(file);
+        listeningState[id].audio.playbackRate = audioSpeed;
+      }
+      listeningState[id].audio.play().catch(function(){});
+      listeningState[id].audio.onended = function() {
         wave.classList.remove('playing');
         playIcon.style.display = '';
         pauseIcon.style.display = 'none';
         listeningState[id].playing = false;
-      }, 8000);
+        if (questions) questions.classList.add('show');
+      };
+    } else {
+      if (!listeningState[id].played) {
+        listeningState[id].played = true;
+        setTimeout(function() {
+          if (questions) questions.classList.add('show');
+          wave.classList.remove('playing');
+          playIcon.style.display = '';
+          pauseIcon.style.display = 'none';
+          listeningState[id].playing = false;
+        }, 8000);
+      }
     }
-  }
-
-  var audioKey = id === 'listening1' ? 'listening_growing_empire' : 'listening_board_meeting';
-  if (audioMap[audioKey]) {
-    speakText(audioKey, btn);
   }
 }
 
