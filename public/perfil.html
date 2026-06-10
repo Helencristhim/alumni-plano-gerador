@@ -729,13 +729,19 @@
             }
         });
 
+        // Detectar idioma do curso para labels dinâmicos
+        var focoAluno = (p.dadosFormulario && p.dadosFormulario.foco) || '';
+        var geracaoFoco = p._geracaoFoco || '';
+        var isEspanhol = /espa[nñ]ol/i.test(focoAluno) || /espa[nñ]ol/i.test(geracaoFoco) || /espa[nñ]ol/i.test(JSON.stringify(p.perfil && p.perfil.programaDetalhado || ''));
+        var labelIdioma = isEspanhol ? 'Espanhol' : 'Inglês';
+
         const fields = [
             { key: 'idade', label: 'Idade', type: 'number', legacyKey: 'idade' },
             { key: 'profissao', label: 'Profissão', type: 'text', legacyKey: 'profissao' },
             { key: 'cidade', label: 'Cidade', type: 'text', legacyKey: 'cidade' },
-            { key: 'nivel', label: 'Nível de Inglês', type: 'select', legacyKey: 'nivel', options: ['A0 (Beginner Absoluto)','A1 (Iniciante)','A2 (Pré-Intermediário)','B1 (Intermediário)','B2 (Intermediário Superior)','C1 (Avançado)','C1+ (Avançado Plus)','C2 (Proficiente)'] },
-            { key: 'foco', label: 'Foco do Curso', type: 'select', legacyKey: 'foco', options: ['Travel English','Business English','Conversação','Proficiência','Apresentações','Acadêmico','Outros'] },
-            { key: 'historico', label: 'Histórico com Inglês', type: 'textarea', legacyKey: 'historico' },
+            { key: 'nivel', label: 'Nível de ' + labelIdioma, type: 'select', legacyKey: 'nivel', options: ['A0 (Beginner Absoluto)','A1 (Iniciante)','A2 (Pré-Intermediário)','B1 (Intermediário)','B2 (Intermediário Superior)','C1 (Avançado)','C1+ (Avançado Plus)','C2 (Proficiente)'] },
+            { key: 'foco', label: 'Foco do Curso', type: 'select', legacyKey: 'foco', options: ['Travel English','Business English','Conversação','Proficiência','Apresentações','Acadêmico','Espanhol Profissional','100% Personalizado','Outros'] },
+            { key: 'historico', label: 'Histórico com ' + labelIdioma, type: 'textarea', legacyKey: 'historico' },
             { key: 'eventoAlvo', label: 'Evento-Alvo', type: 'evento', legacyKey: 'eventoAlvo' },
             { key: 'hobbies', label: 'Hobbies e Interesses', type: 'textarea', legacyKey: 'hobbies' },
             { key: 'stakeAutomatico', label: 'Stake Automático', type: 'textarea', legacyKey: 'stakeAutomatico' },
