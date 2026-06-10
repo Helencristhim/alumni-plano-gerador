@@ -1053,6 +1053,8 @@ body.slide-mode .nav-bar { display:flex; }
 .op-speed{display:flex;gap:.3rem;margin-top:.4rem}
 .op-speed button{padding:.2rem .5rem;border:1px solid var(--border);border-radius:5px;background:var(--bg-card);color:var(--text-dim);font-size:.7rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s}
 .op-speed button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.exit-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:.78rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
+.exit-btn:hover{opacity:.85}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -3824,7 +3826,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div><!-- /lesson-card lesson-5 -->
 
 <!-- AULA 6 -- arquivo separado (REGRA 34) -->
-<a href="/professor/eduarda-gabriel-aula6.html" target="_blank" style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit;margin-bottom:1.5rem" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
+<a href="/professor/eduarda-gabriel-aula6.html" style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit;margin-bottom:1.5rem" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
   <div style="width:48px;height:48px;background:var(--accent-light);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">06</div>
   <div><div style="font-weight:600;font-size:.95rem">Ice-Breaking in International Settings</div><div style="font-size:.8rem;color:var(--text-dim)">Social English &amp; question forms &mdash; Pre-class + IN CLASS</div></div>
 </a>
@@ -3855,7 +3857,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">05</div>
       <div><div style="font-weight:600;font-size:.95rem">First Client Call</div><div style="font-size:.8rem;color:var(--text-dim)">Review &amp; Simulation -- All structures integrated -- 27 slides</div></div>
     </div>
-    <a href="/professor/eduarda-gabriel-aula6.html" target="_blank" style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
+    <a href="/professor/eduarda-gabriel-aula6.html?autostart=1" style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">06</div>
       <div><div style="font-weight:600;font-size:.95rem">Ice-Breaking in International Settings</div><div style="font-size:.8rem;color:var(--text-dim)">Social English &amp; question forms -- 27 slides</div></div>
     </a>
@@ -6638,6 +6640,7 @@ body.slide-mode .nav-bar { display:flex; }
 
 <!-- Navigation Bar -->
 <div class="nav-bar">
+  <button class="exit-btn" onclick="exitSlideMode()" aria-label="Exit to lesson list">&#10005; Exit</button>
   <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <div class="slide-dots" id="slideDots"></div>
   <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)"><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></button>
@@ -7742,6 +7745,12 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
     btn.parentNode.replaceChild(player, btn);
   });
 })();
+</script>
+<script>
+/* REGRA 38 — Exit/Esc sai do slide-mode e volta ao menu IN CLASS; #inclass abre a aba ao voltar de um standalone */
+function exitSlideMode(){document.body.classList.remove("slide-mode");window.scrollTo({top:0});}
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.body.classList.contains("slide-mode"))exitSlideMode();});
+document.addEventListener("DOMContentLoaded",function(){if(window.location.hash==="#inclass"){var b=document.querySelector('.tab-btn[onclick*="inclass"]');if(b)b.click();}});
 </script>
 <script src="/lib/lesson-progress.js"></script>
 <script src="/lib/controle-aulas.js"></script>

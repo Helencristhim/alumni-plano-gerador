@@ -828,6 +828,11 @@ body.slide-mode .nav-bar { display:flex; }
 .op-speed{display:flex;gap:.3rem;margin-top:.4rem}
 .op-speed button{padding:.2rem .5rem;border:1px solid var(--border);border-radius:5px;background:var(--bg-card);color:var(--text-dim);font-size:.7rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s}
 .op-speed button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.exit-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:.78rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
+.exit-btn:hover{opacity:.85}
+.hub-back{display:inline-flex;align-items:center;gap:.3rem;margin-left:1rem;padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--bg-card);color:var(--accent);font-size:.78rem;font-weight:600;text-decoration:none;font-family:'Inter',sans-serif}
+.hub-back:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+body.slide-mode .hub-back{display:none}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -838,6 +843,7 @@ body.slide-mode .nav-bar { display:flex; }
 <div class="logo-bar">
   <img src="/assets/logo-alumni.png" alt="Alumni by Better">
   <span class="prof-badge">Professor View</span>
+  <a href="/professor/eduarda-gabriel.html#inclass" class="hub-back" title="Voltar para a lista de aulas">&#8592; Aulas</a>
   <span class="slide-counter" id="slideCounter">01 / 27</span>
 </div>
 
@@ -2076,6 +2082,7 @@ NB: nenhum item-alvo novo repete vocabulario ja ensinado nas aulas 1-5 (restruct
 
 <!-- Navigation Bar -->
 <div class="nav-bar">
+  <button class="exit-btn" onclick="exitSlideMode()" aria-label="Exit to lesson list">&#10005; Exit</button>
   <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <div class="slide-dots" id="slideDots"></div>
   <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)"><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></button>
@@ -3057,7 +3064,7 @@ function toggleMediaDone(checkbox) {
 
 // ===== PROGRESS TRACKING =====
 function updateProgress() {
-  var totalLessons = 5;
+  var totalLessons = 6;
   try { localStorage.setItem('alumni-progress-eduarda-gabriel', JSON.stringify({ concluidas: 0, total: totalLessons })); } catch(e) {}
   saveState();
 }
@@ -3173,6 +3180,19 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
     btn.parentNode.replaceChild(player, btn);
   });
 })();
+
+// ===== REGRA 38 — Exit volta ao hub (IN CLASS) =====
+function exitSlideMode() {
+  document.body.classList.remove('slide-mode');
+  window.location.href = '/professor/eduarda-gabriel.html#inclass';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.body.classList.contains('slide-mode')) exitSlideMode();
+});
+document.addEventListener('DOMContentLoaded', function() {
+  var first = document.querySelector('.slide[data-slide="1"]');
+  if (first && new URLSearchParams(window.location.search).get('autostart') === '1') enterSlideMode(1);
+});
 </script>
 <script src="/lib/lesson-progress.js"></script>
 <script src="/lib/controle-aulas.js"></script>

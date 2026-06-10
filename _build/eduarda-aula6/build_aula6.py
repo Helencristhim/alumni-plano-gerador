@@ -37,8 +37,16 @@ phrases  = json.loads(read(os.path.join(HERE, 'phrases.json')))
 N = len(re.findall(r'data-slide="\d+"', slides))
 assert N == 27, 'expected 27 slides, got %d' % N
 
-# ---- 1. CSS block (verbatim from monolith) ----
+# ---- 1. CSS block (verbatim from monolith) + REGRA 38 helpers ----
 css = mono[mono.index('<style>'):mono.index('</style>')+len('</style>')]
+EXIT_CSS = (
+".exit-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:.78rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}\n"
+".exit-btn:hover{opacity:.85}\n"
+".hub-back{display:inline-flex;align-items:center;gap:.3rem;margin-left:1rem;padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--bg-card);color:var(--accent);font-size:.78rem;font-weight:600;text-decoration:none;font-family:'Inter',sans-serif}\n"
+".hub-back:hover{background:var(--accent);color:#fff;border-color:var(--accent)}\n"
+"body.slide-mode .hub-back{display:none}\n"
+)
+css = css.replace('</style>', EXIT_CSS + '</style>')
 
 # ---- 2. JS block (the main inline <script>...</script>, last bare <script>) ----
 js_start = mono.rfind('<script>')
@@ -77,6 +85,24 @@ assert n == 1, 'challenges patch'
 js, n = re.subn(r"var dotsEl = document\.getElementById\('slideDots'\);",
                 "var dotsEl = document.getElementById('slideDots'); if(!dotsEl) return;", js)
 assert n == 1, 'slideDots guard'
+
+# ---- 2d. REGRA 38 — Exit/Esc volta ao hub na aba IN CLASS + autostart vindo do menu ----
+EXTRA_JS = (
+"\n// ===== REGRA 38 — Exit volta ao hub (IN CLASS) =====\n"
+"function exitSlideMode() {\n"
+"  document.body.classList.remove('slide-mode');\n"
+"  window.location.href = '/professor/eduarda-gabriel.html#inclass';\n"
+"}\n"
+"document.addEventListener('keydown', function(e) {\n"
+"  if (e.key === 'Escape' && document.body.classList.contains('slide-mode')) exitSlideMode();\n"
+"});\n"
+"document.addEventListener('DOMContentLoaded', function() {\n"
+"  var first = document.querySelector('.slide[data-slide=\"1\"]');\n"
+"  if (first && new URLSearchParams(window.location.search).get('autostart') === '1') enterSlideMode(1);\n"
+"});\n"
+)
+assert js.count('</script>') == 1, 'expected single </script> in js block'
+js = js.replace('</script>', EXTRA_JS + '</script>')
 
 # ---- 3. Planejamento tab (verbatim from monolith — full 50-aula curriculum) ----
 pstart = mono.index('<div class="tab-content active" id="tab-planning">')
@@ -119,11 +145,12 @@ STAMPS = ('<div class="stamps-row">\n'
   '<div class="stamp" id="stamp6" data-label="Ice-Break" style="background-image:url(\'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200&q=80\')"></div>\n'
   '</div>')
 
-def header(badge):
+def header(badge, hubhref):
     return ('<body>\n\n'
       '<div class="logo-bar">\n'
       '  <img src="/assets/logo-alumni.png" alt="Alumni by Better">\n'
       '  <span class="prof-badge">' + badge + '</span>\n'
+      '  <a href="' + hubhref + '" class="hub-back" title="Voltar para a lista de aulas">&#8592; Aulas</a>\n'
       '  <span class="slide-counter" id="slideCounter">01 / %02d</span>\n' % N
       + '</div>\n\n'
       '<div class="main-content">\n\n'
@@ -199,6 +226,7 @@ TAIL = '''<!-- Teacher T Icon -->
 
 <!-- Navigation Bar -->
 <div class="nav-bar">
+  <button class="exit-btn" onclick="exitSlideMode()" aria-label="Exit to lesson list">&#10005; Exit</button>
   <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <div class="slide-dots" id="slideDots"></div>
   <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)"><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></button>
@@ -225,7 +253,7 @@ NB: nenhum item-alvo novo repete vocabulario ja ensinado nas aulas 1-5 (restruct
 # ---- assemble PROFESSOR ----
 prof = (
     head('Professor View &mdash; Eduarda Gabriel | Aula 6 | Ice-Breaking in International Settings | Alumni by Better')
-    + header('Professor View')
+    + header('Professor View', '/professor/eduarda-gabriel.html#inclass')
     + AUDIT
     + TABS_PROF + '\n\n'
     + '<!-- ========== TAB 1: PLANEJAMENTO ========== -->\n' + planning + '\n\n'
@@ -245,7 +273,7 @@ prof = (
 # ---- assemble ALUNO (2 tabs) ----
 aluno = (
     head('Aluno &mdash; Eduarda Gabriel | Aula 6 | Ice-Breaking in International Settings | Alumni by Better')
-    + header('Aluno')
+    + header('Aluno', '/aluno/eduarda-gabriel.html')
     + TABS_ALUNO + '\n\n'
     + '<!-- ========== TAB: PRE-CLASS ========== -->\n'
     + '<div class="tab-content active" id="tab-exercises">\n' + WELCOME + '\n' + preclass + '\n</div>\n\n'
