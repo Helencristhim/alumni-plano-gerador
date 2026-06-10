@@ -1248,6 +1248,13 @@ function updateAutoFields() {
     document.getElementById('btnSave').disabled = name.length < 2;
 }
 
+function nameToSlug(name) {
+    return name.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim().replace(/\s+/g, '-');
+}
+
 async function saveNewStudent() {
     var name = document.getElementById('modalName').value.trim();
     var card = document.getElementById('modalCard').value;
@@ -1259,16 +1266,34 @@ async function saveNewStudent() {
     btn.disabled = true;
     btn.textContent = 'Salvando...';
 
+    var slug = nameToSlug(name);
+
     try {
-        // Save to Supabase
+        // 1. Save to base_alunos (controle-aulas data)
         var resp = await sb.from('base_alunos').insert({
             name: name,
             student_card: card,
             pin: pin,
             has_material: false
         });
-
         if (resp.error) throw new Error(resp.error.message);
+
+        // 2. Create card on dashboard (perfis table)
+        var resp2 = await sb.from('perfis').upsert({
+            id: slug,
+            nome: name,
+            status: 'rascunho',
+            nivel: '',
+            num_aulas: 0,
+            foco: '',
+            ativo: false,
+            data: {
+                dadosFormulario: { nome: name },
+                studentCard: card,
+                pin: pin
+            }
+        });
+        if (resp2.error) throw new Error(resp2.error.message);
 
         // Add to local array
         studentPins.push({
@@ -1283,7 +1308,7 @@ async function saveNewStudent() {
         filterAndRender();
 
         fb.className = 'modal-feedback success';
-        fb.textContent = name + ' adicionado com sucesso! Card: ' + card + ' | PIN: ' + pin;
+        fb.textContent = name + ' adicionado! Card: ' + card + ' | PIN: ' + pin + ' (aparece na dashboard tambem)';
 
         // Prepare for next addition
         setTimeout(function() {
