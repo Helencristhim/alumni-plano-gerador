@@ -519,22 +519,19 @@ Se o elemento tem fundo RGBA()   → texto #ffffff (branco) — rgba sobre slide
 /* CATEGORIA B — Elementos com fundo TRANSPARENTE/ESCURO em slides escuros */
 /* Texto BRANCO puro. NUNCA cinza, NUNCA rgba parcial, NUNCA var(--text) */
 
-/* Dialogue (SEMPRE branco — causa #1 de retrabalho historico) */
-.slide-dark .dialogue-line,
+/* Dialogue (FUNDO BRANCO + TEXTO ESCURO — causa #1 de retrabalho historico) */
+/* Os bubbles DEVEM ter fundo branco solido para leitura. material.css ja tem os overrides. */
+/* Se gerar CSS inline em aula standalone, COPIAR estas regras: */
+.slide-dark .dialogue-container { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+.slide-dark .dialogue-bubble { background: rgba(255,255,255,0.95); border-color: rgba(255,255,255,0.3); }
 .slide-dark .dialogue-bubble,
-.slide-dark .dialogue-bubble p,
-.slide-dark .dialogue-text,
-.slide-dark .dialogue-box,
-.slide-dark .dialogue-box p {
-    color: #ffffff !important;
-}
+.slide-dark .dialogue-bubble * { color: #1a1a2e !important; }
+.slide-dark .dialogue-bubble strong,
+.slide-dark .dialogue-bubble .vocab-highlight { color: var(--accent, #0d7377) !important; }
+.slide-dark .dialogue-bubble .speaker { color: #555 !important; }
+.slide-dark .dialogue-bubble.your-turn { background: rgba(255,255,255,0.9); border-color: rgba(13,115,119,0.4); }
 .slide-dark .dialogue-name {
     color: rgba(255,255,255,0.85) !important;
-}
-.slide-dark .dialogue-line strong,
-.slide-dark .dialogue-bubble strong,
-.slide-dark .dialogue-bubble .vocab-highlight {
-    color: var(--accent-light) !important;
 }
 
 /* Err-item (fundo rgba transparente, NAO branco) */
@@ -598,7 +595,7 @@ Se o elemento tem fundo RGBA()   → texto #ffffff (branco) — rgba sobre slide
 3. **NUNCA `color: rgba(255,255,255,0.6)` ou opacidade parcial** — ou branco puro #fff ou escuro #1a1a2e, NADA no meio
 4. **NUNCA confiar em heranca de cor em slides escuros** — SEMPRE definir cor EXPLICITA em cada elemento
 5. **NUNCA supor que inline `style="color:#fff"` vai funcionar** — regras CSS com !important sobrepoem inline styles. Se uma regra errada forcar #1a1a2e, o inline #fff perde
-6. **NUNCA `.dialogue-*` na lista de elementos com texto escuro** — dialogue e SEMPRE branco
+6. **Dialogue DEVE ter FUNDO BRANCO SOLIDO em slide-dark** — `.dialogue-bubble` recebe `background: rgba(255,255,255,0.95)` + texto `#1a1a2e` com `*` nos filhos. NUNCA fundo transparente/semi-transparente em slide escuro
 7. **NUNCA `.err-item`, `.oral-item`, `.mistake-item` na lista de elementos com texto escuro** — esses tem fundo transparente, texto deve ser branco
 
 ### COMO DECIDIR A CATEGORIA DE UM NOVO ELEMENTO
@@ -646,7 +643,7 @@ grep -oP 'class="[^"]*"' ARQUIVO.html | sort -u
 **Passo 4 — Checklist final (marcar TODOS antes de deploy):**
 - [ ] Zero wildcards `[class*=]` no CSS de contraste
 - [ ] CADA elemento em slide escuro tem cor EXPLICITA definida
-- [ ] Dialogue = texto branco #fff (NUNCA escuro)
+- [ ] Dialogue = bubble com fundo branco solido (rgba(255,255,255,0.95)) + texto escuro #1a1a2e (NUNCA fundo transparente)
 - [ ] err-item, oral-item, mistake-item = texto branco #fff
 - [ ] roleplay-card = fundo branco + texto escuro #1a1a2e
 - [ ] grammar-table, vocab-card-ic, check-item = fundo branco + texto escuro
@@ -1102,7 +1099,60 @@ Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao d
 
 > **LEMBRETE**: O erro mais comum e pular as etapas 1.3 (Grammar in Context) e 1.4 (Grammar Tip) no Pre-class. Isso ja aconteceu antes e NAO pode se repetir. SEMPRE verificar.
 > **LEMBRETE 2**: O segundo erro mais comum e criar slides IN CLASS com classes CSS que nao tem regras definidas (vocab-card-ic sem CSS de reveal, primary-btn sem estilo, comp-q ilegivel em slides escuros). Isso causou retrabalho massivo em 62 arquivos. NUNCA entregar aula sem verificar renderizacao visual de TODOS os slides.
-> **LEMBRETE 3 (CRITICO)**: O TERCEIRO erro mais recorrente — e o mais IRRITANTE — e TEXTO BRANCO SOBRE FUNDO BRANCO em cards dentro de slides escuros. Acontece TODA VEZ que um card com background claro (dialogue, role-play, comprehension, quiz, grammar) fica dentro de um `.slide-dark`. O texto herda `color:#fff` do slide pai e fica INVISIVEL. ANTES de declarar qualquer aula pronta, ABRIR CADA SLIDE no navegador e verificar que NAO existe texto invisivel. Se encontrar: adicionar `.slide-dark .CLASSE { color: #1a1a2e !important; }` no CSS. Material com texto invisivel = NAO PUBLICAR.
+> **LEMBRETE 3 (CRITICO)**: O TERCEIRO erro mais recorrente — e o mais IRRITANTE — e TEXTO BRANCO SOBRE FUNDO BRANCO em cards dentro de slides escuros. Acontece TODA VEZ que um card com background claro (dialogue, role-play, comprehension, quiz, grammar) fica dentro de um `.slide-dark`. O texto herda `color:#fff` do slide pai e fica INVISIVEL. A correcao DEVE usar `*` (wildcard nos filhos), NAO apenas no elemento pai:
+>
+> ```css
+> /* ERRADO — so o pai recebe cor escura, filhos herdam branco do slide-dark */
+> .slide-dark .fill-item { color:#1a1a2e !important; }
+>
+> /* CERTO — pai E todos os filhos recebem cor escura */
+> .slide-dark .fill-item,
+> .slide-dark .fill-item * { color:#1a1a2e !important; }
+> ```
+>
+> **Excecoes explicitas DEPOIS**: `.fill-a` (resposta em accent), `.comp-answer` (accent), `.error-fix` (accent). Essas excecoes devem vir DEPOIS da regra `*` para sobrescrever.
+>
+> Material com texto ilegivel = NAO PUBLICAR.
+
+---
+
+## REGRA 11.5 — EXERCICIOS INTERATIVOS IN CLASS: FILL-THE-GAP (click-to-reveal)
+
+> **REGRA BLOQUEANTE**: Todo exercicio de "Fill the Gap" nos slides IN CLASS DEVE esconder a resposta e so revela-la quando o professor clica. NUNCA mostrar pergunta e resposta ao mesmo tempo.
+
+**FORMATO OBRIGATORIO**:
+
+```html
+<div class="fill-item" onclick="revealFill(this)">
+  <div class="fill-q">"We ___ ___ three sprints so far." <span style="opacity:.4;font-size:.75rem">(complete)</span></div>
+  <div class="fill-a">"We <strong>have completed</strong> three sprints so far."</div>
+</div>
+```
+
+**CSS OBRIGATORIO** (ja deve existir no `<style>` do arquivo):
+```css
+/* fill-q/fill-a: resposta escondida, revelada no clique */
+.fill-item:has(.fill-q) { flex-direction:column; align-items:stretch; }
+.fill-item .fill-q { font-size:1rem; }
+.fill-item .fill-a { display:none; font-weight:600; color:var(--accent); margin-top:.5rem; padding-top:.5rem; border-top:1px solid rgba(0,0,0,.08); }
+.fill-item.revealed .fill-a { display:block; }
+
+/* Em slide-dark: card branco + texto escuro + resposta verde */
+.slide-dark .fill-item,
+.slide-dark .fill-item * { color:#1a1a2e !important; }
+.slide-dark .fill-item .fill-a { color:var(--accent) !important; }
+```
+
+**JS OBRIGATORIO**: `function revealFill(item) { item.classList.toggle('revealed'); }` — TOGGLE, nao add. Clica = mostra, clica de novo = esconde. Isso permite que o professor teste antes da aula sem deixar as respostas abertas.
+
+**REGRAS**:
+1. `.fill-a` DEVE ter `display:none` no CSS — NUNCA visivel por padrao
+2. So aparece quando o professor clica no card (`.revealed` adicionado via JS)
+3. Em `slide-dark`: usar a regra `*` para TODOS os filhos terem texto escuro
+4. Resposta (`.fill-a`) aparece em cor accent apos revelada
+5. NUNCA usar `grammar-sentence` class em slides escuros para este tipo de exercicio — a classe tem CSS com `!important` que conflita. Usar divs sem classe com inline styles
+
+**VERIFICACAO PRE-DEPLOY**: Abrir cada slide de Fill the Gap e confirmar que a resposta esta ESCONDIDA antes do clique. Se estiver visivel = CSS faltando = REJEITAR.
 
 ---
 
