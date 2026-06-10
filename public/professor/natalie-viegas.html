@@ -7933,31 +7933,34 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 var _activeBtn = null;
+var _activeText = null;
 var _playSvg = '<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>';
 var _pauseSvg = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 
 function _resetBtn(b) { if (b && b.classList) { b.classList.remove('playing'); b.innerHTML = _playSvg; } }
 
 function speakText(text, btnEl) {
-  // Toggle: if same button clicked while playing, pause
-  if (currentAudio && _activeBtn === btnEl && btnEl) {
+  var cleanText = text.replace(/\\'/g, "'");
+
+  // Toggle: if same text clicked while audio is playing, pause it
+  if (currentAudio && !currentAudio.paused && _activeText === cleanText) {
     currentAudio.pause(); currentAudio.currentTime = 0;
-    _resetBtn(_activeBtn); currentAudio = null; _activeBtn = null;
+    _resetBtn(_activeBtn); currentAudio = null; _activeBtn = null; _activeText = null;
     return;
   }
-  // Stop previous
-  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; _resetBtn(_activeBtn); currentAudio = null; _activeBtn = null; }
+  // Stop any previous audio
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; _resetBtn(_activeBtn); currentAudio = null; _activeBtn = null; _activeText = null; }
 
-  var cleanText = text.replace(/\\'/g, "'");
   var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
   if (file) {
     currentAudio = new Audio(file);
     currentAudio.playbackRate = audioSpeed;
     _activeBtn = btnEl;
+    _activeText = cleanText;
     if (btnEl && btnEl.classList) { btnEl.classList.add('playing'); btnEl.innerHTML = _pauseSvg; }
-    currentAudio.onended = function() { _resetBtn(btnEl); currentAudio = null; _activeBtn = null; };
-    currentAudio.onerror = function() { _resetBtn(btnEl); currentAudio = null; _activeBtn = null; ttsSpeak(cleanText); };
-    currentAudio.play().catch(function() { _resetBtn(btnEl); currentAudio = null; _activeBtn = null; ttsSpeak(cleanText); });
+    currentAudio.onended = function() { _resetBtn(btnEl); currentAudio = null; _activeBtn = null; _activeText = null; };
+    currentAudio.onerror = function() { _resetBtn(btnEl); currentAudio = null; _activeBtn = null; _activeText = null; ttsSpeak(cleanText); };
+    currentAudio.play().catch(function() { _resetBtn(btnEl); currentAudio = null; _activeBtn = null; _activeText = null; ttsSpeak(cleanText); });
   } else {
     if (btnEl) { btnEl.style.opacity = '0.6'; setTimeout(function() { btnEl.style.opacity = '1'; }, 600); }
     ttsSpeak(cleanText);
