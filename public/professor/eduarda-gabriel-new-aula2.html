@@ -2151,6 +2151,10 @@ function switchTab(tabId) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function exitSlideMode() { document.body.classList.remove('slide-mode'); document.querySelectorAll('.slide').forEach(function(s) { s.classList.remove('active'); }); window.location.href = '/professor/eduarda-gabriel-new.html#inclass'; }
+if (window.location.hash === '#slides') { document.addEventListener('DOMContentLoaded', function() { setTimeout(function(){ enterSlideMode(1); }, 100); }); }
+
+
 function enterSlideMode(startSlide) {
   startSlide = startSlide || 1;
   document.body.classList.add('slide-mode');
@@ -3234,6 +3238,8 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 </script>
 <script src="/lib/audio-toggle.js"></script>
 <script src="/lib/lesson-progress.js"></script>
-<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/controle-aulas.js">
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && document.body.classList.contains('slide-mode')) { e.preventDefault(); exitSlideMode(); } });
+</script>
 </body>
 </html>

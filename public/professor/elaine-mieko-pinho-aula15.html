@@ -1680,9 +1680,9 @@ function startLesson(startSlide, endSlide) {
   goToSlide(startSlide);
 }
 
-function exitSlideMode() {
-  document.body.classList.remove('slide-mode');
-}
+function exitSlideMode() { document.body.classList.remove('slide-mode'); document.querySelectorAll('.slide').forEach(function(s) { s.classList.remove('active'); }); window.location.href = '/professor/elaine-mieko-pinho.html#inclass'; }
+if (window.location.hash === '#slides') { document.addEventListener('DOMContentLoaded', function() { setTimeout(function(){ enterSlideMode(1); }, 100); }); }
+
 
 // ===== LESSON EXPAND/COLLAPSE =====
 function toggleLesson(header) { header.parentElement.classList.toggle('open'); }
@@ -2859,6 +2859,8 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 </script>
 <script src="/lib/lesson-progress.js"></script>
 <script src="/lib/controle-aulas.js"></script>
-<script src="/lib/activity-sync.js"></script>
+<script src="/lib/activity-sync.js">
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && document.body.classList.contains('slide-mode')) { e.preventDefault(); exitSlideMode(); } });
+</script>
 </body>
 </html>
