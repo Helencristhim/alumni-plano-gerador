@@ -2715,3 +2715,74 @@ text.split(/ +/)
 ```
 
 Usar SEMPRE espaco literal (` `) em vez de `\s` para split de palavras em contexto de pronuncia.
+
+---
+
+### REGRA C14 — CHECKLIST IN CLASS: CLASSES OBRIGATORIAS + data-lesson + stamp id (BLOQUEANTE)
+
+> **PROBLEMA QUE ESTA REGRA RESOLVE**: 17 arquivos de professor usavam `checklist-wrap` + `cl-item` no checklist "What I Learned". O `lesson-progress.js` procura `.check-grid` e `.check-item` — as classes antigas NAO eram detectadas. Resultado: checks togglavam visualmente mas NUNCA salvavam no Supabase, stamps NUNCA acendiam, e ao recarregar a pagina os checks sumiam. Alem disso, arquivos standalone copiados de template vinham com `data-lesson="1"` em vez do numero correto da aula, e stamps sem `id="stampN"` impediam o JS de encontra-los. Incidente real: Curimbaba, Pricila, Patricia Ruffo, Diogo, Simone, Carlos Vinicius, Eduarda, Elaine, Gabriela Pires, Estephano (junho/2026).
+
+**TRES REQUISITOS INVIOLAVEIS para o checklist funcionar:**
+
+#### A. Classes CSS EXATAS (NUNCA alternativas)
+
+```html
+<!-- CERTO — lesson-progress.js detecta -->
+<div class="check-grid">
+  <div class="check-item" onclick="toggleCheck(this)">...</div>
+</div>
+
+<!-- ERRADO — lesson-progress.js IGNORA (retorna sem salvar) -->
+<div class="checklist-wrap">
+  <div class="cl-item" onclick="toggleCheck(this)">...</div>
+</div>
+```
+
+**PROIBIDO**: `checklist-wrap`, `cl-item`, `checklist-ic`, ou qualquer outra classe que nao seja `check-grid` + `check-item`. O `lesson-progress.js` faz `item.closest('.check-grid')` na linha 81 — se nao encontrar, faz `return` e NADA e salvo.
+
+#### B. data-lesson CORRETO em TODOS os slides de arquivo standalone
+
+Ao gerar `{slug}-aula{N}.html`, TODOS os slides DEVEM ter `data-lesson="{N}"` (o numero da aula, NAO "1" do template).
+
+```html
+<!-- CERTO — aula 4 standalone -->
+<div class="slide slide-dark" data-slide="1" data-lesson="4" data-phase="1">
+
+<!-- ERRADO — copiou do template sem atualizar -->
+<div class="slide slide-dark" data-slide="1" data-lesson="1" data-phase="1">
+```
+
+**Consequencia do erro**: o Supabase salva como aula 1 (errada), o stamp da aula 1 acende (errado), e ao recarregar nenhum check da aula 4 e restaurado.
+
+#### C. Stamps DEVEM ter id="stampN"
+
+Todo stamp na `stamps-row` DEVE ter `id="stamp{N}"` correspondente ao numero da aula:
+
+```html
+<!-- CERTO -->
+<div class="stamp" id="stamp1" data-label="Identity" style="..."></div>
+
+<!-- ERRADO — sem id, getElementById('stamp1') retorna null -->
+<div class="stamp" data-label="Identity" style="..."></div>
+```
+
+**Sem o id, o `lesson-progress.js` nao encontra o stamp para adicionar `.earned`.**
+
+#### CHECKLIST PRE-DEPLOY (BLOQUEANTE — adicionar aos checks existentes)
+
+```bash
+# 1. ZERO classes antigas no checklist
+grep -c 'checklist-wrap\|"cl-item"' ARQUIVO.html
+# DEVE retornar 0
+
+# 2. data-lesson correto em standalone
+# Para {slug}-aula5.html, TODOS devem ser data-lesson="5"
+grep -o 'data-lesson="[0-9]*"' ARQUIVO.html | sort | uniq -c
+# DEVE mostrar apenas UMA linha com o numero correto
+
+# 3. Stamps com id
+grep 'class="stamp"' ARQUIVO.html | grep -v 'id="stamp'
+# DEVE retornar 0 (zero stamps sem id)
+```
+
+Se QUALQUER check falhar → PARAR → CORRIGIR → so entao deploy.
