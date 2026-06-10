@@ -416,23 +416,79 @@ if (typeof module !== 'undefined' && module.exports) {
 /* ═══════════════════════════════════════════════════════════════
    GLOBAL speakText() — wrapper chamado pelo exercises.js e pelos HTMLs gerados.
    Usa audioMap global (definido no HTML) com fallback para Web Speech API.
+   Suporta play/pause toggle quando btnEl e fornecido.
    ═══════════════════════════════════════════════════════════════ */
-function speakText(text, btnEl) {
-  try {
-    var map = (typeof audioMap !== 'undefined') ? audioMap : {};
-    speakWithFallback(text, map);
-  } catch (err) {
-    console.warn('[speakText] Unexpected error, falling back to Web Speech API:', err);
-    try {
-      _speakWithWebAPI(text);
-    } catch (fallbackErr) {
-      console.warn('[speakText] Web Speech API also failed:', fallbackErr);
-      // Never block interaction — audio is enhancement, not requirement
-    }
+var _activeDialogueAudio = null;
+var _activeDialogueBtn = null;
+
+var _playSvg = '<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>';
+var _pauseSvg = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+function _resetDialogueBtn(btn) {
+  if (btn) {
+    btn.classList.remove('playing');
+    btn.innerHTML = _playSvg;
   }
-  // Visual feedback no botão se fornecido
-  if (btnEl) {
-    btnEl.style.opacity = '0.6';
-    setTimeout(function() { btnEl.style.opacity = '1'; }, 600);
+}
+
+function speakText(text, btnEl) {
+  // If same button clicked while playing — pause/stop
+  if (_activeDialogueAudio && _activeDialogueBtn === btnEl) {
+    _activeDialogueAudio.pause();
+    _activeDialogueAudio.currentTime = 0;
+    _resetDialogueBtn(_activeDialogueBtn);
+    _activeDialogueAudio = null;
+    _activeDialogueBtn = null;
+    return;
+  }
+
+  // Stop any other playing audio
+  if (_activeDialogueAudio) {
+    _activeDialogueAudio.pause();
+    _activeDialogueAudio.currentTime = 0;
+    _resetDialogueBtn(_activeDialogueBtn);
+    _activeDialogueAudio = null;
+    _activeDialogueBtn = null;
+  }
+
+  var map = (typeof audioMap !== 'undefined') ? audioMap : {};
+  var file = map[text] || map[text.toLowerCase()];
+
+  if (file && typeof file === 'string') {
+    var audio = new Audio(file);
+    _activeDialogueAudio = audio;
+    _activeDialogueBtn = btnEl;
+
+    if (btnEl) {
+      btnEl.classList.add('playing');
+      btnEl.innerHTML = _pauseSvg;
+    }
+
+    audio.onended = function() {
+      _resetDialogueBtn(btnEl);
+      _activeDialogueAudio = null;
+      _activeDialogueBtn = null;
+    };
+    audio.onerror = function() {
+      console.warn('[speakText] MP3 failed, falling back to Web Speech API');
+      _resetDialogueBtn(btnEl);
+      _activeDialogueAudio = null;
+      _activeDialogueBtn = null;
+      _speakWithWebAPI(text);
+    };
+    audio.play().catch(function(err) {
+      console.warn('[speakText] Playback failed:', err);
+      _resetDialogueBtn(btnEl);
+      _activeDialogueAudio = null;
+      _activeDialogueBtn = null;
+      _speakWithWebAPI(text);
+    });
+  } else {
+    // No MP3 — fallback to Web Speech API (no toggle for TTS)
+    if (btnEl) {
+      btnEl.style.opacity = '0.6';
+      setTimeout(function() { btnEl.style.opacity = '1'; }, 600);
+    }
+    _speakWithWebAPI(text);
   }
 }

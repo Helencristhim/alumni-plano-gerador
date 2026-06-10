@@ -272,6 +272,16 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 - Vocabulario da aula em negrito cor accent
 - Audio ElevenLabs por linha com `data-voice` no HTML: `data-voice="ellen"` para personagens femininos, `data-voice="arthur"` para masculinos
 - O script de geracao de audio LE o `data-voice` de cada linha para gerar o MP3 com a voz correta automaticamente
+- **OBRIGATORIO: CADA frase do dialogue DEVE ter botao audio-inline play/pause** dentro do `.dialogue-bubble`. O botao usa `speakText()` do audio-generator.js que faz toggle play/pause automaticamente. NUNCA gerar dialogue sem audio por frase.
+- Formato HTML OBRIGATORIO do botao audio-inline dentro de cada `.dialogue-bubble`:
+
+```html
+<span class="audio-inline" onclick="speakText('TEXTO DA FRASE SEM TAGS HTML',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
+```
+
+- O texto passado para `speakText()` DEVE ser limpo (sem tags HTML, sem `<strong>`, sem `<span>`). Exemplo:
+  - HTML bubble: `"I <strong>relocated</strong> from Rio."` → speakText: `'I relocated from Rio.'`
+- O CSS do `audio-inline` ja esta em `material.css` (play/pause, hover, slide-dark). NAO adicionar CSS inline
 - Slide extra de Dialogue Comprehension com 3 perguntas click-to-reveal
 
 **LISTENING — SOUND-FIRST com PLAYER COMPLETO**
