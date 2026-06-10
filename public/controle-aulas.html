@@ -377,6 +377,127 @@
             color: var(--text-dim);
         }
 
+        /* === ADD STUDENT BUTTON === */
+        .add-btn {
+            background: var(--success);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: background 0.2s;
+        }
+        .add-btn:hover { background: #15803d; }
+        .add-btn:focus-visible { outline: 3px solid rgba(22,163,74,0.4); outline-offset: 2px; }
+
+        /* === MODAL === */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: #fff;
+            border-radius: 14px;
+            padding: 2rem;
+            max-width: 440px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .modal h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 1.2rem;
+        }
+        .modal-field {
+            margin-bottom: 1rem;
+        }
+        .modal-field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            margin-bottom: 0.3rem;
+        }
+        .modal-field input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--bg);
+            transition: border-color 0.2s;
+        }
+        .modal-field input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,48,128,0.1); }
+        .modal-field input[readonly] {
+            background: #f0f0eb;
+            color: var(--text-mid);
+            cursor: default;
+        }
+        .modal-auto-tag {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--success);
+            background: var(--success-bg);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            margin-left: 0.4rem;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+        .modal-actions button {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-mid);
+        }
+        .btn-cancel:hover { border-color: var(--text-mid); }
+        .btn-save {
+            background: var(--navy);
+            border: 1px solid var(--navy);
+            color: #fff;
+        }
+        .btn-save:hover { background: var(--navy-light); }
+        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+        .modal-feedback {
+            font-size: 0.78rem;
+            margin-top: 0.8rem;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            display: none;
+        }
+        .modal-feedback.success { display: block; background: var(--success-bg); color: var(--success); }
+        .modal-feedback.error { display: block; background: var(--danger-bg); color: var(--danger); }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header { padding: 1rem; }
@@ -407,6 +528,10 @@
                 <span>Atualiza a cada 1h</span>
             </div>
             <span id="lastUpdate"></span>
+            <button class="add-btn" onclick="openAddModal()" aria-label="Adicionar aluno">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Novo Aluno
+            </button>
             <button class="refresh-btn" onclick="loadAll()" aria-label="Atualizar dados">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
                 Atualizar
@@ -484,6 +609,30 @@
             </tbody>
         </table>
     </div>
+
+<!-- Modal: Adicionar Aluno -->
+<div class="modal-overlay" id="addModal" onclick="if(event.target===this)closeAddModal()">
+    <div class="modal">
+        <h2>Adicionar Novo Aluno</h2>
+        <div class="modal-field">
+            <label>Nome completo</label>
+            <input type="text" id="modalName" placeholder="Ex: Maria Silva Santos" oninput="updateAutoFields()">
+        </div>
+        <div class="modal-field">
+            <label>Student Card <span class="modal-auto-tag">Auto</span></label>
+            <input type="text" id="modalCard" readonly>
+        </div>
+        <div class="modal-field">
+            <label>PIN <span class="modal-auto-tag">Auto</span></label>
+            <input type="text" id="modalPin" readonly>
+        </div>
+        <div class="modal-feedback" id="modalFeedback"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeAddModal()">Cancelar</button>
+            <button class="btn-save" id="btnSave" onclick="saveNewStudent()" disabled>Salvar</button>
+        </div>
+    </div>
+</div>
 
 <script>
 // ============================================================
@@ -1061,9 +1210,135 @@ function updateTimestamp() {
 }
 
 // ============================================================
+// ADD STUDENT — Modal + Auto PIN/Card + Supabase
+// ============================================================
+function getNextSequence() {
+    var maxCardNum = 0;
+    var maxPin = 0;
+    studentPins.forEach(function(s) {
+        var cardNum = parseInt(s.studentCard.replace('SPVT', ''));
+        var pin = parseInt(s.pin);
+        if (cardNum > maxCardNum) maxCardNum = cardNum;
+        if (pin > maxPin) maxPin = pin;
+    });
+    return {
+        nextCard: 'SPVT' + (maxCardNum + 1),
+        nextPin: String(maxPin + 1)
+    };
+}
+
+function openAddModal() {
+    var seq = getNextSequence();
+    document.getElementById('modalName').value = '';
+    document.getElementById('modalCard').value = seq.nextCard;
+    document.getElementById('modalPin').value = seq.nextPin;
+    document.getElementById('btnSave').disabled = true;
+    var fb = document.getElementById('modalFeedback');
+    fb.className = 'modal-feedback'; fb.textContent = '';
+    document.getElementById('addModal').classList.add('open');
+    setTimeout(function() { document.getElementById('modalName').focus(); }, 100);
+}
+
+function closeAddModal() {
+    document.getElementById('addModal').classList.remove('open');
+}
+
+function updateAutoFields() {
+    var name = document.getElementById('modalName').value.trim();
+    document.getElementById('btnSave').disabled = name.length < 2;
+}
+
+async function saveNewStudent() {
+    var name = document.getElementById('modalName').value.trim();
+    var card = document.getElementById('modalCard').value;
+    var pin = document.getElementById('modalPin').value;
+    var fb = document.getElementById('modalFeedback');
+    var btn = document.getElementById('btnSave');
+
+    if (!name) return;
+    btn.disabled = true;
+    btn.textContent = 'Salvando...';
+
+    try {
+        // Save to Supabase
+        var resp = await sb.from('base_alunos').insert({
+            name: name,
+            student_card: card,
+            pin: pin,
+            has_material: false
+        });
+
+        if (resp.error) throw new Error(resp.error.message);
+
+        // Add to local array
+        studentPins.push({
+            name: name,
+            studentCard: card,
+            pin: pin,
+            hasMaterial: false
+        });
+
+        // Update KPI and table
+        document.getElementById('kpiAlunos').textContent = studentPins.length;
+        filterAndRender();
+
+        fb.className = 'modal-feedback success';
+        fb.textContent = name + ' adicionado com sucesso! Card: ' + card + ' | PIN: ' + pin;
+
+        // Prepare for next addition
+        setTimeout(function() {
+            var seq = getNextSequence();
+            document.getElementById('modalName').value = '';
+            document.getElementById('modalCard').value = seq.nextCard;
+            document.getElementById('modalPin').value = seq.nextPin;
+            btn.textContent = 'Salvar';
+            btn.disabled = true;
+        }, 1500);
+
+    } catch(e) {
+        fb.className = 'modal-feedback error';
+        fb.textContent = 'Erro ao salvar: ' + e.message;
+        btn.textContent = 'Salvar';
+        btn.disabled = false;
+    }
+}
+
+// Load extra students from Supabase on init
+async function loadExtraStudents() {
+    try {
+        var resp = await sb.from('base_alunos').select('name,student_card,pin,has_material').order('id', { ascending: true });
+        if (resp.data && resp.data.length > 0) {
+            var existingCards = {};
+            studentPins.forEach(function(s) { existingCards[s.studentCard] = true; });
+            resp.data.forEach(function(row) {
+                if (!existingCards[row.student_card]) {
+                    studentPins.push({
+                        name: row.name,
+                        studentCard: row.student_card,
+                        pin: row.pin,
+                        hasMaterial: row.has_material || false
+                    });
+                }
+            });
+        }
+    } catch(e) { console.warn('Could not load extra students:', e); }
+}
+
+// Keyboard: Esc closes modal
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('addModal').classList.contains('open')) {
+        closeAddModal();
+    }
+    if (e.key === 'Enter' && document.getElementById('addModal').classList.contains('open')) {
+        var btn = document.getElementById('btnSave');
+        if (!btn.disabled) saveNewStudent();
+    }
+});
+
+// ============================================================
 // INIT + AUTO-REFRESH
 // ============================================================
-loadAll();
+loadExtraStudents().then(function() { loadAll(); });
 setInterval(loadAll, 3600000); // 1 hour
 </script>
 
