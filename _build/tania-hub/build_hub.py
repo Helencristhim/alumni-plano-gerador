@@ -111,6 +111,30 @@ def split_slides(body):
     parts = re.split(r'(?=<div class="slide )', body)
     return [p for p in parts if p.strip()]
 
+def dialogue_lines(html):
+    """The conversation lines (audio-inline speakText texts) from the dialogue slide, in order."""
+    if 'class="dialogue-box"' not in html: return []
+    i = html.index('class="dialogue-box"')
+    start = html.rfind('<div class="slide ', 0, i)
+    end = html.find('<div class="slide ', i);  end = end if end != -1 else len(html)
+    seg = html[start:end]
+    return [t.replace("\\'", "'") for t in
+            re.findall(r"audio-inline\" onclick=\"speakText\('((?:[^'\\]|\\.)*)'", seg)]
+
+def _waveform_player(dlines):
+    dl = json.dumps(dlines, ensure_ascii=False).replace('"', '&quot;')
+    bars = ''.join('<div class="bar"></div>' for _ in range(12))
+    return ('<div class="waveform waveform-paused">' + bars + '</div>\n'
+            '    <button class="play-btn" onclick="playListenSeq(this)" data-lines="' + dl + '">'
+            '<svg class="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
+            '<svg class="icon-pause" viewBox="0 0 24 24" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+            '</button>')
+
+def fix_listening_block(blk, dlines):
+    """Replace the single-MP3 custom player with waveform + playListenSeq (multi-voice, per line)."""
+    if 'class="listening-player"' not in blk: return blk
+    return re.sub(r'<div class="listening-player"[^>]*>.*?</audio>', _waveform_player(dlines), blk, count=1, flags=re.S)
+
 def open_tag(block):
     return block[:block.index('>')+1]
 
@@ -133,6 +157,7 @@ def transform_lesson(html, L):
     off = START[L] - 1
     challenges = parse_challenges(html)
     listen = parse_listening_lines(html)   # only for 8/9
+    dlines = dialogue_lines(html)          # for 2-7 listening (multi-voice replay)
     blocks = split_slides(body)
     out = []
     li = 0  # listening index for 8/9
@@ -164,12 +189,9 @@ def transform_lesson(html, L):
         # vocab ids unique (cosmetic / HTML validity)
         blk = (blk.replace('id="vocabGrid1"', 'id="vocabGrid_%dA"' % L).replace('id="vocabGrid2"', 'id="vocabGrid_%dB"' % L)
                   .replace('id="vocabCount1"', 'id="vocabCount_%dA"' % L).replace('id="vocabCount2"', 'id="vocabCount_%dB"' % L))
-        # listening 2-7: unique player ids (shared togglePlayer).
-        # use negative lookahead so 'player-2' never matches inside a freshly-made 'player-2a'.
-        if "togglePlayer('player-" in blk:
-            for base in ('player', 'play-btn', 'progress', 'current-time', 'total-time'):
-                blk = re.sub(base + r'-1(?![0-9a-z])', '%s-%da' % (base, L), blk)
-                blk = re.sub(base + r'-2(?![0-9a-z])', '%s-%db' % (base, L), blk)
+        # listening 2-7: convert single-MP3 player -> playListenSeq (multi-voice, replays dialogue)
+        if 'class="listening-player"' in blk:
+            blk = fix_listening_block(blk, dlines)
         # listening 8-9: toggleListening -> playListenSeq + data-lines
         if 'toggleListening1(this)' in blk or 'toggleListening2(this)' in blk:
             lines = listen[li] if li < len(listen) else []
@@ -252,6 +274,9 @@ def merge_audiomap(html):
 
 # ============================ PROFESSOR ============================
 prof = MONO
+# 0) fix aula1's own single-MP3 listenings -> playListenSeq (multi-voice, replays aula1 dialogue)
+a1_dlines = dialogue_lines(MONO)
+prof = re.sub(r'<div class="listening-player"[^>]*>.*?</audio>', _waveform_player(a1_dlines), prof, flags=re.S)
 # 1) data-lesson="1" on aula1 slides
 prof = re.sub(r'(<div class="slide[^"]*" data-slide="\d+")(?![^>]*data-lesson)', r'\1 data-lesson="1"', prof)
 # 2) engine swap
