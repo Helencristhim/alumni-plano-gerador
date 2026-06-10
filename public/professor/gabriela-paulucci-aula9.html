@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Lesson 9 — Where Is It? Asking for Directions | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --accent:#7B5D8E;--accent-light:#9A7DB0;--accent-dim:rgba(123,93,142,.12);
+  --bg:#f5f2ee;--dark:#1a1a2e;--dark-surface:#232340;
+  --text:#2d2d3a;--text-dim:#6b6b7a;--text-light:#a0a0b0;
+  --white:#fff;--success:#16a34a;--danger:#dc2626;--warn:#d97706;
+  --navy:#003080;--sarah-blue:#5b9bd5;
+  --slide-transition:400ms;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);overflow:hidden;height:100vh;width:100vw}
+
+/* === LOGO BAR === */
+.logo-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.5rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+.logo-bar img{height:28px;filter:brightness(10)}
+.logo-bar .slide-counter{font-size:.75rem;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:2px;font-variant-numeric:tabular-nums}
+
+/* === PHASE PROGRESS BAR === */
+.phase-bar{position:fixed;top:50px;left:0;right:0;z-index:99;display:flex;height:4px;background:rgba(26,26,46,.6)}
+.phase-segment{flex:1;position:relative;transition:background .4s}
+.phase-segment.completed{background:var(--accent)}
+.phase-segment.current{background:var(--accent-light);animation:phasePulse 2s ease infinite}
+.phase-segment.upcoming{background:rgba(255,255,255,.08)}
+@keyframes phasePulse{0%,100%{opacity:1}50%{opacity:.6}}
+.phase-labels{position:fixed;top:54px;left:0;right:0;z-index:98;display:flex;padding:0 1.5rem}
+.phase-label{flex:1;font-size:.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;padding:.3rem 0;transition:color .4s}
+.phase-label.current{color:var(--accent-light)}
+.phase-label.completed{color:var(--accent)}
+
+/* === SLIDE SYSTEM === */
+.slides-container{height:100vh;overflow:hidden;position:relative}
+.slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem}
+.slide.active{opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s}
+
+.slide-inner{max-width:920px;width:100%;position:relative;padding:0 2rem}
+
+.slide-light{background:var(--bg)}
+.slide-light .slide-inner{color:var(--text)}
+.slide-dark{background:var(--dark)}
+.slide-dark .slide-inner{color:var(--white)}
+.slide-dark .vocab-card, .slide-dark .vocab-card-ic, .slide-dark .fill-item, .slide-dark .challenge-card, .slide-dark .error-card, .slide-dark .roleplay-card, .slide-dark .record-card, .slide-dark .survival-item-ic, .slide-dark .oral-item, .slide-dark .scramble-item, .slide-dark .comp-q, .slide-dark .media-card, .slide-dark .match-row select, .slide-dark .hotel-card, .slide-dark .email-card, .slide-dark .boarding-pass, .slide-dark .boarding-pass-artifact, .slide-dark .business-card-artifact, .slide-dark .linkedin-card, .slide-dark .inclass-lesson-card, .slide-dark .flip-card-front, .slide-dark .desk-card, .slide-dark .schedule-card, .slide-dark .family-card, .slide-dark .passport-card { color:#2d2d3a; }
+.slide-image{background-size:cover;background-position:center}
+.slide-image::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,26,46,.4) 0%,rgba(26,26,46,.78) 100%)}
+.slide-image .slide-inner{color:var(--white);position:relative;z-index:2;text-align:center}
+
+/* === NAV === */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:center;gap:1rem;padding:1rem 2rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06)}
+.nav-btn{width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-size:1.2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.nav-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.nav-btn:disabled{opacity:.2;cursor:default;background:transparent;border-color:rgba(255,255,255,.1)}
+.nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.slide-dots{display:flex;gap:6px;align-items:center}
+.slide-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .3s;cursor:pointer}
+.slide-dot.active{background:var(--accent);width:20px;border-radius:3px}
+
+/* === TYPOGRAPHY === */
+.chapter-label{font-size:.75rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--accent-light);margin-bottom:.5rem}
+.slide-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.15;margin-bottom:1rem}
+.slide-subtitle{font-size:1rem;font-weight:300;opacity:.7;line-height:1.6}
+.slide-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;line-height:1.2;margin-bottom:1.2rem}
+.accent{color:var(--accent)}
+.accent-bold{color:var(--accent);font-weight:700}
+
+/* === WARM-UP === */
+.warm-questions{display:flex;flex-direction:column;gap:1.8rem;margin-top:2rem}
+.warm-q{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;font-style:italic;opacity:0;animation:fadeUp .8s ease forwards;color:var(--white);padding-left:1.5rem;border-left:3px solid var(--accent)}
+.warm-q:nth-child(2){animation-delay:.4s}
+.warm-q:nth-child(3){animation-delay:.8s}
+.warm-q:nth-child(4){animation-delay:1.2s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* === TEACHER T ICON === */
+.teacher-t{position:fixed;top:5rem;right:1.5rem;z-index:50;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;cursor:default;transition:all .2s}
+.slide-dark .teacher-t,.slide-image .teacher-t{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.15)}
+.slide-light .teacher-t{background:rgba(123,93,142,.08);color:var(--accent);border:1px solid rgba(123,93,142,.15)}
+.teacher-t:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.teacher-t-panel{display:none;position:absolute;top:0;right:calc(100% + 10px);width:340px;background:rgba(26,26,46,.96);color:rgba(255,255,255,.9);padding:1rem 1.2rem;border-radius:10px;font-size:.82rem;line-height:1.65;box-shadow:0 12px 40px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08)}
+.teacher-t:hover .teacher-t-panel{display:block;animation:fadeIn .2s ease}
+.teacher-t-panel strong{color:#9A7DB0}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* === VOCAB CARDS (2x2 grid) === */
+.vocab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.5rem}
+.vocab-card{background:var(--white);border:2px solid rgba(123,93,142,.12);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .4s;min-height:220px;display:flex;flex-direction:column}
+.vocab-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(123,93,142,.12)}
+.vocab-card.revealed{border-color:var(--accent)}
+.vocab-card .card-icon{width:100%;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;border-radius:11px 11px 0 0;transition:all .5s;padding:.5rem}
+.vocab-card .card-icon svg{width:48px;height:48px;stroke-width:1.5;opacity:.5;transition:opacity .5s}
+.vocab-card .card-hint{font-size:.78rem;color:rgba(255,255,255,.75);font-style:italic;text-align:center;line-height:1.3;padding:0 .5rem;max-width:90%}
+.vocab-card.revealed .card-hint{opacity:.5;font-size:.7rem}
+.vocab-card .card-body{padding:.7rem .8rem;display:flex;flex-direction:column;gap:.25rem;flex:1}
+.vocab-card .card-word{font-weight:700;font-size:1.05rem;color:var(--accent);opacity:0;height:0;overflow:hidden;transition:all .4s}
+.vocab-card.revealed .card-word{opacity:1;height:auto}
+.vocab-card .card-def{font-size:.78rem;color:var(--text-dim);line-height:1.3;font-style:italic;opacity:0;height:0;overflow:hidden;transition:all .4s .1s}
+.vocab-card.revealed .card-def{opacity:1;height:auto}
+.vocab-card .card-example{font-size:.82rem;color:var(--text);line-height:1.3;opacity:0;height:0;overflow:hidden;transition:all .4s .2s}
+.vocab-card.revealed .card-example{opacity:1;height:auto}
+.vocab-card .card-audio{margin-top:auto;padding-top:.4rem;opacity:0;transition:opacity .4s .3s}
+.vocab-card.revealed .card-audio{opacity:1}
+.vocab-card .card-placeholder{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--accent);opacity:.3;font-size:1.5rem;font-weight:800}
+.vocab-card.revealed .card-placeholder{display:none}
+
+/* Audio button small */
+.audio-btn-sm{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:.72rem;font-weight:600;font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.5px}
+.audio-btn-sm:hover{background:#634a74}
+.audio-btn-sm svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Vocab counter */
+.vocab-counter{text-align:center;margin-top:1.2rem;font-weight:600;color:var(--accent);font-size:1rem}
+.vocab-complete{display:none;text-align:center;margin-top:1rem;font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--accent);font-weight:600}
+.vocab-complete.show{display:block;animation:fadeUp .6s ease}
+
+/* === PRONUNCIATION DRILL === */
+.pron-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}
+.pron-item{display:flex;align-items:center;gap:1rem;background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:.8rem 1rem;cursor:pointer;transition:all .3s}
+.pron-item:hover{border-color:var(--accent);box-shadow:0 4px 12px rgba(123,93,142,.1)}
+.pron-word{font-weight:700;font-size:1.1rem;color:var(--dark);min-width:120px}
+.pron-stress{display:flex;gap:.3rem;align-items:center;flex:1}
+.pron-syl{font-size:.9rem;color:var(--text-dim);padding:.2rem .5rem;border-radius:4px;transition:all .3s}
+.pron-syl.stressed{background:var(--accent);color:#fff;font-weight:700;font-size:1rem;transform:scale(1.1)}
+.pron-audio{margin-left:auto}
+
+/* === COMPREHENSION QUESTIONS === */
+.comp-questions{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}
+.comp-q{background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;font-size:.95rem}
+.comp-q:hover{border-color:var(--accent);background:var(--accent-dim)}
+.comp-q .q-text{font-weight:500}
+.comp-q .q-answer{display:none;margin-top:.5rem;color:var(--accent);font-weight:600;font-size:.9rem}
+.comp-q.revealed .q-answer{display:block;animation:fadeUp .3s ease}
+
+/* === GRAMMAR === */
+.grammar-sentences{display:flex;flex-direction:column;gap:1rem;margin:1.5rem 0}
+.grammar-sentence{font-size:1.15rem;text-align:center;line-height:1.6;padding:.6rem;background:rgba(123,93,142,.04);border-radius:8px}
+.grammar-sentence strong{color:var(--accent);font-weight:800;font-size:1.2rem}
+.btn-primary{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif}
+.btn-primary:hover{transform:scale(1.03);box-shadow:0 8px 24px rgba(123,93,142,.3)}
+.btn-secondary{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif}
+.btn-secondary:hover{background:var(--accent);color:#fff}
+
+.grammar-table-wrap{overflow:hidden;max-height:0;transition:max-height .6s ease;margin-top:1rem}
+.grammar-table-wrap.show{max-height:500px}
+.grammar-table{width:100%;max-width:600px;margin:0 auto;border-collapse:collapse}
+.grammar-table th{background:var(--accent);color:#fff;padding:.6rem 1rem;text-align:left;font-size:.85rem}
+.grammar-table td{padding:.6rem 1rem;border-bottom:1px solid #e8e8e8;font-size:.95rem}
+.grammar-table td:nth-child(2){font-weight:700;color:var(--accent)}
+
+/* === GRAMMAR MISTAKE === */
+.mistake-card{display:flex;flex-direction:column;gap:1.5rem;align-items:center;margin-top:2rem}
+.mistake-item{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-radius:12px;font-size:1.2rem;width:100%;max-width:500px}
+.mistake-wrong{background:rgba(220,38,38,.06);border:2px solid rgba(220,38,38,.2);color:var(--danger);text-decoration:line-through;font-weight:600}
+.mistake-right{background:rgba(22,163,74,.06);border:2px solid rgba(22,163,74,.2);color:var(--success);font-weight:700}
+.mistake-icon{width:32px;height:32px;flex-shrink:0}
+.mistake-icon svg{width:32px;height:32px;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* === FILL-IN PRACTICE === */
+.fill-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}
+.fill-item{background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:.8rem}
+.fill-item:hover{border-color:var(--accent)}
+.fill-item .fill-text{font-size:1rem;flex:1}
+.fill-item .fill-blank{color:var(--accent);font-weight:800;border-bottom:2px dashed var(--accent);padding:0 .3rem;min-width:40px;display:inline-block;text-align:center}
+.fill-item .fill-answer{display:none;font-weight:700;color:var(--accent)}
+.fill-item.revealed .fill-blank{display:none}
+.fill-item.revealed .fill-answer{display:inline}
+
+/* === DIALOGUE === */
+.dialogue-box{display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem;max-height:65vh;overflow-y:auto;padding-right:.5rem}
+.dialogue-line{display:flex;gap:.8rem;align-items:flex-start;opacity:0;transform:translateY(10px);transition:all .4s}
+.dialogue-line.visible{opacity:1;transform:translateY(0)}
+.dialogue-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0}
+.dialogue-avatar.david{background:var(--sarah-blue)}
+.dialogue-avatar.sarah{background:var(--sarah-blue)}
+.dialogue-avatar.gabriela{background:var(--accent)}
+.dialogue-bubble{padding:.7rem 1rem;border-radius:12px;font-size:.92rem;line-height:1.5;max-width:80%;position:relative}
+.dialogue-bubble.david-bubble{background:rgba(91,155,213,.14);border:1px solid rgba(91,155,213,.3)}
+.dialogue-bubble.sarah-bubble{background:rgba(91,155,213,.14);border:1px solid rgba(91,155,213,.3)}
+.dialogue-bubble.gabriela-bubble{background:var(--accent-dim);border:1px solid rgba(123,93,142,.25)}
+.dialogue-bubble .vocab-highlight{color:var(--accent-light);font-weight:700}
+.dialogue-bubble .audio-inline, .oral-model .audio-inline{display:inline-flex;margin-left:.4rem;cursor:pointer;opacity:.5;transition:opacity .2s;vertical-align:middle}
+.dialogue-bubble .audio-inline:hover, .oral-model .audio-inline:hover{opacity:1}
+.dialogue-bubble .audio-inline svg, .oral-model .audio-inline svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2}
+.dialogue-name{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem}
+
+/* === CHALLENGE === */
+.challenge-card{background:var(--white);border:2px solid #e8e4df;border-radius:16px;padding:2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;transition:all .3s;position:relative}
+.challenge-prompt{font-family:'Cormorant Garamond',serif;font-size:1.4rem;line-height:1.5;color:var(--text)}
+.challenge-answer{display:none;font-size:1.1rem;color:var(--accent);font-weight:600;padding:1rem;background:var(--accent-dim);border-radius:10px;width:100%;animation:fadeUp .3s ease}
+.challenge-answer.show{display:block}
+.challenge-score{position:absolute;top:1rem;right:1rem;background:var(--accent);color:#fff;padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:700}
+.challenge-counter{font-size:.8rem;color:var(--text-dim);font-weight:600}
+
+/* === ERROR CARDS === */
+.error-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}
+.error-card{background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:1rem}
+.error-card:hover{border-color:var(--accent)}
+.error-card .error-sentence{font-size:1rem;color:var(--text);flex:1}
+.error-card .error-fix{display:none;font-weight:600;color:var(--success);font-size:.95rem}
+.error-card.revealed .error-sentence{text-decoration:line-through;color:var(--danger);opacity:.6}
+.error-card.revealed .error-fix{display:block;animation:fadeUp .3s ease}
+.error-score{text-align:center;margin-top:1rem;font-weight:700;color:var(--accent);font-size:1.1rem}
+
+/* === ORAL DRILL === */
+.oral-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}
+.oral-item{background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;transition:all .3s;cursor:pointer}
+.oral-situation{font-size:.95rem;color:var(--text);margin-bottom:.5rem;line-height:1.5}
+.oral-model{display:none;color:var(--accent);font-weight:600;font-size:.9rem;padding:.6rem;background:var(--accent-dim);border-radius:6px;margin-top:.5rem}
+.oral-item.revealed .oral-model{display:block;animation:fadeUp .3s ease}
+
+/* Listening Player */
+.listening-player{max-width:420px;margin:1.5rem auto 0}
+.lp-seekbar{height:6px;background:rgba(255,255,255,.15);border-radius:3px;cursor:pointer;margin-bottom:8px;position:relative}
+.lp-seekbar:hover{height:8px}
+.lp-progress{height:100%;background:var(--accent);border-radius:3px;transition:width .1s;width:0%}
+.lp-time{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.5);margin-bottom:16px;font-variant-numeric:tabular-nums}
+.lp-controls{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.lp-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lp-btn:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.lp-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.lp-play{width:64px;height:64px;background:var(--accent);border:none;color:#fff}
+.lp-play:hover{transform:scale(1.05)}
+.lp-play svg{width:24px;height:24px}
+.lp-play.playing .lp-icon-play{display:none}
+.lp-play.playing .lp-icon-pause{display:flex!important}
+.lp-icon-pause{display:none!important}
+.lp-speed{display:flex;justify-content:center;gap:8px}
+.lp-speed-btn{padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.lp-speed-btn:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.lp-speed-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lp-label{font-size:.7rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;text-align:center;margin-bottom:6px}
+
+/* === ROLE PLAY === */
+.roleplay-card{background:var(--white);border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:520px;margin:0 auto}
+.roleplay-body{padding:1.5rem}
+.roleplay-scenario{font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem}
+.roleplay-keywords{display:flex;flex-wrap:wrap;gap:.4rem}
+.roleplay-kw{padding:.3rem .7rem;background:var(--accent-dim);border:1px solid rgba(123,93,142,.2);border-radius:16px;font-size:.8rem;color:var(--accent);font-weight:600}
+
+/* === RECORD CARD === */
+.record-card{background:var(--white);border:2px solid #e8e4df;border-radius:16px;padding:2rem;text-align:center;max-width:500px;margin:0 auto}
+.record-prompt{font-family:'Cormorant Garamond',serif;font-size:1.3rem;line-height:1.5;color:var(--text);margin-bottom:1.5rem}
+.record-btn{width:72px;height:72px;border-radius:50%;background:var(--danger);border:none;color:#fff;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;margin:0 auto}
+.record-btn:hover{transform:scale(1.08);box-shadow:0 8px 32px rgba(220,38,38,.3)}
+.record-btn svg{width:28px;height:28px;fill:#fff}
+.record-btn.recording{animation:recordPulse 1s ease infinite}
+@keyframes recordPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)}50%{box-shadow:0 0 0 12px rgba(220,38,38,0)}}
+
+/* === BADGE / CELEBRATION === */
+.badge-card{text-align:center;padding:2rem}
+.badge-icon{width:120px;height:120px;margin:0 auto 1.5rem;position:relative}
+.badge-icon .badge-circle{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-light));display:flex;align-items:center;justify-content:center;animation:badgePop .6s ease}
+.badge-icon .badge-circle svg{width:48px;height:48px;stroke:#fff;fill:none;stroke-width:2}
+@keyframes badgePop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+.sparkles{position:absolute;inset:-20px;pointer-events:none}
+.sparkle{position:absolute;width:6px;height:6px;background:var(--accent);border-radius:50%;animation:sparkle 1.5s ease infinite}
+@keyframes sparkle{0%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(0) translateY(-20px)}}
+.sparkle:nth-child(1){top:10%;left:20%;animation-delay:0s}
+.sparkle:nth-child(2){top:5%;right:25%;animation-delay:.3s}
+.sparkle:nth-child(3){bottom:15%;left:10%;animation-delay:.6s}
+.sparkle:nth-child(4){bottom:10%;right:15%;animation-delay:.2s}
+.sparkle:nth-child(5){top:40%;left:5%;animation-delay:.8s}
+.sparkle:nth-child(6){top:30%;right:5%;animation-delay:.5s}
+
+/* === SURVIVAL / KIT RECAP === */
+.survival-grid{display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem}
+.survival-item{display:flex;align-items:center;gap:.8rem;background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:.8rem 1rem;transition:all .2s}
+.survival-item:hover{border-color:var(--accent)}
+.survival-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+.survival-text{flex:1;font-size:.92rem;color:var(--text)}
+
+/* === CHECKLIST === */
+.check-grid{display:flex;flex-direction:column;gap:.5rem;margin-top:1.5rem}
+.check-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:var(--white);border:1px solid #e8e4df;border-radius:8px;cursor:pointer;transition:all .3s;font-size:.92rem;color:var(--text)}
+.check-item:hover{border-color:var(--accent)}
+.check-item.checked{background:rgba(22,163,74,.06);border-color:rgba(22,163,74,.3)}
+.check-item .check-box{width:22px;height:22px;border-radius:6px;border:2px solid #d0d0d0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s}
+.check-item.checked .check-box{background:var(--success);border-color:var(--success)}
+.check-item.checked .check-box svg{opacity:1}
+.check-box svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:3;opacity:0;transition:opacity .3s}
+
+/* === REVIEW GRID === */
+.review-grid{display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem}
+.review-item{display:flex;align-items:center;gap:.8rem;background:var(--white);border:1px solid #e8e4df;border-radius:10px;padding:.7rem 1rem}
+.review-word{font-weight:700;font-size:1rem;color:var(--accent);min-width:110px}
+.review-example{font-size:.85rem;color:var(--text-dim);flex:1;line-height:1.4;font-style:italic}
+.review-audio{flex-shrink:0}
+
+/* === CONFETTI === */
+.confetti-container{position:fixed;inset:0;pointer-events:none;z-index:9999}
+.confetti-piece{position:absolute;width:8px;height:8px;top:-10px;animation:confettiFall 3s ease forwards}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(123,93,142,.3);border-radius:3px}
+
+/* === RESPONSIVE === */
+@media(max-width:768px){
+  .slide{padding:5rem 1.2rem 5.5rem}
+  .vocab-grid{grid-template-columns:1fr;gap:.8rem}
+  .vocab-card{min-height:auto}
+  .slide-title{font-size:2rem}
+  .slide-heading{font-size:1.6rem}
+  .dialogue-bubble{max-width:85%}
+}
+@media(max-width:375px){
+  .slide-heading{font-size:1.5rem;}
+  .slide-inner{padding:1rem;}
+  .chapter-label{font-size:.65rem;}
+}
+
+.slide-section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:600;line-height:1.2;margin-bottom:.5rem}
+.primary-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif}
+.primary-btn:hover{transform:scale(1.03);box-shadow:0 8px 24px rgba(123,93,142,.3)}
+.secondary-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:"Inter",sans-serif}
+.secondary-btn:hover{background:var(--accent);color:#fff}
+
+/* === ANTI-TEXTO-INVISIVEL — PARTE 1 (cards de fundo claro em slide escuro) === */
+/* NOTA: dialogue-* propositalmente FORA daqui (tem fundo escuro transparente -> texto branco na PARTE 2) */
+.slide-dark .comp-q,
+.slide-dark .comp-q p,
+.slide-dark .comp-q .q-text,
+.slide-dark .comp-q .q-answer,
+.slide-dark .check-item,
+.slide-dark .check-item span,
+.slide-dark .fill-item,
+.slide-dark .fill-item .fill-text,
+.slide-dark .error-card,
+.slide-dark .error-card .error-sentence,
+.slide-dark .oral-item,
+.slide-dark .oral-situation,
+.slide-dark .vocab-card,
+.slide-dark .vocab-card p,
+.slide-dark .challenge-card,
+.slide-dark .challenge-prompt,
+.slide-dark .survival-item,
+.slide-dark .survival-text,
+.slide-dark .review-item,
+.slide-dark .review-example,
+.slide-dark .grammar-table,
+.slide-dark .grammar-table td,
+.slide-dark .grammar-table th,
+.slide-dark .mistake-item,
+.slide-dark .pron-item,
+.slide-dark .pron-word{
+  color:#1a1a2e !important;
+}
+.slide-dark .comp-q .q-answer{color:var(--accent)!important}
+.slide-dark .grammar-table th{color:#fff!important}
+.slide-dark .mistake-wrong{color:var(--danger)!important}
+.slide-dark .mistake-right{color:var(--success)!important}
+
+/* === PARTE 2 — DIALOGUE EM SLIDE ESCURO — texto BRANCO (OBRIGATORIO) === */
+.slide-dark .dialogue-line,
+.slide-dark .dialogue-bubble,
+.slide-dark .dialogue-bubble p,
+.slide-dark .dialogue-text,
+.slide-dark .dialogue-box,
+.slide-dark .dialogue-box p{
+  color:#ffffff !important;
+}
+.slide-dark .dialogue-name{color:rgba(255,255,255,.85)!important}
+.slide-dark .dialogue-line strong,
+.slide-dark .dialogue-bubble strong,
+.slide-dark .dialogue-bubble .vocab-highlight{color:var(--accent-light)!important}
+.slide-dark .dialogue-bubble .audio-inline svg{stroke:#fff!important}
+
+/* === PARTE 3 — BOTOES EM SLIDE ESCURO === */
+.slide-dark .audio-btn-sm,
+.slide-dark .btn-primary,
+.slide-dark .primary-btn,
+.slide-dark .lp-play{
+  color:#ffffff !important;background:var(--accent)!important;border-color:var(--accent)!important;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='gabriela-paulucci';window.TOTAL_AULAS=64;</script>
+</head>
+<body>
+
+<!--
+SCENARIO FIT — Aula 9
+Can-do: "I can ask for and understand simple directions in the city."
+Gramatica-alvo: Where is the ...?; Go straight; Turn left/right; It's next to / on the corner / near.
+Vocab-alvo: map, street, corner, left, right, straight, near, next to.
+Cenario escolhido: na rua, um turista pede direcoes a um morador para achar um lugar (banco/farmacia/estacao).
+Por que elicita o alvo: a situacao OBRIGA o aluno a perguntar onde fica algo e a entender as direcoes (esquerda/direita/reto/ao lado de).
+
+CONTINUIDADE — Aula 9
+Itens novos: map, street, corner, left, right, straight, near, next to, Where is ...?, Go straight, Turn left/right.
+Itens revisados: Excuse me / polite (Aula 7), the store (Aula 8), prepositions this/that.
+Callback no warm-up: retoma a Aula 8 (loja/shopping) e pergunta como ENCONTRAR a loja na cidade -> direcoes.
+-->
+
+<!-- Logo Bar -->
+<div class="logo-bar">
+  <img src="/assets/logo-alumni.png" alt="Alumni by Better">
+  <span class="slide-counter" id="slideCounter">01 / 29</span>
+</div>
+
+<!-- Phase Progress Bar -->
+<div class="phase-bar" id="phaseBar">
+  <div class="phase-segment current" data-phase="1"></div>
+  <div class="phase-segment upcoming" data-phase="2"></div>
+  <div class="phase-segment upcoming" data-phase="3"></div>
+  <div class="phase-segment upcoming" data-phase="4"></div>
+  <div class="phase-segment upcoming" data-phase="5"></div>
+  <div class="phase-segment upcoming" data-phase="6"></div>
+  <div class="phase-segment upcoming" data-phase="7"></div>
+</div>
+<div class="phase-labels" id="phaseLabels">
+  <span class="phase-label current" data-phase="1">The Dream</span>
+  <span class="phase-label" data-phase="2">Words</span>
+  <span class="phase-label" data-phase="3">The Code</span>
+  <span class="phase-label" data-phase="4">On the Street</span>
+  <span class="phase-label" data-phase="5">Practice</span>
+  <span class="phase-label" data-phase="6">Your Turn</span>
+  <span class="phase-label" data-phase="7">Wrap-Up</span>
+</div>
+
+<!-- ===================== SLIDES ===================== -->
+<div class="slides-container" id="slidesContainer">
+
+<div class="slide slide-image active" data-slide="1" data-lesson="9" data-phase="1" data-teacher="<strong>Abertura (1 min):</strong> Cumprimente a Gabriela ao vivo. Em PT: 'Hoje você vai aprender a pedir e entender direções na cidade &mdash; virar a esquerda, a direita, ir reto.' Crie clima por 20 seg." style="background-image:url('https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=1400&q=80')"><div class="slide-inner"><div class="chapter-label">Lesson 9</div><h1 class="slide-title">Where <span class="accent">Is It?</span></h1><p class="slide-subtitle">Asking for directions in the city<br>A2 &bull; 60 minutes &bull; Where is / left / right / straight</p></div></div>
+
+<div class="slide slide-dark" data-slide="2" data-lesson="9" data-phase="1" data-teacher="<strong>Warm-up + Callback (4 min):</strong> 3 perguntas. As duas primeiras RETOMAM a Aula 8 (loja/compras). A terceira faz a PONTE para direções. CCQ: 'left or right?' aponte com a mao para conferir."><div class="slide-inner"><div class="chapter-label">Chapter 1: The Dream</div><h2 class="slide-heading" style="color:var(--white)">Before We <span class="accent">Start</span></h2><div class="warm-questions"><div class="warm-q">Yesterday you went shopping. What did you buy?</div><div class="warm-q">Where is your favorite store in the city?</div><div class="warm-q">When you are lost, how do you ask for directions?</div></div></div></div>
+
+<div class="slide slide-dark" data-slide="3" data-lesson="9" data-phase="1" data-teacher="<strong>A Promessa (1 min):</strong> Em PT: 'No fim de hoje, você vai pedir uma direção na rua e entender a resposta &mdash; vai conseguir se virar em qualquer cidade.' Avance."><div class="slide-inner" style="text-align:center"><div class="chapter-label">Today's Goal</div><h2 class="slide-heading" style="color:var(--white)">By the end of today, you will ask <span class="accent">"Where is it?"</span><br>and follow the directions.</h2><p class="slide-subtitle" style="margin-top:1rem">Left, right, straight, next to, on the corner.</p></div></div>
+
+<div class="slide slide-image" data-slide="4" data-lesson="9" data-phase="2" data-teacher="<strong>Transição (15 seg):</strong> Diga: 'Let us learn the direction words.' Avance." style="background-image:url('https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1400&q=80')"><div class="slide-inner"><div class="chapter-label">Chapter 2</div><h2 class="slide-title">Packing <span class="accent">Words</span></h2><p class="slide-subtitle">Directions in the city</p></div></div>
+
+<div class="slide slide-light" data-slide="5" data-lesson="9" data-phase="2" data-teacher="<strong>Vocab reveal (4 min):</strong> Click on each card. Use as MAOS para mostrar left/right/straight. Velocidade: 25-30 seg/card.">
+  <div class="slide-inner"><div class="chapter-label">New Words 1 of 2</div><h2 class="slide-heading">Direction <span class="accent">Words</span></h2>
+    <div class="vocab-grid" id="vocabGrid1">
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#2e7d32,#66bb6a)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21 3 6"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg><div class="card-hint">You use it to find your way</div></div><div class="card-body"><div class="card-word">Map</div><div class="card-def">a drawing of the streets</div><div class="card-example">"Can I see the map?"</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Can I see the map?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#455a64,#90a4ae)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M4 22l4-18M20 22l-4-18M9 8h6M8 13h8M7 18h10"/></svg><div class="card-hint">Cars and people go on it</div></div><div class="card-body"><div class="card-word">Street</div><div class="card-def">a road in a city</div><div class="card-example">"This is a long street."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('This is a long street.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#e65100,#ff9800)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M4 4v10a6 6 0 006 6h10"/></svg><div class="card-hint">Where two streets meet</div></div><div class="card-body"><div class="card-word">Corner</div><div class="card-def">where two streets meet</div><div class="card-example">"The shop is on the corner."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('The shop is on the corner.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#1565c0,#42a5f5)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg><div class="card-hint">The opposite of right (this hand!)</div></div><div class="card-body"><div class="card-word">Left</div><div class="card-def">the opposite of right</div><div class="card-example">"Turn left."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Turn left.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div></div>
+    </div><div class="vocab-counter" id="vocabCount1">0 / 4 words revealed</div></div>
+</div>
+
+<div class="slide slide-light" data-slide="6" data-lesson="9" data-phase="2" data-teacher="<strong>Vocab reveal (4 min):</strong> Mesma dinamica. 'Straight' = reto/em frente. 'Near' = perto. 'Next to' = ao lado de.">
+  <div class="slide-inner"><div class="chapter-label">New Words 2 of 2</div><h2 class="slide-heading">More <span class="accent">Directions</span></h2>
+    <div class="vocab-grid" id="vocabGrid2">
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#c2185b,#ec407a)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><div class="card-hint">The opposite of left</div></div><div class="card-body"><div class="card-word">Right</div><div class="card-def">the opposite of left</div><div class="card-example">"Turn right."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Turn right.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#00838f,#26c6da)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg><div class="card-hint">Do not turn &mdash; keep going forward</div></div><div class="card-body"><div class="card-word">Straight</div><div class="card-def">forward, with no turn</div><div class="card-example">"Go straight."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Go straight.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#4527a0,#7c4dff)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M12 21s8-4 8-10a8 8 0 00-16 0c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="2.5"/></svg><div class="card-hint">Not far &mdash; close to here</div></div><div class="card-body"><div class="card-word">Near</div><div class="card-def">close, not far</div><div class="card-example">"Is it near here?"</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Is it near here?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#5d4037,#8d6e63)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="3" y="9" width="7" height="11"/><rect x="14" y="9" width="7" height="11"/><path d="M6.5 9V5M17.5 9V5"/></svg><div class="card-hint">Right beside something</div></div><div class="card-body"><div class="card-word">Next to</div><div class="card-def">at the side of</div><div class="card-example">"It's next to the bank."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('It is next to the bank.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div></div>
+    </div><div class="vocab-counter" id="vocabCount2">0 / 4 words revealed</div></div>
+</div>
+
+<div class="slide slide-light" data-slide="7" data-lesson="9" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Click on each word. 'Straight' = STREYT (uma sílaba!). 'Corner' = COR-ner. Use as maos para left/right.">
+  <div class="slide-inner" style="overflow-y:auto;max-height:78vh"><div class="chapter-label">Say It Right</div><h2 class="slide-heading">Pronunciation <span class="accent">Drill</span></h2>
+    <div class="pron-grid">
+      <div class="pron-item" onclick="speakText('Turn left.',this)"><span class="pron-word">Left</span><span class="pron-stress"><span class="pron-syl stressed">LEFT</span></span><span class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Turn left.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></span></div>
+      <div class="pron-item" onclick="speakText('Turn right.',this)"><span class="pron-word">Right</span><span class="pron-stress"><span class="pron-syl stressed">RIGHT</span></span><span class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Turn right.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></span></div>
+      <div class="pron-item" onclick="speakText('Go straight.',this)"><span class="pron-word">Straight</span><span class="pron-stress"><span class="pron-syl stressed">STRAIGHT</span></span><span class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Go straight.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></span></div>
+      <div class="pron-item" onclick="speakText('The shop is on the corner.',this)"><span class="pron-word">Corner</span><span class="pron-stress"><span class="pron-syl stressed">COR</span><span class="pron-syl">ner</span></span><span class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('The shop is on the corner.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></span></div>
+      <div class="pron-item" onclick="speakText('Is it near here?',this)"><span class="pron-word">Near</span><span class="pron-stress"><span class="pron-syl stressed">NEAR</span></span><span class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Is it near here?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></span></div>
+      <div class="pron-item" onclick="speakText('It is next to the bank.',this)"><span class="pron-word">Next to</span><span class="pron-stress"><span class="pron-syl stressed">NEXT</span><span class="pron-syl">to</span></span><span class="pron-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('It is next to the bank.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button></span></div>
+    </div></div>
+</div>
+
+<div class="slide slide-image" data-slide="8" data-lesson="9" data-phase="3" data-teacher="<strong>Transição (15 seg):</strong> Diga: 'Now, how do we ask and give directions?' Avance." style="background-image:url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1400&q=80')"><div class="slide-inner"><div class="chapter-label">Chapter 3</div><h2 class="slide-title">The <span class="accent">Code</span></h2><p class="slide-subtitle">Where is ...? / Go / Turn</p></div></div>
+
+<div class="slide slide-light" data-slide="9" data-lesson="9" data-phase="3" data-teacher="<strong>Discovery (4 min):</strong> NÃO revele a regra. Leia as frases. Pergunte: 'Which one ASKS? Which ones GIVE directions?'. SO ENTAO clique 'Reveal the Rule'. CCQ: '\"Where is bank?\" &mdash; correto?' (R: nao, falta THE).">
+  <div class="slide-inner"><div class="chapter-label">Spot the Pattern</div><h2 class="slide-heading">Asking &amp; <span class="accent">Giving</span></h2>
+    <div class="grammar-sentences"><div class="grammar-sentence"><strong>Where is</strong> the bank?</div><div class="grammar-sentence"><strong>Go</strong> straight.</div><div class="grammar-sentence"><strong>Turn</strong> left.</div><div class="grammar-sentence">It<strong>'s next to</strong> the pharmacy.</div></div>
+    <p style="text-align:center;font-size:1rem;color:var(--text-dim)">How do we ask and give <span class="accent-bold">directions</span>?</p>
+    <div style="text-align:center;margin-top:1.2rem"><button class="btn-primary" onclick="revealGrammar()">Reveal the Rule</button></div>
+    <div class="grammar-table-wrap" id="grammarTable"><table class="grammar-table"><tr><th>Use</th><th>Structure</th><th>Example</th></tr>
+      <tr><td>Ask where</td><td>Where is + the + place?</td><td>Where is the bank?</td></tr>
+      <tr><td>Give: forward</td><td>Go straight</td><td>Go straight on this street.</td></tr>
+      <tr><td>Give: turn</td><td>Turn left / right</td><td>Turn right at the corner.</td></tr>
+      <tr><td>Give: position</td><td>It's next to / on the corner / near</td><td>It's next to the bank.</td></tr></table>
+      <p style="text-align:center;margin-top:.8rem;font-size:.9rem;color:var(--text-dim)"><strong>Rule:</strong> ask with <strong style="color:var(--accent)">Where is the ...?</strong>; give directions with <strong style="color:var(--accent)">Go / Turn</strong> + left / right / straight.</p>
+    </div></div>
+</div>
+
+<div class="slide slide-light" data-slide="10" data-lesson="9" data-phase="3" data-teacher="<strong>Common Mistake (2 min):</strong> Erro #1: 'Where is bank?' (falta THE) e 'Turn to left' (sem TO). Modele a versao certa 2x.">
+  <div class="slide-inner"><div class="chapter-label">Careful!</div><h2 class="slide-heading">Common <span class="accent">Mistake</span></h2>
+    <div class="mistake-card">
+      <div class="mistake-item mistake-wrong"><div class="mistake-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><span>Where is bank?</span></div>
+      <div class="mistake-item mistake-right"><div class="mistake-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div><span>Where is <strong>the</strong> bank?</span></div>
+      <div class="mistake-item mistake-wrong"><div class="mistake-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><span>Turn to left.</span></div>
+      <div class="mistake-item mistake-right"><div class="mistake-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div><span>Turn <strong>left</strong>.</span></div>
+    </div></div>
+</div>
+
+<div class="slide slide-light" data-slide="11" data-lesson="9" data-phase="3" data-teacher="<strong>Practice (3 min):</strong> Click on each card. A Gabriela diz a frase COMPLETA antes de revelar. 6 itens.">
+  <div class="slide-inner" style="overflow-y:auto;max-height:78vh"><div class="chapter-label">Try It</div><h2 class="slide-heading">Grammar <span class="accent">Practice</span></h2>
+    <div class="fill-grid">
+      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Ask where the bank is &mdash; <span class="fill-blank">?</span><span class="fill-answer">Where is the bank?</span></span></div>
+      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Tell someone to go forward &mdash; <span class="fill-blank">?</span><span class="fill-answer">Go straight.</span></span></div>
+      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Tell someone to turn left &mdash; <span class="fill-blank">?</span><span class="fill-answer">Turn left.</span></span></div>
+      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Say it is beside the pharmacy &mdash; <span class="fill-blank">?</span><span class="fill-answer">It's next to the pharmacy.</span></span></div>
+      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Ask if it is close &mdash; <span class="fill-blank">?</span><span class="fill-answer">Is it near here?</span></span></div>
+      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">Tell someone to turn right at the corner &mdash; <span class="fill-blank">?</span><span class="fill-answer">Turn right at the corner.</span></span></div>
+    </div></div>
+</div>
+
+<div class="slide slide-image" data-slide="12" data-lesson="9" data-phase="4" data-teacher="<strong>Transição (15 seg):</strong> Diga: 'Listen to Gabriela ask a local for directions.' Avance." style="background-image:url('https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=1400&q=80')"><div class="slide-inner"><div class="chapter-label">Chapter 4</div><h2 class="slide-title">On the <span class="accent">Street</span></h2><p class="slide-subtitle">Gabriela asks for directions</p></div></div>
+
+<div class="slide slide-dark" data-slide="13" data-lesson="9" data-phase="4" data-teacher="<strong>Dialogo linha a linha (5 min):</strong> Clique 'Next Line'. Toque o áudio. Local = morador (voz masculina). Pause: 'Where is the bank? Left or right?'. No fim, a Gabriela le as falas dela.">
+  <div class="slide-inner"><div class="chapter-label">Listen &amp; Read</div><h2 class="slide-heading" style="color:var(--white)">Finding the <span class="accent">Bank</span></h2>
+    <div class="dialogue-box" id="dialogueBox">
+      <div class="dialogue-line" data-line="1" data-speaker="Gabriela" data-voice="ellen"><div class="dialogue-avatar gabriela">G</div><div class="dialogue-bubble gabriela-bubble"><div class="dialogue-name">Gabriela</div>Excuse me, <span class="vocab-highlight">where is</span> the bank?<span class="audio-inline" onclick="speakText('Excuse me, where is the bank?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="2" data-speaker="Local" data-voice="arthur"><div class="dialogue-avatar sarah">L</div><div class="dialogue-bubble sarah-bubble"><div class="dialogue-name">Local</div>Go <span class="vocab-highlight">straight</span> on this street.<span class="audio-inline" onclick="speakText('Go straight on this street.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="3" data-speaker="Gabriela" data-voice="ellen"><div class="dialogue-avatar gabriela">G</div><div class="dialogue-bubble gabriela-bubble"><div class="dialogue-name">Gabriela</div>Straight? OK.<span class="audio-inline" onclick="speakText('Straight? OK.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="4" data-speaker="Local" data-voice="arthur"><div class="dialogue-avatar sarah">L</div><div class="dialogue-bubble sarah-bubble"><div class="dialogue-name">Local</div>Then turn <span class="vocab-highlight">right</span> at the corner.<span class="audio-inline" onclick="speakText('Then turn right at the corner.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="5" data-speaker="Gabriela" data-voice="ellen"><div class="dialogue-avatar gabriela">G</div><div class="dialogue-bubble gabriela-bubble"><div class="dialogue-name">Gabriela</div>Turn right at the corner.<span class="audio-inline" onclick="speakText('Turn right at the corner.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="6" data-speaker="Local" data-voice="arthur"><div class="dialogue-avatar sarah">L</div><div class="dialogue-bubble sarah-bubble"><div class="dialogue-name">Local</div>The bank is <span class="vocab-highlight">next to</span> the pharmacy.<span class="audio-inline" onclick="speakText('The bank is next to the pharmacy.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="7" data-speaker="Gabriela" data-voice="ellen"><div class="dialogue-avatar gabriela">G</div><div class="dialogue-bubble gabriela-bubble"><div class="dialogue-name">Gabriela</div>Is it <span class="vocab-highlight">near</span> here?<span class="audio-inline" onclick="speakText('Is it near here?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="8" data-speaker="Local" data-voice="arthur"><div class="dialogue-avatar sarah">L</div><div class="dialogue-bubble sarah-bubble"><div class="dialogue-name">Local</div>Yes, it's very near. Two minutes.<span class="audio-inline" onclick="speakText('Yes, it is very near. Two minutes.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="9" data-speaker="Gabriela" data-voice="ellen"><div class="dialogue-avatar gabriela">G</div><div class="dialogue-bubble gabriela-bubble"><div class="dialogue-name">Gabriela</div>Thank you very much!<span class="audio-inline" onclick="speakText('Thank you very much!',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="10" data-speaker="Local" data-voice="arthur"><div class="dialogue-avatar sarah">L</div><div class="dialogue-bubble sarah-bubble"><div class="dialogue-name">Local</div>You're welcome!<span class="audio-inline" onclick="speakText('You are welcome!',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+    </div>
+    <div style="text-align:center;margin-top:1.2rem"><button class="btn-primary" id="nextLineBtn" onclick="nextDialogueLine()">Next Line</button></div></div>
+</div>
+
+<div class="slide slide-light" data-slide="14" data-lesson="9" data-phase="4" data-teacher="<strong>Comprehension (2 min):</strong> Click on each question. Perguntas sobre o caminho. Deixe-a responder antes de revelar.">
+  <div class="slide-inner"><div class="chapter-label">Did You Catch It?</div><h2 class="slide-heading">The <span class="accent">Way</span></h2>
+    <div class="comp-questions"><div class="comp-q" onclick="revealComp(this)"><div class="q-text">Where does Gabriela want to go?</div><div class="q-answer">To the bank.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">Does she turn left or right?</div><div class="q-answer">Right, at the corner.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">What is the bank next to?</div><div class="q-answer">The pharmacy &mdash; and it's very near.</div></div></div></div>
+</div>
+
+<div class="slide slide-dark" data-slide="15" data-lesson="9" data-phase="4" data-teacher="<strong>Listening 1 (4 min):</strong> Áudio PRIMEIRO, sem texto. 'Close your eyes. Listen to directions to a house.' As perguntas aparecem quando o áudio termina.">
+  <div class="slide-inner"><div class="chapter-label">Listening 1</div><h2 class="slide-heading" style="color:var(--white)">How to Find My <span class="accent">House</span></h2><p class="slide-subtitle" style="text-align:center">Close your eyes and listen. Left or right?</p>
+    <div class="listening-player" id="lp1" data-src="/audio/gabriela-paulucci/aula9_listening1_directions.mp3">
+      <div class="lp-label">Directions &mdash; Listening</div>
+      <div class="lp-seekbar" onclick="seekAudio(event,'lp1')"><div class="lp-progress" id="progress-lp1"></div></div>
+      <div class="lp-time"><span id="time-current-lp1">0:00</span><span id="time-total-lp1">0:00</span></div>
+      <div class="lp-controls"><button class="lp-btn" onclick="skipAudio('lp1',-5)" aria-label="Back 5 seconds"><svg viewBox="0 0 24 24"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button><button class="lp-play" onclick="togglePlayer('lp1')" aria-label="Play"><span class="lp-icon-play"><svg viewBox="0 0 24 24" fill="#fff" stroke="none"><polygon points="6 4 20 12 6 20 6 4"/></svg></span><span class="lp-icon-pause"><svg viewBox="0 0 24 24" fill="#fff" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></span></button><button class="lp-btn" onclick="skipAudio('lp1',5)" aria-label="Forward 5 seconds"><svg viewBox="0 0 24 24"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button></div>
+      <div class="lp-speed"><button class="lp-speed-btn" onclick="setPlayerSpeed('lp1',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="setPlayerSpeed('lp1',0.75,this)">0.75x</button><button class="lp-speed-btn active" onclick="setPlayerSpeed('lp1',1,this)">1x</button><button class="lp-speed-btn" onclick="setPlayerSpeed('lp1',1.25,this)">1.25x</button></div>
+    </div>
+    <div class="comp-questions" id="questions-lp1" style="display:none"><div class="comp-q" onclick="revealComp(this)"><div class="q-text">Do you go straight first?</div><div class="q-answer">Yes, go straight on Main Street.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">Left or right at the corner?</div><div class="q-answer">Turn right at the corner.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">What is the house next to?</div><div class="q-answer">The school, near the park.</div></div></div></div>
+</div>
+
+<div class="slide slide-dark" data-slide="16" data-lesson="9" data-phase="4" data-teacher="<strong>Listening 2 (3 min):</strong> Três direções curtas. Toque um por vez. 'Left, right or straight?'">
+  <div class="slide-inner"><div class="chapter-label">Listening 2</div><h2 class="slide-heading" style="color:var(--white)">Three <span class="accent">Directions</span></h2><p class="slide-subtitle" style="text-align:center">Listen to each one. Where is the place?</p>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:.7rem;margin-top:1.5rem">
+      <button class="btn-primary" style="border-radius:30px;min-width:200px;justify-content:center" onclick="speakText('Go straight and turn left. It is on the corner.',this)"><svg viewBox="0 0 24 24" style="width:18px;height:18px" fill="none" stroke="#fff" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Place 1</button>
+      <button class="btn-primary" style="border-radius:30px;min-width:200px;justify-content:center" onclick="speakText('The store is next to the bank.',this)"><svg viewBox="0 0 24 24" style="width:18px;height:18px" fill="none" stroke="#fff" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Place 2</button>
+      <button class="btn-primary" style="border-radius:30px;min-width:200px;justify-content:center" onclick="speakText('It is near here, only two minutes.',this)"><svg viewBox="0 0 24 24" style="width:18px;height:18px" fill="none" stroke="#fff" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Place 3</button>
+    </div>
+    <div class="comp-questions" style="margin-top:1.5rem"><div class="comp-q" onclick="revealComp(this)"><div class="q-text">For Place 1, do you turn left or right?</div><div class="q-answer">Left &mdash; it's on the corner.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">What is Place 2 next to?</div><div class="q-answer">The bank.</div></div><div class="comp-q" onclick="revealComp(this)"><div class="q-text">Is Place 3 near or far?</div><div class="q-answer">Near &mdash; only two minutes.</div></div></div></div>
+</div>
+
+<div class="slide slide-image" data-slide="17" data-lesson="9" data-phase="5" data-teacher="<strong>Transição (15 seg):</strong> Diga: 'Now, quick directions!' Avance." style="background-image:url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400&q=80')"><div class="slide-inner"><div class="chapter-label">Chapter 5</div><h2 class="slide-title"><span class="accent">Practice</span></h2><p class="slide-subtitle">Quick directions</p></div></div>
+
+<div class="slide slide-light" data-slide="18" data-lesson="9" data-phase="5" data-teacher="<strong>Quick Fire (4 min):</strong> Uma situação por vez. A Gabriela RESPONDE, depois 'Show Answer'. 8 perguntas.">
+  <div class="slide-inner"><div class="chapter-label">One at a Time</div><h2 class="slide-heading">Quick <span class="accent">Fire</span></h2>
+    <div class="challenge-card" id="challengeCard"><div class="challenge-score" id="challengeScore">0 / 8</div><div class="challenge-counter" id="challengeCounter">Question 1 of 8</div><div class="challenge-prompt" id="challengePrompt">You are lost. Ask where the bank is, politely.</div><div class="challenge-answer" id="challengeAnswer">"Excuse me, where is the bank?"</div><div style="display:flex;gap:.6rem"><button class="btn-primary" id="showAnswerBtn" onclick="showChallengeAnswer()">Show Answer</button><button class="btn-secondary" id="nextChallengeBtn" onclick="nextChallenge()" style="display:none">Next Question</button></div></div></div>
+</div>
+
+<div class="slide slide-light" data-slide="19" data-lesson="9" data-phase="5" data-teacher="<strong>Spot the Error (3 min):</strong> Click on each sentence. A Gabriela acha o erro primeiro, depois revele. 6 frases.">
+  <div class="slide-inner" style="overflow-y:auto;max-height:78vh"><div class="chapter-label">Find the Mistake</div><h2 class="slide-heading">Spot the <span class="accent">Error</span></h2>
+    <div class="error-grid">
+      <div class="error-card" onclick="revealError(this)"><span class="error-sentence">Where is bank?</span><span class="error-fix">Where is the bank?</span></div>
+      <div class="error-card" onclick="revealError(this)"><span class="error-sentence">Turn to left.</span><span class="error-fix">Turn left.</span></div>
+      <div class="error-card" onclick="revealError(this)"><span class="error-sentence">Go straight on.</span><span class="error-fix">Go straight.</span></div>
+      <div class="error-card" onclick="revealError(this)"><span class="error-sentence">It's next the bank.</span><span class="error-fix">It's next to the bank.</span></div>
+      <div class="error-card" onclick="revealError(this)"><span class="error-sentence">Is it near from here?</span><span class="error-fix">Is it near here?</span></div>
+      <div class="error-card" onclick="revealError(this)"><span class="error-sentence">Where the station is?</span><span class="error-fix">Where is the station?</span></div>
+    </div><div class="error-score" id="errorScore">0 / 6 errors found</div></div>
+</div>
+
+<div class="slide slide-light" data-slide="20" data-lesson="9" data-phase="5" data-teacher="<strong>Listen &amp; Say (3 min):</strong> Click on each card. Toque, a Gabriela repete a frase completa.">
+  <div class="slide-inner"><div class="chapter-label">Say It Back</div><h2 class="slide-heading">Listen &amp; <span class="accent">Say</span></h2>
+    <div class="oral-grid">
+      <div class="oral-item" onclick="this.classList.toggle('revealed')"><div class="oral-situation">Ask where the bank is.<button class="audio-btn-sm" style="margin-left:.5rem" onclick="event.stopPropagation();speakText('Where is the bank?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div class="oral-model">"Where is the bank?"</div></div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')"><div class="oral-situation">Tell someone to go forward.<button class="audio-btn-sm" style="margin-left:.5rem" onclick="event.stopPropagation();speakText('Go straight.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div class="oral-model">"Go straight."</div></div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')"><div class="oral-situation">Tell someone to turn right.<button class="audio-btn-sm" style="margin-left:.5rem" onclick="event.stopPropagation();speakText('Turn right.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div class="oral-model">"Turn right."</div></div>
+      <div class="oral-item" onclick="this.classList.toggle('revealed')"><div class="oral-situation">Say it is beside the pharmacy.<button class="audio-btn-sm" style="margin-left:.5rem" onclick="event.stopPropagation();speakText('It is next to the pharmacy.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div><div class="oral-model">"It's next to the pharmacy."</div></div>
+    </div></div>
+</div>
+
+<div class="slide slide-image" data-slide="21" data-lesson="9" data-phase="6" data-teacher="<strong>Transição (15 seg):</strong> Diga: 'Now you give directions. From guided to free.' Avance." style="background-image:url('https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1400&q=80')"><div class="slide-inner"><div class="chapter-label">Chapter 6</div><h2 class="slide-title">Your <span class="accent">Turn</span></h2><p class="slide-subtitle">From guided to free</p></div></div>
+
+<div class="slide slide-dark" data-slide="22" data-lesson="9" data-phase="6" data-teacher="<strong>Role-play Guiado (3 min):</strong> Você e o turista perdido. Pergunte 'Where is the bank?'. A Gabriela da as direções usando as keywords."><div class="slide-inner"><div class="chapter-label">Level 1 &mdash; Guided</div><h2 class="slide-heading" style="color:var(--white)">Give <span class="accent">Directions</span></h2><div class="roleplay-card"><div class="roleplay-body"><p class="roleplay-scenario">Your teacher is a lost tourist and asks for the bank. Give directions: go straight, turn, and say what it is next to.</p><div class="roleplay-keywords"><span class="roleplay-kw">Go straight</span><span class="roleplay-kw">Turn left/right</span><span class="roleplay-kw">next to ...</span><span class="roleplay-kw">on the corner</span></div></div></div></div></div>
+
+<div class="slide slide-dark" data-slide="23" data-lesson="9" data-phase="6" data-teacher="<strong>Role-play Semi-livre (3 min):</strong> Menos apoio. A Gabriela explica como ir da casa dela ate a loja favorita (callback Aula 8)."><div class="slide-inner"><div class="chapter-label">Level 2 &mdash; Less Help</div><h2 class="slide-heading" style="color:var(--white)">From Home to the <span class="accent">Store</span></h2><div class="roleplay-card"><div class="roleplay-body"><p class="roleplay-scenario">Explain how to go from your house to your favorite store. Use straight, left, right and near.</p><div class="roleplay-keywords"><span class="roleplay-kw">street</span><span class="roleplay-kw">corner</span></div></div></div></div></div>
+
+<div class="slide slide-dark" data-slide="24" data-lesson="9" data-phase="6" data-teacher="<strong>Role-play Livre (3 min):</strong> ZERO keywords. A Gabriela pede e da direções para um lugar real, sozinha. Deixe-a falar. Celebre."><div class="slide-inner"><div class="chapter-label">Level 3 &mdash; Free</div><h2 class="slide-heading" style="color:var(--white)">Find Your <span class="accent">Way</span></h2><div class="roleplay-card"><div class="roleplay-body"><p class="roleplay-scenario">No keywords now! Ask your teacher where a place is, and then give directions to another place. Use everything you learned today.</p></div></div></div></div>
+
+<div class="slide slide-image" data-slide="25" data-lesson="9" data-phase="7" data-teacher="<strong>Transição (15 seg):</strong> Diga: 'Great job! Let us review.' Avance." style="background-image:url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1400&q=80')"><div class="slide-inner"><div class="chapter-label">Chapter 7</div><h2 class="slide-title">Wrap-<span class="accent">Up</span></h2><p class="slide-subtitle">What you can say now</p></div></div>
+
+<div class="slide slide-light" data-slide="26" data-lesson="9" data-phase="7" data-teacher="<strong>Kit Recap (2 min):</strong> Leia cada frase e clique Listen. As 5 frases para se virar na cidade.">
+  <div class="slide-inner" style="overflow-y:auto;max-height:78vh"><div class="chapter-label">Your Phrases</div><h2 class="slide-heading">Directions <span class="accent">Kit</span></h2>
+    <div class="review-grid">
+      <div class="review-item"><div class="review-word">Ask</div><div class="review-example">"Excuse me, where is the bank?"</div><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Excuse me, where is the bank?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      <div class="review-item"><div class="review-word">Straight</div><div class="review-example">"Go straight."</div><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Go straight.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      <div class="review-item"><div class="review-word">Turn</div><div class="review-example">"Turn right."</div><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Turn right.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      <div class="review-item"><div class="review-word">Position</div><div class="review-example">"It's next to the bank."</div><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('It is next to the bank.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      <div class="review-item"><div class="review-word">Near</div><div class="review-example">"Is it near here?"</div><div class="review-audio"><button class="audio-btn-sm" onclick="speakText('Is it near here?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+    </div></div>
+</div>
+
+<div class="slide slide-light" data-slide="27" data-lesson="9" data-phase="7" data-teacher="<strong>Checklist (3 min):</strong> Leia cada item. Marcar TODOS salva a aula como concluida. Celebre.">
+  <div class="slide-inner" style="overflow-y:auto;max-height:78vh"><div class="chapter-label">What I Learned</div><h2 class="slide-heading">Lesson 9 <span class="accent">Checklist</span></h2>
+    <div class="check-grid" id="checkGrid">
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can name direction words (left, right, straight, corner...).</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can ask "Where is the ...?".</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can say "Go straight" and "Turn left/right".</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can say where a place is (next to / on the corner / near).</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can understand simple directions.</div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>I can ask for and give directions in the city.</div>
+    </div></div>
+</div>
+
+<div class="slide slide-dark" data-slide="28" data-lesson="9" data-phase="7" data-teacher="<strong>Celebração!</strong> Diga: 'Gabriela, you will never get lost again! You can find your way in any city.' Dispare os confetes (automatico).">
+  <div class="slide-inner" style="text-align:center"><div class="chapter-label">Achievement</div><div class="badge-card"><div class="badge-icon"><div class="badge-circle"><svg viewBox="0 0 24 24"><path d="M12 21s8-4 8-10a8 8 0 00-16 0c0 6 8 10 8 10z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="11" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div><div class="sparkles"><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div></div></div><h2 class="slide-heading" style="color:var(--white)">Directions <span class="accent">Unlocked!</span></h2><p style="color:rgba(255,255,255,.6);font-size:1rem;margin-top:.5rem">You can ask for and give directions in any city.</p></div></div>
+</div>
+
+<div class="slide slide-image" data-slide="29" data-lesson="9" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Preview: 'Próxima aula: revisão geral do bloco &mdash; tudo que você aprendeu das aulas 6 a 9!' Homework ORAL: gravar direções da sua casa ate a padaria, e mandar no WhatsApp." style="background-image:url('https://images.unsplash.com/photo-1493244040629-496f6d136cc3?w=1400&q=80')"><div class="slide-inner"><div class="chapter-label">What Comes Next</div><h2 class="slide-title">Lesson 9 &mdash; <span class="accent">Complete.</span></h2><p class="slide-subtitle" style="opacity:.85;margin-top:1rem">Next lesson: <span class="accent">Checkpoint 2</span><br>A big review of Lessons 6&ndash;9.</p><p class="slide-subtitle" style="opacity:.6;margin-top:1.2rem;font-size:.9rem">You can find your way. Now let's review it all.</p></div></div>
+
+</div><!-- /slides-container -->
+
+<!-- Teacher T Icon -->
+<div class="teacher-t" id="teacherT">T<div class="teacher-t-panel" id="teacherPanel"></div></div>
+
+<!-- Navigation Bar -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="slide-dots" id="slideDots"></div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">
+    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+  </button>
+</div>
+
+<!-- Confetti container -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP (ElevenLabs — Ellen=Gabriela, Rachel=Sarah, Arthur=male/alt) =====
+var audioMap = {
+  "Can I see the map?": "/audio/gabriela-paulucci/aula9_map.mp3",
+  "This is a long street.": "/audio/gabriela-paulucci/aula9_street.mp3",
+  "The shop is on the corner.": "/audio/gabriela-paulucci/aula9_corner.mp3",
+  "Turn left.": "/audio/gabriela-paulucci/aula9_left.mp3",
+  "Turn right.": "/audio/gabriela-paulucci/aula9_right.mp3",
+  "Go straight.": "/audio/gabriela-paulucci/aula9_straight.mp3",
+  "Is it near here?": "/audio/gabriela-paulucci/aula9_near.mp3",
+  "It is next to the bank.": "/audio/gabriela-paulucci/aula9_nextto.mp3",
+  "Where is the bank?": "/audio/gabriela-paulucci/aula9_where_bank.mp3",
+  "It is next to the pharmacy.": "/audio/gabriela-paulucci/aula9_nextto_pharmacy.mp3",
+  "Excuse me, where is the bank?": "/audio/gabriela-paulucci/aula9_dia_1.mp3",
+  "Go straight on this street.": "/audio/gabriela-paulucci/aula9_dia_2.mp3",
+  "Straight? OK.": "/audio/gabriela-paulucci/aula9_dia_3.mp3",
+  "Then turn right at the corner.": "/audio/gabriela-paulucci/aula9_dia_4.mp3",
+  "Turn right at the corner.": "/audio/gabriela-paulucci/aula9_dia_5.mp3",
+  "The bank is next to the pharmacy.": "/audio/gabriela-paulucci/aula9_dia_6.mp3",
+  "Yes, it is very near. Two minutes.": "/audio/gabriela-paulucci/aula9_dia_8.mp3",
+  "Thank you very much!": "/audio/gabriela-paulucci/aula9_dia_9.mp3",
+  "You are welcome!": "/audio/gabriela-paulucci/aula9_dia_10.mp3",
+  "Go straight and turn left. It is on the corner.": "/audio/gabriela-paulucci/aula9_listening2_p1.mp3",
+  "The store is next to the bank.": "/audio/gabriela-paulucci/aula9_listening2_p2.mp3",
+  "It is near here, only two minutes.": "/audio/gabriela-paulucci/aula9_listening2_p3.mp3"
+};
+
+// ===== SPEAK TEXT =====
+var currentAudio = null;
+var audioSpeed = 1;
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed;
+    currentAudio.play().catch(function() { ttsSpeak(cleanText); });
+  } else {
+    ttsSpeak(cleanText);
+  }
+}
+
+function ttsSpeak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 1;
+var totalSlides = 29;
+var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7,28:7,29:7};
+
+function changeSlide(dir) {
+  var next = currentSlide + dir;
+  if (next < 1 || next > totalSlides) return;
+  goToSlide(next);
+}
+
+function goToSlide(n) {
+  document.querySelector('.slide[data-slide="' + currentSlide + '"]').classList.remove('active');
+  currentSlide = n;
+  var activeSlide = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
+  activeSlide.classList.add('active'); activeSlide.scrollTop = 0;
+  var teacherText = activeSlide.getAttribute('data-teacher') || '';
+  document.getElementById('teacherPanel').innerHTML = teacherText;
+  updateNav();
+  updatePhaseBar();
+}
+
+function updateNav() {
+  document.getElementById('slideCounter').textContent = String(currentSlide).padStart(2,'0') + ' / ' + String(totalSlides).padStart(2,'0');
+  document.getElementById('prevBtn').disabled = currentSlide === 1;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+  var dots = document.querySelectorAll('.slide-dot');
+  dots.forEach(function(d, i) { d.classList.toggle('active', i + 1 === currentSlide); });
+}
+
+function updatePhaseBar() {
+  var cp = slidePhases[currentSlide];
+  document.querySelectorAll('.phase-segment').forEach(function(seg) {
+    var p = parseInt(seg.dataset.phase);
+    seg.classList.remove('completed','current','upcoming');
+    if (p < cp) seg.classList.add('completed');
+    else if (p === cp) seg.classList.add('current');
+    else seg.classList.add('upcoming');
+  });
+  document.querySelectorAll('.phase-label').forEach(function(lbl) {
+    var p = parseInt(lbl.dataset.phase);
+    lbl.classList.remove('completed','current');
+    if (p < cp) lbl.classList.add('completed');
+    else if (p === cp) lbl.classList.add('current');
+  });
+}
+
+// Build dots
+(function() {
+  var dotsEl = document.getElementById('slideDots');
+  for (var i = 1; i <= totalSlides; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'slide-dot' + (i === 1 ? ' active' : '');
+    dot.dataset.slide = i;
+    dot.onclick = (function(n) { return function() { goToSlide(n); }; })(i);
+    dotsEl.appendChild(dot);
+  }
+})();
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); changeSlide(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); changeSlide(-1); }
+});
+
+// ===== VOCAB REVEAL =====
+function revealVocab(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var count = grid.querySelectorAll('.vocab-card.revealed').length;
+  var total = grid.querySelectorAll('.vocab-card').length;
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : grid.id === 'vocabGrid2' ? 'vocabCount2' : grid.id === 'vocabGrid3' ? 'vocabCount3' : 'vocabCount4';
+  var el = document.getElementById(counterId);
+  if (el) el.textContent = count + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar() {
+  document.getElementById('grammarTable').classList.add('show');
+}
+
+// ===== FILL REVEAL =====
+function revealFill(item) { item.classList.toggle('revealed'); }
+
+// ===== COMPREHENSION REVEAL =====
+function revealComp(q) { q.classList.toggle('revealed'); }
+
+// ===== ERROR REVEAL =====
+var errorFound = {};
+function revealError(card) {
+  card.classList.toggle('revealed');
+  var box = card.closest('.error-grid');
+  var found = box.querySelectorAll('.error-card.revealed').length;
+  var total = box.querySelectorAll('.error-card').length;
+  document.getElementById('errorScore').textContent = found + ' / ' + total + ' errors found';
+}
+
+// ===== DIALOGUE LINE-BY-LINE =====
+var dialogueLine = 0;
+function nextDialogueLine() {
+  dialogueLine++;
+  var line = document.querySelector('.dialogue-line[data-line="' + dialogueLine + '"]');
+  if (line) {
+    line.classList.add('visible');
+    var box = document.getElementById('dialogueBox');
+    box.scrollTop = box.scrollHeight;
+    if (dialogueLine >= 10) {
+      var b = document.getElementById('nextLineBtn');
+      b.textContent = 'Dialogue Complete';
+      b.disabled = true;
+      b.style.opacity = '0.5';
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE =====
+var challenges = [
+  { prompt: 'You are lost. Ask where the bank is, politely.', answer: '"Excuse me, where is the bank?"' },
+  { prompt: 'Tell someone to go forward.', answer: '"Go straight."' },
+  { prompt: 'Tell someone to turn left.', answer: '"Turn left."' },
+  { prompt: 'The shop is beside the bank. How do you say it?', answer: '"It\'s next to the bank."' },
+  { prompt: 'Ask if a place is close.', answer: '"Is it near here?"' },
+  { prompt: 'Tell someone to turn right at the corner.', answer: '"Turn right at the corner."' },
+  { prompt: 'Someone thanks you for directions. Reply.', answer: '"You\'re welcome!"' },
+  { prompt: 'Ask where the train station is.', answer: '"Where is the train station?"' }
+];
+var challengeIndex = 0;
+var challengeCorrect = 0;
+
+function showChallengeAnswer() {
+  document.getElementById('challengeAnswer').classList.add('show');
+  document.getElementById('showAnswerBtn').style.display = 'none';
+  document.getElementById('nextChallengeBtn').style.display = 'inline-flex';
+  challengeCorrect++;
+  document.getElementById('challengeScore').textContent = challengeCorrect + ' / 8';
+}
+
+function nextChallenge() {
+  challengeIndex++;
+  if (challengeIndex >= challenges.length) {
+    document.getElementById('challengeCard').innerHTML = '<div style="text-align:center"><h3 style="font-family:Cormorant Garamond,serif;font-size:2rem;color:var(--accent)">Quick Fire Complete!</h3><p style="margin-top:.5rem;color:var(--text-dim)">Score: ' + challengeCorrect + ' / 8</p></div>';
+    triggerConfetti();
+    return;
+  }
+  document.getElementById('challengePrompt').textContent = challenges[challengeIndex].prompt;
+  document.getElementById('challengeAnswer').textContent = challenges[challengeIndex].answer;
+  document.getElementById('challengeAnswer').classList.remove('show');
+  document.getElementById('showAnswerBtn').style.display = 'inline-flex';
+  document.getElementById('nextChallengeBtn').style.display = 'none';
+  document.getElementById('challengeCounter').textContent = 'Question ' + (challengeIndex + 1) + ' of 8';
+}
+
+// ===== LISTENING PLAYER =====
+var lpPlayers = {};
+
+function initPlayer(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var src = el.getAttribute('data-src');
+  if (!src) return;
+  var file = src;
+  if (src.indexOf('/') === -1 && audioMap[src]) file = audioMap[src];
+  var audio = new Audio(file);
+  lpPlayers[id] = { audio: audio, speed: 1, playing: false };
+  audio.addEventListener('timeupdate', function() { updatePlayerUI(id); });
+  audio.addEventListener('loadedmetadata', function() { updatePlayerUI(id); });
+  audio.addEventListener('ended', function() {
+    lpPlayers[id].playing = false;
+    var playBtn = document.querySelector('#' + id + ' .lp-play');
+    if (playBtn) playBtn.classList.remove('playing');
+    var qs = document.getElementById('questions-' + id);
+    if (qs) qs.style.display = 'flex';
+  });
+}
+
+function togglePlayer(id) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var p = lpPlayers[id];
+  var playBtn = document.querySelector('#' + id + ' .lp-play');
+  if (p.playing) {
+    p.audio.pause();
+    p.playing = false;
+    if (playBtn) playBtn.classList.remove('playing');
+  } else {
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    p.audio.playbackRate = p.speed;
+    p.audio.play();
+    p.playing = true;
+    if (playBtn) playBtn.classList.add('playing');
+  }
+}
+
+function skipAudio(id, seconds) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var a = lpPlayers[id].audio;
+  a.currentTime = Math.max(0, Math.min(a.duration || 0, a.currentTime + seconds));
+}
+
+function seekAudio(event, id) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var bar = event.currentTarget;
+  var rect = bar.getBoundingClientRect();
+  var pct = (event.clientX - rect.left) / rect.width;
+  lpPlayers[id].audio.currentTime = pct * (lpPlayers[id].audio.duration || 0);
+}
+
+function setPlayerSpeed(id, speed, btn) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  lpPlayers[id].speed = speed;
+  lpPlayers[id].audio.playbackRate = speed;
+  var container = document.getElementById(id);
+  if (container) {
+    container.querySelectorAll('.lp-speed-btn').forEach(function(b) { b.classList.remove('active'); });
+  }
+  if (btn) btn.classList.add('active');
+}
+
+function updatePlayerUI(id) {
+  var p = lpPlayers[id];
+  if (!p) return;
+  var current = p.audio.currentTime || 0;
+  var total = p.audio.duration || 0;
+  var pct = total > 0 ? (current / total * 100) : 0;
+  var bar = document.getElementById('progress-' + id);
+  if (bar) bar.style.width = pct + '%';
+  var tcEl = document.getElementById('time-current-' + id);
+  if (tcEl) tcEl.textContent = fmtTime(current);
+  var ttEl = document.getElementById('time-total-' + id);
+  if (ttEl) ttEl.textContent = fmtTime(total);
+}
+
+function fmtTime(s) {
+  if (isNaN(s)) return '0:00';
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+// ===== CHECKLIST =====
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+}
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#7B5D8E','#9A7DB0','#003080','#16a34a','#d97706','#dc2626','#5b9bd5'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    var size = 4 + Math.random() * 8;
+    piece.style.width = size + 'px';
+    piece.style.height = size + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 5000);
+}
+
+// ===== INIT =====
+updatePhaseBar();
+var initSlide = document.querySelector('.slide[data-slide="1"]');
+if (initSlide) document.getElementById('teacherPanel').innerHTML = initSlide.getAttribute('data-teacher') || '';
+
+// Auto-trigger confetti on badge slide (28)
+var originalGoToSlide = goToSlide;
+goToSlide = function(n) {
+  originalGoToSlide(n);
+  if (n === 28) setTimeout(triggerConfetti, 600);
+};
+
+// Autostart support (from IN CLASS menu link ?autostart=1)
+(function(){ try { if (location.search.indexOf('autostart=1') !== -1) goToSlide(1); } catch(e){} })();
+</script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js?v=20260608"></script>
+</body>
+</html>
