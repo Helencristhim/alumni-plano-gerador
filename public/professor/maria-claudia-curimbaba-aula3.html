@@ -1728,7 +1728,19 @@ var audioMap = {
   "Could we move on to the next topic?": "/audio/maria-claudia-curimbaba/aula3_surv_could_we_move_on.mp3",
   "Please send the minutes by end of day.": "/audio/maria-claudia-curimbaba/aula3_surv_please_send_minutes.mp3",
   "Let's assign action items before we adjourn.": "/audio/maria-claudia-curimbaba/aula3_surv_lets_assign_action_items.mp3",
-  "I will follow up on this by Friday.": "/audio/maria-claudia-curimbaba/aula3_surv_i_will_follow_up.mp3"
+  "I will follow up on this by Friday.": "/audio/maria-claudia-curimbaba/aula3_surv_i_will_follow_up.mp3",
+  "listening1": "/audio/maria-claudia-curimbaba/aula3_ic_listening1_quarterly_review.mp3",
+  "listening2": "/audio/maria-claudia-curimbaba/aula3_ic_listening2_david_report.mp3",
+  "dlg_mc_1": "/audio/maria-claudia-curimbaba/aula3_ic_dlg_mc_1.mp3",
+  "dlg_david_1": "/audio/maria-claudia-curimbaba/aula3_ic_dlg_david_1.mp3",
+  "dlg_mc_2": "/audio/maria-claudia-curimbaba/aula3_ic_dlg_mc_2.mp3",
+  "dlg_david_2": "/audio/maria-claudia-curimbaba/aula3_ic_dlg_david_2.mp3",
+  "dlg_mc_3": "/audio/maria-claudia-curimbaba/aula3_ic_dlg_mc_3.mp3",
+  "dlg_david_3": "/audio/maria-claudia-curimbaba/aula3_ic_dlg_david_3.mp3",
+  "dlg_mc_4": "/audio/maria-claudia-curimbaba/aula3_ic_dlg_mc_4.mp3",
+  "dlg_david_4": "/audio/maria-claudia-curimbaba/aula3_ic_dlg_david_4.mp3",
+  "dlg_mc_5": "/audio/maria-claudia-curimbaba/aula3_ic_dlg_mc_5.mp3",
+  "dlg_david_5": "/audio/maria-claudia-curimbaba/aula3_ic_dlg_david_5.mp3"
 };
 
 // ===== AUDIO ENGINE =====
@@ -1879,9 +1891,10 @@ function toggleListening(id, btn, waveId, questionsId) {
   var pauseIcon = btn.querySelector('.pause-icon');
   var questions = document.getElementById(questionsId);
 
-  if (!listeningState[id]) listeningState[id] = { playing: false, played: false };
+  if (!listeningState[id]) listeningState[id] = { playing: false, played: false, audio: null };
 
   if (listeningState[id].playing) {
+    if (listeningState[id].audio) listeningState[id].audio.pause();
     wave.classList.remove('playing');
     playIcon.style.display = '';
     pauseIcon.style.display = 'none';
@@ -1891,15 +1904,32 @@ function toggleListening(id, btn, waveId, questionsId) {
     playIcon.style.display = 'none';
     pauseIcon.style.display = '';
     listeningState[id].playing = true;
-    if (!listeningState[id].played) {
-      listeningState[id].played = true;
-      setTimeout(function() {
-        questions.classList.add('show');
+
+    var file = audioMap[id];
+    if (file) {
+      if (!listeningState[id].audio) {
+        listeningState[id].audio = new Audio(file);
+        listeningState[id].audio.playbackRate = audioSpeed;
+      }
+      listeningState[id].audio.play().catch(function(){});
+      listeningState[id].audio.onended = function() {
         wave.classList.remove('playing');
         playIcon.style.display = '';
         pauseIcon.style.display = 'none';
         listeningState[id].playing = false;
-      }, 8000);
+        if (questions) questions.classList.add('show');
+      };
+    } else {
+      if (!listeningState[id].played) {
+        listeningState[id].played = true;
+        setTimeout(function() {
+          if (questions) questions.classList.add('show');
+          wave.classList.remove('playing');
+          playIcon.style.display = '';
+          pauseIcon.style.display = 'none';
+          listeningState[id].playing = false;
+        }, 8000);
+      }
     }
   }
 }
