@@ -654,6 +654,7 @@ grep -oP 'class="[^"]*"' ARQUIVO.html | sort -u
 - [ ] Zero wildcards `[class*=]` no CSS de contraste
 - [ ] CADA elemento em slide escuro tem cor EXPLICITA definida
 - [ ] Dialogue = bubble com fundo branco solido (rgba(255,255,255,0.95)) + texto escuro #1a1a2e (NUNCA fundo transparente)
+- [ ] Dialogue = CADA bubble tem `<span class="audio-inline">` com `speakText()` play/pause (contar: bubbles == audio-inline)
 - [ ] err-item, oral-item, mistake-item = texto branco #fff
 - [ ] roleplay-card = fundo branco + texto escuro #1a1a2e
 - [ ] grammar-table, vocab-card-ic, check-item = fundo branco + texto escuro
@@ -1071,6 +1072,12 @@ grep -c 'data-exercise' ARQUIVO_INCLASS.html   # deve = 0
 
 # 7. ESTRUTURA — slides-wrapper fora do main-content
 grep -n 'main-content\|slides-wrapper' ARQUIVO_INCLASS.html
+
+# 8. DIALOGUE AUDIO — CADA dialogue-bubble DEVE ter audio-inline
+# Contar dialogue-bubbles vs audio-inline (devem ser IGUAIS)
+echo "Bubbles: $(grep -c 'dialogue-bubble' ARQUIVO_INCLASS.html)"
+echo "Audio btns: $(grep -c 'audio-inline' ARQUIVO_INCLASS.html)"
+# Se audio-inline < dialogue-bubble → FALTA audio em alguma frase → CORRIGIR
 ```
 
 Se QUALQUER check falhar: PARAR, CORRIGIR, RODAR DE NOVO. So declarar completo quando TODOS passarem.
@@ -1088,7 +1095,7 @@ NENHUM material e "pronto" sem passar por TODOS os 7 checks:
 5. **Funcionalidade** — Zero `data-exercise`. HTML manual com checkBlank/selectQuiz/etc.
 6. **Etapas Completas (REGRA 4)** — CADA aula DEVE conter: (a) Vocab Cards, (b) Matching, (c) Grammar in Context com texto + quiz, (d) Grammar Tip com explicacao bilingue, (e) Fill-in-the-blank, (f) Pratica, (g) Pronuncia, (h) Quiz Situacional, (i) Producao Livre. Buscar no HTML por "Grammar in Context" e "Grammar Tip" — se NAO encontrar em TODAS as aulas, REJEITAR.
 
-7. **IN CLASS Completa** — Aba IN CLASS DEVE ter: (a) minimo 25 slides para 60min / 35 para 90min, (b) narrativa com 7 capitulos, (c) reveal cards no vocab, (d) grammar discovery, (e) dialogo line-by-line, (f) 2+ listenings com play/pause, (g) quick fire uma por vez, (h) 3 role-plays (guided>semi-free>free), (i) What I Learned checklist checkbox (NUNCA survival card no IN CLASS — survival card e APENAS no Pre-class), (j) icone T com instrucoes em TODOS os slides, (k) ZERO portugues na tela, (l) TODOS os audios no audioMap (zero missing), (m) aba IN CLASS DEVE mostrar menu de selecao de aula primeiro — NUNCA entrar em slide-mode direto no switchTab. O switchTab SEMPRE remove slide-mode. Slides so abrem via enterSlideMode() chamado por click explicito no menu
+7. **IN CLASS Completa** — Aba IN CLASS DEVE ter: (a) minimo 25 slides para 60min / 35 para 90min, (b) narrativa com 7 capitulos, (c) reveal cards no vocab, (d) grammar discovery, (e) dialogo line-by-line **com audio-inline play/pause em CADA frase** (contar: dialogue-bubble == audio-inline, se diferente = REJEITAR), (f) 2+ listenings com play/pause, (g) quick fire uma por vez, (h) 3 role-plays (guided>semi-free>free), (i) What I Learned checklist checkbox (NUNCA survival card no IN CLASS — survival card e APENAS no Pre-class), (j) icone T com instrucoes em TODOS os slides, (k) ZERO portugues na tela, (l) TODOS os audios no audioMap (zero missing), (m) aba IN CLASS DEVE mostrar menu de selecao de aula primeiro — NUNCA entrar em slide-mode direto no switchTab. O switchTab SEMPRE remove slide-mode. Slides so abrem via enterSlideMode() chamado por click explicito no menu
 
 8. **Separacao de Aulas (multi-aula)** — Se o material tem 2+ aulas: (a) TODOS os slides tem `data-lesson="N"`, (b) `lessonRanges` no JS cobre todas as aulas com start/end corretos, (c) `changeSlide()` respeita bounds da aula atual, (d) contador mostra numero relativo ("01/27" nao "28/135"), (e) TODOS os cards do menu IN CLASS tem formato HTML IDENTICO (mesmo border-radius, mesmo layout, mesmo padrao de numero 2 digitos "01"/"02"). NUNCA misturar estilos entre cards.
 
@@ -1100,6 +1107,7 @@ NENHUM material e "pronto" sem passar por TODOS os 7 checks:
     - `lp-player`, `lp-skip`, `lp-seekbar-fill`, `lp-speed-row` (listening player)
     - `slide-section-title` (titulos de secao nos slides)
     - `dialogue-name` (nome do personagem no dialogo)
+    - `audio-inline` dentro de cada `dialogue-bubble` (play/pause por frase — CSS em `material.css`)
     - `comp-answer` (resposta escondida em comprehension questions)
     - `.slide-dark .comp-q { background:#fff!important }` (contraste em slides escuros)
     - NUNCA inventar classe nova sem CSS correspondente — usar classes do template
@@ -1123,6 +1131,8 @@ Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao d
 > **Excecoes explicitas DEPOIS**: `.fill-a` (resposta em accent), `.comp-answer` (accent), `.error-fix` (accent). Essas excecoes devem vir DEPOIS da regra `*` para sobrescrever.
 >
 > Material com texto ilegivel = NAO PUBLICAR.
+
+> **LEMBRETE 4 (CRITICO)**: O QUARTO erro mais recorrente e gerar slides de DIALOGUE sem botao de audio em cada frase. TODA frase dentro de um `.dialogue-bubble` DEVE ter um `<span class="audio-inline" onclick="speakText('...',this)">` com icone SVG de speaker. O `speakText()` faz toggle play/pause automaticamente. Contar: numero de `dialogue-bubble` DEVE ser IGUAL ao numero de `audio-inline`. Se diferente → falta audio em alguma frase → CORRIGIR antes de entregar. Dialogue sem audio = aula NAO entregue.
 
 ---
 
@@ -2098,6 +2108,11 @@ grep -n "class=\"wrong\"" ARQUIVO.html  # verificar CSS correspondente
 
 # Verificar Quick Challenge guards
 grep -n "nextQc\|prevQc" ARQUIVO.html  # ambos devem existir
+
+# Verificar audio em CADA frase do dialogue
+echo "Bubbles: $(grep -c 'dialogue-bubble' ARQUIVO.html)"
+echo "Audio btns: $(grep -c 'audio-inline' ARQUIVO.html)"
+# audio-inline DEVE ser >= dialogue-bubble. Se menor = FALTA audio
 ```
 
 ---
@@ -2277,9 +2292,23 @@ O mesmo padrao se aplica ao arquivo do aluno: lesson cards de aulas 2+ linkam pa
 Cada linha de dialogo DEVE ter `data-speaker="<nome do personagem>"` alem do `data-voice="<chave do roster>"`. O script de geracao de audio mapeia a chave via `VOICE_OPTIONS`.
 
 ```html
-<div class="dialogue-line" data-speaker="Gabriela" data-voice="ellen">Hi, I have a reservation.</div>
-<div class="dialogue-line" data-speaker="Receptionist" data-voice="rachel">Welcome! What is your name?</div>
+<div class="dialogue-line" data-line="1" data-speaker="Gabriela" data-voice="ellen">
+  <div class="dialogue-avatar" style="background:#c27a4a">G</div>
+  <div class="dialogue-bubble gabriela-bubble">
+    "Hi, I have a <strong>reservation</strong>."
+    <span class="audio-inline" onclick="speakText('Hi, I have a reservation.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
+  </div>
+</div>
+<div class="dialogue-line" data-line="2" data-speaker="Receptionist" data-voice="rachel">
+  <div class="dialogue-avatar" style="background:#3b82f6">R</div>
+  <div class="dialogue-bubble npc-bubble">
+    "Welcome! What is your name?"
+    <span class="audio-inline" onclick="speakText('Welcome! What is your name?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>
+  </div>
+</div>
 ```
+
+> **REGRA CRITICA**: CADA `dialogue-bubble` DEVE ter o `<span class="audio-inline">` com `speakText()`. Dialogue SEM botao de audio por frase = aula NAO entregue. O `speakText()` faz play/pause toggle automaticamente (para ao clicar de novo, para o anterior ao clicar em outra frase).
 
 ### Verificacao pre-deploy (BLOQUEANTE — zero colisoes)
 ```bash
