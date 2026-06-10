@@ -350,94 +350,105 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 - Paleta unica por aluno
 - Zero portugues na tela (A2+). Definicoes de vocabulario em INGLES simples
 
-**CONTRASTE — REGRA CRITICA BLOQUEANTE (TEXTO NUNCA ILEGIVEL)**
+**CONTRASTE — REGRA #1 DO SISTEMA. AULA COM TEXTO ILEGIVEL = NAO ENTREGUE.**
 
-> **ERRO MAIS RECORRENTE E INACEITAVEL DO SISTEMA**: Texto ilegivel em slides escuros. Ja aconteceu DEZENAS de vezes e continua acontecendo. NENHUMA aula de NENHUM aluno pode ter esse problema. Esta regra e BLOQUEANTE ABSOLUTA — material com texto ilegivel NAO pode ser publicado sob NENHUMA circunstancia. Se um slide tem QUALQUER elemento ilegivel, a aula INTEIRA esta reprovada.
+> **PRIORIDADE MAXIMA ABSOLUTA. ACIMA DE TODAS AS OUTRAS REGRAS.**
+>
+> Texto ilegivel em slides escuros e o erro MAIS recorrente, MAIS irritante e MAIS inaceitavel de todo o sistema. Ja aconteceu DEZENAS de vezes, em MULTIPLOS alunos, e continua acontecendo apesar de TODAS as regras anteriores. A partir de agora, esta regra e tratada como a #1 do sistema — acima de audio, acima de exercicios, acima de tudo.
+>
+> **UMA AULA COM QUALQUER TEXTO ILEGIVEL NAO ESTA ENTREGUE. NAO ESTA PRONTA. NAO PODE SER DEPLOYADA. PONTO.**
+>
+> Se voce gerar uma aula e tiver UM UNICO slide com texto que nao da pra ler, a aula INTEIRA volta. Nao importa se os outros 29 slides estao perfeitos. Nao importa se os audios estao prontos. Nao importa se demorou 30 minutos para gerar. VOLTA TUDO.
 
-### OS 3 CENARIOS DE CONTRASTE QUEBRADO (todos ja aconteceram em producao):
+### A CAUSA RAIZ: WILDCARDS CSS (PROIBIDOS A PARTIR DE AGORA)
 
-**CENARIO A — Texto branco em card branco (o mais comum)**
+**O QUE CAUSAVA O PROBLEMA:**
+A regra "ANTI-TEXTO-INVISIVEL v3" usava seletores wildcard como `[class*="card"]`, `[class*="item"]`, `[class*="box"]` para forcar `color:#1a1a2e!important` em TUDO dentro de slides escuros. Isso resolvia o Cenario A (texto branco em card branco), mas CRIAVA o Cenario B (texto escuro em fundo escuro transparente).
 
-Slides escuros (`.slide-dark`) forcam `color:#fff` em todo o conteudo via heranca CSS. Quando um card interno tem fundo branco/claro (comprehension, quiz, checklist, etc.), o texto HERDA o branco do slide e fica INVISIVEL. Cards aparecem completamente vazios.
+Exemplos reais de wildcards que quebraram aulas:
+- `[class*="card"]` pegava: roleplay-**card** (fundo branco = OK), mas TAMBEM slide-**card** (fundo transparente = QUEBRADO), challenge-**card**, record-**card**
+- `[class*="item"]` pegava: check-**item** (fundo branco = OK), mas TAMBEM err-**item** (fundo transparente = QUEBRADO), oral-**item**, order-**item**
+- `[class*="box"]` pegava: grammar-**box** (fundo branco = OK), mas TAMBEM dialogue-**box** (fundo transparente = QUEBRADO)
 
-Exemplo real: Slide de Listening com perguntas de comprehension — 4 cards brancos retangulares apareciam completamente vazios. O texto existia no HTML mas era branco sobre branco.
+**A REGRA NOVA (INVIOLAVEL):**
 
-**CENARIO B — Texto cinza/claro em fundo escuro semi-transparente**
+> **NUNCA usar seletores wildcard `[class*="..."]` em regras de contraste. PROIBIDO. SEM EXCECAO.**
+> Usar APENAS seletores EXPLICITOS, listando cada classe por nome completo.
 
-Dialogue bubbles e cards com fundo `rgba()` semi-transparente escuro. O texto dentro usa cor cinza/claro herdada ou definida como `color: var(--text-dim)` ou `color: rgba(255,255,255,0.6)`. Resultado: texto existe mas e quase ilegivel, exige esforco para ler.
+### O PRINCIPIO: DOIS TIPOS DE ELEMENTO EM SLIDES ESCUROS
 
-Exemplo real: Slide de Dialogue com falas em bubbles azul escuro semi-transparente — texto das falas era cinza claro sobre fundo azul marinho. Da pra adivinhar o texto, mas NAO da pra ler confortavelmente. Botao "Dialogue Complete" tambem quase invisivel.
+Todo elemento dentro de um `.slide-dark` pertence a UMA de duas categorias:
 
-**CENARIO C — Botao com texto claro sobre fundo accent em slide escuro**
+**CATEGORIA A — FUNDO BRANCO/CLARO (texto DEVE ser escuro #1a1a2e)**
+Elementos com `background:#fff` ou fundo solido claro. O texto precisa ser escuro para contrastar.
+Exemplos: vocab-card-ic, grammar-table, comp-q (com bg:#fff), check-item, email-card, boarding-pass, roleplay-card (com bg:#fff forcado)
 
-Botoes que usam `background: var(--accent)` com `color` herdada do slide-dark (#fff) parecem ok, MAS quando o accent e claro demais (ex: dourado, laranja claro, amarelo) o texto branco sobre fundo accent NAO tem contraste suficiente.
+**CATEGORIA B — FUNDO TRANSPARENTE/ESCURO (texto DEVE ser branco #fff)**
+Elementos com `background:rgba(...)` transparente sobre o slide escuro, ou sem fundo proprio. O texto precisa ser branco para contrastar com o fundo escuro do slide.
+Exemplos: dialogue-line, dialogue-bubble, err-item, oral-item, slide-card, grammar-sentence, mistake-item, challenge prompts
 
-### SOLUCAO OBRIGATORIA — PARTE 1: Cards com fundo claro em slides escuros
+**A REGRA DE OURO:**
+```
+Se o elemento tem fundo BRANCO   → texto #1a1a2e (escuro)
+Se o elemento tem fundo ESCURO   → texto #ffffff (branco)
+Se o elemento tem fundo RGBA()   → texto #ffffff (branco) — rgba sobre slide escuro = fundo escuro
+```
 
-O CSS do material DEVE incluir regras que forcam `color: #1a1a2e !important` em TODO elemento de texto dentro de cards com fundo claro em slides escuros. A lista abaixo e o MINIMO — se o material usar QUALQUER classe adicional com fundo claro, ela DEVE ser adicionada:
+### CSS OBRIGATORIO — CATEGORIA A (fundo claro → texto escuro)
 
 ```css
-/* REGRA ANTI-TEXTO-INVISIVEL — OBRIGATORIO EM TODO MATERIAL */
-.slide-dark .checklist li,
+/* CATEGORIA A — Elementos com fundo BRANCO em slides escuros */
+/* Cada classe e listada EXPLICITAMENTE. NUNCA wildcard. */
+.slide-dark .vocab-card-ic,
+.slide-dark .vocab-card-ic p,
+.slide-dark .vocab-card-ic h4,
+.slide-dark .vocab-card-ic span,
+.slide-dark .grammar-table,
+.slide-dark .grammar-table td,
+.slide-dark .grammar-table th,
 .slide-dark .check-item,
+.slide-dark .check-item span,
 .slide-dark .check-label,
-.slide-dark .roleplay-body p,
-.slide-dark .roleplay-body,
-.slide-dark .roleplay-scenario,
-.slide-dark .roleplay-card p,
-.slide-dark .roleplay-card,
-.slide-dark .comp-q,
-.slide-dark .comp-q p,
-.slide-dark .comp-answer,
-.slide-dark .comp-option,
-.slide-dark .comp-option label,
-.slide-dark .fill-item label,
-.slide-dark .fill-item p,
-.slide-dark .error-card p,
-.slide-dark .err-item p,
-.slide-dark .err-item,
-.slide-dark .oral-item p,
-.slide-dark .oral-item,
 .slide-dark .email-card,
 .slide-dark .email-card p,
 .slide-dark .boarding-pass p,
 .slide-dark .student-id-card p,
-.slide-dark .qc-card,
-.slide-dark .qc-card p,
-.slide-dark .qc-scenario,
-.slide-dark .qc-question,
-.slide-dark .grammar-table,
-.slide-dark .grammar-table td,
-.slide-dark .grammar-table th,
-.slide-dark .grammar-box,
-.slide-dark .grammar-box p,
-.slide-dark .vocab-card-ic,
-.slide-dark .vocab-card-ic p,
-.slide-dark .slide-card,
-.slide-dark .slide-card p,
-.slide-dark .slide-card li,
-.slide-dark .slide-card h4,
-.slide-dark .slide-card h5,
-.slide-dark .listening-question,
-.slide-dark .listening-question p,
-.slide-dark .listening-option,
-.slide-dark .listening-option label,
-.slide-dark [style*="background:#fff"] p,
-.slide-dark [style*="background:#fff"] li,
-.slide-dark [style*="background:#fff"] h4,
-.slide-dark [style*="background:#fff"] h5,
-.slide-dark [style*="background:white"] p,
-.slide-dark [style*="background:rgba(255"] p {
+.slide-dark .biz-card p,
+.slide-dark .passport-card p {
     color: #1a1a2e !important;
+}
+
+/* Comp-q com fundo branco explicito */
+.slide-dark .comp-q[style*="background:#fff"],
+.slide-dark .comp-q[style*="background:#fff"] p,
+.slide-dark .comp-q[style*="background:white"],
+.slide-dark .comp-q[style*="background:white"] p {
+    color: #1a1a2e !important;
+}
+
+/* Roleplay-card recebe fundo branco forcado + texto escuro */
+.slide-dark .roleplay-card { background: #fff !important; }
+.slide-dark .roleplay-card p,
+.slide-dark .roleplay-card h4,
+.slide-dark .roleplay-card span,
+.slide-dark .roleplay-card .roleplay-body,
+.slide-dark .roleplay-card .roleplay-body p,
+.slide-dark .roleplay-card .roleplay-scenario {
+    color: #1a1a2e !important;
+}
+.slide-dark .roleplay-card .roleplay-kw {
+    color: var(--accent) !important;
+    border-color: var(--accent) !important;
 }
 ```
 
-### SOLUCAO OBRIGATORIA — PARTE 2: Dialogue em slides escuros (CAUSA #1 DE RETRABALHO)
-
-> **ATENCAO MAXIMA**: Este e o erro que MAIS se repete em producao. Dialogue bubbles tem fundo TRANSPARENTE escuro (rgba), NAO fundo branco. Portanto o texto precisa ser BRANCO, nao escuro. A regra ANTI-TEXTO-INVISIVEL da PARTE 1 forca texto escuro (#1a1a2e) em cards com fundo claro — mas dialogue NAO tem fundo claro. Por isso dialogue foi REMOVIDO da lista da PARTE 1 e tem sua PROPRIA regra aqui. NUNCA incluir dialogue-bubble, dialogue-line, dialogue-name, dialogue-box ou dialogue-text na regra da PARTE 1. NUNCA usar [class*="bubble"] na regra da PARTE 1 (pega dialogue-bubble e quebra). SEMPRE incluir a regra abaixo como bloco SEPARADO, DEPOIS da PARTE 1.
+### CSS OBRIGATORIO — CATEGORIA B (fundo escuro/transparente → texto branco)
 
 ```css
-/* PARTE 2 — DIALOGUE EM SLIDES ESCUROS — texto BRANCO (OBRIGATORIO) */
+/* CATEGORIA B — Elementos com fundo TRANSPARENTE/ESCURO em slides escuros */
+/* Texto BRANCO puro. NUNCA cinza, NUNCA rgba parcial, NUNCA var(--text) */
+
+/* Dialogue (SEMPRE branco — causa #1 de retrabalho historico) */
 .slide-dark .dialogue-line,
 .slide-dark .dialogue-bubble,
 .slide-dark .dialogue-bubble p,
@@ -449,43 +460,59 @@ O CSS do material DEVE incluir regras que forcam `color: #1a1a2e !important` em 
 .slide-dark .dialogue-name {
     color: rgba(255,255,255,0.85) !important;
 }
-/* Keywords em bold — accent-light para destaque */
 .slide-dark .dialogue-line strong,
 .slide-dark .dialogue-bubble strong,
 .slide-dark .dialogue-bubble .vocab-highlight {
     color: var(--accent-light) !important;
 }
-/* Icone de audio dentro de dialogue */
-.slide-dark .dialogue-bubble .audio-inline svg {
-    stroke: #fff !important;
-}
+
+/* Err-item (fundo rgba transparente, NAO branco) */
+.slide-dark .err-item { background: rgba(255,255,255,0.06) !important; }
+.slide-dark .err-item p { color: #fff !important; }
+.slide-dark .err-item .wrong { color: #ff6b6b !important; }
+.slide-dark .err-item .err-correction { color: #4ade80 !important; }
+
+/* Oral-item (fundo rgba transparente) */
+.slide-dark .oral-item { background: rgba(255,255,255,0.06) !important; }
+.slide-dark .oral-item p { color: #fff !important; }
+.slide-dark .oral-item .oral-answer,
+.slide-dark .oral-item .oral-model { color: var(--accent-light) !important; }
+
+/* Grammar sentences/discovery (fundo rgba transparente) */
+.slide-dark .grammar-sentence { color: #fff !important; }
+.slide-dark .grammar-sentence strong { color: var(--accent-light) !important; }
+
+/* Mistake cards (fundo rgba colorido transparente) */
+.slide-dark .mistake-item { color: #fff !important; }
+.slide-dark .mistake-item strong { color: inherit !important; }
+.slide-dark .mistake-wrong { color: #fca5a5 !important; }
+.slide-dark .mistake-right { color: #86efac !important; }
+
+/* Fill-in IN CLASS (fundo rgba transparente) */
+.slide-dark .fill-ic { background: rgba(255,255,255,0.06) !important; }
+.slide-dark .fill-ic p { color: #fff !important; }
+.slide-dark .fill-ic .fill-answer { color: var(--accent-light) !important; }
+
+/* Slide-card generico (fundo rgba transparente) */
+.slide-dark .slide-card { color: #fff !important; }
+.slide-dark .slide-card p,
+.slide-dark .slide-card li,
+.slide-dark .slide-card strong { color: #fff !important; }
+
+/* Challenge/Quick Fire (fundo rgba transparente) */
+.slide-dark .challenge-card,
+.slide-dark .qc-card { color: #fff !important; }
+.slide-dark .qc-answer { color: #4ade80 !important; }
 ```
 
-**POR QUE ESSE ERRO ACONTECE:**
-A regra generica da PARTE 1 usa `[class*="bubble"]` ou lista `.dialogue-bubble` junto com cards de fundo branco — isso forca `color:#1a1a2e` (texto escuro) no dialogue, que tem fundo TRANSPARENTE escuro. Resultado: texto escuro sobre fundo escuro = INVISIVEL.
-
-**COMO PREVENIR:**
-1. A PARTE 1 NUNCA deve conter: dialogue-bubble, dialogue-line, dialogue-name, dialogue-box, dialogue-text, dialogue-card, [class*="bubble"]
-2. A PARTE 2 SEMPRE deve existir como bloco SEPARADO com `color:#ffffff!important`
-3. Na PARTE 1, se usar wildcard `[class*="..."]`, NUNCA usar "bubble", "dialogue", "line" — essas classes existem em dialogue
-
-**REGRAS VISUAIS:**
-- Fundo da bubble: `rgba(255,255,255,0.08)` a `rgba(255,255,255,0.12)` (sutil, NAO opaco)
-- Texto da fala: `#ffffff` (NUNCA cinza, NUNCA rgba parcial, NUNCA var(--text))
-- Keywords em bold: `var(--accent-light)` (destaque visivel)
-- Nome do personagem: `rgba(255,255,255,0.85)` ou `var(--accent-light)`
-- Icone de audio SVG: `stroke: #fff`
-
-### SOLUCAO OBRIGATORIA — PARTE 3: Botoes em slides escuros
+### CSS OBRIGATORIO — BOTOES EM SLIDES ESCUROS
 
 ```css
-/* BOTOES EM SLIDES ESCUROS — garantir legibilidade */
+.slide-dark .primary-btn,
 .slide-dark .verify-all-btn,
 .slide-dark .check-btn,
 .slide-dark .audio-btn,
 .slide-dark .btn-listen,
-.slide-dark .dialogue-complete-btn,
-.slide-dark button[class*="complete"],
 .slide-dark button[class*="btn"] {
     color: #ffffff !important;
     background: var(--accent) !important;
@@ -493,38 +520,69 @@ A regra generica da PARTE 1 usa `[class*="bubble"]` ou lista `.dialogue-bubble` 
 }
 ```
 
-**REGRA PARA BOTOES**: Todo botao em slide escuro DEVE ter `color: #ffffff !important` + fundo solido accent. NUNCA fundo transparente + texto accent em slide escuro (o accent pode ser uma cor que nao contrasta com o fundo escuro).
+### PROIBICOES ABSOLUTAS (causaram bugs reais)
 
-### REGRA CRITICA AO COPIAR CSS DO TEMPLATE
+1. **NUNCA `[class*="card"]`, `[class*="item"]`, `[class*="box"]`, `[class*="bubble"]`** — wildcards pegam classes nao intencionais
+2. **NUNCA `color: var(--text)` / `var(--text-dim)` / `var(--text-mid)` em slides escuros** — essas variaveis sao cinza para fundo claro
+3. **NUNCA `color: rgba(255,255,255,0.6)` ou opacidade parcial** — ou branco puro #fff ou escuro #1a1a2e, NADA no meio
+4. **NUNCA confiar em heranca de cor em slides escuros** — SEMPRE definir cor EXPLICITA em cada elemento
+5. **NUNCA supor que inline `style="color:#fff"` vai funcionar** — regras CSS com !important sobrepoem inline styles. Se uma regra errada forcar #1a1a2e, o inline #fff perde
+6. **NUNCA `.dialogue-*` na lista de elementos com texto escuro** — dialogue e SEMPRE branco
+7. **NUNCA `.err-item`, `.oral-item`, `.mistake-item` na lista de elementos com texto escuro** — esses tem fundo transparente, texto deve ser branco
 
-O template (patricia-ruffo.html) contem uma regra "ANTI-TEXTO-INVISIVEL v3" com wildcards `[class*="bubble"]`, `[class*="item"]` etc. que forca `color:#1a1a2e` em TUDO. Essa regra PEGA dialogue-bubble e MATA a legibilidade do dialogue (texto escuro sobre fundo escuro).
+### COMO DECIDIR A CATEGORIA DE UM NOVO ELEMENTO
 
-**AO COPIAR O CSS DO TEMPLATE, OBRIGATORIO:**
-1. REMOVER `[class*="bubble"]` e `[class*="bubble"] p` e `[class*="bubble"] span` da regra v3
-2. REMOVER qualquer menção a `.dialogue-bubble`, `.dialogue-line`, `.dialogue-name`, `.dialogue-box`, `.dialogue-text` da regra que forca `color:#1a1a2e`
-3. ADICIONAR a PARTE 2 (dialogue branco) como bloco CSS SEPARADO, DEPOIS da regra v3
-4. Se o template tiver wildcards que casam com dialogue, REMOVER esses wildcards
+Ao criar um novo componente para slides IN CLASS:
 
-**TESTE RAPIDO**: Depois de gerar o CSS, rodar mentalmente: "alguma regra .slide-dark forca color:#1a1a2e em dialogue-bubble?" Se SIM, esta ERRADO. Dialogue em slide escuro = BRANCO.
+1. Perguntar: "Este elemento tera fundo BRANCO (#fff) ou fundo TRANSPARENTE (rgba)?"
+2. Se BRANCO → adicionar na CATEGORIA A (texto #1a1a2e)
+3. Se TRANSPARENTE/RGBA → adicionar na CATEGORIA B (texto #fff)
+4. Se DUVIDA → usar fundo rgba + texto #fff (mais seguro — branco sobre escuro sempre funciona)
+5. NUNCA criar elemento sem regra de cor explicita — a heranca em slides escuros e IMPREVISIVEL
 
-### CHECKLIST DE CONTRASTE PRE-DEPLOY (BLOQUEANTE — ZERO TOLERANCIA):
+### VALIDACAO OBRIGATORIA PRE-DEPLOY (BLOQUEANTE — ZERO TOLERANCIA)
 
-1. Abrir CADA slide no navegador
-2. **CENARIO A**: Em cada slide escuro, verificar TODOS os cards/caixas com fundo claro — texto DEVE ser escuro (#1a1a2e)
-3. **CENARIO B**: Em cada dialogue em slide escuro, verificar que TODAS as falas sao legiveis — texto DEVE ser branco puro (#fff), NUNCA cinza
-4. **CENARIO C**: Em cada slide escuro, verificar que TODOS os botoes tem texto branco legivel sobre fundo accent solido
-5. Se existir QUALQUER texto ilegivel: PARAR, CORRIGIR, SO ENTAO continuar
-6. Rodar este comando para detectar classes potencialmente afetadas:
+> **NENHUMA aula pode ser declarada "pronta" ou "entregue" sem passar por TODOS estes checks. Se falhar em QUALQUER um, a aula NAO esta pronta. Nao importa quanto tempo levou para gerar.**
+
+**Passo 1 — Verificar que NAO existem wildcards no CSS:**
 ```bash
-# Encontrar todos os elementos com fundo claro dentro de slides
-grep -oP 'class="[^"]*"' ARQUIVO.html | sort -u | while read cls; do echo "$cls"; done
-# Cruzar com as regras .slide-dark no CSS — se faltar alguma, ADICIONAR
+grep -c 'class\*=' ARQUIVO.html
+# DEVE retornar 0. Se > 0, REMOVER todos os wildcards e substituir por seletores explicitos.
 ```
-7. NUNCA usar `color:rgba(255,255,255,0.6)` ou qualquer opacidade parcial em texto dentro de slides escuros — ou branco puro (#fff) ou escuro (#1a1a2e), nada no meio
-8. NUNCA usar `color: var(--text)` / `var(--text-dim)` / `var(--text-mid)` dentro de elementos em slide escuro — essas variaveis sao para fundo claro
-9. Na DUVIDA, adicionar a regra `.slide-dark .CLASSE { color: ... !important; }` — excesso de regra nao quebra nada, falta de regra cria texto ilegivel
 
-> **LEMBRETE FINAL**: Se voce esta gerando um slide com QUALQUER card/caixa de fundo claro dentro de um slide escuro, PARE e pergunte: "o texto deste card vai herdar branco do slide pai?" Se a resposta for sim ou talvez, ADICIONE a regra CSS. SEMPRE. SEM EXCECAO.
+**Passo 2 — Verificar cobertura de classes em slides escuros:**
+```bash
+# Listar TODAS as classes usadas dentro de slides escuros
+grep -oP 'class="[^"]*"' ARQUIVO.html | sort -u
+# Para CADA classe que aparece dentro de um slide-dark:
+# - Se tem fundo branco → DEVE ter regra .slide-dark .CLASSE { color: #1a1a2e }
+# - Se tem fundo transparente → DEVE ter regra .slide-dark .CLASSE { color: #fff }
+# - Se nao tem regra → ADICIONAR antes de considerar pronto
+```
+
+**Passo 3 — Teste visual OBRIGATORIO com curl:**
+```bash
+# Abrir a URL no navegador e navegar por CADA slide escuro
+# Em CADA slide, verificar:
+# - TODO texto e legivel sem esforco?
+# - Cards brancos tem texto escuro?
+# - Elementos com fundo transparente tem texto branco?
+# - Botoes tem texto branco sobre fundo accent?
+# - Palavras em destaque (strong, accent) sao visiveis?
+# Se QUALQUER texto e ilegivel → PARAR → CORRIGIR → SO ENTAO continuar
+```
+
+**Passo 4 — Checklist final (marcar TODOS antes de deploy):**
+- [ ] Zero wildcards `[class*=]` no CSS de contraste
+- [ ] CADA elemento em slide escuro tem cor EXPLICITA definida
+- [ ] Dialogue = texto branco #fff (NUNCA escuro)
+- [ ] err-item, oral-item, mistake-item = texto branco #fff
+- [ ] roleplay-card = fundo branco + texto escuro #1a1a2e
+- [ ] grammar-table, vocab-card-ic, check-item = fundo branco + texto escuro
+- [ ] grammar-sentence, fill-ic = texto branco #fff (fundo transparente)
+- [ ] Botoes = texto branco + fundo accent solido
+- [ ] ZERO texto com opacidade parcial (rgba, var(--text-dim))
+- [ ] Navegado por TODOS os slides — zero texto ilegivel
 
 **ICONE T — INSTRUCOES AO PROFESSOR (SUBSTITUI O ANTIGO PLANO DE AULA)**
 - NAO existe aba separada de Plano de Aula — tudo esta no icone T de cada slide
