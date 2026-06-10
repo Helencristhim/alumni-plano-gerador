@@ -6323,6 +6323,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var saved = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
     var btn = document.querySelector('.speed-btn[data-speed="' + saved + '"]');
     if (btn) setAudioSpeed(saved, btn);
+    // Voltar do Exit de uma aula standalone abre direto a aba IN CLASS
+    if (window.location.hash === '#inclass') {
+        var inclassBtn = document.querySelector('.tab-btn[onclick*="inclass"]');
+        if (inclassBtn) inclassBtn.click();
+    }
 });
 
 function speakText(text, btn) {
