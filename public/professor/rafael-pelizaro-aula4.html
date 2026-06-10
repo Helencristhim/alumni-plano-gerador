@@ -2223,12 +2223,19 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+var currentAudioSrc = null;
 function speakText(text, btn) {
-  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
   var cleanText = text.replace(/\\'/g, "'");
   var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
   if (file) {
+    // Toggle play/pause on same audio
+    if (currentAudio && currentAudioSrc === file && !currentAudio.paused) {
+      currentAudio.pause();
+      return;
+    }
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
     currentAudio = new Audio(file);
+    currentAudioSrc = file;
     currentAudio.playbackRate = audioSpeed;
     currentAudio.play().catch(function() { ttsSpeak(cleanText); });
   } else { ttsSpeak(cleanText); }
