@@ -543,7 +543,7 @@
     <div class="kpi-row">
         <div class="kpi-card">
             <span class="kpi-label">Total Alunos</span>
-            <span class="kpi-value" id="kpiAlunos">202</span>
+            <span class="kpi-value" id="kpiAlunos">--</span>
         </div>
         <div class="kpi-card">
             <span class="kpi-label">Aulas Criadas</span>
@@ -584,7 +584,7 @@
     </div>
 
     <!-- Count line -->
-    <div class="count-line" id="countLine">Exibindo 0 de 202 alunos</div>
+    <div class="count-line" id="countLine">Carregando...</div>
 
     <!-- Table -->
     <div class="table-wrap">
@@ -984,7 +984,9 @@ function updateKPIs() {
     var totalPacote = allData.reduce(function(s, d) { return s + d.pacote; }, 0);
     var taxa = totalCriadas > 0 ? Math.round(totalConcluidas / totalCriadas * 100) : 0;
 
-    document.getElementById('kpiAlunos').textContent = studentPins.length;
+    var uniqueNames = {};
+    studentPins.forEach(function(s) { uniqueNames[s.name] = true; });
+    document.getElementById('kpiAlunos').textContent = Object.keys(uniqueNames).length;
     document.getElementById('kpiCriadas').textContent = totalCriadas;
     document.getElementById('kpiCriadasSub').textContent = totalPacote > 0 ? 'de ' + totalPacote + ' no pacote total' : '';
     document.getElementById('kpiConcluidas').textContent = totalConcluidas;
@@ -1080,7 +1082,7 @@ function filterAndRender() {
     var sortBy = document.getElementById('sortSelect').value;
 
     // Build merged list from studentPins + allData
-    var list = studentPins.map(function(sp) {
+    var raw = studentPins.map(function(sp) {
         var match = findMatch(sp.name);
         return {
             name: sp.name,
@@ -1095,6 +1097,29 @@ function filterAndRender() {
         };
     });
 
+    // Group by name — first (or one with material) = main, rest = extraCards sub-rows
+    var grouped = {};
+    var order = [];
+    raw.forEach(function(s) {
+        var key = s.name;
+        if (!grouped[key]) {
+            grouped[key] = s;
+            s.extraCards = [];
+            order.push(key);
+        } else {
+            // If this one has material and the current main doesn't, swap
+            if (s.hasMaterial && !grouped[key].hasMaterial) {
+                var old = grouped[key];
+                grouped[key] = s;
+                s.extraCards = old.extraCards || [];
+                s.extraCards.push({ studentCard: old.studentCard, pin: old.pin });
+            } else {
+                grouped[key].extraCards.push({ studentCard: s.studentCard, pin: s.pin });
+            }
+        }
+    });
+    var list = order.map(function(k) { return grouped[k]; });
+
     // Filter by mode
     if (filterMode === 'com') {
         list = list.filter(function(s) { return s.hasMaterial; });
@@ -1105,9 +1130,13 @@ function filterAndRender() {
     // Filter by search
     if (q) {
         list = list.filter(function(s) {
-            return s.name.toLowerCase().indexOf(q) !== -1 ||
+            var matchMain = s.name.toLowerCase().indexOf(q) !== -1 ||
                    s.studentCard.toLowerCase().indexOf(q) !== -1 ||
                    s.pin.indexOf(q) !== -1;
+            var matchExtra = (s.extraCards || []).some(function(ec) {
+                return ec.studentCard.toLowerCase().indexOf(q) !== -1 || ec.pin.indexOf(q) !== -1;
+            });
+            return matchMain || matchExtra;
         });
     }
 
@@ -1127,8 +1156,10 @@ function filterAndRender() {
         }
     });
 
+    // Count unique students for display
+    var uniqueTotal = Object.keys(grouped).length;
     renderTable(list);
-    document.getElementById('countLine').textContent = 'Exibindo ' + list.length + ' de ' + studentPins.length + ' alunos';
+    document.getElementById('countLine').textContent = 'Exibindo ' + list.length + ' de ' + uniqueTotal + ' alunos';
 }
 
 function renderTable(list) {
@@ -1182,7 +1213,20 @@ function renderTable(list) {
 
         html += '</tr>';
 
-        // V2 sub-rows
+        // Extra student cards (same student, different contract)
+        if (d.extraCards && d.extraCards.length > 0) {
+            d.extraCards.forEach(function(ec) {
+                html += '<tr class="v2-row">';
+                html += '<td></td>';
+                html += '<td style="padding-left:2.5rem"><span class="v2-badge">2o Card</span></td>';
+                html += '<td><span class="code-badge">' + ec.studentCard + '</span></td>';
+                html += '<td><span class="pin-badge">' + ec.pin + '</span></td>';
+                html += '<td colspan="5" style="font-size:.78rem;color:var(--text-dim)">Mesmo aluno, contrato adicional</td>';
+                html += '</tr>';
+            });
+        }
+
+        // V2 sub-rows (external projects)
         var extras = v2Courses[d.name];
         if (extras) {
             extras.forEach(function(v2) {
@@ -1304,7 +1348,9 @@ async function saveNewStudent() {
         });
 
         // Update KPI and table
-        document.getElementById('kpiAlunos').textContent = studentPins.length;
+        var un = {};
+        studentPins.forEach(function(s) { un[s.name] = true; });
+        document.getElementById('kpiAlunos').textContent = Object.keys(un).length;
         filterAndRender();
 
         fb.className = 'modal-feedback success';
