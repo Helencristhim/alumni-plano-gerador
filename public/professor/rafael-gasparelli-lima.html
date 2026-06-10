@@ -900,6 +900,8 @@ body.slide-mode .teacher-t { display:flex; }
 @keyframes confettiFall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
 
 .nav-bar { position:fixed;bottom:0;left:0;right:0;z-index:520;display:none;align-items:center;justify-content:center;gap:1rem;padding:1rem 2rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06); }
+.exit-btn { padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-size:.75rem;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif; }
+.exit-btn:hover { background:rgba(255,255,255,.1);color:#fff; }
 body.slide-mode .nav-bar { display:flex; }
 .nav-btn { width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-size:1.2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center; }
 .nav-btn:hover { background:var(--accent);border-color:var(--accent);color:#fff; }
@@ -9101,6 +9103,7 @@ body.slide-mode .nav-bar { display:flex; }
 
   <!-- NAV BAR -->
   <div class="nav-bar">
+    <button class="exit-btn" onclick="exitSlideMode()">&#10005; Exit</button>
     <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
     <div class="slide-dots" id="slideDots"></div>
     <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
@@ -9493,6 +9496,12 @@ function changeSlide(dir) {
     var nextIdx = idx + dir;
     if (nextIdx < 0 || nextIdx >= slides.length) return;
     goToSlide(slides[nextIdx]);
+}
+
+function exitSlideMode() {
+    document.body.classList.remove('slide-mode');
+    var t = document.getElementById('tab-inclass'); if (t) t.classList.add('active');
+    window.scrollTo({ top: 0 });
 }
 
 function startLesson(lessonNum) {
