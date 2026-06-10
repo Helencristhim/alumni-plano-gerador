@@ -12,8 +12,18 @@
   var _playSvg = '<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>';
   var _pauseSvg = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 
+  function _isInlineAudio(b) {
+    return b && b.classList && b.classList.contains('audio-inline');
+  }
+
   function _resetBtn(b) {
-    if (b && b.classList) { b.classList.remove('playing'); b.innerHTML = _playSvg; }
+    if (!b) return;
+    if (_isInlineAudio(b)) {
+      b.classList.remove('playing');
+      b.innerHTML = _playSvg;
+    } else if (b.style) {
+      b.style.opacity = '1';
+    }
   }
 
   function _tts(text) {
@@ -64,9 +74,11 @@
       _atText = cleanText;
       window.currentAudio = audio; // compatibilidade
 
-      if (btnEl && btnEl.classList) {
+      if (_isInlineAudio(btnEl)) {
         btnEl.classList.add('playing');
         btnEl.innerHTML = _pauseSvg;
+      } else if (btnEl && btnEl.style) {
+        btnEl.style.opacity = '0.5';
       }
 
       audio.onended = function() {
