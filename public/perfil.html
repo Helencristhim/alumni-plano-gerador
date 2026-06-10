@@ -729,19 +729,13 @@
             }
         });
 
-        // Detectar idioma do curso para labels dinâmicos
-        var focoAluno = (p.dadosFormulario && p.dadosFormulario.foco) || '';
-        var geracaoFoco = p._geracaoFoco || '';
-        var isEspanhol = /espa[nñ]ol/i.test(focoAluno) || /espa[nñ]ol/i.test(geracaoFoco) || /espa[nñ]ol/i.test(JSON.stringify(p.perfil && p.perfil.programaDetalhado || ''));
-        var labelIdioma = isEspanhol ? 'Espanhol' : 'Inglês';
-
         const fields = [
             { key: 'idade', label: 'Idade', type: 'number', legacyKey: 'idade' },
             { key: 'profissao', label: 'Profissão', type: 'text', legacyKey: 'profissao' },
             { key: 'cidade', label: 'Cidade', type: 'text', legacyKey: 'cidade' },
-            { key: 'nivel', label: 'Nível de ' + labelIdioma, type: 'select', legacyKey: 'nivel', options: ['A0 (Beginner Absoluto)','A1 (Iniciante)','A2 (Pré-Intermediário)','B1 (Intermediário)','B2 (Intermediário Superior)','C1 (Avançado)','C1+ (Avançado Plus)','C2 (Proficiente)'] },
-            { key: 'foco', label: 'Foco do Curso', type: 'select', legacyKey: 'foco', options: ['Travel English','Business English','Conversação','Proficiência','Apresentações','Acadêmico','Espanhol Profissional','100% Personalizado','Outros'] },
-            { key: 'historico', label: 'Histórico com ' + labelIdioma, type: 'textarea', legacyKey: 'historico' },
+            { key: 'nivel', label: 'Nível de Inglês', type: 'select', legacyKey: 'nivel', options: ['A0 (Beginner Absoluto)','A1 (Iniciante)','A2 (Pré-Intermediário)','B1 (Intermediário)','B2 (Intermediário Superior)','C1 (Avançado)','C1+ (Avançado Plus)','C2 (Proficiente)'] },
+            { key: 'foco', label: 'Foco do Curso', type: 'select', legacyKey: 'foco', options: ['Travel English','Business English','Conversação','Proficiência','Apresentações','Acadêmico','Outros'] },
+            { key: 'historico', label: 'Histórico com Inglês', type: 'textarea', legacyKey: 'historico' },
             { key: 'eventoAlvo', label: 'Evento-Alvo', type: 'evento', legacyKey: 'eventoAlvo' },
             { key: 'hobbies', label: 'Hobbies e Interesses', type: 'textarea', legacyKey: 'hobbies' },
             { key: 'stakeAutomatico', label: 'Stake Automático', type: 'textarea', legacyKey: 'stakeAutomatico' },
@@ -1491,15 +1485,9 @@
             progDiv = document.createElement('div');
             progDiv.id = 'programaProgress';
             progDiv.style.cssText = 'margin-top:16px;padding:20px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:12px;';
-            var anchor = document.getElementById('programaBtnContainer');
-            if (anchor) { anchor.appendChild(progDiv); }
-            else { document.body.appendChild(progDiv); }
+            var btnContainer = document.querySelector('[onclick="gerarProgramaCompleto()"]').parentElement;
+            btnContainer.parentElement.insertBefore(progDiv, btnContainer.nextSibling);
         }
-
-        // Clear previous curriculum before regenerating
-        perfil.curriculo = [];
-        perfil.blocosGeracoes = [];
-        savePerfil();
 
         // Generate in batches of 10 to avoid timeout
         var batchSize = 10;
@@ -1547,8 +1535,7 @@
                         fraquezas: (source.melhorias || []).map(function(m) { return m.item || m.texto || ''; }).join(', '),
                         resumo: source.resumoExecutivo || '',
                         hobbies: formObj.hobbies || '',
-                        modalidade: formObj.modalidadeAula || formObj.modalidade || '',
-                        programaDetalhado: source.programaDetalhado || null
+                        modalidade: formObj.modalidadeAula || formObj.modalidade || ''
                     })
                 });
 
@@ -1721,8 +1708,7 @@
                     fraquezas: fraquezasArr.join('; '),
                     resumo: source.resumoExecutivo || '',
                     hobbies: hobbiesArr.join('; '),
-                    modalidade: getField('modalidadeAula') || formObj.modalidadeAula || formObj.modalidade || 'Online',
-                    programaDetalhado: source.programaDetalhado || null
+                    modalidade: getField('modalidadeAula') || formObj.modalidadeAula || formObj.modalidade || 'Online'
                 })
             });
 
@@ -1843,7 +1829,7 @@
                 '• <strong>Progressão gramatical</strong> — Foundation → Building → Expansion conforme CEFR-ALUMNI.md<br>' +
                 '• <strong>Mín. 10 palavras/aula</strong> — vocabulário + expressions obrigatórios (Regra 119, 139)<br>' +
                 '• <strong>Nunca repetir como novo</strong> — vocabulário já ensinado só aparece em revisão (Regra 140)<br>' +
-                '• <strong>60 min de conteúdo</strong> — 9 fases PPP por aula (Regra 77, 138)<br>' +
+                '• <strong>90 min de conteúdo</strong> — 9 fases PPP por aula (Regra 77, 138)<br>' +
                 '• <strong>Aula 1 = diagnóstica</strong>, última = simulação + celebração (Regra 100)' +
             '</div>' +
             '<div style="margin-bottom:var(--space-md);">' +
@@ -2542,7 +2528,7 @@
             '- Integração ElevenLabs: /docs/INTEGRACAO-ELEVENLABS.md\n' +
             '- Rulebook Pedagógico: /docs/RULEBOOK-PEDAGOGICO.md\n\n' +
             '- CEFR Alumni: /docs/CEFR-ALUMNI.md — estruturas gramaticais por nível, vocabulário core, proporção geral/foco. SIGA ABSOLUTAMENTE.\n' +
-            '- Regras 138-146: /docs/REGRAS-138-A-146.md — 60 min universal, Vocabulary+Expressions obrigatórios, ElevenLabs, American English.\n' +
+            '- Regras 138-146: /docs/REGRAS-138-A-146.md — 90 min universal, Vocabulary+Expressions obrigatórios, ElevenLabs, American English.\n' +
             '- Design System Visual: /DESIGN.md — Liquid Glass, cores, tipografia, componentes. FONTE DE VERDADE para UI/UX.\n' +
             'EXERCÍCIOS — ABORDAGEM OBRIGATÓRIA:\n' +
             '- SEMPRE HTML manual com funções inline: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(), listenBlank(), playAllVocab(), toggleLesson()\n' +
@@ -2581,9 +2567,9 @@
             '  Instruções ao professor via ícone T (hover) em cada slide.\n' +
             '  DEVE conter: narrativa com 7 capítulos, reveal cards no vocab, grammar discovery,\n' +
             '  diálogo line-by-line, 2+ listenings com play/pause, quick fire uma por vez,\n' +
-            '  3 role-plays (guided>semi-free>free), artefatos reais CSS, What I Learned checklist checkbox (NUNCA survival card no IN CLASS).\n' +
+            '  3 role-plays (guided>semi-free>free), artefatos reais CSS, survival card + checklist checkbox.\n' +
             '  Zero português na tela. 100% ElevenLabs com alternância Arthur/Ellen.\n' +
-            '  Mínimo 25-30 slides para 60 min, 35-45 para 60 min.\n' +
+            '  Mínimo 25-30 slides para 60 min, 35-45 para 90 min.\n' +
             '  REGRA CRÍTICA: A IN CLASS NÃO pode repetir os mesmos exercícios do Pre-class.\n' +
             '  O Pre-class é INTRODUÇÃO (primeiro contato com vocabulário). A IN CLASS é APROFUNDAMENTO (aplicação em contexto real).\n' +
             '  O vocabulário é o MESMO, mas TODAS as frases-exemplo, exercícios e aplicações devem ser DIFERENTES.\n' +
@@ -2644,15 +2630,9 @@
             '- Trocar APENAS: variáveis :root (--accent, --accent-light, --accent-dim, --accent-glow) para a paleta única do aluno\n' +
             '- Manter contraste WCAG 4.5:1, touch targets 44x44px, focus states visíveis\n' +
             '- prefers-reduced-motion: desativar animações\n\n' +
-            'REGRA CRÍTICA DE CONTRASTE (OBRIGATÓRIO em TODOS os materiais):\n' +
-            'Slides escuros (.slide-dark) forçam color:#fff em todo o conteúdo. Cards internos com fundo branco (checklist, role-play, vocab, comprehension, fill-in) HERDAM esse branco e ficam INVISÍVEIS.\n' +
-            'O CSS do material DEVE incluir OBRIGATORIAMENTE esta regra:\n' +
-            '.slide-dark .checklist li,.slide-dark .check-item,.slide-dark .check-label,.slide-dark .roleplay-body,.slide-dark .roleplay-body p,.slide-dark .roleplay-scenario,.slide-dark .comp-q,.slide-dark .comp-q p,.slide-dark .fill-item label,.slide-dark .fill-item p,.slide-dark .error-card p,.slide-dark .oral-item p,.slide-dark .email-card p,.slide-dark .boarding-pass p,.slide-dark .student-id-card p{color:#1a1a2e!important}\n' +
-            '.slide svg:not([width]){max-width:24px;max-height:24px}\n' +
-            'Se esta regra CSS não estiver no arquivo, o material NÃO pode ser publicado. VERIFICAR VISUALMENTE que nenhum texto está invisível (branco sobre branco) em TODOS os slides antes do deploy.\n\n' +
             'ÁUDIOS VIA ELEVENLABS (regra permanente para TODOS os alunos):\n' +
             '- TODOS os botões "Ouvir" devem ter áudio gerado pela ElevenLabs\n' +
-            '- Vozes: Arthur (male, sfJopaWaOtauCD3HKX6Q) e Ellen (female, BIvP0GN1cAtSRTxNHnWS). Atribuição por GÊNERO: palavras soltas e exercícios do aluno = voz do gênero do aluno (sexo feminino=Ellen, masculino=Arthur). Diálogos = voz do gênero do personagem. Frases gerais sem personagem = alternar. NUNCA usar só uma voz no material inteiro.\n' +
+            '- Vozes: Arthur (male, American) e Ellen (female, calm American conversational). ALTERNAR entre as duas para trazer variedade — nunca usar só uma voz no material inteiro. Arthur para vocabulário e drilling, Ellen para diálogos e frases-modelo. Em survival cards e listening, mesclar ambas. Voice IDs: arthur="sfJopaWaOtauCD3HKX6Q", ellen="BIvP0GN1cAtSRTxNHnWS".\n' +
             '- Formato: .mp3\n' +
             '- Gerar durante criação do material (não em runtime)\n' +
             '- Mapear em audioMap do JavaScript (var audioMap, não const)\n' +
@@ -2724,7 +2704,7 @@
             '- Capitaliza\u00e7\u00e3o: todo in\u00edcio de frase com MAI\u00daSCULA. Palavras de vocabul\u00e1rio apresentadas sozinhas (vocab cards, matching, survival cards) SEMPRE com primeira letra MAI\u00daSCULA: "Export" (n\u00e3o "export"), "Luxury Goods" (n\u00e3o "luxury goods"), "Board Meeting" (n\u00e3o "board meeting").\n\n' +
 
             '\u00c1UDIO \u2014 VOZES E OPERACIONAL:\n' +
-            '- Vozes: Arthur (sfJopaWaOtauCD3HKX6Q) + Ellen (BIvP0GN1cAtSRTxNHnWS). Atribui\u00e7\u00e3o por G\u00caNERO: exerc\u00edcios do aluno = voz do g\u00eanero do aluno. Di\u00e1logos = voz do g\u00eanero do personagem. Frases gerais = alternar. NUNCA s\u00f3 uma voz.\n' +
+            '- Vozes: Arthur (sfJopaWaOtauCD3HKX6Q) para vocab/drilling + Ellen (BIvP0GN1cAtSRTxNHnWS) para di\u00e1logos/frases-modelo. ALTERNAR \u2014 nunca s\u00f3 uma voz.\n' +
             '- Contra\u00e7\u00f5es no audioMap: incluir AMBAS vers\u00f5es (I\'m + I am, don\'t + do not, can\'t + cannot).\n' +
             '- audioMap: usar "var audioMap" (n\u00e3o const). NUNCA tag de fechamento de script literal em strings.\n' +
             '- Arquivos tempor\u00e1rios e scripts: DENTRO do reposit\u00f3rio (/Users/helenmendes/alumni-plano-gerador/), paths ABSOLUTOS. NUNCA em /tmp/.\n\n' +
@@ -2738,7 +2718,7 @@
 
             'DENSIDADE M\u00cdNIMA POR AULA (N\u00c3O-NEGOCI\u00c1VEL):\n' +
             '- PRE-CLASS: 7-10 vocab cards | 5+ matching | 4+ fill-in | 2+ quiz | 1 ordering (5+ itens) | 2+ speech | 1 think-about-it | 5+ survival\n' +
-            '- IN CLASS: 25-30 slides (60 min) ou 35-45 slides (60 min) | narrativa 7 capitulos | reveal cards vocab (2x2 grid) | grammar discovery + common mistake | dialogo line-by-line 8+ linhas | 2+ listenings com play/pause | quick fire 6+ questoes | spot the error 4+ | oral drilling 6+ | 3 role-plays (guided>semi-free>free) | artefato real CSS | survival card 5 frases | checklist checkbox 8+ items | icone T com instrucoes em TODOS os slides | ZERO portugues na tela | 100% audios ElevenLabs no audioMap\n' +
+            '- IN CLASS: 25-30 slides (60 min) ou 35-45 slides (90 min) | narrativa 7 capitulos | reveal cards vocab (2x2 grid) | grammar discovery + common mistake | dialogo line-by-line 8+ linhas | 2+ listenings com play/pause | quick fire 6+ questoes | spot the error 4+ | oral drilling 6+ | 3 role-plays (guided>semi-free>free) | artefato real CSS | survival card 5 frases | checklist checkbox 8+ items | icone T com instrucoes em TODOS os slides | ZERO portugues na tela | 100% audios ElevenLabs no audioMap\n' +
             '- COMPLEMENTARES: 3 recomendacoes por aula (serie/filme + podcast + YouTube) com checkbox de conclusao\n' +
             '- Se UMA aula não cumprir TODOS esses mínimos: NÃO faça deploy.';
 
@@ -3009,9 +2989,9 @@
             '  Instruções ao professor via ícone T (hover) em cada slide.\n' +
             '  DEVE conter: narrativa com 7 capítulos, reveal cards no vocab, grammar discovery,\n' +
             '  diálogo line-by-line, 2+ listenings com play/pause, quick fire uma por vez,\n' +
-            '  3 role-plays (guided>semi-free>free), artefatos reais CSS, What I Learned checklist checkbox (NUNCA survival card no IN CLASS).\n' +
+            '  3 role-plays (guided>semi-free>free), artefatos reais CSS, survival card + checklist checkbox.\n' +
             '  Zero português na tela. 100% ElevenLabs com alternância Arthur/Ellen.\n' +
-            '  Mínimo 25-30 slides para 60 min, 35-45 para 60 min.\n' +
+            '  Mínimo 25-30 slides para 60 min, 35-45 para 90 min.\n' +
             '  REGRA CRÍTICA: A IN CLASS NÃO pode repetir os mesmos exercícios do Pre-class.\n' +
             '  O Pre-class é INTRODUÇÃO (primeiro contato com vocabulário). A IN CLASS é APROFUNDAMENTO (aplicação em contexto real).\n' +
             '  O vocabulário é o MESMO, mas TODAS as frases-exemplo, exercícios e aplicações devem ser DIFERENTES.\n' +
@@ -3072,15 +3052,9 @@
             '- Trocar APENAS: variáveis :root (--accent, --accent-light, --accent-dim, --accent-glow) para a paleta única do aluno\n' +
             '- Manter contraste WCAG 4.5:1, touch targets 44x44px, focus states visíveis\n' +
             '- prefers-reduced-motion: desativar animações\n\n' +
-            'REGRA CRÍTICA DE CONTRASTE (OBRIGATÓRIO em TODOS os materiais):\n' +
-            'Slides escuros (.slide-dark) forçam color:#fff em todo o conteúdo. Cards internos com fundo branco (checklist, role-play, vocab, comprehension, fill-in) HERDAM esse branco e ficam INVISÍVEIS.\n' +
-            'O CSS do material DEVE incluir OBRIGATORIAMENTE esta regra:\n' +
-            '.slide-dark .checklist li,.slide-dark .check-item,.slide-dark .check-label,.slide-dark .roleplay-body,.slide-dark .roleplay-body p,.slide-dark .roleplay-scenario,.slide-dark .comp-q,.slide-dark .comp-q p,.slide-dark .fill-item label,.slide-dark .fill-item p,.slide-dark .error-card p,.slide-dark .oral-item p,.slide-dark .email-card p,.slide-dark .boarding-pass p,.slide-dark .student-id-card p{color:#1a1a2e!important}\n' +
-            '.slide svg:not([width]){max-width:24px;max-height:24px}\n' +
-            'Se esta regra CSS não estiver no arquivo, o material NÃO pode ser publicado. VERIFICAR VISUALMENTE que nenhum texto está invisível (branco sobre branco) em TODOS os slides antes do deploy.\n\n' +
             'ÁUDIOS VIA ELEVENLABS (regra permanente para TODOS os alunos):\n' +
             '- TODOS os botões "Ouvir" devem ter áudio gerado pela ElevenLabs\n' +
-            '- Vozes: Arthur (male, sfJopaWaOtauCD3HKX6Q) e Ellen (female, BIvP0GN1cAtSRTxNHnWS). Atribuição por GÊNERO: palavras soltas e exercícios do aluno = voz do gênero do aluno (sexo feminino=Ellen, masculino=Arthur). Diálogos = voz do gênero do personagem. Frases gerais sem personagem = alternar. NUNCA usar só uma voz no material inteiro.\n' +
+            '- Vozes: Arthur (male, American) e Ellen (female, calm American conversational). ALTERNAR entre as duas para trazer variedade — nunca usar só uma voz no material inteiro. Arthur para vocabulário e drilling, Ellen para diálogos e frases-modelo. Em survival cards e listening, mesclar ambas. Voice IDs: arthur="sfJopaWaOtauCD3HKX6Q", ellen="BIvP0GN1cAtSRTxNHnWS".\n' +
             '- Formato: .mp3\n' +
             '- Gerar durante criação do material (não em runtime)\n' +
             '- Mapear em audioMap do JavaScript (var audioMap, não const)\n' +
@@ -3183,21 +3157,21 @@
 
         var levelSpecs = {
             'a1': 'A1 (Iniciante):\n' +
-                '- Pre-teach: Tradução PT-BR permitida. 5-7 palavras novas/aula. Frases de 4-6 palavras. Drilling intenso.\n' +
+                '- Pre-teach: SEMPRE tradução PT-BR. Vocabulário básico (4-5 palavras/aula). Frases de 2-4 palavras. Drilling intenso.\n' +
                 '- Teach: Diálogos muito curtos (3-4 linhas). CCQs em português. Professor modela TUDO antes do aluno.\n' +
                 '- Practice: Matching imagem+palavra, repetição, fill-in-blanks com banco visível. Respostas de 1-2 palavras.\n' +
                 '- Production: Muito guiada — professor dá início da frase. Role-play com script quase completo. Máx 5 min.\n' +
                 '- Mídias: Desenhos animados, vídeos curtos com legendas PT.\n' +
                 '- Padrão de cortesia: "Can I have...?" / "Please" + substantivo.\n',
             'a2': 'A2 (Pré-Intermediário):\n' +
-                '- Pre-teach: ZERO português. 6-8 palavras novas/aula. Definições em inglês simples. Frases 5-8 palavras. Drilling de pronúncia.\n' +
+                '- Pre-teach: Tradução PT-BR obrigatória. 5-7 palavras/aula. Frases simples (5-8 palavras). Drilling de pronúncia.\n' +
                 '- Teach: Diálogos curtos (5-8 linhas). "Blocos de linguagem" (frases prontas). CCQs em inglês simples.\n' +
                 '- Practice: Matching, fill-in-blanks, quiz múltipla escolha. Respostas COMPLETAS.\n' +
                 '- Production: Role-play sem script. Professor reformula em EN simples se travar. 10-15 min.\n' +
                 '- Mídias: Filmes simples, podcasts para learners.\n' +
                 '- Padrão de cortesia: "Could I...?" como modelo de pedido educado. NUNCA "I want".\n',
             'b1': 'B1 (Intermediário):\n' +
-                '- Pre-teach: ZERO português. 7-9 palavras novas/aula. Definições em inglês.\n' +
+                '- Pre-teach: Tradução só para termos técnicos/idiomáticos. 6-8 palavras/expressões.\n' +
                 '- Teach: Textos/diálogos mais longos (8-12 linhas). Expressões idiomáticas. CCQs com justificativa.\n' +
                 '- Practice: Reading + interpretação, ordering, sorting, true/false com justificativa.\n' +
                 '- Production: Role-play com imprevistos. Discussão aberta. 15-20 min.\n' +
@@ -3238,7 +3212,7 @@
                   '  MATERIAL: perguntas na tela IN CLASS + instruções no ícone T\n\n' +
 
                   'FASE 2 — VOCABULARY DEEP-DIVE (15 min):\n' +
-                  '  - 7-10 palavras/expressões novas para aula de 60 min (não 5)\n' +
+                  '  - 7-10 palavras/expressões novas para aula de 90 min (não 5)\n' +
                   '  - Para cada palavra: imagem + exemplo em contexto + áudio + drilling (professor fala, aluno repete 3x)\n' +
                   '  - Atividade: professor fala situação em PT, aluno diz a palavra/frase em EN\n' +
                   '  CONEXÃO COM PRE-CLASS: o aluno já viu estas palavras nos exercícios do Pre-class. Aqui o professor APROFUNDA com exemplos DIFERENTES e drilling oral.\n' +
@@ -3284,12 +3258,12 @@
                   '  MATERIAL: espaço para anotações no ícone T\n\n' +
 
                   'FASE 9 — WRAP-UP + CHECKLIST (5 min):\n' +
-                  '  - Checklist "What I Learned": professor lê cada item, aluno confirma (checkboxes clicáveis)\n' +
+                  '  - Survival Card: revisão das frases-chave da aula com áudio\n' +
+                  '  - Checklist "O que eu aprendi": professor lê cada item, aluno confirma\n' +
                   '  - Preview da próxima aula + homework\n' +
-                  '  - NUNCA incluir Survival Card no IN CLASS (Survival Card é APENAS no Pre-class)\n' +
-                  '  MATERIAL: checklist na tela IN CLASS + homework no ícone T\n\n' +
+                  '  MATERIAL: survival card + checklist na tela IN CLASS + homework no ícone T\n\n' +
 
-                  'TOTAL: 95 min de conteúdo planejado para 60 min de aula (margem de segurança).\n' +
+                  'TOTAL: 95 min de conteúdo planejado para 90 min de aula (margem de segurança).\n' +
                   'NUNCA entregar material insuficiente. Cada fase DEVE ter conteúdo detalhado e específico no HTML.\n' +
                   'Se o professor terminar antes, usar o conteúdo extra. Se não der tempo, a fase 8 pode ser reduzida.\n\n';
               } else if (dur >= 75) {
@@ -3319,7 +3293,7 @@
 
             'ABA IN CLASS — REGRAS DETALHADAS (OBRIGATÓRIO):\n\n' +
 
-            'FORMATO: Sequência de slides (100vh cada). Navegação: setas teclado + botões. Contador "7/30" no canto. Barra de capítulos no topo. Transições fade 400ms. Mínimo 25-30 slides para 60 min, 35-45 para 60 min.\n\n' +
+            'FORMATO: Sequência de slides (100vh cada). Navegação: setas teclado + botões. Contador "7/30" no canto. Barra de capítulos no topo. Transições fade 400ms. Mínimo 25-30 slides para 60 min, 35-45 para 90 min.\n\n' +
 
             'NARRATIVA: Toda aula segue uma HISTÓRIA com título e 7 capítulos: The Dream (warm-up) → Packing Words (vocab) → The Code (grammar) → Getting There (contexto) → Practice → Your Turn (produção) → Wrap-up. Slides de transição entre capítulos com imagem de fundo.\n\n' +
 
@@ -3341,11 +3315,11 @@
 
             'ÍCONE T — INSTRUÇÕES AO PROFESSOR: Cada slide tem "T" fixo no canto superior direito. HOVER mostra painel escuro com instruções em português. Mouse sai → some. DEVE conter: timing, como conduzir, CCQs quando aplicável, obstacle alerts, dicas de pronúncia. É a ÚNICA forma do professor receber instruções — deve ser COMPLETO.\n\n' +
 
-            'WRAP-UP: NUNCA incluir Survival Card no IN CLASS (Survival Card é APENAS no Pre-class). What I Learned (CHECKBOXES clicáveis, click → verde). Badge celebratório com animação. Closing slide "Day X — Complete" + preview próxima aula.\n\n' +
+            'WRAP-UP: Survival Card (slide escuro, 5 frases + audio Listen). What I Learned (CHECKBOXES clicáveis, click → verde). Badge celebratório com animação. Closing slide "Day X — Complete" + preview próxima aula.\n\n' +
 
             'VISUAL: Zero emojis (todos SVG inline Lucide). Zero imagens externas em cards (só em backgrounds full-screen testados). Font mínimo 0.9rem corpo. Dois tipos de botão: primary (filled) + secondary (outlined). Paleta única por aluno.\n\n' +
 
-            'ÁUDIO IN CLASS: 100% ElevenLabs. Atribuição por GÊNERO: palavras soltas e exercícios do aluno = voz do gênero do aluno (aluna=Ellen BIvP0GN1cAtSRTxNHnWS, aluno=Arthur sfJopaWaOtauCD3HKX6Q). Diálogos = voz do gênero do personagem. Frases gerais = alternar Arthur/Ellen. NUNCA voz única. Verificação: ZERO speakText() sem match no audioMap.\n\n' +
+            'ÁUDIO IN CLASS: 100% ElevenLabs. Arthur (sfJopaWaOtauCD3HKX6Q) para personagens masculinos + palavras soltas. Ellen (BIvP0GN1cAtSRTxNHnWS) para personagens femininos (incluindo a aluna se for mulher). Frases 3+ palavras ALTERNAM Arthur/Ellen. NUNCA voz única. Verificação: ZERO speakText() sem match no audioMap.\n\n' +
 
             'ZERO PORTUGUÊS NA TELA: Em QUALQUER nível (A0 a C2), a tela IN CLASS é 100% inglês. Definições de vocabulário em inglês simples. O professor traduz oralmente quando necessário.';
     }

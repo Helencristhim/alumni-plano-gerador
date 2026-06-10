@@ -293,9 +293,7 @@
 <nav class="alumni-nav">
     <a href="index.html">Novo Aluno</a>
     <a href="dashboard.html" class="active">Painel de Alunos</a>
-    <a href="controle-aulas.html">Controle</a>
     <a href="governanca.html">Governança</a>
-    <a href="audio-audit.html">Audio Audit</a>
 </nav>
 
 <div class="container container--wide">
@@ -528,7 +526,6 @@
                 _tipoEvento: d.tipoEvento || '',
                 _updatedAt: row.updated_at,
                 _aulasGeradas: (function() { var bg = (row.data&&row.data.blocosGeracoes)||[]; var c = (row.data&&row.data.curriculo)||[]; return bg.filter(function(b){return b&&b.status==='gerado';}).length || (c.length > 0 ? c.length : 0); })(),
-                _fotoUrl: (row.data&&row.data.fotoUrl) || (d.fotoUrl) || '',
                 _slug: row.id,
                 legacyUrl: (merged[row.id]&&merged[row.id].legacyUrl) || '',
                 externalUrl: (merged[row.id]&&merged[row.id].externalUrl) || ''
@@ -759,14 +756,11 @@
             }
 
             var isAtivo = a._ativo === true;
-            var cardBgUrl = a._fotoUrl || (a.foco ? getThemeImage(a.foco) : '');
-            var bgImg = (alreadyConfirmed && cardBgUrl) ? '<div class="s-card-bg" style="background-image:url(\'' + escAttr(cardBgUrl) + '\')"></div>' : '';
-            return '<div class="s-card'+(deact?' deactivated':'')+(isAtivo?' ativo':'')+'" data-id="'+escAttr(a.id)+'" data-foco="'+escAttr(a.foco)+'" data-foto="'+escAttr(a._fotoUrl)+'" data-legacy="'+escAttr(a.legacyUrl)+'" data-external="'+escAttr(a.externalUrl)+'">' +
+            var bgImg = (alreadyConfirmed && a.foco) ? '<div class="s-card-bg" style="background-image:url(\'' + getThemeImage(a.foco) + '\')"></div>' : '';
+            return '<div class="s-card'+(deact?' deactivated':'')+(isAtivo?' ativo':'')+'" data-id="'+escAttr(a.id)+'" data-foco="'+escAttr(a.foco)+'" data-legacy="'+escAttr(a.legacyUrl)+'" data-external="'+escAttr(a.externalUrl)+'">' +
                 bgImg +
                 '<div class="s-top">' +
-                    (a._fotoUrl
-                        ? '<div class="s-avatar" style="background:url(\''+escAttr(a._fotoUrl)+'\') center/cover;border:2px solid '+nameToColor(a.nome)+'"></div>'
-                        : '<div class="s-avatar" style="background:'+nameToColor(a.nome)+'">'+esc(getInitials(a.nome))+'</div>') +
+                    '<div class="s-avatar" style="background:'+nameToColor(a.nome)+'">'+esc(getInitials(a.nome))+'</div>' +
                     '<div class="s-info">' +
                         '<div class="s-name-row"><span class="s-name">'+esc(a.nome)+'</span><span class="s-badge '+badge.c+'">'+badge.l+'</span>'+cdH+'</div>' +
                         '<div class="s-meta">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('<span class="s-meta-sep">|</span>')+'</div>' +
@@ -866,8 +860,8 @@
 
                     var anyMaterial = profExists || alunoExists || hasLegacy;
                     if (anyMaterial) confirmedMaterials.add(id);
-                    if (anyMaterial && (foco || card.dataset.foto) && !card.querySelector('.s-card-bg')) {
-                        var img = card.dataset.foto || getThemeImage(foco);
+                    if (anyMaterial && foco && !card.querySelector('.s-card-bg')) {
+                        var img = getThemeImage(foco);
                         var bgDiv = document.createElement('div');
                         bgDiv.className = 's-card-bg';
                         bgDiv.style.backgroundImage = "url('" + img + "')";

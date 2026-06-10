@@ -156,7 +156,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:#1a1a1a;line-heig
   <nav class="nav-links">
     <a href="index.html" class="nav-link">Novo Aluno</a>
     <a href="dashboard.html" class="nav-link">Painel de Alunos</a>
-    <a href="controle-aulas.html" class="nav-link">Controle</a>
     <a href="governanca.html" class="nav-link active">Governança</a>
   </nav>
 </div>
@@ -670,8 +669,7 @@ function checkExercises(html) {
 }
 
 function checkOrdering(html) {
-  /* Check for actual ordering HTML elements, not JS function references */
-  var hasOrderContainer = /id\s*=\s*["']order-l\d+["']/.test(html);
+  var hasOrderContainer = html.indexOf('order-container') !== -1;
   if (!hasOrderContainer) {
     /* No ordering exercises found — not necessarily an error, some lessons may not have them */
     return { pass: true, details: 'Nenhum exercício de ordering encontrado (ok se não aplicável)' };
@@ -830,7 +828,7 @@ function checkInClassComponents(html, lessonNum) {
     { name: 'Quick fire', test: function() { return html.indexOf('Quick') !== -1 || html.indexOf('quick-fire') !== -1 || html.indexOf('qf-') !== -1; } },
     { name: 'Spot the error', test: function() { return html.indexOf('error') !== -1 && (html.indexOf('correction') !== -1 || html.indexOf('correct') !== -1); } },
     { name: 'Role-play (3x)', test: function() { var m = html.match(/role-?play/gi); return m && m.length >= 3; } },
-    { name: 'Artefato real', optional: true, optionalUntil: 2, test: function() { var h = html.toLowerCase(); return h.indexOf('boarding-pass') !== -1 || h.indexOf('hotel-confirm') !== -1 || h.indexOf('artifact') !== -1 || h.indexOf('email-') !== -1 || h.indexOf('menu-card') !== -1 || h.indexOf('id-card') !== -1 || h.indexOf('schedule-card') !== -1 || h.indexOf('artefato') !== -1 || h.indexOf('receipt') !== -1 || h.indexOf('ticket') !== -1 || h.indexOf('menu') !== -1; } },
+    { name: 'Artefato real', optional: true, optionalUntil: 2, test: function() { return html.indexOf('boarding-pass') !== -1 || html.indexOf('hotel-confirm') !== -1 || html.indexOf('artifact') !== -1 || html.indexOf('email-') !== -1 || html.indexOf('menu-card') !== -1 || html.indexOf('id-card') !== -1 || html.indexOf('schedule-card') !== -1 || html.indexOf('artefato') !== -1; } },
     { name: 'Checklist', test: function() { return (html.indexOf('checkbox') !== -1 || html.indexOf('checklist') !== -1 || html.indexOf('check-box') !== -1 || html.indexOf('check-item') !== -1 || html.indexOf('toggleCheck') !== -1) && (html.indexOf('What I Learned') !== -1 || html.indexOf('After today') !== -1 || html.indexOf('checklist-item') !== -1 || html.indexOf('check-label') !== -1 || html.indexOf('check-item') !== -1); } }
   ];
   var found = [];
@@ -1241,7 +1239,7 @@ function checkAccents(html) {
     'proximo': 'próximo', 'proxima': 'próxima', 'proximos': 'próximos',
     'ultimo': 'último', 'ultima': 'última',
     'diario': 'diário', 'previsao': 'previsão',
-    'farmacia': 'farmácia',
+    'farmacia': 'farmácia', 'financeiro': 'financeiro',
     'concluidos': 'concluídos', 'extraidos': 'extraídos',
     'pos-curso': 'pós-curso',
     'politica': 'política', 'minimo': 'mínimo',
@@ -1371,8 +1369,7 @@ function checkAccents(html) {
   }
 
   /* Special check: "Ja " at start of sentence (should be "Já") */
-  /* Exclude "Jaú", "Japão", "Jamaica" etc. — city/country names starting with Ja */
-  var jaRegex = /(?:^|[.!?""]\s*)Ja(?![úùûüpP])\b/gm;
+  var jaRegex = /(?:^|[.!?""]\s*)Ja\b/gm;
   var jaMatches = textContent.match(jaRegex);
   if (jaMatches && jaMatches.length > 0) {
     foundItems.push({ word: 'Ja → Já', count: jaMatches.length, context: 'Advérbio deve ter acento' });
@@ -1624,9 +1621,7 @@ function checkVoiceAlternation(html) {
         if (!isMaleContent) {
           var firstWords = phrase.split(/\s+/).slice(0, 3).join(' ');
           /* Skip vocative: "James, ..." with Ellen = female talking TO James = correct */
-          /* Skip greeting: "Hi/Hello/Hey James" = speaker greeting James, not James speaking */
-          var isGreeting = /^(?:Hi|Hello|Hey|Dear|Thank you|Thanks|Good morning|Good afternoon|Good evening|Nice to meet you)\b/i.test(phrase);
-          isMaleContent = !isAddressingMale && !isGreeting && maleNames.test(firstWords) && !femaleNames.test(firstWords);
+          isMaleContent = !isAddressingMale && maleNames.test(firstWords) && !femaleNames.test(firstWords);
         }
         var hasFemaleRef = femalePatterns.some(function(p) { return p.test(phrase); }) ||
           (/\bI(?:'m| am)\b/i.test(phrase) && femaleNames.test(phrase));
@@ -1643,9 +1638,7 @@ function checkVoiceAlternation(html) {
         if (!isFemaleContent) {
           var firstWords2 = phrase.split(/\s+/).slice(0, 3).join(' ');
           /* Skip vocative: "Eduarda, ..." with Arthur = male talking TO Eduarda = correct */
-          /* Skip greeting: "Hi/Hello/Hey Eduarda" = speaker greeting Eduarda, not Eduarda speaking */
-          var isGreeting2 = /^(?:Hi|Hello|Hey|Dear|Thank you|Thanks|Good morning|Good afternoon|Good evening|Nice to meet you)\b/i.test(phrase);
-          isFemaleContent = !isAddressingFemale && !isGreeting2 && femaleNames.test(firstWords2) && !maleNames.test(firstWords2);
+          isFemaleContent = !isAddressingFemale && femaleNames.test(firstWords2) && !maleNames.test(firstWords2);
         }
         var hasMaleRef = malePatterns.some(function(p) { return p.test(phrase); }) ||
           (/\bI(?:'m| am)\b/i.test(phrase) && maleNames.test(phrase));
@@ -1931,59 +1924,6 @@ function checkContrast(html) {
     }
   }
 
-  /* ── 6. White/light text on white/light background (invisible text) ── */
-  /* Detect patterns like color:#fff or color:white or rgba(255,255,255) on elements inside white-background cards */
-  var whiteTextPatterns = [
-    /* White text in inline styles inside cards/checklist/roleplay with white bg */
-    { regex: /style\s*=\s*["'][^"']*color\s*:\s*(?:#fff(?:fff)?|white|rgba\s*\(\s*255\s*,\s*255\s*,\s*255)[^"']*["'][^>]*>[^<]{1,200}/gi, desc: 'Texto branco (#fff/white) em elemento inline' },
-    /* Light accent-colored text that might be invisible on white cards */
-    { regex: /style\s*=\s*["'][^"']*color\s*:\s*var\(--accent-light\)[^"']*["'][^>]*>[^<]{1,200}/gi, desc: 'Texto com cor accent-light que pode ser ilegível em fundo branco' }
-  ];
-
-  var slidesWrapper = html.indexOf('slides-wrapper') !== -1 ? html.substring(html.indexOf('slides-wrapper')) : '';
-  if (slidesWrapper) {
-    /* Find white-bg cards inside slides that might have invisible text */
-    var whiteCardRegex = /(?:background\s*:\s*(?:#fff|white|rgba\s*\(\s*255\s*,\s*255\s*,\s*255))[^;]*;[^"']*color\s*:\s*(?:#fff|white|rgba\s*\(\s*255\s*,\s*255\s*,\s*255)/gi;
-    var whiteOnWhite = slidesWrapper.match(whiteCardRegex);
-    if (whiteOnWhite && whiteOnWhite.length > 0) {
-      problems.push('TEXTO INVISÍVEL: ' + whiteOnWhite.length + ' ocorrência(s) de texto branco sobre fundo branco detectada. Verificar cards, checklists e role-play nos slides.');
-    }
-
-    /* Check for checklist/check items inside slide-dark with white background and no dark text color */
-    var checklistInSlides = slidesWrapper.match(/(?:checklist|check-item|check-label|toggleCheck)[^}]*/gi) || [];
-    var hasChecklistCards = slidesWrapper.indexOf('checklist') !== -1 || slidesWrapper.indexOf('toggleCheck') !== -1;
-    if (hasChecklistCards) {
-      /* Look for li or label elements with white/near-white background that might have inherited white text from slide-dark */
-      var liInChecklist = (slidesWrapper.match(/<li[^>]*style[^>]*background[^>]*(?:white|#fff|rgba\(255)[^>]*>/gi) || []);
-      var whiteTextInChecklist = (slidesWrapper.match(/<li[^>]*style[^>]*color\s*:\s*(?:#fff|white|rgba\(255)[^>]*>/gi) || []);
-      if (liInChecklist.length > 0 || whiteTextInChecklist.length > 0) {
-        problems.push('CHECKLIST ILEGÍVEL: Cards de checklist com fundo branco podem ter texto branco herdado do slide escuro. Adicionar color:#1a1a2e ou color:var(--text) explícito nos itens.');
-      }
-    }
-
-    /* Generic: any element with both white background AND white/very-light text in same style attr */
-    var inlineStyles = slidesWrapper.match(/style\s*=\s*["'][^"']{20,}["']/gi) || [];
-    var invisibleCount = 0;
-    inlineStyles.forEach(function(styleAttr) {
-      var hasBgWhite = /background\s*:\s*(?:#fff|white|rgba\s*\(\s*255\s*,\s*255\s*,\s*255\s*(?:,\s*(?:0\.\d+|1))?s*\))/i.test(styleAttr);
-      var hasColorWhite = /(?:^|;)\s*color\s*:\s*(?:#fff|white|rgba\s*\(\s*255\s*,\s*255\s*,\s*255)/i.test(styleAttr);
-      if (hasBgWhite && hasColorWhite) invisibleCount++;
-    });
-    if (invisibleCount > 0) {
-      problems.push('TEXTO INVISÍVEL (inline): ' + invisibleCount + ' elemento(s) com background branco E cor de texto branca no mesmo style. Texto completamente ilegível.');
-    }
-  }
-
-  /* ── 7. CSS rules that force white text on elements that might have white bg ── */
-  var styleBlocks = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi) || [];
-  var allCSS = styleBlocks.join(' ');
-  /* Check if slide-dark forces color:#fff or white on cards that have their own white bg */
-  var darkSlideWhiteText = /\.slide-dark[^{]*\{[^}]*color\s*:\s*(?:#fff|white)/gi.test(allCSS);
-  var cardsWithWhiteBg = /(?:checklist|check-item|check-label|roleplay-body|comp-q|vocab-card)\s*\{[^}]*background\s*:\s*(?:#fff|white)/gi.test(allCSS);
-  if (darkSlideWhiteText && cardsWithWhiteBg) {
-    problems.push('RISCO DE CONTRASTE: CSS tem slide-dark forçando texto branco, mas cards internos têm fundo branco. Adicionar regra .slide-dark .checklist li, .slide-dark .check-item { color: #1a1a2e } para garantir legibilidade.');
-  }
-
   if (problems.length === 0) {
     return { pass: true, details: 'Contraste e legibilidade OK', issues: [] };
   }
@@ -2072,39 +2012,8 @@ async function auditStudent(index) {
 
   body.innerHTML = '<div class="audit-status">Detectando aulas e executando verificações...</div>';
 
-  /* Detect lessons from main file */
+  /* Detect lessons */
   var detectedLessons = detectLessons(html);
-
-  /* Also check for individual aula files (e.g. tania-rosa-aula2.html, roberto-pires-aula3.html) */
-  var aulaFiles = [];
-  for (var ai = 1; ai <= Math.min(s.totalLessons, 50); ai++) {
-    aulaFiles.push({ num: ai, url: '/professor/' + s.slug + '-aula' + ai + '.html' });
-  }
-  for (var af = 0; af < aulaFiles.length; af++) {
-    try {
-      var aulaResp = await fetch(aulaFiles[af].url, { method: 'HEAD' });
-      if (aulaResp.ok) {
-        var aulaHtml = await (await fetch(aulaFiles[af].url)).text();
-        var aulaLessons = detectLessons(aulaHtml);
-        if (aulaLessons.length > 0) {
-          aulaLessons.forEach(function(al) {
-            al._sourceFile = aulaFiles[af].url;
-            al._sourceHtml = aulaHtml;
-            /* Individual aula file REPLACES placeholder from main file */
-            var existingIdx = -1;
-            detectedLessons.forEach(function(d, idx) { if (d.num === al.num) existingIdx = idx; });
-            if (existingIdx !== -1) {
-              detectedLessons[existingIdx] = al;
-            } else {
-              detectedLessons.push(al);
-            }
-          });
-        }
-      }
-    } catch (e) { /* Individual aula file not found — that's OK */ }
-  }
-  detectedLessons.sort(function(a, b) { return a.num - b.num; });
-
   var detectedCount = detectedLessons.length;
 
   /* Update lesson count display */
@@ -2136,45 +2045,24 @@ async function auditStudent(index) {
 
   for (var li = 0; li < detectedLessons.length; li++) {
     var lesson = detectedLessons[li];
-    /* Use source HTML from individual aula file if available, otherwise from main file */
-    var sourceHtml = lesson._sourceHtml || html;
-    var lessonHtml = sourceHtml.substring(lesson.startIdx, lesson.endIdx);
-
-    /* For Pre-class: if individual aula file has empty/redirect Pre-class, use main file instead */
-    var preclassHtml = lessonHtml;
-    if (lesson._sourceHtml) {
-      var preclassCheck = checkPreclassLesson(lessonHtml, lesson.num);
-      if (!preclassCheck.pass) {
-        /* Try main file's lesson HTML for Pre-class */
-        var mainLesson = null;
-        var mainLessonRegex = new RegExp('id=["\']ex-lesson-' + lesson.num + '["\']');
-        var mainStartIdx = html.search(mainLessonRegex);
-        if (mainStartIdx !== -1) {
-          var mainNextLesson = html.indexOf('id="ex-lesson-' + (lesson.num + 1) + '"', mainStartIdx + 1);
-          var mainEndIdx = mainNextLesson !== -1 ? mainNextLesson : html.length;
-          var mainLessonHtml = html.substring(mainStartIdx, mainEndIdx);
-          var mainCheck = checkPreclassLesson(mainLessonHtml, lesson.num);
-          if (mainCheck.pass) preclassHtml = mainLessonHtml;
-        }
-      }
-    }
+    var lessonHtml = html.substring(lesson.startIdx, lesson.endIdx);
 
     var checks = [];
 
     /* 1. Structure (file-wide, same for all lessons) */
     checks.push({ name: CHECK_NAMES[0], result: fileChecks.structure });
 
-    /* 2. Pre-class etapas (use main file Pre-class if individual has redirect) */
-    checks.push({ name: CHECK_NAMES[1], result: checkPreclassLesson(preclassHtml, lesson.num) });
+    /* 2. Pre-class etapas */
+    checks.push({ name: CHECK_NAMES[1], result: checkPreclassLesson(lessonHtml, lesson.num) });
 
-    /* 3. IN CLASS slides (use source file if from individual aula) */
-    checks.push({ name: CHECK_NAMES[2], result: checkInClassSlides(sourceHtml) });
+    /* 3. IN CLASS slides (file-wide for now — all slides belong to the lesson if only 1) */
+    checks.push({ name: CHECK_NAMES[2], result: checkInClassSlides(html) });
 
     /* 4. IN CLASS components */
-    checks.push({ name: CHECK_NAMES[3], result: checkInClassComponents(sourceHtml, lesson.num) });
+    checks.push({ name: CHECK_NAMES[3], result: checkInClassComponents(html, lesson.num) });
 
     /* 5. Teacher T icon */
-    checks.push({ name: CHECK_NAMES[4], result: checkTeacherT(sourceHtml) });
+    checks.push({ name: CHECK_NAMES[4], result: checkTeacherT(html) });
 
     /* 6. Audio map */
     checks.push({ name: CHECK_NAMES[5], result: fileChecks.audioMap });
