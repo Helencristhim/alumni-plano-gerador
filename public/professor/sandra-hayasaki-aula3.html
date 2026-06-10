@@ -1082,11 +1082,18 @@ function switchTab(tabId) {
   event.currentTarget.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 }
+function exitSlideMode() { document.body.classList.remove('slide-mode'); document.querySelectorAll('.slide').forEach(function(s) { s.classList.remove('active'); }); window.location.href = '/professor/sandra-hayasaki.html#inclass'; }
+
+// Auto-enter slide mode from hub
+if (window.location.hash === '#slides') { document.addEventListener('DOMContentLoaded', function() { setTimeout(function(){ enterSlideMode(1); }, 100); }); }
+
 function enterSlideMode(){document.body.classList.add('slide-mode');if(currentSlide)goToSlide(currentSlide);else goToSlide(1)}
 function toggleLesson(header){header.parentElement.classList.toggle('open')}
 var currentAudio=null;var audioSpeed=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');
 function setAudioSpeed(speed,btn){audioSpeed=speed;localStorage.setItem('alumni-audio-speed',speed);document.querySelectorAll('.speed-btn').forEach(function(b){b.classList.remove('active')});btn.classList.add('active')}
-document.addEventListener('DOMContentLoaded',function(){var saved=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');var btn=document.querySelector('.speed-btn[data-speed="'+saved+'"]');if(btn)setAudioSpeed(saved,btn)});
+document.addEventListener('DOMContentLoaded',function(){
+    if (window.location.hash === '#slides') { setTimeout(function(){ enterSlideMode(1); }, 100); }
+var saved=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');var btn=document.querySelector('.speed-btn[data-speed="'+saved+'"]');if(btn)setAudioSpeed(saved,btn)});
 function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0}var cleanText=text.replace(/\\'/g,"'");var file=audioMap[cleanText]||audioMap[cleanText.replace(/\.$/,'')]||audioMap[cleanText+'.'];if(file){currentAudio=new Audio(file);currentAudio.playbackRate=audioSpeed;currentAudio.play().catch(function(){ttsSpeak(cleanText)})}else{ttsSpeak(cleanText)}}
 function ttsSpeak(text){if('speechSynthesis' in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=audioSpeed*0.85;u.pitch=1;window.speechSynthesis.speak(u)}}
 function speakPhrase(btn){var card=btn.closest('.speech-card');if(card)speakText(card.dataset.phrase,btn)}
@@ -1147,6 +1154,8 @@ if(window.location.search.indexOf('autostart=1')!==-1)setTimeout(function(){ente
 <script src="/lib/audio-toggle.js"></script>
 <script src="/lib/lesson-progress.js"></script>
 <script src="/lib/controle-aulas.js"></script>
-<script src="/lib/activity-sync.js"></script>
+<script src="/lib/activity-sync.js">
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && document.body.classList.contains('slide-mode')) { e.preventDefault(); exitSlideMode(); } });
+</script>
 </body>
 </html>

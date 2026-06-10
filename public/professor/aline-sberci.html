@@ -1758,11 +1758,11 @@ body.slide-mode .nav-bar{display:flex}
       <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">01</div>
       <div><div style="font-weight:600;font-size:.95rem">Who Is Aline?</div><div style="font-size:.8rem;color:var(--text-dim)">Diagnostic Session -- 32 slides</div></div>
     </div>
-    <a href="/professor/aline-sberci-aula2.html?autostart=1" target="_blank" style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
+    <a href="/professor/aline-sberci-aula2.html?autostart=1" style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;background:var(--accent-light);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">02</div>
       <div><div style="font-weight:600;font-size:.95rem">My Week at Novartis</div><div style="font-size:.8rem;color:var(--text-dim)">Daily Routines -- slides</div></div>
     </a>
-    <a href="/professor/aline-sberci-aula3.html?autostart=1" target="_blank" style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
+    <a href="/professor/aline-sberci-aula3.html?autostart=1" style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;background:var(--accent-light);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">03</div>
       <div><div style="font-weight:600;font-size:.95rem">Looking Back</div><div style="font-size:.8rem;color:var(--text-dim)">Career Path -- slides</div></div>
     </a>
@@ -2445,7 +2445,9 @@ function enterSlideMode(){document.body.classList.add('slide-mode');if(currentSl
 function toggleLesson(header){header.parentElement.classList.toggle('open')}
 var currentAudio=null;var audioSpeed=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');
 function setAudioSpeed(speed,btn){audioSpeed=speed;localStorage.setItem('alumni-audio-speed',speed);document.querySelectorAll('.speed-btn').forEach(function(b){b.style.background='var(--bg-card)';b.style.color='var(--text)';b.style.borderColor='var(--border)';b.style.fontWeight='400';b.classList.remove('active')});btn.style.background='var(--accent)';btn.style.color='#fff';btn.style.borderColor='var(--accent)';btn.style.fontWeight='600';btn.classList.add('active')}
-document.addEventListener('DOMContentLoaded',function(){var saved=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');var btn=document.querySelector('.speed-btn[data-speed="'+saved+'"]');if(btn)setAudioSpeed(saved,btn)});
+document.addEventListener('DOMContentLoaded',function(){
+    if (window.location.hash === '#inclass') { var ib = document.querySelector('.tab-btn[onclick*="inclass"]'); if (ib) ib.click(); }
+var saved=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');var btn=document.querySelector('.speed-btn[data-speed="'+saved+'"]');if(btn)setAudioSpeed(saved,btn)});
 function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0}var cleanText=text.replace(/\\'/g,"'");var file=audioMap[cleanText]||audioMap[cleanText.replace(/\.$/,'')]||audioMap[cleanText+'.'];if(file){currentAudio=new Audio(file);currentAudio.playbackRate=audioSpeed;currentAudio.play().catch(function(){ttsSpeak(cleanText)})}else{ttsSpeak(cleanText)}}
 function ttsSpeak(text){if('speechSynthesis' in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=audioSpeed*0.85;u.pitch=1;window.speechSynthesis.speak(u)}}
 function speakPhrase(btn){var card=btn.closest('.speech-card');if(card)speakText(card.dataset.phrase,btn)}
