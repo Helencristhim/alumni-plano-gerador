@@ -251,16 +251,16 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 
 /* ===== DIALOGUE ===== */
 .dialogue-container { max-width:650px; width:100%; display:flex; flex-direction:column; gap:0; }
-.d-line { display:none; padding:0.8rem 1rem; border-left:3px solid transparent; animation:slideUp 0.4s ease; }
-.d-line.visible { display:flex; gap:1rem; align-items:flex-start; }
-.d-line:hover { background:rgba(255,255,255,0.08); }
+.d-line { display:none; padding:1rem 1.2rem; border-left:3px solid transparent; animation:slideUp 0.4s ease; border-radius:10px; margin-bottom:0.5rem; }
+.d-line.visible { display:flex; gap:1rem; align-items:flex-start; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.22); border-left:3px solid var(--accent); }
+.d-line:hover { background:rgba(255,255,255,0.20); }
 .d-avatar {
   width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
   font-size:0.6rem; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:0.5px;
 }
 .d-avatar.blue { background:#2563eb; }
 .d-avatar.purple { background:var(--accent); }
-.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.4); margin-bottom:0.15rem; }
+.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.6); margin-bottom:0.15rem; }
 .d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
 .d-text strong { color:var(--accent-light); font-weight:600; }
 .d-text-wrap { flex:1; }
@@ -1541,13 +1541,21 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 // ===== AUDIO MAP =====
 var audioMap = {
   "agenda": "/audio/maria-claudia-curimbaba/aula3_agenda.mp3",
+  "Agenda": "/audio/maria-claudia-curimbaba/aula3_agenda.mp3",
   "minutes": "/audio/maria-claudia-curimbaba/aula3_minutes.mp3",
+  "Minutes": "/audio/maria-claudia-curimbaba/aula3_minutes.mp3",
   "action item": "/audio/maria-claudia-curimbaba/aula3_action_item.mp3",
+  "Action item": "/audio/maria-claudia-curimbaba/aula3_action_item.mp3",
   "deadline": "/audio/maria-claudia-curimbaba/aula3_deadline.mp3",
+  "Deadline": "/audio/maria-claudia-curimbaba/aula3_deadline.mp3",
   "adjourn": "/audio/maria-claudia-curimbaba/aula3_adjourn.mp3",
+  "Adjourn": "/audio/maria-claudia-curimbaba/aula3_adjourn.mp3",
   "facilitate": "/audio/maria-claudia-curimbaba/aula3_facilitate.mp3",
+  "Facilitate": "/audio/maria-claudia-curimbaba/aula3_facilitate.mp3",
   "follow up": "/audio/maria-claudia-curimbaba/aula3_follow_up.mp3",
+  "Follow up": "/audio/maria-claudia-curimbaba/aula3_follow_up.mp3",
   "wrap up": "/audio/maria-claudia-curimbaba/aula3_wrap_up.mp3",
+  "Wrap up": "/audio/maria-claudia-curimbaba/aula3_wrap_up.mp3",
   "We need to review the agenda before the meeting starts.": "/audio/maria-claudia-curimbaba/aula3_we_need_to_review_the_agenda.mp3",
   "Please send the minutes to all participants by end of day.": "/audio/maria-claudia-curimbaba/aula3_please_send_the_minutes.mp3",
   "Each action item must have a clear owner and deadline.": "/audio/maria-claudia-curimbaba/aula3_each_action_item_must_have.mp3",
@@ -1573,7 +1581,7 @@ var audioSpeed = 1;
 function speakText(text, btn) {
   if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
   var cleanText = text.replace(/\\'/g, "'");
-  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  var file = audioMap[cleanText] || audioMap[cleanText.toLowerCase()] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText.toLowerCase().replace(/\.$/, '')] || audioMap[cleanText + '.'];
   if (file) {
     currentAudio = new Audio(file);
     currentAudio.playbackRate = audioSpeed;
