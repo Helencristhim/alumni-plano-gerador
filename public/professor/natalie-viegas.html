@@ -697,16 +697,18 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 .slide-dark .dialogue-bubble *,
 .slide-dark .dialogue-text,
 .slide-dark .dialogue-content,
-.slide-dark .dialogue-content * { color:#ffffff !important; }
+.slide-dark .dialogue-bubble { background:rgba(255,255,255,0.95) !important;border-color:rgba(255,255,255,.3) !important; }
+.slide-dark .dialogue-bubble,
+.slide-dark .dialogue-bubble * { color:#1a1a2e !important; }
 .slide-dark .dialogue-bubble strong,
-.slide-dark .dialogue-content strong,
-.slide-dark .vocab-highlight { color:#A5B4FC !important; }
-.slide-dark .dialogue-name { color:rgba(255,255,255,.7) !important;font-size:.75rem;font-weight:600;letter-spacing:1px;text-transform:uppercase; }
-.slide-dark .dialogue-bubble { background:rgba(255,255,255,.1) !important; }
-.slide-dark .natalie-bubble { background:rgba(99,102,241,.15) !important; }
-.slide-dark .james-bubble { background:rgba(255,255,255,.08) !important; }
-.slide-dark .audio-inline { color:rgba(255,255,255,.5) !important; }
-.slide-dark .audio-inline svg { stroke:rgba(255,255,255,.5);fill:rgba(255,255,255,.3); }
+.slide-dark .dialogue-bubble .vocab-highlight { color:var(--accent) !important; }
+.slide-dark .natalie-bubble { background:rgba(237,233,254,0.95) !important;border:1px solid rgba(99,102,241,.25) !important; }
+.slide-dark .marco-bubble { background:rgba(235,245,255,0.95) !important;border:1px solid rgba(91,155,213,.25) !important; }
+.slide-dark .dialogue-name { color:rgba(255,255,255,.85) !important;font-size:.75rem;font-weight:600;letter-spacing:1px;text-transform:uppercase; }
+.slide-dark .audio-inline { color:#1a1a2e !important;background:rgba(0,0,0,0.06); }
+.slide-dark .audio-inline svg { stroke:#1a1a2e;fill:none; }
+.slide-dark .audio-inline:hover { background:rgba(0,0,0,0.12); }
+.slide-dark .audio-inline.playing { background:rgba(99,102,241,0.15); }
 
 /* Challenge card */
 .slide-dark .challenge-card { color:#1a1a2e !important; }
@@ -824,8 +826,9 @@ body.slide-mode .teacher-t { display:flex; }
 .dialogue-avatar.james { background:var(--james-blue); }
 .dialogue-avatar.natalie { background:var(--natalie-accent); }
 .dialogue-bubble { padding:.7rem 1rem;border-radius:12px;font-size:.92rem;line-height:1.5;max-width:80%;position:relative; }
-.dialogue-bubble.james-bubble { background:rgba(91,155,213,.1);border:1px solid rgba(91,155,213,.2); }
+.dialogue-bubble.james-bubble, .dialogue-bubble.marco-bubble { background:rgba(91,155,213,.08);border:1px solid rgba(91,155,213,.2); }
 .dialogue-bubble.natalie-bubble { background:var(--accent-dim);border:1px solid rgba(99,102,241,.2); }
+.slide-dark .james-bubble, .slide-dark .marco-bubble { background:rgba(235,245,255,0.95) !important;border:1px solid rgba(91,155,213,.25) !important; }
 .dialogue-bubble .vocab-highlight { color:var(--accent);font-weight:700; }
 .dialogue-bubble .audio-inline, .oral-model .audio-inline { display:inline-flex;margin-left:.4rem;cursor:pointer;opacity:.5;transition:opacity .2s;vertical-align:middle; }
 .dialogue-bubble .audio-inline:hover, .oral-model .audio-inline:hover { opacity:1; }
@@ -5073,9 +5076,9 @@ body.slide-mode .nav-bar { display:flex; }
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Reorder: <span class="accent">Make Sentences</span></h2>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">schedule / I / my / usually / check / morning / in the <span class="fill-blank">?</span><span class="fill-answer">"I usually check my schedule in the morning."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">never / she / meetings / skips / Monday <span class="fill-blank">?</span><span class="fill-answer">"She never skips Monday meetings."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">team / I / often / my / brief / lunch / after <span class="fill-blank">?</span><span class="fill-answer">"I often brief my team after lunch."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-q">schedule / I / my / usually / check / morning / in the</div><div class="fill-a">"I <strong>usually</strong> check my schedule in the morning."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-q">never / she / meetings / skips / Monday</div><div class="fill-a">"She <strong>never</strong> skips Monday meetings."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-q">team / I / often / my / brief / lunch / after</div><div class="fill-a">"I <strong>often</strong> brief my team after lunch."</div></div>
       <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">always / on time / is / he <span class="fill-blank">?</span><span class="fill-answer">"He is always on time."</span></div></div>
     </div>
   </div>
@@ -5737,13 +5740,13 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">At the <span class="accent">Onboarding Event</span></h2>
     <p style="font-size:.85rem;color:rgba(255,255,255,.6);margin-bottom:.8rem">Marco meets Natalie at a Microsoft onboarding event.</p>
     <div class="dialogue-box" id="dialogueBox3">
-      <div class="dialogue-line" data-line="1" data-voice="arthur"><div class="dialogue-avatar" style="background:var(--james-blue)">M</div><div class="dialogue-bubble" style="background:rgba(91,155,213,.1);border:1px solid rgba(91,155,213,.2)">Hey Natalie! I am Marco from the Azure team. I just started this week. Where were you before Microsoft? <span class="audio-inline" onclick="event.stopPropagation();speakText('Hey Natalie! I am Marco from the Azure team. I just started this week. Where were you before Microsoft?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="1" data-voice="arthur"><div class="dialogue-avatar" style="background:var(--james-blue)">M</div><div class="dialogue-bubble marco-bubble">Hey Natalie! I am Marco from the Azure team. I just started this week. Where were you before Microsoft? <span class="audio-inline" onclick="event.stopPropagation();speakText('Hey Natalie! I am Marco from the Azure team. I just started this week. Where were you before Microsoft?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
       <div class="dialogue-line" data-line="2" data-voice="ellen"><div class="dialogue-avatar natalie">N</div><div class="dialogue-bubble natalie-bubble">Hi Marco! Welcome! Before Microsoft, I worked in a completely different industry. I <span class="vocab-highlight">relocated</span> from Rio to São Paulo four years ago. <span class="audio-inline" onclick="event.stopPropagation();speakText('Hi Marco! Welcome! Before Microsoft, I worked in a completely different industry. I relocated from Rio to São Paulo four years ago.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="3" data-voice="arthur"><div class="dialogue-avatar" style="background:var(--james-blue)">M</div><div class="dialogue-bubble" style="background:rgba(91,155,213,.1);border:1px solid rgba(91,155,213,.2)">That is a big move! What made you <span class="vocab-highlight">transition</span> into tech? <span class="audio-inline" onclick="event.stopPropagation();speakText('That is a big move! What made you transition into tech?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="3" data-voice="arthur"><div class="dialogue-avatar" style="background:var(--james-blue)">M</div><div class="dialogue-bubble marco-bubble">That is a big move! What made you <span class="vocab-highlight">transition</span> into tech? <span class="audio-inline" onclick="event.stopPropagation();speakText('That is a big move! What made you transition into tech?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
       <div class="dialogue-line" data-line="4" data-voice="ellen"><div class="dialogue-avatar natalie">N</div><div class="dialogue-bubble natalie-bubble">I <span class="vocab-highlight">pursued</span> a career in enterprise sales because I wanted to work with bigger clients. Microsoft gave me that <span class="vocab-highlight">opportunity</span>. <span class="audio-inline" onclick="event.stopPropagation();speakText('I pursued a career in enterprise sales because I wanted to work with bigger clients. Microsoft gave me that opportunity.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="5" data-voice="arthur"><div class="dialogue-avatar" style="background:var(--james-blue)">M</div><div class="dialogue-bubble" style="background:rgba(91,155,213,.1);border:1px solid rgba(91,155,213,.2)">What was the biggest <span class="vocab-highlight">challenge</span> when you first arrived? <span class="audio-inline" onclick="event.stopPropagation();speakText('What was the biggest challenge when you first arrived?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="5" data-voice="arthur"><div class="dialogue-avatar" style="background:var(--james-blue)">M</div><div class="dialogue-bubble marco-bubble">What was the biggest <span class="vocab-highlight">challenge</span> when you first arrived? <span class="audio-inline" onclick="event.stopPropagation();speakText('What was the biggest challenge when you first arrived?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
       <div class="dialogue-line" data-line="6" data-voice="ellen"><div class="dialogue-avatar natalie">N</div><div class="dialogue-bubble natalie-bubble">The biggest <span class="vocab-highlight">challenge</span> was adapting to a new city and a new industry at the same time. But I <span class="vocab-highlight">gained</span> so much experience. <span class="audio-inline" onclick="event.stopPropagation();speakText('The biggest challenge was adapting to a new city and a new industry at the same time. But I gained so much experience.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
-      <div class="dialogue-line" data-line="7" data-voice="arthur"><div class="dialogue-avatar" style="background:var(--james-blue)">M</div><div class="dialogue-bubble" style="background:rgba(91,155,213,.1);border:1px solid rgba(91,155,213,.2)">It sounds like you <span class="vocab-highlight">accomplished</span> a lot. What is your proudest <span class="vocab-highlight">achievement</span> here? <span class="audio-inline" onclick="event.stopPropagation();speakText('It sounds like you accomplished a lot. What is your proudest achievement here?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="7" data-voice="arthur"><div class="dialogue-avatar" style="background:var(--james-blue)">M</div><div class="dialogue-bubble marco-bubble">It sounds like you <span class="vocab-highlight">accomplished</span> a lot. What is your proudest <span class="vocab-highlight">achievement</span> here? <span class="audio-inline" onclick="event.stopPropagation();speakText('It sounds like you accomplished a lot. What is your proudest achievement here?',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
       <div class="dialogue-line" data-line="8" data-voice="ellen"><div class="dialogue-avatar natalie">N</div><div class="dialogue-bubble natalie-bubble">My greatest <span class="vocab-highlight">achievement</span> last year was closing a multi-million-dollar deal with the Ministry of Justice. That was a real <span class="vocab-highlight">milestone</span> for me. <span class="audio-inline" onclick="event.stopPropagation();speakText('My greatest achievement last year was closing a multi-million-dollar deal with the Ministry of Justice. That was a real milestone for me.',this)"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
     </div>
     <div style="text-align:center;margin-top:1rem">
@@ -5917,9 +5920,10 @@ body.slide-mode .nav-bar { display:flex; }
       </div>
     </div>
     <div class="fill-grid" style="margin-top:1.5rem">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I <span class="fill-blank">___</span><span class="fill-answer">relocated to São Paulo four years ago.</span>"</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"She <span class="fill-blank">___</span><span class="fill-answer">gained valuable experience last year.</span>"</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We <span class="fill-blank">___</span><span class="fill-answer">accomplished our targets in 2022.</span>"</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-q">"I ___ to São Paulo four years ago." <span style="opacity:.4;font-size:.75rem">(relocate)</span></div><div class="fill-a">"I <strong>relocated</strong> to São Paulo four years ago."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-q">"She ___ valuable experience last year." <span style="opacity:.4;font-size:.75rem">(gain)</span></div><div class="fill-a">"She <strong>gained</strong> valuable experience last year."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-q">"We ___ our targets in 2022." <span style="opacity:.4;font-size:.75rem">(accomplish)</span></div><div class="fill-a">"We <strong>accomplished</strong> our targets in 2022."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-q">"The team ___ a career in enterprise sales." <span style="opacity:.4;font-size:.75rem">(pursue)</span></div><div class="fill-a">"The team <strong>pursued</strong> a career in enterprise sales."</div></div>
     </div>
   </div>
 </div>

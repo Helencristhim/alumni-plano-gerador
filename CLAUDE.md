@@ -2437,6 +2437,97 @@ if (window.location.hash === '#inclass') {
 
 ---
 
+## REGRA 39 — CONTEUDO UNICO POR AULA: ZERO DUPLICACAO (OBRIGATORIO — BLOQUEANTE — PRIORIDADE MAXIMA)
+
+> **PROBLEMA QUE ESTA REGRA RESOLVE**: Ao gerar aulas standalone (aula 4, aula 5, etc.), o sistema COPIOU o conteudo INTEIRO da aula 3 — vocabulario, gramatica, dialogo, exercicios, expressoes — e so trocou o titulo e o numero da aula. O resultado: 3 aulas IDENTICAS com nomes diferentes. Aluno pagando por aula repetida. Incidente real: Pricila Adamo, aulas 3/4/5 (junho 2026). NUNCA MAIS.
+
+**CADA AULA E UM UNIVERSO UNICO. ZERO CONTEUDO COMPARTILHADO ENTRE AULAS.**
+
+### O que DEVE ser diferente em CADA aula (TODOS obrigatorios):
+
+| Elemento | Regra | Verificacao |
+|----------|-------|-------------|
+| **Vocabulario** | 10 palavras NOVAS e UNICAS (REGRA 22 + 37) | Nenhuma palavra do vocab da aula N pode existir como vocab novo nas aulas 1..N-1 |
+| **Gramatica** | Ponto gramatical DIFERENTE (ver curriculo) | Se aula 3 ensina "going to vs will", aula 4 NAO pode ensinar "going to vs will" |
+| **Dialogo** | Cenario, personagens e falas ORIGINAIS | Titulo do dialogo, nome dos personagens e conteudo das falas DEVEM ser diferentes |
+| **Expressoes** | 5 expressoes NOVAS relacionadas ao tema | Nenhuma expressao pode repetir de aula anterior |
+| **Exercicios** | Frases de fill-in, quiz, matching ORIGINAIS | As frases dos exercicios DEVEM usar o vocabulario DESTA aula, nao de outra |
+| **Listening** | Audio e perguntas sobre o tema DESTA aula | Contexto e texto do listening DEVEM ser unicos |
+| **Role-play** | Cenarios derivados do tema DESTA aula | Cenarios DEVEM elicitar o vocabulario e a gramatica DESTA aula (REGRA 36) |
+| **Callback** | Retoma 2+ itens da aula N-1 (REGRA 37) | Aula 4 retoma aula 3, aula 5 retoma aula 4 — NUNCA todas retomando a mesma aula |
+
+### CAUSA RAIZ: como a duplicacao acontece
+
+O erro acontece quando o sistema:
+1. Recebe instrucao "gerar aula 4" e usa o arquivo da aula 3 como template
+2. Copia o HTML inteiro e troca APENAS: titulo, numero da aula, chapter label
+3. NAO substitui o conteudo pedagogico (vocab, grammar, dialogue, exercises)
+4. O resultado e uma aula com "capa nova" e "miolo velho"
+
+### PROCEDIMENTO OBRIGATORIO ao gerar aula N standalone:
+
+**ANTES de escrever qualquer HTML:**
+
+1. **Consultar o curriculo** (aba Planejamento do main file) para saber:
+   - Tema da aula N
+   - Foco linguistico da aula N
+   - Atividade principal da aula N
+2. **Listar todo vocabulario ja ensinado** nas aulas 1..N-1 (bloco CONTINUIDADE da REGRA 37)
+3. **Confirmar que o vocabulario novo da aula N NAO repete** nenhuma palavra das aulas anteriores
+4. **Confirmar que a gramatica e DIFERENTE** da aula anterior
+5. **Verificar o audioMap do main file** — o main file JA TEM os audios corretos para cada aula com prefixo `aula{N}_`. Usar esses audios como guia do conteudo correto
+
+**AO escrever o HTML:**
+
+6. Copiar apenas o CSS e JS do template (estrutura visual) — NUNCA copiar conteudo dos slides
+7. Escrever CADA slide com conteudo ORIGINAL baseado no curriculo
+8. Garantir que dialogo, expressoes e exercicios usam o vocabulario e gramatica DESTA aula
+
+### VERIFICACAO PRE-DEPLOY (BLOQUEANTE — ZERO TOLERANCIA)
+
+```bash
+# 1. VOCABULARIO DUPLICADO — comparar vocab da aula nova com aulas anteriores
+# Extrair palavras dos vocab cards e comparar
+echo "=== CHECK DUPLICACAO ==="
+
+# 2. GRAMATICA DUPLICADA — a gramatica da aula N deve ser diferente da aula N-1
+# Verificar titulo/conteudo do grammar discovery
+grep -o "Grammar.*Rule\|Grammar Tip\|Grammar Discovery" AULA_N.html | head -5
+grep -o "Grammar.*Rule\|Grammar Tip\|Grammar Discovery" AULA_N_MINUS_1.html | head -5
+
+# 3. DIALOGO DUPLICADO — titulo e falas do dialogo devem ser diferentes
+grep -o 'data-speaker="[^"]*"' AULA_N.html | sort -u
+grep -o 'data-speaker="[^"]*"' AULA_N_MINUS_1.html | sort -u
+
+# 4. EXPRESSOES DUPLICADAS — as 5 expressoes devem ser unicas
+grep -o "expr_[a-z_]*" AULA_N.html | sort -u
+grep -o "expr_[a-z_]*" AULA_N_MINUS_1.html | sort -u
+
+# 5. CONTEUDO IDENTICO — verificacao final (MAIS IMPORTANTE)
+# Comparar conteudo dos slides excluindo CSS/JS
+# Se > 50% das linhas de slide forem identicas, a aula e COPIA
+diff <(grep 'slide-heading\|v-word\|g-example\|d-text\|qc-prompt\|fp-sentence\|slide-title' AULA_N.html) \
+     <(grep 'slide-heading\|v-word\|g-example\|d-text\|qc-prompt\|fp-sentence\|slide-title' AULA_N_MINUS_1.html) | head -20
+
+echo "Se diff retornar poucas ou zero diferencas = AULA DUPLICADA = REJEITAR"
+```
+
+### REGRA SIMPLES (para nunca esquecer):
+
+> **Se voce trocar o titulo da aula e o conteudo ainda fizer sentido para a aula anterior, a aula e uma COPIA e DEVE ser reescrita do zero.**
+>
+> Teste mental: "Se eu chamar esta aula de 'The Retirement Dream' (aula 3), o conteudo funciona?" Se SIM → esta errado. O conteudo da aula 4 NAO pode funcionar como aula 3 — devem ser INCOMPATIVEIS tematicamente.
+
+### CONSEQUENCIA
+
+Aulas duplicadas significam:
+- Aluno paga por conteudo repetido (fraude pedagogica)
+- Professor percebe na primeira aula e perde confianca no sistema
+- Retrabalho completo (reescrever + regerar audios + re-deploy)
+- **PRIORIDADE MAXIMA: aula duplicada e pior que aula com bugs visuais — bugs se corrigem em minutos, conteudo pedagogico leva horas**
+
+---
+
 ## REGRAS COMPLEMENTARES (OBRIGATORIAS — APRENDIDAS DE INCIDENTES REAIS)
 
 > Estas regras foram adicionadas apos incidentes em producao. Todas sao BLOQUEANTES.
