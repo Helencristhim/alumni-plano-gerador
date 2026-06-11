@@ -32,7 +32,7 @@
   --dark: #1a1a2e;
   --dark-surface: #22223a;
   --dark-elevated: #2d2d4a;
-  --carter-blue: #2563eb;
+  --mark-blue: #2563eb;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; touch-action: manipulation; }
@@ -51,7 +51,9 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   overflow-y:auto; padding:2rem;
 }
 .slide.active { opacity:1; visibility:visible; }
+
 .slide.dark { background:var(--dark); color:#fff; }
+.slide.dark .checklist li,.slide.dark .check-item,.slide.dark .check-label,.slide.dark .roleplay-body p,.slide.dark .roleplay-body,.slide.dark .roleplay-scenario,.slide.dark .comp-q,.slide.dark .comp-q p,.slide.dark .fill-item label,.slide.dark .fill-item p,.slide.dark .error-card p,.slide.dark .oral-item p,.slide.dark .email-card,.slide.dark .email-card p,.slide.dark .boarding-pass p,.slide.dark .student-id-card p{color:#1a1a2e !important}
 .slide.light { background:var(--bg); color:var(--text); }
 
 /* ===== TOP BAR ===== */
@@ -235,7 +237,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
   width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
   font-size:0.6rem; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:0.5px;
 }
-.d-avatar.blue { background:var(--carter-blue); }
+.d-avatar.blue { background:var(--mark-blue); }
 .d-avatar.sienna { background:var(--accent); }
 .d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.65); margin-bottom:0.15rem; }
 .d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
@@ -321,7 +323,8 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 }
 .err-item:hover { border-color:rgba(220,38,38,0.4); }
 .err-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
-.err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
+.err-sentence .wrong { color:rgba(255,255,255,0.85); font-weight:400; text-decoration:none; transition:all 0.3s; }
+.err-item.open .err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
 .err-correction {
   display:none; margin-top:0.6rem; padding:0.5rem 0.8rem;
   background:rgba(22,163,74,0.1); border-radius:6px;
@@ -417,21 +420,21 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 .surv-play svg { width:16px; height:16px; }
 
 /* ===== CHECKLIST ===== */
-.checklist-wrap { max-width:600px; width:100%; }
-.cl-item {
+.check-grid { max-width:600px; width:100%; }
+.check-item {
   display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0;
   border-bottom:1px solid rgba(255,255,255,0.06); cursor:pointer;
 }
-.cl-item:last-child { border-bottom:none; }
+.check-item:last-child { border-bottom:none; }
 .cl-box {
   width:22px; height:22px; border:2px solid rgba(255,255,255,0.2); border-radius:5px;
   flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
 }
 .cl-box svg { width:14px; height:14px; opacity:0; transition:opacity 0.2s; }
-.cl-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
-.cl-item.checked .cl-box svg { opacity:1; }
+.check-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
+.check-item.checked .cl-box svg { opacity:1; }
 .cl-text { font-size:0.88rem; color:rgba(255,255,255,0.7); transition:color 0.2s; }
-.cl-item.checked .cl-text { color:rgba(255,255,255,0.9); }
+.check-item.checked .cl-text { color:rgba(255,255,255,0.9); }
 
 /* ===== CONFETTI ===== */
 .confetti-container { position:fixed; inset:0; pointer-events:none; z-index:9999; }
@@ -466,34 +469,34 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 .sb-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(160,103,75,0.12); border-radius:6px; font-size:0.92rem; color:var(--accent-light); font-weight:600; }
 .sb-item.open .sb-answer { display:block; animation:fadeIn 0.25s ease; }
 
-/* ===== BUCKET LIST ARTIFACT ===== */
-.bucket-list-card {
+/* ===== WELLNESS PRESCRIPTION ARTIFACT ===== */
+.wellness-rx-card {
   max-width:500px; width:100%; border-radius:16px; overflow:hidden;
   background:linear-gradient(135deg, #1a1a2e 0%, #2d2d4a 50%, #A0674B 100%);
   border:1px solid rgba(160,103,75,0.3); position:relative;
 }
-.bucket-list-header {
+.wellness-rx-header {
   padding:1.5rem 2rem 1rem; text-align:center;
   border-bottom:1px solid rgba(255,255,255,0.08);
 }
-.bucket-list-header h3 {
+.wellness-rx-header h3 {
   font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:#fff; margin-bottom:0.3rem;
 }
-.bucket-list-header p {
+.wellness-rx-header p {
   font-size:0.78rem; color:rgba(255,255,255,0.6); letter-spacing:1.5px; text-transform:uppercase; font-weight:600;
 }
-.bucket-list-items { padding:1.2rem 2rem 1.5rem; }
-.bl-item {
+.wellness-rx-items { padding:1.2rem 2rem 1.5rem; }
+.rx-item {
   display:flex; align-items:center; gap:0.8rem; padding:0.6rem 0;
   border-bottom:1px solid rgba(255,255,255,0.06);
 }
-.bl-item:last-child { border-bottom:none; }
-.bl-check {
+.rx-item:last-child { border-bottom:none; }
+.rx-check {
   width:20px; height:20px; border:2px solid rgba(255,255,255,0.3); border-radius:4px;
   flex-shrink:0; display:flex; align-items:center; justify-content:center;
 }
-.bl-text { font-size:0.92rem; color:rgba(255,255,255,0.85); }
-.bucket-list-footer {
+.rx-text { font-size:0.92rem; color:rgba(255,255,255,0.85); }
+.wellness-rx-footer {
   padding:1rem 2rem; background:rgba(0,0,0,0.15); text-align:center;
   font-size:0.72rem; color:rgba(255,255,255,0.5); letter-spacing:1px;
 }
@@ -519,6 +522,11 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 .lp-speed-btn:hover{color:#fff;border-color:rgba(255,255,255,.4)}
 .lp-speed-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .lp-label{font-size:.7rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.5px;text-align:center;margin-bottom:6px}
+
+/* ===== AUDIO INLINE ===== */
+.audio-inline{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;cursor:pointer;opacity:0.6;transition:opacity 0.2s;vertical-align:middle;margin-left:4px}
+.audio-inline:hover{opacity:1}
+.audio-inline svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
 
 /* ===== ANIMATIONS ===== */
 @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
@@ -549,6 +557,20 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <script>window.STUDENT_SLUG='pricila-adamo';window.TOTAL_AULAS=40;</script>
 </head>
 <body>
+
+<!-- SCENARIO FIT — Aula 5
+Can-do: "I can give and receive wellness advice using modal verbs."
+Gramatica-alvo: should, could, might (modal verbs for advice)
+Vocab-alvo: wellness, balance, mindful, symptom, prescription, relief, prevent, recommend, recovery, habit
+Cenario escolhido: Medical checkup — Pricila discusses tiredness/stress from career transition with Dr. Carter
+Por que elicita o alvo: a consulta medica obriga o uso de should/could/might para dar conselhos de saude e bem-estar.
+-->
+
+<!-- CONTINUIDADE — Aula 5
+Itens novos desta aula: Wellness, Balance, Mindful, Symptom, Prescription, Relief, Prevent, Recommend, Recovery, Habit
+Itens revisados (de aulas anteriores): Stunning, Cozy, Vibrant, Unforgettable (Aula 4)
+Callback no warm-up: 2 itens da Aula 4 retomados em mini-quiz (Stunning, Vibrant)
+-->
 
 <!-- ===== TOP BAR ===== -->
 <div class="top-bar">
@@ -593,73 +615,76 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <div class="slide-deck" id="slideDeck">
 
 <!-- ═══════════════════════════════════════ -->
-<!-- CHAPTER 1 — THE HORIZON (Warm-up/Callback) -->
+<!-- CHAPTER 1 — THE HEALER (Warm-up/Callback) -->
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 1 — TITLE ═══ -->
-<div class="slide dark active" data-chapter="1" data-t="<span class='t-timing'>0:00 - 2 min</span>Abertura. Compartilhe a tela. Diga: &quot;Welcome back, Pricila! Last class we talked about your life in chapters. Today we are going to look ahead — your plans, your dreams, your future!&quot; Tom caloroso e motivador. Pergunte como foi a semana." style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark active" data-chapter="1" data-t="<span class='t-timing'>0:00 - 2 min</span>Abertura. Compartilhe a tela. Diga: &quot;Welcome back, Pricila! Last class we explored travel descriptions. Today we are going to talk about something just as important: your health and wellness. Are you ready?&quot; Tom caloroso e motivador. Pergunte como foi a semana." style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(80,52,38,0.88) 40%, rgba(26,26,46,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 1 -- The Healer</div>
     <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:1.5rem;">Lesson 5</p>
     <h1 class="slide-title" style="color:#fff;">Health and Wellness</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.85);">Talking About Plans and Goals</p>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.85);">The Language of Self-Care</p>
     <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
       <span style="padding:0.3rem 0.9rem;background:rgba(160,103,75,0.2);border:1px solid rgba(160,103,75,0.35);border-radius:20px;font-size:0.75rem;color:var(--accent-light);">B1+ Intermediate</span>
-      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">90 min</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">60 min</span>
       <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">Alumni by Better</span>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 2 — CALLBACK WARM-UP ═══ -->
-<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>2:00 - 5 min</span>Callback da Aula 2. Pergunte: &quot;Tell me 4 words from last class.&quot; Espere. Se ela lembrar &quot;chapter, milestone, overcome, achievement&quot; — excelente, valide. Se não, dê dicas: &quot;We talked about your autobiography... what was the word for an important event in your life?&quot; Anote quais ela lembrou.<div class='t-ccq'><strong>CCQs:</strong> &quot;What is a chapter of your life?&quot; / &quot;Can you give me an example of a milestone?&quot; / &quot;What did you overcome?&quot;</div>">
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>2:00 - 5 min</span>Callback da Aula 4. Pergunte: &quot;Do you remember words from last class about travel descriptions?&quot; Espere. Se ela lembrar stunning, cozy, vibrant, unforgettable, valide. Se nao, de dicas: &quot;We talked about beautiful places... what word means extremely beautiful?&quot; Mini-quiz com 2 itens.<div class='t-ccq'><strong>CCQs:</strong> &quot;What is the difference between stunning and beautiful?&quot; (stunning is stronger) / &quot;Is a vibrant city quiet or energetic?&quot; (energetic)</div>">
   <div class="slide-chapter-label">Chapter 1 -- The Healer</div>
   <div style="max-width:650px;text-align:center;">
     <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Callback: Last Class</h2>
     <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
       <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
         <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Memory Check</div>
-        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Tell me 4 words you remember from our last lesson.</p>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Which word means "extremely beautiful, almost breathtaking"?</p>
+        <p style="font-size:0.88rem;color:var(--accent-light);margin-top:0.6rem;font-weight:600;cursor:pointer;opacity:0.7;" onclick="this.style.opacity='1'">Answer: Stunning</p>
       </div>
       <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
-        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Callback Words</div>
-        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin-top:0.5rem;">
-          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Chapter</span>
-          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Milestone</span>
-          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Overcome</span>
-          <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Achievement</span>
-        </div>
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Memory Check</div>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Which word describes a city full of energy, color, and life?</p>
+        <p style="font-size:0.88rem;color:var(--accent-light);margin-top:0.6rem;font-weight:600;cursor:pointer;opacity:0.7;" onclick="this.style.opacity='1'">Answer: Vibrant</p>
+      </div>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;margin-top:0.5rem;">
+        <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Stunning</span>
+        <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Cozy</span>
+        <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Vibrant</span>
+        <span class="vocab-highlight" style="padding:0.4rem 1rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.3);border-radius:20px;font-size:0.88rem;">Unforgettable</span>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 3 — WARM-UP QUESTION ═══ -->
-<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>5:00 - 8 min</span>Warm-up reflexivo. Pergunta aberta sobre o futuro. Deixe Pricila falar livremente 2-3 min. Observe se ela tenta usar futuro ou fica no presente. Se ela usar &quot;I will go&quot; para planos decididos, anote — será importante no grammar discovery. Se travar, ajude: &quot;Close your eyes. Imagine your first day of retirement. What do you see?&quot;<div class='t-alert'>Se Pricila ficar emocionada com aposentadoria (tema sensível), acolha: &quot;It is completely natural to feel this way. Change is exciting and scary at the same time.&quot;</div>">
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>5:00 - 8 min</span>Warm-up reflexivo. Pergunta aberta sobre saude e bem-estar. Deixe Pricila falar livremente 2-3 min. Observe se ela tenta usar modais ou fica no presente. Se ela usar &quot;you must rest&quot; em vez de &quot;you should rest&quot;, anote para o grammar discovery. Se travar, ajude: &quot;Think about what you do to feel good. Do you exercise? Meditate? Walk?&quot;<div class='t-alert'>Tema sensivel: aposentadoria pode gerar ansiedade. Se Pricila mencionar estresse, acolha: &quot;That is completely normal during big life changes.&quot;</div>">
   <div class="slide-chapter-label">Chapter 1 -- The Healer</div>
   <div style="max-width:650px;text-align:center;">
     <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">The Healer</h2>
     <div style="padding:2rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-top:2rem;">
-      <p style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;line-height:1.5;">If you could do anything in your first year of retirement, what would it be?</p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;line-height:1.5;">As a dentist, you take care of other people every day. What do you do to take care of yourself?</p>
     </div>
     <div style="display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem;">
-      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Travel</span>
-      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Learn</span>
-      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Rest</span>
-      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Explore</span>
+      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Exercise</span>
+      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Sleep</span>
+      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Relax</span>
+      <span style="padding:0.4rem 1rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.82rem;color:rgba(255,255,255,0.7);">Nature</span>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 4 — PROMISE ═══ -->
-<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>8:00 - 9 min</span>Promessa da aula. Leia em voz alta com entusiasmo. Diga: &quot;By the end of today, you will be able to talk about your plans and dreams for the future — using the right grammar, the right words, and the right expressions. Ready to dream in English?&quot; Espere o &quot;yes&quot; antes de avançar.">
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>8:00 - 9 min</span>Promessa da aula. Leia em voz alta com entusiasmo. Diga: &quot;By the end of today, you will be able to give and receive health advice using should, could, and might. You will sound like a wellness expert in English!&quot; Espere o &quot;yes&quot; antes de avancar.">
   <div class="slide-chapter-label">Chapter 1 -- The Healer</div>
   <div style="max-width:650px;text-align:center;">
-    <h2 class="slide-title" style="font-size:2.4rem;color:#fff;">Today You Dream in English</h2>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.8);margin-top:1rem;">You will learn to talk about your plans, goals, and dreams for retirement using going to, will, and present continuous for future arrangements.</p>
+    <h2 class="slide-title" style="font-size:2.4rem;color:#fff;">Today You Heal in English</h2>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.8);margin-top:1rem;">You will learn to give advice, describe symptoms, and talk about wellness using should, could, and might.</p>
     <div style="margin-top:2rem;">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(192,128,96,0.6)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(192,128,96,0.6)" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
     </div>
   </div>
 </div>
@@ -669,82 +694,82 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 5 — TRANSITION: PACKING WORDS ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>9:00 - 0.5 min</span>Transição. Diga: &quot;Now let us pack the words you need to talk about your future.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>9:00 - 0.5 min</span>Transicao. Diga: &quot;Now let us pack the words you need to talk about health and wellness.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(80,52,38,0.92) 0%, rgba(26,26,46,0.92) 50%, rgba(160,103,75,0.85) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
-    <h1 class="slide-title" style="color:#fff;">Your Future Vocabulary</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Ten essential words to talk about plans and dreams</p>
+    <h1 class="slide-title" style="color:#fff;">Your Wellness Vocabulary</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Ten essential words to talk about health and self-care</p>
     <div style="margin-top:2rem;">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(192,128,96,0.6)" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(192,128,96,0.6)" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 6 — VOCAB 1-4 ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>9:30 - 16 min</span>Vocabulario parte 1. ANTES de clicar cada card, leia a definição e pergunte: &quot;What word do you think this is?&quot; Espere 5 segundos. DEPOIS de revelar: toque audio 2x, Pricila repete. Foque na pronuncia de &quot;freedom&quot; (FREE-dom, stress na primeira) e &quot;purpose&quot; (PUR-pose, stress na primeira).<div class='t-ccq'><strong>CCQs:</strong> &quot;Is a goal something you want to achieve or something you already achieved?&quot; (want to achieve) / &quot;Is a plan an idea for the future or the past?&quot; (future) / &quot;When you have a dream, is it something real or something you hope for?&quot; (hope for) / &quot;Is freedom the ability to do what you want?&quot; (yes)</div>">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>9:30 - 16 min</span>Vocabulario parte 1. ANTES de clicar cada card, leia a definicao e pergunte: &quot;What word do you think this is?&quot; Espere 5 segundos. DEPOIS de revelar: toque audio 2x, Pricila repete. Foque na pronuncia de &quot;wellness&quot; (WELL-ness, stress na primeira) e &quot;symptom&quot; (SIMP-tom, nao &quot;sin-tom&quot;).<div class='t-ccq'><strong>CCQs:</strong> &quot;Is wellness only about your body?&quot; (no, mind too) / &quot;Is balance about doing one thing all the time?&quot; (no, a mix) / &quot;When you are mindful, are you thinking about the past or the present?&quot; (present) / &quot;Is a symptom the disease itself or a sign of it?&quot; (a sign)</div>">
   <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
-  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click each card to reveal</p>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
   <div class="vocab-grid" id="vocabGrid1">
-    <!-- Card 1: Goal -->
+    <!-- Card 1: Wellness -->
     <div class="v-card" onclick="revealVCard(this)">
       <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #34d399);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </div>
-      <div class="v-card-hint">Something you want to achieve in the future...</div>
+      <div class="v-card-hint">The overall state of being healthy in body and mind...</div>
       <div class="v-card-body">
-        <div class="v-word">Goal</div>
-        <div class="v-def">something you want to achieve; an aim or desired result</div>
-        <div class="v-example">"My goal is to travel to Australia after I retire."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('My goal is to travel to Australia after I retire.',this)">
+        <div class="v-word">Wellness</div>
+        <div class="v-def">the state of being in good physical and mental health</div>
+        <div class="v-example">"Wellness is not just about your body, it is about your mind too."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Wellness is not just about your body, it is about your mind too.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 2: Plan -->
+    <!-- Card 2: Balance -->
     <div class="v-card" onclick="revealVCard(this)">
       <div class="v-card-icon" style="background:linear-gradient(135deg, #2563eb, #60a5fa);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v18M3 12l4-4v8l-4-4M21 12l-4-4v8l4-4"/></svg>
       </div>
-      <div class="v-card-hint">A detailed idea about what you intend to do...</div>
+      <div class="v-card-hint">A healthy mix of different activities in your life...</div>
       <div class="v-card-body">
-        <div class="v-word">Plan</div>
-        <div class="v-def">a detailed idea or arrangement for something you intend to do</div>
-        <div class="v-example">"I have a plan to learn English fluently before my trip."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I have a plan to learn English fluently before my trip.',this)">
+        <div class="v-word">Balance</div>
+        <div class="v-def">a state where different parts of your life receive equal attention</div>
+        <div class="v-example">"You should find a good balance between work and rest."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('You should find a good balance between work and rest.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 3: Dream -->
+    <!-- Card 3: Mindful -->
     <div class="v-card" onclick="revealVCard(this)">
       <div class="v-card-icon" style="background:linear-gradient(135deg, #7c3aed, #a78bfa);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17.5 19H9a7 7 0 110-14h9.5a4.5 4.5 0 010 9H13a2.5 2.5 0 010-5h6"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       </div>
-      <div class="v-card-hint">A strong wish or hope for the future...</div>
+      <div class="v-card-hint">Being aware and present in the current moment...</div>
       <div class="v-card-body">
-        <div class="v-word">Dream</div>
-        <div class="v-def">a strong wish or hope for something you want to happen</div>
-        <div class="v-example">"My dream is to see the Great Barrier Reef in person."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('My dream is to see the Great Barrier Reef in person.',this)">
+        <div class="v-word">Mindful</div>
+        <div class="v-def">being aware of your thoughts and feelings in the present moment</div>
+        <div class="v-example">"Being mindful helps you reduce stress and enjoy the moment."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Being mindful helps you reduce stress and enjoy the moment.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 4: Freedom -->
+    <!-- Card 4: Symptom -->
     <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #0891b2, #22d3ee);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       </div>
-      <div class="v-card-hint">The state of being free to do what you want...</div>
+      <div class="v-card-hint">A physical sign that something is wrong with your health...</div>
       <div class="v-card-body">
-        <div class="v-word">Freedom</div>
-        <div class="v-def">the state of being free to make your own choices</div>
-        <div class="v-example">"Retirement will give me the freedom to travel whenever I want."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Retirement will give me the freedom to travel whenever I want.',this)">
+        <div class="v-word">Symptom</div>
+        <div class="v-def">a physical or mental sign that indicates a disease or condition</div>
+        <div class="v-example">"If you have any symptoms, you should see a doctor."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('If you have any symptoms, you should see a doctor.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
@@ -755,69 +780,69 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 </div>
 
 <!-- ═══ SLIDE 7 — VOCAB 5-8 ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>16:00 - 22 min</span>Vocabulario parte 2. Mesma dinamica. Destaque &quot;adventure&quot; (ad-VEN-ture, stress na segunda) e &quot;lifestyle&quot; (LIFE-style, stress na primeira). Para &quot;priority&quot;, pergunte: &quot;What is YOUR priority for retirement?&quot; — conecte com a vida dela.<div class='t-ccq'><strong>CCQs:</strong> &quot;What is your purpose in learning English?&quot; (to communicate when traveling) / &quot;Is an adventure something exciting or boring?&quot; (exciting) / &quot;Does your lifestyle include what you eat, how you exercise, where you live?&quot; (yes, all of that) / &quot;If something is a priority, is it important or not important?&quot; (very important)</div>">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>16:00 - 22 min</span>Vocabulario parte 2. Mesmo processo. Foque na pronuncia de &quot;prescription&quot; (pree-SCRIP-tion, 3 silabas, stress na segunda) e &quot;recommend&quot; (rec-oh-MEND, stress na ultima).<div class='t-ccq'><strong>CCQs:</strong> &quot;Do you need a prescription for vitamins?&quot; (usually no) / &quot;Is relief a good feeling or a bad feeling?&quot; (good) / &quot;If you prevent something, does it happen?&quot; (no) / &quot;If I recommend a restaurant, do I think it is good or bad?&quot; (good)</div>">
   <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
-  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click each card to reveal</p>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
   <div class="vocab-grid" id="vocabGrid2">
-    <!-- Card 5: Purpose -->
+    <!-- Card 5: Prescription -->
     <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #d97706, #fbbf24);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #0891b2, #22d3ee);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       </div>
-      <div class="v-card-hint">The reason why you do something...</div>
+      <div class="v-card-hint">A written order from a doctor for medicine...</div>
       <div class="v-card-body">
-        <div class="v-word">Purpose</div>
-        <div class="v-def">the reason why you do something; the meaning behind your actions</div>
-        <div class="v-example">"Learning English gives me a sense of purpose."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Learning English gives me a sense of purpose.',this)">
+        <div class="v-word">Prescription</div>
+        <div class="v-def">a doctor's written instruction for medicine or treatment</div>
+        <div class="v-example">"The doctor gave me a prescription for the medicine."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The doctor gave me a prescription for the medicine.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 6: Adventure -->
+    <!-- Card 6: Relief -->
     <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #16a34a, #4ade80);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg>
       </div>
-      <div class="v-card-hint">An exciting experience that involves risk or new things...</div>
+      <div class="v-card-hint">The feeling when pain or worry goes away...</div>
       <div class="v-card-body">
-        <div class="v-word">Adventure</div>
-        <div class="v-def">an exciting experience, often involving new places or activities</div>
-        <div class="v-example">"I am going to have many adventures in retirement."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I am going to have many adventures in retirement.',this)">
+        <div class="v-word">Relief</div>
+        <div class="v-def">the feeling of comfort when pain, worry, or stress disappears</div>
+        <div class="v-example">"I felt relief when the headache finally went away."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I felt relief when the headache finally went away.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 7: Lifestyle -->
+    <!-- Card 7: Prevent -->
     <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #1e3a5f, #2d5a8e);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #ea580c, #fb923c);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
-      <div class="v-card-hint">The way a person lives their daily life...</div>
+      <div class="v-card-hint">To stop something bad from happening...</div>
       <div class="v-card-body">
-        <div class="v-word">Lifestyle</div>
-        <div class="v-def">the way a person lives, including habits, routines, and choices</div>
-        <div class="v-example">"I am planning to change my lifestyle completely after retirement."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I am planning to change my lifestyle completely after retirement.',this)">
+        <div class="v-word">Prevent</div>
+        <div class="v-def">to stop something from happening before it starts</div>
+        <div class="v-example">"Exercise and good food can help prevent many diseases."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Exercise and good food can help prevent many diseases.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 8: Priority -->
+    <!-- Card 8: Recommend -->
     <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #4338ca, #818cf8);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #9333ea, #c084fc);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
       </div>
-      <div class="v-card-hint">Something that is more important than other things...</div>
+      <div class="v-card-hint">To suggest something as a good choice...</div>
       <div class="v-card-body">
-        <div class="v-word">Priority</div>
-        <div class="v-def">something that is more important than other things and needs attention first</div>
-        <div class="v-example">"My number one priority is to spend time with my family."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('My number one priority is to spend time with my family.',this)">
+        <div class="v-word">Recommend</div>
+        <div class="v-def">to suggest something because you believe it is good or helpful</div>
+        <div class="v-example">"I would recommend walking thirty minutes every day."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I would recommend walking thirty minutes every day.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
@@ -828,37 +853,37 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 </div>
 
 <!-- ═══ SLIDE 8 — VOCAB 9-10 ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>22:00 - 25 min</span>Vocabulario parte 3 — ultimas 2 palavras. Para &quot;bucket list&quot;: &quot;Pricila, do you have a bucket list? What is on it?&quot; Para &quot;embrace&quot;: &quot;Are you going to embrace retirement or resist it?&quot; Conecte sempre com a vida real dela.">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>22:00 - 25 min</span>Vocabulario parte 3. Ultimas 2 palavras. Foque na pronuncia de &quot;recovery&quot; (ree-CUV-uh-ree, 4 silabas) e &quot;habit&quot; (HAB-it, stress na primeira).<div class='t-ccq'><strong>CCQs:</strong> &quot;Is recovery fast or does it take time?&quot; (takes time) / &quot;Is brushing your teeth a habit?&quot; (yes)</div>">
   <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
-  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click each card to reveal</p>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
   <div class="vocab-grid" id="vocabGrid3">
-    <!-- Card 9: Bucket List -->
+    <!-- Card 9: Recovery -->
     <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #A0674B, #C08060);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #0d9488, #5eead4);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
       </div>
-      <div class="v-card-hint">A list of experiences or goals you want to achieve in your lifetime...</div>
+      <div class="v-card-hint">The process of getting better after illness or difficulty...</div>
       <div class="v-card-body">
-        <div class="v-word">Bucket List</div>
-        <div class="v-def">a list of experiences or achievements you want to have in your life</div>
-        <div class="v-example">"Visiting Australia is at the top of my bucket list."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Visiting Australia is at the top of my bucket list.',this)">
+        <div class="v-word">Recovery</div>
+        <div class="v-def">the process of becoming healthy or strong again after illness or difficulty</div>
+        <div class="v-example">"Recovery after surgery takes time and patience."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Recovery after surgery takes time and patience.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
       </div>
     </div>
-    <!-- Card 10: Embrace -->
+    <!-- Card 10: Habit -->
     <div class="v-card" onclick="revealVCard(this)">
-      <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #10b981);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #b45309, #fbbf24);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
       </div>
-      <div class="v-card-hint">To accept something enthusiastically and willingly...</div>
+      <div class="v-card-hint">Something you do regularly, often without thinking...</div>
       <div class="v-card-body">
-        <div class="v-word">Embrace</div>
-        <div class="v-def">to accept something enthusiastically and with open arms</div>
-        <div class="v-example">"I am going to embrace this new chapter of my life."</div>
-        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I am going to embrace this new chapter of my life.',this)">
+        <div class="v-word">Habit</div>
+        <div class="v-def">a regular action or behavior that you do often, sometimes without thinking</div>
+        <div class="v-example">"Drinking water is a simple but important habit."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Drinking water is a simple but important habit.',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
           Listen
         </button>
@@ -869,50 +894,42 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 </div>
 
 <!-- ═══ SLIDE 9 — PRONUNCIATION DRILL ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>25:00 - 29 min</span>Pronuncia. Clique cada palavra, toque audio, Pricila repete 2x. Foque em: GOAL (uma silaba), PLAN (uma silaba), DREAM (uma silaba), FREE-dom (stress na primeira), PUR-pose (stress na primeira), ad-VEN-ture (stress na segunda), LIFE-style (stress na primeira), pri-OR-i-ty (stress na segunda), BUCK-et list (stress na primeira), em-BRACE (stress na segunda).<div class='t-alert'>Se Pricila pronunciar &quot;priority&quot; como &quot;pri-o-ri-TY&quot;, corrija: &quot;The stress is on the second syllable: pri-OR-i-ty.&quot;</div>">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>25:00 - 28 min</span>Pronuncia. Toque cada palavra, Pricila repete 2x. Foco nos stress patterns marcados. Corrija gentilmente: &quot;Almost! Try putting more stress on the first syllable: WELL-ness, not well-NESS.&quot;">
   <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Pronunciation Drill</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen, then repeat. Focus on the stressed syllable.</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Pronunciation Drill</h2>
   <div class="pron-list">
     <div class="pron-item">
-      <div class="pron-word">Goal</div>
-      <div class="pron-stress">GOAL</div>
-      <button class="pron-play" onclick="speakText('Goal',this)" aria-label="Listen to Goal">
+      <div class="pron-word">Wellness</div>
+      <div class="pron-stress">WELL-ness</div>
+      <button class="pron-play" onclick="speakText('Wellness',this)" aria-label="Listen to Wellness">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">Freedom</div>
-      <div class="pron-stress">FREE-dom</div>
-      <button class="pron-play" onclick="speakText('Freedom',this)" aria-label="Listen to Freedom">
+      <div class="pron-word">Symptom</div>
+      <div class="pron-stress">SIMP-tum</div>
+      <button class="pron-play" onclick="speakText('Symptom',this)" aria-label="Listen to Symptom">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">Purpose</div>
-      <div class="pron-stress">PUR-pose</div>
-      <button class="pron-play" onclick="speakText('Purpose',this)" aria-label="Listen to Purpose">
+      <div class="pron-word">Prescription</div>
+      <div class="pron-stress">pree-SCRIP-tion</div>
+      <button class="pron-play" onclick="speakText('Prescription',this)" aria-label="Listen to Prescription">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">Adventure</div>
-      <div class="pron-stress">ad-VEN-ture</div>
-      <button class="pron-play" onclick="speakText('Adventure',this)" aria-label="Listen to Adventure">
+      <div class="pron-word">Recommend</div>
+      <div class="pron-stress">rec-uh-MEND</div>
+      <button class="pron-play" onclick="speakText('Recommend',this)" aria-label="Listen to Recommend">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="pron-item">
-      <div class="pron-word">Priority</div>
-      <div class="pron-stress">pri-OR-i-ty</div>
-      <button class="pron-play" onclick="speakText('Priority',this)" aria-label="Listen to Priority">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      </button>
-    </div>
-    <div class="pron-item">
-      <div class="pron-word">Embrace</div>
-      <div class="pron-stress">em-BRACE</div>
-      <button class="pron-play" onclick="speakText('Embrace',this)" aria-label="Listen to Embrace">
+      <div class="pron-word">Recovery</div>
+      <div class="pron-stress">ree-CUV-uh-ree</div>
+      <button class="pron-play" onclick="speakText('Recovery',this)" aria-label="Listen to Recovery">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
@@ -920,38 +937,38 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 </div>
 
 <!-- ═══ SLIDE 10 — EXPRESSIONS ═══ -->
-<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>29:00 - 33 min</span>Expressoes. Toque cada uma, Pricila repete. Para cada expressao, peça que ela complete com algo pessoal. Ex: &quot;I am going to...&quot; — &quot;What are YOU going to do after retirement?&quot; Valide e reformule se necessário.<div class='t-ccq'><strong>CCQs:</strong> &quot;'I am going to' — is this a plan you already decided?&quot; (yes) / &quot;'I am planning to' — is this similar to going to?&quot; (yes) / &quot;'One day, I hope to' — is this certain or uncertain?&quot; (uncertain, it is a wish) / &quot;'My dream is to' — is this something very important to you?&quot; (yes)</div>">
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>28:00 - 31 min</span>Expressoes. Toque cada expressao, Pricila repete. Pergunte: &quot;When would you use 'You should...'?&quot; (strong advice) vs &quot;You could try...&quot; (softer suggestion) vs &quot;It might help to...&quot; (possibility). Estas expressoes serao a base do grammar discovery.">
   <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Expressions</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen, repeat, then complete with your own words.</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Key Expressions</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Expressions for giving advice and making suggestions</p>
   <div class="expr-list">
     <div class="expr-item">
-      <div class="expr-text">"I am going to..."</div>
-      <button class="expr-play" onclick="speakText('I am going to...',this)" aria-label="Listen to expression">
+      <div class="expr-text">"You should..."</div>
+      <button class="expr-play" onclick="speakText('You should...',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="expr-item">
-      <div class="expr-text">"I am planning to..."</div>
-      <button class="expr-play" onclick="speakText('I am planning to...',this)" aria-label="Listen to expression">
+      <div class="expr-text">"You could try..."</div>
+      <button class="expr-play" onclick="speakText('You could try...',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="expr-item">
-      <div class="expr-text">"One day, I hope to..."</div>
-      <button class="expr-play" onclick="speakText('One day, I hope to...',this)" aria-label="Listen to expression">
+      <div class="expr-text">"It might help to..."</div>
+      <button class="expr-play" onclick="speakText('It might help to...',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="expr-item">
-      <div class="expr-text">"My dream is to..."</div>
-      <button class="expr-play" onclick="speakText('My dream is to...',this)" aria-label="Listen to expression">
+      <div class="expr-text">"I would recommend..."</div>
+      <button class="expr-play" onclick="speakText('I would recommend...',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="expr-item">
-      <div class="expr-text">"The most important thing for me is..."</div>
-      <button class="expr-play" onclick="speakText('The most important thing for me is...',this)" aria-label="Listen to expression">
+      <div class="expr-text">"The best thing you could do is..."</div>
+      <button class="expr-play" onclick="speakText('The best thing you could do is...',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
@@ -959,51 +976,52 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 </div>
 
 <!-- ═══════════════════════════════════════ -->
-<!-- CHAPTER 3 — THE CODE (Grammar)          -->
+<!-- CHAPTER 3 — THE CODE (Grammar: Should/Could/Might) -->
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 11 — TRANSITION: THE CODE ═══ -->
-<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>33:00 - 0.5 min</span>Transição. Diga: &quot;Now let us crack the code. How do we talk about plans, predictions, and arrangements for the future?&quot; Avance rápido." style="background-image:url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>31:00 - 0.5 min</span>Transicao. Diga: &quot;Now let us discover the code behind those expressions. How do we give advice in English?&quot; Avance rapido." style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(80,52,38,0.88) 50%, rgba(26,26,46,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 3 -- The Code</div>
-    <h1 class="slide-title" style="color:#fff;">Going To vs. Will vs. Present Continuous</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Three ways to talk about the future</p>
+    <h1 class="slide-title" style="color:#fff;">The Grammar of Advice</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Should, could, and might for wellness recommendations</p>
   </div>
 </div>
 
 <!-- ═══ SLIDE 12 — GRAMMAR DISCOVERY ═══ -->
-<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>33:30 - 40 min</span>Grammar discovery. NÃO explique a regra ainda. Leia cada exemplo e pergunte: &quot;What do the orange words have in common?&quot; Espere. Guie Pricila: &quot;Look at sentences 1 and 2 — one is a plan you already decided. Sentence 3 is a spontaneous decision. Sentence 4 has a specific date.&quot; Quando ela perceber a diferenca, clique &quot;Reveal the Rule&quot;.<div class='t-ccq'><strong>CCQs apos revelar:</strong> &quot;'I am going to visit Australia' — is this a plan you already decided, or something you just thought of right now?&quot; (already decided) / &quot;'I think it will rain tomorrow' — is this a plan or a prediction?&quot; (prediction) / &quot;'I am meeting my friend on Friday' — is there a date or time for this?&quot; (yes, Friday) / &quot;Can you make a sentence about YOUR plans using going to?&quot;</div>">
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>31:30 - 37 min</span>Grammar discovery. Leia cada exemplo, enfatize as palavras em destaque. Pergunte: &quot;What do the orange words have in common?&quot; Espere. Se Pricila disser &quot;they give advice&quot; excelente. Aprofunde: &quot;Are they all the same strength of advice?&quot; Espere 10 segundos. Depois clique &quot;Reveal the Rule.&quot; Reforce: should = strong, could = softer, might = weakest possibility.<div class='t-ccq'><strong>CCQs:</strong> &quot;If I say 'you should rest,' am I sure this is a good idea?&quot; (yes, strong) / &quot;If I say 'you could try yoga,' is it an order?&quot; (no, a suggestion) / &quot;If I say 'it might help,' am I 100% sure?&quot; (no, it is possible)</div>">
   <div class="slide-chapter-label">Chapter 3 -- The Code</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">What do the highlighted words have in common?</h2>
-  <div class="slide-content">
-    <div class="grammar-examples">
-      <div class="g-example">"I <span class='highlight'>am going to</span> visit Australia next year." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(decided plan)</span></div>
-      <div class="g-example">"I <span class='highlight'>am going to</span> change my lifestyle completely." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(decided plan)</span></div>
-      <div class="g-example">"Oh, the phone is ringing! I <span class='highlight'>will</span> answer it." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(spontaneous)</span></div>
-      <div class="g-example">"I think retirement <span class='highlight'>will</span> be amazing." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(prediction)</span></div>
-      <div class="g-example">"I <span class='highlight'>am meeting</span> my travel agent on Friday." <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">(arrangement)</span></div>
-    </div>
-    <button class="g-reveal-btn" onclick="revealGrammar(this)" id="grammarRevealBtn">Reveal the Rule</button>
-    <div class="g-rule" id="grammarRule1">
-      <h4>The Rule</h4>
-      <table>
-        <thead>
-          <tr><th>Going to</th><th>Will</th><th>Present Continuous</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Plans already decided</td><td>Predictions / Spontaneous decisions</td><td>Fixed arrangements (date/time)</td></tr>
-          <tr><td>I <strong>am going to</strong> travel to Australia.</td><td>I think it <strong>will</strong> be amazing.</td><td>I <strong>am meeting</strong> Tom on Friday.</td></tr>
-          <tr><td>S + am/is/are + going to + V</td><td>S + will + V</td><td>S + am/is/are + V-ing</td></tr>
-          <tr><td>Decided before speaking</td><td>Decided at the moment / Opinion</td><td>Already arranged with someone</td></tr>
-        </tbody>
-      </table>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Discover the Pattern</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;max-width:600px;">Read these sentences. What do the highlighted words have in common?</p>
+  <div class="grammar-examples" style="max-width:650px;width:100%;">
+    <div class="g-example">"You <span class='highlight'>should</span> make sure you are getting enough sleep."</div>
+    <div class="g-example">"You <span class='highlight'>could</span> try meditation to reduce stress."</div>
+    <div class="g-example">"It <span class='highlight'>might</span> help you feel more relaxed."</div>
+    <div class="g-example">"I <span class='highlight'>would</span> recommend daily walks for your energy."</div>
+  </div>
+  <button class="g-reveal-btn" onclick="revealGrammar(this)" style="max-width:650px;">Reveal the Rule</button>
+  <div class="g-rule" id="grammarRule1" style="max-width:650px;width:100%;">
+    <h4>Modal Verbs for Advice</h4>
+    <table>
+      <thead>
+        <tr><th>Modal</th><th>Strength</th><th>Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>should</td><td>Strong advice</td><td>"You should rest." (I believe this is best)</td></tr>
+        <tr><td>could</td><td>Softer suggestion</td><td>"You could try yoga." (It is an option)</td></tr>
+        <tr><td>might</td><td>Possibility</td><td>"It might help." (Maybe, not sure)</td></tr>
+        <tr><td>would recommend</td><td>Professional advice</td><td>"I would recommend..." (formal, expert)</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:1rem;padding:0.8rem;background:rgba(160,103,75,0.1);border-radius:6px;font-size:0.85rem;color:rgba(255,255,255,0.8);">
+      <strong style="color:var(--accent-light);">Key Rule:</strong> After should, could, and might, use the BASE FORM of the verb (no "to"). Example: "You should rest" (NOT "You should to rest").
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 13 — COMMON MISTAKE ═══ -->
-<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>40:00 - 43 min</span>Erro comum. Leia a frase errada e pergunte: &quot;What is wrong with this sentence?&quot; Espere. A chave e que &quot;visit Australia next year&quot; e um plano ja decidido, não uma decisão espontânea — exige &quot;going to&quot;, não &quot;will&quot;. Se Pricila não perceber, de dica: &quot;Did you already decide this plan, or did you just think of it right now?&quot;<div class='t-alert'>Este e o erro mais comum no B1. Reforce: &quot;If you already made the decision before speaking, use GOING TO. If you decide right now, use WILL.&quot;</div>">
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>37:00 - 40 min</span>Erro comum. Leia a frase errada e pergunte: &quot;What is wrong with this sentence?&quot; Espere. A chave e que depois de should, could, might, NUNCA usamos &quot;to&quot;. Se Pricila nao perceber, de dica: &quot;Look at the word after should. Is there something extra?&quot;<div class='t-alert'>Este e o erro mais comum com modais. Reforce: &quot;Should + base verb. No TO.&quot;</div>">
   <div class="slide-chapter-label">Chapter 3 -- The Code</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Common Mistake</h2>
   <div class="mistake-box">
@@ -1011,84 +1029,79 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
       <div class="mistake-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </div>
-      <div>"I <strong>will</strong> visit Australia next year." (when it is a pre-made plan)</div>
+      <div>"You <strong>should to</strong> rest more."</div>
     </div>
     <div class="mistake-right">
       <div class="mistake-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <div>"I <strong>am going to</strong> visit Australia next year."</div>
+      <div>"You <strong>should</strong> rest more."</div>
     </div>
     <div style="padding:1rem;background:rgba(160,103,75,0.1);border:1px solid rgba(160,103,75,0.25);border-radius:8px;margin-top:1rem;font-size:0.9rem;color:rgba(255,255,255,0.85);line-height:1.7;">
-      <strong style="color:var(--accent-light);">Why?</strong> You already decided to visit Australia. It is a plan, not a spontaneous decision. Use <strong>going to</strong> for plans you already made. Use <strong>will</strong> for predictions or instant decisions.
+      <strong style="color:var(--accent-light);">Why?</strong> Modal verbs (should, could, might) are ALWAYS followed by the base form of the verb. Never add "to" between the modal and the verb. Same rule for can, will, and must.
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 14 — FILL-IN PRACTICE ═══ -->
-<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>43:00 - 47 min</span>Pratica de fill-in. Leia cada frase, Pricila escolhe a forma correta. Clique para revelar. Reforce o raciocínio: &quot;Is this a plan you already decided? Then going to. Is it a prediction or spontaneous? Then will. Is there a fixed date? Then present continuous.&quot; Se ela errar mais de 2, volte ao slide anterior para revisar.">
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>40:00 - 44 min</span>Pratica de fill-in. Leia cada frase, Pricila escolhe should, could, ou might. Clique para revelar. Reforce o raciocinio: &quot;Is this strong advice, a softer suggestion, or just a possibility?&quot; Se ela errar mais de 2, volte ao slide anterior para revisar.">
   <div class="slide-chapter-label">Chapter 3 -- The Code</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Fill in the Gaps</h2>
   <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Click each sentence to reveal the answer.</p>
   <div class="fill-practice">
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"I <span class='fp-blank'>___</span> (travel) to Australia next year. I already booked the flight."</div>
-      <div class="fp-answer">am going to travel (decided plan, already booked)</div>
+      <div class="fp-sentence">"You <span class='fp-blank'>___</span> see a doctor if the pain continues." (strong advice)</div>
+      <div class="fp-answer">should (strong advice from someone who cares)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"I think retirement <span class='fp-blank'>___</span> (be) the best chapter of my life."</div>
-      <div class="fp-answer">will be (prediction / opinion)</div>
+      <div class="fp-sentence">"You <span class='fp-blank'>___</span> try drinking herbal tea before bed." (softer suggestion)</div>
+      <div class="fp-answer">could (offering an option, not pushing)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"I <span class='fp-blank'>___</span> (meet) my travel agent on Thursday at 3 PM."</div>
-      <div class="fp-answer">am meeting (fixed arrangement with date and time)</div>
+      <div class="fp-sentence">"Yoga <span class='fp-blank'>___</span> help with your back pain." (not sure, possibility)</div>
+      <div class="fp-answer">might (it is possible but not certain)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"Oh, the doorbell! Wait, I <span class='fp-blank'>___</span> (get) it."</div>
-      <div class="fp-answer">will get (spontaneous decision)</div>
+      <div class="fp-sentence">"I <span class='fp-blank'>___</span> recommend getting at least 8 hours of sleep." (professional)</div>
+      <div class="fp-answer">would (professional recommendation)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"I <span class='fp-blank'>___</span> (change) my lifestyle. I decided last month."</div>
-      <div class="fp-answer">am going to change (decided plan, decided last month)</div>
+      <div class="fp-sentence">"You <span class='fp-blank'>___</span> drink more water. It is really important." (strong advice)</div>
+      <div class="fp-answer">should (strong, the speaker is confident)</div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 15 — ORAL GRAMMAR DRILLING ═══ -->
-<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>47:00 - 51 min</span>Drilling oral. Para cada situacao, Pricila forma uma frase usando going to, will, ou present continuous. Clique para revelar o modelo. Se ela usar o tempo errado, não corrija direto — pergunte: &quot;Did you already decide this, or is it a prediction?&quot; Celebre acertos: &quot;Excellent! You are mastering this!&quot;">
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>44:00 - 48 min</span>Drilling oral. Para cada situacao, Pricila forma uma frase usando should, could, ou might. Clique para revelar o modelo. Se ela usar o modal errado, nao corrija direto. Pergunte: &quot;Is this strong advice or just a possibility?&quot; Celebre acertos: &quot;Perfect use of should!&quot;">
   <div class="slide-chapter-label">Chapter 3 -- The Code</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Oral Drilling</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Make a sentence. Then click to compare with the model.</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Give advice for each situation. Then click to compare.</p>
   <div class="oral-list">
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 1</div>
-      <div class="oral-situation">You decided to learn to cook Italian food. It is a plan.</div>
-      <div class="oral-model">"I am going to learn to cook Italian food."</div>
+      <div class="oral-situation">A friend says she cannot sleep at night. Give strong advice.</div>
+      <div class="oral-model">"You should avoid looking at your phone before bed."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 2</div>
-      <div class="oral-situation">Someone asks if retirement will be boring. Give your opinion.</div>
-      <div class="oral-model">"No, I think retirement will be an amazing adventure."</div>
+      <div class="oral-situation">A patient has a headache. Suggest an option gently.</div>
+      <div class="oral-model">"You could try taking a short nap."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 3</div>
-      <div class="oral-situation">You have an appointment with your English teacher on Monday.</div>
-      <div class="oral-model">"I am having my English class on Monday at 10 AM."</div>
+      <div class="oral-situation">Someone is stressed about retirement. Mention a possibility.</div>
+      <div class="oral-model">"Mindfulness might help you feel more relaxed."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 4</div>
-      <div class="oral-situation">A friend needs help. You decide to help right now.</div>
-      <div class="oral-model">"Do not worry, I will help you."</div>
+      <div class="oral-situation">A colleague wants to lose weight. Give professional advice.</div>
+      <div class="oral-model">"I would recommend walking at least thirty minutes every day."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 5</div>
-      <div class="oral-situation">You have a plan to visit the Great Barrier Reef.</div>
-      <div class="oral-model">"I am going to visit the Great Barrier Reef."</div>
-    </div>
-    <div class="oral-item" onclick="this.classList.toggle('open')">
-      <div class="oral-situation-label">Situation 6</div>
-      <div class="oral-situation">You booked dinner at a restaurant for Saturday night.</div>
-      <div class="oral-model">"I am having dinner at a restaurant on Saturday night."</div>
+      <div class="oral-situation">Your daughter feels tired all the time. Give strong advice.</div>
+      <div class="oral-model">"You should get a blood test to check your vitamins."</div>
     </div>
   </div>
 </div>
@@ -1098,74 +1111,74 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 16 — TRANSITION: GETTING THERE ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>51:00 - 0.5 min</span>Transição. Diga: &quot;Excellent! Now let us see these words and grammar in a real conversation at a travel agency.&quot; Avance rápido." style="background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>48:00 - 0.5 min</span>Transicao. Diga: &quot;Now let us see these modals in action. Pricila visits Dr. Carter for a checkup.&quot; Avance rapido." style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(80,52,38,0.88) 50%, rgba(26,26,46,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
-    <h1 class="slide-title" style="color:#fff;">At the Travel Agency</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Pricila meets Tom, a travel agent with great advice</p>
+    <h1 class="slide-title" style="color:#fff;">At the Doctor's Office</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Pricila visits Dr. Carter for a wellness checkup</p>
   </div>
 </div>
 
 <!-- ═══ SLIDE 17 — DIALOGUE ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>51:30 - 57 min</span>Dialogo linha a linha. Clique &quot;Next Line&quot; para revelar cada troca. ANTES de revelar a resposta de Pricila, pergunte: &quot;What do you think Pricila says?&quot; Espere. Depois revele. Destaque as palavras do vocabulario em negrito. Palavras callback da Aula 2 (chapter, milestone, overcome, achievement) também aparecem — aponte: &quot;Look! You already know this word from last class!&quot;">
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>48:30 - 54 min</span>Dialogo linha a linha. Clique &quot;Next Line&quot; para revelar cada troca. ANTES de revelar a resposta de Pricila, pergunte: &quot;What do you think you say next?&quot; Espere. Depois revele. Destaque as palavras do vocabulario em negrito e os modais em accent. Aponte: &quot;Did you notice? Dr. Carter uses should, could, and might to give advice!&quot;">
   <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#fff;margin-bottom:1rem;text-align:center;">Pricila and Tom at the Travel Agency</h2>
-  <div class="dialogue-container" id="dialogue1">
-    <div class="d-line visible">
-      <div class="d-avatar blue">TM</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#fff;margin-bottom:1rem;text-align:center;">Pricila and Dr. Carter at the Checkup</h2>
+  <div class="dialogue-container" id="dialogue1" style="max-height:65vh;overflow-y:auto;">
+    <div class="d-line visible" data-speaker="Dr. Carter" data-voice="arthur">
+      <div class="d-avatar blue">DC</div>
       <div class="d-text-wrap">
-        <div class="d-speaker">Tom</div>
-        <div class="d-text" data-voice="arthur">"Good morning! Welcome to Global Travel. How can I help you today?"</div>
+        <div class="d-speaker">Dr. Carter</div>
+        <div class="d-text">"Good morning, Pricila! How are you feeling today? Any <strong class='vocab-highlight'>symptoms</strong> I <strong class='vocab-highlight'>should</strong> know about?" <span class="audio-inline" onclick="speakText('Good morning, Pricila! How are you feeling today? Any symptoms I should know about?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
       </div>
     </div>
-    <div class="d-line">
+    <div class="d-line" data-speaker="Pricila" data-voice="ellen">
       <div class="d-avatar sienna">PA</div>
       <div class="d-text-wrap">
         <div class="d-speaker">Pricila</div>
-        <div class="d-text" data-voice="ellen">"Hi! I am retiring soon and I <strong>am going to</strong> travel the world. My biggest <strong class='vocab-highlight'>dream</strong> is to visit Australia."</div>
+        <div class="d-text">"I have been feeling tired lately. I think I need to find a better <strong class='vocab-highlight'>balance</strong> in my life." <span class="audio-inline" onclick="speakText('I have been feeling tired lately. I think I need to find a better balance in my life.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
       </div>
     </div>
-    <div class="d-line">
-      <div class="d-avatar blue">TM</div>
+    <div class="d-line" data-speaker="Dr. Carter" data-voice="arthur">
+      <div class="d-avatar blue">DC</div>
       <div class="d-text-wrap">
-        <div class="d-speaker">Tom</div>
-        <div class="d-text" data-voice="arthur">"Australia! That is amazing. Do you have a <strong class='vocab-highlight'>bucket list</strong>? What else is on it?"</div>
+        <div class="d-speaker">Dr. Carter</div>
+        <div class="d-text">"That is very common during big life changes. You <strong class='vocab-highlight'>should</strong> make sure you are getting enough sleep. I would also <strong class='vocab-highlight'>recommend</strong> daily walks." <span class="audio-inline" onclick="speakText('That is very common during big life changes. You should make sure you are getting enough sleep. I would also recommend daily walks.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
       </div>
     </div>
-    <div class="d-line">
+    <div class="d-line" data-speaker="Pricila" data-voice="ellen">
       <div class="d-avatar sienna">PA</div>
       <div class="d-text-wrap">
         <div class="d-speaker">Pricila</div>
-        <div class="d-text" data-voice="ellen">"Yes! I <strong>am going to</strong> see the Great Barrier Reef, <strong class='vocab-highlight'>embrace</strong> a new <strong class='vocab-highlight'>lifestyle</strong>, and I hope to speak fluent English. That is my number one <strong class='vocab-highlight'>goal</strong>."</div>
+        <div class="d-text">"I have heard that being <strong class='vocab-highlight'>mindful</strong> <strong class='vocab-highlight'>could</strong> help with stress. What do you think?" <span class="audio-inline" onclick="speakText('I have heard that being mindful could help with stress. What do you think?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
       </div>
     </div>
-    <div class="d-line">
-      <div class="d-avatar blue">TM</div>
+    <div class="d-line" data-speaker="Dr. Carter" data-voice="arthur">
+      <div class="d-avatar blue">DC</div>
       <div class="d-text-wrap">
-        <div class="d-speaker">Tom</div>
-        <div class="d-text" data-voice="arthur">"I think you <strong>will</strong> love Australia. The people are very friendly. When are you <strong class='vocab-highlight'>planning</strong> to go?"</div>
+        <div class="d-speaker">Dr. Carter</div>
+        <div class="d-text">"Absolutely! Mindfulness is a great <strong class='vocab-highlight'>habit</strong>. It <strong class='vocab-highlight'>might</strong> help you feel more relaxed and <strong class='vocab-highlight'>prevent</strong> burnout." <span class="audio-inline" onclick="speakText('Absolutely! Mindfulness is a great habit. It might help you feel more relaxed and prevent burnout.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
       </div>
     </div>
-    <div class="d-line">
+    <div class="d-line" data-speaker="Pricila" data-voice="ellen">
       <div class="d-avatar sienna">PA</div>
       <div class="d-text-wrap">
         <div class="d-speaker">Pricila</div>
-        <div class="d-text" data-voice="ellen">"I <strong>am meeting</strong> with my family next weekend to decide the dates. Retirement is a new <strong class='vocab-highlight'>adventure</strong> and my <strong class='vocab-highlight'>priority</strong> is <strong class='vocab-highlight'>freedom</strong>."</div>
+        <div class="d-text">"That is a <strong class='vocab-highlight'>relief</strong> to hear. As a dentist, I know about <strong class='vocab-highlight'>wellness</strong>, but I have not been following my own advice." <span class="audio-inline" onclick="speakText('That is a relief to hear. As a dentist, I know about wellness, but I have not been following my own advice.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
       </div>
     </div>
-    <div class="d-line">
-      <div class="d-avatar blue">TM</div>
+    <div class="d-line" data-speaker="Dr. Carter" data-voice="arthur">
+      <div class="d-avatar blue">DC</div>
       <div class="d-text-wrap">
-        <div class="d-speaker">Tom</div>
-        <div class="d-text" data-voice="arthur">"That sounds wonderful. I <strong>will</strong> prepare some options for you. Australia in February is perfect — not too hot, great for the reef."</div>
+        <div class="d-speaker">Dr. Carter</div>
+        <div class="d-text">"The best thing you <strong class='vocab-highlight'>could</strong> do is start small. No <strong class='vocab-highlight'>prescription</strong> needed, just good <strong class='vocab-highlight'>habits</strong> and patience. <strong class='vocab-highlight'>Recovery</strong> from stress takes time." <span class="audio-inline" onclick="speakText('The best thing you could do is start small. No prescription needed, just good habits and patience. Recovery from stress takes time.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
       </div>
     </div>
-    <div class="d-line">
+    <div class="d-line" data-speaker="Pricila" data-voice="ellen">
       <div class="d-avatar sienna">PA</div>
       <div class="d-text-wrap">
         <div class="d-speaker">Pricila</div>
-        <div class="d-text" data-voice="ellen">"Thank you, Tom! I <strong>am going to</strong> <strong class='vocab-highlight'>embrace</strong> this new chapter. <strong class='vocab-highlight'>My dream is to</strong> watch movies without subtitles and travel with <strong class='vocab-highlight'>purpose</strong>."</div>
+        <div class="d-text">"Thank you, Doctor. I am going to embrace this new chapter of my life with better <strong class='vocab-highlight'>habits</strong>." <span class="audio-inline" onclick="speakText('Thank you, Doctor. I am going to embrace this new chapter of my life with better habits.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div>
       </div>
     </div>
   </div>
@@ -1176,29 +1189,29 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 </div>
 
 <!-- ═══ SLIDE 18 — DIALOGUE COMPREHENSION ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>57:00 - 59 min</span>Compreensão do dialogo. Pergunte cada questão oralmente primeiro, espere Pricila responder, depois clique para revelar. Se ela errar, volte ao dialogo (slide anterior) para conferir.">
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>54:00 - 56 min</span>Compreensao do dialogo. Pergunte cada questao oralmente primeiro, espere Pricila responder, depois clique para revelar. Se ela errar, volte ao dialogo (slide anterior) para conferir.">
   <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Dialogue Comprehension</h2>
   <div class="comp-questions">
     <div class="cq-item" onclick="this.classList.toggle('open')">
-      <div class="cq-q">1. What is Pricila's biggest dream?</div>
-      <div class="cq-a">Her biggest dream is to visit Australia and see the Great Barrier Reef.</div>
+      <div class="cq-q">1. What does Dr. Carter recommend for tiredness?</div>
+      <div class="cq-a">He recommends getting enough sleep and taking daily walks.</div>
     </div>
     <div class="cq-item" onclick="this.classList.toggle('open')">
-      <div class="cq-q">2. What is on Pricila's bucket list?</div>
-      <div class="cq-a">Seeing the Great Barrier Reef, embracing a new lifestyle, speaking fluent English, and watching movies without subtitles.</div>
+      <div class="cq-q">2. What does Dr. Carter say about mindfulness?</div>
+      <div class="cq-a">He says it is a great habit that might help Pricila feel more relaxed and prevent burnout.</div>
     </div>
     <div class="cq-item" onclick="this.classList.toggle('open')">
-      <div class="cq-q">3. What does Tom recommend about timing?</div>
-      <div class="cq-a">He recommends February for Australia — not too hot and great for the reef.</div>
+      <div class="cq-q">3. What is Dr. Carter's main advice about recovery?</div>
+      <div class="cq-a">He says to start small, that no prescription is needed, and that recovery from stress takes time.</div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SLIDE 19 — LISTENING 1 (Pricila's Retirement Vision) ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>59:00 - 63 min</span>Listening 1 — a visao de aposentadoria da Pricila narrada em primeira pessoa (voz Ellen). Toque o audio PRIMEIRO, sem texto. Depois que acabar, as perguntas aparecem. Se Pricila pedir para ouvir de novo, toque novamente. Use os controles de velocidade se ela precisar de ritmo mais lento.">
+<!-- ═══ SLIDE 19 — LISTENING 1 (Pricila's Wellness Routine) ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>56:00 - 60 min</span>Listening 1, narracao da rotina de wellness da Pricila (voz Ellen, pois ela e a protagonista). Toque o audio PRIMEIRO, sem texto. Depois que acabar, as perguntas aparecem. Se Pricila pedir para ouvir de novo, toque novamente. Use os controles de velocidade se ela precisar de ritmo mais lento.">
   <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Pricila's Retirement Vision</h2>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Your Wellness Routine</h2>
   <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Listen first, then answer the questions.</p>
   <div class="listening-card">
     <div id="player-listening1" data-src="[listening-1]">
@@ -1212,14 +1225,14 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
         </div>
         <div class="lp-controls">
           <button class="lp-btn" onclick="skipAudio('player-listening1',-5)" aria-label="Rewind 5 seconds">
-            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/><text x="12" y="16" font-size="7" fill="currentColor" stroke="none" text-anchor="middle">5</text></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/><text x="12" y="16" font-size="7" fill="currentColor" stroke="none" text-anchor="middle">5</text></svg>
           </button>
           <button class="lp-btn lp-play" onclick="togglePlayer('player-listening1')" aria-label="Play or pause">
-            <span class="lp-icon-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg></span>
-            <span class="lp-icon-pause"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></span>
+            <span class="lp-icon-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg></span>
+            <span class="lp-icon-pause"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></span>
           </button>
           <button class="lp-btn" onclick="skipAudio('player-listening1',5)" aria-label="Forward 5 seconds">
-            <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.13-9.36L23 10"/><text x="12" y="16" font-size="7" fill="currentColor" stroke="none" text-anchor="middle">5</text></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.13-9.36L23 10"/><text x="12" y="16" font-size="7" fill="currentColor" stroke="none" text-anchor="middle">5</text></svg>
           </button>
         </div>
         <div class="lp-label">Speed</div>
@@ -1233,71 +1246,72 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
     </div>
     <div class="listening-questions" id="questions-player-listening1" style="display:none;">
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">1. What are Pricila's three main goals for retirement?</div>
-        <div class="lq-answer">Travel to Australia, speak fluent English, and embrace a slower lifestyle.</div>
+        <div class="lq-question">1. What does Pricila do every morning for her wellness?</div>
+        <div class="lq-answer">She walks for thirty minutes and practices mindfulness exercises.</div>
       </div>
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">2. What does she want to do at the Great Barrier Reef?</div>
-        <div class="lq-answer">She wants to see it in person and snorkel in the clear water.</div>
+        <div class="lq-question">2. What habit did she recently start?</div>
+        <div class="lq-answer">She started drinking herbal tea before bed to improve her sleep.</div>
       </div>
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">3. Why is learning English important for her retirement plans?</div>
-        <div class="lq-answer">Because she wants to travel independently and watch movies without subtitles.</div>
+        <div class="lq-question">3. What does she want to prevent?</div>
+        <div class="lq-answer">She wants to prevent stress and burnout during her career transition.</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SLIDE 20 — ARTIFACT: BUCKET LIST CARD ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>63:00 - 66 min</span>Artefato — Bucket List Card personalizado da Pricila. Leia cada item em voz alta. Pergunte para cada: &quot;Which future form would you use? Going to, will, or present continuous?&quot; Exemplos: &quot;I am going to visit Australia&quot; (plan), &quot;I think I will love the reef&quot; (prediction). Use como revisao da gramatica aplicada a vida real dela.<div class='t-ccq'><strong>CCQs:</strong> &quot;Is visiting Australia a plan or a prediction?&quot; (plan = going to) / &quot;Speaking fluent English — is this certain or a hope?&quot; (hope = hope to / going to try to)</div>">
+<!-- ═══ SLIDE 20 — ARTIFACT: WELLNESS PRESCRIPTION ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>60:00 - 63 min</span>Artefato: Wellness Prescription personalizado. Leia cada item em voz alta. Pergunte para cada: &quot;Which modal would Dr. Carter use? Should, could, or might?&quot; Use como revisao aplicada. Aponte: &quot;This is your personal prescription. No medicine needed!&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;Is walking 30 minutes strong advice or a soft suggestion?&quot; (strong = should) / &quot;Is trying meditation an order or an option?&quot; (option = could)</div>">
   <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Pricila's Bucket List</h2>
-  <div class="bucket-list-card">
-    <div class="bucket-list-header">
-      <h3>Pricila Adamo</h3>
-      <p>Retirement Bucket List</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Your Wellness Prescription</h2>
+  <div class="wellness-rx-card" style="max-height:65vh;overflow-y:auto;">
+    <div class="wellness-rx-header">
+      <p style="font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.3rem;">Dr. Carter's Office</p>
+      <h3>Wellness Prescription</h3>
+      <p>Patient: Pricila Adamo</p>
     </div>
-    <div class="bucket-list-items">
-      <div class="bl-item">
-        <div class="bl-check">
+    <div class="wellness-rx-items">
+      <div class="rx-item">
+        <div class="rx-check">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
         </div>
-        <div class="bl-text">Visit Australia and see the Great Barrier Reef</div>
+        <div class="rx-text">Walk 30 minutes every day (you should)</div>
       </div>
-      <div class="bl-item">
-        <div class="bl-check">
+      <div class="rx-item">
+        <div class="rx-check">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
         </div>
-        <div class="bl-text">Speak fluent English with confidence</div>
+        <div class="rx-text">Practice mindfulness for 10 minutes (you could try)</div>
       </div>
-      <div class="bl-item">
-        <div class="bl-check">
+      <div class="rx-item">
+        <div class="rx-check">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
         </div>
-        <div class="bl-text">Watch movies and series without subtitles</div>
+        <div class="rx-text">Drink herbal tea before bed (it might help)</div>
       </div>
-      <div class="bl-item">
-        <div class="bl-check">
+      <div class="rx-item">
+        <div class="rx-check">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
         </div>
-        <div class="bl-text">Embrace a slower, more purposeful lifestyle</div>
+        <div class="rx-text">Sleep at least 7 hours (I would recommend)</div>
       </div>
-      <div class="bl-item">
-        <div class="bl-check">
+      <div class="rx-item">
+        <div class="rx-check">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
         </div>
-        <div class="bl-text">Travel to at least 5 new countries</div>
+        <div class="rx-text">Find a hobby that brings joy (the best thing you could do)</div>
       </div>
     </div>
-    <div class="bucket-list-footer">Alumni by Better -- Dream it, plan it, live it</div>
+    <div class="wellness-rx-footer">Alumni by Better -- Your wellness, your rules</div>
   </div>
 </div>
 
-<!-- ═══ SLIDE 21 — LISTENING 2 (Tom's Travel Advice) ═══ -->
-<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>66:00 - 70 min</span>Listening 2 — conselhos de viagem do Tom (voz Arthur). Mesmo formato: audio primeiro, perguntas depois. Compare as perspectivas: &quot;Pricila talked about her dreams. Tom gives practical advice. Both are about the future!&quot;">
+<!-- ═══ SLIDE 21 — LISTENING 2 (Doctor's Advice on Retirement Wellness) ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>63:00 - 67 min</span>Listening 2: conselhos medicos sobre bem-estar na aposentadoria (voz Arthur). Mesmo formato: audio primeiro, perguntas depois. Compare as perspectivas: &quot;In the first listening, you talked about YOUR routine. Now listen to expert advice about retirement wellness.&quot;">
   <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Tom's Travel Advice</h2>
-  <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Listen to Tom's advice, then answer the questions.</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Doctor's Advice on Retirement Wellness</h2>
+  <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Listen to the advice, then answer the questions.</p>
   <div class="listening-card">
     <div id="player-listening2" data-src="[listening-2]">
       <div class="listening-player">
@@ -1310,14 +1324,14 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
         </div>
         <div class="lp-controls">
           <button class="lp-btn" onclick="skipAudio('player-listening2',-5)" aria-label="Rewind 5 seconds">
-            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/><text x="12" y="16" font-size="7" fill="currentColor" stroke="none" text-anchor="middle">5</text></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/><text x="12" y="16" font-size="7" fill="currentColor" stroke="none" text-anchor="middle">5</text></svg>
           </button>
           <button class="lp-btn lp-play" onclick="togglePlayer('player-listening2')" aria-label="Play or pause">
-            <span class="lp-icon-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg></span>
-            <span class="lp-icon-pause"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></span>
+            <span class="lp-icon-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg></span>
+            <span class="lp-icon-pause"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></span>
           </button>
           <button class="lp-btn" onclick="skipAudio('player-listening2',5)" aria-label="Forward 5 seconds">
-            <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.13-9.36L23 10"/><text x="12" y="16" font-size="7" fill="currentColor" stroke="none" text-anchor="middle">5</text></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.13-9.36L23 10"/><text x="12" y="16" font-size="7" fill="currentColor" stroke="none" text-anchor="middle">5</text></svg>
           </button>
         </div>
         <div class="lp-label">Speed</div>
@@ -1331,16 +1345,16 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
     </div>
     <div class="listening-questions" id="questions-player-listening2" style="display:none;">
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">1. What month does Tom recommend for visiting Australia?</div>
-        <div class="lq-answer">He recommends February because the weather is warm but not too hot.</div>
+        <div class="lq-question">1. What does the doctor say about the first year of retirement?</div>
+        <div class="lq-answer">He says it is a period of adjustment and people should be patient with themselves.</div>
       </div>
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">2. What does Tom suggest about the Great Barrier Reef?</div>
-        <div class="lq-answer">He suggests booking a guided snorkeling tour in advance.</div>
+        <div class="lq-question">2. What three habits does the doctor recommend?</div>
+        <div class="lq-answer">Regular exercise, a consistent sleep schedule, and social connections.</div>
       </div>
       <div class="lq-item" onclick="this.classList.toggle('open')">
-        <div class="lq-question">3. What is Tom's advice for solo travelers?</div>
-        <div class="lq-answer">He advises joining small group tours to meet other travelers and feel safe.</div>
+        <div class="lq-question">3. What does the doctor say about mental health?</div>
+        <div class="lq-answer">He says people should not ignore mental health symptoms and might benefit from talking to a professional.</div>
       </div>
     </div>
   </div>
@@ -1351,195 +1365,194 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 22 — TRANSITION: PRACTICE ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>70:00 - 0.5 min</span>Transição. Diga: &quot;Time to practice! Let us see how well you can use these words and grammar.&quot; Avance rápido." style="background-image:url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>67:00 - 0.5 min</span>Transicao. Diga: &quot;More practice! Let us see how well you can use these modals and vocabulary.&quot; Avance rapido." style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(80,52,38,0.92) 0%, rgba(26,26,46,0.92) 50%, rgba(160,103,75,0.85) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 5 -- Practice</div>
-    <h1 class="slide-title" style="color:#fff;">Time to Practice</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Quick fire, spot the error, and sentence building</p>
+    <h1 class="slide-title" style="color:#fff;">More Practice</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Quick fire, spot the error, sentence building, and oral drilling</p>
   </div>
 </div>
 
 <!-- ═══ SLIDE 23 — QUICK FIRE ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>70:30 - 75 min</span>Quick Fire. Uma pergunta por vez. Leia a situacao, Pricila responde oralmente (going to, will, ou present continuous). Depois clique &quot;Show Answer&quot;. Se acertar, clique &quot;Next&quot;. Se errar, pergunte: &quot;Is this a plan, a prediction, or an arrangement?&quot; e espere ela se corrigir. Score visivel — celebre se acertar 5/6 ou mais.">
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>67:30 - 72 min</span>Quick Fire. Uma pergunta por vez. Leia a situacao, Pricila responde oralmente usando should/could/might. Depois clique &quot;Show Answer&quot;. Se acertar, clique &quot;Next&quot;. Se errar, pergunte: &quot;Is this strong advice, a softer suggestion, or just a possibility?&quot; Score visivel. Celebre se acertar 5/6 ou mais.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Quick Fire</h2>
   <div class="qc-score" id="qcScore">0 / 6</div>
   <div class="qc-container">
     <div class="qc-card active">
-      <div class="qc-prompt">You decided to visit Australia next year. Tell your friend about it.</div>
+      <div class="qc-prompt">Your friend says she has a terrible headache. Give her strong advice.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"I am going to visit Australia next year."</div>
+      <div class="qc-answer-box">"You should take some medicine and rest."</div>
       <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
     <div class="qc-card">
-      <div class="qc-prompt">You think learning English will change your life. Share your opinion.</div>
+      <div class="qc-prompt">A colleague feels stressed at work. Suggest something gently.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"I think learning English will change my life."</div>
+      <div class="qc-answer-box">"You could try taking short breaks during the day."</div>
       <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
     <div class="qc-card">
-      <div class="qc-prompt">You have a dentist appointment on Wednesday at 2 PM.</div>
+      <div class="qc-prompt">Someone asks if exercise helps with sleep. You are not sure.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"I am seeing the dentist on Wednesday at 2 PM."</div>
+      <div class="qc-answer-box">"Exercise might help you sleep better at night."</div>
       <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
     <div class="qc-card">
-      <div class="qc-prompt">Someone offers you coffee. You decide to accept right now.</div>
+      <div class="qc-prompt">A patient wants to prevent back pain. Give professional advice.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"Thank you, I will have a coffee."</div>
+      <div class="qc-answer-box">"I would recommend stretching every morning to prevent back pain."</div>
       <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
     <div class="qc-card">
-      <div class="qc-prompt">You and your daughter planned to change your lifestyle after retirement.</div>
+      <div class="qc-prompt">Your daughter cannot sleep. Give her strong advice.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"We are going to change our lifestyle after retirement."</div>
+      <div class="qc-answer-box">"You should avoid caffeine in the evening."</div>
       <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
     </div>
     <div class="qc-card">
-      <div class="qc-prompt">You booked a flight for March 15th. Tell Tom.</div>
+      <div class="qc-prompt">A friend wants to start a wellness routine. Offer the best advice.</div>
       <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
-      <div class="qc-answer-box">"I am flying to Australia on March 15th."</div>
-      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+      <div class="qc-answer-box">"The best thing you could do is start with small habits."</div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 24 — SPOT THE ERROR ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>75:00 - 78 min</span>Spot the Error. Leia cada frase em voz alta. Pergunte: &quot;What is wrong?&quot; Espere Pricila identificar o erro. Depois clique para revelar. Reforce o padrao: plano decidido = going to, predicao = will, arranjo fixo = present continuous.">
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>72:00 - 75 min</span>Spot the Error. Leia cada frase em voz alta. Pergunte: &quot;What is wrong?&quot; Espere Pricila identificar o erro. Depois clique para revelar. Reforce o padrao: no &quot;to&quot; after modals, correct modal choice.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Spot the Error</h2>
   <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Click each sentence to reveal the correction.</p>
   <div class="error-list">
     <div class="err-item" onclick="this.classList.toggle('open')">
-      <div class="err-sentence">"I <span class='wrong'>will travel</span> to Australia next year. I already bought the ticket."</div>
-      <div class="err-correction">"I am going to travel to Australia next year." (Pre-decided plan = going to)</div>
+      <div class="err-sentence">"You <span class='wrong'>should to drink</span> more water every day."</div>
+      <div class="err-correction">"You should drink more water every day." (No "to" after should)</div>
     </div>
     <div class="err-item" onclick="this.classList.toggle('open')">
-      <div class="err-sentence">"I <span class='wrong'>am going to</span> think retirement is amazing."</div>
-      <div class="err-correction">"I think retirement will be amazing." (Prediction/opinion = will)</div>
+      <div class="err-sentence">"She <span class='wrong'>might helps</span> you with the prescription."</div>
+      <div class="err-correction">"She might help you with the prescription." (Base form after might, no "s")</div>
     </div>
     <div class="err-item" onclick="this.classList.toggle('open')">
-      <div class="err-sentence">"I <span class='wrong'>will meet</span> Tom on Friday at 3 PM. It is confirmed."</div>
-      <div class="err-correction">"I am meeting Tom on Friday at 3 PM." (Fixed arrangement = present continuous)</div>
+      <div class="err-sentence">"I <span class='wrong'>could to try</span> meditation this weekend."</div>
+      <div class="err-correction">"I could try meditation this weekend." (No "to" after could)</div>
     </div>
     <div class="err-item" onclick="this.classList.toggle('open')">
-      <div class="err-sentence">"Wait, I <span class='wrong'>am going to help</span> you right now!" (spontaneous)</div>
-      <div class="err-correction">"Wait, I will help you right now!" (Spontaneous decision = will)</div>
+      <div class="err-sentence">"The doctor <span class='wrong'>should recommends</span> more sleep."</div>
+      <div class="err-correction">"The doctor should recommend more sleep." (Base form after should, no "s")</div>
     </div>
   </div>
   <div class="err-score" id="errScore"></div>
 </div>
 
 <!-- ═══ SLIDE 25 — SENTENCE BUILDING ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>78:00 - 81 min</span>Sentence Building. Mostre as palavras embaralhadas, Pricila organiza oralmente. Clique para revelar a resposta. Se ela travar, de a primeira palavra como dica. Celebre: &quot;Great sentence building!&quot;">
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>75:00 - 78 min</span>Sentence Building. Mostre as palavras embaralhadas, Pricila organiza oralmente. Clique para revelar a resposta. Se ela travar, de a primeira palavra como dica. Celebre: &quot;Great sentence building!&quot;">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Sentence Building</h2>
   <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;text-align:center;">Unscramble the words. Click to reveal the answer.</p>
   <div class="sb-list">
     <div class="sb-item" onclick="this.classList.toggle('open')">
-      <div class="sb-scrambled">going / am / I / to / embrace / this / chapter / new</div>
-      <div class="sb-answer">"I am going to embrace this new chapter."</div>
+      <div class="sb-scrambled">should / you / find / balance / a / between / work / rest / and</div>
+      <div class="sb-answer">"You should find a balance between work and rest."</div>
     </div>
     <div class="sb-item" onclick="this.classList.toggle('open')">
-      <div class="sb-scrambled">dream / my / is / to / visit / Australia</div>
-      <div class="sb-answer">"My dream is to visit Australia."</div>
+      <div class="sb-scrambled">might / it / help / to / be / mindful / more</div>
+      <div class="sb-answer">"It might help to be more mindful."</div>
     </div>
     <div class="sb-item" onclick="this.classList.toggle('open')">
-      <div class="sb-scrambled">think / I / will / retirement / be / amazing</div>
-      <div class="sb-answer">"I think retirement will be amazing."</div>
+      <div class="sb-scrambled">would / I / recommend / walking / minutes / thirty / daily</div>
+      <div class="sb-answer">"I would recommend walking thirty minutes daily."</div>
     </div>
     <div class="sb-item" onclick="this.classList.toggle('open')">
-      <div class="sb-scrambled">am / I / meeting / travel / my / agent / Friday / on</div>
-      <div class="sb-answer">"I am meeting my travel agent on Friday."</div>
+      <div class="sb-scrambled">could / you / try / herbal / tea / bed / before</div>
+      <div class="sb-answer">"You could try herbal tea before bed."</div>
     </div>
     <div class="sb-item" onclick="this.classList.toggle('open')">
-      <div class="sb-scrambled">priority / my / number / one / is / freedom</div>
-      <div class="sb-answer">"My number one priority is freedom."</div>
+      <div class="sb-scrambled">best / the / thing / could / you / do / is / small / start</div>
+      <div class="sb-answer">"The best thing you could do is start small."</div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SLIDE 26 — ORAL DRILLING (6 situations) ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>81:00 - 84 min</span>Oral Drilling avancado. Para cada situacao, Pricila forma uma frase COMPLETA usando vocabulario da aula + gramatica correta. Clique para revelar o modelo. Foco na fluência — se ela hesitar muito, de as primeiras palavras: &quot;I am going to...&quot;">
+<!-- ═══ SLIDE 26 — ORAL DRILLING (Advanced) ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>78:00 - 82 min</span>Oral Drilling avancado. Para cada situacao, Pricila forma uma frase COMPLETA usando vocabulario da aula + modal correto. Clique para revelar o modelo. Foco na fluencia. Se ela hesitar muito, de as primeiras palavras: &quot;You should...&quot;">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Oral Drilling</h2>
   <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Respond to each situation. Click to see the model.</p>
   <div class="oral-list">
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 1</div>
-      <div class="oral-situation">Talk about your biggest dream for retirement.</div>
-      <div class="oral-model">"My dream is to visit Australia and see the Great Barrier Reef."</div>
+      <div class="oral-situation">Talk about a good habit that helps with wellness.</div>
+      <div class="oral-model">"Drinking water is a simple but important habit for wellness."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 2</div>
-      <div class="oral-situation">Tell someone about your number one priority.</div>
-      <div class="oral-model">"The most important thing for me is freedom to travel."</div>
+      <div class="oral-situation">Give strong advice to someone who has symptoms of stress.</div>
+      <div class="oral-model">"You should see a doctor if the symptoms do not improve."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 3</div>
-      <div class="oral-situation">Share something on your bucket list.</div>
-      <div class="oral-model">"Watching movies without subtitles is on my bucket list."</div>
+      <div class="oral-situation">Recommend something to prevent tiredness.</div>
+      <div class="oral-model">"I would recommend sleeping at least seven hours to prevent tiredness."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 4</div>
-      <div class="oral-situation">Talk about how retirement will change your lifestyle.</div>
-      <div class="oral-model">"I am going to change my lifestyle completely and embrace a slower pace."</div>
+      <div class="oral-situation">Suggest something that might bring relief from back pain.</div>
+      <div class="oral-model">"Stretching might bring relief from back pain."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 5</div>
-      <div class="oral-situation">Say what gives your life purpose now.</div>
-      <div class="oral-model">"Learning English gives me a sense of purpose."</div>
+      <div class="oral-situation">Tell someone about recovery after a stressful period.</div>
+      <div class="oral-model">"Recovery takes time. You should be patient with yourself."</div>
     </div>
     <div class="oral-item" onclick="this.classList.toggle('open')">
       <div class="oral-situation-label">Situation 6</div>
-      <div class="oral-situation">Talk about an adventure you are planning.</div>
-      <div class="oral-model">"I am planning to have many adventures after I retire."</div>
+      <div class="oral-situation">Give advice about finding balance in retirement.</div>
+      <div class="oral-model">"The best thing you could do is find a balance between rest and activities."</div>
     </div>
   </div>
 </div>
 
-<!-- ═══ SLIDE 27 — ADDITIONAL PRACTICE: USE THE WORD ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>84:00 - 86 min</span>Pratica adicional — Use the Word. Mostre cada palavra, Pricila faz uma frase PESSOAL com ela. Se ela copiar o exemplo do slide de vocab, peça: &quot;Can you make a sentence about YOUR plans?&quot; Valide e reformule se necessário. Ritmo rápido — 30 segundos por palavra.">
+<!-- ═══ SLIDE 27 — USE THE WORD ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>82:00 - 84 min</span>Pratica adicional: Use the Word. Mostre cada palavra, Pricila faz uma frase PESSOAL com ela usando should/could/might. Se ela copiar o exemplo do slide de vocab, peca: &quot;Can you make an advice sentence about YOUR life?&quot; Ritmo rapido, 30 segundos por palavra.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Use the Word</h2>
-  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Make a personal sentence using each word.</p>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Make an advice sentence using each word.</p>
   <div style="display:flex;flex-wrap:wrap;gap:0.8rem;justify-content:center;max-width:650px;">
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Goal</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Dream</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Freedom</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Adventure</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Bucket List</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Embrace</span>
-    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Priority</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Wellness</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Balance</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Mindful</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Prevent</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Recovery</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Habit</span>
+    <span style="padding:0.6rem 1.4rem;background:rgba(160,103,75,0.15);border:1px solid rgba(160,103,75,0.35);border-radius:24px;font-size:1rem;color:var(--accent-light);font-weight:600;cursor:default;">Recommend</span>
   </div>
 </div>
 
-<!-- ═══ SLIDE 28 — ADDITIONAL PRACTICE: FUTURE FORM SORT ═══ -->
-<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>86:00 - 88 min</span>Pratica adicional — classificação de formas futuras. Leia cada frase, Pricila diz se e going to, will, ou present continuous. Clique para revelar. Ritmo rápido — foco em automatizar o raciocínio.">
+<!-- ═══ SLIDE 28 — MODAL SORT ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>84:00 - 86 min</span>Classificacao de modais. Leia cada frase, Pricila diz se o conselho e strong (should), softer (could), ou possibility (might). Clique para revelar. Ritmo rapido, foco em automatizar.">
   <div class="slide-chapter-label">Chapter 5 -- Practice</div>
-  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Going To, Will, or Present Continuous?</h2>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Strong, Softer, or Possible?</h2>
   <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Classify each sentence. Click to reveal.</p>
   <div class="fill-practice">
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"I am going to visit the Great Barrier Reef."</div>
-      <div class="fp-answer">Going to (decided plan)</div>
+      <div class="fp-sentence">"You should stop smoking immediately."</div>
+      <div class="fp-answer">Strong advice (should = I believe this is essential)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"I think you will love it."</div>
-      <div class="fp-answer">Will (prediction/opinion)</div>
+      <div class="fp-sentence">"You could try acupuncture for the pain."</div>
+      <div class="fp-answer">Softer suggestion (could = it is an option to consider)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"I am having dinner with my family on Saturday."</div>
-      <div class="fp-answer">Present Continuous (fixed arrangement with date)</div>
+      <div class="fp-sentence">"A warm bath might help you relax."</div>
+      <div class="fp-answer">Possibility (might = maybe, not certain)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"Wait, I will open the door for you."</div>
-      <div class="fp-answer">Will (spontaneous decision)</div>
+      <div class="fp-sentence">"I would recommend reducing screen time before bed."</div>
+      <div class="fp-answer">Professional advice (would recommend = formal, expert opinion)</div>
     </div>
     <div class="fp-item" onclick="this.classList.toggle('open')">
-      <div class="fp-sentence">"We are going to change our lifestyle completely."</div>
-      <div class="fp-answer">Going to (decided plan)</div>
+      <div class="fp-sentence">"You should make wellness a priority."</div>
+      <div class="fp-answer">Strong advice (should = the speaker is confident)</div>
     </div>
   </div>
 </div>
@@ -1549,78 +1562,77 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 29 — TRANSITION: YOUR TURN ═══ -->
-<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>88:00 - 0.5 min</span>Transição. Diga: &quot;Now it is YOUR turn. You are going to tell me about YOUR plans and dreams for retirement.&quot; Tom motivador." style="background-image:url('https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>86:00 - 0.5 min</span>Transicao. Diga: &quot;Now it is YOUR turn. You are going to give wellness advice like a doctor!&quot; Tom motivador." style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(80,52,38,0.88) 50%, rgba(26,26,46,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
-    <h1 class="slide-title" style="color:#fff;">Your Dreams</h1>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Tell me about your plans for the future</p>
+    <h1 class="slide-title" style="color:#fff;">Your Advice</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">From guided to free: show what you learned</p>
   </div>
 </div>
 
 <!-- ═══ SLIDE 30 — ROLE-PLAY GUIDED ═══ -->
-<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>88:30 - 92 min</span>Role-play guiado. Pricila usa os keywords e starters para falar sobre seus planos. Guie: &quot;Start with your biggest dream. Use 'My dream is to...'&quot; Se ela travar, de as primeiras 3 palavras. Reformule erros sutilmente. Foco: fluência + vocabulario correto + forma futura correta.">
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>86:30 - 90 min</span>Role-play guiado. Pricila descreve sintomas usando os keywords e recebe conselhos do professor (representando o medico). Guie: &quot;Start by describing your symptoms. Use the keywords.&quot; Se ela travar, de as primeiras 3 palavras. Reformule erros sutilmente. Foco: fluencia + vocabulario correto + modal correto.">
   <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
   <div class="rp-card">
     <div class="rp-bg" style="background:linear-gradient(135deg, #A0674B 0%, #1a1a2e 100%);"></div>
     <div class="rp-content">
       <div class="rp-level">Guided</div>
-      <div class="rp-scenario">You are at a travel agency and the agent asks about your retirement plans. Tell them your dreams using these keywords and sentence starters:</div>
-      <div style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-bottom:0.8rem;font-style:italic;">"I am going to..." / "My dream is to..." / "I am planning to..." / "The most important thing for me is..."</div>
+      <div class="rp-scenario">You are at a doctor's appointment. Describe your symptoms and ask for advice. Use the keywords and starters below:</div>
+      <div style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-bottom:0.8rem;font-style:italic;">"I have been feeling..." / "You should..." / "I would recommend..." / "It might help to..."</div>
       <div class="rp-keywords">
-        <span class="rp-keyword">goal</span>
-        <span class="rp-keyword">dream</span>
-        <span class="rp-keyword">bucket list</span>
-        <span class="rp-keyword">adventure</span>
-        <span class="rp-keyword">freedom</span>
-        <span class="rp-keyword">embrace</span>
+        <span class="rp-keyword">symptom</span>
+        <span class="rp-keyword">balance</span>
+        <span class="rp-keyword">wellness</span>
+        <span class="rp-keyword">recommend</span>
+        <span class="rp-keyword">habit</span>
+        <span class="rp-keyword">prevent</span>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 31 — ROLE-PLAY SEMI-FREE ═══ -->
-<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>92:00 - 95 min</span>Role-play semi-livre. Agora sem sentence starters — apenas keywords como apoio. Pricila conta seus planos com mais liberdade. Observe se ela usa going to para planos, will para predicoes, e present continuous para arranjos. Anote erros para feedback no final, mas NÃO interrompa a fluência.">
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>90:00 - 93 min</span>Role-play semi-livre. Agora Pricila e a conselheira, dando conselhos de wellness a uma amiga. Sem sentence starters, apenas keywords como apoio. Observe se ela usa should para conselhos fortes, could para sugestoes, might para possibilidades. Anote erros para feedback no final.">
   <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
   <div class="rp-card">
     <div class="rp-bg" style="background:linear-gradient(135deg, #2d2d4a 0%, #A0674B 100%);"></div>
     <div class="rp-content">
       <div class="rp-level">Semi-Free</div>
-      <div class="rp-scenario">Now tell me about your retirement plans more freely. Use the keywords below, but create your own sentences. Talk about your goals, dreams, and priorities.</div>
+      <div class="rp-scenario">Your friend is stressed and asks for your advice. You are the wellness expert now. Give her at least 3 pieces of advice using different modals (should, could, might). Use the keywords below.</div>
       <div class="rp-keywords">
-        <span class="rp-keyword">purpose</span>
-        <span class="rp-keyword">lifestyle</span>
-        <span class="rp-keyword">priority</span>
-        <span class="rp-keyword">plan</span>
-        <span class="rp-keyword">chapter</span>
-        <span class="rp-keyword">overcome</span>
+        <span class="rp-keyword">mindful</span>
+        <span class="rp-keyword">relief</span>
+        <span class="rp-keyword">recovery</span>
+        <span class="rp-keyword">prescription</span>
+        <span class="rp-keyword">balance</span>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 32 — ROLE-PLAY FREE ═══ -->
-<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>95:00 - 98 min</span>Role-play livre. SEM keywords, SEM starters. Pricila fala livremente sobre seus planos e sonhos. Deixe falar 2-3 minutos sem interrupcao. DEPOIS de feedback: &quot;I loved how you used 'I am going to' for your plans. One thing to improve: [erro especifico].&quot; Seja especifica e positiva.">
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>93:00 - 96 min</span>Role-play livre. SEM keywords, SEM starters. Pricila cria seu plano pessoal de wellness em voz alta. Deixe falar 2-3 minutos sem interrupcao. DEPOIS feedback: &quot;I loved how you used 'should' for strong advice. One thing to improve: [erro especifico].&quot; Seja especifica e positiva.">
   <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
   <div class="rp-card">
     <div class="rp-bg" style="background:linear-gradient(135deg, #1a1a2e 0%, #C08060 50%, #1a1a2e 100%);"></div>
     <div class="rp-content">
       <div class="rp-level">Free Production</div>
-      <div class="rp-scenario">No keywords. No starters. Tell me about your complete retirement vision. What are you going to do? What will change? What adventures are you planning? Take your time.</div>
+      <div class="rp-scenario">No keywords. No starters. Create your personal wellness plan. What should you do more? What could you try? What habits might help you? Tell your teacher everything.</div>
       <div style="margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;">
-        <p style="font-size:0.82rem;color:rgba(255,255,255,0.6);font-style:italic;text-align:center;">Your retirement dream starts now.</p>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.6);font-style:italic;text-align:center;">Your wellness journey starts now.</p>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 33 — REFLECTION ═══ -->
-<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>98:00 - 100 min</span>Reflexão final. Leia a pergunta em voz alta. Pricila responde oralmente. Não é preciso ser perfeito — é o momento de conexão emocional com o conteúdo. Valide o que ela disser: &quot;That is beautiful, Pricila. And you said it in English!&quot;">
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>96:00 - 98 min</span>Reflexao final. Leia a pergunta em voz alta. Pricila responde oralmente. Nao e preciso ser perfeito. Momento de conexao emocional. Valide: &quot;That is beautiful, Pricila. And you said it in English!&quot;">
   <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
   <div style="max-width:600px;text-align:center;">
     <h2 class="slide-title" style="font-size:2rem;color:#fff;">Reflection</h2>
     <div style="padding:2rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-top:1.5rem;">
-      <p style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:#fff;line-height:1.5;">"The most important thing for me in this new chapter is..."</p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:#fff;line-height:1.5;">"The one thing I should change for better wellness is..."</p>
     </div>
     <p style="font-size:0.82rem;color:rgba(255,255,255,0.6);margin-top:1.5rem;">Complete the sentence. Speak from the heart.</p>
   </div>
@@ -1631,52 +1643,52 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 <!-- ═══════════════════════════════════════ -->
 
 <!-- ═══ SLIDE 34 — TRANSITION: WRAP-UP ═══ -->
-<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>100:00 - 0.5 min</span>Transição. Diga: &quot;What an incredible class! Let us wrap up with your survival phrases and see what you learned today.&quot;" style="background-image:url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1400&q=80');background-size:cover;background-position:center;">
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>98:00 - 0.5 min</span>Transicao. Diga: &quot;What an incredible class! Let us wrap up with your survival phrases and see what you learned today.&quot;" style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1400&q=80');background-size:cover;background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(80,52,38,0.88) 50%, rgba(26,26,46,0.92) 100%);"></div>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
     <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
-    <h1 class="slide-title" style="color:#fff;">Reaching the Horizon</h1>
+    <h1 class="slide-title" style="color:#fff;">Healing Complete</h1>
     <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Your survival phrases, your checklist, your badge</p>
   </div>
 </div>
 
 <!-- ═══ SLIDE 35 — SURVIVAL CARD ═══ -->
-<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>100:30 - 104 min</span>Survival Card. Toque cada frase (alternando Arthur/Ellen). Pricila repete 2x cada. Estas são as frases que ela DEVE saber dizer sem pensar. Se ela travar em alguma, toque mais uma vez e peça que repita devagar.">
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>98:30 - 102 min</span>Survival Card. Toque cada frase (alternando Arthur/Ellen). Pricila repete 2x cada. Estas sao as frases que ela DEVE saber dizer sem pensar. Se ela travar em alguma, toque mais uma vez e peca que repita devagar.">
   <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
   <div class="survival">
-    <h3>Survival Card — Lesson 5</h3>
+    <h3>Survival Card -- Lesson 5</h3>
     <div class="surv-phrase">
       <div class="surv-num">1</div>
-      <div class="surv-text">I am going to travel to Australia next year.</div>
-      <button class="surv-play" onclick="speakText('I am going to travel to Australia next year.',this)" aria-label="Listen">
+      <div class="surv-text">You should take care of yourself.</div>
+      <button class="surv-play" onclick="speakText('You should take care of yourself.',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="surv-phrase">
       <div class="surv-num">2</div>
-      <div class="surv-text">My dream is to see the Great Barrier Reef.</div>
-      <button class="surv-play" onclick="speakText('My dream is to see the Great Barrier Reef.',this)" aria-label="Listen">
+      <div class="surv-text">You could try meditation.</div>
+      <button class="surv-play" onclick="speakText('You could try meditation.',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="surv-phrase">
       <div class="surv-num">3</div>
-      <div class="surv-text">I am planning to change my lifestyle.</div>
-      <button class="surv-play" onclick="speakText('I am planning to change my lifestyle.',this)" aria-label="Listen">
+      <div class="surv-text">It might help to go for a walk.</div>
+      <button class="surv-play" onclick="speakText('It might help to go for a walk.',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="surv-phrase">
       <div class="surv-num">4</div>
-      <div class="surv-text">The most important thing for me is freedom.</div>
-      <button class="surv-play" onclick="speakText('The most important thing for me is freedom.',this)" aria-label="Listen">
+      <div class="surv-text">I would recommend getting more sleep.</div>
+      <button class="surv-play" onclick="speakText('I would recommend getting more sleep.',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
     <div class="surv-phrase">
       <div class="surv-num">5</div>
-      <div class="surv-text">I am going to embrace this new chapter of my life.</div>
-      <button class="surv-play" onclick="speakText('I am going to embrace this new chapter of my life.',this)" aria-label="Listen">
+      <div class="surv-text">The best thing you could do is start small.</div>
+      <button class="surv-play" onclick="speakText('The best thing you could do is start small.',this)" aria-label="Listen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </button>
     </div>
@@ -1684,66 +1696,58 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-
 </div>
 
 <!-- ═══ SLIDE 36 — CHECKLIST ═══ -->
-<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>104:00 - 107 min</span>Checklist. Leia cada item em voz alta. Pricila diz &quot;yes&quot; ou &quot;not yet&quot;. Clique nos que ela confirmar. Se algum item ficar sem check, diga: &quot;That is okay! We will practice more next class.&quot; Celebre os checks: &quot;Look at everything you learned today!&quot;">
+<div class="slide dark" data-chapter="7" data-lesson="5" data-t="<span class='t-timing'>102:00 - 105 min</span>Checklist. Leia cada item em voz alta. Pricila diz &quot;yes&quot; ou &quot;not yet&quot;. Clique nos que ela confirmar. Se algum item ficar sem check, diga: &quot;That is okay! We will practice more next class.&quot; Celebre os checks: &quot;Look at everything you learned today!&quot;">
   <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1.5rem;text-align:center;">What I Learned Today</h2>
-  <div class="checklist-wrap">
-    <div class="cl-item" onclick="toggleCheck(this)">
+  <div class="check-grid">
+    <div class="check-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can use "going to" for plans I already decided</div>
+      <div class="cl-text">I can use "should" for strong advice</div>
     </div>
-    <div class="cl-item" onclick="toggleCheck(this)">
+    <div class="check-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can use "will" for predictions and spontaneous decisions</div>
+      <div class="cl-text">I can use "could" for softer suggestions</div>
     </div>
-    <div class="cl-item" onclick="toggleCheck(this)">
+    <div class="check-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can use present continuous for fixed arrangements</div>
+      <div class="cl-text">I can use "might" for possibilities</div>
     </div>
-    <div class="cl-item" onclick="toggleCheck(this)">
+    <div class="check-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can say "goal," "dream," "bucket list," and "embrace" correctly</div>
+      <div class="cl-text">I can say "wellness," "symptom," "prescription," and "recovery" correctly</div>
     </div>
-    <div class="cl-item" onclick="toggleCheck(this)">
+    <div class="check-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can use "I am going to..." to talk about my retirement plans</div>
+      <div class="cl-text">I know the rule: no "to" after should, could, and might</div>
     </div>
-    <div class="cl-item" onclick="toggleCheck(this)">
+    <div class="check-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can say "My dream is to..." and talk about my bucket list</div>
+      <div class="cl-text">I can give wellness advice using different modals</div>
     </div>
-    <div class="cl-item" onclick="toggleCheck(this)">
+    <div class="check-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I know the difference between going to (plan), will (prediction), and present continuous (arrangement)</div>
+      <div class="cl-text">I can describe symptoms and ask for health advice</div>
     </div>
-    <div class="cl-item" onclick="toggleCheck(this)">
+    <div class="check-item" onclick="toggleCheck(this)">
       <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can use "priority," "purpose," and "lifestyle" in sentences</div>
-    </div>
-    <div class="cl-item" onclick="toggleCheck(this)">
-      <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can talk about my plans and dreams for retirement</div>
-    </div>
-    <div class="cl-item" onclick="toggleCheck(this)">
-      <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cl-text">I can say "I am going to embrace this new chapter of my life"</div>
+      <div class="cl-text">I can say "You should take care of yourself" and "The best thing you could do is start small"</div>
     </div>
   </div>
 </div>
 
 <!-- ═══ SLIDE 37 — BADGE + PREVIEW ═══ -->
-<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>107:00 - 110 min</span>Badge final. Parabens! Diga: &quot;Congratulations, Pricila! You earned the Dreamer Badge! Next class, we will practice real travel situations — booking flights, hotels, and asking for directions. Your homework: write your bucket list in English — at least 5 items using 'I am going to' and 'My dream is to'. Have a great week!&quot; Confetti dispara automaticamente.">
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>105:00 - 108 min</span>Badge final. Parabens! Diga: &quot;Congratulations, Pricila! You earned the Healer Badge! Next class, we will continue building your English for your Australia trip. Your homework: write 5 pieces of wellness advice for a friend using should, could, and might. Have a great week!&quot; Confetti dispara automaticamente.">
   <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
   <div style="text-align:center;max-width:500px;">
     <div style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg, #A0674B, #C08060);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 0 40px rgba(160,103,75,0.4);">
       <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
     </div>
     <p style="font-size:0.72rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.5rem;">Lesson 5 Complete</p>
-    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Dreamer Badge Earned!</h2>
-    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);margin-top:0.5rem;">You can now talk about your plans, goals, and dreams for the future in English.</p>
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Healer Badge Earned!</h2>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);margin-top:0.5rem;">You can now give and receive wellness advice in English using should, could, and might.</p>
     <div style="margin-top:2rem;padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
       <div style="font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.5rem;">Next Class Preview</div>
-      <p style="font-size:0.95rem;color:rgba(255,255,255,0.8);">Lesson 4: Real Travel Situations</p>
+      <p style="font-size:0.95rem;color:rgba(255,255,255,0.8);">Lesson 6: Coming Soon</p>
     </div>
   </div>
 </div>
@@ -1787,10 +1791,15 @@ var audioMap = {
   "I have heard that being mindful could help with stress. What do you think?": "/audio/pricila-adamo/aula5_dialogue_pricila_2.mp3",
   "Absolutely! Mindfulness is a great habit. It might help you feel more relaxed and prevent burnout.": "/audio/pricila-adamo/aula5_dialogue_carter_3.mp3",
   "That is a relief to hear. As a dentist, I know about wellness, but I have not been following my own advice.": "/audio/pricila-adamo/aula5_dialogue_pricila_3.mp3",
-  "The best thing you could do is start small. No prescription needed — just good habits and patience. Recovery from stress takes time.": "/audio/pricila-adamo/aula5_dialogue_carter_4.mp3",
+  "The best thing you could do is start small. No prescription needed, just good habits and patience. Recovery from stress takes time.": "/audio/pricila-adamo/aula5_dialogue_carter_4.mp3",
   "Thank you, Doctor. I am going to embrace this new chapter of my life with better habits.": "/audio/pricila-adamo/aula5_dialogue_pricila_4.mp3",
   "[listening-1]": "/audio/pricila-adamo/aula5_listening_1_wellness_routine.mp3",
-  "[listening-2]": "/audio/pricila-adamo/aula5_listening_2_doctor_advice.mp3"
+  "[listening-2]": "/audio/pricila-adamo/aula5_listening_2_doctor_advice.mp3",
+  "You should take care of yourself.": "/audio/pricila-adamo/aula5_surv_you_should.mp3",
+  "You could try meditation.": "/audio/pricila-adamo/aula5_surv_you_could.mp3",
+  "It might help to go for a walk.": "/audio/pricila-adamo/aula5_surv_it_might.mp3",
+  "I would recommend getting more sleep.": "/audio/pricila-adamo/aula5_surv_recommend.mp3",
+  "The best thing you could do is start small.": "/audio/pricila-adamo/aula5_surv_best_thing.mp3"
 };
 
 // ===== AUDIO ENGINE =====
@@ -1851,6 +1860,7 @@ function goToSlide(idx) {
   slides[currentSlide].classList.remove('active');
   currentSlide = idx;
   slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
   updateSlide();
 }
 
@@ -1909,8 +1919,7 @@ document.addEventListener('click', function(e) {
 
 // ===== VOCAB REVEAL =====
 function revealVCard(card) {
-  if (card.classList.contains('revealed')) return;
-  card.classList.add('revealed');
+  card.classList.toggle('revealed');
   var grid = card.closest('.vocab-grid');
   var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : grid.id === 'vocabGrid2' ? 'vocabCount2' : 'vocabCount3';
   var revealed = grid.querySelectorAll('.v-card.revealed').length;
@@ -1951,7 +1960,7 @@ function showQcAnswer(btn) {
   var answer = card.querySelector('.qc-answer-box');
   var next = card.querySelector('.qc-next-btn');
   answer.classList.add('show');
-  next.classList.add('show');
+  if (next) next.classList.add('show');
   btn.style.display = 'none';
   qcScore++;
   document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal;
@@ -1962,6 +1971,7 @@ function showQcAnswer(btn) {
 
 function nextQc() {
   var cards = document.querySelectorAll('.qc-card');
+  if (qcCurrent >= cards.length - 1) return;
   cards[qcCurrent].classList.remove('active');
   qcCurrent++;
   if (qcCurrent < cards.length) {
@@ -2081,8 +2091,13 @@ function formatTime(s) {
 }
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', initSlides);
+document.addEventListener('DOMContentLoaded', function() {
+  initSlides();
+});
 </script>
+<script src="/lib/audio-toggle.js"></script>
 <script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js"></script>
 </body>
 </html>
