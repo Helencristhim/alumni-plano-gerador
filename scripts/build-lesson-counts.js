@@ -24,6 +24,7 @@ const SKIP_PATTERNS = [
     /-listening\./,
     /-palestra\./,
     /-speech-training\./,
+    /^helen-mendes\./,  // aluna MOCK (template modelo) — fora do controle
 ];
 
 const STANDALONE_AULA_RE = /^(.+)-aula(\d+)\.html$/;
