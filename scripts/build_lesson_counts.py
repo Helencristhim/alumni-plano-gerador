@@ -21,6 +21,7 @@ OUT_FILE = ROOT / 'public' / 'data' / 'lesson-counts.json'
 SKIP_PATTERNS = [
     r'-aula\d', r'-backup', r'-test', r'-v-[ab]', r'V2\.', r'-new-?aula',
     r'-new\.', r'-listening\.', r'-palestra\.', r'-speech-training\.',
+    r'^helen-mendes\.',  # aluna MOCK (modelo de template) — não entra no controle
 ]
 STANDALONE_AULA_RE = re.compile(r'^(.+)-aula(\d+)\.html$')
 
