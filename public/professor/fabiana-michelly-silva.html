@@ -1700,7 +1700,7 @@ body.slide-mode .nav-bar{display:flex}
   <div class="slide-inner">
     <div class="slide-heading">Listening Challenge</div>
     <div class="slide-subtitle" style="margin-bottom:1.5rem">Listen to Fabiana's elevator pitch. Do NOT read — just listen.</div>
-    <div class="lp-player" id="player1" data-src="/audio/fabiana-michelly-silva/order_l1_professional_intro.mp3">
+    <div class="lp-player" id="player1" data-src="/audio/fabiana-michelly-silva/listening_1_elevator_pitch.mp3">
       <div class="lp-seekbar" onclick="seekAudio(event,'player1')"><div class="lp-seekbar-fill"></div></div>
       <div class="lp-time"><span class="lp-current">0:00</span><span class="lp-total">0:00</span></div>
       <div class="lp-controls">
@@ -1827,7 +1827,7 @@ body.slide-mode .nav-bar{display:flex}
   <div class="slide-inner">
     <div class="slide-heading">One More Listen</div>
     <div class="slide-subtitle" style="margin-bottom:1.5rem">A quarterly operations meeting. Just listen first.</div>
-    <div class="lp-player" id="player2" data-src="/audio/fabiana-michelly-silva/order_l1_professional_intro.mp3">
+    <div class="lp-player" id="player2" data-src="/audio/fabiana-michelly-silva/listening_2_meeting_intro.mp3">
       <div class="lp-seekbar" onclick="seekAudio(event,'player2')"><div class="lp-seekbar-fill"></div></div>
       <div class="lp-time"><span class="lp-current">0:00</span><span class="lp-total">0:00</span></div>
       <div class="lp-controls">
@@ -2295,28 +2295,140 @@ function revealVocab(card) { card.classList.toggle('revealed'); var grid = card.
 
 // ===== DIALOGUE =====
 var dialogueLine = 0;
-function nextDialogueLine() { dialogueLine++; var line = document.querySelector('.dialogue-line[data-line="' + dialogueLine + '"]'); if (line) line.classList.add('visible'); var btn = document.getElementById('nextLineBtn'); if (dialogueLine >= 8 && btn) btn.style.display = 'none'; }
+function nextDialogueLine() {
+    try {
+        dialogueLine++;
+        var line = document.querySelector('.dialogue-line[data-line="' + dialogueLine + '"]');
+        if (line) {
+            line.classList.add('visible');
+            line.style.opacity = '1';
+            line.style.transform = 'translateY(0)';
+        }
+        if (dialogueLine >= 8) {
+            var btn = document.getElementById('nextLineBtn');
+            if (btn) { btn.textContent = 'Dialogue Complete'; btn.disabled = true; btn.style.opacity = '0.5'; }
+        }
+    } catch(e) { console.error('nextDialogueLine error:', e); }
+}
 
 // ===== COMPREHENSION =====
-function revealAnswer(el) { el.classList.toggle('revealed'); }
-function revealFill(el) { el.classList.toggle('revealed'); }
-function revealOral(el) { el.classList.toggle('revealed'); }
+function revealAnswer(el) {
+    try {
+        el.classList.toggle('revealed');
+        var answer = el.querySelector('.q-answer') || el.querySelector('.comp-answer');
+        if (answer) {
+            answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+            answer.style.marginTop = '.5rem';
+            answer.style.color = 'var(--accent)';
+            answer.style.fontWeight = '600';
+        }
+    } catch(e) { console.error('revealAnswer error:', e); }
+}
+function revealFill(el) {
+    try {
+        el.classList.toggle('revealed');
+        var blank = el.querySelector('.fill-blank');
+        var answer = el.querySelector('.fill-answer');
+        if (el.classList.contains('revealed')) {
+            if (blank) blank.style.display = 'none';
+            if (answer) { answer.style.display = 'inline'; answer.style.fontWeight = '700'; answer.style.color = 'var(--accent)'; }
+        } else {
+            if (blank) blank.style.display = 'inline-block';
+            if (answer) answer.style.display = 'none';
+        }
+    } catch(e) { console.error('revealFill error:', e); }
+}
+function revealOral(el) {
+    try {
+        el.classList.toggle('revealed');
+        var model = el.querySelector('.oral-model');
+        if (model) {
+            model.style.display = model.style.display === 'block' ? 'none' : 'block';
+        }
+    } catch(e) { console.error('revealOral error:', e); }
+}
 
 // ===== ERROR =====
 var errorScore = 0;
-function revealError(el) { if (el.classList.contains('revealed')) return; el.classList.add('revealed'); errorScore++; var scoreEl = document.getElementById('errorScore'); if (scoreEl) scoreEl.textContent = errorScore + ' / 4'; }
+function revealError(el) {
+    try {
+        if (el.classList.contains('revealed')) return;
+        el.classList.add('revealed');
+        var sentence = el.querySelector('.error-sentence');
+        var fix = el.querySelector('.error-fix');
+        if (sentence) { sentence.style.textDecoration = 'line-through'; sentence.style.opacity = '0.5'; }
+        if (fix) { fix.style.display = 'block'; }
+        errorScore++;
+        var scoreEl = document.getElementById('errorScore');
+        if (scoreEl) scoreEl.textContent = errorScore + ' / 4';
+    } catch(e) { console.error('revealError error:', e); }
+}
 
 // ===== QUICK FIRE =====
-var qfIndex = 0; var qfScore = 0;
-function showQFAnswer(btn) { var card = btn.closest('.challenge-card'); card.querySelector('.challenge-answer').classList.add('show'); btn.style.display = 'none'; card.querySelector('.qf-next').style.display = 'inline-flex'; }
-function nextQF(btn) { var slide = btn.closest('.slide'); var cards = slide.querySelectorAll('.challenge-card'); var current = btn.closest('.challenge-card'); current.style.display = 'none'; qfIndex++; qfScore++; var scoreEl = slide.querySelector('.challenge-score'); if (scoreEl) scoreEl.textContent = qfScore + ' / ' + cards.length; if (qfIndex < cards.length) { cards[qfIndex].style.display = 'flex'; } }
+function showQFAnswer(btn) {
+    try {
+        var card = btn.closest('.challenge-card');
+        if (!card) { console.error('showQFAnswer: no .challenge-card found'); return; }
+        var answer = card.querySelector('.challenge-answer');
+        if (answer) { answer.classList.add('show'); answer.style.display = 'block'; }
+        btn.style.display = 'none';
+        var nextBtn = card.querySelector('.qf-next');
+        if (nextBtn) nextBtn.style.display = 'inline-flex';
+    } catch(e) { console.error('showQFAnswer error:', e); }
+}
+function nextQF(btn) {
+    try {
+        var slide = btn.closest('.slide');
+        var cards = slide.querySelectorAll('.challenge-card');
+        var current = btn.closest('.challenge-card');
+        var currentIdx = Array.from(cards).indexOf(current);
+        current.style.display = 'none';
+        var nextIdx = currentIdx + 1;
+        var scoreEl = slide.querySelector('.challenge-score');
+        if (scoreEl) scoreEl.textContent = (nextIdx) + ' / ' + cards.length;
+        if (nextIdx < cards.length) { cards[nextIdx].style.display = 'flex'; }
+        else if (typeof launchConfetti === 'function') { launchConfetti(); }
+    } catch(e) { console.error('nextQF error:', e); }
+}
 
 // ===== TOGGLE CHECK =====
 function toggleCheck(item) { item.classList.toggle('checked'); updateProgress(); }
 
 // ===== LISTENING PLAYER =====
-function initPlayer(id) { var container = document.getElementById(id); if (!container) return; var src = container.dataset.src; if (!src) return; var audio = new Audio(src); container._audio = audio; var playBtn = container.querySelector('.lp-play'); var progress = container.querySelector('.lp-seekbar-fill'); var timeCurrent = container.querySelector('.lp-current'); var timeTotal = container.querySelector('.lp-total'); audio.addEventListener('loadedmetadata', function() { if (timeTotal) timeTotal.textContent = formatTime(audio.duration); }); audio.addEventListener('timeupdate', function() { if (timeCurrent) timeCurrent.textContent = formatTime(audio.currentTime); if (progress && audio.duration) progress.style.width = (audio.currentTime / audio.duration * 100) + '%'; }); audio.addEventListener('ended', function() { playBtn.classList.remove('playing'); }); }
-function togglePlayer(id) { var container = document.getElementById(id); if (!container._audio) { initPlayer(id); } var audio = container._audio; var playBtn = container.querySelector('.lp-play'); if (audio.paused) { audio.play(); playBtn.classList.add('playing'); } else { audio.pause(); playBtn.classList.remove('playing'); } }
+function initPlayer(id) {
+    try {
+        var container = document.getElementById(id);
+        if (!container) { console.error('initPlayer: container not found:', id); return; }
+        var src = container.dataset.src;
+        if (!src) { console.error('initPlayer: no data-src on', id); return; }
+        var audio = new Audio(src);
+        container._audio = audio;
+        var playBtn = container.querySelector('.lp-play');
+        var progress = container.querySelector('.lp-seekbar-fill');
+        var timeCurrent = container.querySelector('.lp-current');
+        var timeTotal = container.querySelector('.lp-total');
+        audio.addEventListener('loadedmetadata', function() { if (timeTotal) timeTotal.textContent = formatTime(audio.duration); });
+        audio.addEventListener('timeupdate', function() { if (timeCurrent) timeCurrent.textContent = formatTime(audio.currentTime); if (progress && audio.duration) progress.style.width = (audio.currentTime / audio.duration * 100) + '%'; });
+        audio.addEventListener('ended', function() { if (playBtn) playBtn.classList.remove('playing'); });
+        audio.addEventListener('error', function(e) { console.error('Audio error for', id, ':', src, e); });
+    } catch(e) { console.error('initPlayer error:', e); }
+}
+function togglePlayer(id) {
+    try {
+        var container = document.getElementById(id);
+        if (!container) { console.error('togglePlayer: container not found:', id); return; }
+        if (!container._audio) { initPlayer(id); }
+        var audio = container._audio;
+        if (!audio) { console.error('togglePlayer: audio not initialized for', id); return; }
+        var playBtn = container.querySelector('.lp-play');
+        if (audio.paused) {
+            audio.play().then(function() { if (playBtn) playBtn.classList.add('playing'); }).catch(function(e) { console.error('Audio play error:', e); });
+        } else {
+            audio.pause();
+            if (playBtn) playBtn.classList.remove('playing');
+        }
+    } catch(e) { console.error('togglePlayer error:', e); }
+}
 function skipAudio(id, seconds) { var container = document.getElementById(id); var audio = container._audio; if (audio) audio.currentTime = Math.max(0, Math.min(audio.duration || 0, audio.currentTime + seconds)); }
 function seekAudio(event, id) { var container = document.getElementById(id); if (!container._audio) initPlayer(id); var audio = container._audio; var seekbar = event.currentTarget; var rect = seekbar.getBoundingClientRect(); var ratio = (event.clientX - rect.left) / rect.width; if (audio && audio.duration) audio.currentTime = ratio * audio.duration; }
 function setPlayerSpeed(id, speed) { var container = document.getElementById(id); if (!container._audio) initPlayer(id); var audio = container._audio; if (audio) audio.playbackRate = speed; container.querySelectorAll('.lp-speed-btn').forEach(function(b) { b.classList.toggle('active', parseFloat(b.dataset.speed) === speed); }); }
@@ -2324,6 +2436,12 @@ function formatTime(s) { if (!s || isNaN(s)) return '0:00'; var m = Math.floor(s
 
 // ===== CONFETTI =====
 function launchConfetti() { var container = document.getElementById('confettiContainer'); var colors = ['#6B4C8A', '#8B6BAA', '#16a34a', '#f59e0b', '#dc2626', '#003080']; for (var i = 0; i < 50; i++) { var piece = document.createElement('div'); piece.className = 'confetti-piece'; piece.style.left = Math.random() * 100 + '%'; piece.style.background = colors[Math.floor(Math.random() * colors.length)]; piece.style.animationDelay = Math.random() * 2 + 's'; piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0'; container.appendChild(piece); } setTimeout(function() { container.innerHTML = ''; }, 4000); }
+
+// ===== AUTO-INIT PLAYERS =====
+document.addEventListener('DOMContentLoaded', function() {
+    try { initPlayer('player1'); } catch(e) { console.error('player1 init:', e); }
+    try { initPlayer('player2'); } catch(e) { console.error('player2 init:', e); }
+});
 
 // ===== INIT =====
 loadState();
