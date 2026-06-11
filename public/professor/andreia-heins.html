@@ -544,7 +544,7 @@ body.slide-mode .logo-bar .slide-counter { display:block; }
    IN CLASS — SLIDE SYSTEM (from elaine-v-b.html)
    ======================================================== */
 .slides-wrapper { display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:500; }
-body.slide-mode .slides-wrapper { display:block; }
+body.slide-mode .slides-wrapper { display:flex;flex-direction:column; }
 body.slide-mode .main-content { display:none; }
 body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 
@@ -561,8 +561,8 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 .phase-label.completed { color:#52D18A; }
 
 /* Slides */
-.slides-container { height:100vh;overflow:hidden;position:relative; }
-.slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem; }
+.slides-container { flex:1;overflow:hidden;position:relative; }
+.slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 2rem; }
 .slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
 .slide-inner { max-width:920px;width:100%;position:relative; }
 .slide-light { background:var(--bg); }
@@ -777,7 +777,7 @@ body.slide-mode .teacher-t { display:flex; }
 @keyframes confettiFall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
 
 /* Nav bar (IN CLASS) */
-.nav-bar { position:fixed;bottom:0;left:0;right:0;z-index:520;display:none;align-items:center;justify-content:center;gap:1rem;padding:1rem 2rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06); }
+.nav-bar { display:none;align-items:center;justify-content:center;gap:1rem;padding:1rem 2rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06);flex-shrink:0;z-index:520; }
 body.slide-mode .nav-bar { display:flex; }
 .nav-btn { width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-size:1.2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center; }
 .nav-btn:hover { background:var(--accent);border-color:var(--accent);color:#fff; }
@@ -802,7 +802,7 @@ body.slide-mode .nav-bar { display:flex; }
 
 /* === RESPONSIVE === */
 @media(max-width:768px) {
-  .slide { padding:5rem 1.2rem 5.5rem; }
+  .slide { padding:5rem 1.2rem 2rem; }
   .vocab-grid { grid-template-columns:1fr;gap:.8rem; }
   .vocab-card { min-height:auto; }
   .slide-title { font-size:2rem; }
@@ -5758,10 +5758,6 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 </div><!-- /slides-container -->
-</div><!-- /slides-wrapper -->
-
-<!-- Teacher T Icon -->
-<div class="teacher-t" id="teacherT">T<div class="teacher-t-panel" id="teacherPanel"></div></div>
 
 <!-- Navigation Bar (IN CLASS) -->
 <div class="nav-bar" style="justify-content:space-between;">
@@ -5773,6 +5769,11 @@ body.slide-mode .nav-bar { display:flex; }
       <button id="nextBtn" onclick="changeSlide(1)" style="background:var(--accent);border:1.5px solid var(--accent);color:#fff;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;">Next &#8594;</button>
     </div>
   </div>
+
+</div><!-- /slides-wrapper -->
+
+<!-- Teacher T Icon -->
+<div class="teacher-t" id="teacherT">T<div class="teacher-t-panel" id="teacherPanel"></div></div>
 
 <!-- Confetti container -->
 <div class="confetti-container" id="confettiContainer"></div>
@@ -5791,6 +5792,7 @@ function switchTab(tabId) {
 function enterSlideMode(startSlide) {
   startSlide = startSlide || 1;
   currentLesson = lessonOf(startSlide);
+  window.scrollTo(0, 0);
   document.body.classList.add('slide-mode');
   buildDots(currentLesson);
   goToSlide(startSlide);
