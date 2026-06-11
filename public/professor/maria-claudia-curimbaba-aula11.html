@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>IN CLASS — Maria Claudia Curimbaba | Lesson 11 | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #6B4C8A;
+  --accent-light: #8B6BAA;
+  --accent-dim: rgba(107,76,138,0.08);
+  --accent-glow: rgba(107,76,138,0.05);
+  --black: #1a1a2e;
+  --bg: #f5f2ee;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0ede8;
+  --bg-input: #fafaf7;
+  --border: #d8d1c8;
+  --border-light: #c4bdb3;
+  --white: #ffffff;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #6b6b7a;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --warn: #d97706;
+  --navy: #003080;
+  --dark: #1a1a2e;
+  --dark-surface: #22223a;
+  --dark-elevated: #2d2d4a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-serif; background:#0a0a1a; color:var(--text); }
+
+/* ===== SLIDE SYSTEM ===== */
+.slide-deck { position:relative; width:100%; height:100vh; }
+.slide {
+  position:absolute; inset:0; width:100%; height:100vh;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  opacity:0; visibility:hidden; transition: opacity 400ms ease, visibility 400ms ease;
+  overflow-y:auto; padding:2rem;
+}
+.slide.active { opacity:1; visibility:visible; }
+
+.slide.dark { background:var(--dark); color:#fff; }
+.slide.dark .checklist li,.slide.dark .check-item,.slide.dark .check-label,.slide.dark .roleplay-body p,.slide.dark .roleplay-body,.slide.dark .roleplay-scenario,.slide.dark .comp-q,.slide.dark .comp-q p,.slide.dark .fill-item label,.slide.dark .fill-item p,.slide.dark .error-card p,.slide.dark .oral-item p,.slide.dark .email-card,.slide.dark .email-card p,.slide.dark .boarding-pass p,.slide.dark .student-id-card p{color:#1a1a2e !important}
+.slide.light { background:var(--bg); color:var(--text); }
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.6rem 1.5rem; background:rgba(10,10,26,0.85); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.12);
+}
+.top-bar-left { display:flex; align-items:center; gap:0.8rem; }
+.top-bar-logo { height:26px; opacity:0.9; }
+.slide-counter { font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.5); letter-spacing:1px; }
+.top-bar-right { display:flex; align-items:center; gap:0.6rem; }
+
+/* Chapter progress */
+.chapter-bar { display:flex; gap:2px; flex:1; max-width:360px; margin:0 1rem; }
+.chapter-dot {
+  flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,0.12);
+  cursor:pointer; transition:background 0.3s;
+}
+.chapter-dot.active { background:var(--accent); }
+.chapter-dot.completed { background:var(--accent-light); }
+
+/* Dot navigation */
+.dot-nav {
+  position:fixed; right:1rem; top:50%; transform:translateY(-50%); z-index:100;
+  display:flex; flex-direction:column; gap:4px;
+}
+.dot-nav-item {
+  width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.25);
+  cursor:pointer; transition:all 0.3s; border:none;
+}
+.dot-nav-item.active { background:var(--accent); transform:scale(1.4); }
+.dot-nav-item:hover { background:rgba(255,255,255,0.4); }
+
+/* Nav arrows */
+.nav-arrows {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:100;
+  display:flex; gap:0.5rem;
+}
+.nav-btn {
+  width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
+  background:rgba(10,10,26,0.7); backdrop-filter:blur(8px);
+  color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.nav-btn:hover { background:var(--accent); border-color:var(--accent); }
+.nav-btn svg { width:18px; height:18px; }
+
+/* ===== TEACHER CUE (T icon) ===== */
+.t-cue {
+  position:fixed; top:3.5rem; right:1.5rem; z-index:200;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.5); font-weight:700; font-size:0.8rem;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.25s;
+}
+.t-cue:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.t-panel {
+  display:none; position:fixed; top:6rem; right:1.5rem; z-index:210;
+  width:340px; max-height:60vh; overflow-y:auto;
+  background:rgba(26,26,46,0.97); color:#e0e0e0; padding:1.2rem 1.4rem;
+  border-radius:10px; font-size:0.82rem; line-height:1.7;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08);
+}
+.t-panel.show { display:block; animation:fadeIn 0.2s ease; }
+.t-panel strong { color:var(--accent-light); }
+.t-panel .t-timing { color:#fbbf24; font-weight:600; font-size:0.75rem; display:block; margin-bottom:0.5rem; }
+.t-panel .t-ccq { background:rgba(107,76,138,0.25); border:1px solid rgba(107,76,138,0.3); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; }
+.t-panel .t-alert { background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.25); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; color:#fca5a5; }
+
+/* ===== TYPOGRAPHY ===== */
+.slide-chapter-label {
+  font-size:0.68rem; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.6rem;
+}
+.slide-title {
+  font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:600;
+  line-height:1.2; margin-bottom:0.8rem; max-width:750px; text-align:center;
+}
+.slide-subtitle {
+  font-size:1rem; font-weight:400; opacity:0.7; max-width:600px; text-align:center; line-height:1.7;
+}
+.slide-content { max-width:800px; width:100%; }
+.section-label {
+  font-size:0.7rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+
+/* ===== VOCAB REVEAL CARDS (2x2 grid) ===== */
+.vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:750px; width:100%; }
+.v-card {
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:12px; padding:1.2rem; cursor:pointer; transition:all 0.35s;
+  min-height:160px; display:flex; flex-direction:column; position:relative; overflow:hidden;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+.v-card:hover { border-color:var(--accent); background:rgba(107,76,138,0.25); }
+.v-card.revealed { border-color:var(--accent-light); background:rgba(107,76,138,0.28); }
+.v-card-icon {
+  width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  margin-bottom:0.8rem; flex-shrink:0;
+}
+.v-card-icon svg { width:24px; height:24px; }
+.v-card-hint { font-size:0.85rem; color:rgba(255,255,255,0.5); font-style:italic; line-height:1.6; }
+.v-card-body { display:none; }
+.v-card.revealed .v-card-hint { display:none; }
+.v-card.revealed .v-card-body { display:block; animation:fadeIn 0.35s ease; }
+.v-word { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:#fff; margin-bottom:0.3rem; }
+.v-def { font-size:0.82rem; color:rgba(255,255,255,0.6); margin-bottom:0.3rem; }
+.v-example { font-size:0.85rem; color:rgba(255,255,255,0.8); font-style:italic; margin-bottom:0.6rem; }
+.v-listen-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.35rem 0.9rem; background:var(--accent); color:#fff;
+  border:none; border-radius:5px; font-size:0.75rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.v-listen-btn:hover { background:var(--accent-light); }
+.v-listen-btn svg { width:14px; height:14px; }
+.vocab-counter { text-align:center; margin-top:1rem; font-size:0.8rem; color:rgba(255,255,255,0.4); font-weight:500; }
+
+/* ===== GRAMMAR DISCOVERY ===== */
+.grammar-examples { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.2rem; }
+.g-example {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; font-size:1.05rem; color:rgba(255,255,255,0.9); line-height:1.6;
+}
+.g-example .highlight { color:var(--accent-light); font-weight:700; }
+.g-reveal-btn {
+  width:100%; padding:0.8rem; border:2px dashed var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:10px; font-size:0.9rem; font-weight:600;
+  cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
+}
+.g-reveal-btn:hover { background:rgba(107,76,138,0.1); }
+.g-reveal-btn.used { display:none; }
+.g-rule {
+  display:none; padding:1.5rem; background:rgba(107,76,138,0.08);
+  border:1px solid rgba(107,76,138,0.25); border-radius:10px; margin-top:1rem;
+}
+.g-rule.show { display:block; animation:fadeIn 0.4s ease; }
+.g-rule h4 { color:var(--accent-light); font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:1rem; }
+.g-rule table { width:100%; border-collapse:collapse; font-size:0.88rem; color:rgba(255,255,255,0.85); }
+.g-rule th { text-align:left; padding:0.6rem; border-bottom:2px solid rgba(255,255,255,0.15); color:var(--accent-light); font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; }
+.g-rule td { padding:0.6rem; border-bottom:1px solid rgba(255,255,255,0.12); }
+
+/* ===== COMMON MISTAKE ===== */
+.mistake-box { max-width:600px; width:100%; }
+.mistake-wrong, .mistake-right {
+  padding:1.2rem 1.5rem; border-radius:10px; font-size:1.1rem; margin-bottom:1rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.mistake-wrong { background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.25); color:#fca5a5; }
+.mistake-right { background:rgba(22,163,74,0.08); border:1px solid rgba(22,163,74,0.25); color:#86efac; }
+.mistake-icon { width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+.mistake-wrong .mistake-icon { background:rgba(220,38,38,0.2); }
+.mistake-right .mistake-icon { background:rgba(22,163,74,0.2); }
+
+/* ===== FILL-IN PRACTICE ===== */
+.fill-practice { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.fp-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.fp-item:hover { border-color:var(--accent); }
+.fp-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.fp-sentence .fp-blank { color:var(--accent-light); font-weight:700; border-bottom:2px dashed var(--accent); padding:0 0.3rem; }
+.fp-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(107,76,138,0.12); border-radius:6px; font-size:0.88rem; color:var(--accent-light); font-weight:600; }
+.fp-item.open .fp-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== ARTIFACT ===== */
+.artifact-card {
+  max-width:620px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15); color:#1a1a2e; max-height:65vh; overflow-y:auto;
+}
+.artifact-header {
+  background:linear-gradient(135deg, #6B4C8A, #8B6BAA); color:#fff; padding:1.2rem 1.5rem;
+}
+.artifact-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; margin-bottom:0.2rem; }
+.artifact-header p { font-size:0.78rem; opacity:0.85; }
+.artifact-body { padding:1.2rem 1.5rem; }
+.artifact-field { margin-bottom:0.8rem; }
+.artifact-label { font-size:0.7rem; letter-spacing:1px; text-transform:uppercase; color:#6B4C8A; font-weight:700; margin-bottom:0.2rem; }
+.artifact-value { font-size:0.88rem; color:#2d2d3a; line-height:1.6; }
+
+/* ===== DIALOGUE ===== */
+.dialogue-container { max-width:650px; width:100%; display:flex; flex-direction:column; gap:0; }
+.d-line { display:none; padding:1rem 1.2rem; border-left:3px solid transparent; animation:slideUp 0.4s ease; border-radius:10px; margin-bottom:0.5rem; }
+.d-line.visible { display:flex; gap:1rem; align-items:flex-start; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.22); border-left:3px solid var(--accent); }
+.d-line:hover { background:rgba(255,255,255,0.20); }
+.d-avatar {
+  width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:0.5px;
+}
+.d-avatar.blue { background:#2563eb; }
+.d-avatar.purple { background:var(--accent); }
+.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.6); margin-bottom:0.15rem; }
+.d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
+.d-text strong { color:var(--accent-light); font-weight:600; }
+.d-text-wrap { flex:1; }
+.d-audio { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:rgba(107,76,138,0.3); border:none; color:var(--accent-light); cursor:pointer; margin-left:0.4rem; vertical-align:middle; transition:background 0.2s; flex-shrink:0; }
+.d-audio:hover { background:var(--accent); color:#fff; }
+.d-audio svg { width:14px; height:14px; }
+.next-line-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.5rem 1.2rem; border:1px solid var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:6px; cursor:pointer; font-size:0.82rem;
+  font-weight:600; margin-top:1rem; transition:all 0.2s;
+}
+.next-line-btn:hover { background:var(--accent); color:#fff; }
+
+/* ===== LISTENING ===== */
+.listening-card { max-width:500px; width:100%; text-align:center; }
+.waveform {
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  height:60px; margin-bottom:1.5rem;
+}
+.waveform-bar {
+  width:4px; border-radius:2px; background:var(--accent);
+  animation:wave 1.2s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.waveform.playing .waveform-bar { animation-play-state:running; }
+@keyframes wave {
+  0%, 100% { height:8px; opacity:0.3; }
+  50% { height:40px; opacity:1; }
+}
+.play-pause-btn {
+  width:64px; height:64px; border-radius:50%; border:2px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem;
+  transition:all 0.2s;
+}
+.play-pause-btn:hover { background:var(--accent); color:#fff; }
+.play-pause-btn svg { width:28px; height:28px; }
+.listening-questions { display:none; flex-direction:column; gap:0.6rem; margin-top:1.5rem; text-align:left; }
+.listening-questions.show { display:flex; animation:fadeIn 0.4s ease; }
+.lq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.lq-item:hover { border-color:var(--accent); }
+.lq-question { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.lq-answer { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.lq-item.open .lq-answer { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== QUICK CHALLENGE ===== */
+.qc-container { max-width:600px; width:100%; }
+.qc-card { display:none; }
+.qc-card.active { display:block; animation:fadeIn 0.3s ease; }
+.qc-prompt {
+  font-size:1.15rem; color:#fff; text-align:center; margin-bottom:1.5rem; line-height:1.7;
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+}
+.qc-show-btn {
+  display:block; width:100%; padding:0.8rem; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); border-radius:8px;
+  font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s;
+}
+.qc-show-btn:hover { background:var(--accent); color:#fff; }
+.qc-answer-box {
+  display:none; margin-top:1rem; padding:1rem; background:rgba(107,76,138,0.1);
+  border:1px solid rgba(107,76,138,0.25); border-radius:8px;
+  font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; text-align:center;
+}
+.qc-answer-box.show { display:block; animation:fadeIn 0.3s ease; }
+.qc-prev-btn, .qc-next-btn {
+  display:none; margin:1rem auto 0; padding:0.5rem 1.5rem; background:var(--accent);
+  color:#fff; border:none; border-radius:6px; font-size:0.82rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.qc-prev-btn.show, .qc-next-btn.show { display:inline-block; }
+.qc-prev-btn:hover, .qc-next-btn:hover { background:var(--accent-light); }
+.qc-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-bottom:1rem; font-weight:500; }
+.qc-nav { text-align:center; }
+
+/* ===== SPOT THE ERROR ===== */
+.error-list { display:flex; flex-direction:column; gap:0.6rem; max-width:700px; width:100%; }
+.err-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.err-item:hover { border-color:rgba(220,38,38,0.4); }
+.err-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.err-sentence .wrong { color:rgba(255,255,255,0.85); font-weight:400; text-decoration:none; transition:all 0.3s; }
+.err-item.open .err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
+.err-correction {
+  display:none; margin-top:0.6rem; padding:0.5rem 0.8rem;
+  background:rgba(22,163,74,0.1); border-radius:6px;
+  font-size:0.88rem; color:#86efac; font-weight:600;
+}
+.err-item.open .err-correction { display:block; animation:fadeIn 0.2s ease; }
+.err-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:1rem; font-weight:500; }
+
+/* ===== SCRAMBLE ===== */
+.scramble-list { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.scramble-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.scramble-item:hover { border-color:var(--accent); }
+.scramble-words { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.5rem; }
+.scramble-chip {
+  padding:0.3rem 0.7rem; background:rgba(107,76,138,0.25); border:1px solid rgba(107,76,138,0.3);
+  border-radius:6px; font-size:0.88rem; color:rgba(255,255,255,0.8);
+}
+.scramble-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(107,76,138,0.12); border-radius:6px; font-size:0.92rem; color:var(--accent-light); font-weight:600; font-style:italic; }
+.scramble-item.open .scramble-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== EXPRESSIONS ===== */
+.expr-list { display:flex; flex-direction:column; gap:0.6rem; max-width:650px; width:100%; }
+.expr-item {
+  display:flex; align-items:center; gap:1rem; padding:1rem 1.2rem;
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; transition:border-color 0.2s;
+}
+.expr-item:hover { border-color:var(--accent); }
+.expr-text { flex:1; font-size:1rem; color:rgba(255,255,255,0.85); font-style:italic; }
+.expr-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0;
+}
+.expr-play:hover { background:var(--accent); color:#fff; }
+.expr-play svg { width:18px; height:18px; }
+
+/* ===== PRONUNCIATION DRILL ===== */
+.pron-list { display:flex; flex-direction:column; gap:0.8rem; max-width:600px; width:100%; }
+.pron-item {
+  display:flex; align-items:center; gap:1rem; padding:0.8rem 1.2rem;
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px;
+}
+.pron-word { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:#fff; font-weight:600; min-width:160px; }
+.pron-stress { font-size:0.88rem; color:var(--accent-light); font-weight:500; flex:1; }
+.pron-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.pron-play:hover { background:var(--accent); color:#fff; }
+.pron-play svg { width:18px; height:18px; }
+
+/* ===== WARM-UP QUESTIONS ===== */
+.warm-q {
+  padding:1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:10px; animation:fadeIn 0.5s ease;
+}
+.warm-q p { font-size:1.05rem; color:rgba(255,255,255,0.8); line-height:1.7; }
+
+/* ===== CALLBACK CARDS ===== */
+.callback-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; max-width:650px; width:100%; }
+.callback-card {
+  padding:1rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:10px; cursor:pointer; transition:all 0.3s;
+}
+.callback-card:hover { border-color:var(--accent); }
+.callback-word { font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:var(--accent-light); font-weight:600; margin-bottom:0.3rem; }
+.callback-prompt { font-size:0.82rem; color:rgba(255,255,255,0.5); }
+
+/* ===== ROLE-PLAY CARDS ===== */
+.rp-card {
+  max-width:600px; width:100%; border-radius:16px; overflow:hidden;
+  position:relative; min-height:280px; display:flex; flex-direction:column; justify-content:flex-end;
+}
+.rp-bg { position:absolute; inset:0; }
+.rp-bg-gradient { position:absolute; inset:0; }
+.rp-content { position:relative; z-index:1; padding:2rem; }
+.rp-level {
+  font-size:0.68rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.5rem;
+}
+.rp-scenario { font-size:1.05rem; color:#fff; line-height:1.7; margin-bottom:1rem; }
+.rp-keywords { display:flex; gap:0.5rem; flex-wrap:wrap; }
+.rp-keyword {
+  padding:0.3rem 0.8rem; background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.32);
+  border-radius:20px; font-size:0.78rem; color:rgba(255,255,255,0.8); font-weight:500;
+}
+
+/* ===== COMPREHENSION Q ===== */
+.comp-questions { display:flex; flex-direction:column; gap:0.6rem; margin-top:1.2rem; max-width:600px; width:100%; }
+.cq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.cq-item:hover { border-color:var(--accent); }
+.cq-q { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.cq-a { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.cq-item.open .cq-a { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== CHECKLIST ===== */
+.check-grid { max-width:600px; width:100%; }
+.check-item {
+  display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.12); cursor:pointer;
+}
+.check-item:last-child { border-bottom:none; }
+.cl-box {
+  width:22px; height:22px; border:2px solid rgba(255,255,255,0.35); border-radius:5px;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.cl-box svg { width:14px; height:14px; opacity:0; transition:opacity 0.2s; }
+.check-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
+.check-item.checked .cl-box svg { opacity:1; }
+.cl-text { font-size:0.88rem; color:rgba(255,255,255,0.7); transition:color 0.2s; }
+.check-item.checked .cl-text { color:rgba(255,255,255,0.9); }
+
+/* ===== CONFETTI ===== */
+.confetti-container { position:fixed; inset:0; pointer-events:none; z-index:9999; }
+.confetti-piece {
+  position:absolute; width:10px; height:10px; opacity:0;
+  animation:confettiFall 3s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { opacity:1; transform:translateY(-100vh) rotate(0deg); }
+  100% { opacity:0; transform:translateY(100vh) rotate(720deg); }
+}
+
+/* ===== WHITE CARDS ON DARK SLIDES — CONTRASTE TOTAL ===== */
+.v-card {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 12px rgba(0,0,0,0.12);
+}
+.v-card:hover { background:#fafaf7 !important; border-color:var(--accent) !important; }
+.v-card.revealed { background:#fafaf7 !important; border-color:var(--accent) !important; }
+.v-card-hint { color:#5c5c6c !important; }
+.v-word { color:#1a1a2e !important; }
+.v-def { color:#4a4a5a !important; }
+.v-example { color:#2d2d3a !important; }
+.vocab-counter { color:rgba(255,255,255,0.5) !important; }
+
+.g-example {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  color:#1a1a2e !important; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.g-example .highlight { color:#6B4C8A !important; }
+
+.g-rule {
+  background:#ffffff !important; border:1px solid rgba(107,76,138,0.3) !important;
+  box-shadow:0 4px 16px rgba(0,0,0,0.1);
+}
+.g-rule h4 { color:#6B4C8A !important; }
+.g-rule table { color:#1a1a2e !important; }
+.g-rule th { color:#6B4C8A !important; border-bottom-color:rgba(107,76,138,0.3) !important; }
+.g-rule td { color:#2d2d3a !important; border-bottom-color:#e0ddd5 !important; }
+
+.fp-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.fp-item:hover { border-color:var(--accent) !important; }
+.fp-sentence { color:#1a1a2e !important; }
+.fp-sentence .fp-blank { color:#6B4C8A !important; border-bottom-color:#6B4C8A !important; }
+.fp-answer { background:rgba(107,76,138,0.08) !important; color:#6B4C8A !important; }
+
+.pron-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.pron-word { color:#1a1a2e !important; }
+.pron-stress { color:#6B4C8A !important; }
+.pron-play { border-color:#6B4C8A !important; color:#6B4C8A !important; background:#fff !important; }
+.pron-play:hover { background:#6B4C8A !important; color:#fff !important; }
+
+.expr-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.expr-item:hover { border-color:var(--accent) !important; }
+.expr-text { color:#1a1a2e !important; }
+.expr-play { border-color:#6B4C8A !important; color:#6B4C8A !important; background:#fff !important; }
+.expr-play:hover { background:#6B4C8A !important; color:#fff !important; }
+
+.lq-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.lq-item:hover { border-color:var(--accent) !important; }
+.lq-question { color:#1a1a2e !important; }
+.lq-answer { color:#6B4C8A !important; }
+
+.err-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.err-item:hover { border-color:rgba(220,38,38,0.5) !important; }
+.err-sentence { color:#1a1a2e !important; }
+.err-sentence .wrong { color:#1a1a2e !important; }
+.err-item.open .err-sentence .wrong { color:#dc2626 !important; }
+.err-correction { background:rgba(22,163,74,0.08) !important; color:#16a34a !important; }
+
+.scramble-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.scramble-item:hover { border-color:var(--accent) !important; }
+.scramble-chip { background:rgba(107,76,138,0.08) !important; color:#6B4C8A !important; border-color:rgba(107,76,138,0.25) !important; }
+.scramble-answer { background:rgba(107,76,138,0.06) !important; color:#6B4C8A !important; }
+
+.cq-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.cq-item:hover { border-color:var(--accent) !important; }
+.cq-q { color:#1a1a2e !important; }
+.cq-a { color:#6B4C8A !important; }
+
+.d-line.visible {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important; border-left:3px solid var(--accent) !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.d-line:hover { background:#fafaf7 !important; }
+.d-speaker { color:#6B4C8A !important; }
+.d-text { color:#1a1a2e !important; }
+.d-text strong { color:#6B4C8A !important; }
+
+.callback-card {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.callback-card:hover { border-color:var(--accent) !important; }
+.callback-word { color:#6B4C8A !important; }
+.callback-prompt { color:#5c5c6c !important; }
+
+.mistake-wrong {
+  background:rgba(220,38,38,0.06) !important; border:1px solid rgba(220,38,38,0.25) !important;
+  color:#dc2626 !important;
+}
+.mistake-right {
+  background:rgba(22,163,74,0.06) !important; border:1px solid rgba(22,163,74,0.25) !important;
+  color:#16a34a !important;
+}
+
+.qc-answer-box {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  color:#1a1a2e !important; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.qc-show-btn {
+  background:#ffffff !important; border:1px solid var(--accent) !important;
+  color:#6B4C8A !important;
+}
+.qc-show-btn:hover { background:#6B4C8A !important; color:#fff !important; }
+
+.cl-box { border-color:rgba(255,255,255,0.4) !important; }
+.cl-text { color:rgba(255,255,255,0.8) !important; }
+.check-item.checked .cl-text { color:#fff !important; }
+
+.next-line-btn { background:rgba(255,255,255,0.12) !important; border-color:var(--accent) !important; }
+.next-line-btn:hover { background:var(--accent) !important; color:#fff !important; }
+
+.warm-q {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.warm-q p { color:#1a1a2e !important; }
+
+/* ===== VIDEO CALL ARTIFACT ===== */
+.vc-interface {
+  max-width:620px; width:100%; background:#1a1a2e; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.3);
+}
+.vc-header {
+  background:linear-gradient(135deg, #6B4C8A, #8B6BAA); color:#fff; padding:0.8rem 1.2rem;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.vc-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.1rem; }
+.vc-header span { font-size:0.72rem; opacity:0.8; }
+.vc-participants {
+  display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:4px;
+}
+.vc-tile {
+  background:#22223a; border-radius:8px; padding:1.5rem 1rem; text-align:center;
+  position:relative; min-height:100px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.vc-tile-avatar {
+  width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.7rem; font-weight:700; color:#fff; margin-bottom:0.4rem;
+}
+.vc-tile-name { font-size:0.78rem; color:rgba(255,255,255,0.7); }
+.vc-tile-muted { position:absolute; top:0.5rem; right:0.5rem; }
+.vc-tile-muted svg { width:14px; height:14px; color:#f87171; }
+.vc-controls {
+  display:flex; justify-content:center; gap:1rem; padding:0.8rem; background:#111125;
+}
+.vc-ctrl-btn {
+  width:40px; height:40px; border-radius:50%; border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.08); color:#fff; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.vc-ctrl-btn:hover { background:var(--accent); border-color:var(--accent); }
+.vc-ctrl-btn.danger { background:rgba(220,38,38,0.2); border-color:rgba(220,38,38,0.4); }
+.vc-ctrl-btn.danger:hover { background:#dc2626; }
+.vc-ctrl-btn svg { width:18px; height:18px; }
+.vc-chat {
+  background:#111125; padding:0.8rem 1rem; border-top:1px solid rgba(255,255,255,0.08);
+  max-height:120px; overflow-y:auto;
+}
+.vc-chat-msg { font-size:0.75rem; color:rgba(255,255,255,0.6); margin-bottom:0.3rem; }
+.vc-chat-msg strong { color:var(--accent-light); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px) {
+  .slide { padding:1.2rem; padding-top:3.5rem; }
+  .slide-title { font-size:1.8rem; }
+  .vocab-grid { grid-template-columns:1fr; }
+  .callback-grid { grid-template-columns:1fr; }
+  .t-panel { width:280px; right:0.5rem; }
+  .dot-nav { display:none; }
+  .nav-arrows { bottom:1rem; right:1rem; }
+  .top-bar { padding:0.5rem 1rem; }
+  .vc-participants { grid-template-columns:1fr; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='maria-claudia-curimbaba';window.TOTAL_AULAS=60;</script>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="top-bar-logo">
+    <span class="slide-counter" id="slideCounter">1 / 31</span>
+  </div>
+  <div class="chapter-bar" id="chapterBar">
+    <div class="chapter-dot active" data-chapter="1" title="Chapter 1: The Dream" onclick="goToSlide(0)"></div>
+    <div class="chapter-dot" data-chapter="2" title="Chapter 2: Packing Words" onclick="goToSlide(3)"></div>
+    <div class="chapter-dot" data-chapter="3" title="Chapter 3: The Code" onclick="goToSlide(8)"></div>
+    <div class="chapter-dot" data-chapter="4" title="Chapter 4: Getting There" onclick="goToSlide(14)"></div>
+    <div class="chapter-dot" data-chapter="5" title="Chapter 5: Practice" onclick="goToSlide(22)"></div>
+    <div class="chapter-dot" data-chapter="6" title="Chapter 6: Your Turn" onclick="goToSlide(26)"></div>
+    <div class="chapter-dot" data-chapter="7" title="Chapter 7: Wrap-Up" onclick="goToSlide(29)"></div>
+  </div>
+  <div class="top-bar-right">
+    <span style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Professor View</span>
+  </div>
+</div>
+
+<!-- ===== TEACHER CUE ===== -->
+<div class="t-cue" id="tCue" onclick="toggleTeacherCue()">T</div>
+<div class="t-panel" id="tPanel"></div>
+
+<!-- ===== DOT NAV ===== -->
+<div class="dot-nav" id="dotNav"></div>
+
+<!-- ===== NAV ARROWS ===== -->
+<div class="nav-arrows">
+  <button class="nav-btn" onclick="prevSlide()" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="nav-btn" onclick="nextSlide()" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<!-- ================================================================ -->
+<!-- SLIDE DECK                                                        -->
+<!-- ================================================================ -->
+<div class="slide-deck" id="slideDeck">
+
+<!-- ====== SLIDE 1 -- TITLE ====== -->
+<div class="slide dark active" data-chapter="1" data-lesson="11" data-t="<span class='t-timing'>0:00 - 1 min</span>Compartilhe a tela. Cumprimente naturalmente. Diga que hoje Maria Claudia vai aprender a conduzir conference calls com polimento: vocabulario tecnico, pedidos educados com 'could you' e 'would you mind', e como lidar com fusos e problemas tecnicos. <strong>Objetivo</strong>: ela sair capaz de liderar uma call com participantes internacionais.<div class='t-ccq'><strong>CCQs:</strong> &quot;Do you have conference calls in English at work?&quot; / &quot;What is the biggest challenge?&quot;</div>" style="background:linear-gradient(135deg,rgba(26,26,46,0.82),rgba(45,27,78,0.78),rgba(26,54,93,0.82)),url('https://images.unsplash.com/photo-1587825140708-dfaf18c4c5ad?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:1.5rem;">Lesson 11</p>
+  <h1 class="slide-title" style="color:#fff;">Maria Claudia on the Line</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.6);">Conference Calls -- Managing Tech, Time Zones</p>
+  <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+    <span style="padding:0.3rem 0.9rem;background:rgba(107,76,138,0.2);border:1px solid rgba(107,76,138,0.35);border-radius:20px;font-size:0.75rem;color:var(--accent-light);">B1+ / B2 Initial</span>
+    <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.20);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.5);">60 min</span>
+    <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.20);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.5);">Polite Requests</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 2 -- CALLBACK FROM AULA 10 ====== -->
+<div class="slide dark" data-chapter="1" data-lesson="11" data-t="<span class='t-timing'>1:00 - 5 min</span>Revisao rapida da Aula 10. Mostre as 4 palavras na tela. Pergunte uma por vez: &quot;What does 'oversee' mean?&quot; Maria Claudia explica de memoria. Se ela travar, de pista mas NAO de a resposta. Celebre o que ela lembrar.<div class='t-ccq'><strong>CCQs:</strong> &quot;What is the difference between 'oversee' and 'manage'?&quot; (oversee = supervise from above, manage = handle directly) / &quot;What does 'leverage' mean in business?&quot; (use something to maximum advantage)</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Review from Lesson 10</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Explain each word from memory</p>
+  <div class="callback-grid">
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Oversee</div>
+      <div class="callback-prompt">To supervise and be responsible for a project or team</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Integrate</div>
+      <div class="callback-prompt">To combine different parts into a unified whole</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Forecast</div>
+      <div class="callback-prompt">A prediction of future results or trends</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Leverage</div>
+      <div class="callback-prompt">To use something to maximum advantage</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 3 -- WARM-UP ====== -->
+<div class="slide dark" data-chapter="1" data-lesson="11" data-t="<span class='t-timing'>5:00 - 10 min</span>Pergunte cada questao. Deixe Maria Claudia falar livremente. Anote vocabulario que ela ja usa para conference calls. Objetivo: diagnosticar nivel de vocabulario tecnico e como ela faz pedidos educados.<div class='t-alert'>Maria Claudia trabalha com Houston, entao conferencias internacionais sao parte do dia a dia. Use exemplos reais dela.</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <div style="max-width:650px;text-align:center;">
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">On the Line</h2>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
+      <div class="warm-q">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Question 1</div>
+        <p>How often do you have video calls with Houston?</p>
+      </div>
+      <div class="warm-q">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Question 2</div>
+        <p>What technical problems do you experience?</p>
+      </div>
+      <div class="warm-q">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Question 3</div>
+        <p>What time zone challenges do you face?</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 4 -- TRANSITION TO VOCAB ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="11" data-t="<span class='t-timing'>10:00 - 0.5 min</span>Transicao: &quot;Now let us pack the vocabulary you need for conference calls. Eight words and three key expressions for polite communication.&quot;" style="background:linear-gradient(135deg,rgba(45,27,78,0.82),rgba(26,54,93,0.78),rgba(107,76,138,0.82)),url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h1 class="slide-title" style="color:#fff;">Packing Call Words</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">8 conference call words and 3 key expressions</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 5 -- VOCAB 1-4 ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="11" data-t="<span class='t-timing'>10:30 - 16 min</span>Antes de clicar cada card, pergunte: &quot;Do you know this word?&quot; Maria Claudia provavelmente conhece 'mute' e 'screen share'. Celebre o que ela sabe. Apos revelar: toque o audio 2x, ela repete. Foque na pronuncia de 'bandwidth' (BAND-width, stress na primeira silaba).<div class='t-ccq'><strong>CCQs:</strong> &quot;What does 'dial in' mean -- is it the same as 'call'?&quot; (dial in = join a call using a phone number) / &quot;What does 'bandwidth' mean -- internet speed or internet capacity?&quot; (capacity)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid1">
+    <!-- Card 1: Dial in -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #2563eb, #60a5fa);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      </div>
+      <div class="v-card-hint">To join a conference call by entering a phone number or code...</div>
+      <div class="v-card-body">
+        <div class="v-word">Dial in</div>
+        <div class="v-def">to join a conference call using a phone number or access code</div>
+        <div class="v-example">"Let me dial in to the Houston call before we start."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Let me dial in to the Houston call before we start.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 2: Mute -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2m14 0v2c0 .76-.12 1.5-.35 2.18"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </div>
+      <div class="v-card-hint">To silence your microphone so others cannot hear you...</div>
+      <div class="v-card-body">
+        <div class="v-word">Mute</div>
+        <div class="v-def">to turn off your microphone during a call</div>
+        <div class="v-example">"Could you please mute your microphone? There is background noise."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Could you please mute your microphone? There is background noise.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 3: Screen share -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #34d399);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div class="v-card-hint">To show your computer screen to other participants during a meeting...</div>
+      <div class="v-card-body">
+        <div class="v-word">Screen share</div>
+        <div class="v-def">to display your screen for other meeting participants</div>
+        <div class="v-example">"Would you mind sharing your screen so we can see the report?"</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Would you mind sharing your screen so we can see the report?',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 4: Bandwidth -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #d97706, #fbbf24);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 12.55a11 11 0 0114.08 0"/><path d="M1.42 9a16 16 0 0121.16 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+      </div>
+      <div class="v-card-hint">The capacity of your internet connection, affecting call quality...</div>
+      <div class="v-card-body">
+        <div class="v-word">Bandwidth</div>
+        <div class="v-def">the capacity of an internet connection; also used figuratively for capacity</div>
+        <div class="v-example">"The video quality is poor because of low bandwidth."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The video quality is poor because of low bandwidth.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount1">0 / 4 words revealed</div>
+</div>
+
+<!-- ====== SLIDE 6 -- VOCAB 5-8 ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="11" data-t="<span class='t-timing'>16:00 - 21 min</span>Palavras mais tecnicas. 'Lag' e 'drop off' sao especificas de conference calls. Pergunte: &quot;Have you ever had someone drop off a call unexpectedly?&quot; Conecte com experiencia real de Maria Claudia. Foque na pronuncia de 'follow-up' (FO-llow-up).<div class='t-ccq'><strong>CCQs:</strong> &quot;Is 'lag' the same as 'delay'?&quot; (similar -- lag is specifically for tech/audio delay) / &quot;What is a 'follow-up'?&quot; (an action taken after a meeting to continue or check progress)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid2">
+    <!-- Card 5: Time zone -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #6B4C8A, #8B6BAA);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="v-card-hint">A region of the globe that observes a uniform standard time...</div>
+      <div class="v-card-body">
+        <div class="v-word">Time zone</div>
+        <div class="v-def">a geographical area with a uniform standard time</div>
+        <div class="v-example">"Houston is two hours behind us, so we need to schedule carefully."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Houston is two hours behind us, so we need to schedule carefully.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 6: Lag -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #64748b, #94a3b8);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="v-card-hint">A delay between a signal being sent and received, causing audio or video issues...</div>
+      <div class="v-card-body">
+        <div class="v-word">Lag</div>
+        <div class="v-def">a delay in audio or video during a call, caused by slow connection</div>
+        <div class="v-example">"There is a lot of lag on this call. Can everyone turn off their cameras?"</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('There is a lot of lag on this call. Can everyone turn off their cameras?',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 7: Drop off -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #b45309, #f59e0b);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15.05 5A5 5 0 0119 8.95M15.05 1A9 9 0 0123 8.94M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </div>
+      <div class="v-card-hint">When a participant unexpectedly leaves or gets disconnected from a call...</div>
+      <div class="v-card-body">
+        <div class="v-word">Drop off</div>
+        <div class="v-def">to get disconnected from a call unexpectedly</div>
+        <div class="v-example">"I apologize for dropping off the call. My connection was unstable."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I apologize for dropping off the call. My connection was unstable.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 8: Follow-up -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #0d9488, #5eead4);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <div class="v-card-hint">An action taken after a meeting to continue progress or check on a topic...</div>
+      <div class="v-card-body">
+        <div class="v-word">Follow-up</div>
+        <div class="v-def">an action or communication after a meeting to continue or check progress</div>
+        <div class="v-example">"I will send a follow-up email with the meeting notes."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I will send a follow-up email with the meeting notes.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount2">0 / 4 words revealed</div>
+</div>
+
+<!-- ====== SLIDE 7 -- EXPRESSIONS ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="11" data-t="<span class='t-timing'>21:00 - 24 min</span>Toque cada expressao. Maria Claudia repete. Depois, ela usa em contexto real: &quot;Could you please... what? Give me an example from your work.&quot; Ritmo: 30s por expressao. Destaque que estas sao ESSENCIAIS para conference calls profissionais.">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Key Expressions</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen and repeat. Then complete with your own context.</p>
+  <div class="expr-list">
+    <div class="expr-item">
+      <div class="expr-text">"Could you please...?"</div>
+      <button class="expr-play" onclick="speakText('Could you please...?',this)" aria-label="Listen to expression">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="expr-item">
+      <div class="expr-text">"Would you mind...?"</div>
+      <button class="expr-play" onclick="speakText('Would you mind...?',this)" aria-label="Listen to expression">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="expr-item">
+      <div class="expr-text">"I apologize for..."</div>
+      <button class="expr-play" onclick="speakText('I apologize for...',this)" aria-label="Listen to expression">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 8 -- PRONUNCIATION DRILL ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="11" data-t="<span class='t-timing'>24:00 - 26 min</span>Pronunciation drill. Toque o audio, Maria Claudia repete. Foque no stress: BAND-width (stress na primeira), SCREEN share (stress na primeira), FO-llow-up (stress na primeira), a-PO-lo-gize (stress na segunda). Ritmo: 20s por palavra.">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Pronunciation Drill</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen and repeat. Pay attention to the stress.</p>
+  <div class="pron-list">
+    <div class="pron-item">
+      <div class="pron-word">Bandwidth</div>
+      <div class="pron-stress"><strong>BAND</strong>-width</div>
+      <button class="pron-play" onclick="speakText('bandwidth',this)" aria-label="Listen to bandwidth">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Screen share</div>
+      <div class="pron-stress"><strong>SCREEN</strong> share</div>
+      <button class="pron-play" onclick="speakText('screen share',this)" aria-label="Listen to screen share">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Follow-up</div>
+      <div class="pron-stress"><strong>FO</strong>-llow-up</div>
+      <button class="pron-play" onclick="speakText('follow-up',this)" aria-label="Listen to follow-up">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Apologize</div>
+      <div class="pron-stress">a-<strong>PO</strong>-lo-gize</div>
+      <button class="pron-play" onclick="speakText('apologize',this)" aria-label="Listen to apologize">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 9 -- TRANSITION TO GRAMMAR ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="11" data-t="<span class='t-timing'>26:00 - 0.5 min</span>Transicao: &quot;Now let us look at how to make polite requests during conference calls. The difference between 'could you' and 'would you mind' can change the tone completely.&quot;" style="background:linear-gradient(135deg,rgba(26,54,93,0.82),rgba(107,76,138,0.78),rgba(45,27,78,0.82)),url('https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h1 class="slide-title" style="color:#fff;">The Code -- Polite Requests</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Could you, Would you mind, Would it be possible to</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 10 -- GRAMMAR DISCOVERY ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="11" data-t="<span class='t-timing'>26:30 - 30 min</span>Mostre as 4 frases. Pergunte: &quot;Look at the purple words. What patterns do you see?&quot; Espere. Maria Claudia e B1+, ela provavelmente vai notar 'could you' + base verb. Se nao, de pista: &quot;What form comes after 'could you'?&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;Is 'Could you repeat that' a command or a request?&quot; (a polite request) / &quot;What is the difference in formality between 'can you' and 'could you'?&quot; (could you is more polite)</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Discovery</h2>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">What patterns do the <span style="color:var(--accent-light);font-weight:600;">purple words</span> follow?</p>
+  <div class="slide-content">
+    <div class="grammar-examples">
+      <div class="g-example"><span class="highlight">Could you</span> repeat that, please?</div>
+      <div class="g-example"><span class="highlight">Would you mind</span> muting your microphone?</div>
+      <div class="g-example"><span class="highlight">Could you</span> send the agenda before the call?</div>
+      <div class="g-example"><span class="highlight">Would it be possible to</span> reschedule the meeting?</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 11 -- GRAMMAR: COULD YOU vs WOULD YOU MIND ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="11" data-t="<span class='t-timing'>30:00 - 33 min</span>Mostre a comparacao. Pergunte: &quot;What comes after 'could you'?&quot; (base verb). &quot;What comes after 'would you mind'?&quot; (verb + ing). Destaque que ambas sao educadas mas 'would you mind' e MAIS formal. 'Would it be possible to' e a MAIS formal de todas.<div class='t-ccq'><strong>CCQs:</strong> &quot;After 'could you', do we use 'to share' or 'share'?&quot; (share -- base verb) / &quot;After 'would you mind', do we use 'share' or 'sharing'?&quot; (sharing -- verb + ing)</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Polite Request Structures</h2>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Compare the three structures</p>
+  <div class="slide-content">
+    <div class="grammar-examples">
+      <div class="g-example"><span class="highlight">Could you</span> + <strong>base verb</strong>? -- <em style="color:rgba(255,255,255,0.5);">Polite</em><br>"Could you <strong>share</strong> the document?"</div>
+      <div class="g-example"><span class="highlight">Would you mind</span> + <strong>verb-ing</strong>? -- <em style="color:rgba(255,255,255,0.5);">More formal</em><br>"Would you mind <strong>sharing</strong> the document?"</div>
+      <div class="g-example"><span class="highlight">Would it be possible to</span> + <strong>base verb</strong>? -- <em style="color:rgba(255,255,255,0.5);">Most formal</em><br>"Would it be possible to <strong>share</strong> the document?"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 12 -- REVEAL THE RULE ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="11" data-t="<span class='t-timing'>33:00 - 36 min</span>Pergunte: &quot;Can you explain the difference between the three structures?&quot; Espere a tentativa de Maria Claudia. Depois clique Reveal. Explique: could you = educado padrao, would you mind = mais formal (resposta esperada: 'No, not at all'), would it be possible to = pedido mais indireto e formal.">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">What is the pattern?</h2>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">How do we form polite requests?</p>
+  <div class="slide-content">
+    <button class="g-reveal-btn" onclick="revealGrammar(this,'grammarRule1')">Reveal the Rule</button>
+    <div class="g-rule" id="grammarRule1">
+      <h4>Polite Request Structures</h4>
+      <table>
+        <thead>
+          <tr><th>Structure</th><th>Form</th><th>Formality</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="color:var(--accent-light);font-weight:600;">Could you...?</td><td>Could you + <strong>base verb</strong></td><td>Polite (standard)</td></tr>
+          <tr><td style="color:var(--accent-light);font-weight:600;">Would you mind...?</td><td>Would you mind + <strong>verb-ing</strong></td><td>More formal</td></tr>
+          <tr><td style="color:var(--accent-light);font-weight:600;">Would it be possible to...?</td><td>Would it be possible to + <strong>base verb</strong></td><td>Most formal</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.28);border-radius:6px;">
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.7);"><strong style="color:var(--accent-light);">Key note:</strong> "Would you mind...?" expects "No, not at all" as a positive answer. "Would it be possible to...?" is the most indirect and formal option.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 13 -- COMMON MISTAKE ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="11" data-t="<span class='t-timing'>36:00 - 38 min</span>Mostre os erros. Pergunte: &quot;What is wrong?&quot; Para o primeiro: 'would you mind' NUNCA usa 'to' + base verb, SEMPRE verb + ing. Para o segundo: 'could you' NUNCA usa 'to' antes do verbo. Reforce: &quot;Mind + ing. Could + base. Never mix them.&quot;<div class='t-alert'>Estes sao erros MUITO comuns em conference calls. Use tom encorajador.</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Common Mistake</h2>
+  <div class="mistake-box">
+    <div class="mistake-wrong">
+      <div class="mistake-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"Would you mind <strong>to repeat</strong> that?"</p>
+        <p style="font-size:0.78rem;opacity:0.6;margin-top:0.3rem;">After "would you mind" use verb-ing, not "to + verb"</p>
+      </div>
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"Would you mind <strong>repeating</strong> that?"</p>
+        <p style="font-size:0.78rem;opacity:0.6;margin-top:0.3rem;">Correct: would you mind + verb-ing</p>
+      </div>
+    </div>
+    <div class="mistake-wrong" style="margin-top:0.5rem;">
+      <div class="mistake-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"Could you <strong>to send</strong> the report?"</p>
+        <p style="font-size:0.78rem;opacity:0.6;margin-top:0.3rem;">After "could you" use base verb directly, not "to + verb"</p>
+      </div>
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"Could you <strong>send</strong> the report?"</p>
+        <p style="font-size:0.78rem;opacity:0.6;margin-top:0.3rem;">Correct: could you + base verb</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);margin-top:1rem;max-width:600px;text-align:center;">Remember: "Could you" takes the base verb directly. "Would you mind" takes verb + ing. Never mix the two patterns.</p>
+</div>
+
+<!-- ====== SLIDE 14 -- GRAMMAR PRACTICE ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="11" data-t="<span class='t-timing'>38:00 - 41 min</span>Leia cada frase. Pause no blank. Maria Claudia completa oralmente. Clique para revelar. Ritmo: 20s por item. Se ela acertar todas, celebre: &quot;You are ready to lead a polite conference call!&quot;">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Practice</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Click to reveal the correct answer</p>
+  <div class="fill-practice">
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">Could you <span class="fp-blank">___</span> your screen? (share / sharing)</div>
+      <div class="fp-answer">Could you <strong>share</strong> your screen? (could you + base verb)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">Would you mind <span class="fp-blank">___</span> your microphone? (mute / muting)</div>
+      <div class="fp-answer">Would you mind <strong>muting</strong> your microphone? (would you mind + verb-ing)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">Would it be possible to <span class="fp-blank">___</span> the meeting? (reschedule / rescheduling)</div>
+      <div class="fp-answer">Would it be possible to <strong>reschedule</strong> the meeting? (would it be possible to + base verb)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">Could you <span class="fp-blank">___</span> the agenda before the call? (sending / send)</div>
+      <div class="fp-answer">Could you <strong>send</strong> the agenda before the call? (could you + base verb)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">Would you mind <span class="fp-blank">___</span> that last point? (repeat / repeating)</div>
+      <div class="fp-answer">Would you mind <strong>repeating</strong> that last point? (would you mind + verb-ing)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">Would it be possible to <span class="fp-blank">___</span> the follow-up email today? (sending / send)</div>
+      <div class="fp-answer">Would it be possible to <strong>send</strong> the follow-up email today? (would it be possible to + base verb)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 15 -- TRANSITION: GETTING THERE ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="11" data-t="<span class='t-timing'>41:00 - 0.5 min</span>Transicao: &quot;Now let us put all of this into action. You are going to hear real conference call scenarios and practice leading calls politely.&quot;" style="background:linear-gradient(135deg,rgba(26,54,93,0.82),rgba(107,76,138,0.78),rgba(45,27,78,0.82)),url('https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h1 class="slide-title" style="color:#fff;">Getting There -- Calls in Action</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Leading conference calls with confidence</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 16 -- LISTENING 1 ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="11" data-t="<span class='t-timing'>41:30 - 44 min</span>Diga: &quot;Listen to Maria Claudia leading a conference call with the Houston team. Pay attention to how she makes polite requests.&quot; Toque o audio. Depois das perguntas, toque novamente se necessario.<div class='t-alert'>Se Maria Claudia pedir para ver o texto, diga: &quot;Let us listen one more time first. Focus on the polite request structures.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: MC Leads a Conference Call</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen to how polite requests are used during the call.</p>
+  <div class="listening-card">
+    <div class="waveform" id="waveform1">
+      <div class="waveform-bar" style="animation-delay:0s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.1s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.2s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.3s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.4s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.5s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.6s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.7s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.8s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.9s;"></div>
+      <div class="waveform-bar" style="animation-delay:1.0s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.15s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.25s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.35s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.45s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.55s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.65s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.75s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.85s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.95s;"></div>
+    </div>
+    <button class="play-pause-btn" id="playBtn1" onclick="toggleListening('listening1',this,'waveform1','lq1')" aria-label="Play or pause audio">
+      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <div class="listening-questions" id="lq1">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. What polite structures does MC use to open the call?</div>
+        <div class="lq-answer">She uses "Could you please share your screen?" and "Would you mind muting your microphone?"</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. What technical issue does she address?</div>
+        <div class="lq-answer">She addresses background noise and asks participants to mute, and mentions low bandwidth affecting video quality.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. How does she handle the time zone difference?</div>
+        <div class="lq-answer">She acknowledges it is early in Houston and thanks the team for adjusting their schedules.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 17 -- LISTENING 1 COMPREHENSION ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="11" data-t="<span class='t-timing'>44:00 - 45 min</span>Pergunte cada questao oralmente. Maria Claudia responde com base no que ouviu. Clique para revelar. Se ela nao lembrar, toque o audio novamente.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Comprehension Check</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. How many participants were on the call?</div>
+      <div class="cq-a">There were four participants: MC, David, and two team members from Houston.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. What did MC ask David to do?</div>
+      <div class="cq-a">She asked him to share his screen so everyone could see the quarterly report.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. What follow-up action did MC propose?</div>
+      <div class="cq-a">She proposed sending a follow-up email with the meeting notes and action items.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 18 -- LISTENING 2 ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="11" data-t="<span class='t-timing'>45:00 - 48 min</span>Segundo listening, contexto diferente: David lidando com problemas tecnicos. Diga: &quot;Now listen to David handling technical issues during a call. Pay attention to how he apologizes and makes requests.&quot; Toque o audio. Perguntas depois.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: David Handles Technical Issues</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen to how David manages tech problems politely.</p>
+  <div class="listening-card">
+    <div class="waveform" id="waveform2">
+      <div class="waveform-bar" style="animation-delay:0s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.12s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.24s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.36s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.48s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.6s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.72s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.84s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.96s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.08s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.2s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.32s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.44s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.56s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.68s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.8s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.92s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.04s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.16s;"></div>
+      <div class="waveform-bar" style="animation-delay:0.28s;"></div>
+    </div>
+    <button class="play-pause-btn" id="playBtn2" onclick="toggleListening('listening2',this,'waveform2','lq2')" aria-label="Play or pause audio">
+      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <div class="listening-questions" id="lq2">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. What technical problem does David experience?</div>
+        <div class="lq-answer">He experiences lag and eventually drops off the call due to bandwidth issues.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. How does David apologize when he reconnects?</div>
+        <div class="lq-answer">He says "I apologize for dropping off. My connection was unstable."</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. What solution does David suggest?</div>
+        <div class="lq-answer">He suggests everyone turn off their cameras to reduce bandwidth usage and dial in by phone as a backup.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 19 -- LISTENING 2 COMPREHENSION ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="11" data-t="<span class='t-timing'>48:00 - 49 min</span>Pergunte cada questao oralmente. Maria Claudia responde. Clique para revelar. Todas as perguntas sao sobre DAVID (o que David disse/fez), nao sobre Maria Claudia.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Comprehension Check</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. Did David blame others for the technical issues?</div>
+      <div class="cq-a">No, he took responsibility and apologized politely for the disconnection.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. What polite request structure did David use?</div>
+      <div class="cq-a">He used "Would you mind turning off your cameras?" and "Could you repeat the last point?"</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. How did David handle the follow-up?</div>
+      <div class="cq-a">He offered to send a follow-up email summarizing the points he missed while disconnected.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 20 -- ARTIFACT: VIDEO CALL INTERFACE ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="11" data-t="<span class='t-timing'>49:00 - 52 min</span>Mostre a interface de video call. Pergunte: &quot;What would you say in each of these situations?&quot; Use como prompt: &quot;Someone has background noise -- what do you say?&quot; (Would you mind muting?) / &quot;You need to see a document -- what do you say?&quot; (Could you share your screen?)<div class='t-ccq'><strong>CCQs:</strong> &quot;If you drop off a call, what do you say when you come back?&quot; / &quot;How do you ask someone to repeat something politely?&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Video Call Interface</h2>
+  <div class="vc-interface">
+    <div class="vc-header">
+      <h3>Quarterly Review -- Houston Team</h3>
+      <span>00:23:45 | 4 participants</span>
+    </div>
+    <div class="vc-participants">
+      <div class="vc-tile">
+        <div class="vc-tile-avatar" style="background:var(--accent);">MC</div>
+        <div class="vc-tile-name">Maria Claudia</div>
+      </div>
+      <div class="vc-tile">
+        <div class="vc-tile-avatar" style="background:#2563eb;">DC</div>
+        <div class="vc-tile-name">David Chen</div>
+        <div class="vc-tile-muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/></svg></div>
+      </div>
+      <div class="vc-tile">
+        <div class="vc-tile-avatar" style="background:#059669;">SJ</div>
+        <div class="vc-tile-name">Sarah Johnson</div>
+      </div>
+      <div class="vc-tile">
+        <div class="vc-tile-avatar" style="background:#d97706;">RM</div>
+        <div class="vc-tile-name">Ryan Mitchell</div>
+        <div class="vc-tile-muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/></svg></div>
+      </div>
+    </div>
+    <div class="vc-controls">
+      <button class="vc-ctrl-btn" aria-label="Toggle microphone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
+      <button class="vc-ctrl-btn" aria-label="Toggle camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></button>
+      <button class="vc-ctrl-btn" aria-label="Share screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></button>
+      <button class="vc-ctrl-btn" aria-label="Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></button>
+      <button class="vc-ctrl-btn danger" aria-label="Leave call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3"/><line x1="1" y1="1" x2="23" y2="23"/></svg></button>
+    </div>
+    <div class="vc-chat">
+      <div class="vc-chat-msg"><strong>Sarah Johnson:</strong> I apologize for the delay. Dialing in now.</div>
+      <div class="vc-chat-msg"><strong>David Chen:</strong> Could you share the Q3 report link?</div>
+      <div class="vc-chat-msg"><strong>Maria Claudia:</strong> Of course. Sharing my screen now.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 21 -- DIALOGUE LINE BY LINE ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="11" data-t="<span class='t-timing'>52:00 - 57 min</span>Diga: &quot;Now let us see a conference call between you and David. You are leading the call with tech issues.&quot; Revele linha por linha. ANTES da fala de Maria Claudia: &quot;What would YOU say here?&quot; DEPOIS: ela le em voz alta. Destaque vocabulario em roxo.<div class='t-alert'>Se Maria Claudia quiser pular linhas, segure: &quot;Let us go one at a time so you can practice each polite request.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Conference Call with Tech Issues</h2>
+  <p style="font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:1rem;text-align:center;">Click "Next Line" to reveal each part of the conversation</p>
+  <div class="dialogue-container" id="dialogue1">
+    <div class="d-line visible" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">Good morning, everyone. Thank you for <strong>dialing in</strong> early, considering the <strong>time zone</strong> difference.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Good morning, everyone. Thank you for dialing in early, considering the time zone difference.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="David Chen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">David Chen</div>
+        <div class="d-text">No problem at all. <strong>Could you</strong> share the agenda so we know what to cover?</div>
+      </div>
+      <button class="d-audio" onclick="speakText('No problem at all. Could you share the agenda so we know what to cover?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">Of course. I am <strong>sharing my screen</strong> now. <strong>Would you mind muting</strong> when you are not speaking? I hear some <strong>lag</strong>.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Of course. I am sharing my screen now. Would you mind muting when you are not speaking? I hear some lag.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="David Chen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">David Chen</div>
+        <div class="d-text">Sure, I will <strong>mute</strong> myself. The <strong>bandwidth</strong> seems low today. My video keeps freezing.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Sure, I will mute myself. The bandwidth seems low today. My video keeps freezing.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text"><strong>Would it be possible to</strong> turn off the cameras? That should help with the <strong>bandwidth</strong>.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Would it be possible to turn off the cameras? That should help with the bandwidth.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="David Chen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">David Chen</div>
+        <div class="d-text">Good idea. Oh no, I think I am about to <strong>drop off</strong>. The connection is very unstable.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Good idea. Oh no, I think I am about to drop off. The connection is very unstable.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">David, <strong>could you</strong> try to <strong>dial in</strong> by phone as a backup? The number is in the invitation.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('David, could you try to dial in by phone as a backup? The number is in the invitation.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="David Chen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">David Chen</div>
+        <div class="d-text"><strong>I apologize for</strong> the interruption. I am back now. <strong>Could you</strong> repeat the last point?</div>
+      </div>
+      <button class="d-audio" onclick="speakText('I apologize for the interruption. I am back now. Could you repeat the last point?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">No worries, David. I will send a <strong>follow-up</strong> email with all the details after the call.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('No worries, David. I will send a follow-up email with all the details after the call.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="David Chen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">David Chen</div>
+        <div class="d-text">Thank you, Maria Claudia. <strong>Would you mind</strong> including the action items in the <strong>follow-up</strong>?</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Thank you, Maria Claudia. Would you mind including the action items in the follow-up?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+  </div>
+  <button class="next-line-btn" id="nextLineBtn1" onclick="revealNextLine('dialogue1','nextLineBtn1')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    Next Line
+  </button>
+</div>
+
+<!-- ====== SLIDE 22 -- DIALOGUE COMPREHENSION ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="11" data-t="<span class='t-timing'>57:00 - 58 min</span>Pergunte cada questao oralmente. Maria Claudia responde. Depois clique para revelar. Todas as perguntas sao sobre DAVID.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Dialogue Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. What did David ask MC to share?</div>
+      <div class="cq-a">David asked MC to share the agenda so the team would know what to cover.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. Why did David drop off the call?</div>
+      <div class="cq-a">He dropped off because his internet connection was very unstable and the bandwidth was low.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. What did David request in the follow-up email?</div>
+      <div class="cq-a">He asked MC to include the action items in the follow-up email.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 23 -- TRANSITION: PRACTICE ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="11" data-t="<span class='t-timing'>58:00 - 0.5 min</span>Transicao: &quot;Now let us practice more intensively. Can you make polite requests and handle tech issues on a conference call?&quot;" style="background:linear-gradient(135deg,rgba(45,27,78,0.82),rgba(26,54,93,0.78),rgba(107,76,138,0.82)),url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h1 class="slide-title" style="color:#fff;">More Practice</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">From controlled to free production</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 24 -- QUICK FIRE ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="11" data-t="<span class='t-timing'>58:30 - 62 min</span>Ritmo rapido: leia a situacao, Maria Claudia responde. Se acertar, &quot;Excellent!&quot; e mostre a resposta. Se travar, de a primeira palavra. 20-30 segundos por item. <strong>Confetti ao completar todas!</strong><div class='t-alert'>Se Maria Claudia ficar insegura, encoraje: &quot;Just use 'could you' or 'would you mind' -- both work.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Fire</h2>
+  <div class="qc-score" id="qcScore">0 / 6</div>
+  <div class="qc-container" id="qcContainer">
+    <div class="qc-card active" data-idx="0">
+      <div class="qc-prompt">A participant has loud background noise. Ask them to turn off their microphone politely.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"Would you mind muting your microphone? There seems to be some background noise."</div>
+      <div class="qc-nav"><button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="1">
+      <div class="qc-prompt">You need to see a colleague's presentation. Ask them to show their screen.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"Could you please share your screen so we can see the presentation?"</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="2">
+      <div class="qc-prompt">You dropped off the call and just reconnected. Apologize and ask them to repeat.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I apologize for dropping off. Could you repeat the last point, please?"</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="3">
+      <div class="qc-prompt">The video quality is bad due to internet issues. Ask everyone to turn off cameras.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"Would it be possible to turn off the cameras? The bandwidth is quite low."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="4">
+      <div class="qc-prompt">You want to change the meeting time because of time zone differences. Make a formal request.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"Would it be possible to reschedule the meeting to accommodate the time zone difference?"</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="5">
+      <div class="qc-prompt">After the meeting, you want to confirm the action items by email. What do you say?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I will send a follow-up email with the meeting notes and action items."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 25 -- SPOT THE ERROR ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="11" data-t="<span class='t-timing'>62:00 - 64 min</span>Leia cada frase. Maria Claudia identifica o erro. Clique para revelar. Todos os erros envolvem polite request structures. Se ela nao encontrar, de pista: &quot;Look at what comes after 'could you' or 'would you mind'.&quot;">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Spot the Error</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Click each sentence to see the correction</p>
+  <div class="error-list" id="errorList">
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"Would you mind <span class="wrong">to send</span> me the report?"</div>
+      <div class="err-correction">"Would you mind <strong>sending</strong> me the report?" (mind + verb-ing)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"Could you <span class="wrong">sharing</span> your screen, please?"</div>
+      <div class="err-correction">"Could you <strong>share</strong> your screen, please?" (could you + base verb)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"I <span class="wrong">apologize to drop</span> off the call."</div>
+      <div class="err-correction">"I apologize <strong>for dropping off</strong> the call." (apologize for + verb-ing)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"Would it be possible <span class="wrong">rescheduling</span> the meeting?"</div>
+      <div class="err-correction">"Would it be possible <strong>to reschedule</strong> the meeting?" (possible to + base verb)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"Could you <span class="wrong">to repeat</span> the last point?"</div>
+      <div class="err-correction">"Could you <strong>repeat</strong> the last point?" (could you + base verb, no 'to')</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 26 -- SCRAMBLE ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="11" data-t="<span class='t-timing'>64:00 - 66 min</span>Frases embaralhadas. Maria Claudia reorganiza oralmente. Clique para revelar. Ritmo rapido. Se ela acertar, celebre. Se errar, releia as palavras devagar.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Sentence Building</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Unscramble the words. Click to see the correct sentence.</p>
+  <div class="scramble-list">
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">muting</span><span class="scramble-chip">Would</span><span class="scramble-chip">you mind</span><span class="scramble-chip">your microphone?</span>
+      </div>
+      <div class="scramble-answer">"Would you mind muting your microphone?"</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">the agenda</span><span class="scramble-chip">Could you</span><span class="scramble-chip">before the call?</span><span class="scramble-chip">send</span>
+      </div>
+      <div class="scramble-answer">"Could you send the agenda before the call?"</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">for dropping off.</span><span class="scramble-chip">I apologize</span><span class="scramble-chip">was unstable.</span><span class="scramble-chip">My connection</span>
+      </div>
+      <div class="scramble-answer">"I apologize for dropping off. My connection was unstable."</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">to reschedule</span><span class="scramble-chip">Would it</span><span class="scramble-chip">the meeting?</span><span class="scramble-chip">be possible</span>
+      </div>
+      <div class="scramble-answer">"Would it be possible to reschedule the meeting?"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 27 -- ROLE-PLAY 1: GUIDED ====== -->
+<div class="slide dark" data-chapter="6" data-lesson="11" data-t="<span class='t-timing'>66:00 - 70 min</span><strong>Role-play guiado</strong>. Leia o cenario. Mostre as keywords. Diga: &quot;Open this conference call politely. Welcome everyone, address the time zone, and ask someone to share their screen.&quot; Se travar, de o modelo: &quot;Start with 'Good morning, everyone. Thank you for...'&quot; Maria Claudia pode olhar a tela. Objetivo: usar as keywords na ordem natural.">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Open a Conference Call Politely</h2>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #2d1b4e 0%, #1a365d 50%, #6B4C8A 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3"/></svg>
+        Role-Play 1 -- Guided
+      </div>
+      <div class="rp-scenario">You are opening a conference call with the Houston team. Welcome everyone, acknowledge the time zone difference, and ask David to share his screen for the presentation.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">dial in</span>
+        <span class="rp-keyword">time zone</span>
+        <span class="rp-keyword">Could you</span>
+        <span class="rp-keyword">screen share</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 28 -- ROLE-PLAY 2: SEMI-FREE ====== -->
+<div class="slide dark" data-chapter="6" data-lesson="11" data-t="<span class='t-timing'>70:00 - 73 min</span><strong>Role-play semi-livre</strong>. Diga: &quot;A participant just dropped off the call. Handle the situation: acknowledge it, continue the meeting, and welcome them back when they reconnect.&quot; Se Maria Claudia travar, de apenas a primeira expressao. Objetivo: producao com apoio minimo.<div class='t-alert'>Se ela usar 'I apologize for' e 'Would you mind' espontaneamente, celebre: &quot;That is exactly how a senior executive handles tech issues on a call.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Handle a Participant Dropping Off</h2>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #6B4C8A 0%, #1a365d 50%, #2d1b4e 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Role-Play 2 -- Semi-Free
+      </div>
+      <div class="rp-scenario">David just dropped off the call due to bandwidth issues. Continue the meeting with the other participants, and when David reconnects, welcome him back and offer to repeat key points. Handle everything politely.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">drop off</span>
+        <span class="rp-keyword">bandwidth</span>
+        <span class="rp-keyword">I apologize for</span>
+        <span class="rp-keyword">follow-up</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 29 -- ROLE-PLAY 3: FREE ====== -->
+<div class="slide dark" data-chapter="6" data-lesson="11" data-t="<span class='t-timing'>73:00 - 77 min</span><strong>Role-play livre</strong>. Sem keywords. Sem apoio. Maria Claudia lidera uma conference call completa: abre, lida com problemas tecnicos, faz pedidos educados, gerencia fusos horarios, e encerra com follow-up. 3 minutos. Anote erros para correcao depois.<div class='t-alert'>Este e o momento mais importante da aula. Maria Claudia precisa SENTIR que consegue liderar uma call em ingles. Valide: &quot;Maria Claudia, you just led a full conference call in English. That is a skill you use every day with Houston.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Lead a Full Conference Call</h2>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #1a1a2e 0%, #6B4C8A 40%, #1a365d 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Role-Play 3 -- Free
+      </div>
+      <div class="rp-scenario">Lead a full conference call with the Houston team. Open the call, handle at least one technical issue, make polite requests, manage time zone considerations, and close with a follow-up plan. Use everything you learned today.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-style:italic;">Use everything you learned today.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 30 -- WHAT I LEARNED ====== -->
+<div class="slide dark" data-chapter="7" data-lesson="11" data-t="<span class='t-timing'>77:00 - 79 min</span>Mostre o checklist. Pergunte: &quot;Can you say yes to all of these?&quot; Maria Claudia clica cada um. Celebre: &quot;Maria Claudia, you just led conference calls, handled tech issues, and made polite requests in English for 60 minutes. Day 11 -- complete.&quot;<br><br><strong>Homework (diga oralmente, NAO esta na tela):</strong><br>1. Gravar 2 minutos simulando a abertura de uma conference call usando 'could you', 'would you mind' e 'would it be possible to'.<br>2. Ouvir um episodio de podcast sobre remote work e anotar 5 expressoes de conference calls.<br>3. Escrever um follow-up email simulado com action items de uma reuniao ficticia.">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;" data-lesson="11">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.3rem;">What I Learned Today</h2>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;">Click each item to check it off</p>
+    <div class="check-grid" style="text-align:left;">
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can use 8 conference call words: dial in, mute, screen share, bandwidth, time zone, lag, drop off, follow-up.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can make polite requests with "Could you + base verb?"</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can make formal requests with "Would you mind + verb-ing?"</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can use "Would it be possible to + base verb?" for very formal requests.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can apologize politely with "I apologize for..."</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can handle technical issues on a call: lag, drop off, bandwidth problems.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can pronounce "bandwidth", "screen share", "follow-up", and "apologize" correctly.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can lead a conference call from opening to follow-up in English.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 31 -- DAY 11 COMPLETE ====== -->
+<div class="slide dark" data-chapter="7" data-lesson="11" data-t="<span class='t-timing'>79:00 - 80 min</span>Slide final. Celebre o dia. De preview da proxima aula: &quot;Next time, we will learn fiscal and tax vocabulary so you can communicate confidently with accountants.&quot;" style="background:linear-gradient(135deg,rgba(26,26,46,0.82),rgba(45,27,78,0.78),rgba(26,54,93,0.82)),url('https://images.unsplash.com/photo-1587825140708-dfaf18c4c5ad?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;">
+    <div style="margin-bottom:2rem;">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+    <div style="padding:1.5rem;background:rgba(107,76,138,0.08);border:1px solid rgba(107,76,138,0.2);border-radius:12px;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;">Day 11 -- Complete.</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);margin-top:0.5rem;">Next: Fiscal and Tax Talk -- Communicating With Accountants</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end slide-deck -->
+
+<!-- ===== CONFETTI CONTAINER ===== -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP =====
+var audioMap = {
+  "dial in": "/audio/maria-claudia-curimbaba/aula11_dial_in.mp3",
+  "Dial in": "/audio/maria-claudia-curimbaba/aula11_dial_in.mp3",
+  "mute": "/audio/maria-claudia-curimbaba/aula11_mute.mp3",
+  "Mute": "/audio/maria-claudia-curimbaba/aula11_mute.mp3",
+  "screen share": "/audio/maria-claudia-curimbaba/aula11_screen_share.mp3",
+  "Screen share": "/audio/maria-claudia-curimbaba/aula11_screen_share.mp3",
+  "bandwidth": "/audio/maria-claudia-curimbaba/aula11_bandwidth.mp3",
+  "Bandwidth": "/audio/maria-claudia-curimbaba/aula11_bandwidth.mp3",
+  "time zone": "/audio/maria-claudia-curimbaba/aula11_time_zone.mp3",
+  "Time zone": "/audio/maria-claudia-curimbaba/aula11_time_zone.mp3",
+  "lag": "/audio/maria-claudia-curimbaba/aula11_lag.mp3",
+  "Lag": "/audio/maria-claudia-curimbaba/aula11_lag.mp3",
+  "drop off": "/audio/maria-claudia-curimbaba/aula11_drop_off.mp3",
+  "Drop off": "/audio/maria-claudia-curimbaba/aula11_drop_off.mp3",
+  "follow-up": "/audio/maria-claudia-curimbaba/aula11_follow_up.mp3",
+  "Follow-up": "/audio/maria-claudia-curimbaba/aula11_follow_up.mp3",
+  "apologize": "/audio/maria-claudia-curimbaba/aula11_apologize.mp3",
+  "Apologize": "/audio/maria-claudia-curimbaba/aula11_apologize.mp3",
+  "Let me dial in to the Houston call before we start.": "/audio/maria-claudia-curimbaba/aula11_let_me_dial_in.mp3",
+  "Could you please mute your microphone? There is background noise.": "/audio/maria-claudia-curimbaba/aula11_could_you_mute.mp3",
+  "Would you mind sharing your screen so we can see the report?": "/audio/maria-claudia-curimbaba/aula11_would_you_mind_sharing.mp3",
+  "The video quality is poor because of low bandwidth.": "/audio/maria-claudia-curimbaba/aula11_video_quality_poor.mp3",
+  "Houston is two hours behind us, so we need to schedule carefully.": "/audio/maria-claudia-curimbaba/aula11_houston_two_hours.mp3",
+  "There is a lot of lag on this call. Can everyone turn off their cameras?": "/audio/maria-claudia-curimbaba/aula11_lot_of_lag.mp3",
+  "I apologize for dropping off the call. My connection was unstable.": "/audio/maria-claudia-curimbaba/aula11_apologize_dropping_off.mp3",
+  "I will send a follow-up email with the meeting notes.": "/audio/maria-claudia-curimbaba/aula11_follow_up_email.mp3",
+  "Could you please...?": "/audio/maria-claudia-curimbaba/aula11_expr_could_you_please.mp3",
+  "Would you mind...?": "/audio/maria-claudia-curimbaba/aula11_expr_would_you_mind.mp3",
+  "I apologize for...": "/audio/maria-claudia-curimbaba/aula11_expr_i_apologize_for.mp3",
+  "listening1": "/audio/maria-claudia-curimbaba/aula11_ic_listening1_mc_leads_call.mp3",
+  "listening2": "/audio/maria-claudia-curimbaba/aula11_ic_listening2_david_tech_issues.mp3",
+  "Good morning, everyone. Thank you for dialing in early, considering the time zone difference.": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_mc_1.mp3",
+  "No problem at all. Could you share the agenda so we know what to cover?": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_david_1.mp3",
+  "Of course. I am sharing my screen now. Would you mind muting when you are not speaking? I hear some lag.": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_mc_2.mp3",
+  "Sure, I will mute myself. The bandwidth seems low today. My video keeps freezing.": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_david_2.mp3",
+  "Would it be possible to turn off the cameras? That should help with the bandwidth.": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_mc_3.mp3",
+  "Good idea. Oh no, I think I am about to drop off. The connection is very unstable.": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_david_3.mp3",
+  "David, could you try to dial in by phone as a backup? The number is in the invitation.": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_mc_4.mp3",
+  "I apologize for the interruption. I am back now. Could you repeat the last point?": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_david_4.mp3",
+  "No worries, David. I will send a follow-up email with all the details after the call.": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_mc_5.mp3",
+  "Thank you, Maria Claudia. Would you mind including the action items in the follow-up?": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_david_5.mp3",
+  "dlg_mc_1": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_mc_1.mp3",
+  "dlg_david_1": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_david_1.mp3",
+  "dlg_mc_2": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_mc_2.mp3",
+  "dlg_david_2": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_david_2.mp3",
+  "dlg_mc_3": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_mc_3.mp3",
+  "dlg_david_3": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_david_3.mp3",
+  "dlg_mc_4": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_mc_4.mp3",
+  "dlg_david_4": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_david_4.mp3",
+  "dlg_mc_5": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_mc_5.mp3",
+  "dlg_david_5": "/audio/maria-claudia-curimbaba/aula11_ic_dlg_david_5.mp3"
+};
+
+// ===== AUDIO ENGINE =====
+var currentAudio = null;
+var audioSpeed = 1;
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.toLowerCase()] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText.toLowerCase().replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed;
+    currentAudio.play().catch(function() { fallbackTTS(cleanText); });
+  } else {
+    fallbackTTS(cleanText);
+  }
+}
+
+function fallbackTTS(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 0;
+var totalSlides = 31;
+var slides = [];
+var teacherCues = [];
+
+function initSlides() {
+  slides = document.querySelectorAll('.slide');
+  slides.forEach(function(s, i) {
+    teacherCues[i] = s.dataset.t || '';
+  });
+  buildDotNav();
+  updateSlide();
+}
+
+function buildDotNav() {
+  var nav = document.getElementById('dotNav');
+  nav.innerHTML = '';
+  for (var i = 0; i < slides.length; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'dot-nav-item' + (i === 0 ? ' active' : '');
+    dot.dataset.idx = i;
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.onclick = function() { goToSlide(parseInt(this.dataset.idx)); };
+    nav.appendChild(dot);
+  }
+}
+
+function goToSlide(idx) {
+  if (idx < 0 || idx >= slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = idx;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateSlide();
+}
+
+function nextSlide() { goToSlide(currentSlide + 1); }
+function prevSlide() { goToSlide(currentSlide - 1); }
+
+function updateSlide() {
+  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + slides.length;
+
+  document.querySelectorAll('.dot-nav-item').forEach(function(d, i) {
+    d.classList.toggle('active', i === currentSlide);
+  });
+
+  var currentChapter = slides[currentSlide].dataset.chapter;
+  document.querySelectorAll('.chapter-dot').forEach(function(d) {
+    var ch = d.dataset.chapter;
+    d.classList.remove('active', 'completed');
+    if (ch === currentChapter) d.classList.add('active');
+    else if (parseInt(ch) < parseInt(currentChapter)) d.classList.add('completed');
+  });
+
+  var panel = document.getElementById('tPanel');
+  panel.classList.remove('show');
+  panel.innerHTML = teacherCues[currentSlide] || '<em>No teacher cue for this slide.</em>';
+}
+
+// ===== KEYBOARD NAV =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+});
+
+// ===== TEACHER CUE TOGGLE =====
+function toggleTeacherCue() {
+  var panel = document.getElementById('tPanel');
+  panel.classList.toggle('show');
+}
+
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('tPanel');
+  var cue = document.getElementById('tCue');
+  if (!panel.contains(e.target) && !cue.contains(e.target)) {
+    panel.classList.remove('show');
+  }
+});
+
+// ===== VOCAB REVEAL (TOGGLE) =====
+function revealVCard(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  var revealed = grid.querySelectorAll('.v-card.revealed').length;
+  var total = grid.querySelectorAll('.v-card').length;
+  document.getElementById(counterId).textContent = revealed + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar(btn, ruleId) {
+  btn.classList.add('used');
+  document.getElementById(ruleId).classList.add('show');
+}
+
+// ===== DIALOGUE LINE BY LINE =====
+function revealNextLine(dialogueId, btnId) {
+  var container = document.getElementById(dialogueId);
+  var lines = container.querySelectorAll('.d-line');
+  var btn = document.getElementById(btnId);
+  var nextHidden = null;
+  for (var i = 0; i < lines.length; i++) {
+    if (!lines[i].classList.contains('visible')) { nextHidden = lines[i]; break; }
+  }
+  if (nextHidden) {
+    nextHidden.classList.add('visible');
+    nextHidden.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  var allVisible = container.querySelectorAll('.d-line:not(.visible)').length === 0;
+  if (allVisible) btn.style.display = 'none';
+}
+
+// ===== LISTENING TOGGLE =====
+var listeningState = {};
+
+function toggleListening(id, btn, waveId, questionsId) {
+  var wave = document.getElementById(waveId);
+  var playIcon = btn.querySelector('.play-icon');
+  var pauseIcon = btn.querySelector('.pause-icon');
+  var questions = document.getElementById(questionsId);
+
+  if (!listeningState[id]) listeningState[id] = { playing: false, played: false, audio: null };
+
+  if (listeningState[id].playing) {
+    if (listeningState[id].audio) listeningState[id].audio.pause();
+    wave.classList.remove('playing');
+    playIcon.style.display = '';
+    pauseIcon.style.display = 'none';
+    listeningState[id].playing = false;
+  } else {
+    wave.classList.add('playing');
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = '';
+    listeningState[id].playing = true;
+
+    var file = audioMap[id];
+    if (file) {
+      if (!listeningState[id].audio) {
+        listeningState[id].audio = new Audio(file);
+        listeningState[id].audio.playbackRate = audioSpeed;
+      }
+      listeningState[id].audio.play().catch(function(){});
+      listeningState[id].audio.onended = function() {
+        wave.classList.remove('playing');
+        playIcon.style.display = '';
+        pauseIcon.style.display = 'none';
+        listeningState[id].playing = false;
+        if (questions) questions.classList.add('show');
+      };
+    } else {
+      if (!listeningState[id].played) {
+        listeningState[id].played = true;
+        setTimeout(function() {
+          if (questions) questions.classList.add('show');
+          wave.classList.remove('playing');
+          playIcon.style.display = '';
+          pauseIcon.style.display = 'none';
+          listeningState[id].playing = false;
+        }, 8000);
+      }
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE =====
+var qcCurrent = 0;
+var qcTotal = 6;
+var qcScore = 0;
+
+function showQcAnswer(btn) {
+  var card = btn.closest('.qc-card');
+  var answer = card.querySelector('.qc-answer-box');
+  var navBtns = card.querySelectorAll('.qc-next-btn, .qc-prev-btn');
+  answer.classList.add('show');
+  navBtns.forEach(function(b) { b.classList.add('show'); });
+  btn.style.display = 'none';
+  qcScore++;
+  document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal;
+
+  if (qcScore === qcTotal) {
+    triggerConfetti();
+  }
+}
+
+function nextQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  if (qcCurrent >= cards.length - 1) return;
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent++;
+  cards[qcCurrent].classList.add('active');
+}
+
+function prevQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  if (qcCurrent <= 0) return;
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent--;
+  cards[qcCurrent].classList.add('active');
+}
+
+// ===== CHECKLIST =====
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+}
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#6B4C8A', '#8B6BAA', '#fbbf24', '#f87171', '#60a5fa', '#a78bfa', '#34d399'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.width = (Math.random() * 8 + 5) + 'px';
+    piece.style.height = (Math.random() * 8 + 5) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 4000);
+}
+
+// ===== EXIT SLIDE MODE (standalone -> hub) =====
+function exitSlideMode() {
+  document.body.classList.remove('slide-mode');
+  window.location.href = '/professor/maria-claudia-curimbaba.html#inclass';
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', function() {
+  initSlides();
+  if (new URLSearchParams(window.location.search).get('autostart')) setTimeout(function() { }, 200);
+});
+</script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js"></script>
+</body>
+</html>
