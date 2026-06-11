@@ -12,7 +12,7 @@ const path = require('path');
 const PROF_DIR = path.join(__dirname, '..', 'public', 'professor');
 const OUT_FILE = path.join(__dirname, '..', 'public', 'data', 'lesson-counts.json');
 
-// Skip non-main files
+// Skip non-main files (but track standalone aula files separately)
 const SKIP_PATTERNS = [
     /-aula\d/,
     /-backup/,
@@ -25,6 +25,8 @@ const SKIP_PATTERNS = [
     /-palestra\./,
     /-speech-training\./,
 ];
+
+const STANDALONE_AULA_RE = /^(.+)-aula(\d+)\.html$/;
 
 function isMainFile(filename) {
     return !SKIP_PATTERNS.some(p => p.test(filename));
@@ -43,23 +45,58 @@ function extractName(html, slug) {
     return slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
+function getStandaloneAulaNumbers(allFiles) {
+    // Get standalone aula numbers (-aula2.html, -aula3.html, etc.) per slug
+    const aulaNumbers = {};
+    for (const file of allFiles) {
+        const match = file.match(STANDALONE_AULA_RE);
+        if (match) {
+            const slug = match[1];
+            const num = parseInt(match[2]);
+            if (!aulaNumbers[slug]) aulaNumbers[slug] = [];
+            aulaNumbers[slug].push(num);
+        }
+    }
+    return aulaNumbers;
+}
+
+function getMaxLessonInMain(html) {
+    // Find the highest lesson number in id="ex-lesson-N"
+    const matches = html.match(/id="ex-lesson-(\d+)"/g);
+    if (!matches) return 0;
+    let max = 0;
+    for (const m of matches) {
+        const num = parseInt(m.match(/(\d+)/)[1]);
+        if (num > max) max = num;
+    }
+    return max;
+}
+
 function run() {
-    const files = fs.readdirSync(PROF_DIR).filter(f => f.endsWith('.html') && isMainFile(f));
+    const allHtmlFiles = fs.readdirSync(PROF_DIR).filter(f => f.endsWith('.html'));
+    const mainFiles = allHtmlFiles.filter(f => isMainFile(f));
+    const standaloneAulaNumbers = getStandaloneAulaNumbers(allHtmlFiles);
     const results = [];
 
-    for (const file of files) {
+    for (const file of mainFiles) {
         const slug = file.replace('.html', '');
         const html = fs.readFileSync(path.join(PROF_DIR, file), 'utf-8');
         const lessonCount = countLessons(html);
+        const maxInMain = getMaxLessonInMain(html);
 
-        if (lessonCount === 0) continue; // skip empty/redirect files
+        // Only count standalone aulas with numbers BEYOND what's in the main file
+        const standaloneNums = standaloneAulaNumbers[slug] || [];
+        const extraStandalone = standaloneNums.filter(n => n > maxInMain).length;
+        const totalCount = lessonCount + extraStandalone;
+
+        if (totalCount === 0) continue; // skip empty/redirect files
 
         const name = extractName(html, slug);
 
         results.push({
             slug,
             name,
-            aulasHtml: lessonCount
+            aulasHtml: totalCount
         });
     }
 
