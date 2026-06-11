@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Dienane Schedules a Meeting &mdash; Lesson 5 | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --accent: #0D7377;
+  --accent-light: #14A3A8;
+  --accent-dim: rgba(13, 115, 119, 0.12);
+  --accent-glow: rgba(13, 115, 119, 0.05);
+  --black: #1a1a2e;
+  --bg: #f5f5f0;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0f0eb;
+  --bg-input: #fafaf7;
+  --border: #d4d4cc;
+  --border-light: #c0c0b8;
+  --white: #1a1a2e;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #5c5c6c;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --success-border: rgba(22,163,74,0.25);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --danger-border: rgba(220,38,38,0.25);
+  --warn: #d97706;
+  --warn-bg: rgba(217,119,6,0.08);
+  --warn-border: rgba(217,119,6,0.25);
+  --navy: #003080;
+  --marco-blue: #5b9bd5;
+  --slide-transition: 400ms;
+}
+
+/* Standalone slide file — always in slide mode */
+body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; width: 100vw; background: var(--black); }
+.header { display: none !important; }
+
+/* === LOGO BAR === */
+.logo-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: .6rem 1.5rem; background: rgba(26,26,46,.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,.06); }
+.logo-bar img { height: 28px; filter: brightness(10); }
+.logo-bar .slide-counter { font-size: .75rem; font-weight: 600; color: rgba(255,255,255,.5); letter-spacing: 2px; font-variant-numeric: tabular-nums; }
+
+/* === PHASE BAR === */
+.phase-bar { position: fixed; top: 50px; left: 0; right: 0; z-index: 99; display: flex; height: 4px; background: rgba(26,26,46,.6); }
+.phase-segment { flex: 1; position: relative; transition: background .4s; }
+.phase-segment.completed { background: var(--accent); }
+.phase-segment.current { background: var(--accent-light); animation: phasePulse 2s ease infinite; }
+.phase-segment.upcoming { background: rgba(255,255,255,.08); }
+@keyframes phasePulse { 0%,100% { opacity: 1; } 50% { opacity: .6; } }
+.phase-labels { position: fixed; top: 54px; left: 0; right: 0; z-index: 98; display: flex; padding: 0 1.5rem; }
+.phase-label { flex: 1; font-size: .6rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.25); text-align: center; padding: .3rem 0; transition: color .4s; }
+.phase-label.current { color: var(--accent-light); }
+.phase-label.completed { color: var(--accent); }
+
+/* === SLIDES === */
+.slides-container { height: 100vh; overflow: hidden; position: relative; }
+.slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; transition: opacity var(--slide-transition) ease, visibility 0s var(--slide-transition); display: flex; align-items: center; justify-content: center; padding: 5rem 2rem 5.5rem; }
+.slide.active { opacity: 1; visibility: visible; transition: opacity var(--slide-transition) ease, visibility 0s 0s; }
+
+.slide-inner { max-width: 920px; width: 100%; position: relative; max-height: calc(100vh - 10.5rem); overflow-y: auto; }
+.slide-light { background: var(--bg); }
+.slide-light .slide-inner { color: var(--text); }
+.slide-dark { background: var(--black); }
+.slide-dark .slide-inner { color: #fff; }
+.slide-dark .vocab-card-ic, .slide-dark .fill-item, .slide-dark .challenge-card, .slide-dark .error-card, .slide-dark .roleplay-card, .slide-dark .record-card, .slide-dark .oral-item, .slide-dark .comp-q, .slide-dark .business-card-artifact, .slide-dark .check-item { color: #2d2d3a; }
+.slide-image { background-size: cover; background-position: center; }
+.slide-image::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(26,26,46,.4) 0%, rgba(26,26,46,.78) 100%); }
+.slide-image .slide-inner { color: #fff; position: relative; z-index: 2; text-align: center; }
+
+/* === NAV BAR === */
+.nav-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1rem 2rem; background: rgba(26,26,46,.92); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,.06); }
+.nav-btn { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.2); background: transparent; color: rgba(255,255,255,.7); font-size: 1.2rem; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; }
+.nav-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.nav-btn:disabled { opacity: .2; cursor: default; background: transparent; border-color: rgba(255,255,255,.1); }
+.nav-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.slide-dots { display: flex; gap: 6px; align-items: center; }
+.slide-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.2); transition: all .3s; cursor: pointer; }
+.slide-dot.active { background: var(--accent); width: 20px; border-radius: 3px; }
+
+/* === Typography === */
+.chapter-label { font-size: .75rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--accent-light); margin-bottom: .5rem; }
+.slide-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem,5vw,4rem); font-weight: 600; line-height: 1.15; margin-bottom: 1rem; }
+.slide-subtitle { font-size: 1rem; font-weight: 300; opacity: .7; line-height: 1.6; }
+.slide-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 600; line-height: 1.2; margin-bottom: 1.2rem; }
+.accent { color: var(--accent); }
+
+/* === Warm-up === */
+.warm-questions { display: flex; flex-direction: column; gap: 1.8rem; margin-top: 2rem; }
+.warm-q { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; font-style: italic; opacity: 0; animation: fadeUp .8s ease forwards; color: #fff; padding-left: 1.5rem; border-left: 3px solid var(--accent); }
+.warm-q:nth-child(2) { animation-delay: .4s; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* === Teacher T === */
+.teacher-t { position: fixed; top: 5rem; right: 1.5rem; z-index: 50; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; cursor: default; transition: all .2s; background: rgba(255,255,255,.1); color: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.15); }
+.teacher-t:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.teacher-t-panel { display: none; position: absolute; top: 0; right: calc(100% + 10px); width: 340px; background: rgba(26,26,46,.96); color: rgba(255,255,255,.9); padding: 1rem 1.2rem; border-radius: 10px; font-size: .82rem; line-height: 1.65; box-shadow: 0 12px 40px rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.08); }
+.teacher-t:hover .teacher-t-panel { display: block; animation: fadeIn .2s ease; }
+.teacher-t-panel strong { color: var(--accent-light); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* === Vocab Cards (IN CLASS 2x2) === */
+.vocab-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; margin-top: 1.5rem; }
+.vocab-card { background: #fff; border: 2px solid var(--accent-dim); border-radius: 12px; overflow: hidden; cursor: pointer; transition: all .4s; min-height: 220px; display: flex; flex-direction: column; }
+.vocab-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,148,136,.12); }
+.vocab-card.revealed { border-color: var(--accent); }
+.vocab-card .card-icon { width: 100%; height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem; border-radius: 11px 11px 0 0; transition: all .5s; padding: .5rem; }
+.vocab-card .card-icon svg { width: 48px; height: 48px; stroke-width: 1.5; opacity: .5; transition: opacity .5s; }
+.vocab-card.revealed .card-icon svg { opacity: 1; }
+.vocab-card .card-hint { font-size: .78rem; color: rgba(255,255,255,.75); font-style: italic; text-align: center; line-height: 1.3; padding: 0 .5rem; max-width: 90%; }
+.vocab-card.revealed .card-hint { opacity: .5; font-size: .7rem; }
+.vocab-card .card-body { padding: .7rem .8rem; display: flex; flex-direction: column; gap: .25rem; flex: 1; }
+.vocab-card .card-word { font-weight: 700; font-size: 1.05rem; color: var(--accent); opacity: 0; height: 0; overflow: hidden; transition: all .4s; }
+.vocab-card.revealed .card-word { opacity: 1; height: auto; }
+.vocab-card .card-def { font-size: .78rem; color: var(--text-dim); line-height: 1.3; font-style: italic; opacity: 0; height: 0; overflow: hidden; transition: all .4s .1s; }
+.vocab-card.revealed .card-def { opacity: 1; height: auto; }
+.vocab-card .card-example { font-size: .82rem; color: var(--text); line-height: 1.3; opacity: 0; height: 0; overflow: hidden; transition: all .4s .2s; }
+.vocab-card.revealed .card-example { opacity: 1; height: auto; }
+.vocab-card .card-audio { margin-top: auto; padding-top: .4rem; opacity: 0; transition: opacity .4s .3s; }
+.vocab-card.revealed .card-audio { opacity: 1; }
+
+.audio-btn-sm { display: inline-flex; align-items: center; gap: .3rem; padding: .3rem .7rem; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; font-size: .72rem; font-weight: 600; font-family: 'Inter', sans-serif; transition: all .2s; letter-spacing: .5px; }
+.audio-btn-sm:hover { filter: brightness(.9); }
+.audio-btn-sm svg { width: 12px; height: 12px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.vocab-counter { text-align: center; margin-top: 1.2rem; font-weight: 600; color: var(--accent); font-size: 1rem; }
+.vocab-complete { display: none; text-align: center; margin-top: 1rem; font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--accent); font-weight: 600; }
+.vocab-complete.show { display: block; animation: fadeUp .6s ease; }
+
+/* === Pronunciation Drill === */
+.pron-grid { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+.pron-item { display: flex; align-items: center; gap: 1rem; background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: .8rem 1rem; cursor: pointer; transition: all .3s; }
+.pron-item:hover { border-color: var(--accent); box-shadow: 0 4px 12px rgba(13,148,136,.1); }
+.pron-word { font-weight: 700; font-size: 1.1rem; color: var(--black); min-width: 120px; }
+.pron-stress { display: flex; gap: .3rem; align-items: center; flex: 1; }
+.pron-syl { font-size: .9rem; color: var(--text-dim); padding: .2rem .5rem; border-radius: 4px; transition: all .3s; }
+.pron-syl.stressed { background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem; transform: scale(1.1); }
+.pron-audio { margin-left: auto; }
+
+/* === Grammar === */
+.grammar-sentences { display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0; }
+.grammar-sentence { font-size: 1.15rem; text-align: center; line-height: 1.6; padding: .6rem; background: rgba(13,148,136,.04); border-radius: 8px; }
+.grammar-sentence strong { color: var(--accent); font-weight: 800; font-size: 1.2rem; }
+.btn-primary { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 2rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: .95rem; font-weight: 600; cursor: pointer; transition: all .3s; font-family: 'Inter', sans-serif; }
+.btn-primary:hover { transform: scale(1.03); box-shadow: 0 8px 24px rgba(13,148,136,.3); }
+.grammar-table-wrap { overflow: hidden; max-height: 0; transition: max-height .6s ease; margin-top: 1rem; }
+.grammar-table-wrap.show { max-height: 500px; }
+.grammar-table { width: 100%; max-width: 500px; margin: 0 auto; border-collapse: collapse; }
+.grammar-table th { background: var(--accent); color: #fff; padding: .6rem 1rem; text-align: left; font-size: .85rem; }
+.grammar-table td { padding: .6rem 1rem; border-bottom: 1px solid #e8e8e8; font-size: .95rem; }
+.grammar-table td:nth-child(2) { font-weight: 700; color: var(--accent); }
+
+/* === Mistake === */
+.mistake-card { display: flex; flex-direction: column; gap: 1.5rem; align-items: center; margin-top: 2rem; }
+.mistake-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 12px; font-size: 1.2rem; width: 100%; max-width: 500px; }
+.mistake-wrong { background: rgba(220,38,38,.06); border: 2px solid rgba(220,38,38,.2); color: var(--danger); text-decoration: line-through; font-weight: 600; }
+.mistake-right { background: rgba(22,163,74,.06); border: 2px solid rgba(22,163,74,.2); color: var(--success); font-weight: 700; }
+.mistake-icon { width: 32px; height: 32px; flex-shrink: 0; }
+.mistake-icon svg { width: 32px; height: 32px; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* === Fill-in Practice === */
+.fill-grid { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+.fill-item { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: all .3s; display: flex; align-items: center; gap: .8rem; }
+.fill-item:hover { border-color: var(--accent); }
+.fill-item .fill-text { font-size: 1rem; flex: 1; }
+.fill-item .fill-blank { color: var(--accent); font-weight: 800; border-bottom: 2px dashed var(--accent); padding: 0 .3rem; min-width: 40px; display: inline-block; text-align: center; }
+.fill-item .fill-answer { display: none; font-weight: 700; color: var(--accent); }
+.fill-item.revealed .fill-blank { display: none; }
+.fill-item.revealed .fill-answer { display: inline; }
+
+/* === Substitution Drill === */
+.sub-template { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; text-align: center; line-height: 2; margin: 1.5rem 0; color: var(--text); }
+.sub-blank { display: inline-block; min-width: 100px; border-bottom: 3px solid var(--accent); cursor: pointer; transition: all .3s; padding: 0 .3rem; color: var(--accent); font-weight: 700; }
+.sub-blank:hover { background: var(--accent-dim); }
+.sub-options { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin-top: 1rem; }
+
+/* === Dialogue === */
+.dialogue-box { display: flex; flex-direction: column; gap: .6rem; margin-top: 1.5rem; max-height: 65vh; overflow-y: auto; padding-right: .5rem; }
+.dialogue-line { display: flex; gap: .8rem; align-items: flex-start; opacity: 0; transform: translateY(10px); transition: all .4s; }
+.dialogue-line.visible { opacity: 1; transform: translateY(0); }
+.dialogue-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .8rem; color: #fff; flex-shrink: 0; }
+.dialogue-avatar.waiter { background: var(--marco-blue); }
+.dialogue-avatar.dienane { background: var(--accent); }
+.dialogue-bubble { padding: .7rem 1rem; border-radius: 12px; font-size: .92rem; line-height: 1.5; max-width: 80%; position: relative; }
+.dialogue-bubble.waiter-bubble { background: rgba(91,155,213,.1); border: 1px solid rgba(91,155,213,.2); }
+.dialogue-bubble.dienane-bubble { background: var(--accent-dim); border: 1px solid rgba(13,148,136,.2); }
+.dialogue-bubble .vocab-highlight { color: var(--accent); font-weight: 700; }
+.audio-inline{ display: inline-flex; margin-left: .4rem; cursor: pointer; opacity: .5; transition: opacity .2s; vertical-align: middle; }
+.audio-inline:hover{ opacity: 1; }
+.audio-inline svg{ width: 14px; height: 14px; stroke: var(--accent); fill: none; stroke-width: 2; }
+
+/* === Comprehension === */
+.comp-questions { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+.comp-q { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: all .3s; font-size: .95rem; }
+.comp-q:hover { border-color: var(--accent); background: var(--accent-dim); }
+.comp-q .q-text { font-weight: 500; }
+.comp-q .q-answer { display: none; margin-top: .5rem; color: var(--accent); font-weight: 600; font-size: .9rem; }
+.comp-q.revealed .q-answer { display: block; animation: fadeUp .3s ease; }
+
+/* === Challenge === */
+.challenge-card { background: #fff; border: 2px solid #e8e4df; border-radius: 16px; padding: 2rem; text-align: center; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2rem; transition: all .3s; }
+.challenge-prompt { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; line-height: 1.5; color: var(--text); }
+.challenge-answer { display: none; font-size: 1.1rem; color: var(--accent); font-weight: 600; padding: 1rem; background: var(--accent-dim); border-radius: 10px; width: 100%; animation: fadeUp .3s ease; }
+.challenge-answer.show { display: block; }
+.challenge-score { position: absolute; top: 1rem; right: 1rem; background: var(--accent); color: #fff; padding: .3rem .8rem; border-radius: 20px; font-size: .8rem; font-weight: 700; }
+.challenge-counter { font-size: .8rem; color: var(--text-dim); font-weight: 600; }
+
+/* === Error Cards === */
+.error-grid { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+.error-card { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: all .3s; display: flex; align-items: center; gap: 1rem; }
+.error-card:hover { border-color: var(--accent); }
+.error-card .error-sentence { font-size: 1rem; color: var(--danger); flex: 1; }
+.error-card .error-fix { display: none; font-weight: 600; color: var(--success); font-size: .95rem; }
+.error-card.revealed .error-sentence { text-decoration: line-through; opacity: .5; }
+.error-card.revealed .error-fix { display: block; animation: fadeUp .3s ease; }
+.error-score { text-align: center; margin-top: 1rem; font-weight: 700; color: var(--accent); font-size: 1.1rem; }
+
+/* === Oral Drill === */
+.oral-grid { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+.oral-item { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: all .3s; }
+.oral-situation { font-size: .95rem; color: var(--text); margin-bottom: .5rem; line-height: 1.5; }
+.oral-model { display: none; color: var(--accent); font-weight: 600; font-size: .9rem; padding: .6rem; background: var(--accent-dim); border-radius: 6px; margin-top: .5rem; }
+.oral-item.revealed .oral-model { display: block; animation: fadeUp .3s ease; }
+
+/* === Listening Player === */
+.listening-player { max-width: 420px; margin: 1.5rem auto 0; }
+.lp-seekbar { height: 6px; background: rgba(255,255,255,.15); border-radius: 3px; cursor: pointer; margin-bottom: 8px; position: relative; }
+.lp-seekbar:hover { height: 8px; }
+.lp-progress { height: 100%; background: var(--accent); border-radius: 3px; transition: width .1s; width: 0%; }
+.lp-time { display: flex; justify-content: space-between; font-size: .75rem; color: rgba(255,255,255,.5); margin-bottom: 16px; font-variant-numeric: tabular-nums; }
+.lp-controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; }
+.lp-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); background: transparent; color: rgba(255,255,255,.7); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+.lp-btn:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+.lp-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+.lp-play { width: 64px; height: 64px; background: var(--accent); border: none; color: #fff; }
+.lp-play:hover { transform: scale(1.05); }
+.lp-play svg { width: 24px; height: 24px; }
+.lp-play.playing .lp-icon-play { display: none; }
+.lp-play.playing .lp-icon-pause { display: flex !important; }
+.lp-icon-pause { display: none !important; }
+.lp-speed { display: flex; justify-content: center; gap: 8px; }
+.lp-speed-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: rgba(255,255,255,.5); font-size: .75rem; font-weight: 600; cursor: pointer; transition: all .2s; font-family: 'Inter', sans-serif; }
+.lp-speed-btn:hover { color: #fff; border-color: rgba(255,255,255,.4); }
+.lp-speed-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.lp-label { font-size: .7rem; color: rgba(255,255,255,.35); text-transform: uppercase; letter-spacing: 1.5px; text-align: center; margin-bottom: 6px; }
+
+/* === Role Play === */
+.roleplay-card { background: #fff; border: 2px solid var(--accent); border-radius: 16px; overflow: hidden; max-width: 500px; margin: 0 auto; }
+.roleplay-header { width: 100%; height: 100px; display: flex; align-items: center; justify-content: center; }
+.roleplay-header svg { width: 48px; height: 48px; stroke: #fff; fill: none; stroke-width: 1.5; }
+.roleplay-body { padding: 1.5rem; }
+.roleplay-scenario { font-size: 1rem; line-height: 1.6; color: var(--text); margin-bottom: 1rem; }
+.roleplay-keywords { display: flex; flex-wrap: wrap; gap: .4rem; }
+.roleplay-kw { padding: .3rem .7rem; background: var(--accent-dim); border: 1px solid rgba(13,148,136,.2); border-radius: 16px; font-size: .8rem; color: var(--accent); font-weight: 600; }
+
+/* === Record Card === */
+.record-card { background: #fff; border: 2px solid #e8e4df; border-radius: 16px; padding: 2rem; text-align: center; max-width: 500px; margin: 0 auto; }
+.record-prompt { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; line-height: 1.5; color: var(--text); margin-bottom: 1.5rem; }
+.record-btn { width: 72px; height: 72px; border-radius: 50%; background: var(--danger); border: none; color: #fff; cursor: pointer; transition: all .3s; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+.record-btn:hover { transform: scale(1.08); box-shadow: 0 8px 32px rgba(220,38,38,.3); }
+.record-btn svg { width: 28px; height: 28px; fill: #fff; }
+.record-btn.recording { animation: recordPulse 1s ease infinite; }
+@keyframes recordPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,.4); } 50% { box-shadow: 0 0 0 12px rgba(220,38,38,0); } }
+
+/* === Badge / Celebration === */
+.badge-card { text-align: center; padding: 2rem; }
+.badge-icon { width: 120px; height: 120px; margin: 0 auto 1.5rem; position: relative; }
+.badge-icon .badge-circle { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg,var(--accent),var(--accent-light)); display: flex; align-items: center; justify-content: center; animation: badgePop .6s ease; }
+.badge-icon .badge-circle svg { width: 48px; height: 48px; stroke: #fff; fill: none; stroke-width: 2; }
+@keyframes badgePop { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+.sparkles { position: absolute; inset: -20px; pointer-events: none; }
+.sparkle { position: absolute; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: sparkle 1.5s ease infinite; }
+@keyframes sparkle { 0% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0) translateY(-20px); } }
+.sparkle:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+.sparkle:nth-child(2) { top: 5%; right: 25%; animation-delay: .3s; }
+.sparkle:nth-child(3) { bottom: 15%; left: 10%; animation-delay: .6s; }
+.sparkle:nth-child(4) { bottom: 10%; right: 15%; animation-delay: .2s; }
+.sparkle:nth-child(5) { top: 40%; left: 5%; animation-delay: .8s; }
+.sparkle:nth-child(6) { top: 30%; right: 5%; animation-delay: .5s; }
+
+/* === Review Grid === */
+.review-grid { display: flex; flex-direction: column; gap: .6rem; margin-top: 1.5rem; }
+.review-item { display: flex; align-items: center; gap: .8rem; background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: .7rem 1rem; }
+.review-word { font-weight: 700; font-size: 1rem; color: var(--accent); min-width: 110px; }
+.review-example { font-size: .85rem; color: var(--text-dim); flex: 1; line-height: 1.4; font-style: italic; }
+.review-audio { flex-shrink: 0; }
+
+/* === Checklist === */
+.check-grid { display: flex; flex-direction: column; gap: .5rem; margin-top: 1.5rem; }
+.check-item { display: flex; align-items: center; gap: .8rem; padding: .7rem 1rem; background: #fff; border: 1px solid #e8e4df; border-radius: 8px; cursor: pointer; transition: all .3s; font-size: .92rem; color: var(--text); }
+.check-item:hover { border-color: var(--accent); }
+.check-item.checked { background: rgba(22,163,74,.06); border-color: rgba(22,163,74,.3); }
+.check-item .check-box { width: 22px; height: 22px; border-radius: 6px; border: 2px solid #d0d0d0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .3s; }
+.check-item.checked .check-box { background: var(--success); border-color: var(--success); }
+.check-item.checked .check-box svg { opacity: 1; }
+.check-box svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 3; opacity: 0; transition: opacity .3s; }
+
+/* === Delayed Error Correction === */
+.error-slots { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+.error-slot { display: flex; gap: 1rem; align-items: center; }
+.error-slot-label { font-size: .8rem; color: rgba(255,255,255,.4); font-weight: 600; min-width: 20px; }
+.error-slot-input { flex: 1; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); border-radius: 8px; padding: .8rem 1rem; color: #fff; font-size: .9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color .2s; }
+.error-slot-input:focus { border-color: var(--accent); }
+.error-slot-arrow { color: var(--accent-light); font-size: 1.2rem; }
+.error-slot-fix { flex: 1; background: rgba(22,163,74,.08); border: 1px solid rgba(22,163,74,.2); border-radius: 8px; padding: .8rem 1rem; color: #fff; font-size: .9rem; font-family: 'Inter', sans-serif; outline: none; }
+.error-slot-fix:focus { border-color: var(--success); }
+
+/* === Menu Artifact === */
+.menu-artifact { background: #fff; border-radius: 12px; max-width: 460px; margin: 0 auto; box-shadow: 0 16px 48px rgba(0,0,0,.12); overflow: hidden; border: 1px solid #e0e0e0; }
+.menu-header { background: var(--accent); padding: .8rem 1.5rem; text-align: center; }
+.menu-header-title { color: #fff; font-weight: 800; font-size: .9rem; letter-spacing: 3px; text-transform: uppercase; }
+.menu-header-sub { color: rgba(255,255,255,.7); font-size: .7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: .2rem; }
+.menu-section { padding: .8rem 1.5rem; border-bottom: 1px solid #f0f0eb; }
+.menu-section:last-child { border-bottom: none; }
+.menu-section-title { font-weight: 700; font-size: .75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: .5rem; }
+.menu-row { display: flex; justify-content: space-between; align-items: center; padding: .3rem 0; }
+.menu-row-left { display: flex; align-items: center; gap: .5rem; font-size: .9rem; color: var(--text); }
+.menu-row-left svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+.menu-row-price { font-weight: 700; font-size: .9rem; color: var(--text-mid); }
+
+/* === Sort Columns === */
+.sort-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top: 1.5rem; }
+.sort-col { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem; text-align: center; }
+.sort-col h4 { font-size: .85rem; font-weight: 700; color: var(--accent); margin-bottom: .8rem; letter-spacing: 1px; text-transform: uppercase; }
+.sort-item { font-size: .9rem; padding: .3rem 0; border-bottom: 1px solid #f0f0eb; cursor: pointer; transition: all .3s; }
+.sort-item:last-child { border-bottom: none; }
+.sort-item:hover { color: var(--accent); }
+
+/* === Build Order === */
+.order-scenarios { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+.order-scenario { background: #fff; border: 1px solid #e8e4df; border-radius: 10px; padding: 1rem 1.2rem; cursor: pointer; transition: all .3s; }
+.order-scenario:hover { border-color: var(--accent); }
+.order-scenario .os-title { font-weight: 600; font-size: 1rem; color: var(--accent); margin-bottom: .3rem; }
+.order-scenario .os-prompt { font-size: .9rem; color: var(--text-dim); line-height: 1.4; }
+.order-scenario .os-model { display: none; color: var(--accent); font-weight: 600; font-size: .9rem; padding: .6rem; background: var(--accent-dim); border-radius: 6px; margin-top: .5rem; }
+.order-scenario.revealed .os-model { display: block; animation: fadeUp .3s ease; }
+
+/* === Confetti === */
+.confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
+.confetti-piece { position: absolute; width: 8px; height: 8px; top: -10px; animation: confettiFall 3s ease forwards; }
+@keyframes confettiFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+/* === Scrollbar === */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(13,148,136,.3); border-radius: 3px; }
+
+/* === Contrast fix === */
+.slide-dark .checklist li,.slide-dark .check-item,.slide-dark .check-label,.slide-dark .roleplay-body,.slide-dark .roleplay-body p,.slide-dark .roleplay-scenario,.slide-dark .comp-q,.slide-dark .comp-q p,.slide-dark .fill-item label,.slide-dark .fill-item p,.slide-dark .error-card p,.slide-dark .oral-item p,.slide-dark .email-card p,.slide-dark .boarding-pass p,.slide-dark .student-id-card p{color:#1a1a2e!important}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .slide { padding: 5rem 1.2rem 5.5rem; }
+  .vocab-grid { grid-template-columns: 1fr; gap: .8rem; }
+  .vocab-card { min-height: auto; }
+  .slide-title { font-size: 2rem; }
+  .slide-heading { font-size: 1.6rem; }
+  .dialogue-bubble { max-width: 85%; }
+  .sub-template { font-size: 1.2rem; }
+  .teacher-t-panel { width: 260px; }
+  .sort-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ===== Aula 2+ slide components ===== */
+.slide-section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:600;line-height:1.2;margin-bottom:.5rem}
+.vocab-card-ic{background:#fff;border:2px solid rgba(51,107,135,.12);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .4s;display:flex;flex-direction:column;min-height:200px}
+.vocab-card-ic:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(51,107,135,.12)}
+.vocab-card-ic.revealed{border-color:var(--accent)}
+.vocab-card-ic .vocab-front{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;padding:1.5rem 1rem;flex:1;text-align:center}
+.vocab-card-ic .vocab-icon{display:flex;align-items:center;justify-content:center}
+.vocab-card-ic .vocab-clue{font-size:.82rem;color:var(--text-dim);font-style:italic;line-height:1.4;max-width:90%}
+.vocab-card-ic .vocab-back{padding:.8rem 1rem;display:flex;flex-direction:column;gap:.3rem;opacity:0;max-height:0;overflow:hidden;transition:all .4s ease}
+.vocab-card-ic.revealed .vocab-back{opacity:1;max-height:300px;padding:.8rem 1rem}
+.vocab-card-ic.revealed .vocab-clue{opacity:.4;font-size:.72rem}
+.vocab-card-ic .vocab-back h4{font-weight:700;font-size:1.05rem;color:var(--accent)}
+.vocab-card-ic .vocab-def-ic{font-size:.78rem;color:var(--text-dim);font-style:italic;line-height:1.3}
+.vocab-card-ic .vocab-ex-ic{font-size:.82rem;color:var(--text);line-height:1.3}
+.vocab-card-ic .vocab-back .audio-btn{margin-top:.3rem}
+.primary-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif}
+.primary-btn:hover{transform:scale(1.03);box-shadow:0 8px 24px rgba(51,107,135,.3)}
+.lp-player{max-width:500px;margin:0 auto}
+.lp-player .lp-controls{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.lp-player .lp-play{width:64px;height:64px;border-radius:50%;background:var(--accent);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.lp-player .lp-play:hover{transform:scale(1.05)}
+.lp-player .lp-play svg{width:24px;height:24px}
+.lp-skip{padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.lp-skip:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+.lp-seekbar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .1s;width:0%}
+.lp-speed-row{display:flex;justify-content:center;gap:8px}
+.lp-player .lp-time{font-size:.75rem;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dialogue-name{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem}
+.comp-answer{display:none;margin-top:.5rem;font-weight:600}
+/* NUCLEAR FIX: force white bg + dark text on ALL card elements in dark slides */
+.slide-dark .comp-q,.slide-dark .check-item,.slide-dark .oral-item,.slide-dark .fill-item,.slide-dark .error-card{background:#fff!important;color:#1a1a2e!important;border-color:rgba(200,200,190,.5)!important}
+.slide-dark .comp-q p,.slide-dark .check-item span,.slide-dark .check-item p{color:#1a1a2e!important}
+.slide-dark .comp-q .comp-answer,.slide-dark .comp-q .q-answer{color:var(--accent)!important}
+.slide-dark .check-item .check-box{border-color:#d0d0d0!important}
+.slide-dark .check-item.checked{background:rgba(22,163,74,.1)!important;border-color:rgba(22,163,74,.3)!important}
+/* Role-play: white bg on .roleplay-card, white text on inline glass cards */
+.slide-dark .roleplay-card{background:#fff!important}
+.slide-dark .roleplay-card{background:#fff!important}
+.slide-dark .roleplay-card .roleplay-scenario{color:#1a1a2e!important}
+.slide-dark .roleplay-scenario{color:#fff!important}
+.slide-dark .roleplay-card .roleplay-kw{color:var(--accent)!important;background:var(--accent-dim)!important;border-color:rgba(51,107,135,.3)!important}
+.slide-dark .roleplay-kw{color:#fff!important}
+/* ===== CONTRASTE SLIDE-DARK — CATEGORIA A (fundo branco → texto escuro) ===== */
+.slide-dark .vocab-card-ic,
+.slide-dark .vocab-card-ic * { color: #1a1a2e !important; }
+.slide-dark .vocab-card-ic .vocab-back h4 { color: var(--accent) !important; }
+.slide-dark .vocab-card { background: #fff !important; }
+.slide-dark .vocab-card .card-body,
+.slide-dark .vocab-card .card-body * { color: #1a1a2e !important; }
+.slide-dark .vocab-card .card-word { color: var(--accent) !important; }
+.slide-dark .comp-q { background: #fff !important; }
+.slide-dark .comp-q,
+.slide-dark .comp-q p { color: #1a1a2e !important; }
+.slide-dark .comp-answer,
+.slide-dark .comp-q .q-answer { color: var(--accent) !important; }
+.slide-dark .check-item,
+.slide-dark .check-item * { color: #1a1a2e !important; }
+.slide-dark .email-card,
+.slide-dark .email-card * { color: #1a1a2e !important; }
+.slide-dark .boarding-pass *,
+.slide-dark .biz-card *,
+.slide-dark .student-id-card *,
+.slide-dark .passport-card * { color: #1a1a2e !important; }
+.slide-dark .fill-item { background: #fff !important; }
+.slide-dark .fill-item,
+.slide-dark .fill-item * { color: #1a1a2e !important; }
+.slide-dark .fill-item .fill-answer { color: var(--accent) !important; }
+.slide-dark .fill-item .fill-blank { color: var(--accent) !important; }
+.slide-dark .oral-item { background: #fff !important; }
+.slide-dark .oral-item,
+.slide-dark .oral-item * { color: #1a1a2e !important; }
+.slide-dark .oral-item .oral-model { color: var(--accent) !important; }
+.slide-dark .error-card { background: #fff !important; }
+.slide-dark .error-card,
+.slide-dark .error-card * { color: #1a1a2e !important; }
+.slide-dark .error-card .error-fix { color: var(--accent) !important; }
+.slide-dark .challenge-card { background: #fff !important; }
+.slide-dark .challenge-card,
+.slide-dark .challenge-card * { color: #1a1a2e !important; }
+.slide-dark .challenge-answer { color: var(--accent) !important; }
+.slide-dark .qc-card { background: #fff !important; border: 1px solid rgba(200,200,190,.5) !important; border-radius: 12px !important; padding: 1.5rem !important; }
+.slide-dark .qc-card,
+.slide-dark .qc-card * { color: #1a1a2e !important; }
+.slide-dark .qc-answer strong { color: var(--accent) !important; }
+.slide-dark .record-card { background: #fff !important; }
+.slide-dark .record-card,
+.slide-dark .record-card * { color: #1a1a2e !important; }
+/* ===== CONTRASTE SLIDE-DARK — CATEGORIA B (fundo transparente → texto branco) ===== */
+.slide-dark .grammar-sentence { color: #fff !important; }
+.slide-dark .grammar-sentence strong { color: var(--accent-light) !important; }
+.slide-dark .grammar-sentence span { color: rgba(255,255,255,.6) !important; }
+.slide-dark .grammar-table { border-color: rgba(255,255,255,.15) !important; }
+.slide-dark .grammar-table th { background: var(--accent) !important; color: #fff !important; }
+.slide-dark .grammar-table td { color: #fff !important; border-color: rgba(255,255,255,.15) !important; }
+.slide-dark .grammar-table td:nth-child(2) { color: var(--accent-light) !important; }
+.slide-dark .grammar-table td em { color: rgba(255,255,255,.7) !important; }
+.slide-dark .mistake-item { color: #fff !important; }
+.slide-dark .mistake-item * { color: inherit !important; }
+.slide-dark .mistake-wrong { color: #fca5a5 !important; background: rgba(220,38,38,.15) !important; border-color: rgba(220,38,38,.4) !important; }
+.slide-dark .mistake-wrong * { color: #fca5a5 !important; }
+.slide-dark .mistake-right { color: #86efac !important; background: rgba(22,163,74,.15) !important; border-color: rgba(22,163,74,.4) !important; }
+.slide-dark .mistake-right * { color: #86efac !important; }
+.slide-dark .mistake-icon svg { stroke: currentColor !important; }
+.slide-dark .dialogue-bubble { background: rgba(255,255,255,.95) !important; border-color: rgba(255,255,255,.3) !important; }
+.slide-dark .dialogue-bubble,
+.slide-dark .dialogue-bubble * { color: #1a1a2e !important; }
+.slide-dark .dialogue-bubble strong,
+.slide-dark .dialogue-bubble .vocab-highlight { color: var(--accent) !important; }
+.slide-dark .dialogue-bubble .audio-inline svg { stroke: var(--accent) !important; }
+.slide-dark .dialogue-name { color: rgba(255,255,255,.85) !important; }
+.slide-dark .slide-card,
+.slide-dark .slide-card * { color: #fff !important; }
+.slide-dark .survival-item-ic,
+.slide-dark .survival-item-ic * { color: #fff !important; }
+.slide-dark .primary-btn,
+.slide-dark .btn-primary,
+.slide-dark .audio-btn,
+.slide-dark .audio-btn-sm,
+.slide-dark .btn-listen { color: #fff !important; background: var(--accent) !important; }
+/* === DIALOGUE BUBBLE CONTRAST FIX — white solid bg + dark text === */
+.slide-dark .dialogue-bubble { background:rgba(255,255,255,0.95) !important;border-color:rgba(255,255,255,.3) !important; }
+.slide-dark .dialogue-bubble,
+.slide-dark .dialogue-bubble * { color:#1a1a2e !important; }
+.slide-dark .dialogue-bubble strong,
+.slide-dark .dialogue-bubble .vocab-highlight { color:var(--accent) !important; }
+.slide-dark .dialogue-name { color:rgba(255,255,255,.85) !important; }
+.slide-dark .audio-inline { color:#1a1a2e !important; }
+.slide-dark .audio-inline svg { stroke:#1a1a2e; }
+.secondary-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:"Inter",sans-serif}
+.secondary-btn:hover{background:var(--accent);color:#fff}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='dienane-brandao-de-mesquita';window.TOTAL_AULAS=71;</script>
+</head>
+<body>
+
+<!-- Logo Bar -->
+<div class="logo-bar">
+  <img src="/assets/logo-alumni.png" alt="Alumni by Better">
+  <span class="slide-counter" id="slideCounter">01 / 35</span>
+</div>
+
+<!-- Phase Bar -->
+<div class="phase-bar" id="phaseBar">
+  <div class="phase-segment current" data-phase="1"></div>
+  <div class="phase-segment upcoming" data-phase="2"></div>
+  <div class="phase-segment upcoming" data-phase="3"></div>
+  <div class="phase-segment upcoming" data-phase="4"></div>
+  <div class="phase-segment upcoming" data-phase="5"></div>
+  <div class="phase-segment upcoming" data-phase="6"></div>
+  <div class="phase-segment upcoming" data-phase="7"></div>
+</div>
+<div class="phase-labels" id="phaseLabels">
+  <span class="phase-label current" data-phase="1">The Dream</span>
+  <span class="phase-label" data-phase="2">Packing Words</span>
+  <span class="phase-label" data-phase="3">The Code</span>
+  <span class="phase-label" data-phase="4">Getting There</span>
+  <span class="phase-label" data-phase="5">Practice</span>
+  <span class="phase-label" data-phase="6">Your Turn</span>
+  <span class="phase-label" data-phase="7">Wrap-Up</span>
+</div>
+
+<div class="slides-container" id="slidesContainer">
+<!-- ========== SLIDE 1: TITLE ========== -->
+<div class="slide slide-image active" data-slide="1" data-phase="1" data-teacher="<strong>Abertura (2 min):</strong> 'Today you schedule a real meeting — by phone, in English!' Dienane é do RH: conecte com o dia a dia dela (entrevistas, reuniões). Crie expectativa." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1400&q=80');background-size:cover;background-position:center">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Day 5 -- Numbers and Time</div>
+    <h1 class="slide-heading" style="font-size:2.5rem;color:#fff">What Time Is the <span class="accent">Meeting?</span></h1>
+    <p style="color:rgba(255,255,255,.7);font-size:1.1rem;margin-top:1rem">Numbers, clocks, and your calendar -- in English</p>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="2" data-phase="1" data-teacher="<strong>Warm-up + callback (3 min):</strong> Faça a ponte com a Aula 4 (restaurante). Toque os 2 áudios e peça Dienane repetir. Pergunte: 'You ordered breakfast — but what TIME is breakfast? What time do you start work?' Espere ela tentar.">
+  <div class="slide-inner">
+    <div class="chapter-label">Warm-up</div>
+    <h2 class="slide-heading">From the Table to the <span class="accent">Clock</span></h2>
+    <p style="color:var(--text-dim);font-size:1rem;margin-top:1rem;max-width:600px;margin-left:auto;margin-right:auto">Last class you ordered breakfast. Let's remember:</p>
+    <div style="display:flex;flex-direction:column;gap:.7rem;max-width:520px;margin:1.2rem auto 0">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem"><p style="font-size:.92rem">"I would like a coffee and some bread, please."</p><button class="audio-btn-sm" onclick="speakText('I would like a coffee and some bread, please.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem"><p style="font-size:.92rem">"An orange juice, please."</p><button class="audio-btn-sm" onclick="speakText('An orange juice, please.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+    </div>
+    <div style="max-width:520px;margin:1.5rem auto 0;background:var(--accent-dim);border:1px solid var(--accent);border-radius:12px;padding:1.2rem">
+      <p style="font-weight:600;font-size:.95rem;margin-bottom:.5rem">Now think:</p>
+      <p style="font-size:.9rem;color:var(--text-dim)">Breakfast is at... what time? Your work starts at... what time? Today you learn to say <strong>every hour of your day</strong> -- and to schedule a meeting by phone.</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="3" data-phase="1" data-teacher="<strong>Bridge (2 min):</strong> Diga: 'Three missions tonight: the numbers, the clock, and a real phone call.' Mostre os 3 passos.">
+  <div class="slide-inner">
+    <div class="chapter-label">Today's Goal</div>
+    <h2 class="slide-heading">Master Your <span class="accent">Day</span></h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;max-width:640px;margin:1.5rem auto 0">
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">1. Numbers</p><p style="font-size:.78rem;color:var(--text-dim)">13 or 30? 15 or 50?</p></div>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">2. The Clock</p><p style="font-size:.78rem;color:var(--text-dim)">half past nine</p></div>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.9rem;text-align:center"><p style="font-weight:700;font-size:.9rem">3. The Call</p><p style="font-size:.78rem;color:var(--text-dim)">schedule the interview</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="4" data-phase="2" data-teacher="<strong>Transição vocab (1 min):</strong> Diga: 'First, the calendar words. Eight words. Click each card to reveal.' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1400&q=80');background-size:cover;background-position:center">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Chapter 2 -- Calendar Words</div>
+    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Your Calendar in <span class="accent">English</span></h2>
+    <p style="color:rgba(255,255,255,.7);font-size:1rem;margin-top:.5rem">8 words for your schedule</p>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocab reveal 1-4 (4 min):</strong> Leia a pista, Dienane tenta a palavra, depois revele. Toque o áudio e peça que repita. CCQ para 'appointment': 'Is an appointment with friends or with a doctor/work? (Doctor/work — hora marcada.)'">
+  <div class="slide-inner">
+    <div class="chapter-label">Calendar Words</div>
+    <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem"><span id="vocabCount1">0 / 4 words revealed</span></p>
+    <div class="vocab-grid" id="vocabGrid1">
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#0e7490,#22d3ee)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/></svg><div class="card-hint">The list of your activities and times</div></div>
+        <div class="card-body"><div class="card-word">Schedule</div><div class="card-def">The list of your activities and times</div><div class="card-example">"My schedule is full on Monday."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Schedule',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><circle cx="9" cy="8" r="3.5"/><circle cx="16" cy="9" r="2.5"/><path d="M2 20v-1a6 6 0 0112 0v1"/><path d="M14 20v-1a5 5 0 016-4.5"/></svg><div class="card-hint">When people work together in a room</div></div>
+        <div class="card-body"><div class="card-word">Meeting</div><div class="card-def">When people work together in a room, at a time</div><div class="card-example">"The meeting is at ten o'clock."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Meeting',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#15803d,#4ade80)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div class="card-hint">A fixed time with a doctor or at work</div></div>
+        <div class="card-body"><div class="card-word">Appointment</div><div class="card-def">A fixed time with a doctor or at work</div><div class="card-example">"I have an appointment at the bank."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Appointment',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#b45309,#f59e0b)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M8 13h2M14 13h2M8 17h2"/></svg><div class="card-hint">The paper or app with all the days</div></div>
+        <div class="card-body"><div class="card-word">Calendar</div><div class="card-def">The paper or app with all the days of the year</div><div class="card-example">"Let me check my calendar."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Calendar',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocab reveal 5-8 (4 min):</strong> Mesma dinâmica. Para 'available', use o contexto dela: 'Are you available?' = a pergunta nº 1 do RH. Para 'busy', o contrário.">
+  <div class="slide-inner">
+    <div class="chapter-label">Calendar Words</div>
+    <h2 class="slide-heading">Words <span class="accent">5-8</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem"><span id="vocabCount2">0 / 4 words revealed</span></p>
+    <div class="vocab-grid" id="vocabGrid2">
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#1d4ed8,#60a5fa)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><div class="card-hint">Free to do something at that time</div></div>
+        <div class="card-body"><div class="card-word">Available</div><div class="card-def">Free to do something at that time</div><div class="card-example">"Are you available on Thursday?"</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Available',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#9f1239,#fb7185)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 4"/><path d="M5 3L3 5M19 3l2 2"/></svg><div class="card-hint">With many things to do, not free</div></div>
+        <div class="card-body"><div class="card-word">Busy</div><div class="card-def">With many things to do, not free</div><div class="card-example">"I am busy in the morning."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Busy',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#0d9488,#2dd4bf)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M12 3v3M12 21v-3M3 12h3M21 12h-3"/><circle cx="12" cy="12" r="6"/><path d="M12 10v2l1.5 1.5"/></svg><div class="card-hint">Before the normal time</div></div>
+        <div class="card-body"><div class="card-word">Early</div><div class="card-def">Before the normal time</div><div class="card-example">"The meeting is early, at eight o'clock."</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Early',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      </div>
+      <div class="vocab-card" onclick="revealVocab(this)">
+        <div class="card-icon" style="background:linear-gradient(135deg,#374151,#9ca3af)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l-3 3"/></svg><div class="card-hint">After the normal time</div></div>
+        <div class="card-body"><div class="card-word">Late</div><div class="card-def">After the normal time</div><div class="card-example">"Sorry, I am late!"</div><div class="card-audio"><button class="audio-btn-sm" onclick="event.stopPropagation();speakText('Late',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Números 13 vs 30 (4 min):</strong> O par mais traiçoeiro do inglês. Toque cada par e peça Dienane repetir, marcando a sílaba forte: thirTEEN (final) vs THIRty (início). Depois dite números e ela diz qual ouviu.">
+  <div class="slide-inner">
+    <div class="chapter-label">Numbers Drill</div>
+    <h2 class="slide-heading">13 or <span class="accent">30</span>?</h2>
+    <p style="text-align:center;font-size:.85rem;color:var(--text-dim);margin-top:.3rem">The most dangerous pairs in English!</p>
+    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:500px;margin:1.2rem auto 0">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1rem;font-weight:600">thirteen (13) vs thirty (30)</span><button class="audio-btn-sm" onclick="speakText('Thirteen. Thirty.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1rem;font-weight:600">fifteen (15) vs fifty (50)</span><button class="audio-btn-sm" onclick="speakText('Fifteen. Fifty.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1rem;font-weight:600">sixteen (16) vs sixty (60)</span><button class="audio-btn-sm" onclick="speakText('Sixteen. Sixty.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;justify-content:space-between;align-items:center"><span style="font-size:1rem;font-weight:600">nineteen (19) vs ninety (90)</span><button class="audio-btn-sm" onclick="speakText('Nineteen. Ninety.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="8" data-phase="3" data-teacher="<strong>Transição grammar (1 min):</strong> Diga: 'Now, the clock. How do you say 9:30 in English? Let's discover.' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1400&q=80');background-size:cover;background-position:center">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Chapter 3 -- The Clock</div>
+    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Telling <span class="accent">Time</span></h2>
+    <p style="color:rgba(255,255,255,.7);font-size:1rem;margin-top:.5rem">o'clock &middot; half past &middot; a quarter past/to</p>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="9" data-phase="3" data-teacher="<strong>Grammar discovery (4 min):</strong> Leia os 4 exemplos. Pergunte 'What do you notice about the highlighted words?'. Clique 'Reveal the Rule'. CCQ: '9:30 é half past NINE ou half past TEN? (Nine — metade DEPOIS das nove.)'">
+  <div class="slide-inner">
+    <div class="chapter-label">Discover the Rule</div>
+    <h2 class="slide-heading">Listen and <span class="accent">Notice</span></h2>
+    <div style="display:flex;flex-direction:column;gap:.7rem;max-width:560px;margin:1rem auto 0">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem"><p style="font-size:.92rem">"It is nine <span class="accent" style="font-weight:700">o'clock</span>." (9:00)</p><button class="audio-btn-sm" onclick="speakText('It is nine o\'clock.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem"><p style="font-size:.92rem">"It is <span class="accent" style="font-weight:700">half past</span> nine." (9:30)</p><button class="audio-btn-sm" onclick="speakText('It is half past nine.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem"><p style="font-size:.92rem">"It is <span class="accent" style="font-weight:700">a quarter past</span> ten." (10:15)</p><button class="audio-btn-sm" onclick="speakText('It is a quarter past ten.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem"><p style="font-size:.92rem">"<span class="accent" style="font-weight:700">What time</span> is the meeting?"</p><button class="audio-btn-sm" onclick="speakText('What time is the meeting?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div>
+    </div>
+    <button class="primary-btn" style="margin:1.2rem auto 0;display:block;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer" onclick="var t=document.getElementById('rule5t');t.style.display=(t.style.display==='none'||!t.style.display)?'block':'none'">Reveal the Rule</button>
+    <div id="rule5t" style="display:none;max-width:560px;margin:1rem auto 0;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.6rem;text-align:left">Clock</th><th style="padding:.6rem;text-align:left">English</th><th style="padding:.6rem;text-align:left">Easy way</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">9:00</td><td style="padding:.5rem;font-weight:600">nine o'clock</td><td style="padding:.5rem">nine (a.m. / p.m.)</td></tr>
+          <tr style="background:var(--bg-elevated);border-bottom:1px solid var(--border)"><td style="padding:.5rem">9:30</td><td style="padding:.5rem;font-weight:600">half past nine</td><td style="padding:.5rem">nine thirty</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">9:15</td><td style="padding:.5rem;font-weight:600">a quarter past nine</td><td style="padding:.5rem">nine fifteen</td></tr>
+          <tr><td style="padding:.5rem">9:45</td><td style="padding:.5rem;font-weight:600">a quarter to ten</td><td style="padding:.5rem">nine forty-five</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem;text-align:center">Two ways, both correct! The "easy way" (nine thirty) always works. Question: "What time...?"</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="10" data-phase="3" data-teacher="<strong>Common mistake (3 min):</strong> Os 2 clássicos do português: 'nine and half' (tradução literal de 'nove e meia') e 'What hours is it?'. Mostre certo (verde) e errado (vermelho). Peça que ela leia as versões certas.">
+  <div class="slide-inner">
+    <div class="chapter-label">Common Mistake</div>
+    <h2 class="slide-heading">Right vs <span class="accent">Wrong</span></h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+        <div style="background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:10px;padding:1rem"><p style="font-size:.78rem;color:var(--danger);font-weight:700;margin-bottom:.3rem">&#10007; WRONG</p><p style="font-size:.88rem">"The meeting is at nine and half."</p></div>
+        <div style="background:var(--success-bg);border:1px solid var(--success-border);border-radius:10px;padding:1rem"><p style="font-size:.78rem;color:var(--success);font-weight:700;margin-bottom:.3rem">&#10003; RIGHT</p><p style="font-size:.88rem">"The meeting is at <strong>half past nine</strong>."</p></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+        <div style="background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:10px;padding:1rem"><p style="font-size:.78rem;color:var(--danger);font-weight:700;margin-bottom:.3rem">&#10007; WRONG</p><p style="font-size:.88rem">"What hours is it?"</p></div>
+        <div style="background:var(--success-bg);border:1px solid var(--success-border);border-radius:10px;padding:1rem"><p style="font-size:.78rem;color:var(--success);font-weight:700;margin-bottom:.3rem">&#10003; RIGHT</p><p style="font-size:.88rem">"<strong>What time</strong> is it?"</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Grammar practice (3 min):</strong> Leia cada frase com o espaço. Dienane completa ORALMENTE antes de revelar. Se travar, dê a primeira palavra.">
+  <div class="slide-inner">
+    <div class="chapter-label">Grammar Practice</div>
+    <h2 class="slide-heading">Complete the <span class="accent">Time</span></h2>
+    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:550px;margin:1.2rem auto 0">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"It is nine _____." (9:00) <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?\"o'clock\":'[show]'">[show]</span></p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"The interview is at _____ past nine." (9:30) <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'half':'[show]'">[show]</span></p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"It is a _____ past ten." (10:15) <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'quarter':'[show]'">[show]</span></p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"_____ time is the meeting?" <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'What':'[show]'">[show]</span></p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"Are you _____ on Thursday?" (free) <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'available':'[show]'">[show]</span></p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="12" data-phase="4" data-teacher="<strong>Transição contexto (1 min):</strong> Diga: 'Now the real mission. You need to schedule an interview with a candidate. Look at your calendar.' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1400&q=80');background-size:cover;background-position:center">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Chapter 4 -- The Call</div>
+    <h2 class="slide-heading" style="font-size:2rem;color:#fff">The <span class="accent">Interview</span></h2>
+    <p style="color:rgba(255,255,255,.7);font-size:1rem;margin-top:.5rem">Schedule it by phone -- in English</p>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="13" data-phase="4" data-teacher="<strong>Artifact -- agenda (3 min):</strong> Mostre a agenda da semana. Pergunte: 'When are you busy? When are you available? What time is good for the interview?' Dienane responde olhando a agenda.">
+  <div class="slide-inner">
+    <div class="chapter-label">Artifact</div>
+    <h2 class="slide-heading">Your Week, Your <span class="accent">Calendar</span></h2>
+    <div style="max-width:400px;margin:1.2rem auto 0;background:linear-gradient(135deg,#f3f9f7,#fff);border:2px solid var(--accent);border-radius:12px;padding:1.3rem;box-shadow:0 4px 20px rgba(0,0,0,.08)">
+      <div style="text-align:center;border-bottom:1px dashed var(--border);padding-bottom:.6rem;margin-bottom:.7rem">
+        <p style="font-size:.7rem;color:var(--text-dim)">HUMAN RESOURCES &middot; WEEKLY SCHEDULE</p>
+        <p style="font-weight:700;font-size:1rem;color:var(--accent);font-family:'Cormorant Garamond',serif">Dienane Brand&atilde;o &mdash; HR</p>
+      </div>
+      <div style="font-size:.85rem;line-height:1.9">
+        <div style="display:flex;justify-content:space-between"><span>Mon &mdash; Team meeting</span><span style="color:var(--accent);font-weight:600">9:00</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Tue &mdash; Busy all day (training)</span><span style="color:var(--text-dim)">--</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Wed &mdash; Doctor's appointment</span><span style="color:var(--accent);font-weight:600">2:30</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Thu &mdash; AVAILABLE</span><span style="color:var(--success);font-weight:700">9:30?</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Fri &mdash; Reports</span><span style="color:var(--accent);font-weight:600">8:00</span></div>
+      </div>
+      <p style="font-size:.72rem;color:var(--accent);text-align:center;margin-top:.7rem">Mission: schedule the interview with Mr. Costa!</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Listen to a secretary confirm an appointment by phone. Close your eyes — just listen.' Toque SEM texto, 2 vezes. Depois revele as perguntas. 0.75x se pedir.">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Listening 1</div>
+    <h2 class="slide-heading" style="color:#fff">The <span class="accent">Confirmation</span></h2>
+    <p style="color:rgba(255,255,255,.6);font-size:.9rem;margin-top:.5rem;margin-bottom:1.5rem">Listen to the phone message about an appointment.</p>
+    <div class="listening-player" id="player1" data-src="/audio/dienane-brandao-de-mesquita/listening5_1_confirmation.mp3">
+      <div class="lp-label">Audio Player</div>
+      <div class="lp-seekbar" onclick="seekAudio(event,'player1')"><div class="lp-progress" id="progress-player1"></div></div>
+      <div class="lp-time"><span id="time-current-player1">0:00</span><span id="time-total-player1">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('player1',-5)" aria-label="Back 5 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('player1')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" style="align-items:center;justify-content:center"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('player1',5)" aria-label="Forward 5 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+      </div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player1',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player1',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn lp-speed-active" onclick="setPlayerSpeed('player1',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player1',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:480px;margin:1.2rem auto 0">
+      <div class="comp-q" style="background:rgba(255,255,255,.95);border-radius:10px;padding:1rem;text-align:left"><p style="font-size:.9rem;font-weight:600;margin-bottom:.5rem;color:#1a1a2e">1. What day is the appointment?</p><p style="font-size:.85rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Click to reveal'?'On Wednesday.':'Click to reveal'">Click to reveal</p></div>
+      <div class="comp-q" style="background:rgba(255,255,255,.95);border-radius:10px;padding:1rem;text-align:left"><p style="font-size:.9rem;font-weight:600;margin-bottom:.5rem;color:#1a1a2e">2. What time?</p><p style="font-size:.85rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Click to reveal'?'At half past two (2:30).':'Click to reveal'">Click to reveal</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Listening 2 + comprehension (4 min):</strong> Diga: 'Now listen to a colleague describe her schedule — this is YOUR model for the homework.' Toque o áudio. Depois as 3 perguntas.">
+  <div class="slide-inner">
+    <div class="chapter-label">Listening 2</div>
+    <h2 class="slide-heading">The Model <span class="accent">Schedule</span></h2>
+    <div class="listening-player" id="player2" data-src="/audio/dienane-brandao-de-mesquita/listening5_2_schedule.mp3">
+      <div class="lp-label">Audio Player</div>
+      <div class="lp-seekbar" onclick="seekAudio(event,'player2')"><div class="lp-progress" id="progress-player2"></div></div>
+      <div class="lp-time"><span id="time-current-player2">0:00</span><span id="time-total-player2">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('player2',-5)" aria-label="Back 5 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('player2')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" style="align-items:center;justify-content:center"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('player2',5)" aria-label="Forward 5 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+      </div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player2',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player2',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn lp-speed-active" onclick="setPlayerSpeed('player2',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('player2',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:520px;margin:1rem auto 0">
+      <div class="comp-q" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"><p style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">1. What time does Ana start work?</p><p style="font-size:.85rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Click to reveal'?'At eight o\'clock.':'Click to reveal'">Click to reveal</p></div>
+      <div class="comp-q" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"><p style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">2. When is her team meeting?</p><p style="font-size:.85rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Click to reveal'?'On Monday, at half past nine.':'Click to reveal'">Click to reveal</p></div>
+      <div class="comp-q" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"><p style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">3. When is she available?</p><p style="font-size:.85rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Click to reveal'?'On Thursday afternoon, after a quarter past two.':'Click to reveal'">Click to reveal</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Diálogo (6 min):</strong> Diga: 'Now the phone call. I am Mr. Costa, the candidate. You are you — from HR!' Clique 'Next Line' para cada fala. Para cada fala da Dienane, peça que ELA fale antes de tocar o áudio. Celebre quando acertar sem ler.">
+  <div class="slide-inner">
+    <div class="chapter-label">The Phone Call</div>
+    <h2 class="slide-heading" style="color:#fff">Scheduling with <span class="accent">Mr. Costa</span></h2>
+    <div class="dialogue-box" id="dialogueBox">
+      <div class="dialogue-line visible" data-line="1" data-voice="arthur"><div class="dialogue-avatar waiter">C</div><div class="dialogue-bubble waiter-bubble">Hello? Marcos Costa speaking. <span class="audio-inline" onclick="speakText('Hello? Marcos Costa speaking.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="2" data-voice="ellen"><div class="dialogue-avatar dienane">D</div><div class="dialogue-bubble dienane-bubble">Good morning, Mr. Costa! This is Dienane, from Human Resources. Are you <span class="vocab-highlight">available</span> for an interview this week? <span class="audio-inline" onclick="speakText('Good morning, Mr. Costa! This is Dienane, from Human Resources. Are you available for an interview this week?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="3" data-voice="arthur"><div class="dialogue-avatar waiter">C</div><div class="dialogue-bubble waiter-bubble">Oh, yes! Thank you for calling. What day is good? <span class="audio-inline" onclick="speakText('Oh, yes! Thank you for calling. What day is good?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="4" data-voice="ellen"><div class="dialogue-avatar dienane">D</div><div class="dialogue-bubble dienane-bubble">Let me check my <span class="vocab-highlight">calendar</span>... I am <span class="vocab-highlight">busy</span> on Tuesday. Is Thursday good for you? <span class="audio-inline" onclick="speakText('Let me check my calendar... I am busy on Tuesday. Is Thursday good for you?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="5" data-voice="arthur"><div class="dialogue-avatar waiter">C</div><div class="dialogue-bubble waiter-bubble">Thursday is perfect. What time? <span class="audio-inline" onclick="speakText('Thursday is perfect. What time?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="6" data-voice="ellen"><div class="dialogue-avatar dienane">D</div><div class="dialogue-bubble dienane-bubble">At <span class="vocab-highlight">half past</span> nine, in the morning. The <span class="vocab-highlight">meeting</span> room is on the second floor. <span class="audio-inline" onclick="speakText('At half past nine, in the morning. The meeting room is on the second floor.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="7" data-voice="arthur"><div class="dialogue-avatar waiter">C</div><div class="dialogue-bubble waiter-bubble">Half past nine, Thursday. I am writing it in my <span class="vocab-highlight">schedule</span>. Thank you very much! <span class="audio-inline" onclick="speakText('Half past nine, Thursday. I am writing it in my schedule. Thank you very much!',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="8" data-voice="ellen"><div class="dialogue-avatar dienane">D</div><div class="dialogue-bubble dienane-bubble">Great! See you on Thursday at nine thirty, Mr. Costa. Have a good day! <span class="audio-inline" onclick="speakText('Great! See you on Thursday at nine thirty, Mr. Costa. Have a good day!',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+    </div>
+    <button class="primary-btn" id="nextLineBtn" onclick="nextDialogueLine()" style="margin:1.2rem auto 0;display:block;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer">Next Line</button>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="17" data-phase="4" data-teacher="<strong>Comprehension (2 min):</strong> Pergunte sobre o MR. COSTA, não sobre a Dienane. Clique para revelar.">
+  <div class="slide-inner">
+    <div class="chapter-label">Comprehension</div>
+    <h2 class="slide-heading">About <span class="accent">Mr. Costa</span></h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
+      <div class="comp-q" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"><p style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">Is Mr. Costa available for the interview?</p><p style="font-size:.85rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Click to reveal'?'Yes — Thursday is perfect for him.':'Click to reveal'">Click to reveal</p></div>
+      <div class="comp-q" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"><p style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">What does he write in his schedule?</p><p style="font-size:.85rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Click to reveal'?'Half past nine, Thursday.':'Click to reveal'">Click to reveal</p></div>
+      <div class="comp-q" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"><p style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">Where is the meeting room?</p><p style="font-size:.85rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Click to reveal'?'On the second floor.':'Click to reveal'">Click to reveal</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="18" data-phase="5" data-teacher="<strong>Transição Quick Fire (1 min):</strong> Diga: 'Now fast practice. One situation, one sentence. Ready?' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1400&q=80');background-size:cover;background-position:center">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Chapter 5 -- Quick Fire</div>
+    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Quick <span class="accent">Fire</span></h2>
+    <p style="color:rgba(255,255,255,.7);font-size:1rem;margin-top:.5rem">6 situations -- Answer fast!</p>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="19" data-phase="5" data-teacher="<strong>Quick Fire (5 min):</strong> Leia cada situação. Espere 5-10 segundos. Dienane é A1+: se travar, dê a primeira palavra e celebre cada acerto. Clique 'Show Answer' só se travar de vez.">
+  <div class="slide-inner">
+    <div class="chapter-label">Quick Fire</div>
+    <h2 class="slide-heading">Situation <span class="accent">Challenge</span></h2>
+    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:560px;margin:1.2rem auto 0">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.88rem;margin-bottom:.4rem"><strong>1.</strong> Ask the time.</p><p style="font-size:.82rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Show Answer'?'What time is it?':'Show Answer'">Show Answer</p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.88rem;margin-bottom:.4rem"><strong>2.</strong> Say the meeting is at 9:30.</p><p style="font-size:.82rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Show Answer'?'The meeting is at half past nine.':'Show Answer'">Show Answer</p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.88rem;margin-bottom:.4rem"><strong>3.</strong> Ask a candidate if he is free on Thursday.</p><p style="font-size:.82rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Show Answer'?'Are you available on Thursday?':'Show Answer'">Show Answer</p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.88rem;margin-bottom:.4rem"><strong>4.</strong> Say you are not free on Tuesday.</p><p style="font-size:.82rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Show Answer'?'I am busy on Tuesday.':'Show Answer'">Show Answer</p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.88rem;margin-bottom:.4rem"><strong>5.</strong> Say the appointment is at 2:15.</p><p style="font-size:.82rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Show Answer'?'The appointment is at a quarter past two.':'Show Answer'">Show Answer</p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.88rem;margin-bottom:.4rem"><strong>6.</strong> Confirm: see you Thursday at 9:30.</p><p style="font-size:.82rem;color:var(--accent);cursor:pointer" onclick="this.textContent=this.textContent==='Show Answer'?'See you on Thursday at nine thirty!':'Show Answer'">Show Answer</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="20" data-phase="5" data-teacher="<strong>Spot the Error (3 min):</strong> Leia cada frase com erro. Pergunte 'What is wrong here?'. São os erros clássicos do português. Clique para revelar a correção.">
+  <div class="slide-inner">
+    <div class="chapter-label">Spot the Error</div>
+    <h2 class="slide-heading">Find the <span class="accent">Mistake</span></h2>
+    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:560px;margin:1.2rem auto 0">
+      <div class="error-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"><p style="font-size:.9rem;margin-bottom:.5rem"><span style="color:var(--danger);text-decoration:line-through">"The meeting is at nine and half."</span></p><p style="font-size:.82rem;color:var(--success);cursor:pointer" onclick="this.textContent=this.textContent==='Click to correct'?'The meeting is at half past nine. (half past + hora)':'Click to correct'">Click to correct</p></div>
+      <div class="error-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"><p style="font-size:.9rem;margin-bottom:.5rem"><span style="color:var(--danger);text-decoration:line-through">"What hours is it?"</span></p><p style="font-size:.82rem;color:var(--success);cursor:pointer" onclick="this.textContent=this.textContent==='Click to correct'?'What time is it? (time, não hours)':'Click to correct'">Click to correct</p></div>
+      <div class="error-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"><p style="font-size:.9rem;margin-bottom:.5rem"><span style="color:var(--danger);text-decoration:line-through">"I have a meeting in Thursday."</span></p><p style="font-size:.82rem;color:var(--success);cursor:pointer" onclick="this.textContent=this.textContent==='Click to correct'?'I have a meeting ON Thursday. (dias = on)':'Click to correct'">Click to correct</p></div>
+      <div class="error-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1rem"><p style="font-size:.9rem;margin-bottom:.5rem"><span style="color:var(--danger);text-decoration:line-through">"The interview is in nine o'clock."</span></p><p style="font-size:.82rem;color:var(--success);cursor:pointer" onclick="this.textContent=this.textContent==='Click to correct'?'The interview is AT nine o\'clock. (horas = at)':'Click to correct'">Click to correct</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="21" data-phase="5" data-teacher="<strong>Oral Drilling (3 min):</strong> Toque cada áudio. Peça Dienane repetir IMEDIATAMENTE. Foque no ritmo: half-past-NINE, a-QUAR-ter-past-TWO.">
+  <div class="slide-inner">
+    <div class="chapter-label">Oral Drilling</div>
+    <h2 class="slide-heading">Repeat <span class="accent">After</span> the Audio</h2>
+    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:540px;margin:1.2rem auto 0">
+      <div class="oral-item" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;align-items:center;gap:.8rem"><button class="audio-btn-sm" onclick="speakText('What time is the meeting?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button><p style="font-size:.88rem">"What time is the meeting?"</p></div>
+      <div class="oral-item" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;align-items:center;gap:.8rem"><button class="audio-btn-sm" onclick="speakText('The interview is at half past nine.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button><p style="font-size:.88rem">"The interview is at half past nine."</p></div>
+      <div class="oral-item" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;align-items:center;gap:.8rem"><button class="audio-btn-sm" onclick="speakText('Are you available on Thursday?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button><p style="font-size:.88rem">"Are you available on Thursday?"</p></div>
+      <div class="oral-item" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem;display:flex;align-items:center;gap:.8rem"><button class="audio-btn-sm" onclick="speakText('Let me check my calendar.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button><p style="font-size:.88rem">"Let me check my calendar."</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="22" data-phase="5" data-teacher="<strong>Error Correction (3 min):</strong> Anote os erros que Dienane cometeu durante a aula. Digite no campo editável. Leia cada erro e peça a correção.">
+  <div class="slide-inner">
+    <div class="chapter-label">Error Correction</div>
+    <h2 class="slide-heading">Let's <span class="accent">Fix</span> These</h2>
+    <p style="font-size:.9rem;color:var(--text-dim);margin-bottom:1rem;max-width:500px;margin-left:auto;margin-right:auto">Errors from today's class:</p>
+    <div class="error-correction-area" contenteditable="true" style="max-width:500px;margin:0 auto;min-height:150px;background:var(--bg-card);border:2px dashed var(--accent);border-radius:10px;padding:1.2rem;font-size:.9rem;line-height:1.8;outline:none" placeholder="Type student errors here..."></div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="23" data-phase="6" data-teacher="<strong>Transição Role-play (1 min):</strong> Diga: 'Now the real thing. Three phone calls: guided, semi-free, free. I am the candidate.' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1400&q=80');background-size:cover;background-position:center">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Chapter 6 -- Your Turn</div>
+    <h2 class="slide-heading" style="font-size:2rem;color:#fff">Your <span class="accent">Turn</span></h2>
+    <p style="color:rgba(255,255,255,.7);font-size:1rem;margin-top:.5rem">Guided &gt; Semi-free &gt; Free</p>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="24" data-phase="6" data-teacher="<strong>Role-play Guided (4 min):</strong> Você é o candidato atendendo o telefone. Dienane liga, se apresenta e marca a entrevista. Use as keywords da tela.">
+  <div class="slide-inner">
+    <div class="chapter-label">Role-Play: Guided</div>
+    <h2 class="slide-heading">The <span class="accent">Call</span></h2>
+    <div class="roleplay-body" style="max-width:500px;margin:1rem auto 0;background:linear-gradient(135deg,var(--accent-dim),rgba(13,115,119,.05));border:1px solid var(--accent);border-radius:12px;padding:1.5rem">
+      <p class="roleplay-scenario" style="font-size:.9rem;margin-bottom:1rem"><strong>Scenario:</strong> Call the candidate: say who you are, ask if he is available, and schedule the interview for Thursday at 9:30.</p>
+      <p style="font-size:.85rem;font-weight:600;margin-bottom:.5rem">Keyword chips:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+        <span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .7rem;font-size:.8rem">This is Dienane, from...</span>
+        <span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .7rem;font-size:.8rem">Are you available...?</span>
+        <span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .7rem;font-size:.8rem">at half past nine</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="25" data-phase="6" data-teacher="<strong>Role-play Semi-free (4 min):</strong> Agora o candidato (você) está OCUPADO na quinta. Dienane precisa olhar a agenda dela e propor OUTRO dia e horário. Menos pistas.">
+  <div class="slide-inner">
+    <div class="chapter-label">Role-Play: Semi-free</div>
+    <h2 class="slide-heading">Plan <span class="accent">B</span></h2>
+    <div class="roleplay-body" style="max-width:500px;margin:1rem auto 0;background:linear-gradient(135deg,rgba(13,115,119,.08),rgba(13,115,119,.02));border:1px solid var(--accent);border-radius:12px;padding:1.5rem">
+      <p class="roleplay-scenario" style="font-size:.9rem;margin-bottom:1rem"><strong>Scenario:</strong> The candidate is busy on Thursday! Check your calendar and propose another day and time. Negotiate until you both agree.</p>
+      <p style="font-size:.85rem;font-weight:600;margin-bottom:.5rem">Keywords:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+        <span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .7rem;font-size:.8rem">Is Friday good for you?</span>
+        <span style="background:var(--bg-card);border:1px solid var(--accent);border-radius:20px;padding:.3rem .7rem;font-size:.8rem">a quarter past...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="26" data-phase="6" data-teacher="<strong>Role-play Free (5 min):</strong> A missão: a ligação completa, do 'Hello?' ao 'See you'. Você é um candidato novo. ZERO pistas. NÃO interrompa. Anote erros. CELEBRE muito no final.">
+  <div class="slide-inner">
+    <div class="chapter-label">Role-Play: Free</div>
+    <h2 class="slide-heading">The Full <span class="accent">Call</span></h2>
+    <div class="roleplay-body" style="max-width:500px;margin:1rem auto 0;background:linear-gradient(135deg,rgba(13,115,119,.12),rgba(13,115,119,.03));border:1px solid var(--accent);border-radius:12px;padding:1.5rem">
+      <p class="roleplay-scenario" style="font-size:.9rem;margin-bottom:1rem"><strong>Scenario:</strong> A new candidate, a new call — from "Hello?" to "See you": introduce yourself, check his availability, look at your calendar, agree on day and time, and confirm everything.</p>
+      <p style="font-size:.85rem;color:var(--text-dim);font-style:italic">No keywords. The phone is yours!</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="27" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Let's review what you can do now. Click each item if you feel confident.' Leia cada item. Todos os checks = aula completa e stamp 5.">
+  <div class="slide-inner">
+    <div class="chapter-label">Chapter 7 -- Wrap-up</div>
+    <h2 class="slide-heading" style="color:#fff">Lesson 5 <span class="accent">Checklist</span></h2>
+    <div class="check-grid" id="checklist-5" style="max-width:520px;margin:1.2rem auto 0;display:flex;flex-direction:column;gap:.5rem">
+      <div class="check-item" onclick="toggleCheck(this)" style="cursor:pointer;background:rgba(255,255,255,.95);border-radius:8px;padding:.7rem 1rem;display:flex;align-items:center;gap:.6rem"><div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><span style="font-size:.88rem;color:#1a1a2e">I can say the numbers 1-100 — and hear the difference: 13/30, 15/50.</span></div>
+      <div class="check-item" onclick="toggleCheck(this)" style="cursor:pointer;background:rgba(255,255,255,.95);border-radius:8px;padding:.7rem 1rem;display:flex;align-items:center;gap:.6rem"><div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><span style="font-size:.88rem;color:#1a1a2e">I can tell the time: o'clock, half past, a quarter past/to.</span></div>
+      <div class="check-item" onclick="toggleCheck(this)" style="cursor:pointer;background:rgba(255,255,255,.95);border-radius:8px;padding:.7rem 1rem;display:flex;align-items:center;gap:.6rem"><div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><span style="font-size:.88rem;color:#1a1a2e">I can ask "What time...?" and "Are you available...?".</span></div>
+      <div class="check-item" onclick="toggleCheck(this)" style="cursor:pointer;background:rgba(255,255,255,.95);border-radius:8px;padding:.7rem 1rem;display:flex;align-items:center;gap:.6rem"><div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><span style="font-size:.88rem;color:#1a1a2e">I scheduled a full interview by phone, in English.</span></div>
+      <div class="check-item" onclick="toggleCheck(this)" style="cursor:pointer;background:rgba(255,255,255,.95);border-radius:8px;padding:.7rem 1rem;display:flex;align-items:center;gap:.6rem"><div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><span style="font-size:.88rem;color:#1a1a2e">I know the words: schedule, meeting, appointment, calendar, available, busy, early, late.</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="28" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Diga: 'Day 5 is complete, Dienane! You earned your Time Master Badge!' Homework (oralmente): escrever a agenda da semana em inglês (5 itens com dia e hora). Próxima aula: Places in the City (preposições de lugar, direções).">
+  <div class="slide-inner" style="text-align:center">
+    <div class="chapter-label">Chapter 7 -- Wrap-up</div>
+    <div class="badge-card">
+      <div class="badge-icon">
+        <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <div class="sparkles"><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div></div>
+      </div>
+      <h2 class="slide-heading" style="color:#fff">Time Master Badge <span class="accent">Earned!</span></h2>
+      <p style="color:rgba(255,255,255,.6);font-size:1rem;margin-top:.5rem">Your calendar speaks English now, Dienane.</p>
+      <p style="color:rgba(255,255,255,.7);font-size:.85rem;margin-top:1.5rem">Day 5 -- Complete.</p>
+      <p style="color:var(--accent-light);font-size:.9rem;margin-top:.5rem">Next lesson: Places in the City</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /slides-container -->
+
+<!-- Teacher T Icon -->
+<div class="teacher-t" id="teacherT">T<div class="teacher-t-panel" id="teacherPanel"></div></div>
+
+<!-- Navigation Bar -->
+<div class="nav-bar" style="justify-content:space-between;">
+    <button onclick="document.body.classList.remove('slide-mode')" aria-label="Exit presentation" style="background:transparent;border:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.85);border-radius:8px;padding:.55rem 1.1rem;font-size:.72rem;font-weight:700;letter-spacing:1px;cursor:pointer;flex:0 0 auto;">&#10005; EXIT</button>
+    <span id="lessonLabel" style="color:rgba(255,255,255,.5);font-size:.72rem;font-weight:600;letter-spacing:1px;flex:0 0 auto;">LESSON 5</span>
+    <div class="slide-dots" id="slideDots" style="display:none;"></div>
+    <div style="display:flex;gap:.6rem;align-items:center;flex:0 0 auto;">
+      <button id="prevBtn" onclick="changeSlide(-1)" disabled style="background:transparent;border:1.5px solid var(--accent);color:var(--accent);border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;">&#8592; Previous</button>
+      <button id="nextBtn" onclick="changeSlide(1)" style="background:var(--accent);border:1.5px solid var(--accent);color:#fff;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;">Next &#8594;</button>
+    </div>
+  </div>
+
+<!-- Confetti -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP =====
+var audioMap = {
+  "Schedule": "/audio/dienane-brandao-de-mesquita/a5_schedule.mp3",
+  "Meeting": "/audio/dienane-brandao-de-mesquita/a5_meeting.mp3",
+  "Appointment": "/audio/dienane-brandao-de-mesquita/a5_appointment.mp3",
+  "Calendar": "/audio/dienane-brandao-de-mesquita/a5_calendar.mp3",
+  "Available": "/audio/dienane-brandao-de-mesquita/a5_available.mp3",
+  "Busy": "/audio/dienane-brandao-de-mesquita/a5_busy.mp3",
+  "Early": "/audio/dienane-brandao-de-mesquita/a5_early.mp3",
+  "Late": "/audio/dienane-brandao-de-mesquita/a5_late.mp3",
+  "[order-l5]": "/audio/dienane-brandao-de-mesquita/a5_order_sequence.mp3",
+  "What time is it?": "/audio/dienane-brandao-de-mesquita/a5_what_time_is_it.mp3",
+  "The meeting is at half past nine.": "/audio/dienane-brandao-de-mesquita/a5_the_meeting_is_at_half_past_nine.mp3",
+  "Are you available on Thursday?": "/audio/dienane-brandao-de-mesquita/a5_are_you_available_on_thursday.mp3",
+  "Let me check my calendar.": "/audio/dienane-brandao-de-mesquita/a5_let_me_check_my_calendar.mp3",
+  "See you on Thursday at nine thirty!": "/audio/dienane-brandao-de-mesquita/a5_see_you_on_thursday_at_nine_thirty.mp3",
+  "I am busy on Tuesday.": "/audio/dienane-brandao-de-mesquita/a5_i_am_busy_on_tuesday.mp3",
+  "I have an appointment at the bank.": "/audio/dienane-brandao-de-mesquita/a5_i_have_an_appointment_at_the_bank.mp3",
+  "What time is the meeting?": "/audio/dienane-brandao-de-mesquita/a5_what_time_is_the_meeting.mp3",
+  "The interview is at half past nine.": "/audio/dienane-brandao-de-mesquita/a5_the_interview_is_at_half_past_nine.mp3",
+  "I would like a coffee and some bread, please.": "/audio/dienane-brandao-de-mesquita/a5_i_would_like_a_coffee_and_some_bread_please.mp3",
+  "An orange juice, please.": "/audio/dienane-brandao-de-mesquita/a5_an_orange_juice_please.mp3",
+  "Thirteen. Thirty.": "/audio/dienane-brandao-de-mesquita/a5_thirteen_thirty.mp3",
+  "Fifteen. Fifty.": "/audio/dienane-brandao-de-mesquita/a5_fifteen_fifty.mp3",
+  "Sixteen. Sixty.": "/audio/dienane-brandao-de-mesquita/a5_sixteen_sixty.mp3",
+  "Nineteen. Ninety.": "/audio/dienane-brandao-de-mesquita/a5_nineteen_ninety.mp3",
+  "It is nine o'clock.": "/audio/dienane-brandao-de-mesquita/a5_it_is_nine_o_clock.mp3",
+  "It is half past nine.": "/audio/dienane-brandao-de-mesquita/a5_it_is_half_past_nine.mp3",
+  "It is a quarter past ten.": "/audio/dienane-brandao-de-mesquita/a5_it_is_a_quarter_past_ten.mp3",
+  "Hello? Marcos Costa speaking.": "/audio/dienane-brandao-de-mesquita/a5_hello_marcos_costa_speaking.mp3",
+  "Good morning, Mr. Costa! This is Dienane, from Human Resources. Are you available for an interview this week?": "/audio/dienane-brandao-de-mesquita/a5_good_morning_mr_costa_this_is_dienane_from_human_resour.mp3",
+  "Oh, yes! Thank you for calling. What day is good?": "/audio/dienane-brandao-de-mesquita/a5_oh_yes_thank_you_for_calling_what_day_is_good.mp3",
+  "Let me check my calendar... I am busy on Tuesday. Is Thursday good for you?": "/audio/dienane-brandao-de-mesquita/a5_let_me_check_my_calendar_i_am_busy_on_tuesday_is_thursd.mp3",
+  "Thursday is perfect. What time?": "/audio/dienane-brandao-de-mesquita/a5_thursday_is_perfect_what_time.mp3",
+  "At half past nine, in the morning. The meeting room is on the second floor.": "/audio/dienane-brandao-de-mesquita/a5_at_half_past_nine_in_the_morning_the_meeting_room_is_on.mp3",
+  "Half past nine, Thursday. I am writing it in my schedule. Thank you very much!": "/audio/dienane-brandao-de-mesquita/a5_half_past_nine_thursday_i_am_writing_it_in_my_schedule.mp3",
+  "Great! See you on Thursday at nine thirty, Mr. Costa. Have a good day!": "/audio/dienane-brandao-de-mesquita/a5_great_see_you_on_thursday_at_nine_thirty_mr_costa_have.mp3"
+};
+
+// ===== SPEAK TEXT =====
+var currentAudio = null;
+var audioSpeed = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed;
+    currentAudio.play().catch(function() { ttsSpeak(cleanText); });
+  } else { ttsSpeak(cleanText); }
+}
+
+function ttsSpeak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 1;
+var totalSlides = 35;
+var slidePhases = {1:1,2:1,3:1,4:1,5:2,6:2,7:2,8:2,9:2,10:2,11:3,12:3,13:3,14:3,15:3,16:4,17:4,18:4,19:4,20:4,21:5,22:5,23:5,24:5,25:5,26:5,27:6,28:6,29:6,30:6,31:7,32:7,33:7,34:7,35:7};
+
+function changeSlide(dir) {
+  var next = currentSlide + dir;
+  if (next < 1 || next > totalSlides) return;
+  goToSlide(next);
+}
+
+function goToSlide(n) {
+  var prev = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
+  if (prev) prev.classList.remove('active');
+  currentSlide = n;
+  var activeSlide = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
+  if (activeSlide) { activeSlide.classList.add('active'); activeSlide.scrollTop = 0; }
+  var teacherText = activeSlide ? activeSlide.getAttribute('data-teacher') || '' : '';
+  document.getElementById('teacherPanel').innerHTML = teacherText;
+  updateNav();
+  updatePhaseBar();
+}
+
+function updateNav() {
+  document.getElementById('slideCounter').textContent = String(currentSlide).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('prevBtn').disabled = currentSlide <= 1;
+  document.getElementById('nextBtn').disabled = currentSlide >= totalSlides;
+  var dots = document.querySelectorAll('.slide-dot');
+  dots.forEach(function(d, i) { d.classList.toggle('active', i + 1 === currentSlide); });
+}
+
+function updatePhaseBar() {
+  var cp = slidePhases[currentSlide];
+  document.querySelectorAll('.phase-segment').forEach(function(seg) {
+    var p = parseInt(seg.dataset.phase);
+    seg.classList.remove('completed', 'current', 'upcoming');
+    if (p < cp) seg.classList.add('completed');
+    else if (p === cp) seg.classList.add('current');
+    else seg.classList.add('upcoming');
+  });
+  document.querySelectorAll('.phase-label').forEach(function(lbl) {
+    var p = parseInt(lbl.dataset.phase);
+    lbl.classList.remove('completed', 'current');
+    if (p < cp) lbl.classList.add('completed');
+    else if (p === cp) lbl.classList.add('current');
+  });
+}
+
+// Build dots
+(function() {
+  var dotsEl = document.getElementById('slideDots');
+  for (var i = 1; i <= totalSlides; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'slide-dot' + (i === 1 ? ' active' : '');
+    dot.dataset.slide = i;
+    dot.onclick = (function(n) { return function() { goToSlide(n); }; })(i);
+    dotsEl.appendChild(dot);
+  }
+})();
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); changeSlide(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); changeSlide(-1); }
+});
+
+// ===== VOCAB REVEAL (toggle) =====
+function revealVocab(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var count = grid.querySelectorAll('.vocab-card.revealed').length;
+  var total = grid.querySelectorAll('.vocab-card').length;
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  document.getElementById(counterId).textContent = count + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
+
+// ===== FILL REVEAL =====
+function revealFill(item) { item.classList.toggle('revealed'); }
+
+// ===== COMPREHENSION REVEAL =====
+function revealComp(q) { q.classList.toggle('revealed'); }
+
+// ===== ERROR REVEAL =====
+var errorCount = 0;
+function revealError(card) {
+  card.classList.toggle('revealed');
+  errorCount++;
+  document.getElementById('errorScore').textContent = errorCount + ' / 5 errors found';
+}
+
+// ===== SUBSTITUTION DRILL =====
+var subOptions = [
+  ['Can I have', 'I would like', 'We would like'],
+  ['a coffee', 'some water', 'an orange', 'some bread', 'a menu', 'some rice', 'some fruit', 'some chicken']
+];
+var subIndex = [0, 0];
+
+function cycleSub(el, group) {
+  subIndex[group] = (subIndex[group] + 1) % subOptions[group].length;
+  el.textContent = subOptions[group][subIndex[group]];
+}
+
+function randomizeSubs() {
+  for (var g = 0; g < 2; g++) subIndex[g] = Math.floor(Math.random() * subOptions[g].length);
+  document.getElementById('subBlank1').textContent = subOptions[0][subIndex[0]];
+  document.getElementById('subBlank2').textContent = subOptions[1][subIndex[1]];
+}
+
+// ===== DIALOGUE LINE-BY-LINE =====
+var dialogueLine = 1;
+function nextDialogueLine() {
+  dialogueLine++;
+  var line = document.querySelector('.dialogue-line[data-line="' + dialogueLine + '"]');
+  if (line) {
+    line.classList.add('visible');
+    if (dialogueLine >= 8) {
+      document.getElementById('nextLineBtn').textContent = 'Dialogue Complete';
+      document.getElementById('nextLineBtn').disabled = true;
+      document.getElementById('nextLineBtn').style.opacity = '0.5';
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE =====
+var challenges = [
+  { prompt: 'You want coffee. How do you ask?', answer: '"Can I have a coffee, please?"' },
+  { prompt: 'You want water. Use "I would like."', answer: '"I would like some water."' },
+  { prompt: 'You see an orange. Use "a" or "an"?', answer: '"An orange (vowel sound)."' },
+  { prompt: 'Order bread for breakfast.', answer: '"I would like some bread, please."' },
+  { prompt: 'The waiter asks "Anything else?" You say...', answer: '"No, thank you. That is all."' },
+  { prompt: 'You want to see the menu.', answer: '"Can I see the menu, please?"' }
+];
+var challengeIndex = 0;
+var challengeCorrect = 0;
+
+function showChallengeAnswer() {
+  document.getElementById('challengeAnswer').classList.add('show');
+  document.getElementById('showAnswerBtn').style.display = 'none';
+  document.getElementById('nextChallengeBtn').style.display = 'inline-flex';
+  challengeCorrect++;
+  document.getElementById('challengeScore').textContent = challengeCorrect + ' / 6';
+}
+
+function nextChallenge() {
+  challengeIndex++;
+  if (challengeIndex >= challenges.length) {
+    document.getElementById('challengeCard').innerHTML = '<div style="text-align:center"><h3 style="font-family:Cormorant Garamond,serif;font-size:2rem;color:var(--accent)">Challenge Complete!</h3><p style="margin-top:.5rem;color:var(--text-dim)">Score: ' + challengeCorrect + ' / 6</p></div>';
+    triggerConfetti();
+    return;
+  }
+  document.getElementById('challengePrompt').textContent = challenges[challengeIndex].prompt;
+  document.getElementById('challengeAnswer').textContent = challenges[challengeIndex].answer;
+  document.getElementById('challengeAnswer').classList.remove('show');
+  document.getElementById('showAnswerBtn').style.display = 'inline-flex';
+  document.getElementById('nextChallengeBtn').style.display = 'none';
+  document.getElementById('challengeCounter').textContent = 'Question ' + (challengeIndex + 1) + ' of 6';
+}
+
+// ===== LISTENING PLAYER =====
+var lpPlayers = {};
+
+function initPlayer(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var src = el.getAttribute('data-src');
+  if (!src) return;
+  var audio = new Audio(src);
+  lpPlayers[id] = { audio: audio, speed: 1, playing: false };
+  audio.addEventListener('timeupdate', function() { updatePlayerUI(id); });
+  audio.addEventListener('loadedmetadata', function() { updatePlayerUI(id); });
+  audio.addEventListener('ended', function() {
+    lpPlayers[id].playing = false;
+    var playBtn = document.querySelector('#' + id + ' .lp-play');
+    if (playBtn) playBtn.classList.remove('playing');
+    var qs = document.getElementById('questions-' + id);
+    if (qs) qs.style.display = 'flex';
+  });
+}
+
+function togglePlayer(id) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var p = lpPlayers[id];
+  var playBtn = document.querySelector('#' + id + ' .lp-play');
+  if (p.playing) {
+    p.audio.pause(); p.playing = false;
+    if (playBtn) playBtn.classList.remove('playing');
+  } else {
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    p.audio.playbackRate = p.speed;
+    p.audio.play();
+    p.playing = true;
+    if (playBtn) playBtn.classList.add('playing');
+  }
+}
+
+function skipAudio(id, seconds) {
+  if (!lpPlayers[id]) return;
+  var a = lpPlayers[id].audio;
+  a.currentTime = Math.max(0, Math.min(a.duration || 0, a.currentTime + seconds));
+}
+
+function seekAudio(event, id) {
+  if (!lpPlayers[id]) return;
+  var bar = event.currentTarget;
+  var rect = bar.getBoundingClientRect();
+  var pct = (event.clientX - rect.left) / rect.width;
+  lpPlayers[id].audio.currentTime = pct * (lpPlayers[id].audio.duration || 0);
+}
+
+function setPlayerSpeed(id, speed, btn) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  lpPlayers[id].speed = speed;
+  lpPlayers[id].audio.playbackRate = speed;
+  var container = document.getElementById(id);
+  if (container) container.querySelectorAll('.lp-speed-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+}
+
+function updatePlayerUI(id) {
+  var p = lpPlayers[id]; if (!p) return;
+  var current = p.audio.currentTime || 0;
+  var total = p.audio.duration || 0;
+  var pct = total > 0 ? (current / total * 100) : 0;
+  var bar = document.getElementById('progress-' + id);
+  if (bar) bar.style.width = pct + '%';
+  var tcEl = document.getElementById('time-current-' + id);
+  if (tcEl) tcEl.textContent = fmtTime(current);
+  var ttEl = document.getElementById('time-total-' + id);
+  if (ttEl) ttEl.textContent = fmtTime(total);
+}
+
+function fmtTime(s) {
+  if (isNaN(s)) return '0:00';
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+// ===== CHECKLIST =====
+function toggleCheck(item) { item.classList.toggle('checked'); }
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#0D7377','#14A3A8','#003080','#16a34a','#d97706','#dc2626','#5b9bd5'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    var size = 4 + Math.random() * 8;
+    piece.style.width = size + 'px'; piece.style.height = size + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 5000);
+}
+
+// ===== REFLECTION RECORDING =====
+var reflectionRecording = false;
+var reflectionRecorder = null;
+var reflectionChunks = [];
+
+function toggleReflectionRecord(btn) {
+  if (!reflectionRecording) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+      var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+      reflectionRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+      reflectionChunks = [];
+      reflectionRecorder.ondataavailable = function(e) { if (e.data.size > 0) reflectionChunks.push(e.data); };
+      reflectionRecorder.onstop = function() {
+        var blob = new Blob(reflectionChunks, { type: reflectionRecorder.mimeType });
+        var url = URL.createObjectURL(blob);
+        document.getElementById('reflectionResult').innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:.5rem"></audio><p style="font-size:.8rem;color:var(--success);margin-top:.3rem">Recording saved. Listen to yourself!</p>';
+        stream.getTracks().forEach(function(t) { t.stop(); });
+      };
+      reflectionRecorder.start(100);
+      btn.classList.add('recording');
+      reflectionRecording = true;
+    }).catch(function() { alert('Could not access microphone.'); });
+  } else {
+    if (reflectionRecorder && reflectionRecorder.state === 'recording') reflectionRecorder.stop();
+    btn.classList.remove('recording');
+    reflectionRecording = false;
+  }
+}
+
+// ===== INIT =====
+updatePhaseBar();
+var initSlide = document.querySelector('.slide[data-slide="1"]');
+if (initSlide) document.getElementById('teacherPanel').innerHTML = initSlide.getAttribute('data-teacher') || '';
+</script>
+
+<script src="/lib/audio-toggle.js"></script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js"></script>
+</body>
+</html>
