@@ -50,8 +50,13 @@ def main():
         print(__doc__)
         return 2
     slug = sys.argv[1]
-    base = sys.argv[2] if len(sys.argv) > 2 else 'origin/main'
     sh('git', 'fetch', '-q', 'origin', 'main')
+    if len(sys.argv) > 2:
+        base = sys.argv[2]
+    else:
+        # merge-base: o main pode ter andado (outras abas mergeando em paralelo);
+        # comparar contra origin/main direto acusaria os arquivos dos outros.
+        base = sh('git', 'merge-base', 'HEAD', 'origin/main').strip()
 
     changed = [l for l in sh('git', 'diff', '--name-only', base).splitlines() if l]
     errors = []
@@ -72,6 +77,9 @@ def main():
         old = show(base, path)
         if not old:
             continue  # arquivo novo, nada a regredir
+        if not (ROOT / path).exists():
+            errors.append(f'ARQUIVO REMOVIDO: {path} (aula só nasce, não morre)')
+            continue
         new = (ROOT / path).read_text(encoding='utf-8', errors='replace')
         old_ex, old_st = counts(old)
         new_ex, new_st = counts(new)
