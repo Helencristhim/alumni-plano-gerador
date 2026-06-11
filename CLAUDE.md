@@ -235,7 +235,7 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 - Mostrar 3-4 exemplos com estrutura em destaque (cor accent)
 - Pergunta: "What do the orange words have in common?"
 - Botao "Reveal the Rule" → tabela gramatical com fade-in
-- Slide extra "Common Mistake" com comparacao visual (X vermelho vs check verde)
+- Slide extra "Common Mistake" com comparacao visual (X vermelho vs check verde). Classe `slide-light` (NUNCA slide-dark). Texto DIRETO no div (NUNCA dentro de `<p>` ou `<strong>` — o `display:flex` do `.mistake-item` espalha elementos inline). SVG 24x24 padrão Patricia. Explicação pedagógica em `<p>` EMBAIXO do mistake-card
 - Slide de Grammar Practice com fill-in clicaveis (click → revela resposta)
 
 **DIALOGO — LINE BY LINE**
