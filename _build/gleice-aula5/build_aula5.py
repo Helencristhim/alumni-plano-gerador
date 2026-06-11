@@ -138,6 +138,7 @@ def build(scaffold, is_aluno):
         # fim dos slides: preserva teacher-t (icone T); fecha slidesContainer + slides-wrapper
         h = replace_between(h, '<div class="slides-container" id="slidesContainer">', '<div class="teacher-t"', slides + '</div>\n</div>\n\n')
         h = h.replace('LESSON 4', 'LESSON 5')
+        h = h.replace('dialogueLine >= 10', 'dialogueLine >= 12')  # dialogo da aula 5 tem 12 falas
     return h
 
 prof = build(read(PROF_SCAFFOLD), False)
