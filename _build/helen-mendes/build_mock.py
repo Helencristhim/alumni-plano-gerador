@@ -94,7 +94,7 @@ ORDER_NARRATIONS = {
 HEADER_INFO = (
     '      <span>A2</span>\n'
     '      <span>S&#227;o Paulo, SP</span>\n'
-    '      <span>Gerente de Marketing</span>\n'
+    '      <span>Diretora Executiva</span>\n'
     '      <span>60 min / Online</span>\n'
 )
 
