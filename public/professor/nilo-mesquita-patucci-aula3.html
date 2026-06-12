@@ -412,6 +412,11 @@ body.slide-mode .logo-bar .slide-counter { display:block; }
   border:1px solid rgba(200,200,190,.5);border-radius:10px;transition:border-color .3s;
 }
 .vocab-card-pc:hover { border-color:var(--accent); }
+.vocab-card-pc.listened{border-color:var(--success);background:rgba(22,163,74,0.06)}
+.vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
+.btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+.btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
+
 .vocab-card-content { flex:1; }
 .vocab-card-header { display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap; }
 .vocab-card-word { font-weight:700;font-size:1rem;color:#1a1a1a; }
@@ -1350,7 +1355,9 @@ document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==
 // ===== AUDIO =====
 var currentAudio=null;
 var audioSpeed=1;
-function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;}var f=audioMap[text]||audioMap[text.replace(/\.$/,'')]||audioMap[text+'.'];if(f){currentAudio=new Audio(f);currentAudio.playbackRate=audioSpeed;currentAudio.play().catch(function(){ttsSpeak(text);});}else{ttsSpeak(text);}}
+function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;}var f=audioMap[text]||audioMap[text.replace(/\.$/,'')]||audioMap[text+'.'];if(f){currentAudio=new Audio(f);currentAudio.playbackRate=audioSpeed;currentAudio.play().catch(function(){ttsSpeak(text);});}else{ttsSpeak(text);}
+  if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
+}
 function ttsSpeak(t){if('speechSynthesis' in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=audioSpeed*0.85;window.speechSynthesis.speak(u);}}
 
 // ===== VOCAB REVEAL (toggle) =====

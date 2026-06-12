@@ -710,6 +710,11 @@ body.slide-mode .logo-bar .view-badge { display: none; }
 .op-speed{display:flex;gap:.3rem;margin-top:.4rem}
 .op-speed button{padding:.2rem .5rem;border:1px solid var(--border);border-radius:5px;background:var(--bg-card);color:var(--text-dim);font-size:.7rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s}
 .op-speed button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.vocab-card-pc.listened{border-color:var(--success);background:rgba(22,163,74,0.06)}
+.vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
+.btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+.btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -4079,7 +4084,9 @@ function speakText(text, btn) {
     currentAudio = new Audio(file);
     currentAudio.playbackRate = audioSpeed;
     currentAudio.play().catch(function() { ttsSpeak(cleanText); });
-  } else { ttsSpeak(cleanText); }
+  } else { ttsSpeak(cleanText); 
+  if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
+}
 }
 
 function ttsSpeak(text) {
@@ -4432,6 +4439,28 @@ function toggleReflectionRecord(btn) {
 }
 
 // ===== SPEECH RECOGNITION =====
+function injectPronunciationBtn(card,audioUrl){
+  var old=card.querySelector('.btn-your-pronunciation');if(old)old.remove();
+  var playBtn=document.createElement('button');
+  playBtn.className='btn btn-your-pronunciation';
+  playBtn.innerHTML='&#9654; Your Pronunciation';
+  playBtn.onclick=function(e){e.preventDefault();
+    if(playBtn.dataset.playing==='true'){
+      var a=card.querySelector('.your-pron-audio');if(a){a.pause();a.remove()}
+      playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';return;
+    }
+    var audio=new Audio(audioUrl);audio.className='your-pron-audio';audio.style.display='none';
+    card.appendChild(audio);playBtn.innerHTML='&#9632; Playing...';playBtn.dataset.playing='true';
+    audio.play();
+    audio.onended=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+    audio.onerror=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+  };
+  var controls=card.querySelector('.speech-controls');
+  if(controls)controls.appendChild(playBtn);
+}
+
+var activeRecognition = null;
+
 var activeRecognition = null;
 
 function startRecording(btn) {
@@ -4479,7 +4508,7 @@ function startRecording(btn) {
   setTimeout(function() { if (btn.classList.contains('recording')) { r.stop(); resetButtons(); } }, 30000);
 }
 
-function stopRecording(stopBtn) { if (activeRecognition) activeRecognition.recognition.stop(); }
+function stopRecording(stopBtn){if(activeRecognition){try{activeRecognition.recognition.stop()}catch(e){}if(activeRecognition.mediaRec&&activeRecognition.mediaRec.state==='recording'){try{activeRecognition.mediaRec.stop()}catch(e){}}}}
 
 // ===== WORD ANALYSIS (LCS + Levenshtein) =====
 function analyzeWords(targetStr, spokenStr) {
@@ -4621,13 +4650,17 @@ function startFreeRecording(btn) {
       var url = URL.createObjectURL(blob);
       var thinkCard = btn.closest('.think-card');
       var resultDiv = thinkCard.querySelector('[id^="think-result"]');
-      if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Grava\u00e7\u00e3o salva!</p>';
+      if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Recording saved!</p>';
+      thinkCard.classList.add('recorded');
+      updateProgress();
       stream.getTracks().forEach(function(t) { t.stop(); });
+      var slug=window.STUDENT_SLUG||'unknown';var thinkId=resultDiv.id||'think-free';var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';var filePath=slug+'/'+thinkId+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;thinkCard.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
     };
     freeRecorder.start(100);
-    btn.style.display = 'none';
-    stopBtn.style.display = 'inline-block';
-  }).catch(function() { alert('N\u00e3o foi poss\u00edvel acessar o microfone.'); });
+    btn.classList.add('hidden');
+    stopBtn.classList.add('visible');
+  }).catch(function() { alert('Could not access microphone.'); });
 }
 
 function stopFreeRecording(stopBtn) {

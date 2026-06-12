@@ -276,6 +276,11 @@ function resetProgress() { if (confirm('Tem certeza que deseja resetar todo o pr
 .op-speed button{padding:.2rem .5rem;border:1px solid var(--border);border-radius:5px;background:var(--bg-card);color:var(--text-dim);font-size:.7rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s}
 .op-speed button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .fill-a { display:none; }
+.vocab-card-pc.listened{border-color:var(--success);background:rgba(22,163,74,0.06)}
+.vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
+.btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+.btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -2792,7 +2797,9 @@ function speakText(text, btn) {
     currentAudio = new Audio(file);
     currentAudio.playbackRate = audioSpeed;
     currentAudio.play().catch(function() { ttsSpeak(cleanText); });
-  } else { ttsSpeak(cleanText); }
+  } else { ttsSpeak(cleanText); 
+  if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
+}
 }
 
 function ttsSpeak(text) {
@@ -2821,6 +2828,28 @@ function switchTab(tabId) {
 function toggleLesson(header) { header.parentElement.classList.toggle('open'); }
 
 // ===== SPEECH RECOGNITION =====
+function injectPronunciationBtn(card,audioUrl){
+  var old=card.querySelector('.btn-your-pronunciation');if(old)old.remove();
+  var playBtn=document.createElement('button');
+  playBtn.className='btn btn-your-pronunciation';
+  playBtn.innerHTML='&#9654; Your Pronunciation';
+  playBtn.onclick=function(e){e.preventDefault();
+    if(playBtn.dataset.playing==='true'){
+      var a=card.querySelector('.your-pron-audio');if(a){a.pause();a.remove()}
+      playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';return;
+    }
+    var audio=new Audio(audioUrl);audio.className='your-pron-audio';audio.style.display='none';
+    card.appendChild(audio);playBtn.innerHTML='&#9632; Playing...';playBtn.dataset.playing='true';
+    audio.play();
+    audio.onended=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+    audio.onerror=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+  };
+  var controls=card.querySelector('.speech-controls');
+  if(controls)controls.appendChild(playBtn);
+}
+
+var activeRecognition = null;
+
 var activeRecognition = null;
 
 function startRecording(btn) {
@@ -2868,7 +2897,7 @@ function startRecording(btn) {
   setTimeout(function() { if (btn.classList.contains('recording')) { r.stop(); resetButtons(); } }, 30000);
 }
 
-function stopRecording(stopBtn) { if (activeRecognition) activeRecognition.recognition.stop(); }
+function stopRecording(stopBtn){if(activeRecognition){try{activeRecognition.recognition.stop()}catch(e){}if(activeRecognition.mediaRec&&activeRecognition.mediaRec.state==='recording'){try{activeRecognition.mediaRec.stop()}catch(e){}}}}
 
 // ===== WORD ANALYSIS (LCS + Levenshtein) =====
 function analyzeWords(targetStr, spokenStr) {
@@ -3010,13 +3039,17 @@ function startFreeRecording(btn) {
       var url = URL.createObjectURL(blob);
       var thinkCard = btn.closest('.think-card');
       var resultDiv = thinkCard.querySelector('[id^="think-result"]');
-      if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Grava\u00e7\u00e3o salva!</p>';
+      if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Recording saved!</p>';
+      thinkCard.classList.add('recorded');
+      updateProgress();
       stream.getTracks().forEach(function(t) { t.stop(); });
+      var slug=window.STUDENT_SLUG||'unknown';var thinkId=resultDiv.id||'think-free';var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';var filePath=slug+'/'+thinkId+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;thinkCard.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
     };
     freeRecorder.start(100);
-    btn.style.display = 'none';
-    stopBtn.style.display = 'inline-block';
-  }).catch(function() { alert('N\u00e3o foi poss\u00edvel acessar o microfone.'); });
+    btn.classList.add('hidden');
+    stopBtn.classList.add('visible');
+  }).catch(function() { alert('Could not access microphone.'); });
 }
 
 function stopFreeRecording(stopBtn) {
@@ -3043,15 +3076,7 @@ function toggleMediaDone(checkbox) {
 }
 
 // ===== STATE PERSISTENCE =====
-function saveState() {
-  var s = { matches: [], blanks: [], quiz: [], speech: [], mediaChecks: {} };
-  document.querySelectorAll('.media-card-wrapper').forEach(function(w) { var id = w.dataset.media; var cb = w.querySelector('input[type="checkbox"]'); if (id && cb) s.mediaChecks[id] = cb.checked; });
-  document.querySelectorAll('.match-row.correct select').forEach(function(sel) { s.matches.push(sel.closest('.match-row').querySelector('.match-word').textContent + '|' + sel.value); });
-  document.querySelectorAll('.blank-input.correct').forEach(function(e) { s.blanks.push(e.dataset.answer); });
-  document.querySelectorAll('.quiz-option.correct').forEach(function(e) { s.quiz.push(e.textContent.trim().substring(0, 30)); });
-  document.querySelectorAll('.speech-result').forEach(function(e) { if (e.style.borderLeft && e.style.borderLeft.indexOf('success') > -1) { var card = e.closest('.speech-card'); if (card) s.speech.push(card.dataset.phrase); } });
-  localStorage.setItem('dienane-brandao-de-mesquita-aluno', JSON.stringify(s));
-}
+function saveState(){var s={matches:[],blanks:[],quiz:[],speech:[],mediaChecks:{},checklists:{},vocabListened:[],ordering:[],thinkRecorded:[]};document.querySelectorAll('.media-card-wrapper').forEach(function(w){var id=w.dataset.media;var cb=w.querySelector('input[type="checkbox"]');if(id&&cb)s.mediaChecks[id]=cb.checked});document.querySelectorAll('.match-row.correct select').forEach(function(sel){s.matches.push(sel.closest('.match-row').querySelector('.match-word').textContent+'|'+sel.value)});document.querySelectorAll('.blank-input.correct').forEach(function(e){s.blanks.push(e.dataset.answer)});document.querySelectorAll('.quiz-option.correct').forEach(function(e){s.quiz.push(e.textContent.trim().substring(0,30))});document.querySelectorAll('.speech-result.show').forEach(function(e){var sc=e.closest('.speech-card');if(sc&&sc.dataset.phrase){var cls=e.classList.contains('good')?'good':e.classList.contains('try-again')?'try-again':'bad';var strong=e.querySelector('strong');var scoreTxt=strong?strong.textContent:'Done';var words=[];e.querySelectorAll('.word-box').forEach(function(wb){words.push({w:wb.textContent,s:wb.classList.contains('word-correct')?'c':'m'})});var recUrl=sc.dataset.recordingUrl||'';s.speech.push(JSON.stringify({p:sc.dataset.phrase,c:cls,s:scoreTxt,words:words,r:recUrl}))}});document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb,i){s.checklists[i]=cb.checked});document.querySelectorAll('.vocab-card-pc.listened').forEach(function(vc){var w=vc.querySelector('.vocab-card-word');if(w)s.vocabListened.push(w.textContent)});document.querySelectorAll('.order-container').forEach(function(oc){var items=oc.querySelectorAll('.order-item');var correct=oc.querySelectorAll('.order-item.correct-order');if(items.length>0&&items.length===correct.length){var id=oc.id||'';var order=[];items.forEach(function(it){order.push(it.querySelector('.order-text').textContent)});s.ordering.push({id:id,order:order})}});document.querySelectorAll('.think-card.recorded').forEach(function(tc){var q=tc.querySelector('.think-question');if(q){var recUrl=tc.dataset.recordingUrl||'';s.thinkRecorded.push(JSON.stringify({q:q.textContent.trim().substring(0,40),r:recUrl}))}});localStorage.setItem('alumni-audio-speed',JSON.stringify(s))}
 
 function loadState() {
   var r = localStorage.getItem('dienane-brandao-de-mesquita-aluno'); if (!r) return;

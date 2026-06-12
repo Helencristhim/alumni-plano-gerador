@@ -11,6 +11,11 @@
 .stamp.earned { opacity:1; border-color:var(--accent-light); filter:grayscale(0%); box-shadow:0 0 20px rgba(0,0,0,0.25); }
 .stamp.earned::after { color:#fff; }
 @media(max-width:768px){ .stamps-row{gap:0.5rem} .stamp{width:50px;height:50px} }
+.vocab-card-pc.listened{border-color:var(--success);background:rgba(22,163,74,0.06)}
+.vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
+.btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+.btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
+
 </style>
     <link rel="stylesheet" href="/styles/design-system.css">
     <script src="/components/exercises.js"></script>
@@ -2905,6 +2910,8 @@ function speakText(text) {
     } else {
         _speakFallback(text);
     }
+
+  if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
 }
 
 function _speakFallback(text) {
@@ -2957,17 +2964,51 @@ function toggleChecklist(el) {
 }
 
 // ─── Progress Bar ───
-function updateProgress() {
-    var checks = document.querySelectorAll('.checklist-item input[type="checkbox"]');
-    var total = checks.length;
-    if (total === 0) return;
-    var done = 0;
-    checks.forEach(function(c) { if (c.checked) done++; });
-    var pct = Math.round((done / total) * 100);
-    var bar = document.getElementById('progressBar');
-    var label = document.getElementById('progressPercent');
-    if (bar) bar.style.width = pct + '%';
-    if (label) label.textContent = pct + '%';
+function updateProgress(){
+  var totalLessons=1;
+  var totalAllDone=0,totalAllEx=0;
+  for(var l=1;l<=totalLessons;l++){
+    var card=document.getElementById('ex-lesson-'+l);
+    if(!card)continue;
+    var total=0,done=0;
+    total+=card.querySelectorAll('.vocab-card-pc').length;
+    done+=card.querySelectorAll('.vocab-card-pc.listened').length;
+    total+=card.querySelectorAll('.match-row').length;
+    done+=card.querySelectorAll('.match-row.correct').length;
+    total+=card.querySelectorAll('.blank-input').length;
+    done+=card.querySelectorAll('.blank-input.correct').length;
+    var quizItems=card.querySelectorAll('.quiz-item');
+    total+=quizItems.length;
+    quizItems.forEach(function(qi){if(qi.querySelector('.quiz-option.correct'))done++});
+    var speechCards=card.querySelectorAll('.speech-card');
+    total+=speechCards.length;
+    speechCards.forEach(function(sc){if(sc.querySelector('.speech-result.show'))done++});
+    card.querySelectorAll('.order-container').forEach(function(oc){
+      var items=oc.querySelectorAll('.order-item');
+      total+=1;
+      if(items.length>0&&items.length===oc.querySelectorAll('.order-item.correct-order').length)done++;
+    });
+    var thinkCards=card.querySelectorAll('.think-card');
+    total+=thinkCards.length;
+    thinkCards.forEach(function(tc){if(tc.classList.contains('recorded'))done++});
+    var pct=total>0?Math.round(done/total*100):0;
+    var fill=document.querySelector('.mini-bar-fill[data-lesson-progress="'+l+'"]');
+    if(fill)fill.style.width=pct+'%';
+    var pctEl=document.querySelector('.mini-percent[data-lesson-pct="'+l+'"]');
+    if(pctEl)pctEl.textContent=pct+'%';
+    var stampEl=document.getElementById('stamp'+l);
+    if(stampEl){if(pct===100)stampEl.classList.add('earned');else stampEl.classList.remove('earned')}
+    totalAllDone+=done;totalAllEx+=total;
+  }
+  var overallPct=totalAllEx>0?Math.round(totalAllDone/totalAllEx*100):0;
+  var pb=document.getElementById('progressBar');
+  var pp=document.getElementById('progressPercent');
+  if(pb)pb.style.width=overallPct+'%';
+  if(pp)pp.textContent=overallPct+'%';
+  var celCard=document.getElementById('celebrationCard');
+  if(celCard)celCard.style.display=overallPct===100?'block':'none';
+  try{localStorage.setItem('alumni-progress-maisa',JSON.stringify({concluidas:totalAllDone,total:totalAllEx}))}catch(e){}
+  saveState();
 }
 
 // ─── State Restore ───
