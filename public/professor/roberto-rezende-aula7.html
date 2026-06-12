@@ -362,6 +362,11 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--dark);color:v
 .lp-seekbar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .1s;width:0%}
 .lp-speed-row{display:flex;justify-content:center;gap:8px}
 .lp-player .lp-time{font-size:.75rem;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums;white-space:nowrap}
+.vocab-card-pc.listened{border-color:var(--success);background:rgba(22,163,74,0.06)}
+.vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
+.btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+.btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -740,7 +745,9 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--dark);color:v
 
 <script>
 var currentAudio=null;var audioSpeed=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');
-function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0}var cleanText=text.replace(/\\'/g,"'");var file=audioMap[cleanText]||audioMap[cleanText.replace(/\.$/,'')]||audioMap[cleanText+'.'];if(file){currentAudio=new Audio(file);currentAudio.playbackRate=audioSpeed;currentAudio.play().catch(function(){ttsSpeak(cleanText)})}else{ttsSpeak(cleanText)}}
+function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0}var cleanText=text.replace(/\\'/g,"'");var file=audioMap[cleanText]||audioMap[cleanText.replace(/\.$/,'')]||audioMap[cleanText+'.'];if(file){currentAudio=new Audio(file);currentAudio.playbackRate=audioSpeed;currentAudio.play().catch(function(){ttsSpeak(cleanText)})}else{ttsSpeak(cleanText)}
+  if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
+}
 function ttsSpeak(text){if('speechSynthesis' in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=audioSpeed*0.85;u.pitch=1;window.speechSynthesis.speak(u)}}
 
 var currentSlide=1;var totalSlides=32;

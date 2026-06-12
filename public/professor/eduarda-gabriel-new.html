@@ -250,6 +250,11 @@ body.slide-mode .logo-bar .slide-counter { display:block; }
   border:1px solid rgba(200,200,190,.5);border-radius:10px;transition:border-color .3s;
 }
 .vocab-card-pc:hover { border-color:var(--accent); }
+.vocab-card-pc.listened{border-color:var(--success);background:rgba(22,163,74,0.06)}
+.vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
+.btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+.btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
+
 .vocab-card-content { flex:1; }
 .vocab-card-header { display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap; }
 .vocab-card-word { font-weight:700;font-size:1rem;color:#1a1a1a; }
@@ -1367,7 +1372,9 @@ function speakText(text, btn) {
     currentAudio = new Audio(file);
     currentAudio.playbackRate = audioSpeed;
     currentAudio.play().catch(function() { ttsSpeak(cleanText); });
-  } else { ttsSpeak(cleanText); }
+  } else { ttsSpeak(cleanText); 
+  if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
+}
 }
 
 function ttsSpeak(text) {
@@ -1394,14 +1401,51 @@ function toggleMediaDone(cb) {
 }
 
 // Progress (from stamps/checks)
-function updateProgress() {
-  var checks = document.querySelectorAll('.media-card-wrapper');
-  var done = document.querySelectorAll('.media-card-wrapper.done');
-  var pct = checks.length > 0 ? Math.round((done.length / checks.length) * 100) : 0;
-  var bar = document.getElementById('progressBar');
-  var txt = document.getElementById('progressPercent');
-  if (bar) bar.style.width = pct + '%';
-  if (txt) txt.textContent = pct + '%';
+function updateProgress(){
+  var totalLessons=1;
+  var totalAllDone=0,totalAllEx=0;
+  for(var l=1;l<=totalLessons;l++){
+    var card=document.getElementById('ex-lesson-'+l);
+    if(!card)continue;
+    var total=0,done=0;
+    total+=card.querySelectorAll('.vocab-card-pc').length;
+    done+=card.querySelectorAll('.vocab-card-pc.listened').length;
+    total+=card.querySelectorAll('.match-row').length;
+    done+=card.querySelectorAll('.match-row.correct').length;
+    total+=card.querySelectorAll('.blank-input').length;
+    done+=card.querySelectorAll('.blank-input.correct').length;
+    var quizItems=card.querySelectorAll('.quiz-item');
+    total+=quizItems.length;
+    quizItems.forEach(function(qi){if(qi.querySelector('.quiz-option.correct'))done++});
+    var speechCards=card.querySelectorAll('.speech-card');
+    total+=speechCards.length;
+    speechCards.forEach(function(sc){if(sc.querySelector('.speech-result.show'))done++});
+    card.querySelectorAll('.order-container').forEach(function(oc){
+      var items=oc.querySelectorAll('.order-item');
+      total+=1;
+      if(items.length>0&&items.length===oc.querySelectorAll('.order-item.correct-order').length)done++;
+    });
+    var thinkCards=card.querySelectorAll('.think-card');
+    total+=thinkCards.length;
+    thinkCards.forEach(function(tc){if(tc.classList.contains('recorded'))done++});
+    var pct=total>0?Math.round(done/total*100):0;
+    var fill=document.querySelector('.mini-bar-fill[data-lesson-progress="'+l+'"]');
+    if(fill)fill.style.width=pct+'%';
+    var pctEl=document.querySelector('.mini-percent[data-lesson-pct="'+l+'"]');
+    if(pctEl)pctEl.textContent=pct+'%';
+    var stampEl=document.getElementById('stamp'+l);
+    if(stampEl){if(pct===100)stampEl.classList.add('earned');else stampEl.classList.remove('earned')}
+    totalAllDone+=done;totalAllEx+=total;
+  }
+  var overallPct=totalAllEx>0?Math.round(totalAllDone/totalAllEx*100):0;
+  var pb=document.getElementById('progressBar');
+  var pp=document.getElementById('progressPercent');
+  if(pb)pb.style.width=overallPct+'%';
+  if(pp)pp.textContent=overallPct+'%';
+  var celCard=document.getElementById('celebrationCard');
+  if(celCard)celCard.style.display=overallPct===100?'block':'none';
+  try{localStorage.setItem('alumni-progress-eduarda-gabriel-new',JSON.stringify({concluidas:totalAllDone,total:totalAllEx}))}catch(e){}
+  saveState();
 }
 </script>
 <script src="/lib/audio-toggle.js"></script>
