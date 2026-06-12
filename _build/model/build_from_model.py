@@ -250,6 +250,9 @@ def build_standalone(cfg, content_dir, manifest):
     s = replace_between(s, '<div class="slides-container" id="slidesContainer">', '</div><!-- /slides-container -->',
                         '\n' + slides + '\n')
     s = s.replace('>LESSON 1<', f'>LESSON {n}<')
+    # Update totalSlides to match actual slide count
+    actual_slides = len(re.findall(r'data-slide=', slides))
+    s = re.sub(r'var totalSlides = \d+', f'var totalSlides = {actual_slides}', s)
 
     entries = assign_voices(extract_phrases(slides), prefix=f'a{n}_', cfg=cfg)
     extra = L.get('extra_audio', [])
