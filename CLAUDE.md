@@ -723,10 +723,13 @@ Ao final de cada aula, incluir card com 5 frases-chave + audio:
 
 ---
 
-## REGRA 19 — DEPLOY AUTOMATICO
+## REGRA 19 — DEPLOY VIA GIT (NUNCA vercel --prod)
 
-Apos qualquer mudanca de codigo, rodar `npx vercel --prod --yes` automaticamente.
-NAO perguntar "quer que eu faca deploy?" — apenas faca.
+Deploy de producao acontece AUTOMATICAMENTE via GitHub: commit → PR → merge no main → Vercel deploya.
+**PROIBIDO rodar `vercel --prod` local** — deploya o checkout LOCAL por cima da producao e ja
+sobrescreveu material no ar (incidente de 11/06/2026: hubs e controle perderam dados).
+Antes de commitar: `git pull --rebase` (evita reverter trabalho de outra pessoa).
+Apos merge: smoke-testar o site live comparando com o git.
 
 ---
 
@@ -740,12 +743,29 @@ NAO perguntar "quer que eu faca deploy?" — apenas faca.
 - Aula 2 so e gerada apos Aula 1 ser validada e aprovada
 - Aula N+1 faz CALLBACK do vocabulario da aula N no warm-up
 
-**Template obrigatorio:**
-- NUNCA gerar CSS/JS do zero — SEMPRE copiar de um material aprovado existente
-- IN CLASS: copiar estrutura de slides, navegacao, componentes do template (patricia-ruffo.html ou elaine-v-b.html)
-- Pre-class: copiar padrao de exercicios do template (checkBlank, selectQuiz, checkMatch)
-- Trocar APENAS: accent color + conteudo dos slides + audioMap + data-teacher
-- Se nao existir template: usar /public/professor/patricia-ruffo.html como referencia
+**Template obrigatorio = ALUNA MODELO (helen-mendes):**
+- NUNCA gerar CSS/JS do zero. A fonte unica de layout e a aluna modelo:
+  `public/professor/helen-mendes-aula1.html` (standalone) e `helen-mendes.html` (hubs prof/aluno)
+- Gerar via builder: `python3 _build/model/build_from_model.py _build/{slug}-aula{N}/config.json`
+  (fluxo completo, schema do config e gates em `_build/model/README.md`)
+- O shell do modelo ja carrega TODOS os fixes globais (EXIT/Escape/player de listening/
+  revealError/contrast-guard/nav-bar flex/3a cor guest). Builder troca APENAS:
+  slug + paleta + header (perfil 360) + personagens + conteudo + audioMap
+- LAYOUT vem do modelo; CONTEUDO vem do perfil 360 do aluno. Sempre.
+- Bug de layout NUNCA se corrige num aluno individual: corrige-se NO MODELO (helen-mendes),
+  e a correcao chega as proximas aulas via builder. Aulas ja publicadas NAO sao tocadas
+  (retrofit = fase 2, sob demanda, com OK explicito)
+- Exercicio de tipo NOVO (outro nivel/idade/formato) entra PRIMEIRO no modelo
+  (HTML + JS + regra no validador), valida, e so entao vai pra aluno real
+- patricia-ruffo/elaine-v-b sao templates LEGADOS — nao usar em geracao nova
+
+**Validacao obrigatoria (gates bloqueantes, antes do PR):**
+- `python3 _build/model/validate_lesson.py public/professor/{slug}-aula{N}.html public/aluno/{slug}-aula{N}.html`
+- Contraste computado headless: 0 textos ilegiveis (check_computed_contrast)
+- VOZES POR PERSONAGEM (bloqueante): toda dialogue-line tem data-voice; 1 voz consistente
+  por personagem; personagens distintos no MESMO dialogo = vozes DISTINTAS; dialogo com
+  mais falantes que vozes disponiveis (_build/model/voices.json) = ERRO; o validador
+  cruza o audio_manifest.json pra garantir que cada MP3 foi gerado com a voz declarada
 
 **Audio OBRIGATORIO em TODA aula:**
 - TODAS as frases com speakText() DEVEM ter MP3 no audioMap ANTES do deploy
