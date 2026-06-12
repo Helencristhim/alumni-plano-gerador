@@ -968,6 +968,7 @@ function startRecording(btn) {
     html += '</div>';
     resultDiv.innerHTML = html;
     resetButtons();
+    updateProgress();
   };
   r.onerror = function() { resetButtons(); resultDiv.classList.add('show', 'try-again'); resultDiv.innerHTML = 'Could not hear you. Check your microphone.'; };
   r.onend = function() { resetButtons(); };
@@ -1102,7 +1103,8 @@ function startFreeRecording(btn) {
       var url = URL.createObjectURL(blob);
       var thinkCard = btn.closest('.think-card');
       var resultDiv = thinkCard.querySelector('[id^="think-result"]');
-      if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Gravação salva!</p>';
+      if (resultDiv) { resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Gravação salva!</p>'; resultDiv.dataset.done = '1'; }
+      updateProgress();
       stream.getTracks().forEach(function(t) { t.stop(); });
     };
     freeRecorder.start(100);
@@ -1126,20 +1128,52 @@ function toggleMediaDone(checkbox) {
 }
 
 // ===== PROGRESS =====
+function lessonProgressUnits(card) {
+  var total = 0, done = 0;
+  card.querySelectorAll('.match-row').forEach(function(r) { total++; if (r.classList.contains('correct')) done++; });
+  card.querySelectorAll('.blank-input').forEach(function(b) { total++; if (b.classList.contains('correct')) done++; });
+  card.querySelectorAll('.quiz-item').forEach(function(q) { total++; if (q.querySelector('.quiz-option.correct')) done++; });
+  card.querySelectorAll('.order-container').forEach(function(c) {
+    total++;
+    var items = c.querySelectorAll('.order-item');
+    if (items.length && c.querySelectorAll('.order-item.correct-order').length === items.length) done++;
+  });
+  card.querySelectorAll('.speech-card').forEach(function(sc) { total++; var r = sc.querySelector('.speech-result'); if (r && r.classList.contains('good')) done++; });
+  card.querySelectorAll('.think-card').forEach(function(tc) { total++; var r = tc.querySelector('[id^="think-result"]'); if (r && (r.querySelector('audio') || r.dataset.done === '1')) done++; });
+  return { total: total, done: done };
+}
+
 function updateProgress() {
   var totalLessons = 2;
-  try { localStorage.setItem('alumni-progress-helen-mendes', JSON.stringify({ concluidas: 0, total: totalLessons })); } catch(e) {}
+  var pcts = [], complete = 0;
+  document.querySelectorAll('.lesson-card[id^="ex-lesson-"]').forEach(function(card) {
+    var n = card.id.replace('ex-lesson-', '');
+    var u = lessonProgressUnits(card);
+    var pct = u.total ? Math.round(100 * u.done / u.total) : 0;
+    pcts.push(pct);
+    if (pct === 100) complete++;
+    var fill = document.querySelector('[data-lesson-progress="' + n + '"]');
+    if (fill) fill.style.width = pct + '%';
+    var label = document.querySelector('[data-lesson-pct="' + n + '"]');
+    if (label) label.textContent = pct + '%';
+  });
+  var overall = pcts.length ? Math.round(pcts.reduce(function(a, b) { return a + b; }, 0) / pcts.length) : 0;
+  var bar = document.getElementById('progressBar'); if (bar) bar.style.width = overall + '%';
+  var pl = document.getElementById('progressPercent'); if (pl) pl.textContent = overall + '%';
+  try { localStorage.setItem('alumni-progress-helen-mendes', JSON.stringify({ concluidas: complete, total: totalLessons })); } catch(e) {}
   saveState();
 }
 
 // ===== STATE =====
 function saveState() {
-  var s = { matches: [], blanks: [], quiz: [], speech: [], mediaChecks: {} };
+  var s = { matches: [], blanks: [], quiz: [], speech: [], orders: [], thinks: [], mediaChecks: {} };
   document.querySelectorAll('.media-card-wrapper').forEach(function(w) { var id = w.dataset.media; var cb = w.querySelector('input[type="checkbox"]'); if (id && cb) s.mediaChecks[id] = cb.checked; });
   document.querySelectorAll('.match-row.correct select').forEach(function(sel) { s.matches.push(sel.closest('.match-row').querySelector('.match-word').textContent + '|' + sel.value); });
   document.querySelectorAll('.blank-input.correct').forEach(function(e) { s.blanks.push(e.dataset.answer); });
   document.querySelectorAll('.quiz-option.correct').forEach(function(e) { s.quiz.push(e.textContent.trim().substring(0, 30)); });
   document.querySelectorAll('.speech-result.good').forEach(function(e) { s.speech.push(e.closest('.speech-card').dataset.phrase); });
+  document.querySelectorAll('.order-container').forEach(function(c) { var items = c.querySelectorAll('.order-item'); if (items.length && c.querySelectorAll('.order-item.correct-order').length === items.length) s.orders.push(c.id); });
+  document.querySelectorAll('.think-card [id^=\"think-result\"]').forEach(function(r) { if (r.querySelector('audio') || r.dataset.done === '1') s.thinks.push(r.id); });
   localStorage.setItem('helen-mendes-aluno', JSON.stringify(s));
 }
 
@@ -1150,6 +1184,9 @@ function loadState() {
   if (s.blanks) s.blanks.forEach(function(a) { document.querySelectorAll('.blank-input[data-answer="' + a + '"]').forEach(function(e) { e.value = a; e.classList.add('correct'); }); });
   if (s.quiz) s.quiz.forEach(function(t) { document.querySelectorAll('.quiz-option[data-correct="true"]').forEach(function(e) { if (e.textContent.trim().substring(0, 30) === t) e.classList.add('correct'); }); });
   if (s.mediaChecks) { document.querySelectorAll('.media-card-wrapper').forEach(function(w) { var id = w.dataset.media; var cb = w.querySelector('input[type="checkbox"]'); if (id && cb && s.mediaChecks[id]) { cb.checked = true; w.classList.add('done'); } }); }
+  if (s.speech) s.speech.forEach(function(ph) { document.querySelectorAll('.speech-card').forEach(function(sc) { if (sc.dataset.phrase === ph) { var r = sc.querySelector('.speech-result'); if (r) r.classList.add('good'); } }); });
+  if (s.orders) s.orders.forEach(function(id) { var c = document.getElementById(id); if (!c) return; var items = Array.prototype.slice.call(c.querySelectorAll('.order-item')); items.sort(function(a, b) { return parseInt(a.dataset.order) - parseInt(b.dataset.order); }); items.forEach(function(it) { c.appendChild(it); it.classList.add('correct-order'); var n = it.querySelector('.order-num'); if (n) n.textContent = it.dataset.order; }); });
+  if (s.thinks) s.thinks.forEach(function(id) { var r = document.getElementById(id); if (r) { r.dataset.done = '1'; if (!r.innerHTML.trim()) r.innerHTML = '<p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Gravação feita ✓</p>'; } });
   updateProgress();
 }
 
