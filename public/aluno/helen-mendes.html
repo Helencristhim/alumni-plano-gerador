@@ -527,7 +527,6 @@ body {
         <div class="match-row" data-answer="apresentar"><span class="match-word">Introduce</span><select onchange="checkMatch(this)"><option value="">Selecione...</option><option value="marca">marca</option><option value="meta">meta</option><option value="apresentar">apresentar</option><option value="parceiro">parceiro</option><option value="campanha">campanha</option><option value="público">público</option></select></div>
         <div class="match-row" data-answer="meta"><span class="match-word">Goal</span><select onchange="checkMatch(this)"><option value="">Selecione...</option><option value="público">público</option><option value="meta">meta</option><option value="campanha">campanha</option><option value="apresentar">apresentar</option><option value="marca">marca</option><option value="parceiro">parceiro</option></select></div>
       </div>
-      <button class="verify-all-btn" onclick="verifyAllMatches('match-l1')">Check Answers</button>
     </div>
 
     <div class="exercise-section">
@@ -655,7 +654,6 @@ body {
         <div class="match-row" data-answer="prioridade"><span class="match-word">Priority</span><select onchange="checkMatch(this)"><option value="">Selecione...</option><option value="relatório">relatório</option><option value="pausa">pausa</option><option value="prioridade">prioridade</option><option value="agenda">agenda</option><option value="tarefa">tarefa</option><option value="prazo">prazo</option></select></div>
         <div class="match-row" data-answer="pausa"><span class="match-word">Break</span><select onchange="checkMatch(this)"><option value="">Selecione...</option><option value="prazo">prazo</option><option value="pausa">pausa</option><option value="tarefa">tarefa</option><option value="prioridade">prioridade</option><option value="agenda">agenda</option><option value="relatório">relatório</option></select></div>
       </div>
-      <button class="verify-all-btn" onclick="verifyAllMatches('match-l2')">Check Answers</button>
     </div>
 
     <div class="exercise-section">
@@ -1034,18 +1032,6 @@ function checkMatch(select) {
   else if (select.value !== '') { row.classList.add('wrong'); setTimeout(function() { row.classList.remove('wrong'); select.value = ''; }, 1000); }
 }
 
-function verifyAllMatches(gridId) {
-  var grid = document.getElementById(gridId);
-  var rows = grid.querySelectorAll('.match-row');
-  rows.forEach(function(row) {
-    var select = row.querySelector('select');
-    var answer = row.dataset.answer;
-    row.classList.remove('correct', 'wrong');
-    if (select.value === answer) { row.classList.add('correct'); }
-    else if (select.value !== '') { row.classList.add('wrong'); setTimeout(function() { row.classList.remove('wrong'); }, 1800); }
-  });
-  updateProgress();
-}
 
 // ===== ORDER =====
 var orderSelection = {};
