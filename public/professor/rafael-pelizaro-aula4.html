@@ -2522,6 +2522,13 @@ var slug=window.STUDENT_SLUG||'unknown';var thinkId=resultDiv.id||'think-free';v
 if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;thinkCard.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}};freeRecorder.start(100);btn.classList.add('hidden');stopBtn.classList.add('visible')}).catch(function(){alert('Could not access microphone.')})}
 function stopFreeRecording(stopBtn) { if (freeRecorder && freeRecorder.state === 'recording') freeRecorder.stop(); var recordBtn = stopBtn.parentElement.querySelector('.btn-record'); recordBtn.classList.remove('hidden'); stopBtn.classList.remove('visible'); }
 
+// ===== CHECKLIST =====
+function toggleChecklist(cb) {
+  var li = cb.closest('li');
+  if (cb.checked) li.classList.add('checked'); else li.classList.remove('checked');
+  updateProgress();
+}
+
 // ===== MEDIA CHECKBOXES =====
 function toggleMediaDone(checkbox) { var wrapper = checkbox.closest('.media-card-wrapper'); wrapper.classList.toggle('done', checkbox.checked); saveState(); }
 

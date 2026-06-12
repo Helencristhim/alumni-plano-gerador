@@ -1164,6 +1164,13 @@ function listenAllVocab(btn) { var section = btn.closest('.exercise-section') ||
 // ===== MATCHING =====
 function verifyAllMatches(gridId) { var grid = document.getElementById(gridId); var rows = grid.querySelectorAll('.match-row'); rows.forEach(function(row) { var select = row.querySelector('select'); var answer = row.dataset.answer; row.classList.remove('correct', 'wrong'); if (select.value === answer) { row.classList.add('correct'); } else if (select.value !== '') { row.classList.add('wrong'); setTimeout(function() { row.classList.remove('wrong'); }, 1800); } }); updateProgress(); }
 function checkMatch(select) { var row = select.closest('.match-row'); var answer = row.dataset.answer; row.classList.remove('correct', 'wrong'); if (select.value === answer) { row.classList.add('correct'); select.disabled = true; updateProgress(); } else if (select.value !== '') { row.classList.add('wrong'); setTimeout(function() { row.classList.remove('wrong'); select.value = ''; }, 1000); } }
+// ===== CHECKLIST =====
+function toggleChecklist(cb) {
+  var li = cb.closest('li');
+  if (cb.checked) li.classList.add('checked'); else li.classList.remove('checked');
+  updateProgress();
+}
+
 function toggleMediaDone(checkbox) { var wrapper = checkbox.closest('.media-card-wrapper'); wrapper.classList.toggle('done', checkbox.checked); saveState(); }
 
 // ===== INIT =====

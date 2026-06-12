@@ -998,7 +998,8 @@
             .tab-content { display: block !important; }
             .lesson-body { max-height: none !important; }
         }
-    </style>
+    .fill-a { display:none; }
+</style>
 </head>
 <body>
 
@@ -2348,7 +2349,14 @@
         checkMilestones();
     }
 
-    function updateProgress() {
+    // ===== CHECKLIST =====
+function toggleChecklist(cb) {
+  var li = cb.closest('li');
+  if (cb.checked) li.classList.add('checked'); else li.classList.remove('checked');
+  updateProgress();
+}
+
+function updateProgress() {
         const total = document.querySelectorAll('.checklist li').length;
         const checked = document.querySelectorAll('.checklist li.checked').length;
         const pct = total > 0 ? (checked / total) * 100 : 0;

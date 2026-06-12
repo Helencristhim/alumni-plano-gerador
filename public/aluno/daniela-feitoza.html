@@ -599,7 +599,8 @@
             margin-bottom: 0.6rem;
             border-radius: 4px;
         }
-        .fill-blank-sentence { font-size: 0.95rem; margin-bottom: 0.8rem; line-height: 2; color: var(--text); }
+        .fill-a { display:none; }
+.fill-blank-sentence { font-size: 0.95rem; margin-bottom: 0.8rem; line-height: 2; color: var(--text); }
         .blank-input {
             display: inline-block;
             border: none;
@@ -2584,7 +2585,14 @@
         else if (select.value !== '') { row.classList.add('wrong'); setTimeout(() => { row.classList.remove('wrong'); select.value = ''; }, 1000); }
     }
 
-    // ===== MEDIA CHECKBOXES =====
+    // ===== CHECKLIST =====
+function toggleChecklist(cb) {
+  var li = cb.closest('li');
+  if (cb.checked) li.classList.add('checked'); else li.classList.remove('checked');
+  updateProgress();
+}
+
+// ===== MEDIA CHECKBOXES =====
     function toggleMediaDone(checkbox) {
         const wrapper = checkbox.closest('.media-card-wrapper');
         wrapper.classList.toggle('done', checkbox.checked);
