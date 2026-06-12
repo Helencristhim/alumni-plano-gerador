@@ -1768,6 +1768,149 @@ function toggleChecklist(cb) {
   updateProgress();
 }
 
+
+function injectPronunciationBtn(card,audioUrl){
+  var old=card.querySelector('.btn-your-pronunciation');if(old)old.remove();
+  var playBtn=document.createElement('button');
+  playBtn.className='btn btn-your-pronunciation';
+  playBtn.innerHTML='&#9654; Your Pronunciation';
+  playBtn.onclick=function(e){e.preventDefault();
+    if(playBtn.dataset.playing==='true'){
+      var a=card.querySelector('.your-pron-audio');if(a){a.pause();a.remove()}
+      playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';return;
+    }
+    var audio=new Audio(audioUrl);audio.className='your-pron-audio';audio.style.display='none';
+    card.appendChild(audio);playBtn.innerHTML='&#9632; Playing...';playBtn.dataset.playing='true';
+    audio.play();
+    audio.onended=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+    audio.onerror=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+  };
+  var controls=card.querySelector('.speech-controls');
+  if(controls)controls.appendChild(playBtn);
+}
+var activeRecognition = null;
+
+function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Please use Google Chrome for voice recognition.');return}var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');
+var mediaRec=null,mediaChunks=[],mediaStream=null,recDone=false;
+navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+  mediaStream=stream;
+  var mimeType=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':'';
+  mediaRec=mimeType?new MediaRecorder(stream,{mimeType:mimeType}):new MediaRecorder(stream);
+  mediaChunks=[];
+  mediaRec.ondataavailable=function(e){if(e.data.size>0)mediaChunks.push(e.data)};
+  mediaRec.onstop=function(){
+    if(recDone)return;recDone=true;
+    stream.getTracks().forEach(function(t){t.stop()});
+    if(mediaChunks.length>0){
+      var blob=new Blob(mediaChunks,{type:mediaRec.mimeType});
+      var audioUrl=URL.createObjectURL(blob);
+      injectPronunciationBtn(card,audioUrl);
+      var phraseSlug=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,50);
+      var slug=window.STUDENT_SLUG||'unknown';
+      var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';
+      var filePath=slug+'/'+phraseSlug+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;card.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
+    }
+  };
+  mediaRec.start(100);
+  var r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=3;r.continuous=true;
+  activeRecognition={recognition:r,btn:btn,stopBtn:stopBtn,card:card,mediaRec:mediaRec};
+  r.start();
+  var ended=false;
+  function finish(){if(ended)return;ended=true;btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');activeRecognition=null;
+    setTimeout(function(){if(mediaRec&&mediaRec.state==='recording')mediaRec.stop()},200);
+  }
+  r.onresult=function(event){var best=event.results[event.results.length-1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g,'');var analysis=analyzeWords(target,best);var totalWords=analysis.expected.length;var correctWords=analysis.expected.filter(function(w){return w.status==='correct'}).length;resultDiv.classList.add('show');resultDiv.classList.remove('good','try-again','bad');var html='';if(analysis.score>=0.8){resultDiv.classList.add('good');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Excellent!';updateProgress()}else if(analysis.score>=0.5){resultDiv.classList.add('try-again');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Almost there!'}else{resultDiv.classList.add('bad');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Keep practicing!'}html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';analysis.expected.forEach(function(w){html+='<span class="word-box word-'+(w.status==='correct'?'correct':'missing')+'">'+w.word+'</span>'});html+='</div></div>';resultDiv.innerHTML=html;finish()};
+  r.onerror=function(){finish();resultDiv.classList.add('show','try-again');resultDiv.innerHTML='Could not hear you. Check your microphone.'};
+  r.onend=function(){finish()};
+  setTimeout(function(){if(!ended){try{r.stop()}catch(e){}finish()}},30000);
+}).catch(function(){btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');alert('Could not access microphone.')})}
+
+function stopRecording(stopBtn){if(activeRecognition){try{activeRecognition.recognition.stop()}catch(e){}if(activeRecognition.mediaRec&&activeRecognition.mediaRec.state==='recording'){try{activeRecognition.mediaRec.stop()}catch(e){}}}}
+
+var freeRecorder=null;var freeChunks=[];
+function startFreeRecording(btn) {
+  var stopBtn = btn.parentElement.querySelector('.btn-stop');
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    freeRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+    freeChunks = [];
+    freeRecorder.ondataavailable = function(e) { if (e.data.size > 0) freeChunks.push(e.data); };
+    freeRecorder.onstop = function() {
+      var blob = new Blob(freeChunks, { type: freeRecorder.mimeType });
+      var url = URL.createObjectURL(blob);
+      var thinkCard = btn.closest('.think-card');
+      var resultDiv = thinkCard.querySelector('[id^="think-result"]');
+      if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Recording saved!</p>';
+      thinkCard.classList.add('recorded');
+      updateProgress();
+      stream.getTracks().forEach(function(t) { t.stop(); });
+      var slug=window.STUDENT_SLUG||'unknown';var thinkId=resultDiv.id||'think-free';var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';var filePath=slug+'/'+thinkId+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;thinkCard.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
+    };
+    freeRecorder.start(100);
+    btn.classList.add('hidden');
+    stopBtn.classList.add('visible');
+  }).catch(function() { alert('Could not access microphone.'); });
+}
+function stopFreeRecording(stopBtn) {
+  if (freeRecorder && freeRecorder.state === 'recording') freeRecorder.stop();
+  var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
+  recordBtn.classList.remove('hidden');
+  stopBtn.classList.remove('visible');
+}
+
+function updateProgress(){
+  var totalLessons=1;
+  var totalAllDone=0,totalAllEx=0;
+  for(var l=1;l<=totalLessons;l++){
+    var card=document.getElementById('ex-lesson-'+l);
+    if(!card)continue;
+    var total=0,done=0;
+    total+=card.querySelectorAll('.vocab-card-pc').length;
+    done+=card.querySelectorAll('.vocab-card-pc.listened').length;
+    total+=card.querySelectorAll('.match-row').length;
+    done+=card.querySelectorAll('.match-row.correct').length;
+    total+=card.querySelectorAll('.blank-input').length;
+    done+=card.querySelectorAll('.blank-input.correct').length;
+    var quizItems=card.querySelectorAll('.quiz-item');
+    total+=quizItems.length;
+    quizItems.forEach(function(qi){if(qi.querySelector('.quiz-option.correct'))done++});
+    var speechCards=card.querySelectorAll('.speech-card');
+    total+=speechCards.length;
+    speechCards.forEach(function(sc){if(sc.querySelector('.speech-result.show'))done++});
+    card.querySelectorAll('.order-container').forEach(function(oc){
+      var items=oc.querySelectorAll('.order-item');
+      total+=1;
+      if(items.length>0&&items.length===oc.querySelectorAll('.order-item.correct-order').length)done++;
+    });
+    var thinkCards=card.querySelectorAll('.think-card');
+    total+=thinkCards.length;
+    thinkCards.forEach(function(tc){if(tc.classList.contains('recorded'))done++});
+    var pct=total>0?Math.round(done/total*100):0;
+    var fill=document.querySelector('.mini-bar-fill[data-lesson-progress="'+l+'"]');
+    if(fill)fill.style.width=pct+'%';
+    var pctEl=document.querySelector('.mini-percent[data-lesson-pct="'+l+'"]');
+    if(pctEl)pctEl.textContent=pct+'%';
+    var stampEl=document.getElementById('stamp'+l);
+    if(stampEl){if(pct===100)stampEl.classList.add('earned');else stampEl.classList.remove('earned')}
+    totalAllDone+=done;totalAllEx+=total;
+  }
+  var overallPct=totalAllEx>0?Math.round(totalAllDone/totalAllEx*100):0;
+  var pb=document.getElementById('progressBar');
+  var pp=document.getElementById('progressPercent');
+  if(pb)pb.style.width=overallPct+'%';
+  if(pp)pp.textContent=overallPct+'%';
+  var celCard=document.getElementById('celebrationCard');
+  if(celCard)celCard.style.display=overallPct===100?'block':'none';
+  try{localStorage.setItem('alumni-progress-patricia-ruffo',JSON.stringify({concluidas:totalAllDone,total:totalAllEx}))}catch(e){}
+  saveState();
+}
+
+function saveState(){var s={matches:[],blanks:[],quiz:[],speech:[],mediaChecks:{},checklists:{},vocabListened:[],ordering:[],thinkRecorded:[]};document.querySelectorAll('.media-card-wrapper').forEach(function(w){var id=w.dataset.media;var cb=w.querySelector('input[type="checkbox"]');if(id&&cb)s.mediaChecks[id]=cb.checked});document.querySelectorAll('.match-row.correct select').forEach(function(sel){s.matches.push(sel.closest('.match-row').querySelector('.match-word').textContent+'|'+sel.value)});document.querySelectorAll('.blank-input.correct').forEach(function(e){s.blanks.push(e.dataset.answer)});document.querySelectorAll('.quiz-option.correct').forEach(function(e){s.quiz.push(e.textContent.trim().substring(0,30))});document.querySelectorAll('.speech-result.show').forEach(function(e){var sc=e.closest('.speech-card');if(sc&&sc.dataset.phrase){var cls=e.classList.contains('good')?'good':e.classList.contains('try-again')?'try-again':'bad';var strong=e.querySelector('strong');var scoreTxt=strong?strong.textContent:'Done';var words=[];e.querySelectorAll('.word-box').forEach(function(wb){words.push({w:wb.textContent,s:wb.classList.contains('word-correct')?'c':'m'})});var recUrl=sc.dataset.recordingUrl||'';s.speech.push(JSON.stringify({p:sc.dataset.phrase,c:cls,s:scoreTxt,words:words,r:recUrl}))}});document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb,i){s.checklists[i]=cb.checked});document.querySelectorAll('.vocab-card-pc.listened').forEach(function(vc){var w=vc.querySelector('.vocab-card-word');if(w)s.vocabListened.push(w.textContent)});document.querySelectorAll('.order-container').forEach(function(oc){var items=oc.querySelectorAll('.order-item');var correct=oc.querySelectorAll('.order-item.correct-order');if(items.length>0&&items.length===correct.length){var id=oc.id||'';var order=[];items.forEach(function(it){order.push(it.querySelector('.order-text').textContent)});s.ordering.push({id:id,order:order})}});document.querySelectorAll('.think-card.recorded').forEach(function(tc){var q=tc.querySelector('.think-question');if(q){var recUrl=tc.dataset.recordingUrl||'';s.thinkRecorded.push(JSON.stringify({q:q.textContent.trim().substring(0,40),r:recUrl}))}});localStorage.setItem('patricia-ruffo-aula1-professor',JSON.stringify(s))}
+
+function loadState(){var r=localStorage.getItem('patricia-ruffo-aula1-professor');if(!r)return;var s=JSON.parse(r);if(s.matches)s.matches.forEach(function(d){var parts=d.split('|');var word=parts[0];var val=parts[1];document.querySelectorAll('.match-row').forEach(function(row){if(row.querySelector('.match-word').textContent===word){var sel=row.querySelector('select');sel.value=val;row.classList.add('correct');sel.disabled=true}})});if(s.blanks)s.blanks.forEach(function(a){document.querySelectorAll('.blank-input[data-answer="'+a+'"]').forEach(function(e){e.value=a;e.classList.add('correct')})});if(s.quiz)s.quiz.forEach(function(t){document.querySelectorAll('.quiz-option[data-correct="true"]').forEach(function(e){if(e.textContent.trim().substring(0,30)===t)e.classList.add('correct')})});if(s.speech)s.speech.forEach(function(d){var phrase,cls,scoreTxt,words,recUrl;try{var obj=JSON.parse(d);phrase=obj.p;cls=obj.c;scoreTxt=obj.s;words=obj.words||[];recUrl=obj.r||''}catch(e){phrase=d;cls='good';scoreTxt='Done';words=[];recUrl=''}document.querySelectorAll('.speech-card').forEach(function(sc){if(sc.dataset.phrase===phrase){var rd=sc.querySelector('.speech-result');if(rd){rd.classList.add('show',cls);var html='<strong>'+scoreTxt+'</strong> — '+(cls==='good'?'Excellent!':cls==='try-again'?'Almost there!':'Keep practicing!');if(words.length>0){html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';words.forEach(function(w){html+='<span class="word-box word-'+(w.s==='c'?'correct':'missing')+'">'+w.w+'</span>'});html+='</div></div>'}rd.innerHTML=html}if(recUrl){sc.dataset.recordingUrl=recUrl;injectPronunciationBtn(sc,recUrl)}}})});if(s.checklists){document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb,i){if(s.checklists[i]){cb.checked=true;cb.closest('li').classList.add('checked')}})}if(s.mediaChecks){document.querySelectorAll('.media-card-wrapper').forEach(function(w){var id=w.dataset.media;var cb=w.querySelector('input[type="checkbox"]');if(id&&cb&&s.mediaChecks[id]){cb.checked=true;w.classList.add('done')}})}if(s.vocabListened){s.vocabListened.forEach(function(word){document.querySelectorAll('.vocab-card-pc').forEach(function(vc){var w=vc.querySelector('.vocab-card-word');if(w&&w.textContent===word)vc.classList.add('listened')})})}if(s.ordering){s.ordering.forEach(function(o){var id=typeof o==='string'?o:o.id;var savedOrder=typeof o==='object'?o.order:null;var oc=id?document.getElementById(id):null;if(!oc)return;if(savedOrder&&savedOrder.length>0){var items=Array.from(oc.querySelectorAll('.order-item'));savedOrder.forEach(function(txt){for(var i=0;i<items.length;i++){var t=items[i].querySelector('.order-text');if(t&&t.textContent===txt){oc.appendChild(items[i]);break}}})}oc.querySelectorAll('.order-item').forEach(function(it,i){it.classList.add('correct-order');it.querySelector('.order-num').textContent=i+1;it.style.borderColor='var(--success)'})})}if(s.thinkRecorded){s.thinkRecorded.forEach(function(d){var qTxt,recUrl;try{var obj=JSON.parse(d);qTxt=obj.q;recUrl=obj.r||''}catch(e){qTxt=d;recUrl=''}document.querySelectorAll('.think-card').forEach(function(tc){var qEl=tc.querySelector('.think-question');if(qEl&&qEl.textContent.trim().substring(0,40)===qTxt){tc.classList.add('recorded');tc.dataset.recordingUrl=recUrl;var rd=tc.querySelector('[id^="think-result"]');if(rd){if(recUrl){rd.innerHTML='<audio controls src="'+recUrl+'" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:.72rem;color:var(--success);margin-top:.3rem;">&#10003; Recording saved</p>'}else{rd.innerHTML='<p style="font-size:.82rem;color:var(--success);font-weight:500;">&#10003; Recording completed</p>'}}}})})}updateProgress()}
+loadState();
 </script>
 </body>
 </html>
