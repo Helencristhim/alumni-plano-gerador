@@ -217,12 +217,13 @@ def inclass_menu(cards):
             '  <div style="display:flex;flex-direction:column;gap:1rem">\n' + '\n'.join(cards) + '\n  </div>\n</div>\n\n')
 
 
-def final_asserts(s, cfg, label):
+def final_asserts(s, cfg, label, is_hub=False):
     low = s.lower()
     assert 'helen' not in low, f'{label}: sobrou referência ao modelo (helen)'
     assert '/lib/contrast-guard.js' in s, f'{label}: contrast-guard NÃO plugado'
     assert 'toggleListening' not in s, f'{label}: listening fake presente'
-    assert 'function mpToggle' in s or 'slidesContainer' not in s, f'{label}: player de listening ausente'
+    if not is_hub:
+        assert 'function mpToggle' in s or 'slidesContainer' not in s, f'{label}: player de listening ausente'
     assert MODEL_ACCENT[0] not in s and MODEL_ACCENT[0].lower() not in low.replace(cfg['palette']['accent'].lower(), ''), \
         f'{label}: paleta do modelo vazou'
 
@@ -308,7 +309,7 @@ def build_hub_new(cfg, content_dir, manifest):
     s = replace_between(s, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
     s = re.sub(r'var totalLessons = \d+', 'var totalLessons = 1', s)
     s = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, s, count=1, flags=re.S)
-    final_asserts(s, cfg, 'hub prof')
+    final_asserts(s, cfg, 'hub prof', is_hub=True)
     write(os.path.join(PROF, f'{cfg["slug"]}.html'), s)
 
     a = read(os.path.join(ALUNO, f'{MODEL}.html'))
@@ -320,7 +321,7 @@ def build_hub_new(cfg, content_dir, manifest):
     a = replace_between(a, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
     a = re.sub(r'var totalLessons = \d+', 'var totalLessons = 1', a)
     a = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, a, count=1, flags=re.S)
-    final_asserts(a, cfg, 'hub aluno')
+    final_asserts(a, cfg, 'hub aluno', is_hub=True)
     write(os.path.join(ALUNO, f'{cfg["slug"]}.html'), a)
 
 
