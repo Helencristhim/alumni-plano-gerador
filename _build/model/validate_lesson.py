@@ -267,6 +267,52 @@ def validate(path):
                 fails.append(f'aula {N} NÃO integrada no hub {slug}.html (aula ÓRFÃ — inserir hub_snippets)')
             if f'id="stamp{N}"' not in hc:
                 fails.append(f'falta stamp{N} no hub professor (REGRA 29)')
+            # COMPLEMENTARES da aula no hub (classe de bug do PR #106)
+            n_media = len(re.findall(rf'data-media="l{N}-', hc))
+            if n_media == 0:
+                fails.append(f'aula {N} SEM complementares no hub (nenhum data-media="l{N}-...") — gerar complementary.html e inserir o snippet 3b')
+            elif n_media < 3:
+                warns.append(f'só {n_media} complementar(es) da aula {N} no hub (padrão do modelo: 3)')
+            # ESTRUTURA mínima do Pre-class (ex-lesson-N do hub)
+            bi = hc.find(f'id="ex-lesson-{N}"')
+            if bi >= 0:
+                bj = hc.find('id="ex-lesson-', bi + 15)
+                if bj < 0:
+                    bj = hc.find('tab-inclass', bi)
+                blk = hc[bi:bj if bj > 0 else len(hc)]
+                REQ = [('vocab-card-pc', 6), ('match-row', 4), ('quiz-item', 3), ('fill-blank-item', 3),
+                       ('order-container', 1), ('speech-card', 2), ('think-card', 1), ('survival-card', 1)]
+                missing = [f'{k} ({blk.count(k)}/{mn})' for k, mn in REQ if blk.count(k) < mn]
+                if missing:
+                    fails.append(f'Pre-class da aula {N} INCOMPLETO no hub: ' + ', '.join(missing))
+            # DOSAGEM por nível (lê o config do build da aula; sem config = pulado)
+            cfg_p = os.path.join(root, '_build', f'{slug}-aula{N}', 'config.json')
+            if os.path.exists(cfg_p):
+                try:
+                    cfg = json.load(open(cfg_p, encoding='utf-8'))
+                    level = next((h for h in cfg.get('header', []) if re.match(r'^[ABC]\d', str(h))), None)
+                except Exception:
+                    level = None
+                if level:
+                    beginner = level[:2] in ('A0', 'A1')
+                    if level[:2] in ('A0', 'A1', 'A2') and bi >= 0:
+                        for need, desc in [('sp-pt', 'survival sem tradução PT (.sp-pt)'),
+                                           ('speech-translation', 'pronúncia sem tradução PT (.speech-translation)')]:
+                            if need not in blk:
+                                fails.append(f'DOSAGEM {level}: Pre-class da aula {N} — {desc}')
+                    if not beginner:
+                        si = c.find('<div class="slides-container"')
+                        sj = c.find('</div><!-- /slides-container -->')
+                        if si >= 0 and sj > si:
+                            scr = re.sub(r'\sdata-teacher="(?:[^"\\]|\\.)*"', '', c[si:sj])
+                            scr = re.sub(r'<[^>]+>', ' ', re.sub(r'<script\b.*?</script>', '', scr, flags=re.S))
+                            acc = re.findall(r'\b[\wÀ-ÿ]*[àáâãéêíóôõúüç][\wÀ-ÿ]*\b', scr)
+                            low = sorted(set(t for t in acc if t[:1].islower()))
+                            PT_SEM_ACENTO = ['rotina', 'trabalho', 'exemplo', 'resposta', 'pergunta',
+                                             'palavra', 'frase', 'ouvir', 'gravar', 'clique', 'escolha', 'voce']
+                            low += sorted(set(re.findall(r'\b(?:' + '|'.join(PT_SEM_ACENTO) + r')\b', scr)))
+                            if low:
+                                fails.append(f'DOSAGEM {level}: português na tela IN CLASS fora de data-teacher: {", ".join(low[:6])}')
         else:
             warns.append(f'hub {slug}.html não encontrado — checagem de integração pulada (ok se aluno novo em build)')
 
