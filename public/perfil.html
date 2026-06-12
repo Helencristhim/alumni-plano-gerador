@@ -2537,57 +2537,54 @@
             '- NUNCA usar atributo data-exercise — SEMPRE HTML manual com as funções acima\n' +
             '- JavaScript vem do builder (helen-mendes modelo). NUNCA copiar de patricia-ruffo (legado). Ver CLAUDE.md REGRA 26\n' +
             '- Trocar APENAS: audioMap, slug no localStorage, e totalLessons\n\n' +
-            'GERAR DOIS ARQUIVOS HTML SEPARADOS:\n' +
-            '1. /public/professor/' + perfilId + '.html \u2014 Material COMPLETO do professor (4 abas: Planejamento Pedagógico, Pre-class, IN CLASS, Atividades Complementares)\n' +
-            '2. /public/aluno/' + perfilId + '.html \u2014 Material do ALUNO (apenas Pre-class + Atividades Complementares, SEM instruções do professor, SEM gabaritos, SEM perfil 360)\n\n' +
-            'URLs públicas após deploy:\n' +
-            '- Professor: https://alumni-plano-gerador.vercel.app/professor/' + perfilId + '.html\n' +
-            '- Aluno: https://alumni-plano-gerador.vercel.app/aluno/' + perfilId + '.html\n\n' +
+            'GERAR VIA BUILDER (NUNCA HTML DIRETO):\n' +
+            'O Claude NUNCA escreve o HTML final. O Claude cria 4 ARQUIVOS DE CONTEÚDO + 1 config:\n' +
+            '  _build/' + perfilId + '-aula{N}/config.json     \u2014 slug, paleta, personagens, stamps, lesson metadata\n' +
+            '  _build/' + perfilId + '-aula{N}/slides.html      \u2014 conteúdo dos slides IN CLASS (SEM CSS/JS)\n' +
+            '  _build/' + perfilId + '-aula{N}/preclass.html    \u2014 conteúdo do Pre-class (SEM CSS/JS)\n' +
+            '  _build/' + perfilId + '-aula{N}/planning.html    \u2014 conteúdo do Planejamento (só hub novo)\n' +
+            '  _build/' + perfilId + '-aula{N}/complementary.html \u2014 conteúdo dos Complementares\n\n' +
+            'Depois roda o BUILDER que monta o HTML final com CSS/JS do modelo helen-mendes:\n' +
+            '  python3 _build/model/build_from_model.py _build/' + perfilId + '-aula{N}/config.json\n' +
+            '  ELEVENLABS_API_KEY=... python3 _build/model/gen_audio.py _build/' + perfilId + '-aula{N}/config.json\n\n' +
+            'SAÍDAS do builder (4 arquivos HTML):\n' +
+            '  public/professor/' + perfilId + '-aula{N}.html  \u2014 standalone professor (IN CLASS slides)\n' +
+            '  public/aluno/' + perfilId + '-aula{N}.html      \u2014 standalone aluno (espelho sem T icon)\n' +
+            '  public/professor/' + perfilId + '.html           \u2014 hub professor (4 abas, só com hub="new")\n' +
+            '  public/aluno/' + perfilId + '.html               \u2014 hub aluno (2 abas, só com hub="new")\n\n' +
+            'Se o builder falhar: CORRIGIR O BUILDER (_build/model/build_from_model.py). NUNCA contornar.\n\n' +
 
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             'INSTRUÇÃO FINAL \u2014 O QUE GERAR\n' +
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
-            'Gere o material pedagógico completo em DOIS arquivos HTML separados:\n\n' +
-            'ARQUIVO 1 \u2014 VISÃO PROFESSOR (/public/professor/' + perfilId + '.html):\n' +
-            '4 abas obrigatórias:\n\n' +
-            'ABA 1 — PLANEJAMENTO PEDAGÓGICO:\n' +
-            '  Visão geral acadêmica completa do programa. Contém:\n' +
-            '  - Cabeçalho: dados do aluno, professor, dias/horários, datas\n' +
-            '  - Objetivo do programa (parágrafo)\n' +
-            '  - Promessa transformadora + personagem-jornada\n' +
-            '  - Forças e pontos de melhoria do aluno\n' +
-            '  - TABELA DO CURRÍCULO: todas as aulas do programa (usar os temas da seção DIVISÃO DE AULAS acima) com # | Tema | Foco Linguístico | Atividade | Homework\n' +
-            '  - Regras de cancelamento\n\n' +
-            'ABA 2 — PRE-CLASS (exercícios interativos):\n' +
-            '  Exercícios que o aluno faz ANTES da aula.\n' +
-            '  HTML manual OBRIGATÓRIO: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(). NUNCA usar data-exercise.\n' +
-            '  Mínimo 5-8 exercícios variados por aula. Com microcopy que autoriza o erro.\n\n' +
-            'ABA 3 — IN CLASS (slides interativos para Zoom):\n' +
-            '  Esta aba substitui o antigo Plano de Aula e Material do Professor.\n' +
-            '  É uma APRESENTAÇÃO de slides (100vh por slide, navegação por setas), NÃO uma página com scroll.\n' +
-            '  Instruções ao professor via ícone T (hover) em cada slide.\n' +
-            '  DEVE conter: narrativa com 7 capítulos, reveal cards no vocab, grammar discovery,\n' +
-            '  diálogo line-by-line, 2+ listenings com play/pause, quick fire uma por vez,\n' +
-            '  3 role-plays (guided>semi-free>free), artefatos reais CSS, survival card + checklist checkbox.\n' +
-            '  Zero português na tela. 100% ElevenLabs com alternância Arthur/Ellen.\n' +
-            '  Mínimo 25-30 slides para 60 min, 35-45 para 90 min.\n' +
-            '  REGRA CRÍTICA: A IN CLASS NÃO pode repetir os mesmos exercícios do Pre-class.\n' +
-            '  O Pre-class é INTRODUÇÃO (primeiro contato com vocabulário). A IN CLASS é APROFUNDAMENTO (aplicação em contexto real).\n' +
-            '  O vocabulário é o MESMO, mas TODAS as frases-exemplo, exercícios e aplicações devem ser DIFERENTES.\n' +
-            '  Ver regras detalhadas na seção ESPECIFICAÇÕES DO MATERIAL.\n\n' +
-            'ABA 4 — ATIVIDADES COMPLEMENTARES:\n' +
-            '  Filmes, séries, podcasts, canais YouTube recomendados por aula.\n' +
-            '  Baseados nos interesses pessoais do aluno.\n\n' +
-            'ARQUIVO 2 \u2014 VISÃO ALUNO (/public/aluno/' + perfilId + '.html):\n' +
-            '- Apenas 2 abas: Pre-class (exercícios interativos) + Atividades Complementares\n' +
-            '- SEM instruções do professor, SEM gabaritos, SEM perfil 360, SEM indicação de professor\n' +
-            '- Link público que o aluno recebe\n\n' +
-            'Ambos os arquivos devem:\n' +
-            '- Usar tema claro Alumni (#f5f5f0), layout centralizado, logo Alumni no header\n' +
-            '- Ter promessa transformadora em cada aula\n' +
-            '- Ter survival card progressivo\n' +
-            '- Ter critérios de sucesso mensuráveis\n' +
-            '- Fazer deploy na Vercel com: npx vercel --prod --yes\n\n' +
+            'Gere os ARQUIVOS DE CONTEÚDO para o builder (NUNCA HTML final direto):\n\n' +
+            'PASSO 1 — Criar config.json em _build/' + perfilId + '-aula{N}/config.json:\n' +
+            '  slug, student_name, first_name, gender, program, total_aulas, palette,\n' +
+            '  header, characters, stamps, lesson (n, menu_num, menu_title, phases, listenings, extra_audio),\n' +
+            '  hub ("new" para aluno novo, "snippets" para aula adicional)\n\n' +
+            'PASSO 2 — Criar os 4 arquivos de CONTEÚDO (HTML puro, SEM css/js):\n\n' +
+            'planning.html — PLANEJAMENTO PEDAGÓGICO:\n' +
+            '  Grid de dados do aluno, jornada, promessa, forças/fraquezas,\n' +
+            '  tabela do currículo COMPLETO, regras de cancelamento.\n\n' +
+            'preclass.html — PRE-CLASS (exercícios interativos):\n' +
+            '  Lesson card com accordion. 5 etapas obrigatórias (REGRA 4):\n' +
+            '  1.1 Vocab Cards, 1.2 Matching, 1.3 Grammar in Context, 1.4 Grammar Tip, 1.5 Fill-in.\n' +
+            '  Stage 2 Ordering, Stage 3 Pronunciation, Stage 4 Quiz, Stage 5 Free Production.\n' +
+            '  Survival Card ao final. HTML manual: checkBlank(), selectQuiz(), checkMatch(), etc.\n\n' +
+            'slides.html — IN CLASS (slides interativos para Zoom):\n' +
+            '  Slides com data-slide, data-phase, data-lesson, data-teacher (instruções PT).\n' +
+            '  Narrativa 7 capítulos, reveal cards vocab, grammar discovery, diálogo line-by-line,\n' +
+            '  2+ listenings (data-src MP3), quick fire, 3 role-plays, survival card, checklist.\n' +
+            '  Zero português na tela. Mínimo 35-45 slides para 90 min.\n\n' +
+            'complementary.html — ATIVIDADES COMPLEMENTARES:\n' +
+            '  3 recomendações por aula com media-card-wrapper e data-media="l{N}-...".\n\n' +
+            'PASSO 3 — Rodar o builder:\n' +
+            '  python3 _build/model/build_from_model.py _build/' + perfilId + '-aula{N}/config.json\n' +
+            '  ELEVENLABS_API_KEY=... python3 _build/model/gen_audio.py _build/' + perfilId + '-aula{N}/config.json\n\n' +
+            'PASSO 4 — Deploy via git (NUNCA vercel --prod):\n' +
+            '  git checkout -b feat/' + perfilId + '-aula{N}\n' +
+            '  git add ... && git commit && git push\n' +
+            '  gh pr create && gh pr merge --squash --delete-branch\n\n' +
 
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             'REFERÊNCIA OBRIGATÓRIA DE EXERCÍCIOS \u2014 PADRÃO FAAP\n' +
@@ -2959,57 +2956,54 @@
             '- NUNCA usar atributo data-exercise — SEMPRE HTML manual com as funções acima\n' +
             '- JavaScript vem do builder (helen-mendes modelo). NUNCA copiar de patricia-ruffo (legado). Ver CLAUDE.md REGRA 26\n' +
             '- Trocar APENAS: audioMap, slug no localStorage, e totalLessons\n\n' +
-            'GERAR DOIS ARQUIVOS HTML SEPARADOS:\n' +
-            '1. /public/professor/' + perfilId + '.html \u2014 Material COMPLETO do professor (4 abas: Planejamento Pedagógico, Pre-class, IN CLASS, Atividades Complementares)\n' +
-            '2. /public/aluno/' + perfilId + '.html \u2014 Material do ALUNO (apenas Pre-class + Atividades Complementares, SEM instruções do professor, SEM gabaritos, SEM perfil 360)\n\n' +
-            'URLs públicas após deploy:\n' +
-            '- Professor: https://alumni-plano-gerador.vercel.app/professor/' + perfilId + '.html\n' +
-            '- Aluno: https://alumni-plano-gerador.vercel.app/aluno/' + perfilId + '.html\n\n' +
+            'GERAR VIA BUILDER (NUNCA HTML DIRETO):\n' +
+            'O Claude NUNCA escreve o HTML final. O Claude cria 4 ARQUIVOS DE CONTEÚDO + 1 config:\n' +
+            '  _build/' + perfilId + '-aula{N}/config.json     \u2014 slug, paleta, personagens, stamps, lesson metadata\n' +
+            '  _build/' + perfilId + '-aula{N}/slides.html      \u2014 conteúdo dos slides IN CLASS (SEM CSS/JS)\n' +
+            '  _build/' + perfilId + '-aula{N}/preclass.html    \u2014 conteúdo do Pre-class (SEM CSS/JS)\n' +
+            '  _build/' + perfilId + '-aula{N}/planning.html    \u2014 conteúdo do Planejamento (só hub novo)\n' +
+            '  _build/' + perfilId + '-aula{N}/complementary.html \u2014 conteúdo dos Complementares\n\n' +
+            'Depois roda o BUILDER que monta o HTML final com CSS/JS do modelo helen-mendes:\n' +
+            '  python3 _build/model/build_from_model.py _build/' + perfilId + '-aula{N}/config.json\n' +
+            '  ELEVENLABS_API_KEY=... python3 _build/model/gen_audio.py _build/' + perfilId + '-aula{N}/config.json\n\n' +
+            'SAÍDAS do builder (4 arquivos HTML):\n' +
+            '  public/professor/' + perfilId + '-aula{N}.html  \u2014 standalone professor (IN CLASS slides)\n' +
+            '  public/aluno/' + perfilId + '-aula{N}.html      \u2014 standalone aluno (espelho sem T icon)\n' +
+            '  public/professor/' + perfilId + '.html           \u2014 hub professor (4 abas, só com hub="new")\n' +
+            '  public/aluno/' + perfilId + '.html               \u2014 hub aluno (2 abas, só com hub="new")\n\n' +
+            'Se o builder falhar: CORRIGIR O BUILDER (_build/model/build_from_model.py). NUNCA contornar.\n\n' +
 
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             'INSTRUÇÃO FINAL \u2014 O QUE GERAR\n' +
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
-            'Gere o material pedagógico completo em DOIS arquivos HTML separados:\n\n' +
-            'ARQUIVO 1 \u2014 VISÃO PROFESSOR (/public/professor/' + perfilId + '.html):\n' +
-            '4 abas obrigatórias:\n\n' +
-            'ABA 1 — PLANEJAMENTO PEDAGÓGICO:\n' +
-            '  Visão geral acadêmica completa do programa. Contém:\n' +
-            '  - Cabeçalho: dados do aluno, professor, dias/horários, datas\n' +
-            '  - Objetivo do programa (parágrafo)\n' +
-            '  - Promessa transformadora + personagem-jornada\n' +
-            '  - Forças e pontos de melhoria do aluno\n' +
-            '  - TABELA DO CURRÍCULO: todas as aulas do programa (usar os temas da seção DIVISÃO DE AULAS acima) com # | Tema | Foco Linguístico | Atividade | Homework\n' +
-            '  - Regras de cancelamento\n\n' +
-            'ABA 2 — PRE-CLASS (exercícios interativos):\n' +
-            '  Exercícios que o aluno faz ANTES da aula.\n' +
-            '  HTML manual OBRIGATÓRIO: checkBlank(), selectQuiz(), checkMatch(), verifyAllMatches(), checkOrder(), moveItem(), speakPhrase(), startRecording(), stopRecording(). NUNCA usar data-exercise.\n' +
-            '  Mínimo 5-8 exercícios variados por aula. Com microcopy que autoriza o erro.\n\n' +
-            'ABA 3 — IN CLASS (slides interativos para Zoom):\n' +
-            '  Esta aba substitui o antigo Plano de Aula e Material do Professor.\n' +
-            '  É uma APRESENTAÇÃO de slides (100vh por slide, navegação por setas), NÃO uma página com scroll.\n' +
-            '  Instruções ao professor via ícone T (hover) em cada slide.\n' +
-            '  DEVE conter: narrativa com 7 capítulos, reveal cards no vocab, grammar discovery,\n' +
-            '  diálogo line-by-line, 2+ listenings com play/pause, quick fire uma por vez,\n' +
-            '  3 role-plays (guided>semi-free>free), artefatos reais CSS, survival card + checklist checkbox.\n' +
-            '  Zero português na tela. 100% ElevenLabs com alternância Arthur/Ellen.\n' +
-            '  Mínimo 25-30 slides para 60 min, 35-45 para 90 min.\n' +
-            '  REGRA CRÍTICA: A IN CLASS NÃO pode repetir os mesmos exercícios do Pre-class.\n' +
-            '  O Pre-class é INTRODUÇÃO (primeiro contato com vocabulário). A IN CLASS é APROFUNDAMENTO (aplicação em contexto real).\n' +
-            '  O vocabulário é o MESMO, mas TODAS as frases-exemplo, exercícios e aplicações devem ser DIFERENTES.\n' +
-            '  Ver regras detalhadas na seção ESPECIFICAÇÕES DO MATERIAL.\n\n' +
-            'ABA 4 — ATIVIDADES COMPLEMENTARES:\n' +
-            '  Filmes, séries, podcasts, canais YouTube recomendados por aula.\n' +
-            '  Baseados nos interesses pessoais do aluno.\n\n' +
-            'ARQUIVO 2 \u2014 VISÃO ALUNO (/public/aluno/' + perfilId + '.html):\n' +
-            '- Apenas 2 abas: Pre-class (exercícios interativos) + Atividades Complementares\n' +
-            '- SEM instruções do professor, SEM gabaritos, SEM perfil 360, SEM indicação de professor\n' +
-            '- Link público que o aluno recebe\n\n' +
-            'Ambos os arquivos devem:\n' +
-            '- Usar tema claro Alumni (#f5f5f0), layout centralizado, logo Alumni no header\n' +
-            '- Ter promessa transformadora em cada aula\n' +
-            '- Ter survival card progressivo\n' +
-            '- Ter critérios de sucesso mensuráveis\n' +
-            '- Fazer deploy na Vercel com: npx vercel --prod --yes\n\n' +
+            'Gere os ARQUIVOS DE CONTEÚDO para o builder (NUNCA HTML final direto):\n\n' +
+            'PASSO 1 — Criar config.json em _build/' + perfilId + '-aula{N}/config.json:\n' +
+            '  slug, student_name, first_name, gender, program, total_aulas, palette,\n' +
+            '  header, characters, stamps, lesson (n, menu_num, menu_title, phases, listenings, extra_audio),\n' +
+            '  hub ("new" para aluno novo, "snippets" para aula adicional)\n\n' +
+            'PASSO 2 — Criar os 4 arquivos de CONTEÚDO (HTML puro, SEM css/js):\n\n' +
+            'planning.html — PLANEJAMENTO PEDAGÓGICO:\n' +
+            '  Grid de dados do aluno, jornada, promessa, forças/fraquezas,\n' +
+            '  tabela do currículo COMPLETO, regras de cancelamento.\n\n' +
+            'preclass.html — PRE-CLASS (exercícios interativos):\n' +
+            '  Lesson card com accordion. 5 etapas obrigatórias (REGRA 4):\n' +
+            '  1.1 Vocab Cards, 1.2 Matching, 1.3 Grammar in Context, 1.4 Grammar Tip, 1.5 Fill-in.\n' +
+            '  Stage 2 Ordering, Stage 3 Pronunciation, Stage 4 Quiz, Stage 5 Free Production.\n' +
+            '  Survival Card ao final. HTML manual: checkBlank(), selectQuiz(), checkMatch(), etc.\n\n' +
+            'slides.html — IN CLASS (slides interativos para Zoom):\n' +
+            '  Slides com data-slide, data-phase, data-lesson, data-teacher (instruções PT).\n' +
+            '  Narrativa 7 capítulos, reveal cards vocab, grammar discovery, diálogo line-by-line,\n' +
+            '  2+ listenings (data-src MP3), quick fire, 3 role-plays, survival card, checklist.\n' +
+            '  Zero português na tela. Mínimo 35-45 slides para 90 min.\n\n' +
+            'complementary.html — ATIVIDADES COMPLEMENTARES:\n' +
+            '  3 recomendações por aula com media-card-wrapper e data-media="l{N}-...".\n\n' +
+            'PASSO 3 — Rodar o builder:\n' +
+            '  python3 _build/model/build_from_model.py _build/' + perfilId + '-aula{N}/config.json\n' +
+            '  ELEVENLABS_API_KEY=... python3 _build/model/gen_audio.py _build/' + perfilId + '-aula{N}/config.json\n\n' +
+            'PASSO 4 — Deploy via git (NUNCA vercel --prod):\n' +
+            '  git checkout -b feat/' + perfilId + '-aula{N}\n' +
+            '  git add ... && git commit && git push\n' +
+            '  gh pr create && gh pr merge --squash --delete-branch\n\n' +
 
             '\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n' +
             'REFERÊNCIA OBRIGATÓRIA DE EXERCÍCIOS \u2014 PADRÃO FAAP\n' +
