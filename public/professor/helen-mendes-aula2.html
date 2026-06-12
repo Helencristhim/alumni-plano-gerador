@@ -175,7 +175,7 @@ body.slide-mode .logo-bar .slide-counter { display:block; }
 @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
 
 .slides-wrapper { display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:500; }
-body.slide-mode .slides-wrapper { display:block; }
+body.slide-mode .slides-wrapper { display:flex;flex-direction:column; }
 body.slide-mode .main-content { display:none; }
 body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 
@@ -190,8 +190,8 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 .phase-label.current { color:var(--accent-light); }
 .phase-label.completed { color:var(--accent); }
 
-.slides-container { height:100vh;overflow:hidden;position:relative; }
-.slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 5.5rem; }
+.slides-container { flex:1;overflow:hidden;position:relative; }
+.slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 2rem; }
 .slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
 
 .slide-inner { max-width:920px;width:100%;position:relative; }
@@ -287,6 +287,8 @@ body.slide-mode .teacher-t { display:flex; }
 .dialogue-bubble { padding:.7rem 1rem;border-radius:12px;font-size:.92rem;line-height:1.5;max-width:80%;position:relative; }
 .dialogue-bubble.james-bubble { background:rgba(91,155,213,.1);border:1px solid rgba(91,155,213,.2); }
 .dialogue-bubble.helen-bubble { background:var(--accent-dim);border:1px solid rgba(190,18,60,.2); }
+.dialogue-avatar.guest { background:#0891b2; }
+.dialogue-bubble.guest-bubble { background:rgba(8,145,178,.12);border:1px solid rgba(8,145,178,.25); }
 .dialogue-bubble .vocab-highlight { color:var(--accent);font-weight:700; }
 .audio-inline{ display:inline-flex;margin-left:.4rem;cursor:pointer;opacity:.5;transition:opacity .2s;vertical-align:middle; }
 .audio-inline:hover{ opacity:1; }
@@ -378,7 +380,7 @@ body.slide-mode .teacher-t { display:flex; }
 .confetti-piece { position:absolute;width:8px;height:8px;top:-10px;animation:confettiFall 3s ease forwards; }
 @keyframes confettiFall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
 
-.nav-bar { position:fixed;bottom:0;left:0;right:0;z-index:520;display:none;align-items:center;justify-content:center;gap:1rem;padding:1rem 2rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06); }
+.nav-bar { display:none;align-items:center;justify-content:center;gap:1rem;padding:1rem 2rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06);flex-shrink:0;z-index:520; }
 body.slide-mode .nav-bar { display:flex; }
 .nav-btn { width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-size:1.2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center; }
 .nav-btn:hover { background:var(--accent);border-color:var(--accent);color:#fff; }
@@ -393,7 +395,7 @@ body.slide-mode .nav-bar { display:flex; }
 ::-webkit-scrollbar-thumb { background:rgba(190,18,60,.3);border-radius:3px; }
 
 @media(max-width:768px) {
-  .slide { padding:5rem 1.2rem 5.5rem; }
+  .slide { padding:5rem 1.2rem 2rem; }
   .vocab-grid { grid-template-columns:1fr;gap:.8rem; }
   .vocab-card { min-height:auto; }
   .slide-title { font-size:2rem; }
@@ -1040,11 +1042,6 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 </div><!-- /slides-container -->
-</div><!-- /slides-wrapper -->
-
-<!-- Teacher T Icon -->
-<div class="teacher-t" id="teacherT">T<div class="teacher-t-panel" id="teacherPanel"></div></div>
-
 <!-- Navigation Bar (IN CLASS) -->
 <div class="nav-bar" style="justify-content:space-between;">
     <button onclick="exitSlideMode()" aria-label="Exit presentation" style="background:transparent;border:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.85);border-radius:8px;padding:.55rem 1.1rem;font-size:.72rem;font-weight:700;letter-spacing:1px;cursor:pointer;flex:0 0 auto;">&#10005; EXIT</button>
@@ -1055,6 +1052,11 @@ body.slide-mode .nav-bar { display:flex; }
       <button id="nextBtn" onclick="changeSlide(1)" style="background:var(--accent);border:1.5px solid var(--accent);color:#fff;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;">Next &#8594;</button>
     </div>
   </div>
+
+</div><!-- /slides-wrapper -->
+
+<!-- Teacher T Icon -->
+<div class="teacher-t" id="teacherT">T<div class="teacher-t-panel" id="teacherPanel"></div></div>
 
 <!-- Confetti container -->
 <div class="confetti-container" id="confettiContainer"></div>
@@ -1076,6 +1078,7 @@ function exitSlideMode() { document.body.classList.remove('slide-mode'); documen
 if (window.location.hash === '#slides') { document.addEventListener('DOMContentLoaded', function() { setTimeout(function(){ enterSlideMode(1); }, 100); }); }
 
 function enterSlideMode() {
+  window.scrollTo(0, 0);
   document.body.classList.add('slide-mode');
   if (currentSlide) goToSlide(currentSlide);
   else goToSlide(1);

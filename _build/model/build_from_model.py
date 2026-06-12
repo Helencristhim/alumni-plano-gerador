@@ -1,0 +1,392 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""build_from_model.py — builder GENÉRICO de aulas a partir da aluna modelo (Helen Mendes).
+
+A REGRA 20 manda: layout vem SEMPRE do modelo; conteúdo vem do perfil 360 do aluno.
+Este builder clona o shell do modelo (public/professor/helen-mendes-aula1.html, que
+carrega TODOS os fixes globais: EXIT->exitSlideMode, handler de Escape fora do <script src>,
+player completo de listening, revealError dinâmico, contrast-guard, nav-bar flex,
+3a cor de diálogo guest) e injeta slug/paleta/conteúdo/audioMap do aluno.
+
+USO (da raiz do repo):
+  python3 _build/model/build_from_model.py _build/{slug}-aula{N}/config.json
+
+ARQUIVOS DE CONTEÚDO (no mesmo diretório do config.json):
+  slides.html            slides da aula (obrigatório)
+  preclass.html          accordion Pre-class da aula (p/ hub novo ou snippet)
+  planning.html          aba Planejamento (só hub "new")
+  complementary.html     aba Complementares (só hub "new")
+
+CONFIG (JSON):
+{
+  "slug": "fulano-de-tal",
+  "student_name": "Fulano de Tal",          // <h1> e títulos
+  "first_name": "Fulano",                   // regra de voz em 1a pessoa
+  "gender": "m",                            // m=arthur, f=ellen p/ falas do aluno
+  "program": "Business English",
+  "total_aulas": 10,
+  "palette": { "accent": "#0D7377", "accent_light": "#14919B" },
+  "header": ["A2", "S&#227;o Paulo, SP", "Gerente de TI", "60 min / Online"],
+  "characters": { "fulano": "arthur", "sarah": "ellen" },  // classe CSS -> voz; 1o = ALUNO
+  "stamps": [ {"id": 1, "label": "First Impressions", "img": "https://..."} ],
+  "lesson": {
+    "n": 1, "menu_num": "01",
+    "menu_title": "...", "menu_desc": "... -- 27 slides",
+    "subtitle": "Aula 1 -- ...",
+    "title_tag": "Professor View -- Fulano | Aula 1 -- ...",
+    "phases": ["...", "...", "...", "...", "...", "...", "..."],
+    "listenings": [ {"file": "a1_listening1.mp3", "voice": "ellen", "text": "..."} ],
+    "extra_audio": [ {"key": "[order-l1]", "file": "pc_order_l1.mp3", "voice": "arthur", "text": "..."} ]
+  },
+  "hub": "snippets"   // "new" = gera hub prof+aluno do zero | "snippets" = só trechos p/ hub existente | "none"
+}
+
+SAÍDAS:
+  public/professor/{slug}-aula{N}.html      standalone professor
+  public/aluno/{slug}-aula{N}.html          espelho aluno (REGRA 34)
+  public/professor/{slug}.html + aluno      (só hub "new")
+  _build/{slug}-aula{N}/audio_manifest.json (consumido por _build/model/gen_audio.py)
+  _build/{slug}-aula{N}/hub_snippets.html   (só hub "snippets")
+
+AULAS PASSADAS NÃO SÃO TOCADAS: o builder só escreve os arquivos da aula nova
+(e o hub apenas no modo "new", de aluno que ainda não tem hub).
+"""
+import json
+import os
+import re
+import sys
+import unicodedata
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
+PROF = os.path.join(ROOT, 'public', 'professor')
+ALUNO = os.path.join(ROOT, 'public', 'aluno')
+
+VOICES = json.load(open(os.path.join(HERE, 'voices.json'), encoding='utf-8'))
+
+MODEL = 'helen-mendes'
+MODEL_ACCENT = ('#BE123C', '#be123c')
+MODEL_ACCENT_LIGHT = ('#F43F5E', '#f43f5e')
+MODEL_ACCENT_RGB = 'rgba(190,18,60'
+MODEL_CHARS = ['helen', 'james']  # classes de diálogo do shell, em ordem (1o = aluno)
+
+
+def read(p):
+    with open(p, encoding='utf-8') as f:
+        return f.read()
+
+
+def write(p, s):
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    with open(p, 'w', encoding='utf-8') as f:
+        f.write(s)
+    print(f'  wrote {os.path.relpath(p, ROOT)} ({len(s)//1024} KB)')
+
+
+def replace_between(s, start, end, new_inner):
+    i = s.index(start)
+    j = s.index(end, i + len(start))
+    return s[:i + len(start)] + new_inner + s[j:]
+
+
+def snake(text, maxlen=48):
+    t = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode()
+    t = re.sub(r"[^a-z0-9]+", '_', t.lower()).strip('_')
+    return t[:maxlen].rstrip('_')
+
+
+def hex_to_rgb(h):
+    h = h.lstrip('#')
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def extract_phrases(html):
+    """(texto, voz_sugerida|None) em ordem de documento; data-voice na mesma linha vence."""
+    out = []
+    for line in html.split('\n'):
+        mv = re.search(r'data-voice="([a-z]+)"', line)
+        hint = mv.group(1) if mv else None
+        for m in re.finditer(r"speakText\('((?:[^'\\]|\\.)*)'", line):
+            t = m.group(1).replace("\\'", "'")
+            if not t.startswith('['):
+                out.append((t, hint))
+        for m in re.finditer(r'data-phrase="([^"]*)"', line):
+            out.append((m.group(1), hint))
+    return out
+
+
+def assign_voices(phrases, prefix, cfg):
+    """REGRA 7: 1-2 palavras = arthur; frases alternam; data-voice (diálogo) vence;
+    falas em 1a pessoa do aluno = voz do gênero do aluno."""
+    student_voice = 'ellen' if cfg['gender'] == 'f' else 'arthur'
+    first = re.escape(cfg['first_name'])
+    first_person = re.compile(rf"\bI am {first}\b|\bI'm {first}\b|\bMy name is {first}\b")
+    entries = {}
+    alt = 0
+    for text, hint in phrases:
+        if text in entries:
+            continue
+        if hint:
+            voice = hint
+        elif len(text.split()) <= 2:
+            voice = 'arthur'
+        elif first_person.search(text):
+            voice = student_voice
+        else:
+            voice = 'ellen' if alt % 2 == 0 else 'arthur'
+            alt += 1
+        assert voice in VOICES, f'voz desconhecida "{voice}" (disponíveis: {sorted(VOICES)})'
+        entries[text] = dict(voice=voice, file=f'{prefix}{snake(text)}.mp3')
+    return entries
+
+
+def audio_map_js(entries, audio_base, extra=None):
+    lines = ['var audioMap = {']
+    for text, meta in entries.items():
+        lines.append(f'  {json.dumps(text, ensure_ascii=False)}: {json.dumps(audio_base + meta["file"])},')
+    for item in (extra or []):
+        lines.append(f'  {json.dumps(item["key"], ensure_ascii=False)}: {json.dumps(audio_base + item["file"])},')
+    lines.append('};')
+    return '\n'.join(lines)
+
+
+def base_swaps(s, cfg, n=None):
+    """Paleta + slug + nome + personagens + programa. SEMPRE antes de injetar conteúdo."""
+    accent = cfg['palette']['accent']
+    light = cfg['palette']['accent_light']
+    r, g, b = hex_to_rgb(accent)
+    for tok in MODEL_ACCENT:
+        s = s.replace(tok, accent)
+    for tok in MODEL_ACCENT_LIGHT:
+        s = s.replace(tok, light)
+    s = s.replace(MODEL_ACCENT_RGB, f'rgba({r},{g},{b}')
+    # personagens do diálogo: classes do shell -> classes do aluno
+    chars = list(cfg['characters'])
+    for old, new in zip(MODEL_CHARS, chars):
+        s = s.replace(f'.dialogue-avatar.{old}', f'.dialogue-avatar.{new}')
+        s = s.replace(f'.dialogue-bubble.{old}-bubble', f'.dialogue-bubble.{new}-bubble')
+    if n:
+        s = s.replace(f'{MODEL}-aula1', f'{cfg["slug"]}-aula{n}')
+        s = s.replace(f'{MODEL}-aula2', f'{cfg["slug"]}-aula{n}')
+    s = s.replace(MODEL, cfg['slug'])
+    s = s.replace('Helen Mendes', cfg['student_name'])
+    s = s.replace('Helen', cfg['first_name'])
+    s = re.sub(r'window\.TOTAL_AULAS=\d+', f'window.TOTAL_AULAS={cfg["total_aulas"]}', s)
+    s = re.sub(r'Business English (--|—) 30 Aulas', f'{cfg["program"]} \\1 {cfg["total_aulas"]} Aulas', s)
+    return s
+
+
+def stamps_html(cfg):
+    rows = ['<div class="stamps-row">']
+    for st in cfg['stamps']:
+        rows.append(f'<div class="stamp" id="stamp{st["id"]}" data-label="{st["label"]}" '
+                    f'style="background-image:url(\'{st["img"]}\')"></div>')
+    rows.append('</div>\n')
+    return '\n'.join(rows)
+
+
+def patch_header(s, cfg, subtitle):
+    s = re.sub(r'<p class="subtitle">[^<]*</p>', f'<p class="subtitle">{subtitle}</p>', s, count=1)
+    info = '\n'.join(f'      <span>{x}</span>' for x in cfg['header'])
+    s = re.sub(r'<div class="student-info">.*?</div>',
+               '<div class="student-info">\n' + info + '\n    </div>', s, count=1, flags=re.S)
+    i = s.index('<div class="stamps-row">')
+    m = re.search(r'\n</div>\n', s[i:])
+    s = s[:i] + stamps_html(cfg) + s[i + m.end() - 1:]
+    return s
+
+
+def menu_card(cfg, target):
+    """Card padrão do menu IN CLASS. target = 'enterSlideMode' (standalone) ou href (hub)."""
+    L = cfg['lesson']
+    if target == 'enterSlideMode':
+        opener = 'onclick="enterSlideMode();"'
+        tag, endtag, href = 'div', 'div', ''
+    else:
+        opener = ''
+        tag, endtag, href = 'a', 'a', f' href="{target}" '
+    return (
+        f'    <{tag}{href} style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" {opener} onmouseover="this.style.borderColor=\'var(--accent)\'" onmouseout="this.style.borderColor=\'rgba(200,200,190,.5)\'">\n'
+        f'      <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">{L["menu_num"]}</div>\n'
+        f'      <div><div style="font-weight:600;font-size:.95rem">{L["menu_title"]}</div><div style="font-size:.8rem;color:var(--text-dim)">{L["menu_desc"]}</div></div>\n'
+        f'    </{endtag}>')
+
+
+def inclass_menu(cards):
+    return ('\n  <h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Selecione a Aula</h3>\n'
+            '  <div style="display:flex;flex-direction:column;gap:1rem">\n' + '\n'.join(cards) + '\n  </div>\n</div>\n\n')
+
+
+def final_asserts(s, cfg, label):
+    low = s.lower()
+    assert 'helen' not in low, f'{label}: sobrou referência ao modelo (helen)'
+    assert '/lib/contrast-guard.js' in s, f'{label}: contrast-guard NÃO plugado'
+    assert 'toggleListening' not in s, f'{label}: listening fake presente'
+    assert 'function mpToggle' in s or 'slidesContainer' not in s, f'{label}: player de listening ausente'
+    assert MODEL_ACCENT[0] not in s and MODEL_ACCENT[0].lower() not in low.replace(cfg['palette']['accent'].lower(), ''), \
+        f'{label}: paleta do modelo vazou'
+
+
+def build_standalone(cfg, content_dir, manifest):
+    L = cfg['lesson']
+    n = L['n']
+    audio_base = f'/audio/{cfg["slug"]}/'
+    slides = read(os.path.join(content_dir, 'slides.html'))
+
+    s = read(os.path.join(PROF, f'{MODEL}-aula1.html'))
+    s = base_swaps(s, cfg, n=n)
+    s = re.sub(r'<title>[^<]*</title>', f'<title>{L["title_tag"]}</title>', s, count=1)
+    s = re.sub(r'<h1>[^<]*</h1>', f'<h1>{cfg["student_name"]}</h1>', s, count=1)
+    s = patch_header(s, cfg, L['subtitle'])
+
+    labels = '\n' + '\n'.join(
+        f'  <span class="phase-label{" current" if i == 0 else ""}" data-phase="{i+1}">{name}</span>'
+        for i, name in enumerate(L['phases'])) + '\n'
+    s = replace_between(s, '<div class="phase-labels" id="phaseLabels">', '</div>', labels)
+
+    s = replace_between(s, '<div class="tab-content active" id="tab-inclass">', '<!-- ========== TAB 4',
+                        inclass_menu([menu_card(cfg, 'enterSlideMode')]))
+    s = replace_between(s, '<div class="slides-container" id="slidesContainer">', '</div><!-- /slides-container -->',
+                        '\n' + slides + '\n')
+    s = s.replace('>LESSON 1<', f'>LESSON {n}<')
+
+    entries = assign_voices(extract_phrases(slides), prefix=f'a{n}_', cfg=cfg)
+    extra = L.get('extra_audio', [])
+    s = re.sub(r'var audioMap = \{.*?\};', lambda _: audio_map_js(entries, audio_base, extra), s, count=1, flags=re.S)
+
+    for text, meta in entries.items():
+        manifest.append(dict(text=text, voice=meta['voice'], file=meta['file']))
+    for li in L.get('listenings', []):
+        assert li['voice'] in VOICES, f'listening com voz desconhecida: {li["voice"]}'
+        manifest.append(dict(text=li['text'], voice=li['voice'], file=li['file']))
+    for item in extra:
+        assert item['voice'] in VOICES, f'extra_audio com voz desconhecida: {item["voice"]}'
+        manifest.append(dict(text=item['text'], voice=item['voice'], file=item['file']))
+
+    final_asserts(s, cfg, f'prof aula{n}')
+    write(os.path.join(PROF, f'{cfg["slug"]}-aula{n}.html'), s)
+
+    # espelho ALUNO (REGRA 34): sem instruções de professor, exit volta ao hub do aluno
+    a = s.replace('<title>Professor View --', '<title>Aluno --')
+    a = a.replace('<span class="prof-badge">Professor View</span>', '<span class="prof-badge">Aluno</span>')
+    a = a.replace('>PROFESSOR VIEW<', '>ALUNO<')
+    a = re.sub(r'\sdata-teacher="(?:[^"\\]|\\.)*"', '', a)
+    a = a.replace('</style>', '.teacher-t{display:none !important}\n</style>')
+    a = a.replace(f"window.location.href = '/professor/{cfg['slug']}.html#inclass'",
+                  f"window.location.href = '/aluno/{cfg['slug']}.html#inclass'")
+    a = a.replace(f'{cfg["slug"]}-aula{n}-professor', f'{cfg["slug"]}-aula{n}-aluno')
+    final_asserts(a, cfg, f'aluno aula{n}')
+    write(os.path.join(ALUNO, f'{cfg["slug"]}-aula{n}.html'), a)
+    return entries
+
+
+def build_hub_new(cfg, content_dir, manifest):
+    """Hub completo (aluno NOVO, sem hub existente). Clona os hubs do modelo."""
+    L = cfg['lesson']
+    audio_base = f'/audio/{cfg["slug"]}/'
+    preclass = read(os.path.join(content_dir, 'preclass.html'))
+    planning = read(os.path.join(content_dir, 'planning.html'))
+    complementary = read(os.path.join(content_dir, 'complementary.html'))
+
+    entries = assign_voices(extract_phrases(preclass), prefix='pc_', cfg=cfg)
+    extra = L.get('extra_audio', [])
+    amap = audio_map_js(entries, audio_base, extra)
+    for text, meta in entries.items():
+        manifest.append(dict(text=text, voice=meta['voice'], file=meta['file']))
+
+    card = menu_card(cfg, f'/professor/{cfg["slug"]}-aula{L["n"]}.html?autostart=1')
+
+    s = read(os.path.join(PROF, f'{MODEL}.html'))
+    s = base_swaps(s, cfg)
+    s = re.sub(r'<title>[^<]*</title>',
+               f'<title>Professor View -- {cfg["student_name"]} | {cfg["program"]}</title>', s, count=1)
+    s = re.sub(r'<h1>[^<]*</h1>', f'<h1>{cfg["student_name"]}</h1>', s, count=1)
+    s = patch_header(s, cfg, cfg.get('hub_subtitle', cfg['program']))
+    s = replace_between(s, '<div class="tab-content active" id="tab-planning">', '</div><!-- /tab-planning -->', '\n' + planning + '\n')
+    s = replace_between(s, '<div class="tab-content" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
+    s = replace_between(s, '<div class="tab-content" id="tab-inclass">', '<!-- ========== TAB 4', inclass_menu([card]))
+    s = replace_between(s, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
+    s = re.sub(r'var totalLessons = \d+', 'var totalLessons = 1', s)
+    s = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, s, count=1, flags=re.S)
+    final_asserts(s, cfg, 'hub prof')
+    write(os.path.join(PROF, f'{cfg["slug"]}.html'), s)
+
+    a = read(os.path.join(ALUNO, f'{MODEL}.html'))
+    a = base_swaps(a, cfg)
+    a = re.sub(r'<title>[^<]*</title>', f'<title>{cfg["student_name"]} | {cfg["program"]} -- Alumni</title>', a, count=1)
+    a = re.sub(r'<h1>[^<]*</h1>', f'<h1>{cfg["student_name"]}</h1>', a, count=1)
+    a = patch_header(a, cfg, cfg.get('hub_subtitle', cfg['program']))
+    a = replace_between(a, '<div class="tab-content active" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
+    a = replace_between(a, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
+    a = re.sub(r'var totalLessons = \d+', 'var totalLessons = 1', a)
+    a = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, a, count=1, flags=re.S)
+    final_asserts(a, cfg, 'hub aluno')
+    write(os.path.join(ALUNO, f'{cfg["slug"]}.html'), a)
+
+
+def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
+    """Aluno EXISTENTE: NÃO toca o hub dele. Gera trechos prontos pra inserir
+    (card IN CLASS, stamp, accordion Pre-class, entradas de audioMap)."""
+    L = cfg['lesson']
+    audio_base = f'/audio/{cfg["slug"]}/'
+    parts = ['<!-- ============ SNIPPETS pro hub de ' + cfg['slug'] + ' (aula ' + str(L['n']) + ') ============ -->\n']
+    parts.append('<!-- 1. CARD do menu IN CLASS (inserir na lista de cards da tab-inclass, prof e aluno c/ /aluno/) -->\n')
+    parts.append(menu_card(cfg, f'/professor/{cfg["slug"]}-aula{L["n"]}.html?autostart=1') + '\n\n')
+    st = next((x for x in cfg['stamps'] if x['id'] == L['n']), None)
+    if st:
+        parts.append('<!-- 2. STAMP (inserir na stamps-row do header) -->\n')
+        parts.append(f'<div class="stamp" id="stamp{st["id"]}" data-label="{st["label"]}" style="background-image:url(\'{st["img"]}\')"></div>\n\n')
+    pc_path = os.path.join(content_dir, 'preclass.html')
+    pc_entries = {}
+    if os.path.exists(pc_path):
+        pc = read(pc_path)
+        pc_entries = assign_voices(extract_phrases(pc), prefix=f'pc{L["n"]}_', cfg=cfg)
+        parts.append('<!-- 3. ACCORDION Pre-class (inserir após o ex-lesson anterior, prof E aluno) -->\n')
+        parts.append(pc + '\n\n')
+    parts.append('<!-- 4. ENTRADAS de audioMap (mesclar no audioMap do hub, prof E aluno) -->\n<script>\n')
+    for text, meta in {**slide_entries, **pc_entries}.items():
+        parts.append(f'  {json.dumps(text, ensure_ascii=False)}: {json.dumps(audio_base + meta["file"])},\n')
+    parts.append('</script>\n')
+    parts.append('<!-- 5. Ajustar: var totalLessons / window.TOTAL_AULAS no hub, se mudou -->\n')
+    write(os.path.join(out_dir, 'hub_snippets.html'), ''.join(parts))
+    return pc_entries
+
+
+def main():
+    if len(sys.argv) != 2:
+        print(__doc__)
+        sys.exit(2)
+    cfg_path = os.path.abspath(sys.argv[1])
+    content_dir = os.path.dirname(cfg_path)
+    cfg = json.load(open(cfg_path, encoding='utf-8'))
+    assert len(cfg['characters']) <= 3, 'máx 3 personagens por diálogo (e só há 2 vozes — ver voices.json)'
+    for v in cfg['characters'].values():
+        assert v in VOICES, f'voz desconhecida no characters: {v}'
+
+    manifest = []
+    print('== standalone ==')
+    entries = build_standalone(cfg, content_dir, manifest)
+
+    hub_mode = cfg.get('hub', 'snippets')
+    if hub_mode == 'new':
+        print('== hub (novo) ==')
+        build_hub_new(cfg, content_dir, manifest)
+    elif hub_mode == 'snippets':
+        print('== hub (snippets p/ hub existente — hub NÃO é tocado) ==')
+        pc_entries = build_hub_snippets(cfg, content_dir, content_dir, entries)
+        for text, meta in pc_entries.items():
+            manifest.append(dict(text=text, voice=meta['voice'], file=meta['file']))
+
+    seen, dedup = set(), []
+    for e in manifest:
+        if e['file'] in seen:
+            continue
+        seen.add(e['file'])
+        dedup.append(e)
+    write(os.path.join(content_dir, 'audio_manifest.json'), json.dumps(dedup, ensure_ascii=False, indent=1))
+    print(f'manifest: {len(dedup)} áudios -> rode: ELEVENLABS_API_KEY=... python3 _build/model/gen_audio.py {os.path.relpath(cfg_path, ROOT)}')
+    print(f'valide:   python3 _build/model/validate_lesson.py public/professor/{cfg["slug"]}-aula{cfg["lesson"]["n"]}.html public/aluno/{cfg["slug"]}-aula{cfg["lesson"]["n"]}.html')
+
+
+if __name__ == '__main__':
+    main()
