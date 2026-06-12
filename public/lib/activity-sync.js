@@ -84,8 +84,13 @@
       var items = oc.querySelectorAll('.order-item');
       var correct = oc.querySelectorAll('.order-item.correct-order');
       if (items.length > 0 && items.length === correct.length) {
-        var id = oc.id || oc.closest('[id]')?.id || 'order-' + s.ordering.length;
-        s.ordering.push(id);
+        var id = oc.id || '';
+        var order = [];
+        items.forEach(function(it) {
+          var txt = it.querySelector('.order-text');
+          if (txt) order.push(txt.textContent);
+        });
+        s.ordering.push({ id: id, order: order });
       }
     });
 
@@ -190,16 +195,26 @@
 
     // Ordering exercises
     if (s.ordering) {
-      s.ordering.forEach(function(id) {
-        var oc = document.getElementById(id);
-        if (oc) {
-          oc.querySelectorAll('.order-item').forEach(function(it, i) {
-            it.classList.add('correct-order');
-            var num = it.querySelector('.order-num');
-            if (num) num.textContent = i + 1;
-            it.style.borderColor = 'var(--success)';
+      s.ordering.forEach(function(o) {
+        var id = typeof o === 'string' ? o : o.id;
+        var savedOrder = typeof o === 'object' ? o.order : null;
+        var oc = id ? document.getElementById(id) : null;
+        if (!oc) return;
+        if (savedOrder && savedOrder.length > 0) {
+          var items = Array.from(oc.querySelectorAll('.order-item'));
+          savedOrder.forEach(function(txt) {
+            for (var i = 0; i < items.length; i++) {
+              var t = items[i].querySelector('.order-text');
+              if (t && t.textContent === txt) { oc.appendChild(items[i]); break; }
+            }
           });
         }
+        oc.querySelectorAll('.order-item').forEach(function(it, i) {
+          it.classList.add('correct-order');
+          var num = it.querySelector('.order-num');
+          if (num) num.textContent = i + 1;
+          it.style.borderColor = 'var(--success)';
+        });
       });
     }
 
