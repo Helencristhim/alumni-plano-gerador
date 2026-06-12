@@ -863,6 +863,14 @@ Helen e Danilo trabalham no mesmo repositorio. Para NUNCA sobrescrever o trabalh
   (HTML + JS + regra no validador), valida, e so entao vai pra aluno real
 - patricia-ruffo/elaine-v-b sao templates LEGADOS — nao usar em geracao nova
 
+**NUNCA contornar o builder (REGRA BLOQUEANTE):**
+- Se o builder falhar (assert, erro de parsing, arquivo faltando): CORRIGIR O BUILDER, nunca contornar
+- PROIBIDO usar `hub: "none"` e montar o hub manualmente via scripts Python ou copy/paste
+- PROIBIDO copiar o standalone como base do hub — standalone tem CSS de slides, hub tem CSS de Pre-class. Sao arquivos DIFERENTES com CSS DIFERENTE
+- PROIBIDO injetar CSS/JS/audioMap manualmente com scripts ad-hoc — o builder faz isso corretamente
+- Se um assert falhar, a correcao e no arquivo `_build/model/build_from_model.py`, NAO no output
+- Incidente: hub do Walyson saiu com CSS quebrado, tabs duplicadas e audioMap fora do bloco JS porque o builder foi contornado com `hub: "none"` + scripts manuais. Custou 3 PRs de correcao
+
 **Validacao obrigatoria (gates bloqueantes, antes do PR):**
 - `python3 _build/model/validate_lesson.py public/professor/{slug}-aula{N}.html public/aluno/{slug}-aula{N}.html`
 - Contraste computado headless: 0 textos ilegiveis (check_computed_contrast)
