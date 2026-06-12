@@ -104,7 +104,10 @@
     // Think cards recorded
     document.querySelectorAll('.think-card.recorded').forEach(function(tc) {
       var q = tc.querySelector('.think-question');
-      if (q) s.thinkRecorded.push(q.textContent.trim().substring(0, 40));
+      if (q) {
+        var recUrl = tc.dataset.recordingUrl || '';
+        s.thinkRecorded.push(JSON.stringify({ q: q.textContent.trim().substring(0, 40), r: recUrl }));
+      }
     });
 
     return s;
@@ -240,13 +243,23 @@
 
     // Think cards recorded
     if (s.thinkRecorded) {
-      s.thinkRecorded.forEach(function(q) {
+      s.thinkRecorded.forEach(function(d) {
+        var qTxt, recUrl;
+        try { var obj = JSON.parse(d); qTxt = obj.q; recUrl = obj.r || ''; }
+        catch(e) { qTxt = d; recUrl = ''; }
         document.querySelectorAll('.think-card').forEach(function(tc) {
           var qEl = tc.querySelector('.think-question');
-          if (qEl && qEl.textContent.trim().substring(0, 40) === q) {
+          if (qEl && qEl.textContent.trim().substring(0, 40) === qTxt) {
             tc.classList.add('recorded');
+            tc.dataset.recordingUrl = recUrl;
             var rd = tc.querySelector('[id^="think-result"]');
-            if (rd && !rd.innerHTML) rd.innerHTML = '<p style="font-size:.82rem;color:#16a34a;font-weight:500;">&#10003; Recording completed</p>';
+            if (rd) {
+              if (recUrl) {
+                rd.innerHTML = '<audio controls src="' + recUrl + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:.72rem;color:#16a34a;margin-top:.3rem;">&#10003; Recording saved</p>';
+              } else if (!rd.innerHTML) {
+                rd.innerHTML = '<p style="font-size:.82rem;color:#16a34a;font-weight:500;">&#10003; Recording completed</p>';
+              }
+            }
           }
         });
       });
