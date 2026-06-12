@@ -40,7 +40,7 @@
 
   // ===== COLLECT STATE (replica a logica do saveState original) =====
   function collectState() {
-    var s = { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [], ordering: [] };
+    var s = { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [], ordering: [], vocabListened: [], thinkRecorded: [] };
 
     document.querySelectorAll('.media-card-wrapper').forEach(function(w) {
       var id = w.dataset.media;
@@ -70,6 +70,12 @@
       s.checklists[i] = cb.checked;
     });
 
+    // Vocab cards listened
+    document.querySelectorAll('.vocab-card-pc.listened').forEach(function(vc) {
+      var w = vc.querySelector('.vocab-card-word');
+      if (w) s.vocabListened.push(w.textContent);
+    });
+
     // Ordering exercises completados
     document.querySelectorAll('.order-container').forEach(function(oc) {
       var items = oc.querySelectorAll('.order-item');
@@ -78,6 +84,12 @@
         var id = oc.id || oc.closest('[id]')?.id || 'order-' + s.ordering.length;
         s.ordering.push(id);
       }
+    });
+
+    // Think cards recorded
+    document.querySelectorAll('.think-card.recorded').forEach(function(tc) {
+      var q = tc.querySelector('.think-question');
+      if (q) s.thinkRecorded.push(q.textContent.trim().substring(0, 40));
     });
 
     return s;
@@ -148,6 +160,45 @@
           if (id && cb && s.mediaChecks[id]) { cb.checked = true; w.classList.add('done'); }
         });
       }
+    }
+
+    // Vocab cards listened
+    if (s.vocabListened) {
+      s.vocabListened.forEach(function(word) {
+        document.querySelectorAll('.vocab-card-pc').forEach(function(vc) {
+          var w = vc.querySelector('.vocab-card-word');
+          if (w && w.textContent === word) vc.classList.add('listened');
+        });
+      });
+    }
+
+    // Ordering exercises
+    if (s.ordering) {
+      s.ordering.forEach(function(id) {
+        var oc = document.getElementById(id);
+        if (oc) {
+          oc.querySelectorAll('.order-item').forEach(function(it, i) {
+            it.classList.add('correct-order');
+            var num = it.querySelector('.order-num');
+            if (num) num.textContent = i + 1;
+            it.style.borderColor = 'var(--success)';
+          });
+        }
+      });
+    }
+
+    // Think cards recorded
+    if (s.thinkRecorded) {
+      s.thinkRecorded.forEach(function(q) {
+        document.querySelectorAll('.think-card').forEach(function(tc) {
+          var qEl = tc.querySelector('.think-question');
+          if (qEl && qEl.textContent.trim().substring(0, 40) === q) {
+            tc.classList.add('recorded');
+            var rd = tc.querySelector('[id^="think-result"]');
+            if (rd && !rd.innerHTML) rd.innerHTML = '<p style="font-size:.82rem;color:#16a34a;font-weight:500;">&#10003; Recording completed</p>';
+          }
+        });
+      });
     }
 
     // Atualizar progresso visual
