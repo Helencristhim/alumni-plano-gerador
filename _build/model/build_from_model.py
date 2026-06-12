@@ -15,7 +15,7 @@ ARQUIVOS DE CONTEÚDO (no mesmo diretório do config.json):
   slides.html            slides da aula (obrigatório)
   preclass.html          accordion Pre-class da aula (p/ hub novo ou snippet)
   planning.html          aba Planejamento (só hub "new")
-  complementary.html     aba Complementares (só hub "new")
+  complementary.html     Complementares: aba inteira (hub "new") ou bloco da AULA (snippets — OBRIGATÓRIO)
 
 CONFIG (JSON):
 {
@@ -343,6 +343,17 @@ def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
         pc_entries = assign_voices(extract_phrases(pc), prefix=f'pc{L["n"]}_', cfg=cfg)
         parts.append('<!-- 3. ACCORDION Pre-class (inserir após o ex-lesson anterior, prof E aluno) -->\n')
         parts.append(pc + '\n\n')
+    # COMPLEMENTARES da aula: obrigatório (classe de bug do PR #106 — aula sem
+    # complementares no hub). data-media deve usar prefixo l{N}- (validador cobra).
+    comp_path = os.path.join(content_dir, 'complementary.html')
+    assert os.path.exists(comp_path), (
+        f'complementary.html FALTANDO em {os.path.relpath(content_dir, ROOT)} — '
+        f'toda aula precisa do bloco de Complementares (data-media="l{L["n"]}-...")')
+    comp = read(comp_path)
+    assert f'data-media="l{L["n"]}-' in comp, (
+        f'complementary.html sem data-media="l{L["n"]}-..." — use o prefixo da aula')
+    parts.append(f'<!-- 3b. COMPLEMENTARES da aula {L["n"]} (inserir na tab-complementary, prof E aluno) -->\n')
+    parts.append(comp + '\n\n')
     parts.append('<!-- 4. ENTRADAS de audioMap (mesclar no audioMap do hub, prof E aluno) -->\n<script>\n')
     for text, meta in {**slide_entries, **pc_entries}.items():
         parts.append(f'  {json.dumps(text, ensure_ascii=False)}: {json.dumps(audio_base + meta["file"])},\n')
