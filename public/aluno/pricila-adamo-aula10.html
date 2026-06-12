@@ -1297,6 +1297,13 @@ function startFreeRecording(btn) {
 function stopFreeRecording(stopBtn) { if (freeRecorder && freeRecorder.state === 'recording') freeRecorder.stop(); var recordBtn = stopBtn.parentElement.querySelector('.btn-record'); recordBtn.classList.remove('hidden'); stopBtn.classList.remove('visible'); }
 
 // ===== MEDIA / PROGRESS =====
+// ===== CHECKLIST =====
+function toggleChecklist(cb) {
+  var li = cb.closest('li');
+  if (cb.checked) li.classList.add('checked'); else li.classList.remove('checked');
+  updateProgress();
+}
+
 function toggleMediaDone(checkbox) { var wrapper = checkbox.closest('.media-card-wrapper'); wrapper.classList.toggle('done', checkbox.checked); saveState(); }
 function updateProgress() { var totalLessons = 9; try { localStorage.setItem('alumni-progress-pricila-adamo-aula10', JSON.stringify({ concluidas: 0, total: totalLessons })); } catch(e) {} saveState(); }
 function saveState() {

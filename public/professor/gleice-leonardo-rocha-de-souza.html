@@ -3569,6 +3569,13 @@ var reflectionRecording = false; var reflectionRecorder = null; var reflectionCh
 function toggleReflectionRecord(btn) { if (!reflectionRecording) { navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) { var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : ''; reflectionRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream); reflectionChunks = []; reflectionRecorder.ondataavailable = function(e) { if (e.data.size > 0) reflectionChunks.push(e.data); }; reflectionRecorder.onstop = function() { var blob = new Blob(reflectionChunks, { type: reflectionRecorder.mimeType }); var url = URL.createObjectURL(blob); document.getElementById('reflectionResult').innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:.5rem"><\/audio>'; stream.getTracks().forEach(function(t) { t.stop(); }); }; reflectionRecorder.start(100); btn.classList.add('recording'); reflectionRecording = true; }).catch(function() { alert('Could not access microphone.'); }); } else { if (reflectionRecorder && reflectionRecorder.state === 'recording') reflectionRecorder.stop(); btn.classList.remove('recording'); reflectionRecording = false; } }
 
 // ===== MEDIA =====
+// ===== CHECKLIST =====
+function toggleChecklist(cb) {
+  var li = cb.closest('li');
+  if (cb.checked) li.classList.add('checked'); else li.classList.remove('checked');
+  updateProgress();
+}
+
 function toggleMediaDone(checkbox) { var wrapper = checkbox.closest('.media-card-wrapper'); wrapper.classList.toggle('done', checkbox.checked); saveState(); }
 
 // ===== PROGRESS =====
