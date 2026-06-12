@@ -46,7 +46,7 @@ const entries = [
   { file: 'aula5_speech_send_minutes.mp3', text: 'Would you mind sending the minutes? We should follow up by Friday.', voice: RILEY },
 
   // ===== ORDERING =====
-  { file: 'order_l5_ordering.mp3', text: 'The objective of this meeting is to review our Q3 targets. Let me share the agenda. We should discuss the budget first. Could we move to the next action item? I would like to recap before we adjourn.', voice: RILEY },
+  { file: 'order_l5_ordering.mp3', text: 'Share the agenda at the beginning. State the objective of the meeting. Discuss each item on the agenda. Recap action items and assign tasks. Adjourn the meeting.', voice: RILEY },
 
   // ===== SURVIVAL CARD (Pre-class) =====
   { file: 'aula5_surv_share_agenda.mp3', text: 'Let me share the agenda for today\'s meeting.', voice: RILEY },

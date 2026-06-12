@@ -52,7 +52,7 @@ const entries = [
   { file: 'aula4_speech2_weekly.mp3', text: 'I study cybersecurity on Tuesday. I have a break at 10 AM for fifteen minutes.', voice: ASH },
 
   // ORDERING
-  { file: 'order_l4_schedule.mp3', text: 'What time is it? It\'s 8 AM. My class starts now. The class is two hours long. I have a break at 10.', voice: ASH },
+  { file: 'order_l4_schedule.mp3', text: 'My class starts at 8 AM. The class is two hours long. I have a break at 10 AM. I have lunch at noon. I study cybersecurity in the afternoon.', voice: ASH },
 
   // LISTENING PASSAGES
   { file: 'aula4_listening_schedule.mp3', text: 'Hi! My name is Rafael. I\'m a computer science student. My schedule is very busy. On Monday and Wednesday, I have programming class at 8 AM. The class is two hours long. I have a break at 10 AM for fifteen minutes. On Tuesday and Thursday, I have math class at 9 AM. On Friday, I have a lab from 2 PM to 5 PM. I have twenty hours of class a week. My favorite day is Friday because I only have class in the afternoon.', voice: ASH },

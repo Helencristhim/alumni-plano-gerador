@@ -46,7 +46,7 @@ const entries = [
   { file: 'aula4_speech_streamlined_scalable.mp3', text: 'I have streamlined the approval process and the system is scalable.', voice: RILEY },
 
   // ===== ORDERING =====
-  { file: 'order_l4_ordering.mp3', text: 'I am working on a new proposal for the Ministry of Justice. We have completed three sprints so far. The team is currently tracking all the deliverables. I have already allocated the budget for next quarter. The system is scalable for other agencies.', voice: RILEY },
+  { file: 'order_l4_ordering.mp3', text: 'We received the proposal from the Ministry of Justice. I assessed the scope and allocated the budget. The team has completed three sprints so far. We are currently rolling out the first module. Two more agencies have expressed interest in the system.', voice: RILEY },
 
   // ===== SURVIVAL CARD (Pre-class) =====
   { file: 'aula4_surv_i_am_currently_working.mp3', text: 'I am currently working on a major project.', voice: RILEY },

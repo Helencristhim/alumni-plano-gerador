@@ -56,7 +56,7 @@ const entries = [
   { file: 'aula2_speech2_studies_passion.mp3', text: "I'm a student. I study Systems Analysis and Development. Technology is my passion.", voice: ASH },
 
   // ORDERING
-  { file: 'order_l2_contraction_intro.mp3', text: "I'm Estephano. I'm from São Paulo. I'm a student at university. Technology is my passion. I'm interested in cybersecurity.", voice: ASH },
+  { file: 'order_l2_contraction_intro.mp3', text: "I'm Estephano. I'm twenty-seven years old. I'm from São Paulo. I'm a student at university. Technology is my passion. I'm very interested in this area.", voice: ASH },
 
   // LISTENING PASSAGES
   { file: 'aula2_listening_alex.mp3', text: "Hi, I'm Alex. I'm twenty-three years old. I'm from Campinas, Brazil. I'm a software developer. I work at a tech company. My passion is programming. I'm interested in artificial intelligence. Nice to meet you!", voice: ASH },

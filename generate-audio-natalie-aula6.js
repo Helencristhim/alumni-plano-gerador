@@ -34,7 +34,7 @@ const entries = [
   { file: 'aula6_speech_executive_summary_reviewed.mp3', text: 'The executive summary has been reviewed and the changes will be implemented next quarter.', voice: RILEY },
 
   // ===== ORDERING =====
-  { file: 'aula6_order_l6_ordering.mp3', text: 'An outline was created by the team. The data was collected and the findings were analyzed. The draft was written based on the outline. The recommendations were reviewed against benchmarks. The final report was submitted to the VP.', voice: RILEY },
+  { file: 'aula6_order_l6_ordering.mp3', text: 'Create an outline. Research and gather findings. Draft the report. Revise and submit the executive summary. Implement recommendations.', voice: RILEY },
 
   // ===== SURVIVAL CARD (Pre-class) =====
   { file: 'aula6_surv_report_drafted.mp3', text: 'The report was drafted and submitted on time.', voice: RILEY },

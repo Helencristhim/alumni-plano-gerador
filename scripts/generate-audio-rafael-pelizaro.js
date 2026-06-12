@@ -82,7 +82,7 @@ const PHRASES = [
   { text: "Thank you for your presentation, Rafael. I have a question about your deployment process. How many vendors do you work with for cloud services? And how do you manage communication with a remote team of twelve developers across different time zones?", file: "listening2_full_qa.mp3", voice: ELLEN },
 
   // ===== Order exercise (ARTHUR) =====
-  { text: "Good afternoon. My name is Rafael Pelizaro. I am an IT Project Manager based in Sao Paulo. I manage technology systems for banks and e-commerce. I lead a remote team of twelve developers. We deploy solutions for major clients.", file: "order_l1_ordering.mp3", voice: ARTHUR },
+  { text: "I am Rafael Pelizaro, an IT Project Manager. I manage technology systems for banks and e-commerce. I lead a remote team of twelve developers. We implement and deploy solutions for major clients. I report our progress to stakeholders every week.", file: "order_l1_ordering.mp3", voice: ARTHUR },
 
   // ===== Survival card (Rafael = ARTHUR) =====
   { text: "We deployed a new payment platform last quarter.", file: "we_deployed_a_new_payment_platform.mp3", voice: ARTHUR },

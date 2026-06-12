@@ -55,7 +55,7 @@ const entries = [
   { file: 'aula3_speech2_afternoon.mp3', text: 'I usually study in the afternoon. Sometimes I watch tech videos on YouTube.', voice: ASH },
 
   // ORDERING
-  { file: 'order_l3_routine.mp3', text: 'I wake up at 8 AM. I have breakfast. I attend class in the morning. I usually study in the afternoon. I go to bed at midnight.', voice: ASH },
+  { file: 'order_l3_routine.mp3', text: 'I wake up at 8 AM. I have breakfast at 8:30. I attend my ADS class. I have lunch at noon. I play video games at night.', voice: ASH },
 
   // LISTENING PASSAGES
   { file: 'aula3_listening_carlos.mp3', text: 'Hi! My name is Carlos. I wake up at 7 AM every day. I have breakfast with my family. In the morning, I attend my computer science class. I usually have lunch at noon. In the afternoon, I study programming. I sometimes play video games after dinner. I go to bed at 11 PM.', voice: ASH },
