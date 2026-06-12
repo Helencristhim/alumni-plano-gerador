@@ -539,6 +539,17 @@ A funcao `startRecording` DEVE implementar:
    - "Focus on: [palavras erradas]"
 6. **REGEX**: `/[^a-z0-9' ]/g` com espaco LITERAL (NUNCA `\s`)
 7. **SPLIT**: `.split(/ +/)` com espaco LITERAL (NUNCA `/\s+/`)
+8. **Persistencia da gravacao**:
+   - Upload do blob para Supabase Storage: `{slug}/{phraseSlug}.{ext}` (bucket `recordings`, `upsert: true`)
+   - URL publica salva em `card.dataset.recordingUrl` para restauracao
+   - `saveState()` inclui a URL no campo `speech` (formato JSON)
+   - Ao recarregar, `loadState()` restaura o botao de playback via `injectPronunciationBtn(card, url)`
+9. **Botao "Your Pronunciation"**:
+   - Aparece apos gravar, ao lado de Listen e Record
+   - Toca o audio gravado pelo aluno (toggle play/pause)
+   - Implementado via `injectPronunciationBtn(card, audioUrl)` — funcao separada, reutilizavel
+   - Cor roxa (#7c3aed) para diferenciar dos botoes Listen (accent) e Record (vermelho)
+10. **Mic error handling**: `.catch()` no `getUserMedia` remove classes recording/hidden e alerta o usuario
 
 ---
 
@@ -566,7 +577,9 @@ stopRecording(stopBtn)     — Parar recording
 analyzeWords(target, spoken) — Comparar palavras (LCS)
 wordsMatch(a, b)           — Comparar 2 palavras (fuzzy)
 levenshtein(a, b)          — Edit distance
-startFreeRecording(btn)    — Gravar sem comparacao
+ttsSpeak(text)             — Fallback TTS via speechSynthesis (helper)
+injectPronunciationBtn(card, url) — Injetar botao playback da gravacao do aluno
+startFreeRecording(btn)    — Gravar sem comparacao + upload Supabase + marcar .recorded
 stopFreeRecording(stopBtn) — Parar gravacao livre
 updateProgress()           — Calcular progresso por aula e geral
 saveState()                — Salvar estado em localStorage
@@ -713,13 +726,83 @@ Ao final de cada aula, incluir card com 5 frases-chave + audio:
 
 ---
 
-## REGRA 18 — PROGRESS TRACKING
+## REGRA 18 — PROGRESS TRACKING + PERSISTENCIA COMPLETA
 
-- Contar exercicios corretos por aula (blanks, quizzes, matches, speech, orders)
-- Calcular % por aula e % geral
-- Atualizar barras de progresso + stamps
-- Salvar em `localStorage` com chave `alumni-progress-{slug}`
-- Exibir celebration card ao atingir 100%
+> O progresso do aluno NUNCA pode sumir. Tudo que o aluno faz no Pre-class fica salvo em localStorage (instantaneo) E no Supabase (nuvem, cross-device) via activity-sync.js. Ao recarregar a pagina ou abrir de outro dispositivo, o estado completo e restaurado.
+
+### 18.1 — O QUE CONTA NO PROGRESSO (7 tipos de exercicio)
+
+Cada lesson card (`#ex-lesson-{N}`) tem seu progresso calculado individualmente:
+
+| Tipo | Selector total | Selector done | Quando conta |
+|---|---|---|---|
+| Vocab cards | `.vocab-card-pc` | `.vocab-card-pc.listened` | Aluno clicou Listen |
+| Matching | `.match-row` | `.match-row.correct` | Resposta correta |
+| Fill-in-blank | `.blank-input` | `.blank-input.correct` | Resposta correta |
+| Quiz | `.quiz-item` | `.quiz-item` com `.quiz-option.correct` | Opcao correta |
+| Speech | `.speech-card` | `.speech-card` com `.speech-result.show` | Qualquer tentativa (good/try-again/bad) |
+| Ordering | `.order-container` (1 por container) | Todos `.order-item.correct-order` | Ordem correta |
+| Think card | `.think-card` | `.think-card.recorded` | Aluno gravou |
+
+**Calculo**: `totalDone / totalExercises * 100` = percentual por aula e geral
+
+**Barras visuais**: `.mini-bar-fill[data-lesson-progress="N"]` (width) + `.mini-percent[data-lesson-pct="N"]` (texto)
+
+**Stamps**: `#stampN` recebe `.earned` quando a aula atinge 100%
+
+**IMPORTANTE**: `data-lesson-progress` e `data-lesson-pct` DEVEM ter o numero correto da aula (1, 2, 3... N). NUNCA todos com "1".
+
+### 18.2 — O QUE E SALVO (saveState)
+
+O `saveState()` coleta o estado COMPLETO do DOM e salva em localStorage + Supabase:
+
+```javascript
+var s = {
+  matches: [],        // "word|value" para cada .match-row.correct
+  blanks: [],         // data-answer de cada .blank-input.correct
+  quiz: [],           // texto (30 chars) de cada .quiz-option.correct
+  speech: [],         // JSON string: {p: phrase, c: class, s: scoreText, words: [{w,s}], r: recordingUrl}
+  mediaChecks: {},    // {mediaId: checked} para complementares
+  checklists: {},     // {index: checked} para checklists
+  vocabListened: [],  // texto da palavra de cada .vocab-card-pc.listened
+  ordering: [],       // {id: containerId, order: [textos na ordem correta]}
+  thinkRecorded: []   // JSON string: {q: questionText, r: recordingUrl}
+};
+```
+
+### 18.3 — O QUE E RESTAURADO (loadState)
+
+O `loadState()` reconstroi o estado visual completo:
+
+- **Matches**: seleciona o dropdown, marca `.correct`, desabilita
+- **Blanks**: preenche o input, marca `.correct`
+- **Quiz**: marca a opcao correta com `.correct`
+- **Speech**: reconstroi score + word-by-word (`.word-box.word-correct` / `.word-missing`) + injeta botao "Your Pronunciation" se houver URL de gravacao
+- **Vocab listened**: marca `.listened` no card
+- **Ordering**: REORDENA o DOM (move os `.order-item` para a posicao correta) e marca `.correct-order`
+- **Think recorded**: marca `.recorded`, restaura `<audio>` player com URL do Supabase ou "Recording completed"
+- **Media checks**: marca checkboxes e `.done`
+
+### 18.4 — GRAVACOES (Supabase Storage)
+
+Toda gravacao (speech + free record) faz upload para Supabase Storage:
+
+- **Bucket**: `recordings`
+- **Path speech**: `{slug}/{phraseSlug}.{ext}` (ext = mp4 ou webm)
+- **Path think**: `{slug}/{thinkResultId}.{ext}`
+- **Upsert**: `true` (regravar sobrescreve a anterior)
+- **URL publica** salva em `card.dataset.recordingUrl` e no estado (speech.r ou thinkRecorded.r)
+
+### 18.5 — CSS OBRIGATORIO
+
+Todo material DEVE ter estes estilos para o tracking funcionar visualmente:
+
+```css
+.vocab-card-pc.listened{border-color:var(--success);background:rgba(22,163,74,0.06)}
+.vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
+.btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+.btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
+```
 
 ---
 
@@ -923,27 +1006,39 @@ function speakText(text, btn) {
     if (file) {
         currentAudio = new Audio(file);
         currentAudio.playbackRate = audioSpeed;
-        currentAudio.play().catch(function() {
-            if ("speechSynthesis" in window) {
-                window.speechSynthesis.cancel();
-                var u = new SpeechSynthesisUtterance(cleanText);
-                u.lang = "en-US"; u.rate = audioSpeed * 0.85; u.pitch = 1;
-                window.speechSynthesis.speak(u);
-            }
-        });
-    } else {
-        if ("speechSynthesis" in window) {
-            window.speechSynthesis.cancel();
-            var u = new SpeechSynthesisUtterance(cleanText);
-            u.lang = "en-US"; u.rate = audioSpeed * 0.85; u.pitch = 1;
-            window.speechSynthesis.speak(u);
-        }
-    }
+        currentAudio.play().catch(function() { ttsSpeak(cleanText); });
+    } else { ttsSpeak(cleanText); }
+    if (btn) { var vc = btn.closest('.vocab-card-pc'); if (vc && !vc.classList.contains('listened')) { vc.classList.add('listened'); updateProgress(); } }
+}
+
+function ttsSpeak(text) {
+    if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1; window.speechSynthesis.speak(u); }
 }
 
 function speakPhrase(btn) {
     var card = btn.closest('.speech-card');
     if (card) speakText(card.dataset.phrase, btn);
+}
+
+// ===== YOUR PRONUNCIATION BUTTON =====
+function injectPronunciationBtn(card, audioUrl) {
+    var old = card.querySelector('.btn-your-pronunciation'); if (old) old.remove();
+    var playBtn = document.createElement('button');
+    playBtn.className = 'btn btn-your-pronunciation';
+    playBtn.innerHTML = '&#9654; Your Pronunciation';
+    playBtn.onclick = function(e) { e.preventDefault();
+        if (playBtn.dataset.playing === 'true') {
+            var a = card.querySelector('.your-pron-audio'); if (a) { a.pause(); a.remove(); }
+            playBtn.innerHTML = '&#9654; Your Pronunciation'; playBtn.dataset.playing = 'false'; return;
+        }
+        var audio = new Audio(audioUrl); audio.className = 'your-pron-audio'; audio.style.display = 'none';
+        card.appendChild(audio); playBtn.innerHTML = '&#9632; Playing...'; playBtn.dataset.playing = 'true';
+        audio.play();
+        audio.onended = function() { playBtn.innerHTML = '&#9654; Your Pronunciation'; playBtn.dataset.playing = 'false'; audio.remove(); };
+        audio.onerror = function() { playBtn.innerHTML = '&#9654; Your Pronunciation'; playBtn.dataset.playing = 'false'; audio.remove(); };
+    };
+    var controls = card.querySelector('.speech-controls');
+    if (controls) controls.appendChild(playBtn);
 }
 
 // ===== SPEECH RECOGNITION =====
@@ -959,45 +1054,79 @@ function startRecording(btn) {
     if (btn.classList.contains('recording')) return;
     btn.classList.add('recording', 'hidden');
     stopBtn.classList.add('visible');
-    var r = new SR();
-    r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 3; r.continuous = true;
-    activeRecognition = { recognition: r, btn: btn, stopBtn: stopBtn, card: card };
-    r.start();
-    function resetButtons() { btn.classList.remove('recording', 'hidden'); stopBtn.classList.remove('visible'); activeRecognition = null; }
-    r.onresult = function(event) {
-        var best = event.results[event.results.length - 1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g, '');
-        var analysis = analyzeWords(target, best);
-        var totalWords = analysis.expected.length;
-        var correctWords = analysis.expected.filter(function(w) { return w.status === 'correct'; }).length;
-        resultDiv.classList.add('show'); resultDiv.classList.remove('good', 'try-again', 'bad');
-        var html = '';
-        if (analysis.score >= 0.8) { resultDiv.classList.add('good'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Excellent!'; updateProgress(); }
-        else if (analysis.score >= 0.5) { resultDiv.classList.add('try-again'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Almost there!'; }
-        else { resultDiv.classList.add('bad'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Keep practicing!'; }
-        html += '<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';
-        analysis.expected.forEach(function(w) { html += '<span class="word-box word-' + (w.status === 'correct' ? 'correct' : 'missing') + '"><span class="word-icon">' + (w.status === 'correct' ? '&#10003;' : '&#10007;') + '</span> ' + w.word + '</span>'; });
-        html += '</div><div class="comp-label">You said:</div><div class="comp-words">';
-        analysis.spoken.forEach(function(w) {
-            var cls = w.status === 'correct' ? 'correct' : w.status === 'extra' ? 'extra' : 'wrong';
-            var icon = w.status === 'correct' ? '&#10003;' : w.status === 'extra' ? '~' : '&#10007;';
-            html += '<span class="word-box word-' + cls + '"><span class="word-icon">' + icon + '</span> ' + w.word + '</span>';
-        });
-        html += '</div>';
-        if (analysis.wrongWords.length > 0) {
-            html += '<div class="speech-suggestion"><strong>Focus on:</strong> ';
-            html += analysis.wrongWords.map(function(w) { return '"<strong>' + w.expected + '</strong>"' + (w.got ? ' (you said "' + w.got + '")' : ''); }).join(' &middot; ');
-            html += '</div>';
+
+    var mediaRec = null, mediaChunks = [], mediaStream = null, recDone = false;
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+        mediaStream = stream;
+        var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+        mediaRec = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+        mediaChunks = [];
+        mediaRec.ondataavailable = function(e) { if (e.data.size > 0) mediaChunks.push(e.data); };
+        mediaRec.onstop = function() {
+            if (recDone) return; recDone = true;
+            stream.getTracks().forEach(function(t) { t.stop(); });
+            if (mediaChunks.length > 0) {
+                var blob = new Blob(mediaChunks, { type: mediaRec.mimeType });
+                var audioUrl = URL.createObjectURL(blob);
+                injectPronunciationBtn(card, audioUrl);
+                // Upload to Supabase Storage for persistence
+                var phraseSlug = card.dataset.phrase.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 50);
+                var slug = window.STUDENT_SLUG || 'unknown';
+                var ext = blob.type.indexOf('mp4') !== -1 ? 'mp4' : 'webm';
+                var filePath = slug + '/' + phraseSlug + '.' + ext;
+                if (typeof sb !== 'undefined') {
+                    sb.storage.from('recordings').upload(filePath, blob, { contentType: blob.type, upsert: true }).then(function(res) {
+                        if (!res.error) {
+                            var pubUrl = sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;
+                            card.dataset.recordingUrl = pubUrl;
+                            if (typeof saveState === 'function') saveState();
+                        }
+                    });
+                }
+            }
+        };
+        mediaRec.start(100);
+
+        var r = new SR();
+        r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 3; r.continuous = true;
+        activeRecognition = { recognition: r, btn: btn, stopBtn: stopBtn, card: card, mediaRec: mediaRec };
+        r.start();
+        var ended = false;
+        function finish() {
+            if (ended) return; ended = true;
+            btn.classList.remove('recording', 'hidden'); stopBtn.classList.remove('visible'); activeRecognition = null;
+            setTimeout(function() { if (mediaRec && mediaRec.state === 'recording') mediaRec.stop(); }, 200);
         }
-        html += '</div>';
-        resultDiv.innerHTML = html;
-        resetButtons();
-    };
-    r.onerror = function() { resetButtons(); resultDiv.classList.add('show', 'try-again'); resultDiv.innerHTML = 'Could not hear you. Check your microphone.'; };
-    r.onend = function() { resetButtons(); };
-    setTimeout(function() { if (btn.classList.contains('recording')) { r.stop(); resetButtons(); } }, 30000);
+        r.onresult = function(event) {
+            var best = event.results[event.results.length - 1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g, '');
+            var analysis = analyzeWords(target, best);
+            var totalWords = analysis.expected.length;
+            var correctWords = analysis.expected.filter(function(w) { return w.status === 'correct'; }).length;
+            resultDiv.classList.add('show'); resultDiv.classList.remove('good', 'try-again', 'bad');
+            var html = '';
+            if (analysis.score >= 0.8) { resultDiv.classList.add('good'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> — Excellent!'; updateProgress(); }
+            else if (analysis.score >= 0.5) { resultDiv.classList.add('try-again'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> — Almost there!'; }
+            else { resultDiv.classList.add('bad'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> — Keep practicing!'; }
+            html += '<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';
+            analysis.expected.forEach(function(w) { html += '<span class="word-box word-' + (w.status === 'correct' ? 'correct' : 'missing') + '">' + w.word + '</span>'; });
+            html += '</div></div>';
+            resultDiv.innerHTML = html;
+            finish();
+        };
+        r.onerror = function() { finish(); resultDiv.classList.add('show', 'try-again'); resultDiv.innerHTML = 'Could not hear you. Check your microphone.'; };
+        r.onend = function() { finish(); };
+        setTimeout(function() { if (!ended) { try { r.stop(); } catch(e) {} finish(); } }, 30000);
+    }).catch(function() { btn.classList.remove('recording', 'hidden'); stopBtn.classList.remove('visible'); alert('Could not access microphone.'); });
 }
 
-function stopRecording(stopBtn) { if (activeRecognition) activeRecognition.recognition.stop(); }
+function stopRecording(stopBtn) {
+    if (activeRecognition) {
+        try { activeRecognition.recognition.stop(); } catch(e) {}
+        if (activeRecognition.mediaRec && activeRecognition.mediaRec.state === 'recording') {
+            try { activeRecognition.mediaRec.stop(); } catch(e) {}
+        }
+    }
+}
 
 // ===== WORD ANALYSIS (LCS + Levenshtein) =====
 function analyzeWords(targetStr, spokenStr) {
@@ -1111,13 +1240,29 @@ function startFreeRecording(btn) {
             var url = URL.createObjectURL(blob);
             var thinkCard = btn.closest('.think-card');
             var resultDiv = thinkCard.querySelector('[id^="think-result"]');
-            if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Gravacao salva!</p>';
+            if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Recording saved!</p>';
+            thinkCard.classList.add('recorded');
+            updateProgress();
             stream.getTracks().forEach(function(t) { t.stop(); });
+            // Upload to Supabase Storage
+            var slug = window.STUDENT_SLUG || 'unknown';
+            var thinkId = resultDiv.id || 'think-free';
+            var ext = blob.type.indexOf('mp4') !== -1 ? 'mp4' : 'webm';
+            var filePath = slug + '/' + thinkId + '.' + ext;
+            if (typeof sb !== 'undefined') {
+                sb.storage.from('recordings').upload(filePath, blob, { contentType: blob.type, upsert: true }).then(function(res) {
+                    if (!res.error) {
+                        var pubUrl = sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;
+                        thinkCard.dataset.recordingUrl = pubUrl;
+                        if (typeof saveState === 'function') saveState();
+                    }
+                });
+            }
         };
         freeRecorder.start(100);
         btn.classList.add('hidden');
         stopBtn.classList.add('visible');
-    }).catch(function() { alert('Nao foi possivel acessar o microfone.'); });
+    }).catch(function() { alert('Could not access microphone.'); });
 }
 
 function stopFreeRecording(stopBtn) {
@@ -1139,42 +1284,83 @@ function toggleChecklist(cb) {
 // SUBSTITUIR: slug no localStorage.setItem
 function updateProgress() {
     var totalLessons = 5; // ← AJUSTAR por aluno
-    var completedLessons = 0;
+    var totalAllDone = 0, totalAllEx = 0;
     for (var l = 1; l <= totalLessons; l++) {
-        var cl = document.getElementById('checklist-' + l);
-        if (!cl) continue;
-        var allChecks = cl.querySelectorAll('input[type="checkbox"]');
-        var checkedChecks = cl.querySelectorAll('input[type="checkbox"]:checked');
-        var lessonPct = allChecks.length > 0 ? Math.round(checkedChecks.length / allChecks.length * 100) : 0;
-        var bar = document.querySelector('[data-lesson-progress="' + l + '"]');
-        var lbl = document.querySelector('[data-lesson-pct="' + l + '"]');
-        if (bar) bar.style.width = lessonPct + '%';
-        if (lbl) lbl.textContent = lessonPct + '%';
+        var card = document.getElementById('ex-lesson-' + l);
+        if (!card) continue;
+        var total = 0, done = 0;
+        total += card.querySelectorAll('.vocab-card-pc').length;
+        done += card.querySelectorAll('.vocab-card-pc.listened').length;
+        total += card.querySelectorAll('.match-row').length;
+        done += card.querySelectorAll('.match-row.correct').length;
+        total += card.querySelectorAll('.blank-input').length;
+        done += card.querySelectorAll('.blank-input.correct').length;
+        var quizItems = card.querySelectorAll('.quiz-item');
+        total += quizItems.length;
+        quizItems.forEach(function(qi) { if (qi.querySelector('.quiz-option.correct')) done++; });
+        var speechCards = card.querySelectorAll('.speech-card');
+        total += speechCards.length;
+        speechCards.forEach(function(sc) { if (sc.querySelector('.speech-result.show')) done++; });
+        card.querySelectorAll('.order-container').forEach(function(oc) {
+            var items = oc.querySelectorAll('.order-item');
+            total += 1;
+            if (items.length > 0 && items.length === oc.querySelectorAll('.order-item.correct-order').length) done++;
+        });
+        var thinkCards = card.querySelectorAll('.think-card');
+        total += thinkCards.length;
+        thinkCards.forEach(function(tc) { if (tc.classList.contains('recorded')) done++; });
+        var pct = total > 0 ? Math.round(done / total * 100) : 0;
+        var fill = document.querySelector('.mini-bar-fill[data-lesson-progress="' + l + '"]');
+        if (fill) fill.style.width = pct + '%';
+        var pctEl = document.querySelector('.mini-percent[data-lesson-pct="' + l + '"]');
+        if (pctEl) pctEl.textContent = pct + '%';
         var stampEl = document.getElementById('stamp' + l);
-        if (stampEl) { if (lessonPct === 100) stampEl.classList.add('earned'); else stampEl.classList.remove('earned'); }
-        if (allChecks.length > 0 && checkedChecks.length === allChecks.length) completedLessons++;
+        if (stampEl) { if (pct === 100) stampEl.classList.add('earned'); else stampEl.classList.remove('earned'); }
+        totalAllDone += done; totalAllEx += total;
     }
-    var overallPct = Math.round(completedLessons / totalLessons * 100);
+    var overallPct = totalAllEx > 0 ? Math.round(totalAllDone / totalAllEx * 100) : 0;
     var pb = document.getElementById('progressBar');
     var pp = document.getElementById('progressPercent');
     if (pb) pb.style.width = overallPct + '%';
     if (pp) pp.textContent = overallPct + '%';
     var celCard = document.getElementById('celebrationCard');
     if (celCard) celCard.style.display = overallPct === 100 ? 'block' : 'none';
-    try { localStorage.setItem('alumni-progress-{SLUG}', JSON.stringify({ concluidas: completedLessons, total: totalLessons })); } catch(e) {}
+    try { localStorage.setItem('alumni-progress-{SLUG}', JSON.stringify({ concluidas: totalAllDone, total: totalAllEx })); } catch(e) {}
     saveState();
 }
 
 // ===== STATE PERSISTENCE =====
 // SUBSTITUIR: '{SLUG}-professor' ou '{SLUG}-aluno' conforme o arquivo
 function saveState() {
-    var s = { dropdowns: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: {}, matches: [] };
+    var s = { matches: [], blanks: [], quiz: [], speech: [], mediaChecks: {}, checklists: {}, vocabListened: [], ordering: [], thinkRecorded: [] };
     document.querySelectorAll('.media-card-wrapper').forEach(function(w) { var id = w.dataset.media; var cb = w.querySelector('input[type="checkbox"]'); if (id && cb) s.mediaChecks[id] = cb.checked; });
     document.querySelectorAll('.match-row.correct select').forEach(function(sel) { s.matches.push(sel.closest('.match-row').querySelector('.match-word').textContent + '|' + sel.value); });
     document.querySelectorAll('.blank-input.correct').forEach(function(e) { s.blanks.push(e.dataset.answer); });
     document.querySelectorAll('.quiz-option.correct').forEach(function(e) { s.quiz.push(e.textContent.trim().substring(0, 30)); });
-    document.querySelectorAll('.speech-result.good').forEach(function(e) { s.speech.push(e.closest('.speech-card').dataset.phrase); });
+    document.querySelectorAll('.speech-result.show').forEach(function(e) {
+        var sc = e.closest('.speech-card');
+        if (sc && sc.dataset.phrase) {
+            var cls = e.classList.contains('good') ? 'good' : e.classList.contains('try-again') ? 'try-again' : 'bad';
+            var strong = e.querySelector('strong'); var scoreTxt = strong ? strong.textContent : 'Done';
+            var words = []; e.querySelectorAll('.word-box').forEach(function(wb) { words.push({ w: wb.textContent, s: wb.classList.contains('word-correct') ? 'c' : 'm' }); });
+            var recUrl = sc.dataset.recordingUrl || '';
+            s.speech.push(JSON.stringify({ p: sc.dataset.phrase, c: cls, s: scoreTxt, words: words, r: recUrl }));
+        }
+    });
     document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb, i) { s.checklists[i] = cb.checked; });
+    document.querySelectorAll('.vocab-card-pc.listened').forEach(function(vc) { var w = vc.querySelector('.vocab-card-word'); if (w) s.vocabListened.push(w.textContent); });
+    document.querySelectorAll('.order-container').forEach(function(oc) {
+        var items = oc.querySelectorAll('.order-item'); var correct = oc.querySelectorAll('.order-item.correct-order');
+        if (items.length > 0 && items.length === correct.length) {
+            var id = oc.id || ''; var order = [];
+            items.forEach(function(it) { order.push(it.querySelector('.order-text').textContent); });
+            s.ordering.push({ id: id, order: order });
+        }
+    });
+    document.querySelectorAll('.think-card.recorded').forEach(function(tc) {
+        var q = tc.querySelector('.think-question');
+        if (q) { var recUrl = tc.dataset.recordingUrl || ''; s.thinkRecorded.push(JSON.stringify({ q: q.textContent.trim().substring(0, 40), r: recUrl })); }
+    });
     localStorage.setItem('{SLUG}-professor', JSON.stringify(s));
 }
 
@@ -1184,8 +1370,47 @@ function loadState() {
     if (s.matches) s.matches.forEach(function(d) { var parts = d.split('|'); var word = parts[0]; var val = parts[1]; document.querySelectorAll('.match-row').forEach(function(row) { if (row.querySelector('.match-word').textContent === word) { var sel = row.querySelector('select'); sel.value = val; row.classList.add('correct'); sel.disabled = true; } }); });
     if (s.blanks) s.blanks.forEach(function(a) { document.querySelectorAll('.blank-input[data-answer="' + a + '"]').forEach(function(e) { e.value = a; e.classList.add('correct'); }); });
     if (s.quiz) s.quiz.forEach(function(t) { document.querySelectorAll('.quiz-option[data-correct="true"]').forEach(function(e) { if (e.textContent.trim().substring(0, 30) === t) e.classList.add('correct'); }); });
+    if (s.speech) s.speech.forEach(function(d) {
+        var phrase, cls, scoreTxt, words, recUrl;
+        try { var obj = JSON.parse(d); phrase = obj.p; cls = obj.c; scoreTxt = obj.s; words = obj.words || []; recUrl = obj.r || ''; }
+        catch(e) { phrase = d; cls = 'good'; scoreTxt = 'Done'; words = []; recUrl = ''; }
+        document.querySelectorAll('.speech-card').forEach(function(sc) {
+            if (sc.dataset.phrase === phrase) {
+                var rd = sc.querySelector('.speech-result');
+                if (rd) {
+                    rd.classList.add('show', cls);
+                    var html = '<strong>' + scoreTxt + '</strong> — ' + (cls === 'good' ? 'Excellent!' : cls === 'try-again' ? 'Almost there!' : 'Keep practicing!');
+                    if (words.length > 0) {
+                        html += '<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';
+                        words.forEach(function(w) { html += '<span class="word-box word-' + (w.s === 'c' ? 'correct' : 'missing') + '">' + w.w + '</span>'; });
+                        html += '</div></div>';
+                    }
+                    rd.innerHTML = html;
+                }
+                if (recUrl) { sc.dataset.recordingUrl = recUrl; injectPronunciationBtn(sc, recUrl); }
+            }
+        });
+    });
     if (s.checklists) { document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb, i) { if (s.checklists[i]) { cb.checked = true; cb.closest('li').classList.add('checked'); } }); }
     if (s.mediaChecks) { document.querySelectorAll('.media-card-wrapper').forEach(function(w) { var id = w.dataset.media; var cb = w.querySelector('input[type="checkbox"]'); if (id && cb && s.mediaChecks[id]) { cb.checked = true; w.classList.add('done'); } }); }
+    if (s.vocabListened) { s.vocabListened.forEach(function(word) { document.querySelectorAll('.vocab-card-pc').forEach(function(vc) { var w = vc.querySelector('.vocab-card-word'); if (w && w.textContent === word) vc.classList.add('listened'); }); }); }
+    if (s.ordering) { s.ordering.forEach(function(o) {
+        var id = typeof o === 'string' ? o : o.id; var savedOrder = typeof o === 'object' ? o.order : null;
+        var oc = id ? document.getElementById(id) : null; if (!oc) return;
+        if (savedOrder && savedOrder.length > 0) { var items = Array.from(oc.querySelectorAll('.order-item')); savedOrder.forEach(function(txt) { for (var i = 0; i < items.length; i++) { var t = items[i].querySelector('.order-text'); if (t && t.textContent === txt) { oc.appendChild(items[i]); break; } } }); }
+        oc.querySelectorAll('.order-item').forEach(function(it, i) { it.classList.add('correct-order'); it.querySelector('.order-num').textContent = i + 1; it.style.borderColor = 'var(--success)'; });
+    }); }
+    if (s.thinkRecorded) { s.thinkRecorded.forEach(function(d) {
+        var qTxt, recUrl; try { var obj = JSON.parse(d); qTxt = obj.q; recUrl = obj.r || ''; } catch(e) { qTxt = d; recUrl = ''; }
+        document.querySelectorAll('.think-card').forEach(function(tc) {
+            var qEl = tc.querySelector('.think-question');
+            if (qEl && qEl.textContent.trim().substring(0, 40) === qTxt) {
+                tc.classList.add('recorded'); tc.dataset.recordingUrl = recUrl;
+                var rd = tc.querySelector('[id^="think-result"]');
+                if (rd) { if (recUrl) { rd.innerHTML = '<audio controls src="' + recUrl + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:.72rem;color:var(--success);margin-top:.3rem;">&#10003; Recording saved</p>'; } else { rd.innerHTML = '<p style="font-size:.82rem;color:var(--success);font-weight:500;">&#10003; Recording completed</p>'; } }
+            }
+        });
+    }); }
     updateProgress();
 }
 
@@ -1247,6 +1472,8 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 | `audioMap = {}` | Mapa completo de frases → MP3 |
 | `totalLessons = 5` | Numero de aulas do bloco |
 | `'{SLUG}-professor'` | Chave localStorage (ex: `daniela-feitoza-professor` ou `daniela-feitoza-aluno`) |
+| `window.STUDENT_SLUG` | Definido no `<head>`: `window.STUDENT_SLUG='{SLUG}'` |
+| `sb` (Supabase client) | Disponivel via `/lib/supabase-config.js` carregado ANTES |
 
 ---
 
@@ -1315,18 +1542,31 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 <script>window.STUDENT_SLUG='{SLUG}';window.TOTAL_AULAS={N};</script>
 ```
 
-### Script obrigatorio antes de `</body>` (DEPOIS do script principal):
+### 3 scripts obrigatorios antes de `</body>` (DEPOIS do script principal, NESTA ORDEM):
 
 ```html
 <script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js"></script>
 </body>
 ```
 
+**ORDEM IMPORTA**: lesson-progress → controle-aulas → activity-sync. O activity-sync DEVE ser o ULTIMO porque faz wrap de `saveState()` e `updateProgress()` que ja devem existir.
+
+### O que cada script faz:
+
+| Script | Funcao | Tabela Supabase |
+|---|---|---|
+| `lesson-progress.js` | Progresso GLOBAL: stamps + barra do header. Wrap do `toggleCheck()` → salva `inclass_done` quando 5/5 checks marcados | `lesson_progress` |
+| `controle-aulas.js` | Injeta aba "Controle de Aulas" com datas, feedback professor/aluno. Auto-save debounce 1.5s | `controle_aulas` |
+| `activity-sync.js` | **O MAIS IMPORTANTE**: sync localStorage↔Supabase de TODOS os exercicios (matching, fill-in, quiz, speech, ordering, think, mediaChecks dos Complementares). Cross-device. Upload gravacoes. Botao Reset (so aluno). Debounce 2s + auto-save 30s + beforeunload keepalive | `student_activity` + Storage `recordings` |
+
 ### Como funciona:
-1. `lesson-progress.js` faz wrap automatico do `toggleCheck()` existente
-2. Quando o professor marca 5/5 checks no checklist de uma aula → `inclass_done = true` salva no Supabase
-3. Ao carregar a pagina, busca do Supabase quais aulas estao concluidas → atualiza barra de progresso + acende stamps + restaura checks visuais
-4. Tabela Supabase: `lesson_progress` (student_slug, lesson_number, inclass_done, inclass_marked_at)
+1. `lesson-progress.js` faz wrap do `toggleCheck()` existente
+2. Quando o professor marca 5/5 checks no checklist → `inclass_done = true` no Supabase
+3. Ao carregar, busca do Supabase quais aulas concluidas → atualiza barra + stamps
+4. `activity-sync.js` faz wrap de `saveState()` — check nos Complementares (`toggleMediaDone`) salva em localStorage E Supabase
+5. Tabelas: `lesson_progress`, `controle_aulas`, `student_activity`
 
 ### Variaveis para substituir:
 
@@ -1336,7 +1576,9 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 | `{N}` | Total de aulas no pacote do aluno (ex: `48`) |
 
 ### IMPORTANTE:
-- O `lesson-progress.js` DEVE ser carregado DEPOIS do `<script>` principal (que define `toggleCheck`)
+- Os 3 scripts DEVEM ser carregados DEPOIS do `<script>` principal (que define `toggleCheck`, `saveState`, `updateProgress`)
 - O `STUDENT_SLUG` DEVE ser o slug PRINCIPAL do aluno (sem sufixo `-aula2` etc.)
-- Nunca editar `lesson-progress.js` para um aluno especifico — ele e GENERICO
+- Nunca editar esses scripts para um aluno especifico — sao GENERICOS
+- Sem `activity-sync.js`, checks dos Complementares salvam APENAS em localStorage (perde ao limpar cache). COM ele, salva no Supabase = permanente + cross-device
+- **TOTAL**: 5 scripts por material = 2 no head (supabase.min.js + supabase-config.js) + 3 antes do body (lesson-progress + controle-aulas + activity-sync)
 - A barra de progresso mostra: aulas com `inclass_done=true` / TOTAL_AULAS * 100
