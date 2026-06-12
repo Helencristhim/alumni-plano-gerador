@@ -1431,11 +1431,25 @@ document.addEventListener('keydown', function(e) {
 // ===== VOCAB REVEAL (IN CLASS) =====
 function revealVocab(card) {
   card.classList.toggle('revealed');
+  var front = card.querySelector('.vocab-front');
+  var back = card.querySelector('.vocab-back');
+  if (front && back) {
+    if (card.classList.contains('revealed')) {
+      front.style.display = 'none';
+      back.style.display = '';
+    } else {
+      front.style.display = '';
+      back.style.display = 'none';
+    }
+  }
   var grid = card.closest('.vocab-grid');
-  var count = grid.querySelectorAll('.vocab-card.revealed').length;
-  var total = grid.querySelectorAll('.vocab-card').length;
-  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
-  document.getElementById(counterId).textContent = count + ' / ' + total + ' words revealed';
+  var sel = '.vocab-card-ic.revealed, .vocab-card.revealed';
+  var selAll = '.vocab-card-ic, .vocab-card';
+  var count = grid.querySelectorAll(sel).length;
+  var total = grid.querySelectorAll(selAll).length;
+  var ids = {'vocabGrid1':'vocabCount1','vocabGrid2':'vocabCount2','vocabGrid3':'vocabCount3'};
+  var el = document.getElementById(ids[grid.id] || 'vocabCount1');
+  if (el) el.textContent = count + ' / ' + total + ' words revealed';
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
