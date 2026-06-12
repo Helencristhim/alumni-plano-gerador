@@ -1640,7 +1640,7 @@ function speakText(text, btn) {
   var file = audioMap[cleanText] || audioMap[cleanText.toLowerCase()] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText.toLowerCase().replace(/\.$/, '')] || audioMap[cleanText + '.'];
   if (file) {
     currentAudio = new Audio(file);
-    currentAudio.playbackRate = audioSpeed;
+    currentAudio.playbackRate = audioSpeed || 1;
     currentAudio.play().catch(function() { fallbackTTS(cleanText); });
   } else {
     fallbackTTS(cleanText);
@@ -1797,7 +1797,7 @@ function toggleListening(id, btn, waveId, questionsId) {
     if (file) {
       if (!listeningState[id].audio) {
         listeningState[id].audio = new Audio(file);
-        listeningState[id].audio.playbackRate = audioSpeed;
+        listeningState[id].audio.playbackRate = audioSpeed || 1;
       }
       listeningState[id].audio.play().catch(function(){});
       listeningState[id].audio.onended = function() {

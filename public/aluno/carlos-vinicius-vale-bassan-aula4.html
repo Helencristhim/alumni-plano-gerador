@@ -1077,7 +1077,7 @@ function toggleLesson(header) { header.parentElement.classList.toggle('open'); }
 
 // ===== SPEAK TEXT (Audio + Fallback TTS) =====
 var currentAudio = null;
-var audioSpeed = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
+var audioSpeed = parseFloat(localStorage.getItem('alumni-audio-speed') || '1'); if(isNaN(audioSpeed))audioSpeed=1;
 
 function setAudioSpeed(speed, btn) {
     audioSpeed = speed;
@@ -1091,7 +1091,7 @@ function setAudioSpeed(speed, btn) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    var saved = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
+    var saved = parseFloat(localStorage.getItem('alumni-audio-speed') || '1'); if(isNaN(saved)){saved=1;localStorage.removeItem('alumni-audio-speed')}
     var btn = document.querySelector('.speed-btn[data-speed="' + saved + '"]');
     if (btn) setAudioSpeed(saved, btn);
 });
@@ -1102,7 +1102,7 @@ function speakText(text, btn) {
     var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
     if (file) {
         currentAudio = new Audio(file);
-        currentAudio.playbackRate = audioSpeed;
+        currentAudio.playbackRate = audioSpeed || 1;
         currentAudio.play().catch(function() {
             if ("speechSynthesis" in window) {
                 window.speechSynthesis.cancel();
