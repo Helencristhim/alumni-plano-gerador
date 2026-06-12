@@ -2191,7 +2191,7 @@ function toggleLesson(header) { header.parentElement.classList.toggle('open'); }
 
 // ===== SPEAK TEXT =====
 var currentAudio = null;
-var audioSpeed = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
+var audioSpeed = parseFloat(localStorage.getItem('alumni-audio-speed') || '1'); if(isNaN(audioSpeed))audioSpeed=1;
 
 function setAudioSpeed(speed, btn) {
   audioSpeed = speed;
@@ -2207,7 +2207,7 @@ function setAudioSpeed(speed, btn) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  var saved = parseFloat(localStorage.getItem('alumni-audio-speed') || '1');
+  var saved = parseFloat(localStorage.getItem('alumni-audio-speed') || '1'); if(isNaN(saved)){saved=1;localStorage.removeItem('alumni-audio-speed')}
   var btn = document.querySelector('.speed-btn[data-speed="' + saved + '"]');
   if (btn) setAudioSpeed(saved, btn);
   if (window.location.hash === '#inclass') {
@@ -2229,7 +2229,7 @@ function speakText(text, btn) {
     if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
     currentAudio = new Audio(file);
     currentAudioSrc = file;
-    currentAudio.playbackRate = audioSpeed;
+    currentAudio.playbackRate = audioSpeed || 1;
     currentAudio.play().catch(function() { ttsSpeak(cleanText); });
   } else { ttsSpeak(cleanText); }
   if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}

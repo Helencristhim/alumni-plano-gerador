@@ -7055,10 +7055,9 @@ function speakText(text, btn) {
   const file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
   if (file) {
     currentAudio = new Audio(file);
-    currentAudio.playbackRate = audioSpeed;
+    currentAudio.playbackRate = audioSpeed || 1;
     currentAudio.play().catch(() => fallbackSpeak(cleanText));
   } else { fallbackSpeak(cleanText); }
-
   if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
 }
 

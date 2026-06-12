@@ -726,12 +726,11 @@ function speakText(text, btn) {
   var file = audioMap[clean] || audioMap[clean.replace(/\.$/, '')] || audioMap[clean + '.'];
   if (file) {
     currentAudio = new Audio(file);
-    currentAudio.playbackRate = audioSpeed;
+    currentAudio.playbackRate = audioSpeed || 1;
     currentAudio.play().catch(function() { fallbackTTS(clean); });
   } else {
     fallbackTTS(clean);
   }
-
   if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
 }
 function fallbackTTS(text) {
