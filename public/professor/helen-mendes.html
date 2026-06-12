@@ -1841,7 +1841,7 @@ function injectPronunciationBtn(card,audioUrl){
   if(controls)controls.appendChild(playBtn);
 }
 
-function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Please use Google Chrome for voice recognition.');return}var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');
+function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');
 var mediaRec=null,mediaChunks=[],mediaStream=null,recDone=false;
 navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
   mediaStream=stream;
@@ -1856,6 +1856,13 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
       var blob=new Blob(mediaChunks,{type:mediaRec.mimeType});
       var audioUrl=URL.createObjectURL(blob);
       injectPronunciationBtn(card,audioUrl);
+      if(!SR){
+        btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');
+        if(activeRecognition&&activeRecognition.card===card)activeRecognition=null;
+        resultDiv.classList.add('show','good');
+        resultDiv.innerHTML='<strong>&#10003; Recording saved!</strong> — Listen to your pronunciation and compare with the model audio.';
+        updateProgress();
+      }
       // Upload to Supabase Storage for persistence
       var phraseSlug=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,50);
       var slug=window.STUDENT_SLUG||'unknown';
@@ -1865,6 +1872,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
     }
   };
   mediaRec.start(100);
+  if(SR){
   var r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=3;r.continuous=true;
   activeRecognition={recognition:r,btn:btn,stopBtn:stopBtn,card:card,mediaRec:mediaRec};
   r.start();
@@ -1876,6 +1884,10 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
   r.onerror=function(){finish();resultDiv.classList.add('show','try-again');resultDiv.innerHTML='Could not hear you. Check your microphone.'};
   r.onend=function(){finish()};
   setTimeout(function(){if(!ended){try{r.stop()}catch(e){}finish()}},30000);
+  } else {
+    activeRecognition={recognition:null,btn:btn,stopBtn:stopBtn,card:card,mediaRec:mediaRec};
+    setTimeout(function(){if(mediaRec&&mediaRec.state==='recording'){try{mediaRec.stop()}catch(e){}}},30000);
+  }
 }).catch(function(){btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');alert('Could not access microphone.')})}
 
 function stopRecording(stopBtn){if(activeRecognition){try{activeRecognition.recognition.stop()}catch(e){}if(activeRecognition.mediaRec&&activeRecognition.mediaRec.state==='recording'){try{activeRecognition.mediaRec.stop()}catch(e){}}}}
