@@ -463,7 +463,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--dark);color:v
 
 <script>
 var currentAudio=null;var audioSpeed=parseFloat(localStorage.getItem('alumni-audio-speed')||'1');
-function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0}var cleanText=text.replace(/\\'/g,"'");var file=audioMap[cleanText]||audioMap[cleanText.replace(/\.$/,'')]||audioMap[cleanText+'.'];if(file){currentAudio=new Audio(file);currentAudio.playbackRate=audioSpeed;currentAudio.play().catch(function(){ttsSpeak(cleanText)})}else{ttsSpeak(cleanText)}
+function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0}var cleanText=text.replace(/\\'/g,"'");var file=audioMap[cleanText]||audioMap[cleanText.replace(/\.$/,'')]||audioMap[cleanText+'.'];if(file){currentAudio=new Audio(file);currentAudio.playbackRate=audioSpeed||1;currentAudio.play().catch(function(){ttsSpeak(cleanText)})}else{ttsSpeak(cleanText)}
   if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
 }
 function ttsSpeak(text){if('speechSynthesis' in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=audioSpeed*0.85;u.pitch=1;window.speechSynthesis.speak(u)}}
