@@ -21,6 +21,23 @@
 8. PR → merge → deploy automático via GitHub (NUNCA vercel --prod)
 ```
 
+## CI (trava física — roda sozinho em TODO PR que toca aula)
+
+`.github/workflows/validate-lessons.yml`: arquivo de aula NOVO passa por
+`validate_lesson.py` (estrutura + vozes por personagem) + `check_contrast.py`
+(contraste computado, slides claros E escuros; gradiente/foto são pulados — o
+contrast-guard cobre em runtime). Arquivo MODIFICADO passa por
+`check_no_regression.py` (ex-lesson/stamp/slide não pode sumir; arquivo não pode
+encolher >10% — classe do incidente 6cd5b3b9). Ninguém precisa lembrar de rodar
+gate local: o PR não mergeia vermelho.
+
+## Áudio de listening = MONÓLOGO
+
+Listening é 1 MP3 com 1 voz. Por isso o texto de listening DEVE ser monólogo
+(aviso, recado, narração). Conversa de 2+ pessoas vai SEMPRE pro diálogo
+line-by-line com `data-voice` por fala (o validador trava voz repetida).
+NUNCA escrever um diálogo dentro de um listening.
+
 ## O que o shell do modelo garante de graça
 
 EXIT→exitSlideMode() · handler de Escape fora de `<script src>` · listening = MP3 único

@@ -1,0 +1,49 @@
+name: Valida aulas (gates do modelo)
+
+# Trava física do PR: NENHUMA aula nova entra no main sem passar pelos gates,
+# mesmo que alguém esqueça de rodar local. Arquivo NOVO = gate completo
+# (estrutura + vozes por personagem + contraste computado). Arquivo MODIFICADO =
+# anti-regressão (aula/stamp/slide não pode sumir, arquivo não pode encolher).
+
+on:
+  pull_request:
+    paths:
+      - 'public/professor/**.html'
+      - 'public/aluno/**.html'
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Classifica arquivos de aula do PR
+        id: files
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1
+          BASE="origin/${{ github.base_ref }}"
+          ADDED=$(git diff --name-only --diff-filter=A "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
+          MODIFIED=$(git diff --name-only --diff-filter=M "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
+          echo "added=$ADDED" >> "$GITHUB_OUTPUT"
+          echo "modified=$MODIFIED" >> "$GITHUB_OUTPUT"
+          echo "Novos: $ADDED"
+          echo "Modificados: $MODIFIED"
+
+      - name: "GATE 1 — estrutura + vozes por personagem (arquivos novos)"
+        if: steps.files.outputs.added != ''
+        run: python3 _build/model/validate_lesson.py ${{ steps.files.outputs.added }}
+
+      - name: "GATE 2 — contraste computado headless (arquivos novos)"
+        if: steps.files.outputs.added != ''
+        run: python3 _build/model/check_contrast.py ${{ steps.files.outputs.added }}
+
+      - name: "GATE 3 — anti-regressão (arquivos modificados)"
+        if: steps.files.outputs.modified != ''
+        run: python3 _build/model/check_no_regression.py --base "origin/${{ github.base_ref }}" ${{ steps.files.outputs.modified }}
+
+      - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
+        if: steps.files.outputs.modified != ''
+        continue-on-error: true
+        run: python3 _build/model/validate_lesson.py ${{ steps.files.outputs.modified }}
