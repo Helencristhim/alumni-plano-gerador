@@ -65,7 +65,9 @@
       var card = e.closest('.speech-card');
       if (card && card.dataset.phrase) {
         var cls = e.classList.contains('good') ? 'good' : e.classList.contains('try-again') ? 'try-again' : 'bad';
-        s.speech.push(card.dataset.phrase + '||' + cls + '||' + e.innerHTML.replace(/\n/g, ''));
+        var strong = e.querySelector('strong');
+        var scoreTxt = strong ? strong.textContent : 'Done';
+        s.speech.push(JSON.stringify({ p: card.dataset.phrase, c: cls, s: scoreTxt }));
       }
     });
 
@@ -140,16 +142,15 @@
     });
 
     if (s.speech) s.speech.forEach(function(d) {
-      if (d.indexOf('||') !== -1) {
-        var parts = d.split('||');
-        var phrase = parts[0];
-        var cls = parts[1];
-        var html = parts[2];
-        document.querySelectorAll('.speech-card[data-phrase="' + phrase + '"]').forEach(function(sc) {
+      var phrase, cls, scoreTxt;
+      try { var obj = JSON.parse(d); phrase = obj.p; cls = obj.c; scoreTxt = obj.s; }
+      catch(e) { if (d.indexOf('||') !== -1) { var parts = d.split('||'); phrase = parts[0]; cls = parts[1]; scoreTxt = 'Done'; } else { phrase = d; cls = 'good'; scoreTxt = 'Done'; } }
+      document.querySelectorAll('.speech-card').forEach(function(sc) {
+        if (sc.dataset.phrase === phrase) {
           var rd = sc.querySelector('.speech-result');
-          if (rd) { rd.classList.add('show', cls); rd.innerHTML = html; }
-        });
-      }
+          if (rd) { rd.classList.add('show', cls); rd.innerHTML = '<strong>' + scoreTxt + '</strong> — ' + (cls === 'good' ? 'Excellent!' : cls === 'try-again' ? 'Almost there!' : 'Keep practicing!'); }
+        }
+      });
     });
 
     if (s.checklists) {
