@@ -67,7 +67,12 @@
         var cls = e.classList.contains('good') ? 'good' : e.classList.contains('try-again') ? 'try-again' : 'bad';
         var strong = e.querySelector('strong');
         var scoreTxt = strong ? strong.textContent : 'Done';
-        s.speech.push(JSON.stringify({ p: card.dataset.phrase, c: cls, s: scoreTxt }));
+        var words = [];
+        e.querySelectorAll('.word-box').forEach(function(wb) {
+          words.push({ w: wb.textContent, s: wb.classList.contains('word-correct') ? 'c' : 'm' });
+        });
+        var recUrl = card.dataset.recordingUrl || '';
+        s.speech.push(JSON.stringify({ p: card.dataset.phrase, c: cls, s: scoreTxt, words: words, r: recUrl }));
       }
     });
 
@@ -142,13 +147,27 @@
     });
 
     if (s.speech) s.speech.forEach(function(d) {
-      var phrase, cls, scoreTxt;
-      try { var obj = JSON.parse(d); phrase = obj.p; cls = obj.c; scoreTxt = obj.s; }
-      catch(e) { if (d.indexOf('||') !== -1) { var parts = d.split('||'); phrase = parts[0]; cls = parts[1]; scoreTxt = 'Done'; } else { phrase = d; cls = 'good'; scoreTxt = 'Done'; } }
+      var phrase, cls, scoreTxt, words;
+      try { var obj = JSON.parse(d); phrase = obj.p; cls = obj.c; scoreTxt = obj.s; words = obj.words || []; }
+      catch(e) { if (d.indexOf('||') !== -1) { var parts = d.split('||'); phrase = parts[0]; cls = parts[1]; scoreTxt = 'Done'; words = []; } else { phrase = d; cls = 'good'; scoreTxt = 'Done'; words = []; } }
+      var recUrl; try { recUrl = JSON.parse(d).r || ''; } catch(e) { recUrl = ''; }
       document.querySelectorAll('.speech-card').forEach(function(sc) {
         if (sc.dataset.phrase === phrase) {
           var rd = sc.querySelector('.speech-result');
-          if (rd) { rd.classList.add('show', cls); rd.innerHTML = '<strong>' + scoreTxt + '</strong> — ' + (cls === 'good' ? 'Excellent!' : cls === 'try-again' ? 'Almost there!' : 'Keep practicing!'); }
+          if (rd) {
+            rd.classList.add('show', cls);
+            var html = '<strong>' + scoreTxt + '</strong> — ' + (cls === 'good' ? 'Excellent!' : cls === 'try-again' ? 'Almost there!' : 'Keep practicing!');
+            if (words.length > 0) {
+              html += '<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';
+              words.forEach(function(w) { html += '<span class="word-box word-' + (w.s === 'c' ? 'correct' : 'missing') + '">' + w.w + '</span>'; });
+              html += '</div></div>';
+            }
+            rd.innerHTML = html;
+          }
+          if (recUrl) {
+            sc.dataset.recordingUrl = recUrl;
+            if (typeof injectPronunciationBtn === 'function') injectPronunciationBtn(sc, recUrl);
+          }
         }
       });
     });
