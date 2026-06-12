@@ -61,9 +61,12 @@
       s.quiz.push(e.textContent.trim().substring(0, 30));
     });
 
-    document.querySelectorAll('.speech-result.good').forEach(function(e) {
+    document.querySelectorAll('.speech-result.show').forEach(function(e) {
       var card = e.closest('.speech-card');
-      if (card && card.dataset.phrase) s.speech.push(card.dataset.phrase);
+      if (card && card.dataset.phrase) {
+        var cls = e.classList.contains('good') ? 'good' : e.classList.contains('try-again') ? 'try-again' : 'bad';
+        s.speech.push(card.dataset.phrase + '||' + cls + '||' + e.innerHTML.replace(/\n/g, ''));
+      }
     });
 
     document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb, i) {
@@ -129,6 +132,19 @@
       document.querySelectorAll('.quiz-option[data-correct="true"]').forEach(function(e) {
         if (e.textContent.trim().substring(0, 30) === t) e.classList.add('correct');
       });
+    });
+
+    if (s.speech) s.speech.forEach(function(d) {
+      if (d.indexOf('||') !== -1) {
+        var parts = d.split('||');
+        var phrase = parts[0];
+        var cls = parts[1];
+        var html = parts[2];
+        document.querySelectorAll('.speech-card[data-phrase="' + phrase + '"]').forEach(function(sc) {
+          var rd = sc.querySelector('.speech-result');
+          if (rd) { rd.classList.add('show', cls); rd.innerHTML = html; }
+        });
+      }
     });
 
     if (s.checklists) {
