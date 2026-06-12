@@ -1337,7 +1337,7 @@ document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==
 // ===== AUDIO =====
 var currentAudio=null;
 var audioSpeed=1;
-function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;}var f=audioMap[text]||audioMap[text.replace(/\.$/,'')]||audioMap[text+'.'];if(f){currentAudio=new Audio(f);currentAudio.playbackRate=audioSpeed;currentAudio.play().catch(function(){ttsSpeak(text);});}else{ttsSpeak(text);}
+function speakText(text,btn){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;}var f=audioMap[text]||audioMap[text.replace(/\.$/,'')]||audioMap[text+'.'];if(f){currentAudio=new Audio(f);currentAudio.playbackRate=audioSpeed||1;currentAudio.play().catch(function(){ttsSpeak(text);});}else{ttsSpeak(text);}
   if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
 }
 function ttsSpeak(t){if('speechSynthesis' in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=audioSpeed*0.85;window.speechSynthesis.speak(u);}}
