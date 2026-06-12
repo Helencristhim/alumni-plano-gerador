@@ -4111,7 +4111,41 @@ function injectPronunciationBtn(card,audioUrl){
 
 var activeRecognition = null;
 
-function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Please use Google Chrome for voice recognition.');return}var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');var r=new SR();r.lang='es-ES';r.interimResults=false;r.maxAlternatives=3;r.continuous=true;activeRecognition={recognition:r,btn:btn,stopBtn:stopBtn,card:card};r.start();function resetButtons(){btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');activeRecognition=null}r.onresult=function(event){var best=event.results[event.results.length-1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g,'');var analysis=analyzeWords(target,best);var totalWords=analysis.expected.length;var correctWords=analysis.expected.filter(function(w){return w.status==='correct'}).length;resultDiv.classList.add('show');resultDiv.classList.remove('good','try-again','bad');var html='';if(analysis.score>=0.8){resultDiv.classList.add('good');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Excelente!';updateProgress()}else if(analysis.score>=0.5){resultDiv.classList.add('try-again');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Casi!'}else{resultDiv.classList.add('bad');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Sigue practicando!'}html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';analysis.expected.forEach(function(w){html+='<span class="word-box word-'+(w.status==='correct'?'correct':'missing')+'"><span class="word-icon">'+(w.status==='correct'?'&#10003;':'&#10007;')+'</span> '+w.word+'</span>'});html+='</div><div class="comp-label">You said:</div><div class="comp-words">';analysis.spoken.forEach(function(w){var cls=w.status==='correct'?'correct':w.status==='extra'?'extra':'wrong';var icon=w.status==='correct'?'&#10003;':w.status==='extra'?'~':'&#10007;';html+='<span class="word-box word-'+cls+'"><span class="word-icon">'+icon+'</span> '+w.word+'</span>'});html+='</div>';if(analysis.wrongWords.length>0){html+='<div class="speech-suggestion"><strong>Focus on:</strong> ';html+=analysis.wrongWords.map(function(w){return'"<strong>'+w.expected+'</strong>"'+(w.got?' (you said "'+w.got+'")':'')}).join(' · ');html+='</div>'}html+='</div>';resultDiv.innerHTML=html;resetButtons()};r.onerror=function(){resetButtons();resultDiv.classList.add('show','try-again');resultDiv.innerHTML='No se pudo escuchar. Revisa tu micr&oacute;fono.'};r.onend=function(){resetButtons()};setTimeout(function(){if(btn.classList.contains('recording')){r.stop();resetButtons()}},30000)}
+function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Please use Google Chrome for voice recognition.');return}var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');
+var mediaRec=null,mediaChunks=[],mediaStream=null,recDone=false;
+navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+  mediaStream=stream;
+  var mimeType=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':'';
+  mediaRec=mimeType?new MediaRecorder(stream,{mimeType:mimeType}):new MediaRecorder(stream);
+  mediaChunks=[];
+  mediaRec.ondataavailable=function(e){if(e.data.size>0)mediaChunks.push(e.data)};
+  mediaRec.onstop=function(){
+    if(recDone)return;recDone=true;
+    stream.getTracks().forEach(function(t){t.stop()});
+    if(mediaChunks.length>0){
+      var blob=new Blob(mediaChunks,{type:mediaRec.mimeType});
+      var audioUrl=URL.createObjectURL(blob);
+      injectPronunciationBtn(card,audioUrl);
+      var phraseSlug=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,50);
+      var slug=window.STUDENT_SLUG||'unknown';
+      var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';
+      var filePath=slug+'/'+phraseSlug+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;card.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
+    }
+  };
+  mediaRec.start(100);
+  var r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=3;r.continuous=true;
+  activeRecognition={recognition:r,btn:btn,stopBtn:stopBtn,card:card,mediaRec:mediaRec};
+  r.start();
+  var ended=false;
+  function finish(){if(ended)return;ended=true;btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');activeRecognition=null;
+    setTimeout(function(){if(mediaRec&&mediaRec.state==='recording')mediaRec.stop()},200);
+  }
+  r.onresult=function(event){var best=event.results[event.results.length-1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g,'');var analysis=analyzeWords(target,best);var totalWords=analysis.expected.length;var correctWords=analysis.expected.filter(function(w){return w.status==='correct'}).length;resultDiv.classList.add('show');resultDiv.classList.remove('good','try-again','bad');var html='';if(analysis.score>=0.8){resultDiv.classList.add('good');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Excellent!';updateProgress()}else if(analysis.score>=0.5){resultDiv.classList.add('try-again');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Almost there!'}else{resultDiv.classList.add('bad');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Keep practicing!'}html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';analysis.expected.forEach(function(w){html+='<span class="word-box word-'+(w.status==='correct'?'correct':'missing')+'">'+w.word+'</span>'});html+='</div></div>';resultDiv.innerHTML=html;finish()};
+  r.onerror=function(){finish();resultDiv.classList.add('show','try-again');resultDiv.innerHTML='Could not hear you. Check your microphone.'};
+  r.onend=function(){finish()};
+  setTimeout(function(){if(!ended){try{r.stop()}catch(e){}finish()}},30000);
+}).catch(function(){btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');alert('Could not access microphone.')})}
 function stopRecording(stopBtn){if(activeRecognition){try{activeRecognition.recognition.stop()}catch(e){}if(activeRecognition.mediaRec&&activeRecognition.mediaRec.state==='recording'){try{activeRecognition.mediaRec.stop()}catch(e){}}}}
 function analyzeWords(targetStr,spokenStr){var tw=targetStr.split(/ +/).filter(function(w){return w});var sw=spokenStr.split(/ +/).filter(function(w){return w});var m=tw.length,n=sw.length;var dp=Array.from({length:m+1},function(){return Array(n+1).fill(0)});for(var i=1;i<=m;i++)for(var j=1;j<=n;j++)dp[i][j]=wordsMatch(tw[i-1],sw[j-1])?dp[i-1][j-1]+1:Math.max(dp[i-1][j],dp[i][j-1]);var mt=new Set(),ms=new Set();var i=m,j=n;while(i>0&&j>0){if(wordsMatch(tw[i-1],sw[j-1])){mt.add(i-1);ms.add(j-1);i--;j--}else if(dp[i-1][j]>dp[i][j-1])i--;else j--}var expected=tw.map(function(w,i){return{word:w,status:mt.has(i)?'correct':'missing'}});var spoken=sw.map(function(w,i){return{word:w,status:ms.has(i)?'correct':'wrong'}});var wrongWords=[],missedTW=tw.filter(function(_,i){return!mt.has(i)}),wrongSW=sw.filter(function(_,i){return!ms.has(i)});missedTW.forEach(function(t,i){wrongWords.push({expected:t,got:wrongSW[i]||null})});wrongSW.slice(missedTW.length).forEach(function(s){spoken.forEach(function(sp){if(sp.word===s&&sp.status==='wrong')sp.status='extra'})});return{expected:expected,spoken:spoken,wrongWords:wrongWords,score:mt.size/Math.max(m,1)}}
 function wordsMatch(a,b){if(a===b)return true;var ca=a.replace(/'/g,''),cb=b.replace(/'/g,'');if(ca===cb)return true;if(a.length>3&&b.length>3&&levenshtein(a,b)<=1)return true;return false}
