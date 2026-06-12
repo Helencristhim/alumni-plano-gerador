@@ -723,13 +723,34 @@ Ao final de cada aula, incluir card com 5 frases-chave + audio:
 
 ---
 
-## REGRA 19 — DEPLOY VIA GIT (NUNCA vercel --prod)
+## REGRA 19 — DEPLOY VIA GIT (NUNCA vercel --prod, SEMPRE via branch + PR)
 
-Deploy de producao acontece AUTOMATICAMENTE via GitHub: commit → PR → merge no main → Vercel deploya.
+Deploy de producao acontece AUTOMATICAMENTE via GitHub: branch → PR → merge no main → Vercel deploya.
 **PROIBIDO rodar `vercel --prod` local** — deploya o checkout LOCAL por cima da producao e ja
 sobrescreveu material no ar (incidente de 11/06/2026: hubs e controle perderam dados).
-Antes de commitar: `git pull --rebase` (evita reverter trabalho de outra pessoa).
-Apos merge: smoke-testar o site live comparando com o git.
+
+### BRANCHING OBRIGATORIO (dois devs no mesmo repo)
+
+Helen e Danilo trabalham no mesmo repositorio. Para NUNCA sobrescrever o trabalho um do outro:
+
+1. **NUNCA commitar direto no `main`**. O branch `main` e protegido.
+2. **SEMPRE criar uma branch** antes de qualquer mudanca:
+   - Padrao: `feat/{slug}-aula{N}` (ex: `feat/tania-rosa-aula9`)
+   - Para fixes: `fix/{descricao-curta}` (ex: `fix/contrast-guard-slides`)
+   - Para docs/config: `chore/{descricao}` (ex: `chore/update-regras`)
+3. **Fluxo automatico que o Claude Code DEVE seguir**:
+   ```
+   git checkout main
+   git pull origin main
+   git checkout -b feat/{slug}-aula{N}
+   # ... fazer todas as mudancas, commits, gerar audios ...
+   git push -u origin feat/{slug}-aula{N}
+   gh pr create --title "..." --body "..."
+   gh pr merge --squash --delete-branch
+   ```
+4. **NUNCA fazer `git push origin main` direto** — o GitHub vai rejeitar.
+5. Se estiver no `main` e precisar editar arquivos: criar branch ANTES da primeira edicao.
+6. Apos merge: smoke-testar o site live comparando com o git.
 
 ---
 
