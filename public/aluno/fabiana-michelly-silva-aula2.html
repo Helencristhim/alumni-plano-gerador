@@ -42,14 +42,7 @@ var audioMap = {
 };
 
 var qfCurrent = 1;
-function nextQF() {
-  qfCurrent++;
-  var all = document.querySelectorAll('.qf-card');
-  all.forEach(function(c) { c.style.display = 'none'; });
-  var next = document.querySelector('.qf-card[data-qf="' + qfCurrent + '"]');
-  if (next) next.style.display = 'block';
-  document.getElementById('qfScore').textContent = (qfCurrent - 1) + ' / ' + all.length;
-}
+function nextQF() { qfCurrent++; var all = document.querySelectorAll('.qf-card'); all.forEach(function(c) { c.style.display = 'none'; }); var next = document.querySelector('.qf-card[data-qf="' + qfCurrent + '"]'); if (next) next.style.display = 'block'; document.getElementById('qfScore').textContent = (qfCurrent - 1) + ' / ' + all.length; }
 </script>
 <style>
 :root {
@@ -903,11 +896,11 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="slide-inner">
     <div class="chapter-label">Grammar Practice</div>
     <h2 class="slide-heading">Complete the <span class="accent">Sentences</span></h2>
-    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:580px;margin:1.2rem auto 0">
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"If we _____ (check) the invoice earlier, we _____ (avoid) the delay." <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'had checked ... would have avoided':'[show]'">[show]</span></p></div>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"She _____ (approve) the purchase order if she _____ (receive) the documents on time." <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'would have approved ... had received':'[show]'">[show]</span></p></div>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"If the carrier _____ (deliver) on schedule, we _____ (not / miss) the clearance deadline." <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'had delivered ... would not have missed':'[show]'">[show]</span></p></div>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"_____ you _____ (choose) a different vendor if you _____ (know) about their turnaround time?" <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'Would ... have chosen ... had known':'[show]'">[show]</span></p></div>
+    <div style="display:flex;flex-direction:column;gap:.7rem;max-width:580px;margin:1.2rem auto 0">
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"If we <span class="fill-blank">_____</span><span class="fill-answer">had checked</span> the invoice earlier, we <span class="fill-blank">_____</span><span class="fill-answer">would have avoided</span> the delay."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"She <span class="fill-blank">_____</span><span class="fill-answer">would have approved</span> the purchase order if she <span class="fill-blank">_____</span><span class="fill-answer">had received</span> the documents on time."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"If the carrier <span class="fill-blank">_____</span><span class="fill-answer">had delivered</span> on schedule, we <span class="fill-blank">_____</span><span class="fill-answer">would not have missed</span> the clearance deadline."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"<span class="fill-blank">_____</span><span class="fill-answer">Would</span> you <span class="fill-blank">_____</span><span class="fill-answer">have chosen</span> a different vendor if you <span class="fill-blank">_____</span><span class="fill-answer">had known</span> about their turnaround time?"</div></div>
     </div>
   </div>
 </div>
@@ -1194,11 +1187,11 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="slide-inner">
     <div class="chapter-label">More Practice</div>
     <h2 class="slide-heading">Complete with Third <span class="accent">Conditional</span></h2>
-    <div style="display:flex;flex-direction:column;gap:.8rem;max-width:580px;margin:1.2rem auto 0">
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"If we _____ (carry out) the review earlier, we _____ (identify) the issue sooner." <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'had carried out ... would have identified':'[show]'">[show]</span></p></div>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"If I _____ (look into) the end-to-end option, I _____ (find) a better deal." <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'had looked into ... would have found':'[show]'">[show]</span></p></div>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"She _____ (reach) a consensus if she _____ (put forward) the proposal last week." <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'would have reached ... had put forward':'[show]'">[show]</span></p></div>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem"><p style="font-size:.9rem">"If they _____ (address) the issue immediately, the client _____ (not / cancel) the order." <span style="color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem" onclick="this.textContent=this.textContent==='[show]'?'had addressed ... would not have cancelled':'[show]'">[show]</span></p></div>
+    <div style="display:flex;flex-direction:column;gap:.7rem;max-width:580px;margin:1.2rem auto 0">
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"If we <span class="fill-blank">_____</span><span class="fill-answer">had carried out</span> the review earlier, we <span class="fill-blank">_____</span><span class="fill-answer">would have identified</span> the issue sooner."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"If I <span class="fill-blank">_____</span><span class="fill-answer">had looked into</span> the end-to-end option, I <span class="fill-blank">_____</span><span class="fill-answer">would have found</span> a better deal."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"She <span class="fill-blank">_____</span><span class="fill-answer">would have reached</span> a consensus if she <span class="fill-blank">_____</span><span class="fill-answer">had put forward</span> the proposal last week."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"If they <span class="fill-blank">_____</span><span class="fill-answer">had addressed</span> the issue immediately, the client <span class="fill-blank">_____</span><span class="fill-answer">would not have cancelled</span> the order."</div></div>
     </div>
   </div>
 </div>
@@ -1436,18 +1429,13 @@ function speakText(text, btn) {
   if (window._lastAudioBtn && window._lastAudioBtn !== btn) {
     window._lastAudioBtn.innerHTML = window._lastAudioBtn._origHTML || 'Listen'; window._lastAudioBtn._playingText = null;
   }
-  // cleanText already set
+  // already set
   // var cleanText = text.replace(/\\'/g, "'");
   var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
   if (file) {
     currentAudio = new Audio(file);
     currentAudio.playbackRate = audioSpeed || 1;
-    if (btn) {
-      btn._origHTML = btn._origHTML || btn.innerHTML; btn._playingText = cleanText;
-      btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pause';
-      window._lastAudioBtn = btn;
-      currentAudio.onended = function() { btn.innerHTML = btn._origHTML; btn._playingText = null; };
-    }
+    if (btn) { btn._origHTML = btn._origHTML || btn.innerHTML; btn._playingText = cleanText; btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pause'; window._lastAudioBtn = btn; currentAudio.onended = function() { btn.innerHTML = btn._origHTML; btn._playingText = null; }; }
     currentAudio.play().catch(function() { ttsSpeak(cleanText); if(btn){btn.innerHTML=btn._origHTML;btn._playingText=null;} });
   } else {
     ttsSpeak(cleanText);
