@@ -1417,13 +1417,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function speakText(text, btn) {
-  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
   var cleanText = text.replace(/\\'/g, "'");
+  if (currentAudio && !currentAudio.paused && btn && btn._playingText === cleanText) {
+    currentAudio.pause(); btn.innerHTML = btn._origHTML || 'Listen'; btn._playingText = null; return;
+  }
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  if (window._lastAudioBtn && window._lastAudioBtn !== btn) {
+    window._lastAudioBtn.innerHTML = window._lastAudioBtn._origHTML || 'Listen'; window._lastAudioBtn._playingText = null;
+  }
+  // already set
+  // var cleanText = text.replace(/\\'/g, "'");
   var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
   if (file) {
     currentAudio = new Audio(file);
     currentAudio.playbackRate = audioSpeed || 1;
-    currentAudio.play().catch(function() { ttsSpeak(cleanText); });
+    if (btn) { btn._origHTML = btn._origHTML || btn.innerHTML; btn._playingText = cleanText; var pauseIcon = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'; btn.innerHTML = btn.classList.contains('audio-inline') ? pauseIcon : pauseIcon + ' Pause'; window._lastAudioBtn = btn; currentAudio.onended = function() { btn.innerHTML = btn._origHTML; btn._playingText = null; }; }
+    currentAudio.play().catch(function() { ttsSpeak(cleanText); if(btn){btn.innerHTML=btn._origHTML;btn._playingText=null;} });
   } else {
     ttsSpeak(cleanText);
   }
