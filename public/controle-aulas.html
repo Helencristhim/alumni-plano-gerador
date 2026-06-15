@@ -1032,11 +1032,11 @@ function updateKPIs() {
 var v2Courses = {
     "Percival Gratti Junior": [
         // V2 = 2o cadastro na planilha (SPVT26272). card permite casar a attendance do V2.
-        { label: "Travel English V2", url: "https://percival-travel-english-v2.vercel.app/", slug: "percival-jrV2", card: "SPVT26272" }
+        { label: "Travel English V2", url: "https://percival-travel-english-v2.vercel.app/", slug: "percival-jr-v2", card: "SPVT26272" }
     ],
     "Daniela Goncalves Feitoza": [
         // Daniela tem 1 cadastro na planilha (SPVT26168) — V2 cai no fallback por nome
-        { label: "Professional English V2", url: "https://daniela-feitoza-v2.vercel.app/", slug: "daniela-feitozaV2" }
+        { label: "Professional English V2", url: "https://daniela-feitoza-v2.vercel.app/", slug: "daniela-feitoza-v2" }
     ]
 };
 
@@ -1235,13 +1235,39 @@ function renderTable(list) {
         var extras = v2Courses[d.name];
         if (extras) {
             extras.forEach(function(v2) {
+                // Dados do material V2 (ja na estrutura, via lesson-counts/Supabase)
+                var v2data = null;
+                for (var k = 0; k < allData.length; k++) { if (allData[k].slug === v2.slug) { v2data = allData[k]; break; } }
+                var v2criadas = v2data ? v2data.criadas : 0;
+                var v2concl = v2data ? v2data.concluidas : 0;
+                var v2pac = v2data ? v2data.pacote : 0;
+                var v2hasMat = v2criadas > 0;
+                var v2pct = v2hasMat ? Math.round(v2concl / v2criadas * 100) : 0;
+                var v2bar = v2pct >= 80 ? 'green' : v2pct >= 40 ? 'yellow' : 'red';
                 var v2att = v2.card ? lookupAttendance(v2.label, v2.card) : lookupAttendance(d.name, null);
+
                 html += '<tr class="v2-row">';
                 html += '<td></td>';
                 html += '<td style="padding-left:2.5rem"><span class="v2-badge">V2</span> <a href="' + v2.url + '" target="_blank" rel="noopener" class="v2-link">' + v2.label + '</a></td>';
-                html += '<td colspan="6" style="font-size:.78rem;color:var(--text-dim)">Projeto externo</td>';
+                // Student Card + PIN + Professor (3 colunas) — projeto externo
+                html += '<td colspan="3" style="font-size:.78rem;color:var(--text-dim)">Projeto externo</td>';
+                // Pacote
+                html += '<td class="num">' + (v2pac ? v2pac : dash) + '</td>';
+                // Criadas (numero de aulas que o V2 tem)
+                html += '<td class="num">' + (v2hasMat ? '<strong>' + v2criadas + '</strong>' : dash) + '</td>';
+                // Concluidas
+                html += '<td class="num">' + (v2hasMat ? '<strong>' + v2concl + '</strong>' : dash) + '</td>';
+                // Attendance
                 html += '<td class="num">' + (v2att !== null && v2att !== undefined && v2att !== '' ? '<strong>' + v2att + '</strong>' : dash) + '</td>';
-                html += '<td>' + dash + '</td>';
+                // Progresso
+                html += '<td>';
+                if (v2hasMat) {
+                    html += '<div class="progress-mini">';
+                    html += '<div class="progress-bar-mini"><div class="progress-fill ' + v2bar + '" style="width:' + v2pct + '%"></div></div>';
+                    html += '<span class="progress-pct" style="color:var(--' + (v2pct >= 80 ? 'success' : v2pct >= 40 ? 'warn' : 'danger') + ')">' + v2pct + '%</span>';
+                    html += '</div>';
+                } else { html += dash; }
+                html += '</td>';
                 html += '</tr>';
             });
         }
