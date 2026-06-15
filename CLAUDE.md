@@ -874,6 +874,9 @@ Helen e Danilo trabalham no mesmo repositorio. Para NUNCA sobrescrever o trabalh
 
 **Validacao obrigatoria (gates bloqueantes, antes do PR):**
 - `python3 _build/model/validate_lesson.py public/professor/{slug}-aula{N}.html public/aluno/{slug}-aula{N}.html`
+- `python3 _build/model/check_vocab_progression.py public/professor/{slug}.html` — REGRA 22:
+  nenhuma palavra (vocab card) ensinada como NOVA em 2+ aulas do aluno. Aula de revisao/checkpoint
+  que reusa vocab de proposito = adicionar as palavras na whitelist `_build/model/vocab_allow_repeat.json`
 - Contraste computado headless: 0 textos ilegiveis (check_computed_contrast)
 - VOZES POR PERSONAGEM (bloqueante): toda dialogue-line tem data-voice; 1 voz consistente
   por personagem; personagens distintos no MESMO dialogo = vozes DISTINTAS; dialogo com
