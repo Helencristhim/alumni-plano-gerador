@@ -1,0 +1,94 @@
+name: Guarda do main (anti-regressão pós-push)
+
+# COMPLEMENTA validate-lessons.yml. Aquele roda em PULL_REQUEST e trava o que entra
+# por PR. ESTE roda em PUSH DIRETO no main — o vetor que já quebrou tudo antes
+# (commit 6cd5b3b9 de um checkout defasado apagou aulas 6-10 de 4 hubs).
+#
+# O que faz: para cada hub (professor/aluno) tocado no push, compara contagem de
+# aulas/stamps/slides e tamanho contra o estado ANTERIOR ao push. Se alguma aula
+# sumiu / o arquivo encolheu (assinatura de overwrite), RESTAURA só esse arquivo
+# pro estado de antes, commita o restore e abre um issue avisando. Não acorda
+# ninguém: o trabalho da madrugada se conserta sozinho em segundos.
+#
+# Push feito pelo GITHUB_TOKEN não re-dispara workflow, então não há loop.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/professor/**.html'
+      - 'public/aluno/**.html'
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    # Pula o próprio commit de restauração (cinto + suspensório; o token já evita loop)
+    if: ${{ !contains(github.event.head_commit.message, '[guard-auto]') }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Detecta regressão nos hubs tocados pelo push
+        id: scan
+        run: |
+          BEFORE='${{ github.event.before }}'
+          # Primeira push da branch (sem "antes"): nada a comparar
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "Sem commit anterior — nada a checar."
+            echo "regressed=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          CHANGED=$(git diff --name-only "$BEFORE" '${{ github.event.after }}' -- 'public/professor/*.html' 'public/aluno/*.html')
+          echo "Hubs tocados:"; echo "$CHANGED"
+          REGRESSED=""
+          for f in $CHANGED; do
+            if [ ! -f "$f" ]; then
+              echo "❌ $f: arquivo APAGADO no push"
+              REGRESSED="$REGRESSED $f"
+              continue
+            fi
+            if ! python3 _build/model/check_no_regression.py --base "$BEFORE" "$f"; then
+              REGRESSED="$REGRESSED $f"
+            fi
+          done
+          REGRESSED=$(echo $REGRESSED | xargs || true)
+          echo "regressed=$REGRESSED" >> "$GITHUB_OUTPUT"
+          if [ -n "$REGRESSED" ]; then
+            echo "::warning::Regressão detectada em: $REGRESSED"
+          fi
+
+      - name: Restaura arquivos regredidos + commita
+        if: steps.scan.outputs.regressed != ''
+        run: |
+          git config user.name  'guard-main[bot]'
+          git config user.email 'guard-main@users.noreply.github.com'
+          BEFORE='${{ github.event.before }}'
+          for f in ${{ steps.scan.outputs.regressed }}; do
+            git checkout "$BEFORE" -- "$f"
+            echo "↩  restaurado $f -> $BEFORE"
+          done
+          git commit -m "guard: restaura aula(s) removida(s) por push defasado [guard-auto]
+
+Restaurado para o estado anterior ao push ${{ github.event.after }}.
+Arquivos: ${{ steps.scan.outputs.regressed }}" || { echo "nada pra commitar"; exit 0; }
+          git push origin HEAD:main
+
+      - name: Abre issue avisando
+        if: steps.scan.outputs.regressed != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "⚠️ Guarda do main reverteu uma regressão automaticamente" \
+            --body "O push \`${{ github.event.after }}\` (por @${{ github.event.pusher.name }}) removeu aula(s)/encolheu hub(s) e foi **restaurado automaticamente** pela guarda do main.
+
+**Arquivos restaurados:** ${{ steps.scan.outputs.regressed }}
+
+Provável causa: commit de um checkout defasado por cima do main (mesmo padrão do incidente 6cd5b3b9). O conteúdo voltou ao estado anterior ao push. Se a remoção foi intencional, refaça a partir do main atualizado (\`git pull\`) e empurre de novo." \
+            || echo "não consegui abrir issue (segue o jogo)"
