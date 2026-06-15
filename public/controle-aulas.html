@@ -622,12 +622,13 @@
                     <th class="num">Pacote</th>
                     <th class="num">Criadas</th>
                     <th class="num">Concluidas</th>
+                    <th class="num">Attendance</th>
                     <th>Progresso</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
                 <tr class="loading-row">
-                    <td colspan="9"><span class="spinner"></span>Carregando dados...</td>
+                    <td colspan="10"><span class="spinner"></span>Carregando dados...</td>
                 </tr>
             </tbody>
         </table>
@@ -664,6 +665,7 @@
 var allData = [];
 var filterMode = 'all';
 var archivedSlugs = {};
+var attendanceData = { byCard: {}, byName: {} };
 
 // Fallback professor map (from spreadsheet)
 var profMap = {
@@ -915,6 +917,31 @@ async function fetchProgress() {
     } catch (e) { console.error('Supabase progress error:', e); return []; }
 }
 
+// Attendance ("Aulas utilizadas") da planilha Google via proxy server-side
+async function fetchAttendance() {
+    try {
+        var r = await fetch('/api/attendance?t=' + Date.now());
+        if (!r.ok) return { byCard: {}, byName: {} };
+        var d = await r.json();
+        return { byCard: d.byCard || {}, byName: d.byName || {} };
+    } catch (e) { console.error('Attendance fetch error:', e); return { byCard: {}, byName: {} }; }
+}
+
+function normNameJS(s) {
+    return (s || '').toString().toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ').trim();
+}
+
+// Resolve attendance de um aluno: tenta pelo Student Card (dígitos), senão pelo nome
+function lookupAttendance(name, studentCard) {
+    var dig = (studentCard || '').replace(/\D/g, '');
+    if (dig && attendanceData.byCard[dig] !== undefined) return attendanceData.byCard[dig];
+    var nn = normNameJS(name);
+    if (nn && attendanceData.byName[nn] !== undefined) return attendanceData.byName[nn];
+    return null;
+}
+
 function decodeHtml(str) {
     var el = document.createElement('textarea');
     el.innerHTML = str;
@@ -926,11 +953,13 @@ function decodeHtml(str) {
 // ============================================================
 async function loadAll() {
     try {
-        var [htmlCounts, perfis, progress] = await Promise.all([
+        var [htmlCounts, perfis, progress, attendance] = await Promise.all([
             fetchHtmlCounts(),
             fetchPerfis(),
-            fetchProgress()
+            fetchProgress(),
+            fetchAttendance()
         ]);
+        attendanceData = attendance;
 
         // Build merged Supabase data keyed by slug
         var merged = {};
@@ -975,7 +1004,7 @@ async function loadAll() {
     } catch (e) {
         console.error('Error loading data:', e);
         document.getElementById('tableBody').innerHTML =
-            '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--danger)">Erro ao carregar dados. Tente atualizar.</td></tr>';
+            '<tr><td colspan="10" style="text-align:center;padding:2rem;color:var(--danger)">Erro ao carregar dados. Tente atualizar.</td></tr>';
     }
 }
 
@@ -1102,7 +1131,8 @@ function filterAndRender() {
             pacote: match ? match.pacote : 0,
             criadas: match ? match.criadas : 0,
             concluidas: match ? match.concluidas : 0,
-            archived: (match && match.archived) || (slug ? archivedSlugs[slug] === true : false)
+            archived: (match && match.archived) || (slug ? archivedSlugs[slug] === true : false),
+            attendance: lookupAttendance(sp.name, sp.studentCard)
         };
     });
 
@@ -1181,6 +1211,10 @@ function renderTable(list) {
         // Concluidas
         html += '<td class="num">' + (hasMat ? '<strong>' + d.concluidas + '</strong>' : dash) + '</td>';
 
+        // Attendance (Aulas utilizadas — planilha Google)
+        var att = d.attendance;
+        html += '<td class="num">' + (att !== null && att !== undefined && att !== '' ? '<strong>' + att + '</strong>' : dash) + '</td>';
+
         // Progresso
         html += '<td>';
         if (hasMat) {
@@ -1202,14 +1236,14 @@ function renderTable(list) {
                 html += '<tr class="v2-row">';
                 html += '<td></td>';
                 html += '<td style="padding-left:2.5rem"><span class="v2-badge">V2</span> <a href="' + v2.url + '" target="_blank" rel="noopener" class="v2-link">' + v2.label + '</a></td>';
-                html += '<td colspan="7" style="font-size:.78rem;color:var(--text-dim)">Projeto externo</td>';
+                html += '<td colspan="8" style="font-size:.78rem;color:var(--text-dim)">Projeto externo</td>';
                 html += '</tr>';
             });
         }
     });
 
     if (!html) {
-        html = '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-dim)">Nenhum aluno encontrado.</td></tr>';
+        html = '<tr><td colspan="10" style="text-align:center;padding:2rem;color:var(--text-dim)">Nenhum aluno encontrado.</td></tr>';
     }
 
     document.getElementById('tableBody').innerHTML = html;
