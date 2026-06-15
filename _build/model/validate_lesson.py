@@ -172,6 +172,14 @@ def check_fix_regressions(c, css, is_standalone_slides, fails, warns):
         seg = m.group(1)
         if re.match(r'\s*<(p|strong)\b', seg):
             fails.append('mistake-item com <p>/<strong> direto — texto deve ser direto no div (display:flex espalha)')
+    # Sentence Building (.oral-item): a RESPOSTA (.oral-model) deve começar escondida
+    # e só aparecer no .revealed (toggle por clique). Sem isso, o gabarito vaza na tela.
+    if 'oral-model' in c:
+        hidden = re.search(r'\.oral-model\b[^{]*\{[^}]*display\s*:\s*none', css)
+        reveal = re.search(r'\.oral-item\.revealed\b[^{]*\.oral-model', css)
+        if not (hidden and reveal):
+            fails.append('Sentence Building VAZA o gabarito: .oral-model precisa começar com display:none '
+                         'e ser revelado por ".oral-item.revealed .oral-model" (toggle do clique)')
 
 
 def check_handlers_exist(c, fails):
