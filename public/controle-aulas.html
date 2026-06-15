@@ -238,6 +238,27 @@
         .student-link:hover { color: var(--navy-light); text-decoration: underline; }
         .student-link:focus-visible { outline: 3px solid rgba(0,48,128,0.2); outline-offset: 2px; border-radius: 2px; }
 
+        /* Archived (arquivado) student */
+        .archived-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-left: 0.5rem;
+            padding: 0.12rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.66rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            background: rgba(120,113,108,0.12);
+            color: #78716c;
+            border: 1px solid rgba(120,113,108,0.25);
+        }
+        tr.archived-row td { background: rgba(120,113,108,0.04); }
+        tr.archived-row:hover td { background: rgba(120,113,108,0.08); }
+        tr.archived-row .student-link,
+        tr.archived-row .student-name { color: var(--text-mid); }
+
         /* Progress bar in table */
         .progress-mini {
             display: flex;
@@ -642,6 +663,7 @@
 // ============================================================
 var allData = [];
 var filterMode = 'all';
+var archivedSlugs = {};
 
 // Fallback professor map (from spreadsheet)
 var profMap = {
@@ -881,7 +903,7 @@ async function fetchHtmlCounts() {
 
 async function fetchPerfis() {
     try {
-        var resp = await sb.from('perfis').select('id,nome,num_aulas,ativo,status,professor,alocacao,data');
+        var resp = await sb.from('perfis').select('id,nome,num_aulas,ativo,status,deactivated,professor,alocacao,data');
         return (resp.data || []);
     } catch (e) { console.error('Supabase perfis error:', e); return []; }
 }
@@ -926,12 +948,15 @@ async function loadAll() {
         });
 
         // 2. Enrich with Supabase perfis (num_aulas = pacote)
+        archivedSlugs = {};
         perfis.forEach(function(p) {
             var slug = p.id;
+            if (p.deactivated === true) archivedSlugs[slug] = true;
             if (merged[slug]) {
                 merged[slug].pacote = p.num_aulas || 0;
                 if (p.nome) merged[slug].name = p.nome;
                 merged[slug].professor = p.professor || (p.alocacao && p.alocacao.professor) || (p.data && p.data.professor) || profMap[slug] || '';
+                merged[slug].archived = p.deactivated === true;
             }
         });
 
@@ -1066,6 +1091,7 @@ function filterAndRender() {
     // Build merged list from studentPins + allData
     var list = studentPins.map(function(sp) {
         var match = findMatch(sp.name);
+        var slug = match ? match.slug : (pinSlugMap[sp.name] || null);
         return {
             name: sp.name,
             studentCard: sp.studentCard,
@@ -1075,7 +1101,8 @@ function filterAndRender() {
             professor: match ? match.professor : '',
             pacote: match ? match.pacote : 0,
             criadas: match ? match.criadas : 0,
-            concluidas: match ? match.concluidas : 0
+            concluidas: match ? match.concluidas : 0,
+            archived: (match && match.archived) || (slug ? archivedSlugs[slug] === true : false)
         };
     });
 
@@ -1124,14 +1151,16 @@ function renderTable(list) {
         var pct = hasMat && d.criadas > 0 ? Math.round(d.concluidas / d.criadas * 100) : 0;
         var barClass = pct >= 80 ? 'green' : pct >= 40 ? 'yellow' : 'red';
 
-        html += '<tr>';
+        var archivedBadge = d.archived ? '<span class="archived-badge" title="Aluno arquivado no dashboard">Arquivado</span>' : '';
+
+        html += '<tr' + (d.archived ? ' class="archived-row"' : '') + '>';
         html += '<td class="num" style="color:var(--text-dim);font-size:.75rem">' + (i + 1) + '</td>';
 
         // Name — link if has material/slug
         if (d.slug) {
-            html += '<td><a href="/professor/' + d.slug + '.html" target="_blank" rel="noopener" class="student-link">' + d.name + '</a></td>';
+            html += '<td><a href="/professor/' + d.slug + '.html" target="_blank" rel="noopener" class="student-link">' + d.name + '</a>' + archivedBadge + '</td>';
         } else {
-            html += '<td><span class="student-name">' + d.name + '</span></td>';
+            html += '<td><span class="student-name">' + d.name + '</span>' + archivedBadge + '</td>';
         }
 
         // Student Card
