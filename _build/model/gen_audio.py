@@ -24,10 +24,21 @@ KEY = os.environ.get('ELEVENLABS_API_KEY')
 assert KEY, 'ELEVENLABS_API_KEY not set'
 os.makedirs(OUT, exist_ok=True)
 
+# Vozes: voices.json (arthur/ellen, inglês) + override por config (cfg['voices']).
+# REGRA: material NÃO-inglês (lang != 'en') NUNCA pode usar voz de inglês — exige
+# override com vozes do idioma-alvo (ex: espanhol = vozes de Espanha). Trava de código.
+VOICES = {**VOICES, **cfg.get('voices', {})}
+LANG = cfg.get('lang', 'en')
+assert LANG == 'en' or cfg.get('voices'), (
+    f"aula lang='{LANG}' SEM 'voices' no config — material não-inglês exige vozes do "
+    f"idioma-alvo (proibido usar arthur/ellen, que são vozes de inglês).")
+
+FORCE = '--force' in sys.argv or os.environ.get('GEN_AUDIO_FORCE') == '1'
+
 gen = skip = err = 0
 for p in manifest:
     fp = os.path.join(OUT, p['file'])
-    if os.path.exists(fp):
+    if os.path.exists(fp) and not FORCE:
         skip += 1
         continue
     body = json.dumps({'text': p['text'], 'model_id': 'eleven_multilingual_v2',
