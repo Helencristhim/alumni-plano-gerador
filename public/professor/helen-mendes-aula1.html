@@ -1154,6 +1154,7 @@ function changeSlide(dir) {
 }
 
 function goToSlide(n) {
+  stopAllAudio();
   var prev = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
   if (prev) prev.classList.remove('active');
   currentSlide = n;
@@ -1247,6 +1248,9 @@ function nextDialogueLine() {
 }
 
 // ===== QUICK CHALLENGE =====
+var qfCurrent = 1;
+function nextQF() { qfCurrent++; var all = document.querySelectorAll('.qf-card'); all.forEach(function(c) { c.style.display = 'none'; }); var next = document.querySelector('.qf-card[data-qf="' + qfCurrent + '"]'); if (next) next.style.display = 'block'; document.getElementById('qfScore').textContent = (qfCurrent - 1) + ' / ' + all.length; }
+
 // ===== LISTENING AUDIO =====
 // ===== LISTENING PLAYER (MP3 unico + controles completos) =====
 var mpAudios = {};
@@ -1302,6 +1306,7 @@ function mpSpeed(id, speed, btn) {
 
 function stopAllAudio() {
   if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  if (typeof mpAudios !== 'undefined') { Object.keys(mpAudios).forEach(function(k) { try { mpAudios[k].pause(); } catch(e) {} }); }
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 }
 

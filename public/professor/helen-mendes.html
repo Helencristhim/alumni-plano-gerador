@@ -1551,6 +1551,7 @@ function changeSlide(dir) {
 }
 
 function goToSlide(n) {
+  stopAllAudio();
   var prev = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
   if (prev) prev.classList.remove('active');
   currentSlide = n;
@@ -1768,6 +1769,7 @@ function fmtTime(s) {
 
 function stopAllAudio() {
   if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  if (typeof mpAudios !== 'undefined') { Object.keys(mpAudios).forEach(function(k) { try { mpAudios[k].pause(); } catch(e) {} }); }
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 }
 
