@@ -326,8 +326,10 @@ def validate(path):
                 try:
                     cfg = json.load(open(cfg_p, encoding='utf-8'))
                     level = next((h for h in cfg.get('header', []) if re.match(r'^[ABC]\d', str(h))), None)
+                    lesson_lang = cfg.get('lang', 'en')  # 'en' (padrão, aula de inglês) | 'es' (espanhol) | ...
                 except Exception:
                     level = None
+                    lesson_lang = 'en'
                 if level:
                     beginner = level[:2] in ('A0', 'A1')
                     if level[:2] in ('A0', 'A1', 'A2') and bi >= 0:
@@ -341,11 +343,20 @@ def validate(path):
                         if si >= 0 and sj > si:
                             scr = re.sub(r'\sdata-teacher="(?:[^"\\]|\\.)*"', '', c[si:sj])
                             scr = re.sub(r'<[^>]+>', ' ', re.sub(r'<script\b.*?</script>', '', scr, flags=re.S))
-                            acc = re.findall(r'\b[\wÀ-ÿ]*[àáâãéêíóôõúüç][\wÀ-ÿ]*\b', scr)
-                            low = sorted(set(t for t in acc if t[:1].islower()))
-                            PT_SEM_ACENTO = ['rotina', 'trabalho', 'exemplo', 'resposta', 'pergunta',
-                                             'palavra', 'frase', 'ouvir', 'gravar', 'clique', 'escolha', 'voce']
-                            low += sorted(set(re.findall(r'\b(?:' + '|'.join(PT_SEM_ACENTO) + r')\b', scr)))
+                            if lesson_lang == 'en':
+                                # aula de inglês: QUALQUER palavra acentuada na tela = vazamento de PT
+                                acc = re.findall(r'\b[\wÀ-ÿ]*[àáâãéêíóôõúüç][\wÀ-ÿ]*\b', scr)
+                                low = sorted(set(t for t in acc if t[:1].islower()))
+                                PT_SEM_ACENTO = ['rotina', 'trabalho', 'exemplo', 'resposta', 'pergunta',
+                                                 'palavra', 'frase', 'ouvir', 'gravar', 'clique', 'escolha', 'voce']
+                                low += sorted(set(re.findall(r'\b(?:' + '|'.join(PT_SEM_ACENTO) + r')\b', scr)))
+                            else:
+                                # idioma-alvo usa acentos (ex.: 'es'): acento é legítimo. Marcar só o que é
+                                # IMPOSSÍVEL na ortografia espanhola (ã, õ, ç) + palavras PT inequívocas.
+                                low = sorted(set(re.findall(r'\b[\wÀ-ÿ]*[ãõç][\wÀ-ÿ]*\b', scr, re.I)))
+                                PT_INEQUIVOCO = ['não', 'nao', 'você', 'voce', 'também', 'tambem',
+                                                 'então', 'entao', 'obrigado', 'trabalho', 'rotina']
+                                low += sorted(set(re.findall(r'\b(?:' + '|'.join(PT_INEQUIVOCO) + r')\b', scr, re.I)))
                             if low:
                                 fails.append(f'DOSAGEM {level}: português na tela IN CLASS fora de data-teacher: {", ".join(low[:6])}')
         else:
