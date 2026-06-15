@@ -176,6 +176,16 @@ def base_swaps(s, cfg, n=None):
     return s
 
 
+def apply_ui_strings(s, cfg):
+    """OPT-IN i18n: troca micro-strings de UI do shell (cravadas em inglês/PT no JS e nas
+    tabs compartilhadas) por traduções vindas do config. Só roda se cfg tiver 'ui_strings' —
+    alunos de inglês não passam essa chave, então o caminho deles fica IDÊNTICO. Substituição
+    exata de substring; aplicar SEMPRE por último (depois dos swaps aluno-específicos)."""
+    for en, tr in cfg.get('ui_strings', {}).items():
+        s = s.replace(en, tr)
+    return s
+
+
 def stamps_html(cfg):
     rows = ['<div class="stamps-row">']
     for st in cfg['stamps']:
@@ -268,9 +278,10 @@ def build_standalone(cfg, content_dir, manifest):
         manifest.append(dict(text=item['text'], voice=item['voice'], file=item['file']))
 
     final_asserts(s, cfg, f'prof aula{n}')
-    write(os.path.join(PROF, f'{cfg["slug"]}-aula{n}.html'), s)
+    write(os.path.join(PROF, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(s, cfg))
 
     # espelho ALUNO (REGRA 34): sem instruções de professor, exit volta ao hub do aluno
+    # (deriva de `s` em INGLÊS — apply_ui_strings só no write, depois dos swaps do aluno)
     a = s.replace('<title>Professor View --', '<title>Aluno --')
     a = a.replace('<span class="prof-badge">Professor View</span>', '<span class="prof-badge">Aluno</span>')
     a = a.replace('>PROFESSOR VIEW<', '>ALUNO<')
@@ -280,7 +291,7 @@ def build_standalone(cfg, content_dir, manifest):
                   f"window.location.href = '/aluno/{cfg['slug']}.html#inclass'")
     a = a.replace(f'{cfg["slug"]}-aula{n}-professor', f'{cfg["slug"]}-aula{n}-aluno')
     final_asserts(a, cfg, f'aluno aula{n}')
-    write(os.path.join(ALUNO, f'{cfg["slug"]}-aula{n}.html'), a)
+    write(os.path.join(ALUNO, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(a, cfg))
     return entries
 
 
@@ -313,7 +324,7 @@ def build_hub_new(cfg, content_dir, manifest):
     s = re.sub(r'var totalLessons = \d+', 'var totalLessons = 1', s)
     s = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, s, count=1, flags=re.S)
     final_asserts(s, cfg, 'hub prof', is_hub=True)
-    write(os.path.join(PROF, f'{cfg["slug"]}.html'), s)
+    write(os.path.join(PROF, f'{cfg["slug"]}.html'), apply_ui_strings(s, cfg))
 
     a = read(os.path.join(ALUNO, f'{MODEL}.html'))
     a = base_swaps(a, cfg)
@@ -325,7 +336,7 @@ def build_hub_new(cfg, content_dir, manifest):
     a = re.sub(r'var totalLessons = \d+', 'var totalLessons = 1', a)
     a = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, a, count=1, flags=re.S)
     final_asserts(a, cfg, 'hub aluno', is_hub=True)
-    write(os.path.join(ALUNO, f'{cfg["slug"]}.html'), a)
+    write(os.path.join(ALUNO, f'{cfg["slug"]}.html'), apply_ui_strings(a, cfg))
 
 
 def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
