@@ -1031,9 +1031,11 @@ function updateKPIs() {
 // V2 courses — students with a second course (external Vercel app)
 var v2Courses = {
     "Percival Gratti Junior": [
-        { label: "Travel English V2", url: "https://percival-travel-english-v2.vercel.app/", slug: "percival-jrV2" }
+        // V2 = 2o cadastro na planilha (SPVT26272). card permite casar a attendance do V2.
+        { label: "Travel English V2", url: "https://percival-travel-english-v2.vercel.app/", slug: "percival-jrV2", card: "SPVT26272" }
     ],
     "Daniela Goncalves Feitoza": [
+        // Daniela tem 1 cadastro na planilha (SPVT26168) — V2 cai no fallback por nome
         { label: "Professional English V2", url: "https://daniela-feitoza-v2.vercel.app/", slug: "daniela-feitozaV2" }
     ]
 };
@@ -1233,10 +1235,13 @@ function renderTable(list) {
         var extras = v2Courses[d.name];
         if (extras) {
             extras.forEach(function(v2) {
+                var v2att = v2.card ? lookupAttendance(v2.label, v2.card) : lookupAttendance(d.name, null);
                 html += '<tr class="v2-row">';
                 html += '<td></td>';
                 html += '<td style="padding-left:2.5rem"><span class="v2-badge">V2</span> <a href="' + v2.url + '" target="_blank" rel="noopener" class="v2-link">' + v2.label + '</a></td>';
-                html += '<td colspan="8" style="font-size:.78rem;color:var(--text-dim)">Projeto externo</td>';
+                html += '<td colspan="6" style="font-size:.78rem;color:var(--text-dim)">Projeto externo</td>';
+                html += '<td class="num">' + (v2att !== null && v2att !== undefined && v2att !== '' ? '<strong>' + v2att + '</strong>' : dash) + '</td>';
+                html += '<td>' + dash + '</td>';
                 html += '</tr>';
             });
         }
