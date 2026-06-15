@@ -190,6 +190,32 @@ def check_handlers_exist(c, fails):
                      f'— exercício/elemento estruturalmente quebrado')
 
 
+def check_speaktext_escaping(c, fails):
+    """speakText('...') com apóstrofo CRU fecha a string JS no meio: o onclick quebra
+    (áudio não toca) E o áudio sai truncado (gerador lê a mesma frase cortada). O furo
+    que deixava passar: extrair a frase com regex que para no apóstrofo = truncado vs
+    truncado. Aqui varremos char a char achando o terminador REAL da string."""
+    broken = []
+    for m in re.finditer(r"speakText\('", c):
+        k = m.end()
+        while k < len(c):
+            ch = c[k]
+            if ch == '\\':
+                k += 2
+                continue
+            if ch == "'":
+                after = c[k + 1:k + 8]
+                if after.startswith((',this)', ', this)', ')', ',')):
+                    pass  # string bem-formada
+                else:
+                    broken.append(c[m.end():k][:45])
+                break
+            k += 1
+    if broken:
+        fails.append(f'{len(broken)} speakText() com APÓSTROFO NÃO-ESCAPADO (fecha a string JS no meio '
+                     f'-> onclick quebra + áudio truncado). Escapar como \\\' . Ex: "{broken[0]}..."')
+
+
 def validate(path):
     fails, warns = [], []
     if not os.path.exists(path):
@@ -267,6 +293,15 @@ def validate(path):
                 fails.append(f'aula {N} NÃO integrada no hub {slug}.html (aula ÓRFÃ — inserir hub_snippets)')
             if f'id="stamp{N}"' not in hc:
                 fails.append(f'falta stamp{N} no hub professor (REGRA 29)')
+            # BARRA DE PROGRESSO: totalLessons do loop tem que cobrir TODAS as aulas do hub.
+            # Se totalLessons < maior ex-lesson, a barra das aulas acima nunca enche (REGRA 18).
+            tl_m = re.search(r'var totalLessons *= *(\d+)', hc)
+            ex_ns = [int(x) for x in re.findall(r'id="ex-lesson-(\d+)"', hc)]
+            max_ex = max(ex_ns) if ex_ns else 0
+            if tl_m and max_ex and int(tl_m.group(1)) < max_ex:
+                fails.append(f'BARRA DE PROGRESSO quebrada no hub {slug}.html: var totalLessons='
+                             f'{tl_m.group(1)} mas há aulas até ex-lesson-{max_ex} — a barra das aulas '
+                             f'> {tl_m.group(1)} nunca enche. Ajustar totalLessons para {max_ex} (REGRA 18)')
             # COMPLEMENTARES da aula no hub (classe de bug do PR #106)
             n_media = len(re.findall(rf'data-media="l{N}-', hc))
             if n_media == 0:
@@ -320,6 +355,7 @@ def validate(path):
     check_dialogue_voices(c, path, root, fails, warns)
     check_fix_regressions(c, css, is_standalone_slides, fails, warns)
     check_handlers_exist(c, fails)
+    check_speaktext_escaping(c, fails)
 
     return fails, warns
 

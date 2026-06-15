@@ -517,8 +517,9 @@ const audioMap = {
 
 A funcao `startRecording` DEVE implementar:
 
-1. **SpeechRecognition** (Web Speech API) com `lang='en-US'`
-2. **MediaRecorder** para playback do audio gravado
+1. **SpeechRecognition** (Web Speech API) com `lang='en-US'` — APENAS para o score word-by-word, que so existe em Chrome/Edge.
+   - NUNCA bloquear a gravacao por falta de SpeechRecognition. Sem SR (Safari/Firefox/celular), `hasSR=false`: a gravacao (MediaRecorder) roda do mesmo jeito, o aluno se ouve no "Your Pronunciation", o audio sobe pro Supabase e o exercicio conta como feito (`.speech-result.show` + `updateProgress()`). So o score automatico e pulado. PROIBIDO o antigo `alert('Please use Google Chrome')` + `return`.
+2. **MediaRecorder** para playback do audio gravado (SEMPRE roda, independente de SpeechRecognition)
    - Iniciar DENTRO de `getUserMedia().then()`
    - `mimeType`: testar `audio/mp4` primeiro (Safari), depois `audio/webm;codecs=opus` (Chrome)
    - `start(100)` para chunks frequentes
@@ -873,6 +874,9 @@ Helen e Danilo trabalham no mesmo repositorio. Para NUNCA sobrescrever o trabalh
 
 **Validacao obrigatoria (gates bloqueantes, antes do PR):**
 - `python3 _build/model/validate_lesson.py public/professor/{slug}-aula{N}.html public/aluno/{slug}-aula{N}.html`
+- `python3 _build/model/check_vocab_progression.py public/professor/{slug}.html` — REGRA 22:
+  nenhuma palavra (vocab card) ensinada como NOVA em 2+ aulas do aluno. Aula de revisao/checkpoint
+  que reusa vocab de proposito = adicionar as palavras na whitelist `_build/model/vocab_allow_repeat.json`
 - Contraste computado headless: 0 textos ilegiveis (check_computed_contrast)
 - VOZES POR PERSONAGEM (bloqueante): toda dialogue-line tem data-voice; 1 voz consistente
   por personagem; personagens distintos no MESMO dialogo = vozes DISTINTAS; dialogo com
@@ -1054,7 +1058,7 @@ var activeRecognition = null;
 
 function startRecording(btn) {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { alert('Please use Google Chrome for voice recognition.'); return; }
+    var hasSR = !!SR; // Chrome/Edge tem SpeechRecognition (score word-by-word). Safari/Firefox/mobile nao — caem no fallback audio-only.
     var card = btn.closest('.speech-card');
     var target = card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g, '');
     var resultDiv = card.querySelector('.speech-result');
@@ -1077,6 +1081,13 @@ function startRecording(btn) {
                 var blob = new Blob(mediaChunks, { type: mediaRec.mimeType });
                 var audioUrl = URL.createObjectURL(blob);
                 injectPronunciationBtn(card, audioUrl);
+                // Fallback audio-only (sem SpeechRecognition): marca o exercicio como feito e mostra "Recording saved"
+                if (!hasSR) {
+                    resultDiv.classList.add('show', 'good'); resultDiv.classList.remove('try-again', 'bad');
+                    resultDiv.innerHTML = '<strong>&#10003; Recording saved</strong> — listen back with "Your Pronunciation".';
+                    if (typeof updateProgress === 'function') updateProgress();
+                    finish();
+                }
                 // Upload to Supabase Storage for persistence
                 var phraseSlug = card.dataset.phrase.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 50);
                 var slug = window.STUDENT_SLUG || 'unknown';
@@ -1095,16 +1106,17 @@ function startRecording(btn) {
         };
         mediaRec.start(100);
 
-        var r = new SR();
-        r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 3; r.continuous = true;
-        activeRecognition = { recognition: r, btn: btn, stopBtn: stopBtn, card: card, mediaRec: mediaRec };
-        r.start();
         var ended = false;
         function finish() {
             if (ended) return; ended = true;
             btn.classList.remove('recording', 'hidden'); stopBtn.classList.remove('visible'); activeRecognition = null;
             setTimeout(function() { if (mediaRec && mediaRec.state === 'recording') mediaRec.stop(); }, 200);
         }
+        if (hasSR) {
+        var r = new SR();
+        r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 3; r.continuous = true;
+        activeRecognition = { recognition: r, btn: btn, stopBtn: stopBtn, card: card, mediaRec: mediaRec };
+        r.start();
         r.onresult = function(event) {
             var best = event.results[event.results.length - 1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g, '');
             var analysis = analyzeWords(target, best);
@@ -1124,6 +1136,10 @@ function startRecording(btn) {
         r.onerror = function() { finish(); resultDiv.classList.add('show', 'try-again'); resultDiv.innerHTML = 'Could not hear you. Check your microphone.'; };
         r.onend = function() { finish(); };
         setTimeout(function() { if (!ended) { try { r.stop(); } catch(e) {} finish(); } }, 30000);
+        } else {
+        activeRecognition = { recognition: null, btn: btn, stopBtn: stopBtn, card: card, mediaRec: mediaRec };
+        setTimeout(function() { if (!ended) finish(); }, 30000);
+        }
     }).catch(function() { btn.classList.remove('recording', 'hidden'); stopBtn.classList.remove('visible'); alert('Could not access microphone.'); });
 }
 
@@ -1387,7 +1403,7 @@ function loadState() {
                 var rd = sc.querySelector('.speech-result');
                 if (rd) {
                     rd.classList.add('show', cls);
-                    var html = '<strong>' + scoreTxt + '</strong> — ' + (cls === 'good' ? 'Excellent!' : cls === 'try-again' ? 'Almost there!' : 'Keep practicing!');
+                    var html = '<strong>' + scoreTxt + '</strong>' + (words.length > 0 ? (' — ' + (cls === 'good' ? 'Excellent!' : cls === 'try-again' ? 'Almost there!' : 'Keep practicing!')) : '');
                     if (words.length > 0) {
                         html += '<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';
                         words.forEach(function(w) { html += '<span class="word-box word-' + (w.s === 'c' ? 'correct' : 'missing') + '">' + w.w + '</span>'; });
