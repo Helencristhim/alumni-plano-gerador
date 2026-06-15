@@ -190,6 +190,32 @@ def check_handlers_exist(c, fails):
                      f'— exercício/elemento estruturalmente quebrado')
 
 
+def check_speaktext_escaping(c, fails):
+    """speakText('...') com apóstrofo CRU fecha a string JS no meio: o onclick quebra
+    (áudio não toca) E o áudio sai truncado (gerador lê a mesma frase cortada). O furo
+    que deixava passar: extrair a frase com regex que para no apóstrofo = truncado vs
+    truncado. Aqui varremos char a char achando o terminador REAL da string."""
+    broken = []
+    for m in re.finditer(r"speakText\('", c):
+        k = m.end()
+        while k < len(c):
+            ch = c[k]
+            if ch == '\\':
+                k += 2
+                continue
+            if ch == "'":
+                after = c[k + 1:k + 8]
+                if after.startswith((',this)', ', this)', ')', ',')):
+                    pass  # string bem-formada
+                else:
+                    broken.append(c[m.end():k][:45])
+                break
+            k += 1
+    if broken:
+        fails.append(f'{len(broken)} speakText() com APÓSTROFO NÃO-ESCAPADO (fecha a string JS no meio '
+                     f'-> onclick quebra + áudio truncado). Escapar como \\\' . Ex: "{broken[0]}..."')
+
+
 def validate(path):
     fails, warns = [], []
     if not os.path.exists(path):
@@ -329,6 +355,7 @@ def validate(path):
     check_dialogue_voices(c, path, root, fails, warns)
     check_fix_regressions(c, css, is_standalone_slides, fails, warns)
     check_handlers_exist(c, fails)
+    check_speaktext_escaping(c, fails)
 
     return fails, warns
 
