@@ -1,0 +1,30 @@
+name: Safepoint noturno (tag de restauração)
+
+# Todo dia de manhã marca o main com uma tag safe-AAAA-MM-DD. Não impede ninguém
+# de quebrar nada — é a REDE: se algo der muito errado, restaura-se a noite
+# inteira com 1 comando (git reset --hard safe-AAAA-MM-DD). Roda também sob
+# demanda (workflow_dispatch) pra cravar um ponto seguro antes de algo arriscado.
+
+on:
+  schedule:
+    - cron: '0 9 * * *'   # 09:00 UTC ≈ 06:00 BRT (depois do trabalho da madrugada)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cria/atualiza a tag do dia
+        run: |
+          TAG="safe-$(date -u +%F)"
+          git tag -f "$TAG"
+          git push -f origin "$TAG"
+          echo "✅ Ponto seguro: $TAG @ $(git rev-parse --short HEAD)"
+          echo "Restaurar com: git fetch --tags && git reset --hard $TAG"
