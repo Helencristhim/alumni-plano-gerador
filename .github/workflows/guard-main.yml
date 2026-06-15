@@ -79,6 +79,15 @@ Restaurado para o estado anterior ao push ${{ github.event.after }}.
 Arquivos: ${{ steps.scan.outputs.regressed }}" || { echo "nada pra commitar"; exit 0; }
           git push origin HEAD:main
 
+      - name: Avança o ponto seguro rolante (push limpo, sem regressão)
+        if: steps.scan.outputs.regressed == ''
+        run: |
+          # last-good = SEMPRE o último estado bom do main. Restaurar tudo que
+          # você já fez, a qualquer momento: git fetch --tags && git reset --hard last-good
+          git tag -f last-good
+          git push -f origin last-good
+          echo "✅ ponto seguro rolante last-good -> $(git rev-parse --short HEAD)"
+
       - name: Abre issue avisando
         if: steps.scan.outputs.regressed != ''
         env:
