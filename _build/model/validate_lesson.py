@@ -267,6 +267,15 @@ def validate(path):
                 fails.append(f'aula {N} NÃO integrada no hub {slug}.html (aula ÓRFÃ — inserir hub_snippets)')
             if f'id="stamp{N}"' not in hc:
                 fails.append(f'falta stamp{N} no hub professor (REGRA 29)')
+            # BARRA DE PROGRESSO: totalLessons do loop tem que cobrir TODAS as aulas do hub.
+            # Se totalLessons < maior ex-lesson, a barra das aulas acima nunca enche (REGRA 18).
+            tl_m = re.search(r'var totalLessons *= *(\d+)', hc)
+            ex_ns = [int(x) for x in re.findall(r'id="ex-lesson-(\d+)"', hc)]
+            max_ex = max(ex_ns) if ex_ns else 0
+            if tl_m and max_ex and int(tl_m.group(1)) < max_ex:
+                fails.append(f'BARRA DE PROGRESSO quebrada no hub {slug}.html: var totalLessons='
+                             f'{tl_m.group(1)} mas há aulas até ex-lesson-{max_ex} — a barra das aulas '
+                             f'> {tl_m.group(1)} nunca enche. Ajustar totalLessons para {max_ex} (REGRA 18)')
             # COMPLEMENTARES da aula no hub (classe de bug do PR #106)
             n_media = len(re.findall(rf'data-media="l{N}-', hc))
             if n_media == 0:
