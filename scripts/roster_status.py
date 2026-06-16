@@ -181,10 +181,23 @@ def classify(slug):
     return "DAN"
 
 
+def hub_inline_count(slug):
+    """Conta aulas inline no hub (alunos sem standalone, ex.: espanhol juliana)."""
+    html_txt = sh(["git", "show", f"origin/main:public/professor/{slug}.html"])
+    nums = [int(x) for x in re.findall(r'id="(?:ex-lesson|stamp)-?(\d+)"', html_txt)]
+    return max(nums) if nums else 0
+
+
 def build_rows(with_meta=False):
     files = git_files()
     mx = count_lessons(files)
     snums = standalone_nums(files)
+    # inclui alunos de espanhol mesmo sem standalone (contagem vem do hub inline)
+    for slug in SPANISH:
+        if slug not in mx:
+            n = hub_inline_count(slug)
+            if n:
+                mx[slug] = n
     pins = load_pins() if with_meta else []
     rows = []
     for slug, n in mx.items():
