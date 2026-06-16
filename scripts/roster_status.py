@@ -102,6 +102,55 @@ def normname(s):
     return re.sub(r"\s+", " ", s).strip()
 
 
+# Aliases slug -> Student Card (casos de grafia/apelido que o matching por nome erra)
+CARD_ALIAS = {
+    "gleice-leonardo-rocha-de-souza": "SPVT26124",  # pin grafa "Sousa"
+    "natalie-viegas": "SPVT26144",                  # pin grafa "Nathalie"
+    "percival-jr": "SPVT26162",                     # pin "Percival Gratti Junior"
+    "tuca-dias": "SPVT26136",                       # pin "Lucia Maria da Silva Dias" (apelido)
+}
+
+
+def card_digits(card):
+    d = re.sub(r"\D", "", card or "")
+    return d or ""
+
+
+def load_pins():
+    """studentPins (nome -> Student Card) da página oficial controle-aulas.html."""
+    html_txt = sh(["git", "show", "origin/main:public/controle-aulas.html"])
+    m = re.search(r"var studentPins\s*=\s*(\[.*?\]);", html_txt, re.S)
+    if not m:
+        return []
+    pins = []
+    for o in re.findall(r"\{[^}]*\}", m.group(1)):
+        nm = re.search(r'name:\s*"([^"]*)"', o)
+        cd = re.search(r'studentCard:\s*"([^"]*)"', o)
+        hm = re.search(r"hasMaterial:\s*(true|false)", o)
+        if nm and cd:
+            pins.append((nm.group(1), cd.group(1), (hm.group(1) == "true") if hm else False))
+    return pins
+
+
+def match_card(slug, name, pins):
+    if slug in CARD_ALIAS:
+        return card_digits(CARD_ALIAS[slug])
+    toks = set(normname(name).split())
+    if not toks:
+        return ""
+    for only_mat in (True, False):
+        best = None
+        for pnm, pcard, mat in pins:
+            if only_mat and not mat:
+                continue
+            ptoks = set(normname(pnm).split())
+            if toks.issubset(ptoks) and (best is None or len(ptoks) < best[0]):
+                best = (len(ptoks), pcard)
+        if best:
+            return card_digits(best[1])
+    return ""
+
+
 def classify(slug):
     if slug in TRASH:  return "lixo"
     if slug in HOLD:   return "hold (Helen)"
@@ -114,18 +163,22 @@ def classify(slug):
 
 def build_rows(with_meta=False):
     mx = count_lessons(git_files())
+    pins = load_pins() if with_meta else []
     rows = []
     for slug, n in mx.items():
         owner = classify(slug)
         if owner == "lixo":
             continue
-        alvo = 5 if owner.startswith("patricia") else TARGET
+        alvo = TARGET
         name = idade = nivel = ""
+        card = ""
         if with_meta:
             name, idade, nivel = profile_meta(slug)
+            card = match_card(slug, name or slug, pins)
         rows.append({"slug": slug, "n": n, "alvo": alvo,
                      "faltam": max(0, alvo - n), "owner": owner,
-                     "name": name or slug, "idade": idade, "nivel": nivel})
+                     "name": name or slug, "idade": idade, "nivel": nivel,
+                     "card": card})
     order = {"DAN": 0, "espanhol (à parte)": 1, "hold (Helen)": 2, "HELEN": 3,
              "patricia (fecha em 5)": 4, "modelo": 5}
     rows.sort(key=lambda r: (order.get(r["owner"], 9), r["n"], r["slug"]))
@@ -145,7 +198,11 @@ PAGE_TMPL = """<!DOCTYPE html>
   h2 {{ font-size:15px; margin:24px 0 8px; color:#1B4965; border-bottom:2px solid #e3e6ea; padding-bottom:4px; }}
   table {{ width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.08); margin-bottom:10px; }}
   th,td {{ text-align:left; padding:8px 12px; font-size:14px; border-bottom:1px solid #eef0f2; }}
-  th {{ background:#1B4965; color:#fff; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.03em; }}
+  th {{ background:#1B4965; color:#fff; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.03em; cursor:pointer; user-select:none; white-space:nowrap; }}
+  th:hover {{ background:#16384f; }}
+  th .arrow {{ opacity:.5; font-size:9px; }}
+  .search {{ width:100%; max-width:340px; padding:8px 12px; font-size:14px; border:1px solid #cdd5dd; border-radius:8px; margin-bottom:16px; }}
+  tr.hide {{ display:none; }}
   td.num {{ text-align:center; font-variant-numeric:tabular-nums; }}
   .bartrack {{ display:inline-block; width:80px; height:8px; border-radius:4px; background:#e3e6ea; vertical-align:middle; margin-right:6px; }}
   .bar {{ display:inline-block; height:8px; border-radius:4px; background:#16a34a; vertical-align:middle; }}
@@ -161,6 +218,7 @@ PAGE_TMPL = """<!DOCTYPE html>
 <strong>Alvo</strong> = meta de aulas · nível/idade = perfil do hub ·
 <strong>Aulas feitas</strong> = planilha "Aulas utilizadas" ao vivo via <code>/api/attendance</code> ·
 <strong>uso interno, não divulgar pros alunos</strong>.</div>
+<input class="search" id="q" placeholder="🔎 Buscar aluno…" oninput="filterRoster()">
 {sections}
 <div class="legend">
 <strong>Atualizar criadas/nível/idade:</strong> <code>python3 scripts/roster_status.py --page public/painel-roster-interno.html</code> e comitar.
@@ -168,24 +226,45 @@ As "Aulas feitas" atualizam sozinhas (leem a planilha a cada carregamento).<br>
 Onde nível/idade aparece em branco, o hub do aluno não expõe o campo num formato que o parser reconhece.
 </div>
 <script>
+// Attendance por Student Card (igual à página oficial controle-aulas.html)
 fetch('/api/attendance').then(function(r){{return r.json();}}).then(function(d){{
-  if(!d || !d.ok || !d.byName) return;
-  // casamento por tokens: todos os tokens do nome do aluno contidos no nome da planilha
-  var sheet = Object.keys(d.byName).map(function(k){{
-    return {{ toks: k.split(' ').filter(Boolean), used: d.byName[k] }};
-  }});
-  document.querySelectorAll('td[data-name]').forEach(function(td){{
-    var toks = td.getAttribute('data-name').split(' ').filter(Boolean);
-    if(!toks.length){{ td.textContent='—'; return; }}
-    var best=null;
-    sheet.forEach(function(e){{
-      var ok = toks.every(function(t){{ return e.toks.indexOf(t) !== -1; }});
-      if(ok && (best===null || e.toks.length < best.toks.length)) best=e;
-    }});
-    var v = best ? best.used : undefined;
-    td.textContent = (v===undefined||v==='') ? '—' : v;
+  if(!d||!d.ok||!d.byCard) return;
+  document.querySelectorAll('td[data-card]').forEach(function(td){{
+    var c=td.getAttribute('data-card');
+    var v=c?d.byCard[c]:undefined;
+    var has=!(v===undefined||v==='');
+    td.textContent=has?v:'—';
+    td.setAttribute('data-sort', has?parseInt(v,10):-1);
   }});
 }}).catch(function(){{}});
+
+// Busca (filtra linhas por texto)
+function filterRoster(){{
+  var q=(document.getElementById('q').value||'').toLowerCase();
+  document.querySelectorAll('table.roster tbody tr').forEach(function(tr){{
+    tr.classList.toggle('hide', !!q && tr.textContent.toLowerCase().indexOf(q)===-1);
+  }});
+}}
+
+// Ordenação ao clicar no cabeçalho
+function cellVal(tr,idx){{ var td=tr.children[idx]; return td.hasAttribute('data-sort')?td.getAttribute('data-sort'):td.textContent.trim(); }}
+document.querySelectorAll('table.roster').forEach(function(tbl){{
+  var ths=tbl.querySelectorAll('thead th');
+  ths.forEach(function(th,idx){{
+    th.addEventListener('click', function(){{
+      var asc=th.getAttribute('data-dir')!=='asc';
+      ths.forEach(function(h){{h.removeAttribute('data-dir');var a=h.querySelector('.arrow');if(a)a.remove();}});
+      th.setAttribute('data-dir', asc?'asc':'desc');
+      th.insertAdjacentHTML('beforeend',' <span class="arrow">'+(asc?'▲':'▼')+'</span>');
+      var tb=tbl.querySelector('tbody');
+      [].slice.call(tb.querySelectorAll('tr')).sort(function(a,b){{
+        var x=cellVal(a,idx), y=cellVal(b,idx), nx=parseFloat(x), ny=parseFloat(y);
+        var r=(!isNaN(nx)&&!isNaN(ny))?(nx-ny):String(x).localeCompare(String(y),'pt');
+        return asc?r:-r;
+      }}).forEach(function(r){{tb.appendChild(r);}});
+    }});
+  }});
+}});
 </script>
 </div></body></html>
 """
@@ -199,13 +278,15 @@ def render_section(title, rows, mark_next=False):
                f'</span></span>{r["n"]}')
         lvl = f'<span class="lvl">{r["nivel"]}</span>' if r["nivel"] else "—"
         body.append(
-            f"<tr><td>{r['name']}</td><td>{lvl}</td>"
-            f"<td class='num'>{r['idade'] or '—'}</td>"
-            f"<td class='num'>{bar}</td><td class='num'>{r['alvo']}</td>"
-            f"<td class='num att' data-name='{normname(r['name'])}'>…</td></tr>")
-    return (f"<h2>{title}</h2><table><tr><th>Aluno</th><th>Nível</th><th>Idade</th>"
-            f"<th>Criadas</th><th>Alvo</th><th>Aulas feitas</th></tr>"
-            f"{''.join(body)}</table>")
+            f"<tr><td>{r['name']}</td><td data-sort='{r['nivel']}'>{lvl}</td>"
+            f"<td class='num' data-sort='{r['idade'] or 0}'>{r['idade'] or '—'}</td>"
+            f"<td class='num' data-sort='{r['n']}'>{bar}</td>"
+            f"<td class='num'>{r['alvo']}</td>"
+            f"<td class='num att' data-card='{r['card']}' data-sort='-1'>…</td></tr>")
+    return (f"<h2>{title}</h2><table class='roster'><thead><tr>"
+            f"<th>Aluno</th><th>Nível</th><th>Idade</th>"
+            f"<th>Criadas</th><th>Alvo</th><th>Aulas feitas</th></tr></thead>"
+            f"<tbody>{''.join(body)}</tbody></table>")
 
 
 def write_page(path, rows, head):
