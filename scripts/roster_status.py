@@ -12,6 +12,7 @@ Uso (de dentro de alumni-plano-gerador/, após git fetch origin):
     python3 ../roster_status.py                 # tabela markdown
     python3 ../roster_status.py --page out.html # página HTML (com attendance ao vivo)
 """
+import html
 import re
 import subprocess
 import sys
@@ -29,7 +30,7 @@ TRASH = {
 }
 MODEL = {"helen-mendes"}
 SPANISH = {"daniel-bastos", "juliana-marques"}   # espanhol — caso à parte
-SPECIAL_5 = {"patricia-ruffo"}                    # programa fecha em 5 aulas
+SPECIAL_5 = set()   # 16/06: Patricia NÃO fecha em 5 — gera normal (alvo 20)
 
 
 def sh(args):
@@ -55,11 +56,7 @@ def count_lessons(files):
 
 
 def _clean(s):
-    s = re.sub(r"&ccedil;", "ç", s); s = re.sub(r"&atilde;", "ã", s)
-    s = re.sub(r"&eacute;", "é", s); s = re.sub(r"&iacute;", "í", s)
-    s = re.sub(r"&aacute;", "á", s); s = re.sub(r"&ecirc;", "ê", s)
-    s = re.sub(r"&[a-z]+;", "", s)
-    return s.strip()
+    return html.unescape(s).strip()
 
 
 def profile_meta(slug):
@@ -173,9 +170,19 @@ Onde nível/idade aparece em branco, o hub do aluno não expõe o campo num form
 <script>
 fetch('/api/attendance').then(function(r){{return r.json();}}).then(function(d){{
   if(!d || !d.ok || !d.byName) return;
+  // casamento por tokens: todos os tokens do nome do aluno contidos no nome da planilha
+  var sheet = Object.keys(d.byName).map(function(k){{
+    return {{ toks: k.split(' ').filter(Boolean), used: d.byName[k] }};
+  }});
   document.querySelectorAll('td[data-name]').forEach(function(td){{
-    var k = td.getAttribute('data-name');
-    var v = d.byName[k];
+    var toks = td.getAttribute('data-name').split(' ').filter(Boolean);
+    if(!toks.length){{ td.textContent='—'; return; }}
+    var best=null;
+    sheet.forEach(function(e){{
+      var ok = toks.every(function(t){{ return e.toks.indexOf(t) !== -1; }});
+      if(ok && (best===null || e.toks.length < best.toks.length)) best=e;
+    }});
+    var v = best ? best.used : undefined;
     td.textContent = (v===undefined||v==='') ? '—' : v;
   }});
 }}).catch(function(){{}});
