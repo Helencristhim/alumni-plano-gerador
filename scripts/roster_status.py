@@ -22,11 +22,10 @@ from collections import defaultdict
 TARGET = 20  # política 12/06/2026: todo aluno com material -> 20 aulas
 
 # Alunos da fila da Helen (não mexer sem OK do Dan)
-HELEN = {
-    "marlene-landucci", "daniela-feitoza", "roberto-pires",
-    "carlos-vinicius-vale-bassan", "percival-jr", "roberto-rezende",
-    "luiz-bressane", "natalie-viegas", "maria-claudia-curimbaba",
-}
+# 16/06/2026: Dan assumiu TODO o roster — não existe mais "fila da Helen".
+# Os antigos alunos da Helen + os "hold" agora são DAN (gerar normalmente).
+HELEN = set()
+HOLD = set()
 # Não são alunos reais / lixo / fora
 TRASH = {
     "elaine-test", "elaine-v-a", "elaine-v-b", "daniela-feitozaV2",
@@ -34,9 +33,9 @@ TRASH = {
     "maisa", "helen-mendes-teste", "zilaudio",
 }
 MODEL = {"helen-mendes"}            # aluna modelo (shell oficial)
-SPANISH = {"daniel-bastos", "juliana-marques"}  # espanhol — caso à parte
+# Espanhol — caso à parte (vozes nativas, pipeline de inglês não serve direto).
+SPANISH = {"daniel-bastos", "juliana-marques"}
 SPECIAL_5 = {"patricia-ruffo"}      # programa fecha em 5 aulas
-HOLD = {"fabiana-michelly-silva", "vanessa-maluf"}  # Helen mexendo — não gerar (memória)
 
 
 def git_files():
