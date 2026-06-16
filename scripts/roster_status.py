@@ -160,14 +160,14 @@ PAGE_TMPL = """<!DOCTYPE html>
   code {{ background:#eef0f2; padding:1px 5px; border-radius:4px; }}
 </style></head><body><div class="wrap">
 <h1>Painel interno — material &amp; frequência por aluno</h1>
-<div class="sub">Material criado = git <code>origin/main @ {head}</code> · nível/idade = perfil do hub ·
-<strong>Attendance</strong> (aulas feitas) = planilha "Aulas utilizadas" ao vivo via <code>/api/attendance</code> ·
-alvo padrão = 20 · <strong>uso interno, não divulgar pros alunos</strong>.</div>
+<div class="sub"><strong>Criadas</strong> = aulas com material pronto (git <code>origin/main @ {head}</code>) ·
+<strong>Alvo</strong> = meta de aulas · nível/idade = perfil do hub ·
+<strong>Aulas feitas</strong> = planilha "Aulas utilizadas" ao vivo via <code>/api/attendance</code> ·
+<strong>uso interno, não divulgar pros alunos</strong>.</div>
 {sections}
 <div class="legend">
-<strong>Atualizar material/nível/idade:</strong> <code>python3 scripts/roster_status.py --page public/painel-roster-interno.html</code> e comitar.
-O attendance atualiza sozinho (lê a planilha a cada carregamento).<br>
-DAN = eu gero · espanhol = caso à parte (daniel-bastos, juliana-marques) · modelo = helen-mendes.
+<strong>Atualizar criadas/nível/idade:</strong> <code>python3 scripts/roster_status.py --page public/painel-roster-interno.html</code> e comitar.
+As "Aulas feitas" atualizam sozinhas (leem a planilha a cada carregamento).<br>
 Onde nível/idade aparece em branco, o hub do aluno não expõe o campo num formato que o parser reconhece.
 </div>
 <script>
@@ -186,27 +186,26 @@ fetch('/api/attendance').then(function(r){{return r.json();}}).then(function(d){
 
 def render_section(title, rows, mark_next=False):
     body = []
-    for i, r in enumerate(rows):
+    for r in rows:
         pct = int(100 * min(r["n"], r["alvo"]) / r["alvo"])
-        cls = ' class="next"' if (mark_next and i == 0) else ""
         bar = (f'<span class="bartrack"><span class="bar" style="width:{int(80*pct/100)}px">'
-               f'</span></span>{r["n"]}/{r["alvo"]}')
+               f'</span></span>{r["n"]}')
         lvl = f'<span class="lvl">{r["nivel"]}</span>' if r["nivel"] else "—"
         body.append(
-            f"<tr{cls}><td>{r['name']}</td><td>{lvl}</td>"
-            f"<td class='num'>{r['idade'] or '—'}</td><td class='num'>{bar}</td>"
-            f"<td class='num'>{r['faltam']}</td>"
+            f"<tr><td>{r['name']}</td><td>{lvl}</td>"
+            f"<td class='num'>{r['idade'] or '—'}</td>"
+            f"<td class='num'>{bar}</td><td class='num'>{r['alvo']}</td>"
             f"<td class='num att' data-name='{normname(r['name'])}'>…</td></tr>")
     return (f"<h2>{title}</h2><table><tr><th>Aluno</th><th>Nível</th><th>Idade</th>"
-            f"<th>Material criado</th><th>Faltam</th><th>Aulas feitas</th></tr>"
+            f"<th>Criadas</th><th>Alvo</th><th>Aulas feitas</th></tr>"
             f"{''.join(body)}</table>")
 
 
 def write_page(path, rows, head):
     groups = [
-        ("👤 DAN — gerar (menor contagem primeiro)", [r for r in rows if r["owner"] == "DAN"], True),
-        ("🇪🇸 Espanhol — caso à parte", [r for r in rows if r["owner"].startswith("espanhol")], False),
-        ("📕 Patricia — fecha em 5", [r for r in rows if r["owner"].startswith("patricia")], False),
+        ("Alunos", [r for r in rows if r["owner"] == "DAN"], False),
+        ("Espanhol", [r for r in rows if r["owner"].startswith("espanhol")], False),
+        ("Programa de 5 aulas", [r for r in rows if r["owner"].startswith("patricia")], False),
     ]
     secs = [render_section(t, rs, nx) for t, rs, nx in groups if rs]
     with open(path, "w") as f:
