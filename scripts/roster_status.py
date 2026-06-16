@@ -55,6 +55,26 @@ def count_lessons(files):
     return mx
 
 
+def standalone_nums(files):
+    """{slug: [nº de aula com arquivo standalone]} — as standalone são as 'do jeito novo';
+    as que faltam abaixo do mínimo são inline/legado (a revisar)."""
+    pat = re.compile(r"^public/professor/([a-z0-9-]+)-aula(\d+)\.html$")
+    out = defaultdict(set)
+    for f in files:
+        m = pat.match(f)
+        if m:
+            out[m.group(1)].add(int(m.group(2)))
+    return out
+
+
+# Especificação MANUAL (Dan) de a partir de qual aula o material é "do jeito novo"
+# (livre de erros). Aulas abaixo disso = jeito antigo, precisam ser repassadas.
+# Quando um slug não está aqui, usa-se um palpite automático (menor aula standalone).
+CLEAN_FROM = {
+    # "slug": N,   # ex.: "milton-sayegh": 7,
+}
+
+
 def _clean(s):
     return html.unescape(s).strip()
 
@@ -162,7 +182,9 @@ def classify(slug):
 
 
 def build_rows(with_meta=False):
-    mx = count_lessons(git_files())
+    files = git_files()
+    mx = count_lessons(files)
+    snums = standalone_nums(files)
     pins = load_pins() if with_meta else []
     rows = []
     for slug, n in mx.items():
@@ -170,6 +192,10 @@ def build_rows(with_meta=False):
         if owner == "lixo":
             continue
         alvo = TARGET
+        auto = min(snums[slug]) if snums.get(slug) else 1
+        clean_from = CLEAN_FROM.get(slug, auto)
+        estimated = slug not in CLEAN_FROM
+        revisar = f"1–{clean_from - 1}" if clean_from > 1 else "—"
         name = idade = nivel = ""
         card = ""
         if with_meta:
@@ -178,7 +204,8 @@ def build_rows(with_meta=False):
         rows.append({"slug": slug, "n": n, "alvo": alvo,
                      "faltam": max(0, alvo - n), "owner": owner,
                      "name": name or slug, "idade": idade, "nivel": nivel,
-                     "card": card})
+                     "card": card, "clean_from": clean_from,
+                     "revisar": revisar, "rev_est": estimated})
     order = {"DAN": 0, "espanhol (à parte)": 1, "hold (Helen)": 2, "HELEN": 3,
              "patricia (fecha em 5)": 4, "modelo": 5}
     rows.sort(key=lambda r: (order.get(r["owner"], 9), r["n"], r["slug"]))
@@ -203,6 +230,7 @@ PAGE_TMPL = """<!DOCTYPE html>
   th .arrow {{ opacity:.5; font-size:9px; }}
   .search {{ width:100%; max-width:340px; padding:8px 12px; font-size:14px; border:1px solid #cdd5dd; border-radius:8px; margin-bottom:16px; }}
   tr.hide {{ display:none; }}
+  .est {{ color:#b08400; font-weight:700; margin-left:2px; cursor:help; }}
   td.num {{ text-align:center; font-variant-numeric:tabular-nums; }}
   .bartrack {{ display:inline-block; width:80px; height:8px; border-radius:4px; background:#e3e6ea; vertical-align:middle; margin-right:6px; }}
   .bar {{ display:inline-block; height:8px; border-radius:4px; background:#16a34a; vertical-align:middle; }}
@@ -277,15 +305,18 @@ def render_section(title, rows, mark_next=False):
         bar = (f'<span class="bartrack"><span class="bar" style="width:{int(80*pct/100)}px">'
                f'</span></span>{r["n"]}')
         lvl = f'<span class="lvl">{r["nivel"]}</span>' if r["nivel"] else "—"
+        est = "<span class='est' title='palpite automático — pode especificar'>~</span>" if (r["revisar"] != "—" and r["rev_est"]) else ""
         body.append(
             f"<tr><td>{r['name']}</td><td data-sort='{r['nivel']}'>{lvl}</td>"
             f"<td class='num' data-sort='{r['idade'] or 0}'>{r['idade'] or '—'}</td>"
             f"<td class='num' data-sort='{r['n']}'>{bar}</td>"
             f"<td class='num'>{r['alvo']}</td>"
-            f"<td class='num att' data-card='{r['card']}' data-sort='-1'>…</td></tr>")
+            f"<td class='num att' data-card='{r['card']}' data-sort='-1'>…</td>"
+            f"<td class='num' data-sort='{r['clean_from'] - 1}'>{r['revisar']}{est}</td></tr>")
     return (f"<h2>{title}</h2><table class='roster'><thead><tr>"
             f"<th>Aluno</th><th>Nível</th><th>Idade</th>"
-            f"<th>Criadas</th><th>Alvo</th><th>Aulas feitas</th></tr></thead>"
+            f"<th>Criadas</th><th>Alvo</th><th>Aulas feitas</th>"
+            f"<th>Antigas a revisar</th></tr></thead>"
             f"<tbody>{''.join(body)}</tbody></table>")
 
 
