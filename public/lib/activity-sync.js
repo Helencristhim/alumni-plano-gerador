@@ -139,6 +139,50 @@
     return [];
   }
 
+  // ===== PLAYBACK COM FIX DE DURACAO =====
+  // Gravacoes do MediaRecorder (webm no Chrome, mp4 no Safari) frequentemente saem SEM
+  // metadata de duracao (o header diz duracao ~0). No dispositivo que gravou, o browser
+  // tem o audio decodificado em memoria e toca inteiro. Em OUTRO computador, ao carregar
+  // o arquivo do Storage, o player le duracao ~0 e CORTA logo no inicio.
+  // Solucao: ao detectar duracao invalida (0/NaN/Infinity), seek pro fim forca o browser
+  // a varrer o arquivo e descobrir a duracao real; depois volta pro inicio e toca inteiro.
+  function playRecordingFixed(url, onStart, onEnd) {
+    var audio = new Audio();
+    audio.preload = 'auto';
+    var started = false, primed = false;
+
+    function badDuration() {
+      var d = audio.duration;
+      return !isFinite(d) || isNaN(d) || d === 0;
+    }
+    function startPlay() {
+      if (started) return; started = true;
+      try { audio.currentTime = 0; } catch (e) {}
+      audio.play();
+      if (onStart) onStart(audio);
+    }
+    audio.addEventListener('loadedmetadata', function() {
+      if (!badDuration()) { startPlay(); return; }
+      // forcar descoberta da duracao real
+      var onTU = function() {
+        if (primed) return;
+        if (isFinite(audio.duration) && audio.duration > 0) {
+          primed = true;
+          audio.removeEventListener('timeupdate', onTU);
+          startPlay();
+        }
+      };
+      audio.addEventListener('timeupdate', onTU);
+      try { audio.currentTime = 1e101; } catch (e) { startPlay(); }
+    });
+    audio.addEventListener('ended', function() { if (onEnd) onEnd(); });
+    audio.addEventListener('error', function() { if (onEnd) onEnd(); });
+    // rede de seguranca: se a metadata nunca carregar, toca mesmo assim
+    setTimeout(function() { if (!started) startPlay(); }, 2000);
+    audio.src = url;
+    return audio;
+  }
+
   // ===== COLLECT STATE (replica a logica do saveState original) =====
   function collectState() {
     var s = { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [], ordering: [], vocabListened: [], thinkRecorded: [] };
@@ -610,31 +654,55 @@
         e.preventDefault();
         // Parar qualquer audio anterior
         document.querySelectorAll('.my-rec-audio-active').forEach(function(a) {
-          a.pause(); a.currentTime = 0; a.remove();
+          a.pause(); try { a.currentTime = 0; } catch (er) {} a.remove();
         });
-
-        var audio = new Audio(audioUrl);
-        audio.className = 'my-rec-audio-active';
-        audio.style.display = 'none';
-        document.body.appendChild(audio);
 
         btn.innerHTML = headphoneIcon + ' Playing...';
         btn.style.background = '#15803d';
-        audio.play();
-        audio.onended = function() {
-          btn.innerHTML = headphoneIcon + ' My Recording';
-          btn.style.background = '';
-          audio.remove();
-        };
-        audio.onerror = function() {
-          btn.innerHTML = headphoneIcon + ' My Recording';
-          btn.style.background = '';
-          audio.remove();
-        };
+        function restore() { btn.innerHTML = headphoneIcon + ' My Recording'; btn.style.background = ''; }
+        var audio = playRecordingFixed(audioUrl, function(a) {
+          a.className = 'my-rec-audio-active';
+          a.style.display = 'none';
+          document.body.appendChild(a);
+        }, function() { restore(); if (audio) audio.remove(); });
       };
 
       controls.appendChild(btn);
     });
+  }
+
+  // ===== OVERRIDE do botao "Your Pronunciation" (inline no HTML do aluno) =====
+  // Substitui a versao inline por uma que toca com o fix de duracao, corrigindo o
+  // "audio cortado em outro computador" para TODOS os alunos sem editar o material.
+  function installPronunciationFix() {
+    window.injectPronunciationBtn = function(card, audioUrl) {
+      var old = card.querySelector('.btn-your-pronunciation');
+      if (old) old.remove();
+      var playBtn = document.createElement('button');
+      playBtn.className = 'btn btn-your-pronunciation';
+      playBtn.innerHTML = '&#9654; Your Pronunciation';
+      var current = null;
+      playBtn.onclick = function(e) {
+        e.preventDefault();
+        if (playBtn.dataset.playing === 'true') {
+          if (current) { current.pause(); current.remove(); current = null; }
+          playBtn.innerHTML = '&#9654; Your Pronunciation';
+          playBtn.dataset.playing = 'false';
+          return;
+        }
+        playBtn.innerHTML = '&#9632; Playing...';
+        playBtn.dataset.playing = 'true';
+        current = playRecordingFixed(audioUrl, function(a) {
+          a.className = 'your-pron-audio'; a.style.display = 'none'; card.appendChild(a);
+        }, function() {
+          playBtn.innerHTML = '&#9654; Your Pronunciation';
+          playBtn.dataset.playing = 'false';
+          if (current) { current.remove(); current = null; }
+        });
+      };
+      var controls = card.querySelector('.speech-controls');
+      if (controls) controls.appendChild(playBtn);
+    };
   }
 
   // Carregar gravacoes salvas do Supabase e injetar botoes
@@ -921,10 +989,25 @@
     document.body.appendChild(script);
   }
 
+  // Re-injeta os botoes "Your Pronunciation" ja na tela com a versao corrigida
+  // (a versao inline antiga foi usada no loadState do material, antes desta lib carregar)
+  function refreshPronunciationButtons() {
+    document.querySelectorAll('.speech-card[data-phrase]').forEach(function(card) {
+      var url = card.dataset.recordingUrl;
+      if (url && typeof window.injectPronunciationBtn === 'function') {
+        window.injectPronunciationBtn(card, url);
+      }
+    });
+  }
+
   // ===== INIT =====
   function init() {
     // Interceptar MediaRecorder ANTES de qualquer gravacao
     if (viewType === 'aluno') interceptRecordings();
+
+    // Substituir o player do botao "Your Pronunciation" pela versao com fix de duracao
+    installPronunciationFix();
+    setTimeout(refreshPronunciationButtons, 300);
 
     // Capturar estado atual (ja restaurado do localStorage pelo loadState do material) como baseline
     knownState = mergeState(emptyState(), collectState());
