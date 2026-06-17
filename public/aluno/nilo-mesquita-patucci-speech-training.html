@@ -1005,6 +1005,9 @@
 .btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='nilo-mesquita-patucci-speech-training';</script>
 </head>
 <body>
 
@@ -2649,10 +2652,12 @@ function updateProgress(){
                 reader.onloadend = () => {
                     rec.dataUrl = reader.result;
                     speechRecordings.push(rec);
-                    try { localStorage.setItem('speech-recordings', JSON.stringify(speechRecordings.map(r => ({id:r.id,label:r.label,duration:r.duration,dataUrl:r.dataUrl})))); } catch(e) {}
+                    try { localStorage.setItem('speech-recordings', JSON.stringify(speechRecordings.map(r => ({id:r.id,label:r.label,duration:r.duration,dataUrl:r.dataUrl,url:r.url})))); } catch(e) {}
                     renderRecordings();
                     playCelebrateSound();
                     showToast('Gravacao salva! ' + formatDuration(duration));
+                    // Sobe pra nuvem em WAV (cross-device + toca em qualquer navegador)
+                    stUploadRecording(rec, blob);
                 };
                 reader.readAsDataURL(blob);
             };
@@ -2758,13 +2763,95 @@ function updateProgress(){
 
     function deleteRecording(i) {
         if (!confirm('Excluir esta gravacao?')) return;
-        if (speechRecordings[i] && speechRecordings[i].url) URL.revokeObjectURL(speechRecordings[i].url);
+        const removed = speechRecordings[i];
+        if (removed && removed.url && removed.url.indexOf('blob:') === 0) URL.revokeObjectURL(removed.url);
         speechRecordings.splice(i, 1);
-        try { localStorage.setItem('speech-recordings', JSON.stringify(speechRecordings.map(r => ({id:r.id,label:r.label,duration:r.duration,dataUrl:r.dataUrl})))); } catch(e) {}
+        try { localStorage.setItem('speech-recordings', JSON.stringify(speechRecordings.map(r => ({id:r.id,label:r.label,duration:r.duration,dataUrl:r.dataUrl,url:r.url})))); } catch(e) {}
         renderRecordings();
+        // Remove da nuvem tambem (cross-device)
+        if (removed && typeof sb !== 'undefined') {
+            try { sb.storage.from(ST_BUCKET).remove([ST_SLUG + '/st-' + removed.id + '.wav']); } catch(e) {}
+            stSyncList();
+        }
+    }
+
+    // ===== CLOUD SYNC (Supabase) — gravacoes em WAV, cross-device =====
+    // O Chrome grava em Opus (webm); o Safari nao decodifica. Aqui a gravacao e
+    // convertida pra WAV (universal) no proprio browser que gravou e sobe pro Storage,
+    // e a lista e persistida em student_activity para aparecer em qualquer computador.
+    var ST_SLUG = window.STUDENT_SLUG || 'nilo-mesquita-patucci-speech-training';
+    var ST_BUCKET = 'recordings';
+    var stAudioCtx = null;
+
+    function stAudioBufferToWav(buffer) {
+        var numCh = buffer.numberOfChannels, sr = buffer.sampleRate, n = buffer.length;
+        var bps = 2, blockAlign = numCh * bps, dataSize = n * blockAlign;
+        var ab = new ArrayBuffer(44 + dataSize), v = new DataView(ab);
+        function ws(o, s) { for (var i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); }
+        ws(0, 'RIFF'); v.setUint32(4, 36 + dataSize, true); ws(8, 'WAVE'); ws(12, 'fmt ');
+        v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, numCh, true);
+        v.setUint32(24, sr, true); v.setUint32(28, sr * blockAlign, true); v.setUint16(32, blockAlign, true);
+        v.setUint16(34, 16, true); ws(36, 'data'); v.setUint32(40, dataSize, true);
+        var ch = []; for (var c = 0; c < numCh; c++) ch.push(buffer.getChannelData(c));
+        var off = 44;
+        for (var i = 0; i < n; i++) { for (var c = 0; c < numCh; c++) { var s = Math.max(-1, Math.min(1, ch[c][i])); v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7FFF, true); off += 2; } }
+        return new Blob([ab], { type: 'audio/wav' });
+    }
+
+    function stTranscodeToWav(blob) {
+        return new Promise(function(resolve, reject) {
+            var AC = window.AudioContext || window.webkitAudioContext;
+            if (!AC) { reject(); return; }
+            try { stAudioCtx = stAudioCtx || new AC(); } catch (e) { reject(); return; }
+            var fr = new FileReader();
+            fr.onload = function() { stAudioCtx.decodeAudioData(fr.result, function(buf) { try { resolve(stAudioBufferToWav(buf)); } catch (e) { reject(); } }, function() { reject(); }); };
+            fr.onerror = function() { reject(); };
+            fr.readAsArrayBuffer(blob);
+        });
+    }
+
+    function stPersistLocal() {
+        try { localStorage.setItem('speech-recordings', JSON.stringify(speechRecordings.map(function(r) { return { id: r.id, label: r.label, duration: r.duration, dataUrl: r.dataUrl, url: r.url }; }))); } catch (e) {}
+    }
+
+    function stUploadRecording(rec, blob) {
+        if (typeof sb === 'undefined') return;
+        stTranscodeToWav(blob).then(function(wav) {
+            var path = ST_SLUG + '/st-' + rec.id + '.wav';
+            sb.storage.from(ST_BUCKET).upload(path, wav, { contentType: 'audio/wav', upsert: true }).then(function(res) {
+                if (res.error) { console.error('speech-training upload:', res.error.message); return; }
+                rec.url = sb.storage.from(ST_BUCKET).getPublicUrl(path).data.publicUrl;
+                stPersistLocal();
+                renderRecordings();
+                stSyncList();
+            });
+        }).catch(function() { /* sem transcode: gravacao fica so local */ });
+    }
+
+    function stSyncList() {
+        if (typeof sb === 'undefined') return;
+        var list = speechRecordings.filter(function(r) { return r.url && r.url.indexOf('blob:') !== 0; })
+            .map(function(r) { return { id: r.id, label: r.label, duration: r.duration, url: r.url }; });
+        sb.from('student_activity').upsert({ student_slug: ST_SLUG, view_type: 'speech-training', state: { recordings: list }, updated_at: new Date().toISOString() }, { onConflict: 'student_slug,view_type' })
+            .then(function(res) { if (res.error) console.error('speech-training sync:', res.error.message); });
+    }
+
+    function stLoadFromCloud() {
+        if (typeof sb === 'undefined') return;
+        sb.from('student_activity').select('state').eq('student_slug', ST_SLUG).eq('view_type', 'speech-training').single()
+            .then(function(res) {
+                if (res.error || !res.data || !res.data.state || !res.data.state.recordings) return;
+                var have = {}; speechRecordings.forEach(function(r) { have[r.id] = true; });
+                var added = false;
+                res.data.state.recordings.forEach(function(r) {
+                    if (!have[r.id]) { speechRecordings.push({ id: r.id, label: r.label, duration: r.duration, url: r.url }); added = true; }
+                });
+                if (added) { speechRecordings.sort(function(a, b) { return a.id - b.id; }); stPersistLocal(); renderRecordings(); }
+            });
     }
 
     renderRecordings();
+    stLoadFromCloud();
 
     // --- ElevenLabs Audio ---
     const AUDIO_BASE = 'audio/';
