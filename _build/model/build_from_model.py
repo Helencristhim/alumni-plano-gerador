@@ -295,13 +295,31 @@ def build_standalone(cfg, content_dir, manifest):
     return entries
 
 
+def normalize_complementary(html):
+    """Normaliza blocos de Complementares para o estilo canônico (REGRA 17: classes CSS).
+    Autores às vezes escrevem com style inline / <h4> sub-header / <hr> separador, o que
+    diverge dos complementares antigos (classes limpas) e quebra a uniformidade visual
+    (REGRA 11 #9). Aqui convertemos para o estilo de classe, deixando o CSS controlar."""
+    # separadores <hr> do estilo inline
+    html = re.sub(r'[ \t]*<hr style="border:none;border-top:1px solid var\(--border\)[^>]*>\n?', '', html)
+    # sub-headers <h4>Aula N -- ...</h4> dentro do grid (redundantes com o <h3>)
+    html = re.sub(r'[ \t]*<h4 style="font-size:\.95rem[^>]*>\s*Aula \d+\s*--[^<]*</h4>\n?', '', html)
+    # style inline no media-thumb (CSS .media-thumb assume tamanho/cor)
+    html = re.sub(r'<div class="media-thumb" style="[^"]*">', '<div class="media-thumb">', html)
+    # style inline no <p> de descrição
+    html = re.sub(r'<p style="font-size:\.82rem;color:var\(--text-mid\)">', '<p>', html)
+    # style inline no media-tip
+    html = re.sub(r'<p class="media-tip" style="[^"]*">', '<p class="media-tip">', html)
+    return html
+
+
 def build_hub_new(cfg, content_dir, manifest):
     """Hub completo (aluno NOVO, sem hub existente). Clona os hubs do modelo."""
     L = cfg['lesson']
     audio_base = f'/audio/{cfg["slug"]}/'
     preclass = read(os.path.join(content_dir, 'preclass.html'))
     planning = read(os.path.join(content_dir, 'planning.html'))
-    complementary = read(os.path.join(content_dir, 'complementary.html'))
+    complementary = normalize_complementary(read(os.path.join(content_dir, 'complementary.html')))
 
     entries = assign_voices(extract_phrases(preclass), prefix='pc_', cfg=cfg)
     extra = L.get('extra_audio', [])
@@ -364,7 +382,7 @@ def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
     assert os.path.exists(comp_path), (
         f'complementary.html FALTANDO em {os.path.relpath(content_dir, ROOT)} — '
         f'toda aula precisa do bloco de Complementares (data-media="l{L["n"]}-...")')
-    comp = read(comp_path)
+    comp = normalize_complementary(read(comp_path))
     assert f'data-media="l{L["n"]}-' in comp, (
         f'complementary.html sem data-media="l{L["n"]}-..." — use o prefixo da aula')
     parts.append(f'<!-- 3b. COMPLEMENTARES da aula {L["n"]} (inserir na tab-complementary, prof E aluno) -->\n')
