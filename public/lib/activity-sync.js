@@ -1153,9 +1153,10 @@
 
   // ===== INIT =====
   function init() {
-    // Transcodar gravacoes pra WAV no upload (compat Safari/cross-browser) — ANTES de gravar
-    if (viewType === 'aluno') installRecorderFormatFix();
-    if (viewType === 'aluno') installStorageTranscode();
+    // Garantia anti-Opus em QUALQUER visao (aluno, professor, "ver como aluno"): toda
+    // gravacao, de qualquer pagina, vira WAV. Forcar webm no Chrome + transcodar no upload.
+    installRecorderFormatFix();
+    installStorageTranscode();
 
     // Interceptar MediaRecorder ANTES de qualquer gravacao
     if (viewType === 'aluno') interceptRecordings();
