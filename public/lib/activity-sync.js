@@ -38,6 +38,88 @@
   var AUTO_SAVE_MS = 30000;
   var lastSavedJSON = '';
 
+  // knownState = melhor estado conhecido (uniao do remoto + tudo que o aluno fez nesta sessao).
+  // Progresso e MONOTONICO: exercicios so sao concluidos, nunca "desfeitos" (exceto Reset explicito).
+  // Por isso TODA escrita faz merge (uniao) com knownState, evitando lost-update entre os varios
+  // gravadores (saveToSupabase, saveRecordingRef, beforeunload). Antes, cada um sobrescrevia a linha
+  // inteira e apagava o trabalho dos outros — causando perda de progresso do Pre-class.
+  var knownState = null;
+
+  function emptyState() {
+    return { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [], ordering: [], vocabListened: [], thinkRecorded: [], recordings: {} };
+  }
+
+  // Uniao de arrays simples (dedupe por valor)
+  function unionArr(a, b) {
+    var out = [], seen = {};
+    (a || []).concat(b || []).forEach(function(v) {
+      if (v === undefined || v === null) return;
+      var k = String(v);
+      if (!seen[k]) { seen[k] = true; out.push(v); }
+    });
+    return out;
+  }
+
+  // Uniao de arrays de JSON-strings keyed por um campo (p=phrase, q=question).
+  // Em conflito, prefere a entrada com gravacao (r nao vazio).
+  function unionByKey(a, b, keyField) {
+    var map = {}, order = [];
+    (a || []).concat(b || []).forEach(function(item) {
+      var key, obj = null;
+      try { obj = JSON.parse(item); key = obj[keyField]; } catch (e) { key = String(item); }
+      if (key === undefined) key = String(item);
+      if (!(key in map)) { order.push(key); map[key] = item; }
+      else {
+        // resolver conflito: manter a que tem gravacao (r)
+        var hasR = false; try { hasR = !!(JSON.parse(item).r); } catch (e) {}
+        var curR = false; try { curR = !!(JSON.parse(map[key]).r); } catch (e) {}
+        if (hasR && !curR) map[key] = item;
+      }
+    });
+    return order.map(function(k) { return map[k]; });
+  }
+
+  // Uniao de ordering (keyed por container id)
+  function unionOrdering(a, b) {
+    var map = {}, order = [];
+    (a || []).concat(b || []).forEach(function(o) {
+      var id = (o && typeof o === 'object') ? o.id : o;
+      if (id === undefined) return;
+      if (!(id in map)) { order.push(id); map[id] = o; }
+    });
+    return order.map(function(k) { return map[k]; });
+  }
+
+  // Merge de dois estados — resultado nunca encolhe (uniao monotonica)
+  function mergeState(base, add) {
+    base = base || emptyState();
+    add = add || emptyState();
+    var out = emptyState();
+    out.matches = unionArr(base.matches, add.matches);
+    out.blanks = unionArr(base.blanks, add.blanks);
+    out.quiz = unionArr(base.quiz, add.quiz);
+    out.vocabListened = unionArr(base.vocabListened, add.vocabListened);
+    // mediaChecks pode chegar como array (atual) ou objeto (legado) — normalizar para array de ids marcados
+    out.mediaChecks = unionArr(toMediaArray(base.mediaChecks), toMediaArray(add.mediaChecks));
+    out.speech = unionByKey(base.speech, add.speech, 'p');
+    out.thinkRecorded = unionByKey(base.thinkRecorded, add.thinkRecorded, 'q');
+    out.ordering = unionOrdering(base.ordering, add.ordering);
+    out.checklists = {};
+    [base.checklists, add.checklists].forEach(function(c) {
+      if (c) Object.keys(c).forEach(function(k) { if (c[k]) out.checklists[k] = true; else if (!(k in out.checklists)) out.checklists[k] = c[k]; });
+    });
+    out.recordings = {};
+    if (base.recordings) Object.assign(out.recordings, base.recordings);
+    if (add.recordings) Object.assign(out.recordings, add.recordings);
+    return out;
+  }
+
+  function toMediaArray(m) {
+    if (Array.isArray(m)) return m;
+    if (m && typeof m === 'object') return Object.keys(m).filter(function(k) { return m[k]; });
+    return [];
+  }
+
   // ===== COLLECT STATE (replica a logica do saveState original) =====
   function collectState() {
     var s = { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [], ordering: [], vocabListened: [], thinkRecorded: [] };
@@ -275,7 +357,9 @@
     var delay = force ? 0 : DEBOUNCE_MS;
 
     saveTimer = setTimeout(function() {
-      var state = collectState();
+      // Merge (uniao) com o melhor estado conhecido — nunca encolhe, preserva recordings.
+      knownState = mergeState(knownState, collectState());
+      var state = knownState;
       var stateJSON = JSON.stringify(state);
 
       // Evitar saves redundantes (nada mudou)
@@ -284,8 +368,11 @@
 
       var now = new Date().toISOString();
 
-      // Salvar timestamp local para comparacao
-      try { localStorage.setItem(timestampKey, now); } catch(e) {}
+      // Salvar timestamp local + estado merged (cross-device + reload)
+      try {
+        localStorage.setItem(timestampKey, now);
+        localStorage.setItem(localKey, stateJSON);
+      } catch(e) {}
 
       sb.from('student_activity')
         .upsert({
@@ -377,34 +464,36 @@
   }
 
   function saveRecordingRef(phraseId, url) {
-    // Ler estado atual, adicionar/atualizar recording ref, salvar
-    sb.from('student_activity')
-      .select('state')
-      .eq('student_slug', slug)
-      .eq('view_type', viewType)
-      .single()
-      .then(function(res) {
-        var state = (res.data && res.data.state) || collectState();
-        if (!state.recordings) state.recordings = {};
-        state.recordings[phraseId] = url;
+    // Merge com o estado conhecido (que ja inclui o remoto carregado no load) +
+    // o DOM atual, e adiciona a ref da gravacao. NUNCA sobrescreve cego o remoto:
+    // antes, um select desatualizado apagava blanks/quiz/matches feitos na sessao.
+    knownState = mergeState(knownState, collectState());
+    if (!knownState.recordings) knownState.recordings = {};
+    knownState.recordings[phraseId] = url;
 
-        var now = new Date().toISOString();
-        sb.from('student_activity')
-          .upsert({
-            student_slug: slug,
-            view_type: viewType,
-            state: state,
-            updated_at: now
-          }, { onConflict: 'student_slug,view_type' })
-          .then(function(r) {
-            if (r.error) console.error('recording ref save error:', r.error.message);
-            else {
-              // Injetar botao "My Recording" imediatamente apos salvar
-              var recs = {};
-              recs[phraseId] = url;
-              injectMyRecordingButtons(recs);
-            }
-          });
+    var state = knownState;
+    var now = new Date().toISOString();
+    lastSavedJSON = JSON.stringify(state);
+    try {
+      localStorage.setItem(timestampKey, now);
+      localStorage.setItem(localKey, lastSavedJSON);
+    } catch(e) {}
+
+    sb.from('student_activity')
+      .upsert({
+        student_slug: slug,
+        view_type: viewType,
+        state: state,
+        updated_at: now
+      }, { onConflict: 'student_slug,view_type' })
+      .then(function(r) {
+        if (r.error) console.error('recording ref save error:', r.error.message);
+        else {
+          // Injetar botao "My Recording" imediatamente apos salvar
+          var recs = {};
+          recs[phraseId] = url;
+          injectMyRecordingButtons(recs);
+        }
       });
   }
 
@@ -653,12 +742,18 @@
           });
         }
 
-        // Recoletar estado limpo
-        var cleanState = collectState();
+        // Recoletar estado limpo (DOM ja foi limpo para esta aula; outras aulas continuam)
+        var cleanState = mergeState(emptyState(), collectState());
         cleanState.recordings = state.recordings || {};
 
+        // CRITICO: o knownState precisa virar o estado limpo, senao o proximo merge
+        // re-infla a aula resetada a partir do knownState antigo (Reset seria desfeito).
+        knownState = cleanState;
+
         var now = new Date().toISOString();
-        try { localStorage.setItem(timestampKey, now); } catch(e) {}
+        var cleanJSON = JSON.stringify(cleanState);
+        try { localStorage.setItem(timestampKey, now); localStorage.setItem(localKey, cleanJSON); } catch(e) {}
+        lastSavedJSON = cleanJSON;
 
         sb.from('student_activity')
           .upsert({
@@ -669,7 +764,6 @@
           }, { onConflict: 'student_slug,view_type' })
           .then(function(r) {
             if (r.error) console.error('reset save error:', r.error.message);
-            lastSavedJSON = JSON.stringify(cleanState);
           });
       });
 
@@ -734,12 +828,14 @@
 
   // ===== FALLBACK: Save antes de sair da pagina =====
   window.addEventListener('beforeunload', function() {
-    var state = collectState();
+    // Merge antes de sair — nunca envia um estado menor que o conhecido (preserva recordings)
+    knownState = mergeState(knownState, collectState());
+    var state = knownState;
     var stateJSON = JSON.stringify(state);
     if (stateJSON === lastSavedJSON) return;
 
     var now = new Date().toISOString();
-    try { localStorage.setItem(timestampKey, now); } catch(e) {}
+    try { localStorage.setItem(timestampKey, now); localStorage.setItem(localKey, stateJSON); } catch(e) {}
 
     // fetch com keepalive para garantir envio mesmo ao fechar
     try {
@@ -774,28 +870,26 @@
         if (res.error || !res.data) return;
 
         var remoteState = res.data.state;
-        var remoteTime = new Date(res.data.updated_at).getTime();
 
-        // Comparar com timestamp local
-        var localTime = 0;
+        // MERGE bidirecional: une o remoto (outro computador) com o que ja existe
+        // localmente/nesta sessao. Cross-device deixa de PERDER progresso porque
+        // nada e sobrescrito — so cresce. Resolve o caso "entro em outro PC e some".
+        knownState = mergeState(knownState, remoteState);
+        applyState(knownState);
+
+        var mergedJSON = JSON.stringify(knownState);
         try {
-          var ts = localStorage.getItem(timestampKey);
-          if (ts) localTime = new Date(ts).getTime();
+          localStorage.setItem(localKey, mergedJSON);
+          localStorage.setItem(timestampKey, res.data.updated_at);
         } catch(e) {}
 
-        // Se Supabase e mais recente OU se localStorage nao tem dados, aplicar
-        var hasLocalData = false;
-        try { hasLocalData = !!localStorage.getItem(localKey); } catch(e) {}
-
-        if (remoteTime > localTime || !hasLocalData) {
-          applyState(remoteState);
-          // Atualizar localStorage com dados do Supabase
-          try {
-            localStorage.setItem(localKey, JSON.stringify(remoteState));
-            localStorage.setItem(timestampKey, res.data.updated_at);
-          } catch(e) {}
-          // Guardar como baseline para evitar re-save imediato
+        // Se o merge resultou em algo MAIOR que o remoto (havia progresso local que
+        // o outro PC nao tinha), empurra a uniao de volta pro Supabase.
+        if (mergedJSON !== JSON.stringify(remoteState)) {
           lastSavedJSON = JSON.stringify(remoteState);
+          saveToSupabase(true);
+        } else {
+          lastSavedJSON = mergedJSON;
         }
       });
   }
@@ -813,10 +907,11 @@
     // Interceptar MediaRecorder ANTES de qualquer gravacao
     if (viewType === 'aluno') interceptRecordings();
 
-    // Capturar estado atual como baseline
-    lastSavedJSON = JSON.stringify(collectState());
+    // Capturar estado atual (ja restaurado do localStorage pelo loadState do material) como baseline
+    knownState = mergeState(emptyState(), collectState());
+    lastSavedJSON = JSON.stringify(knownState);
 
-    // Carregar do Supabase (pode sobrescrever se mais recente)
+    // Carregar do Supabase e fazer merge (nunca sobrescreve — so cresce)
     setTimeout(loadFromSupabase, 200);
 
     // Carregar botoes "My Recording" para gravacoes salvas
