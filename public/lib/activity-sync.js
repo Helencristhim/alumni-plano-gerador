@@ -224,6 +224,91 @@
     return controller;
   }
 
+  // ===== TRANSCODE PRA WAV (compatibilidade cross-browser) =====
+  // O Chrome grava em Opus (dentro de webm ou mp4). O Safari/Mac NAO decodifica Opus,
+  // entao a gravacao toca cortada/nada em outro computador. Solucao: no proprio browser
+  // que gravou (Chrome, que decodifica seu Opus), converter pra WAV — formato universal
+  // que toca em qualquer navegador. A conversao roda no UPLOAD, antes de subir.
+  function audioBufferToWav(buffer) {
+    var numCh = buffer.numberOfChannels;
+    var sampleRate = buffer.sampleRate;
+    var numFrames = buffer.length;
+    var bytesPerSample = 2;
+    var blockAlign = numCh * bytesPerSample;
+    var dataSize = numFrames * blockAlign;
+    var arr = new ArrayBuffer(44 + dataSize);
+    var view = new DataView(arr);
+    function ws(off, s) { for (var i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); }
+    ws(0, 'RIFF'); view.setUint32(4, 36 + dataSize, true); ws(8, 'WAVE');
+    ws(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+    view.setUint16(22, numCh, true); view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * blockAlign, true); view.setUint16(32, blockAlign, true);
+    view.setUint16(34, 8 * bytesPerSample, true);
+    ws(36, 'data'); view.setUint32(40, dataSize, true);
+    var channels = [];
+    for (var c = 0; c < numCh; c++) channels.push(buffer.getChannelData(c));
+    var offset = 44;
+    for (var i = 0; i < numFrames; i++) {
+      for (var ch = 0; ch < numCh; ch++) {
+        var sample = Math.max(-1, Math.min(1, channels[ch][i]));
+        view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+        offset += 2;
+      }
+    }
+    return new Blob([arr], { type: 'audio/wav' });
+  }
+
+  // Recebe um Blob de gravacao e devolve Promise<Blob WAV>. Rejeita se nao decodificar.
+  function transcodeToWav(blob) {
+    return new Promise(function(resolve, reject) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { reject(new Error('no AudioContext')); return; }
+      var ctx;
+      try { ctx = sharedAudioCtx || (sharedAudioCtx = new AC()); } catch (e) { reject(e); return; }
+      var done = false;
+      var fr = new FileReader();
+      fr.onload = function() {
+        ctx.decodeAudioData(fr.result, function(audioBuffer) {
+          if (done) return; done = true;
+          try { resolve(audioBufferToWav(audioBuffer)); } catch (e) { reject(e); }
+        }, function(err) { if (done) return; done = true; reject(err || new Error('decode failed')); });
+      };
+      fr.onerror = function() { if (done) return; done = true; reject(fr.error || new Error('read failed')); };
+      fr.readAsArrayBuffer(blob);
+    });
+  }
+
+  // Envolve sb.storage.from('recordings').upload para transcodar gravacoes pra WAV no
+  // mesmo path (browsers tocam pelo content-type, nao pela extensao). Assim TODA gravacao
+  // nova — pelo upload inline do material OU pelo interceptRecordings — sobe como WAV.
+  function installStorageTranscode() {
+    if (typeof sb === 'undefined' || !sb.storage || sb.storage.__transcodeWrapped) return;
+    var origFrom = sb.storage.from.bind(sb.storage);
+    sb.storage.from = function(bucket) {
+      var ref = origFrom(bucket);
+      if (bucket === 'recordings' && ref && typeof ref.upload === 'function' && !ref.__uploadWrapped) {
+        var origUpload = ref.upload.bind(ref);
+        ref.upload = function(path, blob, opts) {
+          var t = blob && blob.type ? blob.type : '';
+          var isCompressed = /audio|webm|mp4|ogg|opus/i.test(t) && t.indexOf('wav') === -1;
+          if (!isCompressed || !blob || !blob.size) return origUpload(path, blob, opts);
+          return transcodeToWav(blob).then(function(wav) {
+            var o = {};
+            if (opts) for (var k in opts) o[k] = opts[k];
+            o.contentType = 'audio/wav';
+            return origUpload(path, wav, o);
+          }).catch(function() {
+            // Se nao der pra transcodar (ex: browser nao decodifica), sobe o original
+            return origUpload(path, blob, opts);
+          });
+        };
+        ref.__uploadWrapped = true;
+      }
+      return ref;
+    };
+    sb.storage.__transcodeWrapped = true;
+  }
+
   // ===== COLLECT STATE (replica a logica do saveState original) =====
   function collectState() {
     var s = { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [], ordering: [], vocabListened: [], thinkRecorded: [] };
@@ -1036,6 +1121,9 @@
 
   // ===== INIT =====
   function init() {
+    // Transcodar gravacoes pra WAV no upload (compat Safari/cross-browser) — ANTES de gravar
+    if (viewType === 'aluno') installStorageTranscode();
+
     // Interceptar MediaRecorder ANTES de qualquer gravacao
     if (viewType === 'aluno') interceptRecordings();
 
