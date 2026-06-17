@@ -309,6 +309,38 @@
     sb.storage.__transcodeWrapped = true;
   }
 
+  // Forca o MediaRecorder a gravar em webm/opus no Chrome (em vez de mp4/opus).
+  // Motivo: o transcode pra WAV usa decodeAudioData, que decodifica Opus-em-WEBM de
+  // forma confiavel mas NAO decodifica Opus-em-MP4 (que o Chrome tambem grava). Sem
+  // isso, dependendo do formato que o Chrome escolhe, o transcode falha e sobe Opus cru
+  // (que o Safari nao toca). No Safari, webm nao e suportado — mantem o default (mp4/AAC,
+  // que decodifica e toca em qualquer lugar).
+  function installRecorderFormatFix() {
+    if (typeof window.MediaRecorder !== 'function' || window.MediaRecorder.__formatWrapped) return;
+    var Orig = window.MediaRecorder;
+    function preferredType() {
+      try {
+        if (Orig.isTypeSupported && Orig.isTypeSupported('audio/webm;codecs=opus')) return 'audio/webm;codecs=opus';
+        if (Orig.isTypeSupported && Orig.isTypeSupported('audio/webm')) return 'audio/webm';
+      } catch (e) {}
+      return null;
+    }
+    function Wrapped(stream, opts) {
+      opts = opts || {};
+      var mt = opts.mimeType || '';
+      // Se pediram mp4 (ou nada), e webm/opus existe (Chrome), troca pra webm/opus.
+      if (mt.indexOf('mp4') !== -1 || !mt) {
+        var pref = preferredType();
+        if (pref) { var o = {}; for (var k in opts) o[k] = opts[k]; o.mimeType = pref; opts = o; }
+      }
+      return new Orig(stream, opts);
+    }
+    Wrapped.isTypeSupported = function(t) { return Orig.isTypeSupported(t); };
+    Wrapped.prototype = Orig.prototype;
+    Wrapped.__formatWrapped = true;
+    window.MediaRecorder = Wrapped;
+  }
+
   // ===== COLLECT STATE (replica a logica do saveState original) =====
   function collectState() {
     var s = { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [], ordering: [], vocabListened: [], thinkRecorded: [] };
@@ -1122,6 +1154,7 @@
   // ===== INIT =====
   function init() {
     // Transcodar gravacoes pra WAV no upload (compat Safari/cross-browser) — ANTES de gravar
+    if (viewType === 'aluno') installRecorderFormatFix();
     if (viewType === 'aluno') installStorageTranscode();
 
     // Interceptar MediaRecorder ANTES de qualquer gravacao
