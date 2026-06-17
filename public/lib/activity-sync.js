@@ -33,6 +33,12 @@
   var localKey = slug + '-' + viewType;
   var timestampKey = localKey + '-ts';
 
+  // Captura o createObjectURL NATIVO antes do interceptRecordings envolve-lo, para o
+  // playback (fetch->blob) nao ser confundido com uma nova gravacao.
+  var nativeCreateObjectURL = URL.createObjectURL.bind(URL);
+  var sharedAudioCtx = null;     // AudioContext reutilizado p/ playback decodificado
+  var activePlayback = null;     // controller da gravacao tocando agora (p/ parar a anterior)
+
   var saveTimer = null;
   var DEBOUNCE_MS = 2000;
   var AUTO_SAVE_MS = 30000;
@@ -146,41 +152,76 @@
   // o arquivo do Storage, o player le duracao ~0 e CORTA logo no inicio.
   // Solucao: ao detectar duracao invalida (0/NaN/Infinity), seek pro fim forca o browser
   // a varrer o arquivo e descobrir a duracao real; depois volta pro inicio e toca inteiro.
+  function stopActivePlayback() {
+    if (activePlayback) { try { activePlayback.stop(); } catch (e) {} activePlayback = null; }
+  }
+
+  // Playback PRINCIPAL: decodifica o arquivo inteiro via Web Audio API (le todos os bytes
+  // e sabe a duracao EXATA) e toca o buffer. Isso ignora completamente a metadata de
+  // duracao quebrada do MediaRecorder — toca a gravacao inteira em qualquer computador.
+  // Retorna um controller com .stop(). onStart()/onEnd() sao callbacks de UI.
   function playRecordingFixed(url, onStart, onEnd) {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return playViaAudioElement(url, onStart, onEnd);
+
+    if (!sharedAudioCtx) { try { sharedAudioCtx = new AC(); } catch (e) { return playViaAudioElement(url, onStart, onEnd); } }
+    var ctx = sharedAudioCtx;
+    if (ctx.state === 'suspended') { try { ctx.resume(); } catch (e) {} }
+
+    var ended = false, node = null;
+    var controller = { stop: function() { if (node) { try { node.stop(); } catch (e) {} } finish(); } };
+    function finish() { if (ended) return; ended = true; if (onEnd) onEnd(); }
+
+    fetch(url, { cache: 'reload' })
+      .then(function(r) { if (!r.ok) throw new Error('http ' + r.status); return r.arrayBuffer(); })
+      .then(function(buf) { return ctx.decodeAudioData(buf); })
+      .then(function(audioBuffer) {
+        if (ended) return;
+        node = ctx.createBufferSource();
+        node.buffer = audioBuffer;
+        node.connect(ctx.destination);
+        node.onended = finish;
+        node.start(0);
+        if (onStart) onStart(controller);
+      })
+      .catch(function() {
+        // Se decodeAudioData falhar, cai pro <audio>+blob com seek de duracao
+        if (ended) return;
+        var c = playViaAudioElement(url, onStart, onEnd);
+        controller.stop = c.stop;
+      });
+
+    return controller;
+  }
+
+  // Fallback: <audio> tocando a partir do blob completo + truque de seek pra descobrir
+  // a duracao. Usado quando Web Audio nao esta disponivel ou decodeAudioData falha.
+  function playViaAudioElement(url, onStart, onEnd) {
     var audio = new Audio();
     audio.preload = 'auto';
-    var started = false, primed = false;
-
-    function badDuration() {
-      var d = audio.duration;
-      return !isFinite(d) || isNaN(d) || d === 0;
-    }
-    function startPlay() {
-      if (started) return; started = true;
-      try { audio.currentTime = 0; } catch (e) {}
-      audio.play();
-      if (onStart) onStart(audio);
-    }
+    var started = false, primed = false, objUrl = null, ended = false;
+    var controller = { stop: function() { try { audio.pause(); } catch (e) {} cleanup(); finish(); } };
+    function cleanup() { if (objUrl) { try { URL.revokeObjectURL(objUrl); } catch (e) {} objUrl = null; } }
+    function finish() { if (ended) return; ended = true; if (onEnd) onEnd(); }
+    function startPlay() { if (started) return; started = true; try { audio.currentTime = 0; } catch (e) {} audio.play(); if (onStart) onStart(controller); }
     audio.addEventListener('loadedmetadata', function() {
-      if (!badDuration()) { startPlay(); return; }
-      // forcar descoberta da duracao real
+      var d = audio.duration;
+      if (isFinite(d) && d > 0) { startPlay(); return; }
       var onTU = function() {
         if (primed) return;
-        if (isFinite(audio.duration) && audio.duration > 0) {
-          primed = true;
-          audio.removeEventListener('timeupdate', onTU);
-          startPlay();
-        }
+        if (isFinite(audio.duration) && audio.duration > 0) { primed = true; audio.removeEventListener('timeupdate', onTU); startPlay(); }
       };
       audio.addEventListener('timeupdate', onTU);
       try { audio.currentTime = 1e101; } catch (e) { startPlay(); }
     });
-    audio.addEventListener('ended', function() { if (onEnd) onEnd(); });
-    audio.addEventListener('error', function() { if (onEnd) onEnd(); });
-    // rede de seguranca: se a metadata nunca carregar, toca mesmo assim
-    setTimeout(function() { if (!started) startPlay(); }, 2000);
-    audio.src = url;
-    return audio;
+    audio.addEventListener('ended', function() { cleanup(); finish(); });
+    audio.addEventListener('error', function() { cleanup(); finish(); });
+    fetch(url, { cache: 'reload' })
+      .then(function(r) { if (!r.ok) throw new Error('http ' + r.status); return r.blob(); })
+      .then(function(blob) { objUrl = nativeCreateObjectURL(blob); audio.src = objUrl; })
+      .catch(function() { audio.src = url; });
+    setTimeout(function() { if (!started && !audio.src) audio.src = url; }, 4000);
+    return controller;
   }
 
   // ===== COLLECT STATE (replica a logica do saveState original) =====
@@ -652,19 +693,14 @@
       btn.innerHTML = headphoneIcon + ' My Recording';
       btn.onclick = function(e) {
         e.preventDefault();
-        // Parar qualquer audio anterior
-        document.querySelectorAll('.my-rec-audio-active').forEach(function(a) {
-          a.pause(); try { a.currentTime = 0; } catch (er) {} a.remove();
-        });
-
+        function restore() { btn.innerHTML = headphoneIcon + ' My Recording'; btn.style.background = ''; }
+        // Toggle: se esta tocando esta gravacao, para
+        if (btn.dataset.playing === 'true') { stopActivePlayback(); restore(); btn.dataset.playing = 'false'; return; }
+        stopActivePlayback();
         btn.innerHTML = headphoneIcon + ' Playing...';
         btn.style.background = '#15803d';
-        function restore() { btn.innerHTML = headphoneIcon + ' My Recording'; btn.style.background = ''; }
-        var audio = playRecordingFixed(audioUrl, function(a) {
-          a.className = 'my-rec-audio-active';
-          a.style.display = 'none';
-          document.body.appendChild(a);
-        }, function() { restore(); if (audio) audio.remove(); });
+        btn.dataset.playing = 'true';
+        activePlayback = playRecordingFixed(audioUrl, null, function() { restore(); btn.dataset.playing = 'false'; activePlayback = null; });
       };
 
       controls.appendChild(btn);
@@ -681,23 +717,21 @@
       var playBtn = document.createElement('button');
       playBtn.className = 'btn btn-your-pronunciation';
       playBtn.innerHTML = '&#9654; Your Pronunciation';
-      var current = null;
       playBtn.onclick = function(e) {
         e.preventDefault();
         if (playBtn.dataset.playing === 'true') {
-          if (current) { current.pause(); current.remove(); current = null; }
+          stopActivePlayback();
           playBtn.innerHTML = '&#9654; Your Pronunciation';
           playBtn.dataset.playing = 'false';
           return;
         }
+        stopActivePlayback();
         playBtn.innerHTML = '&#9632; Playing...';
         playBtn.dataset.playing = 'true';
-        current = playRecordingFixed(audioUrl, function(a) {
-          a.className = 'your-pron-audio'; a.style.display = 'none'; card.appendChild(a);
-        }, function() {
+        activePlayback = playRecordingFixed(audioUrl, null, function() {
           playBtn.innerHTML = '&#9654; Your Pronunciation';
           playBtn.dataset.playing = 'false';
-          if (current) { current.remove(); current = null; }
+          activePlayback = null;
         });
       };
       var controls = card.querySelector('.speech-controls');
