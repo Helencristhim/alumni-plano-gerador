@@ -52,7 +52,19 @@
   var knownState = null;
 
   function emptyState() {
-    return { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [], ordering: [], vocabListened: [], thinkRecorded: [], recordings: {} };
+    return { matches: [], blanks: [], quiz: [], speech: [], checklists: {}, mediaChecks: [], ordering: [], vocabListened: [], thinkRecorded: [], recordings: {}, _tombstones: {} };
+  }
+
+  // Tipos de array do estado + como extrair a CHAVE de cada item (para dedupe/tombstone)
+  var ARRAY_TYPES = ['matches', 'blanks', 'quiz', 'vocabListened', 'mediaChecks', 'speech', 'thinkRecorded', 'ordering'];
+  function keyOf(type, item) {
+    try {
+      if (type === 'matches') return String(item).split('|')[0];
+      if (type === 'speech') return JSON.parse(item).p;
+      if (type === 'thinkRecorded') return JSON.parse(item).q;
+      if (type === 'ordering') return (item && typeof item === 'object') ? item.id : item;
+    } catch (e) {}
+    return String(item);
   }
 
   // Uniao de arrays simples (dedupe por valor)
@@ -136,7 +148,69 @@
     out.recordings = {};
     if (base.recordings) Object.assign(out.recordings, base.recordings);
     if (add.recordings) Object.assign(out.recordings, add.recordings);
+    // _tombstones: marcas de "resetado" — uniao por tipo/chave. Persistem no estado para que
+    // TODAS as janelas respeitem o reset (senao uma janela com o estado antigo re-adicionaria
+    // via uniao). Sao limpos quando o exercicio e refeito (ver applyTombstones).
+    out._tombstones = {};
+    [base._tombstones, add._tombstones].forEach(function(tb) {
+      if (!tb) return;
+      Object.keys(tb).forEach(function(type) {
+        if (!out._tombstones[type]) out._tombstones[type] = {};
+        Object.keys(tb[type] || {}).forEach(function(k) { if (tb[type][k]) out._tombstones[type][k] = true; });
+      });
+    });
     return out;
+  }
+
+  // Remove de `state` os itens marcados como resetados (_tombstones) que NAO foram refeitos.
+  // `live` = collectState() atual (DOM). Se a chave reaparece no DOM, o exercicio foi refeito:
+  // limpa o tombstone e mantem o item.
+  function applyTombstones(state, live) {
+    var tb = state._tombstones;
+    if (!tb) return state;
+    live = live || emptyState();
+    ARRAY_TYPES.forEach(function(type) {
+      if (!tb[type]) return;
+      var liveKeys = {};
+      (live[type] || []).forEach(function(it) { liveKeys[keyOf(type, it)] = true; });
+      state[type] = (state[type] || []).filter(function(it) {
+        var k = keyOf(type, it);
+        if (liveKeys[k]) { delete tb[type][k]; return true; }   // refeito -> destombstone
+        if (tb[type][k]) return false;                          // resetado e nao refeito -> remove
+        return true;
+      });
+      // chaves refeitas tambem saem do tombstone mesmo se nao estavam no state
+      Object.keys(tb[type]).forEach(function(k) { if (liveKeys[k]) delete tb[type][k]; });
+      if (Object.keys(tb[type]).length === 0) delete tb[type];
+    });
+    // checklists (objeto index->bool)
+    if (tb.checklists) {
+      var liveC = live.checklists || {};
+      Object.keys(tb.checklists).forEach(function(k) {
+        if (liveC[k]) { delete tb.checklists[k]; }
+        else if (state.checklists) { delete state.checklists[k]; }
+      });
+      if (Object.keys(tb.checklists).length === 0) delete tb.checklists;
+    }
+    return state;
+  }
+
+  // Registra como tombstone tudo que existia em `before` e sumiu em `after` (= foi resetado).
+  function addResetTombstones(target, before, after) {
+    if (!target._tombstones) target._tombstones = {};
+    var tb = target._tombstones;
+    ARRAY_TYPES.forEach(function(type) {
+      var afterKeys = {};
+      (after[type] || []).forEach(function(it) { afterKeys[keyOf(type, it)] = true; });
+      (before[type] || []).forEach(function(it) {
+        var k = keyOf(type, it);
+        if (!afterKeys[k]) { if (!tb[type]) tb[type] = {}; tb[type][k] = true; }
+      });
+    });
+    var bc = before.checklists || {}, ac = after.checklists || {};
+    Object.keys(bc).forEach(function(k) {
+      if (bc[k] && !ac[k]) { if (!tb.checklists) tb.checklists = {}; tb.checklists[k] = true; }
+    });
   }
 
   function toMediaArray(m) {
@@ -578,32 +652,45 @@
     var delay = force ? 0 : DEBOUNCE_MS;
 
     saveTimer = setTimeout(function() {
-      // Merge (uniao) com o melhor estado conhecido — nunca encolhe, preserva recordings.
+      // Merge (uniao) com o melhor estado conhecido desta janela.
       knownState = mergeState(knownState, collectState());
-      var state = knownState;
-      var stateJSON = JSON.stringify(state);
+      var localJSON = JSON.stringify(knownState);
+      if (localJSON === lastSavedJSON && !force) return;
 
-      // Evitar saves redundantes (nada mudou)
-      if (stateJSON === lastSavedJSON && !force) return;
-      lastSavedJSON = stateJSON;
-
-      var now = new Date().toISOString();
-
-      // Salvar timestamp local + estado merged (cross-device + reload)
-      try {
-        localStorage.setItem(timestampKey, now);
-        localStorage.setItem(localKey, stateJSON);
-      } catch(e) {}
-
+      // READ-MODIFY-WRITE: le o estado REMOTO vivo e une com o local ANTES de gravar.
+      // Sem isso, uma janela com retrato antigo sobrescreve o progresso que outra janela
+      // gravou (lost-update). Como o merge e uniao (comutativo + monotonico), gravacoes
+      // concorrentes convergem para a uniao — nenhuma janela consegue encolher a linha.
       sb.from('student_activity')
-        .upsert({
-          student_slug: slug,
-          view_type: viewType,
-          state: state,
-          updated_at: now
-        }, { onConflict: 'student_slug,view_type' })
-        .then(function(res) {
-          if (res.error) console.error('activity-sync save error:', res.error.message);
+        .select('state')
+        .eq('student_slug', slug)
+        .eq('view_type', viewType)
+        .single()
+        .then(function(readRes) {
+          var remote = (readRes && readRes.data && readRes.data.state) ? readRes.data.state : null;
+          var merged = mergeState(remote, knownState);
+          // Respeita resets (de qualquer janela) que ainda nao foram refeitos
+          merged = applyTombstones(merged, collectState());
+          knownState = merged;
+
+          var mergedJSON = JSON.stringify(merged);
+          lastSavedJSON = mergedJSON;
+          var now = new Date().toISOString();
+          try {
+            localStorage.setItem(timestampKey, now);
+            localStorage.setItem(localKey, mergedJSON);
+          } catch(e) {}
+
+          sb.from('student_activity')
+            .upsert({
+              student_slug: slug,
+              view_type: viewType,
+              state: merged,
+              updated_at: now
+            }, { onConflict: 'student_slug,view_type' })
+            .then(function(res) {
+              if (res.error) console.error('activity-sync save error:', res.error.message);
+            });
         });
     }, delay);
   }
@@ -685,37 +772,16 @@
   }
 
   function saveRecordingRef(phraseId, url) {
-    // Merge com o estado conhecido (que ja inclui o remoto carregado no load) +
-    // o DOM atual, e adiciona a ref da gravacao. NUNCA sobrescreve cego o remoto:
-    // antes, um select desatualizado apagava blanks/quiz/matches feitos na sessao.
+    // Adiciona a ref da gravacao no knownState e grava pelo MESMO caminho read-modify-write
+    // do saveToSupabase (le o remoto vivo, une, aplica tombstones) — assim um upload de
+    // gravacao nunca sobrescreve progresso de outra janela.
     knownState = mergeState(knownState, collectState());
     if (!knownState.recordings) knownState.recordings = {};
     knownState.recordings[phraseId] = url;
-
-    var state = knownState;
-    var now = new Date().toISOString();
-    lastSavedJSON = JSON.stringify(state);
-    try {
-      localStorage.setItem(timestampKey, now);
-      localStorage.setItem(localKey, lastSavedJSON);
-    } catch(e) {}
-
-    sb.from('student_activity')
-      .upsert({
-        student_slug: slug,
-        view_type: viewType,
-        state: state,
-        updated_at: now
-      }, { onConflict: 'student_slug,view_type' })
-      .then(function(r) {
-        if (r.error) console.error('recording ref save error:', r.error.message);
-        else {
-          // Injetar botao "My Recording" imediatamente apos salvar
-          var recs = {};
-          recs[phraseId] = url;
-          injectMyRecordingButtons(recs);
-        }
-      });
+    saveToSupabase(true);
+    // Injetar botao "My Recording" assim que possivel
+    var recs = {}; recs[phraseId] = url;
+    injectMyRecordingButtons(recs);
   }
 
   // Interceptar URL.createObjectURL para capturar blobs de audio
@@ -916,6 +982,9 @@
   }
 
   function resetLesson(lessonCard, lessonNum) {
+    // Captura o estado ANTES de limpar o DOM, para saber o que sera removido (tombstones).
+    var beforeReset = mergeState(knownState, collectState());
+
     // 1. Reset visual state de todos os exercicios DENTRO desta aula
     lessonCard.querySelectorAll('.blank-input').forEach(function(el) {
       el.value = ''; el.classList.remove('correct', 'wrong'); el.readOnly = false;
@@ -983,6 +1052,12 @@
         // Recoletar estado limpo (DOM ja foi limpo para esta aula; outras aulas continuam)
         var cleanState = mergeState(emptyState(), collectState());
         cleanState.recordings = state.recordings || {};
+
+        // Tombstones: marca o que foi removido nesta aula para que NENHUMA janela (nem o
+        // proprio merge contra o remoto) re-adicione o que o reset limpou. Carrega tombstones
+        // anteriores e adiciona os novos (diff entre antes e depois do reset).
+        cleanState._tombstones = mergeState(emptyState(), beforeReset)._tombstones || {};
+        addResetTombstones(cleanState, beforeReset, cleanState);
 
         // CRITICO: o knownState precisa virar o estado limpo, senao o proximo merge
         // re-infla a aula resetada a partir do knownState antigo (Reset seria desfeito).
@@ -1113,6 +1188,8 @@
         // localmente/nesta sessao. Cross-device deixa de PERDER progresso porque
         // nada e sobrescrito — so cresce. Resolve o caso "entro em outro PC e some".
         knownState = mergeState(knownState, remoteState);
+        // Respeita resets propagados (de qualquer janela) antes de renderizar
+        knownState = applyTombstones(knownState, collectState());
         applyState(knownState);
 
         var mergedJSON = JSON.stringify(knownState);
