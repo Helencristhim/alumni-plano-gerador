@@ -60,23 +60,42 @@
     return out;
   }
 
+  // Combina duas entradas de speech/think da MESMA frase, mantendo o melhor de cada:
+  //  - a correcao word-by-word mais COMPLETA (maior array words / melhor score)
+  //  - a URL de gravacao (r) de qualquer uma que tenha
+  // Resolve o caso "some a parte da correcao": antes, escolher so pela gravacao (r)
+  // podia descartar a entrada que tinha a correcao word-by-word.
+  function richerEntry(x, y) {
+    if (!x) return y;
+    if (!y) return x;
+    var xw = (x.words || []).length, yw = (y.words || []).length;
+    // base = a que tem mais palavras de correcao (empate: a que ja tem gravacao, senao x)
+    var base, other;
+    if (xw !== yw) { base = xw > yw ? x : y; other = xw > yw ? y : x; }
+    else { base = x.r ? x : (y.r ? y : x); other = base === x ? y : x; }
+    var out = {};
+    for (var k in base) out[k] = base[k];
+    if (!out.r && other.r) out.r = other.r;          // herda a gravacao
+    if ((!out.words || !out.words.length) && other.words && other.words.length) out.words = other.words;
+    if ((!out.s || out.s === 'Done') && other.s && other.s !== 'Done') out.s = other.s; // melhor score txt
+    if ((!out.c || out.c === 'good') && other.c && base !== x) out.c = base.c || other.c;
+    return out;
+  }
+
   // Uniao de arrays de JSON-strings keyed por um campo (p=phrase, q=question).
-  // Em conflito, prefere a entrada com gravacao (r nao vazio).
+  // Em conflito, COMBINA as entradas (correcao mais completa + gravacao).
   function unionByKey(a, b, keyField) {
     var map = {}, order = [];
     (a || []).concat(b || []).forEach(function(item) {
       var key, obj = null;
-      try { obj = JSON.parse(item); key = obj[keyField]; } catch (e) { key = String(item); }
+      try { obj = JSON.parse(item); key = obj[keyField]; } catch (e) { obj = null; key = String(item); }
       if (key === undefined) key = String(item);
-      if (!(key in map)) { order.push(key); map[key] = item; }
-      else {
-        // resolver conflito: manter a que tem gravacao (r)
-        var hasR = false; try { hasR = !!(JSON.parse(item).r); } catch (e) {}
-        var curR = false; try { curR = !!(JSON.parse(map[key]).r); } catch (e) {}
-        if (hasR && !curR) map[key] = item;
-      }
+      if (!(key in map)) { order.push(key); map[key] = obj || item; }
+      else if (obj && typeof map[key] === 'object') { map[key] = richerEntry(map[key], obj); }
+      else if (obj && typeof map[key] !== 'object') { map[key] = obj; }
+      // se obj nao parseou, mantem o que ja tinha
     });
-    return order.map(function(k) { return map[k]; });
+    return order.map(function(k) { return typeof map[k] === 'object' ? JSON.stringify(map[k]) : map[k]; });
   }
 
   // Uniao de ordering (keyed por container id)
