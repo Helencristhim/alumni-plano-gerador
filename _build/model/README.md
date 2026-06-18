@@ -24,7 +24,9 @@
 ## CI (trava física — roda sozinho em TODO PR que toca aula)
 
 `.github/workflows/validate-lessons.yml`: arquivo de aula NOVO passa por
-`validate_lesson.py` (estrutura + vozes por personagem) + `check_contrast.py`
+`validate_lesson.py` (estrutura + vozes por personagem + wiring de persistência
+REGRA 28: sem activity-sync.js/supabase/STUDENT_SLUG a gravação do aluno some ao
+atualizar a página) + `check_contrast.py`
 (contraste computado, slides claros E escuros; gradiente/foto são pulados — o
 contrast-guard cobre em runtime). Arquivo MODIFICADO passa por
 `check_no_regression.py` (ex-lesson/stamp/slide não pode sumir; arquivo não pode
