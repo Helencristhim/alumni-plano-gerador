@@ -21,6 +21,11 @@ faltando, fantasma no exit, target=_blank...) e adiciona as regras do modelo:
    - mistake-item sem <p>/<strong> direto (flex espalha inline — REGRA Common Mistake)
    - todo onclick/onchange aponta pra função que EXISTE no arquivo (exercício novo quebrado)
 
+  PERSISTÊNCIA / SYNC CROSS-DEVICE (REGRA 28, bloqueante em material do aluno):
+   - activity-sync.js + supabase + STUDENT_SLUG presentes (sem eles a gravação de
+     áudio do Pre-class SOME ao atualizar a página / abrir de outro device)
+   - lesson-progress.js + controle-aulas.js presentes; ordem e TOTAL_AULAS = WARN
+
 USO (da raiz do repo):
   python3 _build/model/validate_lesson.py public/professor/{slug}-aula{N}.html [mais.html ...]
 Exit code 1 se algum arquivo falhar.
@@ -224,6 +229,65 @@ def check_speaktext_escaping(c, fails):
                      f'-> onclick quebra + áudio truncado). Escapar como \\\' . Ex: "{broken[0]}..."')
 
 
+def check_persistence_wiring(c, path, fails, warns):
+    """REGRA 28: persistência cross-device dos exercícios/gravações do aluno.
+
+    O bug que isto pega: o aluno grava um áudio no Pre-class, atualiza a página
+    (ou abre de outro device) e a gravação SUMIU. Causa = a página não tem o
+    wiring de sync que a REGRA 28 exige. A gravação só persiste se a página
+    incluir activity-sync.js + seus pré-requisitos (supabase + STUDENT_SLUG):
+    é o activity-sync que intercepta o MediaRecorder e sobe o blob pro Supabase.
+
+    FAIL (sync de gravação quebrado de fato):
+      - falta supabase.min.js / supabase-config.js / window.STUDENT_SLUG
+      - falta /lib/activity-sync.js, /lib/lesson-progress.js ou /lib/controle-aulas.js
+    WARN (degradação coberta pelo auto-save de 30s, não perde gravação):
+      - ordem errada dos 3 libs ou activity-sync ANTES do saveState() inline
+      - falta window.TOTAL_AULAS (só a barra global do header)
+
+    Só roda em MATERIAL DO MODELO (tem saveState inline + exercícios). Páginas
+    bespoke com sync próprio (-speech-training) e templates legados (-v2/-v-a/-v-b,
+    REGRA 20) ficam fora de escopo."""
+    p = path.replace('\\', '/')
+    if (re.search(r'-speech-training\.html$', p) or re.search(r'-v(?:2|-[ab])\.html$', p)
+            or re.search(r'-test(?:-aula\d+)?\.html$', p)):
+        return
+    # gatilho: material padrão com infra de exercícios do aluno
+    if 'function saveState' not in c or ('vocab-card-pc' not in c and 'speech-card' not in c):
+        return
+
+    def pos(needle):
+        return c.find(needle)
+
+    for needle, desc in (('supabase.min.js', 'supabase.min.js no <head> (cliente Supabase)'),
+                         ('/lib/supabase-config.js', 'supabase-config.js no <head>'),
+                         ('window.STUDENT_SLUG', 'window.STUDENT_SLUG no <head>')):
+        if pos(needle) < 0:
+            fails.append(f'PERSISTÊNCIA (REGRA 28): falta {desc} — sem isso a gravação do aluno '
+                         f'não sobe pro Supabase e SOME ao atualizar a página / trocar de device')
+    libs = (('/lib/lesson-progress.js', 'lesson-progress.js'),
+            ('/lib/controle-aulas.js', 'controle-aulas.js'),
+            ('/lib/activity-sync.js', 'activity-sync.js'))
+    for needle, name in libs:
+        if pos(needle) < 0:
+            extra = (' (O MAIS IMPORTANTE: é ele que intercepta a gravação e a salva na nuvem; '
+                     'sem ele as gravações/exercícios do Pre-class se perdem ao atualizar a página)'
+                     if name == 'activity-sync.js' else '')
+            fails.append(f'PERSISTÊNCIA (REGRA 28): falta /lib/{name}{extra}')
+
+    lp, ca, asy = pos('/lib/lesson-progress.js'), pos('/lib/controle-aulas.js'), pos('/lib/activity-sync.js')
+    if lp >= 0 and ca >= 0 and asy >= 0 and not (lp < ca < asy):
+        warns.append('PERSISTÊNCIA (REGRA 28): ordem dos scripts deveria ser '
+                     'lesson-progress.js -> controle-aulas.js -> activity-sync.js')
+    sv = pos('function saveState')
+    if asy >= 0 and sv >= 0 and asy < sv:
+        warns.append('PERSISTÊNCIA (REGRA 28): activity-sync.js carregado ANTES do saveState() inline — '
+                     'o wrap do save instantâneo não pega (auto-save de 30s ainda cobre). '
+                     'Carregar activity-sync DEPOIS do <script> principal')
+    if pos('window.TOTAL_AULAS') < 0:
+        warns.append('PERSISTÊNCIA (REGRA 28): falta window.TOTAL_AULAS (barra de progresso global do header)')
+
+
 def validate(path):
     fails, warns = [], []
     if not os.path.exists(path):
@@ -375,6 +439,7 @@ def validate(path):
     check_fix_regressions(c, css, is_standalone_slides, fails, warns)
     check_handlers_exist(c, fails)
     check_speaktext_escaping(c, fails)
+    check_persistence_wiring(c, path, fails, warns)
 
     return fails, warns
 
