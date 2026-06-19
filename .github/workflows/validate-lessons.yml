@@ -43,6 +43,13 @@ jobs:
         if: steps.files.outputs.modified != ''
         run: python3 _build/model/check_no_regression.py --base "origin/${{ github.base_ref }}" ${{ steps.files.outputs.modified }}
 
+      - name: "GATE 4 — vazamento de aba + shell divergente (hubs tocados, novos E modificados)"
+        # Trava o caso TÂNIA: accordion/Complementares vazando entre abas (ORPHAN/ESCAPE/
+        # SLIDES_COMP/DIV_IMBAL/MENU_MIX) e shell pré-modelo (OLD_SHELL). Só checa HUBs
+        # (ignora standalones e slugs lixo). Bloqueia o PR se algum hub tocado tiver defeito.
+        if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
+        run: python3 _build/model/audit_hubs_struct.py --check ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
+
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''
         continue-on-error: true
