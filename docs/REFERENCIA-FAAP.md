@@ -433,7 +433,7 @@ O `startRecording` deve OBRIGATORIAMENTE implementar:
         </div>
         <div class="speech-controls">
             <button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Gravar Livre</button>
-            <button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Parar</button>
+            <button class="btn btn-stop" onclick="stopFreeRecording(this)">&#9632; Parar</button>
         </div>
         <div id="think-result-l1" style="margin-top:0.5rem;"></div>
     </div>

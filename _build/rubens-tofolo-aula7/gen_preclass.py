@@ -137,7 +137,7 @@ def speech_cards():
             f'        <div class="speech-translation">{pt}</div>\n'
             f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
             f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
-            f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
+            f'<button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Stop</button></div>\n'
             f'        <div class="speech-result"></div>\n      </div>')
     return '\n'.join(out)
 
@@ -253,7 +253,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-7">
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. There is no right or wrong answer.</p>
       <div class="think-card">
         <div class="think-question">Imagine you are at a restaurant during your next trip. Order a full meal in one minute. Use would like and could I have for polite requests (I would like an appetizer..., could I have a beverage...), ask the server for advice (what do you recommend?), and mention any allergy. At the end, ask for the bill politely and say something about the tip.</div>
-        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)">&#9632; Stop</button></div>
         <div id="think-result-7"></div>
       </div>
     </div>

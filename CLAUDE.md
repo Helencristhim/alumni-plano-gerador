@@ -471,6 +471,9 @@ Cada aula no Pre-class DEVE conter estas 5 etapas, nesta ordem:
 </div>
 ```
 
+> ⛔ **REGRA BLOQUEANTE — botão `btn-stop` NUNCA com `style="display:none"` inline.**
+> A visibilidade do Stop é controlada SÓ pela classe CSS `.btn-stop.visible` (o JS faz `stopBtn.classList.add('visible')` / `.remove('visible')`). Um `style="display:none"` inline **vence a classe `.visible`** (specificity de estilo inline), então o Stop nunca aparece e, ao clicar Gravar, o botão simplesmente some. Foi exatamente o bug introduzido em jun/2026 quando o JS migrou de `stopBtn.style.display=...` para `classList`. O CSS `.btn-stop{display:none}` já esconde por padrão — NÃO repetir inline. Vale para `stopRecording`, `stopFreeRecording` e qualquer variante de stop.
+
 ---
 
 ## REGRA 6 — BADGES POR TIPO DE EXERCICIO

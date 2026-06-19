@@ -109,7 +109,7 @@ def speech_cards():
             f'        <div class="speech-translation">{pt}</div>\n'
             f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
             f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
-            f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
+            f'<button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Stop</button></div>\n'
             f'        <div class="speech-result"></div>\n      </div>')
     return "\n".join(out)
 
@@ -221,7 +221,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-4">
       <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. There is no right or wrong answer.</p>
       <div class="think-card">
         <div class="think-question">Think about an important phone or video call you have at work, perhaps with a counterpart on a contract. Record a short call: open it (say who you are and why you are calling), clarify one difficult point, and close it clearly with the next step. Use at least four new words from today.</div>
-        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)">&#9632; Stop</button></div>
         <div id="think-result-4"></div>
       </div>
     </div>
