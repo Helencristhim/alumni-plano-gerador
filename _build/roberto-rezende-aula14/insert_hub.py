@@ -25,7 +25,8 @@ def end_of_wrapper(h, start_idx):
     open_div = h.rfind('<div', 0, start_idx)
     i = open_div
     depth = 0
-    tag_re = re.compile(r'<(/?)div\b')
+    # capturar a tag inteira ate o '>' para nao cortar no meio de '</div>'
+    tag_re = re.compile(r'<(/?)div\b[^>]*>')
     while True:
         m = tag_re.search(h, i)
         if not m:
@@ -33,7 +34,7 @@ def end_of_wrapper(h, start_idx):
         if m.group(1) == '/':
             depth -= 1
             if depth == 0:
-                return m.end()
+                return m.end()   # logo apos o '>' do </div>
         else:
             depth += 1
         i = m.end()
@@ -57,14 +58,13 @@ def patch(path, is_prof):
     sclose = h.index('</div>', last_stamp) + len('</div>')
     h = h[:sclose] + '\n        ' + stamp.strip() + h[sclose:]
 
-    # --- 3. ACCORDION Pre-class (apos ex-lesson-13, antes do proximo bloco de aba) ---
+    # --- 3. ACCORDION Pre-class (DENTRO de tab-exercises, logo apos o FIM do
+    #        card ex-lesson-13 — NUNCA antes do <div tab-content> seguinte, senao
+    #        a aula 14 vaza para FORA da aba (ORPHAN) e desbalanceia divs). ---
     assert 'id="ex-lesson-14"' not in h, 'ex-lesson-14 ja existe'
     li = h.index('id="ex-lesson-13"')
-    if is_prof:
-        nxt = h.index('<div class="tab-content" id="tab-inclass">', li)
-    else:
-        nxt = h.index('<div class="tab-content" id="tab-complementary">', li)
-    h = h[:nxt] + accordion.strip() + '\n\n' + h[nxt:]
+    card_end = end_of_wrapper(h, li)   # indice logo apos o </div> que fecha o card ex-lesson-13
+    h = h[:card_end] + '\n' + accordion.strip() + '\n' + h[card_end:]
 
     # --- 4. COMPLEMENTARY (apos o ULTIMO wrapper l13, dentro de tab-complementary) ---
     assert 'data-media="l14-' not in h, 'l14 complementary ja existe'
