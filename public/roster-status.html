@@ -1,0 +1,64 @@
+<!DOCTYPE html><html lang=pt-BR><head><meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Roster — Status ao vivo</title>
+<style>
+body{font:14px/1.5 -apple-system,Inter,sans-serif;background:#0f1117;color:#e6e6e6;margin:0;padding:24px}
+h1{font-size:1.4rem;margin:0 0 4px} .sub{color:#8b8b9b;font-size:.82rem;margin-bottom:16px}
+table{border-collapse:collapse;width:100%;background:#171a23;border-radius:10px;overflow:hidden}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid #242838}
+th{background:#1e2230;cursor:pointer;user-select:none;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:#9aa}
+tr:hover td{background:#1c2030}
+.bar{height:7px;background:#242838;border-radius:4px;overflow:hidden;min-width:90px;display:inline-block;vertical-align:middle}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#22c55e)}
+.feitas>i{background:linear-gradient(90deg,#f59e0b,#22c55e)}
+.lvl{font-weight:700;padding:2px 7px;border-radius:5px;background:#2a2f40;font-size:.78rem}
+.done20{color:#22c55e;font-weight:700}.warn{color:#f59e0b}
+.tag{font-size:.68rem;background:#3a2a1a;color:#f59e0b;padding:1px 5px;border-radius:4px;margin-left:5px}
+.es{background:#1a2a3a;color:#60a5fa}
+button{background:#3b82f6;color:#fff;border:0;padding:7px 14px;border-radius:7px;cursor:pointer;font-weight:600}
+small{color:#6b7280}
+</style></head><body>
+<h1>Roster — Status ao vivo</h1>
+<div class=sub>Criadas/Modelo/Nível = snapshot do git (<code>f9661adc</code>) · <b>Feitas</b> = Supabase ao vivo · alvo <b>20</b> aulas
+&nbsp;<button onclick=load()>↻ Atualizar feitas</button> <span id=st></span></div>
+<table id=t><thead><tr>
+<th onclick=sortBy('slug')>Aluno</th>
+<th onclick=sortBy('nivel')>Nível</th>
+<th onclick=sortBy('criadas')>Criadas</th>
+<th onclick=sortBy('model_from')>Modelo a partir de</th>
+<th onclick=sortBy('feitas')>Feitas pelo aluno (ao vivo)</th>
+<th onclick=sortBy('faltam')>Faltam p/ 20</th>
+</tr></thead><tbody id=tb></tbody></table>
+<script>
+var ROWS=[{"slug": "vanessa-maluf", "nivel": "B1+", "criadas": 5, "model_from": null, "standalones": 0, "spanish": false}, {"slug": "vanessa-giuriati", "nivel": "B1", "criadas": 7, "model_from": 1, "standalones": 7, "spanish": false}, {"slug": "juliana-marques", "nivel": "?", "criadas": 9, "model_from": null, "standalones": 0, "spanish": true}, {"slug": "daniel-bastos", "nivel": "A2", "criadas": 10, "model_from": 1, "standalones": 10, "spanish": true}, {"slug": "marlene-landucci", "nivel": "A1+", "criadas": 10, "model_from": null, "standalones": 0, "spanish": false}, {"slug": "rafael-gasparelli-lima", "nivel": "A2+", "criadas": 10, "model_from": null, "standalones": 0, "spanish": false}, {"slug": "daniela-feitoza-v2", "nivel": "?", "criadas": 14, "model_from": 7, "standalones": 8, "spanish": false}, {"slug": "carlos-vinicius-vale-bassan", "nivel": "B1+", "criadas": 15, "model_from": 7, "standalones": 12, "spanish": false}, {"slug": "carolina-paludetto-rodrigues", "nivel": "A2+", "criadas": 15, "model_from": 6, "standalones": 10, "spanish": false}, {"slug": "elaine-mieko-pinho", "nivel": "A2", "criadas": 15, "model_from": 9, "standalones": 7, "spanish": false}, {"slug": "erica-maria-machado-santarem", "nivel": "A2", "criadas": 15, "model_from": 1, "standalones": 15, "spanish": false}, {"slug": "fabiana-michelly-silva", "nivel": "B2", "criadas": 15, "model_from": 1, "standalones": 15, "spanish": false}, {"slug": "fernanda-gabriela-silva-rodrigues", "nivel": "A1", "criadas": 15, "model_from": 1, "standalones": 15, "spanish": false}, {"slug": "gabriela-pires", "nivel": "A1+", "criadas": 15, "model_from": 9, "standalones": 7, "spanish": false}, {"slug": "luiz-bressane", "nivel": "A2+", "criadas": 15, "model_from": 9, "standalones": 7, "spanish": false}, {"slug": "maria-claudia-curimbaba", "nivel": "B1", "criadas": 15, "model_from": 14, "standalones": 14, "spanish": false}, {"slug": "natalie-viegas", "nivel": "B1+", "criadas": 15, "model_from": 7, "standalones": 11, "spanish": false}, {"slug": "rafael-de-andrade-brandao", "nivel": "A2+", "criadas": 15, "model_from": 4, "standalones": 14, "spanish": false}, {"slug": "roberto-pires", "nivel": "A2", "criadas": 15, "model_from": 1, "standalones": 14, "spanish": false}, {"slug": "roberto-rezende", "nivel": "B1+", "criadas": 15, "model_from": 2, "standalones": 14, "spanish": false}, {"slug": "victor-malvezi-paschotto", "nivel": "B1", "criadas": 15, "model_from": 1, "standalones": 15, "spanish": false}, {"slug": "walyson-ginaldo-silva", "nivel": "B1", "criadas": 15, "model_from": 1, "standalones": 15, "spanish": false}, {"slug": "aline-sberci", "nivel": "A2+", "criadas": 16, "model_from": 4, "standalones": 15, "spanish": false}, {"slug": "andreia-heins", "nivel": "B1", "criadas": 16, "model_from": 6, "standalones": 11, "spanish": false}, {"slug": "anna-flavia-miranda-da-silva", "nivel": "A1", "criadas": 16, "model_from": 7, "standalones": 15, "spanish": false}, {"slug": "dienane-brandao-de-mesquita", "nivel": "A1+", "criadas": 16, "model_from": 2, "standalones": 15, "spanish": false}, {"slug": "diogo-leal", "nivel": "A2+", "criadas": 16, "model_from": 6, "standalones": 15, "spanish": false}, {"slug": "eduarda-gabriel", "nivel": "B1+", "criadas": 16, "model_from": 6, "standalones": 11, "spanish": false}, {"slug": "eduardo-chiba", "nivel": "B1+", "criadas": 16, "model_from": 5, "standalones": 12, "spanish": false}, {"slug": "estephano-akihito-ishii", "nivel": "A1", "criadas": 16, "model_from": 6, "standalones": 11, "spanish": false}, {"slug": "gabriela-paulucci", "nivel": "A1", "criadas": 16, "model_from": 2, "standalones": 15, "spanish": false}, {"slug": "gleice-leonardo-rocha-de-souza", "nivel": "A1+", "criadas": 16, "model_from": 4, "standalones": 13, "spanish": false}, {"slug": "karina-macedo", "nivel": "A1", "criadas": 16, "model_from": 4, "standalones": 13, "spanish": false}, {"slug": "mark-kazuyoshi-seki-omagari", "nivel": "A2", "criadas": 16, "model_from": 6, "standalones": 11, "spanish": false}, {"slug": "milton-sayegh", "nivel": "B1+", "criadas": 16, "model_from": 11, "standalones": 11, "spanish": false}, {"slug": "nilo-mesquita-patucci", "nivel": "B1", "criadas": 16, "model_from": 2, "standalones": 15, "spanish": false}, {"slug": "pricila-adamo", "nivel": "B1+", "criadas": 16, "model_from": 6, "standalones": 15, "spanish": false}, {"slug": "rafael-pelizaro", "nivel": "B1", "criadas": 16, "model_from": 3, "standalones": 14, "spanish": false}, {"slug": "rubens-tofolo", "nivel": "B1", "criadas": 16, "model_from": 4, "standalones": 13, "spanish": false}, {"slug": "sandra-hayasaki", "nivel": "A1", "criadas": 16, "model_from": 1, "standalones": 16, "spanish": false}, {"slug": "simone-quiles-de-santana-marques", "nivel": "A2", "criadas": 16, "model_from": 3, "standalones": 15, "spanish": false}, {"slug": "tania-rosa", "nivel": "A2", "criadas": 16, "model_from": 2, "standalones": 15, "spanish": false}, {"slug": "tuca-dias", "nivel": "B1", "criadas": 16, "model_from": 4, "standalones": 13, "spanish": false}, {"slug": "patricia-ruffo", "nivel": "B1+", "criadas": 17, "model_from": 6, "standalones": 15, "spanish": false}], TARGET=20, SBURL="https://xxdggcopydghbmgqqebq.supabase.co", SBKEY="sb_publishable_RjekGapp8WtVbDx0J8etDg_hVq7na29", sortKey='criadas', asc=true;
+function pct(n,d){return d?Math.round(n/d*100):0}
+function render(){
+ var tb=document.getElementById('tb');tb.innerHTML='';
+ ROWS.slice().sort(function(a,b){var x=a[sortKey],y=b[sortKey];x=x==null?-1:x;y=y==null?-1:y;return (x<y?-1:x>y?1:0)*(asc?1:-1)})
+ .forEach(function(r){
+  var feitas=r.feitas||0, faltam=Math.max(0,TARGET-r.criadas);
+  var modtxt = r.model_from==null ? '<small>—</small>' : (r.model_from==1?'<span class=done20>tudo</span>':'aula '+r.model_from+'+');
+  var tr=document.createElement('tr');
+  tr.innerHTML='<td>'+r.slug+(r.spanish?' <span class="tag es">ES</span>':'')+'</td>'
+   +'<td><span class=lvl>'+(r.nivel||'?')+'</span></td>'
+   +'<td>'+(r.criadas>=20?'<span class=done20>'+r.criadas+'</span>':r.criadas)+' <span class=bar><i style="width:'+pct(r.criadas,TARGET)+'%"></i></span></td>'
+   +'<td>'+modtxt+' <small>('+r.standalones+' standalones)</small></td>'
+   +'<td>'+feitas+' / '+r.criadas+' <span class="bar feitas"><i style="width:'+pct(feitas,r.criadas||1)+'%"></i></span></td>'
+   +'<td>'+(faltam==0?'<span class=done20>✓ 20</span>':'<span class=warn>'+faltam+'</span>')+'</td>';
+  tb.appendChild(tr);
+ });
+}
+function sortBy(k){asc=(sortKey==k)?!asc:true;sortKey=k;render()}
+function load(){
+ document.getElementById('st').textContent='carregando feitas…';
+ fetch(SBURL+'/rest/v1/lesson_progress?select=student_slug,lesson_number,inclass_done&inclass_done=eq.true',
+   {headers:{apikey:SBKEY,Authorization:'Bearer '+SBKEY}})
+ .then(function(r){return r.json()}).then(function(d){
+  var cnt={};d.forEach(function(x){cnt[x.student_slug]=(cnt[x.student_slug]||0)+1});
+  ROWS.forEach(function(r){r.feitas=cnt[r.slug]||0});
+  document.getElementById('st').textContent='✓ '+new Date().toLocaleTimeString();
+  render();
+ }).catch(function(e){document.getElementById('st').textContent='erro Supabase: '+e});
+}
+render();load();setInterval(load,60000);
+</script></body></html>
