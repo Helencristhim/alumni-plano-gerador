@@ -1,0 +1,47 @@
+name: Roster dashboard auto-update
+
+# Regenera public/roster-status.html a cada merge de aula no main.
+# NÃO inclui roster-status.html nos paths (evita loop com o commit do bot)
+# e a mensagem do commit leva [skip ci] como segunda trava.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/professor/**.html'
+      - 'public/aluno/**.html'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: roster-dashboard
+  cancel-in-progress: false
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Regenerate dashboard
+        run: python3 scripts/roster_dashboard.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- public/roster-status.html; then
+            echo "Sem mudanças no painel."
+          else
+            git add public/roster-status.html
+            git commit -m "chore: atualiza painel de status [skip ci]"
+            git push
+          fi
