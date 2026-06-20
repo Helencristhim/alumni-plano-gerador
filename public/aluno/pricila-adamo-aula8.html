@@ -506,6 +506,109 @@ body.slide-mode .nav-bar { display:flex; }
 .btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
 .btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
 
+/* ===== B2 IN-CLASS BLOCKS (aditivo — portados de artefato-b2-exercicios.html) =====
+   Blocos display + 3 interativos (gist/tf/reveal-answer). Tudo escopado em .ic-* para
+   nunca colidir com componentes existentes. Cores mapeadas pra paleta do modelo:
+   navy->#003080 (cor fixa Alumni), accent (verde-substituto sage)->var(--accent),
+   ink->var(--text). Funciona em slide-light e slide-dark (overrides no bloco de contraste). */
+.ic-block { margin: 1.1rem 0; text-align: left; }
+.ic-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); padding: 1.3rem 1.5rem; margin-bottom: 1rem; }
+.ic-card-h3 { margin: 0 0 .8rem; font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.2rem; color: #003080; display: flex; align-items: center; gap: .55rem; }
+.ic-tag { font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #fff; background: var(--accent); padding: .2rem .55rem; border-radius: 6px; }
+/* question / guiding / analyse lists */
+.ic-qs { margin: 0; padding: 0; list-style: none; }
+.ic-qs li { display: flex; gap: .8rem; align-items: flex-start; padding: .8rem .25rem; border-bottom: 1px dashed var(--border); font-size: 1rem; line-height: 1.45; }
+.ic-qs li:last-child { border-bottom: none; }
+.ic-qnum { flex: 0 0 auto; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: #003080; color: #fff; font-size: .82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: .1rem; }
+.ic-qs.ic-guiding .ic-qnum { background: var(--accent); }
+/* vocabnote / followup */
+.ic-note { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem 1.2rem; font-size: .95rem; color: var(--text); font-weight: 500; margin-bottom: 1rem; line-height: 1.45; }
+.ic-followup { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.5; color: var(--text); margin-bottom: 1rem; }
+/* matching (display, 2 columns) */
+.ic-match { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.ic-match-col h4 { margin: 0 0 .65rem; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); }
+.ic-chip { display: flex; gap: .6rem; align-items: flex-start; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 10px; padding: .55rem .75rem; margin-bottom: .5rem; font-size: .9rem; line-height: 1.35; }
+.ic-chip .ic-k { flex: 0 0 auto; font-weight: 800; color: #003080; min-width: 1.2rem; }
+.ic-chip.ic-def .ic-k { color: var(--accent); }
+.ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
+/* reading text + source */
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
+.ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
+.ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
+.ic-reading .ic-src { font-size: .75rem; color: var(--text-dim); margin-top: .8rem; border-top: 1px solid var(--border); padding-top: .6rem; }
+.ic-reading .ic-src a { color: #003080; }
+/* gap-fill */
+.ic-gaptext { font-size: 1.05rem; line-height: 1.9; color: var(--text); }
+.ic-blank { display: inline-block; min-width: 4.5rem; border-bottom: 2px solid var(--accent); text-align: center; font-weight: 700; color: var(--accent); padding: 0 .35rem; }
+.ic-blank .ic-n { font-size: .65rem; color: var(--text-dim); font-weight: 600; vertical-align: super; }
+/* word bank */
+.ic-bank { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
+.ic-bank .ic-b { background: #003080; color: #fff; font-size: .82rem; font-weight: 600; padding: .4rem .8rem; border-radius: 999px; }
+.ic-bank.ic-soft .ic-b { background: var(--bg-card); color: #003080; border: 1.5px solid #003080; }
+/* scenarios */
+.ic-scenario { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: .8rem; }
+.ic-scenario .ic-who { font-size: .68rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+.ic-scenario p { margin: 0; font-size: 1rem; line-height: 1.5; color: var(--text); }
+/* language-focus rows (lf) */
+.ic-lf-list { display: flex; flex-direction: column; gap: .55rem; }
+.ic-lf { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: .75rem 1rem; font-size: 1rem; color: var(--text); }
+.ic-lf .ic-lbl { flex: 0 0 auto; width: 1.7rem; height: 1.7rem; border-radius: 7px; background: var(--bg-elevated); color: #003080; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.ic-lf .ic-mod { font-weight: 700; color: var(--accent); }
+.ic-lf .ic-mod.ic-strong { color: var(--danger); }
+/* modal meaning cards */
+.ic-modals { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+.ic-modal-c { border-radius: 12px; padding: 1rem; border: 1px solid var(--border); background: var(--bg-card); }
+.ic-modal-c .ic-m { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-bottom: .35rem; color: var(--accent); }
+.ic-modal-c .ic-strength { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .5rem; }
+.ic-modal-c p { margin: 0; font-size: .85rem; line-height: 1.45; color: var(--text-mid); }
+/* rephrase rows */
+.ic-rephrase-cue { display: inline-block; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 7px; padding: .1rem .55rem; font-weight: 700; color: #003080; font-size: .78rem; margin-left: .3rem; }
+/* ===== gist (interativo: clicar a ideia certa) ===== */
+.ic-choices { display: flex; flex-direction: column; gap: .65rem; }
+.ic-choice { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 11px; padding: .85rem 1rem; font-size: 1rem; color: var(--text); cursor: pointer; transition: all .2s ease; }
+.ic-choice:hover { border-color: var(--accent); }
+.ic-choice .ic-opt { flex: 0 0 auto; width: 1.8rem; height: 1.8rem; border-radius: 8px; background: var(--bg-elevated); color: #003080; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.ic-choice .ic-badge { margin-left: auto; font-size: .78rem; font-weight: 700; color: var(--success); opacity: 0; transition: opacity .2s; }
+.ic-choice.ic-picked-right { border-color: var(--success); background: var(--success-bg); }
+.ic-choice.ic-picked-right .ic-opt { background: var(--success); color: #fff; }
+.ic-choice.ic-picked-right .ic-badge { opacity: 1; }
+.ic-choice.ic-picked-wrong { border-color: var(--danger); background: var(--danger-bg); }
+/* ===== tf (interativo: revelar verdict + justificativa) ===== */
+.ic-tf { display: flex; flex-direction: column; gap: .55rem; }
+.ic-tfrow { display: flex; gap: .8rem; align-items: flex-start; background: var(--bg-card); border: 1px solid var(--border); border-radius: 11px; padding: .8rem 1rem; cursor: pointer; transition: border-color .2s ease; }
+.ic-tfrow:hover { border-color: var(--accent); }
+.ic-tfrow .ic-qnum { background: #003080; }
+.ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
+.ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
+.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
+.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+.ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
+/* ===== reveal answer (accordion teacher-led) ===== */
+.ic-answer { border-radius: 12px; border: 1.5px dashed var(--accent); background: var(--accent-dim); overflow: hidden; margin-top: 1rem; }
+.ic-answer .ic-ans-head { display: flex; align-items: center; gap: .65rem; padding: .85rem 1.1rem; cursor: pointer; user-select: none; font-weight: 700; color: #003080; font-size: .92rem; }
+.ic-answer .ic-ans-head .ic-ico { width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex: 0 0 auto; transition: transform .2s; }
+.ic-answer.ic-open .ic-ans-head .ic-ico { transform: rotate(45deg); }
+.ic-answer .ic-ans-body { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.ic-answer.ic-open .ic-ans-body { max-height: 60rem; }
+.ic-answer .ic-ans-inner { padding: .1rem 1.1rem 1.1rem; font-size: .9rem; line-height: 1.55; color: var(--text); }
+.ic-answer .ic-akey { display: flex; flex-wrap: wrap; gap: .45rem; }
+.ic-answer .ic-akey .ic-a { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 8px; padding: .3rem .65rem; font-size: .82rem; font-weight: 600; color: #003080; }
+.ic-answer .ic-ans-inner ol { margin: 0; padding-left: 1.3rem; }
+.ic-answer .ic-ans-inner ol li { margin-bottom: .4rem; }
+@media (max-width: 760px) { .ic-match { grid-template-columns: 1fr; } .ic-modals { grid-template-columns: 1fr; } }
+/* slide-dark overrides: blocos legíveis em fundo escuro (cartões claros, texto escuro) */
+.slide-dark .ic-card, .slide-dark .ic-reading, .slide-dark .ic-lf, .slide-dark .ic-modal-c,
+.slide-dark .ic-chip, .slide-dark .ic-choice, .slide-dark .ic-tfrow, .slide-dark .ic-scenario,
+.slide-dark .ic-note, .slide-dark .ic-followup, .slide-dark .ic-answer { background: #fff !important; }
+.slide-dark .ic-card *, .slide-dark .ic-reading *, .slide-dark .ic-lf *, .slide-dark .ic-modal-c *,
+.slide-dark .ic-chip *, .slide-dark .ic-choice *, .slide-dark .ic-tfrow *, .slide-dark .ic-scenario *,
+.slide-dark .ic-note, .slide-dark .ic-followup *, .slide-dark .ic-answer * { color: #1a1a2e !important; }
+.slide-dark .ic-qnum, .slide-dark .ic-bank .ic-b { color: #fff !important; }
+.slide-dark .ic-tag { color: #fff !important; }
+.slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
+.slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
 .teacher-t{display:none !important}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -587,7 +690,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div style="display:flex;flex-direction:column;gap:1rem">
     <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">08</div>
-      <div><div style="font-weight:600;font-size:.95rem">Navigating New Cities</div><div style="font-size:.8rem;color:var(--text-dim)">Getting around &amp; giving directions, defining and non-defining relative clauses -- 28 slides</div></div>
+      <div><div style="font-weight:600;font-size:.95rem">Navigating New Cities</div><div style="font-size:.8rem;color:var(--text-dim)">Getting around, relative clauses &amp; a reading on exploring cities -- 33 slides</div></div>
     </div>
   </div>
 </div>
@@ -934,8 +1037,69 @@ body.slide-mode .nav-bar { display:flex; }
   </div>
 </div>
 
+<!-- ========== B2 READING (new block) ========== -->
+<div class="slide slide-light" data-slide="18" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Read for the Main Idea</div>
+    <h2 class="slide-heading">Getting Pleasantly <span class="accent">Lost</span></h2>
+    <div class="ic-reading"><div class="ic-rtitle">The City That Rewards the Lost</div><p>When Mariana first arrived in Lisbon, she made the mistake that ruins so many trips: she tried to control everything. She studied the metro map for hours, bought a guidebook that promised the ten unmissable sights, and plotted a route that would let her tick every box before sunset. By noon on the first day she was exhausted, irritable, and oddly disappointed. The city, which she had imagined for years, felt like a checklist she was failing to complete.</p><p>Everything changed on the afternoon she got lost. A tram broke down on a street that she could not find on any map, so she simply started walking uphill, away from the crowds. The neighbourhood where she ended up, a maze of crooked lanes and tiled facades, was not in her guidebook at all. She found a tiny bakery whose owner spoke no English, a viewpoint that looked out over the whole river, and a square where old men played cards in the shade. None of it was planned, and that, she realised, was exactly the point.</p><p>Mariana now travels differently. She still reads about a place before she goes, but she leaves whole afternoons empty for the streets that nobody recommends. The traveller who insists on a perfect itinerary, she says, never meets the city that actually exists. A walkable town, which forgives a wrong turn and turns it into a discovery, will always teach you more than a car window ever could. Getting pleasantly lost, it turns out, is not a failure of planning. It is the plan.</p><div class="ic-src">Original passage -- Alumni B2</div></div>
+    <div class="ic-card"><div class="ic-card-h3">What is the writer's main point about Mariana's trip?</div><div class="ic-choices"><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">a</span><span>A detailed itinerary and a good guidebook are the secret to enjoying a new city.</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="true" onclick="icPickGist(this)"><span class="ic-opt">b</span><span>Leaving room to wander and get lost lets a traveller discover the real city.</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">c</span><span>Cities are best explored quickly by car so you can see every famous sight.</span><span class="ic-badge">&#10003; Main idea</span></div></div></div>
+  </div>
+</div>
+
+<!-- ========== B2 MATCHING (new block) ========== -->
+<div class="slide slide-light" data-slide="19" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">From the Text</div>
+    <h2 class="slide-heading">City <span class="accent">Expressions</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Match each expression to its meaning</p>
+    <div class="ic-card"><div class="ic-card-h3">Match the city expression to its meaning</div><div class="ic-match"><div class="ic-match-col"><h4>Words &amp; expressions</h4><div class="ic-chip ic-word"><span class="ic-k">1</span><span>to get pleasantly lost</span></div><div class="ic-chip ic-word"><span class="ic-k">2</span><span>a walkable town</span></div><div class="ic-chip ic-word"><span class="ic-k">3</span><span>off the beaten track</span></div><div class="ic-chip ic-word"><span class="ic-k">4</span><span>a viewpoint</span></div><div class="ic-chip ic-word"><span class="ic-k">5</span><span>an itinerary</span></div></div><div class="ic-match-col"><h4>Definitions</h4><div class="ic-chip ic-def"><span class="ic-k">a</span><span>a high spot from which you can see far across a place</span></div><div class="ic-chip ic-def"><span class="ic-k">b</span><span>away from the busy, touristy areas</span></div><div class="ic-chip ic-def"><span class="ic-k">c</span><span>a planned schedule of places to visit on a trip</span></div><div class="ic-chip ic-def"><span class="ic-k">d</span><span>to wander without a fixed route and enjoy the surprise</span></div><div class="ic-chip ic-def"><span class="ic-k">e</span><span>a place where it is easy and pleasant to go around on foot</span></div></div></div></div>
+  </div>
+</div>
+
+<!-- ========== B2 GAPFILL (new block) ========== -->
+<div class="slide slide-light" data-slide="20" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Build the Sentence</div>
+    <h2 class="slide-heading">Choose the Relative <span class="accent">Pronoun</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Fill each gap from the bank -- one word is a distractor</p>
+    <div class="ic-card"><div class="ic-gaptext">The neighbourhood <span class="ic-blank"><span class="ic-n">1</span>&nbsp;&nbsp;&nbsp;</span> Mariana got lost was a maze of crooked lanes. She found a bakery <span class="ic-blank"><span class="ic-n">2</span>&nbsp;&nbsp;&nbsp;</span> owner spoke no English, a viewpoint <span class="ic-blank"><span class="ic-n">3</span>&nbsp;&nbsp;&nbsp;</span> looked out over the river, and a traveller <span class="ic-blank"><span class="ic-n">4</span>&nbsp;&nbsp;&nbsp;</span> insists on a perfect plan, she says, never meets the city <span class="ic-blank"><span class="ic-n">5</span>&nbsp;&nbsp;&nbsp;</span> actually exists.</div><div class="ic-bank ic-soft"><span class="ic-b">where</span><span class="ic-b">whose</span><span class="ic-b">which</span><span class="ic-b">who</span><span class="ic-b">that</span><span class="ic-b">when</span></div></div>
+  </div>
+</div>
+
+<!-- ========== B2 TRUE/FALSE (new block - interactive) ========== -->
+<div class="slide slide-light" data-slide="21" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Check Understanding</div>
+    <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">On her first day in Lisbon, Mariana tried to plan and control everything.<span class="ic-just">&#8594; She studied the map, bought a guidebook, and plotted a route to tick every box.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">Mariana's best discoveries that day were all listed in her guidebook.<span class="ic-just">&#8594; The neighbourhood where she ended up was not in her guidebook at all.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">She got lost because a tram broke down on a street she could not find on a map.<span class="ic-just">&#8594; A tram broke down on a street that she could not find on any map, so she walked uphill.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">Mariana now believes a strict itinerary is the only way to enjoy a city.<span class="ic-just">&#8594; She leaves afternoons empty and says a perfect itinerary stops you meeting the real city.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+  </div>
+</div>
+
+<!-- ========== B2 GUIDING + REPHRASE (new blocks) ========== -->
+<div class="slide slide-light" data-slide="22" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Talk &amp; Transform</div>
+    <h2 class="slide-heading">Your City, Your <span class="accent">Clauses</span></h2>
+    <div class="ic-card"><ul class="ic-qs ic-guiding"><li><span class="ic-qnum">&#8250;</span><span>Describe a place you discovered by accident, using a relative clause: "a square where...", "a person who...".</span></li><li><span class="ic-qnum">&#8250;</span><span>Are you a planner or a wanderer when you travel? Why?</span></li><li><span class="ic-qnum">&#8250;</span><span>Think of a city you know well. Would you call it walkable or car-dependent, and which detail makes it so?</span></li><li><span class="ic-qnum">&#8250;</span><span>Mariana says getting lost "is the plan". Do you agree? When does that work, and when does it not?</span></li></ul></div>
+    <div class="ic-card"><div class="ic-card-h3">Combine each pair into one sentence using a relative clause</div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>Mariana found a bakery. Its owner spoke no English.<span class="ic-rephrase-cue">(whose)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">2</span><span>She reached a viewpoint. It looked out over the whole river.<span class="ic-rephrase-cue">(which)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">3</span><span>She loved the neighbourhood. She got lost there.<span class="ic-rephrase-cue">(where)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">4</span><span>The traveller never meets the real city. The traveller insists on a perfect plan.<span class="ic-rephrase-cue">(who)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">5</span><span>A walkable town forgives a wrong turn. It turns the wrong turn into a discovery.<span class="ic-rephrase-cue">(which)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li></ol></div>
+  </div>
+</div>
+
+<!-- ========== B2 ANSWER KEY (new block - interactive) ========== -->
+<div class="slide slide-light" data-slide="23" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Check Your Answers</div>
+    <h2 class="slide-heading">Combine <span class="accent">Answer Key</span></h2>
+    <div style="max-width:560px;margin:1.2rem auto 0">
+      <div class="ic-answer"><div class="ic-ans-head" onclick="icToggleAnswer(this)"><span class="ic-ico">+</span>Reveal the combine answer key</div><div class="ic-ans-body"><div class="ic-ans-inner"><div style="font-size:.78rem;color:var(--text-dim);margin-bottom:.6rem">Defining clauses (sentences 1-4) carry essential information and take NO commas; you may use that for things instead of which. A non-defining clause (sentence 5) adds extra information, so it is wrapped in commas and you can NEVER use that -- only which or who.</div><ol><li>Mariana found a bakery whose owner spoke no English.</li><li>She reached a viewpoint which looked out over the whole river.</li><li>She loved the neighbourhood where she got lost.</li><li>The traveller who insists on a perfect plan never meets the real city.</li><li>A walkable town, which forgives a wrong turn, turns it into a discovery.</li></ol></div></div></div>
+    </div>
+  </div>
+</div>
+
 <!-- ========== SLIDE 18: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="18" data-phase="5" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="24" data-phase="5" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train Your <span class="accent">Clauses</span></h2>
@@ -944,7 +1108,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: DETECTIVE ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="5">
+<div class="slide slide-light" data-slide="25" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label">Detective</div>
     <h2 class="slide-heading">Fix the <span class="accent">Clause</span></h2>
@@ -959,7 +1123,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 20: SPEAKING ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="5">
+<div class="slide slide-light" data-slide="26" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label">Speaking</div>
     <h2 class="slide-heading">Join Them <span class="accent">Out Loud</span></h2>
@@ -973,7 +1137,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: ARTIFACT / THE DIRECTIONS ========== -->
-<div class="slide slide-light" data-slide="21" data-phase="5">
+<div class="slide slide-light" data-slide="27" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label">The Directions</div>
     <h2 class="slide-heading">Read a Real Set of <span class="accent">Directions</span></h2>
@@ -989,7 +1153,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="22" data-phase="6" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="28" data-phase="6" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Find Your Way <span class="accent">Yourself</span></h2>
@@ -998,7 +1162,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="6">
+<div class="slide slide-light" data-slide="29" data-phase="6">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">In the <span class="accent">Taxi</span></h2>
@@ -1015,7 +1179,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="6">
+<div class="slide slide-light" data-slide="30" data-phase="6">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Describe the <span class="accent">Route</span></h2>
@@ -1032,7 +1196,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="25" data-phase="6">
+<div class="slide slide-light" data-slide="31" data-phase="6">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Your City, Your <span class="accent">Routes</span></h2>
@@ -1044,7 +1208,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="26" data-phase="7" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="32" data-phase="7" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Mission <span class="accent">Complete</span></h2>
@@ -1052,7 +1216,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: SELF-ASSESSMENT ========== -->
-<div class="slide slide-dark" data-slide="27" data-phase="7">
+<div class="slide slide-dark" data-slide="33" data-phase="7">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading" style="color:#fff">What I Can <span class="accent">Do Now</span></h2>
@@ -1067,7 +1231,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="28" data-phase="7">
+<div class="slide slide-dark" data-slide="34" data-phase="7">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1189,7 +1353,7 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 28;
+var totalSlides = 34;
 var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
 
 function changeSlide(dir) {
@@ -1267,6 +1431,17 @@ function revealVocab(card) {
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
 function revealFill(item) { item.classList.add('revealed'); }
 function revealComp(q) { q.classList.add('revealed'); }
+
+// ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====
+// Interativos teacher-led no slide. Mesmo padrão toggle do revealVocab/revealComp
+// (REGRA 27.E: clicar abre, clicar de novo fecha). NÃO mexem em updateProgress
+// (slides IN CLASS não entram na barra do Pre-class).
+function icPickGist(choice) {
+  var right = choice.dataset.right === 'true';
+  choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
+}
+function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;
 function revealError(card) {
