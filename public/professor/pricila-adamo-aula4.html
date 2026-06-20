@@ -506,6 +506,109 @@ body.slide-mode .nav-bar { display:flex; }
 .btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
 .btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
 
+/* ===== B2 IN-CLASS BLOCKS (aditivo — portados de artefato-b2-exercicios.html) =====
+   Blocos display + 3 interativos (gist/tf/reveal-answer). Tudo escopado em .ic-* para
+   nunca colidir com componentes existentes. Cores mapeadas pra paleta do modelo:
+   navy->#003080 (cor fixa Alumni), accent (verde-substituto sage)->var(--accent),
+   ink->var(--text). Funciona em slide-light e slide-dark (overrides no bloco de contraste). */
+.ic-block { margin: 1.1rem 0; text-align: left; }
+.ic-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); padding: 1.3rem 1.5rem; margin-bottom: 1rem; }
+.ic-card-h3 { margin: 0 0 .8rem; font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.2rem; color: #003080; display: flex; align-items: center; gap: .55rem; }
+.ic-tag { font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #fff; background: var(--accent); padding: .2rem .55rem; border-radius: 6px; }
+/* question / guiding / analyse lists */
+.ic-qs { margin: 0; padding: 0; list-style: none; }
+.ic-qs li { display: flex; gap: .8rem; align-items: flex-start; padding: .8rem .25rem; border-bottom: 1px dashed var(--border); font-size: 1rem; line-height: 1.45; }
+.ic-qs li:last-child { border-bottom: none; }
+.ic-qnum { flex: 0 0 auto; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: #003080; color: #fff; font-size: .82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: .1rem; }
+.ic-qs.ic-guiding .ic-qnum { background: var(--accent); }
+/* vocabnote / followup */
+.ic-note { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem 1.2rem; font-size: .95rem; color: var(--text); font-weight: 500; margin-bottom: 1rem; line-height: 1.45; }
+.ic-followup { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.5; color: var(--text); margin-bottom: 1rem; }
+/* matching (display, 2 columns) */
+.ic-match { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.ic-match-col h4 { margin: 0 0 .65rem; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); }
+.ic-chip { display: flex; gap: .6rem; align-items: flex-start; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 10px; padding: .55rem .75rem; margin-bottom: .5rem; font-size: .9rem; line-height: 1.35; }
+.ic-chip .ic-k { flex: 0 0 auto; font-weight: 800; color: #003080; min-width: 1.2rem; }
+.ic-chip.ic-def .ic-k { color: var(--accent); }
+.ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
+/* reading text + source */
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
+.ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
+.ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
+.ic-reading .ic-src { font-size: .75rem; color: var(--text-dim); margin-top: .8rem; border-top: 1px solid var(--border); padding-top: .6rem; }
+.ic-reading .ic-src a { color: #003080; }
+/* gap-fill */
+.ic-gaptext { font-size: 1.05rem; line-height: 1.9; color: var(--text); }
+.ic-blank { display: inline-block; min-width: 4.5rem; border-bottom: 2px solid var(--accent); text-align: center; font-weight: 700; color: var(--accent); padding: 0 .35rem; }
+.ic-blank .ic-n { font-size: .65rem; color: var(--text-dim); font-weight: 600; vertical-align: super; }
+/* word bank */
+.ic-bank { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
+.ic-bank .ic-b { background: #003080; color: #fff; font-size: .82rem; font-weight: 600; padding: .4rem .8rem; border-radius: 999px; }
+.ic-bank.ic-soft .ic-b { background: var(--bg-card); color: #003080; border: 1.5px solid #003080; }
+/* scenarios */
+.ic-scenario { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: .8rem; }
+.ic-scenario .ic-who { font-size: .68rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+.ic-scenario p { margin: 0; font-size: 1rem; line-height: 1.5; color: var(--text); }
+/* language-focus rows (lf) */
+.ic-lf-list { display: flex; flex-direction: column; gap: .55rem; }
+.ic-lf { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: .75rem 1rem; font-size: 1rem; color: var(--text); }
+.ic-lf .ic-lbl { flex: 0 0 auto; width: 1.7rem; height: 1.7rem; border-radius: 7px; background: var(--bg-elevated); color: #003080; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.ic-lf .ic-mod { font-weight: 700; color: var(--accent); }
+.ic-lf .ic-mod.ic-strong { color: var(--danger); }
+/* modal meaning cards */
+.ic-modals { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+.ic-modal-c { border-radius: 12px; padding: 1rem; border: 1px solid var(--border); background: var(--bg-card); }
+.ic-modal-c .ic-m { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-bottom: .35rem; color: var(--accent); }
+.ic-modal-c .ic-strength { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .5rem; }
+.ic-modal-c p { margin: 0; font-size: .85rem; line-height: 1.45; color: var(--text-mid); }
+/* rephrase rows */
+.ic-rephrase-cue { display: inline-block; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 7px; padding: .1rem .55rem; font-weight: 700; color: #003080; font-size: .78rem; margin-left: .3rem; }
+/* ===== gist (interativo: clicar a ideia certa) ===== */
+.ic-choices { display: flex; flex-direction: column; gap: .65rem; }
+.ic-choice { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 11px; padding: .85rem 1rem; font-size: 1rem; color: var(--text); cursor: pointer; transition: all .2s ease; }
+.ic-choice:hover { border-color: var(--accent); }
+.ic-choice .ic-opt { flex: 0 0 auto; width: 1.8rem; height: 1.8rem; border-radius: 8px; background: var(--bg-elevated); color: #003080; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.ic-choice .ic-badge { margin-left: auto; font-size: .78rem; font-weight: 700; color: var(--success); opacity: 0; transition: opacity .2s; }
+.ic-choice.ic-picked-right { border-color: var(--success); background: var(--success-bg); }
+.ic-choice.ic-picked-right .ic-opt { background: var(--success); color: #fff; }
+.ic-choice.ic-picked-right .ic-badge { opacity: 1; }
+.ic-choice.ic-picked-wrong { border-color: var(--danger); background: var(--danger-bg); }
+/* ===== tf (interativo: revelar verdict + justificativa) ===== */
+.ic-tf { display: flex; flex-direction: column; gap: .55rem; }
+.ic-tfrow { display: flex; gap: .8rem; align-items: flex-start; background: var(--bg-card); border: 1px solid var(--border); border-radius: 11px; padding: .8rem 1rem; cursor: pointer; transition: border-color .2s ease; }
+.ic-tfrow:hover { border-color: var(--accent); }
+.ic-tfrow .ic-qnum { background: #003080; }
+.ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
+.ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
+.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
+.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+.ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
+/* ===== reveal answer (accordion teacher-led) ===== */
+.ic-answer { border-radius: 12px; border: 1.5px dashed var(--accent); background: var(--accent-dim); overflow: hidden; margin-top: 1rem; }
+.ic-answer .ic-ans-head { display: flex; align-items: center; gap: .65rem; padding: .85rem 1.1rem; cursor: pointer; user-select: none; font-weight: 700; color: #003080; font-size: .92rem; }
+.ic-answer .ic-ans-head .ic-ico { width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex: 0 0 auto; transition: transform .2s; }
+.ic-answer.ic-open .ic-ans-head .ic-ico { transform: rotate(45deg); }
+.ic-answer .ic-ans-body { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.ic-answer.ic-open .ic-ans-body { max-height: 60rem; }
+.ic-answer .ic-ans-inner { padding: .1rem 1.1rem 1.1rem; font-size: .9rem; line-height: 1.55; color: var(--text); }
+.ic-answer .ic-akey { display: flex; flex-wrap: wrap; gap: .45rem; }
+.ic-answer .ic-akey .ic-a { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 8px; padding: .3rem .65rem; font-size: .82rem; font-weight: 600; color: #003080; }
+.ic-answer .ic-ans-inner ol { margin: 0; padding-left: 1.3rem; }
+.ic-answer .ic-ans-inner ol li { margin-bottom: .4rem; }
+@media (max-width: 760px) { .ic-match { grid-template-columns: 1fr; } .ic-modals { grid-template-columns: 1fr; } }
+/* slide-dark overrides: blocos legíveis em fundo escuro (cartões claros, texto escuro) */
+.slide-dark .ic-card, .slide-dark .ic-reading, .slide-dark .ic-lf, .slide-dark .ic-modal-c,
+.slide-dark .ic-chip, .slide-dark .ic-choice, .slide-dark .ic-tfrow, .slide-dark .ic-scenario,
+.slide-dark .ic-note, .slide-dark .ic-followup, .slide-dark .ic-answer { background: #fff !important; }
+.slide-dark .ic-card *, .slide-dark .ic-reading *, .slide-dark .ic-lf *, .slide-dark .ic-modal-c *,
+.slide-dark .ic-chip *, .slide-dark .ic-choice *, .slide-dark .ic-tfrow *, .slide-dark .ic-scenario *,
+.slide-dark .ic-note, .slide-dark .ic-followup *, .slide-dark .ic-answer * { color: #1a1a2e !important; }
+.slide-dark .ic-qnum, .slide-dark .ic-bank .ic-b { color: #fff !important; }
+.slide-dark .ic-tag { color: #fff !important; }
+.slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
+.slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -582,7 +685,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div style="display:flex;flex-direction:column;gap:1rem">
     <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">04</div>
-      <div><div style="font-weight:600;font-size:.95rem">A Life of Travel</div><div style="font-size:.8rem;color:var(--text-dim)">Describing places &amp; making deductions about them -- 28 slides</div></div>
+      <div><div style="font-weight:600;font-size:.95rem">A Life of Travel</div><div style="font-size:.8rem;color:var(--text-dim)">Describing places &amp; making deductions about them -- 35 slides</div></div>
     </div>
   </div>
 </div>
@@ -925,8 +1028,77 @@ body.slide-mode .nav-bar { display:flex; }
   </div>
 </div>
 
+<!-- ========== SLIDE 18: B2 READING (new block) ========== -->
+<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto sobre Hallstatt. Depois faca a pergunta de gist: 'What is the writer's main point?' Pricila clica a alternativa -- o card certo fica verde. NAO peca traducao palavra a palavra.">
+  <div class="slide-inner">
+    <div class="chapter-label">Read for the Main Idea</div>
+    <h2 class="slide-heading">A Lakeside <span class="accent">Gem</span></h2>
+    <div class="ic-reading"><div class="ic-rtitle">Hallstatt: The Village That Postcards Cannot Capture</div><p>Tucked between a steep mountain and a glassy lake, the Austrian village of Hallstatt looks almost too perfect to be real. Its pastel houses cling to the shore, mirrored in water so still that the whole scene seems painted. For centuries it was genuinely off the beaten track, reachable only by boat, and that isolation kept it unspoiled long after grander resorts were swallowed by crowds.</p><p>Today the secret is out. On a summer afternoon the narrow lanes can feel bustling, and some visitors leave a little disappointed, calling the famous viewpoint overrated. Yet step away from the main square, climb ten minutes uphill, and the village reveals its quieter, awe-inspiring side: empty stone stairways, a 7,000-year-old salt mine, and a valley that simply stands out from anywhere else in the Alps.</p><p>The travelers who love Hallstatt most are the ones who stay overnight. When the day-trippers leave, the picturesque streets fall silent, the lake turns gold, and you finally understand why, for those willing to immerse themselves and linger, this small getaway is still completely worth the trip.</p><div class="ic-src">Adapted from a travel feature, Wanderlust Magazine <a href="https://www.wanderlust.co.uk" target="_blank" rel="noopener">https://www.wanderlust.co.uk</a></div></div>
+    <div class="ic-card"><div class="ic-card-h3">What is the writer's main point about Hallstatt?</div><div class="ic-choices"><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">a</span><span>It is so crowded now that it is no longer worth visiting.</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="true" onclick="icPickGist(this)"><span class="ic-opt">b</span><span>It still rewards travelers who stay longer and look beyond the famous viewpoint.</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">c</span><span>It is a modern resort that has lost all of its old charm.</span><span class="ic-badge">&#10003; Main idea</span></div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 19: B2 TRUE/FALSE (new block — interactive) ========== -->
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma esta certa ou errada -- volte ao texto.">
+  <div class="slide-inner">
+    <div class="chapter-label">Check Understanding</div>
+    <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">For most of its history, Hallstatt was easy to reach by road.<span class="ic-just">&#8594; It was off the beaten track, reachable only by boat.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">Some visitors think the famous viewpoint is overrated.<span class="ic-just">&#8594; The text says some leave disappointed and call it overrated.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The village is most peaceful and awe-inspiring when the day-trippers have left.<span class="ic-just">&#8594; After they leave, the streets fall silent and the lake turns gold.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer believes a quick day trip is the best way to experience the village.<span class="ic-just">&#8594; Those who stay overnight love it most; it rewards lingering.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 20: B2 GUIDING QUESTIONS (new block) ========== -->
+<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Discussion (4 min):</strong> Perguntas abertas sobre o texto e a experiencia da Pricila. Nao ha resposta certa -- incentive o uso do vocabulario novo e das deducoes. Sem audio, e fala dela.">
+  <div class="slide-inner">
+    <div class="chapter-label">Discuss</div>
+    <h2 class="slide-heading">Talk It <span class="accent">Through</span></h2>
+    <div class="ic-card"><ul class="ic-qs ic-guiding"><li><span class="ic-qnum">&#8250;</span><span>Why do you think isolation kept Hallstatt unspoiled for so long?</span></li><li><span class="ic-qnum">&#8250;</span><span>Some travelers call the viewpoint overrated. From the clues in the text, why might others still find the village awe-inspiring?</span></li><li><span class="ic-qnum">&#8250;</span><span>The writer says the village is best for those who immerse themselves and linger. How does that match your own travel philosophy?</span></li><li><span class="ic-qnum">&#8250;</span><span>Think of a hidden gem you have visited or heard about. What made it stand out and feel worth the trip?</span></li></ul></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 21: B2 SCENARIOS (new block) ========== -->
+<div class="slide slide-light" data-slide="21" data-phase="4" data-teacher="<strong>Scenarios (4 min):</strong> Leia cada cenario de viagem. Para cada um, Pricila reage com UMA deducao (must/might/can't be / must have been) e UMA palavra nova. Espere a frase completa antes de comentar.">
+  <div class="slide-inner">
+    <div class="chapter-label">React with a Deduction</div>
+    <h2 class="slide-heading">Traveler's <span class="accent">Scenarios</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Read each situation and deduce out loud</p>
+    <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Scenario 1</div><p>A friend sends you a photo of a town square packed with tour groups and souvenir stalls. Deduce what kind of place it is.</p></div><div class="ic-scenario"><div class="ic-who">Scenario 2</div><p>You read a review describing empty cobbled streets, no hotels, and a two-hour drive on a dirt road. Make a careful guess about the village.</p></div><div class="ic-scenario"><div class="ic-who">Scenario 3</div><p>An old sepia photograph shows a grand, half-ruined palace overlooking a sprawling city. Deduce what it was like in its prime.</p></div><div class="ic-scenario"><div class="ic-who">Scenario 4</div><p>A blogger writes that a 'world-famous' beach was crowded, noisy, and covered in litter. React to whether it is worth the trip.</p></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 22: B2 REPHRASE (new block) ========== -->
+<div class="slide slide-light" data-slide="22" data-phase="4" data-teacher="<strong>Rephrase (4 min):</strong> Pricila reescreve cada frase usando o modal de deducao entre parenteses, EM VOZ ALTA, antes de ver o gabarito (slide seguinte). Foco na forma: must/might/can't be + verbo; must have been + particicio.">
+  <div class="slide-inner">
+    <div class="chapter-label">Say It Another Way</div>
+    <h2 class="slide-heading">Rephrase with a <span class="accent">Modal</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Use the modal in brackets to express the same deduction</p>
+    <div class="ic-card"><div class="ic-card-h3">Rewrite each impression as a deduction</div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>I'm sure that village is a hidden gem.<span class="ic-rephrase-cue">(must be)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">2</span><span>Perhaps the valley is off the beaten track.<span class="ic-rephrase-cue">(might be)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">3</span><span>It's impossible for such an empty town to be a tourist hotspot.<span class="ic-rephrase-cue">(can't be)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">4</span><span>I'm almost certain the old palace was awe-inspiring long ago.<span class="ic-rephrase-cue">(must have been)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">5</span><span>Maybe the lake was unspoiled before the resorts arrived.<span class="ic-rephrase-cue">(could have been)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li></ol></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 23: B2 ANSWER KEY (new block — interactive) ========== -->
+<div class="slide slide-light" data-slide="23" data-phase="4" data-teacher="<strong>Answer key (2 min):</strong> So depois que Pricila tentar TODAS as frases do rephrase em voz alta, clique para abrir o gabarito e compare junto com ela.">
+  <div class="slide-inner">
+    <div class="chapter-label">Check Your Answers</div>
+    <h2 class="slide-heading">Rephrase <span class="accent">Answer Key</span></h2>
+    <div style="max-width:560px;margin:1.2rem auto 0">
+      <div class="ic-answer"><div class="ic-ans-head" onclick="icToggleAnswer(this)"><span class="ic-ico">+</span>Reveal the rephrase answer key</div><div class="ic-ans-body"><div class="ic-ans-inner"><div style="font-size:.78rem;color:var(--text-dim);margin-bottom:.6rem">Form check: must / might / can't + be + adjective (present); must / could have been + past participle (past).</div><ol><li>That village must be a hidden gem.</li><li>The valley might be off the beaten track.</li><li>Such an empty town can't be a tourist hotspot.</li><li>The old palace must have been awe-inspiring long ago.</li><li>The lake could have been unspoiled before the resorts arrived.</li></ol></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 24: B2 ANALYSE / SECOND READING NOTE (new block) ========== -->
+<div class="slide slide-light" data-slide="24" data-phase="4" data-teacher="<strong>Analyse (3 min):</strong> Releitura focada: peca a Pricila para reler o texto de Hallstatt e responder, em voz alta, como o autor sente o lugar. Conecte com a propria filosofia de viagem dela do Listening 2.">
+  <div class="slide-inner">
+    <div class="chapter-label">Read Again, Deeper</div>
+    <h2 class="slide-heading">Behind the <span class="accent">Words</span></h2>
+    <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">How the writer feels</span></div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>Find two words in the text that show admiration for the quiet side of the village.</span></li><li><span class="ic-qnum">2</span><span>Find one sentence that admits the village has a downside, and explain how the writer balances it.</span></li><li><span class="ic-qnum">3</span><span>The final paragraph rewards a certain kind of traveler. In your own words, who is it written for?</span></li></ol></div>
+  </div>
+</div>
+
 <!-- ========== SLIDE 18: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="18" data-phase="5" data-teacher="<strong>Transicao pratica (1 min):</strong> Diga: 'Now we train: spot the deduction errors, describe places, and read a real review.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="25" data-phase="5" data-teacher="<strong>Transicao pratica (1 min):</strong> Diga: 'Now we train: spot the deduction errors, describe places, and read a real review.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train Your <span class="accent">Traveler's Eye</span></h2>
@@ -935,7 +1107,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: DETECTIVE ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="5" data-teacher="<strong>Detective (4 min):</strong> Leia cada frase com erro de deducao. Pergunte 'What is wrong here?'. Pricila corrige ANTES de clicar. Pontuacao no topo.">
+<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Detective (4 min):</strong> Leia cada frase com erro de deducao. Pergunte 'What is wrong here?'. Pricila corrige ANTES de clicar. Pontuacao no topo.">
   <div class="slide-inner">
     <div class="chapter-label">Detective</div>
     <h2 class="slide-heading">Fix the <span class="accent">Deduction</span></h2>
@@ -950,7 +1122,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 20: SPEAKING ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="5" data-teacher="<strong>Speaking (4 min):</strong> Pricila olha cada pista e faz uma deducao em voz alta. Espere a frase COMPLETA. Se travar, da a dica. Depois clique para comparar.">
+<div class="slide slide-light" data-slide="27" data-phase="5" data-teacher="<strong>Speaking (4 min):</strong> Pricila olha cada pista e faz uma deducao em voz alta. Espere a frase COMPLETA. Se travar, da a dica. Depois clique para comparar.">
   <div class="slide-inner">
     <div class="chapter-label">Speaking</div>
     <h2 class="slide-heading">Make a <span class="accent">Deduction</span></h2>
@@ -964,7 +1136,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: ARTIFACT / THE REVIEW ========== -->
-<div class="slide slide-light" data-slide="21" data-phase="5" data-teacher="<strong>O artefato (4 min):</strong> Mostre a review online. Pricila le em voz alta, identifica as palavras novas e responde as perguntas. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="28" data-phase="5" data-teacher="<strong>O artefato (4 min):</strong> Mostre a review online. Pricila le em voz alta, identifica as palavras novas e responde as perguntas. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">The Review</div>
     <h2 class="slide-heading">Read a Real <span class="accent">Travel Review</span></h2>
@@ -980,7 +1152,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="22" data-phase="6" data-teacher="<strong>Transicao producao (1 min):</strong> Diga: 'Now the big mission: describe a place you know and make deductions about places you have never seen.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="29" data-phase="6" data-teacher="<strong>Transicao producao (1 min):</strong> Diga: 'Now the big mission: describe a place you know and make deductions about places you have never seen.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Describe the <span class="accent">World</span></h2>
@@ -989,7 +1161,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Voce e outro viajante curioso. Pergunte sobre o lugar favorito da Pricila. Ela descreve usando ao menos tres palavras novas. Deixe-a falar com calma.">
+<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Voce e outro viajante curioso. Pergunte sobre o lugar favorito da Pricila. Ela descreve usando ao menos tres palavras novas. Deixe-a falar com calma.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Describe Your Favorite <span class="accent">Place</span></h2>
@@ -1006,7 +1178,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="6" data-teacher="<strong>Role-play semi-livre (4 min):</strong> Mostre (descreva) uma foto misteriosa de um destino. A Pricila faz tres deducoes sobre o lugar usando must/might/can't. Menos pistas.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Role-play semi-livre (4 min):</strong> Mostre (descreva) uma foto misteriosa de um destino. A Pricila faz tres deducoes sobre o lugar usando must/might/can't. Menos pistas.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Guess the <span class="accent">Place</span></h2>
@@ -1023,7 +1195,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="25" data-phase="6" data-teacher="<strong>Pratica livre (5 min):</strong> A missao da aula: descrever um lugar dos sonhos e deduzir como ele e, sem nunca ter ido. ZERO pistas. NAO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
+<div class="slide slide-light" data-slide="32" data-phase="6" data-teacher="<strong>Pratica livre (5 min):</strong> A missao da aula: descrever um lugar dos sonhos e deduzir como ele e, sem nunca ter ido. ZERO pistas. NAO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Your Dream <span class="accent">Destination</span></h2>
@@ -1035,7 +1207,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="26" data-phase="7" data-teacher="<strong>Transicao fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transicao fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Mission <span class="accent">Complete</span></h2>
@@ -1043,7 +1215,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: SELF-ASSESSMENT ========== -->
-<div class="slide slide-dark" data-slide="27" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Check each one if you feel confident.' Leia cada item. Os 5 marcados = aula completa.">
+<div class="slide slide-dark" data-slide="34" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Check each one if you feel confident.' Leia cada item. Os 5 marcados = aula completa.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading" style="color:#fff">What I Can <span class="accent">Do Now</span></h2>
@@ -1058,7 +1230,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="28" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 4 complete, Pricila! You earned your Places Badge!' Homework (oralmente): esta semana, escreva em ingles uma mini-review (4-5 frases) de um lugar que voce ja visitou, usando ao menos quatro palavras novas e uma deducao (must/might/can't). Proxima aula: aula 5 -- Wellness &amp; Slowing Down.">
+<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 4 complete, Pricila! You earned your Places Badge!' Homework (oralmente): esta semana, escreva em ingles uma mini-review (4-5 frases) de um lugar que voce ja visitou, usando ao menos quatro palavras novas e uma deducao (must/might/can't). Proxima aula: aula 5 -- Wellness &amp; Slowing Down.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1180,7 +1352,7 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 28;
+var totalSlides = 35;
 var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
 
 function changeSlide(dir) {
@@ -1258,6 +1430,17 @@ function revealVocab(card) {
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
 function revealFill(item) { item.classList.add('revealed'); }
 function revealComp(q) { q.classList.add('revealed'); }
+
+// ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====
+// Interativos teacher-led no slide. Mesmo padrão toggle do revealVocab/revealComp
+// (REGRA 27.E: clicar abre, clicar de novo fecha). NÃO mexem em updateProgress
+// (slides IN CLASS não entram na barra do Pre-class).
+function icPickGist(choice) {
+  var right = choice.dataset.right === 'true';
+  choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
+}
+function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;
 function revealError(card) {
