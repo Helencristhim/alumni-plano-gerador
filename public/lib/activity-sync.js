@@ -1420,3 +1420,46 @@
     }
   };
 })();
+
+/* =========================================================================
+ * PATCH UNIVERSAL: parar TODO o audio ao trocar de slide (IN CLASS)
+ * A logica inline (goToSlide -> stopAllAudio) cobre currentAudio+mpAudios, mas
+ * aulas legadas podem ter copias antigas/incompletas e algum audio escapa.
+ * Este wrap garante, em runtime e em TODA pagina que carrega esta lib, que
+ * qualquer midia tocando PARA ao navegar de slide — rastreando ate os
+ * `new Audio()` que nao ficam no DOM (querySelectorAll nao pega).
+ * ========================================================================= */
+(function () {
+  if (window.__alumniSlideAudioStop) return;
+  window.__alumniSlideAudioStop = true;
+  var playing = new Set();
+  try {
+    var proto = window.HTMLMediaElement && HTMLMediaElement.prototype;
+    if (proto && proto.play && !proto.play.__alumniWrapped) {
+      var origPlay = proto.play;
+      var wrappedPlay = function () { try { playing.add(this); } catch (e) {} return origPlay.apply(this, arguments); };
+      wrappedPlay.__alumniWrapped = true;
+      proto.play = wrappedPlay;
+    }
+  } catch (e) {}
+  function stopEverything() {
+    try { playing.forEach(function (a) { try { a.pause(); } catch (e) {} }); playing.clear(); } catch (e) {}
+    try { document.querySelectorAll('audio,video').forEach(function (a) { try { a.pause(); } catch (e) {} }); } catch (e) {}
+    try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+    try { if (window.currentAudio && window.currentAudio.pause) window.currentAudio.pause(); } catch (e) {}
+    try { if (typeof window.mpAudios !== 'undefined' && window.mpAudios) { Object.keys(window.mpAudios).forEach(function (k) { try { window.mpAudios[k].pause(); } catch (e) {} }); } } catch (e) {}
+    try { if (typeof window.stopActivePlayback === 'function') window.stopActivePlayback(); } catch (e) {}
+  }
+  function wrap(name) {
+    var orig = window[name];
+    if (typeof orig === 'function' && !orig.__alumniSlideWrapped) {
+      var w = function () { try { stopEverything(); } catch (e) {} return orig.apply(this, arguments); };
+      w.__alumniSlideWrapped = true;
+      try { window[name] = w; } catch (e) {}
+    }
+  }
+  function install() { ['goToSlide', 'changeSlide', 'enterSlideMode', 'exitSlideMode'].forEach(wrap); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
+  else install();
+  setTimeout(install, 1200);
+})();
