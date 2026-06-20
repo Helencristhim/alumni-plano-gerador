@@ -1270,3 +1270,125 @@
   }
 
 })();
+
+/* ============================================================================
+ * PATCH: gravacao do Pre-class desacoplada do SpeechRecognition
+ * ----------------------------------------------------------------------------
+ * Bug antigo (inline em todos os materiais): o MediaRecorder era parado dentro
+ * de finish(), chamado por SR.onend/onerror/onresult. No Chrome atual o
+ * SpeechRecognition encerra sozinho em ~0.5s (onend/onerror 'no-speech'),
+ * cortando a gravacao quase imediatamente e deixando mediaChunks vazio -> o
+ * botao "Your Pronunciation" nunca aparecia.
+ *
+ * Correcao: a gravacao (MediaRecorder) roda ate o usuario clicar Stop ou um
+ * timeout de seguranca de 30s. O SpeechRecognition roda EM PARALELO so para o
+ * score word-by-word; quando ele encerra/erra, NAO para a gravacao (so tenta
+ * reiniciar para continuar pontuando). Sem SR (Safari/Firefox/mobile) grava
+ * audio-only e conta como feito — sem o antigo alert('Please use Google Chrome').
+ *
+ * Esta lib carrega DEPOIS do <script> inline em toda pagina (REGRA 28), entao
+ * window.startRecording/stopRecording aqui sobrescrevem a versao bugada. Um
+ * unico arquivo conserta todos os materiais (existentes e futuros).
+ * ==========================================================================*/
+(function () {
+  function pslug(s) { return (s || '').toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 50); }
+
+  window.startRecording = function (btn) {
+    var card = btn.closest('.speech-card');
+    if (!card) return;
+    if (btn.classList.contains('recording')) return;
+    var target = (card.dataset.phrase || '').toLowerCase().replace(/[^a-z0-9' ]/g, '');
+    var resultDiv = card.querySelector('.speech-result');
+    var stopBtn = card.querySelector('.btn-stop');
+    btn.classList.add('recording', 'hidden');
+    if (stopBtn) stopBtn.classList.add('visible');
+
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var hasSR = !!SR;
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+      var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4'
+        : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+      var mediaRec = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+      var chunks = [], stopped = false, rec = null, srRestarts = 0;
+
+      mediaRec.ondataavailable = function (e) { if (e.data && e.data.size > 0) chunks.push(e.data); };
+      mediaRec.onstop = function () {
+        stream.getTracks().forEach(function (t) { t.stop(); });
+        if (!chunks.length) return;
+        var blob = new Blob(chunks, { type: mediaRec.mimeType || 'audio/webm' });
+        var url = URL.createObjectURL(blob);
+        if (typeof injectPronunciationBtn === 'function') injectPronunciationBtn(card, url);
+        if (resultDiv && !resultDiv.classList.contains('show')) {
+          resultDiv.classList.add('show', 'good');
+          resultDiv.innerHTML = '<strong>&#10003; Recording saved</strong> — listen back with "Your Pronunciation".';
+          if (typeof updateProgress === 'function') updateProgress();
+        }
+        var slug = window.STUDENT_SLUG || 'unknown';
+        var ext = blob.type.indexOf('mp4') !== -1 ? 'mp4' : 'webm';
+        var filePath = slug + '/' + pslug(card.dataset.phrase) + '.' + ext;
+        if (typeof sb !== 'undefined') {
+          sb.storage.from('recordings').upload(filePath, blob, { contentType: blob.type, upsert: true }).then(function (res) {
+            if (!res.error) {
+              card.dataset.recordingUrl = sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;
+              if (typeof saveState === 'function') saveState();
+            }
+          });
+        }
+      };
+
+      function endAll() {
+        if (stopped) return; stopped = true;
+        btn.classList.remove('recording', 'hidden');
+        if (stopBtn) stopBtn.classList.remove('visible');
+        if (rec) { try { rec.stop(); } catch (e) {} }
+        if (mediaRec.state === 'recording') { try { mediaRec.stop(); } catch (e) {} }
+        window.activeRecognition = null;
+      }
+      window.activeRecognition = { mediaRec: mediaRec, endAll: endAll, recognition: null };
+
+      mediaRec.start(100);
+
+      if (hasSR) {
+        rec = new SR();
+        rec.lang = 'en-US'; rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = true;
+        if (window.activeRecognition) window.activeRecognition.recognition = rec;
+        rec.onresult = function (event) {
+          if (typeof analyzeWords !== 'function' || !resultDiv) return;
+          var best = event.results[event.results.length - 1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g, '');
+          var analysis = analyzeWords(target, best);
+          var totalWords = analysis.expected.length;
+          var correctWords = analysis.expected.filter(function (w) { return w.status === 'correct'; }).length;
+          resultDiv.classList.add('show'); resultDiv.classList.remove('good', 'try-again', 'bad');
+          var html = '';
+          if (analysis.score >= 0.8) { resultDiv.classList.add('good'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Excellent!'; if (typeof updateProgress === 'function') updateProgress(); }
+          else if (analysis.score >= 0.5) { resultDiv.classList.add('try-again'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Almost there!'; }
+          else { resultDiv.classList.add('bad'); html += '<strong>Score: ' + correctWords + '/' + totalWords + '</strong> &mdash; Keep practicing!'; }
+          html += '<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';
+          analysis.expected.forEach(function (w) { html += '<span class="word-box word-' + (w.status === 'correct' ? 'correct' : 'missing') + '">' + w.word + '</span>'; });
+          html += '</div></div>';
+          resultDiv.innerHTML = html;
+          /* NAO para a gravacao — usuario controla via Stop */
+        };
+        rec.onend = function () { if (!stopped && srRestarts++ < 60) { setTimeout(function () { if (!stopped) { try { rec.start(); } catch (e) {} } }, 250); } };
+        rec.onerror = function () { /* ignora — gravacao continua */ };
+        try { rec.start(); } catch (e) {}
+      }
+
+      setTimeout(endAll, 30000);
+    }).catch(function () {
+      btn.classList.remove('recording', 'hidden');
+      if (stopBtn) stopBtn.classList.remove('visible');
+      alert('Could not access microphone.');
+    });
+  };
+
+  window.stopRecording = function (stopBtn) {
+    var ar = window.activeRecognition;
+    if (ar && typeof ar.endAll === 'function') { ar.endAll(); return; }
+    if (ar) {
+      try { if (ar.recognition) ar.recognition.stop(); } catch (e) {}
+      try { if (ar.mediaRec && ar.mediaRec.state === 'recording') ar.mediaRec.stop(); } catch (e) {}
+    }
+  };
+})();
