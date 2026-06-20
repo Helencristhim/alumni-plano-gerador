@@ -504,6 +504,109 @@ body.slide-mode .nav-bar { display:flex; }
 .btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
 .btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
 
+/* ===== B2 IN-CLASS BLOCKS (aditivo — portados de artefato-b2-exercicios.html) =====
+   Blocos display + 3 interativos (gist/tf/reveal-answer). Tudo escopado em .ic-* para
+   nunca colidir com componentes existentes. Cores mapeadas pra paleta do modelo:
+   navy->#003080 (cor fixa Alumni), accent (verde-substituto sage)->var(--accent),
+   ink->var(--text). Funciona em slide-light e slide-dark (overrides no bloco de contraste). */
+.ic-block { margin: 1.1rem 0; text-align: left; }
+.ic-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); padding: 1.3rem 1.5rem; margin-bottom: 1rem; }
+.ic-card-h3 { margin: 0 0 .8rem; font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.2rem; color: #003080; display: flex; align-items: center; gap: .55rem; }
+.ic-tag { font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #fff; background: var(--accent); padding: .2rem .55rem; border-radius: 6px; }
+/* question / guiding / analyse lists */
+.ic-qs { margin: 0; padding: 0; list-style: none; }
+.ic-qs li { display: flex; gap: .8rem; align-items: flex-start; padding: .8rem .25rem; border-bottom: 1px dashed var(--border); font-size: 1rem; line-height: 1.45; }
+.ic-qs li:last-child { border-bottom: none; }
+.ic-qnum { flex: 0 0 auto; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: #003080; color: #fff; font-size: .82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: .1rem; }
+.ic-qs.ic-guiding .ic-qnum { background: var(--accent); }
+/* vocabnote / followup */
+.ic-note { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem 1.2rem; font-size: .95rem; color: var(--text); font-weight: 500; margin-bottom: 1rem; line-height: 1.45; }
+.ic-followup { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.5; color: var(--text); margin-bottom: 1rem; }
+/* matching (display, 2 columns) */
+.ic-match { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.ic-match-col h4 { margin: 0 0 .65rem; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); }
+.ic-chip { display: flex; gap: .6rem; align-items: flex-start; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 10px; padding: .55rem .75rem; margin-bottom: .5rem; font-size: .9rem; line-height: 1.35; }
+.ic-chip .ic-k { flex: 0 0 auto; font-weight: 800; color: #003080; min-width: 1.2rem; }
+.ic-chip.ic-def .ic-k { color: var(--accent); }
+.ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
+/* reading text + source */
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
+.ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
+.ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
+.ic-reading .ic-src { font-size: .75rem; color: var(--text-dim); margin-top: .8rem; border-top: 1px solid var(--border); padding-top: .6rem; }
+.ic-reading .ic-src a { color: #003080; }
+/* gap-fill */
+.ic-gaptext { font-size: 1.05rem; line-height: 1.9; color: var(--text); }
+.ic-blank { display: inline-block; min-width: 4.5rem; border-bottom: 2px solid var(--accent); text-align: center; font-weight: 700; color: var(--accent); padding: 0 .35rem; }
+.ic-blank .ic-n { font-size: .65rem; color: var(--text-dim); font-weight: 600; vertical-align: super; }
+/* word bank */
+.ic-bank { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
+.ic-bank .ic-b { background: #003080; color: #fff; font-size: .82rem; font-weight: 600; padding: .4rem .8rem; border-radius: 999px; }
+.ic-bank.ic-soft .ic-b { background: var(--bg-card); color: #003080; border: 1.5px solid #003080; }
+/* scenarios */
+.ic-scenario { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: .8rem; }
+.ic-scenario .ic-who { font-size: .68rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+.ic-scenario p { margin: 0; font-size: 1rem; line-height: 1.5; color: var(--text); }
+/* language-focus rows (lf) */
+.ic-lf-list { display: flex; flex-direction: column; gap: .55rem; }
+.ic-lf { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: .75rem 1rem; font-size: 1rem; color: var(--text); }
+.ic-lf .ic-lbl { flex: 0 0 auto; width: 1.7rem; height: 1.7rem; border-radius: 7px; background: var(--bg-elevated); color: #003080; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.ic-lf .ic-mod { font-weight: 700; color: var(--accent); }
+.ic-lf .ic-mod.ic-strong { color: var(--danger); }
+/* modal meaning cards */
+.ic-modals { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+.ic-modal-c { border-radius: 12px; padding: 1rem; border: 1px solid var(--border); background: var(--bg-card); }
+.ic-modal-c .ic-m { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-bottom: .35rem; color: var(--accent); }
+.ic-modal-c .ic-strength { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .5rem; }
+.ic-modal-c p { margin: 0; font-size: .85rem; line-height: 1.45; color: var(--text-mid); }
+/* rephrase rows */
+.ic-rephrase-cue { display: inline-block; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 7px; padding: .1rem .55rem; font-weight: 700; color: #003080; font-size: .78rem; margin-left: .3rem; }
+/* ===== gist (interativo: clicar a ideia certa) ===== */
+.ic-choices { display: flex; flex-direction: column; gap: .65rem; }
+.ic-choice { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 11px; padding: .85rem 1rem; font-size: 1rem; color: var(--text); cursor: pointer; transition: all .2s ease; }
+.ic-choice:hover { border-color: var(--accent); }
+.ic-choice .ic-opt { flex: 0 0 auto; width: 1.8rem; height: 1.8rem; border-radius: 8px; background: var(--bg-elevated); color: #003080; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.ic-choice .ic-badge { margin-left: auto; font-size: .78rem; font-weight: 700; color: var(--success); opacity: 0; transition: opacity .2s; }
+.ic-choice.ic-picked-right { border-color: var(--success); background: var(--success-bg); }
+.ic-choice.ic-picked-right .ic-opt { background: var(--success); color: #fff; }
+.ic-choice.ic-picked-right .ic-badge { opacity: 1; }
+.ic-choice.ic-picked-wrong { border-color: var(--danger); background: var(--danger-bg); }
+/* ===== tf (interativo: revelar verdict + justificativa) ===== */
+.ic-tf { display: flex; flex-direction: column; gap: .55rem; }
+.ic-tfrow { display: flex; gap: .8rem; align-items: flex-start; background: var(--bg-card); border: 1px solid var(--border); border-radius: 11px; padding: .8rem 1rem; cursor: pointer; transition: border-color .2s ease; }
+.ic-tfrow:hover { border-color: var(--accent); }
+.ic-tfrow .ic-qnum { background: #003080; }
+.ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
+.ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
+.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
+.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+.ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
+/* ===== reveal answer (accordion teacher-led) ===== */
+.ic-answer { border-radius: 12px; border: 1.5px dashed var(--accent); background: var(--accent-dim); overflow: hidden; margin-top: 1rem; }
+.ic-answer .ic-ans-head { display: flex; align-items: center; gap: .65rem; padding: .85rem 1.1rem; cursor: pointer; user-select: none; font-weight: 700; color: #003080; font-size: .92rem; }
+.ic-answer .ic-ans-head .ic-ico { width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex: 0 0 auto; transition: transform .2s; }
+.ic-answer.ic-open .ic-ans-head .ic-ico { transform: rotate(45deg); }
+.ic-answer .ic-ans-body { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.ic-answer.ic-open .ic-ans-body { max-height: 60rem; }
+.ic-answer .ic-ans-inner { padding: .1rem 1.1rem 1.1rem; font-size: .9rem; line-height: 1.55; color: var(--text); }
+.ic-answer .ic-akey { display: flex; flex-wrap: wrap; gap: .45rem; }
+.ic-answer .ic-akey .ic-a { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 8px; padding: .3rem .65rem; font-size: .82rem; font-weight: 600; color: #003080; }
+.ic-answer .ic-ans-inner ol { margin: 0; padding-left: 1.3rem; }
+.ic-answer .ic-ans-inner ol li { margin-bottom: .4rem; }
+@media (max-width: 760px) { .ic-match { grid-template-columns: 1fr; } .ic-modals { grid-template-columns: 1fr; } }
+/* slide-dark overrides: blocos legíveis em fundo escuro (cartões claros, texto escuro) */
+.slide-dark .ic-card, .slide-dark .ic-reading, .slide-dark .ic-lf, .slide-dark .ic-modal-c,
+.slide-dark .ic-chip, .slide-dark .ic-choice, .slide-dark .ic-tfrow, .slide-dark .ic-scenario,
+.slide-dark .ic-note, .slide-dark .ic-followup, .slide-dark .ic-answer { background: #fff !important; }
+.slide-dark .ic-card *, .slide-dark .ic-reading *, .slide-dark .ic-lf *, .slide-dark .ic-modal-c *,
+.slide-dark .ic-chip *, .slide-dark .ic-choice *, .slide-dark .ic-tfrow *, .slide-dark .ic-scenario *,
+.slide-dark .ic-note, .slide-dark .ic-followup *, .slide-dark .ic-answer * { color: #1a1a2e !important; }
+.slide-dark .ic-qnum, .slide-dark .ic-bank .ic-b { color: #fff !important; }
+.slide-dark .ic-tag { color: #fff !important; }
+.slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
+.slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1224,6 +1327,17 @@ function revealVocab(card) {
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
 function revealFill(item) { item.classList.add('revealed'); }
 function revealComp(q) { q.classList.add('revealed'); }
+
+// ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====
+// Interativos teacher-led no slide. Mesmo padrão toggle do revealVocab/revealComp
+// (REGRA 27.E: clicar abre, clicar de novo fecha). NÃO mexem em updateProgress
+// (slides IN CLASS não entram na barra do Pre-class).
+function icPickGist(choice) {
+  var right = choice.dataset.right === 'true';
+  choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
+}
+function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;
 function revealError(card) {

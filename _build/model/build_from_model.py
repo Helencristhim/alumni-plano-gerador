@@ -100,6 +100,155 @@ def hex_to_rgb(h):
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
 
+# ============================================================================
+# B2 IN-CLASS BLOCKS (aditivo) — render estático dos blocos portados de
+# artefato-b2-exercicios.html. O config declara os blocos por slide e o builder
+# emite o HTML; um placeholder <!--IC-BLOCKS:chave--> no slides.html marca o ponto
+# de injeção. Tipos antigos NÃO mudam: aula que não usa inclass_blocks fica idêntica.
+#
+# SCHEMA (config.lesson.inclass_blocks = { "chave": [ {bloco}, ... ], ... }):
+#   {"kind":"gist","prompt":"...","choices":[["a","texto",false],["b","texto",true]]}   (interativo)
+#   {"kind":"tf","items":[["statement","t|f","justification"], ...]}                       (interativo)
+#   {"kind":"answer","title":"Reveal answer key","key":["1 = c", ...]}                     (interativo, accordion)
+#   {"kind":"answer","title":"...","list":["resposta 1", ...],"note":"opcional"}
+#   {"kind":"reading","rtitle":"...","paras":["...", ...],"source":"...","link":"..."}
+#   {"kind":"matching","title":"...","words":[["1","word"], ...],"defs":[["a","def"], ...]}
+#   {"kind":"gapfill","parts":["texto ",["1"]," mais texto"],"bank":["w1","w2"]}
+#   {"kind":"modals","cards":[["should","Strong","..."],["could","Softer","..."]]}
+#   {"kind":"rephrase","title":"...","items":[["cue sentence","modal"], ...]}
+#   {"kind":"scenarios","items":[["Scenario 1","texto"], ...]}
+#   {"kind":"questions","title":"...","ordered":true,"items":["q1", ...]}        (questions/guiding/analyse)
+#   {"kind":"guiding","items":[...]}  {"kind":"analyse","title":"...","items":[...]}
+#   {"kind":"lf","items":[["A","prefix ","should"," suffix","strong|soft"], ...]}
+#   {"kind":"vocabnote","text":"..."}  {"kind":"followup","text":"..."}
+#   {"kind":"bank","label":"...","items":["frase 1", ...]}
+# ============================================================================
+def _esc(t):
+    return '' if t is None else str(t)
+
+
+def render_block(b):
+    """Emite o HTML estático de UM bloco B2. Espelha renderBlock() do artefato,
+    com classes .ic-* (escopadas) e handlers que existem no shell do modelo."""
+    k = b['kind']
+    if k == 'vocabnote':
+        return f'<div class="ic-note">{_esc(b["text"])}</div>'
+    if k == 'followup':
+        return f'<div class="ic-followup">{_esc(b["text"])}</div>'
+    if k in ('questions', 'guiding', 'analyse'):
+        tag = 'ol' if b.get('ordered') or k == 'analyse' else 'ul'
+        extra = ' ic-guiding' if k == 'guiding' else ''
+        bullet = '&#8250;' if k == 'guiding' else None
+        lis = ''.join(
+            f'<li><span class="ic-qnum">{bullet if bullet else i + 1}</span><span>{_esc(q)}</span></li>'
+            for i, q in enumerate(b['items']))
+        head = f'<div class="ic-card-h3"><span class="ic-tag">{_esc(b["title"])}</span></div>' if b.get('title') else ''
+        return f'<div class="ic-card">{head}<{tag} class="ic-qs{extra}">{lis}</{tag}></div>'
+    if k == 'matching':
+        words = ''.join(f'<div class="ic-chip ic-word"><span class="ic-k">{_esc(w[0])}</span><span>{_esc(w[1])}</span></div>' for w in b['words'])
+        defs = ''.join(f'<div class="ic-chip ic-def"><span class="ic-k">{_esc(d[0])}</span><span>{_esc(d[1])}</span></div>' for d in b['defs'])
+        head = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return (f'<div class="ic-card">{head}<div class="ic-match">'
+                f'<div class="ic-match-col"><h4>Words &amp; expressions</h4>{words}</div>'
+                f'<div class="ic-match-col"><h4>Definitions</h4>{defs}</div></div></div>')
+    if k == 'gapfill':
+        html = ''
+        for p in b['parts']:
+            if isinstance(p, list):
+                html += f'<span class="ic-blank"><span class="ic-n">{_esc(p[0])}</span>&nbsp;&nbsp;&nbsp;</span>'
+            else:
+                html += _esc(p)
+        bank = ''.join(f'<span class="ic-b">{_esc(w)}</span>' for w in b['bank'])
+        return f'<div class="ic-card"><div class="ic-gaptext">{html}</div><div class="ic-bank ic-soft">{bank}</div></div>'
+    if k == 'reading':
+        ps = ''.join(f'<p>{_esc(p)}</p>' for p in b['paras'])
+        src = ''
+        if b.get('source'):
+            link = f' <a href="{_esc(b["link"])}" target="_blank" rel="noopener">{_esc(b["link"])}</a>' if b.get('link') else ''
+            src = f'<div class="ic-src">{_esc(b["source"])}{link}</div>'
+        rtitle = f'<div class="ic-rtitle">{_esc(b["rtitle"])}</div>' if b.get('rtitle') else ''
+        return f'<div class="ic-reading">{rtitle}{ps}{src}</div>'
+    if k == 'gist':
+        ch = ''
+        for c in b['choices']:
+            right = 'true' if c[2] else 'false'
+            ch += (f'<div class="ic-choice" data-right="{right}" onclick="icPickGist(this)">'
+                   f'<span class="ic-opt">{_esc(c[0])}</span><span>{_esc(c[1])}</span>'
+                   f'<span class="ic-badge">&#10003; Main idea</span></div>')
+        return f'<div class="ic-card"><div class="ic-card-h3">{_esc(b["prompt"])}</div><div class="ic-choices">{ch}</div></div>'
+    if k == 'tf':
+        rows = ''
+        for i, it in enumerate(b['items']):
+            just = f'<span class="ic-just">&#8594; {_esc(it[2])}</span>' if len(it) > 2 and it[2] else ''
+            rows += (f'<div class="ic-tfrow" onclick="icRevealTf(this)">'
+                     f'<span class="ic-qnum">{i + 1}</span>'
+                     f'<span class="ic-stmt">{_esc(it[0])}{just}</span>'
+                     f'<span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div>')
+        return f'<div class="ic-card"><div class="ic-tf">{rows}</div></div>'
+    if k == 'lf':
+        rows = ''
+        for it in b['items']:
+            strong = ' ic-strong' if (len(it) > 4 and it[4] == 'strong') else ''
+            rows += (f'<div class="ic-lf"><span class="ic-lbl">{_esc(it[0])}</span>'
+                     f'<span>{_esc(it[1])}<span class="ic-mod{strong}">{_esc(it[2])}</span>{_esc(it[3])}</span></div>')
+        head = f'<div class="ic-card-h3"><span class="ic-tag">Analyse</span>{_esc(b.get("title", "Read the advice"))}</div>'
+        return f'<div class="ic-card">{head}<div class="ic-lf-list">{rows}</div></div>'
+    if k == 'modals':
+        cards = ''.join(f'<div class="ic-modal-c"><div class="ic-m">{_esc(c[0])}</div>'
+                        f'<div class="ic-strength">{_esc(c[1])}</div><p>{_esc(c[2])}</p></div>' for c in b['cards'])
+        head = f'<div class="ic-card-h3">{_esc(b.get("title", "Meaning guide"))}</div>'
+        return f'<div class="ic-card">{head}<div class="ic-modals">{cards}</div></div>'
+    if k == 'rephrase':
+        rows = ''
+        for i, it in enumerate(b['items']):
+            rows += (f'<li><span class="ic-qnum">{i + 1}</span>'
+                     f'<span>{_esc(it[0])}<span class="ic-rephrase-cue">({_esc(it[1])})</span>'
+                     f'<span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li>')
+        head = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return f'<div class="ic-card">{head}<ol class="ic-qs">{rows}</ol></div>'
+    if k == 'scenarios':
+        items = ''.join(f'<div class="ic-scenario"><div class="ic-who">{_esc(it[0])}</div><p>{_esc(it[1])}</p></div>' for it in b['items'])
+        return f'<div class="ic-block">{items}</div>'
+    if k == 'bank':
+        items = ''.join(f'<span class="ic-b">{_esc(w)}</span>' for w in b['items'])
+        head = f'<div class="ic-card-h3">{_esc(b.get("label", "Useful language"))}</div>'
+        return f'<div class="ic-card">{head}<div class="ic-bank">{items}</div></div>'
+    if k == 'answer':
+        title = _esc(b.get('title', 'Reveal answer key'))
+        if b.get('key'):
+            chips = ''.join(f'<span class="ic-a">{_esc(a)}</span>' for a in b['key'])
+            inner = f'<div class="ic-akey">{chips}</div>'
+        elif b.get('list'):
+            note = f'<div style="font-size:.78rem;color:var(--text-dim);margin-bottom:.6rem">{_esc(b["note"])}</div>' if b.get('note') else ''
+            ol = ''.join(f'<li>{_esc(a)}</li>' for a in b['list'])
+            inner = f'{note}<ol>{ol}</ol>'
+        else:
+            inner = ''
+        return (f'<div class="ic-answer"><div class="ic-ans-head" onclick="icToggleAnswer(this)">'
+                f'<span class="ic-ico">+</span>{title}</div>'
+                f'<div class="ic-ans-body"><div class="ic-ans-inner">{inner}</div></div></div>')
+    raise AssertionError(f'inclass_blocks: kind desconhecido "{k}"')
+
+
+def expand_inclass_blocks(slides, cfg):
+    """Substitui placeholders <!--IC-BLOCKS:chave--> em slides.html pelo HTML dos
+    blocos declarados em config.lesson.inclass_blocks[chave]. Sem placeholders =
+    no-op (aula antiga fica byte-a-byte idêntica)."""
+    blocks_cfg = cfg.get('lesson', {}).get('inclass_blocks', {})
+    used = set()
+
+    def sub(m):
+        key = m.group(1).strip()
+        assert key in blocks_cfg, f'placeholder IC-BLOCKS:{key} sem entrada em lesson.inclass_blocks'
+        used.add(key)
+        return '\n'.join(render_block(b) for b in blocks_cfg[key])
+
+    out = re.sub(r'<!--\s*IC-BLOCKS:([^>]+?)\s*-->', sub, slides)
+    unused = set(blocks_cfg) - used
+    assert not unused, f'inclass_blocks declarados mas sem placeholder no slides.html: {sorted(unused)}'
+    return out
+
+
 def extract_phrases(html):
     """(texto, voz_sugerida|None) em ordem de documento; data-voice na mesma linha vence."""
     out = []
@@ -243,6 +392,7 @@ def build_standalone(cfg, content_dir, manifest):
     n = L['n']
     audio_base = f'/audio/{cfg["slug"]}/'
     slides = read(os.path.join(content_dir, 'slides.html'))
+    slides = expand_inclass_blocks(slides, cfg)  # B2 blocks (no-op se a aula não usar)
 
     s = read(os.path.join(PROF, f'{MODEL}-aula1.html'))
     s = base_swaps(s, cfg, n=n)
