@@ -506,6 +506,109 @@ body.slide-mode .nav-bar { display:flex; }
 .btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
 .btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
 
+/* ===== B2 IN-CLASS BLOCKS (aditivo — portados de artefato-b2-exercicios.html) =====
+   Blocos display + 3 interativos (gist/tf/reveal-answer). Tudo escopado em .ic-* para
+   nunca colidir com componentes existentes. Cores mapeadas pra paleta do modelo:
+   navy->#003080 (cor fixa Alumni), accent (verde-substituto sage)->var(--accent),
+   ink->var(--text). Funciona em slide-light e slide-dark (overrides no bloco de contraste). */
+.ic-block { margin: 1.1rem 0; text-align: left; }
+.ic-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); padding: 1.3rem 1.5rem; margin-bottom: 1rem; }
+.ic-card-h3 { margin: 0 0 .8rem; font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.2rem; color: #003080; display: flex; align-items: center; gap: .55rem; }
+.ic-tag { font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #fff; background: var(--accent); padding: .2rem .55rem; border-radius: 6px; }
+/* question / guiding / analyse lists */
+.ic-qs { margin: 0; padding: 0; list-style: none; }
+.ic-qs li { display: flex; gap: .8rem; align-items: flex-start; padding: .8rem .25rem; border-bottom: 1px dashed var(--border); font-size: 1rem; line-height: 1.45; }
+.ic-qs li:last-child { border-bottom: none; }
+.ic-qnum { flex: 0 0 auto; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: #003080; color: #fff; font-size: .82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: .1rem; }
+.ic-qs.ic-guiding .ic-qnum { background: var(--accent); }
+/* vocabnote / followup */
+.ic-note { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem 1.2rem; font-size: .95rem; color: var(--text); font-weight: 500; margin-bottom: 1rem; line-height: 1.45; }
+.ic-followup { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.5; color: var(--text); margin-bottom: 1rem; }
+/* matching (display, 2 columns) */
+.ic-match { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.ic-match-col h4 { margin: 0 0 .65rem; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); }
+.ic-chip { display: flex; gap: .6rem; align-items: flex-start; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 10px; padding: .55rem .75rem; margin-bottom: .5rem; font-size: .9rem; line-height: 1.35; }
+.ic-chip .ic-k { flex: 0 0 auto; font-weight: 800; color: #003080; min-width: 1.2rem; }
+.ic-chip.ic-def .ic-k { color: var(--accent); }
+.ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
+/* reading text + source */
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
+.ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
+.ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
+.ic-reading .ic-src { font-size: .75rem; color: var(--text-dim); margin-top: .8rem; border-top: 1px solid var(--border); padding-top: .6rem; }
+.ic-reading .ic-src a { color: #003080; }
+/* gap-fill */
+.ic-gaptext { font-size: 1.05rem; line-height: 1.9; color: var(--text); }
+.ic-blank { display: inline-block; min-width: 4.5rem; border-bottom: 2px solid var(--accent); text-align: center; font-weight: 700; color: var(--accent); padding: 0 .35rem; }
+.ic-blank .ic-n { font-size: .65rem; color: var(--text-dim); font-weight: 600; vertical-align: super; }
+/* word bank */
+.ic-bank { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
+.ic-bank .ic-b { background: #003080; color: #fff; font-size: .82rem; font-weight: 600; padding: .4rem .8rem; border-radius: 999px; }
+.ic-bank.ic-soft .ic-b { background: var(--bg-card); color: #003080; border: 1.5px solid #003080; }
+/* scenarios */
+.ic-scenario { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: .8rem; }
+.ic-scenario .ic-who { font-size: .68rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+.ic-scenario p { margin: 0; font-size: 1rem; line-height: 1.5; color: var(--text); }
+/* language-focus rows (lf) */
+.ic-lf-list { display: flex; flex-direction: column; gap: .55rem; }
+.ic-lf { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: .75rem 1rem; font-size: 1rem; color: var(--text); }
+.ic-lf .ic-lbl { flex: 0 0 auto; width: 1.7rem; height: 1.7rem; border-radius: 7px; background: var(--bg-elevated); color: #003080; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.ic-lf .ic-mod { font-weight: 700; color: var(--accent); }
+.ic-lf .ic-mod.ic-strong { color: var(--danger); }
+/* modal meaning cards */
+.ic-modals { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+.ic-modal-c { border-radius: 12px; padding: 1rem; border: 1px solid var(--border); background: var(--bg-card); }
+.ic-modal-c .ic-m { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-bottom: .35rem; color: var(--accent); }
+.ic-modal-c .ic-strength { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .5rem; }
+.ic-modal-c p { margin: 0; font-size: .85rem; line-height: 1.45; color: var(--text-mid); }
+/* rephrase rows */
+.ic-rephrase-cue { display: inline-block; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 7px; padding: .1rem .55rem; font-weight: 700; color: #003080; font-size: .78rem; margin-left: .3rem; }
+/* ===== gist (interativo: clicar a ideia certa) ===== */
+.ic-choices { display: flex; flex-direction: column; gap: .65rem; }
+.ic-choice { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 11px; padding: .85rem 1rem; font-size: 1rem; color: var(--text); cursor: pointer; transition: all .2s ease; }
+.ic-choice:hover { border-color: var(--accent); }
+.ic-choice .ic-opt { flex: 0 0 auto; width: 1.8rem; height: 1.8rem; border-radius: 8px; background: var(--bg-elevated); color: #003080; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.ic-choice .ic-badge { margin-left: auto; font-size: .78rem; font-weight: 700; color: var(--success); opacity: 0; transition: opacity .2s; }
+.ic-choice.ic-picked-right { border-color: var(--success); background: var(--success-bg); }
+.ic-choice.ic-picked-right .ic-opt { background: var(--success); color: #fff; }
+.ic-choice.ic-picked-right .ic-badge { opacity: 1; }
+.ic-choice.ic-picked-wrong { border-color: var(--danger); background: var(--danger-bg); }
+/* ===== tf (interativo: revelar verdict + justificativa) ===== */
+.ic-tf { display: flex; flex-direction: column; gap: .55rem; }
+.ic-tfrow { display: flex; gap: .8rem; align-items: flex-start; background: var(--bg-card); border: 1px solid var(--border); border-radius: 11px; padding: .8rem 1rem; cursor: pointer; transition: border-color .2s ease; }
+.ic-tfrow:hover { border-color: var(--accent); }
+.ic-tfrow .ic-qnum { background: #003080; }
+.ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
+.ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
+.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
+.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+.ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
+/* ===== reveal answer (accordion teacher-led) ===== */
+.ic-answer { border-radius: 12px; border: 1.5px dashed var(--accent); background: var(--accent-dim); overflow: hidden; margin-top: 1rem; }
+.ic-answer .ic-ans-head { display: flex; align-items: center; gap: .65rem; padding: .85rem 1.1rem; cursor: pointer; user-select: none; font-weight: 700; color: #003080; font-size: .92rem; }
+.ic-answer .ic-ans-head .ic-ico { width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex: 0 0 auto; transition: transform .2s; }
+.ic-answer.ic-open .ic-ans-head .ic-ico { transform: rotate(45deg); }
+.ic-answer .ic-ans-body { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.ic-answer.ic-open .ic-ans-body { max-height: 60rem; }
+.ic-answer .ic-ans-inner { padding: .1rem 1.1rem 1.1rem; font-size: .9rem; line-height: 1.55; color: var(--text); }
+.ic-answer .ic-akey { display: flex; flex-wrap: wrap; gap: .45rem; }
+.ic-answer .ic-akey .ic-a { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 8px; padding: .3rem .65rem; font-size: .82rem; font-weight: 600; color: #003080; }
+.ic-answer .ic-ans-inner ol { margin: 0; padding-left: 1.3rem; }
+.ic-answer .ic-ans-inner ol li { margin-bottom: .4rem; }
+@media (max-width: 760px) { .ic-match { grid-template-columns: 1fr; } .ic-modals { grid-template-columns: 1fr; } }
+/* slide-dark overrides: blocos legíveis em fundo escuro (cartões claros, texto escuro) */
+.slide-dark .ic-card, .slide-dark .ic-reading, .slide-dark .ic-lf, .slide-dark .ic-modal-c,
+.slide-dark .ic-chip, .slide-dark .ic-choice, .slide-dark .ic-tfrow, .slide-dark .ic-scenario,
+.slide-dark .ic-note, .slide-dark .ic-followup, .slide-dark .ic-answer { background: #fff !important; }
+.slide-dark .ic-card *, .slide-dark .ic-reading *, .slide-dark .ic-lf *, .slide-dark .ic-modal-c *,
+.slide-dark .ic-chip *, .slide-dark .ic-choice *, .slide-dark .ic-tfrow *, .slide-dark .ic-scenario *,
+.slide-dark .ic-note, .slide-dark .ic-followup *, .slide-dark .ic-answer * { color: #1a1a2e !important; }
+.slide-dark .ic-qnum, .slide-dark .ic-bank .ic-b { color: #fff !important; }
+.slide-dark .ic-tag { color: #fff !important; }
+.slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
+.slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
 .teacher-t{display:none !important}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -586,7 +689,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div style="display:flex;flex-direction:column;gap:1rem">
     <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">07</div>
-      <div><div style="font-weight:600;font-size:.95rem">The Perfect Stay: Hotels</div><div style="font-size:.8rem;color:var(--text-dim)">Hotel requests &amp; complaints, reporting questions and requests -- 28 slides</div></div>
+      <div><div style="font-weight:600;font-size:.95rem">The Perfect Stay: Hotels</div><div style="font-size:.8rem;color:var(--text-dim)">Hotel requests &amp; complaints, reported questions &amp; a reading on great stays -- 33 slides</div></div>
     </div>
   </div>
 </div>
@@ -934,8 +1037,57 @@ body.slide-mode .nav-bar { display:flex; }
   </div>
 </div>
 
+<!-- ========== SLIDE 18: B2 READING + GIST (new block) ========== -->
+<div class="slide slide-light" data-slide="18" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Read for the Main Idea</div>
+    <h2 class="slide-heading">A Memorable <span class="accent">Stay</span></h2>
+    <div class="ic-reading"><div class="ic-rtitle">The Night the Concierge Saved the Trip</div><p>When the Vasquez family finally reached the Marlowe Hotel, well after midnight, they were close to tears. Their connecting flight had been cancelled, their luggage was somewhere over the Atlantic, and the youngest child had a fever. The night concierge, a softly spoken man named Theo, listened without interrupting. He did not promise miracles. Instead, he quietly asked whether anyone in the family needed medicine, and he told the parents to leave everything to him for the next hour.</p><p>By the time the family had washed and changed into the spare clothes housekeeping had found, Theo had already escalated two requests. He had asked the on-call doctor to come up to the suite, and he had asked the airline to flag the missing bags as urgent. There was a small discrepancy on the reservation, but rather than argue about it at one in the morning, he simply absorbed the cost as a courtesy and moved on. The parents later said it was the calm, not the perks, that they remembered.</p><p>A few weeks afterwards, the family wrote a letter to the hotel manager. They did not mention the upgrade, the late check-out, or the complimentary breakfast. They wrote about a stranger who had asked the right questions, told them not to worry, and made an impossible night feel manageable. A great hotel, the letter concluded, is not measured by its marble lobby but by the people who decide, at the worst possible moment, to be kind.</p><div class="ic-src">Adapted from a hospitality column, The Long Corridor <a href="https://www.thelongcorridor.com" target="_blank" rel="noopener">https://www.thelongcorridor.com</a></div></div>
+    <div class="ic-card"><div class="ic-card-h3">What is the writer's main point about the Marlowe Hotel?</div><div class="ic-choices"><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">a</span><span>The family was impressed mainly by the free upgrade and the luxurious lobby.</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="true" onclick="icPickGist(this)"><span class="ic-opt">b</span><span>What made the stay memorable was a staff member's calm, kindness and quick action, not the perks.</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">c</span><span>The hotel handled the missing luggage badly and lost the family's trust.</span><span class="ic-badge">&#10003; Main idea</span></div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 19: B2 GAPFILL (new block) ========== -->
+<div class="slide slide-light" data-slide="19" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Report It Correctly</div>
+    <h2 class="slide-heading">Fill the <span class="accent">Gaps</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Choose from the word bank -- two words are extra</p>
+    <div class="ic-card"><div class="ic-gaptext">Later, the mother told a friend about that night. She said the concierge <span class="ic-blank"><span class="ic-n">1</span>&nbsp;&nbsp;&nbsp;</span> them not to worry, and that he <span class="ic-blank"><span class="ic-n">2</span>&nbsp;&nbsp;&nbsp;</span> whether anyone needed medicine. She also explained that she had <span class="ic-blank"><span class="ic-n">3</span>&nbsp;&nbsp;&nbsp;</span> him to contact the airline, and that the hotel <span class="ic-blank"><span class="ic-n">4</span>&nbsp;&nbsp;&nbsp;</span> a courtesy breakfast the next morning. "Honestly," she said, "I have never been so grateful for one calm voice."</div><div class="ic-bank ic-soft"><span class="ic-b">told</span><span class="ic-b">asked</span><span class="ic-b">requested</span><span class="ic-b">offered</span><span class="ic-b">said</span><span class="ic-b">whether</span></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 20: B2 TRUE/FALSE (new block - interactive) ========== -->
+<div class="slide slide-light" data-slide="20" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Check Understanding</div>
+    <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The Vasquez family arrived at the hotel early in the evening.<span class="ic-just">&#8594; They reached the Marlowe well after midnight, close to tears.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">Theo escalated requests, contacting both a doctor and the airline.<span class="ic-just">&#8594; He asked the on-call doctor to come up and flagged the bags as urgent with the airline.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">Theo argued about the discrepancy on the reservation at one in the morning.<span class="ic-just">&#8594; Rather than argue, he absorbed the cost as a courtesy and moved on.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">In their letter, the family praised the marble lobby and the upgrade above all.<span class="ic-just">&#8594; They wrote about the kindness of a stranger, not the perks or the lobby.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 21: B2 SCENARIOS (new block) ========== -->
+<div class="slide slide-light" data-slide="21" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Your Turn</div>
+    <h2 class="slide-heading">Report the <span class="accent">Request</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say each one out loud, using the sentence opener</p>
+    <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Scenario 1</div><p>At breakfast, a friend asks what the receptionist wanted to know when you checked in. Report her question out loud, beginning: "She asked whether..."</p></div><div class="ic-scenario"><div class="ic-who">Scenario 2</div><p>You phoned housekeeping last night. Tell your travel companion what you asked them to do, beginning: "I asked housekeeping to..."</p></div><div class="ic-scenario"><div class="ic-who">Scenario 3</div><p>The concierge gave you a firm safety instruction about the room safe. Report it, beginning: "He told me not to..."</p></div><div class="ic-scenario"><div class="ic-who">Scenario 4</div><p>There was a problem with your bill. Explain to a colleague what you asked the manager to do, beginning: "I asked the manager to..."</p></div></div>
+  </div>
+</div>
+
+<!-- ========== SLIDE 22: B2 ANALYSE (new block) ========== -->
+<div class="slide slide-light" data-slide="22" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Close Reading</div>
+    <h2 class="slide-heading">Dig <span class="accent">Deeper</span></h2>
+    <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Look closely at the text</span></div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>Find the two reported questions Theo asks in the first paragraph and rewrite each as the original direct question.</span></li><li><span class="ic-qnum">2</span><span>The writer says "it was the calm, not the perks, that they remembered." Explain in your own words what this contrast tells us about good service.</span></li><li><span class="ic-qnum">3</span><span>The final sentence contrasts a "marble lobby" with "the people who decide to be kind." Why do you think the writer ends on people rather than on facilities?</span></li></ol></div>
+  </div>
+</div>
+
 <!-- ========== SLIDE 18: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="18" data-phase="5" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="23" data-phase="5" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train Your <span class="accent">Reporting</span></h2>
@@ -944,7 +1096,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: DETECTIVE ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="5">
+<div class="slide slide-light" data-slide="24" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label">Detective</div>
     <h2 class="slide-heading">Fix the <span class="accent">Report</span></h2>
@@ -959,7 +1111,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 20: SPEAKING ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="5">
+<div class="slide slide-light" data-slide="25" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label">Speaking</div>
     <h2 class="slide-heading">Report It <span class="accent">Out Loud</span></h2>
@@ -973,7 +1125,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: ARTIFACT / THE CONFIRMATION ========== -->
-<div class="slide slide-light" data-slide="21" data-phase="5">
+<div class="slide slide-light" data-slide="26" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label">The Confirmation</div>
     <h2 class="slide-heading">Read a Real Hotel <span class="accent">Confirmation</span></h2>
@@ -989,7 +1141,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="22" data-phase="6" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="27" data-phase="6" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Handle It <span class="accent">Yourself</span></h2>
@@ -998,7 +1150,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="6">
+<div class="slide slide-light" data-slide="28" data-phase="6">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">At the <span class="accent">Front Desk</span></h2>
@@ -1015,7 +1167,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="6">
+<div class="slide slide-light" data-slide="29" data-phase="6">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Report It to a <span class="accent">Friend</span></h2>
@@ -1032,7 +1184,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="25" data-phase="6">
+<div class="slide slide-light" data-slide="30" data-phase="6">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Your Hotel <span class="accent">Story</span></h2>
@@ -1044,7 +1196,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="26" data-phase="7" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="31" data-phase="7" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Mission <span class="accent">Complete</span></h2>
@@ -1052,7 +1204,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: SELF-ASSESSMENT ========== -->
-<div class="slide slide-dark" data-slide="27" data-phase="7">
+<div class="slide slide-dark" data-slide="32" data-phase="7">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading" style="color:#fff">What I Can <span class="accent">Do Now</span></h2>
@@ -1067,7 +1219,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="28" data-phase="7">
+<div class="slide slide-dark" data-slide="33" data-phase="7">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1189,7 +1341,7 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 28;
+var totalSlides = 33;
 var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
 
 function changeSlide(dir) {
@@ -1267,6 +1419,17 @@ function revealVocab(card) {
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
 function revealFill(item) { item.classList.add('revealed'); }
 function revealComp(q) { q.classList.add('revealed'); }
+
+// ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====
+// Interativos teacher-led no slide. Mesmo padrão toggle do revealVocab/revealComp
+// (REGRA 27.E: clicar abre, clicar de novo fecha). NÃO mexem em updateProgress
+// (slides IN CLASS não entram na barra do Pre-class).
+function icPickGist(choice) {
+  var right = choice.dataset.right === 'true';
+  choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
+}
+function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;
 function revealError(card) {
