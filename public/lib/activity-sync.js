@@ -234,36 +234,48 @@
   // e sabe a duracao EXATA) e toca o buffer. Isso ignora completamente a metadata de
   // duracao quebrada do MediaRecorder — toca a gravacao inteira em qualquer computador.
   // Retorna um controller com .stop(). onStart()/onEnd() sao callbacks de UI.
+  // CROSS-BROWSER: tenta <audio> simples PRIMEIRO (toca DENTRO do gesto do clique — o Safari
+  // reproduz o proprio mp4/aac nativamente, e o WAV restaurado toca em qualquer navegador).
+  // Cai pro Web Audio (decodeAudioData) SO quando a duracao vem invalida (webm/opus do Chrome,
+  // cuja metadata de duracao costuma vir 0/Infinity e tocaria so um pedaco no <audio>).
   function playRecordingFixed(url, onStart, onEnd) {
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return playViaAudioElement(url, onStart, onEnd);
-
-    if (!sharedAudioCtx) { try { sharedAudioCtx = new AC(); } catch (e) { return playViaAudioElement(url, onStart, onEnd); } }
-    var ctx = sharedAudioCtx;
-    if (ctx.state === 'suspended') { try { ctx.resume(); } catch (e) {} }
-
-    var ended = false, node = null;
-    var controller = { stop: function() { if (node) { try { node.stop(); } catch (e) {} } finish(); } };
+    var ended = false, node = null, audio = null, switched = false, startedSimple = false;
+    var controller = { stop: function() { try { if (node) node.stop(); } catch (e) {} try { if (audio) audio.pause(); } catch (e) {} finish(); } };
     function finish() { if (ended) return; ended = true; if (onEnd) onEnd(); }
 
-    fetch(url, { cache: 'reload' })
-      .then(function(r) { if (!r.ok) throw new Error('http ' + r.status); return r.arrayBuffer(); })
-      .then(function(buf) { return ctx.decodeAudioData(buf); })
-      .then(function(audioBuffer) {
-        if (ended) return;
-        node = ctx.createBufferSource();
-        node.buffer = audioBuffer;
-        node.connect(ctx.destination);
-        node.onended = finish;
-        node.start(0);
-        if (onStart) onStart(controller);
-      })
-      .catch(function() {
-        // Se decodeAudioData falhar, cai pro <audio>+blob com seek de duracao
-        if (ended) return;
-        var c = playViaAudioElement(url, onStart, onEnd);
-        controller.stop = c.stop;
+    function viaWebAudio() {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { finish(); return; }
+      try { if (!sharedAudioCtx) sharedAudioCtx = new AC(); } catch (e) { finish(); return; }
+      var ctx = sharedAudioCtx;
+      if (ctx.state === 'suspended') { try { ctx.resume(); } catch (e) {} }
+      fetch(url, { cache: 'reload' })
+        .then(function(r) { if (!r.ok) throw new Error('http ' + r.status); return r.arrayBuffer(); })
+        .then(function(buf) { return ctx.decodeAudioData(buf); })
+        .then(function(audioBuffer) { if (ended) return; node = ctx.createBufferSource(); node.buffer = audioBuffer; node.connect(ctx.destination); node.onended = finish; node.start(0); if (onStart) onStart(controller); })
+        .catch(function() { finish(); });
+    }
+
+    try {
+      audio = new Audio();
+      audio.preload = 'auto';
+      audio.addEventListener('ended', finish);
+      audio.addEventListener('error', function() { if (!switched && !startedSimple) { switched = true; viaWebAudio(); } else { finish(); } });
+      audio.addEventListener('loadedmetadata', function() {
+        var d = audio.duration;
+        if (isFinite(d) && d > 0) {
+          startedSimple = true;
+          var p = audio.play();
+          if (p && p.catch) p.catch(function() { if (!switched && !node) { switched = true; try { audio.pause(); } catch (e) {} viaWebAudio(); } });
+          if (onStart) onStart(controller);
+        } else if (!switched) {
+          switched = true; viaWebAudio();
+        }
       });
+      audio.src = url;
+      // rede de seguranca: se metadata nao carregar em 4s, vai pro Web Audio
+      setTimeout(function() { if (!startedSimple && !switched && !ended) { switched = true; try { audio.pause(); } catch (e) {} viaWebAudio(); } }, 4000);
+    } catch (e) { viaWebAudio(); }
 
     return controller;
   }
@@ -1350,11 +1362,10 @@
       mediaRec.start(100);
 
       if (hasSR) {
-        rec = new SR();
-        rec.lang = 'en-US'; rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = true;
-        if (window.activeRecognition) window.activeRecognition.recognition = rec;
-        rec.onresult = function (event) {
+        var gotResult = false;
+        var onResult = function (event) {
           if (typeof analyzeWords !== 'function' || !resultDiv) return;
+          gotResult = true;
           var best = event.results[event.results.length - 1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g, '');
           var analysis = analyzeWords(target, best);
           var totalWords = analysis.expected.length;
@@ -1370,8 +1381,25 @@
           resultDiv.innerHTML = html;
           /* NAO para a gravacao — usuario controla via Stop */
         };
-        rec.onend = function () { if (!stopped && srRestarts++ < 60) { setTimeout(function () { if (!stopped) { try { rec.start(); } catch (e) {} } }, 250); } };
-        rec.onerror = function () { /* ignora — gravacao continua */ };
+        // Cria SEMPRE uma instancia NOVA do SpeechRecognition. No Chrome, reusar a mesma
+        // instancia depois do onend frequentemente FALHA (a fala seguinte nao e reconhecida,
+        // por isso as palavras nao apareciam). Reinicia so enquanto nao houve resultado.
+        var makeSR = function () {
+          var r = new SR();
+          r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 3; r.continuous = true;
+          r.onresult = onResult;
+          r.onerror = function () { /* ignora — gravacao continua */ };
+          r.onend = function () {
+            if (!stopped && !gotResult && srRestarts++ < 40) {
+              setTimeout(function () {
+                if (!stopped && !gotResult) { rec = makeSR(); if (window.activeRecognition) window.activeRecognition.recognition = rec; try { rec.start(); } catch (e) {} }
+              }, 300);
+            }
+          };
+          return r;
+        };
+        rec = makeSR();
+        if (window.activeRecognition) window.activeRecognition.recognition = rec;
         try { rec.start(); } catch (e) {}
       }
 
