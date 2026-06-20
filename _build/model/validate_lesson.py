@@ -229,6 +229,26 @@ def check_speaktext_escaping(c, fails):
                      f'-> onclick quebra + áudio truncado). Escapar como \\\' . Ex: "{broken[0]}..."')
 
 
+def check_b2_blocks(c, fails, warns):
+    """B2 IN-CLASS BLOCKS (aditivo): reconhece os blocos novos e garante que os
+    interativos estão BEM ligados (handler presente). NÃO reprova uma aula por
+    USAR um bloco novo — só pega bloco interativo emitido sem o handler do shell
+    (regressão estrutural, mesma classe do check_handlers_exist). Aula que não usa
+    nenhum bloco .ic-* passa direto (no-op)."""
+    if 'class="ic-' not in c:
+        return
+    for marker, fn in (('class="ic-choice"', 'icPickGist'),
+                       ('class="ic-tfrow"', 'icRevealTf'),
+                       ('class="ic-answer"', 'icToggleAnswer')):
+        if marker in c and f'function {fn}' not in c:
+            fails.append(f'B2 block interativo presente ({marker}) mas a função {fn}() do shell '
+                         f'NÃO está no arquivo — bloco quebrado (handler ausente)')
+    # gist: avisar se nenhuma alternativa marcada como correta
+    for m in re.finditer(r'<div class="ic-choices">(.*?)</div>\s*</div>', c, flags=re.S):
+        if 'data-right="true"' not in m.group(1):
+            warns.append('B2 gist sem alternativa correta (data-right="true") — confira o config')
+
+
 def check_persistence_wiring(c, path, fails, warns):
     """REGRA 28: persistência cross-device dos exercícios/gravações do aluno.
 
@@ -439,6 +459,7 @@ def validate(path):
     check_fix_regressions(c, css, is_standalone_slides, fails, warns)
     check_handlers_exist(c, fails)
     check_speaktext_escaping(c, fails)
+    check_b2_blocks(c, fails, warns)
     check_persistence_wiring(c, path, fails, warns)
 
     return fails, warns

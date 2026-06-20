@@ -63,3 +63,37 @@ Um tipo de exercício que ainda não existe entra PRIMEIRO no modelo (HTML+JS+re
 validador), valida, e só então é usado em aluna(o) real. O validador pega estrutura
 quebrada: handler `onclick` sem função correspondente, `<div>` desbalanceado, wildcard
 de contraste, `data-exercise`, áudio sem MP3.
+
+## Blocos B2 do IN CLASS (aditivo)
+
+Blocos de exercício prontos pra aulas B2 (leitura/gist/true-false/advice modais...),
+portados de `artefato-b2-exercicios.html`. CSS+JS já vivem no shell do modelo
+(classes `.ic-*`; handlers `icPickGist`/`icRevealTf`/`icToggleAnswer`). O builder
+emite o HTML a partir do config — tipos antigos seguem idênticos.
+
+**Como usar:** no `slides.html`, ponha um placeholder onde os blocos entram:
+```html
+<div class="slide slide-light" data-slide="5" data-phase="3" data-teacher="...">
+  <div class="slide-inner">
+    <h2 class="slide-heading">Read for the <span class="accent">main idea</span></h2>
+    <!--IC-BLOCKS:reading-->
+  </div>
+</div>
+```
+e declare os blocos no config em `lesson.inclass_blocks` (chave = nome do placeholder):
+```json
+"inclass_blocks": {
+  "reading": [
+    {"kind":"reading","rtitle":"...","paras":["..."],"source":"...","link":"..."},
+    {"kind":"gist","prompt":"Best title?","choices":[["a","...",false],["b","...",true]]},
+    {"kind":"tf","items":[["statement","t","justification"], ...]}
+  ]
+}
+```
+Schema completo de cada `kind` (gist, tf, answer, reading, matching, gapfill, modals,
+rephrase, scenarios, questions/guiding/analyse, lf, vocabnote/followup/bank) está no
+cabeçalho de `build_from_model.py` (função `render_block`). Interativos: **gist**
+(clicar a ideia certa), **tf** (revelar verdict+justificativa) e **answer** (accordion
+"Reveal answer key") — todos toggle (REGRA 27.E) e teacher-led (NÃO entram na barra de
+progresso do Pre-class; updateProgress intocado). Aula sem placeholder = build
+byte-a-byte idêntico ao de antes (no-op).

@@ -19,10 +19,33 @@ Correções embutidas (vs. o modelo Roberto):
 import json
 import os
 import re
+import sys
 import unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
+
+# B2 IN-CLASS BLOCKS: reaproveita o render do builder genérico do modelo (única fonte
+# de verdade do HTML dos blocos .ic-*). A aula 3 do modelo mistura componentes existentes
+# + os blocos B2 novos; os placeholders <!--IC-BLOCKS:chave--> no slides.html são expandidos
+# a partir de LESSONS[n]['inclass_blocks']. Aula sem placeholder/inclass_blocks = no-op.
+sys.path.insert(0, os.path.join(ROOT, '_build', 'model'))
+from build_from_model import render_block  # noqa: E402
+
+
+def expand_inclass_blocks(slides, blocks_cfg):
+    used = set()
+
+    def sub(m):
+        key = m.group(1).strip()
+        assert key in blocks_cfg, f'placeholder IC-BLOCKS:{key} sem entrada em inclass_blocks'
+        used.add(key)
+        return '\n'.join(render_block(b) for b in blocks_cfg[key])
+
+    out = re.sub(r'<!--\s*IC-BLOCKS:([^>]+?)\s*-->', sub, slides)
+    unused = set(blocks_cfg) - used
+    assert not unused, f'inclass_blocks declarados mas sem placeholder no slides.html: {sorted(unused)}'
+    return out
 PROF = os.path.join(ROOT, 'public', 'professor')
 ALUNO = os.path.join(ROOT, 'public', 'aluno')
 SLUG = 'helen-mendes'
@@ -78,6 +101,95 @@ LESSONS = {
                 "But she never works on weekends. Weekends are for family.")),
         ],
     ),
+    3: dict(
+        menu_num='03',
+        menu_title='The Mind-Body Reset',
+        menu_desc='Modals of advice + B2 reading blocks, wellness at work -- 28 slides',
+        subtitle='Aula 3 -- The Mind-Body Reset: Wellness, Balance, and the Language of Advice',
+        title_tag='Professor View -- Helen Mendes | Aula 3 -- The Mind-Body Reset',
+        phases=['The Reset', 'Words of Wellbeing', 'Read & Think', 'Language of Advice', 'Practice', 'Your Turn', 'Wrap-Up'],
+        # MISTURA: componentes existentes (vocab reveal, grammar discovery, dialogue,
+        # listening, role-play, survival, comprehension) + blocos B2 NOVOS abaixo.
+        inclass_blocks={
+            'vocab': [
+                {'kind': 'matching', 'title': 'Match each word to its meaning',
+                 'words': [['1', 'burnout'], ['2', 'boundary'], ['3', 'recharge'], ['4', 'resilience'],
+                           ['5', 'mindful'], ['6', 'downtime'], ['7', 'prioritize'], ['8', 'unwind']],
+                 'defs': [['a', 'to rest and get your energy back'],
+                          ['b', 'a clear line between work and personal life'],
+                          ['c', 'deep exhaustion from long-term stress'],
+                          ['d', 'fully present and aware in the moment'],
+                          ['e', 'strength to recover quickly from difficulty'],
+                          ['f', 'to rank a task as more important than others'],
+                          ['g', 'to relax and let go of tension after work'],
+                          ['h', 'a short break to rest the mind and body']]},
+                {'kind': 'vocabnote',
+                 'text': 'Notice the pairs: burnout is the problem; recharge and unwind are the cure. A boundary protects your downtime.'},
+            ],
+            'reading': [
+                {'kind': 'reading', 'rtitle': 'Energy, Not Just Time',
+                 'paras': [
+                     'For years, productivity advice focused on one thing: time. Plan every hour, fill every gap, and you will get more done. But many high performers who manage their time perfectly still hit a wall. They reach the edge of burnout while their calendars look flawless.',
+                     'A newer idea has taken hold: energy is the real resource. You can have hours free and still have nothing left to give. The professionals who last are not the ones who work the longest; they are the ones who recharge on purpose. They set a clear boundary around their downtime and treat rest as part of the job, not a reward for finishing it.',
+                     'The practical advice is simple. Take a short, screen-free break every ninety minutes. Prioritize sleep over one more email. And once a week, fully unwind — a walk, a meal with friends, anything that lets the mind reset. Resilience, it turns out, is built in the pauses.'],
+                 'source': 'Adapted for class use from public wellbeing-at-work research',
+                 'link': 'https://hbr.org/topic/health-and-wellness'},
+                {'kind': 'gist', 'prompt': 'What is the best title for this article?',
+                 'choices': [
+                     ['a', 'Why you should always work longer hours', False],
+                     ['b', 'Managing energy matters more than managing time', True],
+                     ['c', 'How to delete emails faster', False]]},
+            ],
+            'tf': [
+                {'kind': 'tf', 'items': [
+                    ['People with perfect calendars can still reach burnout.', 't',
+                     'The article says high performers who manage time well still "hit a wall".'],
+                    ['The article says rest is a reward you earn after finishing the work.', 'f',
+                     'It says the opposite: treat rest as part of the job, not a reward.'],
+                    ['The author recommends a screen-free break every ninety minutes.', 't',
+                     'This is given as the first piece of practical advice.']]},
+            ],
+            'guiding': [
+                {'kind': 'guiding', 'items': [
+                    'Do you manage your time, your energy, or both? Give an example.',
+                    'What is one boundary you could set this week to protect your downtime?',
+                    'The article says resilience is "built in the pauses." Do you agree? Why?']},
+            ],
+            'modals': [
+                {'kind': 'modals', 'title': 'How strong is the advice?', 'cards': [
+                    ['might want to', 'Softest', 'A gentle suggestion. Easy to refuse: "You might want to try a shorter meeting."'],
+                    ['should / ought to', 'Standard', 'Clear, friendly advice. The everyday choice: "You should prioritize sleep."'],
+                    ['had better', 'Strongest', 'A warning with a consequence: "You had better rest, or you will burn out."']]},
+            ],
+            'practice': [
+                {'kind': 'scenarios', 'items': [
+                    ['Scenario 1', 'A teammate replies to emails at midnight and looks exhausted.'],
+                    ['Scenario 2', 'A new hire skips lunch every day to finish reports.'],
+                    ['Scenario 3', 'Your manager has not taken a day off in two months.']]},
+                {'kind': 'rephrase', 'title': 'Give each person advice — use the modal in brackets',
+                 'items': [
+                     ['The teammate emailing at midnight', 'had better'],
+                     ['The new hire skipping lunch', 'should'],
+                     ['The manager with no days off', 'might want to']]},
+            ],
+            'answerkey': [
+                {'kind': 'answer', 'title': 'Reveal model answers',
+                 'list': [
+                     'You had better stop emailing at midnight, or you will burn out.',
+                     'You should take a real lunch break to recharge.',
+                     'You might want to book a day off and fully unwind.'],
+                 'note': 'Models only — accept any natural answer with the right modal and no "to" after should / had better.'},
+            ],
+        },
+        listenings=[
+            dict(file='a3_listening1.mp3', voice='ellen', text=(
+                "Welcome back to the show. Today, one simple shift: stop thinking about time, and start thinking about energy. "
+                "Time is fixed — you always have twenty-four hours. But energy is a resource you manage. "
+                "You can protect it or you can drain it. So here is my first recommendation: take a short, screen-free break every ninety minutes. "
+                "Just five minutes. Stand up, breathe, look out a window. You should treat that pause as part of the work, not a reward for it. "
+                "Do that for one week, and tell me how your afternoons feel.")),
+        ],
+    ),
 }
 
 ORDER_NARRATIONS = {
@@ -102,6 +214,7 @@ STAMPS_HTML = (
     '<div class="stamps-row">\n'
     '<div class="stamp" id="stamp1" data-label="First Impressions" style="background-image:url(\'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=200&q=80\')"></div>\n'
     '<div class="stamp" id="stamp2" data-label="My Workday" style="background-image:url(\'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=200&q=80\')"></div>\n'
+    '<div class="stamp" id="stamp3" data-label="The Mind-Body Reset" style="background-image:url(\'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=200&q=80\')"></div>\n'
     '</div>\n'
 )
 
@@ -300,10 +413,22 @@ def fix_tail_scripts(s):
 
 def build_standalone(n, manifest):
     L = LESSONS[n]
-    s = read(SRC_STANDALONE)
     slides = read(os.path.join(HERE, f'aula{n}-slides.html'))
+    if L.get('inclass_blocks'):
+        slides = expand_inclass_blocks(slides, L['inclass_blocks'])  # B2 blocks (no-op p/ aulas 1-2)
 
-    s = base_swaps(s, n=n)
+    # SHELL: aulas 1-2 clonam do dialeto roberto (com as correções embutidas abaixo).
+    # Aulas que usam blocos B2 (inclass_blocks) clonam da PRÓPRIA aula 1 do modelo, que
+    # JÁ traz CSS/JS dos blocos .ic-* (icPickGist/icRevealTf/icToggleAnswer) + os fixes
+    # mais novos (nav-bar flex, oral-model toggle). Assim os blocos novos saem "ligados"
+    # e a aula prova que o novo convive com o existente — sem reaplicar swaps do roberto.
+    from_model = bool(L.get('inclass_blocks'))
+    s = read(os.path.join(PROF, f'{SLUG}-aula1.html')) if from_model else read(SRC_STANDALONE)
+    if not from_model:
+        s = base_swaps(s, n=n)
+    else:
+        # shell já é helen-mendes-aula1: só re-aponta o slug do arquivo (links/localStorage)
+        s = s.replace(f'{SLUG}-aula1', f'{SLUG}-aula{n}')
     s = re.sub(r'<title>[^<]*</title>', f'<title>{L["title_tag"]}</title>', s, count=1)
     s = patch_header(s, L['subtitle'])
 
@@ -325,16 +450,19 @@ def build_standalone(n, manifest):
 
     # slides
     s = replace_between(s, '<div class="slides-container" id="slidesContainer">', '</div><!-- /slides-container -->', '\n' + slides + '\n')
+    # totalSlides bate com a contagem real desta aula (nav/dots/counter)
+    actual_slides = len(re.findall(r'data-slide=', slides))
+    s = re.sub(r'var totalSlides = \d+', f'var totalSlides = {actual_slides}', s)
 
-    # nav: label da aula + EXIT correto
-    s = s.replace('>LESSON 5<', f'>LESSON {n}<')
-    s = s.replace('onclick="document.body.classList.remove(\'slide-mode\')" aria-label="Exit presentation"',
-                  'onclick="exitSlideMode()" aria-label="Exit presentation"')
-
-    # JS: remove Quick Challenge (nao usado), troca listening fake por player real, revealError dinamico
-    s = replace_between(s, '// ===== QUICK CHALLENGE =====', '// ===== LISTENING AUDIO =====', '\n')
-    s = replace_between(s, '// ===== LISTENING AUDIO =====', 'function stopAllAudio', '\n' + MP_PLAYER_JS)
-    s = replace_between(s, 'var errorCount = 0;', '// ===== DIALOGUE LINE-BY-LINE =====', '\n' + REVEAL_ERROR_JS + '\n')
+    # nav: label da aula (LESSON N no contador da fase). helen-aula1 já tem LESSON 1.
+    s = s.replace('>LESSON 5<' if not from_model else '>LESSON 1<', f'>LESSON {n}<')
+    if not from_model:
+        # correções da JS só fazem sentido no shell antigo do roberto:
+        s = s.replace('onclick="document.body.classList.remove(\'slide-mode\')" aria-label="Exit presentation"',
+                      'onclick="exitSlideMode()" aria-label="Exit presentation"')
+        s = replace_between(s, '// ===== QUICK CHALLENGE =====', '// ===== LISTENING AUDIO =====', '\n')
+        s = replace_between(s, '// ===== LISTENING AUDIO =====', 'function stopAllAudio', '\n' + MP_PLAYER_JS)
+        s = replace_between(s, 'var errorCount = 0;', '// ===== DIALOGUE LINE-BY-LINE =====', '\n' + REVEAL_ERROR_JS + '\n')
 
     # audioMap
     entries = assign_voices(extract_phrases(slides), prefix=f'a{n}_')
@@ -407,12 +535,18 @@ def build_hub(manifest):
 
 
 def main():
+    # Uso aditivo: `build_mock.py 3` constrói SÓ a aula 3 (não toca aula 1/2 nem o hub).
+    # Sem argumentos, rebuilda tudo (comportamento original do mock).
+    only = [int(a) for a in sys.argv[1:] if a.isdigit()]
     manifest = []
     print('== standalones ==')
     for n in LESSONS:
+        if only and n not in only:
+            continue
         build_standalone(n, manifest)
-    print('== hub ==')
-    build_hub(manifest)
+    if not only:
+        print('== hub ==')
+        build_hub(manifest)
     # dedupe manifest por arquivo
     seen, dedup = set(), []
     for e in manifest:
@@ -420,8 +554,11 @@ def main():
             continue
         seen.add(e['file'])
         dedup.append(e)
-    write(os.path.join(HERE, 'audio_manifest.json'), json.dumps(dedup, ensure_ascii=False, indent=1))
-    print(f'manifest: {len(dedup)} audios')
+    # build aditivo (só algumas aulas) escreve um manifesto separado pra não apagar o
+    # manifesto completo das aulas 1-2 (que já têm áudio no disco).
+    mf_name = f'audio_manifest_aula{only[0]}.json' if only else 'audio_manifest.json'
+    write(os.path.join(HERE, mf_name), json.dumps(dedup, ensure_ascii=False, indent=1))
+    print(f'manifest ({mf_name}): {len(dedup)} audios')
 
 
 if __name__ == '__main__':
