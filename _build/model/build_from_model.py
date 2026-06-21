@@ -274,6 +274,11 @@ def assign_voices(phrases, prefix, cfg):
     alt = 0
     for text, hint in phrases:
         if text in entries:
+            # data-voice (diálogo) vence mesmo se a frase já apareceu antes
+            # sem hint (ex.: a mesma pergunta no slide de gramática e na fala
+            # de um personagem): o personagem define a voz do MP3 único.
+            if hint and entries[text]['voice'] != hint:
+                entries[text]['voice'] = hint
             continue
         if hint:
             voice = hint
