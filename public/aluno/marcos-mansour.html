@@ -1173,8 +1173,11 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
         var fr=new FileReader();
         fr.onloadend=function(){
           fetch('/api/transcribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({audioBase64:fr.result,mimeType:blob.type,lang:'eng'})})
-          .then(function(r){return r.json();}).then(function(d){ if(d&&typeof d.text==='string'&&d.text.trim()){render(card,d.text);} else if(rd){rd.innerHTML='<strong>&#10003; Recording saved</strong> &mdash; nao consegui transcrever, tente de novo.';} })
-          .catch(function(){ if(rd)rd.innerHTML='<strong>&#10003; Recording saved</strong> &mdash; erro de transcricao.'; });
+          .then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});}).then(function(o){ var d=o.d||{};
+            try{ console.log('[STT]', o.ok, JSON.stringify(d).slice(0,300)); }catch(e){}
+            if(d&&typeof d.text==='string'&&d.text.trim()){ render(card,d.text); if(rd){ rd.innerHTML += '<div style="font-size:.7rem;color:#6b7280;margin-top:.3rem">ouvi: "'+d.text+'"</div>'; } }
+            else if(rd){ rd.classList.add('show'); rd.innerHTML='<strong>&#9888; diagn&oacute;stico STT</strong><div style="font-size:.72rem;color:#b45309;margin-top:.3rem;word-break:break-all">http_ok='+o.ok+' | mime='+(blob.type)+' | bytes='+blob.size+'<br>resp: '+JSON.stringify(d).slice(0,250)+'</div>'; } })
+          .catch(function(err){ if(rd){ rd.classList.add('show'); rd.innerHTML='<strong>&#9888; erro de rede no STT</strong><div style="font-size:.72rem;color:#b91c1c;margin-top:.3rem">'+String(err)+'</div>'; } });
         };
         fr.readAsDataURL(blob);
       };
