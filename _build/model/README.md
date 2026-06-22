@@ -18,6 +18,13 @@
 6. Contraste computado (GATE):          python3 check_computed_contrast.py (headless; 0 ilegível obrigatório)
 7. Hub: inserir _build/{slug}-aula{N}/hub_snippets.html no hub existente (modo "snippets")
    ou usar hub "new" no config (aluno novo, sem hub)
+7b. ESTRUTURA DO HUB (GATE OBRIGATÓRIO após insert_hub):
+                                        python3 _build/model/audit_hubs_struct.py --check public/professor/{slug}.html public/aluno/{slug}.html
+    Pega vazamento de aba (ORPHAN/ESCAPE: Pre-class/Complementares renderizando fora
+    da aba certa quando insert_hub fecha </div> de tab cedo demais), SLIDES_COMP,
+    DIV_IMBAL, MENU_MIX, OLD_SHELL. Sai != 0 (bloqueia) se o hub tocado tiver defeito.
+    Fix = mover o </div> de fechamento da aba de ANTES do 1º bloco-órfão para DEPOIS
+    do último bloco da aba, até auditor limpo (0 ESCAPE/ORPHAN) e balanço de divs = 0.
 8. PR → merge → deploy automático via GitHub (NUNCA vercel --prod)
 ```
 
@@ -30,7 +37,11 @@ atualizar a página) + `check_contrast.py`
 (contraste computado, slides claros E escuros; gradiente/foto são pulados — o
 contrast-guard cobre em runtime). Arquivo MODIFICADO passa por
 `check_no_regression.py` (ex-lesson/stamp/slide não pode sumir; arquivo não pode
-encolher >10% — classe do incidente 6cd5b3b9). Ninguém precisa lembrar de rodar
+encolher >10% — classe do incidente 6cd5b3b9). HUBs tocados (novos E modificados)
+passam por `audit_hubs_struct.py --check` (GATE 4 — vazamento de aba ORPHAN/ESCAPE/
+SLIDES_COMP/DIV_IMBAL/MENU_MIX + shell pré-modelo OLD_SHELL; bloqueia o PR se algum
+hub modificado renderizar Pre-class/Complementares fora da aba certa — classe do
+incidente Tânia/tuca-dias). Ninguém precisa lembrar de rodar
 gate local: o PR não mergeia vermelho.
 
 ## Áudio de listening = MONÓLOGO
