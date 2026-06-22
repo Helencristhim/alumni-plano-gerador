@@ -1407,6 +1407,12 @@
     var card = btn.closest('.speech-card');
     if (!card) return;
     if (btn.classList.contains('recording')) return;
+    // Chrome so permite 1 SpeechRecognition por vez: encerra o do card anterior
+    // antes de iniciar este, senao o reconhecimento do 2o card em diante falha
+    // em silencio (rec.start() joga erro engolido) e o word-by-word nao aparece.
+    if (window.activeRecognition && typeof window.activeRecognition.endAll === 'function') {
+      try { window.activeRecognition.endAll(); } catch (e) {}
+    }
     var target = (card.dataset.phrase || '').toLowerCase().replace(/[^a-z0-9' ]/g, '');
     var resultDiv = card.querySelector('.speech-result');
     var stopBtn = card.querySelector('.btn-stop');
