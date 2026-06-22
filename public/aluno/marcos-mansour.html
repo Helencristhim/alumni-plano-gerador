@@ -1132,11 +1132,34 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 <script src="/lib/contrast-guard.js"></script>
 
 
-<!-- ===== Marcos a1: word-by-word via server STT (bind direto nos botoes, imune a precedencia) ===== -->
+
+<!-- ===== Marcos a1: word-by-word via server STT (WAV transcode no cliente; so pre-class) ===== -->
 <script>
 (function(){
   function norm(x){ return (x||'').toLowerCase().replace(/[^a-z0-9' ]/g,''); }
   function pkey(card){ return 'wbw_marcos_'+norm(card.dataset.phrase||'').replace(/[^a-z0-9]/g,'_').slice(0,60); }
+  // ---- transcode blob (webm/opus etc.) -> WAV mono 16-bit (Scribe rejeita webm sem header) ----
+  function abToWav(buffer){
+    var len=buffer.length, sr=buffer.sampleRate, nc=buffer.numberOfChannels;
+    var data=new Float32Array(len);
+    for(var c=0;c<nc;c++){ var ch=buffer.getChannelData(c); for(var i=0;i<len;i++) data[i]+=ch[i]/nc; }
+    var ab=new ArrayBuffer(44+len*2), v=new DataView(ab);
+    function ws(o,s){for(var i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));}
+    ws(0,'RIFF'); v.setUint32(4,36+len*2,true); ws(8,'WAVE'); ws(12,'fmt ');
+    v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+    v.setUint32(24,sr,true); v.setUint32(28,sr*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
+    ws(36,'data'); v.setUint32(40,len*2,true);
+    var o=44; for(var i=0;i<len;i++){ var x=Math.max(-1,Math.min(1,data[i])); v.setInt16(o,x<0?x*0x8000:x*0x7FFF,true); o+=2; }
+    return new Blob([v],{type:'audio/wav'});
+  }
+  function toWav(blob){
+    return new Promise(function(res,rej){
+      var AC=window.AudioContext||window.webkitAudioContext; if(!AC){rej(new Error('no AudioContext'));return;}
+      var fr=new FileReader();
+      fr.onload=function(){ new AC().decodeAudioData(fr.result, function(b){ try{res(abToWav(b));}catch(e){rej(e);} }, function(e){ rej(e||new Error('decode fail')); }); };
+      fr.onerror=function(){rej(fr.error);}; fr.readAsArrayBuffer(blob);
+    });
+  }
   function render(card, spoken){
     var rd=card.querySelector('.speech-result'); if(!rd||typeof analyzeWords!=='function') return;
     var a=analyzeWords(norm(card.dataset.phrase||''), norm(spoken));
@@ -1151,6 +1174,18 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
     html+='</div></div>';
     rd.innerHTML=html;
     try{ localStorage.setItem(pkey(card), spoken); }catch(e){}
+  }
+  function sttSend(card, wavBlob, mime){
+    var rd=card.querySelector('.speech-result');
+    var fr=new FileReader();
+    fr.onloadend=function(){
+      fetch('/api/transcribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({audioBase64:fr.result,mimeType:mime,lang:'eng'})})
+      .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
+      .then(function(o){ var d=o.d||{}; if(d&&typeof d.text==='string'&&d.text.trim()){ render(card,d.text); }
+        else if(rd){ rd.classList.add('show'); rd.innerHTML='<strong>&#9888; STT</strong><div style="font-size:.72rem;color:#b45309;word-break:break-all">'+JSON.stringify(d).slice(0,200)+'</div>'; } })
+      .catch(function(err){ if(rd){rd.classList.add('show');rd.innerHTML='<strong>&#9888; rede</strong> '+String(err);} });
+    };
+    fr.readAsDataURL(wavBlob);
   }
   function myStart(btn){
     var card=btn.closest('.speech-card'); if(!card||btn.classList.contains('recording'))return;
@@ -1170,16 +1205,9 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
         var ext=(blob.type.indexOf('mp4')!==-1)?'mp4':'webm';
         var fp='marcos-mansour/'+norm(card.dataset.phrase||'p').replace(/[^a-z0-9]/g,'_').slice(0,50)+'.'+ext;
         if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(fp,blob,{contentType:blob.type,upsert:true}).then(function(r){if(!r.error){card.dataset.recordingUrl=sb.storage.from('recordings').getPublicUrl(fp).data.publicUrl;if(typeof saveState==='function')saveState();}});}
-        var fr=new FileReader();
-        fr.onloadend=function(){
-          fetch('/api/transcribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({audioBase64:fr.result,mimeType:blob.type,lang:'eng'})})
-          .then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});}).then(function(o){ var d=o.d||{};
-            try{ console.log('[STT]', o.ok, JSON.stringify(d).slice(0,300)); }catch(e){}
-            if(d&&typeof d.text==='string'&&d.text.trim()){ render(card,d.text); if(rd){ rd.innerHTML += '<div style="font-size:.7rem;color:#6b7280;margin-top:.3rem">ouvi: "'+d.text+'"</div>'; } }
-            else if(rd){ rd.classList.add('show'); rd.innerHTML='<strong>&#9888; diagn&oacute;stico STT</strong><div style="font-size:.72rem;color:#b45309;margin-top:.3rem;word-break:break-all">http_ok='+o.ok+' | mime='+(blob.type)+' | bytes='+blob.size+'<br>resp: '+JSON.stringify(d).slice(0,250)+'</div>'; } })
-          .catch(function(err){ if(rd){ rd.classList.add('show'); rd.innerHTML='<strong>&#9888; erro de rede no STT</strong><div style="font-size:.72rem;color:#b91c1c;margin-top:.3rem">'+String(err)+'</div>'; } });
-        };
-        fr.readAsDataURL(blob);
+        // transcode -> WAV e manda pro STT (webm cru e' rejeitado como corrupted)
+        toWav(blob).then(function(wav){ sttSend(card, wav, 'audio/wav'); })
+                   .catch(function(){ sttSend(card, blob, blob.type); });
       };
       rec.start(100); window.__marcosRec=rec;
       btn.classList.add('recording','hidden'); btn.style.display='none';
