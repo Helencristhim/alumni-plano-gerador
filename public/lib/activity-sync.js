@@ -934,6 +934,99 @@
     };
   }
 
+  // ===== OVERRIDE da gravacao livre (Think card, Stage 5 — "Gravar Livre") =====
+  // A versao inline toca a gravacao via <audio controls src=blobUrl> cru, sem o fix de
+  // duracao. Em gravacoes webm/opus (Chrome) a metadata de duracao costuma vir 0/Infinity,
+  // entao em OUTRO navegador (ou ate no mesmo, dependendo do build) o player corta e
+  // "so o final fica audivel". Esta versao usa playRecordingFixed (mesmo player cross-browser
+  // do Stage 3) e injeta um botao Play/Stop em vez do <audio controls> cru.
+  // REGRA 20: conserta no lib compartilhado -> propaga a todos os alunos sem editar material.
+  function freePlayBtnHTML() { return '&#9654; Play Recording'; }
+  function injectFreePlayBtn(resultDiv, audioUrl) {
+    if (!resultDiv) return;
+    resultDiv.innerHTML =
+      '<button type="button" class="btn btn-your-pronunciation btn-free-rec-play" ' +
+      'style="margin-top:.5rem">' + freePlayBtnHTML() + '</button>' +
+      '<p style="font-size:.72rem;color:#16a34a;margin-top:.3rem;">&#10003; Recording saved</p>';
+    var playBtn = resultDiv.querySelector('.btn-free-rec-play');
+    if (!playBtn) return;
+    playBtn.onclick = function(e) {
+      e.preventDefault();
+      if (playBtn.dataset.playing === 'true') {
+        stopActivePlayback(); playBtn.innerHTML = freePlayBtnHTML(); playBtn.dataset.playing = 'false'; return;
+      }
+      stopActivePlayback();
+      playBtn.innerHTML = '&#9632; Playing...'; playBtn.dataset.playing = 'true';
+      activePlayback = playRecordingFixed(audioUrl, null, function() {
+        playBtn.innerHTML = freePlayBtnHTML(); playBtn.dataset.playing = 'false'; activePlayback = null;
+      });
+    };
+  }
+
+  function installFreeRecordingFix() {
+    function pslug(s) { return (s || '').toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 50); }
+
+    window.startFreeRecording = function(btn) {
+      var stopBtn = btn.parentElement.querySelector('.btn-stop');
+      var thinkCard = btn.closest('.think-card');
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+        // MediaRecorder ja vem envolvido por installRecorderFormatFix (Chrome -> webm/opus).
+        var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4'
+          : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+        var rec = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+        var chunks = [];
+        rec.ondataavailable = function(e) { if (e.data && e.data.size > 0) chunks.push(e.data); };
+        rec.onstop = function() {
+          stream.getTracks().forEach(function(t) { t.stop(); });
+          if (!chunks.length) return;
+          var blob = new Blob(chunks, { type: rec.mimeType || 'audio/webm' });
+          var url = nativeCreateObjectURL(blob);
+          var resultDiv = thinkCard ? thinkCard.querySelector('[id^="think-result"]') : null;
+          // Playback local com fix de duracao (em vez de <audio controls> cru)
+          injectFreePlayBtn(resultDiv, url);
+          if (thinkCard) thinkCard.classList.add('recorded');
+          if (typeof updateProgress === 'function') updateProgress();
+          // Upload (installStorageTranscode transcoda pra WAV no caminho)
+          var st = window.STUDENT_SLUG || 'unknown';
+          var thinkId = (resultDiv && resultDiv.id) || ('think-' + pslug((thinkCard && thinkCard.querySelector('.think-question') ? thinkCard.querySelector('.think-question').textContent : 'free')));
+          var ext = blob.type.indexOf('mp4') !== -1 ? 'mp4' : 'webm';
+          var filePath = st + '/' + thinkId + '.' + ext;
+          if (typeof sb !== 'undefined') {
+            sb.storage.from('recordings').upload(filePath, blob, { contentType: blob.type, upsert: true }).then(function(res) {
+              if (!res.error && thinkCard) {
+                thinkCard.dataset.recordingUrl = sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;
+                if (typeof saveState === 'function') saveState();
+              }
+            });
+          }
+        };
+        rec.start(100);
+        window.__freeRecorder = rec;
+        btn.classList.add('hidden');
+        if (stopBtn) stopBtn.classList.add('visible');
+      }).catch(function() { alert('Could not access microphone.'); });
+    };
+
+    window.stopFreeRecording = function(stopBtn) {
+      var rec = window.__freeRecorder;
+      if (rec && rec.state === 'recording') { try { rec.stop(); } catch (e) {} }
+      var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
+      if (recordBtn) recordBtn.classList.remove('hidden');
+      if (stopBtn) stopBtn.classList.remove('visible');
+    };
+  }
+
+  // Re-renderiza os players de gravacao livre ja restaurados pelo loadState do material
+  // (que usa <audio controls> cru) para usar o botao Play com fix de duracao.
+  function refreshFreeRecordingButtons() {
+    document.querySelectorAll('.think-card.recorded').forEach(function(tc) {
+      var url = tc.dataset.recordingUrl;
+      if (!url) return;
+      var resultDiv = tc.querySelector('[id^="think-result"]');
+      if (resultDiv && !resultDiv.querySelector('.btn-free-rec-play')) injectFreePlayBtn(resultDiv, url);
+    });
+  }
+
   // Carregar gravacoes salvas do Supabase e injetar botoes
   function loadSavedRecordings() {
     if (viewType !== 'aluno') return;
@@ -1253,6 +1346,10 @@
     // Substituir o player do botao "Your Pronunciation" pela versao com fix de duracao
     installPronunciationFix();
     setTimeout(refreshPronunciationButtons, 300);
+
+    // Substituir a gravacao livre (Think card) pela versao com playback cross-browser
+    installFreeRecordingFix();
+    setTimeout(refreshFreeRecordingButtons, 350);
 
     // Capturar estado atual (ja restaurado do localStorage pelo loadState do material) como baseline
     knownState = mergeState(emptyState(), collectState());
