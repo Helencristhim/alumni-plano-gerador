@@ -1368,8 +1368,9 @@
     setupEventListeners();
     startAutoSave();
 
-    // Preclass viewer desativado — quebrava layout do IN CLASS (slide-mode)
-    // loadPreclassViewer();
+    // Preclass viewer RELIGADO (Dan 22/06): mitigado por body.slide-mode{display:none!important}
+    // + MutationObserver + guard de /professor/ dentro do preclass-viewer.js
+    loadPreclassViewer();
   }
 
   if (document.readyState === 'loading') {
