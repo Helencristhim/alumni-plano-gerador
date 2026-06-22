@@ -1131,10 +1131,10 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 <script src="/lib/activity-sync.js"></script>
 <script src="/lib/contrast-guard.js"></script>
 
-<!-- ===== Marcos a1: word-by-word via server STT (grava->transcreve->verde/vermelho), persiste apos refresh ===== -->
+
+<!-- ===== Marcos a1: word-by-word via server STT (bind direto nos botoes, imune a precedencia) ===== -->
 <script>
 (function(){
-  if (window.STUDENT_SLUG !== 'marcos-mansour') return;
   function norm(x){ return (x||'').toLowerCase().replace(/[^a-z0-9' ]/g,''); }
   function pkey(card){ return 'wbw_marcos_'+norm(card.dataset.phrase||'').replace(/[^a-z0-9]/g,'_').slice(0,60); }
   function render(card, spoken){
@@ -1152,7 +1152,7 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
     rd.innerHTML=html;
     try{ localStorage.setItem(pkey(card), spoken); }catch(e){}
   }
-  window.startRecording=function(btn){
+  function myStart(btn){
     var card=btn.closest('.speech-card'); if(!card||btn.classList.contains('recording'))return;
     var stopBtn=card.querySelector('.btn-stop'), rd=card.querySelector('.speech-result');
     navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
@@ -1173,8 +1173,8 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
         var fr=new FileReader();
         fr.onloadend=function(){
           fetch('/api/transcribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({audioBase64:fr.result,mimeType:blob.type,lang:'eng'})})
-          .then(function(r){return r.json();}).then(function(d){ if(d&&typeof d.text==='string'){render(card,d.text);} else if(rd){rd.innerHTML='<strong>&#10003; Recording saved</strong>';} })
-          .catch(function(){ if(rd)rd.innerHTML='<strong>&#10003; Recording saved</strong>'; });
+          .then(function(r){return r.json();}).then(function(d){ if(d&&typeof d.text==='string'&&d.text.trim()){render(card,d.text);} else if(rd){rd.innerHTML='<strong>&#10003; Recording saved</strong> &mdash; nao consegui transcrever, tente de novo.';} })
+          .catch(function(){ if(rd)rd.innerHTML='<strong>&#10003; Recording saved</strong> &mdash; erro de transcricao.'; });
         };
         fr.readAsDataURL(blob);
       };
@@ -1182,11 +1182,15 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
       btn.classList.add('recording','hidden'); btn.style.display='none';
       if(stopBtn){stopBtn.classList.add('visible'); stopBtn.style.display='inline-block';}
     }).catch(function(){alert('Could not access microphone.');});
-  };
-  window.stopRecording=function(){var r=window.__marcosRec; if(r&&r.state==='recording'){try{r.stop();}catch(e){}}};
-  // restaura word-by-word apos refresh
-  function restore(){ document.querySelectorAll('.speech-card').forEach(function(card){ try{ var sp=localStorage.getItem(pkey(card)); if(sp) render(card,sp); }catch(e){} }); }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',restore); else restore();
+  }
+  function myStop(){var r=window.__marcosRec; if(r&&r.state==='recording'){try{r.stop();}catch(e){}}}
+  window.startRecording=myStart; window.stopRecording=myStop;
+  function bind(){
+    document.querySelectorAll('.speech-card .btn-record').forEach(function(b){ b.onclick=function(){ myStart(b); return false; }; });
+    document.querySelectorAll('.speech-card .btn-stop').forEach(function(b){ b.onclick=function(){ myStop(b); return false; }; });
+  }
+  function boot(){ bind(); document.querySelectorAll('.speech-card').forEach(function(c){ try{ var sp=localStorage.getItem(pkey(c)); if(sp) render(c,sp); }catch(e){} }); }
+  if(document.readyState==='complete') boot(); else window.addEventListener('load', boot);
 })();
 </script>
 </body>
