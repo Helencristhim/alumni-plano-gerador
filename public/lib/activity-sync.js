@@ -1002,8 +1002,8 @@
         };
         rec.start(100);
         window.__freeRecorder = rec;
-        btn.classList.add('hidden');
-        if (stopBtn) stopBtn.classList.add('visible');
+        btn.classList.add('hidden'); btn.style.display = 'none';
+        if (stopBtn) { stopBtn.classList.add('visible'); stopBtn.style.display = 'inline-block'; }
       }).catch(function() { alert('Could not access microphone.'); });
     };
 
@@ -1011,8 +1011,8 @@
       var rec = window.__freeRecorder;
       if (rec && rec.state === 'recording') { try { rec.stop(); } catch (e) {} }
       var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
-      if (recordBtn) recordBtn.classList.remove('hidden');
-      if (stopBtn) stopBtn.classList.remove('visible');
+      if (recordBtn) { recordBtn.classList.remove('hidden'); recordBtn.style.display = ''; }
+      if (stopBtn) { stopBtn.classList.remove('visible'); stopBtn.style.display = 'none'; }
     };
   }
 
@@ -1409,8 +1409,8 @@
     var target = (card.dataset.phrase || '').toLowerCase().replace(/[^a-z0-9' ]/g, '');
     var resultDiv = card.querySelector('.speech-result');
     var stopBtn = card.querySelector('.btn-stop');
-    btn.classList.add('recording', 'hidden');
-    if (stopBtn) stopBtn.classList.add('visible');
+    btn.classList.add('recording', 'hidden'); btn.style.display = 'none';
+    if (stopBtn) { stopBtn.classList.add('visible'); stopBtn.style.display = 'inline-block'; }
 
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     var hasSR = !!SR;
@@ -1448,8 +1448,8 @@
 
       function endAll() {
         if (stopped) return; stopped = true;
-        btn.classList.remove('recording', 'hidden');
-        if (stopBtn) stopBtn.classList.remove('visible');
+        btn.classList.remove('recording', 'hidden'); btn.style.display = '';
+        if (stopBtn) { stopBtn.classList.remove('visible'); stopBtn.style.display = 'none'; }
         if (rec) { try { rec.stop(); } catch (e) {} }
         if (mediaRec.state === 'recording') { try { mediaRec.stop(); } catch (e) {} }
         window.activeRecognition = null;
@@ -1502,8 +1502,8 @@
 
       setTimeout(endAll, 30000);
     }).catch(function () {
-      btn.classList.remove('recording', 'hidden');
-      if (stopBtn) stopBtn.classList.remove('visible');
+      btn.classList.remove('recording', 'hidden'); btn.style.display = '';
+      if (stopBtn) { stopBtn.classList.remove('visible'); stopBtn.style.display = 'none'; }
       alert('Could not access microphone.');
     });
   };
