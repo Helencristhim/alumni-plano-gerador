@@ -1368,9 +1368,9 @@
     setupEventListeners();
     startAutoSave();
 
-    // Preclass viewer RELIGADO (Dan 22/06): mitigado por body.slide-mode{display:none!important}
-    // + MutationObserver + guard de /professor/ dentro do preclass-viewer.js
-    loadPreclassViewer();
+    // Preclass viewer DESATIVADO de novo (Dan 22/06): vazava no IN CLASS de shells antigos
+    // (ex. gabriela-paulucci slide 31). Reverter > vazar. So religar com guard a prova de vazamento.
+    // loadPreclassViewer();
   }
 
   if (document.readyState === 'loading') {
