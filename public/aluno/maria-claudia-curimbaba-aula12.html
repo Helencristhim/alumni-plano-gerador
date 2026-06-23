@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>IN CLASS — Maria Claudia Curimbaba | Lesson 12 | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #6B4C8A;
+  --accent-light: #8B6BAA;
+  --accent-dim: rgba(107,76,138,0.08);
+  --accent-glow: rgba(107,76,138,0.05);
+  --black: #1a1a2e;
+  --bg: #f5f2ee;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0ede8;
+  --bg-input: #fafaf7;
+  --border: #d8d1c8;
+  --border-light: #c4bdb3;
+  --white: #ffffff;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #6b6b7a;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --warn: #d97706;
+  --navy: #003080;
+  --dark: #1a1a2e;
+  --dark-surface: #22223a;
+  --dark-elevated: #2d2d4a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-serif; background:#0a0a1a; color:var(--text); }
+
+/* ===== SLIDE SYSTEM ===== */
+.slide-deck { position:relative; width:100%; height:100vh; }
+.slide {
+  position:absolute; inset:0; width:100%; height:100vh;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  opacity:0; visibility:hidden; transition: opacity 400ms ease, visibility 400ms ease;
+  overflow-y:auto; padding:2rem;
+}
+.slide.active { opacity:1; visibility:visible; }
+
+.slide.dark { background:var(--dark); color:#fff; }
+.slide.dark .checklist li,.slide.dark .check-item,.slide.dark .check-label,.slide.dark .roleplay-body p,.slide.dark .roleplay-body,.slide.dark .roleplay-scenario,.slide.dark .comp-q,.slide.dark .comp-q p,.slide.dark .fill-item label,.slide.dark .fill-item p,.slide.dark .error-card p,.slide.dark .oral-item p,.slide.dark .email-card,.slide.dark .email-card p,.slide.dark .boarding-pass p,.slide.dark .student-id-card p{color:#1a1a2e !important}
+.slide.light { background:var(--bg); color:var(--text); }
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.6rem 1.5rem; background:rgba(10,10,26,0.85); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.12);
+}
+.top-bar-left { display:flex; align-items:center; gap:0.8rem; }
+.top-bar-logo { height:26px; opacity:0.9; }
+.slide-counter { font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.5); letter-spacing:1px; }
+.top-bar-right { display:flex; align-items:center; gap:0.6rem; }
+
+/* Chapter progress */
+.chapter-bar { display:flex; gap:2px; flex:1; max-width:360px; margin:0 1rem; }
+.chapter-dot {
+  flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,0.12);
+  cursor:pointer; transition:background 0.3s;
+}
+.chapter-dot.active { background:var(--accent); }
+.chapter-dot.completed { background:var(--accent-light); }
+
+/* Dot navigation */
+.dot-nav {
+  position:fixed; right:1rem; top:50%; transform:translateY(-50%); z-index:100;
+  display:flex; flex-direction:column; gap:4px;
+}
+.dot-nav-item {
+  width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.25);
+  cursor:pointer; transition:all 0.3s; border:none;
+}
+.dot-nav-item.active { background:var(--accent); transform:scale(1.4); }
+.dot-nav-item:hover { background:rgba(255,255,255,0.4); }
+
+/* Nav arrows */
+.nav-arrows {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:100;
+  display:flex; gap:0.5rem;
+}
+.nav-btn {
+  width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
+  background:rgba(10,10,26,0.7); backdrop-filter:blur(8px);
+  color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.nav-btn:hover { background:var(--accent); border-color:var(--accent); }
+.nav-btn svg { width:18px; height:18px; }
+
+/* ===== TEACHER CUE (T icon) ===== */
+.t-cue {
+  position:fixed; top:3.5rem; right:1.5rem; z-index:200;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.5); font-weight:700; font-size:0.8rem;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.25s;
+}
+.t-cue:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.t-panel {
+  display:none; position:fixed; top:6rem; right:1.5rem; z-index:210;
+  width:340px; max-height:60vh; overflow-y:auto;
+  background:rgba(26,26,46,0.97); color:#e0e0e0; padding:1.2rem 1.4rem;
+  border-radius:10px; font-size:0.82rem; line-height:1.7;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08);
+}
+.t-panel.show { display:block; animation:fadeIn 0.2s ease; }
+.t-panel strong { color:var(--accent-light); }
+.t-panel .t-timing { color:#fbbf24; font-weight:600; font-size:0.75rem; display:block; margin-bottom:0.5rem; }
+.t-panel .t-ccq { background:rgba(107,76,138,0.25); border:1px solid rgba(107,76,138,0.3); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; }
+.t-panel .t-alert { background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.25); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; color:#fca5a5; }
+
+/* ===== TYPOGRAPHY ===== */
+.slide-chapter-label {
+  font-size:0.68rem; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.6rem;
+}
+.slide-title {
+  font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:600;
+  line-height:1.2; margin-bottom:0.8rem; max-width:750px; text-align:center;
+}
+.slide-subtitle {
+  font-size:1rem; font-weight:400; opacity:0.7; max-width:600px; text-align:center; line-height:1.7;
+}
+.slide-content { max-width:800px; width:100%; }
+.section-label {
+  font-size:0.7rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+
+/* ===== VOCAB REVEAL CARDS (2x2 grid) ===== */
+.vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:750px; width:100%; }
+.v-card {
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:12px; padding:1.2rem; cursor:pointer; transition:all 0.35s;
+  min-height:160px; display:flex; flex-direction:column; position:relative; overflow:hidden;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+.v-card:hover { border-color:var(--accent); background:rgba(107,76,138,0.25); }
+.v-card.revealed { border-color:var(--accent-light); background:rgba(107,76,138,0.28); }
+.v-card-icon {
+  width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  margin-bottom:0.8rem; flex-shrink:0;
+}
+.v-card-icon svg { width:24px; height:24px; }
+.v-card-hint { font-size:0.85rem; color:rgba(255,255,255,0.5); font-style:italic; line-height:1.6; }
+.v-card-body { display:none; }
+.v-card.revealed .v-card-hint { display:none; }
+.v-card.revealed .v-card-body { display:block; animation:fadeIn 0.35s ease; }
+.v-word { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:#fff; margin-bottom:0.3rem; }
+.v-def { font-size:0.82rem; color:rgba(255,255,255,0.6); margin-bottom:0.3rem; }
+.v-example { font-size:0.85rem; color:rgba(255,255,255,0.8); font-style:italic; margin-bottom:0.6rem; }
+.v-listen-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.35rem 0.9rem; background:var(--accent); color:#fff;
+  border:none; border-radius:5px; font-size:0.75rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.v-listen-btn:hover { background:var(--accent-light); }
+.v-listen-btn svg { width:14px; height:14px; }
+.vocab-counter { text-align:center; margin-top:1rem; font-size:0.8rem; color:rgba(255,255,255,0.4); font-weight:500; }
+
+/* ===== GRAMMAR DISCOVERY ===== */
+.grammar-examples { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.2rem; }
+.g-example {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; font-size:1.05rem; color:rgba(255,255,255,0.9); line-height:1.6;
+}
+.g-example .highlight { color:var(--accent-light); font-weight:700; }
+.g-reveal-btn {
+  width:100%; padding:0.8rem; border:2px dashed var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:10px; font-size:0.9rem; font-weight:600;
+  cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
+}
+.g-reveal-btn:hover { background:rgba(107,76,138,0.1); }
+.g-reveal-btn.used { display:none; }
+.g-rule {
+  display:none; padding:1.5rem; background:rgba(107,76,138,0.08);
+  border:1px solid rgba(107,76,138,0.25); border-radius:10px; margin-top:1rem;
+}
+.g-rule.show { display:block; animation:fadeIn 0.4s ease; }
+.g-rule h4 { color:var(--accent-light); font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:1rem; }
+.g-rule table { width:100%; border-collapse:collapse; font-size:0.88rem; color:rgba(255,255,255,0.85); }
+.g-rule th { text-align:left; padding:0.6rem; border-bottom:2px solid rgba(255,255,255,0.15); color:var(--accent-light); font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; }
+.g-rule td { padding:0.6rem; border-bottom:1px solid rgba(255,255,255,0.12); }
+
+/* ===== COMMON MISTAKE ===== */
+.mistake-box { max-width:600px; width:100%; }
+.mistake-wrong, .mistake-right {
+  padding:1.2rem 1.5rem; border-radius:10px; font-size:1.1rem; margin-bottom:1rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.mistake-wrong { background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.25); color:#fca5a5; }
+.mistake-right { background:rgba(22,163,74,0.08); border:1px solid rgba(22,163,74,0.25); color:#86efac; }
+.mistake-icon { width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+.mistake-wrong .mistake-icon { background:rgba(220,38,38,0.2); }
+.mistake-right .mistake-icon { background:rgba(22,163,74,0.2); }
+
+/* ===== FILL-IN PRACTICE ===== */
+.fill-practice { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.fp-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.fp-item:hover { border-color:var(--accent); }
+.fp-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.fp-sentence .fp-blank { color:var(--accent-light); font-weight:700; border-bottom:2px dashed var(--accent); padding:0 0.3rem; }
+.fp-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(107,76,138,0.12); border-radius:6px; font-size:0.88rem; color:var(--accent-light); font-weight:600; }
+.fp-item.open .fp-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== ARTIFACT ===== */
+.artifact-card {
+  max-width:620px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15); color:#1a1a2e; max-height:65vh; overflow-y:auto;
+}
+.artifact-header {
+  background:linear-gradient(135deg, #6B4C8A, #8B6BAA); color:#fff; padding:1.2rem 1.5rem;
+}
+.artifact-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; margin-bottom:0.2rem; }
+.artifact-header p { font-size:0.78rem; opacity:0.85; }
+.artifact-body { padding:1.2rem 1.5rem; }
+.artifact-field { margin-bottom:0.8rem; }
+.artifact-label { font-size:0.7rem; letter-spacing:1px; text-transform:uppercase; color:#6B4C8A; font-weight:700; margin-bottom:0.2rem; }
+.artifact-value { font-size:0.88rem; color:#2d2d3a; line-height:1.6; }
+
+/* ===== DIALOGUE ===== */
+.dialogue-container { max-width:650px; width:100%; display:flex; flex-direction:column; gap:0; }
+.d-line { display:none; padding:1rem 1.2rem; border-left:3px solid transparent; animation:slideUp 0.4s ease; border-radius:10px; margin-bottom:0.5rem; }
+.d-line.visible { display:flex; gap:1rem; align-items:flex-start; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.22); border-left:3px solid var(--accent); }
+.d-line:hover { background:rgba(255,255,255,0.20); }
+.d-avatar {
+  width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:0.5px;
+}
+.d-avatar.blue { background:#2563eb; }
+.d-avatar.purple { background:var(--accent); }
+.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.6); margin-bottom:0.15rem; }
+.d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
+.d-text strong { color:var(--accent-light); font-weight:600; }
+.d-text-wrap { flex:1; }
+.d-audio { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:rgba(107,76,138,0.3); border:none; color:var(--accent-light); cursor:pointer; margin-left:0.4rem; vertical-align:middle; transition:background 0.2s; flex-shrink:0; }
+.d-audio:hover { background:var(--accent); color:#fff; }
+.d-audio svg { width:14px; height:14px; }
+.next-line-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.5rem 1.2rem; border:1px solid var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:6px; cursor:pointer; font-size:0.82rem;
+  font-weight:600; margin-top:1rem; transition:all 0.2s;
+}
+.next-line-btn:hover { background:var(--accent); color:#fff; }
+
+/* ===== LISTENING ===== */
+.listening-card { max-width:500px; width:100%; text-align:center; }
+.waveform {
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  height:60px; margin-bottom:1.5rem;
+}
+.waveform-bar {
+  width:4px; border-radius:2px; background:var(--accent);
+  animation:wave 1.2s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.waveform.playing .waveform-bar { animation-play-state:running; }
+@keyframes wave {
+  0%, 100% { height:8px; opacity:0.3; }
+  50% { height:40px; opacity:1; }
+}
+.play-pause-btn {
+  width:64px; height:64px; border-radius:50%; border:2px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem;
+  transition:all 0.2s;
+}
+.play-pause-btn:hover { background:var(--accent); color:#fff; }
+.play-pause-btn svg { width:28px; height:28px; }
+.listening-questions { display:none; flex-direction:column; gap:0.6rem; margin-top:1.5rem; text-align:left; }
+.listening-questions.show { display:flex; animation:fadeIn 0.4s ease; }
+.lq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.lq-item:hover { border-color:var(--accent); }
+.lq-question { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.lq-answer { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.lq-item.open .lq-answer { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== QUICK CHALLENGE ===== */
+.qc-container { max-width:600px; width:100%; }
+.qc-card { display:none; }
+.qc-card.active { display:block; animation:fadeIn 0.3s ease; }
+.qc-prompt {
+  font-size:1.15rem; color:#fff; text-align:center; margin-bottom:1.5rem; line-height:1.7;
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+}
+.qc-show-btn {
+  display:block; width:100%; padding:0.8rem; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); border-radius:8px;
+  font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s;
+}
+.qc-show-btn:hover { background:var(--accent); color:#fff; }
+.qc-answer-box {
+  display:none; margin-top:1rem; padding:1rem; background:rgba(107,76,138,0.1);
+  border:1px solid rgba(107,76,138,0.25); border-radius:8px;
+  font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; text-align:center;
+}
+.qc-answer-box.show { display:block; animation:fadeIn 0.3s ease; }
+.qc-prev-btn, .qc-next-btn {
+  display:none; margin:1rem auto 0; padding:0.5rem 1.5rem; background:var(--accent);
+  color:#fff; border:none; border-radius:6px; font-size:0.82rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.qc-prev-btn.show, .qc-next-btn.show { display:inline-block; }
+.qc-prev-btn:hover, .qc-next-btn:hover { background:var(--accent-light); }
+.qc-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-bottom:1rem; font-weight:500; }
+.qc-nav { text-align:center; }
+
+/* ===== SPOT THE ERROR ===== */
+.error-list { display:flex; flex-direction:column; gap:0.6rem; max-width:700px; width:100%; }
+.err-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.err-item:hover { border-color:rgba(220,38,38,0.4); }
+.err-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.err-sentence .wrong { color:rgba(255,255,255,0.85); font-weight:400; text-decoration:none; transition:all 0.3s; }
+.err-item.open .err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
+.err-correction {
+  display:none; margin-top:0.6rem; padding:0.5rem 0.8rem;
+  background:rgba(22,163,74,0.1); border-radius:6px;
+  font-size:0.88rem; color:#86efac; font-weight:600;
+}
+.err-item.open .err-correction { display:block; animation:fadeIn 0.2s ease; }
+.err-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:1rem; font-weight:500; }
+
+/* ===== SCRAMBLE ===== */
+.scramble-list { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.scramble-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.scramble-item:hover { border-color:var(--accent); }
+.scramble-words { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.5rem; }
+.scramble-chip {
+  padding:0.3rem 0.7rem; background:rgba(107,76,138,0.25); border:1px solid rgba(107,76,138,0.3);
+  border-radius:6px; font-size:0.88rem; color:rgba(255,255,255,0.8);
+}
+.scramble-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(107,76,138,0.12); border-radius:6px; font-size:0.92rem; color:var(--accent-light); font-weight:600; font-style:italic; }
+.scramble-item.open .scramble-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== EXPRESSIONS ===== */
+.expr-list { display:flex; flex-direction:column; gap:0.6rem; max-width:650px; width:100%; }
+.expr-item {
+  display:flex; align-items:center; gap:1rem; padding:1rem 1.2rem;
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; transition:border-color 0.2s;
+}
+.expr-item:hover { border-color:var(--accent); }
+.expr-text { flex:1; font-size:1rem; color:rgba(255,255,255,0.85); font-style:italic; }
+.expr-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0;
+}
+.expr-play:hover { background:var(--accent); color:#fff; }
+.expr-play svg { width:18px; height:18px; }
+
+/* ===== PRONUNCIATION DRILL ===== */
+.pron-list { display:flex; flex-direction:column; gap:0.8rem; max-width:600px; width:100%; }
+.pron-item {
+  display:flex; align-items:center; gap:1rem; padding:0.8rem 1.2rem;
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px;
+}
+.pron-word { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:#fff; font-weight:600; min-width:160px; }
+.pron-stress { font-size:0.88rem; color:var(--accent-light); font-weight:500; flex:1; }
+.pron-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.pron-play:hover { background:var(--accent); color:#fff; }
+.pron-play svg { width:18px; height:18px; }
+
+/* ===== WARM-UP QUESTIONS ===== */
+.warm-q {
+  padding:1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:10px; animation:fadeIn 0.5s ease;
+}
+.warm-q p { font-size:1.05rem; color:rgba(255,255,255,0.8); line-height:1.7; }
+
+/* ===== CALLBACK CARDS ===== */
+.callback-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; max-width:650px; width:100%; }
+.callback-card {
+  padding:1rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:10px; cursor:pointer; transition:all 0.3s;
+}
+.callback-card:hover { border-color:var(--accent); }
+.callback-word { font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:var(--accent-light); font-weight:600; margin-bottom:0.3rem; }
+.callback-prompt { font-size:0.82rem; color:rgba(255,255,255,0.5); }
+
+/* ===== ROLE-PLAY CARDS ===== */
+.rp-card {
+  max-width:600px; width:100%; border-radius:16px; overflow:hidden;
+  position:relative; min-height:280px; display:flex; flex-direction:column; justify-content:flex-end;
+}
+.rp-bg { position:absolute; inset:0; }
+.rp-bg-gradient { position:absolute; inset:0; }
+.rp-content { position:relative; z-index:1; padding:2rem; }
+.rp-level {
+  font-size:0.68rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.5rem;
+}
+.rp-scenario { font-size:1.05rem; color:#fff; line-height:1.7; margin-bottom:1rem; }
+.rp-keywords { display:flex; gap:0.5rem; flex-wrap:wrap; }
+.rp-keyword {
+  padding:0.3rem 0.8rem; background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.32);
+  border-radius:20px; font-size:0.78rem; color:rgba(255,255,255,0.8); font-weight:500;
+}
+
+/* ===== COMPREHENSION Q ===== */
+.comp-questions { display:flex; flex-direction:column; gap:0.6rem; margin-top:1.2rem; max-width:600px; width:100%; }
+.cq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.cq-item:hover { border-color:var(--accent); }
+.cq-q { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.cq-a { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.cq-item.open .cq-a { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== CHECKLIST ===== */
+.check-grid { max-width:600px; width:100%; }
+.check-item {
+  display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.12); cursor:pointer;
+}
+.check-item:last-child { border-bottom:none; }
+.cl-box {
+  width:22px; height:22px; border:2px solid rgba(255,255,255,0.35); border-radius:5px;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.cl-box svg { width:14px; height:14px; opacity:0; transition:opacity 0.2s; }
+.check-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
+.check-item.checked .cl-box svg { opacity:1; }
+.cl-text { font-size:0.88rem; color:rgba(255,255,255,0.7); transition:color 0.2s; }
+.check-item.checked .cl-text { color:rgba(255,255,255,0.9); }
+
+/* ===== CONFETTI ===== */
+.confetti-container { position:fixed; inset:0; pointer-events:none; z-index:9999; }
+.confetti-piece {
+  position:absolute; width:10px; height:10px; opacity:0;
+  animation:confettiFall 3s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { opacity:1; transform:translateY(-100vh) rotate(0deg); }
+  100% { opacity:0; transform:translateY(100vh) rotate(720deg); }
+}
+
+/* ===== WHITE CARDS ON DARK SLIDES — CONTRASTE TOTAL ===== */
+.v-card {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 12px rgba(0,0,0,0.12);
+}
+.v-card:hover { background:#fafaf7 !important; border-color:var(--accent) !important; }
+.v-card.revealed { background:#fafaf7 !important; border-color:var(--accent) !important; }
+.v-card-hint { color:#5c5c6c !important; }
+.v-word { color:#1a1a2e !important; }
+.v-def { color:#4a4a5a !important; }
+.v-example { color:#2d2d3a !important; }
+.vocab-counter { color:rgba(255,255,255,0.5) !important; }
+
+.g-example {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  color:#1a1a2e !important; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.g-example .highlight { color:#6B4C8A !important; }
+
+.g-rule {
+  background:#ffffff !important; border:1px solid rgba(107,76,138,0.3) !important;
+  box-shadow:0 4px 16px rgba(0,0,0,0.1);
+}
+.g-rule h4 { color:#6B4C8A !important; }
+.g-rule table { color:#1a1a2e !important; }
+.g-rule th { color:#6B4C8A !important; border-bottom-color:rgba(107,76,138,0.3) !important; }
+.g-rule td { color:#2d2d3a !important; border-bottom-color:#e0ddd5 !important; }
+
+.fp-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.fp-item:hover { border-color:var(--accent) !important; }
+.fp-sentence { color:#1a1a2e !important; }
+.fp-sentence .fp-blank { color:#6B4C8A !important; border-bottom-color:#6B4C8A !important; }
+.fp-answer { background:rgba(107,76,138,0.08) !important; color:#6B4C8A !important; }
+
+.pron-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.pron-word { color:#1a1a2e !important; }
+.pron-stress { color:#6B4C8A !important; }
+.pron-play { border-color:#6B4C8A !important; color:#6B4C8A !important; background:#fff !important; }
+.pron-play:hover { background:#6B4C8A !important; color:#fff !important; }
+
+.expr-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.expr-item:hover { border-color:var(--accent) !important; }
+.expr-text { color:#1a1a2e !important; }
+.expr-play { border-color:#6B4C8A !important; color:#6B4C8A !important; background:#fff !important; }
+.expr-play:hover { background:#6B4C8A !important; color:#fff !important; }
+
+.lq-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.lq-item:hover { border-color:var(--accent) !important; }
+.lq-question { color:#1a1a2e !important; }
+.lq-answer { color:#6B4C8A !important; }
+
+.err-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.err-item:hover { border-color:rgba(220,38,38,0.5) !important; }
+.err-sentence { color:#1a1a2e !important; }
+.err-sentence .wrong { color:#1a1a2e !important; }
+.err-item.open .err-sentence .wrong { color:#dc2626 !important; }
+.err-correction { background:rgba(22,163,74,0.08) !important; color:#16a34a !important; }
+
+.scramble-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.scramble-item:hover { border-color:var(--accent) !important; }
+.scramble-chip { background:rgba(107,76,138,0.08) !important; color:#6B4C8A !important; border-color:rgba(107,76,138,0.25) !important; }
+.scramble-answer { background:rgba(107,76,138,0.06) !important; color:#6B4C8A !important; }
+
+.cq-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.cq-item:hover { border-color:var(--accent) !important; }
+.cq-q { color:#1a1a2e !important; }
+.cq-a { color:#6B4C8A !important; }
+
+.d-line.visible {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important; border-left:3px solid var(--accent) !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.d-line:hover { background:#fafaf7 !important; }
+.d-speaker { color:#6B4C8A !important; }
+.d-text { color:#1a1a2e !important; }
+.d-text strong { color:#6B4C8A !important; }
+
+.callback-card {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.callback-card:hover { border-color:var(--accent) !important; }
+.callback-word { color:#6B4C8A !important; }
+.callback-prompt { color:#5c5c6c !important; }
+
+.mistake-wrong {
+  background:rgba(220,38,38,0.06) !important; border:1px solid rgba(220,38,38,0.25) !important;
+  color:#dc2626 !important;
+}
+.mistake-right {
+  background:rgba(22,163,74,0.06) !important; border:1px solid rgba(22,163,74,0.25) !important;
+  color:#16a34a !important;
+}
+
+.qc-answer-box {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  color:#1a1a2e !important; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.qc-show-btn {
+  background:#ffffff !important; border:1px solid var(--accent) !important;
+  color:#6B4C8A !important;
+}
+.qc-show-btn:hover { background:#6B4C8A !important; color:#fff !important; }
+
+.cl-box { border-color:rgba(255,255,255,0.4) !important; }
+.cl-text { color:rgba(255,255,255,0.8) !important; }
+.check-item.checked .cl-text { color:#fff !important; }
+
+.next-line-btn { background:rgba(255,255,255,0.12) !important; border-color:var(--accent) !important; }
+.next-line-btn:hover { background:var(--accent) !important; color:#fff !important; }
+
+.warm-q {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.warm-q p { color:#1a1a2e !important; }
+
+.rp-card {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 4px 16px rgba(0,0,0,0.1);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px) {
+  .slide { padding:1.2rem; padding-top:3.5rem; }
+  .slide-title { font-size:1.8rem; }
+  .vocab-grid { grid-template-columns:1fr; }
+  .callback-grid { grid-template-columns:1fr; }
+  .t-panel { width:280px; right:0.5rem; }
+  .dot-nav { display:none; }
+  .nav-arrows { bottom:1rem; right:1rem; }
+  .top-bar { padding:0.5rem 1rem; }
+}
+.fill-a { display:none; }
+.vocab-card-pc.listened{border-color:var(--success);background:rgba(22,163,74,0.06)}
+.vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
+.btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+.btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
+.t-cue{display:none !important}.t-panel{display:none !important}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='maria-claudia-curimbaba';window.TOTAL_AULAS=60;</script>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="top-bar-logo">
+    <span class="slide-counter" id="slideCounter">1 / 31</span>
+  </div>
+  <div class="chapter-bar" id="chapterBar">
+    <div class="chapter-dot active" data-chapter="1" title="Chapter 1: The Dream" onclick="goToSlide(0)"></div>
+    <div class="chapter-dot" data-chapter="2" title="Chapter 2: Packing Words" onclick="goToSlide(3)"></div>
+    <div class="chapter-dot" data-chapter="3" title="Chapter 3: The Code" onclick="goToSlide(8)"></div>
+    <div class="chapter-dot" data-chapter="4" title="Chapter 4: Getting There" onclick="goToSlide(14)"></div>
+    <div class="chapter-dot" data-chapter="5" title="Chapter 5: Practice" onclick="goToSlide(22)"></div>
+    <div class="chapter-dot" data-chapter="6" title="Chapter 6: Your Turn" onclick="goToSlide(26)"></div>
+    <div class="chapter-dot" data-chapter="7" title="Chapter 7: Wrap-Up" onclick="goToSlide(29)"></div>
+  </div>
+  <div class="top-bar-right">
+    <span style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Aluno</span>
+  </div>
+</div>
+
+<!-- ===== TEACHER CUE ===== -->
+<div class="t-cue" id="tCue" onclick="toggleTeacherCue()">T</div>
+<div class="t-panel" id="tPanel"></div>
+
+<!-- ===== DOT NAV ===== -->
+<div class="dot-nav" id="dotNav"></div>
+
+<!-- ===== NAV ARROWS ===== -->
+<div class="nav-arrows">
+  <button class="nav-btn" onclick="prevSlide()" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="nav-btn" onclick="nextSlide()" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<!-- ================================================================ -->
+<!-- SLIDE DECK                                                        -->
+<!-- ================================================================ -->
+<div class="slide-deck" id="slideDeck">
+
+<!-- ====== SLIDE 1 -- TITLE ====== -->
+<div class="slide dark active" data-chapter="1" data-lesson="12" data-t="<span class='t-timing'>0:00 - 1 min</span>Compartilhe a tela. Cumprimente naturalmente. Diga que hoje a Maria Claudia vai aprender a conversar sobre impostos e questoes fiscais com contadores usando vocabulario tecnico e present perfect com for/since. <strong>Objetivo</strong>: ela sair capaz de discutir prazos fiscais, relatorios e resultados financeiros em ingles com fluencia." style="background:linear-gradient(135deg,rgba(26,26,46,0.82),rgba(45,27,78,0.78),rgba(26,54,93,0.82)),url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:1.5rem;">Lesson 12</p>
+  <h1 class="slide-title" style="color:#fff;">Maria Claudia Talks Taxes</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.6);">Fiscal and Tax Talk -- Communicating With Accountants</p>
+  <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+    <span style="padding:0.3rem 0.9rem;background:rgba(107,76,138,0.2);border:1px solid rgba(107,76,138,0.35);border-radius:20px;font-size:0.75rem;color:var(--accent-light);">B1+ / B2 Initial</span>
+    <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.20);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.5);">60 min</span>
+    <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.20);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.5);">Tax and Finance</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 2 -- CALLBACK FROM AULA 11 ====== -->
+<div class="slide dark" data-chapter="1" data-lesson="12" data-t="<span class='t-timing'>1:00 - 5 min</span>Revisao rapida da Aula 11. Mostre as 4 palavras na tela. Pergunte uma por vez: &quot;What does 'dial in' mean?&quot; Maria Claudia explica de memoria. Se ela travar, de pista mas NAO de a resposta. Celebre o que ela lembrar.<div class='t-ccq'><strong>CCQs:</strong> &quot;What does 'mute' mean in a video call?&quot; (to turn off your microphone) / &quot;What is 'bandwidth' in a business context?&quot; (capacity to handle tasks or data)</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Review from Lesson 11</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Explain each word from memory</p>
+  <div class="callback-grid">
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Dial in</div>
+      <div class="callback-prompt">To join a conference call or meeting remotely</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Mute</div>
+      <div class="callback-prompt">To turn off your microphone during a call</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Bandwidth</div>
+      <div class="callback-prompt">Capacity to handle work, data, or tasks</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Follow-up</div>
+      <div class="callback-prompt">A subsequent action or communication after a meeting</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 3 -- WARM-UP ====== -->
+<div class="slide dark" data-chapter="1" data-lesson="12" data-t="<span class='t-timing'>5:00 - 10 min</span>Pergunte cada questao. Deixe Maria Claudia falar livremente. Anote vocabulario financeiro que ela ja conhece. Objetivo: diagnostico de como ela discute temas fiscais antes de aprender o vocabulario especifico e present perfect com for/since.<div class='t-alert'>Maria Claudia e executiva e lida com contadores regularmente. Conecte as perguntas com a realidade corporativa dela para tornar o tema relevante e pratico.</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <div style="max-width:650px;text-align:center;">
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Tax Season</h2>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
+      <div class="warm-q">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Question 1</div>
+        <p>How often do you meet with your accountant?</p>
+      </div>
+      <div class="warm-q">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Question 2</div>
+        <p>What is the most challenging part of tax season?</p>
+      </div>
+      <div class="warm-q">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Question 3</div>
+        <p>How do you communicate financial data in English?</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 4 -- TRANSITION TO VOCAB ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="12" data-t="<span class='t-timing'>10:00 - 0.5 min</span>Transicao: &quot;Now let us pack the vocabulary you need to talk about taxes and fiscal matters with your accountant. Eight words and three key expressions.&quot;" style="background:linear-gradient(135deg,rgba(45,27,78,0.82),rgba(26,54,93,0.78),rgba(107,76,138,0.82)),url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h1 class="slide-title" style="color:#fff;">Packing Tax Words</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">8 fiscal words and 3 key expressions</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 5 -- VOCAB 1-4 ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="12" data-t="<span class='t-timing'>10:30 - 16 min</span>Antes de clicar cada card, pergunte: &quot;Do you know this word?&quot; Maria Claudia provavelmente conhece 'audit' como cognato. Celebre o que ela sabe. Apos revelar: toque o audio 2x, ela repete. Foque na pronuncia de 'compliance' (com-PLI-ance, stress na segunda silaba) e 'liability' (li-a-BI-li-ty, stress na terceira).<div class='t-ccq'><strong>CCQs:</strong> &quot;What is the difference between a deduction and a write-off?&quot; (deduction = amount subtracted from taxable income; write-off = expense that reduces tax liability) / &quot;What does 'compliance' mean in a tax context?&quot; (following all legal tax rules and regulations)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid1">
+    <!-- Card 1: Tax return -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #2563eb, #60a5fa);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="v-card-hint">An official document you file with the government declaring your income and taxes owed...</div>
+      <div class="v-card-body">
+        <div class="v-word">Tax return</div>
+        <div class="v-def">a form filed to report income and calculate taxes owed to the government</div>
+        <div class="v-example">"We need to file our tax return before the end of the fiscal year."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We need to file our tax return before the end of the fiscal year.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 2: Audit -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <div class="v-card-hint">A formal examination of financial records to verify accuracy and legal compliance...</div>
+      <div class="v-card-body">
+        <div class="v-word">Audit</div>
+        <div class="v-def">an official inspection of financial accounts</div>
+        <div class="v-example">"The company has been under audit for the past three months."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The company has been under audit for the past three months.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 3: Deduction -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #34d399);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+      <div class="v-card-hint">An amount subtracted from your total income before calculating the tax you owe...</div>
+      <div class="v-card-body">
+        <div class="v-word">Deduction</div>
+        <div class="v-def">an expense subtracted from taxable income to reduce the amount of tax owed</div>
+        <div class="v-example">"We have claimed several deductions since the new policy was introduced."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We have claimed several deductions since the new policy was introduced.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 4: Compliance -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #6B4C8A, #8B6BAA);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      </div>
+      <div class="v-card-hint">The act of following all rules, regulations, and legal requirements in business or taxation...</div>
+      <div class="v-card-body">
+        <div class="v-word">Compliance</div>
+        <div class="v-def">adherence to laws, regulations, and standards</div>
+        <div class="v-example">"Our compliance team has worked on this issue for over six months."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Our compliance team has worked on this issue for over six months.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount1">0 / 4 words revealed</div>
+</div>
+
+<!-- ====== SLIDE 6 -- VOCAB 5-8 ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="12" data-t="<span class='t-timing'>16:00 - 22 min</span>Continue com os proximos 4 cards. Maria Claudia provavelmente conhece 'revenue' de aulas anteriores -- lembre que aqui estamos focando em 'revenue stream' como conceito mais especifico. Pronuncia: 'fiscal' (FIS-cal) e 'liability' (li-a-BI-li-ty).<div class='t-ccq'><strong>CCQs:</strong> &quot;What is a revenue stream?&quot; (a specific source of income for a company) / &quot;What is the difference between liability and debt?&quot; (liability = any financial obligation; debt = money borrowed that must be repaid)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid2">
+    <!-- Card 5: Liability -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #d97706, #fbbf24);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="v-card-hint">A legal or financial obligation that a company is responsible for paying...</div>
+      <div class="v-card-body">
+        <div class="v-word">Liability</div>
+        <div class="v-def">a financial debt or obligation a company must pay</div>
+        <div class="v-example">"The tax liability has increased since we expanded to new markets."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The tax liability has increased since we expanded to new markets.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 6: Fiscal year -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #0891b2, #67e8f9);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div class="v-card-hint">A twelve-month period used by companies for accounting and financial reporting...</div>
+      <div class="v-card-body">
+        <div class="v-word">Fiscal year</div>
+        <div class="v-def">a 12-month period used for financial reporting and budgeting</div>
+        <div class="v-example">"We have been reviewing our numbers for the entire fiscal year."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We have been reviewing our numbers for the entire fiscal year.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 7: Revenue stream -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #16a34a, #4ade80);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      </div>
+      <div class="v-card-hint">A specific source of income that flows into a company from products, services, or investments...</div>
+      <div class="v-card-body">
+        <div class="v-word">Revenue stream</div>
+        <div class="v-def">a particular source of income for a business</div>
+        <div class="v-example">"Our main revenue stream has grown significantly since last January."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Our main revenue stream has grown significantly since last January.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 8: Write-off -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #7c3aed, #a78bfa);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+      </div>
+      <div class="v-card-hint">An expense that can be deducted from taxes, reducing the total amount owed to the government...</div>
+      <div class="v-card-body">
+        <div class="v-word">Write-off</div>
+        <div class="v-def">a tax deduction for a business expense</div>
+        <div class="v-example">"The accountant has identified several write-offs for this fiscal year."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The accountant has identified several write-offs for this fiscal year.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount2">0 / 4 words revealed</div>
+</div>
+
+<!-- ====== SLIDE 7 -- EXPRESSIONS ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="12" data-t="<span class='t-timing'>22:00 - 25 min</span>Toque cada expressao. Maria Claudia repete. Explique que essas expressoes usam present perfect (have been, since, for) que e o foco gramatical da aula. Peca para ela criar uma frase propria com cada expressao.<div class='t-ccq'><strong>CCQs:</strong> &quot;When do we use 'for the past'?&quot; (to express duration) / &quot;When do we use 'since the restructuring'?&quot; (to mark a specific point in time when something started)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Key Expressions</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen and repeat each expression</p>
+  <div class="expr-list">
+    <div class="expr-item">
+      <div class="expr-text">"We have been working on compliance for the past two quarters."</div>
+      <button class="expr-play" onclick="speakText('We have been working on compliance for the past two quarters.',this)" aria-label="Listen to expression">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+    <div class="expr-item">
+      <div class="expr-text">"Since the restructuring, our tax liability has decreased."</div>
+      <button class="expr-play" onclick="speakText('Since the restructuring, our tax liability has decreased.',this)" aria-label="Listen to expression">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+    <div class="expr-item">
+      <div class="expr-text">"For the past three years, we have filed our tax returns on time."</div>
+      <button class="expr-play" onclick="speakText('For the past three years, we have filed our tax returns on time.',this)" aria-label="Listen to expression">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 8 -- PRONUNCIATION DRILL ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="12" data-t="<span class='t-timing'>25:00 - 27 min</span>Pronuncia focada. Toque cada palavra, Maria Claudia repete 2-3 vezes. Foque em 'compliance' (com-PLI-ance) e 'liability' (li-a-BI-li-ty) que sao as mais dificeis. 'Deduction' tambem merece atencao (de-DUC-tion, nao 'de-du-TION').">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Pronunciation Drill</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen, then repeat with the correct stress</p>
+  <div class="pron-list">
+    <div class="pron-item">
+      <div class="pron-word">Compliance</div>
+      <div class="pron-stress">com-PLI-ance</div>
+      <button class="pron-play" onclick="speakText('Compliance',this)" aria-label="Listen to Compliance">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Liability</div>
+      <div class="pron-stress">li-a-BI-li-ty</div>
+      <button class="pron-play" onclick="speakText('Liability',this)" aria-label="Listen to Liability">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Deduction</div>
+      <div class="pron-stress">de-DUC-tion</div>
+      <button class="pron-play" onclick="speakText('Deduction',this)" aria-label="Listen to Deduction">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Fiscal</div>
+      <div class="pron-stress">FIS-cal</div>
+      <button class="pron-play" onclick="speakText('Fiscal',this)" aria-label="Listen to Fiscal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 9 -- TRANSITION TO GRAMMAR ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="12" data-t="<span class='t-timing'>27:00 - 0.5 min</span>Transicao: &quot;Now let us look at how we talk about time and duration in business. How do we express that something started in the past and continues until now?&quot;" style="background:linear-gradient(135deg,rgba(45,27,78,0.82),rgba(26,54,93,0.78),rgba(107,76,138,0.82)),url('https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h1 class="slide-title" style="color:#fff;">The Code of Time</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Present Perfect with for and since</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 10 -- GRAMMAR DISCOVERY: FOR ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="12" data-t="<span class='t-timing'>27:30 - 31 min</span>Mostre os exemplos com FOR. Pergunte: &quot;What do the purple words have in common?&quot; Maria Claudia deve notar que todas usam 'have/has + past participle' seguido de 'for' + duracao. NAO revele a regra ainda -- deixe ela descobrir o padrao.<div class='t-ccq'><strong>CCQs:</strong> &quot;Does 'for' express a point in time or a duration?&quot; (a duration) / &quot;Is the action finished or still happening?&quot; (still happening -- that is why we use present perfect)</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">What do you notice?</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Look at the highlighted words. What pattern do you see?</p>
+  <div class="slide-content">
+    <div class="grammar-examples">
+      <div class="g-example">"We <span class='highlight'>have worked</span> with this accountant <span class='highlight'>for five years</span>."</div>
+      <div class="g-example">"The compliance team <span class='highlight'>has reviewed</span> our records <span class='highlight'>for the past two months</span>."</div>
+      <div class="g-example">"I <span class='highlight'>have managed</span> this fiscal process <span class='highlight'>for over a decade</span>."</div>
+      <div class="g-example">"Our revenue stream <span class='highlight'>has grown</span> <span class='highlight'>for three consecutive quarters</span>."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 11 -- GRAMMAR DISCOVERY: SINCE ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="12" data-t="<span class='t-timing'>31:00 - 34 min</span>Agora mostre os exemplos com SINCE. Pergunte: &quot;How is 'since' different from 'for'?&quot; Maria Claudia deve perceber que 'since' marca um PONTO no tempo, nao uma duracao. Compare: 'for five years' (duracao) vs 'since 2020' (ponto). Ainda NAO revele a regra formal.<div class='t-ccq'><strong>CCQs:</strong> &quot;Does 'since' come before a duration or a specific moment?&quot; (a specific moment) / &quot;Can I say 'since three years'?&quot; (No! It should be 'for three years')</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">And now with "since"...</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">How is this different from the previous examples?</p>
+  <div class="slide-content">
+    <div class="grammar-examples">
+      <div class="g-example">"We <span class='highlight'>have filed</span> our tax returns on time <span class='highlight'>since 2019</span>."</div>
+      <div class="g-example">"The liability <span class='highlight'>has decreased</span> <span class='highlight'>since the restructuring</span>."</div>
+      <div class="g-example">"I <span class='highlight'>have used</span> this accounting software <span class='highlight'>since last January</span>."</div>
+      <div class="g-example">"Our deductions <span class='highlight'>have increased</span> <span class='highlight'>since we hired a new accountant</span>."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 12 -- GRAMMAR REVEAL: FOR vs SINCE ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="12" data-t="<span class='t-timing'>34:00 - 37 min</span>Agora revele a regra. Clique no botao. Explique a tabela: FOR = duracao (three years, six months, a long time), SINCE = ponto no tempo (2019, January, the restructuring). Importante: presente perfect = acao que COMECOU no passado e CONTINUA ate agora. Peca 2 exemplos dela: um com FOR e um com SINCE usando vocabulario da aula.">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Present Perfect: for vs since</h2>
+  <div class="slide-content">
+    <button class="g-reveal-btn" onclick="revealGrammar(this,'grammarRule1')">Reveal the Rule</button>
+    <div class="g-rule" id="grammarRule1">
+      <h4>Present Perfect Rule</h4>
+      <table>
+        <thead>
+          <tr><th>Structure</th><th>Usage</th><th>Examples</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>have/has + past participle + <strong>for</strong></td><td>Duration (how long)</td><td>for five years, for two months, for a long time, for the past quarter</td></tr>
+          <tr><td>have/has + past participle + <strong>since</strong></td><td>Point in time (when it started)</td><td>since 2019, since January, since the restructuring, since we hired</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 13 -- COMMON MISTAKE ====== -->
+<div class="slide light" data-chapter="3" data-lesson="12" data-t="<span class='t-timing'>37:00 - 39 min</span>Slide de erros comuns. Mostre as duas comparacoes. O erro mais comum e trocar FOR por SINCE (e vice-versa). 'Since three years' e ERRADO porque three years e duracao (usar FOR). 'For January' e ERRADO porque January e ponto no tempo (usar SINCE). Peca a Maria Claudia para explicar POR QUE cada um esta errado.">
+  <div class="slide-chapter-label" style="color:var(--accent);">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--text);margin-bottom:1.5rem;text-align:center;">Common Mistakes</h2>
+  <div class="mistake-box">
+    <div class="mistake-wrong">
+      <div class="mistake-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      "We have worked here <strong>since</strong> three years."
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+      "We have worked here <strong>for</strong> three years."
+    </div>
+    <p style="font-size:0.85rem;color:var(--text-mid);margin-top:0.5rem;margin-bottom:1.5rem;">Three years is a duration, not a point in time. Use <strong>for</strong>.</p>
+
+    <div class="mistake-wrong">
+      <div class="mistake-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      "I have been here <strong>for</strong> January."
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+      "I have been here <strong>since</strong> January."
+    </div>
+    <p style="font-size:0.85rem;color:var(--text-mid);margin-top:0.5rem;">January is a specific point in time. Use <strong>since</strong>.</p>
+  </div>
+</div>
+
+<!-- ====== SLIDE 14 -- GRAMMAR PRACTICE ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="12" data-t="<span class='t-timing'>39:00 - 42 min</span>Pratica de fill-in. Maria Claudia clica para revelar cada resposta. Leia a frase, ela diz FOR ou SINCE antes de clicar. Se errar, volte a regra: duracao = for, ponto = since.">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Practice</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Click each sentence to reveal the answer</p>
+  <div class="fill-practice">
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"We have worked with this firm <span class='fp-blank'>___</span> over ten years."</div>
+      <div class="fp-answer">for (duration)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"Our compliance has improved <span class='fp-blank'>___</span> the new regulations were introduced."</div>
+      <div class="fp-answer">since (point in time -- when regulations started)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"The audit has been ongoing <span class='fp-blank'>___</span> three months."</div>
+      <div class="fp-answer">for (duration)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"They have claimed more deductions <span class='fp-blank'>___</span> 2023."</div>
+      <div class="fp-answer">since (point in time -- a specific year)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"I have managed this account <span class='fp-blank'>___</span> I joined the company."</div>
+      <div class="fp-answer">since (point in time -- when I joined)</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"Our revenue stream has been stable <span class='fp-blank'>___</span> the past two quarters."</div>
+      <div class="fp-answer">for (duration)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 15 -- TRANSITION TO CONTEXT ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="12" data-t="<span class='t-timing'>42:00 - 0.5 min</span>Transicao: &quot;Now let us put everything together. You will hear Maria Claudia in real situations -- meeting an accountant and reviewing fiscal results.&quot;" style="background:linear-gradient(135deg,rgba(45,27,78,0.82),rgba(26,54,93,0.78),rgba(107,76,138,0.82)),url('https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h1 class="slide-title" style="color:#fff;">Getting There</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Listening, artifacts, and dialogue</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 16 -- LISTENING 1 ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="12" data-t="<span class='t-timing'>42:30 - 45 min</span>Listening 1: MC se reune com o contador. Toque o audio. Maria Claudia ouve SEM texto. Apos o audio terminar, as perguntas de compreensao aparecem automaticamente. Ela responde oralmente, depois clique para revelar.<div class='t-alert'>Se Maria Claudia pedir para ouvir de novo, toque mais uma vez. Maximo 2 vezes.</div>">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.3rem;text-align:center;">MC Meets With the Accountant</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen first, then answer the questions</p>
+  <div class="listening-card">
+    <div class="waveform" id="wave1">
+      <div class="waveform-bar" style="animation-delay:0s;height:12px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.1s;height:20px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.2s;height:32px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.3s;height:24px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.4s;height:36px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.5s;height:16px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.6s;height:28px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.7s;height:40px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.8s;height:20px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.9s;height:32px;"></div>
+      <div class="waveform-bar" style="animation-delay:1.0s;height:14px;"></div>
+      <div class="waveform-bar" style="animation-delay:1.1s;height:26px;"></div>
+    </div>
+    <button class="play-pause-btn" onclick="toggleListening('listening1',this,'wave1','lq1')">
+      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <div class="listening-questions" id="lq1">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. How long has MC been working with this accountant?</div>
+        <div class="lq-answer">She has been working with the accountant for over three years.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. What has the accountant identified in the tax return?</div>
+        <div class="lq-answer">The accountant has identified several deductions and a potential write-off.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. Since when has the company been fully compliant?</div>
+        <div class="lq-answer">The company has been fully compliant since the last audit in 2024.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 17 -- LISTENING 1 COMPREHENSION ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="12" data-t="<span class='t-timing'>45:00 - 46 min</span>Perguntas adicionais sobre o Listening 1. Pergunte oralmente. Maria Claudia responde. Depois clique para revelar. Todas as perguntas sao sobre o que foi DITO no audio.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Listening 1 -- Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. What kind of meeting did MC have?</div>
+      <div class="cq-a">A meeting with her accountant to review the tax return for the fiscal year.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. What has the compliance team done recently?</div>
+      <div class="cq-a">They have reviewed all the records and ensured everything is in order.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. How has the tax liability changed?</div>
+      <div class="cq-a">The tax liability has decreased since they claimed new deductions.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 18 -- LISTENING 2 ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="12" data-t="<span class='t-timing'>46:00 - 49 min</span>Listening 2: David reporta resultados fiscais de Pittsburgh. Audio diferente, contexto de apresentacao corporativa. Maria Claudia ouve, depois responde as perguntas. Foque no uso de present perfect com for/since nos exemplos do David.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.3rem;text-align:center;">David Reports Pittsburgh's Fiscal Results</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen first, then answer the questions</p>
+  <div class="listening-card">
+    <div class="waveform" id="wave2">
+      <div class="waveform-bar" style="animation-delay:0s;height:16px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.15s;height:28px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.3s;height:36px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.45s;height:20px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.6s;height:40px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.75s;height:24px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.9s;height:32px;"></div>
+      <div class="waveform-bar" style="animation-delay:1.05s;height:18px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.2s;height:30px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.35s;height:14px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.5s;height:22px;"></div>
+      <div class="waveform-bar" style="animation-delay:0.65s;height:38px;"></div>
+    </div>
+    <button class="play-pause-btn" onclick="toggleListening('listening2',this,'wave2','lq2')">
+      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <div class="listening-questions" id="lq2">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. How long has the Pittsburgh office been operating?</div>
+        <div class="lq-answer">It has been operating for over eight years.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. What has happened to the revenue stream since Q3?</div>
+        <div class="lq-answer">The revenue stream has grown by 12% since Q3.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. What write-offs has David mentioned?</div>
+        <div class="lq-answer">He mentioned write-offs for equipment and office renovations.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 19 -- LISTENING 2 COMPREHENSION ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="12" data-t="<span class='t-timing'>49:00 - 50 min</span>Perguntas adicionais sobre o Listening 2. Todas focadas no que DAVID disse. Maria Claudia responde oralmente, depois clique para revelar.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Listening 2 -- Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. How has the audit gone according to David?</div>
+      <div class="cq-a">The audit has gone smoothly, and they have maintained full compliance since 2023.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. What has David done about the tax return?</div>
+      <div class="cq-a">He has already filed the tax return for the current fiscal year.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. What has the liability situation been for Pittsburgh?</div>
+      <div class="cq-a">The tax liability has remained stable for the past four quarters.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 20 -- ARTIFACT: TAX SUMMARY REPORT ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="12" data-t="<span class='t-timing'>50:00 - 52 min</span>Artefato real: Tax Summary Report. Mostre o documento. Pergunte: &quot;What information can you find in this report?&quot; Peca para Maria Claudia descrever cada campo usando vocabulario da aula. Exemplo: &quot;The total revenue is... The deductions include... The compliance status is...&quot;">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Tax Summary Report</h2>
+  <div class="artifact-card">
+    <div class="artifact-header">
+      <h3>Annual Tax Summary Report</h3>
+      <p>Curimbaba Holdings International</p>
+    </div>
+    <div class="artifact-body">
+      <div class="artifact-field">
+        <div class="artifact-label">Company Name</div>
+        <div class="artifact-value">Curimbaba Holdings International</div>
+      </div>
+      <div class="artifact-field">
+        <div class="artifact-label">Fiscal Year</div>
+        <div class="artifact-value">January 2025 -- December 2025</div>
+      </div>
+      <div class="artifact-field">
+        <div class="artifact-label">Total Revenue</div>
+        <div class="artifact-value">$4,250,000.00</div>
+      </div>
+      <div class="artifact-field">
+        <div class="artifact-label">Total Deductions</div>
+        <div class="artifact-value">$620,000.00 (equipment write-offs, operational expenses, R&D credits)</div>
+      </div>
+      <div class="artifact-field">
+        <div class="artifact-label">Tax Liability</div>
+        <div class="artifact-value">$870,000.00</div>
+      </div>
+      <div class="artifact-field">
+        <div class="artifact-label">Compliance Status</div>
+        <div class="artifact-value" style="color:#16a34a;font-weight:600;">Fully Compliant -- Audit Passed (March 2026)</div>
+      </div>
+      <div class="artifact-field">
+        <div class="artifact-label">Primary Revenue Stream</div>
+        <div class="artifact-value">Consulting Services (68%) | Software Licensing (32%)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 21 -- DIALOGUE ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="12" data-t="<span class='t-timing'>52:00 - 57 min</span>Dialogo line-by-line. Clique 'Next Line' para cada troca. Maria Claudia le a parte dela em voz alta apos ouvir o audio. Vocabulario da aula em negrito. Foque no uso de present perfect com for/since nas falas. Apos terminar, pergunte: &quot;What did the accountant recommend?&quot;"><br>
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.3rem;text-align:center;">MC and the Accountant</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1rem;text-align:center;">Reviewing the fiscal year results</p>
+  <div class="dialogue-container" id="dialogue1">
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">Thank you for meeting me. We have been preparing this <strong>tax return</strong> <strong>for</strong> the past two weeks.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Thank you for meeting me. We have been preparing this tax return for the past two weeks.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="Accountant" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">AC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Accountant</div>
+        <div class="d-text">Of course. I have reviewed your numbers. Your <strong>compliance</strong> record has been excellent <strong>since</strong> the last <strong>audit</strong>.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Of course. I have reviewed your numbers. Your compliance record has been excellent since the last audit.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">That is good to hear. Have you identified any <strong>deductions</strong> we might have missed?</div>
+      </div>
+      <button class="d-audio" onclick="speakText('That is good to hear. Have you identified any deductions we might have missed?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="Accountant" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">AC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Accountant</div>
+        <div class="d-text">Yes. I have found a <strong>write-off</strong> for the new equipment. You have been eligible <strong>for</strong> this <strong>since</strong> March.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Yes. I have found a write-off for the new equipment. You have been eligible for this since March.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">Excellent. And how has our <strong>tax liability</strong> changed compared to last <strong>fiscal year</strong>?</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Excellent. And how has our tax liability changed compared to last fiscal year?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="Accountant" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">AC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Accountant</div>
+        <div class="d-text">Your <strong>liability</strong> has decreased <strong>for</strong> the second year in a row. The <strong>revenue stream</strong> has been strong <strong>since</strong> Q2.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Your liability has decreased for the second year in a row. The revenue stream has been strong since Q2.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">That is reassuring. We have invested in new software <strong>since</strong> the beginning of the year.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('That is reassuring. We have invested in new software since the beginning of the year.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="Accountant" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">AC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Accountant</div>
+        <div class="d-text">I have noticed. Those qualify as <strong>write-offs</strong> too. Your <strong>compliance</strong> is in perfect shape.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('I have noticed. Those qualify as write-offs too. Your compliance is in perfect shape.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">When do we need to file the <strong>tax return</strong>?</div>
+      </div>
+      <button class="d-audio" onclick="speakText('When do we need to file the tax return?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="Accountant" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">AC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Accountant</div>
+        <div class="d-text">We have until the end of July. I have already started the final review. We will be ready <strong>for</strong> the deadline.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('We have until the end of July. I have already started the final review. We will be ready for the deadline.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+  </div>
+  <button class="next-line-btn" id="nextLineBtn1" onclick="revealNextLine('dialogue1','nextLineBtn1')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    Next Line
+  </button>
+</div>
+
+<!-- ====== SLIDE 22 -- DIALOGUE COMPREHENSION ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="12" data-t="<span class='t-timing'>57:00 - 58 min</span>Pergunte cada questao oralmente. Maria Claudia responde. Depois clique para revelar. Todas as perguntas sao sobre o ACCOUNTANT (o que ele disse/encontrou), nao sobre Maria Claudia.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Dialogue Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. What has the accountant found regarding equipment?</div>
+      <div class="cq-a">He has found a write-off for the new equipment that MC has been eligible for since March.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. How has the tax liability changed according to the accountant?</div>
+      <div class="cq-a">The liability has decreased for the second year in a row.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. What is the deadline for filing the tax return?</div>
+      <div class="cq-a">They have until the end of July, and the accountant has already started the final review.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 23 -- TRANSITION: PRACTICE ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="12" data-t="<span class='t-timing'>58:00 - 0.5 min</span>Transicao: &quot;Now let us practice more intensively. Can you discuss taxes and fiscal matters fluently using present perfect?&quot;" style="background:linear-gradient(135deg,rgba(45,27,78,0.82),rgba(26,54,93,0.78),rgba(107,76,138,0.82)),url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h1 class="slide-title" style="color:#fff;">More Practice</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">From controlled to free production</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 24 -- QUICK FIRE ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="12" data-t="<span class='t-timing'>58:30 - 62 min</span>Ritmo rapido: leia a situacao, Maria Claudia responde. Se acertar, &quot;Excellent!&quot; e mostre a resposta. Se travar, de a primeira palavra. 20-30 segundos por item. <strong>Confetti ao completar todas!</strong><div class='t-alert'>Se Maria Claudia ficar insegura, encoraje: &quot;Just use the vocabulary and present perfect from today.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Fire</h2>
+  <div class="qc-score" id="qcScore">0 / 6</div>
+  <div class="qc-container" id="qcContainer">
+    <div class="qc-card active" data-idx="0">
+      <div class="qc-prompt">Your accountant asks how long you have used the current accounting software. You started in 2022.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"We have used this software since 2022."</div>
+      <div class="qc-nav"><button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="1">
+      <div class="qc-prompt">Tell the accountant that the company has been fully compliant. It has been four consecutive years.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"We have been fully compliant for four consecutive years."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="2">
+      <div class="qc-prompt">Explain that the main revenue stream has grown. The growth started after the expansion into new markets.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"Our main revenue stream has grown since the expansion into new markets."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="3">
+      <div class="qc-prompt">The audit has been ongoing. It started three months ago. How do you describe this?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"The audit has been ongoing for three months."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="4">
+      <div class="qc-prompt">Your colleague asks about the write-offs. The accountant identified them last quarter. What do you say?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"The accountant has identified several write-offs since last quarter."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="5">
+      <div class="qc-prompt">Tell a colleague that you have been reviewing the tax return. It has taken two weeks so far.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I have been reviewing the tax return for the past two weeks."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 25 -- SPOT THE ERROR ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="12" data-t="<span class='t-timing'>62:00 - 64 min</span>Leia cada frase. Maria Claudia identifica o erro. Clique para revelar. Todos os erros envolvem present perfect com for/since ou vocabulario fiscal. Se ela nao encontrar, de pista: &quot;Look at the choice between for and since.&quot;">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Spot the Error</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Click each sentence to see the correction</p>
+  <div class="error-list" id="errorList">
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"We have worked with this firm <span class='wrong'>since five years</span>."</div>
+      <div class="err-correction">"We have worked with this firm <strong>for five years</strong>." (five years = duration, use FOR)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"The tax liability has <span class='wrong'>increase</span> since last quarter."</div>
+      <div class="err-correction">"The tax liability has <strong>increased</strong> since last quarter." (present perfect = has + past participle)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"I have been here <span class='wrong'>for</span> the restructuring."</div>
+      <div class="err-correction">"I have been here <strong>since</strong> the restructuring." (the restructuring = point in time, use SINCE)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"We <span class='wrong'>have file</span> the tax return on time every year."</div>
+      <div class="err-correction">"We <strong>have filed</strong> the tax return on time every year." (present perfect = have + past participle)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"Our compliance <span class='wrong'>has been improved for</span> January."</div>
+      <div class="err-correction">"Our compliance <strong>has improved since</strong> January." (January = point in time; no passive needed)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 26 -- SCRAMBLE ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="12" data-t="<span class='t-timing'>64:00 - 66 min</span>Frases embaralhadas. Maria Claudia reorganiza oralmente. Clique para revelar. Ritmo rapido. Se ela acertar, celebre. Se errar, releia as palavras devagar.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Sentence Building</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Unscramble the words. Click to see the correct sentence.</p>
+  <div class="scramble-list">
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">for</span><span class="scramble-chip">the tax return</span><span class="scramble-chip">We have</span><span class="scramble-chip">reviewed</span><span class="scramble-chip">two weeks</span>
+      </div>
+      <div class="scramble-answer">"We have reviewed the tax return for two weeks."</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">since</span><span class="scramble-chip">has decreased</span><span class="scramble-chip">The liability</span><span class="scramble-chip">the restructuring</span>
+      </div>
+      <div class="scramble-answer">"The liability has decreased since the restructuring."</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">compliance</span><span class="scramble-chip">has maintained</span><span class="scramble-chip">for</span><span class="scramble-chip">Our team</span><span class="scramble-chip">full</span><span class="scramble-chip">three years</span>
+      </div>
+      <div class="scramble-answer">"Our team has maintained full compliance for three years."</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">since Q3</span><span class="scramble-chip">has grown</span><span class="scramble-chip">The revenue stream</span><span class="scramble-chip">significantly</span>
+      </div>
+      <div class="scramble-answer">"The revenue stream has grown significantly since Q3."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 27 -- ROLE-PLAY GUIDED ====== -->
+<div class="slide dark" data-chapter="6" data-lesson="12" data-t="<span class='t-timing'>66:00 - 69 min</span>Role-play guiado. Maria Claudia e a executiva, voce e o contador. Ela segue o cenario e usa as keywords. Corrija gentilmente erros de for/since. Encoraje uso do vocabulario da aula.">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Role-Play</h2>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #6B4C8A, #2563eb);"></div>
+    <div class="rp-bg-gradient" style="background:linear-gradient(to top, rgba(26,26,46,0.95), transparent);"></div>
+    <div class="rp-content">
+      <div class="rp-level">Guided</div>
+      <div class="rp-scenario">You are meeting with your accountant to discuss the tax return for this fiscal year. Ask about deductions and the compliance status. Use present perfect with for and since.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">tax return</span>
+        <span class="rp-keyword">deductions</span>
+        <span class="rp-keyword">compliance</span>
+        <span class="rp-keyword">for three years</span>
+        <span class="rp-keyword">since 2023</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 28 -- ROLE-PLAY SEMI-FREE ====== -->
+<div class="slide dark" data-chapter="6" data-lesson="12" data-t="<span class='t-timing'>69:00 - 72 min</span>Role-play semi-livre. Cenario mais complexo. Maria Claudia lidera a conversa. Voce e o contador que sugere write-offs. Ela decide se aceita ou nao. Menos keywords = mais liberdade. Corrija erros so apos a pratica.">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Role-Play</h2>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #8B6BAA, #0891b2);"></div>
+    <div class="rp-bg-gradient" style="background:linear-gradient(to top, rgba(26,26,46,0.95), transparent);"></div>
+    <div class="rp-content">
+      <div class="rp-level">Semi-Free</div>
+      <div class="rp-scenario">Your accountant suggests a major write-off for new equipment and software. Discuss whether it is a good decision for the company. Express how long you have been considering this option.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">write-off</span>
+        <span class="rp-keyword">liability</span>
+        <span class="rp-keyword">revenue stream</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 29 -- ROLE-PLAY FREE ====== -->
+<div class="slide dark" data-chapter="6" data-lesson="12" data-t="<span class='t-timing'>72:00 - 76 min</span>Role-play livre. Maria Claudia conduz uma reuniao completa de revisao do ano fiscal. Voce e o contador que responde. Zero keywords = producao 100% livre. Anote erros para feedback no final. Celebre fluencia.">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Role-Play</h2>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #7c3aed, #059669);"></div>
+    <div class="rp-bg-gradient" style="background:linear-gradient(to top, rgba(26,26,46,0.95), transparent);"></div>
+    <div class="rp-content">
+      <div class="rp-level">Free</div>
+      <div class="rp-scenario">Lead a full fiscal year review meeting with your accountant. Discuss revenue streams, deductions, write-offs, compliance, and the tax return filing timeline. Use present perfect naturally to describe what has happened and for how long.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">No keywords -- speak freely</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 30 -- CHECKLIST ====== -->
+<div class="slide dark" data-chapter="7" data-lesson="12" data-t="<span class='t-timing'>76:00 - 78 min</span>Checklist de aprendizado. Maria Claudia marca cada item que ela sente confianca. Se ela hesitar em algum, revise rapidamente. Quando marcar 5/5, celebre com confetti! <strong>Homework</strong>: Diga oralmente: &quot;Write 5 sentences about your company using present perfect with for and since. Use at least 4 vocab words from today.&quot;">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">What I Learned</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Check each item you feel confident about</p>
+  <div class="check-grid" id="checklist-12" data-lesson="12">
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="cl-text">I can use tax and fiscal vocabulary (tax return, audit, deduction, compliance, liability, fiscal year, revenue stream, write-off)</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="cl-text">I can use present perfect with "for" to express duration</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="cl-text">I can use present perfect with "since" to mark a point in time</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="cl-text">I can discuss fiscal matters with an accountant using appropriate language</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="cl-text">I can distinguish between for (duration) and since (point in time) correctly</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="cl-text">I can pronounce compliance, liability, deduction, and fiscal correctly</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="cl-text">I can read and understand a Tax Summary Report</div>
+    </div>
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="cl-text">I can lead a fiscal year review meeting in English</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 31 -- CLOSING ====== -->
+<div class="slide dark" data-chapter="7" data-lesson="12" data-t="<span class='t-timing'>78:00 - 80 min</span>Slide final. Celebre o progresso de Maria Claudia. Encerre naturalmente. Preview da proxima aula sobre propostas e pitching ideas." style="background:linear-gradient(135deg,rgba(26,26,46,0.82),rgba(45,27,78,0.78),rgba(26,54,93,0.82)),url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:1rem;">Lesson 12</p>
+  <h1 class="slide-title" style="color:#fff;">Day 12 Complete</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.6);">Fiscal and Tax Talk -- Communicating With Accountants</p>
+  <div style="margin-top:2rem;padding:1.2rem 2rem;background:rgba(107,76,138,0.15);border:1px solid rgba(107,76,138,0.3);border-radius:12px;">
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;font-weight:600;margin-bottom:0.4rem;">Next Lesson</p>
+    <p style="font-size:1.1rem;color:#fff;font-family:'Cormorant Garamond',serif;font-weight:600;">Making Proposals -- Pitching Ideas</p>
+  </div>
+</div>
+
+</div><!-- /slide-deck -->
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP =====
+var audioMap = {
+  // Vocab words (dual case)
+  "tax return": "/audio/maria-claudia-curimbaba/aula12_tax_return.mp3",
+  "Tax return": "/audio/maria-claudia-curimbaba/aula12_tax_return.mp3",
+  "audit": "/audio/maria-claudia-curimbaba/aula12_audit.mp3",
+  "Audit": "/audio/maria-claudia-curimbaba/aula12_audit.mp3",
+  "deduction": "/audio/maria-claudia-curimbaba/aula12_deduction.mp3",
+  "Deduction": "/audio/maria-claudia-curimbaba/aula12_deduction.mp3",
+  "compliance": "/audio/maria-claudia-curimbaba/aula12_compliance.mp3",
+  "Compliance": "/audio/maria-claudia-curimbaba/aula12_compliance.mp3",
+  "liability": "/audio/maria-claudia-curimbaba/aula12_liability.mp3",
+  "Liability": "/audio/maria-claudia-curimbaba/aula12_liability.mp3",
+  "fiscal year": "/audio/maria-claudia-curimbaba/aula12_fiscal_year.mp3",
+  "Fiscal year": "/audio/maria-claudia-curimbaba/aula12_fiscal_year.mp3",
+  "fiscal": "/audio/maria-claudia-curimbaba/aula12_fiscal.mp3",
+  "Fiscal": "/audio/maria-claudia-curimbaba/aula12_fiscal.mp3",
+  "revenue stream": "/audio/maria-claudia-curimbaba/aula12_revenue_stream.mp3",
+  "Revenue stream": "/audio/maria-claudia-curimbaba/aula12_revenue_stream.mp3",
+  "write-off": "/audio/maria-claudia-curimbaba/aula12_write_off.mp3",
+  "Write-off": "/audio/maria-claudia-curimbaba/aula12_write_off.mp3",
+
+  // Vocab sentences
+  "We need to file our tax return before the end of the fiscal year.": "/audio/maria-claudia-curimbaba/aula12_we_need_to_file.mp3",
+  "The company has been under audit for the past three months.": "/audio/maria-claudia-curimbaba/aula12_company_under_audit.mp3",
+  "We have claimed several deductions since the new policy was introduced.": "/audio/maria-claudia-curimbaba/aula12_claimed_deductions.mp3",
+  "Our compliance team has worked on this issue for over six months.": "/audio/maria-claudia-curimbaba/aula12_compliance_team.mp3",
+  "The tax liability has increased since we expanded to new markets.": "/audio/maria-claudia-curimbaba/aula12_tax_liability_increased.mp3",
+  "We have been reviewing our numbers for the entire fiscal year.": "/audio/maria-claudia-curimbaba/aula12_reviewing_numbers.mp3",
+  "Our main revenue stream has grown significantly since last January.": "/audio/maria-claudia-curimbaba/aula12_revenue_stream_grown.mp3",
+  "The accountant has identified several write-offs for this fiscal year.": "/audio/maria-claudia-curimbaba/aula12_accountant_writeoffs.mp3",
+
+  // Expressions
+  "We have been working on compliance for the past two quarters.": "/audio/maria-claudia-curimbaba/aula12_expr_compliance_quarters.mp3",
+  "Since the restructuring, our tax liability has decreased.": "/audio/maria-claudia-curimbaba/aula12_expr_since_restructuring.mp3",
+  "For the past three years, we have filed our tax returns on time.": "/audio/maria-claudia-curimbaba/aula12_expr_past_three_years.mp3",
+
+  // Listening
+  "listening1": "/audio/maria-claudia-curimbaba/aula12_ic_listening1.mp3",
+  "listening2": "/audio/maria-claudia-curimbaba/aula12_ic_listening2.mp3",
+
+  // Dialogue lines
+  "Thank you for meeting me. We have been preparing this tax return for the past two weeks.": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_mc_1.mp3",
+  "Of course. I have reviewed your numbers. Your compliance record has been excellent since the last audit.": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_ac_1.mp3",
+  "That is good to hear. Have you identified any deductions we might have missed?": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_mc_2.mp3",
+  "Yes. I have found a write-off for the new equipment. You have been eligible for this since March.": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_ac_2.mp3",
+  "Excellent. And how has our tax liability changed compared to last fiscal year?": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_mc_3.mp3",
+  "Your liability has decreased for the second year in a row. The revenue stream has been strong since Q2.": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_ac_3.mp3",
+  "That is reassuring. We have invested in new software since the beginning of the year.": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_mc_4.mp3",
+  "I have noticed. Those qualify as write-offs too. Your compliance is in perfect shape.": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_ac_4.mp3",
+  "When do we need to file the tax return?": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_mc_5.mp3",
+  "We have until the end of July. I have already started the final review. We will be ready for the deadline.": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_ac_5.mp3",
+
+  // Dialogue keys
+  "dlg_mc_1": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_mc_1.mp3",
+  "dlg_ac_1": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_ac_1.mp3",
+  "dlg_mc_2": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_mc_2.mp3",
+  "dlg_ac_2": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_ac_2.mp3",
+  "dlg_mc_3": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_mc_3.mp3",
+  "dlg_ac_3": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_ac_3.mp3",
+  "dlg_mc_4": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_mc_4.mp3",
+  "dlg_ac_4": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_ac_4.mp3",
+  "dlg_mc_5": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_mc_5.mp3",
+  "dlg_ac_5": "/audio/maria-claudia-curimbaba/aula12_ic_dlg_ac_5.mp3",
+
+  // Error sentences
+  "We have worked with this firm since five years.": "/audio/maria-claudia-curimbaba/aula12_err_since_five.mp3",
+  "The tax liability has increase since last quarter.": "/audio/maria-claudia-curimbaba/aula12_err_increase.mp3",
+  "I have been here for the restructuring.": "/audio/maria-claudia-curimbaba/aula12_err_for_restructuring.mp3",
+  "We have file the tax return on time every year.": "/audio/maria-claudia-curimbaba/aula12_err_have_file.mp3",
+  "Our compliance has been improved for January.": "/audio/maria-claudia-curimbaba/aula12_err_improved_for.mp3"
+};
+
+// ===== AUDIO ENGINE =====
+var currentAudio = null;
+var audioSpeed = 1;
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.toLowerCase()] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText.toLowerCase().replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed || 1;
+    currentAudio.play().catch(function() { fallbackTTS(cleanText); });
+  } else {
+    fallbackTTS(cleanText);
+  }
+  if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
+}
+
+function fallbackTTS(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 0;
+var totalSlides = 31;
+var slides = [];
+var teacherCues = [];
+
+function initSlides() {
+  slides = document.querySelectorAll('.slide');
+  slides.forEach(function(s, i) {
+    teacherCues[i] = s.dataset.t || '';
+  });
+  buildDotNav();
+  updateSlide();
+}
+
+function buildDotNav() {
+  var nav = document.getElementById('dotNav');
+  nav.innerHTML = '';
+  for (var i = 0; i < slides.length; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'dot-nav-item' + (i === 0 ? ' active' : '');
+    dot.dataset.idx = i;
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.onclick = function() { goToSlide(parseInt(this.dataset.idx)); };
+    nav.appendChild(dot);
+  }
+}
+
+function goToSlide(idx) {
+  if (idx < 0 || idx >= slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = idx;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateSlide();
+}
+
+function nextSlide() { goToSlide(currentSlide + 1); }
+function prevSlide() { goToSlide(currentSlide - 1); }
+
+function updateSlide() {
+  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + slides.length;
+
+  document.querySelectorAll('.dot-nav-item').forEach(function(d, i) {
+    d.classList.toggle('active', i === currentSlide);
+  });
+
+  var currentChapter = slides[currentSlide].dataset.chapter;
+  document.querySelectorAll('.chapter-dot').forEach(function(d) {
+    var ch = d.dataset.chapter;
+    d.classList.remove('active', 'completed');
+    if (ch === currentChapter) d.classList.add('active');
+    else if (parseInt(ch) < parseInt(currentChapter)) d.classList.add('completed');
+  });
+
+  var panel = document.getElementById('tPanel');
+  panel.classList.remove('show');
+  panel.innerHTML = teacherCues[currentSlide] || '<em>No teacher cue for this slide.</em>';
+}
+
+// ===== KEYBOARD NAV =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+});
+
+// ===== TEACHER CUE TOGGLE =====
+function toggleTeacherCue() {
+  var panel = document.getElementById('tPanel');
+  panel.classList.toggle('show');
+}
+
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('tPanel');
+  var cue = document.getElementById('tCue');
+  if (!panel.contains(e.target) && !cue.contains(e.target)) {
+    panel.classList.remove('show');
+  }
+});
+
+// ===== VOCAB REVEAL (TOGGLE) =====
+function revealVCard(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  var revealed = grid.querySelectorAll('.v-card.revealed').length;
+  var total = grid.querySelectorAll('.v-card').length;
+  document.getElementById(counterId).textContent = revealed + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar(btn, ruleId) {
+  btn.classList.add('used');
+  document.getElementById(ruleId).classList.add('show');
+}
+
+// ===== DIALOGUE LINE BY LINE =====
+function revealNextLine(dialogueId, btnId) {
+  var container = document.getElementById(dialogueId);
+  var lines = container.querySelectorAll('.d-line');
+  var btn = document.getElementById(btnId);
+  var nextHidden = null;
+  for (var i = 0; i < lines.length; i++) {
+    if (!lines[i].classList.contains('visible')) { nextHidden = lines[i]; break; }
+  }
+  if (nextHidden) {
+    nextHidden.classList.add('visible');
+    nextHidden.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  var allVisible = container.querySelectorAll('.d-line:not(.visible)').length === 0;
+  if (allVisible) btn.style.display = 'none';
+}
+
+// ===== LISTENING TOGGLE =====
+var listeningState = {};
+
+function toggleListening(id, btn, waveId, questionsId) {
+  var wave = document.getElementById(waveId);
+  var playIcon = btn.querySelector('.play-icon');
+  var pauseIcon = btn.querySelector('.pause-icon');
+  var questions = document.getElementById(questionsId);
+
+  if (!listeningState[id]) listeningState[id] = { playing: false, played: false, audio: null };
+
+  if (listeningState[id].playing) {
+    if (listeningState[id].audio) listeningState[id].audio.pause();
+    wave.classList.remove('playing');
+    playIcon.style.display = '';
+    pauseIcon.style.display = 'none';
+    listeningState[id].playing = false;
+  } else {
+    wave.classList.add('playing');
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = '';
+    listeningState[id].playing = true;
+
+    var file = audioMap[id];
+    if (file) {
+      if (!listeningState[id].audio) {
+        listeningState[id].audio = new Audio(file);
+        listeningState[id].audio.playbackRate = audioSpeed || 1;
+      }
+      listeningState[id].audio.play().catch(function(){});
+      listeningState[id].audio.onended = function() {
+        wave.classList.remove('playing');
+        playIcon.style.display = '';
+        pauseIcon.style.display = 'none';
+        listeningState[id].playing = false;
+        if (questions) questions.classList.add('show');
+      };
+    } else {
+      if (!listeningState[id].played) {
+        listeningState[id].played = true;
+        setTimeout(function() {
+          if (questions) questions.classList.add('show');
+          wave.classList.remove('playing');
+          playIcon.style.display = '';
+          pauseIcon.style.display = 'none';
+          listeningState[id].playing = false;
+        }, 8000);
+      }
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE =====
+var qcCurrent = 0;
+var qcTotal = 6;
+var qcScore = 0;
+
+function showQcAnswer(btn) {
+  var card = btn.closest('.qc-card');
+  var answer = card.querySelector('.qc-answer-box');
+  var navBtns = card.querySelectorAll('.qc-next-btn, .qc-prev-btn');
+  answer.classList.add('show');
+  navBtns.forEach(function(b) { b.classList.add('show'); });
+  btn.style.display = 'none';
+  qcScore++;
+  document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal;
+
+  if (qcScore === qcTotal) {
+    triggerConfetti();
+  }
+}
+
+function nextQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  if (qcCurrent >= cards.length - 1) return;
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent++;
+  cards[qcCurrent].classList.add('active');
+}
+
+function prevQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  if (qcCurrent <= 0) return;
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent--;
+  cards[qcCurrent].classList.add('active');
+}
+
+
+// ===== WORD ANALYSIS (LCS + Levenshtein) =====
+function analyzeWords(targetStr, spokenStr) {
+  var tw = targetStr.split(/ +/).filter(function(w) { return w; });
+  var sw = spokenStr.split(/ +/).filter(function(w) { return w; });
+  var m = tw.length, n = sw.length;
+  var dp = Array.from({ length: m + 1 }, function() { return Array(n + 1).fill(0); });
+  for (var i = 1; i <= m; i++) for (var j = 1; j <= n; j++) dp[i][j] = wordsMatch(tw[i-1], sw[j-1]) ? dp[i-1][j-1] + 1 : Math.max(dp[i-1][j], dp[i][j-1]);
+  var mt = new Set(), ms = new Set(); var i = m, j = n;
+  while (i > 0 && j > 0) { if (wordsMatch(tw[i-1], sw[j-1])) { mt.add(i-1); ms.add(j-1); i--; j--; } else if (dp[i-1][j] > dp[i][j-1]) i--; else j--; }
+  var expected = tw.map(function(w, i) { return { word: w, status: mt.has(i) ? 'correct' : 'missing' }; });
+  var spoken = sw.map(function(w, i) { return { word: w, status: ms.has(i) ? 'correct' : 'wrong' }; });
+  var wrongWords = [], missedTW = tw.filter(function(_, i) { return !mt.has(i); }), wrongSW = sw.filter(function(_, i) { return !ms.has(i); });
+  missedTW.forEach(function(t, i) { wrongWords.push({ expected: t, got: wrongSW[i] || null }); });
+  wrongSW.slice(missedTW.length).forEach(function(s) { spoken.forEach(function(sp) { if (sp.word === s && sp.status === 'wrong') sp.status = 'extra'; }); });
+  return { expected: expected, spoken: spoken, wrongWords: wrongWords, score: mt.size / Math.max(m, 1) };
+}
+
+function wordsMatch(a, b) { if (a === b) return true; var ca = a.replace(/'/g, ''), cb = b.replace(/'/g, ''); if (ca === cb) return true; if (a.length > 3 && b.length > 3 && levenshtein(a, b) <= 1) return true; return false; }
+function levenshtein(a, b) { var m = []; for (var i = 0; i <= b.length; i++) m[i] = [i]; for (var j = 0; j <= a.length; j++) m[0][j] = j; for (var i = 1; i <= b.length; i++) for (var j = 1; j <= a.length; j++) m[i][j] = b[i-1] === a[j-1] ? m[i-1][j-1] : Math.min(m[i-1][j-1] + 1, m[i][j-1] + 1, m[i-1][j] + 1); return m[b.length][a.length]; }
+
+// ===== CHECKLIST =====
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+}
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#6B4C8A', '#8B6BAA', '#fbbf24', '#f87171', '#60a5fa', '#a78bfa', '#34d399'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.width = (Math.random() * 8 + 5) + 'px';
+    piece.style.height = (Math.random() * 8 + 5) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 4000);
+}
+
+// ===== EXIT SLIDE MODE (standalone -> hub) =====
+function exitSlideMode() {
+  document.body.classList.remove('slide-mode');
+  window.location.href = '/aluno/maria-claudia-curimbaba.html#inclass';
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', function() {
+  initSlides();
+  if (new URLSearchParams(window.location.search).get('autostart')) setTimeout(function() { }, 200);
+});
+</script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js">// ===== CHECKLIST =====
+function toggleChecklist(cb) {
+  var li = cb.closest('li');
+  if (cb.checked) li.classList.add('checked'); else li.classList.remove('checked');
+  updateProgress();
+}
+
+
+function injectPronunciationBtn(card,audioUrl){
+  var old=card.querySelector('.btn-your-pronunciation');if(old)old.remove();
+  var playBtn=document.createElement('button');
+  playBtn.className='btn btn-your-pronunciation';
+  playBtn.innerHTML='&#9654; Your Pronunciation';
+  playBtn.onclick=function(e){e.preventDefault();
+    if(playBtn.dataset.playing==='true'){
+      var a=card.querySelector('.your-pron-audio');if(a){a.pause();a.remove()}
+      playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';return;
+    }
+    var audio=new Audio(audioUrl);audio.className='your-pron-audio';audio.style.display='none';
+    card.appendChild(audio);playBtn.innerHTML='&#9632; Playing...';playBtn.dataset.playing='true';
+    audio.play();
+    audio.onended=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+    audio.onerror=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+  };
+  var controls=card.querySelector('.speech-controls');
+  if(controls)controls.appendChild(playBtn);
+}
+var activeRecognition = null;
+
+function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Please use Google Chrome for voice recognition.');return}var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');
+var mediaRec=null,mediaChunks=[],mediaStream=null,recDone=false;
+navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+  mediaStream=stream;
+  var mimeType=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':'';
+  mediaRec=mimeType?new MediaRecorder(stream,{mimeType:mimeType}):new MediaRecorder(stream);
+  mediaChunks=[];
+  mediaRec.ondataavailable=function(e){if(e.data.size>0)mediaChunks.push(e.data)};
+  mediaRec.onstop=function(){
+    if(recDone)return;recDone=true;
+    stream.getTracks().forEach(function(t){t.stop()});
+    if(mediaChunks.length>0){
+      var blob=new Blob(mediaChunks,{type:mediaRec.mimeType});
+      var audioUrl=URL.createObjectURL(blob);
+      injectPronunciationBtn(card,audioUrl);
+      var phraseSlug=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,50);
+      var slug=window.STUDENT_SLUG||'unknown';
+      var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';
+      var filePath=slug+'/'+phraseSlug+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;card.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
+    }
+  };
+  mediaRec.start(100);
+  var r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=3;r.continuous=true;
+  activeRecognition={recognition:r,btn:btn,stopBtn:stopBtn,card:card,mediaRec:mediaRec};
+  r.start();
+  var ended=false;
+  function finish(){if(ended)return;ended=true;btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');activeRecognition=null;
+    setTimeout(function(){if(mediaRec&&mediaRec.state==='recording')mediaRec.stop()},200);
+  }
+  r.onresult=function(event){var best=event.results[event.results.length-1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g,'');var analysis=analyzeWords(target,best);var totalWords=analysis.expected.length;var correctWords=analysis.expected.filter(function(w){return w.status==='correct'}).length;resultDiv.classList.add('show');resultDiv.classList.remove('good','try-again','bad');var html='';if(analysis.score>=0.8){resultDiv.classList.add('good');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Excellent!';updateProgress()}else if(analysis.score>=0.5){resultDiv.classList.add('try-again');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Almost there!'}else{resultDiv.classList.add('bad');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Keep practicing!'}html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';analysis.expected.forEach(function(w){html+='<span class="word-box word-'+(w.status==='correct'?'correct':'missing')+'">'+w.word+'</span>'});html+='</div></div>';resultDiv.innerHTML=html;finish()};
+  r.onerror=function(){finish();resultDiv.classList.add('show','try-again');resultDiv.innerHTML='Could not hear you. Check your microphone.'};
+  r.onend=function(){finish()};
+  setTimeout(function(){if(!ended){try{r.stop()}catch(e){}finish()}},30000);
+}).catch(function(){btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');alert('Could not access microphone.')})}
+
+function stopRecording(stopBtn){if(activeRecognition){try{activeRecognition.recognition.stop()}catch(e){}if(activeRecognition.mediaRec&&activeRecognition.mediaRec.state==='recording'){try{activeRecognition.mediaRec.stop()}catch(e){}}}}
+
+var freeRecorder=null;var freeChunks=[];
+function startFreeRecording(btn) {
+  var stopBtn = btn.parentElement.querySelector('.btn-stop');
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    freeRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+    freeChunks = [];
+    freeRecorder.ondataavailable = function(e) { if (e.data.size > 0) freeChunks.push(e.data); };
+    freeRecorder.onstop = function() {
+      var blob = new Blob(freeChunks, { type: freeRecorder.mimeType });
+      var url = URL.createObjectURL(blob);
+      var thinkCard = btn.closest('.think-card');
+      var resultDiv = thinkCard.querySelector('[id^="think-result"]');
+      if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Recording saved!</p>';
+      thinkCard.classList.add('recorded');
+      updateProgress();
+      stream.getTracks().forEach(function(t) { t.stop(); });
+      var slug=window.STUDENT_SLUG||'unknown';var thinkId=resultDiv.id||'think-free';var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';var filePath=slug+'/'+thinkId+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;thinkCard.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
+    };
+    freeRecorder.start(100);
+    btn.classList.add('hidden');
+    stopBtn.classList.add('visible');
+  }).catch(function() { alert('Could not access microphone.'); });
+}
+function stopFreeRecording(stopBtn) {
+  if (freeRecorder && freeRecorder.state === 'recording') freeRecorder.stop();
+  var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
+  recordBtn.classList.remove('hidden');
+  stopBtn.classList.remove('visible');
+}
+
+function updateProgress(){
+  var totalLessons=1;
+  var totalAllDone=0,totalAllEx=0;
+  for(var l=1;l<=totalLessons;l++){
+    var card=document.getElementById('ex-lesson-'+l);
+    if(!card)continue;
+    var total=0,done=0;
+    total+=card.querySelectorAll('.vocab-card-pc').length;
+    done+=card.querySelectorAll('.vocab-card-pc.listened').length;
+    total+=card.querySelectorAll('.match-row').length;
+    done+=card.querySelectorAll('.match-row.correct').length;
+    total+=card.querySelectorAll('.blank-input').length;
+    done+=card.querySelectorAll('.blank-input.correct').length;
+    var quizItems=card.querySelectorAll('.quiz-item');
+    total+=quizItems.length;
+    quizItems.forEach(function(qi){if(qi.querySelector('.quiz-option.correct'))done++});
+    var speechCards=card.querySelectorAll('.speech-card');
+    total+=speechCards.length;
+    speechCards.forEach(function(sc){if(sc.querySelector('.speech-result.show'))done++});
+    card.querySelectorAll('.order-container').forEach(function(oc){
+      var items=oc.querySelectorAll('.order-item');
+      total+=1;
+      if(items.length>0&&items.length===oc.querySelectorAll('.order-item.correct-order').length)done++;
+    });
+    var thinkCards=card.querySelectorAll('.think-card');
+    total+=thinkCards.length;
+    thinkCards.forEach(function(tc){if(tc.classList.contains('recorded'))done++});
+    var pct=total>0?Math.round(done/total*100):0;
+    var fill=document.querySelector('.mini-bar-fill[data-lesson-progress="'+l+'"]');
+    if(fill)fill.style.width=pct+'%';
+    var pctEl=document.querySelector('.mini-percent[data-lesson-pct="'+l+'"]');
+    if(pctEl)pctEl.textContent=pct+'%';
+    var stampEl=document.getElementById('stamp'+l);
+    if(stampEl){if(pct===100)stampEl.classList.add('earned');else stampEl.classList.remove('earned')}
+    totalAllDone+=done;totalAllEx+=total;
+  }
+  var overallPct=totalAllEx>0?Math.round(totalAllDone/totalAllEx*100):0;
+  var pb=document.getElementById('progressBar');
+  var pp=document.getElementById('progressPercent');
+  if(pb)pb.style.width=overallPct+'%';
+  if(pp)pp.textContent=overallPct+'%';
+  var celCard=document.getElementById('celebrationCard');
+  if(celCard)celCard.style.display=overallPct===100?'block':'none';
+  try{localStorage.setItem('alumni-progress-maria-claudia-curimbaba',JSON.stringify({concluidas:totalAllDone,total:totalAllEx}))}catch(e){}
+  saveState();
+}
+
+function saveState(){var s={matches:[],blanks:[],quiz:[],speech:[],mediaChecks:{},checklists:{},vocabListened:[],ordering:[],thinkRecorded:[]};document.querySelectorAll('.media-card-wrapper').forEach(function(w){var id=w.dataset.media;var cb=w.querySelector('input[type="checkbox"]');if(id&&cb)s.mediaChecks[id]=cb.checked});document.querySelectorAll('.match-row.correct select').forEach(function(sel){s.matches.push(sel.closest('.match-row').querySelector('.match-word').textContent+'|'+sel.value)});document.querySelectorAll('.blank-input.correct').forEach(function(e){s.blanks.push(e.dataset.answer)});document.querySelectorAll('.quiz-option.correct').forEach(function(e){s.quiz.push(e.textContent.trim().substring(0,30))});document.querySelectorAll('.speech-result.show').forEach(function(e){var sc=e.closest('.speech-card');if(sc&&sc.dataset.phrase){var cls=e.classList.contains('good')?'good':e.classList.contains('try-again')?'try-again':'bad';var strong=e.querySelector('strong');var scoreTxt=strong?strong.textContent:'Done';var words=[];e.querySelectorAll('.word-box').forEach(function(wb){words.push({w:wb.textContent,s:wb.classList.contains('word-correct')?'c':'m'})});var recUrl=sc.dataset.recordingUrl||'';s.speech.push(JSON.stringify({p:sc.dataset.phrase,c:cls,s:scoreTxt,words:words,r:recUrl}))}});document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb,i){s.checklists[i]=cb.checked});document.querySelectorAll('.vocab-card-pc.listened').forEach(function(vc){var w=vc.querySelector('.vocab-card-word');if(w)s.vocabListened.push(w.textContent)});document.querySelectorAll('.order-container').forEach(function(oc){var items=oc.querySelectorAll('.order-item');var correct=oc.querySelectorAll('.order-item.correct-order');if(items.length>0&&items.length===correct.length){var id=oc.id||'';var order=[];items.forEach(function(it){order.push(it.querySelector('.order-text').textContent)});s.ordering.push({id:id,order:order})}});document.querySelectorAll('.think-card.recorded').forEach(function(tc){var q=tc.querySelector('.think-question');if(q){var recUrl=tc.dataset.recordingUrl||'';s.thinkRecorded.push(JSON.stringify({q:q.textContent.trim().substring(0,40),r:recUrl}))}});localStorage.setItem('maria-claudia-curimbaba-aula12-aluno',JSON.stringify(s))}
+
+function loadState(){var r=localStorage.getItem('maria-claudia-curimbaba-aula12-aluno');if(!r)return;var s=JSON.parse(r);if(s.matches)s.matches.forEach(function(d){var parts=d.split('|');var word=parts[0];var val=parts[1];document.querySelectorAll('.match-row').forEach(function(row){if(row.querySelector('.match-word').textContent===word){var sel=row.querySelector('select');sel.value=val;row.classList.add('correct');sel.disabled=true}})});if(s.blanks)s.blanks.forEach(function(a){document.querySelectorAll('.blank-input[data-answer="'+a+'"]').forEach(function(e){e.value=a;e.classList.add('correct')})});if(s.quiz)s.quiz.forEach(function(t){document.querySelectorAll('.quiz-option[data-correct="true"]').forEach(function(e){if(e.textContent.trim().substring(0,30)===t)e.classList.add('correct')})});if(s.speech)s.speech.forEach(function(d){var phrase,cls,scoreTxt,words,recUrl;try{var obj=JSON.parse(d);phrase=obj.p;cls=obj.c;scoreTxt=obj.s;words=obj.words||[];recUrl=obj.r||''}catch(e){phrase=d;cls='good';scoreTxt='Done';words=[];recUrl=''}document.querySelectorAll('.speech-card').forEach(function(sc){if(sc.dataset.phrase===phrase){var rd=sc.querySelector('.speech-result');if(rd){rd.classList.add('show',cls);var html='<strong>'+scoreTxt+'</strong> — '+(cls==='good'?'Excellent!':cls==='try-again'?'Almost there!':'Keep practicing!');if(words.length>0){html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';words.forEach(function(w){html+='<span class="word-box word-'+(w.s==='c'?'correct':'missing')+'">'+w.w+'</span>'});html+='</div></div>'}rd.innerHTML=html}if(recUrl){sc.dataset.recordingUrl=recUrl;injectPronunciationBtn(sc,recUrl)}}})});if(s.checklists){document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb,i){if(s.checklists[i]){cb.checked=true;cb.closest('li').classList.add('checked')}})}if(s.mediaChecks){document.querySelectorAll('.media-card-wrapper').forEach(function(w){var id=w.dataset.media;var cb=w.querySelector('input[type="checkbox"]');if(id&&cb&&s.mediaChecks[id]){cb.checked=true;w.classList.add('done')}})}if(s.vocabListened){s.vocabListened.forEach(function(word){document.querySelectorAll('.vocab-card-pc').forEach(function(vc){var w=vc.querySelector('.vocab-card-word');if(w&&w.textContent===word)vc.classList.add('listened')})})}if(s.ordering){s.ordering.forEach(function(o){var id=typeof o==='string'?o:o.id;var savedOrder=typeof o==='object'?o.order:null;var oc=id?document.getElementById(id):null;if(!oc)return;if(savedOrder&&savedOrder.length>0){var items=Array.from(oc.querySelectorAll('.order-item'));savedOrder.forEach(function(txt){for(var i=0;i<items.length;i++){var t=items[i].querySelector('.order-text');if(t&&t.textContent===txt){oc.appendChild(items[i]);break}}})}oc.querySelectorAll('.order-item').forEach(function(it,i){it.classList.add('correct-order');it.querySelector('.order-num').textContent=i+1;it.style.borderColor='var(--success)'})})}if(s.thinkRecorded){s.thinkRecorded.forEach(function(d){var qTxt,recUrl;try{var obj=JSON.parse(d);qTxt=obj.q;recUrl=obj.r||''}catch(e){qTxt=d;recUrl=''}document.querySelectorAll('.think-card').forEach(function(tc){var qEl=tc.querySelector('.think-question');if(qEl&&qEl.textContent.trim().substring(0,40)===qTxt){tc.classList.add('recorded');tc.dataset.recordingUrl=recUrl;var rd=tc.querySelector('[id^="think-result"]');if(rd){if(recUrl){rd.innerHTML='<audio controls src="'+recUrl+'" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:.72rem;color:var(--success);margin-top:.3rem;">&#10003; Recording saved</p>'}else{rd.innerHTML='<p style="font-size:.82rem;color:var(--success);font-weight:500;">&#10003; Recording completed</p>'}}}})})}updateProgress()}
+loadState();
+</script>
+<script src="/lib/contrast-guard.js"></script>
+</body>
+</html>
