@@ -475,6 +475,17 @@
       }
     });
 
+    // Safety net: gravacao que SUBIU mas cujo resultado nunca apareceu (.speech-result sem .show)
+    // — ex: SpeechRecognition nao retornou nada. Sem isso, o ref ficava so no Storage (orfao) e
+    // o botao "Your Pronunciation" nao reaparecia no reload. Salva entrada minima com a gravacao.
+    // So entra se o card TEM gravacao (dataset.recordingUrl) e ainda nao foi capturado acima.
+    document.querySelectorAll('.speech-card[data-phrase]').forEach(function(card) {
+      if (!card.dataset.recordingUrl) return;
+      var rd = card.querySelector('.speech-result');
+      if (rd && rd.classList.contains('show')) return; // ja salvo pelo loop acima
+      s.speech.push(JSON.stringify({ p: card.dataset.phrase, c: 'good', s: '✓ Recording saved', words: [], r: card.dataset.recordingUrl }));
+    });
+
     document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb, i) {
       s.checklists[i] = cb.checked;
     });
