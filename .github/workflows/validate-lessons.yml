@@ -50,6 +50,14 @@ jobs:
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: python3 _build/model/audit_hubs_struct.py --check ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
+      - name: "GATE 5 — integridade de áudio (arquivos do PR: novos E modificados)"
+        # Pega aula publicada apontando p/ .mp3 que NÃO existe (aula "sem som") e HTML
+        # truncado/corrompido. ESCOPADO nos arquivos DO PR: a geração em curso de OUTRO
+        # aluno nunca trava este gate — era exatamente o repo-inteiro no buildCommand do
+        # Vercel que congelava a produção por uma única aula a meio de geração.
+        if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
+        run: python3 scripts/check_lesson_integrity.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
+
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''
         continue-on-error: true
