@@ -1795,5 +1795,101 @@ function stopFreeRecording(stopBtn) {
   stopBtn.classList.remove('visible');
 }
 </script>
+
+<!-- ===== Percival JR: word-by-word via server STT (cross-browser; WAV transcode no cliente; Pre-class) ===== -->
+<script>
+(function(){
+  if (window.__percivalSTT) return; window.__percivalSTT = true;
+  function slug(){ return window.STUDENT_SLUG || 'percival-jr'; }
+  function norm(x){ return (x||'').toLowerCase().replace(/[^a-z0-9' ]/g,''); }
+  function pkey(card){ return 'wbw_'+slug()+'_'+norm(card.dataset.phrase||'').replace(/[^a-z0-9]/g,'_').slice(0,60); }
+  // ---- transcode blob (webm/opus/mp4 etc.) -> WAV mono 16-bit (Scribe rejeita webm cru como corrupted) ----
+  function abToWav(buffer){
+    var len=buffer.length, sr=buffer.sampleRate, nc=buffer.numberOfChannels;
+    var data=new Float32Array(len);
+    for(var c=0;c<nc;c++){ var ch=buffer.getChannelData(c); for(var i=0;i<len;i++) data[i]+=ch[i]/nc; }
+    var ab=new ArrayBuffer(44+len*2), v=new DataView(ab);
+    function ws(o,s){for(var i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));}
+    ws(0,'RIFF'); v.setUint32(4,36+len*2,true); ws(8,'WAVE'); ws(12,'fmt ');
+    v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+    v.setUint32(24,sr,true); v.setUint32(28,sr*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
+    ws(36,'data'); v.setUint32(40,len*2,true);
+    var o=44; for(var i=0;i<len;i++){ var x=Math.max(-1,Math.min(1,data[i])); v.setInt16(o,x<0?x*0x8000:x*0x7FFF,true); o+=2; }
+    return new Blob([v],{type:'audio/wav'});
+  }
+  function toWav(blob){
+    return new Promise(function(res,rej){
+      var AC=window.AudioContext||window.webkitAudioContext; if(!AC){rej(new Error('no AudioContext'));return;}
+      var fr=new FileReader();
+      fr.onload=function(){ new AC().decodeAudioData(fr.result, function(b){ try{res(abToWav(b));}catch(e){rej(e);} }, function(e){ rej(e||new Error('decode fail')); }); };
+      fr.onerror=function(){rej(fr.error);}; fr.readAsArrayBuffer(blob);
+    });
+  }
+  function render(card, spoken){
+    var rd=card.querySelector('.speech-result'); if(!rd||typeof analyzeWords!=='function') return;
+    var a=analyzeWords(norm(card.dataset.phrase||''), norm(spoken));
+    var tot=a.expected.length, ok=a.expected.filter(function(w){return w.status==='correct';}).length;
+    rd.classList.add('show'); rd.classList.remove('good','try-again','bad');
+    var html='';
+    if(a.score>=0.8){rd.classList.add('good');html+='<strong>Score: '+ok+'/'+tot+'</strong> &mdash; Excellent!'; if(typeof updateProgress==='function')updateProgress();}
+    else if(a.score>=0.5){rd.classList.add('try-again');html+='<strong>Score: '+ok+'/'+tot+'</strong> &mdash; Almost there!';}
+    else{rd.classList.add('bad');html+='<strong>Score: '+ok+'/'+tot+'</strong> &mdash; Keep practicing!';}
+    html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';
+    a.expected.forEach(function(w){html+='<span class="word-box word-'+(w.status==='correct'?'correct':'missing')+'">'+w.word+'</span>';});
+    html+='</div></div>';
+    rd.innerHTML=html;
+    try{ localStorage.setItem(pkey(card), spoken); }catch(e){}
+    if(typeof saveState==='function'){try{saveState();}catch(e){}}
+  }
+  function sttSend(card, wavBlob, mime){
+    var rd=card.querySelector('.speech-result');
+    var fr=new FileReader();
+    fr.onloadend=function(){
+      fetch('/api/transcribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({audioBase64:fr.result,mimeType:mime,lang:'eng'})})
+      .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
+      .then(function(o){ var d=o.d||{}; if(d&&typeof d.text==='string'&&d.text.trim()){ render(card,d.text); }
+        else if(rd){ rd.classList.add('show'); rd.innerHTML='<strong>&#9888; STT</strong><div style="font-size:.72rem;color:#b45309;word-break:break-all">'+JSON.stringify(d).slice(0,200)+'</div>'; } })
+      .catch(function(err){ if(rd){rd.classList.add('show');rd.innerHTML='<strong>&#9888; rede</strong> '+String(err);} });
+    };
+    fr.readAsDataURL(wavBlob);
+  }
+  function myStart(btn){
+    var card=btn.closest('.speech-card'); if(!card||btn.classList.contains('recording'))return;
+    var stopBtn=card.querySelector('.btn-stop'), rd=card.querySelector('.speech-result');
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      var mt=MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':(MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'');
+      var rec=mt?new MediaRecorder(stream,{mimeType:mt}):new MediaRecorder(stream);
+      var chunks=[]; rec.ondataavailable=function(e){if(e.data&&e.data.size>0)chunks.push(e.data);};
+      rec.onstop=function(){
+        stream.getTracks().forEach(function(t){t.stop();});
+        btn.classList.remove('recording','hidden');
+        if(stopBtn){stopBtn.classList.remove('visible');}
+        if(!chunks.length)return;
+        var blob=new Blob(chunks,{type:rec.mimeType||'audio/webm'});
+        if(typeof window.injectPronunciationBtn==='function'){try{window.injectPronunciationBtn(card,URL.createObjectURL(blob));}catch(e){}}
+        if(rd){rd.classList.add('show');rd.classList.remove('good','try-again','bad');rd.innerHTML='<em>Analisando pronúncia&hellip;</em>';}
+        var ext=(blob.type.indexOf('mp4')!==-1)?'mp4':'webm';
+        var fp=slug()+'/'+norm(card.dataset.phrase||'p').replace(/[^a-z0-9]/g,'_').slice(0,50)+'.'+ext;
+        if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(fp,blob,{contentType:blob.type,upsert:true}).then(function(r){if(!r.error){card.dataset.recordingUrl=sb.storage.from('recordings').getPublicUrl(fp).data.publicUrl;if(typeof saveState==='function')saveState();}});}
+        // transcode -> WAV e manda pro STT (qualquer navegador: Safari, Chrome, Firefox, celular)
+        toWav(blob).then(function(wav){ sttSend(card, wav, 'audio/wav'); })
+                   .catch(function(){ sttSend(card, blob, blob.type); });
+      };
+      rec.start(100); window.__percivalRec=rec;
+      btn.classList.add('recording','hidden');
+      if(stopBtn){stopBtn.classList.add('visible');}
+    }).catch(function(){alert('Could not access microphone.');});
+  }
+  function myStop(){var r=window.__percivalRec; if(r&&r.state==='recording'){try{r.stop();}catch(e){}}}
+  window.startRecording=myStart; window.stopRecording=myStop;
+  function bind(){
+    document.querySelectorAll('.speech-card .btn-record').forEach(function(b){ b.onclick=function(){ myStart(b); return false; }; });
+    document.querySelectorAll('.speech-card .btn-stop').forEach(function(b){ b.onclick=function(){ myStop(b); return false; }; });
+  }
+  function boot(){ bind(); document.querySelectorAll('.speech-card').forEach(function(c){ try{ var sp=localStorage.getItem(pkey(c)); if(sp) render(c,sp); }catch(e){} }); }
+  if(document.readyState==='complete') boot(); else window.addEventListener('load', boot);
+})();
+</script>
+
 </body>
 </html>
