@@ -11137,6 +11137,28 @@ function nextDialogueLine3() {
   }
 }
 
+// ===== AULA 4: DIALOGUE LINE-BY-LINE (container por id) =====
+var showNextDialogueIndex = {};
+function showNextDialogueLine(containerId) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  var lines = container.querySelectorAll('.dialogue-line');
+  var idx = showNextDialogueIndex[containerId] || 0;
+  if (idx >= lines.length) return;
+  var line = lines[idx];
+  line.style.display = 'flex';
+  line.classList.add('visible');
+  showNextDialogueIndex[containerId] = idx + 1;
+  if (idx + 1 >= lines.length) {
+    var btn = container.parentElement.querySelector('.btn-primary');
+    if (btn) {
+      btn.textContent = 'Dialogue Complete';
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+    }
+  }
+}
+
 // ===== AULA 3: QUICK CHALLENGE =====
 var challenges3 = [
   { prompt: 'A colleague asks: "Where did you work before Microsoft?" Answer in Past Simple.', answer: '"In my previous role, I worked in a different industry in Rio de Janeiro."' },
