@@ -79,18 +79,28 @@
   }
 
   // Combina duas entradas de speech/think da MESMA frase, mantendo o melhor de cada:
-  //  - a correcao word-by-word mais COMPLETA (maior array words / melhor score)
+  //  - a correcao word-by-word mais COMPLETA (maior array words)
+  //  - empate no total de palavras: a que tem MAIS palavras corretas (melhor score)
   //  - a URL de gravacao (r) de qualquer uma que tenha
   // Resolve o caso "some a parte da correcao": antes, escolher so pela gravacao (r)
   // podia descartar a entrada que tinha a correcao word-by-word.
+  // Resolve tambem "regravei melhor mas o refresh mostra o score antigo": como toda
+  // tentativa da MESMA frase tem o mesmo total de palavras, o desempate caia no (r) e
+  // mantinha a tentativa antiga. Agora desempata pelo numero de palavras CORRETAS.
   function richerEntry(x, y) {
     if (!x) return y;
     if (!y) return x;
+    function nCorrect(e) { return (e.words || []).filter(function(w) { return w.s === 'c'; }).length; }
     var xw = (x.words || []).length, yw = (y.words || []).length;
-    // base = a que tem mais palavras de correcao (empate: a que ja tem gravacao, senao x)
+    // base = a que tem mais palavras de correcao; empate -> mais palavras corretas;
+    // empate de novo -> a que ja tem gravacao, senao x
     var base, other;
     if (xw !== yw) { base = xw > yw ? x : y; other = xw > yw ? y : x; }
-    else { base = x.r ? x : (y.r ? y : x); other = base === x ? y : x; }
+    else {
+      var xc = nCorrect(x), yc = nCorrect(y);
+      if (xc !== yc) { base = xc > yc ? x : y; other = xc > yc ? y : x; }
+      else { base = x.r ? x : (y.r ? y : x); other = base === x ? y : x; }
+    }
     var out = {};
     for (var k in base) out[k] = base[k];
     if (!out.r && other.r) out.r = other.r;          // herda a gravacao
