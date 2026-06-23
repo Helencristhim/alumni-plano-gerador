@@ -4951,6 +4951,21 @@ function selectQuiz(o) {
   else { o.classList.add('wrong'); setTimeout(function() { o.classList.remove('wrong'); }, 800); }
 }
 
+// ===== VERIFY ALL MATCHES =====
+function verifyAllMatches(gridId) {
+  var grid = document.getElementById(gridId);
+  if (!grid) return;
+  var rows = grid.querySelectorAll('.match-row');
+  rows.forEach(function(row) {
+    var select = row.querySelector('select');
+    var answer = row.dataset.answer;
+    row.classList.remove('correct', 'wrong');
+    if (select.value === answer) { row.classList.add('correct'); }
+    else if (select.value !== '') { row.classList.add('wrong'); setTimeout(function() { row.classList.remove('wrong'); }, 1800); }
+  });
+  updateProgress();
+}
+
 function checkMatch(select) {
   var row = select.closest('.match-row');
   var answer = row.dataset.answer;
