@@ -25,7 +25,7 @@ TARGET = 20
 
 JUNK = ('helen-mendes', 'maisa', 'zilaudio', 'elaine-test', 'elaine-v-a', 'elaine-v-b',
         'daniela-feitozaV2', 'percival-jrV2', 'eduarda-gabriel-new', 'luiz-bressane-backup',
-        'helen-mendes-teste', 'daniela-feitozaV2', 'percival-jr-v2')
+        'helen-mendes-teste', 'vanessa-maluf')
 # slugs depreciados (duplicata — o oficial é o -v2): esconder
 DEPRECATED = ('daniela-feitoza', 'percival-jr')  # os SEM -v2
 SPANISH = ('juliana-marques', 'daniel-bastos')
