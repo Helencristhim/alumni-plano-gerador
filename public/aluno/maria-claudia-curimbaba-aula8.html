@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>IN CLASS — Maria Claudia Curimbaba | Lesson 8 | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #6B4C8A;
+  --accent-light: #8B6BAA;
+  --accent-dim: rgba(107,76,138,0.08);
+  --accent-glow: rgba(107,76,138,0.05);
+  --black: #1a1a2e;
+  --bg: #f5f2ee;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0ede8;
+  --bg-input: #fafaf7;
+  --border: #d8d1c8;
+  --border-light: #c4bdb3;
+  --white: #ffffff;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #6b6b7a;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --warn: #d97706;
+  --navy: #003080;
+  --dark: #1a1a2e;
+  --dark-surface: #22223a;
+  --dark-elevated: #2d2d4a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-serif; background:#0a0a1a; color:var(--text); }
+
+/* ===== SLIDE SYSTEM ===== */
+.slide-deck { position:relative; width:100%; height:100vh; }
+.slide {
+  position:absolute; inset:0; width:100%; height:100vh;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  opacity:0; visibility:hidden; transition: opacity 400ms ease, visibility 400ms ease;
+  overflow-y:auto; padding:2rem;
+}
+.slide.active { opacity:1; visibility:visible; }
+
+.slide.dark { background:var(--dark); color:#fff; }
+.slide.dark .checklist li,.slide.dark .check-item,.slide.dark .check-label,.slide.dark .roleplay-body p,.slide.dark .roleplay-body,.slide.dark .roleplay-scenario,.slide.dark .comp-q,.slide.dark .comp-q p,.slide.dark .fill-item label,.slide.dark .fill-item p,.slide.dark .error-card p,.slide.dark .oral-item p,.slide.dark .email-card,.slide.dark .email-card p,.slide.dark .boarding-pass p,.slide.dark .student-id-card p{color:#1a1a2e !important}
+.slide.light { background:var(--bg); color:var(--text); }
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.6rem 1.5rem; background:rgba(10,10,26,0.85); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.12);
+}
+.top-bar-left { display:flex; align-items:center; gap:0.8rem; }
+.top-bar-logo { height:26px; opacity:0.9; }
+.slide-counter { font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.5); letter-spacing:1px; }
+.top-bar-right { display:flex; align-items:center; gap:0.6rem; }
+
+/* Chapter progress */
+.chapter-bar { display:flex; gap:2px; flex:1; max-width:360px; margin:0 1rem; }
+.chapter-dot {
+  flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,0.12);
+  cursor:pointer; transition:background 0.3s;
+}
+.chapter-dot.active { background:var(--accent); }
+.chapter-dot.completed { background:var(--accent-light); }
+
+/* Dot navigation */
+.dot-nav {
+  position:fixed; right:1rem; top:50%; transform:translateY(-50%); z-index:100;
+  display:flex; flex-direction:column; gap:4px;
+}
+.dot-nav-item {
+  width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.25);
+  cursor:pointer; transition:all 0.3s; border:none;
+}
+.dot-nav-item.active { background:var(--accent); transform:scale(1.4); }
+.dot-nav-item:hover { background:rgba(255,255,255,0.4); }
+
+/* Nav arrows */
+.nav-arrows {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:100;
+  display:flex; gap:0.5rem;
+}
+.nav-btn {
+  width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
+  background:rgba(10,10,26,0.7); backdrop-filter:blur(8px);
+  color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.nav-btn:hover { background:var(--accent); border-color:var(--accent); }
+.nav-btn svg { width:18px; height:18px; }
+
+/* ===== TEACHER CUE (T icon) ===== */
+.t-cue {
+  position:fixed; top:3.5rem; right:1.5rem; z-index:200;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.5); font-weight:700; font-size:0.8rem;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.25s;
+}
+.t-cue:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.t-panel {
+  display:none; position:fixed; top:6rem; right:1.5rem; z-index:210;
+  width:340px; max-height:60vh; overflow-y:auto;
+  background:rgba(26,26,46,0.97); color:#e0e0e0; padding:1.2rem 1.4rem;
+  border-radius:10px; font-size:0.82rem; line-height:1.7;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08);
+}
+.t-panel.show { display:block; animation:fadeIn 0.2s ease; }
+.t-panel strong { color:var(--accent-light); }
+.t-panel .t-timing { color:#fbbf24; font-weight:600; font-size:0.75rem; display:block; margin-bottom:0.5rem; }
+.t-panel .t-ccq { background:rgba(107,76,138,0.25); border:1px solid rgba(107,76,138,0.3); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; }
+.t-panel .t-alert { background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.25); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; color:#fca5a5; }
+
+/* ===== TYPOGRAPHY ===== */
+.slide-chapter-label {
+  font-size:0.68rem; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.6rem;
+}
+.slide-title {
+  font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:600;
+  line-height:1.2; margin-bottom:0.8rem; max-width:750px; text-align:center;
+}
+.slide-subtitle {
+  font-size:1rem; font-weight:400; opacity:0.7; max-width:600px; text-align:center; line-height:1.7;
+}
+.slide-content { max-width:800px; width:100%; }
+.section-label {
+  font-size:0.7rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+
+/* ===== VOCAB REVEAL CARDS (2x2 grid) ===== */
+.vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:750px; width:100%; }
+.v-card {
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:12px; padding:1.2rem; cursor:pointer; transition:all 0.35s;
+  min-height:160px; display:flex; flex-direction:column; position:relative; overflow:hidden;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+.v-card:hover { border-color:var(--accent); background:rgba(107,76,138,0.25); }
+.v-card.revealed { border-color:var(--accent-light); background:rgba(107,76,138,0.28); }
+.v-card-icon {
+  width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  margin-bottom:0.8rem; flex-shrink:0;
+}
+.v-card-icon svg { width:24px; height:24px; }
+.v-card-hint { font-size:0.85rem; color:rgba(255,255,255,0.5); font-style:italic; line-height:1.6; }
+.v-card-body { display:none; }
+.v-card.revealed .v-card-hint { display:none; }
+.v-card.revealed .v-card-body { display:block; animation:fadeIn 0.35s ease; }
+.v-word { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:#fff; margin-bottom:0.3rem; }
+.v-def { font-size:0.82rem; color:rgba(255,255,255,0.6); margin-bottom:0.3rem; }
+.v-example { font-size:0.85rem; color:rgba(255,255,255,0.8); font-style:italic; margin-bottom:0.6rem; }
+.v-listen-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.35rem 0.9rem; background:var(--accent); color:#fff;
+  border:none; border-radius:5px; font-size:0.75rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.v-listen-btn:hover { background:var(--accent-light); }
+.v-listen-btn svg { width:14px; height:14px; }
+.vocab-counter { text-align:center; margin-top:1rem; font-size:0.8rem; color:rgba(255,255,255,0.4); font-weight:500; }
+
+/* ===== GRAMMAR DISCOVERY ===== */
+.grammar-examples { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.2rem; }
+.g-example {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; font-size:1.05rem; color:rgba(255,255,255,0.9); line-height:1.6;
+}
+.g-example .highlight { color:var(--accent-light); font-weight:700; }
+.g-reveal-btn {
+  width:100%; padding:0.8rem; border:2px dashed var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:10px; font-size:0.9rem; font-weight:600;
+  cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
+}
+.g-reveal-btn:hover { background:rgba(107,76,138,0.1); }
+.g-reveal-btn.used { display:none; }
+.g-rule {
+  display:none; padding:1.5rem; background:rgba(107,76,138,0.08);
+  border:1px solid rgba(107,76,138,0.25); border-radius:10px; margin-top:1rem;
+}
+.g-rule.show { display:block; animation:fadeIn 0.4s ease; }
+.g-rule h4 { color:var(--accent-light); font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:1rem; }
+.g-rule table { width:100%; border-collapse:collapse; font-size:0.88rem; color:rgba(255,255,255,0.85); }
+.g-rule th { text-align:left; padding:0.6rem; border-bottom:2px solid rgba(255,255,255,0.15); color:var(--accent-light); font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; }
+.g-rule td { padding:0.6rem; border-bottom:1px solid rgba(255,255,255,0.12); }
+
+/* ===== COMMON MISTAKE ===== */
+.mistake-box { max-width:600px; width:100%; }
+.mistake-wrong, .mistake-right {
+  padding:1.2rem 1.5rem; border-radius:10px; font-size:1.1rem; margin-bottom:1rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.mistake-wrong { background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.25); color:#fca5a5; }
+.mistake-right { background:rgba(22,163,74,0.08); border:1px solid rgba(22,163,74,0.25); color:#86efac; }
+.mistake-icon { width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+.mistake-wrong .mistake-icon { background:rgba(220,38,38,0.2); }
+.mistake-right .mistake-icon { background:rgba(22,163,74,0.2); }
+
+/* ===== FILL-IN PRACTICE ===== */
+.fill-practice { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.fp-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.fp-item:hover { border-color:var(--accent); }
+.fp-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.fp-sentence .fp-blank { color:var(--accent-light); font-weight:700; border-bottom:2px dashed var(--accent); padding:0 0.3rem; }
+.fp-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(107,76,138,0.12); border-radius:6px; font-size:0.88rem; color:var(--accent-light); font-weight:600; }
+.fp-item.open .fp-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== ARTIFACT ===== */
+.artifact-card {
+  max-width:620px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15); color:#1a1a2e; max-height:65vh; overflow-y:auto;
+}
+.artifact-header {
+  background:linear-gradient(135deg, #6B4C8A, #8B6BAA); color:#fff; padding:1.2rem 1.5rem;
+}
+.artifact-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; margin-bottom:0.2rem; }
+.artifact-header p { font-size:0.78rem; opacity:0.85; }
+.artifact-body { padding:1.2rem 1.5rem; }
+.artifact-field { margin-bottom:0.8rem; }
+.artifact-label { font-size:0.7rem; letter-spacing:1px; text-transform:uppercase; color:#6B4C8A; font-weight:700; margin-bottom:0.2rem; }
+.artifact-value { font-size:0.88rem; color:#2d2d3a; line-height:1.6; }
+
+/* ===== DIALOGUE ===== */
+.dialogue-container { max-width:650px; width:100%; display:flex; flex-direction:column; gap:0; }
+.d-line { display:none; padding:1rem 1.2rem; border-left:3px solid transparent; animation:slideUp 0.4s ease; border-radius:10px; margin-bottom:0.5rem; }
+.d-line.visible { display:flex; gap:1rem; align-items:flex-start; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.22); border-left:3px solid var(--accent); }
+.d-line:hover { background:rgba(255,255,255,0.20); }
+.d-avatar {
+  width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:0.5px;
+}
+.d-avatar.blue { background:#2563eb; }
+.d-avatar.purple { background:var(--accent); }
+.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.6); margin-bottom:0.15rem; }
+.d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
+.d-text strong { color:var(--accent-light); font-weight:600; }
+.d-text-wrap { flex:1; }
+.d-audio { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:rgba(107,76,138,0.3); border:none; color:var(--accent-light); cursor:pointer; margin-left:0.4rem; vertical-align:middle; transition:background 0.2s; flex-shrink:0; }
+.d-audio:hover { background:var(--accent); color:#fff; }
+.d-audio svg { width:14px; height:14px; }
+.next-line-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.5rem 1.2rem; border:1px solid var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:6px; cursor:pointer; font-size:0.82rem;
+  font-weight:600; margin-top:1rem; transition:all 0.2s;
+}
+.next-line-btn:hover { background:var(--accent); color:#fff; }
+
+/* ===== LISTENING ===== */
+.listening-card { max-width:500px; width:100%; text-align:center; }
+.waveform {
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  height:60px; margin-bottom:1.5rem;
+}
+.waveform-bar {
+  width:4px; border-radius:2px; background:var(--accent);
+  animation:wave 1.2s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.waveform.playing .waveform-bar { animation-play-state:running; }
+@keyframes wave {
+  0%, 100% { height:8px; opacity:0.3; }
+  50% { height:40px; opacity:1; }
+}
+.play-pause-btn {
+  width:64px; height:64px; border-radius:50%; border:2px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem;
+  transition:all 0.2s;
+}
+.play-pause-btn:hover { background:var(--accent); color:#fff; }
+.play-pause-btn svg { width:28px; height:28px; }
+.listening-questions { display:none; flex-direction:column; gap:0.6rem; margin-top:1.5rem; text-align:left; }
+.listening-questions.show { display:flex; animation:fadeIn 0.4s ease; }
+.lq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.lq-item:hover { border-color:var(--accent); }
+.lq-question { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.lq-answer { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.lq-item.open .lq-answer { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== QUICK CHALLENGE ===== */
+.qc-container { max-width:600px; width:100%; }
+.qc-card { display:none; }
+.qc-card.active { display:block; animation:fadeIn 0.3s ease; }
+.qc-prompt {
+  font-size:1.15rem; color:#fff; text-align:center; margin-bottom:1.5rem; line-height:1.7;
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+}
+.qc-show-btn {
+  display:block; width:100%; padding:0.8rem; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); border-radius:8px;
+  font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s;
+}
+.qc-show-btn:hover { background:var(--accent); color:#fff; }
+.qc-answer-box {
+  display:none; margin-top:1rem; padding:1rem; background:rgba(107,76,138,0.1);
+  border:1px solid rgba(107,76,138,0.25); border-radius:8px;
+  font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; text-align:center;
+}
+.qc-answer-box.show { display:block; animation:fadeIn 0.3s ease; }
+.qc-prev-btn, .qc-next-btn {
+  display:none; margin:1rem auto 0; padding:0.5rem 1.5rem; background:var(--accent);
+  color:#fff; border:none; border-radius:6px; font-size:0.82rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.qc-prev-btn.show, .qc-next-btn.show { display:inline-block; }
+.qc-prev-btn:hover, .qc-next-btn:hover { background:var(--accent-light); }
+.qc-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-bottom:1rem; font-weight:500; }
+.qc-nav { text-align:center; }
+
+/* ===== SPOT THE ERROR ===== */
+.error-list { display:flex; flex-direction:column; gap:0.6rem; max-width:700px; width:100%; }
+.err-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.err-item:hover { border-color:rgba(220,38,38,0.4); }
+.err-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.err-sentence .wrong { color:rgba(255,255,255,0.85); font-weight:400; text-decoration:none; transition:all 0.3s; }
+.err-item.open .err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
+.err-correction {
+  display:none; margin-top:0.6rem; padding:0.5rem 0.8rem;
+  background:rgba(22,163,74,0.1); border-radius:6px;
+  font-size:0.88rem; color:#86efac; font-weight:600;
+}
+.err-item.open .err-correction { display:block; animation:fadeIn 0.2s ease; }
+.err-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:1rem; font-weight:500; }
+
+/* ===== SCRAMBLE ===== */
+.scramble-list { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.scramble-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.scramble-item:hover { border-color:var(--accent); }
+.scramble-words { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.5rem; }
+.scramble-chip {
+  padding:0.3rem 0.7rem; background:rgba(107,76,138,0.25); border:1px solid rgba(107,76,138,0.3);
+  border-radius:6px; font-size:0.88rem; color:rgba(255,255,255,0.8);
+}
+.scramble-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(107,76,138,0.12); border-radius:6px; font-size:0.92rem; color:var(--accent-light); font-weight:600; font-style:italic; }
+.scramble-item.open .scramble-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== EXPRESSIONS ===== */
+.expr-list { display:flex; flex-direction:column; gap:0.6rem; max-width:650px; width:100%; }
+.expr-item {
+  display:flex; align-items:center; gap:1rem; padding:1rem 1.2rem;
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; transition:border-color 0.2s;
+}
+.expr-item:hover { border-color:var(--accent); }
+.expr-text { flex:1; font-size:1rem; color:rgba(255,255,255,0.85); font-style:italic; }
+.expr-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0;
+}
+.expr-play:hover { background:var(--accent); color:#fff; }
+.expr-play svg { width:18px; height:18px; }
+
+/* ===== PRONUNCIATION DRILL ===== */
+.pron-list { display:flex; flex-direction:column; gap:0.8rem; max-width:600px; width:100%; }
+.pron-item {
+  display:flex; align-items:center; gap:1rem; padding:0.8rem 1.2rem;
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px;
+}
+.pron-word { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:#fff; font-weight:600; min-width:160px; }
+.pron-stress { font-size:0.88rem; color:var(--accent-light); font-weight:500; flex:1; }
+.pron-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.pron-play:hover { background:var(--accent); color:#fff; }
+.pron-play svg { width:18px; height:18px; }
+
+/* ===== WARM-UP QUESTIONS ===== */
+.warm-q {
+  padding:1.2rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:10px; animation:fadeIn 0.5s ease;
+}
+.warm-q p { font-size:1.05rem; color:rgba(255,255,255,0.8); line-height:1.7; }
+
+/* ===== CALLBACK CARDS ===== */
+.callback-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; max-width:650px; width:100%; }
+.callback-card {
+  padding:1rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:10px; cursor:pointer; transition:all 0.3s;
+}
+.callback-card:hover { border-color:var(--accent); }
+.callback-word { font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:var(--accent-light); font-weight:600; margin-bottom:0.3rem; }
+.callback-prompt { font-size:0.82rem; color:rgba(255,255,255,0.5); }
+
+/* ===== ROLE-PLAY CARDS ===== */
+.rp-card {
+  max-width:600px; width:100%; border-radius:16px; overflow:hidden;
+  position:relative; min-height:280px; display:flex; flex-direction:column; justify-content:flex-end;
+}
+.rp-bg { position:absolute; inset:0; }
+.rp-bg-gradient { position:absolute; inset:0; }
+.rp-content { position:relative; z-index:1; padding:2rem; }
+.rp-level {
+  font-size:0.68rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.5rem;
+}
+.rp-scenario { font-size:1.05rem; color:#fff; line-height:1.7; margin-bottom:1rem; }
+.rp-keywords { display:flex; gap:0.5rem; flex-wrap:wrap; }
+.rp-keyword {
+  padding:0.3rem 0.8rem; background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.32);
+  border-radius:20px; font-size:0.78rem; color:rgba(255,255,255,0.8); font-weight:500;
+}
+
+/* ===== COMPREHENSION Q ===== */
+.comp-questions { display:flex; flex-direction:column; gap:0.6rem; margin-top:1.2rem; max-width:600px; width:100%; }
+.cq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.cq-item:hover { border-color:var(--accent); }
+.cq-q { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.cq-a { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.cq-item.open .cq-a { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== CHECKLIST ===== */
+.check-grid { max-width:600px; width:100%; }
+.check-item {
+  display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.12); cursor:pointer;
+}
+.check-item:last-child { border-bottom:none; }
+.cl-box {
+  width:22px; height:22px; border:2px solid rgba(255,255,255,0.35); border-radius:5px;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.cl-box svg { width:14px; height:14px; opacity:0; transition:opacity 0.2s; }
+.check-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
+.check-item.checked .cl-box svg { opacity:1; }
+.cl-text { font-size:0.88rem; color:rgba(255,255,255,0.7); transition:color 0.2s; }
+.check-item.checked .cl-text { color:rgba(255,255,255,0.9); }
+
+/* ===== CONFETTI ===== */
+.confetti-container { position:fixed; inset:0; pointer-events:none; z-index:9999; }
+.confetti-piece {
+  position:absolute; width:10px; height:10px; opacity:0;
+  animation:confettiFall 3s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { opacity:1; transform:translateY(-100vh) rotate(0deg); }
+  100% { opacity:0; transform:translateY(100vh) rotate(720deg); }
+}
+
+/* ===== WHITE CARDS ON DARK SLIDES — CONTRASTE TOTAL ===== */
+.v-card {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 12px rgba(0,0,0,0.12);
+}
+.v-card:hover { background:#fafaf7 !important; border-color:var(--accent) !important; }
+.v-card.revealed { background:#fafaf7 !important; border-color:var(--accent) !important; }
+.v-card-hint { color:#5c5c6c !important; }
+.v-word { color:#1a1a2e !important; }
+.v-def { color:#4a4a5a !important; }
+.v-example { color:#2d2d3a !important; }
+.vocab-counter { color:rgba(255,255,255,0.5) !important; }
+
+.g-example {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  color:#1a1a2e !important; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.g-example .highlight { color:#6B4C8A !important; }
+
+.g-rule {
+  background:#ffffff !important; border:1px solid rgba(107,76,138,0.3) !important;
+  box-shadow:0 4px 16px rgba(0,0,0,0.1);
+}
+.g-rule h4 { color:#6B4C8A !important; }
+.g-rule table { color:#1a1a2e !important; }
+.g-rule th { color:#6B4C8A !important; border-bottom-color:rgba(107,76,138,0.3) !important; }
+.g-rule td { color:#2d2d3a !important; border-bottom-color:#e0ddd5 !important; }
+
+.fp-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.fp-item:hover { border-color:var(--accent) !important; }
+.fp-sentence { color:#1a1a2e !important; }
+.fp-sentence .fp-blank { color:#6B4C8A !important; border-bottom-color:#6B4C8A !important; }
+.fp-answer { background:rgba(107,76,138,0.08) !important; color:#6B4C8A !important; }
+
+.pron-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.pron-word { color:#1a1a2e !important; }
+.pron-stress { color:#6B4C8A !important; }
+.pron-play { border-color:#6B4C8A !important; color:#6B4C8A !important; background:#fff !important; }
+.pron-play:hover { background:#6B4C8A !important; color:#fff !important; }
+
+.expr-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.expr-item:hover { border-color:var(--accent) !important; }
+.expr-text { color:#1a1a2e !important; }
+.expr-play { border-color:#6B4C8A !important; color:#6B4C8A !important; background:#fff !important; }
+.expr-play:hover { background:#6B4C8A !important; color:#fff !important; }
+
+.lq-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.lq-item:hover { border-color:var(--accent) !important; }
+.lq-question { color:#1a1a2e !important; }
+.lq-answer { color:#6B4C8A !important; }
+
+.err-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.err-item:hover { border-color:rgba(220,38,38,0.5) !important; }
+.err-sentence { color:#1a1a2e !important; }
+.err-sentence .wrong { color:#1a1a2e !important; }
+.err-item.open .err-sentence .wrong { color:#dc2626 !important; }
+.err-correction { background:rgba(22,163,74,0.08) !important; color:#16a34a !important; }
+
+.scramble-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.scramble-item:hover { border-color:var(--accent) !important; }
+.scramble-chip { background:rgba(107,76,138,0.08) !important; color:#6B4C8A !important; border-color:rgba(107,76,138,0.25) !important; }
+.scramble-answer { background:rgba(107,76,138,0.06) !important; color:#6B4C8A !important; }
+
+.cq-item {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.cq-item:hover { border-color:var(--accent) !important; }
+.cq-q { color:#1a1a2e !important; }
+.cq-a { color:#6B4C8A !important; }
+
+.d-line.visible {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important; border-left:3px solid var(--accent) !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.d-line:hover { background:#fafaf7 !important; }
+.d-speaker { color:#6B4C8A !important; }
+.d-text { color:#1a1a2e !important; }
+.d-text strong { color:#6B4C8A !important; }
+
+.callback-card {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.callback-card:hover { border-color:var(--accent) !important; }
+.callback-word { color:#6B4C8A !important; }
+.callback-prompt { color:#5c5c6c !important; }
+
+.mistake-wrong {
+  background:rgba(220,38,38,0.06) !important; border:1px solid rgba(220,38,38,0.25) !important;
+  color:#dc2626 !important;
+}
+.mistake-right {
+  background:rgba(22,163,74,0.06) !important; border:1px solid rgba(22,163,74,0.25) !important;
+  color:#16a34a !important;
+}
+
+.qc-answer-box {
+  background:#ffffff !important; border:1px solid #e0ddd5 !important;
+  color:#1a1a2e !important; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.qc-show-btn {
+  background:#ffffff !important; border:1px solid var(--accent) !important;
+  color:#6B4C8A !important;
+}
+.qc-show-btn:hover { background:#6B4C8A !important; color:#fff !important; }
+
+.cl-box { border-color:rgba(255,255,255,0.4) !important; }
+.cl-text { color:rgba(255,255,255,0.8) !important; }
+.check-item.checked .cl-text { color:#fff !important; }
+
+.next-line-btn { background:rgba(255,255,255,0.12) !important; border-color:var(--accent) !important; }
+.next-line-btn:hover { background:var(--accent) !important; color:#fff !important; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px) {
+  .slide { padding:1.2rem; padding-top:3.5rem; }
+  .slide-title { font-size:1.8rem; }
+  .vocab-grid { grid-template-columns:1fr; }
+  .callback-grid { grid-template-columns:1fr; }
+  .t-panel { width:280px; right:0.5rem; }
+  .dot-nav { display:none; }
+  .nav-arrows { bottom:1rem; right:1rem; }
+  .top-bar { padding:0.5rem 1rem; }
+}
+.fill-a { display:none; }
+.vocab-card-pc.listened{border-color:var(--success);background:rgba(22,163,74,0.06)}
+.vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
+.btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+.btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
+.t-cue{display:none !important}.t-panel{display:none !important}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='maria-claudia-curimbaba';window.TOTAL_AULAS=60;</script>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="top-bar-logo">
+    <span class="slide-counter" id="slideCounter">1 / 31</span>
+  </div>
+  <div class="chapter-bar" id="chapterBar">
+    <div class="chapter-dot active" data-chapter="1" title="Chapter 1: The Dream" onclick="goToSlide(0)"></div>
+    <div class="chapter-dot" data-chapter="2" title="Chapter 2: Packing Words" onclick="goToSlide(3)"></div>
+    <div class="chapter-dot" data-chapter="3" title="Chapter 3: The Code" onclick="goToSlide(8)"></div>
+    <div class="chapter-dot" data-chapter="4" title="Chapter 4: Getting There" onclick="goToSlide(14)"></div>
+    <div class="chapter-dot" data-chapter="5" title="Chapter 5: Practice" onclick="goToSlide(22)"></div>
+    <div class="chapter-dot" data-chapter="6" title="Chapter 6: Your Turn" onclick="goToSlide(26)"></div>
+    <div class="chapter-dot" data-chapter="7" title="Chapter 7: Wrap-Up" onclick="goToSlide(29)"></div>
+  </div>
+  <div class="top-bar-right">
+    <span style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Aluno</span>
+  </div>
+</div>
+
+<!-- ===== TEACHER CUE ===== -->
+<div class="t-cue" id="tCue" onclick="toggleTeacherCue()">T</div>
+<div class="t-panel" id="tPanel"></div>
+
+<!-- ===== DOT NAV ===== -->
+<div class="dot-nav" id="dotNav"></div>
+
+<!-- ===== NAV ARROWS ===== -->
+<div class="nav-arrows">
+  <button class="nav-btn" onclick="prevSlide()" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="nav-btn" onclick="nextSlide()" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<!-- ================================================================ -->
+<!-- SLIDE DECK                                                        -->
+<!-- ================================================================ -->
+<div class="slide-deck" id="slideDeck">
+
+<!-- ====== SLIDE 1 -- TITLE ====== -->
+<div class="slide dark active" data-chapter="1" data-lesson="8" data-t="<span class='t-timing'>0:00 - 1 min</span>Compartilhe a tela. Cumprimente naturalmente. Diga que hoje Maria Claudia vai dominar a arte de escrever emails profissionais em ingles com vocabulario formal e expressoes de abertura/fechamento. <strong>Objetivo</strong>: ela sair capaz de redigir um email profissional completo, usando registro formal e expressoes apropriadas." style="background:linear-gradient(135deg,rgba(26,26,46,0.82),rgba(45,27,78,0.78),rgba(26,54,93,0.82)),url('https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:1.5rem;">Lesson 8</p>
+  <h1 class="slide-title" style="color:#fff;">Maria Claudia Writes with Power</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.6);">Email Power -- Professional Correspondence</p>
+  <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+    <span style="padding:0.3rem 0.9rem;background:rgba(107,76,138,0.2);border:1px solid rgba(107,76,138,0.35);border-radius:20px;font-size:0.75rem;color:var(--accent-light);">B1+ / B2 Initial</span>
+    <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.20);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.5);">60 min</span>
+    <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.20);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.5);">Formal Register</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 2 -- CALLBACK FROM AULA 7 ====== -->
+<div class="slide dark" data-chapter="1" data-lesson="8" data-t="<span class='t-timing'>1:00 - 5 min</span>Revisao rapida da Aula 7. Mostre as 4 palavras na tela. Pergunte uma por vez: &quot;What does 'negotiate' mean?&quot; Maria Claudia explica de memoria. Se ela travar, de pista mas NAO de a resposta. Celebre o que ela lembrar.<div class='t-ccq'><strong>CCQs:</strong> &quot;What is the difference between a proposal and a counteroffer?&quot; (proposal = initial offer, counteroffer = response with different terms) / &quot;What are 'terms' in a negotiation?&quot; (the conditions of an agreement)</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Review from Lesson 7</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Explain each word from memory</p>
+  <div class="callback-grid">
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Negotiate</div>
+      <div class="callback-prompt">To discuss in order to reach an agreement</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Proposal</div>
+      <div class="callback-prompt">A formal plan or suggestion presented for consideration</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Counteroffer</div>
+      <div class="callback-prompt">A new offer made in response to the first one</div>
+    </div>
+    <div class="callback-card" onclick="this.classList.toggle('open')">
+      <div class="callback-word">Terms</div>
+      <div class="callback-prompt">The conditions of an agreement or contract</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 3 -- WARM-UP ====== -->
+<div class="slide dark" data-chapter="1" data-lesson="8" data-t="<span class='t-timing'>5:00 - 10 min</span>Pergunte cada questao. Deixe Maria Claudia falar livremente. Anote expressoes que ela usa -- provavelmente vai misturar formal e informal. Objetivo: diagnostico de como ela escreve emails antes de aprender formal register.<div class='t-alert'>Maria Claudia trabalha com Houston, entao conecte: &quot;When you email Houston, what tone do you use?&quot;</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Dream</div>
+  <div style="max-width:650px;text-align:center;">
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">The Power of Words</h2>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
+      <div class="warm-q">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Question 1</div>
+        <p>How many professional emails do you write per day?</p>
+      </div>
+      <div class="warm-q">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Question 2</div>
+        <p>Do you write emails in English to Houston?</p>
+      </div>
+      <div class="warm-q">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:0.4rem;">Question 3</div>
+        <p>What is the most difficult part of writing formal emails?</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 4 -- TRANSITION TO VOCAB ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="8" data-t="<span class='t-timing'>10:00 - 0.5 min</span>Transicao: &quot;Now let us pack the vocabulary you need to write powerful professional emails. Eight words and three key expressions.&quot;" style="background:linear-gradient(135deg,rgba(45,27,78,0.82),rgba(26,54,93,0.78),rgba(107,76,138,0.82)),url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h1 class="slide-title" style="color:#fff;">Packing Email Words</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">8 email words and 3 key expressions</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 5 -- VOCAB 1-4 ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="8" data-t="<span class='t-timing'>10:30 - 16 min</span>Antes de clicar cada card, pergunte: &quot;Do you know this word?&quot; Maria Claudia provavelmente conhece 'attachment' como cognato. Celebre o que ela sabe. Apos revelar: toque o audio 2x, ela repete. Foque na pronuncia de 'regarding' (re-GAR-ding, stress na segunda silaba) e 'acknowledge' (ac-KNOW-ledge, stress na segunda).<div class='t-ccq'><strong>CCQs:</strong> &quot;Is 'regarding' formal or informal?&quot; (formal, equivalent of 'about') / &quot;What does 'acknowledge' mean -- to ignore or to recognize?&quot; (to recognize or confirm receipt)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid1">
+    <!-- Card 1: Regarding -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #2563eb, #60a5fa);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <div class="v-card-hint">A formal way to say "about" or "concerning" a specific topic...</div>
+      <div class="v-card-body">
+        <div class="v-word">Regarding</div>
+        <div class="v-def">concerning; about a particular matter</div>
+        <div class="v-example">"I am writing regarding the quarterly report."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I am writing regarding the quarterly report.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 2: Acknowledge -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #34d399);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      </div>
+      <div class="v-card-hint">To confirm that you have received or recognized something...</div>
+      <div class="v-card-body">
+        <div class="v-word">Acknowledge</div>
+        <div class="v-def">to confirm receipt of or recognize something</div>
+        <div class="v-example">"I would like to acknowledge receipt of your proposal."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I would like to acknowledge receipt of your proposal.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 3: Inquire -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #6B4C8A, #8B6BAA);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="v-card-hint">To ask for information in a formal and polite way...</div>
+      <div class="v-card-body">
+        <div class="v-word">Inquire</div>
+        <div class="v-def">to ask formally for information</div>
+        <div class="v-example">"I am writing to inquire about the project timeline."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I am writing to inquire about the project timeline.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 4: Attachment -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+      </div>
+      <div class="v-card-hint">A file sent together with an email message...</div>
+      <div class="v-card-body">
+        <div class="v-word">Attachment</div>
+        <div class="v-def">a document or file included with an email</div>
+        <div class="v-example">"Please find the contract as an attachment."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Please find the contract as an attachment.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount1">0 / 4 words revealed</div>
+</div>
+
+<!-- ====== SLIDE 6 -- VOCAB 5-8 ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="8" data-t="<span class='t-timing'>16:00 - 22 min</span>Continue com as 4 palavras restantes. Foque em 'follow through' como phrasal verb -- nao e so 'follow'. Pergunte: &quot;What happens when someone does NOT follow through on a promise?&quot; Maria Claudia provavelmente vai conectar com experiencias profissionais.<div class='t-ccq'><strong>CCQs:</strong> &quot;Is 'outline' the full details or a summary?&quot; (summary/overview) / &quot;When you 'forward' an email, where does it go?&quot; (to another person)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <p class="section-label" style="color:var(--accent-light);text-align:center;">Click on each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid2">
+    <!-- Card 5: Follow through -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #d97706, #fbbf24);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="v-card-hint">To complete what you promised or started doing...</div>
+      <div class="v-card-body">
+        <div class="v-word">Follow through</div>
+        <div class="v-def">to complete an action or promise</div>
+        <div class="v-example">"We need to follow through on the commitments from the meeting."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We need to follow through on the commitments from the meeting.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 6: Outline -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #0891b2, #67e8f9);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>
+      <div class="v-card-hint">To give a summary or general description of something...</div>
+      <div class="v-card-body">
+        <div class="v-word">Outline</div>
+        <div class="v-def">to describe the main points or structure</div>
+        <div class="v-example">"I would like to outline the key objectives of this project."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I would like to outline the key objectives of this project.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 7: Notify -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #7c3aed, #a78bfa);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </div>
+      <div class="v-card-hint">To formally inform someone about something important...</div>
+      <div class="v-card-body">
+        <div class="v-word">Notify</div>
+        <div class="v-def">to formally inform or give notice</div>
+        <div class="v-example">"Please notify the team of the schedule change."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Please notify the team of the schedule change.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 8: Forward -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #be185d, #f472b6);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="15 17 20 12 15 7"/><path d="M4 18v-2a4 4 0 014-4h12"/></svg>
+      </div>
+      <div class="v-card-hint">To send an email you received to another person...</div>
+      <div class="v-card-body">
+        <div class="v-word">Forward</div>
+        <div class="v-def">to send a received message to someone else</div>
+        <div class="v-example">"Could you forward the meeting notes to the Houston team?"</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Could you forward the meeting notes to the Houston team?',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount2">0 / 4 words revealed</div>
+</div>
+
+<!-- ====== SLIDE 7 -- EXPRESSIONS ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="8" data-t="<span class='t-timing'>22:00 - 25 min</span>Apresente as 3 expressoes formais. Toque o audio de cada uma. Pergunte: &quot;Have you used any of these in your emails to Houston?&quot; Pratique cada uma 2x. Conecte: &quot;These are the building blocks of every professional email.&quot;">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Key Expressions</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Essential phrases for professional emails</p>
+  <div class="expr-list">
+    <div class="expr-item">
+      <div class="expr-text">"I am writing to..."</div>
+      <button class="expr-play" onclick="speakText('I am writing to inform you about the upcoming changes.',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+    <div class="expr-item">
+      <div class="expr-text">"Please find attached..."</div>
+      <button class="expr-play" onclick="speakText('Please find attached the revised budget for Q3.',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+    <div class="expr-item">
+      <div class="expr-text">"I look forward to..."</div>
+      <button class="expr-play" onclick="speakText('I look forward to hearing from you at your earliest convenience.',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 8 -- PRONUNCIATION ====== -->
+<div class="slide dark" data-chapter="2" data-lesson="8" data-t="<span class='t-timing'>25:00 - 28 min</span>Pronuncia das 4 palavras com stress marcado. Toque cada audio, Maria Claudia repete 2x. Foque em 'acknowledge' (3 silabas, stress na segunda) e 'inquire' (stress na segunda). Se ela pronunciar 'in-QUAI-er', corrija para 'in-QUIRE'.">
+  <div class="slide-chapter-label">Chapter 2 -- Packing Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Pronunciation Drill</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen and repeat. Focus on the stressed syllable.</p>
+  <div class="pron-list">
+    <div class="pron-item">
+      <div class="pron-word">Regarding</div>
+      <div class="pron-stress">re-<strong>GAR</strong>-ding</div>
+      <button class="pron-play" onclick="speakText('regarding',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Acknowledge</div>
+      <div class="pron-stress">ac-<strong>KNOW</strong>-ledge</div>
+      <button class="pron-play" onclick="speakText('acknowledge',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Inquire</div>
+      <div class="pron-stress">in-<strong>QUIRE</strong></div>
+      <button class="pron-play" onclick="speakText('inquire',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Attachment</div>
+      <div class="pron-stress">at-<strong>TACH</strong>-ment</div>
+      <button class="pron-play" onclick="speakText('attachment',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 9 -- TRANSITION TO GRAMMAR ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="8" data-t="<span class='t-timing'>28:00 - 0.5 min</span>Transicao: &quot;Now let us discover the code behind formal emails. How do we transform casual language into professional power?&quot;" style="background:linear-gradient(135deg,rgba(45,27,78,0.82),rgba(26,54,93,0.78),rgba(107,76,138,0.82)),url('https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h1 class="slide-title" style="color:#fff;">The Formal Code</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Transforming casual into professional</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 10 -- GRAMMAR DISCOVERY ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="8" data-t="<span class='t-timing'>28:30 - 33 min</span>Mostre os dois emails lado a lado. Pergunte: &quot;Which email sounds more professional? Why?&quot; Maria Claudia identifica diferencas. Destaque as palavras em cor accent. Pergunte: &quot;What do the highlighted words have in common?&quot; Ela deve notar que sao mais formais.<div class='t-ccq'><strong>CCQs:</strong> &quot;Would you send the first email to your CEO? Why not?&quot; / &quot;Which expressions make the second email sound professional?&quot;</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Spot the Difference</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Compare these two emails. What makes one more professional?</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;max-width:750px;width:100%;">
+    <div class="g-example">
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#dc2626;margin-bottom:0.6rem;">Informal</div>
+      <p style="line-height:1.8;color:#2d2d3a;">Hi David,<br><br>Just <span class="highlight">wanted to ask</span> about the budget. Can you <span class="highlight">send me</span> the file? <span class="highlight">Let me know</span> if you need anything.<br><br>Thanks,<br>MC</p>
+    </div>
+    <div class="g-example">
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#16a34a;margin-bottom:0.6rem;">Formal</div>
+      <p style="line-height:1.8;color:#2d2d3a;">Dear David,<br><br><span class="highlight">I am writing to inquire</span> about the budget. <span class="highlight">Please find attached</span> the revised file. <span class="highlight">I look forward to hearing from you</span> at your earliest convenience.<br><br>Best regards,<br>Maria Claudia</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 11 -- MORE EXAMPLES ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="8" data-t="<span class='t-timing'>33:00 - 36 min</span>Mais exemplos de transformacao informal para formal. Mostre cada par. Pergunte: &quot;Can you see the pattern?&quot; O padrao e: verbos simples viram expressoes mais longas e educadas. Contractions desaparecem. Phrasal verbs viram verbos latinos.">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">More Transformations</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">What do the highlighted words have in common?</p>
+  <div class="grammar-examples" style="max-width:700px;">
+    <div class="g-example">
+      <p><span style="color:#dc2626;">Informal:</span> "I <span class="highlight">want to</span> set up a meeting."<br><span style="color:#16a34a;">Formal:</span> "I <span class="highlight">would like to</span> arrange a meeting."</p>
+    </div>
+    <div class="g-example">
+      <p><span style="color:#dc2626;">Informal:</span> "Can you <span class="highlight">tell</span> the team?"<br><span style="color:#16a34a;">Formal:</span> "Could you <span class="highlight">notify</span> the team?"</p>
+    </div>
+    <div class="g-example">
+      <p><span style="color:#dc2626;">Informal:</span> "I <span class="highlight">got</span> your email."<br><span style="color:#16a34a;">Formal:</span> "I <span class="highlight">acknowledge</span> receipt of your email."</p>
+    </div>
+    <div class="g-example">
+      <p><span style="color:#dc2626;">Informal:</span> "<span class="highlight">About</span> the contract..."<br><span style="color:#16a34a;">Formal:</span> "<span class="highlight">Regarding</span> the contract..."</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 12 -- REVEAL THE RULE ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="8" data-t="<span class='t-timing'>36:00 - 39 min</span>Pergunte antes de clicar: &quot;What is the pattern you see?&quot; Maria Claudia deve notar: (1) phrasal verbs viram verbos formais, (2) contractions somem, (3) expressoes de abertura/fechamento mudam. Clique 'Reveal the Rule' para confirmar.">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">The Formal Register</h2>
+  <div style="max-width:700px;width:100%;">
+    <button class="g-reveal-btn" onclick="revealGrammar(this,'grammarRule1')">Reveal the Rule</button>
+    <div class="g-rule" id="grammarRule1">
+      <h4>Informal to Formal Equivalents</h4>
+      <table>
+        <thead>
+          <tr><th>Informal</th><th>Formal</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>want to</td><td>would like to</td></tr>
+          <tr><td>ask about</td><td>inquire about</td></tr>
+          <tr><td>tell / let know</td><td>notify / inform</td></tr>
+          <tr><td>got (your email)</td><td>acknowledge receipt of</td></tr>
+          <tr><td>about</td><td>regarding</td></tr>
+          <tr><td>send (the file)</td><td>please find attached</td></tr>
+          <tr><td>thanks</td><td>thank you for your time</td></tr>
+          <tr><td>Hi / Hey</td><td>Dear (Mr./Ms.)</td></tr>
+          <tr><td>let me know</td><td>I look forward to hearing from you</td></tr>
+          <tr><td>do it / finish it</td><td>follow through on</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 13 -- COMMON MISTAKE ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="8" data-t="<span class='t-timing'>39:00 - 41 min</span>Mostre o erro comum. Pergunte: &quot;What is wrong with the first version?&quot; Maria Claudia deve identificar que 'I want to ask about' e informal demais para um email profissional. A versao correta usa 'I am writing to inquire about'.">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Common Mistake</h2>
+  <div class="mistake-box">
+    <div class="mistake-wrong">
+      <div class="mistake-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <span>"Dear David, I <strong>want to ask about</strong> the project deadline."</span>
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span>"Dear David, <strong>I am writing to inquire about</strong> the project deadline."</span>
+    </div>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-top:1rem;text-align:center;">In formal emails, use "I am writing to..." instead of "I want to..."</p>
+  </div>
+</div>
+
+<!-- ====== SLIDE 14 -- GRAMMAR PRACTICE ====== -->
+<div class="slide dark" data-chapter="3" data-lesson="8" data-t="<span class='t-timing'>41:00 - 44 min</span>Pratica de transformacao. Clique cada item para revelar. Maria Claudia tenta PRIMEIRO oralmente antes de clicar. Celebre acertos: &quot;That is exactly how a native speaker would write it!&quot;">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Transform to Formal</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Click to reveal the formal version</p>
+  <div class="fill-practice">
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"I <span class="fp-blank">want to</span> schedule a call."</div>
+      <div class="fp-answer">"I would like to schedule a call."</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"Can you <span class="fp-blank">send me</span> the report?"</div>
+      <div class="fp-answer">"Could you please forward the report?"</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"<span class="fp-blank">About</span> the new policy..."</div>
+      <div class="fp-answer">"Regarding the new policy..."</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"I <span class="fp-blank">got</span> your message."</div>
+      <div class="fp-answer">"I acknowledge receipt of your message."</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">"<span class="fp-blank">Let me know</span> when you are available."</div>
+      <div class="fp-answer">"I look forward to hearing from you at your earliest convenience."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 15 -- TRANSITION: GETTING THERE ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="8" data-t="<span class='t-timing'>44:00 - 0.5 min</span>Transicao: &quot;Now let us see and hear formal emails in action. First, MC reads a professional email, then David explains best practices.&quot;" style="background:linear-gradient(135deg,rgba(45,27,78,0.82),rgba(26,54,93,0.78),rgba(107,76,138,0.82)),url('https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h1 class="slide-title" style="color:#fff;">Emails in Action</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">Listen, read, and practice real correspondence</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 16 -- LISTENING 1 ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="8" data-t="<span class='t-timing'>44:30 - 48 min</span>MC le um email profissional em voz alta. Toque o audio. Maria Claudia ouve SEM texto na tela. Apos o audio, clique para mostrar as perguntas de compreensao. Pergunte oralmente antes de revelar.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">MC Reads a Professional Email Aloud</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen first, then answer the questions</p>
+  <div class="listening-card">
+    <div class="waveform" id="wave1">
+      <div class="waveform-bar" style="animation-delay:0s;"></div><div class="waveform-bar" style="animation-delay:0.1s;"></div><div class="waveform-bar" style="animation-delay:0.2s;"></div><div class="waveform-bar" style="animation-delay:0.3s;"></div><div class="waveform-bar" style="animation-delay:0.4s;"></div><div class="waveform-bar" style="animation-delay:0.5s;"></div><div class="waveform-bar" style="animation-delay:0.6s;"></div><div class="waveform-bar" style="animation-delay:0.7s;"></div><div class="waveform-bar" style="animation-delay:0.8s;"></div><div class="waveform-bar" style="animation-delay:0.9s;"></div><div class="waveform-bar" style="animation-delay:1.0s;"></div><div class="waveform-bar" style="animation-delay:1.1s;"></div>
+    </div>
+    <button class="play-pause-btn" onclick="toggleListening('listening1',this,'wave1','lq1')">
+      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <div class="listening-questions" id="lq1">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. What is the purpose of MC's email?</div>
+        <div class="lq-answer">To inquire about the timeline for the Houston project and to request an updated schedule.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. What does MC attach to the email?</div>
+        <div class="lq-answer">The revised project outline with the key milestones.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. How does MC close the email?</div>
+        <div class="lq-answer">With "I look forward to hearing from you at your earliest convenience."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 17 -- LISTENING 1 COMP ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="8" data-t="<span class='t-timing'>48:00 - 49 min</span>Revisao da compreensao do listening 1. Pergunte oralmente. Clique para revelar. Se Maria Claudia acertar tudo, celebre: &quot;You understood every formal expression perfectly.&quot;">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Listening 1 -- Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. Which formal expression does MC use to open the email?</div>
+      <div class="cq-a">"I am writing regarding the Houston project timeline."</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. Does MC use "about" or "regarding" in the email?</div>
+      <div class="cq-a">MC uses "regarding" because it is the formal equivalent of "about."</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. What does MC ask David to do?</div>
+      <div class="cq-a">MC asks David to review the attached outline and confirm the updated deadlines.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 18 -- LISTENING 2 ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="8" data-t="<span class='t-timing'>49:00 - 53 min</span>David explica boas praticas de email. Toque o audio. Maria Claudia ouve SEM texto. Apos o audio, clique para mostrar as perguntas. Pergunte oralmente antes de revelar.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">David Explains Email Best Practices</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;text-align:center;">Listen first, then answer the questions</p>
+  <div class="listening-card">
+    <div class="waveform" id="wave2">
+      <div class="waveform-bar" style="animation-delay:0s;"></div><div class="waveform-bar" style="animation-delay:0.1s;"></div><div class="waveform-bar" style="animation-delay:0.2s;"></div><div class="waveform-bar" style="animation-delay:0.3s;"></div><div class="waveform-bar" style="animation-delay:0.4s;"></div><div class="waveform-bar" style="animation-delay:0.5s;"></div><div class="waveform-bar" style="animation-delay:0.6s;"></div><div class="waveform-bar" style="animation-delay:0.7s;"></div><div class="waveform-bar" style="animation-delay:0.8s;"></div><div class="waveform-bar" style="animation-delay:0.9s;"></div><div class="waveform-bar" style="animation-delay:1.0s;"></div><div class="waveform-bar" style="animation-delay:1.1s;"></div>
+    </div>
+    <button class="play-pause-btn" onclick="toggleListening('listening2',this,'wave2','lq2')">
+      <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <div class="listening-questions" id="lq2">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. What is David's first tip for professional emails?</div>
+        <div class="lq-answer">Always state the purpose clearly in the first sentence using "I am writing to..."</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. What does David say about contractions?</div>
+        <div class="lq-answer">Avoid contractions in formal emails. Use "I am" instead of "I'm," "do not" instead of "don't."</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. How does David recommend closing an email?</div>
+        <div class="lq-answer">With "I look forward to hearing from you" followed by "Best regards" or "Kind regards."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 19 -- LISTENING 2 COMP ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="8" data-t="<span class='t-timing'>53:00 - 54 min</span>Revisao da compreensao do listening 2. Pergunte: &quot;What did David say about the subject line?&quot; Maria Claudia responde. Clique para revelar.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Listening 2 -- Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. Why does David recommend avoiding phrasal verbs in formal emails?</div>
+      <div class="cq-a">Because single Latinate verbs like "notify," "inquire," and "outline" sound more professional.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. What does David say about the subject line?</div>
+      <div class="cq-a">The subject line should be specific and action-oriented, not vague like "Quick question."</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. What is David's advice about following through?</div>
+      <div class="cq-a">Always follow through on commitments mentioned in emails. If you say you will send something, send it promptly.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 20 -- ARTIFACT: PROFESSIONAL EMAIL ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="8" data-t="<span class='t-timing'>54:00 - 56 min</span>Mostre o email como artefato. Pergunte: &quot;Can you identify all the formal expressions in this email?&quot; Maria Claudia identifica: 'I am writing regarding', 'Please find attached', 'I would like to outline', 'I look forward to'. Celebre cada uma encontrada.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Professional Email</h2>
+  <div class="artifact-card">
+    <div class="artifact-header">
+      <h3>Professional Email</h3>
+      <p>Maria Claudia Curimbaba -- Houston Project</p>
+    </div>
+    <div class="artifact-body">
+      <div class="artifact-field">
+        <div class="artifact-label">From</div>
+        <div class="artifact-value">Maria Claudia Curimbaba &lt;mc.curimbaba@company.com&gt;</div>
+      </div>
+      <div class="artifact-field">
+        <div class="artifact-label">To</div>
+        <div class="artifact-value">David Chen &lt;d.chen@houston-ops.com&gt;</div>
+      </div>
+      <div class="artifact-field">
+        <div class="artifact-label">Subject</div>
+        <div class="artifact-value">Regarding the Q3 Project Timeline -- Updated Milestones</div>
+      </div>
+      <div class="artifact-field">
+        <div class="artifact-label">Date</div>
+        <div class="artifact-value">June 10, 2026</div>
+      </div>
+      <div style="border-top:1px solid #e0ddd5;padding-top:1rem;margin-top:0.8rem;">
+        <div class="artifact-value">
+          <p>Dear David,</p>
+          <p style="margin-top:0.8rem;">I am writing <strong>regarding</strong> the Q3 project timeline. I would like to <strong>inquire</strong> about the current status of the deliverables and whether the team can <strong>follow through</strong> on the original deadlines.</p>
+          <p style="margin-top:0.8rem;"><strong>Please find attached</strong> the revised project <strong>outline</strong> with updated milestones. I would appreciate it if you could <strong>acknowledge</strong> receipt and <strong>notify</strong> the Houston team of any changes.</p>
+          <p style="margin-top:0.8rem;">Should you need any additional information, please do not hesitate to contact me. <strong>I look forward to</strong> hearing from you at your earliest convenience.</p>
+          <p style="margin-top:0.8rem;">Best regards,<br>Maria Claudia Curimbaba</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 21 -- DIALOGUE ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="8" data-t="<span class='t-timing'>56:00 - 60 min</span>Dialogo: MC e David discutem comunicacao por email. Clique 'Next Line' para revelar uma troca por vez. Toque o audio de cada linha. Vocabulario da aula em negrito. Pergunte apos cada troca: &quot;What did David just suggest?&quot;">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:0.5rem;text-align:center;">MC and David Discuss Email Communication</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1rem;text-align:center;">Click "Next Line" to reveal each exchange</p>
+  <div class="dialogue-container" id="dialogue1">
+    <div class="d-line visible" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">David, I need to write a formal email <strong>regarding</strong> the Houston project. What should I include?</div>
+      </div>
+      <button class="d-audio" onclick="speakText('David, I need to write a formal email regarding the Houston project. What should I include?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="David Chen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">David Chen</div>
+        <div class="d-text">Start with your purpose. Use <strong>"I am writing to"</strong> and state what you need clearly.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Start with your purpose. Use I am writing to and state what you need clearly.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">I also need to send the updated <strong>outline</strong>. Should I mention the <strong>attachment</strong>?</div>
+      </div>
+      <button class="d-audio" onclick="speakText('I also need to send the updated outline. Should I mention the attachment?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="David Chen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">David Chen</div>
+        <div class="d-text">Absolutely. Say <strong>"Please find attached"</strong> followed by a description. It shows professionalism.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Absolutely. Say please find attached followed by a description. It shows professionalism.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">What about the closing? I usually write "Let me know." Is that too informal?</div>
+      </div>
+      <button class="d-audio" onclick="speakText('What about the closing? I usually write let me know. Is that too informal?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="David Chen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">David Chen</div>
+        <div class="d-text">Yes, try <strong>"I look forward to hearing from you"</strong> instead. It is professional and polite.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Yes, try I look forward to hearing from you instead. It is professional and polite.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">I will also ask them to <strong>acknowledge</strong> the email. Should I <strong>forward</strong> it to the whole team?</div>
+      </div>
+      <button class="d-audio" onclick="speakText('I will also ask them to acknowledge the email. Should I forward it to the whole team?',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="David Chen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">David Chen</div>
+        <div class="d-text">Send it to the project leads first. Ask them to <strong>notify</strong> their teams. That way you <strong>follow through</strong> on the chain of command.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Send it to the project leads first. Ask them to notify their teams. That way you follow through on the chain of command.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="ellen" data-speaker="Maria Claudia" style="border-left-color:var(--accent);">
+      <div class="d-avatar purple">MC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Maria Claudia</div>
+        <div class="d-text">Good idea. I will <strong>outline</strong> the next steps clearly so everyone knows what to do.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Good idea. I will outline the next steps clearly so everyone knows what to do.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+    <div class="d-line" data-voice="arthur" data-speaker="David Chen" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">David Chen</div>
+        <div class="d-text">Perfect. And do not forget to <strong>inquire</strong> about any concerns before the deadline. Proactive communication makes all the difference.</div>
+      </div>
+      <button class="d-audio" onclick="speakText('Perfect. And do not forget to inquire about any concerns before the deadline. Proactive communication makes all the difference.',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    </div>
+  </div>
+  <button class="next-line-btn" id="nextLineBtn1" onclick="revealNextLine('dialogue1','nextLineBtn1')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    Next Line
+  </button>
+</div>
+
+<!-- ====== SLIDE 22 -- DIALOGUE COMPREHENSION ====== -->
+<div class="slide dark" data-chapter="4" data-lesson="8" data-t="<span class='t-timing'>60:00 - 62 min</span>Pergunte cada questao oralmente. Maria Claudia responde. Depois clique para revelar. Todas as perguntas sao sobre DAVID (o que David disse/recomendou), nao sobre Maria Claudia.">
+  <div class="slide-chapter-label">Chapter 4 -- Getting There</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Dialogue Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. What does David suggest for opening a formal email?</div>
+      <div class="cq-a">David suggests starting with "I am writing to..." and stating the purpose clearly.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. What does David recommend instead of "Let me know"?</div>
+      <div class="cq-a">He recommends "I look forward to hearing from you" because it is more professional and polite.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. What is David's advice about the chain of command?</div>
+      <div class="cq-a">Send to project leads first and ask them to notify their teams, following through on the chain of command.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 23 -- TRANSITION: PRACTICE ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="8" data-t="<span class='t-timing'>62:00 - 0.5 min</span>Transicao: &quot;Now let us practice more intensively. Can you write and transform emails with formal register fluently?&quot;" style="background:linear-gradient(135deg,rgba(45,27,78,0.82),rgba(26,54,93,0.78),rgba(107,76,138,0.82)),url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h1 class="slide-title" style="color:#fff;">More Practice</h1>
+  <p class="slide-subtitle" style="color:rgba(255,255,255,0.5);">From controlled to free production</p>
+  <div style="margin-top:2rem;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(107,76,138,0.6)" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+  </div>
+</div>
+
+<!-- ====== SLIDE 24 -- QUICK FIRE ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="8" data-t="<span class='t-timing'>62:30 - 66 min</span>Ritmo rapido: leia a situacao, Maria Claudia responde. Se acertar, &quot;Excellent!&quot; e mostre a resposta. Se travar, de a primeira palavra. 20-30 segundos por item. <strong>Confetti ao completar todas!</strong><div class='t-alert'>Se Maria Claudia ficar insegura, encoraje: &quot;Just use the formal expressions from today.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Fire</h2>
+  <div class="qc-score" id="qcScore">0 / 6</div>
+  <div class="qc-container" id="qcContainer">
+    <div class="qc-card active" data-idx="0">
+      <div class="qc-prompt">You need to open an email to your CEO about a new policy. What is the formal opening?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"Dear Mr. Thompson, I am writing regarding the new company policy."</div>
+      <div class="qc-nav"><button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="1">
+      <div class="qc-prompt">You want to ask about the project deadline formally. How do you phrase it?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I am writing to inquire about the current project deadline."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="2">
+      <div class="qc-prompt">You are sending a budget report with the email. How do you mention it?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"Please find attached the Q3 budget report for your review."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="3">
+      <div class="qc-prompt">You received a contract from Houston and want to confirm it formally. What do you write?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I would like to acknowledge receipt of the contract."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="4">
+      <div class="qc-prompt">You need to end the email professionally. What closing sentence do you use?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"I look forward to hearing from you at your earliest convenience."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button> <button class="qc-next-btn" onclick="nextQc()">Next Question</button></div>
+    </div>
+    <div class="qc-card" data-idx="5">
+      <div class="qc-prompt">You want to inform the team about a schedule change formally. What verb do you use instead of "tell"?</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">"Please notify the team of the schedule change."</div>
+      <div class="qc-nav"><button class="qc-prev-btn" onclick="prevQc()">Previous</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 25 -- SPOT THE ERROR ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="8" data-t="<span class='t-timing'>66:00 - 69 min</span>Leia cada frase. Maria Claudia identifica o erro de formalidade. Clique para revelar. Todos os erros envolvem uso informal em contexto formal. Se ela nao encontrar, de pista: &quot;Is this formal enough for an email to your CEO?&quot;">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Spot the Error</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Click each sentence to see the correction</p>
+  <div class="error-list" id="errorList">
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"Dear Mr. Johnson, <span class="wrong">I want to ask about</span> the meeting."</div>
+      <div class="err-correction">"Dear Mr. Johnson, <strong>I am writing to inquire about</strong> the meeting."</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"<span class="wrong">Here's</span> the file you needed."</div>
+      <div class="err-correction">"<strong>Please find attached</strong> the file you requested."</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"Can you <span class="wrong">tell</span> the team about the new schedule?"</div>
+      <div class="err-correction">"Could you please <strong>notify</strong> the team regarding the new schedule?"</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"<span class="wrong">Got</span> your email. Thanks!"</div>
+      <div class="err-correction">"I <strong>acknowledge</strong> receipt of your email. Thank you."</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"<span class="wrong">Let me know</span> if you need anything."</div>
+      <div class="err-correction">"Should you require any further assistance, please do not hesitate to contact me."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 26 -- SCRAMBLE ====== -->
+<div class="slide dark" data-chapter="5" data-lesson="8" data-t="<span class='t-timing'>69:00 - 72 min</span>Frases embaralhadas. Maria Claudia reorganiza oralmente. Clique para revelar. Ritmo rapido. Se ela acertar, celebre. Se errar, releia as palavras devagar.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Sentence Building</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;text-align:center;">Unscramble the words. Click to see the correct sentence.</p>
+  <div class="scramble-list">
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">regarding</span><span class="scramble-chip">am writing</span><span class="scramble-chip">the project</span><span class="scramble-chip">I</span><span class="scramble-chip">timeline</span>
+      </div>
+      <div class="scramble-answer">"I am writing regarding the project timeline."</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">attached</span><span class="scramble-chip">the revised</span><span class="scramble-chip">Please</span><span class="scramble-chip">find</span><span class="scramble-chip">report</span>
+      </div>
+      <div class="scramble-answer">"Please find attached the revised report."</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">to hearing</span><span class="scramble-chip">I</span><span class="scramble-chip">from you</span><span class="scramble-chip">look forward</span>
+      </div>
+      <div class="scramble-answer">"I look forward to hearing from you."</div>
+    </div>
+    <div class="scramble-item" onclick="this.classList.toggle('open')">
+      <div class="scramble-words">
+        <span class="scramble-chip">the team</span><span class="scramble-chip">notify</span><span class="scramble-chip">the schedule</span><span class="scramble-chip">Please</span><span class="scramble-chip">of</span><span class="scramble-chip">change</span>
+      </div>
+      <div class="scramble-answer">"Please notify the team of the schedule change."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 27 -- ROLE-PLAY 1: GUIDED ====== -->
+<div class="slide dark" data-chapter="6" data-lesson="8" data-t="<span class='t-timing'>72:00 - 75 min</span><strong>Role-play guiado</strong>. Leia o cenario. Mostre as keywords. Diga: &quot;Write a follow-up email after a meeting using today's vocabulary.&quot; Se travar, de o modelo: &quot;Start with 'I am writing regarding...'&quot; Maria Claudia pode olhar a tela. Objetivo: usar as keywords na ordem natural.<div class='t-alert'>Maria Claudia e executiva. Conecte: &quot;Imagine this is the follow-up to the Houston project meeting from last week.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Write a Follow-Up Email After a Meeting</h2>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #2d1b4e 0%, #1a365d 50%, #6B4C8A 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Role-Play 1 -- Guided
+      </div>
+      <div class="rp-scenario">You just finished a project meeting with David. Write a follow-up email summarizing the key points, attaching the action items, and asking for confirmation.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">I am writing regarding</span>
+        <span class="rp-keyword">please find attached</span>
+        <span class="rp-keyword">outline</span>
+        <span class="rp-keyword">follow through</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 28 -- ROLE-PLAY 2: SEMI-FREE ====== -->
+<div class="slide dark" data-chapter="6" data-lesson="8" data-t="<span class='t-timing'>75:00 - 78 min</span><strong>Role-play semi-livre</strong>. Diga: &quot;David replied to your email with some corrections. Reply politely, acknowledging the corrections and asking for clarification on one point.&quot; Se Maria Claudia travar, de apenas a primeira expressao. Objetivo: producao com apoio minimo.<div class='t-alert'>Se ela usar 'acknowledge' e 'inquire' espontaneamente, celebre muito: &quot;That is EXACTLY the formal register Houston expects!&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Reply to David's Email with Corrections</h2>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #6B4C8A 0%, #1a365d 50%, #2d1b4e 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Role-Play 2 -- Semi-Free
+      </div>
+      <div class="rp-scenario">David replied with corrections to the timeline. Write a reply acknowledging his feedback, inquiring about one unclear point, and confirming you will follow through on the updated deadlines.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">acknowledge</span>
+        <span class="rp-keyword">inquire</span>
+        <span class="rp-keyword">I look forward to</span>
+        <span class="rp-keyword">notify</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 29 -- ROLE-PLAY 3: FREE ====== -->
+<div class="slide dark" data-chapter="6" data-lesson="8" data-t="<span class='t-timing'>78:00 - 82 min</span><strong>Role-play livre</strong>. Sem keywords. Sem apoio. Maria Claudia redige um email completo para um novo fornecedor: abertura formal, proposito, detalhes, attachment, pedido de confirmacao, fechamento. 3 minutos. Anote erros para correcao depois.<div class='t-alert'>Este e o momento mais importante da aula. Maria Claudia precisa SENTIR que consegue escrever emails profissionais em ingles. Valide: &quot;Maria Claudia, you just wrote a complete professional email with formal register. Houston would be impressed.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">Draft a Complete Email to a New Vendor</h2>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #1a1a2e 0%, #6B4C8A 40%, #1a365d 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Role-Play 3 -- Free
+      </div>
+      <div class="rp-scenario">You are contacting a new vendor for the first time. Draft a complete professional email: introduce yourself, state the purpose, outline your requirements, attach relevant documents, and close formally. Use everything you learned today.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-style:italic;">Use everything you learned today.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 30 -- WHAT I LEARNED ====== -->
+<div class="slide dark" data-chapter="7" data-lesson="8" data-t="<span class='t-timing'>82:00 - 84 min</span>Mostre o checklist. Pergunte: &quot;Can you say yes to all of these?&quot; Maria Claudia clica cada um. Celebre: &quot;Maria Claudia, you just mastered professional email writing in English. You used formal register, proper openings and closings, and all eight vocabulary words naturally. Day 8 -- complete.&quot;<br><br><strong>Homework (diga oralmente, NAO esta na tela):</strong><br>1. Escrever um email formal real para o time de Houston usando todas as expressoes da aula.<br>2. Reescrever 2 emails antigos transformando linguagem informal em formal.<br>3. Ler 1 email profissional em ingles e identificar as expressoes formais usadas.">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.3rem;">What I Learned Today</h2>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;">Click each item to check it off</p>
+    <div class="check-grid" id="checklist-8" data-lesson="8" style="text-align:left;">
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can use 8 email words: regarding, acknowledge, inquire, attachment, follow through, outline, notify, forward.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can transform informal expressions into formal register.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can open an email with "I am writing to..." and close with "I look forward to..."</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can use "Please find attached..." to reference documents.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can pronounce "regarding," "acknowledge," "inquire," and "attachment" correctly.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can identify and correct informal language in professional emails.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can write a complete professional email with formal register.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can discuss email best practices and follow through on commitments.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 31 -- DAY 8 COMPLETE ====== -->
+<div class="slide dark" data-chapter="7" data-lesson="8" data-t="<span class='t-timing'>84:00 - 85 min</span>Slide final. Celebre o dia. De preview da proxima aula: &quot;Next time, we will explore how to socialize about art and business at gallery events. Gallery Night awaits!&quot;" style="background:linear-gradient(135deg,rgba(26,26,46,0.82),rgba(45,27,78,0.78),rgba(26,54,93,0.82)),url('https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=1400&q=80') center/cover no-repeat;">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;">
+    <div style="margin-bottom:2rem;">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+    <div style="padding:1.5rem;background:rgba(107,76,138,0.08);border:1px solid rgba(107,76,138,0.2);border-radius:12px;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;">Day 8 -- Complete.</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);margin-top:0.5rem;">Next: Gallery Night -- Socializing About Art and Business</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end slide-deck -->
+
+<!-- ===== CONFETTI CONTAINER ===== -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP =====
+var audioMap = {
+  "regarding": "/audio/maria-claudia-curimbaba/aula8_regarding.mp3",
+  "Regarding": "/audio/maria-claudia-curimbaba/aula8_regarding.mp3",
+  "acknowledge": "/audio/maria-claudia-curimbaba/aula8_acknowledge.mp3",
+  "Acknowledge": "/audio/maria-claudia-curimbaba/aula8_acknowledge.mp3",
+  "inquire": "/audio/maria-claudia-curimbaba/aula8_inquire.mp3",
+  "Inquire": "/audio/maria-claudia-curimbaba/aula8_inquire.mp3",
+  "attachment": "/audio/maria-claudia-curimbaba/aula8_attachment.mp3",
+  "Attachment": "/audio/maria-claudia-curimbaba/aula8_attachment.mp3",
+  "follow through": "/audio/maria-claudia-curimbaba/aula8_follow_through.mp3",
+  "Follow through": "/audio/maria-claudia-curimbaba/aula8_follow_through.mp3",
+  "outline": "/audio/maria-claudia-curimbaba/aula8_outline.mp3",
+  "Outline": "/audio/maria-claudia-curimbaba/aula8_outline.mp3",
+  "notify": "/audio/maria-claudia-curimbaba/aula8_notify.mp3",
+  "Notify": "/audio/maria-claudia-curimbaba/aula8_notify.mp3",
+  "forward": "/audio/maria-claudia-curimbaba/aula8_forward.mp3",
+  "Forward": "/audio/maria-claudia-curimbaba/aula8_forward.mp3",
+  "I am writing regarding the quarterly report.": "/audio/maria-claudia-curimbaba/aula8_i_am_writing_regarding.mp3",
+  "I would like to acknowledge receipt of your proposal.": "/audio/maria-claudia-curimbaba/aula8_i_would_like_to_acknowledge.mp3",
+  "I am writing to inquire about the project timeline.": "/audio/maria-claudia-curimbaba/aula8_i_am_writing_to_inquire.mp3",
+  "Please find the contract as an attachment.": "/audio/maria-claudia-curimbaba/aula8_please_find_the_contract.mp3",
+  "We need to follow through on the commitments from the meeting.": "/audio/maria-claudia-curimbaba/aula8_we_need_to_follow_through.mp3",
+  "I would like to outline the key objectives of this project.": "/audio/maria-claudia-curimbaba/aula8_i_would_like_to_outline.mp3",
+  "Please notify the team of the schedule change.": "/audio/maria-claudia-curimbaba/aula8_please_notify_the_team.mp3",
+  "Could you forward the meeting notes to the Houston team?": "/audio/maria-claudia-curimbaba/aula8_could_you_forward.mp3",
+  "I am writing to inform you about the upcoming changes.": "/audio/maria-claudia-curimbaba/aula8_expr_i_am_writing_to.mp3",
+  "Please find attached the revised budget for Q3.": "/audio/maria-claudia-curimbaba/aula8_expr_please_find_attached.mp3",
+  "I look forward to hearing from you at your earliest convenience.": "/audio/maria-claudia-curimbaba/aula8_expr_i_look_forward_to.mp3",
+  "listening1": "/audio/maria-claudia-curimbaba/aula8_ic_listening1_mc_reads_email.mp3",
+  "listening2": "/audio/maria-claudia-curimbaba/aula8_ic_listening2_david_best_practices.mp3",
+  "David, I need to write a formal email regarding the Houston project. What should I include?": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_mc_1.mp3",
+  "Start with your purpose. Use I am writing to and state what you need clearly.": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_david_1.mp3",
+  "I also need to send the updated outline. Should I mention the attachment?": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_mc_2.mp3",
+  "Absolutely. Say please find attached followed by a description. It shows professionalism.": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_david_2.mp3",
+  "What about the closing? I usually write let me know. Is that too informal?": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_mc_3.mp3",
+  "Yes, try I look forward to hearing from you instead. It is professional and polite.": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_david_3.mp3",
+  "I will also ask them to acknowledge the email. Should I forward it to the whole team?": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_mc_4.mp3",
+  "Send it to the project leads first. Ask them to notify their teams. That way you follow through on the chain of command.": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_david_4.mp3",
+  "Good idea. I will outline the next steps clearly so everyone knows what to do.": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_mc_5.mp3",
+  "Perfect. And do not forget to inquire about any concerns before the deadline. Proactive communication makes all the difference.": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_david_5.mp3",
+  "dlg_mc_1": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_mc_1.mp3",
+  "dlg_david_1": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_david_1.mp3",
+  "dlg_mc_2": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_mc_2.mp3",
+  "dlg_david_2": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_david_2.mp3",
+  "dlg_mc_3": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_mc_3.mp3",
+  "dlg_david_3": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_david_3.mp3",
+  "dlg_mc_4": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_mc_4.mp3",
+  "dlg_david_4": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_david_4.mp3",
+  "dlg_mc_5": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_mc_5.mp3",
+  "dlg_david_5": "/audio/maria-claudia-curimbaba/aula8_ic_dlg_david_5.mp3"
+};
+
+// ===== AUDIO ENGINE =====
+var currentAudio = null;
+var audioSpeed = 1;
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.toLowerCase()] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText.toLowerCase().replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed || 1;
+    currentAudio.play().catch(function() { fallbackTTS(cleanText); });
+  } else {
+    fallbackTTS(cleanText);
+  }
+  if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
+}
+
+function fallbackTTS(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 0;
+var totalSlides = 31;
+var slides = [];
+var teacherCues = [];
+
+function initSlides() {
+  slides = document.querySelectorAll('.slide');
+  slides.forEach(function(s, i) {
+    teacherCues[i] = s.dataset.t || '';
+  });
+  buildDotNav();
+  updateSlide();
+}
+
+function buildDotNav() {
+  var nav = document.getElementById('dotNav');
+  nav.innerHTML = '';
+  for (var i = 0; i < slides.length; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'dot-nav-item' + (i === 0 ? ' active' : '');
+    dot.dataset.idx = i;
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.onclick = function() { goToSlide(parseInt(this.dataset.idx)); };
+    nav.appendChild(dot);
+  }
+}
+
+function goToSlide(idx) {
+  if (idx < 0 || idx >= slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = idx;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateSlide();
+}
+
+function nextSlide() { goToSlide(currentSlide + 1); }
+function prevSlide() { goToSlide(currentSlide - 1); }
+
+function updateSlide() {
+  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + slides.length;
+
+  document.querySelectorAll('.dot-nav-item').forEach(function(d, i) {
+    d.classList.toggle('active', i === currentSlide);
+  });
+
+  var currentChapter = slides[currentSlide].dataset.chapter;
+  document.querySelectorAll('.chapter-dot').forEach(function(d) {
+    var ch = d.dataset.chapter;
+    d.classList.remove('active', 'completed');
+    if (ch === currentChapter) d.classList.add('active');
+    else if (parseInt(ch) < parseInt(currentChapter)) d.classList.add('completed');
+  });
+
+  var panel = document.getElementById('tPanel');
+  panel.classList.remove('show');
+  panel.innerHTML = teacherCues[currentSlide] || '<em>No teacher cue for this slide.</em>';
+}
+
+// ===== KEYBOARD NAV =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+});
+
+// ===== TEACHER CUE TOGGLE =====
+function toggleTeacherCue() {
+  var panel = document.getElementById('tPanel');
+  panel.classList.toggle('show');
+}
+
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('tPanel');
+  var cue = document.getElementById('tCue');
+  if (!panel.contains(e.target) && !cue.contains(e.target)) {
+    panel.classList.remove('show');
+  }
+});
+
+// ===== VOCAB REVEAL (TOGGLE) =====
+function revealVCard(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  var revealed = grid.querySelectorAll('.v-card.revealed').length;
+  var total = grid.querySelectorAll('.v-card').length;
+  document.getElementById(counterId).textContent = revealed + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar(btn, ruleId) {
+  btn.classList.add('used');
+  document.getElementById(ruleId).classList.add('show');
+}
+
+// ===== DIALOGUE LINE BY LINE =====
+function revealNextLine(dialogueId, btnId) {
+  var container = document.getElementById(dialogueId);
+  var lines = container.querySelectorAll('.d-line');
+  var btn = document.getElementById(btnId);
+  var nextHidden = null;
+  for (var i = 0; i < lines.length; i++) {
+    if (!lines[i].classList.contains('visible')) { nextHidden = lines[i]; break; }
+  }
+  if (nextHidden) {
+    nextHidden.classList.add('visible');
+    nextHidden.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  var allVisible = container.querySelectorAll('.d-line:not(.visible)').length === 0;
+  if (allVisible) btn.style.display = 'none';
+}
+
+// ===== LISTENING TOGGLE =====
+var listeningState = {};
+
+function toggleListening(id, btn, waveId, questionsId) {
+  var wave = document.getElementById(waveId);
+  var playIcon = btn.querySelector('.play-icon');
+  var pauseIcon = btn.querySelector('.pause-icon');
+  var questions = document.getElementById(questionsId);
+
+  if (!listeningState[id]) listeningState[id] = { playing: false, played: false, audio: null };
+
+  if (listeningState[id].playing) {
+    if (listeningState[id].audio) listeningState[id].audio.pause();
+    wave.classList.remove('playing');
+    playIcon.style.display = '';
+    pauseIcon.style.display = 'none';
+    listeningState[id].playing = false;
+  } else {
+    wave.classList.add('playing');
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = '';
+    listeningState[id].playing = true;
+
+    var file = audioMap[id];
+    if (file) {
+      if (!listeningState[id].audio) {
+        listeningState[id].audio = new Audio(file);
+        listeningState[id].audio.playbackRate = audioSpeed || 1;
+      }
+      listeningState[id].audio.play().catch(function(){});
+      listeningState[id].audio.onended = function() {
+        wave.classList.remove('playing');
+        playIcon.style.display = '';
+        pauseIcon.style.display = 'none';
+        listeningState[id].playing = false;
+        if (questions) questions.classList.add('show');
+      };
+    } else {
+      if (!listeningState[id].played) {
+        listeningState[id].played = true;
+        setTimeout(function() {
+          if (questions) questions.classList.add('show');
+          wave.classList.remove('playing');
+          playIcon.style.display = '';
+          pauseIcon.style.display = 'none';
+          listeningState[id].playing = false;
+        }, 8000);
+      }
+    }
+  }
+}
+
+// ===== QUICK CHALLENGE =====
+var qcCurrent = 0;
+var qcTotal = 6;
+var qcScore = 0;
+
+function showQcAnswer(btn) {
+  var card = btn.closest('.qc-card');
+  var answer = card.querySelector('.qc-answer-box');
+  var navBtns = card.querySelectorAll('.qc-next-btn, .qc-prev-btn');
+  answer.classList.add('show');
+  navBtns.forEach(function(b) { b.classList.add('show'); });
+  btn.style.display = 'none';
+  qcScore++;
+  document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal;
+
+  if (qcScore === qcTotal) {
+    triggerConfetti();
+  }
+}
+
+function nextQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  if (qcCurrent >= cards.length - 1) return;
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent++;
+  cards[qcCurrent].classList.add('active');
+}
+
+function prevQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  if (qcCurrent <= 0) return;
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent--;
+  cards[qcCurrent].classList.add('active');
+}
+
+
+// ===== WORD ANALYSIS (LCS + Levenshtein) =====
+function analyzeWords(targetStr, spokenStr) {
+  var tw = targetStr.split(/ +/).filter(function(w) { return w; });
+  var sw = spokenStr.split(/ +/).filter(function(w) { return w; });
+  var m = tw.length, n = sw.length;
+  var dp = Array.from({ length: m + 1 }, function() { return Array(n + 1).fill(0); });
+  for (var i = 1; i <= m; i++) for (var j = 1; j <= n; j++) dp[i][j] = wordsMatch(tw[i-1], sw[j-1]) ? dp[i-1][j-1] + 1 : Math.max(dp[i-1][j], dp[i][j-1]);
+  var mt = new Set(), ms = new Set(); var i = m, j = n;
+  while (i > 0 && j > 0) { if (wordsMatch(tw[i-1], sw[j-1])) { mt.add(i-1); ms.add(j-1); i--; j--; } else if (dp[i-1][j] > dp[i][j-1]) i--; else j--; }
+  var expected = tw.map(function(w, i) { return { word: w, status: mt.has(i) ? 'correct' : 'missing' }; });
+  var spoken = sw.map(function(w, i) { return { word: w, status: ms.has(i) ? 'correct' : 'wrong' }; });
+  var wrongWords = [], missedTW = tw.filter(function(_, i) { return !mt.has(i); }), wrongSW = sw.filter(function(_, i) { return !ms.has(i); });
+  missedTW.forEach(function(t, i) { wrongWords.push({ expected: t, got: wrongSW[i] || null }); });
+  wrongSW.slice(missedTW.length).forEach(function(s) { spoken.forEach(function(sp) { if (sp.word === s && sp.status === 'wrong') sp.status = 'extra'; }); });
+  return { expected: expected, spoken: spoken, wrongWords: wrongWords, score: mt.size / Math.max(m, 1) };
+}
+
+function wordsMatch(a, b) { if (a === b) return true; var ca = a.replace(/'/g, ''), cb = b.replace(/'/g, ''); if (ca === cb) return true; if (a.length > 3 && b.length > 3 && levenshtein(a, b) <= 1) return true; return false; }
+function levenshtein(a, b) { var m = []; for (var i = 0; i <= b.length; i++) m[i] = [i]; for (var j = 0; j <= a.length; j++) m[0][j] = j; for (var i = 1; i <= b.length; i++) for (var j = 1; j <= a.length; j++) m[i][j] = b[i-1] === a[j-1] ? m[i-1][j-1] : Math.min(m[i-1][j-1] + 1, m[i][j-1] + 1, m[i-1][j] + 1); return m[b.length][a.length]; }
+
+// ===== CHECKLIST =====
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+}
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#6B4C8A', '#8B6BAA', '#fbbf24', '#f87171', '#60a5fa', '#a78bfa', '#34d399'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.width = (Math.random() * 8 + 5) + 'px';
+    piece.style.height = (Math.random() * 8 + 5) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 4000);
+}
+
+// ===== EXIT SLIDE MODE (standalone -> hub) =====
+function exitSlideMode() {
+  document.body.classList.remove('slide-mode');
+  window.location.href = '/aluno/maria-claudia-curimbaba.html#inclass';
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', function() {
+  initSlides();
+  if (new URLSearchParams(window.location.search).get('autostart')) setTimeout(function() { }, 200);
+});
+</script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js">// ===== CHECKLIST =====
+function toggleChecklist(cb) {
+  var li = cb.closest('li');
+  if (cb.checked) li.classList.add('checked'); else li.classList.remove('checked');
+  updateProgress();
+}
+
+
+function injectPronunciationBtn(card,audioUrl){
+  var old=card.querySelector('.btn-your-pronunciation');if(old)old.remove();
+  var playBtn=document.createElement('button');
+  playBtn.className='btn btn-your-pronunciation';
+  playBtn.innerHTML='&#9654; Your Pronunciation';
+  playBtn.onclick=function(e){e.preventDefault();
+    if(playBtn.dataset.playing==='true'){
+      var a=card.querySelector('.your-pron-audio');if(a){a.pause();a.remove()}
+      playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';return;
+    }
+    var audio=new Audio(audioUrl);audio.className='your-pron-audio';audio.style.display='none';
+    card.appendChild(audio);playBtn.innerHTML='&#9632; Playing...';playBtn.dataset.playing='true';
+    audio.play();
+    audio.onended=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+    audio.onerror=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+  };
+  var controls=card.querySelector('.speech-controls');
+  if(controls)controls.appendChild(playBtn);
+}
+var activeRecognition = null;
+
+function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Please use Google Chrome for voice recognition.');return}var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');
+var mediaRec=null,mediaChunks=[],mediaStream=null,recDone=false;
+navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+  mediaStream=stream;
+  var mimeType=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':'';
+  mediaRec=mimeType?new MediaRecorder(stream,{mimeType:mimeType}):new MediaRecorder(stream);
+  mediaChunks=[];
+  mediaRec.ondataavailable=function(e){if(e.data.size>0)mediaChunks.push(e.data)};
+  mediaRec.onstop=function(){
+    if(recDone)return;recDone=true;
+    stream.getTracks().forEach(function(t){t.stop()});
+    if(mediaChunks.length>0){
+      var blob=new Blob(mediaChunks,{type:mediaRec.mimeType});
+      var audioUrl=URL.createObjectURL(blob);
+      injectPronunciationBtn(card,audioUrl);
+      var phraseSlug=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,50);
+      var slug=window.STUDENT_SLUG||'unknown';
+      var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';
+      var filePath=slug+'/'+phraseSlug+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;card.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
+    }
+  };
+  mediaRec.start(100);
+  var r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=3;r.continuous=true;
+  activeRecognition={recognition:r,btn:btn,stopBtn:stopBtn,card:card,mediaRec:mediaRec};
+  r.start();
+  var ended=false;
+  function finish(){if(ended)return;ended=true;btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');activeRecognition=null;
+    setTimeout(function(){if(mediaRec&&mediaRec.state==='recording')mediaRec.stop()},200);
+  }
+  r.onresult=function(event){var best=event.results[event.results.length-1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g,'');var analysis=analyzeWords(target,best);var totalWords=analysis.expected.length;var correctWords=analysis.expected.filter(function(w){return w.status==='correct'}).length;resultDiv.classList.add('show');resultDiv.classList.remove('good','try-again','bad');var html='';if(analysis.score>=0.8){resultDiv.classList.add('good');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Excellent!';updateProgress()}else if(analysis.score>=0.5){resultDiv.classList.add('try-again');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Almost there!'}else{resultDiv.classList.add('bad');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Keep practicing!'}html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';analysis.expected.forEach(function(w){html+='<span class="word-box word-'+(w.status==='correct'?'correct':'missing')+'">'+w.word+'</span>'});html+='</div></div>';resultDiv.innerHTML=html;finish()};
+  r.onerror=function(){finish();resultDiv.classList.add('show','try-again');resultDiv.innerHTML='Could not hear you. Check your microphone.'};
+  r.onend=function(){finish()};
+  setTimeout(function(){if(!ended){try{r.stop()}catch(e){}finish()}},30000);
+}).catch(function(){btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');alert('Could not access microphone.')})}
+
+function stopRecording(stopBtn){if(activeRecognition){try{activeRecognition.recognition.stop()}catch(e){}if(activeRecognition.mediaRec&&activeRecognition.mediaRec.state==='recording'){try{activeRecognition.mediaRec.stop()}catch(e){}}}}
+
+var freeRecorder=null;var freeChunks=[];
+function startFreeRecording(btn) {
+  var stopBtn = btn.parentElement.querySelector('.btn-stop');
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    freeRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+    freeChunks = [];
+    freeRecorder.ondataavailable = function(e) { if (e.data.size > 0) freeChunks.push(e.data); };
+    freeRecorder.onstop = function() {
+      var blob = new Blob(freeChunks, { type: freeRecorder.mimeType });
+      var url = URL.createObjectURL(blob);
+      var thinkCard = btn.closest('.think-card');
+      var resultDiv = thinkCard.querySelector('[id^="think-result"]');
+      if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Recording saved!</p>';
+      thinkCard.classList.add('recorded');
+      updateProgress();
+      stream.getTracks().forEach(function(t) { t.stop(); });
+      var slug=window.STUDENT_SLUG||'unknown';var thinkId=resultDiv.id||'think-free';var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';var filePath=slug+'/'+thinkId+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;thinkCard.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
+    };
+    freeRecorder.start(100);
+    btn.classList.add('hidden');
+    stopBtn.classList.add('visible');
+  }).catch(function() { alert('Could not access microphone.'); });
+}
+function stopFreeRecording(stopBtn) {
+  if (freeRecorder && freeRecorder.state === 'recording') freeRecorder.stop();
+  var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
+  recordBtn.classList.remove('hidden');
+  stopBtn.classList.remove('visible');
+}
+
+function updateProgress(){
+  var totalLessons=1;
+  var totalAllDone=0,totalAllEx=0;
+  for(var l=1;l<=totalLessons;l++){
+    var card=document.getElementById('ex-lesson-'+l);
+    if(!card)continue;
+    var total=0,done=0;
+    total+=card.querySelectorAll('.vocab-card-pc').length;
+    done+=card.querySelectorAll('.vocab-card-pc.listened').length;
+    total+=card.querySelectorAll('.match-row').length;
+    done+=card.querySelectorAll('.match-row.correct').length;
+    total+=card.querySelectorAll('.blank-input').length;
+    done+=card.querySelectorAll('.blank-input.correct').length;
+    var quizItems=card.querySelectorAll('.quiz-item');
+    total+=quizItems.length;
+    quizItems.forEach(function(qi){if(qi.querySelector('.quiz-option.correct'))done++});
+    var speechCards=card.querySelectorAll('.speech-card');
+    total+=speechCards.length;
+    speechCards.forEach(function(sc){if(sc.querySelector('.speech-result.show'))done++});
+    card.querySelectorAll('.order-container').forEach(function(oc){
+      var items=oc.querySelectorAll('.order-item');
+      total+=1;
+      if(items.length>0&&items.length===oc.querySelectorAll('.order-item.correct-order').length)done++;
+    });
+    var thinkCards=card.querySelectorAll('.think-card');
+    total+=thinkCards.length;
+    thinkCards.forEach(function(tc){if(tc.classList.contains('recorded'))done++});
+    var pct=total>0?Math.round(done/total*100):0;
+    var fill=document.querySelector('.mini-bar-fill[data-lesson-progress="'+l+'"]');
+    if(fill)fill.style.width=pct+'%';
+    var pctEl=document.querySelector('.mini-percent[data-lesson-pct="'+l+'"]');
+    if(pctEl)pctEl.textContent=pct+'%';
+    var stampEl=document.getElementById('stamp'+l);
+    if(stampEl){if(pct===100)stampEl.classList.add('earned');else stampEl.classList.remove('earned')}
+    totalAllDone+=done;totalAllEx+=total;
+  }
+  var overallPct=totalAllEx>0?Math.round(totalAllDone/totalAllEx*100):0;
+  var pb=document.getElementById('progressBar');
+  var pp=document.getElementById('progressPercent');
+  if(pb)pb.style.width=overallPct+'%';
+  if(pp)pp.textContent=overallPct+'%';
+  var celCard=document.getElementById('celebrationCard');
+  if(celCard)celCard.style.display=overallPct===100?'block':'none';
+  try{localStorage.setItem('alumni-progress-maria-claudia-curimbaba',JSON.stringify({concluidas:totalAllDone,total:totalAllEx}))}catch(e){}
+  saveState();
+}
+
+function saveState(){var s={matches:[],blanks:[],quiz:[],speech:[],mediaChecks:{},checklists:{},vocabListened:[],ordering:[],thinkRecorded:[]};document.querySelectorAll('.media-card-wrapper').forEach(function(w){var id=w.dataset.media;var cb=w.querySelector('input[type="checkbox"]');if(id&&cb)s.mediaChecks[id]=cb.checked});document.querySelectorAll('.match-row.correct select').forEach(function(sel){s.matches.push(sel.closest('.match-row').querySelector('.match-word').textContent+'|'+sel.value)});document.querySelectorAll('.blank-input.correct').forEach(function(e){s.blanks.push(e.dataset.answer)});document.querySelectorAll('.quiz-option.correct').forEach(function(e){s.quiz.push(e.textContent.trim().substring(0,30))});document.querySelectorAll('.speech-result.show').forEach(function(e){var sc=e.closest('.speech-card');if(sc&&sc.dataset.phrase){var cls=e.classList.contains('good')?'good':e.classList.contains('try-again')?'try-again':'bad';var strong=e.querySelector('strong');var scoreTxt=strong?strong.textContent:'Done';var words=[];e.querySelectorAll('.word-box').forEach(function(wb){words.push({w:wb.textContent,s:wb.classList.contains('word-correct')?'c':'m'})});var recUrl=sc.dataset.recordingUrl||'';s.speech.push(JSON.stringify({p:sc.dataset.phrase,c:cls,s:scoreTxt,words:words,r:recUrl}))}});document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb,i){s.checklists[i]=cb.checked});document.querySelectorAll('.vocab-card-pc.listened').forEach(function(vc){var w=vc.querySelector('.vocab-card-word');if(w)s.vocabListened.push(w.textContent)});document.querySelectorAll('.order-container').forEach(function(oc){var items=oc.querySelectorAll('.order-item');var correct=oc.querySelectorAll('.order-item.correct-order');if(items.length>0&&items.length===correct.length){var id=oc.id||'';var order=[];items.forEach(function(it){order.push(it.querySelector('.order-text').textContent)});s.ordering.push({id:id,order:order})}});document.querySelectorAll('.think-card.recorded').forEach(function(tc){var q=tc.querySelector('.think-question');if(q){var recUrl=tc.dataset.recordingUrl||'';s.thinkRecorded.push(JSON.stringify({q:q.textContent.trim().substring(0,40),r:recUrl}))}});localStorage.setItem('maria-claudia-curimbaba-aula8-aluno',JSON.stringify(s))}
+
+function loadState(){var r=localStorage.getItem('maria-claudia-curimbaba-aula8-aluno');if(!r)return;var s=JSON.parse(r);if(s.matches)s.matches.forEach(function(d){var parts=d.split('|');var word=parts[0];var val=parts[1];document.querySelectorAll('.match-row').forEach(function(row){if(row.querySelector('.match-word').textContent===word){var sel=row.querySelector('select');sel.value=val;row.classList.add('correct');sel.disabled=true}})});if(s.blanks)s.blanks.forEach(function(a){document.querySelectorAll('.blank-input[data-answer="'+a+'"]').forEach(function(e){e.value=a;e.classList.add('correct')})});if(s.quiz)s.quiz.forEach(function(t){document.querySelectorAll('.quiz-option[data-correct="true"]').forEach(function(e){if(e.textContent.trim().substring(0,30)===t)e.classList.add('correct')})});if(s.speech)s.speech.forEach(function(d){var phrase,cls,scoreTxt,words,recUrl;try{var obj=JSON.parse(d);phrase=obj.p;cls=obj.c;scoreTxt=obj.s;words=obj.words||[];recUrl=obj.r||''}catch(e){phrase=d;cls='good';scoreTxt='Done';words=[];recUrl=''}document.querySelectorAll('.speech-card').forEach(function(sc){if(sc.dataset.phrase===phrase){var rd=sc.querySelector('.speech-result');if(rd){rd.classList.add('show',cls);var html='<strong>'+scoreTxt+'</strong> — '+(cls==='good'?'Excellent!':cls==='try-again'?'Almost there!':'Keep practicing!');if(words.length>0){html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';words.forEach(function(w){html+='<span class="word-box word-'+(w.s==='c'?'correct':'missing')+'">'+w.w+'</span>'});html+='</div></div>'}rd.innerHTML=html}if(recUrl){sc.dataset.recordingUrl=recUrl;injectPronunciationBtn(sc,recUrl)}}})});if(s.checklists){document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb,i){if(s.checklists[i]){cb.checked=true;cb.closest('li').classList.add('checked')}})}if(s.mediaChecks){document.querySelectorAll('.media-card-wrapper').forEach(function(w){var id=w.dataset.media;var cb=w.querySelector('input[type="checkbox"]');if(id&&cb&&s.mediaChecks[id]){cb.checked=true;w.classList.add('done')}})}if(s.vocabListened){s.vocabListened.forEach(function(word){document.querySelectorAll('.vocab-card-pc').forEach(function(vc){var w=vc.querySelector('.vocab-card-word');if(w&&w.textContent===word)vc.classList.add('listened')})})}if(s.ordering){s.ordering.forEach(function(o){var id=typeof o==='string'?o:o.id;var savedOrder=typeof o==='object'?o.order:null;var oc=id?document.getElementById(id):null;if(!oc)return;if(savedOrder&&savedOrder.length>0){var items=Array.from(oc.querySelectorAll('.order-item'));savedOrder.forEach(function(txt){for(var i=0;i<items.length;i++){var t=items[i].querySelector('.order-text');if(t&&t.textContent===txt){oc.appendChild(items[i]);break}}})}oc.querySelectorAll('.order-item').forEach(function(it,i){it.classList.add('correct-order');it.querySelector('.order-num').textContent=i+1;it.style.borderColor='var(--success)'})})}if(s.thinkRecorded){s.thinkRecorded.forEach(function(d){var qTxt,recUrl;try{var obj=JSON.parse(d);qTxt=obj.q;recUrl=obj.r||''}catch(e){qTxt=d;recUrl=''}document.querySelectorAll('.think-card').forEach(function(tc){var qEl=tc.querySelector('.think-question');if(qEl&&qEl.textContent.trim().substring(0,40)===qTxt){tc.classList.add('recorded');tc.dataset.recordingUrl=recUrl;var rd=tc.querySelector('[id^="think-result"]');if(rd){if(recUrl){rd.innerHTML='<audio controls src="'+recUrl+'" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:.72rem;color:var(--success);margin-top:.3rem;">&#10003; Recording saved</p>'}else{rd.innerHTML='<p style="font-size:.82rem;color:var(--success);font-weight:500;">&#10003; Recording completed</p>'}}}})})}updateProgress()}
+loadState();
+</script>
+<script src="/lib/contrast-guard.js"></script>
+</body>
+</html>
