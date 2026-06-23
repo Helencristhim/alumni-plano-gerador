@@ -1428,9 +1428,11 @@
     var card = btn.closest('.speech-card');
     if (!card) return;
     if (btn.classList.contains('recording')) return;
-    // Chrome so permite 1 SpeechRecognition por vez: encerra o do card anterior
-    // antes de iniciar este, senao o reconhecimento do 2o card em diante falha
-    // em silencio (rec.start() joga erro engolido) e o word-by-word nao aparece.
+    // Chrome so permite 1 SpeechRecognition ativo por vez: encerra a gravacao/
+    // reconhecimento do card anterior antes de iniciar este. Sem isto, o word-by-word
+    // so funciona na 1a frase quando o aluno grava varias seguidas sem clicar Stop
+    // (rec.start() do card seguinte joga erro engolido e o onresult nunca dispara).
+    // endAll() do card anterior tambem dispara o onstop -> salva aquela gravacao.
     if (window.activeRecognition && typeof window.activeRecognition.endAll === 'function') {
       try { window.activeRecognition.endAll(); } catch (e) {}
     }
