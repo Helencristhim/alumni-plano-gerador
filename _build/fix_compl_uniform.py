@@ -96,38 +96,42 @@ def transform(path):
     opentag=h[ds:h.find('>',ds)+1]
     inner=h[h.find('>',ds)+1:end-len('</div>')]
 
-    # tokens em ordem: headers (h3/h4) e cards (por data-media)
-    tokens=[]
-    for m in re.finditer(r'<h[34]\b[^>]*>(.*?)</h[34]>|<div class="media-card-wrapper" data-media="([^"]+)"', inner, re.S):
-        if m.group(2):  # card
-            mid=m.group(2)
-            s=m.start(); d=0; e=None
-            for mm in re.finditer(r'<div\b|</div>', inner[s:]):
-                d+= 1 if mm.group(0)=='<div' else -1
-                if d==0: e=s+mm.end();break
-            tokens.append(('card', mid, inner[s:e]))
-        else:  # header
-            tokens.append(('header', re.sub(r'<[^>]+>','',m.group(1)).strip()))
+    # título por aula: 1) header existente na aba (Lesson/Aula N — Titulo), 2) Pre-class, 3) genérico
+    hdr_title={}
+    for m in re.finditer(r'<h[3-5][^>]*>\s*(?:Lesson|Aula)\s*(\d+)\s*(?:&mdash;|—|:|-)+\s*(.*?)</h[3-5]>', inner, re.S):
+        hdr_title[int(m.group(1))]=re.sub(r'<[^>]+>','',m.group(2)).strip()
+    pre_title={}
+    for m in re.finditer(r'id="ex-lesson-(\d+)".*?<h3[^>]*>(.*?)</h3>', h, re.S):
+        pre_title[int(m.group(1))]=re.sub(r'<[^>]+>','',m.group(2)).strip()
 
-    # agrupa: header inicia grupo; cards entram no grupo corrente
-    groups=[]; cur=None
-    for t in tokens:
-        if t[0]=='header':
-            cur={'title':t[1],'cards':[]}; groups.append(cur)
-        else:
-            if cur is None: cur={'title':None,'cards':[]}; groups.append(cur)
-            cur['cards'].append((t[1],t[2]))
+    # coleta todos os cards na ordem e agrupa pelo número da aula (data-media lN)
+    cards=[]
+    for m in re.finditer(r'<div class="media-card-wrapper" data-media="([^"]+)"', inner):
+        mid=m.group(1); s=m.start(); d=0; e=None
+        for mm in re.finditer(r'<div\b|</div>', inner[s:]):
+            d+= 1 if mm.group(0)=='<div' else -1
+            if d==0: e=s+mm.end();break
+        cards.append((mid, inner[s:e]))
+    from collections import OrderedDict
+    groups=OrderedDict(); misc=[]
+    for mid,block in cards:
+        mm=re.match(r'l(\d+)', mid)
+        (groups.setdefault(int(mm.group(1)),[]) if mm else misc).append((mid,block))
 
     out=[]
-    for g in groups:
-        if g['title']:
-            tag='h3' if g['title'].lower().startswith('materiais') else 'h4'
-            out.append(f'<{tag}>{g["title"]}</{tag}>')
-        if g['cards']:
-            out.append('<div class="media-grid">')
-            for mid,block in g['cards']:
-                out.append(emit_card(mid,*parse_card(block,mid)))
-            out.append('</div>')
+    top=re.search(r'<h3[^>]*>(.*?)</h3>', inner, re.S)
+    out.append('<h3>'+(re.sub(r'<[^>]+>','',top.group(1)).strip() if top else 'Materiais Complementares')+'</h3>')
+    for n in sorted(groups):
+        t=hdr_title.get(n) or pre_title.get(n)
+        out.append(f'<h4>Lesson {n} &mdash; {t}</h4>' if t else f'<h4>Lesson {n}</h4>')
+        out.append('<div class="media-grid">')
+        for mid,block in groups[n]:
+            out.append(emit_card(mid,*parse_card(block,mid)))
+        out.append('</div>')
+    if misc:
+        out.append('<div class="media-grid">')
+        for mid,block in misc: out.append(emit_card(mid,*parse_card(block,mid)))
+        out.append('</div>')
     new_inner='\n'+'\n'.join(out)+'\n    '
     h=h[:h.find('>',ds)+1]+new_inner+h[end-len('</div>'):]
 
@@ -135,7 +139,7 @@ def transform(path):
     if '/* compl uniform:' not in h:
         i=h.find('</style>'); h=h[:i]+MEDIA_CSS+h[i:]
     open(path,'w',encoding='utf-8').write(h)
-    print(path,f"-> {sum(len(g['cards']) for g in groups)} cards normalizados em {len(groups)} grupos")
+    print(path,f"-> {len(cards)} cards em {len(groups)} aulas")
 
 if __name__=='__main__':
     for p in sys.argv[1:]: transform(p)
