@@ -888,6 +888,25 @@ body {
 .stamp.earned { opacity:1; border-color:var(--accent-light); filter:grayscale(0%); box-shadow:0 0 20px rgba(0,0,0,0.25); }
 .stamp.earned::after { color:#fff; }
 @media(max-width:768px){ .stamps-row{gap:0.5rem} .stamp{width:50px;height:50px} }
+
+/* compl uniform: estilo dos cards de complementares (padrão modelo) */
+#tab-complementary .media-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:.5rem; }
+#tab-complementary .media-card-wrapper { position:relative;display:block;margin:0;padding:0;background:none;border:none; }
+#tab-complementary .media-card-wrapper.done { opacity:.6; }
+#tab-complementary .media-check { position:absolute;top:.7rem;right:.7rem;z-index:1;display:block;margin:0; }
+#tab-complementary .media-check input { width:18px;height:18px;cursor:pointer;accent-color:var(--accent); }
+#tab-complementary .media-card { display:block;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:box-shadow .2s; }
+#tab-complementary .media-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.06); }
+#tab-complementary .media-thumb { width:auto;min-height:0;height:50px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated,#f0f2f7); }
+#tab-complementary .media-thumb::after { content:none; }
+#tab-complementary .media-thumb svg { width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:2; }
+#tab-complementary .media-info { padding:1rem; }
+#tab-complementary .media-type { font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:var(--accent);margin-bottom:.3rem; }
+#tab-complementary .media-info h5 { font-size:.9rem;font-weight:600;color:#1a1a1a;margin:0 0 .3rem; }
+#tab-complementary .media-info p { font-size:.78rem;color:var(--text-dim);line-height:1.5;margin:0 0 .3rem; }
+#tab-complementary .media-info p.media-tip { color:#b45309;font-style:italic;margin-top:.4rem;margin-bottom:0; }
+#tab-complementary .media-info a { font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent); }
+#tab-complementary h4 { grid-column:1 / -1;font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--accent);margin:2rem 0 1rem;padding-bottom:.4rem;border-bottom:2px solid var(--accent); }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -7048,220 +7067,206 @@ body {
 
 <!-- ========== TAB 2: COMPLEMENTARES ========== -->
 <div class="tab-content" id="tab-complementary">
-
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem">Materiais Complementares &mdash; Aula 1</h3>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Conte&uacute;dos para refor&ccedil;ar o aprendizado fora de aula. Marque como conclu&iacute;do ao terminar.</p>
-
+<h3>Materiais Complementares &mdash; Aula 1</h3>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l1-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">S&eacute;rie</div>
-        <h5>Extra English &mdash; Season 1, Episode 1</h5>
-        <p>Sitcom for beginners with slow dialogue and simple vocabulary. Great for first contact with real English.</p>
-        <p class="media-tip">Dica: assista com legenda em ingl&ecirc;s. Pause e repita as frases.</p>
-        <a href="https://www.youtube.com/results?search_query=extra+english+season+1+episode+1" target="_blank" style="font-size:.8rem;color:var(--accent);font-weight:600;text-decoration:none">Assistir no YouTube</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l1-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="currentColor"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>BBC Learning English &mdash; English in a Minute</h5>
-        <p>60-second videos explaining one structure per video. Perfect for daily micro-learning.</p>
-        <p class="media-tip">Dica: assista um por dia. S&atilde;o apenas 60 segundos!</p>
-        <a href="https://www.youtube.com/results?search_query=bbc+learning+english+english+in+a+minute" target="_blank" style="font-size:.8rem;color:var(--accent);font-weight:600;text-decoration:none">Assistir no YouTube</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l1-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>English with Lucy &mdash; Basic Self-Introduction</h5>
-        <p>Learn to introduce yourself naturally in English. Clear pronunciation and simple structures.</p>
-        <p class="media-tip">Dica: pause e repita cada frase. Grave voc&ecirc; mesma depois.</p>
-        <a href="https://www.youtube.com/results?search_query=english+with+lucy+self+introduction" target="_blank" style="font-size:.8rem;color:var(--accent);font-weight:600;text-decoration:none">Assistir no YouTube</a>
-      </div>
+<div class="media-card-wrapper" data-media="l1-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">S&eacute;rie</div>
+      <h5>Extra English &mdash; Season 1, Episode 1</h5>
+      <p>Sitcom for beginners with slow dialogue and simple vocabulary. Great for first contact with real English.</p>
+      <p class="media-tip">Dica: assista com legenda em ingl&ecirc;s. Pause e repita as frases.</p>
+      <p><a href="https://www.youtube.com/results?search_query=extra+english+season+1+episode+1" target="_blank" style="font-size:.8rem;color:var(--accent);font-weight:600;text-decoration:none">Assistir no YouTube</a></p>
     </div>
   </div>
 </div>
-
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem;margin-top:2rem">Materiais Complementares &mdash; Aula 2</h3>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Conte&uacute;dos para refor&ccedil;ar o vocabul&aacute;rio de objetos e cores.</p>
-
-<div class="media-grid">
-  <div class="media-card-wrapper" data-media="l2-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Série</div>
-        <h5>Extra English &mdash; Season 1, Episode 2</h5>
-        <p>Vocabul&aacute;rio de objetos do dia a dia em di&aacute;logos simples. Ritmo lento, perfeito para A1.</p>
-        <p class="media-tip">Dica: anote os objetos que voc&ecirc; reconhece em cada cena.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l2-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>BBC Learning English &mdash; What is it?</h5>
-        <p>Describing everyday objects in simple English. 60-second format.</p>
-        <p class="media-tip">Dica: ou&ccedil;a e tente descrever o objeto antes da resposta.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l2-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>Learn English with Bob the Canadian &mdash; Everyday Objects</h5>
-        <p>Learn the names of common objects around you with clear pronunciation.</p>
-        <p class="media-tip">Dica: pause e aponte para o objeto na sua mesa enquanto repete.</p>
-      </div>
+<div class="media-card-wrapper" data-media="l1-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="currentColor"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>BBC Learning English &mdash; English in a Minute</h5>
+      <p>60-second videos explaining one structure per video. Perfect for daily micro-learning.</p>
+      <p class="media-tip">Dica: assista um por dia. S&atilde;o apenas 60 segundos!</p>
+      <p><a href="https://www.youtube.com/results?search_query=bbc+learning+english+english+in+a+minute" target="_blank" style="font-size:.8rem;color:var(--accent);font-weight:600;text-decoration:none">Assistir no YouTube</a></p>
     </div>
   </div>
 </div>
-
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem;margin-top:2rem">Materiais Complementares &mdash; Aula 3</h3>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Conte&uacute;dos para praticar rotinas e express&otilde;es de tempo.</p>
-<div class="media-grid">
-  <div class="media-card-wrapper" data-media="l3-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">S&eacute;rie</div>
-        <h5>Extra English &mdash; Season 1, Episode 3</h5>
-        <p>Os personagens descrevem suas rotinas di&aacute;rias. Vocabul&aacute;rio simples e repeti&ccedil;&atilde;o natural.</p>
-        <p class="media-tip">Dica: anote os verbos de rotina que voc&ecirc; reconhece.</p>
-      </div>
-    </div>
-  </div>
-  <div class="media-card-wrapper" data-media="l3-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>BBC Learning English &mdash; Daily Routine</h5>
-        <p>How to talk about your daily routine in English. Simple present tense practice.</p>
-        <p class="media-tip">Dica: ou&ccedil;a e repita as frases sobre rotina.</p>
-      </div>
-    </div>
-  </div>
-  <div class="media-card-wrapper" data-media="l3-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>English Addict with Mr Duncan &mdash; My Daily Routine</h5>
-        <p>Learn to describe your daily routine with fun visuals and clear pronunciation.</p>
-        <p class="media-tip">Dica: fa&ccedil;a uma lista da SUA rotina em ingl&ecirc;s enquanto assiste.</p>
-      </div>
+<div class="media-card-wrapper" data-media="l1-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>English with Lucy &mdash; Basic Self-Introduction</h5>
+      <p>Learn to introduce yourself naturally in English. Clear pronunciation and simple structures.</p>
+      <p class="media-tip">Dica: pause e repita cada frase. Grave voc&ecirc; mesma depois.</p>
+      <p><a href="https://www.youtube.com/results?search_query=english+with+lucy+self+introduction" target="_blank" style="font-size:.8rem;color:var(--accent);font-weight:600;text-decoration:none">Assistir no YouTube</a></p>
     </div>
   </div>
 </div>
-
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem;margin-top:2rem">Materiais Complementares &mdash; Aula 4</h3>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Conte&uacute;dos para praticar vocabul&aacute;rio de fam&iacute;lia e terceira pessoa.</p>
+</div>
+<h3>Materiais Complementares &mdash; Aula 2</h3>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l4-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Série</div>
-        <h5>Extra English &mdash; Season 1, Episode 4</h5>
-        <p>Os personagens falam sobre suas fam&iacute;lias e amigos. &Oacute;timo para terceira pessoa.</p>
-        <p class="media-tip">Dica: anote toda vez que ouvir &ldquo;he&rdquo; ou &ldquo;she&rdquo; + verbo com S.</p>
-      </div>
-    </div>
-  </div>
-  <div class="media-card-wrapper" data-media="l4-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>BBC Learning English &mdash; Talking About Family</h5>
-        <p>How to describe your family members in English. Simple vocabulary and structures.</p>
-        <p class="media-tip">Dica: descreva sua pr&oacute;pria fam&iacute;lia enquanto ouve.</p>
-      </div>
-    </div>
-  </div>
-  <div class="media-card-wrapper" data-media="l4-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>English with Lucy &mdash; Family Vocabulary</h5>
-        <p>Learn all family member names and how to describe them. Clear British pronunciation.</p>
-        <p class="media-tip">Dica: fa&ccedil;a uma &aacute;rvore geneal&oacute;gica com os nomes em ingl&ecirc;s.</p>
-      </div>
+<div class="media-card-wrapper" data-media="l2-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Série</div>
+      <h5>Extra English &mdash; Season 1, Episode 2</h5>
+      <p>Vocabul&aacute;rio de objetos do dia a dia em di&aacute;logos simples. Ritmo lento, perfeito para A1.</p>
+      <p class="media-tip">Dica: anote os objetos que voc&ecirc; reconhece em cada cena.</p>
     </div>
   </div>
 </div>
-
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem;margin-top:2rem">Materiais Complementares &mdash; Aula 5 (Checkpoint)</h3>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Revis&atilde;o geral &mdash; assista para consolidar tudo.</p>
+<div class="media-card-wrapper" data-media="l2-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>BBC Learning English &mdash; What is it?</h5>
+      <p>Describing everyday objects in simple English. 60-second format.</p>
+      <p class="media-tip">Dica: ou&ccedil;a e tente descrever o objeto antes da resposta.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l2-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>Learn English with Bob the Canadian &mdash; Everyday Objects</h5>
+      <p>Learn the names of common objects around you with clear pronunciation.</p>
+      <p class="media-tip">Dica: pause e aponte para o objeto na sua mesa enquanto repete.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h3>Materiais Complementares &mdash; Aula 3</h3>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l5-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Série</div>
-        <h5>Extra English &mdash; Season 1, Episode 5</h5>
-        <p>Revise all the vocabulary and structures from the first 4 episodes.</p>
-        <p class="media-tip">Dica: assista sem legenda primeiro. Depois com legenda em ingl&ecirc;s.</p>
-      </div>
+<div class="media-card-wrapper" data-media="l3-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">S&eacute;rie</div>
+      <h5>Extra English &mdash; Season 1, Episode 3</h5>
+      <p>Os personagens descrevem suas rotinas di&aacute;rias. Vocabul&aacute;rio simples e repeti&ccedil;&atilde;o natural.</p>
+      <p class="media-tip">Dica: anote os verbos de rotina que voc&ecirc; reconhece.</p>
     </div>
   </div>
-  <div class="media-card-wrapper" data-media="l5-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>Peppa Pig em Ingl&ecirc;s &mdash; My Family</h5>
-        <p>Vocabul&aacute;rio de fam&iacute;lia e rotina em ingl&ecirc;s simples com ritmo lento.</p>
-        <p class="media-tip">Dica: o vocabul&aacute;rio &eacute; simples mas a pron&uacute;ncia &eacute; excelente.</p>
-      </div>
+</div>
+<div class="media-card-wrapper" data-media="l3-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>BBC Learning English &mdash; Daily Routine</h5>
+      <p>How to talk about your daily routine in English. Simple present tense practice.</p>
+      <p class="media-tip">Dica: ou&ccedil;a e repita as frases sobre rotina.</p>
     </div>
   </div>
-  <div class="media-card-wrapper" data-media="l5-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>Learn English with TV Series &mdash; Friends Intro Scene</h5>
-        <p>Watch how characters introduce themselves and talk about routines. Simple vocabulary.</p>
-        <p class="media-tip">Dica: tente entender sem legenda. Voc&ecirc; vai se surpreender!</p>
-      </div>
+</div>
+<div class="media-card-wrapper" data-media="l3-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>English Addict with Mr Duncan &mdash; My Daily Routine</h5>
+      <p>Learn to describe your daily routine with fun visuals and clear pronunciation.</p>
+      <p class="media-tip">Dica: fa&ccedil;a uma lista da SUA rotina em ingl&ecirc;s enquanto assiste.</p>
     </div>
   </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 11 -- My Home: There Is, There Are</h4>
+</div>
+</div>
+<h3>Materiais Complementares &mdash; Aula 4</h3>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l4-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Série</div>
+      <h5>Extra English &mdash; Season 1, Episode 4</h5>
+      <p>Os personagens falam sobre suas fam&iacute;lias e amigos. &Oacute;timo para terceira pessoa.</p>
+      <p class="media-tip">Dica: anote toda vez que ouvir &ldquo;he&rdquo; ou &ldquo;she&rdquo; + verbo com S.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l4-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>BBC Learning English &mdash; Talking About Family</h5>
+      <p>How to describe your family members in English. Simple vocabulary and structures.</p>
+      <p class="media-tip">Dica: descreva sua pr&oacute;pria fam&iacute;lia enquanto ouve.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l4-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>English with Lucy &mdash; Family Vocabulary</h5>
+      <p>Learn all family member names and how to describe them. Clear British pronunciation.</p>
+      <p class="media-tip">Dica: fa&ccedil;a uma &aacute;rvore geneal&oacute;gica com os nomes em ingl&ecirc;s.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h3>Materiais Complementares &mdash; Aula 5 (Checkpoint)</h3>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l5-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Série</div>
+      <h5>Extra English &mdash; Season 1, Episode 5</h5>
+      <p>Revise all the vocabulary and structures from the first 4 episodes.</p>
+      <p class="media-tip">Dica: assista sem legenda primeiro. Depois com legenda em ingl&ecirc;s.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l5-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Peppa Pig em Ingl&ecirc;s &mdash; My Family</h5>
+      <p>Vocabul&aacute;rio de fam&iacute;lia e rotina em ingl&ecirc;s simples com ritmo lento.</p>
+      <p class="media-tip">Dica: o vocabul&aacute;rio &eacute; simples mas a pron&uacute;ncia &eacute; excelente.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l5-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>Learn English with TV Series &mdash; Friends Intro Scene</h5>
+      <p>Watch how characters introduce themselves and talk about routines. Simple vocabulary.</p>
+      <p class="media-tip">Dica: tente entender sem legenda. Voc&ecirc; vai se surpreender!</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 11 -- My Home: There Is, There Are</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l11-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -7298,7 +7303,9 @@ body {
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 12 -- What's the Weather Like?</h4>
+</div>
+<h4>Lesson 12 -- What's the Weather Like?</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l12-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -7335,7 +7342,9 @@ body {
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 13 -- Clothes &amp; Shopping for the Season</h4>
+</div>
+<h4>Lesson 13 -- Clothes &amp; Shopping for the Season</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l13-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -7372,7 +7381,9 @@ body {
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 14 -- My Daily Routine</h4>
+</div>
+<h4>Lesson 14 -- My Daily Routine</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l14-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -7409,7 +7420,9 @@ body {
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 15 -- Free Time &amp; Hobbies</h4>
+</div>
+<h4>Lesson 15 -- Free Time &amp; Hobbies</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l15-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -7446,7 +7459,9 @@ body {
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 16 -- At the Airport -- Part 1</h4>
+</div>
+<h4>Lesson 16 -- At the Airport -- Part 1</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l16-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -7483,7 +7498,9 @@ body {
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 17 -- At the Airport -- Part 2</h4>
+</div>
+<h4>Lesson 17 -- At the Airport -- Part 2</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l17-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -7520,7 +7537,9 @@ body {
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 18 -- At the Hotel -- Checking In</h4>
+</div>
+<h4>Lesson 18 -- At the Hotel -- Checking In</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l18-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -7557,7 +7576,9 @@ body {
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 19 -- Around Town -- Public Transport</h4>
+</div>
+<h4>Lesson 19 -- Around Town -- Public Transport</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l19-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -7594,7 +7615,9 @@ body {
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 20 -- Eating Out -- At the Caf&#233; Counter</h4>
+</div>
+<h4>Lesson 20 -- Eating Out -- At the Caf&#233; Counter</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l20-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -7632,8 +7655,7 @@ body {
   </div>
 </div>
 </div>
-
-</div><!-- /tab-complementary -->
+    </div><!-- /tab-complementary -->
 
 </div><!-- /container -->
 </div><!-- /main-content -->
