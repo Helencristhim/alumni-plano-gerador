@@ -1007,6 +1007,25 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
 .op-speed{display:flex;gap:.3rem;margin-top:.4rem}
 .op-speed button{padding:.2rem .5rem;border:1px solid var(--border);border-radius:5px;background:var(--bg-card);color:var(--text-dim);font-size:.7rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s}
 .op-speed button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* compl uniform: estilo dos cards de complementares (padrão modelo) */
+#tab-complementary .media-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:.5rem; }
+#tab-complementary .media-card-wrapper { position:relative;display:block;margin:0;padding:0;background:none;border:none; }
+#tab-complementary .media-card-wrapper.done { opacity:.6; }
+#tab-complementary .media-check { position:absolute;top:.7rem;right:.7rem;z-index:1;display:block;margin:0; }
+#tab-complementary .media-check input { width:18px;height:18px;cursor:pointer;accent-color:var(--accent); }
+#tab-complementary .media-card { display:block;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:box-shadow .2s; }
+#tab-complementary .media-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.06); }
+#tab-complementary .media-thumb { width:auto;min-height:0;height:50px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated,#f0f2f7); }
+#tab-complementary .media-thumb::after { content:none; }
+#tab-complementary .media-thumb svg { width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:2; }
+#tab-complementary .media-info { padding:1rem; }
+#tab-complementary .media-type { font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:var(--accent);margin-bottom:.3rem; }
+#tab-complementary .media-info h5 { font-size:.9rem;font-weight:600;color:#1a1a1a;margin:0 0 .3rem; }
+#tab-complementary .media-info p { font-size:.78rem;color:var(--text-dim);line-height:1.5;margin:0 0 .3rem; }
+#tab-complementary .media-info p.media-tip { color:#b45309;font-style:italic;margin-top:.4rem;margin-bottom:0; }
+#tab-complementary .media-info a { font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent); }
+#tab-complementary h4 { grid-column:1 / -1;font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--accent);margin:2rem 0 1rem;padding-bottom:.4rem;border-bottom:2px solid var(--accent); }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -8327,864 +8346,813 @@ body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135
 
 <!-- ========== TAB 2: COMPLEMENTARES ========== -->
 <div class="tab-content" id="tab-complementary">
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;color:var(--text)">Materiais Complementares — Aula 01</h3>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l1-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>NPR Planet Money — Corporate Holdings</h5>
-          <p>An episode about how holding companies work and why they exist. Perfect vocabulary exposure for your business context.</p>
-          <p class="media-tip">Tip: listen with headphones and try to write down 5 new words.</p>
-          <a href="https://open.spotify.com/show/4FYpq3lSeQMAhqNI81O0Cn" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l1-ted">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">TED Talk</div>
-          <h5>Julian Treasure — How to Speak So That People Want to Listen</h5>
-          <p>Essential communication skills for executives. Focus on how he structures his message and uses vocal variety.</p>
-          <p class="media-tip">Tip: watch with English subtitles and pause to repeat key phrases.</p>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l1-film">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Filme</div>
-          <h5>Moneyball (2011)</h5>
-          <p>Negotiation, decision-making, and executive English in a real business context. Watch how Billy Beane presents data to stakeholders.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Pay attention to the meeting and negotiation scenes.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 2</h3>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l2-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>HBR IdeaCast — How Family Businesses Thrive</h5>
-          <p>English business vocabulary about holdings and governance. Listen for words like board, shareholders, and assets in real context.</p>
-          <p class="media-tip">Tip: listen with headphones and write down 5 new expressions about company structure.</p>
-          <a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l2-documentary">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Documentary</div>
-          <h5>Abstract: The Art of Design — Season 1, Episode 1</h5>
-          <p>Netflix. Design thinking connects to your art interest, and the English narration is rich with advanced vocabulary and clear pronunciation.</p>
-          <p class="media-tip">Tip: watch with English subtitles and pause to repeat sentences you find interesting.</p>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l2-film">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Film</div>
-          <h5>The Big Short (2015)</h5>
-          <p>Financial vocabulary, corporate structures, and American English at its sharpest. Pay attention to how characters explain complex business concepts in simple terms.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Focus on scenes with boardroom discussions and financial negotiations.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 3</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: Running meetings, agendas, and action items. Pay attention to how speakers open meetings, assign tasks, and close discussions.</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l3-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>HBR IdeaCast — To Build Stronger Teams, Ask Better Questions</h5>
-          <p>Harvard professors share techniques for structuring meetings so every voice is heard. Listen for phrases like "let's move on to," "action items," and "follow up."</p>
-          <p class="media-tip">Tip: listen with headphones and note every time the speakers use imperatives or "let's" to guide the conversation.</p>
-          <a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l3-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>TED — "5 Tips for Dealing with Meeting Overload" (The Way We Work)</h5>
-          <p>Practical advice on making meetings productive. Notice how the speaker uses meeting vocabulary: agenda, action items, wrap up. Connects directly to this lesson.</p>
-          <p class="media-tip">Tip: watch with English subtitles. Write down 3 phrases you could use in your own meetings.</p>
-          <a href="https://www.youtube.com/watch?v=Mp3Msfw90BE" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l3-series">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Series</div>
-          <h5>Succession (HBO) — Season 1, Episode 6: "Which Side Are You On?"</h5>
-          <p>A high-stakes board meeting with corporate language at its peak. Notice how characters open discussions, set agendas, and assign responsibilities. Rich in meeting vocabulary.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Focus on the boardroom scenes and how executives facilitate the meeting.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 4</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: Financial vocabulary, revenue, budget discussions. Pay attention to how speakers present numbers, compare results, and discuss financial performance.</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l4-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>Planet Money (NPR) — Economics and Finance Stories</h5>
-          <p>Short, engaging episodes about money, markets, and business. Listen for financial vocabulary like revenue, profit, budget, and growth. Each episode makes complex financial concepts easy to understand.</p>
-          <p class="media-tip">Tip: listen with headphones. Write down every time you hear a number (percent, million, billion) and how the speaker presents it.</p>
-          <a href="https://open.spotify.com/show/4FYpq3lSeQMAhqNI81O4En" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l4-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>TED — "How to speak so that people want to listen" by Julian Treasure</h5>
-          <p>A powerful talk (10 min) about communication skills. Notice how Treasure uses comparatives and numbers to make his points. The delivery techniques apply directly to financial presentations.</p>
-          <p class="media-tip">Tip: watch with English subtitles. Focus on how the speaker structures comparisons and uses vocal variety to present data.</p>
-          <a href="https://www.youtube.com/watch?v=eIho2S0ZahI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l4-series">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Series</div>
-          <h5>Billions (Showtime) — Season 1, Episode 1: "Pilot"</h5>
-          <p>High-stakes finance at its best. The pilot episode is packed with financial vocabulary: revenue, profit margins, quarterly results. Pay attention to how characters present numbers and use comparatives in negotiations.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Focus on the scenes where characters discuss financial performance and compare results.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 5</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: Art, colors, and expressing opinions. Pay attention to how speakers describe visual elements, express preferences, and use adjective order naturally.</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l5-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>The Lonely Palette — Art History Stories</h5>
-          <p>Each episode focuses on a single painting, describing colors, composition, and the artist's choices. Listen for vocabulary like "vibrant," "subtle," "striking," and how the host expresses opinions about art.</p>
-          <p class="media-tip">Tip: pick any episode that interests you. Write down 3 adjectives the host uses to describe the painting and try to use them in your own descriptions.</p>
-          <a href="https://open.spotify.com/show/5KssJ05JMHOiMmgcMGQ8M0" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l5-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>TED — "The Power of Vulnerability" by Brene Brown</h5>
-          <p>A powerful talk (20 min) about expressing opinions and being authentic. Notice how Brown uses "I find it..." and "In my opinion..." structures naturally. The vocabulary of emotions and opinions connects directly with Lesson 5.</p>
-          <p class="media-tip">Tip: watch with English subtitles. Write down every time the speaker expresses a personal opinion and note the structure she uses.</p>
-          <a href="https://www.youtube.com/watch?v=iCvmsMzlF7o" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l5-series">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Series</div>
-          <h5>Abstract: The Art of Design (Netflix) — Season 1, Episode 2: "Tinker Hatfield: Footwear Design"</h5>
-          <p>A visually stunning episode about design, color choices, and composition. Pay attention to how designers describe their work using adjective order: "a beautiful large contemporary American sculpture." Notice expressions of opinion throughout.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Focus on how the designers express their opinions about art and design using "I find it..." and similar structures.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 6</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: The passive voice in business and art contexts. Pay attention to how processes are described using passive structures: "is reviewed," "are distributed," "has been approved."</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l6-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>Grammar Girl Quick and Dirty Tips</h5>
-          <p>A podcast about grammar, style, and usage. Episodes frequently cover active vs. passive voice with clear examples from business and journalism. Listen for how the host explains when passive voice is appropriate and when to avoid it.</p>
-          <p class="media-tip">Tip: search for episodes about "passive voice" or "active voice." Write down 3 examples of passive sentences you hear.</p>
-          <a href="https://open.spotify.com/show/2TnkSj8LV5nFMKjJRJbbyP" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l6-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>TED-Ed — "How to use rhetoric to get what you want"</h5>
-          <p>A short animated lesson (5 min) about persuasive language. Notice how passive structures are used in formal rhetoric: "decisions are made," "arguments are presented." The passive voice creates authority and distance in professional communication.</p>
-          <p class="media-tip">Tip: watch with English subtitles. Count how many passive voice sentences you can identify in the narration.</p>
-          <a href="https://www.youtube.com/watch?v=3klMM9BkW5o" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l6-series">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Series</div>
-          <h5>The Crown (Netflix) — Season 1, Episode 1: "Wolferton Splash"</h5>
-          <p>Formal English in a royal and government context. Pay attention to how passive voice is used in official communication: "The King is informed," "Decisions are taken by the Cabinet," "The ceremony is conducted." This episode is rich with passive structures in formal, professional English.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Write down every passive sentence you notice and identify the agent (by whom?).</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 7</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: Negotiation vocabulary and first conditional structures. Pay attention to how negotiators propose terms, make counteroffers, and use conditional language: "If you agree to..., we will..."</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l7-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>Business English Pod</h5>
-          <p>A podcast focused on business English skills including negotiation, meetings, and presentations. Episodes cover real negotiation scenarios with vocabulary like "counteroffer," "terms," and "leverage." Perfect for practicing conditional language in professional contexts.</p>
-          <p class="media-tip">Tip: listen to a negotiation episode and write down every "if... will..." sentence you hear.</p>
-          <a href="https://open.spotify.com/show/3W29VpoTB2OQKNqfRrjxMa" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l7-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>TED — "Getting to Yes" by William Ury</h5>
-          <p>A masterclass on negotiation from one of the world's leading negotiation experts. Ury explains how to turn adversaries into partners using principled negotiation. Notice how he uses conditional language and negotiation vocabulary throughout the talk.</p>
-          <p class="media-tip">Tip: watch with English subtitles. Write down 5 negotiation expressions and try to use them in your own sentences with first conditionals.</p>
-          <a href="https://www.youtube.com/watch?v=yB1a3GOqMzI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l7-series">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Series</div>
-          <h5>Shark Tank — Season 1, Episode 1</h5>
-          <p>Real negotiation vocabulary in action. Entrepreneurs pitch their business ideas and negotiate deals with investors. Pay attention to how they discuss prices, terms, counteroffers, and concessions. Notice the use of conditional language: "If you invest..., I will give you..."</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Focus on how each side uses leverage and makes concessions to reach an agreement.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 8</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: Professional email correspondence and formal register. Pay attention to how professionals write emails using formal greetings, attachment references, and polite closings.</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l8-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>All Ears English</h5>
-          <p>A podcast dedicated to real-world English communication. Episodes on professional email writing cover formal register, polite phrasing, and how to structure business correspondence. Perfect for reinforcing vocabulary like "regarding," "acknowledge," and "I look forward to."</p>
-          <p class="media-tip">Tip: listen and write down 5 formal email phrases you can use at work.</p>
-          <a href="https://open.spotify.com/show/3GIgMSGl2YkMBhINyNkr05" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l8-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>"How to Write a Professional Email" by Harvard Business Review</h5>
-          <p>A concise guide on writing effective professional emails. Covers structure, tone, formal greetings, and closings. Notice how they use expressions like "Please find attached," "I am writing to," and "I look forward to hearing from you."</p>
-          <p class="media-tip">Tip: watch and compare the informal vs. formal versions of each email. Practice rewriting an informal email in formal register.</p>
-          <a href="https://www.youtube.com/watch?v=I3iFfTMqPLM" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l8-series">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Series</div>
-          <h5>Suits (USA Network) — Season 1, Episode 1: "Pilot"</h5>
-          <p>Corporate email and formal communication at its best. Pay attention to how lawyers and executives communicate in writing: formal greetings, references to attached documents, and professional closings. Notice the contrast between casual spoken language and formal written correspondence.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Write down every formal email phrase you notice and practice using them in your own emails.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 9</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: Art, socializing, networking, and expressing opinions. Pay attention to how speakers share views, agree, and disagree in social and professional contexts.</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l9-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>The Art Newspaper Weekly</h5>
-          <p>Weekly discussions about the global art world, covering exhibitions, galleries, and the intersection of art and business. Listen for vocabulary like curator, collection, vernissage, and networking in real art-world conversations.</p>
-          <p class="media-tip">Tip: listen to one episode and write down 5 opinion phrases the speakers use (I think, I believe, in my view).</p>
-          <a href="https://open.spotify.com/show/1PsLbEjAHIqCPlLDDRKs7t" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l9-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>TED — "Your body language may shape who you are" by Amy Cuddy</h5>
-          <p>A powerful talk about confidence and presence at social events. Notice how Amy Cuddy structures her opinions, uses persuasive language, and connects with her audience. Perfect for practicing networking and expressing views.</p>
-          <p class="media-tip">Tip: watch with English subtitles. Notice how she uses "I believe," "I think," and "from my perspective" to share her views.</p>
-          <a href="https://www.youtube.com/watch?v=Ks-_Mh1QhMc" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l9-series">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Series</div>
-          <h5>Emily in Paris (Netflix) — Season 1, Episode 3</h5>
-          <p>Socializing, networking, and art gallery scenes set in Paris. Pay attention to how characters mingle at events, express opinions about art, and build professional connections. Rich in social English vocabulary and opinion expressions.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Focus on the gallery and networking scenes. Write down phrases used to express opinions and agree or disagree politely.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 10</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: Review and integration. Business dinners, art appreciation, and comprehensive English for executives. Focus on how speakers summarize, reflect, and express opinions across different contexts.</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l10-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>HBR IdeaCast — Episode on Leadership Communication</h5>
-          <p>Harvard Business Review's flagship podcast. Listen to how executives summarize quarterly results, express opinions, and use review language in real business conversations. Perfect for reinforcing all structures from Block 1.</p>
-          <p class="media-tip">Tip: listen to one episode and note how the speaker uses "looking back," "overall," and "to summarize" to structure their message.</p>
-          <a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l10-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>TED — "The Power of Introverts" by Susan Cain</h5>
-          <p>A compelling talk about leadership styles and professional environments. Notice how Susan Cain integrates personal stories with business insights, uses opinion structures, and summarizes her key points. Excellent for reviewing all Block 1 language in a real presentation context.</p>
-          <p class="media-tip">Tip: watch with English subtitles. Pay attention to how she uses "I believe," comparatives, and summary phrases to structure her argument.</p>
-          <a href="https://www.youtube.com/watch?v=c0KYU2j0TM4" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l10-film">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Film</div>
-          <h5>The Intern (2015)</h5>
-          <p>Robert De Niro and Anne Hathaway in a film about business, social skills, and professional English. Rich in meeting vocabulary, opinion expressions, networking language, and formal register. Watch the dinner and meeting scenes for a comprehensive review of Block 1 structures.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Focus on how characters introduce themselves, give opinions, negotiate, and summarize in professional settings.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 11</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: Conference calls, managing technology, polite requests. Focus on how speakers handle technical issues, navigate time zones, and make polite requests in professional calls.</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l11-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>Business English Pod — Conference Call Skills</h5>
-          <p>Practical episodes on managing conference calls, handling technical issues, and making polite requests in professional settings. Listen for phrases like "could you please," "would you mind," and "I apologize for."</p>
-          <p class="media-tip">Tip: listen to one episode and note how speakers handle interruptions and technical problems politely.</p>
-          <a href="https://open.spotify.com/show/3W29VpoTB2OQKNqfRrjxMa" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l11-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>TED — "10 ways to have a better conversation" by Celeste Headlee</h5>
-          <p>Essential communication skills for conference calls and meetings. Celeste Headlee shares practical tips for listening, asking questions, and managing conversations. Notice how she uses polite language and clear structure.</p>
-          <p class="media-tip">Tip: watch with English subtitles. Pay attention to how she structures polite requests and handles interruptions.</p>
-          <a href="https://www.youtube.com/watch?v=R1vskiVDwl4" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l11-series">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Series</div>
-          <h5>Silicon Valley (HBO) — Season 1, Episode 1</h5>
-          <p>Tech startup culture, video calls, and corporate communication at its most entertaining. Watch how characters navigate technology, pitch ideas, and handle the chaos of the tech world. Rich in conference call vocabulary and startup jargon.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Focus on scenes with video calls, presentations, and technical discussions.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 12</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: Fiscal and tax talk, communicating with accountants. Focus on financial vocabulary, tax processes, and how professionals discuss audits, compliance, and fiscal results.</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l12-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>Planet Money (NPR) — Tax Season Episodes</h5>
-          <p>Engaging episodes about how taxes work, tax returns, deductions, and the accounting world. Rich in fiscal vocabulary and perfect for understanding how Americans talk about taxes in everyday language.</p>
-          <p class="media-tip">Tip: listen for words like "deduction," "write-off," "compliance," and "audit" in real context.</p>
-          <a href="https://open.spotify.com/show/4FYpq3lSeQMAhqNI81O4En" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l12-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>TED — "What they don't teach you about money"</h5>
-          <p>A thought-provoking talk about financial literacy and how money works in the real world. Great exposure to financial English vocabulary, including revenue, liability, and fiscal planning concepts.</p>
-          <p class="media-tip">Tip: watch with English subtitles. Write down 5 financial terms and how the speaker uses them.</p>
-          <a href="https://www.youtube.com/watch?v=WEDIj9JBTC8" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l12-film">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Film</div>
-          <h5>The Accountant (2016)</h5>
-          <p>Financial vocabulary, auditing processes, and professional English in action. Watch how the protagonist navigates complex financial situations. Rich in tax, compliance, and accounting terminology.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Focus on scenes with financial discussions and audit-related dialogue.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:1rem;margin-top:2rem;color:var(--text)">Complementary Materials — Lesson 13</h3>
-  <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1rem">Theme: Making proposals and pitching ideas. Focus on persuasive language, presenting ROI, timelines, and scalable solutions to stakeholders and board members.</p>
-  <div class="media-grid">
-    <div class="media-card-wrapper" data-media="l13-podcast">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Podcast</div>
-          <h5>Masters of Scale with Reid Hoffman</h5>
-          <p>Founders and executives pitch and scale their ideas. Rich in proposal language, ROI discussions, and how leaders present scalable solutions to investors and stakeholders.</p>
-          <p class="media-tip">Tip: listen for expressions like "I would like to propose," "the key benefit is," and how guests pitch their vision.</p>
-          <a href="https://open.spotify.com/show/1bJRgaFZHuzifad4IAApFR" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-        </div>
-      </div>
-    </div>
-    <div class="media-card-wrapper" data-media="l13-youtube">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">YouTube</div>
-          <h5>TED — Bill Gross: The single biggest reason why startups succeed</h5>
-          <p>Bill Gross analyzes what makes a pitch succeed or fail. Excellent exposure to proposal vocabulary, feasibility analysis, and how to present data-driven arguments to stakeholders.</p>
-          <p class="media-tip">Tip: watch with English subtitles. Notice how he structures his proposal and presents ROI data.</p>
-          <a href="https://www.youtube.com/watch?v=bNpx7gpSqbY" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a>
-        </div>
-      </div>
-    </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--accent);margin-top:2rem;margin-bottom:.8rem">Aula 20 -- The Big Review: Block 2 Integration</h4>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Tema da aula: integrar tudo do Bloco 2 numa negocia&#231;&#227;o completa -- present perfect, modais (shall/must/may, should/had better), trend language e compara&#231;&#227;o (whereas/unlike/different from); track record, revenue, warranty, trade-off, rapport, mindset. Refor&#231;o fora de aula -- marque como conclu&#237;do ao terminar.</p>
-
+<h3>Materiais Complementares</h3>
+<h4>Lesson 1 &mdash; Who Is Maria Claudia? — Diagnostic + Executive Self-Portrait</h4>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l20-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">S&#233;rie</div>
-        <h5>Industry (HBO) -- deals, terms, and negotiation</h5>
-        <p>Watch how analysts and executives report results, state contract terms, and weigh trade-offs under pressure. A high-stakes showcase of every Block 2 structure in real business English.</p>
-        <p class="media-tip">Dica: assista a uma cena de negocia&#231;&#227;o e anote uma frase de cada tipo -- present perfect, modal de obriga&#231;&#227;o, trend language, conselho e compara&#231;&#227;o.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l20-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>HBR IdeaCast -- "How to Negotiate a Better Deal"</h5>
-        <p>Experts discuss track records, options, and trade-offs, and how to give a clear recommendation. Rich review input for present perfect, modals, and advice language across one conversation.</p>
-        <p class="media-tip">Dica: ou&#231;a um epis&#243;dio e grave um resumo de 60 segundos usando pelo menos tr&#234;s estruturas do bloco (track record, terms, recommendation).</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l20-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>TED -- "The Art of Negotiation" (William Ury)</h5>
-        <p>A clear talk on preparing your position, weighing options and trade-offs, and reaching agreement across cultures. Perfect to close Block 2 and prepare you to lead the meeting in Block 3.</p>
-        <p class="media-tip">Dica: depois de assistir, escreva cinco frases de auto-avalia&#231;&#227;o do Bloco 2, uma para cada estrutura, e leia em voz alta.</p>
-      </div>
+<div class="media-card-wrapper" data-media="l1-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>NPR Planet Money — Corporate Holdings</h5>
+      <p>An episode about how holding companies work and why they exist. Perfect vocabulary exposure for your business context.</p>
+      <p class="media-tip">Tip: listen with headphones and try to write down 5 new words.</p>
+      <p><a href="https://open.spotify.com/show/4FYpq3lSeQMAhqNI81O0Cn" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--accent);margin-top:2rem;margin-bottom:.8rem">Aula 19 -- Houston, We Have Culture: US vs Brazil</h4>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Tema da aula: compare business and art culture across the US and Brazil -- whereas, while, unlike, similar to, different from; punctuality, hierarchy, directness, etiquette, rapport, mindset. Refor&#231;o fora de aula -- marque como conclu&#237;do ao terminar.</p>
-
+<div class="media-card-wrapper" data-media="l1-ted">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">TED Talk</div>
+      <h5>Julian Treasure — How to Speak So That People Want to Listen</h5>
+      <p>Essential communication skills for executives. Focus on how he structures his message and uses vocal variety.</p>
+      <p class="media-tip">Tip: watch with English subtitles and pause to repeat key phrases.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l1-film">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Filme</div>
+      <h5>Moneyball (2011)</h5>
+      <p>Negotiation, decision-making, and executive English in a real business context. Watch how Billy Beane presents data to stakeholders.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Pay attention to the meeting and negotiation scenes.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 2 &mdash; The Holding Structure — Describing Your Business Empire</h4>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l19-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">S&#233;rie</div>
-        <h5>Ted Lasso (Apple TV+) -- US vs UK culture clashes</h5>
-        <p>Watch an American adapt to a very different work culture. Listen for how characters notice differences in directness, formality, and rapport, and how a warm mindset wins people over.</p>
-        <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s frases que comparam culturas -- uma com whereas ou while, e uma com unlike ou different from.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l19-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>HBR IdeaCast -- "Working Across Cultures"</h5>
-        <p>Leaders discuss how punctuality, hierarchy, and directness differ across countries, and how to build rapport with international partners. Rich input for the language of comparing and contrasting.</p>
-        <p class="media-tip">Dica: ou&#231;a um epis&#243;dio sobre cultura e separe duas express&#245;es novas (custom, mindset, etiquette, rapport) e como foram usadas em contraste.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l19-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>Museum of Fine Arts, Houston -- gallery walkthrough</h5>
-        <p>Explore the Houston Museum District before your trip. Note how curators describe contemporary and abstract works -- perfect small talk to build rapport with US partners who share your taste in art.</p>
-        <p class="media-tip">Dica: depois de assistir, grave uma frase comparando o gosto americano e o brasileiro por arte, usando similar to e different from.</p>
-      </div>
+<div class="media-card-wrapper" data-media="l2-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>HBR IdeaCast — How Family Businesses Thrive</h5>
+      <p>English business vocabulary about holdings and governance. Listen for words like board, shareholders, and assets in real context.</p>
+      <p class="media-tip">Tip: listen with headphones and write down 5 new expressions about company structure.</p>
+      <p><a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--accent);margin-top:2rem;margin-bottom:.8rem">Aula 18 -- Decision-Making: I Suggest We...</h4>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Tema da aula: recommend and decide in a meeting -- should and ought to for normal advice, had better for strong advice with a consequence; weigh the options, pros and cons, reach a consensus. Refor&#231;o fora de aula -- marque como conclu&#237;do ao terminar.</p>
-
+<div class="media-card-wrapper" data-media="l2-documentary">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Documentary</div>
+      <h5>Abstract: The Art of Design — Season 1, Episode 1</h5>
+      <p>Netflix. Design thinking connects to your art interest, and the English narration is rich with advanced vocabulary and clear pronunciation.</p>
+      <p class="media-tip">Tip: watch with English subtitles and pause to repeat sentences you find interesting.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l2-film">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Film</div>
+      <h5>The Big Short (2015)</h5>
+      <p>Financial vocabulary, corporate structures, and American English at its sharpest. Pay attention to how characters explain complex business concepts in simple terms.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Focus on scenes with boardroom discussions and financial negotiations.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 3 &mdash; Running the Meeting</h4>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l18-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">S&#233;rie</div>
-        <h5>Succession (HBO) -- the boardroom decision scenes</h5>
-        <p>Watch the family and the board weigh options under pressure. Listen for how executives recommend a path (we should..., we ought to...) and how they warn about consequences (we had better..., or...).</p>
-        <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s frases -- uma com should ou ought to (conselho normal) e uma com had better (aviso com consequ&#234;ncia).</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l18-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>HBR IdeaCast (Harvard Business Review)</h5>
-        <p>Conversations with leaders on how they make hard calls -- weighing pros and cons, trade-offs, and reaching consensus on a team. Rich input for the language of recommending and deciding.</p>
-        <p class="media-tip">Dica: ou&#231;a um epis&#243;dio sobre decis&#227;o e separe duas express&#245;es novas (weigh the options, trade-off, downside, reach a consensus) e como foram usadas.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l18-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>"Should, ought to and had better" (business English channels)</h5>
-        <p>Short lessons that show the difference between normal advice (should / ought to) and strong advice with a consequence (had better), plus the base-verb rule and the negatives.</p>
-        <p class="media-tip">Dica: pegue uma decis&#227;o real do seu trabalho e grave uma recomenda&#231;&#227;o em voz alta: uma frase com should ou ought to, e uma com had better + or...</p>
-      </div>
+<div class="media-card-wrapper" data-media="l3-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>HBR IdeaCast — To Build Stronger Teams, Ask Better Questions</h5>
+      <p>Harvard professors share techniques for structuring meetings so every voice is heard. Listen for phrases like "let's move on to," "action items," and "follow up."</p>
+      <p class="media-tip">Tip: listen with headphones and note every time the speakers use imperatives or "let's" to guide the conversation.</p>
+      <p><a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--accent);margin-top:2rem;margin-bottom:.8rem">Aula 17 -- Data-Driven: Describing Trends and Numbers</h4>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Tema da aula: describe charts and figures with trend verbs, adverbs of speed, and prepositions of change (rose to, fell by, from X to Y). Refor&#231;o fora de aula -- marque como conclu&#237;do ao terminar.</p>
-
+<div class="media-card-wrapper" data-media="l3-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED — "5 Tips for Dealing with Meeting Overload" (The Way We Work)</h5>
+      <p>Practical advice on making meetings productive. Notice how the speaker uses meeting vocabulary: agenda, action items, wrap up. Connects directly to this lesson.</p>
+      <p class="media-tip">Tip: watch with English subtitles. Write down 3 phrases you could use in your own meetings.</p>
+      <p><a href="https://www.youtube.com/watch?v=Mp3Msfw90BE" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l3-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>Succession (HBO) — Season 1, Episode 6: "Which Side Are You On?"</h5>
+      <p>A high-stakes board meeting with corporate language at its peak. Notice how characters open discussions, set agendas, and assign responsibilities. Rich in meeting vocabulary.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Focus on the boardroom scenes and how executives facilitate the meeting.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 4 &mdash; Money Talks</h4>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l17-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">S&#233;rie</div>
-        <h5>Industry (HBO) -- trading floor and results scenes</h5>
-        <p>Watch the analysts present numbers and react to charts. Listen for trend verbs (surge, plummet, peak, dip, plateau) and how they say figures rose or fell by an amount, or grew from one value to another.</p>
-        <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s frases -- uma com um verbo de tend&#234;ncia (surged, dipped) e uma com uma preposi&#231;&#227;o de mudan&#231;a (rose to, fell by).</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l17-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>The Indicator from Planet Money (NPR)</h5>
-        <p>Short daily episodes that explain one economic number or trend. Perfect input for hearing how professionals describe data moving up and down -- sharply or gradually, a steady rise or a sudden surge.</p>
-        <p class="media-tip">Dica: ou&#231;a um epis&#243;dio e separe duas express&#245;es de tend&#234;ncia novas (surge, plummet, plateau, fluctuate, steady, gradual) e como foram usadas com n&#250;meros.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l17-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>"Describing graphs and trends in English" (business English channels)</h5>
-        <p>Short lessons that show how to describe a chart: which verb for up, down, or flat, which adverb for the speed, and when to use to, by, or from...to for the figures -- exactly the language of your quarterly results.</p>
-        <p class="media-tip">Dica: pegue um gr&#225;fico real do seu trabalho e descreva-o em voz alta em tr&#234;s frases: a tend&#234;ncia geral, o maior movimento, e um n&#250;mero exato com a preposi&#231;&#227;o certa.</p>
-      </div>
+<div class="media-card-wrapper" data-media="l4-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Planet Money (NPR) — Economics and Finance Stories</h5>
+      <p>Short, engaging episodes about money, markets, and business. Listen for financial vocabulary like revenue, profit, budget, and growth. Each episode makes complex financial concepts easy to understand.</p>
+      <p class="media-tip">Tip: listen with headphones. Write down every time you hear a number (percent, million, billion) and how the speaker presents it.</p>
+      <p><a href="https://open.spotify.com/show/4FYpq3lSeQMAhqNI81O4En" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--accent);margin-top:2rem;margin-bottom:.8rem">Aula 16 -- Contracts and Agreements</h4>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Tema da aula: read and discuss contract clauses with the legal modals -- shall for obligation, must for requirement, may for permission. Refor&#231;o fora de aula -- marque como conclu&#237;do ao terminar.</p>
-
+<div class="media-card-wrapper" data-media="l4-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED — "How to speak so that people want to listen" by Julian Treasure</h5>
+      <p>A powerful talk (10 min) about communication skills. Notice how Treasure uses comparatives and numbers to make his points. The delivery techniques apply directly to financial presentations.</p>
+      <p class="media-tip">Tip: watch with English subtitles. Focus on how the speaker structures comparisons and uses vocal variety to present data.</p>
+      <p><a href="https://www.youtube.com/watch?v=eIho2S0ZahI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l4-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>Billions (Showtime) — Season 1, Episode 1: "Pilot"</h5>
+      <p>High-stakes finance at its best. The pilot episode is packed with financial vocabulary: revenue, profit margins, quarterly results. Pay attention to how characters present numbers and use comparatives in negotiations.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Focus on the scenes where characters discuss financial performance and compare results.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 5 &mdash; Colors and Opinions</h4>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l16-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">S&#233;rie</div>
-        <h5>Suits -- contract negotiation scenes</h5>
-        <p>Watch the lawyers review and negotiate agreements. Listen for the legal modals shall and must (obligations) versus may (permissions and rights), and for words like clause, breach, and terminate.</p>
-        <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s frases -- uma com shall ou must (dever) e uma com may (permiss&#227;o).</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l16-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>Harvard Business Review IdeaCast -- "Negotiating deals"</h5>
-        <p>Episodes on contracts and deal-making in plain business English. A good input for hearing how professionals describe obligations, permissions, warranties, and how to terminate or amend an agreement.</p>
-        <p class="media-tip">Dica: ou&#231;a um epis&#243;dio e separe duas express&#245;es legais novas (obligation, breach, indemnify, waive, enforce, amend) e como foram usadas.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l16-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>"Shall vs Must vs May in legal English" (legal English channels)</h5>
-        <p>Short videos that explain the three legal modals with real contract examples. Notice how shall and must create duties and may grants rights -- exactly the language of your supply agreement.</p>
-        <p class="media-tip">Dica: pegue uma cl&#225;usula de um contrato real e reescreva-a em ingl&#234;s simples, marcando cada dever com shall ou must e cada direito com may. Leia em voz alta.</p>
-      </div>
+<div class="media-card-wrapper" data-media="l5-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>The Lonely Palette — Art History Stories</h5>
+      <p>Each episode focuses on a single painting, describing colors, composition, and the artist's choices. Listen for vocabulary like "vibrant," "subtle," "striking," and how the host expresses opinions about art.</p>
+      <p class="media-tip">Tip: pick any episode that interests you. Write down 3 adjectives the host uses to describe the painting and try to use them in your own descriptions.</p>
+      <p><a href="https://open.spotify.com/show/5KssJ05JMHOiMmgcMGQ8M0" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--accent);margin-top:2rem;margin-bottom:.8rem">Aula 15 -- Present Perfect in Business</h4>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Tema da aula: present your track record -- present perfect for experience and results (I have closed three deals this quarter) vs simple past for finished, dated events (I led the restructuring in 2019). Refor&#231;o fora de aula -- marque como conclu&#237;do ao terminar.</p>
-
+<div class="media-card-wrapper" data-media="l5-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED — "The Power of Vulnerability" by Brene Brown</h5>
+      <p>A powerful talk (20 min) about expressing opinions and being authentic. Notice how Brown uses "I find it..." and "In my opinion..." structures naturally. The vocabulary of emotions and opinions connects directly with Lesson 5.</p>
+      <p class="media-tip">Tip: watch with English subtitles. Write down every time the speaker expresses a personal opinion and note the structure she uses.</p>
+      <p><a href="https://www.youtube.com/watch?v=iCvmsMzlF7o" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l5-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>Abstract: The Art of Design (Netflix) — Season 1, Episode 2: "Tinker Hatfield: Footwear Design"</h5>
+      <p>A visually stunning episode about design, color choices, and composition. Pay attention to how designers describe their work using adjective order: "a beautiful large contemporary American sculpture." Notice expressions of opinion throughout.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Focus on how the designers express their opinions about art and design using "I find it..." and similar structures.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 6 &mdash; The Passive Voice</h4>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l15-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">TED Talk</div>
-        <h5>TED -- Leaders telling their career stories</h5>
-        <p>Watch how senior leaders present their own track record on stage. Listen for the present perfect for experience and ongoing results, and the simple past for the specific projects they finished.</p>
-        <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s frases no present perfect (I have...) e uma no simple past com data (in 2019 / last year).</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l15-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>NPR -- "How I Built This" (Guy Raz)</h5>
-        <p>Founders and executives describe how they built their companies. A perfect input for present perfect vs simple past: their journey so far (have built, have grown) and the dated turning points (in that year, we launched...).</p>
-        <p class="media-tip">Dica: ou&#231;a um epis&#243;dio e separe duas falas: uma de experi&#234;ncia/resultado (present perfect) e uma de evento datado (simple past).</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l15-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>"How to write a LinkedIn summary" (career coaches)</h5>
-        <p>Short videos on writing a professional summary in English. Notice how strong summaries use the present perfect for a track record and the simple past for specific, dated achievements -- exactly your homework.</p>
-        <p class="media-tip">Dica: escreva o seu pr&#243;prio resumo de LinkedIn com tr&#234;s frases no present perfect e uma no simple past com data. Leia em voz alta.</p>
-      </div>
+<div class="media-card-wrapper" data-media="l6-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Grammar Girl Quick and Dirty Tips</h5>
+      <p>A podcast about grammar, style, and usage. Episodes frequently cover active vs. passive voice with clear examples from business and journalism. Listen for how the host explains when passive voice is appropriate and when to avoid it.</p>
+      <p class="media-tip">Tip: search for episodes about "passive voice" or "active voice." Write down 3 examples of passive sentences you hear.</p>
+      <p><a href="https://open.spotify.com/show/2TnkSj8LV5nFMKjJRJbbyP" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--accent);margin-top:2rem;margin-bottom:.8rem">Aula 14 -- The Art Market</h4>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Tema da aula: reading the art market -- trends, artists and value (superlatives: the most sought-after artist, the highest price; trend language: prices are rising, values have soared). Refor&#231;o fora de aula -- marque como conclu&#237;do ao terminar.</p>
-
+<div class="media-card-wrapper" data-media="l6-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED-Ed — "How to use rhetoric to get what you want"</h5>
+      <p>A short animated lesson (5 min) about persuasive language. Notice how passive structures are used in formal rhetoric: "decisions are made," "arguments are presented." The passive voice creates authority and distance in professional communication.</p>
+      <p class="media-tip">Tip: watch with English subtitles. Count how many passive voice sentences you can identify in the narration.</p>
+      <p><a href="https://www.youtube.com/watch?v=3klMM9BkW5o" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l6-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>The Crown (Netflix) — Season 1, Episode 1: "Wolferton Splash"</h5>
+      <p>Formal English in a royal and government context. Pay attention to how passive voice is used in official communication: "The King is informed," "Decisions are taken by the Cabinet," "The ceremony is conducted." This episode is rich with passive structures in formal, professional English.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Write down every passive sentence you notice and identify the agent (by whom?).</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 7 &mdash; Negotiation 101</h4>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l14-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Documentary</div>
-        <h5>"The Price of Everything" (HBO documentary)</h5>
-        <p>A sharp look inside the contemporary art market -- auctions, blue-chip names, emerging artists and soaring values. Listen for how dealers and collectors talk about what is most sought-after and how prices rise.</p>
-        <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s superlativos (the most ___, the ___-est) e duas frases de trend (prices are rising, values have soared).</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l14-podcast">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>NPR -- "Planet Money" / "The Art Market" episodes</h5>
-        <p>Clear, well-produced episodes on how art is valued, auctioned, and traded. Great input to review appraisal, provenance, bid, and how the market booms -- exactly the vocabulary of this lesson.</p>
-        <p class="media-tip">Dica: ou&#231;a uma vez sem texto e uma vez com a transcri&#231;&#227;o. Anote cada palavra usada para falar de valor e de leil&#227;o (auction, bid, appraisal, provenance).</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l14-youtube">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">YouTube</div>
-        <h5>Sotheby's &amp; Christie's -- "Inside the Auction Room"</h5>
-        <p>Official channel videos showing real evening sales: how lots are presented, how bids climb, and how an auctioneer describes the most valuable masterpiece of the night. Watch the language of value and trends in action.</p>
-        <p class="media-tip">Dica: pause em cada lote e descreva-o em voz alta com um superlativo e uma frase de trend (por exemplo, "This is the most sought-after lot, and prices are rising").</p>
-      </div>
+<div class="media-card-wrapper" data-media="l7-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Business English Pod</h5>
+      <p>A podcast focused on business English skills including negotiation, meetings, and presentations. Episodes cover real negotiation scenarios with vocabulary like "counteroffer," "terms," and "leverage." Perfect for practicing conditional language in professional contexts.</p>
+      <p class="media-tip">Tip: listen to a negotiation episode and write down every "if... will..." sentence you hear.</p>
+      <p><a href="https://open.spotify.com/show/3W29VpoTB2OQKNqfRrjxMa" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
     </div>
   </div>
 </div>
-    <div class="media-card-wrapper" data-media="l13-series">
-      <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-      <div class="media-card">
-        <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
-        <div class="media-info">
-          <div class="media-type">Series</div>
-          <h5>Dragon's Den — Season 1, Episode 1</h5>
-          <p>Entrepreneurs pitch their business proposals to a panel of investors. Watch how they present timelines, ROI projections, scalability, and respond to stakeholder questions about feasibility.</p>
-          <p class="media-tip">Tip: watch in English with English subtitles. Focus on how each pitcher structures their proposal and handles objections.</p>
-        </div>
-      </div>
+<div class="media-card-wrapper" data-media="l7-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED — "Getting to Yes" by William Ury</h5>
+      <p>A masterclass on negotiation from one of the world's leading negotiation experts. Ury explains how to turn adversaries into partners using principled negotiation. Notice how he uses conditional language and negotiation vocabulary throughout the talk.</p>
+      <p class="media-tip">Tip: watch with English subtitles. Write down 5 negotiation expressions and try to use them in your own sentences with first conditionals.</p>
+      <p><a href="https://www.youtube.com/watch?v=yB1a3GOqMzI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
     </div>
   </div>
-
-</div><!-- /container -->
+</div>
+<div class="media-card-wrapper" data-media="l7-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>Shark Tank — Season 1, Episode 1</h5>
+      <p>Real negotiation vocabulary in action. Entrepreneurs pitch their business ideas and negotiate deals with investors. Pay attention to how they discuss prices, terms, counteroffers, and concessions. Notice the use of conditional language: "If you invest..., I will give you..."</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Focus on how each side uses leverage and makes concessions to reach an agreement.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 8 &mdash; Email Power</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l8-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>All Ears English</h5>
+      <p>A podcast dedicated to real-world English communication. Episodes on professional email writing cover formal register, polite phrasing, and how to structure business correspondence. Perfect for reinforcing vocabulary like "regarding," "acknowledge," and "I look forward to."</p>
+      <p class="media-tip">Tip: listen and write down 5 formal email phrases you can use at work.</p>
+      <p><a href="https://open.spotify.com/show/3GIgMSGl2YkMBhINyNkr05" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l8-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>"How to Write a Professional Email" by Harvard Business Review</h5>
+      <p>A concise guide on writing effective professional emails. Covers structure, tone, formal greetings, and closings. Notice how they use expressions like "Please find attached," "I am writing to," and "I look forward to hearing from you."</p>
+      <p class="media-tip">Tip: watch and compare the informal vs. formal versions of each email. Practice rewriting an informal email in formal register.</p>
+      <p><a href="https://www.youtube.com/watch?v=I3iFfTMqPLM" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l8-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>Suits (USA Network) — Season 1, Episode 1: "Pilot"</h5>
+      <p>Corporate email and formal communication at its best. Pay attention to how lawyers and executives communicate in writing: formal greetings, references to attached documents, and professional closings. Notice the contrast between casual spoken language and formal written correspondence.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Write down every formal email phrase you notice and practice using them in your own emails.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 9 &mdash; Gallery Night</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l9-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>The Art Newspaper Weekly</h5>
+      <p>Weekly discussions about the global art world, covering exhibitions, galleries, and the intersection of art and business. Listen for vocabulary like curator, collection, vernissage, and networking in real art-world conversations.</p>
+      <p class="media-tip">Tip: listen to one episode and write down 5 opinion phrases the speakers use (I think, I believe, in my view).</p>
+      <p><a href="https://open.spotify.com/show/1PsLbEjAHIqCPlLDDRKs7t" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l9-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED — "Your body language may shape who you are" by Amy Cuddy</h5>
+      <p>A powerful talk about confidence and presence at social events. Notice how Amy Cuddy structures her opinions, uses persuasive language, and connects with her audience. Perfect for practicing networking and expressing views.</p>
+      <p class="media-tip">Tip: watch with English subtitles. Notice how she uses "I believe," "I think," and "from my perspective" to share her views.</p>
+      <p><a href="https://www.youtube.com/watch?v=Ks-_Mh1QhMc" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l9-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>Emily in Paris (Netflix) — Season 1, Episode 3</h5>
+      <p>Socializing, networking, and art gallery scenes set in Paris. Pay attention to how characters mingle at events, express opinions about art, and build professional connections. Rich in social English vocabulary and opinion expressions.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Focus on the gallery and networking scenes. Write down phrases used to express opinions and agree or disagree politely.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 10 &mdash; Review and Integration</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l10-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>HBR IdeaCast — Episode on Leadership Communication</h5>
+      <p>Harvard Business Review's flagship podcast. Listen to how executives summarize quarterly results, express opinions, and use review language in real business conversations. Perfect for reinforcing all structures from Block 1.</p>
+      <p class="media-tip">Tip: listen to one episode and note how the speaker uses "looking back," "overall," and "to summarize" to structure their message.</p>
+      <p><a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l10-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED — "The Power of Introverts" by Susan Cain</h5>
+      <p>A compelling talk about leadership styles and professional environments. Notice how Susan Cain integrates personal stories with business insights, uses opinion structures, and summarizes her key points. Excellent for reviewing all Block 1 language in a real presentation context.</p>
+      <p class="media-tip">Tip: watch with English subtitles. Pay attention to how she uses "I believe," comparatives, and summary phrases to structure her argument.</p>
+      <p><a href="https://www.youtube.com/watch?v=c0KYU2j0TM4" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l10-film">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Film</div>
+      <h5>The Intern (2015)</h5>
+      <p>Robert De Niro and Anne Hathaway in a film about business, social skills, and professional English. Rich in meeting vocabulary, opinion expressions, networking language, and formal register. Watch the dinner and meeting scenes for a comprehensive review of Block 1 structures.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Focus on how characters introduce themselves, give opinions, negotiate, and summarize in professional settings.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 11 &mdash; Conference Calls</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l11-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Business English Pod — Conference Call Skills</h5>
+      <p>Practical episodes on managing conference calls, handling technical issues, and making polite requests in professional settings. Listen for phrases like "could you please," "would you mind," and "I apologize for."</p>
+      <p class="media-tip">Tip: listen to one episode and note how speakers handle interruptions and technical problems politely.</p>
+      <p><a href="https://open.spotify.com/show/3W29VpoTB2OQKNqfRrjxMa" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l11-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED — "10 ways to have a better conversation" by Celeste Headlee</h5>
+      <p>Essential communication skills for conference calls and meetings. Celeste Headlee shares practical tips for listening, asking questions, and managing conversations. Notice how she uses polite language and clear structure.</p>
+      <p class="media-tip">Tip: watch with English subtitles. Pay attention to how she structures polite requests and handles interruptions.</p>
+      <p><a href="https://www.youtube.com/watch?v=R1vskiVDwl4" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l11-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>Silicon Valley (HBO) — Season 1, Episode 1</h5>
+      <p>Tech startup culture, video calls, and corporate communication at its most entertaining. Watch how characters navigate technology, pitch ideas, and handle the chaos of the tech world. Rich in conference call vocabulary and startup jargon.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Focus on scenes with video calls, presentations, and technical discussions.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 12 &mdash; Fiscal and Tax Talk</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l12-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Planet Money (NPR) — Tax Season Episodes</h5>
+      <p>Engaging episodes about how taxes work, tax returns, deductions, and the accounting world. Rich in fiscal vocabulary and perfect for understanding how Americans talk about taxes in everyday language.</p>
+      <p class="media-tip">Tip: listen for words like "deduction," "write-off," "compliance," and "audit" in real context.</p>
+      <p><a href="https://open.spotify.com/show/4FYpq3lSeQMAhqNI81O4En" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l12-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED — "What they don't teach you about money"</h5>
+      <p>A thought-provoking talk about financial literacy and how money works in the real world. Great exposure to financial English vocabulary, including revenue, liability, and fiscal planning concepts.</p>
+      <p class="media-tip">Tip: watch with English subtitles. Write down 5 financial terms and how the speaker uses them.</p>
+      <p><a href="https://www.youtube.com/watch?v=WEDIj9JBTC8" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l12-film">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Film</div>
+      <h5>The Accountant (2016)</h5>
+      <p>Financial vocabulary, auditing processes, and professional English in action. Watch how the protagonist navigates complex financial situations. Rich in tax, compliance, and accounting terminology.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Focus on scenes with financial discussions and audit-related dialogue.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 13 &mdash; Making Proposals — Pitching Ideas</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l13-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Masters of Scale with Reid Hoffman</h5>
+      <p>Founders and executives pitch and scale their ideas. Rich in proposal language, ROI discussions, and how leaders present scalable solutions to investors and stakeholders.</p>
+      <p class="media-tip">Tip: listen for expressions like "I would like to propose," "the key benefit is," and how guests pitch their vision.</p>
+      <p><a href="https://open.spotify.com/show/1bJRgaFZHuzifad4IAApFR" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l13-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED — Bill Gross: The single biggest reason why startups succeed</h5>
+      <p>Bill Gross analyzes what makes a pitch succeed or fail. Excellent exposure to proposal vocabulary, feasibility analysis, and how to present data-driven arguments to stakeholders.</p>
+      <p class="media-tip">Tip: watch with English subtitles. Notice how he structures his proposal and presents ROI data.</p>
+      <p><a href="https://www.youtube.com/watch?v=bNpx7gpSqbY" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l13-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>Dragon's Den — Season 1, Episode 1</h5>
+      <p>Entrepreneurs pitch their business proposals to a panel of investors. Watch how they present timelines, ROI projections, scalability, and respond to stakeholder questions about feasibility.</p>
+      <p class="media-tip">Tip: watch in English with English subtitles. Focus on how each pitcher structures their proposal and handles objections.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 14 &mdash; The Art Market -- Trends, Artists &amp; Value</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l14-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Documentary</div>
+      <h5>"The Price of Everything" (HBO documentary)</h5>
+      <p>A sharp look inside the contemporary art market -- auctions, blue-chip names, emerging artists and soaring values. Listen for how dealers and collectors talk about what is most sought-after and how prices rise.</p>
+      <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s superlativos (the most ___, the ___-est) e duas frases de trend (prices are rising, values have soared).</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l14-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>NPR -- "Planet Money" / "The Art Market" episodes</h5>
+      <p>Clear, well-produced episodes on how art is valued, auctioned, and traded. Great input to review appraisal, provenance, bid, and how the market booms -- exactly the vocabulary of this lesson.</p>
+      <p class="media-tip">Dica: ou&#231;a uma vez sem texto e uma vez com a transcri&#231;&#227;o. Anote cada palavra usada para falar de valor e de leil&#227;o (auction, bid, appraisal, provenance).</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l14-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>Sotheby's &amp; Christie's -- "Inside the Auction Room"</h5>
+      <p>Official channel videos showing real evening sales: how lots are presented, how bids climb, and how an auctioneer describes the most valuable masterpiece of the night. Watch the language of value and trends in action.</p>
+      <p class="media-tip">Dica: pause em cada lote e descreva-o em voz alta com um superlativo e uma frase de trend (por exemplo, "This is the most sought-after lot, and prices are rising").</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 15 &mdash; Present Perfect in Business -- Experience &amp; Results</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l15-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">TED Talk</div>
+      <h5>TED -- Leaders telling their career stories</h5>
+      <p>Watch how senior leaders present their own track record on stage. Listen for the present perfect for experience and ongoing results, and the simple past for the specific projects they finished.</p>
+      <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s frases no present perfect (I have...) e uma no simple past com data (in 2019 / last year).</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l15-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>NPR -- "How I Built This" (Guy Raz)</h5>
+      <p>Founders and executives describe how they built their companies. A perfect input for present perfect vs simple past: their journey so far (have built, have grown) and the dated turning points (in that year, we launched...).</p>
+      <p class="media-tip">Dica: ou&#231;a um epis&#243;dio e separe duas falas: uma de experi&#234;ncia/resultado (present perfect) e uma de evento datado (simple past).</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l15-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>"How to write a LinkedIn summary" (career coaches)</h5>
+      <p>Short videos on writing a professional summary in English. Notice how strong summaries use the present perfect for a track record and the simple past for specific, dated achievements -- exactly your homework.</p>
+      <p class="media-tip">Dica: escreva o seu pr&#243;prio resumo de LinkedIn com tr&#234;s frases no present perfect e uma no simple past com data. Leia em voz alta.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 16 &mdash; Contracts and Agreements -- Legal English</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l16-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">S&#233;rie</div>
+      <h5>Suits -- contract negotiation scenes</h5>
+      <p>Watch the lawyers review and negotiate agreements. Listen for the legal modals shall and must (obligations) versus may (permissions and rights), and for words like clause, breach, and terminate.</p>
+      <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s frases -- uma com shall ou must (dever) e uma com may (permiss&#227;o).</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l16-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Harvard Business Review IdeaCast -- "Negotiating deals"</h5>
+      <p>Episodes on contracts and deal-making in plain business English. A good input for hearing how professionals describe obligations, permissions, warranties, and how to terminate or amend an agreement.</p>
+      <p class="media-tip">Dica: ou&#231;a um epis&#243;dio e separe duas express&#245;es legais novas (obligation, breach, indemnify, waive, enforce, amend) e como foram usadas.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l16-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>"Shall vs Must vs May in legal English" (legal English channels)</h5>
+      <p>Short videos that explain the three legal modals with real contract examples. Notice how shall and must create duties and may grants rights -- exactly the language of your supply agreement.</p>
+      <p class="media-tip">Dica: pegue uma cl&#225;usula de um contrato real e reescreva-a em ingl&#234;s simples, marcando cada dever com shall ou must e cada direito com may. Leia em voz alta.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 17 &mdash; Data-Driven -- Describing Trends and Numbers</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l17-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">S&#233;rie</div>
+      <h5>Industry (HBO) -- trading floor and results scenes</h5>
+      <p>Watch the analysts present numbers and react to charts. Listen for trend verbs (surge, plummet, peak, dip, plateau) and how they say figures rose or fell by an amount, or grew from one value to another.</p>
+      <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s frases -- uma com um verbo de tend&#234;ncia (surged, dipped) e uma com uma preposi&#231;&#227;o de mudan&#231;a (rose to, fell by).</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l17-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>The Indicator from Planet Money (NPR)</h5>
+      <p>Short daily episodes that explain one economic number or trend. Perfect input for hearing how professionals describe data moving up and down -- sharply or gradually, a steady rise or a sudden surge.</p>
+      <p class="media-tip">Dica: ou&#231;a um epis&#243;dio e separe duas express&#245;es de tend&#234;ncia novas (surge, plummet, plateau, fluctuate, steady, gradual) e como foram usadas com n&#250;meros.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l17-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>"Describing graphs and trends in English" (business English channels)</h5>
+      <p>Short lessons that show how to describe a chart: which verb for up, down, or flat, which adverb for the speed, and when to use to, by, or from...to for the figures -- exactly the language of your quarterly results.</p>
+      <p class="media-tip">Dica: pegue um gr&#225;fico real do seu trabalho e descreva-o em voz alta em tr&#234;s frases: a tend&#234;ncia geral, o maior movimento, e um n&#250;mero exato com a preposi&#231;&#227;o certa.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 18 &mdash; Decision-Making -- I Suggest We...</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l18-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">S&#233;rie</div>
+      <h5>Succession (HBO) -- the boardroom decision scenes</h5>
+      <p>Watch the family and the board weigh options under pressure. Listen for how executives recommend a path (we should..., we ought to...) and how they warn about consequences (we had better..., or...).</p>
+      <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s frases -- uma com should ou ought to (conselho normal) e uma com had better (aviso com consequ&#234;ncia).</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l18-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>HBR IdeaCast (Harvard Business Review)</h5>
+      <p>Conversations with leaders on how they make hard calls -- weighing pros and cons, trade-offs, and reaching consensus on a team. Rich input for the language of recommending and deciding.</p>
+      <p class="media-tip">Dica: ou&#231;a um epis&#243;dio sobre decis&#227;o e separe duas express&#245;es novas (weigh the options, trade-off, downside, reach a consensus) e como foram usadas.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l18-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>"Should, ought to and had better" (business English channels)</h5>
+      <p>Short lessons that show the difference between normal advice (should / ought to) and strong advice with a consequence (had better), plus the base-verb rule and the negatives.</p>
+      <p class="media-tip">Dica: pegue uma decis&#227;o real do seu trabalho e grave uma recomenda&#231;&#227;o em voz alta: uma frase com should ou ought to, e uma com had better + or...</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 19 &mdash; Houston, We Have Culture -- US vs Brazil</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l19-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">S&#233;rie</div>
+      <h5>Ted Lasso (Apple TV+) -- US vs UK culture clashes</h5>
+      <p>Watch an American adapt to a very different work culture. Listen for how characters notice differences in directness, formality, and rapport, and how a warm mindset wins people over.</p>
+      <p class="media-tip">Dica: assista com legenda em ingl&#234;s e anote tr&#234;s frases que comparam culturas -- uma com whereas ou while, e uma com unlike ou different from.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l19-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>HBR IdeaCast -- "Working Across Cultures"</h5>
+      <p>Leaders discuss how punctuality, hierarchy, and directness differ across countries, and how to build rapport with international partners. Rich input for the language of comparing and contrasting.</p>
+      <p class="media-tip">Dica: ou&#231;a um epis&#243;dio sobre cultura e separe duas express&#245;es novas (custom, mindset, etiquette, rapport) e como foram usadas em contraste.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l19-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>Museum of Fine Arts, Houston -- gallery walkthrough</h5>
+      <p>Explore the Houston Museum District before your trip. Note how curators describe contemporary and abstract works -- perfect small talk to build rapport with US partners who share your taste in art.</p>
+      <p class="media-tip">Dica: depois de assistir, grave uma frase comparando o gosto americano e o brasileiro por arte, usando similar to e different from.</p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 20 &mdash; The Big Review -- Block 2 Integration</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l20-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">S&#233;rie</div>
+      <h5>Industry (HBO) -- deals, terms, and negotiation</h5>
+      <p>Watch how analysts and executives report results, state contract terms, and weigh trade-offs under pressure. A high-stakes showcase of every Block 2 structure in real business English.</p>
+      <p class="media-tip">Dica: assista a uma cena de negocia&#231;&#227;o e anote uma frase de cada tipo -- present perfect, modal de obriga&#231;&#227;o, trend language, conselho e compara&#231;&#227;o.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l20-podcast">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>HBR IdeaCast -- "How to Negotiate a Better Deal"</h5>
+      <p>Experts discuss track records, options, and trade-offs, and how to give a clear recommendation. Rich review input for present perfect, modals, and advice language across one conversation.</p>
+      <p class="media-tip">Dica: ou&#231;a um epis&#243;dio e grave um resumo de 60 segundos usando pelo menos tr&#234;s estruturas do bloco (track record, terms, recommendation).</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l20-youtube">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">YouTube</div>
+      <h5>TED -- "The Art of Negotiation" (William Ury)</h5>
+      <p>A clear talk on preparing your position, weighing options and trade-offs, and reaching agreement across cultures. Perfect to close Block 2 and prepare you to lead the meeting in Block 3.</p>
+      <p class="media-tip">Dica: depois de assistir, escreva cinco frases de auto-avalia&#231;&#227;o do Bloco 2, uma para cada estrutura, e leia em voz alta.</p>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+      </div>
 
 <script>
 // ===== TAB SWITCHING =====
