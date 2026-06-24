@@ -97,6 +97,13 @@
       var curriculo = (perfil.data && perfil.data.curriculo) || [];
       var numAulas = perfil.num_aulas || curriculo.length || 0;
 
+      // Piso: a tabela nunca mostra MENOS aulas do que o material realmente tem.
+      // window.TOTAL_AULAS é setado no HTML de cada aluno e reflete a contagem real
+      // de aulas geradas; se o perfil no Supabase estiver defasado (ex: num_aulas=10
+      // mas o aluno já tem 20), usamos o valor real. Só aumenta, nunca diminui.
+      var realTotal = (typeof window !== 'undefined' && window.TOTAL_AULAS) ? parseInt(window.TOTAL_AULAS, 10) : 0;
+      if (realTotal > numAulas) numAulas = realTotal;
+
       if (numAulas === 0) { tabContent.innerHTML = '<div class="controle-empty">Nenhuma aula cadastrada no currículo.</div>'; return; }
 
       // Se currículo não tem todas as aulas, preencher com genéricas
