@@ -1284,6 +1284,25 @@ body.slide-mode .nav-bar { display:flex; }
 .op-speed{display:flex;gap:.3rem;margin-top:.4rem}
 .op-speed button{padding:.2rem .5rem;border:1px solid var(--border);border-radius:5px;background:var(--bg-card);color:var(--text-dim);font-size:.7rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s}
 .op-speed button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* compl uniform: estilo dos cards de complementares (padrão modelo) */
+#tab-complementary .media-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:.5rem; }
+#tab-complementary .media-card-wrapper { position:relative;display:block;margin:0;padding:0;background:none;border:none; }
+#tab-complementary .media-card-wrapper.done { opacity:.6; }
+#tab-complementary .media-check { position:absolute;top:.7rem;right:.7rem;z-index:1;display:block;margin:0; }
+#tab-complementary .media-check input { width:18px;height:18px;cursor:pointer;accent-color:var(--accent); }
+#tab-complementary .media-card { display:block;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:box-shadow .2s; }
+#tab-complementary .media-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.06); }
+#tab-complementary .media-thumb { width:auto;min-height:0;height:50px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated,#f0f2f7); }
+#tab-complementary .media-thumb::after { content:none; }
+#tab-complementary .media-thumb svg { width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:2; }
+#tab-complementary .media-info { padding:1rem; }
+#tab-complementary .media-type { font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:var(--accent);margin-bottom:.3rem; }
+#tab-complementary .media-info h5 { font-size:.9rem;font-weight:600;color:#1a1a1a;margin:0 0 .3rem; }
+#tab-complementary .media-info p { font-size:.78rem;color:var(--text-dim);line-height:1.5;margin:0 0 .3rem; }
+#tab-complementary .media-info p.media-tip { color:#b45309;font-style:italic;margin-top:.4rem;margin-bottom:0; }
+#tab-complementary .media-info a { font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent); }
+#tab-complementary h4 { grid-column:1 / -1;font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--accent);margin:2rem 0 1rem;padding-bottom:.4rem;border-bottom:2px solid var(--accent); }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -5400,102 +5419,91 @@ body.slide-mode .nav-bar { display:flex; }
 
 <!-- ========== TAB 4: COMPLEMENTARES ========== -->
 <div class="tab-content" id="tab-complementary">
-
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem">Supplementary Materials -- Lesson 1</h3>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Extra content to reinforce your learning outside of class. Mark as done when finished.</p>
-
+<h3>Supplementary Materials -- Lesson 1</h3>
+<h4>Lesson 1 &mdash; Who Is Simone?</h4>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l1-podcast1">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>Introducing Yourself in a Meeting -- Business English Pod</h5>
-        <p>Short episode about professional introductions. Perfect for your level.</p>
-        <p class="media-tip">Tip: Listen once without pausing. Write down 3 new phrases.</p>
-        <a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l1-ted">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">TED Talk</div>
-        <h5>Your body language may shape who you are -- Amy Cuddy</h5>
-        <p>Powerful talk about confidence and body language.</p>
-        <p class="media-tip">Tip: Watch with English subtitles.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l1-podcast2">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>The English We Speak -- BBC Learning English</h5>
-        <p>Short episodes about everyday English expressions.</p>
-        <p class="media-tip">Tip: Listen to 2-3 episodes this week.</p>
-        <a href="https://open.spotify.com/show/2cOv2r93UovlubXwlTrTMI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-      </div>
+<div class="media-card-wrapper" data-media="l1-podcast1">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Introducing Yourself in a Meeting -- Business English Pod</h5>
+      <p>Short episode about professional introductions. Perfect for your level.</p>
+      <p class="media-tip">Tip: Listen once without pausing. Write down 3 new phrases.</p>
+      <p><a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
     </div>
   </div>
 </div>
-
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem;margin-top:2rem">Supplementary Materials -- Lesson 2</h3>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Extra content to reinforce your learning outside of class. Mark as done when finished.</p>
-
-<div class="media-grid">
-  <div class="media-card-wrapper" data-media="l2-podcast1">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>Talking About Your Job -- Business English Pod</h5>
-        <p>Learn phrases to describe your daily work responsibilities.</p>
-        <p class="media-tip">Tip: Listen twice. First for general understanding, then for specific phrases.</p>
-        <a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l2-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="17 2 12 7 7 2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Series</div>
-        <h5>Suits -- Season 1, Episode 1 (Netflix)</h5>
-        <p>Corporate law drama with authentic legal vocabulary. Watch the first 30 minutes.</p>
-        <p class="media-tip">Tip: Watch with English subtitles. Note how lawyers describe their work.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l2-podcast2">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>6 Minute English -- Working from Home (BBC Learning English)</h5>
-        <p>Short episode about modern work routines.</p>
-        <p class="media-tip">Tip: Listen during your commute. Write 3 new phrases.</p>
-        <a href="https://open.spotify.com/show/2cOv2r93UovlubXwlTrTMI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-      </div>
+<div class="media-card-wrapper" data-media="l1-ted">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">TED Talk</div>
+      <h5>Your body language may shape who you are -- Amy Cuddy</h5>
+      <p>Powerful talk about confidence and body language.</p>
+      <p class="media-tip">Tip: Watch with English subtitles.</p>
     </div>
   </div>
 </div>
-
-
-
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 3 -- Email Essentials</h4>
+<div class="media-card-wrapper" data-media="l1-podcast2">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>The English We Speak -- BBC Learning English</h5>
+      <p>Short episodes about everyday English expressions.</p>
+      <p class="media-tip">Tip: Listen to 2-3 episodes this week.</p>
+      <p><a href="https://open.spotify.com/show/2cOv2r93UovlubXwlTrTMI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 2 &mdash; My Daily Routine</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l2-podcast1">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Talking About Your Job -- Business English Pod</h5>
+      <p>Learn phrases to describe your daily work responsibilities.</p>
+      <p class="media-tip">Tip: Listen twice. First for general understanding, then for specific phrases.</p>
+      <p><a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l2-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="17 2 12 7 7 2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>Suits -- Season 1, Episode 1 (Netflix)</h5>
+      <p>Corporate law drama with authentic legal vocabulary. Watch the first 30 minutes.</p>
+      <p class="media-tip">Tip: Watch with English subtitles. Note how lawyers describe their work.</p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l2-podcast2">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>6 Minute English -- Working from Home (BBC Learning English)</h5>
+      <p>Short episode about modern work routines.</p>
+      <p class="media-tip">Tip: Listen during your commute. Write 3 new phrases.</p>
+      <p><a href="https://open.spotify.com/show/2cOv2r93UovlubXwlTrTMI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 3 &mdash; Email Essentials</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l3-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5532,8 +5540,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 4 -- Phone &amp; Video Calls</h4>
+</div>
+<h4>Lesson 4 &mdash; Phone &amp; Video Calls</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l4-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5570,7 +5579,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 5 -- Small Talk That Works</h4>
+</div>
+<h4>Lesson 5 &mdash; Small Talk That Works</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l5-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5607,7 +5618,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 6 -- Meeting Basics</h4>
+</div>
+<h4>Lesson 6 &mdash; Meeting Basics</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l6-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5644,7 +5657,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 7 -- Expressing Opinions</h4>
+</div>
+<h4>Lesson 7 &mdash; Expressing Opinions</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l7-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5681,7 +5696,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 8 -- Giving Updates</h4>
+</div>
+<h4>Lesson 8 &mdash; Giving Updates</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l8-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5718,7 +5735,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 9 -- Asking Smart Questions</h4>
+</div>
+<h4>Lesson 9 &mdash; Asking Smart Questions</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l9-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5755,7 +5774,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 10 -- Travel English I</h4>
+</div>
+<h4>Lesson 10 &mdash; Travel English I</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l10-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5792,7 +5813,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 11 -- Contract Vocabulary</h4>
+</div>
+<h4>Lesson 11 &mdash; Contract Vocabulary</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l11-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5829,7 +5852,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 12 -- Reading Contracts II</h4>
+</div>
+<h4>Lesson 12 &mdash; Reading Contracts II</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l12-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5866,7 +5891,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 13 -- Contract Vocabulary III</h4>
+</div>
+<h4>Lesson 13 &mdash; Contract Vocabulary III</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l13-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5903,7 +5930,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 14 -- Resolving Disputes</h4>
+</div>
+<h4>Lesson 14 &mdash; Resolving Disputes</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l14-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5940,7 +5969,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 15 -- Reading Contracts IV</h4>
+</div>
+<h4>Lesson 15 &mdash; Reading Contracts IV</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l15-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5977,7 +6008,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 16 -- Closing the Deal</h4>
+</div>
+<h4>Lesson 16 &mdash; Closing the Deal</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l16-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6014,7 +6047,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 17 -- Leading a Meeting</h4>
+</div>
+<h4>Lesson 17 &mdash; Leading a Meeting</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l17-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6051,7 +6086,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 18 -- Negotiating Terms</h4>
+</div>
+<h4>Lesson 18 &mdash; Negotiating Terms</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l18-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6088,7 +6125,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 19 -- Handling Objections</h4>
+</div>
+<h4>Lesson 19 &mdash; Handling Objections</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l19-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6125,7 +6164,9 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 20 -- Social English</h4>
+</div>
+<h4>Lesson 20 &mdash; Social English</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l20-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6162,7 +6203,8 @@ body.slide-mode .nav-bar { display:flex; }
     </div>
   </div>
 </div>
-</div><!-- /tab-complementary -->
+</div>
+    </div><!-- /tab-complementary -->
 
 </div><!-- /container -->
 </div><!-- /main-content -->
