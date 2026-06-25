@@ -28,6 +28,7 @@ m = re.search(r'(<a href="/professor/graziele-dias-aula%d\.html\?autostart=1".*?
 card_prof = m.group(1)
 card_aluno = card_prof.replace('/professor/graziele-dias-aula%d.html' % N, '/aluno/graziele-dias-aula%d.html' % N)
 
+stamp = between(SNIP, '<!-- 2. STAMP (inserir na stamps-row do header) -->', '<!-- 3. ACCORDION') if '<!-- 2. STAMP' in SNIP else ''
 accordion = between(SNIP, '(inserir após o ex-lesson anterior, prof E aluno) -->', '<!-- 3b. COMPLEMENTARES')
 complementary = between(SNIP, f'(inserir na tab-complementary, prof E aluno) -->', '<!-- 4. ENTRADAS')
 amap_inner = between(SNIP, '<!-- 4. ENTRADAS de audioMap (mesclar no audioMap do hub, prof E aluno) -->\n<script>', '</script>')
@@ -48,6 +49,13 @@ def patch(path, is_prof):
     # 3. complementares (prof+aluno)
     assert s.count('</div><!-- /tab-complementary -->') == 1, f'{path}: tab-complementary anchor'
     s = s.replace('</div><!-- /tab-complementary -->', '\n' + complementary + '\n\n</div><!-- /tab-complementary -->', 1); edits += 1
+    # 3c. stamp no header (prof+aluno) — inserir após o stamp{PREV}, se ainda nao existe
+    if stamp and f'id="stamp{N}"' not in s:
+        prev_stamp = f'id="stamp{PREV}"'
+        assert prev_stamp in s, f'{path}: stamp{PREV} nao encontrado'
+        pi = s.index(prev_stamp)
+        pclose = s.index('</div>', pi) + len('</div>')
+        s = s[:pclose] + '\n' + stamp + s[pclose:]; edits += 1
     # 4. totalLessons {PREV}->{N}
     assert f'var totalLessons={PREV}' in s, f'{path}: totalLessons={PREV} nao encontrado'
     s = s.replace(f'var totalLessons={PREV}', f'var totalLessons={N}', 1); edits += 1
