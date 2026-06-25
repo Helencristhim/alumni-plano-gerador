@@ -484,7 +484,7 @@ def _lesson_h4(cfg):
     """Cabeçalho canônico da aula nos Complementares: <h4>Lesson N &mdash; Título</h4>
     (Lección para aulas de espanhol). Título vem do config (lesson.menu_title)."""
     L = cfg['lesson']
-    label = 'Lección' if cfg.get('lang') == 'es' else 'Lesson'
+    label = 'Clase' if cfg.get('lang') == 'es' else 'Lesson'
     title = (L.get('menu_title') or L.get('subtitle') or '').strip()
     title = re.sub(r'&(?!#?\w+;)', '&amp;', title)  # escapa & solto
     return (f'<h4 style="font-size:.95rem;margin:1.5rem 0 .8rem">'
@@ -508,11 +508,15 @@ def normalize_complementary(html, cfg=None):
     html = re.sub(r'<p style="font-size:\.82rem;color:var\(--text-mid\)">', '<p>', html)
     # style inline no media-tip
     html = re.sub(r'<p class="media-tip" style="[^"]*">', '<p class="media-tip">', html)
-    # GARANTE 1 h4 de cabeçalho da aula (do config) antes dos cards
-    if cfg is not None and 'media-card-wrapper' in html and 'class="media-grid"' not in html:
-        first = html.find('<div class="media-card-wrapper"')
-        if first >= 0:
-            html = html[:first] + _lesson_h4(cfg) + '\n' + html[first:]
+    # GARANTE 1 h4 de cabeçalho da aula (do config) antes dos cards/grid — mesmo quando o
+    # autor JÁ mandou os cards dentro de um <div class="media-grid"> (antes o h4 sumia nesse
+    # caso: a condição exigia ausência de media-grid). Insere antes do grid, ou do 1º card.
+    if cfg is not None and 'media-card-wrapper' in html:
+        anchor = html.find('<div class="media-grid"')
+        if anchor < 0:
+            anchor = html.find('<div class="media-card-wrapper"')
+        if anchor >= 0:
+            html = html[:anchor] + _lesson_h4(cfg) + '\n' + html[anchor:]
     # ENVOLVE os cards de cada aula (sob seu h4) num <div class="media-grid"> — idempotente
     if 'media-card-wrapper' in html and 'class="media-grid"' not in html:
         parts = re.split(r'(<h4\b[^>]*>.*?</h4>)', html, flags=re.S)
