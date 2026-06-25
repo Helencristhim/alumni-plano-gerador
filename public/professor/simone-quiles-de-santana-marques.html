@@ -1284,6 +1284,25 @@ body.slide-mode .nav-bar { display:flex; }
 .op-speed{display:flex;gap:.3rem;margin-top:.4rem}
 .op-speed button{padding:.2rem .5rem;border:1px solid var(--border);border-radius:5px;background:var(--bg-card);color:var(--text-dim);font-size:.7rem;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s}
 .op-speed button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* compl uniform: estilo dos cards de complementares (padrão modelo) */
+#tab-complementary .media-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:.5rem; }
+#tab-complementary .media-card-wrapper { position:relative;display:block;margin:0;padding:0;background:none;border:none; }
+#tab-complementary .media-card-wrapper.done { opacity:.6; }
+#tab-complementary .media-check { position:absolute;top:.7rem;right:.7rem;z-index:1;display:block;margin:0; }
+#tab-complementary .media-check input { width:18px;height:18px;cursor:pointer;accent-color:var(--accent); }
+#tab-complementary .media-card { display:block;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:box-shadow .2s; }
+#tab-complementary .media-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.06); }
+#tab-complementary .media-thumb { width:auto;min-height:0;height:50px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated,#f0f2f7); }
+#tab-complementary .media-thumb::after { content:none; }
+#tab-complementary .media-thumb svg { width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:2; }
+#tab-complementary .media-info { padding:1rem; }
+#tab-complementary .media-type { font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:var(--accent);margin-bottom:.3rem; }
+#tab-complementary .media-info h5 { font-size:.9rem;font-weight:600;color:#1a1a1a;margin:0 0 .3rem; }
+#tab-complementary .media-info p { font-size:.78rem;color:var(--text-dim);line-height:1.5;margin:0 0 .3rem; }
+#tab-complementary .media-info p.media-tip { color:#b45309;font-style:italic;margin-top:.4rem;margin-bottom:0; }
+#tab-complementary .media-info a { font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent); }
+#tab-complementary h4 { grid-column:1 / -1;font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--accent);margin:2rem 0 1rem;padding-bottom:.4rem;border-bottom:2px solid var(--accent); }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -5400,102 +5419,91 @@ body.slide-mode .nav-bar { display:flex; }
 
 <!-- ========== TAB 4: COMPLEMENTARES ========== -->
 <div class="tab-content" id="tab-complementary">
-
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem">Supplementary Materials -- Lesson 1</h3>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Extra content to reinforce your learning outside of class. Mark as done when finished.</p>
-
+<h3>Supplementary Materials -- Lesson 1</h3>
+<h4>Lesson 1 &mdash; Who Is Simone?</h4>
 <div class="media-grid">
-  <div class="media-card-wrapper" data-media="l1-podcast1">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>Introducing Yourself in a Meeting -- Business English Pod</h5>
-        <p>Short episode about professional introductions. Perfect for your level.</p>
-        <p class="media-tip">Tip: Listen once without pausing. Write down 3 new phrases.</p>
-        <a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l1-ted">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">TED Talk</div>
-        <h5>Your body language may shape who you are -- Amy Cuddy</h5>
-        <p>Powerful talk about confidence and body language.</p>
-        <p class="media-tip">Tip: Watch with English subtitles.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l1-podcast2">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>The English We Speak -- BBC Learning English</h5>
-        <p>Short episodes about everyday English expressions.</p>
-        <p class="media-tip">Tip: Listen to 2-3 episodes this week.</p>
-        <a href="https://open.spotify.com/show/2cOv2r93UovlubXwlTrTMI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-      </div>
+<div class="media-card-wrapper" data-media="l1-podcast1">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Introducing Yourself in a Meeting -- Business English Pod</h5>
+      <p>Short episode about professional introductions. Perfect for your level.</p>
+      <p class="media-tip">Tip: Listen once without pausing. Write down 3 new phrases.</p>
+      <p><a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
     </div>
   </div>
 </div>
-
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem;margin-top:2rem">Supplementary Materials -- Lesson 2</h3>
-<p style="font-size:.82rem;color:var(--text-dim);margin-bottom:1.5rem">Extra content to reinforce your learning outside of class. Mark as done when finished.</p>
-
-<div class="media-grid">
-  <div class="media-card-wrapper" data-media="l2-podcast1">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>Talking About Your Job -- Business English Pod</h5>
-        <p>Learn phrases to describe your daily work responsibilities.</p>
-        <p class="media-tip">Tip: Listen twice. First for general understanding, then for specific phrases.</p>
-        <a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-      </div>
+<div class="media-card-wrapper" data-media="l1-ted">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">TED Talk</div>
+      <h5>Your body language may shape who you are -- Amy Cuddy</h5>
+      <p>Powerful talk about confidence and body language.</p>
+      <p class="media-tip">Tip: Watch with English subtitles.</p>
     </div>
   </div>
-
-  <div class="media-card-wrapper" data-media="l2-series">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="17 2 12 7 7 2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Series</div>
-        <h5>Suits -- Season 1, Episode 1 (Netflix)</h5>
-        <p>Corporate law drama with authentic legal vocabulary. Watch the first 30 minutes.</p>
-        <p class="media-tip">Tip: Watch with English subtitles. Note how lawyers describe their work.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="media-card-wrapper" data-media="l2-podcast2">
-    <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
-    <div class="media-card">
-      <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-      <div class="media-info">
-        <div class="media-type">Podcast</div>
-        <h5>6 Minute English -- Working from Home (BBC Learning English)</h5>
-        <p>Short episode about modern work routines.</p>
-        <p class="media-tip">Tip: Listen during your commute. Write 3 new phrases.</p>
-        <a href="https://open.spotify.com/show/2cOv2r93UovlubXwlTrTMI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a>
-      </div>
+<p style="margin-top:.4rem"><a href="https://www.ted.com/talks/amy_cuddy_your_body_language_may_shape_who_you_are" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on TED &#8599;</a></p></div>
+<div class="media-card-wrapper" data-media="l1-podcast2">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>The English We Speak -- BBC Learning English</h5>
+      <p>Short episodes about everyday English expressions.</p>
+      <p class="media-tip">Tip: Listen to 2-3 episodes this week.</p>
+      <p><a href="https://open.spotify.com/show/2cOv2r93UovlubXwlTrTMI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
     </div>
   </div>
 </div>
-
-
-
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 3 -- Email Essentials</h4>
+</div>
+<h4>Lesson 2 &mdash; My Daily Routine</h4>
+<div class="media-grid">
+<div class="media-card-wrapper" data-media="l2-podcast1">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>Talking About Your Job -- Business English Pod</h5>
+      <p>Learn phrases to describe your daily work responsibilities.</p>
+      <p class="media-tip">Tip: Listen twice. First for general understanding, then for specific phrases.</p>
+      <p><a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+<div class="media-card-wrapper" data-media="l2-series">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="17 2 12 7 7 2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Series</div>
+      <h5>Suits -- Season 1, Episode 1 (Netflix)</h5>
+      <p>Corporate law drama with authentic legal vocabulary. Watch the first 30 minutes.</p>
+      <p class="media-tip">Tip: Watch with English subtitles. Note how lawyers describe their work.</p>
+    </div>
+  </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+1%2C+Episode+1+%28Netflix%29" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
+<div class="media-card-wrapper" data-media="l2-podcast2">
+  <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
+  <div class="media-card">
+    <div class="media-thumb"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+    <div class="media-info">
+      <div class="media-type">Podcast</div>
+      <h5>6 Minute English -- Working from Home (BBC Learning English)</h5>
+      <p>Short episode about modern work routines.</p>
+      <p class="media-tip">Tip: Listen during your commute. Write 3 new phrases.</p>
+      <p><a href="https://open.spotify.com/show/2cOv2r93UovlubXwlTrTMI" target="_blank" rel="noopener" style="display:inline-block;margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p>
+    </div>
+  </div>
+</div>
+</div>
+<h4>Lesson 3 &mdash; Email Essentials</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l3-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5507,7 +5515,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 opening or closing lines you hear or read on screen, then reuse one in an email of your own.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+1%2C+Episode+2%3A+Errors+and+Omissions" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l3-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5519,7 +5527,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 phrases the speakers use to open and close an email. Compare them with the phrases Simone used with Thomas today.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l3-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5531,9 +5539,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write a 5-line email to a fictional counterpart: open, make one request, mention an attachment, and sign off. Then read it out loud.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/watch?v=3-QoPcJHQws" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 4 -- Phone &amp; Video Calls</h4>
+<h4>Lesson 4 &mdash; Phone &amp; Video Calls</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l4-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5545,7 +5554,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 phrases people use to open or close a call. Then record yourself reusing one of them with your own context.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Industry+%28HBO%29+Season+1%2C+Episode+1%3A+Induction" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l4-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5557,7 +5566,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 expressions the speakers use to clarify or confirm. Compare them with the phrases Simone used with Mark in today's call.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l4-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5569,8 +5578,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, record a 60-second voicemail in English about a contract point. Use at least four new words and the three phases: open, clarify, close.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+Telephone+English%3A+how+to+make+a+phone+call" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 5 -- Small Talk That Works</h4>
+<h4>Lesson 5 &mdash; Small Talk That Works</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l5-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5582,7 +5593,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 questions characters use to start or build a conversation. Then record yourself reusing one with your own context.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+1%2C+Episode+1%3A+Pilot" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l5-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5594,7 +5605,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 open questions the speakers recommend. Compare them with the questions Simone used with Daniel at the coffee break.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l5-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5606,8 +5617,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, note three phrases the speaker uses to connect with the audience, then record a 60-second self-introduction using at least four new expressions from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.ted.com/talks/andrew_vincent_the_art_of_asking_questions" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on TED &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 6 -- Meeting Basics</h4>
+<h4>Lesson 6 &mdash; Meeting Basics</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l6-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5619,7 +5632,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 sentences with can, could, or should from a meeting scene. Then record yourself reusing one in your own meeting context.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+1%2C+Episode+3%3A+Inside+Track" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l6-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5631,7 +5644,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 phrases the speakers use to keep a meeting moving. Compare them with the questions Simone and Daniel use in the project meeting.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l6-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5643,8 +5656,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, note three polite phrases with could or should, then record a 60-second meeting opening using at least four new words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+English+at+Work%3A+meetings+%2F+Modal+verbs%3A+can%2C+could%2C+should" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 7 -- Expressing Opinions</h4>
+<h4>Lesson 7 &mdash; Expressing Opinions</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l7-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5656,7 +5671,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 sentences with I think, in my view, or I disagree from a debate scene. Then record yourself reusing one in your own work context.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=The+Good+Wife+Season+1%2C+Episode+5%3A+Crash" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l7-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5668,7 +5683,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 phrases the speakers use to disagree politely. Compare them with how Simone and Daniel debate the client proposal.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l7-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5680,8 +5695,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, note three opinion phrases, then record a 60-second opinion on a work topic using at least four new words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+Giving+opinions+%2F+Agreeing+and+disagreeing+in+English" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 8 -- Giving Updates</h4>
+<h4>Lesson 8 &mdash; Giving Updates</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l8-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5693,7 +5710,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 sentences in the present continuous about what someone is doing. Then record yourself giving a one-minute update on your own project.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Industry+Season+1%2C+Episode+1%3A+Induction" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l8-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5705,7 +5722,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 phrases the speakers use to report progress. Compare them with how Simone updates Daniel on the merger.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/4gtSBBxIAE142ApX6LqsvN" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l8-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5717,8 +5734,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, note three time expressions, then record a 60-second project update using at least four new words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+Present+continuous+%2F+Talking+about+now" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 9 -- Asking Smart Questions</h4>
+<h4>Lesson 9 &mdash; Asking Smart Questions</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l9-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5730,7 +5749,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 indirect questions you hear. Then turn each one into a direct question and notice the change in word order.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=The+Good+Wife+Season+1%2C+Episode+1%3A+Pilot" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l9-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5742,7 +5761,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 phrases the speakers use to ask follow-up questions. Compare them with how Simone questions Daniel in the Q&amp;A call.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://podcasts.apple.com/us/podcast/ask-better-questions/id152022135?i=1000412519196" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Apple Podcasts &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l9-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5754,8 +5773,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five indirect questions about a real deal, then record yourself asking them using at least four new words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+Indirect+questions+%2F+Being+polite" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 10 -- Travel English I</h4>
+<h4>Lesson 10 &mdash; Travel English I</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l10-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5767,7 +5788,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch the first 30 minutes with English subtitles. Write down 5 travel words you hear and 3 polite requests with Could I or Could you.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Up+in+the+Air+%282009%29+film" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l10-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5779,7 +5800,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 phrases the speakers use to ask for things. Compare them with how Simone asks the agent in the check-in dialogue.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.google.com/search?q=The+Travel+English+Podcast+At+the+Airport+%26+Hotel" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Find the podcast &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l10-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5791,8 +5812,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five polite requests for a real trip, then record yourself asking them using at least four travel words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+Travel+English+%2F+Polite+requests" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 11 -- Contract Vocabulary</h4>
+<h4>Lesson 11 &mdash; Contract Vocabulary</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l11-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5804,7 +5827,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch the first 30 minutes with English subtitles. Write down 5 legal nouns you hear and 3 sentences with that or which.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+1%2C+Episode+1+Pilot" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l11-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5816,7 +5839,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 legal nouns the hosts define, and write one defining clause for each using that or which.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.google.com/search?q=Legal+English+Podcast+Reading+Commercial+Contracts" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Find the podcast &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l11-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5828,8 +5851,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five sentences about a contract using a defining clause in each, then record yourself reading them with at least four legal words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+Relative+clauses%3A+that%2C+which+and+who" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 12 -- Reading Contracts II</h4>
+<h4>Lesson 12 &mdash; Reading Contracts II</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l12-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5841,7 +5866,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 conditions you hear (one with if, one with unless, one with provided) and the legal nouns around them.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+1%2C+Episode+2+Errors+and+Omissions" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l12-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5853,7 +5878,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 conditions the hosts read, and rewrite each one using a different word: if, unless or provided.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.google.com/search?q=Legal+English+Podcast+Conditions+and+Termination+Clauses" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Find the podcast &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l12-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5865,8 +5890,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five conditions about a contract (using if, unless and provided), then record yourself reading them with at least four legal words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+First+conditional%3A+if%2C+unless+and+provided+that" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 13 -- Contract Vocabulary III</h4>
+<h4>Lesson 13 &mdash; Contract Vocabulary III</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l13-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5878,7 +5905,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 duties you hear (one with must, one with shall, one with may) and the legal verbs around them.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+1%2C+Episode+3+Inside+Track" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l13-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5890,7 +5917,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 duties the hosts read, and rewrite each one using a different modal: must, shall or may.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/15y8Y9lQdkmpCB46hcjOmw" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l13-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5902,8 +5929,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five duties about a contract (using must, shall, may and must not), then record yourself reading them with at least four legal words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+Modal+verbs+of+obligation%3A+must%2C+have+to+and+mustn%27t" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 14 -- Resolving Disputes</h4>
+<h4>Lesson 14 &mdash; Resolving Disputes</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l14-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5915,7 +5944,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 first-conditional sentences you hear (if + present, will + verb) and the dispute words around them.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+2%2C+Episode+6+All+In" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l14-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5927,7 +5956,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 steps the hosts describe, and rewrite each one as a first-conditional sentence (if + present, will + verb).</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/15y8Y9lQdkmpCB46hcjOmw" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l14-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5939,8 +5968,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five first-conditional sentences about a dispute, then record yourself reading them with at least four dispute words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+The+first+conditional%3A+if+%2B+present%2C+will+%2B+verb" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 15 -- Reading Contracts IV</h4>
+<h4>Lesson 15 &mdash; Reading Contracts IV</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l15-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5952,7 +5983,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 passive sentences you hear (be + past participle) and the drafting words around them.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+1%2C+Episode+9+Undefeated" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l15-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5964,7 +5995,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 drafting steps the hosts describe, and rewrite each one as a passive sentence (be + past participle).</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/15y8Y9lQdkmpCB46hcjOmw" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l15-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5976,8 +6007,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five passive sentences about a contract, then record yourself reading them with at least four drafting words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+The+passive+voice%3A+be+%2B+past+participle" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 16 -- Closing the Deal</h4>
+<h4>Lesson 16 &mdash; Closing the Deal</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l16-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -5989,7 +6022,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 reported sentences you hear (said / told me + the verb one step back) and the closing words around them.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+2%2C+Episode+6+All+In" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l16-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6001,7 +6034,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 3 things the hosts report someone saying, and rewrite each one as reported speech (said / told me + verb one step back).</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/15y8Y9lQdkmpCB46hcjOmw" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l16-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6013,8 +6046,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five reported sentences about a deal, then record yourself reading them with at least four closing words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+Reported+speech%3A+said+and+told" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 17 -- Leading a Meeting</h4>
+<h4>Lesson 17 &mdash; Leading a Meeting</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l17-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6026,7 +6061,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 sentences the chair uses to manage the meeting, and mark whether each verb is followed by -ing or by to.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Industry+Season+1%2C+Episode+4+Sesh" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l17-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6038,7 +6073,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 5 chairing phrases the hosts use, and underline the verb pattern in each one (-ing or to).</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://podcasts.apple.com/us/podcast/business-english-pod-learn-business-english/id206603090" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Apple Podcasts &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l17-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6050,8 +6085,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five chairing sentences (open, allocate, suggest, propose, adjourn), then record yourself reading them with at least four new words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+Verbs+followed+by+-ing+or+to+%2B+infinitive" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 18 -- Negotiating Terms</h4>
+<h4>Lesson 18 &mdash; Negotiating Terms</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l18-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6063,7 +6100,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 sentences where a character uses "if + past, would" to make an offer, and underline the trade-off in each one.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+2%2C+Episode+1+She+Knows" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l18-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6075,7 +6112,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 5 negotiation phrases the hosts use, and mark which ones are in the second conditional (if + past, would).</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://podcasts.apple.com/us/podcast/business-english-pod-learn-business-english/id206603090" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Apple Podcasts &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l18-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6087,8 +6124,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five second conditional sentences for a negotiation (price, contract, payment, delivery, deadline), then record yourself reading them with at least four new words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=BBC+Learning+English+The+Second+Conditional" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 19 -- Handling Objections</h4>
+<h4>Lesson 19 &mdash; Handling Objections</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l19-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6100,7 +6139,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 moments where a character acknowledges a concern before answering, and underline the connector (however / nevertheless / on the other hand) in each one.</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+2%2C+Episode+6+All+In" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l19-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6112,7 +6151,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 5 phrases the hosts use to acknowledge or answer an objection, and mark which ones use a concession connector (however, nevertheless, on the other hand).</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l19-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6124,8 +6163,10 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five sentences where you acknowledge a concern and then answer it with a connector. Record yourself reading them with at least four new words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/watch?v=M_2N2Ts8DxQ" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-<h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:1.5rem 0 1rem;color:var(--accent)">Lesson 20 -- Social English</h4>
+<h4>Lesson 20 &mdash; Social English</h4>
+<div class="media-grid">
 <div class="media-card-wrapper" data-media="l20-series">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6137,7 +6178,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Watch with English subtitles. Write down 3 social phrases a character uses to compliment someone or open a conversation, and underline any present perfect (have/has + participle).</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/results?search_query=Suits+Season+3%2C+Episode+4+Conflict+of+Interest" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l20-podcast">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6149,7 +6190,7 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">Note 5 social phrases the hosts use, and write 3 present perfect questions you could ask a guest (Have you ever...?).</p>
     </div>
   </div>
-</div>
+<p style="margin-top:.4rem"><a href="https://open.spotify.com/show/4nCHpl7GXuMu41Jn4xDLtH" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Listen on Spotify &#8599;</a></p></div>
 <div class="media-card-wrapper" data-media="l20-youtube">
   <label class="media-check"><input type="checkbox" onchange="toggleMediaDone(this)"></label>
   <div class="media-card">
@@ -6161,8 +6202,9 @@ body.slide-mode .nav-bar { display:flex; }
       <p class="media-tip">After watching, write five present perfect sentences about your own experience, then record yourself making conversation with at least four new words from today.</p>
     </div>
   </div>
+<p style="margin-top:.4rem"><a href="https://www.youtube.com/watch?v=o-GWYDA4IQY" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--accent)">Watch on YouTube &#8599;</a></p></div>
 </div>
-</div><!-- /tab-complementary -->
+    </div><!-- /tab-complementary -->
 
 </div><!-- /container -->
 </div><!-- /main-content -->

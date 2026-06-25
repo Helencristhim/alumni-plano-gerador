@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>IN CLASS — Patricia Ruffo | Lesson 4 | Alumni by Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #2D6A4F;
+  --accent-light: #7BEFB2;
+  --accent-dim: rgba(45,106,79,0.08);
+  --accent-glow: rgba(45,106,79,0.05);
+  --black: #1a1a2e;
+  --bg: #f5f2ee;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0ede8;
+  --bg-input: #fafaf7;
+  --border: #d8d1c8;
+  --border-light: #c4bdb3;
+  --white: #ffffff;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #6b6b7a;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --warn: #d97706;
+  --navy: #003080;
+  --dark: #1a1a2e;
+  --dark-surface: #22223a;
+  --dark-elevated: #2d2d4a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; touch-action: manipulation; }
+
+/* === FOCUS STATES (Accessibility) === */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter',sans-serif; background:#0a0a1a; color:var(--text); }
+
+/* ===== SLIDE SYSTEM ===== */
+.slide-deck { position:relative; width:100%; height:100vh; }
+.slide {
+  position:absolute; inset:0; width:100%; height:100vh;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  opacity:0; visibility:hidden; transition: opacity 400ms ease, visibility 400ms ease;
+  overflow-y:auto; padding:2rem;
+}
+.slide.active { opacity:1; visibility:visible; }
+
+.slide.dark { background:var(--dark); color:#fff; }
+.slide.dark .checklist li,.slide.dark .check-item,.slide.dark .check-label,.slide.dark .roleplay-body p,.slide.dark .roleplay-body,.slide.dark .roleplay-scenario,.slide.dark .comp-q,.slide.dark .comp-q p,.slide.dark .fill-item label,.slide.dark .fill-item p,.slide.dark .error-card p,.slide.dark .oral-item p,.slide.dark .email-card,.slide.dark .email-card p,.slide.dark .boarding-pass p,.slide.dark .student-id-card p{color:#1a1a2e !important}
+.slide.light { background:var(--bg); color:var(--text); }
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.6rem 1.5rem; background:rgba(10,10,26,0.85); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.top-bar-left { display:flex; align-items:center; gap:0.8rem; }
+.top-bar-logo { height:26px; opacity:0.9; }
+.slide-counter { font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.75); letter-spacing:1px; }
+.top-bar-right { display:flex; align-items:center; gap:0.6rem; }
+
+/* Chapter progress */
+.chapter-bar { display:flex; gap:2px; flex:1; max-width:360px; margin:0 1rem; }
+.chapter-dot {
+  flex:1; height:5px; border-radius:3px; background:rgba(255,255,255,0.2);
+  cursor:pointer; transition:background 0.3s;
+}
+.chapter-dot.active { background:#52D18A; }
+.chapter-dot.completed { background:#7BEFB2; }
+
+/* Dot navigation */
+.dot-nav {
+  position:fixed; right:1rem; top:50%; transform:translateY(-50%); z-index:100;
+  display:flex; flex-direction:column; gap:4px;
+}
+.dot-nav-item {
+  width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.3);
+  cursor:pointer; transition:all 0.3s; border:none;
+}
+.dot-nav-item.active { background:var(--accent); transform:scale(1.4); }
+.dot-nav-item:hover { background:rgba(255,255,255,0.4); }
+
+/* Nav arrows */
+.nav-arrows {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:100;
+  display:flex; gap:0.5rem;
+}
+.nav-btn {
+  width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
+  background:rgba(10,10,26,0.7); backdrop-filter:blur(8px);
+  color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.nav-btn:hover { background:var(--accent); border-color:var(--accent); }
+.nav-btn svg { width:18px; height:18px; }
+
+/* ===== TEACHER CUE (T icon) ===== */
+.t-cue {
+  position:fixed; top:3.5rem; right:1.5rem; z-index:200;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.75); font-weight:700; font-size:0.8rem;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 0.25s;
+}
+.t-cue:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.t-panel {
+  display:none; position:fixed; top:6rem; right:1.5rem; z-index:210;
+  width:340px; max-height:60vh; overflow-y:auto;
+  background:rgba(26,26,46,0.97); color:#e0e0e0; padding:1.2rem 1.4rem;
+  border-radius:10px; font-size:0.82rem; line-height:1.7;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08);
+}
+.t-panel.show { display:block; animation:fadeIn 0.2s ease; }
+.t-panel strong { color:var(--accent-light); }
+.t-panel .t-timing { color:#fbbf24; font-weight:600; font-size:0.75rem; display:block; margin-bottom:0.5rem; }
+.t-panel .t-ccq { background:rgba(45,106,79,0.15); border:1px solid rgba(45,106,79,0.3); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; }
+.t-panel .t-alert { background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.25); border-radius:6px; padding:0.6rem 0.8rem; margin-top:0.6rem; color:#fca5a5; }
+
+/* ===== TYPOGRAPHY ===== */
+.slide-chapter-label {
+  font-size:0.68rem; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.6rem;
+}
+.slide-title {
+  font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:600;
+  line-height:1.2; margin-bottom:0.8rem; max-width:750px; text-align:center;
+}
+.slide-subtitle {
+  font-size:1rem; font-weight:400; opacity:0.85; max-width:600px; text-align:center; line-height:1.7;
+}
+.slide[style*="background-image"] .slide-title { text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+.slide[style*="background-image"] .slide-chapter-label { color: rgba(255,255,255,0.8); }
+.slide.dark .accent, .slide.dark .accent-bold { color: #7BEFB2; }
+.slide.dark .slide-chapter-label { color: rgba(255,255,255,0.8); }
+.slide-content { max-width:800px; width:100%; }
+.section-label {
+  font-size:0.7rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+
+/* ===== VOCAB REVEAL CARDS (2x2 grid) ===== */
+.vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:750px; width:100%; }
+.v-card {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px; padding:1.2rem; cursor:pointer; transition:all 0.35s;
+  min-height:160px; display:flex; flex-direction:column; position:relative; overflow:hidden;
+}
+.v-card:hover { border-color:var(--accent); background:rgba(45,106,79,0.06); }
+.v-card.revealed { border-color:var(--accent-light); background:rgba(45,106,79,0.08); }
+.v-card-icon {
+  width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  margin-bottom:0.8rem; flex-shrink:0;
+}
+.v-card-icon svg { width:24px; height:24px; }
+.v-card-hint { font-size:0.85rem; color:rgba(255,255,255,0.75); font-style:italic; line-height:1.6; }
+.v-card-body { display:none; }
+.v-card.revealed .v-card-hint { display:none; }
+.v-card.revealed .v-card-body { display:block; animation:fadeIn 0.35s ease; }
+.v-word { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:#fff; margin-bottom:0.3rem; }
+.v-def { font-size:0.82rem; color:rgba(255,255,255,0.85); margin-bottom:0.3rem; }
+.v-example { font-size:0.85rem; color:rgba(255,255,255,0.8); font-style:italic; margin-bottom:0.6rem; }
+.v-listen-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.35rem 0.9rem; background:var(--accent); color:#fff;
+  border:none; border-radius:5px; font-size:0.75rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.v-listen-btn:hover { background:var(--accent-light); }
+.v-listen-btn svg { width:14px; height:14px; }
+.vocab-counter { text-align:center; margin-top:1rem; font-size:0.8rem; color:rgba(255,255,255,0.65); font-weight:500; }
+
+/* ===== GRAMMAR DISCOVERY ===== */
+.grammar-examples { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.2rem; }
+.g-example {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; font-size:1.05rem; color:rgba(255,255,255,0.9); line-height:1.6;
+}
+.g-example .highlight { color:var(--accent-light); font-weight:700; }
+.g-reveal-btn {
+  width:100%; padding:0.8rem; border:2px dashed var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:10px; font-size:0.9rem; font-weight:600;
+  cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
+}
+.g-reveal-btn:hover { background:rgba(45,106,79,0.1); }
+.g-reveal-btn.used { display:none; }
+.g-rule {
+  display:none; padding:1.5rem; background:rgba(45,106,79,0.08);
+  border:1px solid rgba(45,106,79,0.25); border-radius:10px; margin-top:1rem;
+}
+.g-rule.show { display:block; animation:fadeIn 0.4s ease; }
+.g-rule h4 { color:var(--accent-light); font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:1rem; }
+.g-rule table { width:100%; border-collapse:collapse; font-size:0.88rem; color:rgba(255,255,255,0.85); }
+.g-rule th { text-align:left; padding:0.6rem; border-bottom:2px solid rgba(255,255,255,0.15); color:var(--accent-light); font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; }
+.g-rule td { padding:0.6rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+
+/* ===== COMMON MISTAKE ===== */
+.mistake-box { max-width:600px; width:100%; }
+.mistake-wrong, .mistake-right {
+  padding:1.2rem 1.5rem; border-radius:10px; font-size:1.1rem; margin-bottom:1rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.mistake-wrong { background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.25); color:#fca5a5; }
+.mistake-right { background:rgba(22,163,74,0.08); border:1px solid rgba(22,163,74,0.25); color:#86efac; }
+.mistake-icon { width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+.mistake-wrong .mistake-icon { background:rgba(220,38,38,0.2); }
+.mistake-right .mistake-icon { background:rgba(22,163,74,0.2); }
+
+/* ===== FILL-IN PRACTICE ===== */
+.fill-practice { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.fp-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.fp-item:hover { border-color:var(--accent); }
+.fp-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.fp-sentence .fp-blank { color:var(--accent-light); font-weight:700; border-bottom:2px dashed var(--accent); padding:0 0.3rem; }
+.fp-answer { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(45,106,79,0.12); border-radius:6px; font-size:0.88rem; color:var(--accent-light); font-weight:600; }
+.fp-item.open .fp-answer { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== SUBSTITUTION DRILL ===== */
+.sub-drill { max-width:600px; width:100%; text-align:center; }
+.sub-template { font-family:'Cormorant Garamond',serif; font-size:2rem; color:#fff; margin-bottom:2rem; }
+.sub-template .sub-slot { color:var(--accent-light); border-bottom:3px solid var(--accent); padding:0 0.5rem; }
+.sub-prompts { display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:center; }
+.sub-chip {
+  padding:0.5rem 1.2rem; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+  border-radius:20px; font-size:0.88rem; color:rgba(255,255,255,0.7); cursor:pointer; transition:all 0.2s;
+}
+.sub-chip:hover, .sub-chip.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* ===== ARTIFACT (Badge, Bio, Email) ===== */
+.artifact-badge {
+  max-width:420px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15); position:relative;
+}
+.artifact-badge-header {
+  background:linear-gradient(135deg, #1a365d 0%, #2D6A4F 100%);
+  padding:1.2rem 1.5rem; color:#fff;
+}
+.artifact-badge-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; margin-bottom:0.3rem; }
+.artifact-badge-header h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; }
+.artifact-badge-body { padding:1.5rem; }
+.artifact-badge-body .badge-name { font-size:1.2rem; font-weight:700; color:var(--dark); }
+.artifact-badge-body .badge-title { font-size:0.82rem; color:var(--text-mid); margin-top:0.2rem; }
+.artifact-badge-body .badge-affiliation { font-size:0.85rem; color:var(--text); margin-top:0.3rem; }
+.artifact-badge-body .badge-location { font-size:0.78rem; color:var(--text-dim); margin-top:0.2rem; }
+.artifact-badge-photo {
+  width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-light));
+  display:flex; align-items:center; justify-content:center; color:#fff;
+  font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600;
+  position:absolute; top:3.2rem; right:1.5rem; border:3px solid #fff;
+}
+
+.artifact-email {
+  max-width:520px; width:100%; background:#fff; border-radius:12px; overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.15);
+}
+.artifact-email-header {
+  background:linear-gradient(135deg, #1a365d 0%, #2D6A4F 100%);
+  padding:1rem 1.5rem; color:#fff;
+}
+.artifact-email-header h5 { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; margin-bottom:0.3rem; }
+.artifact-email-body { padding:1.5rem; color:var(--text); font-size:0.88rem; line-height:1.8; }
+.artifact-email-body .email-field { font-size:0.78rem; color:var(--text-dim); margin-bottom:0.2rem; }
+.artifact-email-body .email-field strong { color:var(--text-mid); }
+.artifact-email-body .email-subject { font-size:0.95rem; font-weight:700; color:var(--dark); margin:0.5rem 0 1rem; padding-bottom:0.8rem; border-bottom:1px solid var(--border); }
+
+/* ===== DIALOGUE ===== */
+.dialogue-container { max-width:650px; width:100%; display:flex; flex-direction:column; gap:0; }
+.d-line { display:none; padding:0.8rem 1rem; border-left:3px solid transparent; animation:slideUp 0.4s ease; }
+.d-line.visible { display:flex; gap:1rem; align-items:flex-start; }
+.d-line:hover { background:rgba(255,255,255,0.03); }
+.d-avatar {
+  width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:0.5px;
+}
+.d-avatar.blue { background:#2563eb; }
+.d-avatar.green { background:var(--accent); }
+.d-speaker { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.65); margin-bottom:0.15rem; }
+.d-text { font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; }
+.d-text strong { color:var(--accent-light); font-weight:600; }
+.d-text-wrap { flex:1; }
+.next-line-btn {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.5rem 1.2rem; border:1px solid var(--accent); background:transparent;
+  color:var(--accent-light); border-radius:6px; cursor:pointer; font-size:0.82rem;
+  font-weight:600; margin-top:1rem; transition:all 0.2s;
+}
+.next-line-btn:hover { background:var(--accent); color:#fff; }
+
+/* ===== LISTENING ===== */
+.listening-card { max-width:500px; width:100%; text-align:center; }
+.waveform {
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  height:60px; margin-bottom:1.5rem;
+}
+.waveform-bar {
+  width:4px; border-radius:2px; background:var(--accent);
+  animation:wave 1.2s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.waveform.playing .waveform-bar { animation-play-state:running; }
+@keyframes wave {
+  0%, 100% { height:8px; opacity:0.3; }
+  50% { height:40px; opacity:1; }
+}
+.play-pause-btn {
+  width:64px; height:64px; border-radius:50%; border:2px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem;
+  transition:all 0.2s;
+}
+.play-pause-btn:hover { background:var(--accent); color:#fff; }
+.play-pause-btn svg { width:28px; height:28px; }
+.listening-questions { display:none; flex-direction:column; gap:0.6rem; margin-top:1.5rem; text-align:left; }
+.listening-questions.show { display:flex; animation:fadeIn 0.4s ease; }
+.lq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.lq-item:hover { border-color:var(--accent); }
+.lq-question { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.lq-answer { display:none; margin-top:0.5rem; font-size:0.85rem; color:#7BEFB2; font-weight:500; }
+.lq-item.open .lq-answer { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== QUICK CHALLENGE ===== */
+.qc-container { max-width:600px; width:100%; }
+.qc-card { display:none; }
+.qc-card.active { display:block; animation:fadeIn 0.3s ease; }
+.qc-prompt {
+  font-size:1.15rem; color:#fff; text-align:center; margin-bottom:1.5rem; line-height:1.7;
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+}
+.qc-show-btn {
+  display:block; width:100%; padding:0.8rem; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); border-radius:8px;
+  font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s;
+}
+.qc-show-btn:hover { background:var(--accent); color:#fff; }
+.qc-answer-box {
+  display:none; margin-top:1rem; padding:1rem; background:rgba(45,106,79,0.1);
+  border:1px solid rgba(45,106,79,0.25); border-radius:8px;
+  font-size:0.95rem; color:rgba(255,255,255,0.85); line-height:1.7; text-align:center;
+}
+.qc-answer-box.show { display:block; animation:fadeIn 0.3s ease; }
+.qc-next-btn {
+  display:none; margin:1rem auto 0; padding:0.5rem 1.5rem; background:var(--accent);
+  color:#fff; border:none; border-radius:6px; font-size:0.82rem; font-weight:600;
+  cursor:pointer; transition:background 0.2s;
+}
+.qc-next-btn.show { display:block; }
+.qc-next-btn:hover { background:var(--accent-light); }
+.qc-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.65); margin-bottom:1rem; font-weight:500; }
+
+/* ===== SPOT THE ERROR ===== */
+.error-list { display:flex; flex-direction:column; gap:0.6rem; max-width:700px; width:100%; }
+.err-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.err-item:hover { border-color:rgba(220,38,38,0.4); }
+.err-sentence { font-size:1rem; color:rgba(255,255,255,0.85); line-height:1.6; }
+.err-sentence .wrong { color:rgba(255,255,255,0.85); font-weight:400; text-decoration:none; transition:all 0.3s; }
+.err-item.open .err-sentence .wrong { text-decoration:line-through; color:#f87171; font-weight:600; }
+.err-correction {
+  display:none; margin-top:0.6rem; padding:0.5rem 0.8rem;
+  background:rgba(22,163,74,0.1); border-radius:6px;
+  font-size:0.88rem; color:#86efac; font-weight:600;
+}
+.err-item.open .err-correction { display:block; animation:fadeIn 0.2s ease; }
+.err-score { text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.65); margin-top:1rem; font-weight:500; }
+
+/* ===== ORAL DRILLING ===== */
+.oral-list { display:flex; flex-direction:column; gap:0.8rem; max-width:700px; width:100%; }
+.oral-item {
+  padding:1rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.3s;
+}
+.oral-item:hover { border-color:var(--accent); }
+.oral-situation { font-size:0.92rem; color:rgba(255,255,255,0.7); margin-bottom:0.3rem; }
+.oral-situation-label { font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent-light); margin-bottom:0.4rem; }
+.oral-model { display:none; margin-top:0.6rem; padding:0.6rem 0.8rem; background:rgba(45,106,79,0.1); border-radius:6px; font-size:0.92rem; color:rgba(255,255,255,0.9); font-style:italic; line-height:1.6; }
+.oral-item.open .oral-model { display:block; animation:fadeIn 0.25s ease; }
+
+/* ===== ROLE-PLAY CARDS ===== */
+.rp-card {
+  max-width:600px; width:100%; border-radius:16px; overflow:hidden;
+  position:relative; min-height:280px; display:flex; flex-direction:column; justify-content:flex-end;
+}
+.rp-bg { position:absolute; inset:0; }
+.rp-bg-gradient { position:absolute; inset:0; }
+.rp-content { position:relative; z-index:1; padding:2rem; }
+.rp-level {
+  font-size:0.68rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--accent-light); margin-bottom:0.5rem;
+}
+.rp-scenario { font-size:1.05rem; color:#fff; line-height:1.7; margin-bottom:1rem; }
+.rp-keywords { display:flex; gap:0.5rem; flex-wrap:wrap; }
+.rp-keyword {
+  padding:0.3rem 0.8rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px; font-size:0.78rem; color:rgba(255,255,255,0.8); font-weight:500;
+}
+
+/* ===== PRONUNCIATION DRILL ===== */
+.pron-list { display:flex; flex-direction:column; gap:0.8rem; max-width:600px; width:100%; }
+.pron-item {
+  display:flex; align-items:center; gap:1rem; padding:0.8rem 1.2rem;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;
+}
+.pron-word { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:#fff; font-weight:600; min-width:160px; }
+.pron-stress { font-size:0.88rem; color:var(--accent-light); font-weight:500; flex:1; }
+.pron-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.pron-play:hover { background:var(--accent); color:#fff; }
+.pron-play svg { width:18px; height:18px; }
+
+/* ===== EXPRESSIONS ===== */
+.expr-list { display:flex; flex-direction:column; gap:0.6rem; max-width:650px; width:100%; }
+.expr-item {
+  display:flex; align-items:center; gap:1rem; padding:1rem 1.2rem;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; transition:border-color 0.2s;
+}
+.expr-item:hover { border-color:var(--accent); }
+.expr-text { flex:1; font-size:1rem; color:rgba(255,255,255,0.85); font-style:italic; }
+.expr-play {
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-light); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0;
+}
+.expr-play:hover { background:var(--accent); color:#fff; }
+.expr-play svg { width:18px; height:18px; }
+
+/* ===== SURVIVAL CARD ===== */
+.survival {
+  max-width:600px; width:100%; background:linear-gradient(135deg, #1a1a2e 0%, #2d2d4a 100%);
+  border-radius:14px; padding:2rem; border:1px solid rgba(255,255,255,0.06);
+}
+.survival h3 { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--accent-light); margin-bottom:1.2rem; text-align:center; }
+.surv-phrase { display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+.surv-phrase:last-child { border-bottom:none; }
+.surv-num {
+  width:26px; height:26px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0;
+}
+.surv-text { flex:1; font-size:0.9rem; color:rgba(255,255,255,0.85); }
+.surv-play {
+  width:34px; height:34px; border-radius:50%; border:none;
+  background:rgba(255,255,255,0.1); color:#fff; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:background 0.2s;
+}
+.surv-play:hover { background:var(--accent); }
+.surv-play svg { width:16px; height:16px; }
+
+/* ===== CHECKLIST ===== */
+.check-grid { max-width:600px; width:100%; }
+.check-item {
+  display:flex; align-items:center; gap:0.8rem; padding:0.7rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.06); cursor:pointer;
+}
+.check-item:last-child { border-bottom:none; }
+.cl-box {
+  width:22px; height:22px; border:2px solid rgba(255,255,255,0.2); border-radius:5px;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.cl-box svg { width:14px; height:14px; opacity:0; transition:opacity 0.2s; }
+.check-item.checked .cl-box { background:var(--accent); border-color:var(--accent); }
+.check-item.checked .cl-box svg { opacity:1; }
+.cl-text { font-size:0.88rem; color:rgba(255,255,255,0.7); transition:color 0.2s; }
+.check-item.checked .cl-text { color:rgba(255,255,255,0.9); }
+
+/* ===== CONFETTI ===== */
+.confetti-container { position:fixed; inset:0; pointer-events:none; z-index:9999; }
+.confetti-piece {
+  position:absolute; width:10px; height:10px; opacity:0;
+  animation:confettiFall 3s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { opacity:1; transform:translateY(-100vh) rotate(0deg); }
+  100% { opacity:0; transform:translateY(100vh) rotate(720deg); }
+}
+
+/* ===== COMPREHENSION Q ===== */
+.comp-questions { display:flex; flex-direction:column; gap:0.6rem; margin-top:1.2rem; max-width:600px; width:100%; }
+.cq-item {
+  padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; cursor:pointer; transition:all 0.2s;
+}
+.cq-item:hover { border-color:var(--accent); }
+.cq-q { font-size:0.9rem; color:rgba(255,255,255,0.8); }
+.cq-a { display:none; margin-top:0.5rem; font-size:0.85rem; color:var(--accent-light); font-weight:500; }
+.cq-item.open .cq-a { display:block; animation:fadeIn 0.2s ease; }
+
+/* ===== REPORTING VERBS TABLE ===== */
+.frames-table { width:100%; border-collapse:collapse; font-size:0.88rem; color:rgba(255,255,255,0.85); max-width:600px; }
+.frames-table th { text-align:left; padding:0.6rem; border-bottom:2px solid rgba(255,255,255,0.15); color:var(--accent-light); font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; }
+.frames-table td { padding:0.6rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* === LISTENING PLAYER (Full) === */
+.listening-player{max-width:420px;margin:1.5rem auto 0}
+.lp-seekbar{height:6px;background:rgba(255,255,255,.3);border-radius:3px;cursor:pointer;margin-bottom:8px;position:relative}
+.lp-seekbar:hover{height:8px}
+.lp-progress{height:100%;background:var(--accent);border-radius:3px;transition:width .1s;width:0%}
+.lp-time{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.75);margin-bottom:16px;font-variant-numeric:tabular-nums}
+.lp-controls{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.lp-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lp-btn:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.lp-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.lp-play{width:64px;height:64px;background:var(--accent);border:none;color:#fff}
+.lp-play:hover{transform:scale(1.05)}
+.lp-play svg{width:24px;height:24px}
+.lp-play.playing .lp-icon-play{display:none}
+.lp-play.playing .lp-icon-pause{display:flex!important}
+.lp-icon-pause{display:none!important}
+.lp-speed{display:flex;justify-content:center;gap:8px}
+.lp-speed-btn{padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.75);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.lp-speed-btn:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.lp-speed-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lp-label{font-size:.7rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.5px;text-align:center;margin-bottom:6px}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px) {
+  .slide { padding:1.2rem; padding-top:3.5rem; }
+  .slide-title { font-size:1.8rem; }
+  .vocab-grid { grid-template-columns:1fr; }
+  .t-panel { width:280px; right:0.5rem; }
+  .dot-nav { display:none; }
+  .nav-arrows { bottom:1rem; right:1rem; }
+  .top-bar { padding:0.5rem 1rem; }
+}
+
+/* === REDUCED MOTION (Accessibility) === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+.fill-a { display:none; }
+.vocab-card-pc.listened{border-color:var(--success);background:rgba(22,163,74,0.06)}
+.vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
+.btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
+.btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
+.t-cue{display:none !important}.t-panel{display:none !important}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='patricia-ruffo';window.TOTAL_AULAS=40;</script>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="top-bar-logo">
+    <span class="slide-counter" id="slideCounter">1 / 28</span>
+  </div>
+  <div class="chapter-bar" id="chapterBar">
+    <div class="chapter-dot active" data-chapter="1" title="Chapter 1: The Briefing" onclick="goToSlide(0)"></div>
+    <div class="chapter-dot" data-chapter="2" title="Chapter 2: Key Words" onclick="goToSlide(3)"></div>
+    <div class="chapter-dot" data-chapter="3" title="Chapter 3: The Code" onclick="goToSlide(7)"></div>
+    <div class="chapter-dot" data-chapter="4" title="Chapter 4: The Meeting" onclick="goToSlide(10)"></div>
+    <div class="chapter-dot" data-chapter="5" title="Chapter 5: Practice" onclick="goToSlide(16)"></div>
+    <div class="chapter-dot" data-chapter="6" title="Chapter 6: Your Turn" onclick="goToSlide(20)"></div>
+    <div class="chapter-dot" data-chapter="7" title="Chapter 7: Wrap-Up" onclick="goToSlide(24)"></div>
+  </div>
+  <div class="top-bar-right">
+    <span style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);">Aluno</span>
+  </div>
+</div>
+
+<!-- ===== TEACHER CUE ===== -->
+<div class="t-cue" id="tCue" onclick="toggleTeacherCue()">T</div>
+<div class="t-panel" id="tPanel"></div>
+
+<!-- ===== DOT NAV ===== -->
+<div class="dot-nav" id="dotNav"></div>
+
+<!-- ===== NAV ARROWS ===== -->
+<div class="nav-arrows">
+  <button class="nav-btn" onclick="prevSlide()" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="nav-btn" onclick="nextSlide()" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SLIDE DECK                                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="slide-deck" id="slideDeck">
+
+<!-- ═══ SLIDE 1 — TITLE ═══ -->
+<div class="slide dark active" data-chapter="1" data-t="<span class='t-timing'>0:00 - 2 min</span>Abertura. Compartilhe a tela. Diga: &quot;Welcome back, Patricia! Nas aulas anteriores você aprendeu a se apresentar, discordar educadamente e fazer perguntas inteligentes. Hoje vamos aprender a reportar e atualizar -- team presentations.&quot; Tom energético. Pergunte como foi a semana antes de avançar." style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(15,41,34,0.9) 40%, rgba(26,54,93,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 1 -- The Briefing</div>
+    <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:#7BEFB2;margin-bottom:1.5rem;">Lesson 4</p>
+    <h1 class="slide-title" style="color:#fff;">Reporting &amp; Updating</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.85);">Lesson 4 -- Business English</p>
+    <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+      <span style="padding:0.3rem 0.9rem;background:rgba(45,106,79,0.2);border:1px solid rgba(45,106,79,0.35);border-radius:20px;font-size:0.75rem;color:#7BEFB2;">B1+ Intermediate</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">60 min</span>
+      <span style="padding:0.3rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;font-size:0.75rem;color:rgba(255,255,255,0.75);">Alumni by Better</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 2 — WARM-UP 1: CALLBACK ═══ -->
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>2:00 - 5 min</span>Warm-up. Callback das aulas 1-3. Pergunte cada questão uma por vez. Se Patricia mencionar dificuldade em reportar informações, valide: &quot;That is exactly what we will practice today.&quot; Observe se ela usa os question frames da aula 3 naturalmente.">
+  <div class="slide-chapter-label">Chapter 1 -- The Briefing</div>
+  <div style="max-width:650px;text-align:center;">
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Callback: Lessons 1, 2 &amp; 3</h2>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
+      <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7BEFB2;margin-bottom:0.4rem;">Your Journey So Far</div>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">You can introduce yourself, disagree politely, and ask smart questions. Today: reporting and updating.</p>
+      </div>
+      <div style="padding:1.2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7BEFB2;margin-bottom:0.4rem;">Reflection</div>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.8);">Last class, you asked smart questions at a conference. Which question frame was most useful?</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 3 — WARM-UP 2: PRESENTING UPDATES ═══ -->
+<div class="slide dark" data-chapter="1" data-t="<span class='t-timing'>5:00 - 8 min</span>Warm-up 2. Conecte com o contexto profissional dela na Abbott. Estas perguntas são diagnósticas: observe se Patricia tem vocabulário para reportar informações e dar updates. Encerre com: &quot;Today you will learn to report and update like a project leader.&quot;<div class='t-alert'>Se ela falar em português sobre reuniões, valide o conteúdo e ajude com as palavras em inglês.</div>">
+  <div class="slide-chapter-label">Chapter 1 -- The Briefing</div>
+  <div style="max-width:650px;text-align:center;">
+    <h2 class="slide-title" style="font-size:2.2rem;color:#fff;">Presenting Updates at Work</h2>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;">
+      <div style="padding:1.5rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;">How often do you give project updates to your team?</p>
+      </div>
+      <div style="padding:1.5rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;">What information do stakeholders usually want to know?</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 4 — TRANSITION: KEY WORDS ═══ -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>8:00 - 0.5 min</span>Transição. Diga: &quot;Now let us build your reporting vocabulary.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(15,41,34,0.92) 0%, rgba(26,54,93,0.92) 50%, rgba(45,106,79,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 2 -- Key Words</div>
+    <h1 class="slide-title" style="color:#fff;">Your Reporting Vocabulary</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Ten essential words for team presentations</p>
+    <div style="margin-top:2rem;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(45,106,79,0.6)" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 5 — VOCAB 1-5 ═══ -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>8:30 - 16 min</span>Vocabulário. ANTES de clicar cada card, leia a definição e pergunte: &quot;What word do you think this is?&quot; Espere. DEPOIS de revelar: toque áudio 2x, Patricia repete. Foque na pronúncia de &quot;summarize&quot; (SUM-ma-rize, stress na primeira) e &quot;highlight&quot; (HIGH-light, stress na primeira).<div class='t-ccq'><strong>CCQs:</strong> &quot;When you report, do you give information officially or casually?&quot; (officially) / &quot;If you summarize, do you give all the details or just the main points?&quot; (main points) / &quot;Is a deadline flexible or fixed?&quot; (fixed)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Key Words</div>
+  <p class="section-label" style="color:#7BEFB2;text-align:center;">Click each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid1">
+    <!-- Card 1: Report -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #2D6A4F, #40916C);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h6"/></svg>
+      </div>
+      <div class="v-card-hint">To give information about something officially...</div>
+      <div class="v-card-body">
+        <div class="v-word">Report</div>
+        <div class="v-def">to give information about something officially</div>
+        <div class="v-example">"I need to report our findings to the team."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I need to report our findings to the team.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 2: Update -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #1e3a5f, #2d5a8e);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+      </div>
+      <div class="v-card-hint">To give someone the latest information...</div>
+      <div class="v-card-body">
+        <div class="v-word">Update</div>
+        <div class="v-def">to give someone the latest information</div>
+        <div class="v-example">"Let me update you on the latest trial results."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('Let me update you on the latest trial results.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 3: Summarize -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #7c3aed, #a78bfa);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </div>
+      <div class="v-card-hint">To give a short statement of the main points...</div>
+      <div class="v-card-body">
+        <div class="v-word">Summarize</div>
+        <div class="v-def">to give a short statement of the main points</div>
+        <div class="v-example">"I will summarize the key points of our research."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I will summarize the key points of our research.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 4: Highlight -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #0891b2, #22d3ee);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div class="v-card-hint">To draw attention to something important...</div>
+      <div class="v-card-body">
+        <div class="v-word">Highlight</div>
+        <div class="v-def">to draw attention to something important</div>
+        <div class="v-example">"I would like to highlight three important milestones."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('I would like to highlight three important milestones.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 5: Deadline -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #d97706, #fbbf24);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="v-card-hint">The latest time by which something must be done...</div>
+      <div class="v-card-body">
+        <div class="v-word">Deadline</div>
+        <div class="v-def">the latest time by which something must be done</div>
+        <div class="v-example">"The deadline for the final report is next Friday."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The deadline for the final report is next Friday.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount1">0 / 5 words revealed</div>
+</div>
+
+<!-- ═══ SLIDE 6 — VOCAB 6-10 ═══ -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>16:00 - 24 min</span>Vocabulário parte 2. Mesma dinâmica. Destaque &quot;stakeholder&quot; como palavra composta (stake + holder). Pergunte: &quot;What does stake mean here? It means interest. So a stakeholder is...?&quot; Patricia completa. Foque na pronúncia de &quot;deliverable&quot; (de-LIV-er-a-ble) e &quot;milestone&quot; (MILE-stone).<div class='t-ccq'><strong>CCQs:</strong> &quot;If you make progress, are you moving forward or backward?&quot; (forward) / &quot;Is a stakeholder someone involved in the project or an outsider?&quot; (involved) / &quot;Is feedback about what happened or what should happen?&quot; (what happened)</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Key Words</div>
+  <p class="section-label" style="color:#7BEFB2;text-align:center;">Click each card to reveal</p>
+  <div class="vocab-grid" id="vocabGrid2">
+    <!-- Card 6: Progress -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #059669, #34d399);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <div class="v-card-hint">Movement toward a goal...</div>
+      <div class="v-card-body">
+        <div class="v-word">Progress</div>
+        <div class="v-def">movement toward a goal</div>
+        <div class="v-example">"We have made significant progress this quarter."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We have made significant progress this quarter.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 7: Stakeholder -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div class="v-card-hint">A person with interest in a project...</div>
+      <div class="v-card-body">
+        <div class="v-word">Stakeholder</div>
+        <div class="v-def">a person with interest in a project</div>
+        <div class="v-example">"The stakeholders are expecting a detailed update."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The stakeholders are expecting a detailed update.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 8: Milestone -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #4338ca, #818cf8);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+      </div>
+      <div class="v-card-hint">An important event in the development of something...</div>
+      <div class="v-card-body">
+        <div class="v-word">Milestone</div>
+        <div class="v-def">an important event in the development of something</div>
+        <div class="v-example">"We reached an important milestone last month."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('We reached an important milestone last month.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 9: Deliverable -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #2D6A4F, #40916C);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      </div>
+      <div class="v-card-hint">Something that must be provided as part of a project...</div>
+      <div class="v-card-body">
+        <div class="v-word">Deliverable</div>
+        <div class="v-def">something that must be provided as part of a project</div>
+        <div class="v-example">"The deliverable is due by the end of the week."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The deliverable is due by the end of the week.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+    <!-- Card 10: Feedback -->
+    <div class="v-card" onclick="revealVCard(this)">
+      <div class="v-card-icon" style="background:linear-gradient(135deg, #dc2626, #f87171);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+      </div>
+      <div class="v-card-hint">Comments about how well someone is doing...</div>
+      <div class="v-card-body">
+        <div class="v-word">Feedback</div>
+        <div class="v-def">comments about how well someone is doing</div>
+        <div class="v-example">"The feedback from the committee was very positive."</div>
+        <button class="v-listen-btn" onclick="event.stopPropagation();speakText('The feedback from the committee was very positive.',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="vocab-counter" id="vocabCount2">0 / 5 words revealed</div>
+</div>
+
+<!-- ═══ SLIDE 7 — PRONUNCIATION DRILL ═══ -->
+<div class="slide dark" data-chapter="2" data-t="<span class='t-timing'>24:00 - 28 min</span>Pronúncia. Clique cada palavra. Foque em: re-PORT (stress na segunda), UP-date (stress na primeira), SUM-ma-rize (stress na primeira), de-LIV-er-a-ble (stress na segunda). Para &quot;stakeholder&quot;: STAKE-hold-er (stress na primeira). Toque áudio, ela repete 2x.<div class='t-alert'>Se Patricia pronúnciar &quot;deliverable&quot; como &quot;de-li-VER-a-ble&quot;, corrija: &quot;The stress is on the second syllable: de-LIV-er-a-ble.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 2 -- Key Words</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Pronunciation Drill</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen, then repeat. Focus on the stressed syllable.</p>
+  <div class="pron-list">
+    <div class="pron-item">
+      <div class="pron-word">Report</div>
+      <div class="pron-stress">re-PORT</div>
+      <button class="pron-play" onclick="speakText('report',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Update</div>
+      <div class="pron-stress">UP-date</div>
+      <button class="pron-play" onclick="speakText('update',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Summarize</div>
+      <div class="pron-stress">SUM-ma-rize</div>
+      <button class="pron-play" onclick="speakText('summarize',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Highlight</div>
+      <div class="pron-stress">HIGH-light</div>
+      <button class="pron-play" onclick="speakText('highlight',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Deadline</div>
+      <div class="pron-stress">DEAD-line</div>
+      <button class="pron-play" onclick="speakText('deadline',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Progress</div>
+      <div class="pron-stress">PROG-ress</div>
+      <button class="pron-play" onclick="speakText('progress',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Stakeholder</div>
+      <div class="pron-stress">STAKE-hold-er</div>
+      <button class="pron-play" onclick="speakText('stakeholder',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Milestone</div>
+      <div class="pron-stress">MILE-stone</div>
+      <button class="pron-play" onclick="speakText('milestone',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Deliverable</div>
+      <div class="pron-stress">de-LIV-er-a-ble</div>
+      <button class="pron-play" onclick="speakText('deliverable',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="pron-item">
+      <div class="pron-word">Feedback</div>
+      <div class="pron-stress">FEED-back</div>
+      <button class="pron-play" onclick="speakText('feedback',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 8 — GRAMMAR DISCOVERY ═══ -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>28:00 - 33 min</span>Gramática Discovery. NÃO explique a regra. Aponte para as palavras em verde e pergunte: &quot;What pattern do you see?&quot; Espere. Patricia é B1+ -- ela pode identificar o backshift. Só clique &quot;Reveal&quot; DEPOIS que ela tentar. Se ela disser &quot;the verb changes to past&quot;, celebre: &quot;Exactly! That is Reported Speech.&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;When we report what someone said, do we keep the same tense or shift it back?&quot; (shift back) / &quot;Does 'said that' introduce a direct quote or an indirect report?&quot; (indirect) / &quot;What happens to 'are' in reported speech?&quot; (becomes 'were')</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Discovery</h2>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">What do the <span style="color:#7BEFB2;font-weight:600;">green words</span> have in common?</p>
+  <div class="slide-content">
+    <div class="grammar-examples">
+      <div class="g-example">She said: "The results are promising." &rarr; She <span class="highlight">said that</span> the results <span class="highlight">were</span> promising.</div>
+      <div class="g-example">He told me: "We need more data." &rarr; He <span class="highlight">told</span> me that they <span class="highlight">needed</span> more data.</div>
+      <div class="g-example">They mentioned: "The deadline is Friday." &rarr; They <span class="highlight">mentioned that</span> the deadline <span class="highlight">was</span> Friday.</div>
+      <div class="g-example">Patricia reported: "We have completed phase one." &rarr; Patricia <span class="highlight">reported that</span> they <span class="highlight">had completed</span> phase one.</div>
+    </div>
+    <button class="g-reveal-btn" onclick="revealGrammar(this)">Reveal the Rule</button>
+    <div class="g-rule" id="grammarRule1">
+      <h4>Reported Speech -- Backshift</h4>
+      <table>
+        <thead>
+          <tr><th>Direct Speech</th><th>Reported Speech</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="color:#7BEFB2;font-weight:600;">Present Simple</td><td>Past Simple</td><td>"are" &rarr; <strong>were</strong></td></tr>
+          <tr><td style="color:#7BEFB2;font-weight:600;">Present Perfect</td><td>Past Perfect</td><td>"have completed" &rarr; <strong>had completed</strong></td></tr>
+          <tr><td style="color:#7BEFB2;font-weight:600;">will</td><td>would</td><td>"will present" &rarr; <strong>would present</strong></td></tr>
+          <tr><td style="color:#7BEFB2;font-weight:600;">can</td><td>could</td><td>"can do" &rarr; <strong>could do</strong></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.04);border-radius:6px;">
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.7);"><strong style="color:#7BEFB2;">Key rule:</strong> Reported Speech shifts tenses back: present becomes past, past becomes past perfect, will becomes would. Use reporting verbs: said (that), told (+ object), mentioned (that), reported (that).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 9 — COMMON MISTAKE + REPORTING VERBS TABLE ═══ -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>33:00 - 38 min</span>Erro Comum. Diga: &quot;Many learners confuse 'said' and 'told'. Listen to the difference.&quot; Leia as duas frases. Depois revise a tabela de Reporting Verbs. Pergunte: &quot;Which verb needs a person after it?&quot; Patricia responde: told.<div class='t-alert'>Este é o erro mais comum no Reported Speech. Não corrija com &quot;wrong&quot; -- use: &quot;Almost! 'Told' always needs a person: told me, told us, told the team.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1.5rem;text-align:center;">Watch Out!</h2>
+  <div class="mistake-box" style="margin-bottom:1.5rem;">
+    <div class="mistake-wrong">
+      <div class="mistake-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"He <strong>told that</strong> we need more data."</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">told without object + no backshift = incorrect</p>
+      </div>
+    </div>
+    <div class="mistake-right">
+      <div class="mistake-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div>
+        <p style="font-size:1.1rem;line-height:1.6;">"He <strong>told us that</strong> we <strong>needed</strong> more data."</p>
+        <p style="font-size:0.78rem;opacity:0.85;margin-top:0.3rem;">told + object + backshift = correct</p>
+      </div>
+    </div>
+  </div>
+  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#fff;margin-bottom:0.6rem;text-align:center;">Reporting Verbs</h3>
+  <table class="frames-table">
+    <thead>
+      <tr><th>Verb</th><th>Structure</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style="color:#7BEFB2;font-weight:600;">said</td><td>said (that) + clause</td><td>She said that the results were promising.</td></tr>
+      <tr><td style="color:#7BEFB2;font-weight:600;">told</td><td>told + person + (that) + clause</td><td>He told me that they needed more data.</td></tr>
+      <tr><td style="color:#7BEFB2;font-weight:600;">mentioned</td><td>mentioned (that) + clause</td><td>They mentioned that the deadline was Friday.</td></tr>
+      <tr><td style="color:#7BEFB2;font-weight:600;">reported</td><td>reported (that) + clause</td><td>She reported that they had completed phase one.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ SLIDE 10 — GRAMMAR PRACTICE ═══ -->
+<div class="slide dark" data-chapter="3" data-t="<span class='t-timing'>38:00 - 43 min</span>Prática. Leia cada frase com a lacuna. Patricia completa oralmente. DEPOIS clique para revelar. Se ela errar o backshift, relembre: &quot;When we report, the tense shifts back one step.&quot; Após todas, releia as corretas em sequência rápida para fixar.<div class='t-ccq'><strong>CCQs por item:</strong> 1) said that + was (present&rarr;past). 2) told + object + needed (present&rarr;past). 3) mentioned that + would (will&rarr;would). 4) reported that + had completed (present perfect&rarr;past perfect). 5) said that + were (present&rarr;past). 6) told + object + could (can&rarr;could).</div>">
+  <div class="slide-chapter-label">Chapter 3 -- The Code</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Grammar Practice</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Click to reveal the correct answer</p>
+  <div class="fill-practice">
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">She <span class="fp-blank">___</span> the progress <span class="fp-blank">___</span> significant.</div>
+      <div class="fp-answer">She <strong>said that</strong> the progress <strong>was</strong> significant.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">He <span class="fp-blank">___</span> the team <span class="fp-blank">___</span> they <span class="fp-blank">___</span> more funding.</div>
+      <div class="fp-answer">He <strong>told</strong> the team <strong>that</strong> they <strong>needed</strong> more funding.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">They <span class="fp-blank">___</span> the deliverable <span class="fp-blank">___</span> be ready by Friday.</div>
+      <div class="fp-answer">They <strong>mentioned that</strong> the deliverable <strong>would</strong> be ready by Friday.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">Patricia <span class="fp-blank">___</span> the team <span class="fp-blank">___</span> the first milestone.</div>
+      <div class="fp-answer">Patricia <strong>reported that</strong> the team <strong>had completed</strong> the first milestone.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">Dr. Nakamura <span class="fp-blank">___</span> the preliminary results <span class="fp-blank">___</span> very promising.</div>
+      <div class="fp-answer">Dr. Nakamura <strong>said that</strong> the preliminary results <strong>were</strong> very promising.</div>
+    </div>
+    <div class="fp-item" onclick="this.classList.toggle('open')">
+      <div class="fp-sentence">She <span class="fp-blank">___</span> the stakeholders <span class="fp-blank">___</span> they <span class="fp-blank">___</span> provide feedback soon.</div>
+      <div class="fp-answer">She <strong>told</strong> the stakeholders <strong>that</strong> they <strong>could</strong> provide feedback soon.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 11 — TRANSITION: THE MEETING ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>43:00 - 0.5 min</span>Transição. Diga: &quot;Now let us see Patricia in action -- reporting at a team meeting.&quot; Avance em 10 segundos." style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,54,93,0.92) 0%, rgba(45,106,79,0.92) 50%, rgba(15,41,34,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 4 -- The Meeting</div>
+    <h1 class="slide-title" style="color:#fff;">Patricia's Team Briefing</h1>
+    <p class="slide-subtitle" style="color:rgba(255,255,255,0.75);">Time to report and update at a team meeting.</p>
+    <div style="margin-top:2rem;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(45,106,79,0.6)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 12 — ARTIFACT: PROJECT UPDATE EMAIL ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>43:30 - 46 min</span>Artefato. Diga: &quot;Look at this email from Patricia to the Abbott stakeholders.&quot; Pergunte cada questão oralmente ANTES de clicar. Conecte: &quot;What information did Patricia include in her update?&quot;<div class='t-ccq'><strong>CCQs:</strong> &quot;What milestone did the team reach?&quot; (completed first phase of clinical trial) / &quot;When is the deadline?&quot; (December 15th) / &quot;Who provided feedback?&quot; (the stakeholders)</div>">
+  <div class="slide-chapter-label">Chapter 4 -- The Meeting</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;">
+    <div class="artifact-email">
+      <div class="artifact-email-header">
+        <h5>Project Update Email</h5>
+      </div>
+      <div class="artifact-email-body">
+        <div class="email-field"><strong>From:</strong> Patricia Ruffo (p.ruffo@abbott.com)</div>
+        <div class="email-field"><strong>To:</strong> Abbott Stakeholders</div>
+        <div class="email-field"><strong>Date:</strong> November 28, 2026</div>
+        <div class="email-subject">Subject: Glycemic Control Project -- Progress Update</div>
+        <p>Dear Stakeholders,</p>
+        <p style="margin-top:0.6rem;">I would like to <strong>update</strong> you on the glycemic control project. Last month, we reached an important <strong>milestone</strong>: we completed the first phase of our clinical trial with 120 participants.</p>
+        <p style="margin-top:0.6rem;">Dr. Nakamura <strong>reported</strong> that the preliminary results showed a significant correlation between supplement dosage and glycemic response. The <strong>feedback</strong> from the review committee was very positive.</p>
+        <p style="margin-top:0.6rem;">The next <strong>deliverable</strong> is a comprehensive <strong>progress</strong> report. The <strong>deadline</strong> is December 15th. I will <strong>summarize</strong> our findings and <strong>highlight</strong> the key results for all <strong>stakeholders</strong>.</p>
+        <p style="margin-top:0.8rem;">Best regards,<br>Patricia Ruffo</p>
+      </div>
+    </div>
+    <div class="comp-questions">
+      <div class="cq-item" onclick="this.classList.toggle('open')">
+        <div class="cq-q">1. What milestone did the team reach?</div>
+        <div class="cq-a">They completed the first phase of the clinical trial with 120 participants.</div>
+      </div>
+      <div class="cq-item" onclick="this.classList.toggle('open')">
+        <div class="cq-q">2. What is the next deliverable?</div>
+        <div class="cq-a">A comprehensive progress report.</div>
+      </div>
+      <div class="cq-item" onclick="this.classList.toggle('open')">
+        <div class="cq-q">3. When is the deadline?</div>
+        <div class="cq-a">December 15th.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 13 — LISTENING 1: PATRICIA'S TEAM BRIEFING ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>46:00 - 51 min</span>Listening. Diga: &quot;Close your eyes and listen to Patricia's progress presentation.&quot; Toque o áudio. NÃO mostre texto. Depois pergunte: &quot;What did you hear?&quot; Aceite respostas parciais. Pergunte cada questão de compreensão oralmente ANTES de clicar.<div class='t-alert'>Se Patricia pedir para ver o texto, diga: &quot;Let us listen one more time first. Focus on the reporting verbs.&quot; Só mostre texto se ela realmente não entender após 2x.</div>">
+  <div class="slide-chapter-label">Chapter 4 -- The Meeting</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Patricia's Presentation</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to Patricia presenting a progress update to her team.</p>
+  <div class="listening-card">
+    <div class="listening-player" id="lp-listen1" data-src="/audio/patricia-ruffo/aula4_good_morning_everyone_i_would_like_to_update_you_on_th.mp3">
+      <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen1')"><div class="lp-progress" id="progress-lp-listen1"></div></div>
+      <div class="lp-time"><span id="time-current-lp-listen1">0:00</span><span id="time-total-lp-listen1">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('lp-listen1',-5)" aria-label="Back 5s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.5 8.14v7.72M10 12l-6-4.5v9l6-4.5"/><path d="M22 12A10 10 0 1112 2" stroke-linecap="round"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('lp-listen1')" aria-label="Play Pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('lp-listen1',5)" aria-label="Forward 5s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11.5 15.86V8.14M14 12l6-4.5v9l-6-4.5"/><path d="M2 12a10 10 0 0010 10" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="lp-label">Speed</div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('lp-listen1',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen1',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div class="listening-questions" id="questions-lp-listen1">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. What milestone did Patricia report?</div>
+        <div class="lq-answer">They completed the first phase of the clinical trial with 120 participants.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. What did Dr. Nakamura report about the results?</div>
+        <div class="lq-answer">He reported that the preliminary results showed a significant correlation between supplement dosage and glycemic response.</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">3. When is the deadline for the final deliverable?</div>
+        <div class="lq-answer">December 15th.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 14 — DIALOGUE: THE TEAM BRIEFING ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>51:00 - 57 min</span>Diálogo. Clique &quot;Next Line&quot; para cada fala. ANTES da fala de Patricia: &quot;How do you think she reports this?&quot; Espere. Palavras em verde = vocabulário da aula. Destaque os reporting verbs: &quot;Notice she used 'reported that' with backshift -- 'had completed'.&quot; Patricia lê cada fala em voz alta após revelar.<div class='t-alert'>Se Patricia quiser pular linhas, segure: &quot;Let us go one at a time so you can hear each reporting verb.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 4 -- The Meeting</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:1rem;text-align:center;">The Team Briefing</h2>
+  <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:1rem;text-align:center;">Click "Next Line" to reveal each part of the conversation</p>
+  <div class="dialogue-container" id="dialogue1">
+    <div class="d-line visible" data-voice="arthur" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Dr. Chen</div>
+        <div class="d-text">Good morning, team. Patricia, could you give us an <strong>update</strong> on the glycemic control project?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:var(--accent);">
+      <div class="d-avatar green">PR</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Patricia Ruffo</div>
+        <div class="d-text">Of course. I <strong>reported</strong> to the team last week that we <strong>had completed</strong> the first phase of the trial.</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="arthur" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Dr. Chen</div>
+        <div class="d-text">Thank you. What did the preliminary results show?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:var(--accent);">
+      <div class="d-avatar green">PR</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Patricia Ruffo</div>
+        <div class="d-text">Dr. Nakamura <strong>said that</strong> the correlation between dosage and glycemic response <strong>was</strong> significant. He also <strong>mentioned that</strong> the sample size <strong>needed</strong> to be larger.</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="arthur" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Dr. Chen</div>
+        <div class="d-text">That is excellent <strong>progress</strong>. What are the next <strong>milestones</strong>?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:var(--accent);">
+      <div class="d-avatar green">PR</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Patricia Ruffo</div>
+        <div class="d-text">The next <strong>milestone</strong> is to replicate the study with 300 participants. I <strong>told</strong> the research team that we <strong>would need</strong> additional funding.</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="arthur" style="border-left-color:#2563eb;">
+      <div class="d-avatar blue">DC</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Dr. Chen</div>
+        <div class="d-text">Great. Please keep the <strong>stakeholders</strong> informed. When is the <strong>deadline</strong> for the final <strong>deliverable</strong>?</div>
+      </div>
+    </div>
+    <div class="d-line" data-voice="ellen" style="border-left-color:var(--accent);">
+      <div class="d-avatar green">PR</div>
+      <div class="d-text-wrap">
+        <div class="d-speaker">Patricia Ruffo</div>
+        <div class="d-text">The <strong>deadline</strong> is December 15th. I will <strong>summarize</strong> our <strong>progress</strong> in a written report and <strong>highlight</strong> the key <strong>deliverables</strong> for the <strong>stakeholders</strong>.</div>
+      </div>
+    </div>
+  </div>
+  <button class="next-line-btn" id="nextLineBtn1" onclick="revealNextLine('dialogue1','nextLineBtn1')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    Next Line
+  </button>
+</div>
+
+<!-- ═══ SLIDE 15 — DIALOGUE COMPREHENSION ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>57:00 - 60 min</span>Compreensão. Pergunte cada questão oralmente. Patricia responde em frase completa. Depois clique para revelar e confirmar. Se ela errar, diga: &quot;Let us go back to the dialogue.&quot;">
+  <div class="slide-chapter-label">Chapter 4 -- The Meeting</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:1rem;text-align:center;">Dialogue Comprehension</h2>
+  <div class="comp-questions" style="margin-top:0;">
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">1. What reporting verbs did Patricia use?</div>
+      <div class="cq-a">She used "reported that", "said that", "mentioned that", and "told".</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">2. What did Dr. Nakamura say about the sample size?</div>
+      <div class="cq-a">He mentioned that the sample size needed to be larger.</div>
+    </div>
+    <div class="cq-item" onclick="this.classList.toggle('open')">
+      <div class="cq-q">3. What will Patricia do before the deadline?</div>
+      <div class="cq-a">She will summarize the progress in a written report and highlight the key deliverables for the stakeholders.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 16 — LISTENING 2: PROGRESS REPORT ═══ -->
+<div class="slide dark" data-chapter="4" data-t="<span class='t-timing'>60:00 - 65 min</span>Listening 2. Toque. Patricia ouve SEM texto. Depois pergunte o que entendeu. Perguntas de compreensão uma por vez, oralmente ANTES de clicar.">
+  <div class="slide-chapter-label">Chapter 4 -- The Meeting</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Listening: Progress Report</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Listen to Patricia presenting her progress update to the stakeholders.</p>
+  <div class="listening-card">
+    <div class="listening-player" id="lp-listen2" data-src="">
+      <div class="lp-seekbar" onclick="seekAudio(event,'lp-listen2')"><div class="lp-progress" id="progress-lp-listen2"></div></div>
+      <div class="lp-time"><span id="time-current-lp-listen2">0:00</span><span id="time-total-lp-listen2">0:00</span></div>
+      <div class="lp-controls">
+        <button class="lp-btn" onclick="skipAudio('lp-listen2',-5)" aria-label="Back 5s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.5 8.14v7.72M10 12l-6-4.5v9l6-4.5"/><path d="M22 12A10 10 0 1112 2" stroke-linecap="round"/></svg></button>
+        <button class="lp-btn lp-play" onclick="togglePlayer('lp-listen2')" aria-label="Play Pause"><svg class="lp-icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg></button>
+        <button class="lp-btn" onclick="skipAudio('lp-listen2',5)" aria-label="Forward 5s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11.5 15.86V8.14M14 12l6-4.5v9l-6-4.5"/><path d="M2 12a10 10 0 0010 10" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="lp-label">Speed</div>
+      <div class="lp-speed">
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',0.5,this)">0.5x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',0.75,this)">0.75x</button>
+        <button class="lp-speed-btn active" onclick="setPlayerSpeed('lp-listen2',1,this)">1x</button>
+        <button class="lp-speed-btn" onclick="setPlayerSpeed('lp-listen2',1.25,this)">1.25x</button>
+      </div>
+    </div>
+    <div class="listening-questions" id="questions-lp-listen2">
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">1. Which reporting verbs did Patricia use in her presentation?</div>
+        <div class="lq-answer">She used "reported", "said that", "mentioned that", and "told".</div>
+      </div>
+      <div class="lq-item" onclick="this.classList.toggle('open')">
+        <div class="lq-question">2. What did Dr. Nakamura report about the methodology?</div>
+        <div class="lq-answer">He reported that the methodology was solid but mentioned that they would need a larger sample.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 17 — QUICK CHALLENGE ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>65:00 - 72 min</span>Quick Challenge. Leia a situação. Patricia converte de discurso direto para indireto. Se acertar: &quot;Show Answer&quot; para confirmar. Se travar: dê a primeira palavra. 30 segundos por item. <strong>Confetti ao completar todas!</strong><div class='t-alert'>Se Patricia ficar insegura, encoraje: &quot;Remember: shift the tense back one step.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Quick Challenge</h2>
+  <div class="qc-score" id="qcScore">0 / 6</div>
+  <div class="qc-container" id="qcContainer">
+    <div class="qc-card active" data-idx="0">
+      <div class="qc-prompt">Patricia says: "We have completed the trial." Report this.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">Patricia <strong>said that</strong> they <strong>had completed</strong> the trial.</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="1">
+      <div class="qc-prompt">Dr. Chen says: "The deadline is Friday." Report this.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">Dr. Chen <strong>said that</strong> the deadline <strong>was</strong> Friday.</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="2">
+      <div class="qc-prompt">The team says: "We need more funding." Report this.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">The team <strong>mentioned that</strong> they <strong>needed</strong> more funding.</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="3">
+      <div class="qc-prompt">Dr. Nakamura says: "I will present the results." Report this.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">Dr. Nakamura <strong>said that</strong> he <strong>would present</strong> the results.</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="4">
+      <div class="qc-prompt">Your colleague asks: "When is the progress update due?" Report the question.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">My colleague <strong>asked</strong> when the progress update <strong>was</strong> due.</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+    <div class="qc-card" data-idx="5">
+      <div class="qc-prompt">Summarize a project update using 3 reporting verbs.</div>
+      <button class="qc-show-btn" onclick="showQcAnswer(this)">Show Answer</button>
+      <div class="qc-answer-box">I <strong>reported that</strong> we had reached a milestone. Dr. Nakamura <strong>mentioned that</strong> the results were significant. The team <strong>told</strong> me that the deliverable was on track.</div>
+      <button class="qc-next-btn" onclick="nextQc()">Next Question</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 18 — SPOT THE ERROR ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>72:00 - 77 min</span>Spot the Error. Leia cada frase. Pergunte: &quot;Can you find the mistake?&quot; Clique para revelar. Erros são sobre Reported Speech: backshift e said vs told.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Spot the Error</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Click each sentence to see the correction</p>
+  <div class="error-list" id="errorList">
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"She said that the results <span class="wrong">are</span> promising."</div>
+      <div class="err-correction">"She said that the results <strong>were</strong> promising." (present &rarr; past in reported speech)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"He <span class="wrong">told that</span> we need more data."</div>
+      <div class="err-correction">"He <strong>told us that</strong> we <strong>needed</strong> more data." (told needs an object + backshift)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"They mentioned that the deadline <span class="wrong">will be</span> Friday."</div>
+      <div class="err-correction">"They mentioned that the deadline <strong>would be</strong> Friday." (will &rarr; would in reported speech)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"Patricia reported that they <span class="wrong">have completed</span> phase one."</div>
+      <div class="err-correction">"Patricia reported that they <strong>had completed</strong> phase one." (present perfect &rarr; past perfect)</div>
+    </div>
+    <div class="err-item" onclick="this.classList.toggle('open')">
+      <div class="err-sentence">"He <span class="wrong">said me</span> that the feedback was positive."</div>
+      <div class="err-correction">"He <strong>told me</strong> that the feedback was positive." (said doesn't take a personal object)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 19 — ORAL DRILLING ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>77:00 - 82 min</span>Oral Drilling. Leia a situação. Patricia responde oralmente usando reported speech. Clique para revelar o modelo. Se a resposta dela foi diferente mas correta, valide: &quot;That works too! Here is another way to say it.&quot; 30 segundos por item.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Oral Drilling</h2>
+  <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);margin-bottom:1.2rem;text-align:center;">Respond to each situation, then click to see a model answer</p>
+  <div class="oral-list">
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">Your manager asks you to report on your team's progress. What do you say?</div>
+      <div class="oral-model">"I would like to report that we have made significant progress."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">A colleague wants to know the latest news about a project. Give them an update.</div>
+      <div class="oral-model">"Let me update you on the latest developments."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">Dr. Nakamura told you: "The results are very promising." Report this to your team.</div>
+      <div class="oral-model">"Dr. Nakamura said that the results were very promising."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">The research team told you: "We will need more time." Report this to the stakeholders.</div>
+      <div class="oral-model">"The team mentioned that they would need more time to finish the deliverable."</div>
+    </div>
+    <div class="oral-item" onclick="this.classList.toggle('open')">
+      <div class="oral-situation-label">Situation</div>
+      <div class="oral-situation">Summarize the key milestones and send feedback before the deadline.</div>
+      <div class="oral-model">"I will summarize the key milestones and send my feedback by the deadline."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 20 — REPORTING VERBS PRACTICE ═══ -->
+<div class="slide dark" data-chapter="5" data-t="<span class='t-timing'>82:00 - 85 min</span>Reporting Verbs Practice. Dê um cenário. Patricia responde usando cada reporting verb diferente. Incentive variedade: said, told, mentioned, reported.">
+  <div class="slide-chapter-label">Chapter 5 -- Practice</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:0.5rem;text-align:center;">Reporting Verbs Practice</h2>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;text-align:center;">Report each statement using the indicated verb</p>
+  <div style="max-width:600px;width:100%;">
+    <div style="display:flex;flex-direction:column;gap:0.6rem;">
+      <div class="fp-item" onclick="this.classList.toggle('open')">
+        <div class="fp-sentence">Direct: "We have completed the first milestone." &rarr; Use <span style="color:#7BEFB2;font-weight:600;">reported</span></div>
+        <div class="fp-answer">"I would like to report that we have completed the first milestone."</div>
+      </div>
+      <div class="fp-item" onclick="this.classList.toggle('open')">
+        <div class="fp-sentence">Direct: "The results are significant." &rarr; Use <span style="color:#7BEFB2;font-weight:600;">said</span></div>
+        <div class="fp-answer">"Dr. Nakamura said that the preliminary results were significant."</div>
+      </div>
+      <div class="fp-item" onclick="this.classList.toggle('open')">
+        <div class="fp-sentence">Direct: "We expect a progress update by the deadline." &rarr; Use <span style="color:#7BEFB2;font-weight:600;">mentioned</span></div>
+        <div class="fp-answer">"The stakeholders mentioned that they expected a progress update by the deadline."</div>
+      </div>
+      <div class="fp-item" onclick="this.classList.toggle('open')">
+        <div class="fp-sentence">Direct: "You need to submit the deliverable by Friday." &rarr; Use <span style="color:#7BEFB2;font-weight:600;">told</span></div>
+        <div class="fp-answer">"The manager told us that we needed to submit the deliverable by Friday."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 21 — ROLE-PLAY 1: GUIDED ═══ -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>85:00 - 60 min</span><strong>Role-Play Guided</strong>. Você é Dr. Chen (diretor). Patricia é ela mesma dando um team briefing. Keywords na tela como apoio. Se travar: &quot;Start with 'I would like to report that...'&quot; Patricia pode olhar os keywords. Objetivo: usar vocabulário e reported speech da aula.<div class='t-alert'>Se fluir bem, desafie: &quot;Now use a different reporting verb.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #2D6A4F 0%, #40916C 50%, #0f2922 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Role-Play 1 -- Guided
+      </div>
+      <div class="rp-scenario">You are at a team briefing. Dr. Chen (your director) asks for a progress update on the glycemic control project. Report on milestones, deliverables, and deadlines.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">report</span>
+        <span class="rp-keyword">milestone</span>
+        <span class="rp-keyword">progress</span>
+        <span class="rp-keyword">deadline</span>
+        <span class="rp-keyword">said that</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 22 — ROLE-PLAY 2: SEMI-FREE ═══ -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>90:00 - 95 min</span><strong>Role-Play Semi-Free</strong>. Você é um stakeholder externo. Menos apoio visual. Anote erros -- corrija DEPOIS. Patricia apresenta um update sobre o projeto. Menos keywords.<div class='t-alert'>Se ela falar mais de 2 min, deixe! O objetivo é fluência. Anote erros para delayed correction.</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #4338ca 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Role-Play 2 -- Semi-Free
+      </div>
+      <div class="rp-scenario">You are presenting to a board of stakeholders. Give a comprehensive update on the project: report what different team members said, summarize progress, and highlight key deliverables.</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">stakeholder</span>
+        <span class="rp-keyword">summarize</span>
+        <span class="rp-keyword">highlight</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 23 — ROLE-PLAY 3: FREE ═══ -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>95:00 - 100 min</span><strong>Role-Play Free</strong>. Sem keywords, sem script. Você é um stakeholder em uma call. Patricia da um update completo sobre o projeto. Celebre QUALQUER produção. Patricia precisa SENTIR que consegue reportar e dar updates em inglês. Delayed correction DEPOIS.<div class='t-alert'>Este é o momento mais importante. Valide: &quot;Patricia, you just gave a professional update like a true project leader. That is exactly what you will do at your next meeting.&quot;</div>">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div class="rp-card">
+    <div class="rp-bg" style="background:linear-gradient(135deg, #2D6A4F 0%, #059669 50%, #1a365d 100%);"></div>
+    <div class="rp-content">
+      <div class="rp-level">
+        <svg style="display:inline;vertical-align:middle;margin-right:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Role-Play 3 -- Free
+      </div>
+      <div class="rp-scenario">You are on a stakeholder call. Give a full project update, report what colleagues have said, and discuss next steps. No keywords, no script. Just report and update!</div>
+      <div class="rp-keywords">
+        <span class="rp-keyword">no keywords -- speak freely</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 24 — RECORD YOURSELF ═══ -->
+<div class="slide dark" data-chapter="6" data-t="<span class='t-timing'>100:00 - 103 min</span>Reflexão. Diga: &quot;Record yourself. Imagine you are giving a progress update to the stakeholders.&quot; Grave. Depois ouça juntas. Feedback positivo primeiro, depois 1-2 pontos de melhoria.">
+  <div class="slide-chapter-label">Chapter 6 -- Your Turn</div>
+  <div style="max-width:550px;text-align:center;">
+    <div style="width:64px;height:64px;border-radius:50%;background:rgba(45,106,79,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.8rem;">Record Yourself</h2>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:1.5rem;">Imagine you are giving a progress update to your stakeholders. Record yourself reporting on the glycemic control project.</p>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;text-align:left;padding:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+      <p style="font-size:0.85rem;color:rgba(255,255,255,0.75);">Include:</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">1. At least 3 different reporting verbs</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">2. Report what Dr. Nakamura said (with backshift)</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">3. Vocabulary from this lesson (milestone, deliverable, feedback)</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);">4. Mention the deadline and next steps</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 25 — BADGE EARNED ═══ -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>103:00 - 104 min</span>Celebração. Diga: &quot;You earned your Reporter Badge, Patricia!&quot; Conecte com a promessa: &quot;You can now report and update at any meeting.&quot; Confetti automático.">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:450px;text-align:center;">
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg, var(--accent), var(--accent-light));display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 0 30px rgba(45,106,79,0.4);">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:#fff;margin-bottom:0.5rem;">Reporter Badge Earned!</h2>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.85);line-height:1.7;">You can now report and update at any meeting, Patricia.</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 26 — SURVIVAL CARD ═══ -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>104:00 - 107 min</span>Survival Card. Leia cada frase com Patricia. Ela repete. Toque o áudio. &quot;These 5 phrases are yours forever.&quot;">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div class="survival">
+    <h3>Patricia's Professional Toolkit -- Lesson 4</h3>
+    <div class="surv-phrase">
+      <div class="surv-num">1</div>
+      <div class="surv-text">I would like to report that we have made significant progress.</div>
+      <button class="surv-play" onclick="speakText('I would like to report that we have made significant progress.',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="surv-phrase">
+      <div class="surv-num">2</div>
+      <div class="surv-text">Let me update you on the latest developments.</div>
+      <button class="surv-play" onclick="speakText('Let me update you on the latest developments.',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="surv-phrase">
+      <div class="surv-num">3</div>
+      <div class="surv-text">Dr. Nakamura said that the results were very promising.</div>
+      <button class="surv-play" onclick="speakText('Dr. Nakamura said that the results were very promising.',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="surv-phrase">
+      <div class="surv-num">4</div>
+      <div class="surv-text">The team mentioned that they would need more time to finish the deliverable.</div>
+      <button class="surv-play" onclick="speakText('The team mentioned that they would need more time to finish the deliverable.',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+    <div class="surv-phrase">
+      <div class="surv-num">5</div>
+      <div class="surv-text">I will summarize the key milestones and send my feedback by the deadline.</div>
+      <button class="surv-play" onclick="speakText('I will summarize the key milestones and send my feedback by the deadline.',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 27 — WHAT I LEARNED ═══ -->
+<div class="slide dark" data-chapter="7" data-lesson="4" data-t="<span class='t-timing'>107:00 - 110 min</span>Checklist. Leia cada item. Pergunte: &quot;Can you say yes to this?&quot; Se sim, clique o checkbox juntas. Celebre cada check.">
+  <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+  <div style="max-width:550px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#fff;margin-bottom:0.3rem;">What I Learned Today</h2>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-bottom:1.5rem;">Click each item to check it off</p>
+    <div class="check-grid" style="text-align:left;">
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can report project updates using reported speech.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I know 10 words for reporting and updating.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can use "said that", "told", "mentioned that", and "reported that".</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I understand backshift in reported speech.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can give a progress update to stakeholders.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I can summarize key milestones and highlight deliverables.</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I know the difference between "said" and "told".</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="cl-box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cl-text">I feel more confident about presenting at team meetings.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 28 — CLOSING ═══ -->
+<div class="slide dark" data-chapter="7" data-t="<span class='t-timing'>110:00 - 112 min</span>Encerramento. Diga: &quot;Day 4 is complete. Next class we will have the full simulation -- the Abbott Science Summit.&quot;<br><br><strong>Homework (diga oralmente, NÃO está na tela):</strong><br>1. Write a project update email (200 words) using reported speech.<br>2. Use at least 3 different reporting verbs (said, told, mentioned, reported).<br>3. Include vocabulary from this lesson (milestone, deliverable, deadline, progress, feedback)." style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(45,106,79,0.92) 50%, rgba(26,54,93,0.92) 100%);"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="slide-chapter-label">Chapter 7 -- Wrap-Up</div>
+    <div style="margin-top:1rem;padding:1.5rem 2rem;background:rgba(45,106,79,0.08);border:1px solid rgba(45,106,79,0.2);border-radius:12px;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:#fff;">Day 4 -- Complete.</p>
+      <p style="font-size:0.95rem;color:rgba(255,255,255,0.75);margin-top:0.8rem;">Next lesson: Full Simulation -- Abbott Science Summit</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end slide-deck -->
+
+<!-- ===== CONFETTI CONTAINER ===== -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ===== AUDIO MAP =====
+var audioMap = {
+  "report": "/audio/patricia-ruffo/aula4_report.mp3",
+  "update": "/audio/patricia-ruffo/aula4_update.mp3",
+  "summarize": "/audio/patricia-ruffo/aula4_summarize.mp3",
+  "highlight": "/audio/patricia-ruffo/aula4_highlight.mp3",
+  "deadline": "/audio/patricia-ruffo/aula4_deadline.mp3",
+  "progress": "/audio/patricia-ruffo/aula4_progress.mp3",
+  "stakeholder": "/audio/patricia-ruffo/aula4_stakeholder.mp3",
+  "milestone": "/audio/patricia-ruffo/aula4_milestone.mp3",
+  "deliverable": "/audio/patricia-ruffo/aula4_deliverable.mp3",
+  "feedback": "/audio/patricia-ruffo/aula4_feedback.mp3",
+  "I need to report our findings to the team.": "/audio/patricia-ruffo/aula4_i_need_to_report_our_findings_to_the_team.mp3",
+  "Let me update you on the latest trial results.": "/audio/patricia-ruffo/aula4_let_me_update_you_on_the_latest_trial_results.mp3",
+  "I will summarize the key points of our research.": "/audio/patricia-ruffo/aula4_i_will_summarize_the_key_points_of_our_research.mp3",
+  "I would like to highlight three important milestones.": "/audio/patricia-ruffo/aula4_i_would_like_to_highlight_three_important_milestones.mp3",
+  "The deadline for the final report is next Friday.": "/audio/patricia-ruffo/aula4_the_deadline_for_the_final_report_is_next_friday.mp3",
+  "We have made significant progress this quarter.": "/audio/patricia-ruffo/aula4_we_have_made_significant_progress_this_quarter.mp3",
+  "The stakeholders are expecting a detailed update.": "/audio/patricia-ruffo/aula4_the_stakeholders_are_expecting_a_detailed_update.mp3",
+  "We reached an important milestone last month.": "/audio/patricia-ruffo/aula4_we_reached_an_important_milestone_last_month.mp3",
+  "The deliverable is due by the end of the week.": "/audio/patricia-ruffo/aula4_the_deliverable_is_due_by_the_end_of_the_week.mp3",
+  "The feedback from the committee was very positive.": "/audio/patricia-ruffo/aula4_the_feedback_from_the_committee_was_very_positive.mp3",
+  "Good morning, team. Patricia, could you give us an update on the glycemic control project?": "/audio/patricia-ruffo/aula4_good_morning_team_patricia_could_you_give_us_an_update.mp3",
+  "Thank you. What did the preliminary results show?": "/audio/patricia-ruffo/aula4_thank_you_what_did_the_preliminary_results_show.mp3",
+  "That is excellent progress. What are the next milestones?": "/audio/patricia-ruffo/aula4_that_is_excellent_progress_what_are_the_next_milestone.mp3",
+  "Great. Please keep the stakeholders informed. When is the deadline for the final deliverable?": "/audio/patricia-ruffo/aula4_great_please_keep_the_stakeholders_informed_when_is_th.mp3",
+  "Of course. I reported to the team last week that we had completed the first phase of the trial.": "/audio/patricia-ruffo/aula4_of_course_i_reported_to_the_team_last_week_that_we_had.mp3",
+  "Dr. Nakamura said that the correlation between dosage and glycemic response was significant. He also mentioned that the sample size needed to be larger.": "/audio/patricia-ruffo/aula4_dr_nakamura_said_that_the_correlation_between_dosage_a.mp3",
+  "The next milestone is to replicate the study with 300 participants. I told the research team that we would need additional funding.": "/audio/patricia-ruffo/aula4_the_next_milestone_is_to_replicate_the_study_with_300_.mp3",
+  "The deadline is December 15th. I will summarize our progress in a written report and highlight the key deliverables for the stakeholders.": "/audio/patricia-ruffo/aula4_the_deadline_is_december_15th_i_will_summarize_our_pro.mp3",
+  "I would like to report that we have made significant progress.": "/audio/patricia-ruffo/aula4_i_would_like_to_report_that_we_have_made_significant_p.mp3",
+  "Let me update you on the latest developments.": "/audio/patricia-ruffo/aula4_let_me_update_you_on_the_latest_developments.mp3",
+  "Dr. Nakamura said that the results were very promising.": "/audio/patricia-ruffo/aula4_dr_nakamura_said_that_the_results_were_very_promising.mp3",
+  "The team mentioned that they would need more time to finish the deliverable.": "/audio/patricia-ruffo/aula4_the_team_mentioned_that_they_would_need_more_time_to_f.mp3",
+  "I will summarize the key milestones and send my feedback by the deadline.": "/audio/patricia-ruffo/aula4_i_will_summarize_the_key_milestones_and_send_my_feedba.mp3",
+  "I would like to report that we have completed the first milestone.": "/audio/patricia-ruffo/aula4_i_would_like_to_report_that_we_have_completed_the_firs.mp3",
+  "Dr. Nakamura said that the preliminary results were significant.": "/audio/patricia-ruffo/aula4_dr_nakamura_said_that_the_preliminary_results_were_sig.mp3",
+  "The stakeholders mentioned that they expected a progress update by the deadline.": "/audio/patricia-ruffo/aula4_the_stakeholders_mentioned_that_they_expected_a_progre.mp3",
+  "Good morning, everyone. I would like to update you on the glycemic control project. Last month, we reached an important milestone. We completed the first phase of our clinical trial with 120 participants. Dr. Nakamura reported that the preliminary results showed a significant correlation between supplement dosage and glycemic response. He said that the methodology was solid, but he mentioned that we would need a larger sample to confirm our findings. The stakeholders have provided positive feedback so far. Our next deliverable is a comprehensive progress report, which is due by December 15th. I will summarize our findings and highlight the key milestones for the team.": "/audio/patricia-ruffo/aula4_good_morning_everyone_i_would_like_to_update_you_on_th.mp3"
+};
+
+// ===== AUDIO ENGINE =====
+var currentAudio = null;
+var audioSpeed = 1;
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed || 1;
+    currentAudio.play().catch(function() { fallbackTTS(cleanText); });
+  } else {
+    fallbackTTS(cleanText);
+  }
+  if(btn){var vc=btn.closest('.vocab-card-pc');if(vc&&!vc.classList.contains('listened')){vc.classList.add('listened');updateProgress()}}
+}
+
+function fallbackTTS(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== SLIDE NAVIGATION =====
+var currentSlide = 0;
+var slides = [];
+var teacherCues = [];
+
+function initSlides() {
+  slides = document.querySelectorAll('.slide');
+  slides.forEach(function(s, i) {
+    teacherCues[i] = s.dataset.t || '';
+  });
+  buildDotNav();
+  updateSlide();
+  // Trigger confetti on badge slide
+  triggerBadgeConfetti();
+}
+
+function buildDotNav() {
+  var nav = document.getElementById('dotNav');
+  nav.innerHTML = '';
+  for (var i = 0; i < slides.length; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'dot-nav-item' + (i === 0 ? ' active' : '');
+    dot.dataset.idx = i;
+    dot.onclick = function() { goToSlide(parseInt(this.dataset.idx)); };
+    nav.appendChild(dot);
+  }
+}
+
+function goToSlide(idx) {
+  if (idx < 0 || idx >= slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = idx;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateSlide();
+}
+
+function nextSlide() { goToSlide(currentSlide + 1); }
+function prevSlide() { goToSlide(currentSlide - 1); }
+
+function updateSlide() {
+  // Counter
+  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + slides.length;
+
+  // Dot nav
+  document.querySelectorAll('.dot-nav-item').forEach(function(d, i) {
+    d.classList.toggle('active', i === currentSlide);
+  });
+
+  // Chapter bar
+  var currentChapter = slides[currentSlide].dataset.chapter;
+  document.querySelectorAll('.chapter-dot').forEach(function(d) {
+    var ch = d.dataset.chapter;
+    d.classList.remove('active', 'completed');
+    if (ch === currentChapter) d.classList.add('active');
+    else if (parseInt(ch) < parseInt(currentChapter)) d.classList.add('completed');
+  });
+
+  // Teacher panel
+  var panel = document.getElementById('tPanel');
+  panel.classList.remove('show');
+  panel.innerHTML = teacherCues[currentSlide] || '<em>No teacher cue for this slide.</em>';
+
+  // Badge confetti
+  if (currentSlide === 24) {
+    setTimeout(triggerConfetti, 500);
+  }
+}
+
+// ===== KEYBOARD NAV =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+});
+
+// ===== TEACHER CUE TOGGLE =====
+function toggleTeacherCue() {
+  var panel = document.getElementById('tPanel');
+  panel.classList.toggle('show');
+}
+
+// Close panel on outside click
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('tPanel');
+  var cue = document.getElementById('tCue');
+  if (!panel.contains(e.target) && !cue.contains(e.target)) {
+    panel.classList.remove('show');
+  }
+});
+
+// ===== VOCAB REVEAL =====
+function revealVCard(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  var revealed = grid.querySelectorAll('.v-card.revealed').length;
+  var total = grid.querySelectorAll('.v-card').length;
+  document.getElementById(counterId).textContent = revealed + ' / ' + total + ' words revealed';
+}
+
+// ===== GRAMMAR REVEAL =====
+function revealGrammar(btn) {
+  btn.classList.add('used');
+  document.getElementById('grammarRule1').classList.add('show');
+}
+
+// ===== DIALOGUE LINE BY LINE =====
+function revealNextLine(dialogueId, btnId) {
+  var container = document.getElementById(dialogueId);
+  var lines = container.querySelectorAll('.d-line');
+  var btn = document.getElementById(btnId);
+  var nextHidden = null;
+  for (var i = 0; i < lines.length; i++) {
+    if (!lines[i].classList.contains('visible')) { nextHidden = lines[i]; break; }
+  }
+  if (nextHidden) {
+    nextHidden.classList.add('visible');
+    nextHidden.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  var allVisible = container.querySelectorAll('.d-line:not(.visible)').length === 0;
+  if (allVisible) btn.style.display = 'none';
+}
+
+// ===== LISTENING TOGGLE =====
+var listeningState = {};
+
+function toggleListening(id, btn, waveId, questionsId) {
+  var wave = document.getElementById(waveId);
+  var playIcon = btn.querySelector('.play-icon');
+  var pauseIcon = btn.querySelector('.pause-icon');
+  var questions = document.getElementById(questionsId);
+
+  if (!listeningState[id]) listeningState[id] = { playing: false, played: false };
+
+  if (listeningState[id].playing) {
+    wave.classList.remove('playing');
+    playIcon.style.display = '';
+    pauseIcon.style.display = 'none';
+    listeningState[id].playing = false;
+  } else {
+    wave.classList.add('playing');
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = '';
+    listeningState[id].playing = true;
+    if (!listeningState[id].played) {
+      listeningState[id].played = true;
+      setTimeout(function() {
+        questions.classList.add('show');
+        wave.classList.remove('playing');
+        playIcon.style.display = '';
+        pauseIcon.style.display = 'none';
+        listeningState[id].playing = false;
+      }, 8000);
+    }
+  }
+
+  // Attempt to play audio from audioMap
+  if (id === 'listening1') {
+    var listeningText = "Good morning, everyone. I would like to update you on the glycemic control project. Last month, we reached an important milestone. We completed the first phase of our clinical trial with 120 participants. Dr. Nakamura reported that the preliminary results showed a significant correlation between supplement dosage and glycemic response. He said that the methodology was solid, but he mentioned that we would need a larger sample to confirm our findings. The stakeholders have provided positive feedback so far. Our next deliverable is a comprehensive progress report, which is due by December 15th. I will summarize our findings and highlight the key milestones for the team.";
+    speakText(listeningText, btn);
+  }
+}
+
+// ===== QUICK CHALLENGE =====
+var qcCurrent = 0;
+var qcTotal = 6;
+var qcScore = 0;
+
+function showQcAnswer(btn) {
+  var card = btn.closest('.qc-card');
+  var answer = card.querySelector('.qc-answer-box');
+  var next = card.querySelector('.qc-next-btn');
+  answer.classList.add('show');
+  next.classList.add('show');
+  btn.style.display = 'none';
+  qcScore++;
+  document.getElementById('qcScore').textContent = qcScore + ' / ' + qcTotal;
+
+  if (qcScore === qcTotal) {
+    triggerConfetti();
+  }
+}
+
+function nextQc() {
+  var cards = document.querySelectorAll('.qc-card');
+  cards[qcCurrent].classList.remove('active');
+  qcCurrent++;
+  if (qcCurrent < cards.length) {
+    cards[qcCurrent].classList.add('active');
+  }
+}
+
+
+// ===== WORD ANALYSIS (LCS + Levenshtein) =====
+function analyzeWords(targetStr, spokenStr) {
+  var tw = targetStr.split(/ +/).filter(function(w) { return w; });
+  var sw = spokenStr.split(/ +/).filter(function(w) { return w; });
+  var m = tw.length, n = sw.length;
+  var dp = Array.from({ length: m + 1 }, function() { return Array(n + 1).fill(0); });
+  for (var i = 1; i <= m; i++) for (var j = 1; j <= n; j++) dp[i][j] = wordsMatch(tw[i-1], sw[j-1]) ? dp[i-1][j-1] + 1 : Math.max(dp[i-1][j], dp[i][j-1]);
+  var mt = new Set(), ms = new Set(); var i = m, j = n;
+  while (i > 0 && j > 0) { if (wordsMatch(tw[i-1], sw[j-1])) { mt.add(i-1); ms.add(j-1); i--; j--; } else if (dp[i-1][j] > dp[i][j-1]) i--; else j--; }
+  var expected = tw.map(function(w, i) { return { word: w, status: mt.has(i) ? 'correct' : 'missing' }; });
+  var spoken = sw.map(function(w, i) { return { word: w, status: ms.has(i) ? 'correct' : 'wrong' }; });
+  var wrongWords = [], missedTW = tw.filter(function(_, i) { return !mt.has(i); }), wrongSW = sw.filter(function(_, i) { return !ms.has(i); });
+  missedTW.forEach(function(t, i) { wrongWords.push({ expected: t, got: wrongSW[i] || null }); });
+  wrongSW.slice(missedTW.length).forEach(function(s) { spoken.forEach(function(sp) { if (sp.word === s && sp.status === 'wrong') sp.status = 'extra'; }); });
+  return { expected: expected, spoken: spoken, wrongWords: wrongWords, score: mt.size / Math.max(m, 1) };
+}
+
+function wordsMatch(a, b) { if (a === b) return true; var ca = a.replace(/'/g, ''), cb = b.replace(/'/g, ''); if (ca === cb) return true; if (a.length > 3 && b.length > 3 && levenshtein(a, b) <= 1) return true; return false; }
+function levenshtein(a, b) { var m = []; for (var i = 0; i <= b.length; i++) m[i] = [i]; for (var j = 0; j <= a.length; j++) m[0][j] = j; for (var i = 1; i <= b.length; i++) for (var j = 1; j <= a.length; j++) m[i][j] = b[i-1] === a[j-1] ? m[i-1][j-1] : Math.min(m[i-1][j-1] + 1, m[i][j-1] + 1, m[i-1][j] + 1); return m[b.length][a.length]; }
+
+// ===== CHECKLIST =====
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+}
+
+// ===== CONFETTI =====
+function triggerConfetti() {
+  var container = document.getElementById('confettiContainer');
+  var colors = ['#2D6A4F', '#40916C', '#fbbf24', '#f87171', '#60a5fa', '#a78bfa', '#34d399'];
+  for (var i = 0; i < 80; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.width = (Math.random() * 8 + 5) + 'px';
+    piece.style.height = (Math.random() * 8 + 5) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    container.appendChild(piece);
+  }
+  setTimeout(function() { container.innerHTML = ''; }, 4000);
+}
+
+function triggerBadgeConfetti() {
+  // Will fire when navigating to badge slide (slide 25, index 24)
+}
+
+// ===== LISTENING PLAYER (Full) =====
+var lpPlayers = {};
+
+function initPlayer(id) {
+  var container = document.getElementById(id);
+  if (!container) return;
+  var src = container.dataset.src;
+  if (!src) return;
+  var file = src;
+  if (src.indexOf('/') === -1 && audioMap[src]) file = audioMap[src];
+  var audio = new Audio(file);
+  lpPlayers[id] = { audio: audio, speed: 1, playing: false };
+  audio.addEventListener('timeupdate', function() { updatePlayerUI(id); });
+  audio.addEventListener('loadedmetadata', function() { updatePlayerUI(id); });
+  audio.addEventListener('ended', function() {
+    lpPlayers[id].playing = false;
+    var playBtn = document.querySelector('#' + id + ' .lp-play');
+    if (playBtn) playBtn.classList.remove('playing');
+    var qs = document.getElementById('questions-' + id);
+    if (qs) qs.style.display = 'flex';
+  });
+}
+
+function togglePlayer(id) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  var p = lpPlayers[id];
+  var playBtn = document.querySelector('#' + id + ' .lp-play');
+  if (p.playing) {
+    p.audio.pause();
+    p.playing = false;
+    if (playBtn) playBtn.classList.remove('playing');
+  } else {
+    if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    p.audio.playbackRate = p.speed;
+    p.audio.play();
+    p.playing = true;
+    if (playBtn) playBtn.classList.add('playing');
+  }
+}
+
+function skipAudio(id, seconds) {
+  if (!lpPlayers[id]) return;
+  var a = lpPlayers[id].audio;
+  a.currentTime = Math.max(0, Math.min(a.duration || 0, a.currentTime + seconds));
+}
+
+function seekAudio(event, id) {
+  if (!lpPlayers[id]) return;
+  var bar = event.currentTarget;
+  var rect = bar.getBoundingClientRect();
+  var pct = (event.clientX - rect.left) / rect.width;
+  lpPlayers[id].audio.currentTime = pct * (lpPlayers[id].audio.duration || 0);
+}
+
+function setPlayerSpeed(id, speed, btn) {
+  if (!lpPlayers[id]) initPlayer(id);
+  if (!lpPlayers[id]) return;
+  lpPlayers[id].speed = speed;
+  lpPlayers[id].audio.playbackRate = speed;
+  var container = document.getElementById(id);
+  if (container) {
+    container.querySelectorAll('.lp-speed-btn').forEach(function(b) { b.classList.remove('active'); });
+  }
+  if (btn) btn.classList.add('active');
+}
+
+function updatePlayerUI(id) {
+  var p = lpPlayers[id];
+  if (!p) return;
+  var current = p.audio.currentTime || 0;
+  var total = p.audio.duration || 0;
+  var pct = total > 0 ? (current / total) * 100 : 0;
+  var progressEl = document.getElementById('progress-' + id);
+  if (progressEl) progressEl.style.width = pct + '%';
+  var curEl = document.getElementById('time-current-' + id);
+  var totEl = document.getElementById('time-total-' + id);
+  if (curEl) curEl.textContent = formatTime(current);
+  if (totEl) totEl.textContent = formatTime(total);
+}
+
+function formatTime(s) {
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', function(){initSlides();if(new URLSearchParams(window.location.search).get('autostart'))setTimeout(function(){enterSlideMode()},200);});
+</script>
+<script src="/lib/audio-toggle.js"></script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js">// ===== CHECKLIST =====
+function toggleChecklist(cb) {
+  var li = cb.closest('li');
+  if (cb.checked) li.classList.add('checked'); else li.classList.remove('checked');
+  updateProgress();
+}
+
+
+function injectPronunciationBtn(card,audioUrl){
+  var old=card.querySelector('.btn-your-pronunciation');if(old)old.remove();
+  var playBtn=document.createElement('button');
+  playBtn.className='btn btn-your-pronunciation';
+  playBtn.innerHTML='&#9654; Your Pronunciation';
+  playBtn.onclick=function(e){e.preventDefault();
+    if(playBtn.dataset.playing==='true'){
+      var a=card.querySelector('.your-pron-audio');if(a){a.pause();a.remove()}
+      playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';return;
+    }
+    var audio=new Audio(audioUrl);audio.className='your-pron-audio';audio.style.display='none';
+    card.appendChild(audio);playBtn.innerHTML='&#9632; Playing...';playBtn.dataset.playing='true';
+    audio.play();
+    audio.onended=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+    audio.onerror=function(){playBtn.innerHTML='&#9654; Your Pronunciation';playBtn.dataset.playing='false';audio.remove()};
+  };
+  var controls=card.querySelector('.speech-controls');
+  if(controls)controls.appendChild(playBtn);
+}
+var activeRecognition = null;
+
+function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Please use Google Chrome for voice recognition.');return}var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');
+var mediaRec=null,mediaChunks=[],mediaStream=null,recDone=false;
+navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+  mediaStream=stream;
+  var mimeType=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':'';
+  mediaRec=mimeType?new MediaRecorder(stream,{mimeType:mimeType}):new MediaRecorder(stream);
+  mediaChunks=[];
+  mediaRec.ondataavailable=function(e){if(e.data.size>0)mediaChunks.push(e.data)};
+  mediaRec.onstop=function(){
+    if(recDone)return;recDone=true;
+    stream.getTracks().forEach(function(t){t.stop()});
+    if(mediaChunks.length>0){
+      var blob=new Blob(mediaChunks,{type:mediaRec.mimeType});
+      var audioUrl=URL.createObjectURL(blob);
+      injectPronunciationBtn(card,audioUrl);
+      var phraseSlug=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,50);
+      var slug=window.STUDENT_SLUG||'unknown';
+      var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';
+      var filePath=slug+'/'+phraseSlug+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;card.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
+    }
+  };
+  mediaRec.start(100);
+  var r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=3;r.continuous=true;
+  activeRecognition={recognition:r,btn:btn,stopBtn:stopBtn,card:card,mediaRec:mediaRec};
+  r.start();
+  var ended=false;
+  function finish(){if(ended)return;ended=true;btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');activeRecognition=null;
+    setTimeout(function(){if(mediaRec&&mediaRec.state==='recording')mediaRec.stop()},200);
+  }
+  r.onresult=function(event){var best=event.results[event.results.length-1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g,'');var analysis=analyzeWords(target,best);var totalWords=analysis.expected.length;var correctWords=analysis.expected.filter(function(w){return w.status==='correct'}).length;resultDiv.classList.add('show');resultDiv.classList.remove('good','try-again','bad');var html='';if(analysis.score>=0.8){resultDiv.classList.add('good');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Excellent!';updateProgress()}else if(analysis.score>=0.5){resultDiv.classList.add('try-again');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Almost there!'}else{resultDiv.classList.add('bad');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Keep practicing!'}html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';analysis.expected.forEach(function(w){html+='<span class="word-box word-'+(w.status==='correct'?'correct':'missing')+'">'+w.word+'</span>'});html+='</div></div>';resultDiv.innerHTML=html;finish()};
+  r.onerror=function(){finish();resultDiv.classList.add('show','try-again');resultDiv.innerHTML='Could not hear you. Check your microphone.'};
+  r.onend=function(){finish()};
+  setTimeout(function(){if(!ended){try{r.stop()}catch(e){}finish()}},30000);
+}).catch(function(){btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');alert('Could not access microphone.')})}
+
+function stopRecording(stopBtn){if(activeRecognition){try{activeRecognition.recognition.stop()}catch(e){}if(activeRecognition.mediaRec&&activeRecognition.mediaRec.state==='recording'){try{activeRecognition.mediaRec.stop()}catch(e){}}}}
+
+var freeRecorder=null;var freeChunks=[];
+function startFreeRecording(btn) {
+  var stopBtn = btn.parentElement.querySelector('.btn-stop');
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    var mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    freeRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+    freeChunks = [];
+    freeRecorder.ondataavailable = function(e) { if (e.data.size > 0) freeChunks.push(e.data); };
+    freeRecorder.onstop = function() {
+      var blob = new Blob(freeChunks, { type: freeRecorder.mimeType });
+      var url = URL.createObjectURL(blob);
+      var thinkCard = btn.closest('.think-card');
+      var resultDiv = thinkCard.querySelector('[id^="think-result"]');
+      if (resultDiv) resultDiv.innerHTML = '<audio controls src="' + url + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:0.72rem;color:var(--success);margin-top:0.3rem;">Recording saved!</p>';
+      thinkCard.classList.add('recorded');
+      updateProgress();
+      stream.getTracks().forEach(function(t) { t.stop(); });
+      var slug=window.STUDENT_SLUG||'unknown';var thinkId=resultDiv.id||'think-free';var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';var filePath=slug+'/'+thinkId+'.'+ext;
+      if(typeof sb!=='undefined'){sb.storage.from('recordings').upload(filePath,blob,{contentType:blob.type,upsert:true}).then(function(res){if(!res.error){var pubUrl=sb.storage.from('recordings').getPublicUrl(filePath).data.publicUrl;thinkCard.dataset.recordingUrl=pubUrl;if(typeof saveState==='function')saveState()}})}
+    };
+    freeRecorder.start(100);
+    btn.classList.add('hidden');
+    stopBtn.classList.add('visible');
+  }).catch(function() { alert('Could not access microphone.'); });
+}
+function stopFreeRecording(stopBtn) {
+  if (freeRecorder && freeRecorder.state === 'recording') freeRecorder.stop();
+  var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
+  recordBtn.classList.remove('hidden');
+  stopBtn.classList.remove('visible');
+}
+
+function updateProgress(){
+  var totalLessons=1;
+  var totalAllDone=0,totalAllEx=0;
+  for(var l=1;l<=totalLessons;l++){
+    var card=document.getElementById('ex-lesson-'+l);
+    if(!card)continue;
+    var total=0,done=0;
+    total+=card.querySelectorAll('.vocab-card-pc').length;
+    done+=card.querySelectorAll('.vocab-card-pc.listened').length;
+    total+=card.querySelectorAll('.match-row').length;
+    done+=card.querySelectorAll('.match-row.correct').length;
+    total+=card.querySelectorAll('.blank-input').length;
+    done+=card.querySelectorAll('.blank-input.correct').length;
+    var quizItems=card.querySelectorAll('.quiz-item');
+    total+=quizItems.length;
+    quizItems.forEach(function(qi){if(qi.querySelector('.quiz-option.correct'))done++});
+    var speechCards=card.querySelectorAll('.speech-card');
+    total+=speechCards.length;
+    speechCards.forEach(function(sc){if(sc.querySelector('.speech-result.show'))done++});
+    card.querySelectorAll('.order-container').forEach(function(oc){
+      var items=oc.querySelectorAll('.order-item');
+      total+=1;
+      if(items.length>0&&items.length===oc.querySelectorAll('.order-item.correct-order').length)done++;
+    });
+    var thinkCards=card.querySelectorAll('.think-card');
+    total+=thinkCards.length;
+    thinkCards.forEach(function(tc){if(tc.classList.contains('recorded'))done++});
+    var pct=total>0?Math.round(done/total*100):0;
+    var fill=document.querySelector('.mini-bar-fill[data-lesson-progress="'+l+'"]');
+    if(fill)fill.style.width=pct+'%';
+    var pctEl=document.querySelector('.mini-percent[data-lesson-pct="'+l+'"]');
+    if(pctEl)pctEl.textContent=pct+'%';
+    var stampEl=document.getElementById('stamp'+l);
+    if(stampEl){if(pct===100)stampEl.classList.add('earned');else stampEl.classList.remove('earned')}
+    totalAllDone+=done;totalAllEx+=total;
+  }
+  var overallPct=totalAllEx>0?Math.round(totalAllDone/totalAllEx*100):0;
+  var pb=document.getElementById('progressBar');
+  var pp=document.getElementById('progressPercent');
+  if(pb)pb.style.width=overallPct+'%';
+  if(pp)pp.textContent=overallPct+'%';
+  var celCard=document.getElementById('celebrationCard');
+  if(celCard)celCard.style.display=overallPct===100?'block':'none';
+  try{localStorage.setItem('alumni-progress-patricia-ruffo',JSON.stringify({concluidas:totalAllDone,total:totalAllEx}))}catch(e){}
+  saveState();
+}
+
+function saveState(){var s={matches:[],blanks:[],quiz:[],speech:[],mediaChecks:{},checklists:{},vocabListened:[],ordering:[],thinkRecorded:[]};document.querySelectorAll('.media-card-wrapper').forEach(function(w){var id=w.dataset.media;var cb=w.querySelector('input[type="checkbox"]');if(id&&cb)s.mediaChecks[id]=cb.checked});document.querySelectorAll('.match-row.correct select').forEach(function(sel){s.matches.push(sel.closest('.match-row').querySelector('.match-word').textContent+'|'+sel.value)});document.querySelectorAll('.blank-input.correct').forEach(function(e){s.blanks.push(e.dataset.answer)});document.querySelectorAll('.quiz-option.correct').forEach(function(e){s.quiz.push(e.textContent.trim().substring(0,30))});document.querySelectorAll('.speech-result.show').forEach(function(e){var sc=e.closest('.speech-card');if(sc&&sc.dataset.phrase){var cls=e.classList.contains('good')?'good':e.classList.contains('try-again')?'try-again':'bad';var strong=e.querySelector('strong');var scoreTxt=strong?strong.textContent:'Done';var words=[];e.querySelectorAll('.word-box').forEach(function(wb){words.push({w:wb.textContent,s:wb.classList.contains('word-correct')?'c':'m'})});var recUrl=sc.dataset.recordingUrl||'';s.speech.push(JSON.stringify({p:sc.dataset.phrase,c:cls,s:scoreTxt,words:words,r:recUrl}))}});document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb,i){s.checklists[i]=cb.checked});document.querySelectorAll('.vocab-card-pc.listened').forEach(function(vc){var w=vc.querySelector('.vocab-card-word');if(w)s.vocabListened.push(w.textContent)});document.querySelectorAll('.order-container').forEach(function(oc){var items=oc.querySelectorAll('.order-item');var correct=oc.querySelectorAll('.order-item.correct-order');if(items.length>0&&items.length===correct.length){var id=oc.id||'';var order=[];items.forEach(function(it){order.push(it.querySelector('.order-text').textContent)});s.ordering.push({id:id,order:order})}});document.querySelectorAll('.think-card.recorded').forEach(function(tc){var q=tc.querySelector('.think-question');if(q){var recUrl=tc.dataset.recordingUrl||'';s.thinkRecorded.push(JSON.stringify({q:q.textContent.trim().substring(0,40),r:recUrl}))}});localStorage.setItem('patricia-ruffo-aula4-aluno',JSON.stringify(s))}
+
+function loadState(){var r=localStorage.getItem('patricia-ruffo-aula4-aluno');if(!r)return;var s=JSON.parse(r);if(s.matches)s.matches.forEach(function(d){var parts=d.split('|');var word=parts[0];var val=parts[1];document.querySelectorAll('.match-row').forEach(function(row){if(row.querySelector('.match-word').textContent===word){var sel=row.querySelector('select');sel.value=val;row.classList.add('correct');sel.disabled=true}})});if(s.blanks)s.blanks.forEach(function(a){document.querySelectorAll('.blank-input[data-answer="'+a+'"]').forEach(function(e){e.value=a;e.classList.add('correct')})});if(s.quiz)s.quiz.forEach(function(t){document.querySelectorAll('.quiz-option[data-correct="true"]').forEach(function(e){if(e.textContent.trim().substring(0,30)===t)e.classList.add('correct')})});if(s.speech)s.speech.forEach(function(d){var phrase,cls,scoreTxt,words,recUrl;try{var obj=JSON.parse(d);phrase=obj.p;cls=obj.c;scoreTxt=obj.s;words=obj.words||[];recUrl=obj.r||''}catch(e){phrase=d;cls='good';scoreTxt='Done';words=[];recUrl=''}document.querySelectorAll('.speech-card').forEach(function(sc){if(sc.dataset.phrase===phrase){var rd=sc.querySelector('.speech-result');if(rd){rd.classList.add('show',cls);var html='<strong>'+scoreTxt+'</strong> — '+(cls==='good'?'Excellent!':cls==='try-again'?'Almost there!':'Keep practicing!');if(words.length>0){html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';words.forEach(function(w){html+='<span class="word-box word-'+(w.s==='c'?'correct':'missing')+'">'+w.w+'</span>'});html+='</div></div>'}rd.innerHTML=html}if(recUrl){sc.dataset.recordingUrl=recUrl;injectPronunciationBtn(sc,recUrl)}}})});if(s.checklists){document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb,i){if(s.checklists[i]){cb.checked=true;cb.closest('li').classList.add('checked')}})}if(s.mediaChecks){document.querySelectorAll('.media-card-wrapper').forEach(function(w){var id=w.dataset.media;var cb=w.querySelector('input[type="checkbox"]');if(id&&cb&&s.mediaChecks[id]){cb.checked=true;w.classList.add('done')}})}if(s.vocabListened){s.vocabListened.forEach(function(word){document.querySelectorAll('.vocab-card-pc').forEach(function(vc){var w=vc.querySelector('.vocab-card-word');if(w&&w.textContent===word)vc.classList.add('listened')})})}if(s.ordering){s.ordering.forEach(function(o){var id=typeof o==='string'?o:o.id;var savedOrder=typeof o==='object'?o.order:null;var oc=id?document.getElementById(id):null;if(!oc)return;if(savedOrder&&savedOrder.length>0){var items=Array.from(oc.querySelectorAll('.order-item'));savedOrder.forEach(function(txt){for(var i=0;i<items.length;i++){var t=items[i].querySelector('.order-text');if(t&&t.textContent===txt){oc.appendChild(items[i]);break}}})}oc.querySelectorAll('.order-item').forEach(function(it,i){it.classList.add('correct-order');it.querySelector('.order-num').textContent=i+1;it.style.borderColor='var(--success)'})})}if(s.thinkRecorded){s.thinkRecorded.forEach(function(d){var qTxt,recUrl;try{var obj=JSON.parse(d);qTxt=obj.q;recUrl=obj.r||''}catch(e){qTxt=d;recUrl=''}document.querySelectorAll('.think-card').forEach(function(tc){var qEl=tc.querySelector('.think-question');if(qEl&&qEl.textContent.trim().substring(0,40)===qTxt){tc.classList.add('recorded');tc.dataset.recordingUrl=recUrl;var rd=tc.querySelector('[id^="think-result"]');if(rd){if(recUrl){rd.innerHTML='<audio controls src="'+recUrl+'" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:.72rem;color:var(--success);margin-top:.3rem;">&#10003; Recording saved</p>'}else{rd.innerHTML='<p style="font-size:.82rem;color:var(--success);font-weight:500;">&#10003; Recording completed</p>'}}}})})}updateProgress()}
+loadState();
+</script>
+<script src="/lib/contrast-guard.js"></script>
+</body>
+</html>

@@ -450,21 +450,83 @@ def build_standalone(cfg, content_dir, manifest):
     return entries
 
 
-def normalize_complementary(html):
-    """Normaliza blocos de Complementares para o estilo canônico (REGRA 17: classes CSS).
-    Autores às vezes escrevem com style inline / <h4> sub-header / <hr> separador, o que
-    diverge dos complementares antigos (classes limpas) e quebra a uniformidade visual
-    (REGRA 11 #9). Aqui convertemos para o estilo de classe, deixando o CSS controlar."""
+def _match_div_end(s, start):
+    """Dado o índice de um '<div' em s, retorna o índice logo após o </div> que o fecha."""
+    depth = 0
+    for m in re.finditer(r'<div\b|</div>', s[start:]):
+        if m.group(0) == '</div>':
+            depth -= 1
+            if depth == 0:
+                return start + m.end()
+        else:
+            depth += 1
+    return -1
+
+
+def _wrap_card_run(body):
+    """Envolve o bloco contíguo de .media-card-wrapper de `body` num <div class="media-grid">
+    (layout 2+1 da maria-claudia). Preserva o que vem antes/depois dos cards."""
+    if 'media-card-wrapper' not in body:
+        return body
+    first = body.find('<div class="media-card-wrapper"')
+    i, end = first, first
+    while i >= 0:
+        e = _match_div_end(body, i)
+        if e < 0:
+            break
+        end = e
+        i = body.find('<div class="media-card-wrapper"', e)
+    inner = body[first:end].strip('\n')
+    return body[:first] + '<div class="media-grid">\n' + inner + '\n</div>\n' + body[end:]
+
+
+def _lesson_h4(cfg):
+    """Cabeçalho canônico da aula nos Complementares: <h4>Lesson N &mdash; Título</h4>
+    (Lección para aulas de espanhol). Título vem do config (lesson.menu_title)."""
+    L = cfg['lesson']
+    label = 'Clase' if cfg.get('lang') == 'es' else 'Lesson'
+    title = (L.get('menu_title') or L.get('subtitle') or '').strip()
+    title = re.sub(r'&(?!#?\w+;)', '&amp;', title)  # escapa & solto
+    return (f'<h4 style="font-size:.95rem;margin:1.5rem 0 .8rem">'
+            f'{label} {L["n"]} &mdash; {title}</h4>')
+
+
+def normalize_complementary(html, cfg=None):
+    """Normaliza Complementares ao estilo canônico (REGRA 17: classes CSS) e GARANTE o
+    layout media-grid (2 cards em cima + 1 embaixo) com 1 <h4> de cabeçalho por aula,
+    igual à maria-claudia. Autores às vezes escrevem com style inline / cards soltos /
+    <h4> divergente; aqui convertemos para classes e agrupamos. Idempotente: se já houver
+    media-grid, não duplica."""
     # separadores <hr> do estilo inline
     html = re.sub(r'[ \t]*<hr style="border:none;border-top:1px solid var\(--border\)[^>]*>\n?', '', html)
-    # sub-headers <h4>Aula N -- ...</h4> dentro do grid (redundantes com o <h3>)
-    html = re.sub(r'[ \t]*<h4 style="font-size:\.95rem[^>]*>\s*Aula \d+\s*--[^<]*</h4>\n?', '', html)
+    # sub-header <h4 font-size:.95rem> da aula: removido e re-emitido do config (título canônico,
+    # "Lesson/Lección N — ..."), NÃO deixado de fora como antes (bug: aula saía sem h4)
+    html = re.sub(r'[ \t]*<h4 style="font-size:\.95rem[^>]*>.*?</h4>\n?', '', html, flags=re.S)
     # style inline no media-thumb (CSS .media-thumb assume tamanho/cor)
     html = re.sub(r'<div class="media-thumb" style="[^"]*">', '<div class="media-thumb">', html)
     # style inline no <p> de descrição
     html = re.sub(r'<p style="font-size:\.82rem;color:var\(--text-mid\)">', '<p>', html)
     # style inline no media-tip
     html = re.sub(r'<p class="media-tip" style="[^"]*">', '<p class="media-tip">', html)
+    # GARANTE 1 h4 de cabeçalho da aula (do config) antes dos cards/grid — mesmo quando o
+    # autor JÁ mandou os cards dentro de um <div class="media-grid"> (antes o h4 sumia nesse
+    # caso: a condição exigia ausência de media-grid). Insere antes do grid, ou do 1º card.
+    if cfg is not None and 'media-card-wrapper' in html:
+        anchor = html.find('<div class="media-grid"')
+        if anchor < 0:
+            anchor = html.find('<div class="media-card-wrapper"')
+        if anchor >= 0:
+            html = html[:anchor] + _lesson_h4(cfg) + '\n' + html[anchor:]
+    # ENVOLVE os cards de cada aula (sob seu h4) num <div class="media-grid"> — idempotente
+    if 'media-card-wrapper' in html and 'class="media-grid"' not in html:
+        parts = re.split(r'(<h4\b[^>]*>.*?</h4>)', html, flags=re.S)
+        out = [parts[0]]
+        i = 1
+        while i < len(parts):
+            out.append(parts[i])                                   # o <h4>
+            out.append(_wrap_card_run(parts[i + 1] if i + 1 < len(parts) else ''))
+            i += 2
+        html = ''.join(out)
     return html
 
 
@@ -474,7 +536,7 @@ def build_hub_new(cfg, content_dir, manifest):
     audio_base = f'/audio/{cfg["slug"]}/'
     preclass = read(os.path.join(content_dir, 'preclass.html'))
     planning = read(os.path.join(content_dir, 'planning.html'))
-    complementary = normalize_complementary(read(os.path.join(content_dir, 'complementary.html')))
+    complementary = normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg)
 
     entries = assign_voices(extract_phrases(preclass), prefix='pc_', cfg=cfg)
     extra = L.get('extra_audio', [])
@@ -537,7 +599,7 @@ def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
     assert os.path.exists(comp_path), (
         f'complementary.html FALTANDO em {os.path.relpath(content_dir, ROOT)} — '
         f'toda aula precisa do bloco de Complementares (data-media="l{L["n"]}-...")')
-    comp = normalize_complementary(read(comp_path))
+    comp = normalize_complementary(read(comp_path), cfg)
     assert f'data-media="l{L["n"]}-' in comp, (
         f'complementary.html sem data-media="l{L["n"]}-..." — use o prefixo da aula')
     parts.append(f'<!-- 3b. COMPLEMENTARES da aula {L["n"]} (inserir na tab-complementary, prof E aluno) -->\n')

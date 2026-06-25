@@ -400,6 +400,31 @@ def validate(path):
                 fails.append(f'aula {N} SEM complementares no hub (nenhum data-media="l{N}-...") — gerar complementary.html e inserir o snippet 3b')
             elif n_media < 3:
                 warns.append(f'só {n_media} complementar(es) da aula {N} no hub (padrão do modelo: 3)')
+            # LINK obrigatório em CADA complementar (REGRA 17): todo media-card da aula
+            # precisa de um <a href="http..."> clicável (série/filme, podcast, vídeo).
+            # Card sem link = bug bloqueante (saíram cards sem link em alunos novos).
+            comp_i = hc.find('id="tab-complementary"')
+            if comp_i >= 0 and n_media > 0:
+                comp_seg = hc[comp_i:]
+                cards = re.findall(
+                    rf'data-media="l{N}-[^"]*".*?(?=<div class="media-card-wrapper"|</div><!-- /tab-complementary -->|$)',
+                    comp_seg, re.S)
+                no_link = [c for c in cards if 'href="http' not in c]
+                if no_link:
+                    fails.append(f'aula {N}: {len(no_link)} de {len(cards)} complementar(es) SEM link '
+                                 f'clicável (<a href="http...">) — todo media-card precisa de link (REGRA 17)')
+                # LAYOUT media-grid (REGRA 17): os cards da aula DEVEM estar agrupados num
+                # <div class="media-grid"> sob o <h4> da aula (2 em cima + 1 embaixo, igual à
+                # maria-claudia). Card de aula fora de media-grid = layout em coluna única = FAIL.
+                first_card = comp_seg.find(f'data-media="l{N}-')
+                if first_card >= 0:
+                    head = comp_seg[:first_card]
+                    h4_pos = head.rfind('<h4')
+                    region = head[h4_pos:] if h4_pos >= 0 else head
+                    if 'class="media-grid"' not in region:
+                        fails.append(f'aula {N}: complementares FORA de <div class="media-grid"> — '
+                                     f'agrupar os cards da aula num media-grid sob o <h4> '
+                                     f'(layout 2+1, REGRA 17)')
             # ESTRUTURA mínima do Pre-class (ex-lesson-N do hub)
             bi = hc.find(f'id="ex-lesson-{N}"')
             if bi >= 0:
