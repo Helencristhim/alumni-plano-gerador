@@ -413,6 +413,18 @@ def validate(path):
                 if no_link:
                     fails.append(f'aula {N}: {len(no_link)} de {len(cards)} complementar(es) SEM link '
                                  f'clicável (<a href="http...">) — todo media-card precisa de link (REGRA 17)')
+                # LAYOUT media-grid (REGRA 17): os cards da aula DEVEM estar agrupados num
+                # <div class="media-grid"> sob o <h4> da aula (2 em cima + 1 embaixo, igual à
+                # maria-claudia). Card de aula fora de media-grid = layout em coluna única = FAIL.
+                first_card = comp_seg.find(f'data-media="l{N}-')
+                if first_card >= 0:
+                    head = comp_seg[:first_card]
+                    h4_pos = head.rfind('<h4')
+                    region = head[h4_pos:] if h4_pos >= 0 else head
+                    if 'class="media-grid"' not in region:
+                        fails.append(f'aula {N}: complementares FORA de <div class="media-grid"> — '
+                                     f'agrupar os cards da aula num media-grid sob o <h4> '
+                                     f'(layout 2+1, REGRA 17)')
             # ESTRUTURA mínima do Pre-class (ex-lesson-N do hub)
             bi = hc.find(f'id="ex-lesson-{N}"')
             if bi >= 0:
