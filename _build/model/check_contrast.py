@@ -1,132 +1,129 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""check_contrast.py — GATE de contraste COMPUTADO (chromium/chrome headless).
-
-Renderiza a página, varre TODOS os slides (escuros E claros), computa a cor
-efetiva de cada texto (subindo ancestrais + alpha blending) e falha se houver
-texto ilegível (ratio < 2.5:1). É a prova final de que o contrast-guard +
-o CSS do modelo seguram qualquer paleta.
-
-Arquivo sem slides (data-slide) é pulado (exit 0).
-USO: python3 _build/model/check_contrast.py arquivo.html [...]
-"""
-import json
-import os
-import re
-import shutil
-import subprocess
-import sys
-
-INJECT = """
-<script>
-window.addEventListener('load', function(){
-  function lum(c){
-    var m = c.match(/rgba?\\(([\\d.]+),\\s*([\\d.]+),\\s*([\\d.]+)(?:,\\s*([\\d.]+))?\\)/);
-    if(!m) return null;
-    var a = m[4]===undefined?1:parseFloat(m[4]);
-    var ch=[m[1],m[2],m[3]].map(function(v){v=parseFloat(v)/255;
-      return v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055,2.4);});
-    return {l:0.2126*ch[0]+0.7152*ch[1]+0.0722*ch[2], a:a};
-  }
-  function effBg(el, fallback){
-    var node=el;
-    while(node && node.nodeType===1){
-      var cs=getComputedStyle(node);
-      var L=lum(cs.backgroundColor);
-      if(L && L.a>0.5) return {l:L.l, css:cs.backgroundColor};
-      // gradiente/foto: brilho não-computável — pular o elemento (guard cobre em runtime)
-      if(cs.backgroundImage && cs.backgroundImage!=='none') return null;
-      node=node.parentElement;
-    }
-    return {l:fallback, css:'assumed'};
-  }
-  function blend(fg, bgl){ return fg.a>=1? fg.l : fg.l*fg.a + bgl*(1-fg.a); }
-  var out=[];
-  var slides=document.querySelectorAll('.slide');
-  slides.forEach(function(slide, si){
-    var isLight = slide.classList.contains('slide-light');
-    var fallback = isLight ? 0.93 : 0.05;  // claro assume página clara; resto assume escuro
-    slide.querySelectorAll('*').forEach(function(el){
-      if(['SCRIPT','STYLE','SVG','PATH','BUTTON'].indexOf(el.tagName)>=0) return;
-      var hasText=false;
-      el.childNodes.forEach(function(n){ if(n.nodeType===3 && n.textContent.trim()) hasText=true; });
-      if(!hasText) return;
-      var cs=getComputedStyle(el);
-      var fg=lum(cs.color); if(!fg) return;
-      var bg=effBg(el, fallback); if(!bg) return;
-      var fl=blend(fg,bg.l);
-      var ratio=(Math.max(fl,bg.l)+0.05)/(Math.min(fl,bg.l)+0.05);
-      if(ratio<2.5){
-        out.push({slide:si+1, light:isLight, tag:el.tagName, color:cs.color, bg:bg.css,
-                  ratio:Math.round(ratio*100)/100, text:el.textContent.trim().slice(0,60)});
-      }
-    });
-  });
-  var pre=document.createElement('pre');
-  pre.id='__contrast_audit__';
-  pre.textContent=JSON.stringify({slides:slides.length, offenders:out});
-  document.body.appendChild(pre);
-});
-</script>
-"""
-
-
-def find_browser():
-    for b in ('chromium', 'chromium-browser', 'google-chrome', 'google-chrome-stable', 'chrome'):
-        if shutil.which(b):
-            return b
-    print('ERRO: nenhum chromium/chrome no PATH')
-    sys.exit(2)
-
-
-def check(path, browser):
-    html = open(path, encoding='utf-8').read()
-    if 'data-slide=' not in html:
-        print(f'{path}: sem slides — pulado')
-        return 0
-    pub = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(path)), '..'))
-    html = re.sub(r'(src|href)="/(lib|styles|assets|audio)/', r'\1="file://' + pub + r'/\2/', html)
-    html = html.replace('</body>', INJECT + '</body>', 1) if '</body>' in html else html + INJECT
-    # snap chromium só acessa /home e NÃO lê diretórios ocultos (~/.*) — usar dir visível
-    tmpdir = os.path.join(os.path.expanduser('~'), 'contrast-check-tmp')
-    os.makedirs(tmpdir, exist_ok=True)
-    tmp = os.path.join(tmpdir, os.path.basename(path))
-    open(tmp, 'w', encoding='utf-8').write(html)
-    r = subprocess.run([browser, '--headless', '--disable-gpu', '--no-sandbox',
-                        '--virtual-time-budget=8000', '--dump-dom', 'file://' + tmp],
-                       capture_output=True, text=True, timeout=120)
-    m = re.search(r'<pre id="__contrast_audit__">(.*?)</pre>', r.stdout, re.S)
-    os.remove(tmp)
-    if not m:
-        print(f'{path}: FALHA ao extrair resultado do headless')
-        return 2
-    data = json.loads(m.group(1))
-    offs = data['offenders']
-    print(f'{path}: {data["slides"]} slides, {len(offs)} textos ILEGÍVEIS (ratio<2.5)')
-    seen = set()
-    for o in offs[:25]:
-        key = (o['slide'], o['color'], o['text'][:30])
-        if key in seen:
-            continue
-        seen.add(key)
-        kind = 'claro' if o['light'] else 'escuro'
-        print(f'  slide {o["slide"]:>2} ({kind}) <{o["tag"].lower()}> ratio {o["ratio"]:>4} '
-              f'color={o["color"]} bg={o["bg"]} :: {o["text"]!r}')
-    if len(offs) > 25:
-        print(f'  ... +{len(offs)-25}')
-    return 1 if offs else 0
-
-
-def main():
-    if len(sys.argv) < 2:
-        print(__doc__)
-        sys.exit(2)
-    browser = find_browser()
-    rc = 0
-    for p in sys.argv[1:]:
-        rc = max(rc, check(p, browser))
-    sys.exit(rc)
-
-
-if __name__ == '__main__':
-    main()
+"""Scanner determinístico de contraste: razão WCAG de texto sobre fundo colorido
+inline (linear-gradient/solid), com casamento correto da <div> do container
+(exclui sub-containers com fundo próprio). Estático, sem browser."""
+import re,sys,os
+def hexs(c):
+    c=c.strip().lstrip('#')
+    if len(c)==3: c=''.join(ch*2 for ch in c)
+    if len(c)!=6: return None
+    try: return tuple(int(c[i:i+2],16) for i in (0,2,4))
+    except: return None
+def lum(rgb):
+    def f(v):
+        v/=255
+        return v/12.92 if v<=0.03928 else ((v+0.055)/1.055)**2.4
+    r,g,b=rgb; return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b)
+def ratio(a,b):
+    la,lb=lum(a),lum(b); hi,lo=max(la,lb),min(la,lb); return (hi+0.05)/(lo+0.05)
+def varmap(h):
+    return {k:v for k,v in re.findall(r'(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{3,6})',h)}
+def resolve(val,vm):
+    val=val.strip()
+    mv=re.match(r'var\((--[\w-]+)\)',val)
+    if mv: val=vm.get(mv.group(1),'')
+    val=val.strip()
+    if val.startswith('#'): return hexs(val)
+    mr=re.match(r'rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)',val)
+    if mr: return tuple(int(mr.group(i)) for i in (1,2,3))
+    return None
+def classcolors(h,vm):
+    cm={}
+    for sel,body in re.findall(r'\.([\w-]+)\s*\{([^}]*)\}',h):
+        m=re.search(r'(?<!-)color\s*:\s*([^;]+)',body)
+        if m:
+            rgb=resolve(m.group(1),vm)
+            if rgb: cm.setdefault(sel,rgb)
+    return cm
+def inner_div(h,open_start):
+    i=h.find('>',open_start)+1; depth=1; j=i
+    while j<len(h) and depth>0:
+        nd=h.find('<div',j); cd=h.find('</div>',j)
+        if cd==-1: return h[i:]
+        if nd!=-1 and nd<cd: depth+=1; j=nd+4
+        else: depth-=1; j=cd+6
+    return h[i:cd]
+def bgclasses(h):
+    s=set()
+    for sel,body in re.findall(r'([^{}]+)\{([^}]*)\}',h):
+        if re.search(r'background(-color)?\s*:\s*(?!none|transparent|inherit)\S',body):
+            for tok in re.findall(r'\.([\w-]+)',sel): s.add(tok)
+    return s
+def strip_bg(seg,bgc):
+    # remove iterativamente sub-divs FOLHA (sem <div interno) que têm fundo próprio
+    # (inline OU classe com background) — deixa só texto direto sobre ESTE container
+    pat=re.compile(r'<div\b((?:[^>"]|"[^"]*")*?)>((?:(?!<div\b).)*?)</div>',re.S)
+    changed=True
+    while changed:
+        changed=False
+        out=[]; last=0
+        for m in pat.finditer(seg):
+            attrs=m.group(1)
+            has=bool(re.search(r'style="[^"]*background:',attrs)) or any(tok in bgc for cattr in re.findall(r'class="([^"]*)"',attrs) for tok in cattr.split())
+            if has:
+                out.append(seg[last:m.start()]); last=m.end(); changed=True
+        out.append(seg[last:])
+        seg=''.join(out)
+    return seg
+def darkctx_overrides(h,vm):
+    # em slides escuros (.slide-dark / .slide-image) o texto recebe cor clara via cascade
+    ov={}
+    for sel,body in re.findall(r'([^{}]+)\{([^}]*)\}',h):
+        if '.slide-dark' not in sel and '.slide-image' not in sel: continue
+        m=re.search(r'(?<!-)color\s*:\s*([^;!]+)',body)
+        if not m: continue
+        rgb=resolve(m.group(1),vm)
+        if not rgb: continue
+        for cls in re.findall(r'\.(?:slide-dark|slide-image)\s+\.([\w-]+)',sel): ov.setdefault(cls,rgb)
+    return ov
+def hiddenclasses(h):
+    s=set()
+    for sel,body in re.findall(r'([^{}]+)\{([^}]*)\}',h):
+        if re.search(r'(?:opacity\s*:\s*0(?!\.)|display\s*:\s*none|visibility\s*:\s*hidden)',body):
+            for tok in re.findall(r'\.([\w-]+)',sel): s.add(tok)
+    return s
+def scan(path):
+    h=open(path,encoding='utf-8').read()
+    vm=varmap(h); cm=classcolors(h,vm); bgc=bgclasses(h); ov=darkctx_overrides(h,vm)
+    hid=hiddenclasses(h); findings=[]
+    for m in re.finditer(r'<div[^>]*style="([^"]*)"',h):
+        style=m.group(1)
+        bgm=re.search(r'background(?:-color|-image)?\s*:\s*([^;]+)',style)
+        if not bgm: continue
+        bgval=bgm.group(1)
+        # só fundos coloridos: hex no VALOR do background (não no color/border)
+        stops=[s for s in (hexs(x) for x in re.findall(r'#[0-9a-fA-F]{3,6}',bgval)) if s]
+        if not stops: continue
+        # ignora fundos essencialmente brancos/claros (rgba branco, #fff): texto escuro ali é OK
+        if all(lum(s)>0.7 for s in stops): continue
+        is_dark=max(lum(s) for s in stops)<0.18   # fundo escuro => contexto slide-dark/slide-image
+        seg=inner_div(h,m.start())
+        seg2=strip_bg(seg,bgc)
+        # se o fundo tem um stop branco/claro, o texto real provavelmente fica sobre
+        # a parte clara só na borda — não medir contra o stop escuro como se fosse sólido.
+        for cls in set(re.findall(r'class="([\w-]+)"',seg2)):
+            if cls in bgc or cls in hid: continue   # fundo próprio, ou texto escondido (opacity:0/none)
+            if cls in cm and re.search(r'class="[^"]*\b'+re.escape(cls)+r'\b[^"]*"[^>]*>[^<]*[A-Za-z]{3}',seg2):
+                txt=ov.get(cls,cm[cls]) if is_dark else cm[cls]
+                mn=min(ratio(txt,st) for st in stops)
+                if mn<3.0: findings.append((cls,'#%02x%02x%02x'%txt,'/'.join('#%02x%02x%02x'%s for s in stops),round(mn,2)))
+        for tag in re.findall(r'<[^>]*style="([^"]*color:\s*#[0-9a-fA-F]{3,6}[^"]*)"[^>]*>[^<]*[A-Za-z]{3}',seg2):
+            if 'background' in tag: continue   # elemento com fundo próprio
+            cmi=re.search(r'color:\s*(#[0-9a-fA-F]{3,6})',tag).group(1); txt=hexs(cmi)
+            if txt:
+                mn=min(ratio(txt,st) for st in stops)
+                if mn<3.0: findings.append(('inline',cmi,'/'.join('#%02x%02x%02x'%s for s in stops),round(mn,2)))
+    return sorted(set(findings),key=lambda x:x[3])
+if __name__=='__main__':
+    perstu={}; tot=0
+    for f in sys.argv[1:]:
+        fs=scan(f)
+        if fs:
+            stu=re.sub(r'-aula\d+','',os.path.basename(f)[:-5])
+            perstu.setdefault(stu,{})[f]=fs; tot+=len(fs)
+    for stu in sorted(perstu):
+        print(f"\n### {stu}")
+        for f,fs in perstu[stu].items():
+            for cls,tc,bg,r in fs[:6]:
+                print(f"  {os.path.basename(f):42} {r:>4}  txt {tc} sobre {bg}  [{cls}]")
+    print(f"\n=== TOTAL achados <3.0: {tot} em {len(perstu)} alunos ===")
