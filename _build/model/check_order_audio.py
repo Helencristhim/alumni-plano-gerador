@@ -121,14 +121,16 @@ def crit_count(F): return len(F['orphan_token'])+len(F['missing_file'])+len(F['t
 
 if __name__=='__main__':
     if sys.argv[1]=='--selftest':
-        PRE='2e436336da87a77f4142d0d3d2a4bb6c30d14ed4'  # antes do fix da L1 da Fabiana
+        # Refs PRÉ-FIX imutáveis (não usar origin/main — os bugs já foram corrigidos lá)
+        FAB_PRE='2e436336da87a77f4142d0d3d2a4bb6c30d14ed4'  # antes do #1037 (Fabiana order-l1)
+        SIM_PRE='e172eddf17ec9aaa225db640443cab22f81b9268'  # antes do #1038 (simone order-l3)
         print("AUTOTESTE (detector tem que apitar nos bugs conhecidos):")
-        f_pre=audit(PRE,'fabiana-michelly-silva')
+        f_pre=audit(FAB_PRE,'fabiana-michelly-silva')
         t1=any(k=='[order-l1]' for k in (x[0] for x in f_pre['token_content']))
         print(f"  1. Fabiana@pré-fix flag [order-l1] por conteúdo? {'PASS' if t1 else 'FALHOU'}  -> {[x for x in f_pre['token_content'] if x[0]=='[order-l1]']}")
-        s_cur=audit('origin/main','simone-quiles-de-santana-marques')
-        t2='[order-l3]' in s_cur['orphan_token']
-        print(f"  2. simone@main flag [order-l3] órfão?            {'PASS' if t2 else 'FALHOU'}  -> orphan_tokens={s_cur['orphan_token']}")
+        s_pre=audit(SIM_PRE,'simone-quiles-de-santana-marques')
+        t2='[order-l3]' in s_pre['orphan_token']
+        print(f"  2. simone@pré-fix flag [order-l3] órfão?         {'PASS' if t2 else 'FALHOU'}  -> orphan_tokens={s_pre['orphan_token']}")
         f_cur=audit('origin/main','fabiana-michelly-silva')
         t3=crit_count(f_cur)==0
         print(f"  3. Fabiana@main SEM críticos?                    {'PASS' if t3 else 'FALHOU'}  -> crit={crit_count(f_cur)} {f_cur['token_content'][:2]}")
