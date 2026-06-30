@@ -47,6 +47,14 @@ def check(path):
             'alternativas estouram os 100vh e ficam cortados). Adicione '
             '.ic-reading{max-height:42vh;overflow-y:auto}.')
 
+    # Bug D (overlap): slide de leitura centraliza vertical -> conteudo alto transborda
+    # pra cima e o titulo invade a barra de capitulos. Exige top-align nos slides de leitura.
+    if 'class="ic-reading"' in s and 'ic-reading:not(.ic-collapsed)){align-items:flex-start' not in s:
+        problems.append(
+            '.ic-reading presente mas SEM a regra de top-align (slide alto transborda '
+            'pra cima e o titulo colide com a barra de capitulos). Adicione '
+            '.slide:has(.ic-reading:not(.ic-collapsed)){align-items:flex-start}.')
+
     # Bug B (parte 2): ic-tfrow sem data-answer -> True/False mostra os 2 veredictos
     rows = re.findall(r'<div class="ic-tfrow"([^>]*)>', s)
     missing = [r for r in rows if 'data-answer' not in r]
