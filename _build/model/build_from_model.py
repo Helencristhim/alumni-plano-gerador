@@ -117,6 +117,7 @@ def hex_to_rgb(h):
 #   {"kind":"modals","cards":[["should","Strong","..."],["could","Softer","..."]]}
 #   {"kind":"rephrase","title":"...","items":[["cue sentence","modal"], ...]}
 #   {"kind":"scenarios","items":[["Scenario 1","texto"], ...]}
+#   {"kind":"quickfire","items":[{"situation":"...","tips":["...","..."]}, ...]}  (Prev/Next + Tips toggle)
 #   {"kind":"questions","title":"...","ordered":true,"items":["q1", ...]}        (questions/guiding/analyse)
 #   {"kind":"guiding","items":[...]}  {"kind":"analyse","title":"...","items":[...]}
 #   {"kind":"lf","items":[["A","prefix ","should"," suffix","strong|soft"], ...]}
@@ -212,6 +213,34 @@ def render_block(b):
     if k == 'scenarios':
         items = ''.join(f'<div class="ic-scenario"><div class="ic-who">{_esc(it[0])}</div><p>{_esc(it[1])}</p></div>' for it in b['items'])
         return f'<div class="ic-block">{items}</div>'
+    if k == 'quickfire':
+        # Quick Fire BIDIRECIONAL + Tips. Situacoes ABERTAS (REGRA 27.D): cada item
+        # tem "situation" (cenario realista) e "tips" (frases de apoio/estrutura,
+        # NAO um gabarito). Navega Previous/Next (qfNav, shell) com contador; Tips
+        # faz toggle (qfTips, REGRA 27.E). Vai num placeholder <!--IC-BLOCKS:quickfire-->.
+        items = b['items']
+        assert items, 'quickfire sem items'
+        btn_st = ('background:var(--accent);color:#fff;border:none;border-radius:8px;'
+                  'padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer')
+        nav_prev = ('background:transparent;color:var(--accent);border:2px solid var(--accent);'
+                    'border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer')
+        cards = ''
+        for i, it in enumerate(items):
+            disp = '' if i == 0 else 'display:none;'
+            tips = ''.join(f'<li style="margin-bottom:.3rem">{_esc(t)}</li>' for t in it['tips'])
+            cards += (
+                f'<div class="qf-card" data-qf="{i + 1}" style="{disp}background:var(--bg-card);'
+                f'border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.8rem">'
+                f'<p class="qf-situation" style="font-size:.92rem;font-weight:600;margin-bottom:.6rem">{_esc(it["situation"])}</p>'
+                f'<button class="primary-btn qf-tips-btn" onclick="qfTips(this)" style="{btn_st}">Tips</button>'
+                f'<div class="qf-tips" style="display:none;margin-top:.6rem">'
+                f'<ul style="font-size:.84rem;color:var(--text-mid);padding-left:1.1rem;margin:0">{tips}</ul></div></div>')
+        score = (f'<p style="text-align:center;font-size:.82rem;color:var(--text-dim);margin-top:.3rem">'
+                 f'<span id="qfScore">1 / {len(items)}</span></p>')
+        nav = ('<div class="qf-nav" style="display:flex;gap:.6rem;justify-content:center;margin-top:1rem">'
+               f'<button class="qf-prev" onclick="qfNav(-1)" style="{nav_prev}">&#8592; Previous</button>'
+               f'<button class="primary-btn qf-next" onclick="qfNav(1)" style="{btn_st}">Next &#8594;</button></div>')
+        return f'{score}<div id="qfContainer" style="max-width:560px;margin:1rem auto 0">{cards}{nav}</div>'
     if k == 'bank':
         items = ''.join(f'<span class="ic-b">{_esc(w)}</span>' for w in b['items'])
         head = f'<div class="ic-card-h3">{_esc(b.get("label", "Useful language"))}</div>'
