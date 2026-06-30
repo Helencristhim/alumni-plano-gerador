@@ -532,6 +532,14 @@ body.slide-mode .nav-bar { display:flex; }
 /* reading text + source */
 .ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
 .slide:has(.ic-reading:not(.ic-collapsed)){align-items:flex-start}
+/* Leitura + card de atividade (gist/true-false aberto) na MESMA tela: texto + pergunta +
+   3 alternativas estouravam os 100vh e as ultimas opcoes ficavam cortadas pelo rodape.
+   Fix: o .slide-inner vira o UNICO container rolavel (uma barra so) e o .ic-reading larga
+   o scroll interno proprio — assim da pra rolar ate a ultima alternativa sem cortar nada. */
+.slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner { max-height: calc(100vh - 7rem); overflow-y: auto; padding-right: .5rem; }
+.slide:has(.ic-reading:not(.ic-collapsed)) .ic-reading { max-height: none; overflow: visible; }
+.slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar { width: 8px; }
+.slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 .ic-reading::-webkit-scrollbar { width: 8px; }
 .ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 .ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
@@ -1336,7 +1344,7 @@ function revealVocab(card) {
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
 function revealFill(item) { item.classList.add('revealed'); }
-function revealComp(q) { q.classList.add('revealed'); }
+function revealComp(q) { q.classList.toggle('revealed'); }
 
 // ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====
 // Interativos teacher-led no slide. Mesmo padrão toggle do revealVocab/revealComp
@@ -1377,6 +1385,27 @@ function nextDialogueLine() {
 // ===== QUICK CHALLENGE =====
 var qfCurrent = 1;
 function nextQF() { qfCurrent++; var all = document.querySelectorAll('.qf-card'); all.forEach(function(c) { c.style.display = 'none'; }); var next = document.querySelector('.qf-card[data-qf="' + qfCurrent + '"]'); if (next) next.style.display = 'block'; document.getElementById('qfScore').textContent = (qfCurrent - 1) + ' / ' + all.length; }
+// QUICK FIRE bidirecional (situacoes abertas): Previous/Next + contador. Substitui o
+// nextQF() one-way (que so avancava). Acha o cartao visivel, move +-1 dentro dos limites.
+function qfNav(dir) {
+    var all = document.querySelectorAll('.qf-card');
+    if (!all.length) return;
+    var cur = 0;
+    all.forEach(function(c, i) { if (c.style.display !== 'none') cur = i; });
+    var next = Math.min(Math.max(cur + dir, 0), all.length - 1);
+    all.forEach(function(c, i) { c.style.display = (i === next) ? 'block' : 'none'; });
+    var sc = document.getElementById('qfScore');
+    if (sc) sc.textContent = (next + 1) + ' / ' + all.length;
+}
+// QUICK FIRE tips: respostas MUITO abertas nao tem gabarito — o botao revela DICAS
+// (frases de apoio/estrutura). Toggle (REGRA 27.E): abre / fecha no mesmo botao.
+function qfTips(btn) {
+    var box = btn.nextElementSibling;
+    if (!box) return;
+    var open = box.style.display === 'block';
+    box.style.display = open ? 'none' : 'block';
+    btn.textContent = open ? 'Tips' : 'Hide tips';
+}
 
 // ===== LISTENING AUDIO =====
 // ===== LISTENING PLAYER (MP3 unico + controles completos) =====
