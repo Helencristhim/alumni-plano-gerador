@@ -535,7 +535,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -584,8 +590,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -1042,7 +1051,9 @@ body.slide-mode .nav-bar { display:flex; }
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">According to the text, the hardest part of a friendship made while traveling is meeting the person.<span class="ic-just">&#8594; The hard part is staying in touch once you are back home, not meeting them.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">The travelers who reconnect tend to replace a vague promise with a concrete plan.<span class="ic-just">&#8594; Instead of a weak "let's stay in touch", they say something specific with a condition or time clause.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer says you need a grand reunion before you are allowed to reconnect.<span class="ic-just">&#8594; You do not need a grand reunion; a quick message or voice note keeps the bond warm.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">Making a small effort every few weeks helps you avoid falling out of touch.<span class="ic-just">&#8594; Make a little effort every few weeks and you will rarely fall out of touch.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">How travelers keep the bond alive</div><p>Every good trip leaves you with a handful of people you genuinely do not want to lose. You share a long dinner, a delayed train or a sunrise hike, and suddenly a stranger feels like an old friend. The hard part is not meeting them; it is staying in touch once you are back home and life takes over. Many of us promise to keep in touch and then, slowly and silently, we drift apart.</p><p>The travelers who manage to reconnect tend to do one simple thing: they turn a vague promise into a concrete plan. Instead of a weak "let's stay in touch", they say something specific. "If I make it to Lisbon next spring, I'll let you know." "As soon as I land, I'll drop you a line." "Once things calm down at work, I'll reach out and we'll have a proper catch-up." Notice the pattern: a small condition or time clause, then a clear promise. The plan does the remembering for you.</p><p>It also helps to lower the stakes. You do not need a grand reunion to reconnect; a quick message to check in on someone, a photo, or a short voice note keeps the bond warm. Make a little effort every few weeks and you will rarely fall out of touch. The friends you keep from your travels are not the ones you met by chance; they are the ones you chose, on purpose, to look up again.</p><div class="ic-src">Adapted for class use <a href="https://www.bbc.com/travel" target="_blank" rel="noopener">https://www.bbc.com/travel</a></div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">According to the text, the hardest part of a friendship made while traveling is meeting the person.<span class="ic-just">&#8594; The hard part is staying in touch once you are back home, not meeting them.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">The travelers who reconnect tend to replace a vague promise with a concrete plan.<span class="ic-just">&#8594; Instead of a weak "let's stay in touch", they say something specific with a condition or time clause.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer says you need a grand reunion before you are allowed to reconnect.<span class="ic-just">&#8594; You do not need a grand reunion; a quick message or voice note keeps the bond warm.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">Making a small effort every few weeks helps you avoid falling out of touch.<span class="ic-just">&#8594; Make a little effort every few weeks and you will rarely fall out of touch.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
@@ -1061,6 +1072,8 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="slide-inner">
     <div class="chapter-label">Talk About It</div>
     <h2 class="slide-heading">Your <span class="accent">Experience</span></h2>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">How travelers keep the bond alive</div><p>Every good trip leaves you with a handful of people you genuinely do not want to lose. You share a long dinner, a delayed train or a sunrise hike, and suddenly a stranger feels like an old friend. The hard part is not meeting them; it is staying in touch once you are back home and life takes over. Many of us promise to keep in touch and then, slowly and silently, we drift apart.</p><p>The travelers who manage to reconnect tend to do one simple thing: they turn a vague promise into a concrete plan. Instead of a weak "let's stay in touch", they say something specific. "If I make it to Lisbon next spring, I'll let you know." "As soon as I land, I'll drop you a line." "Once things calm down at work, I'll reach out and we'll have a proper catch-up." Notice the pattern: a small condition or time clause, then a clear promise. The plan does the remembering for you.</p><p>It also helps to lower the stakes. You do not need a grand reunion to reconnect; a quick message to check in on someone, a photo, or a short voice note keeps the bond warm. Make a little effort every few weeks and you will rarely fall out of touch. The friends you keep from your travels are not the ones you met by chance; they are the ones you chose, on purpose, to look up again.</p><div class="ic-src">Adapted for class use <a href="https://www.bbc.com/travel" target="_blank" rel="noopener">https://www.bbc.com/travel</a></div></div>
     <div class="ic-card"><ul class="ic-qs ic-guiding"><li><span class="ic-qnum">&#8250;</span><span>Think of someone you met while traveling. Have you stayed in touch, or did you drift apart? Why?</span></li><li><span class="ic-qnum">&#8250;</span><span>What is your honest way of keeping in touch once you are home -- messages, photos, calls, or nothing at all?</span></li><li><span class="ic-qnum">&#8250;</span><span>The text says a plan "does the remembering for you". Do you agree? What concrete plan could you make to reconnect with someone?</span></li><li><span class="ic-qnum">&#8250;</span><span>Now that you have more free time, who is one long-lost friend you would like to look up again, and how will you reach out?</span></li></ul></div>
   </div>
 </div>
@@ -1445,6 +1458,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;

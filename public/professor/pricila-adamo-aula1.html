@@ -532,7 +532,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -581,8 +587,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -1027,7 +1036,9 @@ body.slide-mode .nav-bar { display:flex; }
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer says the old story of a single lifelong career is disappearing.<span class="ic-just">&#8594; It says that story is fading fast.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">Most people in the article describe the shift as a crisis.<span class="ic-just">&#8594; Many describe it as a turning point, not a crisis.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">People say they have been taking stock of what truly matters.<span class="ic-just">&#8594; The text uses exactly this idea.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">According to researchers, the most fulfilled people are the ones who quietly withdraw and rest.<span class="ic-just">&#8594; The most fulfilled stay curious, well-rounded and keep thriving.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Long Way Round: Why Mid-Life Reinventions Are Quietly Booming</div><p>For decades, the story we told about a career was simple: you trained for one thing in your twenties and you did it until you stopped. That story is fading fast. Across the world, people in their fifties and sixties are quietly reinventing themselves, and many describe the shift not as a crisis but as a turning point they have been waiting years to reach.</p><p>The pattern is strikingly consistent. People say they have been taking stock of what truly matters, looking back on a long career path with pride, and looking forward with a fresh perspective. Far from winding down, they are juggling new projects, learning new skills, and discovering interests they never had time for while raising families or building demanding businesses.</p><p>What unites them is a sense that they have come a long way and still have a great deal to give. They are not running from their old lives; they are building on them. The most fulfilled, researchers note, are the ones who stay curious and well-rounded -- the ones who keep thriving long after the world expected them to slow down.</p><div class="ic-src">Adapted from a lifestyle feature, The Atlantic Weekend <a href="https://www.theatlantic.com" target="_blank" rel="noopener">https://www.theatlantic.com</a></div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer says the old story of a single lifelong career is disappearing.<span class="ic-just">&#8594; It says that story is fading fast.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">Most people in the article describe the shift as a crisis.<span class="ic-just">&#8594; Many describe it as a turning point, not a crisis.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">People say they have been taking stock of what truly matters.<span class="ic-just">&#8594; The text uses exactly this idea.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">According to researchers, the most fulfilled people are the ones who quietly withdraw and rest.<span class="ic-just">&#8594; The most fulfilled stay curious, well-rounded and keep thriving.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
@@ -1036,6 +1047,8 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="slide-inner">
     <div class="chapter-label">Discuss</div>
     <h2 class="slide-heading">Talk It <span class="accent">Through</span></h2>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Long Way Round: Why Mid-Life Reinventions Are Quietly Booming</div><p>For decades, the story we told about a career was simple: you trained for one thing in your twenties and you did it until you stopped. That story is fading fast. Across the world, people in their fifties and sixties are quietly reinventing themselves, and many describe the shift not as a crisis but as a turning point they have been waiting years to reach.</p><p>The pattern is strikingly consistent. People say they have been taking stock of what truly matters, looking back on a long career path with pride, and looking forward with a fresh perspective. Far from winding down, they are juggling new projects, learning new skills, and discovering interests they never had time for while raising families or building demanding businesses.</p><p>What unites them is a sense that they have come a long way and still have a great deal to give. They are not running from their old lives; they are building on them. The most fulfilled, researchers note, are the ones who stay curious and well-rounded -- the ones who keep thriving long after the world expected them to slow down.</p><div class="ic-src">Adapted from a lifestyle feature, The Atlantic Weekend <a href="https://www.theatlantic.com" target="_blank" rel="noopener">https://www.theatlantic.com</a></div></div>
     <div class="ic-card"><ul class="ic-qs ic-guiding"><li><span class="ic-qnum">&#8250;</span><span>The article calls this stage a turning point rather than a crisis. Which word fits your own experience better, and why?</span></li><li><span class="ic-qnum">&#8250;</span><span>What have you been taking stock of recently in your own life?</span></li><li><span class="ic-qnum">&#8250;</span><span>The text says the most fulfilled people stay curious and well-rounded. How do you keep yourself curious?</span></li><li><span class="ic-qnum">&#8250;</span><span>If you look back on your career path so far, what milestone are you proudest of?</span></li></ul></div>
   </div>
 </div>
@@ -1076,6 +1089,8 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="slide-inner">
     <div class="chapter-label">Read Again, Deeper</div>
     <h2 class="slide-heading">Behind the <span class="accent">Words</span></h2>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Long Way Round: Why Mid-Life Reinventions Are Quietly Booming</div><p>For decades, the story we told about a career was simple: you trained for one thing in your twenties and you did it until you stopped. That story is fading fast. Across the world, people in their fifties and sixties are quietly reinventing themselves, and many describe the shift not as a crisis but as a turning point they have been waiting years to reach.</p><p>The pattern is strikingly consistent. People say they have been taking stock of what truly matters, looking back on a long career path with pride, and looking forward with a fresh perspective. Far from winding down, they are juggling new projects, learning new skills, and discovering interests they never had time for while raising families or building demanding businesses.</p><p>What unites them is a sense that they have come a long way and still have a great deal to give. They are not running from their old lives; they are building on them. The most fulfilled, researchers note, are the ones who stay curious and well-rounded -- the ones who keep thriving long after the world expected them to slow down.</p><div class="ic-src">Adapted from a lifestyle feature, The Atlantic Weekend <a href="https://www.theatlantic.com" target="_blank" rel="noopener">https://www.theatlantic.com</a></div></div>
     <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">How the writer frames the change</span></div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>Find two phrases in the text that show reinvention is seen as positive rather than a loss.</span></li><li><span class="ic-qnum">2</span><span>The writer says people are 'building on' their old lives, not 'running from' them. In your own words, what is the difference?</span></li><li><span class="ic-qnum">3</span><span>The final sentence describes who stays fulfilled. In one sentence, who is the article quietly encouraging the reader to become?</span></li></ol></div>
   </div>
 </div>
@@ -1423,6 +1438,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;
