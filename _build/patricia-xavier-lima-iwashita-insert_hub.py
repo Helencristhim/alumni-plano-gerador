@@ -44,7 +44,11 @@ def process(path, href_prefix, is_prof):
     # 1. IN CLASS card: only the professor hub has a tab-inclass with aula cards.
     if is_prof:
         this_card = card.replace('/professor/' + SLUG + '-aula', href_prefix + '/' + SLUG + '-aula')
-        anchor_prev = f'<a href="{href_prefix}/{SLUG}-aula{N-1}.html?autostart=1"'
+        # Anchor on the highest existing card below N (gaps possible from parallel generation).
+        prev_m = next((m for m in range(N - 1, 0, -1)
+                       if f'{href_prefix}/{SLUG}-aula{m}.html?autostart=1' in s), None)
+        assert prev_m is not None, f'no previous aula card found in {path}'
+        anchor_prev = f'<a href="{href_prefix}/{SLUG}-aula{prev_m}.html?autostart=1"'
         ia = s.index(anchor_prev)
         close_a = s.index('</a>', ia) + len('</a>')
         s = s[:close_a] + '\n' + this_card + s[close_a:]
@@ -64,8 +68,10 @@ def process(path, href_prefix, is_prof):
     iam = s.index(am_anchor) + len(am_anchor)
     s = s[:iam] + '\n' + am_inner + s[iam:]
 
-    # 5. totalLessons N-1 -> N
-    s = s.replace(f'var totalLessons={N-1};', f'var totalLessons={N};', 1)
+    # 5. totalLessons -> N (hub may be behind by gaps; bump to N if current < N)
+    def _bump(m):
+        return f'var totalLessons={N};' if int(m.group(1)) < N else m.group(0)
+    s = re.sub(r'var totalLessons=(\d+);', _bump, s, count=1)
 
     # 6. STAMP do milestone (idempotente): so insere stamp{N} se ainda nao existir.
     if stamp_div and f'id="stamp{N}"' not in s:
