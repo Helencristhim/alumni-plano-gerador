@@ -180,7 +180,10 @@ def render_block(b):
         rows = ''
         for i, it in enumerate(b['items']):
             just = f'<span class="ic-just">&#8594; {_esc(it[2])}</span>' if len(it) > 2 and it[2] else ''
-            rows += (f'<div class="ic-tfrow" onclick="icRevealTf(this)">'
+            ans = str(it[1]).strip().lower()
+            assert ans in ('t', 'f', 'true', 'false'), f'tf item[1] deve ser t/f (lido da afirmação): {it!r}'
+            answer = 'true' if ans in ('t', 'true') else 'false'
+            rows += (f'<div class="ic-tfrow" data-answer="{answer}" onclick="icRevealTf(this)">'
                      f'<span class="ic-qnum">{i + 1}</span>'
                      f'<span class="ic-stmt">{_esc(it[0])}{just}</span>'
                      f'<span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div>')
