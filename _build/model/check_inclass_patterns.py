@@ -40,6 +40,21 @@ def check(path):
             f'(visual chapado). Use as classes do modelo: '
             f'<div class="mistake-item mistake-wrong"> / mistake-right.')
 
+    # Bug A (template leitura): .ic-reading sem rolagem -> texto+alternativas estouram a tela
+    if 'class="ic-reading"' in s and not re.search(r'\.ic-reading\s*\{[^}]*max-height', s):
+        problems.append(
+            '.ic-reading presente mas SEM max-height/overflow no CSS (texto longo + '
+            'alternativas estouram os 100vh e ficam cortados). Adicione '
+            '.ic-reading{max-height:42vh;overflow-y:auto}.')
+
+    # Bug B (parte 2): ic-tfrow sem data-answer -> True/False mostra os 2 veredictos
+    rows = re.findall(r'<div class="ic-tfrow"([^>]*)>', s)
+    missing = [r for r in rows if 'data-answer' not in r]
+    if missing:
+        problems.append(
+            f'{len(missing)}x <div class="ic-tfrow"> SEM data-answer (True/False acende '
+            f'TRUE e FALSE juntos). Marque data-answer="true|false" em cada linha.')
+
     return problems
 
 
