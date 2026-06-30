@@ -54,7 +54,30 @@ DICT = {
     'area': 'área', 'areas': 'áreas', 'ideia': 'ideia', 'energia': 'energia',
     'estrategia': 'estratégia', 'estrategias': 'estratégias', 'sera': 'será',
     'voce': 'você', 'apos': 'após', 'atraves': 'através', 'series': 'séries',
+    'dinamica': 'dinâmica', 'dinamicas': 'dinâmicas', 'pratico': 'prático',
+    'pratica': 'prática', 'praticas': 'práticas', 'logico': 'lógico',
+    'ortografia': 'ortografia', 'enfatico': 'enfático', 'sintese': 'síntese',
+    'analise': 'análise', 'criterio': 'critério', 'criterios': 'critérios',
+    'proposito': 'propósito', 'unico': 'único', 'unica': 'única',
+    'orgao': 'órgão', 'apoio': 'apoio', 'fluencia': 'fluência',
+    'sequencia': 'sequência', 'frequencia': 'frequência', 'consequencia': 'consequência',
+    'experiencia': 'experiência', 'experiencias': 'experiências', 'paciencia': 'paciência',
+    'referencia': 'referência', 'preferencia': 'preferência', 'diferenca': 'diferença',
+    'diferencas': 'diferenças', 'comecar': 'começar', 'reforco': 'reforço',
+    'espaco': 'espaço', 'progressao': 'progressão', 'extensao': 'extensão',
+    'compreensao': 'compreensão', 'atencao': 'atenção', 'tonico': 'tônico',
+    'cronologico': 'cronológico', 'pratiquem': 'pratiquem', 'silencioso': 'silencioso',
+    'apolo': 'apolo', 'antonimo': 'antônimo', 'sinonimo': 'sinônimo',
+    'sinonimos': 'sinônimos', 'antonimos': 'antônimos', 'verbo': 'verbo',
+    'le': 'lê',
 }
+
+# AMBÍGUAS de PADRÃO CONFIÁVEL: esta -> está só antes de um conjunto fechado de
+# palavras de estado/lugar (nunca "esta" = "this" nesses contextos).
+ESTA_PAT = re.compile(
+    r"\b([Ee]sta)\b(?=\s+(na|no|nos|nas|em|certo|certa|errado|errada|correto|correta|"
+    r"incorreto|incorreta|pronto|pronta|sendo|fazendo|tentando|relacionad[oa]|"
+    r"disponivel|disponível|em\b)\b)")
 
 # AMBÍGUAS — NÃO tocar (deixar p/ revisão): e/é, esta/está, este(=this), de/dê, da/dá,
 # do/dó, so/só(EN), la/lá(EN), para(válida), pode(válida), pratica(verbo), pronuncia(verbo),
@@ -84,7 +107,13 @@ def reaccent(s):
 
     def fix_pt(seg):
         # só PT: re-acentua palavras inequívocas
-        return re.sub(r"[A-Za-z]+", repl, seg)
+        seg = re.sub(r"[A-Za-z]+", repl, seg)
+        # esta -> está só em contexto fechado de estado/lugar (nunca "this")
+        def esta_fix(m):
+            count[0] += 1
+            return 'Está' if m.group(1)[0] == 'E' else 'está'
+        seg = ESTA_PAT.sub(esta_fix, seg)
+        return seg
 
     def fix_tip(m):
         inner = m.group(1)
