@@ -877,6 +877,9 @@ Helen e Danilo trabalham no mesmo repositorio. Para NUNCA sobrescrever o trabalh
 - `python3 _build/model/check_vocab_progression.py public/professor/{slug}.html` — REGRA 22:
   nenhuma palavra (vocab card) ensinada como NOVA em 2+ aulas do aluno. Aula de revisao/checkpoint
   que reusa vocab de proposito = adicionar as palavras na whitelist `_build/model/vocab_allow_repeat.json`
+- `python3 _build/model/check_preclass_coherence.py public/professor/{slug}.html` — REGRA 29:
+  o Pre-class (bloco ex-lesson-N do hub) PREVIEWA a aula IN CLASS (mesmo tema/gramatica/vocab).
+  Falha se o Pre-class for de outra aula (vocab disjunto do da aula)
 - Contraste computado headless: 0 textos ilegiveis (check_computed_contrast)
 - VOZES POR PERSONAGEM (bloqueante): toda dialogue-line tem data-voice; 1 voz consistente
   por personagem; personagens distintos no MESMO dialogo = vozes DISTINTAS; dialogo com
@@ -1606,3 +1609,33 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 - Sem `activity-sync.js`, checks dos Complementares salvam APENAS em localStorage (perde ao limpar cache). COM ele, salva no Supabase = permanente + cross-device
 - **TOTAL**: 5 scripts por material = 2 no head (supabase.min.js + supabase-config.js) + 3 antes do body (lesson-progress + controle-aulas + activity-sync)
 - A barra de progresso mostra: aulas com `inclass_done=true` / TOTAL_AULAS * 100
+
+---
+
+## REGRA 29 — COERENCIA DAS 4 ABAS (Pre-class PREVIEWA a aula)
+
+> Reforca a REGRA 1.5. Uma aula e UMA so: as 4 abas (Planejamento, Pre-class, IN CLASS,
+> Complementares) falam da MESMA aula — MESMO tema, MESMA gramatica, MESMO vocab. O
+> Pre-class do hub (bloco `id="ex-lesson-N"` em `{slug}.html`) PREVIEWA exatamente a aula
+> IN CLASS standalone (`{slug}-aulaN.html`): mesmo titulo, mesma gramatica, e o vocab do
+> Pre-class e o MESMO vocab que a aula ensina. NUNCA o Pre-class de uma aula com tema/vocab
+> de OUTRA aula. (Incidente sandra-hayasaki aula 5: IN CLASS "My Life in 3 Minutes" mas
+> Pre-class "Review" com vocab totalmente diferente. Incidente pricila-adamo: IN CLASS
+> refeito em B2 mas Pre-class deixado no A1-A2 antigo — 16 aulas incoerentes.)
+
+1. **Pre-class = preview da aula**: ao gerar/editar a aula N, o bloco `ex-lesson-N` recebe o
+   titulo, a gramatica e o vocab DAQUELA aula. Se a aula muda (re-nivelamento, troca de
+   tema), o Pre-class muda JUNTO — nunca um sem o outro. Vale tambem p/ Planejamento
+   (linha N da tabela curricular) e Complementares (recomendacoes da aula N).
+
+2. **Geracao INTERCALA os 2 modelos por numero de aula**: aula PAR = modelo de **LEITURA**
+   (texto central `ic-reading` + gist/true-false); aula IMPAR = modelo **PADRAO/fala**
+   (dialogo line-by-line + role-play). Alterna por N para variar o formato ao longo do
+   pacote (nao duas leituras seguidas, nao so fala).
+
+3. **Gate obrigatorio antes do PR** (bloqueante, REGRA 20):
+   `python3 _build/model/check_preclass_coherence.py public/professor/{slug}.html`
+   Falha (exit !=0) se o Pre-class for incoerente com a aula — sinal mais forte = vocab do
+   Pre-class disjunto do vocab da aula. Aula de review/consolidacao e excecao (titulo da
+   AULA contem review/checkpoint). Auditoria do roster em
+   `_build/model/AUDIT-preclass-coherence.md`.

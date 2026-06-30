@@ -26,6 +26,11 @@
     regra CSS de reveal (clicar nao revela — use .comp-q/.q-answer do modelo); (2)
     slide Common Mistake com .mistake-item cru (background inline) em vez de
     .mistake-wrong/.mistake-right. Sai != 0 se a aula nova reproduzir qualquer um.
+5c. COERENCIA PRE-CLASS (GATE):          python3 _build/model/check_preclass_coherence.py public/professor/{slug}.html
+    REGRA 29: o bloco Pre-class (id="ex-lesson-N" no hub) tem de PREVIEWAR a aula IN CLASS
+    (mesmo tema/gramatica/vocab). Falha se o Pre-class for de OUTRA aula — sinal mais forte
+    = vocab do Pre-class disjunto do vocab da aula (incidentes Sandra a5, Pricila B2). Roda
+    depois do hub montado (passo 7). Auditoria do roster: AUDIT-preclass-coherence.md.
 6. Contraste computado (GATE):          python3 check_computed_contrast.py (headless; 0 ilegível obrigatório)
 7. Hub: inserir _build/{slug}-aula{N}/hub_snippets.html no hub existente (modo "snippets")
    ou usar hub "new" no config (aluno novo, sem hub)
