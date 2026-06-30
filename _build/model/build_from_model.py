@@ -415,13 +415,21 @@ def inclass_menu(cards):
 
 def final_asserts(s, cfg, label, is_hub=False):
     low = s.lower()
-    assert 'helen' not in low, f'{label}: sobrou referência ao modelo (helen)'
+    # A própria aluna MODELO (helen-mendes) é o único slug em que "helen" e a paleta
+    # do modelo são LEGÍTIMOS no output — são o nome/paleta do aluno, não vazamento.
+    # As aulas-referência do modelo (helen-mendes-aula4/5) nascem do mesmo builder;
+    # exatamente por isso ficaram de fora antes. Os dois asserts anti-vazamento só
+    # fazem sentido para OUTROS alunos, então pulamos quando o slug é o do modelo.
+    is_model = cfg['slug'] == MODEL
+    if not is_model:
+        assert 'helen' not in low, f'{label}: sobrou referência ao modelo (helen)'
     assert '/lib/contrast-guard.js' in s, f'{label}: contrast-guard NÃO plugado'
     assert 'toggleListening' not in s, f'{label}: listening fake presente'
     if not is_hub:
         assert 'function mpToggle' in s or 'slidesContainer' not in s, f'{label}: player de listening ausente'
-    assert MODEL_ACCENT[0] not in s and MODEL_ACCENT[0].lower() not in low.replace(cfg['palette']['accent'].lower(), ''), \
-        f'{label}: paleta do modelo vazou'
+    if not is_model:
+        assert MODEL_ACCENT[0] not in s and MODEL_ACCENT[0].lower() not in low.replace(cfg['palette']['accent'].lower(), ''), \
+            f'{label}: paleta do modelo vazou'
 
 
 def build_standalone(cfg, content_dir, manifest):
