@@ -21,6 +21,11 @@
     arquivo EXISTE, não se presta — incidente Fabiana). Se acusar podre: re-gere só
     esses com GEN_AUDIO_FORCE=1 e revalide até 0 podre.
 5. Validar (GATE, bloqueante):          python3 _build/model/validate_lesson.py public/professor/{slug}-aula{N}.html public/aluno/{slug}-aula{N}.html
+5b. PADROES IN CLASS (GATE):             python3 _build/model/check_inclass_patterns.py public/professor/{slug}-aula{N}.html
+    Anti-regressao dos 2 bugs sistemicos: (1) Comprehension com .comp-question SEM a
+    regra CSS de reveal (clicar nao revela — use .comp-q/.q-answer do modelo); (2)
+    slide Common Mistake com .mistake-item cru (background inline) em vez de
+    .mistake-wrong/.mistake-right. Sai != 0 se a aula nova reproduzir qualquer um.
 6. Contraste computado (GATE):          python3 check_computed_contrast.py (headless; 0 ilegível obrigatório)
 7. Hub: inserir _build/{slug}-aula{N}/hub_snippets.html no hub existente (modo "snippets")
    ou usar hub "new" no config (aluno novo, sem hub)
