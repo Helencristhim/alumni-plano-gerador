@@ -14,6 +14,12 @@
 2. Configurar:                          _build/{slug}-aula{N}/config.json (schema no build_from_model.py)
 3. Buildar:                             python3 _build/model/build_from_model.py _build/{slug}-aula{N}/config.json
 4. Gerar áudio:                         ELEVENLABS_API_KEY=... python3 _build/model/gen_audio.py _build/{slug}-aula{N}/config.json
+4b. QUALIDADE DE ÁUDIO (GATE, bloqueante): python3 _build/model/check_audio_quality.py _build/{slug}-aula{N}/config.json
+    Valida que CADA mp3 do manifest é um MP3 real (frames MPEG + duração ≥ 0.30s +
+    tamanho ≥ 1.2KB). Pega áudio PODRE que gen_audio gravou de um corpo de erro/
+    rate-limit/truncado da ElevenLabs (o gate de integridade do deploy só checa se o
+    arquivo EXISTE, não se presta — incidente Fabiana). Se acusar podre: re-gere só
+    esses com GEN_AUDIO_FORCE=1 e revalide até 0 podre.
 5. Validar (GATE, bloqueante):          python3 _build/model/validate_lesson.py public/professor/{slug}-aula{N}.html public/aluno/{slug}-aula{N}.html
 6. Contraste computado (GATE):          python3 check_computed_contrast.py (headless; 0 ilegível obrigatório)
 7. Hub: inserir _build/{slug}-aula{N}/hub_snippets.html no hub existente (modo "snippets")
