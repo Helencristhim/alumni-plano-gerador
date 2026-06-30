@@ -533,7 +533,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -582,8 +588,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -729,7 +738,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 2: HOOK / CALLBACK ========== -->
-<div class="slide slide-dark" data-slide="2" data-phase="1" data-lesson="11" data-teacher="<strong>Gancho + callback (3 min):</strong> Relembre a Aula 10 SEM traduzir: 'Last class you talked about smart spending -- comparing prices and getting value for money.' Hoje, o passo humano: nao so negociar, mas CONVERSAR de verdade com a pessoa. CCQ: 'Which sounds softer: Where are you from? or I was wondering where you were from? (The second one.)'" style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-dark" data-slide="2" data-phase="1" data-lesson="11" data-teacher="<strong>Gancho + callback (3 min):</strong> Relembre a Aula 10 SEM traduzir: 'Last class you talked about smart spending -- comparing prices and getting value for money.' Hoje, o passo humano: não so negociar, mas CONVERSAR de verdade com a pessoa. CCQ: 'Which sounds softer: Where are you from? or I was wondering where you were from? (The second one.)'" style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 1: Beyond Hello</div>
     <h2 class="slide-heading" style="color:#fff">From Small Talk to <span class="accent">Real Talk</span></h2>
@@ -752,7 +761,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 4: CH2 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="4" data-phase="2" data-lesson="11" data-teacher="<strong>Transicao vocabulario (1 min):</strong> Diga: 'Thirteen expressions a confident conversationalist uses. Click each card to discover.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="4" data-phase="2" data-lesson="11" data-teacher="<strong>Transição vocabulário (1 min):</strong> Diga: 'Thirteen expressions a confident conversationalist uses. Click each card to discover.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 2: The Conversationalist's Words</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Words to <span class="accent">Connect</span></h2>
@@ -761,7 +770,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 5: VOCAB 1-4 ========== -->
-<div class="slide slide-light" data-slide="5" data-phase="2" data-lesson="11" data-teacher="<strong>Vocabulario 1-4 (4 min):</strong> Leia a pista em ingles, Pricila adivinha, depois revele. Toque o audio. CCQ 'to strike up a conversation': 'Does it mean to start a chat or to end one? (To start one.)' CCQ 'to hit it off': 'If two people hit it off, do they like each other quickly? (Yes.)'">
+<div class="slide slide-light" data-slide="5" data-phase="2" data-lesson="11" data-teacher="<strong>Vocabulário 1-4 (4 min):</strong> Leia a pista em inglês, Pricila adivinha, depois revele. Toque o áudio. CCQ 'to strike up a conversation': 'Does it mean to start a chat or to end one? (To start one.)' CCQ 'to hit it off': 'If two people hit it off, do they like each other quickly? (Yes.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
@@ -788,7 +797,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 6: VOCAB 5-9 ========== -->
-<div class="slide slide-light" data-slide="6" data-phase="2" data-lesson="11" data-teacher="<strong>Vocabulario 5-9 (5 min):</strong> Mesma dinamica. CCQ 'a lull': 'Is a lull a moment of silence or a loud moment? (A quiet pause.)' CCQ 'to read the room': 'Does it mean to feel the mood of the people around you? (Yes.)' CCQ 'tactful': 'Is a tactful person careful not to upset others? (Yes.)'">
+<div class="slide slide-light" data-slide="6" data-phase="2" data-lesson="11" data-teacher="<strong>Vocabulário 5-9 (5 min):</strong> Mesma dinâmica. CCQ 'a lull': 'Is a lull a moment of silence or a loud moment? (A quiet pause.)' CCQ 'to read the room': 'Does it mean to feel the mood of the people around you? (Yes.)' CCQ 'tactful': 'Is a tactful person careful not to upset others? (Yes.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">5-9</span></h2>
@@ -819,7 +828,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 7: VOCAB 10-13 ========== -->
-<div class="slide slide-light" data-slide="7" data-phase="2" data-lesson="11" data-teacher="<strong>Vocabulario 10-13 (4 min):</strong> Mesma dinamica. CCQ 'to put someone at ease': 'Does it make a person feel relaxed or nervous? (Relaxed.)' CCQ 'to come across as': 'Does it mean the impression you give to others? (Yes.)' CCQ 'to keep the conversation going': 'Is it to continue the chat or to stop it? (To continue.)'">
+<div class="slide slide-light" data-slide="7" data-phase="2" data-lesson="11" data-teacher="<strong>Vocabulário 10-13 (4 min):</strong> Mesma dinâmica. CCQ 'to put someone at ease': 'Does it make a person feel relaxed or nervous? (Relaxed.)' CCQ 'to come across as': 'Does it mean the impression you give to others? (Yes.)' CCQ 'to keep the conversation going': 'Is it to continue the chat or to stop it? (To continue.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">10-13</span></h2>
@@ -846,7 +855,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 8: PRONUNCIATION ========== -->
-<div class="slide slide-light" data-slide="8" data-phase="2" data-lesson="11" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada audio e peca que Pricila repita. Atencao a: 'rapport' (ra-POR, o T e mudo), 'acquaintance' (a-KWAYN-tans) e a fluidez de 'I was wondering whether...'">
+<div class="slide slide-light" data-slide="8" data-phase="2" data-lesson="11" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada áudio e peça que Pricila repita. Atenção a: 'rapport' (ra-POR, o T e mudo), 'acquaintance' (a-KWAYN-tans) e a fluidez de 'I was wondering whether...'">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Say It <span class="accent">Clearly</span></h2>
@@ -859,7 +868,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 9: CH3 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="9" data-phase="3" data-lesson="11" data-teacher="<strong>Transicao gramatica (1 min):</strong> Diga: 'A blunt question can sound abrupt. English has a softer, more polite way to ask: the indirect question. Let us find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="9" data-phase="3" data-lesson="11" data-teacher="<strong>Transição gramática (1 min):</strong> Diga: 'A blunt question can sound abrupt. English has a softer, more polite way to ask: the indirect question. Let us find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 3: Asking Indirectly</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">The Polite <span class="accent">Question</span></h2>
@@ -894,7 +903,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 11: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="11" data-phase="3" data-lesson="11" data-teacher="<strong>Erro comum (3 min):</strong> Dois erros classicos: manter a inversao (where IS it) ou usar do/does dentro da pergunta indireta. Mostre certo (verde) vs errado (vermelho). Peca que Pricila leia as versoes corretas 2x.">
+<div class="slide slide-light" data-slide="11" data-phase="3" data-lesson="11" data-teacher="<strong>Erro comum (3 min):</strong> Dois erros classicos: manter a inversao (where IS it) ou usar do/does dentro da pergunta indireta. Mostre certo (verde) vs errado (vermelho). Peça que Pricila leia as versoes corretas 2x.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Wrong vs <span class="accent">Right</span></h2>
@@ -912,7 +921,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: PRACTICE FILL ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3" data-lesson="11" data-teacher="<strong>Pratica (3 min):</strong> Leia cada frase. Pricila completa a parte que falta EM VOZ ALTA antes de clicar para revelar. Se travar, lembre: depois do abre, ordem de afirmacao (sem inversao, sem do/does).">
+<div class="slide slide-light" data-slide="12" data-phase="3" data-lesson="11" data-teacher="<strong>Prática (3 min):</strong> Leia cada frase. Pricila completa a parte que falta EM VOZ ALTA antes de clicar para revelar. Se travar, lembre: depois do abre, ordem de afirmacao (sem inversao, sem do/does).">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Complete the <span class="accent">Indirect Question</span></h2>
@@ -928,7 +937,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: CH4 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="13" data-phase="4" data-lesson="11" data-teacher="<strong>Transicao contexto (1 min):</strong> Diga: 'Now Pricila chats with a fellow guest at a hotel breakfast, using these new words and the polite indirect questions.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="13" data-phase="4" data-lesson="11" data-teacher="<strong>Transição contexto (1 min):</strong> Diga: 'Now Pricila chats with a fellow guest at a hotel breakfast, using these new words and the polite indirect questions.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: A Conversation Abroad</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">At the Hotel <span class="accent">Breakfast</span></h2>
@@ -937,7 +946,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-lesson="11" data-teacher="<strong>Dialogo (6 min):</strong> Pricila conversa com outro hospede no cafe da manha. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peca que ELA fale primeiro, depois toque o audio. Repare nas perguntas indiretas e no vocabulario novo.">
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-lesson="11" data-teacher="<strong>Diálogo (6 min):</strong> Pricila conversa com outro hospede no cafe da manha. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peça que ELA fale primeiro, depois toque o áudio. Repare nas perguntas indiretas e no vocabulário novo.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">Two Guests, One <span class="accent">Conversation</span></h2>
@@ -954,7 +963,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="15" data-phase="4" data-lesson="11" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'A lost traveller asks you for help, very politely.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o audio termina. 0.75x se pedir.">
+<div class="slide slide-dark" data-slide="15" data-phase="4" data-lesson="11" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'A lost traveller asks you for help, very politely.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o áudio termina. 0.75x se pedir.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">A Polite <span class="accent">Request</span></h2>
@@ -984,7 +993,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: COMPREHENSION ========== -->
-<div class="slide slide-light" data-slide="16" data-phase="4" data-lesson="11" data-teacher="<strong>Compreensao (2 min):</strong> Perguntas sobre o dialogo entre Pricila e o hospede. Clique para revelar cada resposta depois que Pricila responder.">
+<div class="slide slide-light" data-slide="16" data-phase="4" data-lesson="11" data-teacher="<strong>Compreensão (2 min):</strong> Perguntas sobre o diálogo entre Pricila e o hospede. Clique para revelar cada resposta depois que Pricila responder.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About the <span class="accent">Conversation</span></h2>
@@ -997,7 +1006,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="17" data-phase="4" data-lesson="11" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now Pricila reflects on how she became a confident conversationalist.' Toque 2 vezes. As perguntas aparecem ao fim do audio.">
+<div class="slide slide-dark" data-slide="17" data-phase="4" data-lesson="11" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now Pricila reflects on how she became a confident conversationalist.' Toque 2 vezes. As perguntas aparecem ao fim do áudio.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">Pricila's <span class="accent">Secret</span></h2>
@@ -1028,7 +1037,7 @@ body.slide-mode .nav-bar { display:flex; }
 
 <!-- ========== B2 BLOCKS (new) — phase 4 ========== -->
 <!-- SLIDE 18: B2 READING + GIST -->
-<div class="slide slide-light" data-slide="18" data-phase="4" data-lesson="11" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faca a pergunta de gist: 'What is the writer's main point?' Pricila clica a alternativa -- o card certo fica verde. NAO peca traducao palavra a palavra.">
+<div class="slide slide-light" data-slide="18" data-phase="4" data-lesson="11" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faça a pergunta de gist: 'What is the writer's main point?' Pricila clica a alternativa -- o card certo fica verde. NÃO peça tradução palavra a palavra.">
   <div class="slide-inner" style="overflow-y:auto;max-height:84vh">
     <div class="chapter-label">Read for the Main Idea</div>
     <h2 class="slide-heading">Talking to <span class="accent">Strangers</span></h2>
@@ -1038,12 +1047,14 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- SLIDE 19: B2 TRUE/FALSE -->
-<div class="slide slide-light" data-slide="19" data-phase="4" data-lesson="11" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma esta certa ou errada -- volte ao texto.">
+<div class="slide slide-light" data-slide="19" data-phase="4" data-lesson="11" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma está certa ou errada -- volte ao texto.">
   <div class="slide-inner" style="overflow-y:auto;max-height:84vh">
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">According to the writer, good conversationalists are mainly the ones who talk the most.<span class="ic-just">&#8594; They are the ones who notice the most, ask, and listen.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">Asking a question indirectly can make you come across as warmer and more tactful.<span class="ic-just">&#8594; 'I was wondering where you were based' invites someone in, unlike a blunt question.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer says skilled talkers are afraid of a lull and avoid it at all costs.<span class="ic-just">&#8594; They rescue a lull with a small comment or a follow-up question instead of fearing it.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer believes you need to be witty to build rapport.<span class="ic-just">&#8594; You need curiosity and a little courage, not wit.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Lost Art of Talking to Strangers</div><p>Most of us imagine that good conversationalists are simply born that way -- naturally charming people who can strike up a conversation with anyone. In reality, the skill is far more learnable than it looks. The people who put others at ease are not the ones who talk the most; they are the ones who notice the most. They read the room, they ask, and then they genuinely listen.</p><p>A surprising amount of it comes down to softening. A blunt 'Where are you from?' can feel like an interrogation, whereas 'I was wondering where you were based' invites someone in. The same question, asked indirectly, comes across as warmer and more tactful. Skilled talkers also rescue a lull instead of fearing it: a small comment, a follow-up question, and the conversation keeps going.</p><p>Perhaps the most freeing idea is that you do not need to be witty to build rapport. You need curiosity and a little courage. Ask one more question than feels comfortable, resist the urge to change the subject too soon, and you will find that most strangers are quietly delighted that someone bothered to ask.</p><div class="ic-src">Adapted from a feature on social skills, The Connection Review</div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">According to the writer, good conversationalists are mainly the ones who talk the most.<span class="ic-just">&#8594; They are the ones who notice the most, ask, and listen.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">Asking a question indirectly can make you come across as warmer and more tactful.<span class="ic-just">&#8594; 'I was wondering where you were based' invites someone in, unlike a blunt question.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer says skilled talkers are afraid of a lull and avoid it at all costs.<span class="ic-just">&#8594; They rescue a lull with a small comment or a follow-up question instead of fearing it.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer believes you need to be witty to build rapport.<span class="ic-just">&#8594; You need curiosity and a little courage, not wit.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
@@ -1057,7 +1068,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- SLIDE 21: B2 LANGUAGE FOCUS (lf) -->
-<div class="slide slide-light" data-slide="21" data-phase="4" data-lesson="11" data-teacher="<strong>Language Focus (3 min):</strong> Mostre como a MESMA pergunta soa abrupta (blunt) ou educada (softer). Pricila le cada par e sente a diferenca de registro. Destaque a parte realcada.">
+<div class="slide slide-light" data-slide="21" data-phase="4" data-lesson="11" data-teacher="<strong>Language Focus (3 min):</strong> Mostre como a MESMA pergunta soa abrupta (blunt) ou educada (softer). Pricila lê cada par e sente a diferença de registro. Destaque a parte realcada.">
   <div class="slide-inner" style="overflow-y:auto;max-height:84vh">
     <div class="chapter-label">Notice the Register</div>
     <h2 class="slide-heading">Blunt vs <span class="accent">Tactful</span></h2>
@@ -1066,7 +1077,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- SLIDE 22: B2 SCENARIOS -->
-<div class="slide slide-light" data-slide="22" data-phase="4" data-lesson="11" data-teacher="<strong>Scenarios (4 min):</strong> Leia cada cenario. Para cada um, Pricila responde com UMA pergunta indireta ou frase usando o vocabulario novo. Espere a frase completa antes de comentar.">
+<div class="slide slide-light" data-slide="22" data-phase="4" data-lesson="11" data-teacher="<strong>Scenarios (4 min):</strong> Leia cada cenário. Para cada um, Pricila responde com UMA pergunta indireta ou frase usando o vocabulário novo. Espere a frase completa antes de comentar.">
   <div class="slide-inner" style="overflow-y:auto;max-height:84vh">
     <div class="chapter-label">React in Conversation</div>
     <h2 class="slide-heading">Conversation <span class="accent">Scenarios</span></h2>
@@ -1076,7 +1087,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- SLIDE 23: B2 REPHRASE -->
-<div class="slide slide-light" data-slide="23" data-phase="4" data-lesson="11" data-teacher="<strong>Rephrase (4 min):</strong> Pricila reescreve cada pergunta direta como indireta, EM VOZ ALTA, antes de ver o gabarito (slide seguinte). Foco na forma: abre + ordem de afirmacao; if/whether para sim/nao.">
+<div class="slide slide-light" data-slide="23" data-phase="4" data-lesson="11" data-teacher="<strong>Rephrase (4 min):</strong> Pricila reescreve cada pergunta direta como indireta, EM VOZ ALTA, antes de ver o gabarito (slide seguinte). Foco na forma: abre + ordem de afirmacao; if/whether para sim/não.">
   <div class="slide-inner" style="overflow-y:auto;max-height:84vh">
     <div class="chapter-label">Say It Another Way</div>
     <h2 class="slide-heading">Make It <span class="accent">Indirect</span></h2>
@@ -1097,7 +1108,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="25" data-phase="5" data-lesson="11" data-teacher="<strong>Transicao pratica (1 min):</strong> Diga: 'Now we train: spot the error, build polite questions, and the artifact.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="25" data-phase="5" data-lesson="11" data-teacher="<strong>Transição prática (1 min):</strong> Diga: 'Now we train: spot the error, build polite questions, and the artifact.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train Your <span class="accent">Conversation</span></h2>
@@ -1135,7 +1146,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: ARTIFACT — THE NOTE ========== -->
-<div class="slide slide-light" data-slide="28" data-phase="5" data-lesson="11" data-teacher="<strong>O artefato (4 min):</strong> Mostre o bilhete que o hospede deixou para a Pricila. Ela le em voz alta, identifica as perguntas indiretas e responde. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="28" data-phase="5" data-lesson="11" data-teacher="<strong>O artefato (4 min):</strong> Mostre o bilhete que o hospede deixou para a Pricila. Ela lê em voz alta, identifica as perguntas indiretas e responde. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">Real World</div>
     <h2 class="slide-heading">A Note Left at <span class="accent">Reception</span></h2>
@@ -1151,7 +1162,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 29: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="29" data-phase="6" data-lesson="11" data-teacher="<strong>Transicao producao (1 min):</strong> Diga: 'Now the big mission: hold a full conversation with a stranger, asking and answering politely.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="29" data-phase="6" data-lesson="11" data-teacher="<strong>Transição produção (1 min):</strong> Diga: 'Now the big mission: hold a full conversation with a stranger, asking and answering politely.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Hold a Real <span class="accent">Conversation</span></h2>
@@ -1160,7 +1171,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 30: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="30" data-phase="6" data-lesson="11" data-teacher="<strong>Role-play guiado (4 min):</strong> Voce e um hospede simpatico no cafe da manha. Puxe conversa com a Pricila. Ela responde e faz pelo menos uma pergunta indireta. Deixe-a responder com calma.">
+<div class="slide slide-light" data-slide="30" data-phase="6" data-lesson="11" data-teacher="<strong>Role-play guiado (4 min):</strong> Você e um hospede simpatico no cafe da manha. Puxe conversa com a Pricila. Ela responde e faz pelo menos uma pergunta indireta. Deixe-a responder com calma.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Answer the <span class="accent">Guest</span></h2>
@@ -1177,7 +1188,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6" data-lesson="11" data-teacher="<strong>Role-play semi-livre (4 min):</strong> Agora a Pricila puxa a conversa com um desconhecido na fila de um museu. Ela usa o vocabulario novo e DUAS perguntas indiretas. Menos pistas.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-lesson="11" data-teacher="<strong>Role-play semi-livre (4 min):</strong> Agora a Pricila puxa a conversa com um desconhecido na fila de um museu. Ela usa o vocabulário novo e DUAS perguntas indiretas. Menos pistas.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Start the <span class="accent">Conversation</span></h2>
@@ -1194,7 +1205,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 32: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="32" data-phase="6" data-lesson="11" data-teacher="<strong>Pratica livre (5 min):</strong> A missao da aula: uma conversa completa com um desconhecido, do inicio ao fim. ZERO pistas. NAO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
+<div class="slide slide-light" data-slide="32" data-phase="6" data-lesson="11" data-teacher="<strong>Prática livre (5 min):</strong> A missao da aula: uma conversa completa com um desconhecido, do inicio ao fim. ZERO pistas. NÃO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Your Full <span class="accent">Conversation</span></h2>
@@ -1206,7 +1217,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 33: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="33" data-phase="7" data-lesson="11" data-teacher="<strong>Transicao fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="33" data-phase="7" data-lesson="11" data-teacher="<strong>Transição fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Mission <span class="accent">Complete</span></h2>
@@ -1229,7 +1240,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 35: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="35" data-phase="7" data-lesson="11" data-teacher="<strong>Fechamento (1 min):</strong> Diga: 'Lesson 11 complete, Pricila! You earned your Conversation Badge!' Reforce o quanto ela avancou. Proxima aula: aula 12 -- Diplomatic Disagreement.">
+<div class="slide slide-dark" data-slide="35" data-phase="7" data-lesson="11" data-teacher="<strong>Fechamento (1 min):</strong> Diga: 'Lesson 11 complete, Pricila! You earned your Conversation Badge!' Reforce o quanto ela avancou. Próxima aula: aula 12 -- Diplomatic Disagreement.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1439,6 +1450,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;

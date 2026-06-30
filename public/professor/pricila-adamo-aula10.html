@@ -529,7 +529,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -578,8 +584,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -1071,7 +1080,9 @@ body.slide-mode .nav-bar { display:flex; }
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">Prices tend to rise the closer you get to the main attraction.<span class="ic-just">&#8594; The closer you stand to the attraction, the more overpriced everything becomes.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">The writer says the marked price in a market is usually exactly what you must pay.<span class="ic-just">&#8594; It is often considerably higher than what the seller actually expects; you can haggle.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">A polite shopper willing to haggle can sometimes cut the price by about a third.<span class="ic-just">&#8594; The text says they can talk the price down by a third.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">According to the writer, the cheapest option is always the best value.<span class="ic-just">&#8594; The cheapest can be a false economy; value for money matters more than price.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Souvenir Trap: How Travellers Spend Smart Abroad</div><p>Every famous destination has its shopping streets, and most of them are designed to part you from your money. The closer you stand to the main attraction, the more overpriced everything becomes. A fridge magnet that costs one euro three streets away can be five euros in the square, and the so-called 'local craft' is, more often than not, a knock-off shipped in by the thousand.</p><p>The traveller who spends smart treats the first price as the beginning of a conversation, not the end. In many markets, the marked price is considerably higher than what the seller actually expects to receive, and a polite shopper who is willing to haggle can often talk the price down by a third. The trick is to stay friendly, to browse without rushing, and never to look too keen on any single item.</p><p>Yet smart spending is not only about paying less. It is about value for money. Sometimes the cheapest option is a false economy, and the slightly pricier, better-made piece is far more worth the extra. The wisest souvenirs are rarely the most expensive ones; they are the ones that still mean something long after the trip, when the bargain has been forgotten but the memory has not.</p><div class="ic-src">Adapted from a travel-money column, The Frugal Globe</div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">Prices tend to rise the closer you get to the main attraction.<span class="ic-just">&#8594; The closer you stand to the attraction, the more overpriced everything becomes.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">The writer says the marked price in a market is usually exactly what you must pay.<span class="ic-just">&#8594; It is often considerably higher than what the seller actually expects; you can haggle.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">A polite shopper willing to haggle can sometimes cut the price by about a third.<span class="ic-just">&#8594; The text says they can talk the price down by a third.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">According to the writer, the cheapest option is always the best value.<span class="ic-just">&#8594; The cheapest can be a false economy; value for money matters more than price.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
@@ -1085,7 +1096,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- SLIDE 22: B2 LANGUAGE FOCUS (lf) -->
-<div class="slide slide-light" data-slide="22" data-phase="4" data-lesson="10" data-teacher="<strong>Language Focus (3 min):</strong> Analise cada frase: a parte destacada &eacute; o intensifier. Pergunte: 'Big difference or small?' (far/considerably = grande; slightly = pequena). Pricila l&ecirc; cada uma em voz alta.">
+<div class="slide slide-light" data-slide="22" data-phase="4" data-lesson="10" data-teacher="<strong>Language Focus (3 min):</strong> Análise cada frase: a parte destacada &eacute; o intensifier. Pergunte: 'Big difference or small?' (far/considerably = grande; slightly = pequena). Pricila l&ecirc; cada uma em voz alta.">
   <div class="slide-inner" style="overflow-y:auto;max-height:84vh">
     <div class="chapter-label">Language Focus</div>
     <h2 class="slide-heading">How Big Is the <span class="accent">Difference?</span></h2>
@@ -1490,6 +1501,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;

@@ -532,7 +532,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -581,8 +587,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -740,7 +749,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 2: HOOK / CALLBACK ========== -->
-<div class="slide slide-dark" data-slide="2" data-phase="1" data-teacher="<strong>Gancho + callback (3 min):</strong> Relembre a Aula 12 SEM traduzir: 'Last class you shared opinions and reasons.' Hoje o passo seguinte: voce conta uma historia que aconteceu com voce. CCQ: 'If I say -- I was walking when I met her -- am I describing a habit or a moment in the past? (A moment in the past.)'" style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-dark" data-slide="2" data-phase="1" data-teacher="<strong>Gancho + callback (3 min):</strong> Relembre a Aula 12 SEM traduzir: 'Last class you shared opinions and reasons.' Hoje o passo seguinte: você conta uma história que aconteceu com você. CCQ: 'If I say -- I was walking when I met her -- am I describing a habit or a moment in the past? (A moment in the past.)'" style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 1: The Hook</div>
     <h2 class="slide-heading" style="color:#fff">From Opinions to a <span class="accent">Real Story</span></h2>
@@ -763,7 +772,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 4: CH2 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transicao vocabulario (1 min):</strong> Diga: 'Eleven new words for telling a story. Click each card to discover.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transição vocabulário (1 min):</strong> Diga: 'Eleven new words for telling a story. Click each card to discover.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 2: Story Words</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Words to <span class="accent">Tell a Story</span></h2>
@@ -772,7 +781,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 5: VOCAB 1-4 ========== -->
-<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulario 1-4 (4 min):</strong> Leia a pista em ingles, Pricila adivinha, depois revele. Toque o audio. CCQ 'anecdote': 'Is an anecdote a long report or a short personal story? (A short personal story.)' CCQ 'eventful': 'If a day is eventful, is it boring or full of things happening? (Full of things happening.)'">
+<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulário 1-4 (4 min):</strong> Leia a pista em inglês, Pricila adivinha, depois revele. Toque o áudio. CCQ 'anecdote': 'Is an anecdote a long report or a short personal story? (A short personal story.)' CCQ 'eventful': 'If a day is eventful, is it boring or full of things happening? (Full of things happening.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
@@ -799,7 +808,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 6: VOCAB 5-7 ========== -->
-<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulario 5-7 (4 min):</strong> Mesma dinamica. CCQ 'unexpected': 'If something is unexpected, did you plan it or not? (You did not plan it.)' CCQ 'turning point': 'Is a turning point a small detail or a moment that changes things? (A moment that changes things.)'">
+<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulário 5-7 (4 min):</strong> Mesma dinâmica. CCQ 'unexpected': 'If something is unexpected, did you plan it or not? (You did not plan it.)' CCQ 'turning point': 'Is a turning point a small detail or a moment that changes things? (A moment that changes things.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">5-7</span></h2>
@@ -822,7 +831,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 7: VOCAB 8-11 ========== -->
-<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulario 8-11 (4 min):</strong> Mesma dinamica. CCQ 'run into': 'If I run into a friend, did I plan to meet them? (No, by chance.)' CCQ 'end up': 'Does -- end up -- describe the start or the final result? (The final result.)'">
+<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulário 8-11 (4 min):</strong> Mesma dinâmica. CCQ 'run into': 'If I run into a friend, did I plan to meet them? (No, by chance.)' CCQ 'end up': 'Does -- end up -- describe the start or the final result? (The final result.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">8-11</span></h2>
@@ -849,7 +858,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 8: PRONUNCIATION ========== -->
-<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada audio e peca que Pricila repita. Atencao a: 'anecdote' (AN-ik-doht), 'eventful' (ih-VENT-ful) e ao ritmo de 'Out of the blue, we ran into an old friend.'">
+<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada áudio e peça que Pricila repita. Atenção a: 'anecdote' (AN-ik-doht), 'eventful' (ih-VENT-ful) e ao ritmo de 'Out of the blue, we ran into an old friend.'">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Say It <span class="accent">Clearly</span></h2>
@@ -862,7 +871,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 9: CH3 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transicao gramatica (1 min):</strong> Diga: 'Every story has a scene and a surprise. Let's find the grammar that builds it.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transição gramática (1 min):</strong> Diga: 'Every story has a scene and a surprise. Let's find the grammar that builds it.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 3: Setting the Scene</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">The Grammar of <span class="accent">Stories</span></h2>
@@ -899,7 +908,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 11: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> O erro classico: usar o past simple para a acao de fundo, e usar 'would' para um estado (would be). Mostre certo (verde) vs errado (vermelho). Peca que Pricila leia as versoes corretas 2x.">
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> O erro classico: usar o past simple para a ação de fundo, e usar 'would' para um estado (would be). Mostre certo (verde) vs errado (vermelho). Peça que Pricila leia as versoes corretas 2x.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Wrong vs <span class="accent">Right</span></h2>
@@ -918,7 +927,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: PRACTICE FILL ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Pratica (3 min):</strong> Leia cada frase. Pricila completa a forma EM VOZ ALTA antes de clicar para revelar. Se travar, lembre do quadro: was/were + -ing; used to + base.">
+<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Prática (3 min):</strong> Leia cada frase. Pricila completa a forma EM VOZ ALTA antes de clicar para revelar. Se travar, lembre do quadro: was/were + -ing; used to + base.">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Complete the <span class="accent">Story</span></h2>
@@ -934,7 +943,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: CH4 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transicao contexto (1 min):</strong> Diga: 'Now a traveler tells Pricila a real story, and then you'll read and discuss one.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transição contexto (1 min):</strong> Diga: 'Now a traveler tells Pricila a real story, and then you'll read and discuss one.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: A Story Worth Telling</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Let's Hear a <span class="accent">Real Story</span></h2>
@@ -943,7 +952,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Dialogo (6 min):</strong> Tom conta a Pricila a historia de um dia que deu errado e virou o melhor da viagem. Clique em 'Next Line' para cada fala. Para cada fala da Pricila, peca que ELA fale primeiro, depois toque o audio. Repare nos tempos verbais.">
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Diálogo (6 min):</strong> Tom conta a Pricila a história de um dia que deu errado e virou o melhor da viagem. Clique em 'Next Line' para cada fala. Para cada fala da Pricila, peça que ELA fale primeiro, depois toque o áudio. Repare nos tempos verbais.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">A Traveler's <span class="accent">Anecdote</span></h2>
@@ -960,7 +969,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="15" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Close your eyes. A traveler tells the story of an eventful day that went wrong and turned out well.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o audio termina. 0.75x se pedir.">
+<div class="slide slide-dark" data-slide="15" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Close your eyes. A traveler tells the story of an eventful day that went wrong and turned out well.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o áudio termina. 0.75x se pedir.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">The Eventful <span class="accent">Day</span></h2>
@@ -990,7 +999,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: COMPREHENSION ========== -->
-<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Compreensao (2 min):</strong> Perguntas sobre a historia que o viajante (Tom) contou no dialogo. Clique para revelar cada resposta depois que Pricila responder.">
+<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Compreensão (2 min):</strong> Perguntas sobre a história que o viajante (Tom) contou no diálogo. Clique para revelar cada resposta depois que Pricila responder.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About Tom's <span class="accent">Story</span></h2>
@@ -1003,7 +1012,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now Pricila reflects on how the way she used to travel changed.' Toque 2 vezes. As perguntas aparecem ao fim do audio.">
+<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now Pricila reflects on how the way she used to travel changed.' Toque 2 vezes. As perguntas aparecem ao fim do áudio.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">Pricila's <span class="accent">Turning Point</span></h2>
@@ -1033,7 +1042,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: B2 READING (new block) ========== -->
-<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto 'The Night the Train Stopped'. Depois faca a pergunta de gist: 'What is the writer's main point?' Pricila clica a alternativa -- o card certo fica verde. NAO peca traducao palavra a palavra.">
+<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto 'The Night the Train Stopped'. Depois faça a pergunta de gist: 'What is the writer's main point?' Pricila clica a alternativa -- o card certo fica verde. NÃO peça tradução palavra a palavra.">
   <div class="slide-inner">
     <div class="chapter-label">Read for the Main Idea</div>
     <h2 class="slide-heading">A Story on the <span class="accent">Tracks</span></h2>
@@ -1043,20 +1052,24 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: B2 TRUE/FALSE (new block -- interactive) ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma esta certa ou errada -- volte ao texto.">
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma está certa ou errada -- volte ao texto.">
   <div class="slide-inner">
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer had never made this train journey before.<span class="ic-just">&#8594; The text says 'I had done the trip before'.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">The train stopped suddenly around midnight in a remote place.<span class="ic-just">&#8594; It 'shuddered to a halt' at midnight 'in the middle of nowhere'.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The grandmother had once worked as a teacher.<span class="ic-just">&#8594; She says she 'used to be a teacher' and still loved an audience.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer remembers the beach more clearly than the breakdown.<span class="ic-just">&#8594; Only the breakdown is what the writer can 'still recall vividly'.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Night the Train Stopped</div><p>It was meant to be an ordinary overnight train from Hanoi to the coast. I had done the trip before, and I expected to sleep through it and wake up by the sea. But somewhere around midnight, in the middle of nowhere, the train shuddered to a halt and the lights went out. For a long, strange moment, nobody moved.</p><p>Then something unexpected happened. A grandmother in the next bunk lit a small candle, opened a tin of sweets, and started telling a story to the children around her. She used to be a teacher, she said, and she still loved an audience. While she was talking, a young soldier translated for me in a whisper, and out of the blue the dark carriage felt warm and full of life.</p><p>We were stuck there for almost four hours. When the train finally jolted forward again, I was almost disappointed. Looking back, that breakdown is the only part of the journey I can still recall vividly. The sea was beautiful, of course, but it is the night the train stopped that became the story I tell at every dinner table. The best anecdotes, I have learned, rarely come from the parts that go to plan.</p><div class="ic-src">Adapted from a travel essay, Slow Travel Stories <a href="https://www.slowtravelstories.com" target="_blank" rel="noopener">https://www.slowtravelstories.com</a></div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer had never made this train journey before.<span class="ic-just">&#8594; The text says 'I had done the trip before'.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">The train stopped suddenly around midnight in a remote place.<span class="ic-just">&#8594; It 'shuddered to a halt' at midnight 'in the middle of nowhere'.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The grandmother had once worked as a teacher.<span class="ic-just">&#8594; She says she 'used to be a teacher' and still loved an audience.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer remembers the beach more clearly than the breakdown.<span class="ic-just">&#8594; Only the breakdown is what the writer can 'still recall vividly'.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
 <!-- ========== SLIDE 20: B2 GUIDING QUESTIONS (new block) ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Discussion (4 min):</strong> Perguntas abertas sobre o texto e a experiencia da Pricila. Nao ha resposta certa -- incentive o uso do vocabulario novo e dos tempos do passado. Sem audio, e fala dela.">
+<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Discussion (4 min):</strong> Perguntas abertas sobre o texto e a experiência da Pricila. Não ha resposta certa -- incentive o uso do vocabulário novo e dos tempos do passado. Sem áudio, e fala dela.">
   <div class="slide-inner">
     <div class="chapter-label">Discuss</div>
     <h2 class="slide-heading">Talk It <span class="accent">Through</span></h2>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Night the Train Stopped</div><p>It was meant to be an ordinary overnight train from Hanoi to the coast. I had done the trip before, and I expected to sleep through it and wake up by the sea. But somewhere around midnight, in the middle of nowhere, the train shuddered to a halt and the lights went out. For a long, strange moment, nobody moved.</p><p>Then something unexpected happened. A grandmother in the next bunk lit a small candle, opened a tin of sweets, and started telling a story to the children around her. She used to be a teacher, she said, and she still loved an audience. While she was talking, a young soldier translated for me in a whisper, and out of the blue the dark carriage felt warm and full of life.</p><p>We were stuck there for almost four hours. When the train finally jolted forward again, I was almost disappointed. Looking back, that breakdown is the only part of the journey I can still recall vividly. The sea was beautiful, of course, but it is the night the train stopped that became the story I tell at every dinner table. The best anecdotes, I have learned, rarely come from the parts that go to plan.</p><div class="ic-src">Adapted from a travel essay, Slow Travel Stories <a href="https://www.slowtravelstories.com" target="_blank" rel="noopener">https://www.slowtravelstories.com</a></div></div>
     <div class="ic-card"><ul class="ic-qs ic-guiding"><li><span class="ic-qnum">&#8250;</span><span>Why do you think the breakdown became the most memorable part of the trip, while the sea did not?</span></li><li><span class="ic-qnum">&#8250;</span><span>The grandmother turned a stuck train into a warm moment. What does that tell you about a good storyteller?</span></li><li><span class="ic-qnum">&#8250;</span><span>Think of a time when something went wrong on a trip. Looking back, did it become a story worth telling?</span></li><li><span class="ic-qnum">&#8250;</span><span>The writer says the best anecdotes rarely come from the parts that go to plan. Do you agree, from your own travels?</span></li></ul></div>
   </div>
 </div>
@@ -1083,16 +1096,18 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: B2 ANALYSE / SECOND READING (new block) ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="4" data-teacher="<strong>Analyse (3 min):</strong> Releitura focada: peca a Pricila para reler 'The Night the Train Stopped' e responder, em voz alta, como o autor constroi a historia. Conecte com a propria filosofia de viagem dela do Listening 2.">
+<div class="slide slide-light" data-slide="23" data-phase="4" data-teacher="<strong>Analyse (3 min):</strong> Releitura focada: peça a Pricila para reler 'The Night the Train Stopped' e responder, em voz alta, como o autor constroi a história. Conecte com a própria filosofia de viagem dela do Listening 2.">
   <div class="slide-inner">
     <div class="chapter-label">Read Again, Deeper</div>
     <h2 class="slide-heading">Behind the <span class="accent">Story</span></h2>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Night the Train Stopped</div><p>It was meant to be an ordinary overnight train from Hanoi to the coast. I had done the trip before, and I expected to sleep through it and wake up by the sea. But somewhere around midnight, in the middle of nowhere, the train shuddered to a halt and the lights went out. For a long, strange moment, nobody moved.</p><p>Then something unexpected happened. A grandmother in the next bunk lit a small candle, opened a tin of sweets, and started telling a story to the children around her. She used to be a teacher, she said, and she still loved an audience. While she was talking, a young soldier translated for me in a whisper, and out of the blue the dark carriage felt warm and full of life.</p><p>We were stuck there for almost four hours. When the train finally jolted forward again, I was almost disappointed. Looking back, that breakdown is the only part of the journey I can still recall vividly. The sea was beautiful, of course, but it is the night the train stopped that became the story I tell at every dinner table. The best anecdotes, I have learned, rarely come from the parts that go to plan.</p><div class="ic-src">Adapted from a travel essay, Slow Travel Stories <a href="https://www.slowtravelstories.com" target="_blank" rel="noopener">https://www.slowtravelstories.com</a></div></div>
     <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">How the writer builds the story</span></div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>Find the sentence that sets the scene at the start. What background tense does the writer use?</span></li><li><span class="ic-qnum">2</span><span>Find the moment the unexpected event interrupts the scene. Which words signal the sudden change?</span></li><li><span class="ic-qnum">3</span><span>The final paragraph gives the 'point' of the story. In your own words, what lesson does the writer draw?</span></li></ol></div>
   </div>
 </div>
 
 <!-- ========== SLIDE 24: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="24" data-phase="5" data-teacher="<strong>Transicao pratica (1 min):</strong> Diga: 'Now we train: spot the tense errors, and build story sentences out loud.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="24" data-phase="5" data-teacher="<strong>Transição prática (1 min):</strong> Diga: 'Now we train: spot the tense errors, and build story sentences out loud.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train Your <span class="accent">Storytelling</span></h2>
@@ -1116,7 +1131,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: SPEAKING ========== -->
-<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Speaking (4 min):</strong> Pricila olha cada situacao e narra uma frase em voz alta. Espere a frase COMPLETA. Se travar, da a dica. Depois clique para comparar.">
+<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Speaking (4 min):</strong> Pricila olha cada situação e narra uma frase em voz alta. Espere a frase COMPLETA. Se travar, da a dica. Depois clique para comparar.">
   <div class="slide-inner">
     <div class="chapter-label">Speaking</div>
     <h2 class="slide-heading">Tell the <span class="accent">Moment</span></h2>
@@ -1130,7 +1145,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: BUILD ========== -->
-<div class="slide slide-light" data-slide="27" data-phase="5" data-teacher="<strong>Construir a historia (4 min):</strong> Mostre cada pista. Pricila constroi uma frase completa de historia EM VOZ ALTA, depois clica para comparar. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="27" data-phase="5" data-teacher="<strong>Construir a história (4 min):</strong> Mostre cada pista. Pricila constroi uma frase completa de história EM VOZ ALTA, depois clica para comparar. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">Building</div>
     <h2 class="slide-heading">Build the <span class="accent">Story Line</span></h2>
@@ -1145,7 +1160,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="28" data-phase="6" data-teacher="<strong>Transicao producao (1 min):</strong> Diga: 'Now the big mission: tell a story worth telling, in three steps.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="28" data-phase="6" data-teacher="<strong>Transição produção (1 min):</strong> Diga: 'Now the big mission: tell a story worth telling, in three steps.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Tell Your <span class="accent">Story</span></h2>
@@ -1154,7 +1169,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 29: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="29" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Voce e um amigo curioso. Faca perguntas para a Pricila contar uma viagem antiga. Ela narra usando ao menos tres palavras novas e o passado continuo. Deixe-a falar com calma.">
+<div class="slide slide-light" data-slide="29" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Você e um amigo curioso. Faça perguntas para a Pricila contar uma viagem antiga. Ela narra usando ao menos três palavras novas e o passado continuo. Deixe-a falar com calma.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Tell a Trip from Your <span class="accent">Twenties</span></h2>
@@ -1188,7 +1203,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Pratica livre (5 min):</strong> A missao da aula: contar a sua melhor anedota de viagem, do inicio ao fim. ZERO pistas. NAO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Prática livre (5 min):</strong> A missao da aula: contar a sua melhor anedota de viagem, do inicio ao fim. ZERO pistas. NÃO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Your Story Worth <span class="accent">Telling</span></h2>
@@ -1200,7 +1215,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 32: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="32" data-phase="7" data-teacher="<strong>Transicao fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="32" data-phase="7" data-teacher="<strong>Transição fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Mission <span class="accent">Complete</span></h2>
@@ -1223,7 +1238,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 34: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="34" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 13 complete, Pricila! You earned your Stories Badge!' Homework (oralmente): esta semana, escreva uma anedota de viagem de 5-6 frases, usando ao menos quatro palavras novas, uma frase com 'I was ...ing when...' e uma com 'used to'. Proxima aula: aula 14 -- Staying in Touch (manter contato; primeira condicional e future time clauses).">
+<div class="slide slide-dark" data-slide="34" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 13 complete, Pricila! You earned your Stories Badge!' Homework (oralmente): esta semana, escreva uma anedota de viagem de 5-6 frases, usando ao menos quatro palavras novas, uma frase com 'I was ...ing when...' e uma com 'used to'. Próxima aula: aula 14 -- Staying in Touch (manter contato; primeira condicional e future time clauses).">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1433,6 +1448,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;

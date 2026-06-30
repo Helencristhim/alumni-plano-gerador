@@ -532,7 +532,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -581,8 +587,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -756,7 +765,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 4: CH2 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transicao vocabulario (1 min):</strong> Diga: 'Thirteen words that frequent flyers use at every airport. Click each card to discover.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transição vocabulário (1 min):</strong> Diga: 'Thirteen words that frequent flyers use at every airport. Click each card to discover.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 2: Airport Words</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Words for the <span class="accent">Airport</span></h2>
@@ -765,7 +774,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 5: VOCAB 1-4 ========== -->
-<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulario 1-4 (4 min):</strong> Leia a pista em ingles, Pricila adivinha, depois revele. Toque o audio. CCQ 'overbooked': 'Did the airline sell more seats than the plane has, or fewer? (More -- so some passengers may not get on.)' CCQ 'a layover': 'Is a layover the final stop, or a wait between two flights? (A wait between two flights.)'">
+<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulário 1-4 (4 min):</strong> Leia a pista em inglês, Pricila adivinha, depois revele. Toque o áudio. CCQ 'overbooked': 'Did the airline sell more seats than the plane has, or fewer? (More -- so some passengers may not get on.)' CCQ 'a layover': 'Is a layover the final stop, or a wait between two flights? (A wait between two flights.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
@@ -792,7 +801,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 6: VOCAB 5-8 ========== -->
-<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulario 5-8 (4 min):</strong> Mesma dinamica. CCQ 'to be rebooked': 'If your flight is rebooked, do you keep the old time or get a new one? (You get a new flight/time.)' CCQ 'to be bumped': 'If you are bumped from a flight, did you get on it? (No -- you were taken off it, usually because it was overbooked.)'">
+<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulário 5-8 (4 min):</strong> Mesma dinâmica. CCQ 'to be rebooked': 'If your flight is rebooked, do you keep the old time or get a new one? (You get a new flight/time.)' CCQ 'to be bumped': 'If you are bumped from a flight, did you get on it? (No -- you were taken off it, usually because it was overbooked.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">5-8</span></h2>
@@ -819,7 +828,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 7: VOCAB 9-13 ========== -->
-<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulario 9-13 (5 min):</strong> Mesma dinamica. CCQ 'to clear security': 'Have you finished the security check, or are you still in the queue? (You have finished it.)' CCQ 'baggage claim': 'Do you pick up your checked suitcase at the gate, or at baggage claim? (At baggage claim.)' CCQ 'jet lag': 'Is jet lag a feeling of tiredness after crossing time zones, or a type of luggage? (Tiredness after time zones.)'">
+<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulário 9-13 (5 min):</strong> Mesma dinâmica. CCQ 'to clear security': 'Have you finished the security check, or are you still in the queue? (You have finished it.)' CCQ 'baggage claim': 'Do you pick up your checked suitcase at the gate, or at baggage claim? (At baggage claim.)' CCQ 'jet lag': 'Is jet lag a feeling of tiredness after crossing time zones, or a type of luggage? (Tiredness after time zones.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">9-13</span></h2>
@@ -850,7 +859,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 8: PRONUNCIATION ========== -->
-<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada audio e peca que Pricila repita. Atencao a: 'layover' (LAY-oh-ver, stress inicial), 'overbooked' (oh-ver-BOOKT, -ed quase mudo) e ao ritmo natural de 'I was bumped from the flight.'">
+<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada áudio e peça que Pricila repita. Atenção a: 'layover' (LAY-oh-ver, stress inicial), 'overbooked' (oh-ver-BOOKT, -ed quase mudo) e ao ritmo natural de 'I was bumped from the flight.'">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Say It <span class="accent">Clearly</span></h2>
@@ -863,7 +872,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 9: CH3 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transicao gramatica (1 min):</strong> Diga: 'At the airport, you constantly tell people what someone else just said. English shifts the tense back when we do that. Let's find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transição gramática (1 min):</strong> Diga: 'At the airport, you constantly tell people what someone else just said. English shifts the tense back when we do that. Let's find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 3: Reporting the News</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Telling People What You <span class="accent">Heard</span></h2>
@@ -900,7 +909,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 11: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> Tres erros classicos: 'said me' (o certo e 'told me' OU 'said to me'); esquecer o backshift ('said the flight is' em vez de 'was'); e 'told that' sem pessoa. Mostre certo (verde) vs errado (vermelho). Peca que Pricila leia as versoes corretas 2x.">
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> Três erros classicos: 'said me' (o certo e 'told me' OU 'said to me'); esquecer o backshift ('said the flight is' em vez de 'was'); e 'told that' sem pessoa. Mostre certo (verde) vs errado (vermelho). Peça que Pricila leia as versoes corretas 2x.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Wrong vs <span class="accent">Right</span></h2>
@@ -918,7 +927,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: PRACTICE FILL ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Pratica (3 min):</strong> Leia cada frase. Pricila completa a forma reportada correta EM VOZ ALTA antes de clicar para revelar. Se travar, lembre: is->was, will->would, has->had, can->could; told + pessoa.">
+<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Prática (3 min):</strong> Leia cada frase. Pricila completa a forma reportada correta EM VOZ ALTA antes de clicar para revelar. Se travar, lembre: is->was, will->would, has->had, can->could; told + pessoa.">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Report What They <span class="accent">Said</span></h2>
@@ -934,7 +943,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: CH4 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transicao contexto (1 min):</strong> Diga: 'Now Pricila reaches the gate and finds a problem. Watch how she and the ground staff handle a missed connection, and how she later reports it.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transição contexto (1 min):</strong> Diga: 'Now Pricila reaches the gate and finds a problem. Watch how she and the ground staff handle a missed connection, and how she later reports it.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: At the Gate</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">A Problem at the <span class="accent">Gate</span></h2>
@@ -943,7 +952,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Dialogo (6 min):</strong> Pricila conversa com um membro do ground staff sobre uma conexao perdida. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peca que ELA fale primeiro, depois toque o audio. Repare no vocabulario novo (rebook, layover, standby) e na cortesia ao reclamar.">
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Diálogo (6 min):</strong> Pricila conversa com um membro do ground staff sobre uma conexao perdida. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peça que ELA fale primeiro, depois toque o áudio. Repare no vocabulário novo (rebook, layover, standby) e na cortesia ao reclamar.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">Rebooking a Missed <span class="accent">Connection</span></h2>
@@ -960,7 +969,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="15" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'You hear a real airport announcement about a delayed flight.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o audio termina. 0.75x se pedir.">
+<div class="slide slide-dark" data-slide="15" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'You hear a real airport announcement about a delayed flight.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o áudio termina. 0.75x se pedir.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">An Airport <span class="accent">Announcement</span></h2>
@@ -990,7 +999,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: COMPREHENSION ========== -->
-<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Compreensao (2 min):</strong> Perguntas sobre o dialogo entre Pricila e o ground staff. Clique para revelar cada resposta depois que Pricila responder. Peca que ela reporte uma das falas usando reported speech.">
+<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Compreensão (2 min):</strong> Perguntas sobre o diálogo entre Pricila e o ground staff. Clique para revelar cada resposta depois que Pricila responder. Peça que ela reporte uma das falas usando reported speech.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About the <span class="accent">Conversation</span></h2>
@@ -1003,7 +1012,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now Pricila tells a friend the whole story of her trip, reporting what the staff said.' Toque 2 vezes. As perguntas aparecem ao fim do audio. Repare em quantas vezes ela usa reported speech.">
+<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now Pricila tells a friend the whole story of her trip, reporting what the staff said.' Toque 2 vezes. As perguntas aparecem ao fim do áudio. Repare em quantas vezes ela usa reported speech.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">Pricila Tells the <span class="accent">Story</span></h2>
@@ -1032,18 +1041,22 @@ body.slide-mode .nav-bar { display:flex; }
   </div>
 </div>
 
-<!-- B2 READING --><div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Leitura + Ideia central (6 min):</strong> Pricila le os tres paragrafos em silencio (3 min), depois em voz alta um trecho. Pergunte qual e a ideia principal ANTES de revelar o gist. CCQ: 'Did the cancellation ruin Marta's trip? (No -- it became one of the better memories.)' Clique a alternativa correta para confirmar.">
+<!-- B2 READING --><div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Leitura + Ideia central (6 min):</strong> Pricila lê os três paragrafos em silencio (3 min), depois em voz alta um trecho. Pergunte qual e a ideia principal ANTES de revelar o gist. CCQ: 'Did the cancellation ruin Marta's trip? (No -- it became one of the better memories.)' Clique a alternativa correta para confirmar.">
   <div class="slide-inner"><div class="chapter-label">Read for the Main Idea</div><h2 class="slide-heading">A Story of <span class="accent">Travel Disruption</span></h2>
     <div class="ic-reading"><div class="ic-rtitle">The Flight That Never Boarded</div><p>It was supposed to be the easiest leg of the whole trip: a short connecting flight from Frankfurt to Lisbon, the last hop before a week by the sea. Marta had cleared security with two hours to spare, found a quiet corner of the departure lounge, and allowed herself to relax. Then the board flickered. Her flight had moved from "On time" to "Delayed", and a few minutes later to a word every traveller dreads: "Cancelled".</p><p>At the service desk, the ground staff were calm but honest. The agent explained that the flight had been overbooked and then grounded by a technical fault, and that there was simply no spare aircraft that night. She told Marta she would be rebooked onto the first morning flight, and warned her that a handful of passengers were still on standby. Marta asked about her suitcase; the agent said it had already been tagged through and would be waiting at baggage claim in Lisbon, whatever happened to her.</p><p>What could have ruined the evening became, oddly, one of the better memories of the trip. The airline handed out vouchers for a nearby hotel, and Marta found herself sharing a late dinner with three strangers who had all been bumped from the same flight. By the time she finally landed the next day, jet lag and all, the story she told her friends was not about the cancellation at all. It was about the people she had met because of it.</p><div class="ic-src">Original reading for Pricila &middot; Aula 6</div></div>
 <div class="ic-card"><div class="ic-card-h3">What is the best title for this reading?</div><div class="ic-choices"><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">a</span><span>How airlines decide which flights to cancel</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="true" onclick="icPickGist(this)"><span class="ic-opt">b</span><span>A cancelled flight that turned into a good memory</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">c</span><span>A guide to getting compensation from airlines</span><span class="ic-badge">&#10003; Main idea</span></div></div></div></div></div>
-<!-- B2 TF --><div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>Verdadeiro ou falso (4 min):</strong> Para cada afirmacao, Pricila decide TRUE ou FALSE e justifica com base no texto ANTES de tocar para revelar. Toque cada linha para mostrar o veredito e a justificativa. Peca que ela aponte a frase do texto que prova a resposta.">
+<!-- B2 TF --><div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>Verdadeiro ou falso (4 min):</strong> Para cada afirmacao, Pricila decide TRUE ou FALSE e justifica com base no texto ANTES de tocar para revelar. Toque cada linha para mostrar o veredito e a justificativa. Peça que ela aponte a frase do texto que prova a resposta.">
   <div class="slide-inner"><div class="chapter-label">Check Understanding</div><h2 class="slide-heading">True or <span class="accent">False?</span></h2>
-    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p><div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">Marta arrived at the gate at the last minute, with no time to spare.<span class="ic-just">&#8594; She had cleared security two hours early and was relaxing in the departure lounge.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">The agent said the flight had been overbooked and then grounded by a technical fault.<span class="ic-just">&#8594; Both reasons are given at the service desk.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">Marta's suitcase was left behind in Frankfurt because of the cancellation.<span class="ic-just">&#8594; The agent said it had been tagged through and would wait at baggage claim in Lisbon.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">In the end, the story Marta told her friends focused on the people she met, not the cancellation.<span class="ic-just">&#8594; The last paragraph says the story was about the strangers, not the cancelled flight.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div></div></div>
-<!-- B2 MATCHING --><div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Palavras e significados (4 min):</strong> Revisao do vocabulario da aula. Pricila liga cada expressao (1-6) a sua definicao (a-f) em voz alta: 'Number 1 goes with...'. Confirme cada par e peca um exemplo de frase com duas das expressoes.">
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p><button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Flight That Never Boarded</div><p>It was supposed to be the easiest leg of the whole trip: a short connecting flight from Frankfurt to Lisbon, the last hop before a week by the sea. Marta had cleared security with two hours to spare, found a quiet corner of the departure lounge, and allowed herself to relax. Then the board flickered. Her flight had moved from "On time" to "Delayed", and a few minutes later to a word every traveller dreads: "Cancelled".</p><p>At the service desk, the ground staff were calm but honest. The agent explained that the flight had been overbooked and then grounded by a technical fault, and that there was simply no spare aircraft that night. She told Marta she would be rebooked onto the first morning flight, and warned her that a handful of passengers were still on standby. Marta asked about her suitcase; the agent said it had already been tagged through and would be waiting at baggage claim in Lisbon, whatever happened to her.</p><p>What could have ruined the evening became, oddly, one of the better memories of the trip. The airline handed out vouchers for a nearby hotel, and Marta found herself sharing a late dinner with three strangers who had all been bumped from the same flight. By the time she finally landed the next day, jet lag and all, the story she told her friends was not about the cancellation at all. It was about the people she had met because of it.</p><div class="ic-src">Original reading for Pricila &middot; Aula 6</div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">Marta arrived at the gate at the last minute, with no time to spare.<span class="ic-just">&#8594; She had cleared security two hours early and was relaxing in the departure lounge.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">The agent said the flight had been overbooked and then grounded by a technical fault.<span class="ic-just">&#8594; Both reasons are given at the service desk.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">Marta's suitcase was left behind in Frankfurt because of the cancellation.<span class="ic-just">&#8594; The agent said it had been tagged through and would wait at baggage claim in Lisbon.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">In the end, the story Marta told her friends focused on the people she met, not the cancellation.<span class="ic-just">&#8594; The last paragraph says the story was about the strangers, not the cancelled flight.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div></div></div>
+<!-- B2 MATCHING --><div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Palavras e significados (4 min):</strong> Revisão do vocabulário da aula. Pricila liga cada expressão (1-6) a sua definicao (a-f) em voz alta: 'Number 1 goes with...'. Confirme cada par e peça um exemplo de frase com duas das expressões.">
   <div class="slide-inner"><div class="chapter-label">Words &amp; Meanings</div><h2 class="slide-heading">Match the <span class="accent">Expressions</span></h2><div class="ic-card"><div class="ic-card-h3">Match each airport expression to its meaning</div><div class="ic-match"><div class="ic-match-col"><h4>Words &amp; expressions</h4><div class="ic-chip ic-word"><span class="ic-k">1</span><span>A layover</span></div><div class="ic-chip ic-word"><span class="ic-k">2</span><span>Overbooked</span></div><div class="ic-chip ic-word"><span class="ic-k">3</span><span>To be bumped</span></div><div class="ic-chip ic-word"><span class="ic-k">4</span><span>Standby</span></div><div class="ic-chip ic-word"><span class="ic-k">5</span><span>Baggage claim</span></div><div class="ic-chip ic-word"><span class="ic-k">6</span><span>Jet lag</span></div></div><div class="ic-match-col"><h4>Definitions</h4><div class="ic-chip ic-def"><span class="ic-k">a</span><span>the tired, out-of-sync feeling after flying across time zones</span></div><div class="ic-chip ic-def"><span class="ic-k">b</span><span>a waiting status where you only fly if a seat becomes free</span></div><div class="ic-chip ic-def"><span class="ic-k">c</span><span>the wait at an airport between one flight and the next</span></div><div class="ic-chip ic-def"><span class="ic-k">d</span><span>the area with belts where you collect checked luggage after landing</span></div><div class="ic-chip ic-def"><span class="ic-k">e</span><span>when an airline has sold more seats than the aircraft has</span></div><div class="ic-chip ic-def"><span class="ic-k">f</span><span>to be taken off a flight you had booked, usually because it was full</span></div></div></div></div></div></div>
-<!-- B2 GUIDING --><div class="slide slide-light" data-slide="21" data-phase="4" data-teacher="<strong>Discussao (5 min):</strong> Conversa aberta conectada ao texto e a vida da Pricila. Faca uma pergunta por vez, deixe-a desenvolver, reaja com naturalidade e estimule frases completas. Anote bons usos do vocabulario para o feedback.">
-  <div class="slide-inner"><div class="chapter-label">Discuss</div><h2 class="slide-heading">Talk It <span class="accent">Through</span></h2><div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Talk about it</span></div><ul class="ic-qs ic-guiding"><li><span class="ic-qnum">&#8250;</span><span>Has a delay or cancellation ever changed your trip for the better? What happened?</span></li><li><span class="ic-qnum">&#8250;</span><span>Marta stayed calm and the staff were honest. Do you stay calm when travel goes wrong, or do you get stressed?</span></li><li><span class="ic-qnum">&#8250;</span><span>Would you accept a voucher and a later flight if your flight were overbooked? Why or why not?</span></li><li><span class="ic-qnum">&#8250;</span><span>What is the kindest thing an airline or a stranger has ever done for you while travelling?</span></li></ul></div></div></div>
-<!-- B2 REPHRASE --><div class="slide slide-light" data-slide="22" data-phase="4" data-teacher="<strong>Reformular (5 min):</strong> Cada frase e uma fala direta. Pricila a reporta EM VOZ ALTA usando o verbo entre parenteses (said/told) e o backshift correto. Espere a frase completa antes de seguir; a proxima tela traz o gabarito.">
+<!-- B2 GUIDING --><div class="slide slide-light" data-slide="21" data-phase="4" data-teacher="<strong>Discussão (5 min):</strong> Conversa aberta conectada ao texto e a vida da Pricila. Faça uma pergunta por vez, deixe-a desenvolver, reaja com naturalidade e estimule frases completas. Anote bons usos do vocabulário para o feedback.">
+  <div class="slide-inner"><div class="chapter-label">Discuss</div><h2 class="slide-heading">Talk It <span class="accent">Through</span></h2><button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Flight That Never Boarded</div><p>It was supposed to be the easiest leg of the whole trip: a short connecting flight from Frankfurt to Lisbon, the last hop before a week by the sea. Marta had cleared security with two hours to spare, found a quiet corner of the departure lounge, and allowed herself to relax. Then the board flickered. Her flight had moved from "On time" to "Delayed", and a few minutes later to a word every traveller dreads: "Cancelled".</p><p>At the service desk, the ground staff were calm but honest. The agent explained that the flight had been overbooked and then grounded by a technical fault, and that there was simply no spare aircraft that night. She told Marta she would be rebooked onto the first morning flight, and warned her that a handful of passengers were still on standby. Marta asked about her suitcase; the agent said it had already been tagged through and would be waiting at baggage claim in Lisbon, whatever happened to her.</p><p>What could have ruined the evening became, oddly, one of the better memories of the trip. The airline handed out vouchers for a nearby hotel, and Marta found herself sharing a late dinner with three strangers who had all been bumped from the same flight. By the time she finally landed the next day, jet lag and all, the story she told her friends was not about the cancellation at all. It was about the people she had met because of it.</p><div class="ic-src">Original reading for Pricila &middot; Aula 6</div></div>
+    <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Talk about it</span></div><ul class="ic-qs ic-guiding"><li><span class="ic-qnum">&#8250;</span><span>Has a delay or cancellation ever changed your trip for the better? What happened?</span></li><li><span class="ic-qnum">&#8250;</span><span>Marta stayed calm and the staff were honest. Do you stay calm when travel goes wrong, or do you get stressed?</span></li><li><span class="ic-qnum">&#8250;</span><span>Would you accept a voucher and a later flight if your flight were overbooked? Why or why not?</span></li><li><span class="ic-qnum">&#8250;</span><span>What is the kindest thing an airline or a stranger has ever done for you while travelling?</span></li></ul></div></div></div>
+<!-- B2 REPHRASE --><div class="slide slide-light" data-slide="22" data-phase="4" data-teacher="<strong>Reformular (5 min):</strong> Cada frase e uma fala direta. Pricila a reporta EM VOZ ALTA usando o verbo entre parenteses (said/told) e o backshift correto. Espere a frase completa antes de seguir; a próxima tela traz o gabarito.">
   <div class="slide-inner"><div class="chapter-label">Say It Another Way</div><h2 class="slide-heading">Report What They <span class="accent">Said</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Use the reporting verb in brackets and backshift the tense</p><div class="ic-card"><div class="ic-card-h3">Report each sentence with said / told + backshift</div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>"Your flight is cancelled."  (the agent / told)<span class="ic-rephrase-cue">(told)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">2</span><span>"We will rebook you on the morning flight."  (the staff / said)<span class="ic-rephrase-cue">(said)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">3</span><span>"Your suitcase has already been tagged through."  (she / told)<span class="ic-rephrase-cue">(told)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">4</span><span>"A few passengers are still on standby."  (the agent / said)<span class="ic-rephrase-cue">(said)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">5</span><span>"I can give you a hotel voucher."  (he / told)<span class="ic-rephrase-cue">(told)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li></ol></div></div></div>
 <!-- B2 ANSWERKEY --><div class="slide slide-light" data-slide="23" data-phase="4" data-teacher="<strong>Conferir respostas (2 min):</strong> So abra o gabarito DEPOIS que a Pricila tiver reportado todas as frases. Clique para expandir, compare as respostas dela com o modelo e revise o backshift onde ela tiver hesitado. Releia a nota de forma juntos.">
@@ -1051,7 +1064,7 @@ body.slide-mode .nav-bar { display:flex; }
     <div style="max-width:560px;margin:1.2rem auto 0"><div class="ic-answer"><div class="ic-ans-head" onclick="icToggleAnswer(this)"><span class="ic-ico">+</span>Reveal the reported answers</div><div class="ic-ans-body"><div class="ic-ans-inner"><div style="font-size:.78rem;color:var(--text-dim);margin-bottom:.6rem">Backshift the tense one step back: present (is) &rarr; past (was); will &rarr; would; present perfect (has been) &rarr; past perfect (had been); can &rarr; could. Use told + person (told me) but said with no person (said that...).</div><ol><li>The agent told me (that) my flight was cancelled.</li><li>The staff said (that) they would rebook me on the morning flight.</li><li>She told me (that) my suitcase had already been tagged through.</li><li>The agent said (that) a few passengers were still on standby.</li><li>He told me (that) he could give me a hotel voucher.</li></ol></div></div></div></div></div></div>
 
 <!-- ========== SLIDE 18: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="24" data-phase="5" data-teacher="<strong>Transicao pratica (1 min):</strong> Diga: 'Now we train: fix reported-speech errors, report messages, and read a real travel notice.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="24" data-phase="5" data-teacher="<strong>Transição prática (1 min):</strong> Diga: 'Now we train: fix reported-speech errors, report messages, and read a real travel notice.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train Your <span class="accent">Reporting</span></h2>
@@ -1089,7 +1102,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: ARTIFACT / THE NOTICE ========== -->
-<div class="slide slide-light" data-slide="27" data-phase="5" data-teacher="<strong>O artefato (4 min):</strong> Mostre o aviso de companhia aerea. Pricila le em voz alta, identifica as palavras novas e responde reportando o que o aviso diz. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="27" data-phase="5" data-teacher="<strong>O artefato (4 min):</strong> Mostre o aviso de companhia aerea. Pricila lê em voz alta, identifica as palavras novas e responde reportando o que o aviso diz. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">The Notice</div>
     <h2 class="slide-heading">Read a Real Airline <span class="accent">Notice</span></h2>
@@ -1105,7 +1118,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="28" data-phase="6" data-teacher="<strong>Transicao producao (1 min):</strong> Diga: 'Now the big mission: handle a real airport problem and report the whole story to a friend.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="28" data-phase="6" data-teacher="<strong>Transição produção (1 min):</strong> Diga: 'Now the big mission: handle a real airport problem and report the whole story to a friend.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Handle It <span class="accent">Yourself</span></h2>
@@ -1114,7 +1127,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="29" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Voce e o ground staff. A Pricila chega ao balcao porque a conexao dela atrasou. Ela explica o problema e pede para ser rebooked, usando ao menos tres palavras novas. Deixe-a falar com calma.">
+<div class="slide slide-light" data-slide="29" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Você e o ground staff. A Pricila chega ao balcao porque a conexao dela atrasou. Ela explica o problema e pede para ser rebooked, usando ao menos três palavras novas. Deixe-a falar com calma.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">At the <span class="accent">Service Desk</span></h2>
@@ -1148,7 +1161,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Pratica livre (5 min):</strong> A missao da aula: contar a historia completa de uma viagem que deu errado (real ou imaginaria), do check-in ao baggage claim, reportando o que as pessoas disseram. ZERO pistas. NAO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Prática livre (5 min):</strong> A missao da aula: contar a história completa de uma viagem que deu errado (real ou imaginaria), do check-in ao baggage claim, reportando o que as pessoas disseram. ZERO pistas. NÃO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Your Travel <span class="accent">Story</span></h2>
@@ -1160,7 +1173,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="32" data-phase="7" data-teacher="<strong>Transicao fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="32" data-phase="7" data-teacher="<strong>Transição fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Mission <span class="accent">Complete</span></h2>
@@ -1183,7 +1196,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="34" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 6 complete, Pricila! You earned your Airport Badge!' Homework (oralmente): esta semana, conte para alguem em ingles uma historia de viagem (real ou inventada), reportando ao menos quatro coisas que as pessoas disseram (said/told + backshift) e usando quatro palavras novas. Proxima aula: aula 7 -- The Perfect Stay: Hotels.">
+<div class="slide slide-dark" data-slide="34" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 6 complete, Pricila! You earned your Airport Badge!' Homework (oralmente): esta semana, conte para alguem em inglês uma história de viagem (real ou inventada), reportando ao menos quatro coisas que as pessoas disseram (said/told + backshift) e usando quatro palavras novas. Próxima aula: aula 7 -- The Perfect Stay: Hotels.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1393,6 +1406,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;

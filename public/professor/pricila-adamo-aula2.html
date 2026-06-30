@@ -531,7 +531,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -580,8 +586,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -730,7 +739,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 2: WARM-UP ========== -->
-<div class="slide slide-dark" data-slide="2" data-phase="1" data-teacher="<strong>Gancho + callback (3 min):</strong> Relembre a Aula 1 SEM traduzir: 'Last class you reintroduced yourself and what you have been doing.' Hoje, a historia POR TRAS disso. Pergunte: 'If you divided your life into chapters, what would you call the chapter you are in now?' CCQ: 'If one past action happened BEFORE another past action, do we use the same tense for both? (No -- the earlier one can use the past perfect: had + done.)'">
+<div class="slide slide-dark" data-slide="2" data-phase="1" data-teacher="<strong>Gancho + callback (3 min):</strong> Relembre a Aula 1 SEM traduzir: 'Last class you reintroduced yourself and what you have been doing.' Hoje, a história POR TRAS disso. Pergunte: 'If you divided your life into chapters, what would you call the chapter you are in now?' CCQ: 'If one past action happened BEFORE another past action, do we use the same tense for both? (No -- the earlier one can use the past perfect: had + done.)'">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Warm-up</div>
     <h2 class="slide-heading" style="color:#fff">A Life in <span class="accent">Chapters</span></h2>
@@ -752,7 +761,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 4: VOCAB TRANSITION ========== -->
-<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transicao vocabulario (1 min):</strong> Diga: 'Thirteen words storytellers use to talk about the journey of a life. Click each card to discover.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transição vocabulário (1 min):</strong> Diga: 'Thirteen words storytellers use to talk about the journey of a life. Click each card to discover.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 2: Words for the Journey</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Words for the <span class="accent">Journey</span></h2>
@@ -760,7 +769,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 5: VOCAB 1-4 ========== -->
-<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulario 1-4 (4 min):</strong> Leia a pista em ingles, Pricila adivinha, depois revele. Toque o audio. CCQ 'a setback': 'Is a setback a step forward, or a problem that delays your progress? (A problem that delays progress.)' CCQ 'in hindsight': 'Do we use in hindsight before something happens, or looking back afterwards? (Looking back afterwards.)'">
+<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulário 1-4 (4 min):</strong> Leia a pista em inglês, Pricila adivinha, depois revele. Toque o áudio. CCQ 'a setback': 'Is a setback a step forward, or a problem that delays your progress? (A problem that delays progress.)' CCQ 'in hindsight': 'Do we use in hindsight before something happens, or looking back afterwards? (Looking back afterwards.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
@@ -783,7 +792,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 6: VOCAB 5-8 ========== -->
-<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulario 5-8 (4 min):</strong> Mesma dinamica. CCQ 'to embark on': 'Do you embark on something you finish in a second, or a big new journey or project? (A big new journey.)' CCQ 'daunting': 'Is a daunting task easy and relaxing, or difficult and a little frightening? (Difficult and frightening.)' CCQ 'a leap of faith': 'Is a leap of faith a fully safe choice, or a brave decision without guarantees? (A brave decision without guarantees.)'">
+<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulário 5-8 (4 min):</strong> Mesma dinâmica. CCQ 'to embark on': 'Do you embark on something you finish in a second, or a big new journey or project? (A big new journey.)' CCQ 'daunting': 'Is a daunting task easy and relaxing, or difficult and a little frightening? (Difficult and frightening.)' CCQ 'a leap of faith': 'Is a leap of faith a fully safe choice, or a brave decision without guarantees? (A brave decision without guarantees.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">5-8</span></h2>
@@ -806,7 +815,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 7: VOCAB 9-13 ========== -->
-<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulario 9-13 (5 min):</strong> Mesma dinamica. CCQ 'a gut feeling': 'Is a gut feeling a careful calculation, or an instinct you cannot fully explain? (An instinct.)' CCQ 'against all odds': 'Does against all odds mean it was easy and expected, or it succeeded despite little chance? (Succeeded despite little chance.)' CCQ 'a defining moment': 'Is a defining moment forgettable, or one that shapes who you become? (One that shapes who you become.)'">
+<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulário 9-13 (5 min):</strong> Mesma dinâmica. CCQ 'a gut feeling': 'Is a gut feeling a careful calculation, or an instinct you cannot fully explain? (An instinct.)' CCQ 'against all odds': 'Does against all odds mean it was easy and expected, or it succeeded despite little chance? (Succeeded despite little chance.)' CCQ 'a defining moment': 'Is a defining moment forgettable, or one that shapes who you become? (One that shapes who you become.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">9-13</span></h2>
@@ -832,7 +841,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 8: PRONUNCIATION ========== -->
-<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada audio e peca que Pricila repita. Atencao a: 'daunting' (DAWN-ting), 'pivotal' (PIV-uh-tul) e ao ritmo de 'By the time I arrived, she had left' (a contracao she'd).">
+<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada áudio e peça que Pricila repita. Atenção a: 'daunting' (DAWN-ting), 'pivotal' (PIV-uh-tul) e ao ritmo de 'By the time I arrived, she had left' (a contracao she'd).">
   <div class="slide-inner">
     <div class="chapter-label">Pronunciation</div>
     <h2 class="slide-heading">Say It <span class="accent">Clearly</span></h2>
@@ -845,7 +854,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 9: GRAMMAR TRANSITION ========== -->
-<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transicao gramatica (1 min):</strong> Diga: 'When we tell a story, we often need to show what happened BEFORE something else. English has a tense just for that. Let's find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transição gramática (1 min):</strong> Diga: 'When we tell a story, we often need to show what happened BEFORE something else. English has a tense just for that. Let's find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 3: Before and After</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">What Had <span class="accent">Happened First?</span></h2>
@@ -879,7 +888,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 11: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> Dois erros classicos: usar o past simple para as DUAS acoes ('When I arrived, she left' quando ela ja tinha saido) e dizer 'had went' em vez de 'had gone'. Mostre certo (verde) vs errado (vermelho). Peca que Pricila leia as versoes corretas 2x.">
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> Dois erros classicos: usar o past simple para as DUAS ações ('When I arrived, she left' quando ela já tinha saido) e dizer 'had went' em vez de 'had gone'. Mostre certo (verde) vs errado (vermelho). Peça que Pricila leia as versoes corretas 2x.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Wrong vs <span class="accent">Right</span></h2>
@@ -899,7 +908,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: GRAMMAR PRACTICE ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Pratica (3 min):</strong> Leia cada frase. Pricila completa o verbo no past perfect EM VOZ ALTA antes de clicar para revelar. Lembre: had + participio passado para a acao mais antiga.">
+<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Prática (3 min):</strong> Leia cada frase. Pricila completa o verbo no past perfect EM VOZ ALTA antes de clicar para revelar. Lembre: had + participio passado para a ação mais antiga.">
   <div class="slide-inner">
     <div class="chapter-label">Grammar Practice</div>
     <h2 class="slide-heading">Complete the <span class="accent">Story</span></h2>
@@ -913,7 +922,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: CONTEXT TRANSITION ========== -->
-<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transicao contexto (1 min):</strong> Diga: 'Now Pricila tells the story of a turning point, in a short interview about her life in chapters.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transição contexto (1 min):</strong> Diga: 'Now Pricila tells the story of a turning point, in a short interview about her life in chapters.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: A Life in Chapters</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Telling the <span class="accent">Story</span></h2>
@@ -921,7 +930,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Dialogo (6 min):</strong> Um entrevistador pede que a Pricila conte um momento decisivo. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peca que ELA fale primeiro, depois toque o audio. Repare no past perfect e no vocabulario novo.">
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Diálogo (6 min):</strong> Um entrevistador pede que a Pricila conte um momento decisivo. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peça que ELA fale primeiro, depois toque o áudio. Repare no past perfect e no vocabulário novo.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">A Turning <span class="accent">Point</span></h2>
@@ -938,7 +947,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="15" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'You hear Pricila telling the story of the year everything changed.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o audio termina. 0.75x se pedir.">
+<div class="slide slide-dark" data-slide="15" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'You hear Pricila telling the story of the year everything changed.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o áudio termina. 0.75x se pedir.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">The Year Everything <span class="accent">Changed</span></h2>
@@ -968,7 +977,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: COMPREHENSION ========== -->
-<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Compreensao (2 min):</strong> Perguntas sobre o dialogo entre Pricila e o entrevistador. Clique para revelar cada resposta depois que Pricila responder.">
+<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Compreensão (2 min):</strong> Perguntas sobre o diálogo entre Pricila e o entrevistador. Clique para revelar cada resposta depois que Pricila responder.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About the <span class="accent">Conversation</span></h2>
@@ -981,7 +990,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now an old friend reflects on the setbacks that paved the way for Pricila's success.' Toque 2 vezes. As perguntas aparecem ao fim do audio.">
+<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now an old friend reflects on the setbacks that paved the way for Pricila's success.' Toque 2 vezes. As perguntas aparecem ao fim do áudio.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">The Secret Was No <span class="accent">Secret</span></h2>
@@ -1011,7 +1020,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: B2 READING + GIST ========== -->
-<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faca a pergunta de gist. Pricila clica a alternativa -- o card certo fica verde. NAO peca traducao palavra a palavra.">
+<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faça a pergunta de gist. Pricila clica a alternativa -- o card certo fica verde. NÃO peça tradução palavra a palavra.">
   <div class="slide-inner">
     <div class="chapter-label">Read for the Main Idea</div>
     <h2 class="slide-heading">A Story of <span class="accent">Transformation</span></h2>
@@ -1021,26 +1030,30 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: B2 TRUE/FALSE ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma esta certa ou errada -- volte ao texto e repare no past perfect.">
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma está certa ou errada -- volte ao texto e repare no past perfect.">
   <div class="slide-inner">
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">Before the fire, Marina believed her most interesting chapters were still ahead of her.<span class="ic-just">&#8594; She had told herself they were already behind her.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">By the time the insurance paid out, she had already decided not to rebuild.<span class="ic-just">&#8594; The text says exactly this -- a past perfect 'had decided' before the payout.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">She had been dreaming of something different for years before the fire.<span class="ic-just">&#8594; The text says she had been dreaming for years.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The new bakery turned out to be less rewarding than the old one.<span class="ic-just">&#8594; It was more rewarding by every measure.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Year Everything Changed: How One Decision Rewrote a Life</div><p>By the time Marina turned fifty, she had spent nearly three decades running the same small bakery her grandmother had founded. She had survived recessions, she had buried a marriage, and she had quietly told herself that the most interesting chapters of her life were already behind her. In hindsight, she would call that the most pivotal year of all.</p><p>It began with a setback. A fire had gutted the kitchen one winter night, and by the time the insurance had paid out, she had already decided she would not rebuild. The decision felt daunting, even reckless. But she had been dreaming for years of something different, and the fire, oddly, had paved the way. Trusting little more than a gut feeling, she embarked on a year of travelling the world to learn the breads of other cultures.</p><p>Against all odds, she came back transformed. The woman who had once believed her story was finished had, in fact, only reached an intermission. She had put the old life behind her and opened a new bakery -- braver, wiser and, by every measure, more rewarding than the one before. The fire, she now says, was not the end of her story. It was the turning of a page.</p><div class="ic-src">Adapted from a profile, Reader's Companion <a href="https://www.readerscompanion.com" target="_blank" rel="noopener">https://www.readerscompanion.com</a></div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">Before the fire, Marina believed her most interesting chapters were still ahead of her.<span class="ic-just">&#8594; She had told herself they were already behind her.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">By the time the insurance paid out, she had already decided not to rebuild.<span class="ic-just">&#8594; The text says exactly this -- a past perfect 'had decided' before the payout.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">She had been dreaming of something different for years before the fire.<span class="ic-just">&#8594; The text says she had been dreaming for years.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The new bakery turned out to be less rewarding than the old one.<span class="ic-just">&#8594; It was more rewarding by every measure.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
 <!-- ========== SLIDE 20: B2 GUIDING QUESTIONS ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Discussion (4 min):</strong> Perguntas abertas sobre o texto e a vida da Pricila. Nao ha resposta certa -- incentive o uso do vocabulario novo e dos tempos narrativos. Sem audio, e fala dela.">
+<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Discussion (4 min):</strong> Perguntas abertas sobre o texto e a vida da Pricila. Não ha resposta certa -- incentive o uso do vocabulário novo e dos tempos narrativos. Sem áudio, e fala dela.">
   <div class="slide-inner">
     <div class="chapter-label">Discuss</div>
     <h2 class="slide-heading">Talk It <span class="accent">Through</span></h2>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Year Everything Changed: How One Decision Rewrote a Life</div><p>By the time Marina turned fifty, she had spent nearly three decades running the same small bakery her grandmother had founded. She had survived recessions, she had buried a marriage, and she had quietly told herself that the most interesting chapters of her life were already behind her. In hindsight, she would call that the most pivotal year of all.</p><p>It began with a setback. A fire had gutted the kitchen one winter night, and by the time the insurance had paid out, she had already decided she would not rebuild. The decision felt daunting, even reckless. But she had been dreaming for years of something different, and the fire, oddly, had paved the way. Trusting little more than a gut feeling, she embarked on a year of travelling the world to learn the breads of other cultures.</p><p>Against all odds, she came back transformed. The woman who had once believed her story was finished had, in fact, only reached an intermission. She had put the old life behind her and opened a new bakery -- braver, wiser and, by every measure, more rewarding than the one before. The fire, she now says, was not the end of her story. It was the turning of a page.</p><div class="ic-src">Adapted from a profile, Reader's Companion <a href="https://www.readerscompanion.com" target="_blank" rel="noopener">https://www.readerscompanion.com</a></div></div>
     <div class="ic-card"><ul class="ic-qs ic-guiding"><li><span class="ic-qnum">&#8250;</span><span>Marina calls the fire a turning point in hindsight. Looking back, which moment in your own life turned out to be more important than it seemed at the time?</span></li><li><span class="ic-qnum">&#8250;</span><span>She trusted little more than a gut feeling. When has a gut feeling led you to a good decision?</span></li><li><span class="ic-qnum">&#8250;</span><span>The writer says her story had only reached an intermission, not an ending. How does that idea sit with your own sense of this chapter of your life?</span></li><li><span class="ic-qnum">&#8250;</span><span>Think of a setback you have put behind you. What did you learn from how you overcame it?</span></li></ul></div>
   </div>
 </div>
 
 <!-- ========== SLIDE 21: B2 SCENARIOS ========== -->
-<div class="slide slide-light" data-slide="21" data-phase="4" data-teacher="<strong>Scenarios (4 min):</strong> Leia cada cenario. Para cada um, Pricila conta a historia sequenciando os tempos (past simple + past perfect) e usando UMA palavra nova. Espere a frase completa antes de comentar.">
+<div class="slide slide-light" data-slide="21" data-phase="4" data-teacher="<strong>Scenarios (4 min):</strong> Leia cada cenário. Para cada um, Pricila conta a história sequenciando os tempos (past simple + past perfect) e usando UMA palavra nova. Espere a frase completa antes de comentar.">
   <div class="slide-inner">
     <div class="chapter-label">Tell the Story</div>
     <h2 class="slide-heading">Narrate Your <span class="accent">Past</span></h2>
@@ -1050,7 +1063,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: B2 REPHRASE ========== -->
-<div class="slide slide-light" data-slide="22" data-phase="4" data-teacher="<strong>Rephrase (4 min):</strong> Pricila combina cada par de frases usando o past perfect, EM VOZ ALTA, antes de ver o gabarito (slide seguinte). Foco na forma: had + participio para a acao anterior.">
+<div class="slide slide-light" data-slide="22" data-phase="4" data-teacher="<strong>Rephrase (4 min):</strong> Pricila combina cada par de frases usando o past perfect, EM VOZ ALTA, antes de ver o gabarito (slide seguinte). Foco na forma: had + participio para a ação anterior.">
   <div class="slide-inner">
     <div class="chapter-label">Say It Another Way</div>
     <h2 class="slide-heading">Combine with the <span class="accent">Past Perfect</span></h2>
@@ -1071,16 +1084,18 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: B2 ANALYSE ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="4" data-teacher="<strong>Analyse (3 min):</strong> Releitura focada: peca a Pricila para reler o texto e responder, em voz alta, como o autor constroi a narrativa. Conecte com a propria historia dela do Listening 1.">
+<div class="slide slide-light" data-slide="24" data-phase="4" data-teacher="<strong>Analyse (3 min):</strong> Releitura focada: peça a Pricila para reler o texto e responder, em voz alta, como o autor constroi a narrativa. Conecte com a própria história dela do Listening 1.">
   <div class="slide-inner">
     <div class="chapter-label">Read Again, Deeper</div>
     <h2 class="slide-heading">Behind the <span class="accent">Words</span></h2>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Year Everything Changed: How One Decision Rewrote a Life</div><p>By the time Marina turned fifty, she had spent nearly three decades running the same small bakery her grandmother had founded. She had survived recessions, she had buried a marriage, and she had quietly told herself that the most interesting chapters of her life were already behind her. In hindsight, she would call that the most pivotal year of all.</p><p>It began with a setback. A fire had gutted the kitchen one winter night, and by the time the insurance had paid out, she had already decided she would not rebuild. The decision felt daunting, even reckless. But she had been dreaming for years of something different, and the fire, oddly, had paved the way. Trusting little more than a gut feeling, she embarked on a year of travelling the world to learn the breads of other cultures.</p><p>Against all odds, she came back transformed. The woman who had once believed her story was finished had, in fact, only reached an intermission. She had put the old life behind her and opened a new bakery -- braver, wiser and, by every measure, more rewarding than the one before. The fire, she now says, was not the end of her story. It was the turning of a page.</p><div class="ic-src">Adapted from a profile, Reader's Companion <a href="https://www.readerscompanion.com" target="_blank" rel="noopener">https://www.readerscompanion.com</a></div></div>
     <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">How the writer builds the story</span></div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>Find two sentences that use the past perfect to show what had happened BEFORE the main events.</span></li><li><span class="ic-qnum">2</span><span>The writer waits until the end to reveal the meaning of the fire. How does delaying that change the impact of the story?</span></li><li><span class="ic-qnum">3</span><span>In your own words, what is the difference between an 'ending' and an 'intermission', and why does the writer choose the second word?</span></li></ol></div>
   </div>
 </div>
 
 <!-- ========== SLIDE 25: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="25" data-phase="5" data-teacher="<strong>Transicao pratica (1 min):</strong> Diga: 'Now we train: fix the narrative errors, tell your story, and read a real life timeline.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="25" data-phase="5" data-teacher="<strong>Transição prática (1 min):</strong> Diga: 'Now we train: fix the narrative errors, tell your story, and read a real life timeline.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Sequence the <span class="accent">Past</span></h2>
@@ -1118,7 +1133,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: ARTIFACT / TIMELINE ========== -->
-<div class="slide slide-light" data-slide="28" data-phase="5" data-teacher="<strong>O artefato (4 min):</strong> Mostre a linha do tempo de uma vida. Pricila le em voz alta, identifica as palavras novas e responde as perguntas. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="28" data-phase="5" data-teacher="<strong>O artefato (4 min):</strong> Mostre a linha do tempo de uma vida. Pricila lê em voz alta, identifica as palavras novas e responde as perguntas. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">Your Timeline</div>
     <h2 class="slide-heading">A Life in <span class="accent">Chapters</span></h2>
@@ -1139,7 +1154,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 29: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="29" data-phase="6" data-teacher="<strong>Transicao producao (1 min):</strong> Diga: 'Now the big mission: tell the story of a real turning point in your own life, in chapters.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="29" data-phase="6" data-teacher="<strong>Transição produção (1 min):</strong> Diga: 'Now the big mission: tell the story of a real turning point in your own life, in chapters.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Tell Your <span class="accent">Story</span></h2>
@@ -1148,7 +1163,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 30: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Voce e um entrevistador curioso sobre a vida da Pricila. Pergunte sobre um momento decisivo. Ela conta usando ao menos tres palavras novas e dois exemplos de past perfect. Deixe-a falar com calma.">
+<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Você e um entrevistador curioso sobre a vida da Pricila. Pergunte sobre um momento decisivo. Ela conta usando ao menos três palavras novas e dois exemplos de past perfect. Deixe-a falar com calma.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">A Defining <span class="accent">Moment</span></h2>
@@ -1165,7 +1180,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Role-play semi-livre (4 min):</strong> A Pricila divide a vida dela em tres capitulos e da um nome a cada um, explicando o que tinha acontecido antes de cada virada. Menos apoio.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Role-play semi-livre (4 min):</strong> A Pricila divide a vida dela em três capitulos e da um nome a cada um, explicando o que tinha acontecido antes de cada virada. Menos apoio.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Name Your <span class="accent">Chapters</span></h2>
@@ -1182,7 +1197,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 32: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="32" data-phase="6" data-teacher="<strong>Pratica livre (5 min):</strong> A missao da aula: contar a historia de uma virada decisiva da propria vida, em pelo menos um minuto, sequenciando bem os tempos. ZERO apoio. NAO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
+<div class="slide slide-light" data-slide="32" data-phase="6" data-teacher="<strong>Prática livre (5 min):</strong> A missao da aula: contar a história de uma virada decisiva da própria vida, em pelo menos um minuto, sequenciando bem os tempos. ZERO apoio. NÃO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Your Turning <span class="accent">Point</span></h2>
@@ -1194,7 +1209,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 33: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transicao fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transição fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Mission <span class="accent">Complete</span></h2>
@@ -1217,7 +1232,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 35: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 2 complete, Pricila! You earned your Chapters Badge!' Homework (oralmente): esta semana, grave ou escreva em ingles a historia de uma virada da sua vida (5-6 frases), sequenciando bem os tempos (pelo menos dois exemplos de past perfect) e usando ao menos quatro palavras novas. Proxima aula: aula 3 -- A Fresh Chapter Ahead.">
+<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 2 complete, Pricila! You earned your Chapters Badge!' Homework (oralmente): esta semana, grave ou escreva em inglês a história de uma virada da sua vida (5-6 frases), sequenciando bem os tempos (pelo menos dois exemplos de past perfect) e usando ao menos quatro palavras novas. Próxima aula: aula 3 -- A Fresh Chapter Ahead.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1427,6 +1442,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;

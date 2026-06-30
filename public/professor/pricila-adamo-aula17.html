@@ -537,7 +537,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -586,8 +592,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -749,7 +758,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 2: HOOK / CALLBACK ========== -->
-<div class="slide slide-dark" data-slide="2" data-phase="1" data-teacher="<strong>Gancho + callback (3 min):</strong> Relembre a Aula 16 SEM traduzir: 'Last class you handled money matters abroad -- tipping, hidden costs, the advanced passive.' Hoje o passo seguinte: olhar para TRAS, para uma viagem ou uma vida inteira, e pensar no que voce teria feito diferente -- sem se martirizar. CCQ: 'If I look back on a trip and say what I would have done differently, am I talking about the real past or an imaginary one? (An imaginary one.)'" style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-dark" data-slide="2" data-phase="1" data-teacher="<strong>Gancho + callback (3 min):</strong> Relembre a Aula 16 SEM traduzir: 'Last class you handled money matters abroad -- tipping, hidden costs, the advanced passive.' Hoje o passo seguinte: olhar para TRAS, para uma viagem ou uma vida inteira, e pensar no que você teria feito diferente -- sem se martirizar. CCQ: 'If I look back on a trip and say what I would have done differently, am I talking about the real past or an imaginary one? (An imaginary one.)'" style="background-image:linear-gradient(rgba(20,20,30,.82),rgba(20,20,30,.9)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 1: Looking Back</div>
     <h2 class="slide-heading" style="color:#fff">The Road Not <span class="accent">Taken</span></h2>
@@ -772,7 +781,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 4: CH2 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transicao vocabulario (1 min):</strong> Diga: 'Thirteen words for reflecting on the past. Click each card to discover the meaning.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transição vocabulário (1 min):</strong> Diga: 'Thirteen words for reflecting on the past. Click each card to discover the meaning.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 2: Words for Reflection</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Words for <span class="accent">Looking Back</span></h2>
@@ -781,7 +790,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 5: VOCAB 1-4 ========== -->
-<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulario 1-4 (4 min):</strong> Leia a pista em ingles, Pricila adivinha, depois revele. Toque o audio. CCQ 'in hindsight': 'Is it what I knew at the time, or what I understand now, looking back? (What I understand now.)' CCQ 'a turning point': 'Is it a small detail, or a moment that changes the direction of your life? (A moment that changes direction.)'">
+<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulário 1-4 (4 min):</strong> Leia a pista em inglês, Pricila adivinha, depois revele. Toque o áudio. CCQ 'in hindsight': 'Is it what I knew at the time, or what I understand now, looking back? (What I understand now.)' CCQ 'a turning point': 'Is it a small detail, or a moment that changes the direction of your life? (A moment that changes direction.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
@@ -808,7 +817,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 6: VOCAB 5-8 ========== -->
-<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulario 5-8 (4 min):</strong> Mesma dinamica. CCQ 'to make the most of': 'Do I waste the chance, or use it as fully as I can? (Use it fully.)' CCQ 'a leap of faith': 'Do I know exactly how it will end, or do I act bravely without knowing? (I act without knowing.)'">
+<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulário 5-8 (4 min):</strong> Mesma dinâmica. CCQ 'to make the most of': 'Do I waste the chance, or use it as fully as I can? (Use it fully.)' CCQ 'a leap of faith': 'Do I know exactly how it will end, or do I act bravely without knowing? (I act without knowing.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">5-8</span></h2>
@@ -835,7 +844,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 7: VOCAB 9-13 ========== -->
-<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulario 9-13 (5 min):</strong> Mesma dinamica. CCQ 'a wake-up call': 'Is it good news, or an event that warns me I must change? (A warning to change.)' CCQ 'worthwhile': 'Was it worth the time and effort, or a waste? (Worth it.)' CCQ 'to look back on': 'Am I thinking about the future or remembering the past? (Remembering the past.)'">
+<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulário 9-13 (5 min):</strong> Mesma dinâmica. CCQ 'a wake-up call': 'Is it good news, or an event that warns me I must change? (A warning to change.)' CCQ 'worthwhile': 'Was it worth the time and effort, or a waste? (Worth it.)' CCQ 'to look back on': 'Am I thinking about the future or remembering the past? (Remembering the past.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">9-13</span></h2>
@@ -866,7 +875,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 8: PRONUNCIATION ========== -->
-<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada audio e peca que Pricila repita. Atencao a: 'hindsight' (HIND-site), a contracao 'would've' (WOOD-uv, nao 'would of'), e a entonacao suave e reflexiva de 'I wish I had known'.">
+<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada áudio e peça que Pricila repita. Atenção a: 'hindsight' (HIND-site), a contracao 'would've' (WOOD-uv, nao 'would of'), e a entonacao suave e reflexiva de 'I wish I had known'.">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Say It <span class="accent">Clearly</span></h2>
@@ -879,7 +888,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 9: CH3 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transicao gramatica (1 min):</strong> Diga: 'To talk about an imaginary past -- what would have happened -- we need a special grammar. Let's find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transição gramática (1 min):</strong> Diga: 'To talk about an imaginary past -- what would have happened -- we need a special grammar. Let's find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 3: The Third Conditional</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">The Imaginary <span class="accent">Past</span></h2>
@@ -915,7 +924,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 11: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> Dois erros classicos: (1) por 'would' na clausula 'if' ('if I would have known'), e (2) escrever/dizer 'would of' em vez de 'would have'. Mostre certo (verde) vs errado (vermelho). Peca que Pricila leia as versoes corretas 2x.">
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> Dois erros classicos: (1) por 'would' na clausula 'if' ('if I would have known'), e (2) escrever/dizer 'would of' em vez de 'would have'. Mostre certo (verde) vs errado (vermelho). Peça que Pricila leia as versoes corretas 2x.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Wrong vs <span class="accent">Right</span></h2>
@@ -934,7 +943,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: GRAMMAR PRACTICE FILL ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Pratica de gramatica (3 min):</strong> Leia cada frase. Pricila completa a forma do terceiro condicional EM VOZ ALTA antes de clicar para revelar. Se travar, lembre: if + had + participio / would have + participio.">
+<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Prática de gramática (3 min):</strong> Leia cada frase. Pricila completa a forma do terceiro condicional EM VOZ ALTA antes de clicar para revelar. Se travar, lembre: if + had + participio / would have + participio.">
   <div class="slide-inner">
     <div class="chapter-label">Grammar Practice</div>
     <h2 class="slide-heading">Complete the <span class="accent">Third Conditional</span></h2>
@@ -950,7 +959,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: CH4 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transicao contexto (1 min):</strong> Diga: 'Now two friends look back on the trips they did and didn't take. Listen for the third conditional.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transição contexto (1 min):</strong> Diga: 'Now two friends look back on the trips they did and didn't take. Listen for the third conditional.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: A Journey Remembered</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Two Friends, <span class="accent">Looking Back</span></h2>
@@ -959,7 +968,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Dialogo (6 min):</strong> Pricila e um velho amigo (Daniel) relembram uma viagem. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peca que ELA fale primeiro, depois toque o audio. Repare no terceiro condicional e em 'I wish' / 'no regrets'.">
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Diálogo (6 min):</strong> Pricila e um velho amigo (Daniel) relembram uma viagem. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peça que ELA fale primeiro, depois toque o áudio. Repare no terceiro condicional e em 'I wish' / 'no regrets'.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">The Trip We Almost <span class="accent">Took</span></h2>
@@ -976,7 +985,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: COMPREHENSION ========== -->
-<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Compreensao (2 min):</strong> Perguntas sobre o que DANIEL (o amigo) disse no dialogo. Clique para revelar cada resposta depois que Pricila responder.">
+<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Compreensão (2 min):</strong> Perguntas sobre o que DANIEL (o amigo) disse no diálogo. Clique para revelar cada resposta depois que Pricila responder.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About the <span class="accent">Conversation</span></h2>
@@ -989,7 +998,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Pricila remembers a trip she would have done differently.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o audio termina. 0.75x se pedir.">
+<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Pricila remembers a trip she would have done differently.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o áudio termina. 0.75x se pedir.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">The Trip She'd Have Done <span class="accent">Differently</span></h2>
@@ -1019,7 +1028,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now an old friend leaves Pricila a voice note about living with no regrets.' Toque 2 vezes. As perguntas aparecem ao fim do audio.">
+<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now an old friend leaves Pricila a voice note about living with no regrets.' Toque 2 vezes. As perguntas aparecem ao fim do áudio.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">A Friend's <span class="accent">No-Regrets Note</span></h2>
@@ -1049,7 +1058,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: B2 READING + GIST ========== -->
-<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faca a pergunta de gist. Pricila clica a alternativa -- o card certo fica verde. NAO peca traducao palavra a palavra. Foco no terceiro condicional: 'if you had gone, you would have seen'.">
+<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faça a pergunta de gist. Pricila clica a alternativa -- o card certo fica verde. NÃO peça tradução palavra a palavra. Foco no terceiro condicional: 'if you had gone, you would have seen'.">
   <div class="slide-inner">
     <div class="chapter-label">Read for the Main Idea</div>
     <h2 class="slide-heading">The Road Not <span class="accent">Taken</span></h2>
@@ -1059,17 +1068,19 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: B2 TRUE/FALSE ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma esta certa ou errada -- volte ao texto.">
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma está certa ou errada -- volte ao texto.">
   <div class="slide-inner">
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer says every traveller remembers some roads and choices they did not take.<span class="ic-just">&#8594; Every traveller carries a small museum of roads not taken.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">According to the writer, the healthiest travellers are the ones who have no regrets at all.<span class="ic-just">&#8594; They are not the ones with no regrets, but the ones who hold their regrets lightly.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer warns that dwelling endlessly on a missed turning makes you miss the real journey.<span class="ic-just">&#8594; To dwell endlessly on the missed turning is to live in a journey that never happened, while the real one slips past.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer thinks the third conditional should be used to punish yourself for past mistakes.<span class="ic-just">&#8594; It is not a tool for punishing yourself; it is a way of making peace.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The road not taken -- and the one that was</div><p>Every traveller carries a small museum of roads not taken. There is the flight you almost booked, the city you walked past, the invitation you politely declined because the timing felt wrong. Looking back, it is tempting to believe that the other choice would have been the better one -- that if you had only been braver, the whole story would have unfolded more beautifully. The third conditional is the grammar of this quiet daydream: if I had gone, I would have seen; if I had stayed, I would have missed. It lets us replay the past in a key it never actually played.</p><p>And yet there is a trap in it. To dwell endlessly on the missed turning is to live in a journey that never happened, while the real one slips past unnoticed. The healthiest travellers, it seems, are not the ones with no regrets at all, but the ones who hold their regrets lightly. They take stock of what a wrong turn taught them. They notice that the cancelled trip led, by some strange route, to a better one. They look back just long enough to learn, and then they turn around and face the road ahead.</p><p>Perhaps that is the real lesson of the third conditional. It is not a tool for punishing yourself with everything you would have done differently. It is a way of making peace: if I had not taken that imperfect path, I would not have arrived exactly here, with exactly this view. Hindsight, used gently, does not weigh you down. It hands you a map for the next departure -- and reminds you that the best journey is almost always the one you have not taken yet.</p><div class="ic-src">Adapted for class use <a href="https://www.bbc.com/travel" target="_blank" rel="noopener">https://www.bbc.com/travel</a></div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer says every traveller remembers some roads and choices they did not take.<span class="ic-just">&#8594; Every traveller carries a small museum of roads not taken.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">According to the writer, the healthiest travellers are the ones who have no regrets at all.<span class="ic-just">&#8594; They are not the ones with no regrets, but the ones who hold their regrets lightly.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer warns that dwelling endlessly on a missed turning makes you miss the real journey.<span class="ic-just">&#8594; To dwell endlessly on the missed turning is to live in a journey that never happened, while the real one slips past.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer thinks the third conditional should be used to punish yourself for past mistakes.<span class="ic-just">&#8594; It is not a tool for punishing yourself; it is a way of making peace.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
 <!-- ========== SLIDE 20: B2 MATCHING ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Matching (3 min):</strong> Pricila liga cada expressao de reflexao a sua definicao em voz alta. As colunas estao embaralhadas de proposito. Confira juntos e peca um exemplo proprio para duas delas.">
+<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Matching (3 min):</strong> Pricila liga cada expressão de reflexao a sua definicao em voz alta. As colunas estao embaralhadas de propósito. Confira juntos e peça um exemplo próprio para duas delas.">
   <div class="slide-inner">
     <div class="chapter-label">Match the Meaning</div>
     <h2 class="slide-heading">Reflection Words &amp; <span class="accent">Meanings</span></h2>
@@ -1078,7 +1089,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: SECOND VS THIRD BRIDGE ========== -->
-<div class="slide slide-light" data-slide="21" data-phase="5" data-teacher="<strong>Ponte 2nd vs 3rd (3 min):</strong> Reforce a diferenca com a Aula 15. Segundo condicional = um AGORA imaginario (if I missed the train, I would...). Terceiro = um PASSADO imaginario (if I HAD missed the train, I would HAVE...). Peca que Pricila diga uma frase de cada tipo.">
+<div class="slide slide-light" data-slide="21" data-phase="5" data-teacher="<strong>Ponte 2nd vs 3rd (3 min):</strong> Reforce a diferença com a Aula 15. Segundo condicional = um AGORA imaginario (if I missed the train, I would...). Terceiro = um PASSADO imaginario (if I HAD missed the train, I would HAVE...). Peça que Pricila diga uma frase de cada tipo.">
   <div class="slide-inner">
     <div class="chapter-label">Second vs Third</div>
     <h2 class="slide-heading">An Unreal <span class="accent">Now vs Past</span></h2>
@@ -1097,7 +1108,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="22" data-phase="5" data-teacher="<strong>Transicao pratica (1 min):</strong> Diga: 'Now we train: fix the mistakes, rewrite as regrets, check the key, and reflect.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="22" data-phase="5" data-teacher="<strong>Transição prática (1 min):</strong> Diga: 'Now we train: fix the mistakes, rewrite as regrets, check the key, and reflect.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train the <span class="accent">Third Conditional</span></h2>
@@ -1142,7 +1153,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: B2 ANALYSE ========== -->
-<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Analyse (4 min):</strong> Perguntas de leitura critica sobre o texto e o uso do terceiro condicional. Pricila responde em voz alta, com suas proprias palavras. Sem gabarito unico -- e producao e reflexao. Estimule frases completas.">
+<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Analyse (4 min):</strong> Perguntas de leitura critica sobre o texto e o uso do terceiro condicional. Pricila responde em voz alta, com suas proprias palavras. Sem gabarito único -- e produção e reflexao. Estimule frases completas.">
   <div class="slide-inner">
     <div class="chapter-label">Close Reading</div>
     <h2 class="slide-heading">Why Look <span class="accent">Back?</span></h2>
@@ -1151,7 +1162,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="27" data-phase="6" data-teacher="<strong>Transicao producao (1 min):</strong> Diga: 'Now the big mission: reflect on your own journey, in three steps. Ready?' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="27" data-phase="6" data-teacher="<strong>Transição produção (1 min):</strong> Diga: 'Now the big mission: reflect on your own journey, in three steps. Ready?' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Tell Your Own <span class="accent">Story</span></h2>
@@ -1160,7 +1171,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="28" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Voce e um velho amigo. Relembrem juntos uma viagem que a Pricila NAO fez. Deixe-a usar o terceiro condicional com as frases-chave.">
+<div class="slide slide-light" data-slide="28" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Você e um velho amigo. Relembrem juntos uma viagem que a Pricila NÃO fez. Deixe-a usar o terceiro condicional com as frases-chave.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">The Trip You <span class="accent">Missed</span></h2>
@@ -1194,7 +1205,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 30: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Pratica livre (5 min):</strong> A missao da aula: olhar para a jornada inteira (vida e viagens) e refletir. ZERO pistas. NAO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
+<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Prática livre (5 min):</strong> A missao da aula: olhar para a jornada inteira (vida e viagens) e refletir. ZERO pistas. NÃO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Looking Back, <span class="accent">Moving Forward</span></h2>
@@ -1206,7 +1217,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: ARTIFACT (JOURNAL) ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Artefato (3 min):</strong> Mostre a pagina do diario de viagem da Pricila. Peca que ela leia em voz alta usando o terceiro condicional ('if I had stayed, I would have...') e identifique o turning point. Use as perguntas embaixo.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Artefato (3 min):</strong> Mostre a página do diario de viagem da Pricila. Peça que ela leia em voz alta usando o terceiro condicional ('if I had stayed, I would have...') e identifique o turning point. Use as perguntas embaixo.">
   <div class="slide-inner">
     <div class="chapter-label">Read the Journal</div>
     <h2 class="slide-heading">Pricila's <span class="accent">Travel Journal</span></h2>
@@ -1223,7 +1234,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 32: SURVIVAL CARD ========== -->
-<div class="slide slide-dark" data-slide="32" data-phase="7" data-teacher="<strong>Survival Card (2 min):</strong> Toque cada frase e peca que Pricila repita. Sao as 5 frases-chave que ela leva da aula.">
+<div class="slide slide-dark" data-slide="32" data-phase="7" data-teacher="<strong>Survival Card (2 min):</strong> Toque cada frase e peça que Pricila repita. Sao as 5 frases-chave que ela leva da aula.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Survival Card</div>
     <h2 class="slide-heading" style="color:#fff">Phrases to <span class="accent">Keep</span></h2>
@@ -1238,7 +1249,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 33: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transicao fechamento (1 min):</strong> Diga: 'A reflective lesson done. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transição fechamento (1 min):</strong> Diga: 'A reflective lesson done. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Looking <span class="accent">Forward</span></h2>
@@ -1261,7 +1272,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 35: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 17 complete, Pricila -- you earned your Reflections Badge!' Homework (oralmente): esta semana, grave-se contando, em ingles, tres coisas: uma viagem que voce teria feito diferente (terceiro condicional), um arrependimento gentil com 'I wish I had...', e um turning point que mudou sua vida -- terminando com 'no regrets'. Preview: aula 18 abrira um novo arco.">
+<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 17 complete, Pricila -- you earned your Reflections Badge!' Homework (oralmente): esta semana, grave-se contando, em inglês, três coisas: uma viagem que você teria feito diferente (terceiro condicional), um arrependimento gentil com 'I wish I had...', e um turning point que mudou sua vida -- terminando com 'no regrets'. Preview: aula 18 abrira um novo arco.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1471,6 +1482,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;

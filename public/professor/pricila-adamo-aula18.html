@@ -536,7 +536,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -585,8 +591,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -772,7 +781,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 4: CH2 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transicao vocabulario (1 min):</strong> Diga: 'Thirteen words for confusing social moments abroad. Click each card to discover the meaning.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transição vocabulário (1 min):</strong> Diga: 'Thirteen words for confusing social moments abroad. Click each card to discover the meaning.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 2: Words for Misunderstandings</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Words for <span class="accent">Reading People</span></h2>
@@ -781,7 +790,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 5: VOCAB 1-4 ========== -->
-<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulario 1-4 (4 min):</strong> Leia a pista em ingles, Pricila adivinha, depois revele. Toque o audio. CCQ 'a faux pas': 'Is it a big crime, or a small social mistake about manners? (A small social mistake.)' CCQ 'to misread a situation': 'Did I understand the mood correctly, or wrongly? (Wrongly.)'">
+<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulário 1-4 (4 min):</strong> Leia a pista em inglês, Pricila adivinha, depois revele. Toque o áudio. CCQ 'a faux pas': 'Is it a big crime, or a small social mistake about manners? (A small social mistake.)' CCQ 'to misread a situation': 'Did I understand the mood correctly, or wrongly? (Wrongly.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
@@ -808,7 +817,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 6: VOCAB 5-8 ========== -->
-<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulario 5-8 (4 min):</strong> Mesma dinamica. CCQ 'to mean no harm': 'Did the person want to hurt me, or not? (Not at all.)' CCQ 'a culture clash': 'Is it a fight, or just friction between two different customs? (Friction between customs.)'">
+<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulário 5-8 (4 min):</strong> Mesma dinâmica. CCQ 'to mean no harm': 'Did the person want to hurt me, or not? (Not at all.)' CCQ 'a culture clash': 'Is it a fight, or just friction between two different customs? (Friction between customs.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">5-8</span></h2>
@@ -835,7 +844,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 7: VOCAB 9-13 ========== -->
-<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulario 9-13 (5 min):</strong> Mesma dinamica. CCQ 'body language': 'Are these words, or the messages from posture, hands and face? (From posture, hands, face.)' CCQ 'to lose face': 'Do I gain respect, or feel embarrassed in front of others? (Feel embarrassed.)' CCQ 'to read between the lines': 'Do I take the words literally, or find the hidden meaning? (Find the hidden meaning.)'">
+<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulário 9-13 (5 min):</strong> Mesma dinâmica. CCQ 'body language': 'Are these words, or the messages from posture, hands and face? (From posture, hands, face.)' CCQ 'to lose face': 'Do I gain respect, or feel embarrassed in front of others? (Feel embarrassed.)' CCQ 'to read between the lines': 'Do I take the words literally, or find the hidden meaning? (Find the hidden meaning.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">9-13</span></h2>
@@ -866,7 +875,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 8: PRONUNCIATION ========== -->
-<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada audio e peca que Pricila repita. Atencao a: 'faux pas' (FOH-pah, 's' mudo), a contracao 'must've' (MUST-uv, nao 'must of'), e o som de 'can't have' (KANT-uv), curto e firme.">
+<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada áudio e peça que Pricila repita. Atenção a: 'faux pas' (FOH-pah, 's' mudo), a contracao 'must've' (MUST-uv, nao 'must of'), e o som de 'can't have' (KANT-uv), curto e firme.">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Say It <span class="accent">Clearly</span></h2>
@@ -879,7 +888,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 9: CH3 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transicao gramatica (1 min):</strong> Diga: 'When we guess about the PAST -- what someone must have, might have, or can't have meant -- we need a special grammar. Let's find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transição gramática (1 min):</strong> Diga: 'When we guess about the PAST -- what someone must have, might have, or can't have meant -- we need a special grammar. Let's find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 3: Deducing the Past</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">How Sure Are You About <span class="accent">the Past?</span></h2>
@@ -888,7 +897,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 10: GRAMMAR DISCOVERY ========== -->
-<div class="slide slide-light" data-slide="10" data-phase="3" data-teacher="<strong>Descoberta (5 min):</strong> Toque os 4 exemplos. Pergunte: 'These all guess about the past -- but with different certainty. Find the pattern in the orange words.' Clique 'Reveal the Rule'. CONTRASTE com a Aula 5 (should/could/might no presente) e a Aula 17 (3o condicional, passado imaginario): aqui o passado e REAL, so nao sabemos o que aconteceu na cabeca do outro. CCQ: 'She must have misunderstood me -- am I 100% sure, or 95%? (About 95%, deducing.)' CCQ: 'They can't have meant it -- is it possible they meant it? (No, almost impossible.)'">
+<div class="slide slide-light" data-slide="10" data-phase="3" data-teacher="<strong>Descoberta (5 min):</strong> Toque os 4 exemplos. Pergunte: 'These all guess about the past -- but with different certainty. Find the pattern in the orange words.' Clique 'Reveal the Rule'. CONTRASTE com a Aula 5 (should/could/might no presente) e a Aula 17 (3o condicional, passado imaginario): aqui o passado e REAL, so não sabemos o que aconteceu na cabeca do outro. CCQ: 'She must have misunderstood me -- am I 100% sure, or 95%? (About 95%, deducing.)' CCQ: 'They can't have meant it -- is it possible they meant it? (No, almost impossible.)'">
   <div class="slide-inner">
     <div class="chapter-label">Discover the Code</div>
     <h2 class="slide-heading">Listen and <span class="accent">Find the Pattern</span></h2>
@@ -915,7 +924,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 11: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> Dois erros classicos: (1) usar 'mustn't have' para certeza negativa (o certo e 'can't have'), e (2) dizer/escrever 'must of' em vez de 'must have'. Mostre certo (verde) vs errado (vermelho). Peca que Pricila leia as versoes corretas 2x.">
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> Dois erros classicos: (1) usar 'mustn't have' para certeza negativa (o certo e 'can't have'), e (2) dizer/escrever 'must of' em vez de 'must have'. Mostre certo (verde) vs errado (vermelho). Peça que Pricila leia as versoes corretas 2x.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Wrong vs <span class="accent">Right</span></h2>
@@ -934,7 +943,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: GRAMMAR PRACTICE FILL ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Pratica de gramatica (3 min):</strong> Leia cada frase. Pricila completa o modal de deducao EM VOZ ALTA antes de clicar para revelar. Se travar, lembre: certeza positiva = must have; possivel = might have; certeza negativa = can't have.">
+<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Prática de gramática (3 min):</strong> Leia cada frase. Pricila completa o modal de deducao EM VOZ ALTA antes de clicar para revelar. Se travar, lembre: certeza positiva = must have; possível = might have; certeza negativa = can't have.">
   <div class="slide-inner">
     <div class="chapter-label">Grammar Practice</div>
     <h2 class="slide-heading">Complete the <span class="accent">Deduction</span></h2>
@@ -950,7 +959,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: CH4 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transicao contexto (1 min):</strong> Diga: 'Now Pricila and a friend make sense of a confusing moment abroad. Listen for must have, might have, and can't have.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transição contexto (1 min):</strong> Diga: 'Now Pricila and a friend make sense of a confusing moment abroad. Listen for must have, might have, and can't have.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: A Culture Clash</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Making Sense of It <span class="accent">Together</span></h2>
@@ -959,7 +968,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Dialogo (6 min):</strong> Pricila e um amigo (Daniel) tentam entender um mal-entendido. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peca que ELA fale primeiro, depois toque o audio. Repare nos modais de deducao no passado e em 'a faux pas' / 'benefit of the doubt'.">
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Diálogo (6 min):</strong> Pricila e um amigo (Daniel) tentam entender um mal-entendido. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peça que ELA fale primeiro, depois toque o áudio. Repare nos modais de deducao no passado e em 'a faux pas' / 'benefit of the doubt'.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">The Business Card <span class="accent">Moment</span></h2>
@@ -976,7 +985,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: COMPREHENSION ========== -->
-<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Compreensao (2 min):</strong> Perguntas sobre o que DANIEL (o amigo) disse no dialogo. Clique para revelar cada resposta depois que Pricila responder.">
+<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Compreensão (2 min):</strong> Perguntas sobre o que DANIEL (o amigo) disse no diálogo. Clique para revelar cada resposta depois que Pricila responder.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About the <span class="accent">Conversation</span></h2>
@@ -989,7 +998,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Pricila tells the story of a misunderstanding in Japan and deduces what really happened.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o audio termina. 0.75x se pedir.">
+<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Pricila tells the story of a misunderstanding in Japan and deduces what really happened.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o áudio termina. 0.75x se pedir.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">The Business Card in <span class="accent">Japan</span></h2>
@@ -1019,7 +1028,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now a friend leaves Pricila a voice note explaining the custom she can't have known.' Toque 2 vezes. As perguntas aparecem ao fim do audio.">
+<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now a friend leaves Pricila a voice note explaining the custom she can't have known.' Toque 2 vezes. As perguntas aparecem ao fim do áudio.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">The Custom You <span class="accent">Couldn't Have Known</span></h2>
@@ -1049,7 +1058,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: B2 READING + GIST ========== -->
-<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faca a pergunta de gist. Pricila clica a alternativa -- o card certo fica verde. NAO peca traducao palavra a palavra. Foco nos modais de deducao: 'she must have misunderstood me', 'he can't have been angry'.">
+<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faça a pergunta de gist. Pricila clica a alternativa -- o card certo fica verde. NÃO peça tradução palavra a palavra. Foco nos modais de deducao: 'she must have misunderstood me', 'he can't have been angry'.">
   <div class="slide-inner">
     <div class="chapter-label">Read for the Main Idea</div>
     <h2 class="slide-heading">What Did They <span class="accent">Really Mean?</span></h2>
@@ -1059,17 +1068,19 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: B2 TRUE/FALSE ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma esta certa ou errada -- volte ao texto.">
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma está certa ou errada -- volte ao texto.">
   <div class="slide-inner">
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer says a gesture meant warmly can sometimes land as cold in another culture.<span class="ic-just">&#8594; A gesture meant warmly can land as cold.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">According to the writer, the best traveller is the one who never makes a faux pas.<span class="ic-just">&#8594; Not the one who never makes a faux pas, but the one who knows how to think about them afterwards.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer warns that the anxious mind tends to fill a silence with the worst story.<span class="ic-just">&#8594; The quick, anxious mind fills the silence with the worst story: I must have offended them.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer says giving the benefit of the doubt means being naive about everyone.<span class="ic-just">&#8594; It does not mean being naive; it means remembering that custom shifts and most people mean no harm.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">What did they really mean?</div><p>Travel throws strangers together, and strangers are hard to read. A pause that means nothing at home can feel like an insult abroad; a gesture meant warmly can land as cold. The traveller who survives these moments is not the one who never makes a faux pas, but the one who knows how to think about them afterwards. And the grammar of that thinking is the past modal of deduction: she must have misunderstood me; he can't have meant it rudely; they might have a different custom. We did not see what happened inside the other person's head, so we deduce it -- with more or less certainty -- from the little we did see.</p><p>The trap is to jump to conclusions. When a host goes quiet, or a waiter frowns, or a colleague does not shake your hand, the quick, anxious mind fills the silence with the worst story: I must have offended them. But the same evidence usually supports a kinder reading. He can't have been angry -- he was smiling a moment later. She might have simply been tired, or shy, or unsure of the language. To read between the lines is to hold two or three of these explanations at once, and to lean toward the generous one until the facts say otherwise.</p><p>That generous lean has a name: giving the benefit of the doubt. It does not mean being naive. It means remembering that body language and custom shift from one country to the next, that an awkward silence is rarely an accusation, and that most people, most of the time, mean no harm. When a culture clash does happen, the skilled traveller does not lose face by panicking. They smooth things over with a question and a smile -- and quietly file the moment away as one more thing they now know how to read.</p><div class="ic-src">Adapted for class use <a href="https://www.bbc.com/travel" target="_blank" rel="noopener">https://www.bbc.com/travel</a></div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer says a gesture meant warmly can sometimes land as cold in another culture.<span class="ic-just">&#8594; A gesture meant warmly can land as cold.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">According to the writer, the best traveller is the one who never makes a faux pas.<span class="ic-just">&#8594; Not the one who never makes a faux pas, but the one who knows how to think about them afterwards.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer warns that the anxious mind tends to fill a silence with the worst story.<span class="ic-just">&#8594; The quick, anxious mind fills the silence with the worst story: I must have offended them.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer says giving the benefit of the doubt means being naive about everyone.<span class="ic-just">&#8594; It does not mean being naive; it means remembering that custom shifts and most people mean no harm.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
 <!-- ========== SLIDE 20: B2 MATCHING ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Matching (3 min):</strong> Pricila liga cada expressao a sua definicao em voz alta. As colunas estao embaralhadas de proposito. Confira juntos e peca um exemplo proprio para duas delas.">
+<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Matching (3 min):</strong> Pricila liga cada expressão a sua definicao em voz alta. As colunas estao embaralhadas de propósito. Confira juntos e peça um exemplo próprio para duas delas.">
   <div class="slide-inner">
     <div class="chapter-label">Match the Meaning</div>
     <h2 class="slide-heading">Expressions &amp; <span class="accent">Meanings</span></h2>
@@ -1078,7 +1089,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: CERTAINTY SCALE BRIDGE ========== -->
-<div class="slide slide-light" data-slide="21" data-phase="5" data-teacher="<strong>Escala de certeza (3 min):</strong> Reforce a diferenca de certeza. must have = quase certo que SIM. might/could have = possivel. can't have = quase certo que NAO. Peca que Pricila diga uma frase de cada nivel sobre o mesmo momento (o silencio do colega).">
+<div class="slide slide-light" data-slide="21" data-phase="5" data-teacher="<strong>Escala de certeza (3 min):</strong> Reforce a diferença de certeza. must have = quase certo que SIM. might/could have = possível. can't have = quase certo que NÃO. Peça que Pricila diga uma frase de cada nível sobre o mesmo momento (o silencio do colega).">
   <div class="slide-inner">
     <div class="chapter-label">How Sure Are You?</div>
     <h2 class="slide-heading">The Certainty <span class="accent">Scale</span></h2>
@@ -1101,7 +1112,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="22" data-phase="5" data-teacher="<strong>Transicao pratica (1 min):</strong> Diga: 'Now we train: fix the mistakes, rewrite as deductions, check the key, and reflect.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="22" data-phase="5" data-teacher="<strong>Transição prática (1 min):</strong> Diga: 'Now we train: fix the mistakes, rewrite as deductions, check the key, and reflect.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train the <span class="accent">Deduction</span></h2>
@@ -1146,7 +1157,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: B2 ANALYSE ========== -->
-<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Analyse (4 min):</strong> Perguntas de leitura critica sobre o texto e o uso dos modais de deducao. Pricila responde em voz alta, com suas proprias palavras. Sem gabarito unico -- e producao e reflexao. Estimule frases completas.">
+<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Analyse (4 min):</strong> Perguntas de leitura critica sobre o texto e o uso dos modais de deducao. Pricila responde em voz alta, com suas proprias palavras. Sem gabarito único -- e produção e reflexao. Estimule frases completas.">
   <div class="slide-inner">
     <div class="chapter-label">Close Reading</div>
     <h2 class="slide-heading">Why Read People <span class="accent">Generously?</span></h2>
@@ -1155,7 +1166,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="27" data-phase="6" data-teacher="<strong>Transicao producao (1 min):</strong> Diga: 'Now the big mission: tell about a confusing moment abroad and deduce what really happened, in three steps. Ready?' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="27" data-phase="6" data-teacher="<strong>Transição produção (1 min):</strong> Diga: 'Now the big mission: tell about a confusing moment abroad and deduce what really happened, in three steps. Ready?' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Decode a <span class="accent">Moment</span></h2>
@@ -1164,7 +1175,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="28" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Voce e um amigo. Pricila descreve um momento confuso com um estranho abroad, e voces deduzem juntos o que aconteceu. Deixe-a usar os modais de deducao com as frases-chave.">
+<div class="slide slide-light" data-slide="28" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Você e um amigo. Pricila descreve um momento confuso com um estranho abroad, e vocês deduzem juntos o que aconteceu. Deixe-a usar os modais de deducao com as frases-chave.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">The Confusing <span class="accent">Moment</span></h2>
@@ -1198,7 +1209,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 30: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Pratica livre (5 min):</strong> A missao da aula: ler uma pessoa ou situacao confusa e deduzir o que aconteceu, com generosidade. ZERO pistas. NAO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
+<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Prática livre (5 min):</strong> A missao da aula: ler uma pessoa ou situação confusa e deduzir o que aconteceu, com generosidade. ZERO pistas. NÃO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Reading People <span class="accent">Generously</span></h2>
@@ -1210,7 +1221,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: ARTIFACT (TRAVEL TIP CARD) ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Artefato (3 min):</strong> Mostre o cartao de dicas culturais. Peca que Pricila leia em voz alta deduzindo o que um viajante 'must have' / 'can't have' feito errado, e identifique cada faux pas. Use as perguntas embaixo.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Artefato (3 min):</strong> Mostre o cartao de dicas culturais. Peça que Pricila leia em voz alta deduzindo o que um viajante 'must have' / 'can't have' feito errado, e identifique cada faux pas. Use as perguntas embaixo.">
   <div class="slide-inner">
     <div class="chapter-label">Read the Card</div>
     <h2 class="slide-heading">Pricila's <span class="accent">Culture Notes</span></h2>
@@ -1227,7 +1238,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 32: SURVIVAL CARD ========== -->
-<div class="slide slide-dark" data-slide="32" data-phase="7" data-teacher="<strong>Survival Card (2 min):</strong> Toque cada frase e peca que Pricila repita. Sao as 5 frases-chave que ela leva da aula.">
+<div class="slide slide-dark" data-slide="32" data-phase="7" data-teacher="<strong>Survival Card (2 min):</strong> Toque cada frase e peça que Pricila repita. Sao as 5 frases-chave que ela leva da aula.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Survival Card</div>
     <h2 class="slide-heading" style="color:#fff">Phrases to <span class="accent">Keep</span></h2>
@@ -1242,7 +1253,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 33: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transicao fechamento (1 min):</strong> Diga: 'A lesson on reading people done. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transição fechamento (1 min):</strong> Diga: 'A lesson on reading people done. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Reading <span class="accent">People</span></h2>
@@ -1265,7 +1276,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 35: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 18 complete, Pricila -- you earned your Reading People Badge!' Homework (oralmente): esta semana, grave-se contando, em ingles, um momento confuso com alguem (de viagem ou da vida) e deduza, usando 'must have', 'might have' e 'can't have', o que a pessoa realmente quis dizer -- terminando com 'I gave them the benefit of the doubt'. Preview: aula 19 -- Telling Stories: making your travel tales come alive (narrative tenses).">
+<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 18 complete, Pricila -- you earned your Reading People Badge!' Homework (oralmente): esta semana, grave-se contando, em inglês, um momento confuso com alguem (de viagem ou da vida) e deduza, usando 'must have', 'might have' e 'can't have', o que a pessoa realmente quis dizer -- terminando com 'I gave them the benefit of the doubt'. Preview: aula 19 -- Telling Stories: making your travel tales come alive (narrative tenses).">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1475,6 +1486,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;

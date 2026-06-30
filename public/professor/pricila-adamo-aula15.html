@@ -535,7 +535,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -584,8 +590,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -744,7 +753,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 2: WARM-UP ========== -->
-<div class="slide slide-dark" data-slide="2" data-phase="1" data-teacher="<strong>Gancho + callback (3 min):</strong> Relembre a Aula 14 SEM traduzir: 'Last class you made real plans to stay in touch after a trip.' Hoje: e quando o proprio plano da errado? Pergunte: 'Has a trip ever gone wrong for you -- a cancelled flight, a lost booking, bad weather? What happened, and how did you cope?' CCQ: 'If a flight is cancelled, is the trip automatically ruined, or can I still cope and carry on? (I can still cope.)'">
+<div class="slide slide-dark" data-slide="2" data-phase="1" data-teacher="<strong>Gancho + callback (3 min):</strong> Relembre a Aula 14 SEM traduzir: 'Last class you made real plans to stay in touch after a trip.' Hoje: e quando o próprio plano da errado? Pergunte: 'Has a trip ever gone wrong for you -- a cancelled flight, a lost booking, bad weather? What happened, and how did you cope?' CCQ: 'If a flight is cancelled, is the trip automatically ruined, or can I still cope and carry on? (I can still cope.)'">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Warm-up</div>
     <h2 class="slide-heading" style="color:#fff">When It All Goes <span class="accent">Wrong</span></h2>
@@ -766,7 +775,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 4: VOCAB TRANSITION ========== -->
-<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transicao vocabulario (1 min):</strong> Diga: 'Fourteen phrases for coping when life throws you a surprise. Click each card to discover.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transição vocabulário (1 min):</strong> Diga: 'Fourteen phrases for coping when life throws you a surprise. Click each card to discover.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 2: Words for Coping</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Words for the <span class="accent">Unexpected</span></h2>
@@ -774,7 +783,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 5: VOCAB 1-4 ========== -->
-<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulario 1-4 (4 min):</strong> Leia a pista em ingles, Pricila adivinha, depois revele. Toque o audio. CCQ 'to go pear-shaped': 'Does it mean a plan goes well, or goes wrong? (Goes wrong.)' CCQ 'a hiccup': 'Is it a huge disaster, or a small, temporary problem? (Small and temporary.)' CCQ 'to keep your cool': 'Do you panic, or stay calm under pressure? (Stay calm.)'">
+<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulário 1-4 (4 min):</strong> Leia a pista em inglês, Pricila adivinha, depois revele. Toque o áudio. CCQ 'to go pear-shaped': 'Does it mean a plan goes well, or goes wrong? (Goes wrong.)' CCQ 'a hiccup': 'Is it a huge disaster, or a small, temporary problem? (Small and temporary.)' CCQ 'to keep your cool': 'Do you panic, or stay calm under pressure? (Stay calm.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
@@ -797,7 +806,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 6: VOCAB 5-9 ========== -->
-<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulario 5-9 (5 min):</strong> Mesma dinamica. CCQ 'to think on your feet': 'Do you plan slowly in advance, or react and solve quickly in the moment? (React quickly in the moment.)' CCQ 'a contingency plan': 'A plan for the normal case, or a plan ready in case something goes wrong? (For if something goes wrong.)' CCQ 'a backup plan': 'Your only plan, or a second plan if the first fails? (A second plan.)' CCQ 'to fall through': 'Does a plan succeed, or fail to happen? (Fail to happen.)'">
+<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulário 5-9 (5 min):</strong> Mesma dinâmica. CCQ 'to think on your feet': 'Do you plan slowly in advance, or react and solve quickly in the moment? (React quickly in the moment.)' CCQ 'a contingency plan': 'A plan for the normal case, or a plan ready in case something goes wrong? (For if something goes wrong.)' CCQ 'a backup plan': 'Your only plan, or a second plan if the first fails? (A second plan.)' CCQ 'to fall through': 'Does a plan succeed, or fail to happen? (Fail to happen.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">5-9</span></h2>
@@ -823,7 +832,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 7: VOCAB 10-14 ========== -->
-<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulario 10-14 (5 min):</strong> Mesma dinamica. CCQ 'to roll with the punches': 'Do you fight every problem, or adapt calmly and keep going? (Adapt and keep going.)' CCQ 'to take it in your stride': 'Do you get very upset, or deal with it calmly without stress? (Calmly, without stress.)' CCQ 'to weather the storm': 'To give up during hard times, or to survive them and come out the other side? (Survive and come out the other side.)' CCQ 'to be caught off guard': 'Ready and prepared, or surprised and unprepared? (Surprised and unprepared.)' CCQ 'a worst-case scenario': 'The best possible result, or the worst thing that could happen? (The worst thing.)'">
+<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulário 10-14 (5 min):</strong> Mesma dinâmica. CCQ 'to roll with the punches': 'Do you fight every problem, or adapt calmly and keep going? (Adapt and keep going.)' CCQ 'to take it in your stride': 'Do you get very upset, or deal with it calmly without stress? (Calmly, without stress.)' CCQ 'to weather the storm': 'To give up during hard times, or to survive them and come out the other side? (Survive and come out the other side.)' CCQ 'to be caught off guard': 'Ready and prepared, or surprised and unprepared? (Surprised and unprepared.)' CCQ 'a worst-case scenario': 'The best possible result, or the worst thing that could happen? (The worst thing.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">10-14</span></h2>
@@ -849,7 +858,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 8: PRONUNCIATION ========== -->
-<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada audio e peca que Pricila repita. Atencao ao linking de 'roll with the punches' (roll-with-the) e 'take it in your stride' (ta-ki-tin), e ao ritmo de 'caught off guard' (caw-toff-guard).">
+<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada áudio e peça que Pricila repita. Atenção ao linking de 'roll with the punches' (roll-with-the) e 'take it in your stride' (ta-ki-tin), e ao ritmo de 'caught off guard' (caw-toff-guard).">
   <div class="slide-inner">
     <div class="chapter-label">Pronunciation</div>
     <h2 class="slide-heading">Say It <span class="accent">Clearly</span></h2>
@@ -862,7 +871,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 9: GRAMMAR TRANSITION ========== -->
-<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transicao gramatica (1 min):</strong> Diga: 'When we imagine a problem that is not real now, English uses a special pattern. Let's find it.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transição gramática (1 min):</strong> Diga: 'When we imagine a problem that is not real now, English uses a special pattern. Let's find it.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 3: What Would You Do?</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">If This <span class="accent">Happened...</span></h2>
@@ -895,7 +904,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 11: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> O erro classico: usar 'would' DEPOIS de 'if'. Mostre certo (verde) vs errado (vermelho). O segundo erro: usar 'was' em vez de 'were' no hipotetico. Peca que Pricila leia as versoes corretas 2x.">
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> O erro classico: usar 'would' DEPOIS de 'if'. Mostre certo (verde) vs errado (vermelho). O segundo erro: usar 'was' em vez de 'were' no hipotetico. Peça que Pricila leia as versoes corretas 2x.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Wrong vs <span class="accent">Right</span></h2>
@@ -915,7 +924,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: GRAMMAR PRACTICE ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Pratica (3 min):</strong> Leia cada frase. Pricila escolhe a forma certa EM VOZ ALTA antes de clicar para revelar. Lembre: depois de if = passado simples; would so no resultado; were para o hipotetico.">
+<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Prática (3 min):</strong> Leia cada frase. Pricila escolhe a forma certa EM VOZ ALTA antes de clicar para revelar. Lembre: depois de if = passado simples; would so no resultado; were para o hipotetico.">
   <div class="slide-inner">
     <div class="chapter-label">Grammar Practice</div>
     <h2 class="slide-heading">Choose the <span class="accent">Right Form</span></h2>
@@ -929,7 +938,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: CONTEXT TRANSITION ========== -->
-<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transicao contexto (1 min):</strong> Diga: 'It's midnight at a foreign airport. Pricila's flight is cancelled, and a fellow traveller helps her stay calm.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transição contexto (1 min):</strong> Diga: 'It's midnight at a foreign airport. Pricila's flight is cancelled, and a fellow traveller helps her stay calm.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: A Crisis Abroad</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Midnight at the <span class="accent">Airport</span></h2>
@@ -937,7 +946,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Dialogo (6 min):</strong> A Pricila e um viajante experiente conversam apos um voo cancelado a meia-noite. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peca que ELA fale primeiro, depois toque o audio. Repare nas expressoes de coping e no second conditional.">
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Diálogo (6 min):</strong> A Pricila e um viajante experiente conversam após um voo cancelado a meia-noite. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peça que ELA fale primeiro, depois toque o áudio. Repare nas expressões de coping e no second conditional.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">When the Flight <span class="accent">Falls Through</span></h2>
@@ -954,7 +963,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: COMPREHENSION (DIALOGUE) ========== -->
-<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Compreensao (2 min):</strong> Perguntas sobre o viajante (T) no dialogo. Clique para revelar cada resposta depois que Pricila responder.">
+<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Compreensão (2 min):</strong> Perguntas sobre o viajante (T) no diálogo. Clique para revelar cada resposta depois que Pricila responder.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About the <span class="accent">Conversation</span></h2>
@@ -967,7 +976,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'You hear Pricila tell the story of the night a perfect trip fell through.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o audio termina. 0.75x se pedir.">
+<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'You hear Pricila tell the story of the night a perfect trip fell through.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o áudio termina. 0.75x se pedir.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">The Night It <span class="accent">Fell Through</span></h2>
@@ -997,7 +1006,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now a friend leaves Pricila a voice note with advice before her next trip.' Toque 2 vezes. As perguntas aparecem ao fim do audio.">
+<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now a friend leaves Pricila a voice note with advice before her next trip.' Toque 2 vezes. As perguntas aparecem ao fim do áudio.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">A Word of <span class="accent">Advice</span></h2>
@@ -1027,7 +1036,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: B2 READING + GIST ========== -->
-<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faca a pergunta de gist. Pricila clica a alternativa -- o card certo fica verde. NAO peca traducao palavra a palavra.">
+<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faça a pergunta de gist. Pricila clica a alternativa -- o card certo fica verde. NÃO peça tradução palavra a palavra.">
   <div class="slide-inner">
     <div class="chapter-label">Read for the Main Idea</div>
     <h2 class="slide-heading">A Trip That <span class="accent">Went Wrong</span></h2>
@@ -1037,17 +1046,19 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: B2 TRUE/FALSE ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma esta certa ou errada -- volte ao texto.">
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma está certa ou errada -- volte ao texto.">
   <div class="slide-inner">
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer's connecting flight, onward booking and hotel room all failed on the same night.<span class="ic-just">&#8594; The flight was cancelled, the airline had no record of the booking, and the hotel had given the room away.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">At first, the writer was able to think on their feet and solve everything calmly.<span class="ic-just">&#8594; For a few minutes the writer could not think on their feet at all and just stared at the board.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer built a contingency plan with a new route, a cheaper hotel and a backup option.<span class="ic-just">&#8594; They planned a new route home, a cheaper hotel two streets away, and a backup plan in case that fell through.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">Looking back, the writer regrets the trip and wishes it had been smooth.<span class="ic-just">&#8594; The writer says the trip taught them more about themselves than any smooth holiday could.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The flight that fell through</div><p>Halfway through what was meant to be a relaxing trip, everything went pear-shaped at once. My connecting flight was cancelled, the airline had no record of my onward booking, and the only hotel I had reserved for that night had quietly given my room away. Standing in a foreign airport at midnight, jet-lagged and exhausted, I felt the panic rising. For a few minutes I could not think on my feet at all; I just stared at the departure board as if it might fix itself.</p><p>Then something my mother used to say came back to me: when a trip goes wrong, the journey is not ruined -- it just changes shape. So I made do with what I had. I took it in my stride, kept my cool, and worked the problem one piece at a time. I found a quiet corner, charged my phone, and built a quick contingency plan: a new route home, a cheaper hotel two streets away, and a backup plan in case that one fell through too. By the time the sun came up, I had weathered the storm, and the curveball had somehow become the best story of the whole trip.</p><p>Looking back, the trip taught me more about myself than any smooth holiday ever could. If it happened again tomorrow, I would not panic the way I did at first. I would breathe, accept the hiccup, and trust that I can roll with the punches. The unexpected is not the enemy of a good journey; very often, it is the part you remember most.</p><div class="ic-src">Adapted for class use <a href="https://www.bbc.com/travel" target="_blank" rel="noopener">https://www.bbc.com/travel</a></div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer's connecting flight, onward booking and hotel room all failed on the same night.<span class="ic-just">&#8594; The flight was cancelled, the airline had no record of the booking, and the hotel had given the room away.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">At first, the writer was able to think on their feet and solve everything calmly.<span class="ic-just">&#8594; For a few minutes the writer could not think on their feet at all and just stared at the board.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer built a contingency plan with a new route, a cheaper hotel and a backup option.<span class="ic-just">&#8594; They planned a new route home, a cheaper hotel two streets away, and a backup plan in case that fell through.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">Looking back, the writer regrets the trip and wishes it had been smooth.<span class="ic-just">&#8594; The writer says the trip taught them more about themselves than any smooth holiday could.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
 <!-- ========== SLIDE 20: B2 SCENARIOS ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Cenarios (4 min):</strong> Para cada situacao, Pricila reage EM VOZ ALTA com um second conditional ('If that happened, I would...'). Espere a frase completa. Estimule pelo menos uma expressao nova por resposta.">
+<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Cenarios (4 min):</strong> Para cada situação, Pricila reage EM VOZ ALTA com um second conditional ('If that happened, I would...'). Espere a frase completa. Estimule pelo menos uma expressão nova por resposta.">
   <div class="slide-inner">
     <div class="chapter-label">What Would You Do?</div>
     <h2 class="slide-heading">React with a <span class="accent">Hypothetical</span></h2>
@@ -1057,7 +1068,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: B2 LANGUAGE FOCUS (lf) ========== -->
-<div class="slide slide-light" data-slide="21" data-phase="4" data-teacher="<strong>Foco de linguagem (3 min):</strong> Compare como soa quem esta calmo (soft) e quem esta ansioso (strong). Peca que Pricila leia as versoes calmas em voz alta, sentindo o tom tranquilizador. Repare que as frases calmas usam as expressoes da aula.">
+<div class="slide slide-light" data-slide="21" data-phase="4" data-teacher="<strong>Foco de linguagem (3 min):</strong> Compare como soa quem esta calmo (soft) e quem esta ansioso (strong). Peça que Pricila leia as versoes calmas em voz alta, sentindo o tom tranquilizador. Repare que as frases calmas usam as expressões da aula.">
   <div class="slide-inner">
     <div class="chapter-label">Language Focus</div>
     <h2 class="slide-heading">Calm vs <span class="accent">Anxious</span></h2>
@@ -1067,7 +1078,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: B2 REPHRASE ========== -->
-<div class="slide slide-light" data-slide="22" data-phase="4" data-teacher="<strong>Rephrase (4 min):</strong> Pricila transforma cada frase real (first conditional) em hipotetica (second conditional), EM VOZ ALTA, antes de ver o gabarito (slide seguinte). Foco: passado simples apos if, would no resultado, were no hipotetico.">
+<div class="slide slide-light" data-slide="22" data-phase="4" data-teacher="<strong>Rephrase (4 min):</strong> Pricila transforma cada frase real (first conditional) em hipotetica (second conditional), EM VOZ ALTA, antes de ver o gabarito (slide seguinte). Foco: passado simples após if, would no resultado, were no hipotetico.">
   <div class="slide-inner">
     <div class="chapter-label">Say It Another Way</div>
     <h2 class="slide-heading">Make It <span class="accent">Hypothetical</span></h2>
@@ -1077,7 +1088,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: B2 ANSWER KEY ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="4" data-teacher="<strong>Answer key (2 min):</strong> So depois que Pricila tentar TODAS as frases do rephrase em voz alta, clique para abrir o gabarito e compare junto com ela. Confira: passado simples apos if, would no resultado, were no hipotetico.">
+<div class="slide slide-light" data-slide="23" data-phase="4" data-teacher="<strong>Answer key (2 min):</strong> So depois que Pricila tentar TODAS as frases do rephrase em voz alta, clique para abrir o gabarito e compare junto com ela. Confira: passado simples após if, would no resultado, were no hipotetico.">
   <div class="slide-inner">
     <div class="chapter-label">Check Your Answers</div>
     <h2 class="slide-heading">Rephrase <span class="accent">Answer Key</span></h2>
@@ -1088,7 +1099,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="24" data-phase="5" data-teacher="<strong>Transicao pratica (1 min):</strong> Diga: 'Now we train: fix the if/would errors, analyse the story closely, then read a real travel diary.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="24" data-phase="5" data-teacher="<strong>Transição prática (1 min):</strong> Diga: 'Now we train: fix the if/would errors, analyse the story closely, then read a real travel diary.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Make It <span class="accent">Stick</span></h2>
@@ -1112,7 +1123,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: CLOSE READING (analyse) ========== -->
-<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Leitura atenta (4 min):</strong> Volte ao texto da leitura. Pricila responde cada pergunta de analise apontando a parte exata do texto. Estimule respostas completas, usando o vocabulario novo.">
+<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Leitura atenta (4 min):</strong> Volte ao texto da leitura. Pricila responde cada pergunta de análise apontando a parte exata do texto. Estimule respostas completas, usando o vocabulário novo.">
   <div class="slide-inner">
     <div class="chapter-label">Close Reading</div>
     <h2 class="slide-heading">Read Between the <span class="accent">Lines</span></h2>
@@ -1121,7 +1132,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: ARTIFACT / TRAVEL DIARY ========== -->
-<div class="slide slide-light" data-slide="27" data-phase="5" data-teacher="<strong>O artefato (4 min):</strong> Mostre a pagina de diario de viagem. Pricila le em voz alta, identifica as expressoes novas e o second conditional, e responde as perguntas. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="27" data-phase="5" data-teacher="<strong>O artefato (4 min):</strong> Mostre a página de diario de viagem. Pricila lê em voz alta, identifica as expressões novas e o second conditional, e responde as perguntas. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">A Real Page</div>
     <h2 class="slide-heading">A Travel <span class="accent">Diary</span></h2>
@@ -1142,7 +1153,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: BANK / USEFUL LANGUAGE ========== -->
-<div class="slide slide-light" data-slide="28" data-phase="5" data-teacher="<strong>Banco de frases (2 min):</strong> Frases prontas para lidar com o inesperado. Leia cada uma com Pricila e peca que ela escolha 2 ou 3 que usaria numa viagem real. Use como apoio na producao a seguir.">
+<div class="slide slide-light" data-slide="28" data-phase="5" data-teacher="<strong>Banco de frases (2 min):</strong> Frases prontas para lidar com o inesperado. Leia cada uma com Pricila e peça que ela escolha 2 ou 3 que usaria numa viagem real. Use como apoio na produção a seguir.">
   <div class="slide-inner">
     <div class="chapter-label">Ready-to-Use Phrases</div>
     <h2 class="slide-heading">Your <span class="accent">Toolkit</span></h2>
@@ -1153,7 +1164,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 29: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="29" data-phase="6" data-teacher="<strong>Transicao producao (1 min):</strong> Diga: 'Now the big mission: handle a crisis abroad and talk about what you would do -- from guided to free.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="29" data-phase="6" data-teacher="<strong>Transição produção (1 min):</strong> Diga: 'Now the big mission: handle a crisis abroad and talk about what you would do -- from guided to free.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Handle the <span class="accent">Crisis</span></h2>
@@ -1162,7 +1173,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 30: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Voce e o agente da companhia aerea. O voo da Pricila foi cancelado. Ela mantem a calma, explica o problema e propoe uma solucao, usando ao menos uma expressao nova e um second conditional. Deixe-a falar com calma.">
+<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Você e o agente da companhia aerea. O voo da Pricila foi cancelado. Ela mantem a calma, explica o problema e propoe uma solucao, usando ao menos uma expressão nova e um second conditional. Deixe-a falar com calma.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">At the <span class="accent">Airline Desk</span></h2>
@@ -1179,7 +1190,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Role-play semi-livre (4 min):</strong> A Pricila aconselha uma amiga nervosa que esta prestes a viajar pela primeira vez. Menos apoio. Estimule 'If I were you, I would...' + pelo menos duas expressoes novas.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Role-play semi-livre (4 min):</strong> A Pricila aconselha uma amiga nervosa que esta prestes a viajar pela primeira vez. Menos apoio. Estimule 'If I were you, I would...' + pelo menos duas expressões novas.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Calm a Nervous <span class="accent">Friend</span></h2>
@@ -1196,7 +1207,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 32: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="32" data-phase="6" data-teacher="<strong>Pratica livre (5 min):</strong> A missao da aula: a Pricila grava ou conta uma historia de um minuto sobre uma vez em que algo deu errado numa viagem (real ou imaginaria), e o que ela faria diferente hoje, com pelo menos dois second conditionals e quatro expressoes novas. ZERO apoio. NAO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
+<div class="slide slide-light" data-slide="32" data-phase="6" data-teacher="<strong>Prática livre (5 min):</strong> A missao da aula: a Pricila grava ou conta uma história de um minuto sobre uma vez em que algo deu errado numa viagem (real ou imaginaria), e o que ela faria diferente hoje, com pelo menos dois second conditionals e quatro expressões novas. ZERO apoio. NÃO interrompa. Anote os erros para o feedback. CELEBRE bastante.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Your Own <span class="accent">Story</span></h2>
@@ -1208,7 +1219,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 33: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transicao fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transição fechamento (1 min):</strong> Diga: 'Mission complete. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Mission <span class="accent">Complete</span></h2>
@@ -1231,7 +1242,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 35: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 15 complete, Pricila! You earned your Resilience Badge -- you can handle whatever a trip throws at you now!' Homework (oralmente): esta semana, escreva ou grave em ingles uma historia curta (5-6 frases) sobre uma vez em que algo deu errado, ou o que voce faria numa situacao imaginaria, usando ao menos dois second conditionals e quatro expressoes novas. Proxima aula: aula 16 -- Looking Back & Looking Ahead.">
+<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 15 complete, Pricila! You earned your Resilience Badge -- you can handle whatever a trip throws at you now!' Homework (oralmente): esta semana, escreva ou grave em inglês uma história curta (5-6 frases) sobre uma vez em que algo deu errado, ou o que você faria numa situação imaginaria, usando ao menos dois second conditionals e quatro expressões novas. Próxima aula: aula 16 -- Looking Back & Looking Ahead.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1441,6 +1452,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;

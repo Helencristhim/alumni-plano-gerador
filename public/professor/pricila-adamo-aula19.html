@@ -539,7 +539,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
 /* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; }
+.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
+.ic-reading::-webkit-scrollbar { width: 8px; }
+.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
+.ic-textbtn:hover { border-color: var(--accent); }
+.ic-reading.ic-collapsed { display: none; }
+.ic-reading.ic-collapsed.ic-open { display: block; }
 .ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
 .ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
 .ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
@@ -588,8 +594,11 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-tfrow .ic-qnum { background: #003080; }
 .ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
 .ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-tfrow.ic-revealed .ic-verdict.ic-t { opacity: 1; background: var(--success-bg); color: var(--success); }
-.ic-tfrow.ic-revealed .ic-verdict.ic-f { opacity: 1; background: var(--danger-bg); color: var(--danger); }
+.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
+.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
+.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
+.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
+.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
 .ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
 .ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
 /* ===== reveal answer (accordion teacher-led) ===== */
@@ -776,7 +785,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 4: CH2 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transicao vocabulario (1 min):</strong> Diga: 'Thirteen expressions for talking about hobbies and the life you build. Click each card to discover the meaning.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="4" data-phase="2" data-teacher="<strong>Transição vocabulário (1 min):</strong> Diga: 'Thirteen expressions for talking about hobbies and the life you build. Click each card to discover the meaning.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 2: Words for Habits &amp; Hobbies</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Words for the Life <span class="accent">You're Building</span></h2>
@@ -785,7 +794,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 5: VOCAB 1-4 ========== -->
-<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulario 1-4 (4 min):</strong> Leia a pista em ingles, Pricila adivinha, depois revele. Toque o audio. CCQ 'to take up': 'Do I start a new hobby, or stop one? (Start.)' CCQ 'to give up': 'Do I keep the habit, or quit it? (Quit it.)'">
+<div class="slide slide-light" data-slide="5" data-phase="2" data-teacher="<strong>Vocabulário 1-4 (4 min):</strong> Leia a pista em inglês, Pricila adivinha, depois revele. Toque o áudio. CCQ 'to take up': 'Do I start a new hobby, or stop one? (Start.)' CCQ 'to give up': 'Do I keep the habit, or quit it? (Quit it.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">1-4</span></h2>
@@ -812,7 +821,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 6: VOCAB 5-8 ========== -->
-<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulario 5-8 (4 min):</strong> Mesma dinamica. CCQ 'a pastime': 'Is it work, or something I do for pleasure? (For pleasure.)' CCQ 'to unwind': 'Do I get stressed, or relax? (Relax.)'">
+<div class="slide slide-light" data-slide="6" data-phase="2" data-teacher="<strong>Vocabulário 5-8 (4 min):</strong> Mesma dinâmica. CCQ 'a pastime': 'Is it work, or something I do for pleasure? (For pleasure.)' CCQ 'to unwind': 'Do I get stressed, or relax? (Relax.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">5-8</span></h2>
@@ -839,7 +848,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 7: VOCAB 9-13 ========== -->
-<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulario 9-13 (5 min):</strong> Mesma dinamica. CCQ 'to make time for': 'Do I find time on purpose, or never do it? (Find time on purpose.)' CCQ 'an acquired taste': 'Do I like it at once, or only after a while? (Only after a while.)' CCQ 'to broaden your horizons': 'Does my world get smaller, or wider? (Wider.)'">
+<div class="slide slide-light" data-slide="7" data-phase="2" data-teacher="<strong>Vocabulário 9-13 (5 min):</strong> Mesma dinâmica. CCQ 'to make time for': 'Do I find time on purpose, or never do it? (Find time on purpose.)' CCQ 'an acquired taste': 'Do I like it at once, or only after a while? (Only after a while.)' CCQ 'to broaden your horizons': 'Does my world get smaller, or wider? (Wider.)'">
   <div class="slide-inner">
     <div class="chapter-label">Vocabulary &middot; New</div>
     <h2 class="slide-heading">Words <span class="accent">9-13</span></h2>
@@ -870,7 +879,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 8: PRONUNCIATION ========== -->
-<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada audio e peca que Pricila repita. Atencao a: a forma fraca 'to' (tuh) em 'decided to take up', o som ligado de 'into it' (IN-tuh-wit), e o ritmo de 'get the hang of it'.">
+<div class="slide slide-light" data-slide="8" data-phase="2" data-teacher="<strong>Pronuncia (3 min):</strong> Toque cada áudio e peça que Pricila repita. Atenção a: a forma fraca 'to' (tuh) em 'decided to take up', o som ligado de 'into it' (IN-tuh-wit), e o ritmo de 'get the hang of it'.">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Say It <span class="accent">Clearly</span></h2>
@@ -883,7 +892,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 9: CH3 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transicao gramatica (1 min):</strong> Diga: 'Some verbs are followed by -ing, some by to + verb. A few change meaning. Let's find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="9" data-phase="3" data-teacher="<strong>Transição gramática (1 min):</strong> Diga: 'Some verbs are followed by -ing, some by to + verb. A few change meaning. Let's find the pattern.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 3: Gerunds vs Infinitives</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">-ing or <span class="accent">to + verb?</span></h2>
@@ -892,7 +901,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 10: GRAMMAR DISCOVERY ========== -->
-<div class="slide slide-light" data-slide="10" data-phase="3" data-teacher="<strong>Descoberta (5 min):</strong> Toque os 4 exemplos. Pergunte: 'Look at the orange words -- some take -ing, some take to. Find the pattern.' Clique 'Reveal the Rule'. CCQ: 'After enjoy, do I say painting or to paint? (painting.)' CCQ: 'After decide, do I say take up or to take up? (to take up.)' Mostre a diferenca de SIGNIFICADO em stop: stop scrolling = parei de rolar a tela; stop to rest = parei PARA descansar.">
+<div class="slide slide-light" data-slide="10" data-phase="3" data-teacher="<strong>Descoberta (5 min):</strong> Toque os 4 exemplos. Pergunte: 'Look at the orange words -- some take -ing, some take to. Find the pattern.' Clique 'Reveal the Rule'. CCQ: 'After enjoy, do I say painting or to paint? (painting.)' CCQ: 'After decide, do I say take up or to take up? (to take up.)' Mostre a diferença de SIGNIFICADO em stop: stop scrolling = parei de rolar a tela; stop to rest = parei PARA descansar.">
   <div class="slide-inner">
     <div class="chapter-label">Discover the Code</div>
     <h2 class="slide-heading">Listen and <span class="accent">Find the Pattern</span></h2>
@@ -919,7 +928,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 11: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> Dois erros classicos: (1) 'enjoy to do' em vez de 'enjoy doing', e (2) usar 'stop doing' quando o sentido e PARAR PARA fazer (stop to do). Mostre certo (verde) vs errado (vermelho). Peca que Pricila leia as versoes corretas 2x.">
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>Erro comum (3 min):</strong> Dois erros classicos: (1) 'enjoy to do' em vez de 'enjoy doing', e (2) usar 'stop doing' quando o sentido e PARAR PARA fazer (stop to do). Mostre certo (verde) vs errado (vermelho). Peça que Pricila leia as versoes corretas 2x.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Wrong vs <span class="accent">Right</span></h2>
@@ -938,7 +947,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: GRAMMAR PRACTICE FILL ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Pratica de gramatica (3 min):</strong> Leia cada frase. Pricila diz a forma certa (-ing ou to + verbo) EM VOZ ALTA antes de clicar para revelar. Se travar, lembre as colunas da tabela.">
+<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Prática de gramática (3 min):</strong> Leia cada frase. Pricila diz a forma certa (-ing ou to + verbo) EM VOZ ALTA antes de clicar para revelar. Se travar, lembre as colunas da tabela.">
   <div class="slide-inner">
     <div class="chapter-label">Grammar Practice</div>
     <h2 class="slide-heading">-ing or <span class="accent">to + verb?</span></h2>
@@ -954,7 +963,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: CH4 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transicao contexto (1 min):</strong> Diga: 'Now Pricila and a friend talk about hobbies and finding balance. Listen for -ing and to + verb.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transição contexto (1 min):</strong> Diga: 'Now Pricila and a friend talk about hobbies and finding balance. Listen for -ing and to + verb.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: A Conversation About Hobbies</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">What Are You <span class="accent">Into?</span></h2>
@@ -963,7 +972,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Dialogo (6 min):</strong> Pricila e um amigo (Daniel) falam sobre hobbies. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peca que ELA fale primeiro, depois toque o audio. Repare nos padroes -ing vs to + verbo e no vocabulario da aula.">
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Diálogo (6 min):</strong> Pricila e um amigo (Daniel) falam sobre hobbies. Clique 'Next Line' para cada fala. Para cada fala da Pricila, peça que ELA fale primeiro, depois toque o áudio. Repare nos padrões -ing vs to + verbo e no vocabulário da aula.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">Taking Something <span class="accent">Up</span></h2>
@@ -980,7 +989,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: COMPREHENSION ========== -->
-<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Compreensao (2 min):</strong> Perguntas sobre o que DANIEL (o amigo) disse no dialogo. Clique para revelar cada resposta depois que Pricila responder.">
+<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Compreensão (2 min):</strong> Perguntas sobre o que DANIEL (o amigo) disse no diálogo. Clique para revelar cada resposta depois que Pricila responder.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About the <span class="accent">Conversation</span></h2>
@@ -993,7 +1002,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Pricila talks about the hobbies she gave up and took up, and the life she wants.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o audio termina. 0.75x se pedir.">
+<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Pricila talks about the hobbies she gave up and took up, and the life she wants.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o áudio termina. 0.75x se pedir.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">What I Do <span class="accent">for Fun</span></h2>
@@ -1023,7 +1032,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now a friend leaves Pricila a voice note about work-life balance and making time for hobbies.' Toque 2 vezes. As perguntas aparecem ao fim do audio.">
+<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now a friend leaves Pricila a voice note about work-life balance and making time for hobbies.' Toque 2 vezes. As perguntas aparecem ao fim do áudio.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">Finding the <span class="accent">Balance</span></h2>
@@ -1053,7 +1062,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: B2 READING + GIST ========== -->
-<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faca a pergunta de gist. Pricila clica a alternativa -- o card certo fica verde. NAO peca traducao palavra a palavra. Foco nos padroes -ing/to: 'we enjoy doing', 'we decide to do', 'taking up a new pastime'.">
+<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Reading + Gist (5 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois faça a pergunta de gist. Pricila clica a alternativa -- o card certo fica verde. NÃO peça tradução palavra a palavra. Foco nos padrões -ing/to: 'we enjoy doing', 'we decide to do', 'taking up a new pastime'.">
   <div class="slide-inner">
     <div class="chapter-label">Read for the Main Idea</div>
     <h2 class="slide-heading">The Life <span class="accent">You're Building</span></h2>
@@ -1063,17 +1072,19 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: B2 TRUE/FALSE ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma esta certa ou errada -- volte ao texto.">
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>True / False (4 min):</strong> Pricila decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma está certa ou errada -- volte ao texto.">
   <div class="slide-inner">
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then tap to reveal the answer and why</p>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer says that when you ask people what they enjoy doing, you often get a pause.<span class="ic-just">&#8594; Ask them what they enjoy doing, and you often get a pause.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">According to the writer, taking up a new pastime at fifty or sixty is a waste of time.<span class="ic-just">&#8594; Taking up a new pastime at fifty or sixty is not a waste of time; it is one of the surest ways to broaden your horizons.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer says a hobby has to be useful for it to be worth doing.<span class="ic-just">&#8594; None of it has to be useful. Doing something for its own sake keeps you curious.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer suggests that some pleasures are an acquired taste while others hook you at once.<span class="ic-just">&#8594; Some pleasures are an acquired taste; others hook you at once.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <button class="ic-textbtn" onclick="icToggleText(this)">Read the text again</button>
+    <div class="ic-reading ic-collapsed"><div class="ic-rtitle">The Life You're Building</div><p>Ask people what they do, and most will tell you about their work. Ask them what they enjoy doing, and you often get a pause. Somewhere between the job and the to-do list, the hobbies quietly disappear. We give up the guitar, we stop going to the pool, we keep meaning to take up that language -- and the years go by. The life we want stays a plan we never quite start. The grammar of all this is small but stubborn: we enjoy doing things, we avoid doing things, we decide to do things, we hope to do things. Get the patterns right, and you can finally say what you want out loud.</p><p>The happiest people are rarely the busiest. They are the ones who have learned to make time for what they love, and who are not afraid to be beginners again. Taking up a new pastime at fifty or sixty is not a waste of time; it is one of the surest ways to broaden your horizons. You dabble in painting, you get the hang of the piano, you discover you are hopelessly into birdwatching. None of it has to be useful. The point is that doing something for its own sake -- something you can't stand to give up -- keeps you curious, and a curious mind stays young.</p><p>There is a quiet honesty in admitting what you are really into. Some pleasures are an acquired taste; others hook you at once. Some habits you keep, some you give up, and the trick is knowing which is which. A creature of habit is not a prisoner -- routines can be the floor you build a life on -- but every now and then it helps to try something new, just to remember that you still can. The life you want is not waiting at the end of a long list of tasks. It is made, one unhurried afternoon at a time, of the things you choose to keep doing.</p><div class="ic-src">Adapted for class use <a href="https://www.bbc.com/travel" target="_blank" rel="noopener">https://www.bbc.com/travel</a></div></div>
+    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The writer says that when you ask people what they enjoy doing, you often get a pause.<span class="ic-just">&#8594; Ask them what they enjoy doing, and you often get a pause.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">According to the writer, taking up a new pastime at fifty or sixty is a waste of time.<span class="ic-just">&#8594; Taking up a new pastime at fifty or sixty is not a waste of time; it is one of the surest ways to broaden your horizons.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The writer says a hobby has to be useful for it to be worth doing.<span class="ic-just">&#8594; None of it has to be useful. Doing something for its own sake keeps you curious.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The writer suggests that some pleasures are an acquired taste while others hook you at once.<span class="ic-just">&#8594; Some pleasures are an acquired taste; others hook you at once.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
 <!-- ========== SLIDE 20: B2 MATCHING ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Matching (3 min):</strong> Pricila liga cada expressao a sua definicao em voz alta. As colunas estao embaralhadas de proposito. Confira juntos e peca um exemplo proprio para duas delas.">
+<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Matching (3 min):</strong> Pricila liga cada expressão a sua definicao em voz alta. As colunas estao embaralhadas de propósito. Confira juntos e peça um exemplo próprio para duas delas.">
   <div class="slide-inner">
     <div class="chapter-label">Match the Meaning</div>
     <h2 class="slide-heading">Expressions &amp; <span class="accent">Meanings</span></h2>
@@ -1082,7 +1093,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: PATTERN BRIDGE ========== -->
-<div class="slide slide-light" data-slide="21" data-phase="5" data-teacher="<strong>Mapa dos padroes (3 min):</strong> Reforce os tres grupos. Verbo + -ing (enjoy, avoid, keep, give up, can't stand). Verbo + to (decide, manage, hope, plan, afford). Depois de preposicao = sempre -ing. Peca que Pricila diga uma frase de cada grupo sobre um hobby dela.">
+<div class="slide slide-light" data-slide="21" data-phase="5" data-teacher="<strong>Mapa dos padrões (3 min):</strong> Reforce os três grupos. Verbo + -ing (enjoy, avoid, keep, give up, can't stand). Verbo + to (decide, manage, hope, plan, afford). Depois de preposicao = sempre -ing. Peça que Pricila diga uma frase de cada grupo sobre um hobby dela.">
   <div class="slide-inner">
     <div class="chapter-label">The Pattern Map</div>
     <h2 class="slide-heading">Three <span class="accent">Groups</span></h2>
@@ -1105,7 +1116,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="22" data-phase="5" data-teacher="<strong>Transicao pratica (1 min):</strong> Diga: 'Now we train: fix the mistakes, rewrite with the right pattern, check the key, and reflect.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="22" data-phase="5" data-teacher="<strong>Transição prática (1 min):</strong> Diga: 'Now we train: fix the mistakes, rewrite with the right pattern, check the key, and reflect.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train the <span class="accent">Patterns</span></h2>
@@ -1129,7 +1140,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: B2 REPHRASE ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="5" data-teacher="<strong>Rephrase (4 min):</strong> Pricila completa cada frase escolhendo -ing ou to + verbo, EM VOZ ALTA, antes de ver o gabarito (slide seguinte). O verbo entre parenteses e a pista. Foco no padrao certo.">
+<div class="slide slide-light" data-slide="24" data-phase="5" data-teacher="<strong>Rephrase (4 min):</strong> Pricila completa cada frase escolhendo -ing ou to + verbo, EM VOZ ALTA, antes de ver o gabarito (slide seguinte). O verbo entre parenteses e a pista. Foco no padrão certo.">
   <div class="slide-inner">
     <div class="chapter-label">Say It Another Way</div>
     <h2 class="slide-heading">Choose the <span class="accent">Right Form</span></h2>
@@ -1139,7 +1150,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: B2 ANSWER KEY ========== -->
-<div class="slide slide-light" data-slide="25" data-phase="5" data-teacher="<strong>Answer key (2 min):</strong> So depois que Pricila tentar TODAS as frases do rephrase em voz alta, clique para abrir o gabarito e compare junto com ela. Confira o padrao (-ing apos enjoy/keep/preposicao; to + verbo apos decide/afford/remember-to).">
+<div class="slide slide-light" data-slide="25" data-phase="5" data-teacher="<strong>Answer key (2 min):</strong> So depois que Pricila tentar TODAS as frases do rephrase em voz alta, clique para abrir o gabarito e compare junto com ela. Confira o padrão (-ing após enjoy/keep/preposicao; to + verbo após decide/afford/remember-to).">
   <div class="slide-inner">
     <div class="chapter-label">Check Your Answers</div>
     <h2 class="slide-heading">Verb-Pattern <span class="accent">Answer Key</span></h2>
@@ -1150,7 +1161,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: B2 ANALYSE ========== -->
-<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Analyse (4 min):</strong> Perguntas de leitura critica sobre o texto e a vida que Pricila quer. Pricila responde em voz alta, com suas proprias palavras. Sem gabarito unico -- e producao e reflexao. Estimule frases completas com -ing e to + verbo.">
+<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Analyse (4 min):</strong> Perguntas de leitura critica sobre o texto e a vida que Pricila quer. Pricila responde em voz alta, com suas proprias palavras. Sem gabarito único -- e produção e reflexao. Estimule frases completas com -ing e to + verbo.">
   <div class="slide-inner">
     <div class="chapter-label">Close Reading</div>
     <h2 class="slide-heading">The Life You <span class="accent">Choose</span></h2>
@@ -1159,7 +1170,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="27" data-phase="6" data-teacher="<strong>Transicao producao (1 min):</strong> Diga: 'Now the big mission: talk about your habits, your hobbies, and the life you want, in three steps. Ready?' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="27" data-phase="6" data-teacher="<strong>Transição produção (1 min):</strong> Diga: 'Now the big mission: talk about your habits, your hobbies, and the life you want, in three steps. Ready?' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">The Life <span class="accent">You Want</span></h2>
@@ -1168,7 +1179,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="28" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Voce e um amigo curioso. Pergunte a Pricila sobre suas rotinas e hobbies. Deixe-a usar -ing e to + verbo com as frases-chave.">
+<div class="slide slide-light" data-slide="28" data-phase="6" data-teacher="<strong>Role-play guiado (4 min):</strong> Você e um amigo curioso. Pergunte a Pricila sobre suas rotinas e hobbies. Deixe-a usar -ing e to + verbo com as frases-chave.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">What Do You <span class="accent">Enjoy Doing?</span></h2>
@@ -1185,7 +1196,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 29: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="29" data-phase="6" data-teacher="<strong>Role-play semi-livre (4 min):</strong> Agora Pricila fala de um habito que ela quer mudar -- algo que quer largar (give up) e algo que quer comecar (take up). Menos pistas. Use 'I want to give up...', 'I'd like to take up...', 'I'm planning to...'.">
+<div class="slide slide-light" data-slide="29" data-phase="6" data-teacher="<strong>Role-play semi-livre (4 min):</strong> Agora Pricila fala de um habito que ela quer mudar -- algo que quer largar (give up) e algo que quer começar (take up). Menos pistas. Use 'I want to give up...', 'I'd like to take up...', 'I'm planning to...'.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">A Habit to <span class="accent">Change</span></h2>
@@ -1202,7 +1213,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 30: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Pratica livre (5 min):</strong> A missao da aula: descrever a vida que ela quer construir e o papel dos hobbies nela. ZERO pistas. NAO interrompa. Anote os erros de -ing/to para o feedback. CELEBRE bastante.">
+<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Prática livre (5 min):</strong> A missao da aula: descrever a vida que ela quer construir e o papel dos hobbies nela. ZERO pistas. NÃO interrompa. Anote os erros de -ing/to para o feedback. CELEBRE bastante.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">The Life You're <span class="accent">Building</span></h2>
@@ -1214,7 +1225,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: ARTIFACT (HOBBY PLAN CARD) ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Artefato (3 min):</strong> Mostre o cartao de plano de hobbies da Pricila. Peca que ela leia em voz alta, prestando atencao aos padroes -ing e to + verbo. Use as perguntas embaixo.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Artefato (3 min):</strong> Mostre o cartao de plano de hobbies da Pricila. Peça que ela leia em voz alta, prestando atenção aos padrões -ing e to + verbo. Use as perguntas embaixo.">
   <div class="slide-inner">
     <div class="chapter-label">Read the Card</div>
     <h2 class="slide-heading">Pricila's <span class="accent">Hobby Plan</span></h2>
@@ -1231,7 +1242,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 32: SURVIVAL CARD ========== -->
-<div class="slide slide-dark" data-slide="32" data-phase="7" data-teacher="<strong>Survival Card (2 min):</strong> Toque cada frase e peca que Pricila repita. Sao as 5 frases-chave que ela leva da aula.">
+<div class="slide slide-dark" data-slide="32" data-phase="7" data-teacher="<strong>Survival Card (2 min):</strong> Toque cada frase e peça que Pricila repita. Sao as 5 frases-chave que ela leva da aula.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Survival Card</div>
     <h2 class="slide-heading" style="color:#fff">Phrases to <span class="accent">Keep</span></h2>
@@ -1246,7 +1257,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 33: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transicao fechamento (1 min):</strong> Diga: 'A lesson on hobbies and the life you want, done. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="33" data-phase="7" data-teacher="<strong>Transição fechamento (1 min):</strong> Diga: 'A lesson on hobbies and the life you want, done. Let's see all you can do now.' Avance." style="background-image:linear-gradient(rgba(20,20,30,.74),rgba(20,20,30,.86)),url('https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Habits &amp; <span class="accent">Hobbies</span></h2>
@@ -1269,7 +1280,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 35: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 19 complete, Pricila -- you earned your Hobbies Badge!' Homework (oralmente): esta semana, grave-se contando, em ingles, sobre um hobby que voce quer largar (give up) e um que voce quer comecar (take up), usando -ing e to + verbo, e termine com 'making time for what I'm into broadens my horizons'. Preview: aula 20 -- Telling Your Story: making your travel tales come alive (narrative tenses).">
+<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Fechamento (2 min):</strong> Diga: 'Lesson 19 complete, Pricila -- you earned your Hobbies Badge!' Homework (oralmente): esta semana, grave-se contando, em inglês, sobre um hobby que você quer largar (give up) e um que você quer começar (take up), usando -ing e to + verbo, e termine com 'making time for what I'm into broadens my horizons'. Preview: aula 20 -- Telling Your Story: making your travel tales come alive (narrative tenses).">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1479,6 +1490,7 @@ function icPickGist(choice) {
   choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
 }
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
+function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 var errorCount = 0;
