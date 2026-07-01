@@ -177,6 +177,15 @@ def check_fix_regressions(c, css, is_standalone_slides, fails, warns):
         seg = m.group(1)
         if re.match(r'\s*<(p|strong)\b', seg):
             fails.append('mistake-item com <p>/<strong> direto — texto deve ser direto no div (display:flex espalha)')
+    # Rolagem de slide (#1071/#1073/#1074, "centraliza-se-cabe / rola-se-passa"): slide
+    # alto (ex: vocab de 5 cards, leitura+atividade) NÃO pode cortar conteúdo atrás da
+    # nav-bar sem barra de rolagem. Todo arquivo com slides + .slide-inner DEVE ter o
+    # override de rolagem — inclusive o ESPELHO ALUNO (que o #1074 esqueceu).
+    if 'data-slide=' in c and 'slide-inner' in c:
+        if not re.search(r'\.slide\s*>\s*\.slide-inner\s*\{[^}]*overflow-y\s*:\s*auto', css):
+            fails.append('REGRESSÃO fix rolagem de slide (#1074): falta '
+                         '".slide>.slide-inner{...max-height:calc(100vh - 11rem);overflow-y:auto...}" — '
+                         'slide alto corta conteúdo atrás da nav-bar sem barra de rolagem (incidente Patricia aula 1)')
     # Sentence Building (.oral-item): a RESPOSTA (.oral-model) deve começar escondida
     # e só aparecer no .revealed (toggle por clique). Sem isso, o gabarito vaza na tela.
     if 'oral-model' in c:
