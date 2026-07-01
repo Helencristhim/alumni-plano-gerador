@@ -15,7 +15,10 @@ ROOT = os.path.dirname(HERE)
 D = os.path.join(HERE, 'pricila-adamo-aula%d' % N)
 
 new_block = open(os.path.join(D, 'preclass.html'), encoding='utf-8').read().rstrip('\n')
-manifest = json.load(open(os.path.join(D, 'pc_audio_manifest.json'), encoding='utf-8'))
+_mf = os.path.join(D, 'pc_audio_manifest.json')
+if not os.path.exists(_mf):
+    _mf = os.path.join(D, 'preclass_audio_manifest.json')
+manifest = json.load(open(_mf, encoding='utf-8'))
 AUDIO_BASE = '/audio/pricila-adamo/'
 
 
