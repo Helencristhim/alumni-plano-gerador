@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Aluno -- Helen Mendes V4 | Aula 02 -- Handling Phone Calls &amp; Voicemail (Listening)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<script>
+var audioMap = {
+  "Hi, this is Daniel from Redpoint Marketing. I am calling for Laura about our campaign meeting. I am sorry I missed you. I wanted to let you know that our Thursday call needs to move. Something urgent came up with a client, so Thursday at ten is no longer possible for me. Could we schedule the call for Friday morning instead? I am available any time before noon. If Friday does not work, please call me back and we will find another time. You can reach me on my mobile, or just leave a message and I will get back to you today. Thanks a lot. Talk soon. Bye.": "/audio/helen-mendes-v4/a2_voicemail_daniel.mp3"
+};
+</script>
+<style>
+:root {
+  --accent: #BE123C;
+  --accent-light: #F43F5E;
+  --accent-dim: rgba(190,18,60,0.08);
+  --accent-glow: rgba(190,18,60,0.05);
+  --navy: #003080;
+  --black: #1a1a2e;
+  --bg: #f5f5f0;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fafaf7;
+  --bg-elevated: #f0f0eb;
+  --bg-input: #fafaf7;
+  --border: #d4d4cc;
+  --border-light: #c0c0b8;
+  --white: #1a1a2e;
+  --text: #2d2d3a;
+  --text-mid: #4a4a5a;
+  --text-dim: #5c5c6c;
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.08);
+  --success-border: rgba(22,163,74,0.25);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.08);
+  --danger-border: rgba(220,38,38,0.25);
+  --warn: #d97706;
+  --warn-bg: rgba(217,119,6,0.08);
+  --warn-border: rgba(217,119,6,0.25);
+  --dark: #1a1a2e;
+  --dark-surface: #232340;
+  --agent-blue: #5b9bd5;
+  --slide-transition: 400ms;
+}
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:'Inter',-apple-system,sans-serif;
+  background:linear-gradient(135deg,#e8e4dc 0%,var(--bg) 50%,#e0ddd5 100%);
+  color:var(--text);
+  line-height:1.7;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+.logo-bar {
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.6rem 1.5rem;
+  background:rgba(255,255,255,0.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  transition:background .3s,border .3s;
+}
+.logo-bar img { height:32px; }
+.logo-bar .prof-badge {
+  font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:#fff;background:var(--accent);border:1px solid var(--accent);
+  padding:0.35rem 0.9rem;border-radius:4px;
+}
+.logo-bar .slide-counter {
+  font-size:.75rem;font-weight:600;color:rgba(255,255,255,.5);
+  letter-spacing:2px;font-variant-numeric:tabular-nums;display:none;
+}
+
+body.slide-mode .logo-bar {
+  background:rgba(26,26,46,.92);border-bottom:1px solid rgba(255,255,255,.06);
+}
+body.slide-mode .logo-bar img { filter:brightness(0) invert(1); }
+body.slide-mode .logo-bar .prof-badge { display:none; }
+body.slide-mode .logo-bar .slide-counter { display:block; }
+
+.header {
+  position:relative;min-height:340px;display:flex;align-items:flex-end;padding:3rem 2rem;overflow:hidden;
+  background:url('https://images.unsplash.com/photo-1516387938699-a93567ec168e?w=1400&q=80') center/cover no-repeat;
+}
+.header::before {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(26,26,46,.92) 0%,rgba(26,26,46,.75) 40%,rgba(26,26,46,.6) 100%);
+}
+.header-content { position:relative;z-index:1;max-width:900px;margin:0 auto;width:100%; }
+.passport-badge {
+  display:inline-flex;align-items:center;gap:.5rem;background:var(--accent);
+  padding:.5rem 1.2rem;font-size:.75rem;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:#fff;margin-bottom:1.2rem;border-radius:4px;
+}
+.header h1 {
+  font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:700;
+  color:#fff;line-height:1.1;margin-bottom:.5rem;
+}
+.header .subtitle { font-size:1rem;font-weight:400;color:rgba(255,255,255,.9);margin-bottom:1.5rem;max-width:600px; }
+.student-info { display:flex;gap:.8rem;flex-wrap:wrap;font-size:.8rem;color:#fff; }
+.student-info span {
+  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+  padding:.3rem .7rem;border-radius:4px;border:1px solid rgba(255,255,255,.1);
+}
+.progress-passport {
+  margin-top:1.2rem;background:rgba(0,0,0,.35);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:1rem 1.2rem;
+}
+.progress-label { display:flex;justify-content:space-between;font-size:.75rem;color:#e8e8e8;margin-bottom:.4rem; }
+.progress-bar-outer { height:6px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden; }
+.progress-bar-inner { height:100%;background:var(--accent-light);border-radius:3px;width:0%;transition:width .6s ease; }
+
+.container { max-width:900px;margin:0 auto;padding:2rem 1.5rem; }
+
+.speed-control {
+  display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-bottom:12px;
+  padding:8px 12px;background:rgba(255,255,255,.8);backdrop-filter:blur(12px);
+  border-radius:20px;border:1px solid var(--border);width:fit-content;margin-left:auto;
+}
+.speed-label { font-size:.75rem;color:#666677; }
+.speed-btn {
+  padding:5px 10px;font-size:.72rem;border:1px solid var(--border);background:transparent;
+  border-radius:12px;cursor:pointer;min-height:32px;transition:all .2s;font-weight:500;color:#555;font-family:'Inter',sans-serif;
+}
+.speed-btn.active { background:var(--accent);color:#fff;border-color:var(--accent); }
+
+.tabs-wrapper {
+  position:sticky;top:0;z-index:100;
+  background:rgba(245,245,240,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:.5rem 0;border-bottom:1px solid var(--border);
+}
+.tabs { display:flex;gap:0;overflow-x:auto;max-width:900px;margin:0 auto;padding:0 1.5rem; }
+.tab-btn {
+  flex:1;padding:.8rem .4rem;border:none;background:transparent;cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:.62rem;font-weight:500;color:var(--text-dim);
+  letter-spacing:1px;text-transform:uppercase;position:relative;white-space:nowrap;
+  min-height:44px;transition:all .2s ease-out;
+}
+.tab-btn.active { color:var(--accent);font-weight:700; }
+.tab-btn.active::after {
+  content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;
+  background:var(--accent);border-radius:1px;
+}
+.tab-content { display:none; }
+.tab-content.active { display:block;animation:fadeIn .3s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+
+.slides-wrapper { display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:500; }
+body.slide-mode .slides-wrapper { display:flex;flex-direction:column; }
+body.slide-mode .main-content { display:none; }
+body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
+
+.phase-bar { position:fixed;top:50px;left:0;right:0;z-index:510;display:flex;height:4px;background:rgba(26,26,46,.6); }
+.phase-segment { flex:1;position:relative;transition:background .4s; }
+.phase-segment.completed { background:var(--accent); }
+.phase-segment.current { background:var(--accent-light);animation:phasePulse 2s ease infinite; }
+.phase-segment.upcoming { background:rgba(255,255,255,.08); }
+@keyframes phasePulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+.phase-labels { position:fixed;top:54px;left:0;right:0;z-index:509;display:flex;padding:0 1.5rem; }
+.phase-label { flex:1;font-size:.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;padding:.3rem 0;transition:color .4s; }
+.phase-label.current { color:var(--accent-light); }
+.phase-label.completed { color:var(--accent); }
+
+.slides-container { flex:1;overflow:hidden;position:relative; }
+.slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5.5rem 2rem 2rem;overflow-y:auto;-webkit-overflow-scrolling:touch; }
+.slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
+
+.slide-inner { max-width:920px;width:100%;position:relative;margin:auto 0; }
+.slide-light { background:var(--bg); }
+.slide-light .slide-inner { color:var(--text); }
+.slide-dark { background:var(--dark); }
+.slide-dark .slide-inner { color:#fff; }
+.slide-image { background-size:cover;background-position:center; }
+.slide-image::before { content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,26,46,.4) 0%,rgba(26,26,46,.78) 100%); }
+.slide-image .slide-inner { color:#fff;position:relative;z-index:2;text-align:center; }
+
+.chapter-label { font-size:.75rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--accent-light);margin-bottom:.5rem; }
+.slide-title { font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.15;margin-bottom:1rem; }
+.slide-subtitle { font-size:1rem;font-weight:300;opacity:.7;line-height:1.6; }
+.slide-heading { font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;line-height:1.2;margin-bottom:1.2rem; }
+.slide-image .slide-title, .slide-image .slide-subtitle, .slide-image .slide-heading, .slide-image .accent { text-shadow:0 2px 8px rgba(0,0,0,0.6); }
+.accent { color:var(--accent); }
+.accent-bold { color:var(--accent);font-weight:700; }
+
+.vocab-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.5rem; }
+.vocab-card { background:#fff;border:2px solid rgba(190,18,60,.12);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .4s;min-height:220px;display:flex;flex-direction:column; }
+.vocab-card:hover { border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(190,18,60,.12); }
+.vocab-card.revealed { border-color:var(--accent); }
+.vocab-card .card-icon { width:100%;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;border-radius:11px 11px 0 0;transition:all .5s;padding:.5rem; }
+.vocab-card .card-icon svg { width:48px;height:48px;stroke-width:1.5;opacity:.5;transition:opacity .5s; }
+.vocab-card.revealed .card-icon svg { opacity:1; }
+.vocab-card .card-hint { font-size:.78rem;color:rgba(255,255,255,.75);font-style:italic;text-align:center;line-height:1.3;padding:0 .5rem;max-width:90%; }
+.vocab-card.revealed .card-hint { opacity:.5;font-size:.7rem; }
+.vocab-card .card-body { padding:.7rem .8rem;display:flex;flex-direction:column;gap:.25rem;flex:1; }
+.vocab-card .card-word { font-weight:700;font-size:1.05rem;color:var(--accent);opacity:0;height:0;overflow:hidden;transition:all .4s; }
+.vocab-card.revealed .card-word { opacity:1;height:auto; }
+.vocab-card .card-def { font-size:.78rem;color:var(--text-dim);line-height:1.3;font-style:italic;opacity:0;height:0;overflow:hidden;transition:all .4s .1s; }
+.vocab-card.revealed .card-def { opacity:1;height:auto; }
+.vocab-card .card-example { font-size:.82rem;color:var(--text);line-height:1.3;opacity:0;height:0;overflow:hidden;transition:all .4s .2s; }
+.vocab-card.revealed .card-example { opacity:1;height:auto; }
+.vocab-card .card-audio { margin-top:auto;padding-top:.4rem;opacity:0;transition:opacity .4s .3s; }
+.vocab-card.revealed .card-audio { opacity:1; }
+.audio-btn-sm { display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:.72rem;font-weight:600;font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.5px; }
+.audio-btn-sm:hover { background:#9F1239; }
+.audio-btn-sm svg { width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
+.vocab-counter { text-align:center;margin-top:1.2rem;font-weight:600;color:var(--accent);font-size:1rem; }
+
+.grammar-sentences { display:flex;flex-direction:column;gap:1rem;margin:1.5rem 0; }
+.grammar-sentence { font-size:1.1rem;text-align:left;line-height:1.6;padding:.7rem 1rem;background:rgba(190,18,60,.04);border-radius:8px; }
+.grammar-sentence strong { color:var(--accent);font-weight:800; }
+.btn-primary { display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif; }
+.btn-primary:hover { transform:scale(1.03);box-shadow:0 8px 24px rgba(190,18,60,.3); }
+
+.fill-grid { display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem; }
+.fill-item { background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:.8rem; }
+.fill-item:hover { border-color:var(--accent); }
+.fill-item .fill-text { font-size:1rem;flex:1; }
+.fill-item .fill-blank { color:var(--accent);font-weight:800;border-bottom:2px dashed var(--accent);padding:0 .3rem;min-width:40px;display:inline-block;text-align:center; }
+.fill-item .fill-answer { display:none;font-weight:700;color:var(--accent); }
+.fill-item.revealed .fill-blank { display:none; }
+.fill-item.revealed .fill-answer { display:inline; }
+
+.reading-box { background:#fff;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:1.3rem 1.5rem;max-width:680px;margin:.6rem auto 0;text-align:left; }
+.reading-box p { font-size:.98rem;line-height:1.7;margin-bottom:.7rem;color:var(--text); }
+.reading-box p:last-child { margin-bottom:0; }
+.reading-box .rb-source { font-size:.76rem;color:var(--text-dim);font-style:italic;margin-top:.6rem; }
+
+.opt-list { max-width:680px;margin:.8rem auto 0;display:flex;flex-direction:column;gap:.5rem;text-align:left; }
+.opt-item { background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;font-size:.95rem; }
+
+.mistake-card { display:flex;flex-direction:column;gap:1.5rem;align-items:center;margin-top:2rem; }
+.mistake-item { display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-radius:12px;font-size:1.15rem;width:100%;max-width:560px; }
+.mistake-wrong { background:rgba(220,38,38,.06);border:2px solid rgba(220,38,38,.2);color:var(--danger);text-decoration:line-through;font-weight:600; }
+.mistake-right { background:rgba(22,163,74,.06);border:2px solid rgba(22,163,74,.2);color:var(--success);font-weight:700; }
+
+.roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:600px;margin:0 auto; }
+.roleplay-body { padding:1.5rem; }
+.roleplay-scenario { font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem; }
+.roleplay-keywords { display:flex;flex-wrap:wrap;gap:.4rem; }
+.roleplay-kw { padding:.3rem .7rem;background:var(--accent-dim);border:1px solid rgba(190,18,60,.2);border-radius:16px;font-size:.8rem;color:var(--accent);font-weight:600; }
+
+.check-grid { display:flex;flex-direction:column;gap:.5rem;margin-top:1.5rem; }
+.check-item { display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:#fff;border:1px solid #e8e4df;border-radius:8px;cursor:pointer;transition:all .3s;font-size:.92rem;color:var(--text); }
+.check-item:hover { border-color:var(--accent); }
+.check-item.checked { background:rgba(22,163,74,.06);border-color:rgba(22,163,74,.3); }
+.check-item .check-box { width:22px;height:22px;border-radius:6px;border:2px solid #d0d0d0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s; }
+.check-item.checked .check-box { background:var(--success);border-color:var(--success); }
+.check-item.checked .check-box svg { opacity:1; }
+.check-box svg { width:14px;height:14px;stroke:#fff;fill:none;stroke-width:3;opacity:0;transition:opacity .3s; }
+
+.comp-questions { display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem; }
+.comp-q { background:#fff;color:var(--text);border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s;font-size:.95rem; }
+.comp-q:hover { border-color:var(--accent);background:var(--accent-dim); }
+.comp-q .q-text { font-weight:500; }
+.comp-q .q-answer { display:none;margin-top:.5rem;color:var(--accent);font-weight:600;font-size:.9rem; }
+.comp-q.revealed .q-answer { display:block;animation:fadeIn .3s ease; }
+.answer-key { border-color:var(--accent)!important;background:var(--accent-dim); }
+.answer-key .q-text { color:var(--accent);font-weight:700;letter-spacing:.5px;text-transform:uppercase;font-size:.82rem; }
+
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgba(190,18,60,.3);border-radius:3px; }
+
+@media(max-width:768px) {
+  .slide { padding:5.5rem 1.2rem 2rem; }
+  .vocab-grid { grid-template-columns:1fr;gap:.8rem; }
+  .vocab-card { min-height:auto; }
+  .slide-title { font-size:2rem; }
+  .slide-heading { font-size:1.6rem; }
+}
+.stamps-row { display:flex; gap:0.8rem; margin-top:1.2rem; flex-wrap:wrap; }
+.stamp { width:64px; height:64px; border-radius:4px; overflow:hidden; border:1px solid var(--border); position:relative; opacity:0.3; transition:all 0.4s ease; background-size:cover; background-position:center; filter:grayscale(100%); }
+.stamp::after { content:attr(data-label); position:absolute; bottom:0; left:0; right:0; padding:0.15rem 0.2rem; font-size:0.5rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; text-align:center; background:linear-gradient(transparent,rgba(0,0,0,0.9)); color:#d4d4d4; }
+.stamp.earned { opacity:1; border-color:var(--accent-light); filter:grayscale(0%); box-shadow:0 0 20px rgba(0,0,0,0.25); }
+.stamp.earned::after { color:#fff; }
+@media(max-width:768px){ .stamps-row{gap:0.5rem} .stamp{width:50px;height:50px} }
+
+.slide-dark .check-item,.slide-dark .check-item *,.slide-dark .roleplay-body,.slide-dark .roleplay-body p,.slide-dark .roleplay-scenario,.slide-dark .comp-q,.slide-dark .comp-q p,.slide-dark .fill-item,.slide-dark .fill-item *,.slide-dark .vocab-card .card-body,.slide-dark .vocab-card .card-body *,.slide-dark .reading-box,.slide-dark .reading-box *,.slide-dark .opt-item{color:#1a1a2e!important}
+.slide-dark .vocab-card{background:#fff!important}
+.slide-dark .vocab-card .card-word{color:var(--accent)!important}
+.slide-dark .comp-q{background:#fff!important}
+.slide-dark .comp-q .q-answer{color:var(--accent)!important}
+.slide-dark .fill-item{background:#fff!important}
+.slide-dark .fill-item .fill-answer,.slide-dark .fill-item .fill-blank{color:var(--accent)!important}
+.slide-dark .roleplay-card{background:#fff!important}
+.slide-dark .roleplay-keywords .roleplay-kw{color:var(--accent)!important}
+.slide-dark .grammar-sentence{color:#fff!important}
+.slide-dark .grammar-sentence strong{color:var(--accent-light)!important}
+
+.teacher-t { position:fixed;top:5rem;right:1.5rem;z-index:520;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;cursor:default;transition:all .2s;background:var(--accent);color:#fff;border:2px solid rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.3);display:none; }
+body.slide-mode .teacher-t { display:flex; }
+.teacher-t:hover { background:var(--accent-light);color:#fff;border-color:#fff; }
+.teacher-t-panel { display:none;position:absolute;top:0;right:calc(100% + 10px);width:360px;background:rgba(26,26,46,.96);color:rgba(255,255,255,.9);padding:1rem 1.2rem;border-radius:10px;font-size:.82rem;line-height:1.65;box-shadow:0 12px 40px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);max-height:64vh;overflow-y:auto;text-align:left; }
+.teacher-t:hover .teacher-t-panel { display:block;animation:fadeIn .2s ease; }
+.teacher-t-panel strong { color:var(--accent-light); }
+
+.nav-bar { display:none;align-items:center;justify-content:center;gap:1rem;padding:1rem 2rem;background:rgba(26,26,46,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06);flex-shrink:0;z-index:520; }
+body.slide-mode .nav-bar { display:flex; }
+.slide-dots { display:flex;gap:6px;align-items:center; }
+.slide-dot { width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .3s;cursor:pointer; }
+.slide-dot.active { background:var(--accent);width:20px;border-radius:3px; }
+
+.reset-exercise-btn{display:inline-flex;align-items:center;gap:.4rem;margin:1rem auto 0;padding:.45rem 1.1rem;font:600 .76rem/1.3 'Inter',sans-serif;color:var(--text-dim);background:transparent;border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:all .2s;letter-spacing:.5px}
+.reset-exercise-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+.reset-exercise-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .4s ease}
+.reset-exercise-btn.reset-spin svg{transform:rotate(-360deg)}
+.reset-row{display:flex;justify-content:center}
+.slide{align-items:flex-start}
+.slide>.slide-inner{margin:auto 0;max-height:calc(100vh - 11rem);overflow-y:auto;padding-bottom:1rem}
+.slide>.slide-inner::-webkit-scrollbar{width:8px}
+.slide>.slide-inner::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/lib/supabase-config.js"></script>
+<script>window.STUDENT_SLUG='helen-mendes-v4';window.TOTAL_AULAS=5;</script>
+</head>
+<body>
+
+<div class="logo-bar">
+  <img src="/assets/logo-alumni.png" alt="Alumni by Better">
+  <span class="prof-badge">Aluno</span>
+  <span class="slide-counter" id="slideCounter">01 / 12</span>
+</div>
+
+<div class="main-content">
+
+<div class="header">
+  <div class="header-content">
+    <div class="passport-badge">Private &middot; Personalizada &middot; V4</div>
+    <h1>Helen Mendes</h1>
+    <p class="subtitle">Aula 02 -- Handling Phone Calls &amp; Voicemail</p>
+    <div class="student-info">
+      <span>A2</span>
+      <span>S&atilde;o Paulo, SP</span>
+      <span>Skill principal: Listening</span>
+      <span>90 min &middot; Online</span>
+    </div>
+    <div class="progress-passport">
+      <div class="progress-label"><span>Progresso Geral</span><span id="progressPercent">0%</span></div>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+      <div class="stamps-row">
+        <div class="stamp earned" data-label="Aula 02" style="background-image:url('https://images.unsplash.com/photo-1516387938699-a93567ec168e?w=200&q=80')"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="speed-control">
+  <span class="speed-label">Velocidade:</span>
+  <button class="speed-btn" data-speed="0.5" onclick="setAudioSpeed(0.5,this)">0.5x</button>
+  <button class="speed-btn" data-speed="0.75" onclick="setAudioSpeed(0.75,this)">0.75x</button>
+  <button class="speed-btn active" data-speed="1" onclick="setAudioSpeed(1,this)">1x</button>
+  <button class="speed-btn" data-speed="1.25" onclick="setAudioSpeed(1.25,this)">1.25x</button>
+</div>
+
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab-btn" onclick="switchTab('planning')">Planejamento</button>
+    <button class="tab-btn" onclick="switchTab('exercises')">Pre-class</button>
+    <button class="tab-btn active" onclick="switchTab('inclass')">IN CLASS</button>
+    <button class="tab-btn" onclick="switchTab('complementary')">Complementares</button>
+  </div>
+</div>
+
+<div class="tab-content" id="tab-planning">
+<p style="font-size:.9rem;color:var(--text-dim);text-align:center;padding:2rem">Planejamento completo dispon&iacute;vel no arquivo principal <code>helen-mendes-v4.html</code>.</p>
+</div>
+
+<div class="tab-content" id="tab-exercises">
+<p style="font-size:.9rem;color:var(--text-dim);text-align:center;padding:2rem">Pre-class completo dispon&iacute;vel no arquivo principal <code>helen-mendes-v4.html</code>.</p>
+</div>
+
+<div class="tab-content active" id="tab-inclass">
+  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Selecione a Aula</h3>
+  <div style="display:flex;flex-direction:column;gap:1rem">
+    <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
+      <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">02</div>
+      <div><div style="font-weight:600;font-size:.95rem">Handling Phone Calls &amp; Voicemail</div><div style="font-size:.8rem;color:var(--text-dim)">V4 -- listening skill -- 12 slides</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="tab-complementary">
+<p style="font-size:.9rem;color:var(--text-dim);text-align:center;padding:2rem">Materiais complementares dispon&iacute;veis no arquivo principal <code>helen-mendes-v4.html</code>.</p>
+</div>
+
+</div><!-- /container -->
+</div><!-- /main-content -->
+
+<div class="slides-wrapper">
+
+<div class="phase-bar" id="phaseBar">
+  <div class="phase-segment current" data-phase="1"></div>
+  <div class="phase-segment upcoming" data-phase="2"></div>
+  <div class="phase-segment upcoming" data-phase="3"></div>
+  <div class="phase-segment upcoming" data-phase="4"></div>
+  <div class="phase-segment upcoming" data-phase="5"></div>
+  <div class="phase-segment upcoming" data-phase="6"></div>
+</div>
+<div class="phase-labels" id="phaseLabels">
+  <span class="phase-label current" data-phase="1">Let's Get Started</span>
+  <span class="phase-label" data-phase="2">Packing Words</span>
+  <span class="phase-label" data-phase="3">Brainstorming</span>
+  <span class="phase-label" data-phase="4">Diving Deep</span>
+  <span class="phase-label" data-phase="5">Your Turn</span>
+  <span class="phase-label" data-phase="6">Wrap-up</span>
+</div>
+
+<div class="slides-container" id="slidesContainer">
+
+<!-- ===== CHAPTER 1: LET'S GET STARTED ===== -->
+<!-- SLIDE 1: LEAD-IN (speaking only -- listening skill: NO audio here) -->
+<div class="slide active slide-light" data-slide="1" data-lesson="2" data-phase="1">
+  <div class="slide-inner">
+    <div class="chapter-label">Let's Get Started -- Lesson 02</div>
+    <h2 class="slide-heading">Before the <span class="accent">Beep</span></h2>
+    <div class="reading-box" style="border-left-color:var(--accent-light)">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;line-height:1.5;margin:0">&ldquo;A missed call is not a problem. A voicemail with no clear message &mdash; that is a problem.&rdquo;</p>
+    </div>
+    <div style="max-width:680px;margin:1.1rem auto 0;display:flex;flex-direction:column;gap:.6rem;text-align:left">
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.75rem 1rem;font-size:.95rem">1. Do you prefer a phone call, a voicemail, or a message? Why?</div>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.75rem 1rem;font-size:.95rem">2. How do you feel about making phone calls in English?</div>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.75rem 1rem;font-size:.95rem">3. What do you say when you cannot answer and someone leaves a message?</div>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.75rem 1rem;font-size:.95rem">4. When was the last time you had to call someone back? What was it about?</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHAPTER 2: PACKING WORDS ===== -->
+<!-- SLIDE 2: VOCAB PRESENTATION (no audio -- listening skill-load) -->
+<div class="slide slide-light" data-slide="2" data-lesson="2" data-phase="2">
+  <div class="slide-inner">
+    <div class="chapter-label">Packing Words</div>
+    <h2 class="slide-heading">The Language of the <span class="accent">Telephone</span></h2>
+    <p style="text-align:center;font-size:.8rem;color:var(--text-dim)"><span id="vocabCount1">0 / 8 words revealed</span></p>
+    <div class="vocab-grid" id="vocabGrid1" style="grid-template-columns:repeat(2,1fr);margin-top:1rem">
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#0369a1,#38bdf8)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div class="card-hint">A recorded message left after the beep</div></div><div class="card-body"><div class="card-word">voicemail</div><div class="card-def">a recorded message you leave when someone does not answer</div><div class="card-example">&ldquo;She left a voicemail after the beep.&rdquo;</div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#9F1239,#fb7185)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div class="card-hint">To reach someone successfully by phone</div></div><div class="card-body"><div class="card-word">get through</div><div class="card-def">to succeed in reaching someone by phone</div><div class="card-example">&ldquo;I could not get through; the line was busy.&rdquo;</div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#b45309,#f59e0b)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg><div class="card-hint">To wait a short moment on the line</div></div><div class="card-body"><div class="card-word">hold on</div><div class="card-def">to wait a short time on the phone</div><div class="card-example">&ldquo;Hold on a moment, please.&rdquo;</div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><polyline points="19 1 23 5 19 9"/><line x1="15" y1="5" x2="23" y2="5"/><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div class="card-hint">To return a phone call later</div></div><div class="card-body"><div class="card-word">call back</div><div class="card-def">to return someone's phone call later</div><div class="card-example">&ldquo;I will call back this afternoon.&rdquo;</div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#15803d,#4ade80)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><div class="card-hint">Free and able to talk now</div></div><div class="card-body"><div class="card-word">available</div><div class="card-def">free and able to talk now</div><div class="card-example">&ldquo;Is Ms. Costa available now?&rdquo;</div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#be123c,#fda4af)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="card-hint">Very important, needs fast action</div></div><div class="card-body"><div class="card-word">urgent</div><div class="card-def">very important and needing fast action</div><div class="card-example">&ldquo;It is urgent, so please call me today.&rdquo;</div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#0e7490,#22d3ee)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="card-hint">Information you leave for someone</div></div><div class="card-body"><div class="card-word">message</div><div class="card-def">information you leave for someone</div><div class="card-example">&ldquo;Can I take a message?&rdquo;</div></div></div>
+      <div class="vocab-card" onclick="revealVocab(this)"><div class="card-icon" style="background:linear-gradient(135deg,#0d9488,#2dd4bf)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><div class="card-hint">To arrange a time for something</div></div><div class="card-body"><div class="card-word">schedule</div><div class="card-def">to arrange a time for something, like a call</div><div class="card-example">&ldquo;Let us schedule the call for Friday.&rdquo;</div></div></div>
+    </div>
+    <div style="max-width:760px;margin:1rem auto 0;background:var(--accent-dim);border:1px dashed var(--accent);border-radius:10px;padding:.8rem 1rem;font-size:.86rem;text-align:left"><strong>Useful expressions:</strong> leave a message &middot; put you through &middot; Can I take a message? &middot; I'll get back to you</div>
+    <div class="reset-row"><button class="reset-exercise-btn" onclick="resetSlideExercises(this)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Resetar / esconder resposta</button></div>
+  </div>
+</div>
+
+<!-- SLIDE 3: PACKING WORDS EX 1 -- MULTIPLE CHOICE (synonym / closest meaning) -->
+<div class="slide slide-light" data-slide="3" data-lesson="2" data-phase="2">
+  <div class="slide-inner">
+    <div class="chapter-label">Packing Words -- Practice</div>
+    <h2 class="slide-heading" style="font-size:1.8rem">Choose the <span class="accent">closest meaning</span></h2>
+    <div class="opt-list" style="max-width:720px">
+      <div class="opt-item"><strong>1. available</strong> &nbsp; (a) tired &nbsp; (b) free to talk now &nbsp; (c) angry</div>
+      <div class="opt-item"><strong>2. urgent</strong> &nbsp; (a) not important &nbsp; (b) very slow &nbsp; (c) needs fast action</div>
+      <div class="opt-item"><strong>3. get through</strong> &nbsp; (a) reach someone by phone &nbsp; (b) hang up &nbsp; (c) forget</div>
+      <div class="opt-item"><strong>4. hold on</strong> &nbsp; (a) shout &nbsp; (b) wait a moment &nbsp; (c) leave now</div>
+      <div class="opt-item"><strong>5. schedule</strong> &nbsp; (a) cancel &nbsp; (b) arrange a time &nbsp; (c) pay</div>
+    </div>
+    <div class="comp-questions" style="max-width:720px;margin:.8rem auto 0">
+      <div class="comp-q answer-key" onclick="revealComp(this)">
+        <div class="q-text">Answer key &mdash; click to reveal</div>
+        <div class="q-answer">1-b &nbsp; 2-c &nbsp; 3-a &nbsp; 4-b &nbsp; 5-b</div>
+      </div>
+    </div>
+    <div class="reset-row"><button class="reset-exercise-btn" onclick="resetSlideExercises(this)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Resetar / esconder resposta</button></div>
+  </div>
+</div>
+
+<!-- SLIDE 4: PACKING WORDS EX 2 -- TRUE / FALSE (vocabulary in use) -->
+<div class="slide slide-light" data-slide="4" data-lesson="2" data-phase="2">
+  <div class="slide-inner">
+    <div class="chapter-label">Packing Words -- Practice</div>
+    <h2 class="slide-heading" style="font-size:1.8rem">True or <span class="accent">False?</span></h2>
+    <p style="text-align:center;font-size:.9rem;color:var(--text-dim);max-width:620px;margin:0 auto">Decide if each sentence uses the word correctly. Correct the false ones.</p>
+    <div style="max-width:700px;margin:.8rem auto 0;display:flex;flex-direction:column;gap:.5rem;text-align:left;font-size:.95rem">
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem">1. If someone is <strong>available</strong>, they cannot talk now.</div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem">2. You leave a <strong>voicemail</strong> when the person does not answer.</div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem">3. An <strong>urgent</strong> matter can wait until next month.</div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem">4. When you <strong>call back</strong>, you return a call you missed.</div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem">5. &ldquo;Can I take a <strong>message</strong>?&rdquo; means &ldquo;Do you want me to write down what you say?&rdquo;</div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem">6. If you <strong>hold on</strong>, you hang up immediately.</div>
+    </div>
+    <div class="comp-questions" style="max-width:700px;margin:.8rem auto 0">
+      <div class="comp-q answer-key" onclick="revealComp(this)">
+        <div class="q-text">Answer key &mdash; click to reveal</div>
+        <div class="q-answer">1. False &mdash; available means they <em>can</em> talk now. &nbsp; 2. True. &nbsp; 3. False &mdash; urgent means it needs <em>fast</em> action. &nbsp; 4. True. &nbsp; 5. True. &nbsp; 6. False &mdash; hold on means <em>wait</em> a moment, do not hang up.</div>
+      </div>
+    </div>
+    <div class="reset-row"><button class="reset-exercise-btn" onclick="resetSlideExercises(this)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Resetar / esconder resposta</button></div>
+  </div>
+</div>
+
+<!-- ===== CHAPTER 3: BRAINSTORMING (LISTENING -- principal skill) ===== -->
+<!-- SLIDE 5: LISTENING FOR GIST -- QUESTIONS -->
+<div class="slide slide-dark" data-slide="5" data-lesson="2" data-phase="3">
+  <div class="slide-inner">
+    <div class="chapter-label" style="color:var(--accent-light)">Brainstorming -- Listening for Gist</div>
+    <h2 class="slide-heading" style="font-size:1.8rem;color:#fff">Listen: <span class="accent">A Voicemail</span></h2>
+    <p style="text-align:center;font-size:.9rem;color:rgba(255,255,255,.75);max-width:600px;margin:0 auto .6rem">Daniel leaves a voicemail for Laura. Listen once for the general idea &mdash; do not read the transcript yet.</p>
+    <div style="text-align:center;margin:.6rem 0 1rem">
+      <button class="audio-btn-sm" style="padding:.6rem 1.4rem;font-size:.9rem" onclick="event.stopPropagation();speakText('Hi, this is Daniel from Redpoint Marketing. I am calling for Laura about our campaign meeting. I am sorry I missed you. I wanted to let you know that our Thursday call needs to move. Something urgent came up with a client, so Thursday at ten is no longer possible for me. Could we schedule the call for Friday morning instead? I am available any time before noon. If Friday does not work, please call me back and we will find another time. You can reach me on my mobile, or just leave a message and I will get back to you today. Thanks a lot. Talk soon. Bye.',this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg> Play the message</button>
+    </div>
+    <div class="opt-list">
+      <p style="font-size:.82rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.1rem">Answer these general questions</p>
+      <div class="opt-item"><strong>1.</strong> Who is calling, and who is the message for?</div>
+      <div class="opt-item"><strong>2.</strong> Why is Daniel calling?</div>
+      <div class="opt-item"><strong>3.</strong> What does he want to change?</div>
+    </div>
+    <div class="comp-questions" style="max-width:680px;margin:.7rem auto 0">
+      <div class="comp-q answer-key" onclick="revealComp(this)">
+        <div class="q-text">Answer key &mdash; click to reveal</div>
+        <div class="q-answer">1. Daniel (from Redpoint Marketing) is calling; the message is for Laura. &nbsp; 2. He is calling about the campaign meeting / their Thursday call. &nbsp; 3. He wants to move the call from Thursday to Friday morning.</div>
+      </div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">Show transcript (after listening)</div><div class="q-answer">&ldquo;Hi, this is Daniel from Redpoint Marketing. I am calling for Laura about our campaign meeting. I am sorry I missed you. I wanted to let you know that our Thursday call needs to move. Something urgent came up with a client, so Thursday at ten is no longer possible for me. Could we schedule the call for Friday morning instead? I am available any time before noon. If Friday does not work, please call me back and we will find another time. You can reach me on my mobile, or just leave a message and I will get back to you today. Thanks a lot. Talk soon. Bye.&rdquo;</div></div>
+    </div>
+    <div class="reset-row"><button class="reset-exercise-btn" onclick="resetSlideExercises(this)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Resetar / esconder resposta</button></div>
+  </div>
+</div>
+
+<!-- SLIDE 6: LISTENING FOR DETAIL -- MULTIPLE CHOICE -->
+<div class="slide slide-dark" data-slide="6" data-lesson="2" data-phase="3">
+  <div class="slide-inner">
+    <div class="chapter-label" style="color:var(--accent-light)">Brainstorming -- Listening for Detail</div>
+    <h2 class="slide-heading" style="font-size:1.8rem;color:#fff">Listen Again for the <span class="accent">Details</span></h2>
+    <p style="text-align:center;font-size:.9rem;color:rgba(255,255,255,.75);max-width:620px;margin:0 auto .6rem">Play the message again and choose the correct option.</p>
+    <div style="text-align:center;margin:.4rem 0 .8rem">
+      <button class="audio-btn-sm" style="padding:.55rem 1.3rem" onclick="event.stopPropagation();speakText('Hi, this is Daniel from Redpoint Marketing. I am calling for Laura about our campaign meeting. I am sorry I missed you. I wanted to let you know that our Thursday call needs to move. Something urgent came up with a client, so Thursday at ten is no longer possible for me. Could we schedule the call for Friday morning instead? I am available any time before noon. If Friday does not work, please call me back and we will find another time. You can reach me on my mobile, or just leave a message and I will get back to you today. Thanks a lot. Talk soon. Bye.',this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Play again</button>
+    </div>
+    <div class="opt-list" style="max-width:720px">
+      <div class="opt-item"><strong>1. The Thursday call must move because...</strong><br>(a) Daniel is sick &nbsp; (b) something urgent came up with a client &nbsp; (c) Laura is on holiday</div>
+      <div class="opt-item"><strong>2. Daniel suggests...</strong><br>(a) Friday morning &nbsp; (b) Thursday afternoon &nbsp; (c) next Monday</div>
+      <div class="opt-item"><strong>3. Daniel is available...</strong><br>(a) after noon &nbsp; (b) any time before noon &nbsp; (c) all day Friday</div>
+      <div class="opt-item"><strong>4. If Friday does not work, Laura should...</strong><br>(a) send an email &nbsp; (b) call him back &nbsp; (c) wait for him to write</div>
+    </div>
+    <div class="comp-questions" style="max-width:720px;margin:.8rem auto 0">
+      <div class="comp-q answer-key" onclick="revealComp(this)">
+        <div class="q-text">Answer key &mdash; click to reveal</div>
+        <div class="q-answer">1-b &nbsp; 2-a &nbsp; 3-b &nbsp; 4-b</div>
+      </div>
+    </div>
+    <div class="reset-row"><button class="reset-exercise-btn" onclick="resetSlideExercises(this)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Resetar / esconder resposta</button></div>
+  </div>
+</div>
+
+<!-- SLIDE 7: POST-SKILL DISCUSSION -->
+<div class="slide slide-light" data-slide="7" data-lesson="2" data-phase="3">
+  <div class="slide-inner">
+    <div class="chapter-label">Brainstorming -- Discussion</div>
+    <h2 class="slide-heading" style="font-size:1.8rem">What Do <span class="accent">You</span> Think?</h2>
+    <p style="text-align:center;font-size:.9rem;color:var(--text-dim);max-width:600px;margin:0 auto">Discuss these questions about the message and about your own phone habits.</p>
+    <div style="max-width:680px;margin:1rem auto 0;display:flex;flex-direction:column;gap:.6rem;text-align:left">
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.75rem 1rem;font-size:.95rem">1. Was Daniel's voicemail clear and polite? What made it good?</div>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.75rem 1rem;font-size:.95rem">2. What information should a good voicemail always include?</div>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.75rem 1rem;font-size:.95rem">3. Do you find it harder to understand people on the phone than face to face? Why?</div>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.75rem 1rem;font-size:.95rem">4. What is one phrase from the message you could use at work this week?</div>
+    </div>
+    <div class="comp-questions" style="max-width:680px;margin:.8rem auto 0">
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">Sample ideas &mdash; for the teacher (model only if needed)</div><div class="q-answer"><em>Open answers.</em> A good voicemail usually has: your name and company, who the message is for, the reason, what you want (a call back / a new time), and how to reach you. Encourage Helen to give a reason and a personal example in each answer.</div></div>
+    </div>
+    <div class="reset-row"><button class="reset-exercise-btn" onclick="resetSlideExercises(this)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Resetar / esconder resposta</button></div>
+  </div>
+</div>
+
+<!-- ===== CHAPTER 4: DIVING DEEP ===== -->
+<!-- SLIDE 8: LANGUAGE FOCUS (polite requests with can/could -- implicit grammar, no audio) -->
+<div class="slide slide-light" data-slide="8" data-lesson="2" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Diving Deep -- Language Focus</div>
+    <h2 class="slide-heading" style="font-size:1.7rem">Polite Requests on the <span class="accent">Phone</span></h2>
+    <div class="grammar-sentences" style="max-width:720px;margin:.4rem auto 0">
+      <div class="grammar-sentence"><span style="font-size:.78rem;color:var(--text-dim);display:block">Ask to speak to someone</span>&ldquo;Hello, <strong>could I speak to</strong> Laura, please?&rdquo;</div>
+      <div class="grammar-sentence"><span style="font-size:.78rem;color:var(--text-dim);display:block">Offer to help</span>&ldquo;<strong>Can I take</strong> a message?&rdquo;</div>
+      <div class="grammar-sentence"><span style="font-size:.78rem;color:var(--text-dim);display:block">Ask the caller to wait</span>&ldquo;<strong>Could you hold on</strong> a moment, please?&rdquo;</div>
+      <div class="grammar-sentence"><span style="font-size:.78rem;color:var(--text-dim);display:block">Ask for a call back</span>&ldquo;<strong>Could you ask her to call me back?</strong>&rdquo;</div>
+    </div>
+    <div class="comp-questions" style="max-width:720px;margin:.6rem auto 0">
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. Which word sounds more polite and softer: &ldquo;Can I...&rdquo; or &ldquo;Could I...&rdquo;?</div><div class="q-answer"><strong>Could</strong> is a little softer and more polite. Both are correct and common on the phone.</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What form of the verb comes after can/could: &ldquo;Could you to hold on&rdquo; or &ldquo;Could you hold on&rdquo;?</div><div class="q-answer"><strong>Could you hold on</strong> &mdash; use the base verb, with no &ldquo;to&rdquo;.</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. You answer the phone and the person is not there. What do you offer?</div><div class="q-answer"><strong>&ldquo;Can I take a message?&rdquo;</strong> (or &ldquo;Would you like to leave a message?&rdquo;)</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">4. Why do we add &ldquo;please&rdquo; and use &ldquo;could&rdquo; on business calls?</div><div class="q-answer">To sound <em>polite and professional</em> &mdash; on the phone, tone matters even more because the other person cannot see you.</div></div>
+    </div>
+    <div class="reset-row"><button class="reset-exercise-btn" onclick="resetSlideExercises(this)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Resetar / esconder resposta</button></div>
+  </div>
+</div>
+
+<!-- SLIDE 9: PRACTICE 1 (Category A -- Matching, controlled core + freedom hook) -->
+<div class="slide slide-light" data-slide="9" data-lesson="2" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Practice -- Category A</div>
+    <h2 class="slide-heading" style="font-size:1.7rem">Match the Phrase to its <span class="accent">Function</span></h2>
+    <div style="display:grid;grid-template-columns:1.2fr 1.25fr;gap:1rem;max-width:780px;margin:.6rem auto 0;text-align:left;font-size:.84rem">
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:.45rem .8rem"><strong>A.</strong> &ldquo;Could I speak to Mr. Costa, please?&rdquo;</div>
+        <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:.45rem .8rem"><strong>B.</strong> &ldquo;Can I take a message?&rdquo;</div>
+        <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:.45rem .8rem"><strong>C.</strong> &ldquo;Could you hold on a moment?&rdquo;</div>
+        <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:.45rem .8rem"><strong>D.</strong> &ldquo;I'll put you through.&rdquo;</div>
+        <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:.45rem .8rem"><strong>E.</strong> &ldquo;Could you call me back?&rdquo;</div>
+        <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:.45rem .8rem"><strong>F.</strong> &ldquo;Sorry, she's not available right now.&rdquo;</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:.45rem .8rem"><strong>1.</strong> offering to write down a message</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:.45rem .8rem"><strong>2.</strong> asking to talk to someone</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:.45rem .8rem"><strong>3.</strong> connecting the caller to another person</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:.45rem .8rem"><strong>4.</strong> asking the other person to wait</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:.45rem .8rem"><strong>5.</strong> saying someone cannot talk now</div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:.45rem .8rem"><strong>6.</strong> asking someone to return your call</div>
+      </div>
+    </div>
+    <div style="max-width:780px;margin:.8rem auto 0;background:var(--accent-dim);border:1px dashed var(--accent);border-radius:10px;padding:.8rem 1rem;font-size:.88rem;text-align:left"><strong>Freedom hook:</strong> add one more useful phone phrase of your own, and say when you would use it.</div>
+    <div class="comp-questions" style="max-width:780px;margin:.8rem auto 0">
+      <div class="comp-q answer-key" onclick="revealComp(this)">
+        <div class="q-text">Answer key &mdash; click to reveal</div>
+        <div class="q-answer">A-2 &nbsp; B-1 &nbsp; C-4 &nbsp; D-3 &nbsp; E-6 &nbsp; F-5</div>
+      </div>
+    </div>
+    <div class="reset-row"><button class="reset-exercise-btn" onclick="resetSlideExercises(this)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Resetar / esconder resposta</button></div>
+  </div>
+</div>
+
+<!-- SLIDE 10: PRACTICE 2 (Category B -- Fill in the blanks / scaffolding) -->
+<div class="slide slide-light" data-slide="10" data-lesson="2" data-phase="4">
+  <div class="slide-inner">
+    <div class="chapter-label">Practice -- Category B</div>
+    <h2 class="slide-heading" style="font-size:1.7rem">Complete the <span class="accent">Phone Call</span></h2>
+    <p style="text-align:center;font-size:.9rem;color:var(--text-dim);max-width:640px;margin:0 auto">Complete each line with <strong>can</strong> or <strong>could</strong> and the right verb.</p>
+    <div class="fill-grid" style="max-width:700px;margin:.8rem auto 0">
+      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">1. &ldquo;<span class="fill-blank">?</span><span class="fill-answer">Could I speak</span> to Laura, please?&rdquo;</span></div>
+      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">2. &ldquo;<span class="fill-blank">?</span><span class="fill-answer">Could you hold</span> on a moment, please?&rdquo;</span></div>
+      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">3. &ldquo;<span class="fill-blank">?</span><span class="fill-answer">Can I take</span> a message?&rdquo;</span></div>
+      <div class="fill-item" onclick="revealFill(this)"><span class="fill-text">4. &ldquo;<span class="fill-blank">?</span><span class="fill-answer">Could you call</span> me back this afternoon?&rdquo;</span></div>
+    </div>
+    <div style="max-width:700px;margin:.8rem auto 0;background:var(--accent-dim);border:1px dashed var(--accent);border-radius:10px;padding:.8rem 1rem;font-size:.9rem;text-align:left">
+      <strong>Now leave your own voicemail (say it out loud):</strong><br>
+      5. Say who you are, why you are calling, and ask the person to call you back &mdash; in two or three sentences.
+    </div>
+    <div class="comp-questions" style="max-width:700px;margin:.6rem auto 0">
+      <div class="comp-q answer-key" onclick="revealComp(this)">
+        <div class="q-text">Answer key (1-4) &mdash; click to reveal</div>
+        <div class="q-answer">1. Could I speak &nbsp; 2. Could you hold &nbsp; 3. Can I take &nbsp; 4. Could you call<br><span style="opacity:.75">For 5, accept any reasonable, justified variation &mdash; the key follows Helen's own voicemail.</span></div>
+      </div>
+    </div>
+    <div class="reset-row"><button class="reset-exercise-btn" onclick="resetSlideExercises(this)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Resetar / esconder resposta</button></div>
+  </div>
+</div>
+
+<!-- ===== CHAPTER 5: YOUR TURN ===== -->
+<!-- SLIDE 11: PRODUCTION (case study) + DISCUSSION -->
+<div class="slide slide-light" data-slide="11" data-lesson="2" data-phase="5">
+  <div class="slide-inner">
+    <div class="chapter-label">Your Turn -- Production (Case Study)</div>
+    <h2 class="slide-heading" style="font-size:1.8rem">Handle the <span class="accent">Missed Call</span></h2>
+    <div class="roleplay-card" style="margin-top:.6rem">
+      <div class="roleplay-body">
+        <div class="roleplay-scenario"><strong>The case:</strong> You are back from lunch and you see a missed call and a short note from reception: &ldquo;A partner from the London office called &mdash; it sounded <strong>urgent</strong>. They are three hours ahead of us.&rdquo; It is 2 p.m. in S&atilde;o Paulo. <br><br><strong>Step 1 &mdash; Decide:</strong> Do you call back now or send an email? Give one reason. <br><strong>Step 2 &mdash; Act:</strong> The partner does not answer, so leave a <strong>voicemail</strong>: introduce yourself (name, role, company), say why you are calling, propose a time to talk, and ask them to call you back.</div>
+        <p style="font-size:.78rem;font-weight:600;color:var(--text-dim);margin-bottom:.4rem">USEFUL LANGUAGE</p>
+        <div class="roleplay-keywords">
+          <span class="roleplay-kw">Hi, this is ... from ...</span><span class="roleplay-kw">I'm calling about ...</span><span class="roleplay-kw">It's a little urgent</span><span class="roleplay-kw">Could we schedule a call?</span><span class="roleplay-kw">I'm available before ...</span><span class="roleplay-kw">Could you call me back?</span><span class="roleplay-kw">You can reach me on ...</span><span class="roleplay-kw">Thanks, talk soon</span>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:680px;margin:1rem auto 0;display:flex;flex-direction:column;gap:.6rem;text-align:left">
+      <p style="font-size:.8rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)">Then discuss</p>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.7rem 1rem;font-size:.95rem">1. Which is harder for you in English: understanding a voicemail, or leaving one? Why?</div>
+      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:10px;padding:.7rem 1rem;font-size:.95rem">2. What is your rule for &ldquo;call now&rdquo; vs &ldquo;email and wait&rdquo; at work?</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHAPTER 6: WRAP-UP ===== -->
+<!-- SLIDE 12: WRAP-UP -->
+<div class="slide slide-light" data-slide="12" data-lesson="2" data-phase="6">
+  <div class="slide-inner">
+    <div class="chapter-label">Wrap-up</div>
+    <h2 class="slide-heading">What We Did <span class="accent">Today</span></h2>
+    <div class="check-grid" style="max-width:620px;margin:.8rem auto 0">
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span style="font-size:.92rem">I can use telephone vocabulary: voicemail, call back, available, urgent, message</span></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span style="font-size:.92rem">I listened to a voicemail and understood the main idea and the details</span></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span style="font-size:.92rem">I can make polite requests: &ldquo;Could I speak to...?&rdquo;, &ldquo;Can I take a message?&rdquo;</span></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span style="font-size:.92rem">I left a clear voicemail: who I am, why I'm calling, and a call-back request</span></div>
+    </div>
+    <div class="comp-questions" style="max-width:620px;margin:1rem auto 0">
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. Give me three things a good voicemail should include.</div><div class="q-answer">e.g. your name and company, the reason for the call, what you want (a call back / a new time), and how to reach you.</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. Ask me to wait, and ask me to call you back &mdash; politely.</div><div class="q-answer">&ldquo;Could you hold on a moment, please?&rdquo; and &ldquo;Could you call me back when you are free?&rdquo;</div></div>
+      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. Who do you need to call in English soon? What will you say first?</div><div class="q-answer">Open, personal &mdash; closes on Helen's own real plan.</div></div>
+    </div>
+    <div style="max-width:560px;margin:1.2rem auto 0;background:var(--accent-dim);border:1px solid var(--accent);border-radius:12px;padding:1.1rem;text-align:center">
+      <h3 style="font-size:1.05rem;font-weight:700;color:var(--accent)">Lesson 02 -- Complete</h3>
+      <p style="font-size:.86rem;color:var(--text-dim);margin-top:.4rem">Optional homework: record a 30-second voicemail in English for a real work contact you need to reach this week.</p>
+    </div>
+    <div class="reset-row"><button class="reset-exercise-btn" onclick="resetSlideExercises(this)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Resetar / esconder resposta</button></div>
+  </div>
+</div>
+
+</div><!-- /slides-container -->
+<div class="nav-bar" style="justify-content:space-between;">
+    <button onclick="exitSlideMode()" aria-label="Exit presentation" style="background:transparent;border:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.85);border-radius:8px;padding:.55rem 1.1rem;font-size:.72rem;font-weight:700;letter-spacing:1px;cursor:pointer;flex:0 0 auto;">&#10005; EXIT</button>
+    <span id="lessonLabel" style="color:rgba(255,255,255,.5);font-size:.72rem;font-weight:600;letter-spacing:1px;flex:0 0 auto;">LESSON 02</span>
+    <div class="slide-dots" id="slideDots" style="display:none;"></div>
+    <div style="display:flex;gap:.6rem;align-items:center;flex:0 0 auto;">
+      <button id="prevBtn" onclick="changeSlide(-1)" disabled style="background:transparent;border:1.5px solid var(--accent);color:var(--accent);border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;">&#8592; Previous</button>
+      <button id="nextBtn" onclick="changeSlide(1)" style="background:var(--accent);border:1.5px solid var(--accent);color:#fff;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;">Next &#8594;</button>
+    </div>
+  </div>
+
+</div><!-- /slides-wrapper -->
+
+<div class="teacher-t" id="teacherT">T<div class="teacher-t-panel" id="teacherPanel"></div></div>
+
+<script>
+function switchTab(tabId) {
+  document.body.classList.remove('slide-mode');
+  document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-' + tabId).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function exitSlideMode() { document.body.classList.remove('slide-mode'); document.querySelectorAll('.slide').forEach(function(s) { s.classList.remove('active'); }); window.location.href = '/aluno/helen-mendes-v4.html#inclass'; }
+
+function enterSlideMode() {
+  window.scrollTo(0, 0);
+  document.body.classList.add('slide-mode');
+  if (currentSlide) goToSlide(currentSlide);
+  else goToSlide(1);
+}
+
+var currentAudio = null;
+var audioSpeed = parseFloat(localStorage.getItem('alumni-audio-speed') || '1'); if(isNaN(audioSpeed))audioSpeed=1;
+
+function setAudioSpeed(speed, btn) {
+  audioSpeed = speed;
+  localStorage.setItem('alumni-audio-speed', speed);
+  document.querySelectorAll('.speed-btn').forEach(function(b) {
+    b.style.background = 'var(--bg-card)'; b.style.color = 'var(--text)';
+    b.style.borderColor = 'var(--border)'; b.style.fontWeight = '400';
+    b.classList.remove('active');
+  });
+  btn.style.background = 'var(--accent)'; btn.style.color = '#fff';
+  btn.style.borderColor = 'var(--accent)'; btn.style.fontWeight = '600';
+  btn.classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.hash === '#slides') { setTimeout(function(){ enterSlideMode(); }, 100); }
+  if(new URLSearchParams(window.location.search).get('autostart'))setTimeout(function(){enterSlideMode()},100);
+  var saved = parseFloat(localStorage.getItem('alumni-audio-speed') || '1'); if(isNaN(saved)){saved=1;localStorage.removeItem('alumni-audio-speed')}
+  var btn = document.querySelector('.speed-btn[data-speed="' + saved + '"]');
+  if (btn) setAudioSpeed(saved, btn);
+});
+
+function speakText(text, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  var cleanText = text.replace(/\\'/g, "'");
+  var file = audioMap[cleanText] || audioMap[cleanText.replace(/\.$/, '')] || audioMap[cleanText + '.'];
+  if (file) {
+    currentAudio = new Audio(file);
+    currentAudio.playbackRate = audioSpeed || 1;
+    currentAudio.play().catch(function() { ttsSpeak(cleanText); });
+  } else {
+    ttsSpeak(cleanText);
+  }
+}
+
+function ttsSpeak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = audioSpeed * 0.85; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+var currentSlide = 1;
+var totalSlides = 12;
+var slidePhases = {1:1,2:2,3:2,4:2,5:3,6:3,7:3,8:4,9:4,10:4,11:5,12:6};
+
+function changeSlide(dir) {
+  var next = currentSlide + dir;
+  if (next < 1 || next > totalSlides) return;
+  goToSlide(next);
+}
+
+function goToSlide(n) {
+  stopAllAudio();
+  var prev = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
+  if (prev) prev.classList.remove('active');
+  currentSlide = n;
+  var activeSlide = document.querySelector('.slide[data-slide="' + currentSlide + '"]');
+  if (activeSlide) { activeSlide.classList.add('active'); activeSlide.scrollTop = 0; }
+  var teacherText = activeSlide ? activeSlide.getAttribute('data-teacher') || '' : '';
+  document.getElementById('teacherPanel').innerHTML = teacherText;
+  updateNav();
+  updatePhaseBar();
+}
+
+function updateNav() {
+  document.getElementById('slideCounter').textContent = String(currentSlide).padStart(2,'0') + ' / ' + String(totalSlides).padStart(2,'0');
+  document.getElementById('prevBtn').disabled = currentSlide === 1;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+  var dots = document.querySelectorAll('.slide-dot');
+  dots.forEach(function(d, i) { d.classList.toggle('active', i + 1 === currentSlide); });
+}
+
+function updatePhaseBar() {
+  var cp = slidePhases[currentSlide];
+  document.querySelectorAll('.phase-segment').forEach(function(seg) {
+    var p = parseInt(seg.dataset.phase);
+    seg.classList.remove('completed','current','upcoming');
+    if (p < cp) seg.classList.add('completed');
+    else if (p === cp) seg.classList.add('current');
+    else seg.classList.add('upcoming');
+  });
+  document.querySelectorAll('.phase-label').forEach(function(lbl) {
+    var p = parseInt(lbl.dataset.phase);
+    lbl.classList.remove('completed','current');
+    if (p < cp) lbl.classList.add('completed');
+    else if (p === cp) lbl.classList.add('current');
+  });
+}
+
+(function() {
+  var dotsEl = document.getElementById('slideDots');
+  for (var i = 1; i <= totalSlides; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'slide-dot' + (i === 1 ? ' active' : '');
+    dot.dataset.slide = i;
+    dot.onclick = (function(n) { return function() { goToSlide(n); }; })(i);
+    dotsEl.appendChild(dot);
+  }
+})();
+
+document.addEventListener('keydown', function(e) {
+  if (!document.body.classList.contains('slide-mode')) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); changeSlide(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); changeSlide(-1); }
+});
+
+function revealVocab(card) {
+  card.classList.toggle('revealed');
+  var grid = card.closest('.vocab-grid');
+  var count = grid.querySelectorAll('.vocab-card.revealed').length;
+  var total = grid.querySelectorAll('.vocab-card').length;
+  document.getElementById('vocabCount1').textContent = count + ' / ' + total + ' words revealed';
+}
+
+function revealFill(item) { item.classList.add('revealed'); }
+function revealComp(q) { q.classList.add('revealed'); }
+
+function resetSlideExercises(btn) {
+  var slide = btn.closest('.slide');
+  if (!slide) return;
+  slide.querySelectorAll('.vocab-card.revealed').forEach(function(c) { c.classList.remove('revealed'); });
+  slide.querySelectorAll('.fill-item.revealed').forEach(function(f) { f.classList.remove('revealed'); });
+  slide.querySelectorAll('.comp-q.revealed').forEach(function(q) { q.classList.remove('revealed'); });
+  slide.querySelectorAll('.check-item.checked').forEach(function(c) { c.classList.remove('checked'); });
+  var vc = slide.querySelector('#vocabCount1');
+  if (vc) {
+    var grid = slide.querySelector('.vocab-grid');
+    if (grid) vc.textContent = '0 / ' + grid.querySelectorAll('.vocab-card').length + ' words revealed';
+  }
+  btn.classList.add('reset-spin');
+  setTimeout(function() { btn.classList.remove('reset-spin'); }, 400);
+}
+
+function stopAllAudio() {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+function toggleCheck(item) { item.classList.toggle('checked'); }
+
+var initSlide = document.querySelector('.slide[data-slide="1"]');
+if (initSlide) document.getElementById('teacherPanel').innerHTML = initSlide.getAttribute('data-teacher') || '';
+
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && document.body.classList.contains('slide-mode')) { e.preventDefault(); exitSlideMode(); } });
+</script>
+<script src="/lib/lesson-progress.js"></script>
+<script src="/lib/controle-aulas.js"></script>
+<script src="/lib/activity-sync.js"></script>
+<script src="/lib/contrast-guard.js"></script>
+</body>
+</html>
