@@ -1155,6 +1155,9 @@ body.slide-mode .nav-bar { display:flex; }
       </div>
 
     </div>
+    <div style="max-width:520px;margin:.8rem auto 0;text-align:center">
+      <button id="qfBack" onclick="prevQF()" aria-label="Previous question" disabled style="background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:default;opacity:.4;transition:all .15s">&#8592; Back</button>
+    </div>
   </div>
 </div>
 
@@ -1578,7 +1581,18 @@ function nextDialogueLine() {
 
 // ===== QUICK CHALLENGE =====
 var qfCurrent = 1;
-function nextQF() { qfCurrent++; var all = document.querySelectorAll('.qf-card'); all.forEach(function(c) { c.style.display = 'none'; }); var next = document.querySelector('.qf-card[data-qf="' + qfCurrent + '"]'); if (next) next.style.display = 'block'; document.getElementById('qfScore').textContent = (qfCurrent - 1) + ' / ' + all.length; }
+function renderQF() {
+  var all = document.querySelectorAll('.qf-card');
+  all.forEach(function(c) { c.style.display = 'none'; });
+  var cur = document.querySelector('.qf-card[data-qf="' + qfCurrent + '"]');
+  if (cur) cur.style.display = 'block';
+  var sc = document.getElementById('qfScore'); if (sc) sc.textContent = (qfCurrent - 1) + ' / ' + all.length;
+  var back = document.getElementById('qfBack');
+  if (back) { var d = qfCurrent <= 1; back.disabled = d; back.style.opacity = d ? '.4' : '1'; back.style.cursor = d ? 'default' : 'pointer'; }
+}
+function nextQF() { var all = document.querySelectorAll('.qf-card'); if (qfCurrent < all.length) { qfCurrent++; renderQF(); } }
+function prevQF() { if (qfCurrent > 1) { qfCurrent--; renderQF(); } }
+renderQF();
 
 // ===== LISTENING AUDIO =====
 // ===== LISTENING PLAYER (MP3 unico + controles completos) =====
