@@ -1063,7 +1063,10 @@ body.slide-mode .nav-bar { display:flex; }
       </div>
 
     </div>
-    <button class="primary-btn" id="nextLineBtn" onclick="nextDialogueLine()" style="margin:1rem auto 0;display:block;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer">Next Line</button>
+    <div style="display:flex;gap:.6rem;justify-content:center;margin:1rem auto 0">
+      <button id="prevLineBtn" onclick="prevDialogueLine()" aria-label="Previous line" disabled style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:default;opacity:.4;transition:all .15s">&#8592; Back</button>
+      <button class="primary-btn" id="nextLineBtn" onclick="nextDialogueLine()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer">Next Line</button>
+    </div>
   </div>
 </div>
 
@@ -1565,19 +1568,26 @@ function revealError(card) {
 }
 
 // ===== DIALOGUE LINE-BY-LINE =====
-var dialogueLine = 0;
-function nextDialogueLine() {
-  dialogueLine++;
-  var line = document.querySelector('.dialogue-line[data-line="' + dialogueLine + '"]');
-  if (line) {
-    line.classList.add('visible');
-    if (dialogueLine >= 10) {
-      document.getElementById('nextLineBtn').textContent = 'Dialogue Complete';
-      document.getElementById('nextLineBtn').disabled = true;
-      document.getElementById('nextLineBtn').style.opacity = '0.5';
-    }
+var dialogueLine = 1;
+function renderDialogue() {
+  var lines = document.querySelectorAll('.dialogue-line');
+  var total = lines.length;
+  lines.forEach(function(l) {
+    var n = parseInt(l.getAttribute('data-line'), 10);
+    if (n <= dialogueLine) l.classList.add('visible'); else l.classList.remove('visible');
+  });
+  var nb = document.getElementById('nextLineBtn');
+  if (nb) {
+    var done = dialogueLine >= total;
+    nb.textContent = done ? 'Dialogue Complete' : 'Next Line';
+    nb.disabled = done; nb.style.opacity = done ? '0.5' : '1'; nb.style.cursor = done ? 'default' : 'pointer';
   }
+  var pb = document.getElementById('prevLineBtn');
+  if (pb) { var d = dialogueLine <= 1; pb.disabled = d; pb.style.opacity = d ? '.4' : '1'; pb.style.cursor = d ? 'default' : 'pointer'; }
 }
+function nextDialogueLine() { var total = document.querySelectorAll('.dialogue-line').length; if (dialogueLine < total) { dialogueLine++; renderDialogue(); } }
+function prevDialogueLine() { if (dialogueLine > 1) { dialogueLine--; renderDialogue(); } }
+renderDialogue();
 
 // ===== QUICK CHALLENGE =====
 var qfCurrent = 1;
