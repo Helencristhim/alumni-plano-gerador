@@ -15,6 +15,7 @@ Uso (de dentro de alumni-plano-gerador/, após git fetch):
     python3 ../audit_hubs_struct.py            # lê do origin/main
     python3 ../audit_hubs_struct.py --local    # lê do working tree
 """
+import os
 import re
 import subprocess
 import sys
@@ -118,7 +119,10 @@ def flags_for(txt):
 
 
 # Slugs lixo: hubs que NÃO devem bloquear o CI (não são alunos reais / depreciados).
-JUNK_SLUGS = ('daniela-feitozaV2', 'percival-jrV2', 'maisa', 'zilaudio',
+# ATENÇÃO: o filtro é por slug EXATO (basename sem .html), NUNCA por substring —
+# senão um lixo curto mascara um aluno real (ex.: 'maisa' escondia
+# 'maisa-de-oliveira-santos', que passou a ser o slug canônico).
+JUNK_SLUGS = ('daniela-feitozaV2', 'percival-jrV2', 'zilaudio',
               'elaine-test', 'eduarda-gabriel-new', 'helen-mendes-teste')
 
 
@@ -126,11 +130,15 @@ def is_hub_path(p):
     return bool(re.search(r'public/(aluno|professor)/[a-z0-9-]+\.html$', p) and '-aula' not in p)
 
 
+def slug_of(p):
+    return os.path.basename(p)[:-5] if p.endswith('.html') else os.path.basename(p)
+
+
 def check_mode(paths):
     """GATE de CI: recebe arquivos (tocados num PR), checa só os que são HUB,
     sai 1 se algum tiver defeito. Lê do working tree."""
     hubs = [p for p in paths if is_hub_path(p)
-            and not any(j in p for j in JUNK_SLUGS)]
+            and slug_of(p) not in JUNK_SLUGS]
     if not hubs:
         print("audit_hubs_struct --check: nenhum hub real nos arquivos dados — OK")
         return 0
