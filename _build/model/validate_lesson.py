@@ -422,6 +422,20 @@ def validate(path):
                 if no_link:
                     fails.append(f'aula {N}: {len(no_link)} de {len(cards)} complementar(es) SEM link '
                                  f'clicável (<a href="http...">) — todo media-card precisa de link (REGRA 17)')
+                # LINK PLACEHOLDER de busca (GATE, bloqueante): um card com link do tipo
+                # youtube.com/results?search_query=... / google search / bing search NÃO aponta
+                # pro episódio/vídeo exato — é o padrão preguiçoso que engana o check acima
+                # (tem href="http" mas cai numa busca). Memória links-episodio-real: link vai ao
+                # episódio/vídeo EXATO, verificado. Ex.: modelo helen-mendes saiu com 6 desses.
+                PLACEHOLDER_LINK = re.compile(
+                    r'href="https?://[^"]*'
+                    r'(?:/results\?|[?&]search_query=|google\.[a-z.]+/search|bing\.com/search|/search\?q=)',
+                    re.I)
+                placeholder = [c for c in cards if PLACEHOLDER_LINK.search(c)]
+                if placeholder:
+                    fails.append(f'aula {N}: {len(placeholder)} complementar(es) com link PLACEHOLDER de '
+                                 f'busca (youtube.com/results, search_query=, google/bing search) em vez do '
+                                 f'episódio/vídeo DIRETO — trocar pelo link exato verificado (REGRA 17)')
                 # LAYOUT media-grid (REGRA 17): os cards da aula DEVEM estar agrupados num
                 # <div class="media-grid"> sob o <h4> da aula (2 em cima + 1 embaixo, igual à
                 # maria-claudia). Card de aula fora de media-grid = layout em coluna única = FAIL.
