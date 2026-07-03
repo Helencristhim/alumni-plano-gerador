@@ -68,9 +68,17 @@ def insert(hub_path, cfg, content_dir, is_aluno):
     target = f'/{folder}/{slug}-aula{n}.html?autostart=1'
     card = B.menu_card(cfg, target)
 
-    # 1. stampN — após stamp{N-1}
+    # 1. stampN — após stamp{N-1}. Se o config não define um stamp id=N (geração
+    #    1-aula-por-vez além do bloco inicial de 5 stamps do modelo), sintetiza a
+    #    partir do título da aula + recicla uma das imagens de stamp existentes.
+    #    Assim nunca quebra e a stamps-row escala até N aulas (roster grande = 1
+    #    stamp por aula, mesmo padrão de fabiana/rafael).
     st = next((x for x in cfg['stamps'] if x['id'] == n), None)
-    assert st, f'config sem stamp id={n}'
+    if not st:
+        base = cfg['stamps'][(n - 1) % len(cfg['stamps'])] if cfg.get('stamps') else {}
+        label = (cfg['lesson'].get('menu_title', '').split(' -- ')[0]
+                 .split(' — ')[0].strip()) or f'Lesson {n}'
+        st = {'id': n, 'label': label, 'img': base.get('img', '')}
     if f'id="stamp{n}"' not in s:
         stamp_html = (f'<div class="stamp" id="stamp{n}" data-label="{st["label"]}" '
                       f"style=\"background-image:url('{st['img']}')\"></div>\n")
