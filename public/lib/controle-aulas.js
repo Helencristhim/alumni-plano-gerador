@@ -106,13 +106,17 @@
 
       if (numAulas === 0) { tabContent.innerHTML = '<div class="controle-empty">Nenhuma aula cadastrada no currículo.</div>'; return; }
 
-      // Se currículo não tem todas as aulas, preencher com genéricas
+      // Título do MATERIAL autorado (Pre-class / IN CLASS) tem PRIORIDADE sobre o
+      // curriculo do Supabase: o curriculo é o PLANO original e frequentemente divergiu
+      // do que foi de fato gerado (título errado no Controle — REGRA 29). Se a aula já
+      // existe no hub, o Controle mostra o título real dela; senão, cai no plano.
       var aulas = [];
       for (var i = 1; i <= numAulas; i++) {
         var found = curriculo.find(function(c) { return c.aula === i; });
+        var authored = authoredTema(i);
         aulas.push({
           num: i,
-          tema: found ? found.tema : 'Aula ' + i
+          tema: authored || (found ? found.tema : 'Aula ' + i)
         });
       }
 
@@ -135,6 +139,23 @@
       console.error('Controle de Aulas error:', err);
       tabContent.innerHTML = '<div class="controle-empty">Erro ao carregar: ' + escHTML(err.message) + '</div>';
     }
+  }
+
+  // Lê o título REAL da aula a partir do material autorado no hub: primeiro o
+  // Pre-class (#ex-lesson-N h3), depois o menu IN CLASS (card com enterSlideMode(N)).
+  // Retorna null se a aula ainda não foi gerada no hub (aí usa-se o plano do curriculo).
+  function authoredTema(n) {
+    var ex = document.getElementById('ex-lesson-' + n);
+    if (ex) {
+      var h3 = ex.querySelector('h3');
+      if (h3 && h3.textContent && h3.textContent.trim()) return h3.textContent.trim();
+    }
+    var cards = document.querySelectorAll('[onclick*="enterSlideMode(' + n + ')"]');
+    for (var k = 0; k < cards.length; k++) {
+      var t = cards[k].querySelector('div[style*="font-weight:600"]');
+      if (t && t.textContent && t.textContent.trim()) return t.textContent.trim();
+    }
+    return null;
   }
 
   function renderControle(aulas, savedData, blocos) {
