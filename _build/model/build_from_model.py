@@ -426,6 +426,11 @@ def final_asserts(s, cfg, label, is_hub=False):
     assert '/lib/contrast-guard.js' in s, f'{label}: contrast-guard NÃO plugado'
     assert "class=\"check-item\" onclick=\"this.classList.toggle('checked')\"" not in s, \
         f'{label}: checklist com onclick inline não persiste (use toggleCheck(this) — REGRA 28)'
+    if 'class="check-item"' in s:
+        for g in re.findall(r'<div class="check-grid"[^>]*>', s):
+            assert 'data-lesson=' in g, \
+                f'{label}: check-grid sem data-lesson — lesson-progress.js não detecta a aula, ' \
+                f'inclass_done nunca salva (barra do pacote/stamps travados — REGRA 28)'
     assert 'toggleListening' not in s, f'{label}: listening fake presente'
     if not is_hub:
         assert 'function mpToggle' in s or 'slidesContainer' not in s, f'{label}: player de listening ausente'
@@ -447,6 +452,12 @@ def build_standalone(cfg, content_dir, manifest):
     slides = slides.replace(
         'class="check-item" onclick="this.classList.toggle(\'checked\')"',
         'class="check-item" onclick="toggleCheck(this)"')
+    # O check-grid do "What I Learned" DEVE ter data-lesson=N — é assim que o
+    # lesson-progress.js detecta a aula e grava inclass_done (barra do pacote + stamps).
+    # Template antigo usava id="checklist-N" (inconsistente entre alunos) SEM data-lesson,
+    # e nesses casos o save nunca disparava. Normaliza na fonte (N = número da aula).
+    slides = re.sub(r'<div class="check-grid"(?![^>]*\bdata-lesson=)',
+                    f'<div class="check-grid" data-lesson="{n}"', slides)
 
     s = read(os.path.join(PROF, f'{MODEL}-aula1.html'))
     s = base_swaps(s, cfg, n=n)

@@ -187,13 +187,16 @@ def check_fix_regressions(c, css, is_standalone_slides, fails, warns):
                          '".slide>.slide-inner{...max-height:calc(100vh - 11rem);overflow-y:auto...}" — '
                          'slide alto corta conteúdo atrás da nav-bar sem barra de rolagem (incidente Patricia aula 1)')
     # Sentence Building (.oral-item): a RESPOSTA (.oral-model) deve começar escondida
-    # e só aparecer no .revealed (toggle por clique). Sem isso, o gabarito vaza na tela.
-    if 'oral-model' in c:
+    # e só aparecer no clique. Sem isso, o gabarito vaza na tela.
+    # Só checa se o EXERCÍCIO existe de fato (class="oral-item" no HTML) — a mera presença
+    # do CSS .oral-model herdado do shell do modelo NÃO é vazamento (não há gabarito na tela).
+    # Aceita as duas variantes de revelar: .revealed (modelo novo) e .open (materiais antigos).
+    if re.search(r'class="oral-item[\s"]', c):
         hidden = re.search(r'\.oral-model\b[^{]*\{[^}]*display\s*:\s*none', css)
-        reveal = re.search(r'\.oral-item\.revealed\b[^{]*\.oral-model', css)
+        reveal = re.search(r'\.oral-item\.(revealed|open)\b[^{]*\.oral-model', css)
         if not (hidden and reveal):
             fails.append('Sentence Building VAZA o gabarito: .oral-model precisa começar com display:none '
-                         'e ser revelado por ".oral-item.revealed .oral-model" (toggle do clique)')
+                         'e ser revelado por ".oral-item.revealed .oral-model" (ou .open) no clique')
 
 
 def check_handlers_exist(c, fails):
