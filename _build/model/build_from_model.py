@@ -458,6 +458,11 @@ def build_standalone(cfg, content_dir, manifest):
     # e nesses casos o save nunca disparava. Normaliza na fonte (N = número da aula).
     slides = re.sub(r'<div class="check-grid"(?![^>]*\bdata-lesson=)',
                     f'<div class="check-grid" data-lesson="{n}"', slides)
+    # Common Mistake: riscar a FRASE INTEIRA (<s>"..."</s>) fica ilegível/feio. O erro já
+    # vem marcado com <strong>; move o <s> para envolver SÓ o <strong>, deixando o resto
+    # da frase legível ("I <s><strong>check always</strong></s> the schedule first.").
+    slides = re.sub(r'<s>"([^"<]*)<strong>([^<]*)</strong>([^"<]*)"</s>',
+                    r'"\1<s><strong>\2</strong></s>\3"', slides)
 
     s = read(os.path.join(PROF, f'{MODEL}-aula1.html'))
     s = base_swaps(s, cfg, n=n)
