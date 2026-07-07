@@ -463,6 +463,10 @@ def build_standalone(cfg, content_dir, manifest):
     # da frase legível ("I <s><strong>check always</strong></s> the schedule first.").
     slides = re.sub(r'<s>"([^"<]*)<strong>([^<]*)</strong>([^"<]*)"</s>',
                     r'"\1<s><strong>\2</strong></s>\3"', slides)
+    # Common Mistake: padding:1rem deixa as frases apertadas em cima/embaixo. Mais respiro.
+    slides = slides.replace(
+        'class="mistake-item" style="display:flex;align-items:flex-start;gap:.8rem;padding:1rem;',
+        'class="mistake-item" style="display:flex;align-items:flex-start;gap:.8rem;padding:1.4rem 1.2rem;')
 
     s = read(os.path.join(PROF, f'{MODEL}-aula1.html'))
     s = base_swaps(s, cfg, n=n)
