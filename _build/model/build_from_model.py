@@ -424,6 +424,8 @@ def final_asserts(s, cfg, label, is_hub=False):
     if not is_model:
         assert 'helen' not in low, f'{label}: sobrou referência ao modelo (helen)'
     assert '/lib/contrast-guard.js' in s, f'{label}: contrast-guard NÃO plugado'
+    assert "class=\"check-item\" onclick=\"this.classList.toggle('checked')\"" not in s, \
+        f'{label}: checklist com onclick inline não persiste (use toggleCheck(this) — REGRA 28)'
     assert 'toggleListening' not in s, f'{label}: listening fake presente'
     if not is_hub:
         assert 'function mpToggle' in s or 'slidesContainer' not in s, f'{label}: player de listening ausente'
@@ -438,6 +440,13 @@ def build_standalone(cfg, content_dir, manifest):
     audio_base = f'/audio/{cfg["slug"]}/'
     slides = read(os.path.join(content_dir, 'slides.html'))
     slides = expand_inclass_blocks(slides, cfg)  # B2 blocks (no-op se a aula não usar)
+    # REGRA 28: o checklist "What I Learned" DEVE chamar toggleCheck(this) — é ele que o
+    # lesson-progress.js faz wrap para salvar inclass_done (barra do pacote + stamps).
+    # onclick="this.classList.toggle('checked')" só alterna a classe visual: os tics somem
+    # ao recarregar e o progresso do pacote nunca avança. Normaliza aqui, na fonte.
+    slides = slides.replace(
+        'class="check-item" onclick="this.classList.toggle(\'checked\')"',
+        'class="check-item" onclick="toggleCheck(this)"')
 
     s = read(os.path.join(PROF, f'{MODEL}-aula1.html'))
     s = base_swaps(s, cfg, n=n)
