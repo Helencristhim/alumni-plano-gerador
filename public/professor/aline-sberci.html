@@ -6445,7 +6445,7 @@ function updatePhaseBar(){var cp=slidePhases[currentSlide];document.querySelecto
 document.addEventListener('keydown',function(e){if(!document.body.classList.contains('slide-mode'))return;if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();changeSlide(1)}if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();changeSlide(-1)}});
 function revealVocab(card){if(card.classList.contains('revealed'))return;card.classList.add('revealed');var grid=card.closest('.vocab-grid');var count=grid.querySelectorAll('.vocab-card-ic.revealed').length;var total=grid.querySelectorAll('.vocab-card-ic').length;var counterId=grid.id==='vocabGrid1'?'vocabCount1':grid.id==='vocabGrid2'?'vocabCount2':'vocabCount3';document.getElementById(counterId).textContent=count+' / '+total+' words revealed'}
 function revealGrammar(){document.getElementById('grammarTable').classList.add('show')}
-function revealFill(item){item.classList.add('revealed')}
+function revealFill(item){item.classList.toggle('revealed')}
 function revealComp(q){q.classList.add('revealed')}
 var errorCount=0;function revealError(card){if(card.classList.contains('revealed'))return;card.classList.add('revealed');errorCount++;document.getElementById('errorScore').textContent=errorCount+' / 5 errors found'}
 var dialogueLine=0;function nextDialogueLine(){dialogueLine++;var line=document.querySelector('.dialogue-line[data-line="'+dialogueLine+'"]');if(line){line.classList.add('visible');if(dialogueLine>=8){document.getElementById('nextLineBtn').textContent='Dialogue Complete';document.getElementById('nextLineBtn').disabled=true;document.getElementById('nextLineBtn').style.opacity='0.5'}}}
