@@ -69,7 +69,7 @@
     '.controle-header-row { display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:.5rem; }',
     '.controle-title { font:600 1.4rem/1.3 "Cormorant Garamond",Georgia,serif;color:#1a1a2e; }',
     '.controle-subtitle { font:400 .88rem/1.5 "Inter",sans-serif;color:#777; }',
-    '.controle-save-status { font:500 .78rem/1.4 "Inter",sans-serif;color:#16a34a;opacity:0;transition:opacity .3s; }',
+    '.controle-save-status { font:500 .78rem/1.4 "Inter",sans-serif;color:#15803d;opacity:0;transition:opacity .3s; }',
     '.controle-save-status.show { opacity:1; }',
     '.controle-save-status.error { color:#dc2626; }',
     '.controle-card { background:#fff;border:1px solid #d4d4cc;border-radius:12px;padding:1.5rem 1.8rem;box-shadow:0 2px 8px rgba(0,0,0,.04); }',
