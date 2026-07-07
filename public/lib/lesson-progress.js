@@ -98,12 +98,16 @@
     window.toggleCheck = function(item) {
       _originalToggleCheck(item);
       var slide = item.closest('.slide');
+      var grid = item.closest('.check-grid');
+      // detecta a aula pelo slide (template novo) OU pelo data-lesson do próprio
+      // check-grid (template antigo retrofitado). NUNCA confiar no id="checklist-N":
+      // é inconsistente entre alunos (patricia-xavier aula5 = checklist-1).
       var lessonNum = detectLesson(slide);
+      if (!lessonNum && grid && grid.dataset.lesson) lessonNum = parseInt(grid.dataset.lesson);
       if (!lessonNum) {
         console.warn('lesson-progress: could not detect lesson number for check item');
         return;
       }
-      var grid = item.closest('.check-grid');
       if (!grid) return;
       var allItems = grid.querySelectorAll('.check-item');
       var checkedItems = grid.querySelectorAll('.check-item.checked');
@@ -205,6 +209,7 @@
         document.querySelectorAll('.check-grid').forEach(function(grid) {
           var slide = grid.closest('.slide');
           var lessonNum = detectLesson(slide);
+          if (!lessonNum && grid.dataset.lesson) lessonNum = parseInt(grid.dataset.lesson);
           if (lessonNum && completedSet[lessonNum]) {
             grid.querySelectorAll('.check-item').forEach(function(item) {
               item.classList.add('checked');
