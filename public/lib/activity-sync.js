@@ -665,9 +665,9 @@
             var rd = tc.querySelector('[id^="think-result"]');
             if (rd) {
               if (recUrl) {
-                rd.innerHTML = '<audio controls src="' + recUrl + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:.72rem;color:#16a34a;margin-top:.3rem;">&#10003; Recording saved</p>';
+                rd.innerHTML = '<audio controls src="' + recUrl + '" style="width:100%;margin-top:0.5rem;"></audio><p style="font-size:.72rem;color:#15803d;margin-top:.3rem;">&#10003; Recording saved</p>';
               } else if (!rd.innerHTML) {
-                rd.innerHTML = '<p style="font-size:.82rem;color:#16a34a;font-weight:500;">&#10003; Recording completed</p>';
+                rd.innerHTML = '<p style="font-size:.82rem;color:#15803d;font-weight:500;">&#10003; Recording completed</p>';
               }
             }
           }
@@ -880,7 +880,7 @@
     style.textContent =
       '.btn-my-rec{display:inline-flex;align-items:center;gap:5px;padding:0.55rem 1.2rem;' +
       'font:600 0.85rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;' +
-      'color:#fff;background:#16a34a;border:2px solid #16a34a;border-radius:8px;cursor:pointer;' +
+      'color:#fff;background:#15803d;border:2px solid #15803d;border-radius:8px;cursor:pointer;' +
       'transition:all 150ms ease;white-space:nowrap}' +
       '.btn-my-rec:hover{background:#15803d;border-color:#15803d}' +
       '.btn-my-rec svg{flex-shrink:0}';
@@ -968,7 +968,7 @@
     resultDiv.innerHTML =
       '<button type="button" class="btn btn-your-pronunciation btn-free-rec-play" ' +
       'style="margin-top:.5rem">' + freePlayBtnHTML() + '</button>' +
-      '<p style="font-size:.72rem;color:#16a34a;margin-top:.3rem;">&#10003; Recording saved</p>';
+      '<p style="font-size:.72rem;color:#15803d;margin-top:.3rem;">&#10003; Recording saved</p>';
     var playBtn = resultDiv.querySelector('.btn-free-rec-play');
     if (!playBtn) return;
     playBtn.onclick = function(e) {
@@ -1209,9 +1209,9 @@
     // 6. Feedback visual
     var btn = lessonCard.querySelector('.btn-reset-lesson');
     if (btn) {
-      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Reset done!';
-      btn.style.color = '#16a34a';
-      btn.style.borderColor = '#16a34a';
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Reset done!';
+      btn.style.color = '#15803d';
+      btn.style.borderColor = '#15803d';
       setTimeout(function() {
         btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Reset Lesson ' + lessonCard.id.replace('ex-lesson-', '');
         btn.style.color = '';

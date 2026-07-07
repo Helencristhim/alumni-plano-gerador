@@ -22,7 +22,7 @@
     if (existing) existing.remove();
     var toast = document.createElement('div');
     toast.id = 'lp-toast';
-    var bg = type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#003080';
+    var bg = type === 'success' ? '#15803d' : type === 'error' ? '#dc2626' : '#003080';
     toast.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:' + bg + ';color:#fff;padding:.75rem 1.2rem;border-radius:8px;font:500 .85rem/1.4 "Inter",sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);z-index:99999;opacity:0;transform:translateY(10px);transition:all .3s ease;max-width:320px;';
     toast.textContent = msg;
     document.body.appendChild(toast);

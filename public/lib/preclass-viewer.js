@@ -101,7 +101,7 @@
       '.pcv-details{margin-top:16px;border-top:1px solid var(--border-light,#e0e0e0);padding-top:16px}' +
       '.pcv-detail-title{font:600 0.8rem/1.4 var(--font-body);color:var(--text-mid,#555);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.3px}' +
       '.pcv-pills{display:flex;flex-wrap:wrap;gap:6px}' +
-      '.pcv-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font:500 0.75rem/1.4 var(--font-body);background:var(--success-bg,rgba(22,163,74,0.08));color:var(--success,#16a34a);border:1px solid var(--success-border,rgba(22,163,74,0.2))}' +
+      '.pcv-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font:500 0.75rem/1.4 var(--font-body);background:var(--success-bg,rgba(21,128,61,0.08));color:var(--success,#15803d);border:1px solid var(--success-border,rgba(21,128,61,0.2))}' +
       '.pcv-pill svg{width:12px;height:12px}' +
       '.pcv-section{margin-bottom:12px}' +
       '.pcv-section:last-child{margin-bottom:0}' +
@@ -109,8 +109,8 @@
       '.pcv-audio-label{font:500 0.8rem/1.3 var(--font-body);color:var(--text,#1a1a2e);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
       '.pcv-audio audio{height:32px;max-width:220px;flex-shrink:0}' +
       '.pcv-mic-icon{color:var(--accent,#003080);flex-shrink:0}' +
-      '.pcv-live{display:inline-flex;align-items:center;gap:4px;font:600 0.7rem/1 var(--font-body);color:var(--success,#16a34a);text-transform:uppercase;letter-spacing:0.5px}' +
-      '.pcv-live-dot{width:6px;height:6px;border-radius:50%;background:var(--success,#16a34a);animation:pcv-pulse 2s ease-in-out infinite}' +
+      '.pcv-live{display:inline-flex;align-items:center;gap:4px;font:600 0.7rem/1 var(--font-body);color:var(--success,#15803d);text-transform:uppercase;letter-spacing:0.5px}' +
+      '.pcv-live-dot{width:6px;height:6px;border-radius:50%;background:var(--success,#15803d);animation:pcv-pulse 2s ease-in-out infinite}' +
       '@keyframes pcv-pulse{0%,100%{opacity:1}50%{opacity:0.3}}' +
       '@media(max-width:640px){.pcv-grid{grid-template-columns:1fr 1fr}.pcv-card{padding:16px}}' +
       '</style>';
