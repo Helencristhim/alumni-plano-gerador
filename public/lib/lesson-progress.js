@@ -22,9 +22,15 @@
   // Totalmente INDEPENDENTE dos exercícios do Pre-class.
   var packageLoaded = false;
   var packagePct = 0;
+  var packageCompleted = 0;
   var completedSet = {};
 
   function applyPackageProgress() {
+    // O TEXTO mostra "feitas/contratadas" (ex: 2/48) — facilita contato de renovação.
+    // Setado SEMPRE (usa cache/0), para sobrescrever o "%" que o updateProgress do
+    // Pre-class escreve nesse mesmo elemento e evitar flash de porcentagem.
+    var pp = document.getElementById('progressPercent');
+    if (pp) pp.textContent = packageCompleted + '/' + totalAulas;
     if (!packageLoaded) return;
     // Stamps/cards acendem EXCLUSIVAMENTE pela conclusão do checklist (inclass_done)
     document.querySelectorAll('[id^="stamp"]').forEach(function(st) {
@@ -33,11 +39,9 @@
       if (completedSet[n]) st.classList.add('earned');
       else st.classList.remove('earned');
     });
-    // Barra do pacote = concluídas ÷ contratadas
+    // Barra (largura visual) = concluídas ÷ contratadas em %
     var pb = document.getElementById('progressBar');
-    var pp = document.getElementById('progressPercent');
     if (pb) pb.style.width = packagePct + '%';
-    if (pp) pp.textContent = packagePct + '%';
   }
   window.applyPackageProgress = applyPackageProgress;
 
@@ -267,6 +271,7 @@
         if (!didReconcile) { didReconcile = true; reconcileChecks(); }
         var denom = totalAulas > 0 ? totalAulas : 1;
         packagePct = Math.min(100, Math.round(completedLessons / denom * 100));
+        packageCompleted = completedLessons;
         packageLoaded = true;
         applyPackageProgress();
         try { localStorage.setItem(slug + '-global-progress', JSON.stringify({ completed: completedLessons, total: totalAulas, pct: packagePct })); } catch(e) {}
@@ -279,7 +284,17 @@
   window.loadGlobalProgress = loadGlobalProgress;
   window.saveInclassDone = saveInclassDone;
 
-  function initProgress() { try { restoreLocalChecks(); } catch(e) {} loadGlobalProgress(); }
+  function initProgress() {
+    try { restoreLocalChecks(); } catch(e) {}
+    // valor imediato "feitas/contratadas" a partir do cache local (evita flash de "0%")
+    try {
+      var cached = JSON.parse(localStorage.getItem(slug + '-global-progress') || 'null');
+      if (cached && typeof cached.completed === 'number') packageCompleted = cached.completed;
+      var pp = document.getElementById('progressPercent');
+      if (pp) pp.textContent = packageCompleted + '/' + totalAulas;
+    } catch(e) {}
+    loadGlobalProgress();
+  }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initProgress);
   } else {
