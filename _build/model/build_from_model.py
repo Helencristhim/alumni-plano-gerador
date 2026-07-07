@@ -467,6 +467,17 @@ def build_standalone(cfg, content_dir, manifest):
     slides = slides.replace(
         'class="mistake-item" style="display:flex;align-items:flex-start;gap:.8rem;padding:1rem;',
         'class="mistake-item" style="display:flex;align-items:flex-start;gap:.8rem;padding:1.4rem 1.2rem;')
+    # Common Mistake: margem UNIFORME nos 4 lados. O card ganha padding+gap+stretch; os blocos
+    # coloridos preenchem (max-width:none) e o divisor (border-bottom) sai — antes topo/base
+    # encostavam na borda enquanto as laterais tinham margem (max-width:500px centralizado).
+    slides = re.sub(r'(class="mistake-card" style="[^"]*?border-radius:12px);overflow:hidden"',
+                    r'\1;padding:1.1rem;display:flex;flex-direction:column;gap:1.1rem;align-items:stretch"', slides)
+    slides = slides.replace(
+        'gap:.8rem;padding:1.4rem 1.2rem;border-bottom:1px solid var(--border);background:var(--danger-bg)"',
+        'gap:.8rem;padding:1.4rem 1.2rem;background:var(--danger-bg);max-width:none"')
+    slides = slides.replace(
+        'gap:.8rem;padding:1.4rem 1.2rem;background:var(--success-bg)"',
+        'gap:.8rem;padding:1.4rem 1.2rem;background:var(--success-bg);max-width:none"')
 
     s = read(os.path.join(PROF, f'{MODEL}-aula1.html'))
     s = base_swaps(s, cfg, n=n)
