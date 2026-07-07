@@ -1394,7 +1394,7 @@ function saveState() {
 function loadState() {
     var r = localStorage.getItem('{SLUG}-professor'); if (!r) return;
     var s = JSON.parse(r);
-    if (s.matches) s.matches.forEach(function(d) { var parts = d.split('|'); var word = parts[0]; var val = parts[1]; document.querySelectorAll('.match-row').forEach(function(row) { if (row.querySelector('.match-word').textContent === word) { var sel = row.querySelector('select'); sel.value = val; row.classList.add('correct'); sel.disabled = true; } }); });
+    if (s.matches) s.matches.forEach(function(d) { var parts = d.split('|'); var word = parts[0]; var val = parts[1]; document.querySelectorAll('.match-row').forEach(function(row) { if (row.querySelector('.match-word').textContent === word) { var sel = row.querySelector('select'); sel.value = val; row.classList.add('correct'); } }); });
     if (s.blanks) s.blanks.forEach(function(a) { document.querySelectorAll('.blank-input[data-answer="' + a + '"]').forEach(function(e) { e.value = a; e.classList.add('correct'); }); });
     if (s.quiz) s.quiz.forEach(function(t) { document.querySelectorAll('.quiz-option[data-correct="true"]').forEach(function(e) { if (e.textContent.trim().substring(0, 30) === t) e.classList.add('correct'); }); });
     if (s.speech) s.speech.forEach(function(d) {
@@ -1470,7 +1470,7 @@ function checkMatch(select) {
     var row = select.closest('.match-row');
     var answer = row.dataset.answer;
     row.classList.remove('correct', 'wrong');
-    if (select.value === answer) { row.classList.add('correct'); select.disabled = true; updateProgress(); }
+    if (select.value === answer) { row.classList.add('correct'); updateProgress(); } // NUNCA disabled: dropdown segue trocavel (REGRA UX)
     else if (select.value !== '') { row.classList.add('wrong'); setTimeout(function() { row.classList.remove('wrong'); select.value = ''; }, 1000); }
 }
 
