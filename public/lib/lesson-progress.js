@@ -96,49 +96,6 @@
     return null;
   }
 
-  // ===== PERSISTÊNCIA LOCAL + AUTO-CURA DOS CHECKS ("What I Learned") =====
-  // O inline saveState NÃO persiste os .check-item, e o saveInclassDone só dispara no
-  // clique que fecha 5/5. Sem isso: as marcas somem no reload e um checklist já-marcado
-  // (restaurado, cache, ou salvo que falhou) NUNCA contabiliza no pacote. Aqui: guarda as
-  // marcas em localStorage, restaura no load, e QUALQUER grid totalmente marcado que ainda
-  // não está no Supabase é salvo automaticamente (reconciliação idempotente).
-  var CK_KEY = slug + '-inclass-checks';
-  var didReconcile = false;
-  function readChecks() { try { return JSON.parse(localStorage.getItem(CK_KEY) || '{}'); } catch(e) { return {}; } }
-  function writeChecks(o) { try { localStorage.setItem(CK_KEY, JSON.stringify(o)); } catch(e) {} }
-  function gridLesson(grid) {
-    if (!grid) return null;
-    var l = detectLesson(grid.closest('.slide'));
-    if (!l && grid.dataset.lesson) l = parseInt(grid.dataset.lesson);
-    return l || null;
-  }
-  function persistGrid(grid) {
-    var l = gridLesson(grid); if (!l) return;
-    var checked = [];
-    grid.querySelectorAll('.check-item').forEach(function(it, i) { if (it.classList.contains('checked')) checked.push(i); });
-    var all = readChecks(); all[l] = checked; writeChecks(all);
-  }
-  function restoreLocalChecks() {
-    var all = readChecks();
-    document.querySelectorAll('.check-grid').forEach(function(grid) {
-      var l = gridLesson(grid); if (!l || !all[l]) return;
-      var items = grid.querySelectorAll('.check-item');
-      all[l].forEach(function(i) { if (items[i]) items[i].classList.add('checked'); });
-    });
-  }
-  function reconcileChecks() {
-    // grid TOTALMENTE marcado que ainda não está salvo no Supabase → salva
-    document.querySelectorAll('.check-grid').forEach(function(grid) {
-      var l = gridLesson(grid); if (!l || completedSet[l]) return;
-      var items = grid.querySelectorAll('.check-item');
-      if (items.length && grid.querySelectorAll('.check-item.checked').length === items.length) {
-        console.log('lesson-progress: reconciliando aula ' + l + ' (marcada mas não salva)');
-        saveInclassDone(l);
-      }
-    });
-  }
-  window.restoreLocalChecks = restoreLocalChecks;
-
   // ===== WRAP toggleCheck (Professor pages) =====
   if (typeof window.toggleCheck === 'function') {
     var _originalToggleCheck = window.toggleCheck;
@@ -158,7 +115,6 @@
       if (!grid) return;
       var allItems = grid.querySelectorAll('.check-item');
       var checkedItems = grid.querySelectorAll('.check-item.checked');
-      persistGrid(grid); // guarda as marcas atuais (sobrevive reload)
       var remaining = allItems.length - checkedItems.length;
       if (remaining > 0) {
         console.log('lesson-progress: ' + checkedItems.length + '/' + allItems.length + ' checked (lesson ' + lessonNum + ')');
@@ -264,11 +220,6 @@
             });
           }
         });
-        // restaura marcas locais (parciais/inclusive de aulas ainda não salvas) e
-        // reconcilia UMA vez: qualquer checklist já 100% marcado que não está no Supabase
-        // é salvo agora — corrige o caso "marquei mas não contabilizou".
-        restoreLocalChecks();
-        if (!didReconcile) { didReconcile = true; reconcileChecks(); }
         var denom = totalAulas > 0 ? totalAulas : 1;
         packagePct = Math.min(100, Math.round(completedLessons / denom * 100));
         packageCompleted = completedLessons;
@@ -285,7 +236,6 @@
   window.saveInclassDone = saveInclassDone;
 
   function initProgress() {
-    try { restoreLocalChecks(); } catch(e) {}
     // valor imediato "feitas/contratadas" a partir do cache local (evita flash de "0%")
     try {
       var cached = JSON.parse(localStorage.getItem(slug + '-global-progress') || 'null');
