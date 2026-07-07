@@ -16,6 +16,31 @@
 
   if (!slug) { console.warn('lesson-progress.js: STUDENT_SLUG not defined'); return; }
 
+  // ===== PROGRESSO DO PACOTE (concluídas ÷ contratadas) =====
+  // Fonte da verdade: inclass_done (checklist do último slide) do Supabase.
+  // Denominador: window.TOTAL_AULAS (o "48 aulas" mostrado no header). Teto 100%.
+  // Totalmente INDEPENDENTE dos exercícios do Pre-class.
+  var packageLoaded = false;
+  var packagePct = 0;
+  var completedSet = {};
+
+  function applyPackageProgress() {
+    if (!packageLoaded) return;
+    // Stamps/cards acendem EXCLUSIVAMENTE pela conclusão do checklist (inclass_done)
+    document.querySelectorAll('[id^="stamp"]').forEach(function(st) {
+      if (!/^stamp\d+$/.test(st.id)) return;
+      var n = parseInt(st.id.replace('stamp', ''), 10);
+      if (completedSet[n]) st.classList.add('earned');
+      else st.classList.remove('earned');
+    });
+    // Barra do pacote = concluídas ÷ contratadas
+    var pb = document.getElementById('progressBar');
+    var pp = document.getElementById('progressPercent');
+    if (pb) pb.style.width = packagePct + '%';
+    if (pp) pp.textContent = packagePct + '%';
+  }
+  window.applyPackageProgress = applyPackageProgress;
+
   // ===== TOAST NOTIFICATION =====
   function showToast(msg, type) {
     var existing = document.getElementById('lp-toast');
@@ -95,6 +120,21 @@
     console.warn('lesson-progress: toggleCheck not found, wrapping skipped');
   }
 
+  // ===== WRAP updateProgress =====
+  // updateProgress() (inline em cada hub) calcula a % dos EXERCÍCIOS do Pre-class
+  // e escrevia por cima da barra do pacote + stamps. Aqui reafirmamos o progresso
+  // do pacote (concluídas ÷ contratadas) depois que ela roda, mantendo as duas
+  // coisas independentes. As mini-barras por aula seguem sendo atualizadas por ela.
+  if (typeof window.updateProgress === 'function') {
+    var _originalUpdateProgress = window.updateProgress;
+    window.updateProgress = function() {
+      var r = _originalUpdateProgress.apply(this, arguments);
+      applyPackageProgress();
+      return r;
+    };
+    console.log('lesson-progress: updateProgress wrapped (barra do pacote protegida)');
+  }
+
   // ===== SAVE INCLASS DONE =====
   function saveInclassDone(lessonNum) {
     var supabase = getSb();
@@ -153,13 +193,11 @@
           return;
         }
         var completedLessons = 0;
-        var completedSet = {};
+        completedSet = {};
         res.data.forEach(function(row) {
           if (row.inclass_done) {
             completedLessons++;
             completedSet[row.lesson_number] = true;
-            var stampEl = document.getElementById('stamp' + row.lesson_number);
-            if (stampEl) stampEl.classList.add('earned');
           }
         });
         console.log('lesson-progress: ' + completedLessons + ' aulas concluídas de ' + totalAulas);
@@ -173,12 +211,11 @@
             });
           }
         });
-        var pct = Math.round(completedLessons / totalAulas * 100);
-        var pb = document.getElementById('progressBar');
-        var pp = document.getElementById('progressPercent');
-        if (pb) pb.style.width = pct + '%';
-        if (pp) pp.textContent = pct + '%';
-        try { localStorage.setItem(slug + '-global-progress', JSON.stringify({ completed: completedLessons, total: totalAulas, pct: pct })); } catch(e) {}
+        var denom = totalAulas > 0 ? totalAulas : 1;
+        packagePct = Math.min(100, Math.round(completedLessons / denom * 100));
+        packageLoaded = true;
+        applyPackageProgress();
+        try { localStorage.setItem(slug + '-global-progress', JSON.stringify({ completed: completedLessons, total: totalAulas, pct: packagePct })); } catch(e) {}
       })
       .catch(function(err) {
         console.error('lesson-progress load catch:', err);
