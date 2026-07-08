@@ -1048,19 +1048,56 @@
     });
   }
 
-  // Carregar gravacoes salvas do Supabase e injetar botoes
-  function loadSavedRecordings() {
-    if (viewType !== 'aluno') return;
+  // Carregar gravacoes salvas e injetar botoes.
+  // FONTE DA VERDADE = o Storage, NAO o state. O ponteiro em student_activity.state
+  // (recordings/speech[].r) pode se perder numa corrida entre o upload da gravacao e o
+  // sync do state -> a gravacao ficava orfa (existe no Storage mas o reload nao a acha)
+  // e o aluno via "o audio some ao atualizar a pagina". Como o caminho do arquivo e
+  // DETERMINISTICO ({slug}/{pslug(frase)}.ext), listamos a pasta do aluno no Storage e
+  // reconstruimos o ponteiro por frase, independente do state. O state entra so como
+  // complemento (compat). REGRA 20: conserta no lib compartilhado -> propaga a todos.
+  function recPslug(s) { return (s || '').toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 50); }
 
+  function loadSavedRecordings() {
+    if (viewType !== 'aluno' || !slug) return;
+
+    var recs = {};
+
+    function done() { if (Object.keys(recs).length) injectMyRecordingButtons(recs); }
+
+    // 1) Reconstruir do Storage (fonte da verdade)
+    function fromStorage() {
+      sb.storage.from(STORAGE_BUCKET).list(slug, { limit: 1000 }).then(function(res) {
+        if (!res.error && res.data && res.data.length) {
+          // filename (sem extensao) -> URL publica
+          var byKey = {};
+          res.data.forEach(function(f) {
+            if (!f.name || !f.id) return; // f.id null = subpasta, nao arquivo
+            var key = f.name.replace(/\.(webm|mp4|wav|ogg|m4a)$/i, '');
+            byKey[key] = sb.storage.from(STORAGE_BUCKET).getPublicUrl(slug + '/' + f.name).data.publicUrl;
+          });
+          document.querySelectorAll('.speech-card[data-phrase]').forEach(function(card) {
+            var url = byKey[recPslug(card.dataset.phrase)];
+            if (url) { recs[card.dataset.phrase] = url; card.dataset.recordingUrl = url; }
+          });
+        }
+        done();
+      }, function() { done(); });
+    }
+
+    // 2) State como complemento (nao bloqueia se falhar)
     sb.from('student_activity')
       .select('state')
       .eq('student_slug', slug)
       .eq('view_type', 'aluno')
       .single()
       .then(function(res) {
-        if (res.error || !res.data || !res.data.state || !res.data.state.recordings) return;
-        injectMyRecordingButtons(res.data.state.recordings);
-      });
+        if (!res.error && res.data && res.data.state && res.data.state.recordings) {
+          var r = res.data.state.recordings;
+          Object.keys(r).forEach(function(k) { if (!recs[k]) recs[k] = r[k]; });
+        }
+        fromStorage();
+      }, function() { fromStorage(); });
   }
 
   // ===== RESET BUTTON (per lesson, injected at bottom of each lesson-body) =====
