@@ -354,7 +354,10 @@
     return new Blob([arr], { type: 'audio/wav' });
   }
 
-  // Recebe um Blob de gravacao e devolve Promise<Blob WAV>. Rejeita se nao decodificar.
+  // Recebe um Blob de gravacao e devolve Promise<{blob:WAV, duration}>. Rejeita se nao decodificar.
+  // RAPIDO (decode em background), mas em alguns Chrome decodeAudioData TRUNCA o webm/opus do
+  // MediaRecorder: o arquivo tem o audio inteiro, mas a metadata de duracao vem quebrada e o
+  // decode para em ~0.7s. Por isso o chamador DEVE conferir a duracao (ver uploadTranscoded).
   function transcodeToWav(blob) {
     return new Promise(function(resolve, reject) {
       var AC = window.AudioContext || window.webkitAudioContext;
@@ -366,7 +369,7 @@
       fr.onload = function() {
         ctx.decodeAudioData(fr.result, function(audioBuffer) {
           if (done) return; done = true;
-          try { resolve(audioBufferToWav(audioBuffer)); } catch (e) { reject(e); }
+          try { resolve({ blob: audioBufferToWav(audioBuffer), duration: audioBuffer.duration }); } catch (e) { reject(e); }
         }, function(err) { if (done) return; done = true; reject(err || new Error('decode failed')); });
       };
       fr.onerror = function() { if (done) return; done = true; reject(fr.error || new Error('read failed')); };
@@ -374,9 +377,150 @@
     });
   }
 
+  // Duracao REAL do blob via <audio> (pipeline de midia decodifica o webm INTEIRO, ao
+  // contrario do decodeAudioData). Usa o truque de seek pra Infinity quando a metadata vem
+  // sem duracao. Devolve segundos (>0) ou -1 se nao der. Este e o "oraculo" que detecta a
+  // truncacao do decode.
+  function getRealDurationFromBlob(blob) {
+    return new Promise(function(resolve) {
+      var url = nativeCreateObjectURL(blob);
+      var a = new Audio();
+      var settled = false;
+      function done(v) { if (settled) return; settled = true; try { URL.revokeObjectURL(url); } catch (e) {} resolve(v); }
+      a.preload = 'metadata';
+      a.addEventListener('loadedmetadata', function() {
+        if (isFinite(a.duration) && a.duration > 0) { done(a.duration); return; }
+        var onTU = function() { if (isFinite(a.duration) && a.duration > 0) { a.removeEventListener('timeupdate', onTU); done(a.duration); } };
+        a.addEventListener('timeupdate', onTU);
+        try { a.currentTime = 1e101; } catch (e) { done(-1); }
+      });
+      a.addEventListener('error', function() { done(-1); });
+      setTimeout(function() { done(a && isFinite(a.duration) && a.duration > 0 ? a.duration : -1); }, 8000);
+      a.src = url;
+    });
+  }
+
+  // Transcode CONFIAVEL via pipeline de midia: toca o blob por um <audio> -> MediaElementSource
+  // -> ScriptProcessor, capturando o PCM em tempo real. O elemento de midia decodifica o webm
+  // INTEIRO (mesma engine que toca a gravacao completa na tela), entao NAO sofre a truncacao do
+  // decodeAudioData. Custo: roda em tempo real (~duracao do audio). Usado so quando o decode
+  // rapido truncou. Devolve Promise<{blob:WAV, duration}>.
+  function transcodeViaMediaElement(blob) {
+    return new Promise(function(resolve, reject) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { reject(new Error('no AudioContext')); return; }
+      var ctx; try { ctx = new AC(); } catch (e) { reject(e); return; }
+      var url = nativeCreateObjectURL(blob);
+      var audio = new Audio();
+      audio.preload = 'auto';
+      var src = null, proc = null, chans = [[], []], nch = 1, sr = ctx.sampleRate, gotAny = false, finished = false, to = null;
+      function cleanup() {
+        if (to) { clearTimeout(to); to = null; }
+        try { audio.pause(); } catch (e) {}
+        try { if (proc) proc.disconnect(); } catch (e) {}
+        try { if (src) src.disconnect(); } catch (e) {}
+        try { URL.revokeObjectURL(url); } catch (e) {}
+        try { ctx.close(); } catch (e) {}
+      }
+      function fail(e) { if (finished) return; finished = true; cleanup(); reject(e || new Error('media transcode failed')); }
+      function finish() {
+        if (finished) return; finished = true;
+        if (!gotAny) { cleanup(); reject(new Error('no audio captured')); return; }
+        var out;
+        try {
+          var flat = [], total = 0;
+          for (var c = 0; c < nch; c++) {
+            var parts = chans[c], len = 0, i;
+            for (i = 0; i < parts.length; i++) len += parts[i].length;
+            var arr = new Float32Array(len), off = 0;
+            for (i = 0; i < parts.length; i++) { arr.set(parts[i], off); off += parts[i].length; }
+            flat.push(arr); total = len;
+          }
+          out = ctx.createBuffer(nch, total, sr);
+          for (var c2 = 0; c2 < nch; c2++) out.getChannelData(c2).set(flat[c2]);
+        } catch (e) { cleanup(); reject(e); return; }
+        var duration = out.duration;
+        var wav; try { wav = audioBufferToWav(out); } catch (e) { cleanup(); reject(e); return; }
+        cleanup();
+        resolve({ blob: wav, duration: duration });
+      }
+      audio.addEventListener('canplay', function() {
+        if (src) return;
+        try {
+          src = ctx.createMediaElementSource(audio);
+          proc = ctx.createScriptProcessor(4096, 2, 2);
+          proc.onaudioprocess = function(e) {
+            var ib = e.inputBuffer;
+            nch = Math.min(2, ib.numberOfChannels) || 1; sr = ib.sampleRate;
+            for (var c = 0; c < nch; c++) {
+              var d = ib.getChannelData(c), copy = new Float32Array(d.length);
+              copy.set(d); chans[c].push(copy); gotAny = true;
+            }
+          };
+          var mute = ctx.createGain(); mute.gain.value = 0;
+          src.connect(proc); proc.connect(mute); mute.connect(ctx.destination);
+          var pr = audio.play();
+          if (pr && pr.catch) pr.catch(function(err) { fail(err); });
+        } catch (e) { fail(e); }
+      });
+      audio.addEventListener('ended', finish);
+      audio.addEventListener('error', function() { fail(new Error('media error')); });
+      // rede de seguranca: nunca passa de 60s
+      to = setTimeout(finish, 60000);
+      audio.src = url;
+    });
+  }
+
+  // Decide o melhor blob pra subir. REGRA DE OURO (nunca truncar): so sobe um WAV se der pra
+  // CONFIRMAR que ele tem a duracao completa (>=90% da duracao real medida pela pipeline de
+  // midia). Sem confirmacao, sobe o ORIGINAL completo (webm/opus toca inteiro no Chrome; so o
+  // Safari perde ESSE arquivo — infinitamente melhor que todo mundo receber <1s). NUNCA existe
+  // caminho que suba um WAV sem antes conferir a duracao.
+  //
+  // Ordem: mede a duracao real (oraculo) -> decode rapido; se confirmado completo, usa. Senao
+  // (truncou OU nao deu pra confirmar) -> transcode via pipeline de midia (decodifica o arquivo
+  // inteiro tocando em tempo real); se confirmado, usa. Senao -> ORIGINAL completo.
+  function uploadTranscoded(origUpload, path, blob, opts) {
+    function put(finalBlob, contentType) {
+      var o = {}; if (opts) for (var k in opts) o[k] = opts[k];
+      if (contentType) o.contentType = contentType;
+      return origUpload(path, finalBlob, o);
+    }
+    // So considera um WAV "completo" quando temos a duracao real E o WAV bate com ela. Sem
+    // duracao real (realDur<=0) NENHUM WAV e aceito -> cai pro original. Assim um decode
+    // truncado NUNCA vaza, nem quando o oraculo falha.
+    function confirmedFull(realDur, dur) { return realDur > 0 && dur > 0 && dur >= realDur * 0.9; }
+    function measureReal() { return getRealDurationFromBlob(blob).catch(function() { return -1; }); }
+
+    return measureReal().then(function(realDur) {
+      // 1) decode rapido (maioria dos casos passa aqui, sem custo extra)
+      return transcodeToWav(blob).then(function(fast) {
+        if (confirmedFull(realDur, fast.duration)) return put(fast.blob, 'audio/wav');
+        // 2) decode truncou (ou nao deu pra confirmar) -> transcode confiavel via midia
+        return transcodeViaMediaElement(blob).then(function(slow) {
+          // aceita se bate com a real; ou, quando a real nao deu pra medir, se a midia
+          // capturou MAIS que o decode (a midia decodifica o arquivo inteiro)
+          if (confirmedFull(realDur, slow.duration) ||
+              (realDur <= 0 && slow.duration > 0 && slow.duration > (fast.duration || 0) + 0.05)) {
+            return put(slow.blob, 'audio/wav');
+          }
+          return put(blob, blob.type);           // 3) original completo (nunca WAV cortado)
+        }).catch(function() { return put(blob, blob.type); });
+      }).catch(function() {
+        // decode nem rodou -> midia -> original
+        return transcodeViaMediaElement(blob).then(function(slow) {
+          if (slow.duration > 0 && (realDur <= 0 || confirmedFull(realDur, slow.duration)))
+            return put(slow.blob, 'audio/wav');
+          return put(blob, blob.type);
+        }).catch(function() { return put(blob, blob.type); });
+      });
+    });
+  }
+
   // Envolve sb.storage.from('recordings').upload para transcodar gravacoes pra WAV no
   // mesmo path (browsers tocam pelo content-type, nao pela extensao). Assim TODA gravacao
-  // nova — pelo upload inline do material OU pelo interceptRecordings — sobe como WAV.
+  // nova — pelo upload inline do material OU pelo interceptRecordings — sobe como WAV
+  // (ou, se o transcode truncaria, sobe o original completo — nunca um WAV cortado).
   function installStorageTranscode() {
     if (typeof sb === 'undefined' || !sb.storage || sb.storage.__transcodeWrapped) return;
     var origFrom = sb.storage.from.bind(sb.storage);
@@ -388,15 +532,7 @@
           var t = blob && blob.type ? blob.type : '';
           var isCompressed = /audio|webm|mp4|ogg|opus/i.test(t) && t.indexOf('wav') === -1;
           if (!isCompressed || !blob || !blob.size) return origUpload(path, blob, opts);
-          return transcodeToWav(blob).then(function(wav) {
-            var o = {};
-            if (opts) for (var k in opts) o[k] = opts[k];
-            o.contentType = 'audio/wav';
-            return origUpload(path, wav, o);
-          }).catch(function() {
-            // Se nao der pra transcodar (ex: browser nao decodifica), sobe o original
-            return origUpload(path, blob, opts);
-          });
+          return uploadTranscoded(origUpload, path, blob, opts);
         };
         ref.__uploadWrapped = true;
       }
