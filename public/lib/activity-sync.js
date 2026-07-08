@@ -1132,11 +1132,14 @@
           : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
         var rec = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
         var chunks = [];
+        var pcm = (typeof window.__alumniPcmCapture === 'function') ? window.__alumniPcmCapture(stream) : null;
         rec.ondataavailable = function(e) { if (e.data && e.data.size > 0) chunks.push(e.data); };
         rec.onstop = function() {
+          var pcmResult = pcm ? pcm.stop() : null;
           stream.getTracks().forEach(function(t) { t.stop(); });
-          if (!chunks.length) return;
-          var blob = new Blob(chunks, { type: rec.mimeType || 'audio/webm' });
+          // Prefere o WAV do PCM (impossivel truncar); cai pro webm so se a captura PCM falhou
+          var blob = pcmResult ? pcmResult.blob : (chunks.length ? new Blob(chunks, { type: rec.mimeType || 'audio/webm' }) : null);
+          if (!blob) return;
           var url = nativeCreateObjectURL(blob);
           var resultDiv = thinkCard ? thinkCard.querySelector('[id^="think-result"]') : null;
           // Playback local com fix de duracao (em vez de <audio controls> cru)
@@ -1146,7 +1149,7 @@
           // Upload (installStorageTranscode transcoda pra WAV no caminho)
           var st = window.STUDENT_SLUG || 'unknown';
           var thinkId = (resultDiv && resultDiv.id) || ('think-' + pslug((thinkCard && thinkCard.querySelector('.think-question') ? thinkCard.querySelector('.think-question').textContent : 'free')));
-          var ext = blob.type.indexOf('mp4') !== -1 ? 'mp4' : 'webm';
+          var ext = blob.type.indexOf('wav') !== -1 ? 'wav' : blob.type.indexOf('mp4') !== -1 ? 'mp4' : 'webm';
           var filePath = st + '/' + thinkId + '.' + ext;
           if (typeof sb !== 'undefined') {
             sb.storage.from('recordings').upload(filePath, blob, { contentType: blob.type, upsert: true }).then(function(res) {
@@ -1560,6 +1563,59 @@
 (function () {
   function pslug(s) { return (s || '').toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 50); }
 
+  // ===== CAPTURA PCM DIRETA (WAV completo, sem MediaRecorder/opus/decodeAudioData) =====
+  // O transcode webm->WAV via decodeAudioData trunca em alguns Chrome (o arquivo tem o audio
+  // todo, mas o decode para em ~0.7s) — e o MESMO decode e usado no player, entao ate subir o
+  // webm original nao resolve (o playback trunca). Solucao definitiva: capturar o PCM cru do
+  // microfone DURANTE a gravacao (ScriptProcessor no proprio stream) e montar o WAV a partir
+  // dele. Zero decode, zero opus -> impossivel truncar, duracao finita, toca em qualquer lugar.
+  function pcmEncodeWav(chunks, sampleRate) {
+    var len = 0, i;
+    for (i = 0; i < chunks.length; i++) len += chunks[i].length;
+    var dataSize = len * 2;
+    var arr = new ArrayBuffer(44 + dataSize), view = new DataView(arr);
+    function ws(off, s) { for (var k = 0; k < s.length; k++) view.setUint8(off + k, s.charCodeAt(k)); }
+    ws(0, 'RIFF'); view.setUint32(4, 36 + dataSize, true); ws(8, 'WAVE');
+    ws(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true); view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+    ws(36, 'data'); view.setUint32(40, dataSize, true);
+    var off = 44;
+    for (i = 0; i < chunks.length; i++) {
+      var c = chunks[i];
+      for (var j = 0; j < c.length; j++) { var s = c[j] < -1 ? -1 : c[j] > 1 ? 1 : c[j]; view.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7FFF, true); off += 2; }
+    }
+    return new Blob([arr], { type: 'audio/wav' });
+  }
+  // Liga a captura PCM num stream. Devolve controlador com .stop() -> {blob:WAV} ou null.
+  function startPcmCapture(stream) {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC || typeof stream.getAudioTracks !== 'function' || !stream.getAudioTracks().length) return null;
+      var ctx = new AC();
+      var srcNode = ctx.createMediaStreamSource(stream);
+      var proc = ctx.createScriptProcessor(4096, 1, 1);
+      var chunks = [], sr = ctx.sampleRate;
+      proc.onaudioprocess = function (e) {
+        var d = e.inputBuffer.getChannelData(0), copy = new Float32Array(d.length);
+        copy.set(d); chunks.push(copy);
+      };
+      var mute = ctx.createGain(); mute.gain.value = 0;   // gain 0 = sem eco/feedback do mic
+      srcNode.connect(proc); proc.connect(mute); mute.connect(ctx.destination);
+      return {
+        stop: function () {
+          try { proc.disconnect(); } catch (e) {}
+          try { srcNode.disconnect(); } catch (e) {}
+          try { ctx.close(); } catch (e) {}
+          var total = 0; for (var i = 0; i < chunks.length; i++) total += chunks[i].length;
+          if (!total) return null;
+          return { blob: pcmEncodeWav(chunks, sr) };
+        }
+      };
+    } catch (e) { return null; }
+  }
+  window.__alumniPcmCapture = startPcmCapture;   // reusado pela gravacao livre (think card)
+
   window.startRecording = function (btn) {
     var card = btn.closest('.speech-card');
     if (!card) return;
@@ -1586,12 +1642,17 @@
         : MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
       var mediaRec = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
       var chunks = [], stopped = false, rec = null, srRestarts = 0;
+      var pcm = startPcmCapture(stream);   // captura PCM cru em paralelo -> WAV completo garantido
 
       mediaRec.ondataavailable = function (e) { if (e.data && e.data.size > 0) chunks.push(e.data); };
       mediaRec.onstop = function () {
+        // Fecha a captura PCM ANTES de parar as tracks (le o que ja foi capturado)
+        var pcmResult = pcm ? pcm.stop() : null;
         stream.getTracks().forEach(function (t) { t.stop(); });
-        if (!chunks.length) return;
-        var blob = new Blob(chunks, { type: mediaRec.mimeType || 'audio/webm' });
+        // Prefere o WAV do PCM (impossivel truncar, toca em qualquer navegador). So cai pro
+        // blob do MediaRecorder (webm/opus) se a captura PCM nao produziu nada.
+        var blob = pcmResult ? pcmResult.blob : (chunks.length ? new Blob(chunks, { type: mediaRec.mimeType || 'audio/webm' }) : null);
+        if (!blob) return;
         var url = URL.createObjectURL(blob);
         if (typeof injectPronunciationBtn === 'function') injectPronunciationBtn(card, url);
         if (resultDiv && !resultDiv.classList.contains('show')) {
@@ -1600,7 +1661,7 @@
           if (typeof updateProgress === 'function') updateProgress();
         }
         var slug = window.STUDENT_SLUG || 'unknown';
-        var ext = blob.type.indexOf('mp4') !== -1 ? 'mp4' : 'webm';
+        var ext = blob.type.indexOf('wav') !== -1 ? 'wav' : blob.type.indexOf('mp4') !== -1 ? 'mp4' : 'webm';
         var filePath = slug + '/' + pslug(card.dataset.phrase) + '.' + ext;
         if (typeof sb !== 'undefined') {
           sb.storage.from('recordings').upload(filePath, blob, { contentType: blob.type, upsert: true }).then(function (res) {
