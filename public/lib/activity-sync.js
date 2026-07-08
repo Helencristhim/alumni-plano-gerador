@@ -471,36 +471,49 @@
     });
   }
 
-  // Decide o melhor blob pra subir: WAV completo se der, senao o original completo (nunca um
-  // WAV truncado). Ordem: decode rapido -> confere duracao -> se truncou, transcode via midia
-  // -> se ainda falhar, sobe o ORIGINAL (webm/opus toca inteiro no Chrome; so o Safari perde
-  // ESSE arquivo — melhor que todo mundo receber <1s). realDur e o oraculo de truncacao.
+  // Decide o melhor blob pra subir. REGRA DE OURO (nunca truncar): so sobe um WAV se der pra
+  // CONFIRMAR que ele tem a duracao completa (>=90% da duracao real medida pela pipeline de
+  // midia). Sem confirmacao, sobe o ORIGINAL completo (webm/opus toca inteiro no Chrome; so o
+  // Safari perde ESSE arquivo — infinitamente melhor que todo mundo receber <1s). NUNCA existe
+  // caminho que suba um WAV sem antes conferir a duracao.
+  //
+  // Ordem: mede a duracao real (oraculo) -> decode rapido; se confirmado completo, usa. Senao
+  // (truncou OU nao deu pra confirmar) -> transcode via pipeline de midia (decodifica o arquivo
+  // inteiro tocando em tempo real); se confirmado, usa. Senao -> ORIGINAL completo.
   function uploadTranscoded(origUpload, path, blob, opts) {
     function put(finalBlob, contentType) {
       var o = {}; if (opts) for (var k in opts) o[k] = opts[k];
       if (contentType) o.contentType = contentType;
       return origUpload(path, finalBlob, o);
     }
-    function ok(realDur, dur) { return dur > 0 && (realDur <= 0 || dur >= realDur * 0.9); }
-    return getRealDurationFromBlob(blob).then(function(realDur) {
+    // So considera um WAV "completo" quando temos a duracao real E o WAV bate com ela. Sem
+    // duracao real (realDur<=0) NENHUM WAV e aceito -> cai pro original. Assim um decode
+    // truncado NUNCA vaza, nem quando o oraculo falha.
+    function confirmedFull(realDur, dur) { return realDur > 0 && dur > 0 && dur >= realDur * 0.9; }
+    function measureReal() { return getRealDurationFromBlob(blob).catch(function() { return -1; }); }
+
+    return measureReal().then(function(realDur) {
+      // 1) decode rapido (maioria dos casos passa aqui, sem custo extra)
       return transcodeToWav(blob).then(function(fast) {
-        if (ok(realDur, fast.duration)) return put(fast.blob, 'audio/wav');   // caminho rapido (maioria)
-        // decode truncou -> transcode confiavel via pipeline de midia
+        if (confirmedFull(realDur, fast.duration)) return put(fast.blob, 'audio/wav');
+        // 2) decode truncou (ou nao deu pra confirmar) -> transcode confiavel via midia
         return transcodeViaMediaElement(blob).then(function(slow) {
-          if (ok(realDur, slow.duration)) return put(slow.blob, 'audio/wav');
-          return put(blob, blob.type);                                        // ultimo recurso: original completo
+          // aceita se bate com a real; ou, quando a real nao deu pra medir, se a midia
+          // capturou MAIS que o decode (a midia decodifica o arquivo inteiro)
+          if (confirmedFull(realDur, slow.duration) ||
+              (realDur <= 0 && slow.duration > 0 && slow.duration > (fast.duration || 0) + 0.05)) {
+            return put(slow.blob, 'audio/wav');
+          }
+          return put(blob, blob.type);           // 3) original completo (nunca WAV cortado)
         }).catch(function() { return put(blob, blob.type); });
       }).catch(function() {
-        // decode nem rodou -> tenta midia -> original
+        // decode nem rodou -> midia -> original
         return transcodeViaMediaElement(blob).then(function(slow) {
-          if (ok(realDur, slow.duration)) return put(slow.blob, 'audio/wav');
+          if (slow.duration > 0 && (realDur <= 0 || confirmedFull(realDur, slow.duration)))
+            return put(slow.blob, 'audio/wav');
           return put(blob, blob.type);
         }).catch(function() { return put(blob, blob.type); });
       });
-    }).catch(function() {
-      // nem a duracao real deu pra medir -> comportamento antigo (decode ou original)
-      return transcodeToWav(blob).then(function(fast) { return put(fast.blob, 'audio/wav'); })
-        .catch(function() { return origUpload(path, blob, opts); });
     });
   }
 
