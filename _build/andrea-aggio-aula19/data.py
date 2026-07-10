@@ -1,0 +1,375 @@
+# -*- coding: utf-8 -*-
+BG1 = "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1400&q=80"
+BG2 = "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1400&q=80"
+BG3 = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=80"
+BG4 = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80"
+BG5 = "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1400&q=80"
+BG6 = "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80"
+
+D = {
+    'n': 19,
+    'reading': True,
+    'partner_name': 'klaus',
+    'grammar_point_pt': "condicionais mistas (mixed conditionals): combinam DOIS tempos numa so frase. Passado -> presente: 'If I had set the boundary earlier, we wouldn't be at a deadlock now' (condicao no passado, resultado agora). Presente -> passado: 'If she weren't so composed, she would have lost the deal yesterday' (condicao permanente/agora, resultado no passado). Ferramenta essencial para refletir, sob pressao, como decisoes passadas moldam o momento atual e como quem voce e teria mudado o que aconteceu -- o coracao de uma conversa de alto risco",
+    'chapter_tag': 'When the Pressure Is On',
+    'title_h1': 'Handling High-Stakes <span class="accent">Conversations</span>',
+    'title_sub': 'Stay composed when the outcome matters. De-escalate, stand your ground on what is non-negotiable, and know when to walk away.',
+    'short_title': 'High-Stakes Conversations',
+    'menu_title': 'Handling High-Stakes Conversations',
+    'menu_desc': 'Stay composed under pressure using mixed conditionals',
+    'bg_title': BG1, 'bg_vocab': BG2, 'bg_read': BG3, 'bg_gram': BG4,
+    'bg_lesson_card': "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=600&q=80",
+    'stamp_label': 'Composed Negotiator',
+    'stamp_img': "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=200&q=80",
+    'phases': ['When the Pressure Is On', 'Words Under Pressure', 'The Standoff',
+               'Mixed in Time', 'Voices', 'Your Turn', 'Wrap-Up'],
+
+    'warm_h2': 'From Coaching to the <span class="accent">Hard Talk</span>',
+    'warm_p': "Last time you stepped back from doing and into coaching -- delegating a real responsibility and getting the work done through someone you were growing. But leadership is not only patient development; sometimes it is a single, tense conversation where a lot is riding on the next sentence. A supplier issues an ultimatum. A partner pushes back hard. A client threatens to walk. Today you learn to hold your composure when the stakes are high: to de-escalate without caving, to stand your ground on what is non-negotiable, and to reflect -- even mid-pressure -- on how you got here and what you would do differently. By the end of this hour, you will handle a high-stakes conversation with a steady voice.",
+    'warm_prompt': 'In one sentence: think of a tense conversation you have had at work -- what made it high-stakes?',
+    'missions': [
+        'Learn the language of pressure, pushback, and staying composed.',
+        'Use mixed conditionals to connect a past cause to a present result -- and the reverse.',
+        'Hold a high-stakes conversation: de-escalate, stand firm on the non-negotiable, and know your walk-away point.',
+    ],
+
+    'vocab_trans_h2': 'Words Under <span class="accent">Pressure</span>',
+    'vocab': [
+        ("High-stakes", "with a lot to win or lose; where the outcome really matters (de alto risco, com muito em jogo)", "This is a high-stakes call -- the whole account depends on it."),
+        ("Composure", "calmness and self-control under pressure (compostura, autocontrole)", "She kept her composure even when he raised his voice."),
+        ("To de-escalate", "to make a tense situation calmer (desescalar, acalmar a tensao)", "I tried to de-escalate before anyone said something they'd regret."),
+        ("Pushback", "strong resistance or opposition to a plan or idea (resistencia, oposicao)", "We got serious pushback on the new cancellation terms."),
+        ("To stand your ground", "to refuse to change your position under pressure (manter sua posicao)", "I stood my ground on the deposit -- it protects us."),
+        ("Non-negotiable", "that cannot be changed or discussed (inegociavel)", "The insurance clause is non-negotiable for us."),
+        ("To concede", "to admit a point or give something up in an argument (ceder, conceder um ponto)", "I conceded on the dates so I could hold firm on price."),
+        ("Ultimatum", "a final demand with a threat if it is refused (ultimato)", "He gave me an ultimatum: sign today or lose the rate."),
+        ("Deadlock", "a situation where no agreement is possible (impasse)", "We reached a deadlock and agreed to sleep on it."),
+        ("To walk away", "to leave a deal rather than accept bad terms (abandonar a negociacao, desistir)", "If they won't move, I'm prepared to walk away."),
+        ("To defuse", "to remove the tension or danger from a situation (neutralizar a tensao)", "A calm question can defuse a heated moment."),
+        ("To salvage", "to save something from a difficult or failing situation (salvar, recuperar)", "We salvaged the relationship even though the deal fell through."),
+    ],
+
+    'gram_trans_h2': 'Two Times in <span class="accent">One Sentence</span>',
+    'gram_trans_sub': 'past condition &rarr; present result &middot; present condition &rarr; past result',
+    'gram_examples': [
+        ("", "If I had set the boundary earlier, we wouldn't be at a deadlock now.", '"If I <span class="accent" style="font-weight:700">had set</span> the boundary earlier, we <span class="accent" style="font-weight:700">wouldn\'t be</span> at a deadlock now."'),
+        ("", "If she weren't so composed, she would have lost the deal yesterday.", '"If she <span class="accent" style="font-weight:700">weren\'t</span> so composed, she <span class="accent" style="font-weight:700">would have lost</span> the deal yesterday."'),
+        ("", "If we hadn't walked away last year, we would still be overpaying.", '"If we <span class="accent" style="font-weight:700">hadn\'t walked away</span> last year, we <span class="accent" style="font-weight:700">would still be</span> overpaying."'),
+    ],
+    'gram_disc_q': 'Each sentence mixes TWO different times: one clause is about the past, the other is about now. In the first and third, the "if" part is past and the result is present. In the second, the "if" part is a present, always-true fact and the result is past. How do the verb forms show which time each clause is in?',
+    'gram_table': [
+        ("past condition &rarr; present result", "If + past perfect, ... would + base verb", "If I <strong>had prepared</strong>, I <strong>would be</strong> calmer now."),
+        ("present condition &rarr; past result", "If + past simple, ... would have + past participle", "If I <strong>were</strong> more assertive, I <strong>would have pushed back</strong>."),
+        ("the mix", "the two clauses sit in DIFFERENT times on purpose", "one clause past, one clause present -- that is the whole point."),
+    ],
+    'gram_rule_foot': "Mixed conditionals join two time frames in one sentence. Use them to connect a PAST cause to a PRESENT result ('If I had set the boundary earlier, we wouldn't be stuck now') or a PRESENT fact to a PAST result ('If I weren't so calm, I would have lost my temper'). The trick: look at each clause on its own and put it in the time it belongs to -- past perfect for a past 'if', 'would + base verb' for a present result; past simple for a present 'if', 'would have + participle' for a past result.",
+
+    'lf_h2': 'Mix the <span class="accent">Times</span>',
+    'lf_title': 'Read each line and complete the mixed conditional',
+    'lf_items': [
+        ["A", "", "If I had signed then", ", we wouldn't be renegotiating now.", "strong"],
+        ["B", "", "If we weren't so exposed", ", I would have walked away already.", "strong"],
+        ["C", "", "If she hadn't stayed composed", ", the deal would be dead today.", "soft"],
+        ["D", "", "If I were less patient", ", I would have given him an ultimatum.", "soft"],
+    ],
+    'lf_followup': "Past 'if' + present result uses 'had done ... would be'. Present 'if' + past result uses 'were/did ... would have done'. Read each clause alone and give it the time it belongs to.",
+
+    'mistakes': [
+        ("If I had prepared better, I would have been calmer now.", 'If I had prepared better, I <strong>would be</strong> calmer now.'),
+        ("If I was more composed, I would have handled it better.", 'If I <strong>were</strong> more composed, I would have handled it better.'),
+    ],
+    'mistake_note': "When the result is happening NOW, use 'would + base verb', not 'would have': 'If I had prepared, I would BE calmer now' (not 'would have been'). And for a present, always-true condition, use 'were' for all subjects -- 'If I WERE more composed', not 'If I was'. The mix is deliberate: match each clause to its own time.",
+
+    'read_trans_h2': 'Read the <span class="accent">Standoff</span>',
+    'reading_h2': 'The Sentence You Don\'t <span class="accent">Take Back</span>',
+    'read_block': {
+        'rtitle': "The Sentence You Don't Take Back",
+        'paras': [
+            "Most conversations are forgiving. You can misspeak, backtrack, and no one remembers by lunch. A high-stakes conversation is different: the outcome matters, the other side is watching your face, and one badly chosen sentence can cost you the deal, the partnership, or the trust you spent years building. What separates people who do this well is not that they feel no pressure -- it is that they keep their composure while feeling it. They slow down. They breathe. They do not let a raised voice raise theirs.",
+            "The first skill is to de-escalate without caving. When you get pushback, the instinct is either to fight or to fold, and both are traps. Instead, defuse the heat with a calm question and separate the person from the problem. Then decide, in advance, what is actually non-negotiable and what you can concede. If you have not drawn that line before the room gets hot, you will draw it badly under pressure. The people who stand their ground do so because they knew, going in, exactly which ground was worth standing on -- and which they were willing to trade.",
+            "The second skill is knowing your walk-away point. An ultimatum only has power if you cannot leave; the moment you are genuinely prepared to walk away, a deadlock stops being a threat and becomes just a choice. This is also where reflection lives. In the middle of the hardest talks, good negotiators think in two times at once: if they had set a clearer boundary last month, they would not be cornered now; if they were less afraid of losing the deal, they would already have said no. That double vision -- past cause, present result -- is what lets them salvage the relationship even when the deal itself falls apart.",
+        ],
+        'source': 'Adapted from a negotiation and communication guide',
+        'link': 'https://www.pon.harvard.edu/category/daily/negotiation-skills-daily/',
+        'gist_prompt': 'What is the main idea of the text?',
+        'gist_choices': [
+            ["a", "High-stakes conversations go well for people who never feel any pressure at all.", False],
+            ["b", "Handling high-stakes talks means keeping composure, de-escalating without caving, knowing your non-negotiables, and being prepared to walk away.", True],
+            ["c", "The best strategy in a tense conversation is to fight hard and never concede anything.", False],
+        ],
+        'tf': [
+            ["The text says skilled people succeed because they feel no pressure.", "f", "It says they DO feel pressure -- the difference is that they keep their composure while feeling it."],
+            ["According to the text, you should decide what is non-negotiable before the conversation gets tense.", "t", "It says if you have not drawn that line before the room gets hot, you will draw it badly under pressure."],
+            ["The text says an ultimatum loses its power once you are genuinely prepared to walk away.", "t", "The third paragraph says the moment you are prepared to walk away, a deadlock becomes just a choice, not a threat."],
+            ["The text says you should never reflect on past decisions during a hard conversation.", "f", "It says good negotiators think in two times at once -- how a past decision led to the present situation."],
+        ],
+    },
+
+    'dialogue_h2': 'Andrea Holds the Line with <span class="accent">Klaus</span>',
+    'dialogue': [
+        ('klaus', 'arthur', "Andrea, I'll be direct. Either you match our competitor's rate today, or we move the whole group elsewhere.",
+         "Andrea, I'll be direct. Either you match our competitor's rate today, or we move the whole group elsewhere."),
+        ('andrea', 'ellen', "I hear you, Klaus, and I want to keep this group with us. But an ultimatum on a Friday afternoon isn't how we usually work together.",
+         "I hear you, Klaus, and I want to keep this group with us. But an <span class=\"vocab-highlight\">ultimatum</span> on a Friday afternoon isn't how we usually work together."),
+        ('klaus', 'arthur', "It's not personal. The numbers are the numbers. Your price is simply too high.",
+         "It's not personal. The numbers are the numbers. Your price is simply too high."),
+        ('andrea', 'ellen', "Let me ask one thing before we go there. If we had locked in last season's rate for you, would we even be having this conversation now?",
+         "Let me ask one thing before we go there. If we <span class=\"vocab-highlight\">had locked in</span> last season's rate for you, would we even be having this conversation now?"),
+        ('klaus', 'arthur', "Probably not. But that ship has sailed. So -- can you match it or not?",
+         "Probably not. But that ship has sailed. So -- can you match it or not?"),
+        ('andrea', 'ellen', "I can move on the payment terms; that's flexible. But the cancellation protection is non-negotiable -- if I dropped it, I'd be exposing both of us.",
+         "I can move on the payment terms; that's flexible. But the cancellation protection is <span class=\"vocab-highlight\">non-negotiable</span> -- if I dropped it, I'd be exposing both of us."),
+        ('klaus', 'arthur', "And if I say that's not enough, and I walk?",
+         "And if I say that's not enough, and I walk?"),
+        ('andrea', 'ellen', "Then I'd be sorry to lose the deal, but I'd rather keep the relationship than sign something I can't stand behind. If I were the kind of supplier who caved under pressure, you wouldn't have trusted us for six years.",
+         "Then I'd be sorry to lose the deal, but I'd rather keep the relationship than sign something I can't stand behind. If I <span class=\"vocab-highlight\">were</span> the kind of supplier who caved under pressure, you wouldn't have trusted us for six years."),
+    ],
+    'comprehension': [
+        ("1. What ultimatum does Klaus give Andrea at the start?", "Match the competitor's rate today, or he moves the whole group elsewhere."),
+        ("2. What is Andrea willing to move on, and what is non-negotiable?", "She can move on the payment terms, but the cancellation protection is non-negotiable."),
+        ("3. What does Andrea say she would rather do than sign something she can't stand behind?", "Keep the relationship, even if it means losing the deal."),
+    ],
+
+    'listen1_h2': 'The <span class="accent">Standoff</span>',
+    'listen1_sub': 'A director describes a high-stakes negotiation. Sound first -- no text.',
+    'listen1_qs': [
+        ("1. What made the conversation high-stakes for the director?", "A major client threatened to walk away over price -- the whole account was on the line."),
+        ("2. How did she keep the situation from blowing up?", "She stayed composed, de-escalated with a calm question, and separated the person from the problem."),
+        ("3. What did she decide in advance, before the meeting?", "Exactly what was non-negotiable and what she was willing to concede -- and her walk-away point."),
+    ],
+    'listen2_h2': 'Mixing Time in <span class="accent">Conditionals</span>',
+    'listen2_sub': 'A short tip on mixed conditionals. Sound first -- no text.',
+    'listen2_qs': [
+        ("1. When the condition is past but the result is now, which forms do you use?", "Past perfect in the 'if' clause, 'would + base verb' in the result -- 'If I had prepared, I would be calmer now'."),
+        ("2. When the condition is a present fact but the result is past, which forms do you use?", "Past simple (or 'were') in the 'if' clause, 'would have + participle' in the result."),
+        ("3. What is the golden rule the speaker gives?", "Look at each clause alone and put it in the time it belongs to."),
+    ],
+    'listenings': [
+        {'file': 'a19_listening_standoff.mp3', 'voice': 'arthur',
+         'text': "The hardest conversation I had all year lasted about twenty minutes. A major client -- one of our biggest accounts -- told me flatly that if we didn't drop our price, they were walking to a competitor. Everything was on the line: the revenue, the relationship, the precedent it would set with every other client watching. My instinct was to argue back, but I've learned that raising my voice only raises theirs. So I slowed down. I asked one calm question to defuse the heat, and I separated the person from the problem. The thing that saved me wasn't clever wording in the moment. It was that I had decided, before I walked in, exactly what was non-negotiable and what I could concede. I knew my walk-away point. So when the pressure came, I wasn't drawing the line under stress -- I'd already drawn it. I conceded on the timeline, I stood my ground on the terms that protect us both, and in the end they stayed. Composure isn't the absence of pressure. It's what you do while you feel it."},
+        {'file': 'a19_listening_mixedtip.mp3', 'voice': 'ellen',
+         'text': "Let's talk about mixed conditionals -- the ones that put two different times in a single sentence. Normally a conditional stays in one time. But real life doesn't. Sometimes a decision in the past shapes your situation right now. For that, use the past perfect in the if clause and would plus the base verb in the result. If I had set the boundary earlier, I would not be stuck today. The if part is past; the result is now. And sometimes it's the reverse. Something that is true about you in general explains something that happened in the past. For that, use the past simple, or were, in the if clause, and would have plus the participle in the result. If I were more assertive, I would have pushed back yesterday. The if part is a present fact; the result is past. The golden rule is simple. Don't try to force the whole sentence into one time. Look at each clause on its own, decide whether it's about the past or the present, and give it the form that time needs. Master that, and you can reflect out loud, even under pressure."},
+    ],
+
+    'gapfill_parts': [
+        "Klaus gives Andrea an ",
+        ["1"], ": match the rate today or move the group. Andrea keeps her composure and refuses to let the pressure rush her. She asks whether, if they ",
+        ["2"], " last season's rate, they would even be in this spot now. She's willing to ",
+        ["3"], " on payment terms, but the cancellation protection is ",
+        ["4"], ". She names her limit calmly: she would rather ",
+        ["5"], " than sign something she can't stand behind.",
+    ],
+    'gapfill_bank': ["ultimatum", "had locked in", "concede", "non-negotiable", "walk away"],
+    'vocabnote': "Mixed conditionals: past 'if' + present result ('If we had locked in the rate, we wouldn't be negotiating now' -- had + past participle ... would + base verb); present 'if' + past result ('If I were softer, I would have caved' -- were/past simple ... would have + participle). Read each clause in the time it belongs to.",
+
+    'bank_label_top': 'The Standoff',
+    'bank_label': 'Useful language for high-stakes conversations',
+    'bank_items': [
+        "I hear you, and I want to make this work -- but not under an ultimatum.",
+        "Let me ask one question before we go there.",
+        "I can move on the terms; that part is flexible.",
+        "This point is non-negotiable for us, and here's why.",
+        "If I dropped it, I'd be exposing both of us.",
+        "I'd rather keep the relationship than sign something I can't stand behind.",
+        "If we had settled this earlier, we wouldn't be stuck now.",
+        "I'm prepared to walk away, and that's not a threat -- it's just my limit.",
+    ],
+
+    'scenarios_h2': 'Hold the <span class="accent">Line</span>',
+    'scenario_items': [
+        ["Scenario 1", "Someone gives you an ultimatum. De-escalate first -- acknowledge them, then slow the pace ('Let me ask one thing before we go there')."],
+        ["Scenario 2", "Reflect on how you got here with a mixed conditional: 'If we had settled this earlier, we wouldn't be at a deadlock now.'"],
+        ["Scenario 3", "Draw the line: concede one flexible point, then stand your ground on a non-negotiable and say why."],
+        ["Scenario 4", "State your walk-away point calmly, without threatening -- 'I'd rather lose the deal than sign something I can't stand behind.'"],
+    ],
+    'answerkey_list': [
+        "Gap-fill: 1 = ultimatum, 2 = had locked in, 3 = concede, 4 = non-negotiable, 5 = walk away.",
+        "Past cause -> present result: 'If we had locked in the rate, we wouldn't be negotiating now.'",
+        "Present fact -> past result: 'If I were softer, I would have caved yesterday.'",
+        "Walk-away line: 'I'm prepared to walk away -- that's my limit, not a threat.'",
+    ],
+    'answerkey_note': "Mixed conditional forms: past 'if' (had + participle) + present result (would + base verb); present 'if' (were / past simple) + past result (would have + participle).",
+
+    'roleplays': [
+        {'h2': 'The <span class="accent">Ultimatum</span>',
+         'scenario': "A supplier or client gives you a take-it-or-leave-it demand. De-escalate without caving: acknowledge them, ask a calm question, and buy a moment before you respond.",
+         'keywords': ["I hear you...", "let me ask one thing", "before we go there"]},
+        {'h2': 'The <span class="accent">Line</span>',
+         'scenario': "Draw your boundaries out loud. Concede one flexible point, then stand your ground on a non-negotiable -- and use a mixed conditional to explain how you got here ('If we had... we wouldn't be...').",
+         'keywords': ["I can move on...", "but this is non-negotiable", "if we had..., we wouldn't be..."]},
+        {'h2': 'The Walk-Away <span class="accent">Point</span>',
+         'scenario': "The other side won't budge and you're at a deadlock. State your walk-away point calmly -- protect the relationship even if the deal falls apart -- without turning it into a threat.",
+         'keywords': []},
+    ],
+
+    'survival_h2': 'Composure Under <span class="accent">Fire</span>',
+    'survival': [
+        ("I hear you -- but not under an ultimatum.", "Eu te entendo, mas nao sob um ultimato."),
+        ("Let me ask one thing before we go there.", "Deixe-me perguntar uma coisa antes de irmos por esse caminho."),
+        ("This point is non-negotiable for us.", "Este ponto e inegociavel para nos."),
+        ("If we had settled this earlier, we wouldn't be stuck now.", "Se tivessemos resolvido isto antes, nao estariamos travados agora."),
+        ("I'm prepared to walk away, and that's just my limit.", "Estou preparada para desistir, e isso e apenas o meu limite."),
+    ],
+    'learned': [
+        "I can stay composed and de-escalate a tense conversation without caving.",
+        "I can connect a past cause to a present result: 'If I had..., I would be...'.",
+        "I can connect a present fact to a past result: 'If I were..., I would have...'.",
+        "I can concede a flexible point while standing my ground on a non-negotiable.",
+        "I know the words: high-stakes, composure, to de-escalate, pushback, to stand your ground, non-negotiable, to concede, ultimatum, deadlock, to walk away, to defuse, to salvage.",
+    ],
+    'badge_name': 'Composed Negotiator Badge',
+    'badge_p': 'You can handle a high-stakes conversation with a steady voice -- de-escalating, holding your non-negotiables, and knowing your walk-away point, Andrea.',
+    'next_lesson': 'Sharing Your Vision and Inspiring the Room',
+
+    # ----- new B2 slides (pipeline v2) -----
+    'spot_errors': [
+        ("If I had prepared better, I would have been calmer now.", "If I had prepared better, I would be calmer now."),
+        ("If I was more composed, I would have handled it better.", "If I were more composed, I would have handled it better."),
+        ("If we had walked away, we wouldn't be overpaying now.", "If we had walked away, we wouldn't be overpaying now."),
+        ("If she weren't so calm, she would lose the deal yesterday.", "If she weren't so calm, she would have lost the deal yesterday."),
+    ],
+    'bridge5': {
+        'h2': 'Voices Under <span class="accent">Pressure</span>',
+        'sub': 'Listen to a director describe a standoff, then hold a high-stakes line out loud.',
+        'bg': BG5,
+    },
+    'register': [
+        ("Take it or leave it. That's my final offer.", "I understand where you are -- let me ask one thing before we treat this as final."),
+        ("You're wrong, and this price is a joke.", "I hear the pushback on price; let me show you what's driving it and what I can move on."),
+        ("Fine, whatever you want, just sign it.", "I can concede on the timeline, but this clause is non-negotiable -- here's why it protects us both."),
+        ("If you won't drop the price, we're done.", "If it comes to that, I'd rather keep the relationship than sign something I can't stand behind."),
+    ],
+    'artifact': {
+        'label': 'The Prep Sheet',
+        'h2': 'High-Stakes Conversation <span class="accent">Prep Sheet</span>',
+        'meta': [
+            ("Prepared by:", "Andrea Aggio -- Commercial Director"),
+            ("Conversation:", "Rate standoff with Klaus (group account)"),
+            ("Objective:", "Keep the group without breaking our protections"),
+        ],
+        'paras': [
+            "Non-negotiables: the cancellation-protection clause stays. If I dropped it, I would be exposing both sides, and if this had gone wrong once before, we would already have learned that lesson the hard way. This line does not move.",
+            "Concessions I can make: payment terms and the timeline are flexible. I'll open with one of these to show good faith and de-escalate, before we touch the harder points.",
+            "Walk-away point: if Klaus insists I drop the protection to match the rate, I walk -- calmly, and with the relationship intact. An ultimatum only has power if I can't leave. My job is to salvage the partnership even if this particular deal does not close.",
+        ],
+    },
+    'artifact_qs': [
+        ("1. According to the prep sheet, which clause is non-negotiable?", "The cancellation-protection clause."),
+        ("2. What is Andrea willing to concede to show good faith?", "Payment terms and the timeline."),
+        ("3. What is her walk-away point?", "If Klaus insists she drop the protection to match the rate, she walks -- calmly, keeping the relationship."),
+    ],
+    'pron_lines': [
+        ("If I had known, I wouldn't be here now.", "'had known' links -- ha-dnown; 'wouldn't be' -- wood-nbee; stress KNOWN and HERE."),
+        ("I'm prepared to walk away.", "'prepared to' links -- pre-pair-dtuh; stress WALK a-WAY, two beats."),
+        ("This point is non-negotiable.", "stress the NON in non-neGOtiable; five syllables, keep it steady and calm."),
+        ("Let me ask one thing before we go there.", "'let me' -- lemme in speech; light, slow pace to de-escalate; stress ONE and GO."),
+    ],
+    'bridge6': {
+        'h2': 'Now You Hold the <span class="accent">Line</span>',
+        'sub': 'Your turn: face the pressure, stay composed, and stand your ground.',
+        'bg': BG6,
+    },
+    'quickfire': [
+        {'situation': "Someone opens with an ultimatum. De-escalate first.",
+         'tips': ["Acknowledge them, don't fight.", "'I hear you -- let me ask one thing first.'", "Slow the pace before responding."]},
+        {'situation': "Explain how a past decision left you stuck now. Use a mixed conditional.",
+         'tips': ["Past 'if' + present result.", "'If we had settled this, we wouldn't be here now.'", "had + participle ... would + base verb."]},
+        {'situation': "Explain a past outcome using a present fact about yourself.",
+         'tips': ["Present 'if' + past result.", "'If I were softer, I would have caved.'", "were ... would have + participle."]},
+        {'situation': "Draw the line: concede one point, hold another.",
+         'tips': ["'I can move on the timeline.'", "'But this clause is non-negotiable.'", "Give a reason for the line."]},
+        {'situation': "State your walk-away point without threatening.",
+         'tips': ["Stay calm, not aggressive.", "'I'd rather lose the deal than sign this.'", "A limit, not an ultimatum."]},
+    ],
+
+    'preclass_title': 'Handling High-Stakes Conversations',
+    'preclass_desc': "How to stay composed under pressure, de-escalate, and hold your ground -- using mixed conditionals. Key words: high-stakes, composure, to de-escalate, pushback, to stand your ground, non-negotiable, to concede, ultimatum, deadlock, to walk away, to defuse, to salvage. Structure: past 'if' + present result (had done ... would be); present 'if' + past result (were/did ... would have done).",
+    'context': ("A supplier, Klaus, gives Andrea an <strong>ultimatum</strong>: match the rate today or move the group. "
+                "Instead of fighting, she keeps her <strong>composure</strong> and works to <strong>de-escalate</strong>. "
+                "'If we <strong>had locked in</strong> last season's rate,' she reflects, 'we wouldn't be at this "
+                "<strong>deadlock</strong> now.' She meets the <strong>pushback</strong> calmly: she can "
+                "<strong>concede</strong> on payment terms, but the cancellation protection is "
+                "<strong>non-negotiable</strong> -- 'if I dropped it, I'd be exposing both of us.' She knows her limit "
+                "and is prepared to <strong>walk away</strong>: 'If I <strong>were</strong> the kind of supplier who "
+                "caved, you wouldn't have trusted us for six years.' Even if the deal falls through, she wants to "
+                "<strong>salvage</strong> the relationship."),
+    'context_quiz': [
+        ("1. In 'If we had locked in the rate, we wouldn't be stuck now', the result clause is:",
+         [("A", "present -- 'would + base verb' (wouldn't be).", True),
+          ("B", "past -- 'would have + participle'.", False),
+          ("C", "future -- 'will be'.", False)]),
+        ("2. Which sentence mixes a present fact with a past result?",
+         [("A", "If I were more assertive, I would have pushed back.", True),
+          ("B", "If I had prepared, I would be calmer now.", False),
+          ("C", "If I prepare, I will be calmer.", False)]),
+        ("3. Which sentence is correct for a past cause and a present result?",
+         [("A", "If I had set the boundary, I would be calmer now.", True),
+          ("B", "If I had set the boundary, I would have been calmer now.", False),
+          ("C", "If I set the boundary, I would be calmer now.", False)]),
+    ],
+    'tip_title': 'Mixed Conditionals',
+    'tip_sub': "Como juntar dois tempos numa so frase -- passado que afeta o presente, e presente que explica o passado (em ingles e portugues).",
+    'tip_rows': [
+        ("Past &rarr; present", "causa no passado, resultado agora. past cause, present result.", "If I <strong>had prepared</strong>, I <strong>would be</strong> calmer now."),
+        ("Present &rarr; past", "fato permanente, resultado no passado. present fact, past result.", "If I <strong>were</strong> braver, I <strong>would have said</strong> no."),
+        ("As formas / The forms", "past perfect + would + base verb; OU past simple/were + would have + participio.", "had done ... <strong>would be</strong> / were ... <strong>would have done</strong>."),
+        ("Regra de ouro / Golden rule", "olhe cada clausula sozinha e de a ela o tempo a que pertence. read each clause on its own.", "nao force tudo num so tempo."),
+    ],
+    'fill': [
+        ('"If we ', "had locked in", "Dica: causa no passado -- past perfect (had + participio)", "If we had locked in the rate, we wouldn't be stuck now.", ' the rate, we wouldn\'t be stuck now."'),
+        ('"If I had prepared better, I ', "would be", "Dica: resultado AGORA -- would + verbo base (nao 'would have')", "If I had prepared better, I would be calmer now.", ' calmer now."'),
+        ('"If I ', "were", "Dica: fato presente -- use 'were' para todos os sujeitos", "If I were more composed, I would have handled it better.", ' more composed, I would have handled it better."'),
+        ('"If she weren\'t so calm, she ', "would have lost", "Dica: resultado no PASSADO -- would have + participio", "If she weren't so calm, she would have lost the deal.", ' the deal."'),
+        ('"This clause is ', "non-negotiable", "Dica: que nao pode ser mudado nem discutido", "This clause is non-negotiable for us.", ' for us."'),
+        ('"I\'m prepared to ', "walk away", "Dica: abandonar a negociacao em vez de aceitar termos ruins", "I'm prepared to walk away if the terms are wrong.", ' if the terms are wrong."'),
+    ],
+    'order_intro': "Coloque os passos de uma conversa de alto risco na ordem correta.",
+    'order': [
+        "Before the meeting, decide what is non-negotiable and what you can concede.",
+        "When the ultimatum lands, keep your composure and de-escalate.",
+        "Ask a calm question to defuse the heat and slow the pace.",
+        "Concede a flexible point, then stand your ground on the non-negotiable.",
+        "State your walk-away point calmly, and protect the relationship either way.",
+    ],
+    'speech': [
+        ("I hear you -- but not under an ultimatum.", "Eu te entendo, mas nao sob um ultimato."),
+        ("Let me ask one thing before we go there.", "Deixe-me perguntar uma coisa antes de irmos por esse caminho."),
+        ("If we had settled this earlier, we wouldn't be stuck now.", "Se tivessemos resolvido isto antes, nao estariamos travados agora."),
+        ("This point is non-negotiable for us.", "Este ponto e inegociavel para nos."),
+        ("I'm prepared to walk away, and that's just my limit.", "Estou preparada para desistir, e isso e apenas o meu limite."),
+    ],
+    'quiz': [
+        ("A client opens with a take-it-or-leave-it demand. You de-escalate. You say:",
+         [("A", "I hear you -- let me ask one thing before we go there.", True),
+          ("B", "That's ridiculous. Take it or leave it yourself.", False),
+          ("C", "Fine, whatever you want.", False)]),
+        ("You explain how a past decision left you stuck now. You say:",
+         [("A", "If we had settled this earlier, we wouldn't be at a deadlock now.", True),
+          ("B", "If we had settled this earlier, we wouldn't have been at a deadlock now.", False),
+          ("C", "If we settle this earlier, we won't be at a deadlock.", False)]),
+        ("You explain a past outcome with a present fact about yourself. You say:",
+         [("A", "If I were less patient, I would have given him an ultimatum.", True),
+          ("B", "If I was less patient, I would give him an ultimatum.", False),
+          ("C", "If I am less patient, I will give him an ultimatum.", False)]),
+        ("You describe refusing to change your position under pressure. You call it:",
+         [("A", "standing your ground.", True),
+          ("B", "walking away.", False),
+          ("C", "conceding.", False)]),
+    ],
+    'think': "Imagine a real high-stakes conversation you might face at Escape Turismo -- a supplier's ultimatum, a client threatening to leave, a partner pushing back hard. Record a one-minute plan for handling it. Say how you'll keep your composure and de-escalate; name one non-negotiable and one point you could concede; and use at least one mixed conditional to reflect ('If we had..., we wouldn't be... now' or 'If I were..., I would have...'). Finish with your walk-away point, stated calmly. Take your time.",
+
+    'media': [
+        ('series', "Industry (HBO)",
+         "A drama set inside a high-pressure investment bank where nearly every scene is a high-stakes conversation -- ultimatums, pushback, deadlocks, and people fighting to stand their ground while staying (or losing) composure. A masterclass in the language and psychology of pressure. Connection to Lesson 19: handling high-stakes conversations.",
+         'Tip: pick one confrontation and note how the calmer speaker de-escalates -- or fails to.',
+         'https://www.imdb.com/title/tt7671070/'),
+        ('podcast', 'Negotiate Anything',
+         "A long-running podcast by Kwame Christian entirely about difficult conversations: de-escalation, standing firm, conceding wisely, and walking away. Practical, guest-driven, and full of the exact vocabulary of this lesson. Connection to Lesson 19: staying composed and holding your line under pressure.",
+         'Tip: after an episode, write one mixed conditional about a tense conversation you have had.',
+         'https://podcasts.apple.com/us/podcast/negotiate-anything/id1101679010'),
+        ('youtube', '"Mixed Conditionals" -- English grammar lesson',
+         "A clear, B2-level explanation of the exact grammar of this class: mixing past and present in one conditional sentence. Connection to Lesson 19: 'If I had prepared, I would be calmer now' and 'If I were braver, I would have said no'.",
+         'Tip: after each example, build your own mixed conditional about a decision at work.',
+         'https://www.youtube.com/watch?v=Ln7Ew5FKMWY'),
+    ],
+}
