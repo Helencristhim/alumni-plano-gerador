@@ -58,6 +58,17 @@ jobs:
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: python3 scripts/check_lesson_integrity.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
+      - name: "GATE 6 — reintrodução de padrão já consertado (novos E modificados)"
+        # BLOQUEANTE também em arquivo MODIFICADO, ao contrário do validador abaixo.
+        # É esse o buraco que ele tapa: uma branch ramificada ANTES de um conserto
+        # sobrescreve o arquivo e reintroduz o bug ao mergear, e o anti-regressão não
+        # vê (só conta ex-lesson, stamp e slide). Aconteceu em 10/07 com o alert do
+        # Chrome e com os links de busca. Critério = "não piorou vs a base", não
+        # "zero" — 49 páginas legadas ainda têm link de busca e travar todo PR que as
+        # toque seria pior que o bug.
+        if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
+        run: python3 scripts/check_forbidden_patterns.py --base "origin/${{ github.base_ref }}" ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
+
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''
         continue-on-error: true
