@@ -128,6 +128,60 @@
     console.warn('lesson-progress: toggleCheck not found, wrapping skipped');
   }
 
+  // ===== DETECT LESSON NUMBER FOR A LEGACY CHECKLIST =====
+  // Template LEGADO: <ul class="checklist"><li><input onchange="toggleChecklist(this)">.
+  // Sem .check-grid nem data-lesson proprio. Descobre a aula pela MESMA fonte confiavel
+  // que o resto da lib usa, NUNCA pelo id="checklist-N" (inconsistente entre alunos —
+  // patricia-xavier aula5 tem id="checklist-1"). Prioridade:
+  //   1. o slide que contem o checklist (detectLesson: data-lesson do slide / lessonRanges)
+  //   2. qualquer ancestral com [data-lesson]
+  //   3. o lesson-card ancestral id="ex-lesson-N" (Pre-class accordion) → N
+  function detectLessonForChecklist(list) {
+    if (!list) return null;
+    var lessonNum = detectLesson(list.closest('.slide'));
+    if (lessonNum) return lessonNum;
+    var dl = list.closest('[data-lesson]');
+    if (dl && dl.dataset.lesson) {
+      var n = parseInt(dl.dataset.lesson, 10);
+      if (n) return n;
+    }
+    var card = list.closest('.lesson-card[id^="ex-lesson-"]');
+    if (card) {
+      var m = card.id.match(/^ex-lesson-(\d+)$/);
+      if (m) return parseInt(m[1], 10);
+    }
+    return null;
+  }
+
+  // ===== WRAP toggleChecklist (paginas do template LEGADO) =====
+  // Espelha o wrap de toggleCheck: quando TODOS os checkboxes de um <ul class="checklist">
+  // estao marcados, grava inclass_done e acende o stamp. Idempotente (saveInclassDone faz
+  // upsert onConflict). NAO dispara duas vezes se a pagina tambem tiver .check-grid: cada
+  // template tem seu proprio handler e seus proprios checkboxes.
+  if (typeof window.toggleChecklist === 'function') {
+    var _originalToggleChecklist = window.toggleChecklist;
+    window.toggleChecklist = function(cb) {
+      _originalToggleChecklist(cb);
+      var list = cb.closest ? cb.closest('.checklist') : null;
+      if (!list) { var li = cb.closest ? cb.closest('li') : null; list = li ? li.parentElement : null; }
+      if (!list) return;
+      var lessonNum = detectLessonForChecklist(list);
+      if (!lessonNum) {
+        console.warn('lesson-progress: could not detect lesson number for checklist (legacy template)');
+        return;
+      }
+      var boxes = list.querySelectorAll('input[type="checkbox"]');
+      var checked = list.querySelectorAll('input[type="checkbox"]:checked');
+      if (boxes.length > 0 && checked.length < boxes.length) {
+        console.log('lesson-progress: ' + checked.length + '/' + boxes.length + ' checklist items checked (lesson ' + lessonNum + ')');
+      }
+      if (boxes.length > 0 && checked.length === boxes.length) {
+        saveInclassDone(lessonNum);
+      }
+    };
+    console.log('lesson-progress: toggleChecklist wrapped successfully');
+  }
+
   // ===== WRAP updateProgress =====
   // updateProgress() (inline em cada hub) calcula a % dos EXERCÍCIOS do Pre-class
   // e escrevia por cima da barra do pacote + stamps. Aqui reafirmamos o progresso
