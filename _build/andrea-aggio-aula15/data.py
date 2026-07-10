@@ -1,0 +1,372 @@
+# -*- coding: utf-8 -*-
+BG1 = "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1400&q=80"
+BG2 = "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80"
+BG3 = "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1400&q=80"
+BG4 = "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=80"
+BG5 = "https://images.unsplash.com/photo-1560439514-4e9645039924?w=1400&q=80"
+BG6 = "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1400&q=80"
+
+D = {
+    'n': 15,
+    'reading': True,
+    'partner_name': 'sven',
+    'grammar_point_pt': "gerundio vs infinitivo apos certos verbos: alguns verbos pedem a forma -ing (suggest, recommend, avoid, consider, keep), outros pedem to + infinitivo (decide, agree, plan, need, offer, hope), e depois de qualquer preposicao (for, before, after, look forward to) usa-se sempre -ing",
+    'chapter_tag': 'Running the Meeting',
+    'title_h1': 'Leading and Wrapping Up a <span class="accent">Business Meeting</span>',
+    'title_sub': 'Open with a clear objective, keep the discussion on track, and close with a confident recap and action items.',
+    'short_title': 'Leading a Meeting',
+    'menu_title': 'Leading and Wrapping Up a Business Meeting',
+    'menu_desc': 'Chair a meeting and close it well using gerund and infinitive verb patterns',
+    'bg_title': BG1, 'bg_vocab': BG2, 'bg_read': BG3, 'bg_gram': BG4,
+    'bg_lesson_card': "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=600&q=80",
+    'stamp_label': 'Meeting Lead',
+    'stamp_img': "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=200&q=80",
+    'phases': ['In the Chair', 'Meeting Words', 'A Well-Run Meeting',
+               'Verb Patterns', 'Voices', 'Your Turn', 'Wrap-Up'],
+
+    'warm_h2': 'From Forecasting to <span class="accent">Chairing</span>',
+    'warm_p': "Last time you looked at the whole industry and made a confident forecast: 'By 2030, demand will have doubled.' Today you sit at the head of the table. Leading a meeting is a skill of its own -- you open with a clear objective, keep everyone on track, and close with a recap that leaves the room on the same page. By the end of this hour, you will run a meeting from the first word to the last.",
+    'warm_prompt': 'In one sentence: what makes a business meeting feel like a good use of your time?',
+    'missions': [
+        'Learn the language of chairing, running, and closing a meeting.',
+        'Use the right verb pattern -- gerund or infinitive -- after key verbs.',
+        'Open, steer, and wrap up a meeting with a clear recap and action items.',
+    ],
+
+    'vocab_trans_h2': 'Words for the <span class="accent">Meeting Room</span>',
+    'vocab': [
+        ("Agenda", "the list of items to be discussed in a meeting (pauta)", "Let's stick to the agenda so we finish on time."),
+        ("To chair", "to lead and run a meeting (presidir, conduzir)", "Andrea will chair today's meeting."),
+        ("Objective", "the specific result you want to achieve (objetivo)", "The objective today is to approve the budget."),
+        ("Attendee", "a person who is present at a meeting (participante, presente)", "We had twelve attendees on the call."),
+        ("Minutes", "the official written record of a meeting (ata)", "I'll send the minutes by tomorrow morning."),
+        ("Action item", "a specific task assigned during a meeting (tarefa, ponto de acao)", "Each action item has an owner and a deadline."),
+        ("To recap", "to summarize the main points quickly (recapitular)", "Before we close, let me recap what we agreed."),
+        ("Takeaway", "the key point or conclusion to remember (conclusao principal)", "The main takeaway is that demand is rising."),
+        ("Consensus", "general agreement across the group (consenso)", "We reached consensus on the new rates."),
+        ("On the same page", "in full agreement, sharing one understanding (alinhados)", "Let's make sure everyone is on the same page."),
+        ("To assign", "to give a task or responsibility to someone (atribuir, designar)", "I'll assign the follow-up to the sales team."),
+        ("To adjourn", "to formally close or end a meeting (encerrar, suspender)", "If there's nothing else, we can adjourn."),
+    ],
+
+    'gram_trans_h2': 'Gerund or <span class="accent">Infinitive</span>',
+    'gram_trans_sub': 'suggest + -ing &middot; decide + to &middot; preposition + -ing',
+    'gram_examples': [
+        ("", "I suggest starting with the sales figures.", '"I <span style="color:#15803d;font-weight:700">suggest starting</span> with the sales figures."'),
+        ("", "We decided to postpone the launch.", '"We <span class="accent" style="font-weight:700">decided to postpone</span> the launch."'),
+        ("", "Thank you all for coming today.", '"Thank you all <span class="accent" style="font-weight:700">for coming</span> today."'),
+    ],
+    'gram_disc_q': 'One verb is followed by the -ing form, one by to + infinitive, and one word is a preposition followed by -ing. Which pattern does each one use?',
+    'gram_table': [
+        ("Verb + -ing", "after suggest, recommend, avoid, consider, keep, finish", "I <strong>suggest reviewing</strong> the budget first."),
+        ("Verb + to + infinitive", "after decide, agree, plan, need, offer, hope, want", "We <strong>agreed to meet</strong> again next week."),
+        ("Preposition + -ing", "after for / before / after, and 'look forward to'", "Thanks <strong>for coming</strong>. I look forward <strong>to hearing</strong> from you."),
+    ],
+    'gram_rule_foot': "Some verbs take the -ing form (suggest, recommend, avoid, consider, keep), others take to + infinitive (decide, agree, plan, need, offer, hope). After any preposition -- including the 'to' in 'look forward to' -- always use -ing. Learn each verb with its pattern.",
+
+    'lf_h2': 'Choose the Right <span class="accent">Pattern</span>',
+    'lf_title': 'Complete each sentence with the correct verb form',
+    'lf_items': [
+        ["A", "I suggest ", "reviewing", " the numbers before we vote.", "strong"],
+        ["B", "We agreed ", "to postpone", " the decision until Friday.", "soft"],
+        ["C", "Thank you all ", "for coming", " on such short notice.", "soft"],
+        ["D", "Let's plan ", "to meet", " again next week to confirm.", "strong"],
+    ],
+    'lf_followup': "After 'suggest / recommend / avoid' use the -ing form; after 'decide / agree / plan / need' use to + infinitive; after any preposition (for, before, after) use -ing. When in doubt, learn the verb together with its pattern.",
+
+    'mistakes': [
+        ("I suggest to start with the budget.", 'I <strong>suggest starting</strong> with the budget.'),
+        ("We decided postponing the launch.", 'We <strong>decided to postpone</strong> the launch.'),
+    ],
+    'mistake_note': "'Suggest' and 'recommend' are always followed by the -ing form, never by 'to'. 'Decide', 'agree', and 'plan' are always followed by to + infinitive. Learning the verb with its pattern is the fastest way to stop guessing.",
+
+    'read_trans_h2': 'Read the <span class="accent">Playbook</span>',
+    'reading_h2': 'How to Run a Meeting That <span class="accent">Ends Well</span>',
+    'read_block': {
+        'rtitle': 'How to Run a Meeting That Ends Well',
+        'paras': [
+            "We have all sat through meetings that went nowhere. The good news is that running a strong meeting is a skill, not a talent, and it starts before anyone walks in. A good chair sends a short agenda in advance and opens by stating one clear objective, so every attendee knows why they are in the room. Without that, people keep talking, and the meeting drifts.",
+            "The middle is about control. A good chair keeps the discussion on track, invites quieter attendees to speak, and avoids letting one strong voice dominate. When people disagree, the aim is not to win but to reach consensus, or at least to get everyone on the same page about the next step. If a topic needs more work, a smart chair suggests moving it to a later meeting rather than forcing a rushed decision.",
+            "But the ending is what people remember. Before you adjourn, always recap: summarize the main takeaways, confirm every action item, and assign an owner and a deadline to each one. Then promise to send the minutes. A meeting that closes with a clear recap and named actions feels like time well spent. A meeting that just fades out feels like time lost -- so decide to finish well.",
+        ],
+        'source': 'Adapted from a business communication guide',
+        'link': 'https://hbr.org/2018/01/podcast-ideacast',
+        'gist_prompt': 'What is the main idea of the text?',
+        'gist_choices': [
+            ["a", "Meetings are a waste of time and should be avoided.", False],
+            ["b", "A strong meeting needs a clear objective, a chair who keeps it on track, and a firm close with a recap and action items.", True],
+            ["c", "The most important part of a meeting is inviting as many attendees as possible.", False],
+        ],
+        'tf': [
+            ["The text says a good chair opens the meeting by stating one clear objective.", "t", "The first paragraph says a good chair opens by stating one clear objective so every attendee knows why they are there."],
+            ["According to the text, the aim of a disagreement is to win the argument.", "f", "It says the aim is not to win but to reach consensus, or to get everyone on the same page about the next step."],
+            ["The text advises forcing a rushed decision when a topic needs more work.", "f", "It says a smart chair suggests moving the topic to a later meeting rather than forcing a rushed decision."],
+            ["The text says the ending of a meeting is what people remember.", "t", "The last paragraph says the ending is what people remember and should include a recap and named action items."],
+        ],
+    },
+
+    'dialogue_h2': 'Andrea <span class="accent">Wraps It Up</span>',
+    'dialogue': [
+        ('andrea', 'ellen', "Alright, I think we've covered everything on the agenda. Sven, before I adjourn, let me recap so we're all on the same page.",
+         "Alright, I think we've covered everything on the <span class=\"vocab-highlight\">agenda</span>. Sven, before I <span class=\"vocab-highlight\">adjourn</span>, let me <span class=\"vocab-highlight\">recap</span> so we're all <span class=\"vocab-highlight\">on the same page</span>."),
+        ('sven', 'arthur', "Please do. I want to make sure we agreed on the group rates for next season.",
+         "Please do. I want to make sure we agreed on the group rates for next season."),
+        ('andrea', 'ellen', "We did. The main takeaway is that we'll offer a five percent discount, and we reached consensus on that. I suggest reviewing the final numbers by email before we sign.",
+         "We did. The main <span class=\"vocab-highlight\">takeaway</span> is that we'll offer a five percent discount, and we reached <span class=\"vocab-highlight\">consensus</span> on that. I suggest <span class=\"vocab-highlight\">reviewing</span> the final numbers by email before we sign."),
+        ('sven', 'arthur', "Sounds good. And who is handling the contract?",
+         "Sounds good. And who is handling the contract?"),
+        ('andrea', 'ellen', "That's an action item for me. I'll assign the follow-up to my team and plan to send you a draft on Thursday.",
+         "That's an <span class=\"vocab-highlight\">action item</span> for me. I'll <span class=\"vocab-highlight\">assign</span> the follow-up to my team and plan to send you a draft on Thursday."),
+        ('sven', 'arthur', "Perfect. Can you also send the minutes so I can share them with my board?",
+         "Perfect. Can you also send the <span class=\"vocab-highlight\">minutes</span> so I can share them with my board?"),
+        ('andrea', 'ellen', "Of course. Thank you all for coming. I think this was a good use of everyone's time. Let's plan to meet again once the draft is ready. Meeting adjourned.",
+         "Of course. Thank you all for coming. I think this was a good use of everyone's time. Let's plan to meet again once the draft is ready. Meeting <span class=\"vocab-highlight\">adjourned</span>."),
+    ],
+    'comprehension': [
+        ("1. What does Sven want to confirm before the meeting ends?", "That they agreed on the group rates for next season."),
+        ("2. What does Sven ask Andrea to send to his board?", "The minutes of the meeting."),
+        ("3. When does Andrea plan to send Sven the contract draft?", "On Thursday."),
+    ],
+
+    'listen1_h2': 'The <span class="accent">Wrap-Up</span>',
+    'listen1_sub': 'A manager closes a meeting with a clear recap and action items. Sound first -- no text.',
+    'listen1_qs': [
+        ("1. What is the first thing the manager does before closing?", "Recaps the main takeaways of the meeting."),
+        ("2. What does the manager assign to each action item?", "An owner and a deadline."),
+        ("3. What does the manager promise to send after the meeting?", "The minutes."),
+    ],
+    'listen2_h2': 'Gerund or <span class="accent">Infinitive?</span>',
+    'listen2_sub': 'A short business tip on which verbs take -ing and which take to + infinitive. Sound first -- no text.',
+    'listen2_qs': [
+        ("1. Which form follows 'suggest' and 'recommend'?", "The -ing form (the gerund)."),
+        ("2. Which form follows 'decide', 'agree', and 'plan'?", "To + infinitive."),
+        ("3. What form do you always use after a preposition?", "The -ing form."),
+    ],
+    'listenings': [
+        {'file': 'a15_listening_wrapup.mp3', 'voice': 'arthur',
+         'text': "Alright, everyone, let's bring this to a close. Before we adjourn, let me recap the main takeaways. First, we reached consensus on the new group rates, so we are all on the same page there. Second, we agreed to postpone the marketing decision until the next meeting, because that topic needs more work. Now, the action items. Andrea will assign the contract follow-up to her team and plan to send a draft by Thursday. I will finish preparing the minutes and send them to all attendees tomorrow. If there is nothing else on the agenda, thank you all for coming. I think this was a good use of our time. Let's plan to meet again next week. Meeting adjourned."},
+        {'file': 'a15_listening_verbtip.mp3', 'voice': 'ellen',
+         'text': "Welcome to this short segment on verb patterns. In a meeting, two forms do most of the work. Some verbs are followed by the -ing form. After suggest, recommend, avoid, and consider, use -ing. For example, I suggest starting with the budget, or I recommend reviewing the numbers first. Other verbs are followed by to plus the infinitive. After decide, agree, plan, need, and offer, use to. For example, we decided to postpone the launch, or we agreed to meet again. And here is the golden rule. After any preposition, always use -ing. That includes the little word to in look forward to, so we say I look forward to hearing from you, not to hear. Learn each verb with its pattern, and you will sound natural every time you chair a meeting."},
+    ],
+
+    'gapfill_parts': [
+        "Andrea chairs the meeting and opens with a clear ",
+        ["1"], ". After the discussion, the group reaches ",
+        ["2"], " on the new rates. Before she adjourns, Andrea suggests ",
+        ["3"], " the final numbers by email, and the team agrees ",
+        ["4"], " a draft by Thursday. She promises to send the ",
+        ["5"], " to all attendees.",
+    ],
+    'gapfill_bank': ["objective", "consensus", "reviewing", "to send", "minutes"],
+    'vocabnote': "Verb + -ing: after suggest, recommend, avoid, consider ('I suggest reviewing the numbers'). Verb + to + infinitive: after decide, agree, plan, need, offer ('the team agrees to send a draft'). After a preposition, always -ing. The verb decides the pattern, not the meaning.",
+
+    'bank_label_top': 'In the Chair',
+    'bank_label': 'Useful language for opening, steering, and closing a meeting',
+    'bank_items': [
+        "The objective today is to approve the new rates.",
+        "Let's stick to the agenda so we finish on time.",
+        "I suggest moving that topic to the next meeting.",
+        "Can we get everyone on the same page here?",
+        "Before we adjourn, let me recap the main takeaways.",
+        "Each action item has an owner and a deadline.",
+        "I'll assign the follow-up to my team.",
+        "Thank you all for coming. Meeting adjourned.",
+    ],
+
+    'scenarios_h2': 'Run the <span class="accent">Meeting</span>',
+    'scenario_items': [
+        ["Scenario 1", "Open the meeting: state one clear objective for the group in a single sentence."],
+        ["Scenario 2", "A topic needs more work. Suggest moving it to a later meeting using 'I suggest + -ing'."],
+        ["Scenario 3", "Close the meeting: recap one takeaway and assign one action item with a deadline."],
+        ["Scenario 4", "Thank the attendees and adjourn, using 'for coming' and 'plan to meet' correctly."],
+    ],
+    'answerkey_list': [
+        "Gap-fill: 1 = objective, 2 = consensus, 3 = reviewing, 4 = to send, 5 = minutes.",
+        "Verb + -ing (suggest / recommend / avoid): 'I suggest reviewing the numbers.'",
+        "Verb + to + infinitive (decide / agree / plan): 'We agreed to send a draft.'",
+        "Preposition + -ing: 'Thank you for coming'; 'I look forward to hearing from you.'",
+    ],
+    'answerkey_note': "Verb + -ing after suggest, recommend, avoid, consider; verb + to + infinitive after decide, agree, plan, need, offer; -ing after every preposition.",
+
+    'roleplays': [
+        {'h2': 'Opening the <span class="accent">Meeting</span>',
+         'scenario': "You are chairing a meeting about next season's rates. Open it: welcome the attendees and state one clear objective.",
+         'keywords': ["thank you for coming", "the objective today is to...", "let's stick to the agenda"]},
+        {'h2': 'Steering the <span class="accent">Discussion</span>',
+         'scenario': "A topic is getting stuck and needs more work. Suggest moving it to a later meeting and get the group on the same page about the next step.",
+         'keywords': ["I suggest moving...", "let's get on the same page", "we agreed to..."]},
+        {'h2': 'The Full <span class="accent">Wrap-Up</span>',
+         'scenario': "Close a two-minute meeting: recap the takeaways, confirm the action items with owners and deadlines, promise the minutes, thank everyone, and adjourn.",
+         'keywords': []},
+    ],
+
+    'survival_h2': 'Chair Like a <span class="accent">Pro</span>',
+    'survival': [
+        ("The objective today is to approve the new rates.", "O objetivo hoje e aprovar as novas tarifas."),
+        ("Let's stick to the agenda so we finish on time.", "Vamos seguir a pauta para terminarmos no horario."),
+        ("Before we adjourn, let me recap the main takeaways.", "Antes de encerrarmos, deixe-me recapitular os pontos principais."),
+        ("I'll assign the follow-up to my team.", "Vou atribuir o acompanhamento a minha equipe."),
+        ("Thank you all for coming. Meeting adjourned.", "Obrigada a todos por virem. Reuniao encerrada."),
+    ],
+    'learned': [
+        "I can open a meeting by stating a clear objective and following an agenda.",
+        "I can use the -ing form after suggest, recommend, avoid, and consider.",
+        "I can use to + infinitive after decide, agree, plan, need, and offer.",
+        "I can close a meeting with a recap, action items, and a clear adjournment.",
+        "I know the words: agenda, to chair, objective, attendee, minutes, action item, to recap, takeaway, consensus, on the same page, to assign, to adjourn.",
+    ],
+    'badge_name': 'Meeting Lead Badge',
+    'badge_p': 'You can open, steer, and close a business meeting with confidence -- choosing the right verb pattern and leaving every attendee on the same page, Andrea.',
+    'next_lesson': 'Analyzing Results and Making Deductions',
+
+    # ----- new B2 slides (pipeline v2) -----
+    'spot_errors': [
+        ("I suggest to start with the budget.", "I suggest starting with the budget."),
+        ("We decided postponing the launch.", "We decided to postpone the launch."),
+        ("Thank you for come to the meeting.", "Thank you for coming to the meeting."),
+        ("I recommend to assign an owner to each task.", "I recommend assigning an owner to each task."),
+    ],
+    'bridge5': {
+        'h2': 'Voices in the <span class="accent">Boardroom</span>',
+        'sub': 'Listen to a manager close a meeting, then run your own out loud.',
+        'bg': BG5,
+    },
+    'register': [
+        ("Ok, we're done, bye.", "That covers the agenda. Thank you all for coming -- meeting adjourned."),
+        ("Just figure out the contract, someone.", "Let's assign the contract follow-up, with an owner and a deadline."),
+        ("We're not deciding this today, moving on.", "This topic needs more work, so I suggest moving it to the next meeting."),
+        ("Everybody get it? Good.", "Let me recap the takeaways so we're all on the same page."),
+    ],
+    'artifact': {
+        'label': 'The Record',
+        'h2': 'Meeting <span class="accent">Minutes</span>',
+        'meta': [
+            ("Meeting:", "Escape Turismo -- Rates Review, next season"),
+            ("Chair:", "Andrea Aggio -- Commercial Director"),
+            ("Attendees:", "A. Aggio, S. (partner agency), sales team"),
+        ],
+        'paras': [
+            "Objective: to approve the group rates for next season and agree on next steps.",
+            "Decisions: the group reached consensus on a five percent discount. The marketing decision was postponed to the next meeting, as the team agreed it needs more work.",
+            "Action items: Andrea to send the contract draft by Thursday and assign the follow-up to her team. Chair to circulate these minutes to all attendees. Next meeting: to be confirmed once the draft is reviewed.",
+        ],
+    },
+    'artifact_qs': [
+        ("1. What was the objective of the meeting?", "To approve the group rates for next season and agree on next steps."),
+        ("2. What did the group decide about the discount?", "They reached consensus on a five percent discount."),
+        ("3. What are Andrea's two action items?", "Send the contract draft by Thursday and assign the follow-up to her team."),
+    ],
+    'pron_lines': [
+        ("I suggest starting with the numbers.", "'suggest starting' links -- suh-JEST-STAR-ting; keep the -ing crisp."),
+        ("We agreed to postpone the launch.", "'agreed to' reduces -- uh-GREED-tuh; stress post-PONE."),
+        ("Thank you all for coming.", "'for coming' links -- fer-CUM-ing; warm, falling tone to close."),
+        ("Let's plan to meet again next week.", "'plan to meet' -- plan-tuh-MEET; light stress on MEET and WEEK."),
+    ],
+    'bridge6': {
+        'h2': 'Now You <span class="accent">Take the Chair</span>',
+        'sub': 'Your turn: open, steer, and close a meeting out loud.',
+        'bg': BG6,
+    },
+    'quickfire': [
+        {'situation': "You are opening a meeting. State the objective in one sentence.",
+         'tips': ["'The objective today is to...'", "Keep it to one clear goal.", "Mention the agenda."]},
+        {'situation': "A topic is stuck and needs more work. Move it to a later meeting.",
+         'tips': ["Use 'I suggest + -ing'.", "'I suggest moving this to next week.'", "Don't force a rushed decision."]},
+        {'situation': "Confirm a task before closing. Assign it with a deadline.",
+         'tips': ["'That's an action item for...'", "'I'll assign it to my team.'", "Add an owner and a date."]},
+        {'situation': "A colleague asks what was decided. Recap in one line.",
+         'tips': ["'The main takeaway is...'", "'We reached consensus on...'", "Keep everyone on the same page."]},
+        {'situation': "Close the meeting warmly and adjourn.",
+         'tips': ["'Thank you all for coming.'", "'Let's plan to meet again...'", "'Meeting adjourned.'"]},
+    ],
+
+    'preclass_title': 'Leading and Wrapping Up a Business Meeting',
+    'preclass_desc': "How to open, steer, and close a business meeting using gerund and infinitive verb patterns. Key words: agenda, to chair, objective, attendee, minutes, action item, to recap, takeaway, consensus, on the same page, to assign, to adjourn. Structure: verb + -ing (suggest, recommend) vs verb + to + infinitive (decide, agree, plan); preposition + -ing.",
+    'context': ("Andrea <strong>chairs</strong> the meeting. 'The <strong>objective</strong> today is to approve the new "
+                "rates,' she says, 'so let's stick to the <strong>agenda</strong>.' After the discussion, the group "
+                "reaches <strong>consensus</strong>, and everyone is <strong>on the same page</strong>. 'I suggest "
+                "<strong>reviewing</strong> the final numbers by email,' Andrea adds, 'and we agreed <strong>to send</strong> "
+                "a draft by Thursday.' Before she <strong>adjourns</strong>, she <strong>recaps</strong> the main "
+                "<strong>takeaway</strong> and confirms each <strong>action item</strong>. 'I'll <strong>assign</strong> the "
+                "follow-up to my team, and I'll send the <strong>minutes</strong> to every <strong>attendee</strong>. Thank "
+                "you all for coming.'"),
+    'context_quiz': [
+        ("1. 'I suggest reviewing the numbers' uses which form, and why?",
+         [("A", "The -ing form -- 'suggest' is always followed by a gerund.", True),
+          ("B", "To + infinitive -- 'suggest' is followed by 'to'.", False),
+          ("C", "Present simple -- it is a fact.", False)]),
+        ("2. Which verb is followed by to + infinitive?",
+         [("A", "suggest", False),
+          ("B", "agree", True),
+          ("C", "avoid", False)]),
+        ("3. Which sentence is correct?",
+         [("A", "Thank you for coming to the meeting.", True),
+          ("B", "Thank you for come to the meeting.", False),
+          ("C", "Thank you for to come to the meeting.", False)]),
+    ],
+    'tip_title': 'Gerund vs Infinitive',
+    'tip_sub': "Como escolher entre -ing e to + infinitivo depois de certos verbos (explicacao em ingles e portugues).",
+    'tip_rows': [
+        ("Verb + -ing", "apos suggest, recommend, avoid, consider, keep. after these verbs, use the -ing form.", "I <strong>suggest reviewing</strong> the budget."),
+        ("Verb + to + infinitive", "apos decide, agree, plan, need, offer, hope. after these verbs, use to + infinitive.", "We <strong>agreed to meet</strong> again."),
+        ("Preposition + -ing", "apos qualquer preposicao (for, before, after, 'look forward to'). always -ing.", "Thanks <strong>for coming</strong>."),
+        ("Regra de ouro / Golden rule", "aprenda o verbo junto com seu padrao. learn the verb with its pattern.", "suggest + -ing vs decide + to."),
+    ],
+    'fill': [
+        ('"I suggest ', "reviewing", "Dica: apos 'suggest' usa-se -ing (review + ___)", "I suggest reviewing the numbers first.", ' the numbers first."'),
+        ('"We agreed ', "to postpone", "Dica: apos 'agree' usa-se to + infinitivo", "We agreed to postpone the decision.", ' the decision."'),
+        ('"Thank you all ', "for coming", "Dica: apos preposicao usa-se -ing (for + come + ___)", "Thank you all for coming today.", ' today."'),
+        ('"Before we adjourn, let me ', "recap", "Dica: resumir os pontos principais", "Before we adjourn, let me recap the takeaways.", ' the takeaways."'),
+        ("\"Let's stick to the ", "agenda", "Dica: a lista de itens da reuniao", "Let's stick to the agenda so we finish on time.", ' so we finish on time."'),
+        ('"Each ', "action item", "Dica: uma tarefa atribuida na reuniao", "Each action item has an owner and a deadline.", ' has an owner and a deadline."'),
+    ],
+    'order_intro': "Coloque os passos de uma reuniao bem conduzida na ordem correta.",
+    'order': [
+        "Send a short agenda and state one clear objective.",
+        "Keep the discussion on track and invite everyone to speak.",
+        "Reach consensus, or get the group on the same page.",
+        "Recap the takeaways and confirm each action item.",
+        "Thank the attendees, promise the minutes, and adjourn.",
+    ],
+    'speech': [
+        ("The objective today is to approve the new rates.", "O objetivo hoje e aprovar as novas tarifas."),
+        ("I suggest reviewing the numbers before we vote.", "Sugiro revisar os numeros antes de votarmos."),
+        ("We agreed to send a draft by Thursday.", "Concordamos em enviar um rascunho ate quinta."),
+        ("Before we adjourn, let me recap the takeaways.", "Antes de encerrarmos, deixe-me recapitular os pontos."),
+        ("Thank you all for coming. Meeting adjourned.", "Obrigada a todos por virem. Reuniao encerrada."),
+    ],
+    'quiz': [
+        ("You want to propose starting with the budget. You say:",
+         [("A", "I suggest starting with the budget.", True),
+          ("B", "I suggest to start with the budget.", False),
+          ("C", "I suggest start with the budget.", False)]),
+        ("You confirm the group's decision to meet again. You say:",
+         [("A", "We agreed to meet again next week.", True),
+          ("B", "We agreed meeting again next week.", False),
+          ("C", "We agreed meet again next week.", False)]),
+        ("You thank the attendees at the end. You say:",
+         [("A", "Thank you all for coming.", True),
+          ("B", "Thank you all for to come.", False),
+          ("C", "Thank you all for come.", False)]),
+        ("A topic needs more work. You say:",
+         [("A", "I suggest moving it to the next meeting.", True),
+          ("B", "I suggest to move it to the next meeting.", False),
+          ("C", "I suggest move it to the next meeting.", False)]),
+    ],
+    'think': "Imagine you are chairing the final meeting about next season's rates for Escape Turismo. Record a one-minute wrap-up. Open by stating the objective, recap one takeaway ('the main takeaway is...'), use 'I suggest + -ing' for a next step, use 'we agreed to + infinitive' to confirm a decision, assign one action item with a deadline, thank the attendees ('thank you for coming'), and adjourn. Take your time.",
+
+    'media': [
+        ('series', "Succession (HBO)",
+         "A drama built almost entirely around boardroom meetings, negotiations, and power plays inside a family media empire. Sharp, high-level business English -- exactly the language of chairing, deciding, and wrapping up. Connection to Lesson 15: leading meetings, reaching consensus, and steering a discussion.",
+         'Tip: pick a boardroom scene and note every verb followed by -ing or to + infinitive that you hear.',
+         'https://www.imdb.com/title/tt7660850/'),
+        ('podcast', 'HBR IdeaCast (Harvard Business Review)',
+         "A weekly podcast from Harvard Business Review on leadership, management, and running teams -- including how to make meetings work. Ideal for hearing meeting and decision language used by real business leaders. Connection to Lesson 15: chairing, objectives, action items, and closing well.",
+         'Tip: choose an episode about meetings or leadership and write down three action items the guest recommends.',
+         'https://hbr.org/2018/01/podcast-ideacast'),
+        ('youtube', '"Verb patterns - 6 Minute Grammar" -- BBC Learning English',
+         "A short, clear lesson on the exact grammar of this class: which verbs are followed by the gerund (-ing) and which by the infinitive (to do). Connection to Lesson 15: 'I suggest reviewing' vs 'we decided to postpone'.",
+         'Tip: after each example, make your own meeting sentence using the same verb and pattern.',
+         'https://www.youtube.com/watch?v=ohR163PgEK4'),
+    ],
+}
