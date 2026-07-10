@@ -1,0 +1,375 @@
+# -*- coding: utf-8 -*-
+BG1 = "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1400&q=80"
+BG2 = "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1400&q=80"
+BG3 = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=80"
+BG4 = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80"
+BG5 = "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1400&q=80"
+BG6 = "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80"
+
+D = {
+    'n': 16,
+    'reading': True,
+    'partner_name': 'nathan',
+    'grammar_point_pt': "modais de deducao no passado (must have / might have / could have / can't have + participio): usar 'must have + pp' para quase certeza de que algo aconteceu, 'might/may/could have + pp' para possibilidade, e 'can't have / couldn't have + pp' para quase certeza de que NAO aconteceu -- para deduzir a causa de um resultado",
+    'chapter_tag': 'Reading the Numbers',
+    'title_h1': 'Analyzing Results and Making <span class="accent">Deductions</span>',
+    'title_sub': 'Read the figures, find the root cause, and explain what must have, might have, or can\'t have happened.',
+    'short_title': 'Analyzing Results',
+    'menu_title': 'Analyzing Results and Making Deductions',
+    'menu_desc': 'Review results and deduce the cause with past modals of deduction',
+    'bg_title': BG1, 'bg_vocab': BG2, 'bg_read': BG3, 'bg_gram': BG4,
+    'bg_lesson_card': "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=600&q=80",
+    'stamp_label': 'Results Analyst',
+    'stamp_img': "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=200&q=80",
+    'phases': ['Reading the Numbers', 'Results Words', 'The Post-Mortem',
+               'Past Deductions', 'Voices', 'Your Turn', 'Wrap-Up'],
+
+    'warm_h2': 'From the Chair to the <span class="accent">Numbers</span>',
+    'warm_p': "Last time you led a meeting from the opening objective to the final recap, choosing the right verb pattern along the way. Today you sit down with the quarter's figures. Some segments exceeded the target, others underperformed, and your job is to work out why. Good analysts don't just report numbers -- they deduce the cause. By the end of this hour, you will read a set of results and explain what must have, might have, or can't have happened.",
+    'warm_prompt': 'In one sentence: when a number goes up or down, what is the first question you ask?',
+    'missions': [
+        'Learn the language of results, targets, and root causes.',
+        'Use past modals -- must have, might have, can\'t have -- to deduce the cause.',
+        'Analyze a set of results and explain what happened with confidence.',
+    ],
+
+    'vocab_trans_h2': 'Words for the <span class="accent">Results</span>',
+    'vocab': [
+        ("Figures", "the numbers or data in a report (numeros, dados)", "The quarterly figures are on the second slide."),
+        ("Target", "the specific number or goal you aim to reach (meta)", "We set an ambitious target for the summer."),
+        ("To exceed", "to go beyond a target or expectation (superar, exceder)", "Bookings exceeded the target by ten percent."),
+        ("To underperform", "to do worse than expected (ter desempenho abaixo do esperado)", "The city hotels underperformed this quarter."),
+        ("Downturn", "a fall in business activity or sales (queda, retracao)", "The downturn hit corporate travel hardest."),
+        ("To bounce back", "to recover after a difficult period (se recuperar)", "Leisure travel bounced back in June."),
+        ("Root cause", "the underlying reason something happened (causa raiz)", "The root cause was a pricing error."),
+        ("To account for", "to explain the reason for something (explicar, justificar)", "The heatwave accounts for the drop in July."),
+        ("Assumption", "something you believe is true without proof (suposicao, premissa)", "That was an assumption, not a fact."),
+        ("Benchmark", "a standard used to compare performance (referencia, parametro)", "We measure ourselves against the industry benchmark."),
+        ("Margin", "the difference between cost and selling price (margem de lucro)", "Discounts cut into our margin."),
+        ("Quarter", "a three-month period in the business year (trimestre)", "Revenue rose in the third quarter."),
+    ],
+
+    'gram_trans_h2': 'Deduce the <span class="accent">Past</span>',
+    'gram_trans_sub': 'must have + pp &middot; might / could have + pp &middot; can\'t have + pp',
+    'gram_examples': [
+        ("", "Sales rose sharply, so the campaign must have worked.", '"Sales rose sharply, so the campaign <span style="color:#15803d;font-weight:700">must have worked</span>."'),
+        ("", "Bookings fell in July, so the heatwave might have affected demand.", '"Bookings fell in July, so the heatwave <span class="accent" style="font-weight:700">might have affected</span> demand."'),
+        ("", "The team can't have missed the deadline; the report was on time.", '"The team <span class="accent" style="font-weight:700">can\'t have missed</span> the deadline; the report was on time."'),
+    ],
+    'gram_disc_q': 'One sentence shows the speaker is almost certain, one shows they think it is possible, and one shows they are almost certain it did NOT happen. Which modal does each one use?',
+    'gram_table': [
+        ("must have + pp", "you are almost certain it happened", "Sales rose -- the campaign <strong>must have worked</strong>."),
+        ("might / may / could have + pp", "you think it is possible", "The weather <strong>might have affected</strong> demand."),
+        ("can't / couldn't have + pp", "you are almost certain it did NOT happen", "They <strong>can't have seen</strong> the new rates."),
+    ],
+    'gram_rule_foot': "All three use have + past participle. Use 'must have' when you are almost sure something happened, 'might / may / could have' when you think it is possible, and 'can't / couldn't have' when you are almost sure it did not. These are deductions about the past, based on evidence -- not statements of fact.",
+
+    'lf_h2': 'Deduce the <span class="accent">Cause</span>',
+    'lf_title': 'Complete each deduction with the correct modal',
+    'lf_items': [
+        ["A", "Revenue doubled, so the new pricing ", "must have", " worked.", "strong"],
+        ["B", "We are not sure why July dropped -- the weather ", "might have", " affected it.", "soft"],
+        ["C", "They ", "can't have", " read the report; they asked the same question.", "soft"],
+        ["D", "The margin fell, so the discounts ", "must have", " been too deep.", "strong"],
+    ],
+    'lf_followup': "'Must have + pp' = near certainty it happened; 'might / could have + pp' = it is possible; 'can't have + pp' = near certainty it did NOT happen. All three describe a deduction about the past, built on the evidence in the numbers.",
+
+    'mistakes': [
+        ("Sales rose, so the campaign must worked.", 'Sales rose, so the campaign <strong>must have worked</strong>.'),
+        ("They can't seen the new rates.", 'They <strong>can\'t have seen</strong> the new rates.'),
+    ],
+    'mistake_note': "For a deduction about the PAST, always use the modal + 'have' + past participle: 'must have worked', not 'must worked'; 'can't have seen', not 'can't seen'. Dropping 'have' turns a past deduction into a present one and changes the meaning.",
+
+    'read_trans_h2': 'Read the <span class="accent">Post-Mortem</span>',
+    'reading_h2': 'What the Numbers <span class="accent">Really Say</span>',
+    'read_block': {
+        'rtitle': 'What the Numbers Really Say',
+        'paras': [
+            "Every quarter, the same scene plays out in offices everywhere: the figures land, and everyone starts guessing why. Sales are up, so the new campaign must have worked. Bookings are down, so the market must have collapsed. But a good analyst knows that the first explanation is usually an assumption, not a root cause. The numbers tell you what happened; your job is to deduce why, carefully.",
+            "Start with the benchmark. If your city hotels underperformed but the whole market fell by the same amount, then you can't have caused the drop -- something bigger did. If your leisure segment exceeded the target while everyone else was flat, the campaign might have worked, or a competitor might have raised prices and sent clients your way. A single number rarely has a single cause, so resist the temptation to jump to the easy answer.",
+            "The best post-mortems separate what you know from what you are guessing. 'Revenue rose' is a fact. 'The campaign must have driven it' is a deduction -- strong, but still a deduction. 'A rival can't have matched our rates' is another. Label each one honestly, test it against the data, and only then decide what to do next quarter. The margin fell? Maybe the discounts were too deep. Maybe costs rose. Find the root cause before you act, because a wrong assumption is more expensive than a slow answer.",
+        ],
+        'source': 'Adapted from a business analytics guide',
+        'link': 'https://www.npr.org/podcasts/510325/the-indicator-from-planet-money',
+        'gist_prompt': 'What is the main idea of the text?',
+        'gist_choices': [
+            ["a", "The first explanation for a number is always the correct one.", False],
+            ["b", "Good analysis separates facts from deductions, uses a benchmark, and finds the root cause before acting.", True],
+            ["c", "Numbers should never be questioned or explained.", False],
+        ],
+        'tf': [
+            ["The text says the first explanation for a result is usually the root cause.", "f", "It says the first explanation is usually an assumption, not a root cause."],
+            ["According to the text, you should compare your results against a benchmark.", "t", "The second paragraph says to start with the benchmark and compare your fall against the whole market."],
+            ["The text treats 'the campaign must have driven it' as a proven fact.", "f", "It calls that a deduction -- strong, but still a deduction, not a fact."],
+            ["The text says a wrong assumption is more expensive than a slow answer.", "t", "The last sentence says find the root cause first, because a wrong assumption is more expensive than a slow answer."],
+        ],
+    },
+
+    'dialogue_h2': 'Andrea and Nathan <span class="accent">Read the Quarter</span>',
+    'dialogue': [
+        ('nathan', 'arthur', "Andrea, the third-quarter figures are in. Leisure exceeded the target, but the corporate segment really underperformed.",
+         "Andrea, the third-quarter <span class=\"vocab-highlight\">figures</span> are in. Leisure <span class=\"vocab-highlight\">exceeded</span> the <span class=\"vocab-highlight\">target</span>, but the corporate segment really <span class=\"vocab-highlight\">underperformed</span>."),
+        ('andrea', 'ellen', "Interesting. Leisure did so well -- the summer campaign must have worked. But corporate? Let me think about the root cause.",
+         "Interesting. Leisure did so well -- the summer campaign must have worked. But corporate? Let me think about the <span class=\"vocab-highlight\">root cause</span>."),
+        ('nathan', 'arthur', "My first guess was the downturn. Business travel fell across the whole market.",
+         "My first guess was the <span class=\"vocab-highlight\">downturn</span>. Business travel fell across the whole market."),
+        ('andrea', 'ellen', "That accounts for part of it, but not all. If the whole market fell, we can't have caused the drop ourselves. Something bigger did.",
+         "That <span class=\"vocab-highlight\">accounts for</span> part of it, but not all. If the whole market fell, we <span class=\"vocab-highlight\">can't have</span> caused the drop ourselves. Something bigger did."),
+        ('nathan', 'arthur', "True. And the margin was thinner than last quarter.",
+         "True. And the <span class=\"vocab-highlight\">margin</span> was thinner than last <span class=\"vocab-highlight\">quarter</span>."),
+        ('andrea', 'ellen', "Right -- the discounts might have been too deep. That's an assumption, though. Let's check it against the benchmark before we decide anything.",
+         "Right -- the discounts might have been too deep. That's an <span class=\"vocab-highlight\">assumption</span>, though. Let's check it against the <span class=\"vocab-highlight\">benchmark</span> before we decide anything."),
+        ('nathan', 'arthur', "So what's the takeaway for the board?",
+         "So what's the takeaway for the board?"),
+        ('andrea', 'ellen', "Leisure bounced back and the campaign must have driven it. Corporate underperformed, but the market can't have helped. We find the root cause, then we act.",
+         "Leisure <span class=\"vocab-highlight\">bounced back</span> and the campaign must have driven it. Corporate underperformed, but the market can't have helped. We find the root cause, then we act."),
+    ],
+    'comprehension': [
+        ("1. Which segment exceeded the target, according to Nathan?", "The leisure segment."),
+        ("2. What was Nathan's first guess for the corporate drop?", "The downturn -- business travel fell across the whole market."),
+        ("3. What does Andrea want to check before deciding anything?", "The assumption about discounts, against the benchmark."),
+    ],
+
+    'listen1_h2': 'The <span class="accent">Quarterly Review</span>',
+    'listen1_sub': 'A manager presents the quarter\'s results and deduces the causes. Sound first -- no text.',
+    'listen1_qs': [
+        ("1. What does the manager say must have driven the leisure result?", "The summer campaign."),
+        ("2. What does the manager say can't have caused the corporate drop on its own?", "The company itself -- the whole market fell, so something bigger did."),
+        ("3. What does the manager want to check before acting on the margin?", "Whether the discounts were too deep -- against the benchmark."),
+    ],
+    'listen2_h2': 'How to <span class="accent">Deduce</span>',
+    'listen2_sub': 'A short business tip on making deductions about the past. Sound first -- no text.',
+    'listen2_qs': [
+        ("1. Which modal shows you are almost certain something happened?", "Must have + past participle."),
+        ("2. Which modals show you think something is only possible?", "Might, may, or could have + past participle."),
+        ("3. Which modal shows you are almost certain something did NOT happen?", "Can't have or couldn't have + past participle."),
+    ],
+    'listenings': [
+        {'file': 'a16_listening_review.mp3', 'voice': 'arthur',
+         'text': "Good morning, everyone. Let me walk you through the third-quarter results. First, the good news. Leisure travel exceeded the target by twelve percent. The summer campaign must have driven it, because the growth started the week it launched. Now the corporate segment. It underperformed badly, down eighteen percent. My first assumption was that we lost clients, but the whole market fell by a similar amount, so we can't have caused the drop on our own. Something bigger, a downturn in business travel, accounts for most of it. One more point. The margin was thinner than last quarter. The discounts might have been too deep, or costs might have risen. I don't know yet, so I'm not calling it a root cause. Before the board meeting, we check every assumption against the benchmark. We report the facts, we label our deductions, and only then do we decide what to change."},
+        {'file': 'a16_listening_deducetip.mp3', 'voice': 'ellen',
+         'text': "Welcome to this short segment on making deductions about the past. When you look at a result and try to explain it, three modal forms do the work, and all of them use have plus the past participle. Use must have when you are almost certain. For example, sales rose, so the campaign must have worked. Use might have, may have, or could have when you think something is possible but you are not sure. For example, the weather might have affected demand. And use can't have or couldn't have when you are almost certain something did not happen. For example, they can't have seen the new rates, because they asked the same question. The key is the little word have. Drop it, and you change a past deduction into a present one. Keep it, add the past participle, and your analysis will sound precise and professional."},
+    ],
+
+    'gapfill_parts': [
+        "Andrea and Nathan review the quarter. Leisure ",
+        ["1"], " the target, so the campaign ",
+        ["2"], " worked. Corporate underperformed, but since the whole market fell, the company ",
+        ["3"], " caused the drop alone. The ",
+        ["4"], " was thinner too, so the discounts might have been too deep -- though that is still an ",
+        ["5"], " to test against the benchmark.",
+    ],
+    'gapfill_bank': ["exceeded", "must have", "can't have", "margin", "assumption"],
+    'vocabnote': "Past deduction: must have + pp = near certainty it happened ('the campaign must have worked'); might/could have + pp = possible ('the weather might have affected it'); can't have + pp = near certainty it did NOT happen ('the company can't have caused it alone'). Evidence in the figures decides which one you use.",
+
+    'bank_label_top': 'Post-Mortem',
+    'bank_label': 'Useful language for analyzing results and making deductions',
+    'bank_items': [
+        "Leisure exceeded the target by twelve percent.",
+        "The corporate segment underperformed this quarter.",
+        "The campaign must have driven the growth.",
+        "The weather might have affected demand.",
+        "We can't have caused the drop on our own.",
+        "That's an assumption -- let's check it against the benchmark.",
+        "The discounts might have been too deep.",
+        "Let's find the root cause before we act.",
+    ],
+
+    'scenarios_h2': 'Analyze the <span class="accent">Results</span>',
+    'scenario_items': [
+        ["Scenario 1", "A segment exceeded its target. State a strong deduction about why, using 'must have'."],
+        ["Scenario 2", "A number dropped and you are unsure why. Offer a possible cause with 'might have' or 'could have'."],
+        ["Scenario 3", "Rule out a cause you are almost certain did not happen, using 'can't have'."],
+        ["Scenario 4", "Sum up the quarter for the board: one fact, one deduction, and the root cause you'll test."],
+    ],
+    'answerkey_list': [
+        "Gap-fill: 1 = exceeded, 2 = must have, 3 = can't have, 4 = margin, 5 = assumption.",
+        "Near certainty it happened: 'The campaign must have worked.'",
+        "Possible cause: 'The weather might have affected demand.'",
+        "Near certainty it did NOT happen: 'We can't have caused the drop alone.'",
+    ],
+    'answerkey_note': "must have + pp = almost certain it happened; might / may / could have + pp = possible; can't / couldn't have + pp = almost certain it did not happen.",
+
+    'roleplays': [
+        {'h2': 'The Strong <span class="accent">Deduction</span>',
+         'scenario': "One segment beat its target this quarter. Explain to a colleague why it happened, using a confident 'must have' deduction.",
+         'keywords': ["the figures show...", "it must have...", "that accounts for..."]},
+        {'h2': 'The Open <span class="accent">Question</span>',
+         'scenario': "A number dropped and you are not sure why. Offer two possible causes with 'might have' / 'could have', and rule one out with 'can't have'.",
+         'keywords': ["it might have...", "it could have...", "it can't have..."]},
+        {'h2': 'The Board <span class="accent">Summary</span>',
+         'scenario': "Give a two-minute summary of the quarter: report the facts, label your deductions with the right modal, name the root cause you'll test, and recommend a next step.",
+         'keywords': []},
+    ],
+
+    'survival_h2': 'Deduce Like a <span class="accent">Pro</span>',
+    'survival': [
+        ("The campaign must have driven the growth.", "A campanha deve ter impulsionado o crescimento."),
+        ("The weather might have affected demand.", "O clima pode ter afetado a demanda."),
+        ("We can't have caused the drop on our own.", "Nao podemos ter causado a queda sozinhos."),
+        ("Let's find the root cause before we act.", "Vamos encontrar a causa raiz antes de agir."),
+        ("That's an assumption -- let's test it against the benchmark.", "Isso e uma suposicao -- vamos testa-la contra a referencia."),
+    ],
+    'learned': [
+        "I can use 'must have + past participle' for a deduction I am almost certain about.",
+        "I can use 'might / could have + past participle' for a cause that is possible.",
+        "I can use 'can't have + past participle' to rule out a cause I am almost certain did not happen.",
+        "I can separate facts from deductions when I analyze a set of results.",
+        "I know the words: figures, target, to exceed, to underperform, downturn, to bounce back, root cause, to account for, assumption, benchmark, margin, quarter.",
+    ],
+    'badge_name': 'Results Analyst Badge',
+    'badge_p': 'You can read a set of results and deduce the cause with confidence -- using must have, might have, and can\'t have like a real analyst, Andrea.',
+    'next_lesson': 'Giving and Responding to Feedback',
+
+    # ----- new B2 slides (pipeline v2) -----
+    'spot_errors': [
+        ("Sales rose, so the campaign must worked.", "Sales rose, so the campaign must have worked."),
+        ("They can't seen the new rates.", "They can't have seen the new rates."),
+        ("The margin fell, so the discounts might been too deep.", "The margin fell, so the discounts might have been too deep."),
+        ("The whole market fell, so we couldn't have cause it alone.", "The whole market fell, so we couldn't have caused it alone."),
+    ],
+    'bridge5': {
+        'h2': 'Voices on the <span class="accent">Results</span>',
+        'sub': 'Listen to a quarterly review, then analyze the numbers out loud.',
+        'bg': BG5,
+    },
+    'register': [
+        ("The numbers are bad, someone messed up.", "The corporate segment underperformed; let's find the root cause before we blame anyone."),
+        ("Obviously the campaign worked, duh.", "Growth started the week it launched, so the campaign must have driven it."),
+        ("It's definitely the discounts.", "The margin was thinner, so the discounts might have been too deep -- but that's an assumption to test."),
+        ("It's not our fault, end of story.", "The whole market fell, so we can't have caused the drop on our own."),
+    ],
+    'artifact': {
+        'label': 'The Summary',
+        'h2': 'Quarterly Results <span class="accent">Summary</span>',
+        'meta': [
+            ("Report:", "Q3 Results -- prepared for the Escape Turismo board"),
+            ("Author:", "Andrea Aggio -- Commercial Director"),
+            ("Period:", "Third quarter, versus target and market benchmark"),
+        ],
+        'paras': [
+            "Facts: leisure travel exceeded the target by twelve percent; the corporate segment underperformed, down eighteen percent; the margin was thinner than the previous quarter.",
+            "Deductions: the summer campaign must have driven the leisure growth, as it began the week the campaign launched. The corporate drop tracks a market-wide downturn, so the company can't have caused it alone. The thinner margin might have come from deeper discounts, or costs might have risen -- still to be confirmed.",
+            "Next step: test the discount assumption against the industry benchmark before the board meeting, then recommend a pricing decision for Q4. Root cause to be confirmed, not assumed.",
+        ],
+    },
+    'artifact_qs': [
+        ("1. According to the report, which segment exceeded its target?", "Leisure travel, by twelve percent."),
+        ("2. Why does the report say the company can't have caused the corporate drop alone?", "Because it tracks a market-wide downturn -- something bigger did."),
+        ("3. What is the report's next step?", "Test the discount assumption against the benchmark before recommending a Q4 pricing decision."),
+    ],
+    'pron_lines': [
+        ("The campaign must have worked.", "'must have' reduces -- mus-tuv; stress WORKED at the end."),
+        ("It might have affected demand.", "'might have' reduces -- migh-tuv; link 'affected demand'."),
+        ("We can't have caused it.", "'can't have' -- cahnt-uv; strong stress on CAN'T to signal the negative."),
+        ("The discounts must have been too deep.", "'must have been' links -- mus-tuv-bin; light stress on DEEP."),
+    ],
+    'bridge6': {
+        'h2': 'Now You <span class="accent">Analyze</span>',
+        'sub': 'Your turn: read each result and deduce the cause out loud.',
+        'bg': BG6,
+    },
+    'quickfire': [
+        {'situation': "A segment beat its target. Give a confident reason for it.",
+         'tips': ["Use 'must have + pp'.", "'The campaign must have worked.'", "Point to the evidence."]},
+        {'situation': "A number dropped and you are not sure why. Offer a possible cause.",
+         'tips': ["Use 'might / could have + pp'.", "'The weather might have affected it.'", "Signal you're not certain."]},
+        {'situation': "Rule out a cause you're almost sure did not happen.",
+         'tips': ["Use 'can't have + pp'.", "'They can't have seen the report.'", "Give your evidence."]},
+        {'situation': "A colleague states an assumption as a fact. Correct it gently.",
+         'tips': ["'That's a deduction, not a fact.'", "'Let's check it against the benchmark.'", "Stay professional."]},
+        {'situation': "Sum up the quarter in one line for the board.",
+         'tips': ["One fact + one deduction.", "'Leisure exceeded target; the campaign must have driven it.'", "Name the root cause to test."]},
+    ],
+
+    'preclass_title': 'Analyzing Results and Making Deductions',
+    'preclass_desc': "How to read business results and deduce the cause using past modals of deduction. Key words: figures, target, to exceed, to underperform, downturn, to bounce back, root cause, to account for, assumption, benchmark, margin, quarter. Structure: must have + pp (near certainty) vs might/could have + pp (possible) vs can't have + pp (near certainty it did not happen).",
+    'context': ("Andrea reviews the quarter's <strong>figures</strong> with her team. Leisure "
+                "<strong>exceeded</strong> the <strong>target</strong>, so the campaign <strong>must have</strong> "
+                "worked. Corporate <strong>underperformed</strong>, but since the whole market saw a "
+                "<strong>downturn</strong>, the company <strong>can't have</strong> caused the drop alone. The "
+                "<strong>margin</strong> was thinner, so the discounts <strong>might have</strong> been too deep -- "
+                "though Andrea calls that an <strong>assumption</strong>, not a <strong>root cause</strong>. 'That "
+                "<strong>accounts for</strong> part of it,' she says, 'but let's test it against the "
+                "<strong>benchmark</strong> before we act. Leisure <strong>bounced back</strong>; now we find out why "
+                "corporate didn't.'"),
+    'context_quiz': [
+        ("1. 'The campaign must have worked' shows the speaker is:",
+         [("A", "almost certain it happened.", True),
+          ("B", "only guessing it is possible.", False),
+          ("C", "sure it did NOT happen.", False)]),
+        ("2. Which form means 'I am almost certain it did NOT happen'?",
+         [("A", "might have + pp", False),
+          ("B", "can't have + pp", True),
+          ("C", "must have + pp", False)]),
+        ("3. Which sentence is correct?",
+         [("A", "The weather might have affected demand.", True),
+          ("B", "The weather might affected demand.", False),
+          ("C", "The weather might have affect demand.", False)]),
+    ],
+    'tip_title': 'Past Modals of Deduction',
+    'tip_sub': "Como deduzir a causa de um resultado passado (explicacao em ingles e portugues).",
+    'tip_rows': [
+        ("must have + pp", "quase certeza de que aconteceu. near certainty it happened.", "Sales rose -- it <strong>must have worked</strong>."),
+        ("might / may / could have + pp", "possibilidade, sem certeza. possible, not sure.", "The weather <strong>might have affected</strong> it."),
+        ("can't / couldn't have + pp", "quase certeza de que NAO aconteceu. near certainty it did NOT happen.", "They <strong>can't have seen</strong> the rates."),
+        ("Regra de ouro / Golden rule", "sempre modal + have + participio. always modal + have + past participle.", "must / might / can't + <strong>have</strong> + done."),
+    ],
+    'fill': [
+        ('"Sales rose, so the campaign ', "must have", "Dica: quase certeza de que aconteceu (___ + worked)", "Sales rose, so the campaign must have worked.", ' worked."'),
+        ('"The weather ', "might have", "Dica: possibilidade, sem certeza (___ + affected)", "The weather might have affected demand.", ' affected demand."'),
+        ('"The whole market fell, so we ', "can't have", "Dica: quase certeza de que NAO aconteceu", "The whole market fell, so we can't have caused it alone.", ' caused it alone."'),
+        ('"Leisure ', "exceeded", "Dica: superou a meta", "Leisure exceeded the target this quarter.", ' the target this quarter."'),
+        ('"Let\'s find the ', "root cause", "Dica: a razao fundamental de algo", "Let's find the root cause before we act.", ' before we act."'),
+        ('"That is an ', "assumption", "Dica: algo que se acredita sem prova", "That is an assumption, not a fact.", ', not a fact."'),
+    ],
+    'order_intro': "Coloque os passos de uma boa analise de resultados na ordem correta.",
+    'order': [
+        "Read the figures and compare them against the target.",
+        "Check the results against the market benchmark.",
+        "Separate the facts from your assumptions.",
+        "Deduce the likely cause with must have, might have, or can't have.",
+        "Confirm the root cause before you decide what to do next.",
+    ],
+    'speech': [
+        ("The campaign must have driven the growth.", "A campanha deve ter impulsionado o crescimento."),
+        ("The weather might have affected demand.", "O clima pode ter afetado a demanda."),
+        ("We can't have caused the drop on our own.", "Nao podemos ter causado a queda sozinhos."),
+        ("Leisure exceeded the target this quarter.", "O lazer superou a meta neste trimestre."),
+        ("Let's find the root cause before we act.", "Vamos encontrar a causa raiz antes de agir."),
+    ],
+    'quiz': [
+        ("A segment beat its target and you're almost sure why. You say:",
+         [("A", "The campaign must have worked.", True),
+          ("B", "The campaign must worked.", False),
+          ("C", "The campaign must have work.", False)]),
+        ("A number dropped and you think a cause is possible. You say:",
+         [("A", "The weather might have affected it.", True),
+          ("B", "The weather might affected it.", False),
+          ("C", "The weather might have affect it.", False)]),
+        ("You rule out a cause you're almost sure did not happen. You say:",
+         [("A", "They can't have seen the new rates.", True),
+          ("B", "They can't seen the new rates.", False),
+          ("C", "They can't have saw the new rates.", False)]),
+        ("You describe a segment that did worse than expected. You say:",
+         [("A", "The corporate segment underperformed.", True),
+          ("B", "The corporate segment exceeded.", False),
+          ("C", "The corporate segment benchmark.", False)]),
+    ],
+    'think': "Imagine the third-quarter figures for Escape Turismo have just landed: leisure exceeded the target, corporate underperformed, and the margin was thinner. Record a one-minute analysis for the board. State one fact, make one strong deduction with 'must have', offer one possible cause with 'might have' or 'could have', rule out one cause with 'can't have', and name the root cause you want to test against the benchmark. Take your time.",
+
+    'media': [
+        ('series', "Billions (Showtime)",
+         "A high-finance drama where every scene is about reading results, deducing motives, and working out what really happened behind the numbers. Dense, high-level business English and constant deduction. Connection to Lesson 16: analyzing results and reasoning about causes.",
+         'Tip: pick a scene where a character explains a market move and note every deduction ('+"must have, might have, can't have"+').',
+         'https://www.imdb.com/title/tt4270492/'),
+        ('podcast', 'The Indicator from Planet Money (NPR)',
+         "A short daily podcast that takes one number from the economy and works out what it means and why it moved -- exactly the skill of this lesson. Great for hearing analysts reason from figures to causes. Connection to Lesson 16: reading results and finding the root cause.",
+         'Tip: after an episode, write two deductions about the number using must have and might have.',
+         'https://www.npr.org/podcasts/510325/the-indicator-from-planet-money'),
+        ('youtube', '"How to use modals of deduction and speculation" -- BBC 6 Minute Grammar',
+         "A short, clear lesson on the exact grammar of this class: must have, might have, and can't have for making deductions. Connection to Lesson 16: 'the campaign must have worked' vs 'we can't have caused the drop'.",
+         'Tip: after each example, make your own deduction about a business result using the same modal.',
+         'https://www.youtube.com/watch?v=TWw8We_ElLo'),
+    ],
+}
