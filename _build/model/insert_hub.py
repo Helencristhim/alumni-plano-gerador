@@ -109,8 +109,14 @@ def insert(hub_path, cfg, content_dir, is_aluno):
     new_lines = hub_audiomap_lines(cfg, content_dir)
 
     def add_amap(m):
-        existing = m.group(0)
-        adds = '\n'.join(l for l in new_lines if l.split(':')[0].strip() not in s)
+        # Dedup SÓ contra as chaves já existentes no audioMap — NÃO contra o HTML
+        # inteiro. Antes checava `not in s`: uma frase nova cujo texto aparece num
+        # atributo data-phrase="..." (fill-blank, speech-card) era vista como já
+        # presente e caía fora do audioMap (áudio some no hub). Ver validate_lesson.
+        block_end = s.index('};', m.end())
+        existing_block = s[m.end():block_end]
+        existing_keys = set(re.findall(r'"(?:[^"\\]|\\.)*"(?=\s*:\s*")', existing_block))
+        adds = '\n'.join(l for l in new_lines if l.split(':')[0].strip() not in existing_keys)
         return 'var audioMap = {\n' + adds + '\n' if adds else m.group(0)
     s = re.sub(r'var audioMap = \{', add_amap, s, count=1)
 
