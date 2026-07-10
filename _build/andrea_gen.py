@@ -46,8 +46,16 @@ def clean_def(d):
     return re.sub(r'\s*\([^)]*\)\s*$', '', d).strip()
 
 
+def esc_js(s):
+    """Escapa apostrofo p/ dentro de speakText('...') — string JS de aspas simples.
+    Sem isso, uma contracao (I'm, it's) fecha a string no meio (onclick quebra +
+    audio truncado). extract_phrases do build_from_model desescapa \\' -> ' de volta,
+    entao a chave do audioMap fica com o apostrofo natural."""
+    return s.replace("'", "\\'")
+
+
 def audiobtn_sm(text):
-    return (f'<button class="audio-btn-sm" onclick="event.stopPropagation();speakText(\'{text}\',this)">'
+    return (f'<button class="audio-btn-sm" onclick="event.stopPropagation();speakText(\'{esc_js(text)}\',this)">'
             f'{LISTEN_SVG} Listen</button>')
 
 
@@ -107,6 +115,14 @@ def teacher_map(D):
         'listen2': '<strong>Listening 2 (4 min):</strong> Toque SEM texto, 2 vezes. As perguntas aparecem ao final. Compare o contexto com o listening 1.',
         'scenarios': '<strong>Scenarios (5 min):</strong> Para cada cena, a Andrea produz a resposta em voz alta usando a estrutura-alvo. Sem gabarito visivel; ela produz.',
         'answerkey': '<strong>Answer key (2 min):</strong> O accordion fica fechado. A Andrea so clica depois de tentar o gap-fill e os cenarios. Controle do professor (toggle); use para conferir.',
+        'spot': '<strong>Spot the error (4 min):</strong> A Andrea le cada frase e diz onde esta o erro ANTES de clicar. Ao clicar, a versao certa aparece em verde. Reforce a estrutura-alvo em cada correcao.',
+        'bridge5': '<strong>Transicao (1 min):</strong> Ponte para a parte de fala. Diga que agora eles vao ouvir e produzir a lingua em situacao real. Passe ao proximo.',
+        'register': '<strong>Register e tom (4 min):</strong> Mostre a frase direta demais e peca que a Andrea proponha a versao profissional ANTES de revelar. Discuta por que o tom importa no atendimento.',
+        'artifact': '<strong>Documento real (4 min):</strong> De 2 minutos de leitura silenciosa do texto. Depois pergunte qual e o problema e como o cliente se sente. NAO peca traducao palavra a palavra.',
+        'artifact_comp': '<strong>Comprehension do documento (3 min):</strong> A Andrea responde cada pergunta sobre o texto ANTES de clicar para revelar. Volte ao documento para justificar.',
+        'pron': '<strong>Say it naturally (4 min):</strong> Toque cada frase, aponte a fala conectada (linking) e peca que a Andrea repita 2 vezes, imitando o ritmo. Foco na naturalidade, nao na perfeicao.',
+        'bridge6': '<strong>Transicao (1 min):</strong> Ponte para a producao livre. Diga que agora a Andrea assume o controle. Passe ao proximo.',
+        'quickfire': '<strong>Quick fire (5 min):</strong> Uma situacao por vez. A Andrea responde em voz alta usando a estrutura-alvo, SEM ver as tips. Use Tips so se ela travar. Navegue com Previous/Next.',
         'roleplay': ro,
         'survival': '<strong>Survival lines (3 min):</strong> Leia cada frase, toque o audio e peca que a Andrea repita. Sao as frases-chave da aula.',
         'learned': '<strong>Checklist (2 min):</strong> Diga: click each item if you feel confident. Leia cada item. Os 5 checks = aula completa e stamp no passaporte.',
@@ -263,6 +279,41 @@ def build_slides(D):
            f'    <div style="display:flex;flex-direction:column;gap:1rem;max-width:540px;margin:1.2rem auto 0">\n{pairs}    </div>\n'
            f'    <p style="font-size:.82rem;color:var(--text-dim);margin:1rem auto 0;max-width:480px;text-align:center">{D["mistake_note"]}</p>')
 
+    # SPOT THE ERROR (ph4) -- reveal cada correcao (revealError do shell)
+    if D.get('spot_errors'):
+        cards = ''
+        for wrong, fix in D['spot_errors']:
+            cards += (f'      <div class="error-card" onclick="revealError(this)">'
+                      f'<div class="error-sentence">"{wrong}"</div>'
+                      f'<div class="error-fix">{fix}</div></div>\n')
+        sb.add('slide slide-light', 4, D['t']['spot'],
+               f'    <div class="chapter-label">Spot the Error</div>\n'
+               f'    <h2 class="slide-heading">Find the <span {acc}>Mistake</span></h2>\n'
+               f'    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Tap each card to reveal the correction</p>\n'
+               f'    <div class="error-grid" style="max-width:600px;margin:1.2rem auto 0">\n{cards}    </div>\n'
+               f'    <div class="error-score" id="errorScore" style="margin-top:1rem">0 / {len(D["spot_errors"])} errors found</div>')
+
+    # BRIDGE 5 (ph5) -- transicao de capitulo para "Voices"
+    if D.get('bridge5'):
+        b5 = D['bridge5']
+        sb.add('slide slide-image', 5, D['t']['bridge5'],
+               f'    <div class="chapter-label">Chapter 5: {D["phases"][4]}</div>\n'
+               f'    <h2 class="slide-heading" style="font-size:2rem;color:#fff">{b5["h2"]}</h2>\n'
+               f'    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">{b5["sub"]}</p>',
+               bg=b5['bg'], inner_style='text-align:center')
+
+    # REGISTER & TONE (ph5) -- blunt vs professional (revealComp do shell)
+    if D.get('register'):
+        rows = ''
+        for direct, polite in D['register']:
+            rows += (f'      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">Instead of: "{direct}"</div>'
+                     f'<div class="q-answer">Say: {polite}</div></div>\n')
+        sb.add('slide slide-light', 5, D['t']['register'],
+               f'    <div class="chapter-label">Register &amp; Tone</div>\n'
+               f'    <h2 class="slide-heading">Sound <span {acc}>Professional</span></h2>\n'
+               f'    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Tap to see the polished, professional version</p>\n'
+               f'    <div class="comp-questions" style="max-width:560px;margin:1.2rem auto 0">\n{rows}    </div>')
+
     # DIALOGUE
     lines = ''
     for i, (who, voice, text, disp) in enumerate(D['dialogue'], 1):
@@ -272,7 +323,7 @@ def build_slides(D):
         lines += (f'      <div class="dialogue-line{vis}" data-line="{i}" data-voice="{voice}">'
                   f'<div class="dialogue-avatar {cls_av}">{letter}</div>'
                   f'<div class="dialogue-bubble {cls_av}-bubble">{disp} '
-                  f'<span class="audio-inline" onclick="speakText(\'{text}\',this)">{LISTEN_SVG}</span></div></div>\n')
+                  f'<span class="audio-inline" onclick="speakText(\'{esc_js(text)}\',this)">{LISTEN_SVG}</span></div></div>\n')
     sb.add('slide slide-dark', 5, D['t']['dialogue'],
            f'    <div class="chapter-label">Dialogue</div>\n'
            f'    <h2 class="slide-heading" style="color:#fff">{D["dialogue_h2"]}</h2>\n'
@@ -287,6 +338,29 @@ def build_slides(D):
            f'    <div class="chapter-label">Did You Catch It?</div>\n'
            f'    <h2 class="slide-heading">About <span {acc}>{partner.capitalize()}</span></h2>\n'
            f'    <div class="comp-questions" style="max-width:540px;margin:1.2rem auto 0">\n{cq}    </div>')
+
+    # ARTIFACT (ph5) -- documento real em HTML/CSS (email/review), zero PT
+    if D.get('artifact'):
+        art = D['artifact']
+        meta = ''.join(f'<div style="font-size:.8rem;color:var(--text-dim);margin-bottom:.2rem"><strong style="color:var(--text)">{k}</strong> {v}</div>'
+                       for k, v in art.get('meta', []))
+        paras = ''.join(f'<p style="font-size:.9rem;line-height:1.6;margin-top:.6rem;color:var(--text)">{p}</p>' for p in art['paras'])
+        metablock = f'<div style="border-bottom:1px solid var(--border);padding-bottom:.7rem;margin-bottom:.5rem">{meta}</div>' if meta else ''
+        sb.add('slide slide-light', 5, D['t']['artifact'],
+               f'    <div class="chapter-label">{art["label"]}</div>\n'
+               f'    <h2 class="slide-heading">{art["h2"]}</h2>\n'
+               f'    <div style="max-width:560px;margin:1.2rem auto 0;background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:1.4rem;text-align:left">\n'
+               f'      {metablock}\n      {paras}\n    </div>')
+
+    # ARTIFACT COMPREHENSION (ph5) -- revealComp sobre o documento
+    if D.get('artifact_qs'):
+        aq = ''
+        for q, a in D['artifact_qs']:
+            aq += (f'      <div class="comp-q" onclick="revealComp(this)"><div class="q-text">{q}</div><div class="q-answer">{a}</div></div>\n')
+        sb.add('slide slide-light', 5, D['t']['artifact_comp'],
+               f'    <div class="chapter-label">Read Closely</div>\n'
+               f'    <h2 class="slide-heading">Understand the <span {acc}>Message</span></h2>\n'
+               f'    <div class="comp-questions" style="max-width:540px;margin:1.2rem auto 0">\n{aq}    </div>')
 
     # LISTENING 1 & 2
     def listening_slide(idx, li, label, h2, sub, qs):
@@ -325,6 +399,36 @@ def build_slides(D):
            listening_slide(2, D['listenings'][1], 'Listening 2', D['listen2_h2'], D['listen2_sub'], D['listen2_qs']),
            inner_style='text-align:center')
 
+    # SAY IT NATURALLY (ph5) -- fala conectada, Listen por frase (speakText)
+    if D.get('pron_lines'):
+        rows = ''
+        for phrase, note in D['pron_lines']:
+            rows += (f'      <div style="display:flex;justify-content:space-between;align-items:center;gap:.8rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.1rem">'
+                     f'<div style="text-align:left"><p style="font-size:.95rem;font-weight:600">"{phrase}"</p>'
+                     f'<p style="font-size:.78rem;color:var(--text-dim);margin-top:.2rem">{note}</p></div>{audiobtn_sm(phrase)}</div>\n')
+        sb.add('slide slide-light', 5, D['t']['pron'],
+               f'    <div class="chapter-label">Pronunciation</div>\n'
+               f'    <h2 class="slide-heading">Say It <span {acc}>Naturally</span></h2>\n'
+               f'    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Listen for the linking, then repeat twice</p>\n'
+               f'    <div style="display:flex;flex-direction:column;gap:.7rem;max-width:560px;margin:1.2rem auto 0">\n{rows}    </div>')
+
+    # BRIDGE 6 (ph6) -- transicao de capitulo para "Your Turn"
+    if D.get('bridge6'):
+        b6 = D['bridge6']
+        sb.add('slide slide-image', 6, D['t']['bridge6'],
+               f'    <div class="chapter-label">Chapter 6: {D["phases"][5]}</div>\n'
+               f'    <h2 class="slide-heading" style="font-size:2rem;color:#fff">{b6["h2"]}</h2>\n'
+               f'    <p style="color:rgba(255,255,255,.82);font-size:1rem;margin-top:.5rem">{b6["sub"]}</p>',
+               bg=b6['bg'], inner_style='text-align:center')
+
+    # QUICK FIRE (ph6) -- IC-BLOCKS:quickfire (Prev/Next + Tips do shell)
+    if D.get('quickfire'):
+        sb.add('slide slide-light', 6, D['t']['quickfire'],
+               f'    <div class="chapter-label">Quick Fire</div>\n'
+               f'    <h2 class="slide-heading">Think on Your <span {acc}>Feet</span></h2>\n'
+               f'    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">One situation at a time &mdash; respond out loud, then check the tips</p>\n'
+               f'    <!--IC-BLOCKS:quickfire-->')
+
     # SCENARIOS
     sb.add('slide slide-light', 6, D['t']['scenarios'],
            f'    <div class="chapter-label">Chapter 6: {D["phases"][5]}</div>\n'
@@ -360,7 +464,7 @@ def build_slides(D):
     surv = ''
     for i, (en, pt) in enumerate(D['survival'], 1):
         surv += (f'      <div class="survival-item-ic"><div class="survival-num-ic">{i}</div><div class="survival-text-ic">"{en}"</div>'
-                 f'<button class="audio-btn-sm" onclick="speakText(\'{en}\',this)">{LISTEN_SVG}</button></div>\n')
+                 f'<button class="audio-btn-sm" onclick="speakText(\'{esc_js(en)}\',this)">{LISTEN_SVG}</button></div>\n')
     sb.add('slide slide-dark', 7, D['t']['survival'],
            f'    <div class="chapter-label">Chapter 7: Wrap-Up</div>\n'
            f'    <h2 class="slide-heading" style="color:#fff">{D["survival_h2"]}</h2>\n'
@@ -427,7 +531,7 @@ def build_preclass(D):
                         f'<span class="vocab-card-word">{w}</span><span class="vocab-card-dot"> -- </span>'
                         f'<span class="vocab-card-def">{d}</span></div>'
                         f'<div class="vocab-card-example">"{ex}"</div></div>'
-                        f'<button class="audio-btn" onclick="speakText(\'{w}\',this)">Listen</button></div>\n')
+                        f'<button class="audio-btn" onclick="speakText(\'{esc_js(w)}\',this)">Listen</button></div>\n')
 
     # context quiz
     ctx_quiz = ''
@@ -487,7 +591,7 @@ def build_preclass(D):
     surv = ''
     for i, (en, pt) in enumerate(D['survival'], 1):
         surv += (f'      <div class="survival-phrase"><span class="sp-num">{i}</span><span class="sp-en">{en}</span>'
-                 f'<span class="sp-pt">{pt}</span><button class="btn btn-listen" onclick="speakText(\'{en}\',this)">&#9835;</button></div>\n')
+                 f'<span class="sp-pt">{pt}</span><button class="btn btn-listen" onclick="speakText(\'{esc_js(en)}\',this)">&#9835;</button></div>\n')
 
     html = f'''<div class="lesson-card" id="ex-lesson-{n}">
   <div class="lesson-header" onclick="toggleLesson(this)">
@@ -620,6 +724,8 @@ def build_config(D, slide_count):
         {'kind': 'lf', 'title': D['lf_title'], 'items': D['lf_items']},
         {'kind': 'followup', 'text': D['lf_followup']},
     ]
+    if D.get('quickfire'):
+        inclass['quickfire'] = [{'kind': 'quickfire', 'items': D['quickfire']}]
     inclass['practice'] = [{'kind': 'scenarios', 'items': D['scenario_items']}]
     inclass['answerkey'] = [{'kind': 'answer', 'title': 'Reveal the answer key',
                              'list': D['answerkey_list'], 'note': D['answerkey_note']}]
