@@ -1,0 +1,372 @@
+# -*- coding: utf-8 -*-
+BG1 = "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=1400&q=80"
+BG2 = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1400&q=80"
+BG3 = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1400&q=80"
+BG4 = "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1400&q=80"
+BG5 = "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1400&q=80"
+BG6 = "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1400&q=80"
+
+D = {
+    'n': 14,
+    'reading': True,
+    'partner_name': 'erik',
+    'grammar_point_pt': "as formas de futuro avancado: future continuous (will be + -ing, acao em andamento num ponto futuro) e future perfect (will have + particulio, acao concluida antes de um ponto futuro), com marcadores como 'by 2030' e 'this time next year'",
+    'chapter_tag': 'The Future of Tourism',
+    'title_h1': 'Talking About Trends and the <span class="accent">Future of Tourism</span>',
+    'title_sub': 'Read the trends, make a confident forecast, and describe where the industry will be years from now.',
+    'short_title': 'Trends & the Future',
+    'menu_title': 'Talking About Trends and the Future of Tourism',
+    'menu_desc': 'Discuss trends and forecast the future with future continuous and future perfect',
+    'bg_title': BG1, 'bg_vocab': BG2, 'bg_read': BG3, 'bg_gram': BG4,
+    'bg_lesson_card': "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600&q=80",
+    'stamp_label': 'Trend Spotter',
+    'stamp_img': "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=200&q=80",
+    'phases': ['The Big Picture', 'Words for Change', 'The Forecast',
+               'Future Forms', 'Voices', 'Your Turn', 'Wrap-Up'],
+
+    'warm_h2': 'From Your Pitch to the <span class="accent">Big Picture</span>',
+    'warm_p': "Last time you pitched your company at the fair and described it with relative clauses: 'We are an agency that specializes in luxury travel.' Today you step back and look at the whole industry. Where is tourism going? A journalist wants your forecast, and by the end of this hour, you will be talking about trends and the future with total confidence.",
+    'warm_prompt': 'In one sentence: what is one way travel will be different ten years from now?',
+    'missions': [
+        'Learn the language of trends, forecasts, and change.',
+        'Use future continuous and future perfect to describe the future.',
+        'Give a confident forecast about the future of tourism.',
+    ],
+
+    'vocab_trans_h2': 'Words for <span class="accent">Change</span>',
+    'vocab': [
+        ("Trend", "a general direction in which things are changing (tendencia)", "Wellness travel is a growing trend."),
+        ("Forecast", "a statement about what will probably happen (previsao)", "The forecast shows strong demand next year."),
+        ("Emerging", "starting to develop and become important (emergente)", "Vietnam is an emerging destination."),
+        ("Sustainable", "able to continue without harming the environment (sustentavel)", "Travelers want more sustainable options."),
+        ("Demand", "how much people want to buy something (demanda, procura)", "Demand for eco-tours is rising fast."),
+        ("To boom", "to grow or succeed very quickly (crescer explosivamente)", "Adventure travel is booming."),
+        ("Shift", "a change in position, direction, or focus (mudanca, virada)", "There is a shift toward local experiences."),
+        ("Eco-friendly", "not harmful to the environment (ecologico)", "We now offer eco-friendly hotels."),
+        ("To predict", "to say what you think will happen (prever)", "Experts predict a record season."),
+        ("Mainstream", "accepted by or common among most people (predominante, comum)", "Remote work has gone mainstream."),
+        ("Niche", "a small, specialized part of the market (nicho)", "Luxury safaris are a profitable niche."),
+        ("Wellness tourism", "travel focused on health and well-being (turismo de bem-estar)", "Wellness tourism is our fastest-growing segment."),
+    ],
+
+    'gram_trans_h2': 'Future <span class="accent">Forms</span>',
+    'gram_trans_sub': 'will be + -ing &middot; will have + past participle &middot; by 2030 / this time next year',
+    'gram_examples': [
+        ("", "This time next year, we will be running eco-tours.", '"This time next year, we <span style="color:#15803d;font-weight:700">will be running</span> eco-tours."'),
+        ("", "By 2030, tourism will have doubled.", '"By 2030, tourism <span class="accent" style="font-weight:700">will have doubled</span>."'),
+        ("", "By then, most hotels will have gone eco-friendly.", '"By then, most hotels <span class="accent" style="font-weight:700">will have gone</span> eco-friendly."'),
+    ],
+    'gram_disc_q': 'One sentence talks about an action in progress at a future moment; the others talk about an action finished before a future moment. Which form does each one use?',
+    'gram_table': [
+        ("Future continuous", "will be + -ing: in progress at a future point", "This time next year, we <strong>will be opening</strong> a new office."),
+        ("Future perfect", "will have + past participle: finished before a future point", "By 2030, demand <strong>will have doubled</strong>."),
+        ("Time signposts", "by + time = perfect; this time next year = continuous", "<strong>By</strong> next year we will have launched it."),
+    ],
+    'gram_rule_foot': "Use the future continuous (will be + -ing) for an action in progress at a future moment, and the future perfect (will have + past participle) for an action completed before a future moment. 'By 2030' signals the perfect; 'this time next year' signals the continuous.",
+
+    'lf_h2': 'Forecast the <span class="accent">Industry</span>',
+    'lf_title': 'Complete the future sentence',
+    'lf_items': [
+        ["A", "This time next year, we ", "will be", " offering wellness retreats.", "strong"],
+        ["B", "By 2030, tourism ", "will have", " changed completely.", "soft"],
+        ["C", "By then, most travelers ", "will have", " gone eco-friendly.", "soft"],
+        ["D", "In five years, we ", "will be", " running tours in emerging markets.", "strong"],
+    ],
+    'lf_followup': "Future continuous (will be + -ing) = in progress at a future point; future perfect (will have + past participle) = completed before a future point. Watch the time signpost: 'by' points to the perfect, 'this time next year' to the continuous.",
+
+    'mistakes': [
+        ("By 2030, tourism will double.", 'By 2030, tourism <strong>will have doubled</strong>.'),
+        ("This time next year, we will open a new office.", 'This time next year, we <strong>will be opening</strong> a new office.'),
+    ],
+    'mistake_note': "With 'by + a future time', use the future perfect (will have + past participle) because the action is finished before that point. With 'this time next year', use the future continuous (will be + -ing) because the action is in progress at that moment.",
+
+    'read_trans_h2': 'Read the <span class="accent">Forecast</span>',
+    'reading_h2': 'Where Tourism Is <span class="accent">Heading</span>',
+    'read_block': {
+        'rtitle': 'Where Tourism Is Heading',
+        'paras': [
+            "Ask any expert about the future of tourism, and you will hear the same word again and again: change. The industry is shifting faster than at any point in its history, and the companies that read the trends early are the ones that boom. Those that ignore them are left behind. So what will travel look like ten years from now?",
+            "The first big shift is sustainability. What was once a niche is quickly going mainstream. By 2035, most analysts predict, the majority of travelers will have chosen an eco-friendly option at least once, and demand for sustainable trips will still be rising. Wellness tourism -- travel built around health and well-being -- is booming too, and this time next decade, agencies will be selling far more retreats than beach packages. Emerging destinations, from Vietnam to Rwanda, will have taken market share from the old classics.",
+            "The second shift is technology. This time next year, most travelers will already be booking through their phones, comparing prices in seconds and expecting instant answers. Forecasts are never perfect -- no one predicted a global pause on travel -- but the direction is clear. The winners will not be the biggest companies. They will be the ones that see the trend, make the forecast, and act on it before everyone else does.",
+        ],
+        'source': 'Adapted from a tourism industry outlook report',
+        'link': 'https://www.unwto.org/tourism-data/global-and-regional-tourism-performance',
+        'gist_prompt': 'What is the main idea of the text?',
+        'gist_choices': [
+            ["a", "Tourism will stay exactly the same for the next ten years.", False],
+            ["b", "Tourism is changing fast, and the winners will be the companies that read trends and act on their forecast early.", True],
+            ["c", "Only the biggest companies will succeed in the future of tourism.", False],
+        ],
+        'tf': [
+            ["The text says the tourism industry is changing very slowly.", "f", "It says the industry is shifting faster than at any point in its history."],
+            ["Sustainability is described as a niche that is going mainstream.", "t", "The second paragraph says what was once a niche is quickly going mainstream."],
+            ["The text predicts agencies will sell more beach packages than wellness retreats.", "f", "It says agencies will be selling far more retreats than beach packages."],
+            ["According to the text, the winners will be the companies that act on trends early.", "t", "The last sentence says the winners will be the ones that see the trend and act before everyone else."],
+        ],
+    },
+
+    'dialogue_h2': 'A Journalist Wants Your <span class="accent">Forecast</span>',
+    'dialogue': [
+        ('erik', 'arthur', "Andrea, thanks for the interview. You have seen the industry for years. What is the biggest trend right now?",
+         "Andrea, thanks for the interview. You have seen the industry for years. What is the biggest <span class=\"vocab-highlight\">trend</span> right now?"),
+        ('andrea', 'ellen', "Sustainability, without a doubt. What was a niche is going mainstream. My forecast is that by 2030, most travelers will have chosen an eco-friendly trip at least once.",
+         "Sustainability, without a doubt. What was a <span class=\"vocab-highlight\">niche</span> is going <span class=\"vocab-highlight\">mainstream</span>. My <span class=\"vocab-highlight\">forecast</span> is that by 2030, most travelers will have chosen an <span class=\"vocab-highlight\">eco-friendly</span> trip at least once."),
+        ('erik', 'arthur', "That is a bold prediction. And demand? Is it really growing that fast?",
+         "That is a bold <span class=\"vocab-highlight\">prediction</span>. And <span class=\"vocab-highlight\">demand</span>? Is it really growing that fast?"),
+        ('andrea', 'ellen', "It is booming. Wellness tourism especially. This time next year, we will be selling more retreats than beach packages. It is a real shift.",
+         "It is <span class=\"vocab-highlight\">booming</span>. <span class=\"vocab-highlight\">Wellness tourism</span> especially. This time next year, we will be selling more retreats than beach packages. It is a real <span class=\"vocab-highlight\">shift</span>."),
+        ('erik', 'arthur', "And the destinations? Will the classics survive?",
+         "And the destinations? Will the classics survive?"),
+        ('andrea', 'ellen', "They will, but emerging markets will have taken a big share by then. Places that predict this early will be the winners. That is where we are investing.",
+         "They will, but <span class=\"vocab-highlight\">emerging</span> markets will have taken a big share by then. Places that <span class=\"vocab-highlight\">predict</span> this early will be the winners. That is where we are investing."),
+        ('erik', 'arthur', "So if you had to sum up the future in one word?",
+         "So if you had to sum up the future in one word?"),
+        ('andrea', 'ellen', "Sustainable. In ten years, the whole industry will have moved that way, and the companies that started now will be leading it.",
+         "<span class=\"vocab-highlight\">Sustainable</span>. In ten years, the whole industry will have moved that way, and the companies that started now will be leading it."),
+    ],
+    'comprehension': [
+        ("1. What does Andrea say is the biggest trend?", "Sustainability -- it is moving from niche to mainstream."),
+        ("2. What is her forecast about wellness tourism for next year?", "They will be selling more retreats than beach packages."),
+        ("3. What does she predict about emerging markets?", "They will have taken a big share of the market by 2030."),
+    ],
+
+    'listen1_h2': 'The <span class="accent">Industry Outlook</span>',
+    'listen1_sub': 'An analyst shares a short forecast for the next decade. Sound first -- no text.',
+    'listen1_qs': [
+        ("1. What does the analyst say will have happened to demand by 2030?", "It will have doubled for sustainable travel."),
+        ("2. What will travelers be doing more of this time next year?", "Booking through their phones and comparing prices instantly."),
+        ("3. Which segment does the analyst say is booming?", "Wellness tourism."),
+    ],
+    'listen2_h2': 'How to Make a <span class="accent">Forecast</span>',
+    'listen2_sub': 'A short business tip on describing the future with the right verb forms. Sound first -- no text.',
+    'listen2_qs': [
+        ("1. Which form describes an action in progress at a future point?", "The future continuous: will be + -ing."),
+        ("2. Which form describes an action finished before a future point?", "The future perfect: will have + past participle."),
+        ("3. What does the signpost 'by 2030' tell you to use?", "The future perfect -- the action is complete before that date."),
+    ],
+    'listenings': [
+        {'file': 'a14_listening_outlook.mp3', 'voice': 'arthur',
+         'text': "Here is the outlook for the next decade. The headline trend is sustainability. Our forecast is that by 2030, demand for sustainable travel will have doubled, and eco-friendly options, which are a niche today, will have gone completely mainstream. On technology, the shift is even faster. This time next year, most travelers will already be booking through their phones, comparing prices in seconds. Wellness tourism is booming, and emerging destinations will have taken serious market share from the classics. My advice to any company is simple. Read the trend now, make your forecast, and act on it. In ten years, the businesses that moved early will be leading the industry, and the ones that waited will be trying to catch up."},
+        {'file': 'a14_listening_forecasttip.mp3', 'voice': 'ellen',
+         'text': "Welcome to this short segment on talking about the future. When you make a forecast, two verb forms do most of the work. Use the future continuous, will be plus the -ing form, for an action in progress at a future moment. For example, this time next year, we will be selling more retreats. Use the future perfect, will have plus the past participle, for an action that is finished before a future moment. For example, by 2030, demand will have doubled. The trick is the time signpost. If you hear by a future date, think future perfect, because the action is complete by then. If you hear this time next year, think future continuous, because the action is happening at that moment. Get these two forms right, and your forecast will sound confident and professional."},
+    ],
+
+    'gapfill_parts': [
+        "A journalist asks Andrea for her forecast. She predicts that by 2030, demand for sustainable travel ",
+        ["1"], " doubled. This time next year, she says, agencies ",
+        ["2"], " selling more wellness retreats than beach packages. Eco-friendly trips, once a ",
+        ["3"], ", are going ", ["4"], ". Her advice: read the ", ["5"], " and act early.",
+    ],
+    'gapfill_bank': ["will have", "will be", "niche", "mainstream", "trend"],
+    'vocabnote': "Future perfect (will have + past participle) = finished before a future point ('by 2030, demand will have doubled'). Future continuous (will be + -ing) = in progress at a future point ('this time next year, we will be selling'). The signpost tells you which: 'by + date' = perfect; 'this time next year' = continuous.",
+
+    'bank_label_top': 'Forecast',
+    'bank_label': 'Useful language for discussing trends and the future',
+    'bank_items': [
+        "By 2030, demand will have doubled.",
+        "This time next year, we will be running eco-tours.",
+        "The biggest trend right now is sustainability.",
+        "My forecast is that wellness tourism will keep booming.",
+        "Emerging markets will have taken a big share by then.",
+        "There is a clear shift toward eco-friendly travel.",
+        "Experts predict a record season.",
+        "What was a niche is quickly going mainstream.",
+    ],
+
+    'scenarios_h2': 'Give Your <span class="accent">Forecast</span>',
+    'scenario_items': [
+        ["Scenario 1", "A journalist asks about demand. Forecast it with the future perfect: 'By 2030, demand will have...'."],
+        ["Scenario 2", "Describe what your agency will be doing next year using the future continuous."],
+        ["Scenario 3", "Name one trend that is going from niche to mainstream, and predict where it leads."],
+        ["Scenario 4", "Sum up the future of tourism in one sentence, using both future forms."],
+    ],
+    'answerkey_list': [
+        "Gap-fill: 1 = will have, 2 = will be, 3 = niche, 4 = mainstream, 5 = trend.",
+        "Future perfect (finished before a future point): 'By 2030, demand will have doubled.'",
+        "Future continuous (in progress at a future point): 'This time next year, we will be selling more retreats.'",
+        "Signpost rule: 'by + date' = perfect; 'this time next year' = continuous.",
+    ],
+    'answerkey_note': "Future continuous (will be + -ing) = in progress at a future moment; future perfect (will have + past participle) = completed before a future moment.",
+
+    'roleplays': [
+        {'h2': 'The <span class="accent">Interview</span>',
+         'scenario': "A journalist asks for your forecast on the biggest trend in tourism. Answer using the future perfect: 'By 2030, ... will have ...'.",
+         'keywords': ["the biggest trend is...", "by 2030...", "will have doubled"]},
+        {'h2': 'Next <span class="accent">Year</span>',
+         'scenario': "Describe what your agency will be doing this time next year, and the shift you expect in demand. Use the future continuous.",
+         'keywords': ["this time next year...", "we will be...", "a shift toward..."]},
+        {'h2': 'The Full <span class="accent">Forecast</span>',
+         'scenario': "Give a two-minute forecast for the future of tourism: name the trends, use both future forms, and finish with one bold prediction.",
+         'keywords': []},
+    ],
+
+    'survival_h2': 'Forecast Like a <span class="accent">Pro</span>',
+    'survival': [
+        ("By 2030, demand will have doubled.", "Ate 2030, a demanda tera dobrado."),
+        ("This time next year, we will be running eco-tours.", "Nesta epoca no ano que vem, estaremos oferecendo eco-tours."),
+        ("The biggest trend right now is sustainability.", "A maior tendencia agora e a sustentabilidade."),
+        ("What was a niche is quickly going mainstream.", "O que era um nicho esta rapidamente se tornando predominante."),
+        ("My forecast is that wellness tourism will keep booming.", "Minha previsao e que o turismo de bem-estar continuara crescendo."),
+    ],
+    'learned': [
+        "I can use the future continuous (will be + -ing) for an action in progress at a future point.",
+        "I can use the future perfect (will have + past participle) for an action finished before a future point.",
+        "I can choose the right form from the time signpost ('by 2030' vs 'this time next year').",
+        "I can give a clear forecast about a trend in my industry.",
+        "I know the words: trend, forecast, emerging, sustainable, demand, to boom, shift, eco-friendly, to predict, mainstream, niche, wellness tourism.",
+    ],
+    'badge_name': 'Trend Spotter Badge',
+    'badge_p': 'You can read the trends and forecast the future of tourism with confidence -- using the future continuous and future perfect like a real industry expert, Andrea.',
+    'next_lesson': 'Leading and Wrapping Up a Business Meeting',
+
+    # ----- new B2 slides (pipeline v2) -----
+    'spot_errors': [
+        ("By 2030, tourism will double.", "By 2030, tourism will have doubled."),
+        ("This time next year, we will open a new office.", "This time next year, we will be opening a new office."),
+        ("By then, demand will grow a lot.", "By then, demand will have grown a lot."),
+        ("Next month, we will launching the eco-tour.", "Next month, we will be launching the eco-tour."),
+    ],
+    'bridge5': {
+        'h2': 'Voices on the <span class="accent">Future</span>',
+        'sub': 'Listen to an industry forecast, then give your own out loud.',
+        'bg': BG5,
+    },
+    'register': [
+        ("Everything is going to change, obviously.", "The industry is shifting, and the signs are already clear."),
+        ("Beach trips are dead.", "There is a clear shift from beach packages toward wellness retreats."),
+        ("Trust me, eco-travel is the future.", "My forecast is that eco-friendly travel will have gone mainstream by 2030."),
+        ("The old destinations are finished.", "Emerging markets will have taken a real share by then."),
+    ],
+    'artifact': {
+        'label': 'The Outlook',
+        'h2': 'Industry <span class="accent">Forecast 2030</span>',
+        'meta': [
+            ("Report:", "Tourism Outlook -- prepared for Escape Turismo"),
+            ("Horizon:", "Five-year forecast, to 2030"),
+            ("Author:", "Andrea Aggio -- Commercial Director"),
+        ],
+        'paras': [
+            "Headline: the biggest shift is sustainability. Our forecast is that by 2030, demand for eco-friendly travel will have doubled, and options that are a niche today will have gone mainstream.",
+            "Segments: wellness tourism is booming. This time next year, the company will be selling more retreats than beach packages. Emerging destinations, from Vietnam to Rwanda, will have taken a meaningful share from the classics.",
+            "Technology: this time next year, most clients will already be booking through their phones. Recommendation: read the trend now and act. By 2030, the companies that moved early will be leading the market.",
+        ],
+    },
+    'artifact_qs': [
+        ("1. What does the report forecast for demand by 2030?", "Demand for eco-friendly travel will have doubled."),
+        ("2. What will the company be doing next year, according to the report?", "Selling more wellness retreats than beach packages."),
+        ("3. What is the report's main recommendation?", "Read the trend now and act -- companies that move early will lead the market."),
+    ],
+    'pron_lines': [
+        ("It will have doubled by then.", "'will have' reduces -- wil-uv; 'doubled by' links -- dub-buld-by."),
+        ("We will be running eco-tours.", "'will be' reduces -- wil-bee; stress RUN-ning."),
+        ("What was a niche is going mainstream.", "'niche' = neesh; keep 'mainstream' crisp -- MAIN-streem."),
+        ("By 2030, the shift will be complete.", "pause after the date -- 2030 / the shift; stress com-PLETE."),
+    ],
+    'bridge6': {
+        'h2': 'Now You <span class="accent">Forecast</span>',
+        'sub': 'Your turn: read each trend and predict the future out loud.',
+        'bg': BG6,
+    },
+    'quickfire': [
+        {'situation': "A journalist asks what will have changed in tourism by 2030.",
+         'tips': ["Use the future perfect: 'will have + ...'", "'By 2030, demand will have doubled.'", "Name one clear trend."]},
+        {'situation': "Describe what your agency will be doing this time next year.",
+         'tips': ["Use the future continuous: 'will be + -ing'", "'We will be selling more retreats.'", "Add the shift you expect."]},
+        {'situation': "A client asks if eco-friendly travel is just a fad.",
+         'tips': ["'What was a niche is going mainstream.'", "'By 2030 it will have doubled.'", "Sound confident, not vague."]},
+        {'situation': "You want to predict which destinations will grow.",
+         'tips': ["'Emerging markets will have taken a share.'", "Name one: 'Vietnam, Rwanda...'", "Use 'by then'."]},
+        {'situation': "Sum up the future of tourism in one strong line.",
+         'tips': ["Use both forms in one breath.", "'By 2030 it will have shifted, and we will be leading it.'", "End on your bold prediction."]},
+    ],
+
+    'preclass_title': 'Talking About Trends and the Future of Tourism',
+    'preclass_desc': "How to discuss trends and forecast the future with the future continuous and future perfect. Key words: trend, forecast, emerging, sustainable, demand, to boom, shift, eco-friendly, to predict, mainstream, niche, wellness tourism. Structure: future continuous (will be + -ing) vs future perfect (will have + past participle).",
+    'context': ("A journalist asks Andrea for her <strong>forecast</strong>. 'The biggest <strong>trend</strong> is "
+                "sustainability,' she says. 'By 2030, most travelers <strong>will have</strong> chosen an "
+                "<strong>eco-friendly</strong> trip, and <strong>demand</strong> will still be growing.' She explains "
+                "that <strong>wellness tourism</strong> is <strong>booming</strong>: 'This time next year, we "
+                "<strong>will be</strong> selling more retreats than beach packages.' What was a <strong>niche</strong> "
+                "is going <strong>mainstream</strong>, and <strong>emerging</strong> destinations will have taken a big "
+                "share. 'Companies that <strong>predict</strong> this <strong>shift</strong> early,' she adds, 'will be "
+                "the ones leading the industry.'"),
+    'context_quiz': [
+        ("1. 'By 2030, demand will have doubled' uses which form, and why?",
+         [("A", "Future perfect -- the action is finished before 2030.", True),
+          ("B", "Future continuous -- the action is in progress in 2030.", False),
+          ("C", "Present simple -- it is a fact now.", False)]),
+        ("2. Which signpost goes with the future continuous?",
+         [("A", "by 2030", False),
+          ("B", "this time next year", True),
+          ("C", "last year", False)]),
+        ("3. Which sentence is correct?",
+         [("A", "This time next year, we will be running eco-tours.", True),
+          ("B", "This time next year, we will run eco-tours.", False),
+          ("C", "This time next year, we will have run eco-tours.", False)]),
+    ],
+    'tip_title': 'Future Continuous & Future Perfect',
+    'tip_sub': "Como descrever o futuro com precisao (explicacao em ingles e portugues).",
+    'tip_rows': [
+        ("Future continuous", "will be + -ing: em andamento num ponto futuro. in progress at a future point.", "This time next year, we <strong>will be running</strong> tours."),
+        ("Future perfect", "will have + participio: concluido antes de um ponto futuro. finished before a future point.", "By 2030, demand <strong>will have doubled</strong>."),
+        ("Marcadores / Signposts", "'by + data' = perfect; 'this time next year' = continuous.", "<strong>By</strong> then, it <strong>will have</strong> changed."),
+        ("Regra de ouro / Golden rule", "escolha a forma pelo marcador de tempo. let the time signpost decide.", "By 2030 (perfect) vs next year (continuous)."),
+    ],
+    'fill': [
+        ('"By 2030, demand ', "will have", "Dica: concluido antes de 2030 (will ___ + doubled)", "By 2030, demand will have doubled.", ' doubled."'),
+        ('"This time next year, we ', "will be", "Dica: em andamento no ano que vem (___ + running)", "This time next year, we will be running eco-tours.", ' running eco-tours."'),
+        ('"The biggest ', "trend", "Dica: direcao geral de mudanca", "The biggest trend right now is sustainability.", ' right now is sustainability."'),
+        ('"What was a niche is going ', "mainstream", "Dica: comum, aceito por todos", "What was a niche is going mainstream.", '."'),
+        ('"Experts ', "predict", "Dica: dizer o que vai acontecer", "Experts predict a record season.", ' a record season."'),
+        ('"Wellness tourism is ', "booming", "Dica: crescer explosivamente (___-ing)", "Wellness tourism is booming.", '."'),
+    ],
+    'order_intro': "Coloque os passos de uma boa previsao de mercado na ordem correta.",
+    'order': [
+        "Look at the data and spot the main trend.",
+        "Say what has already started to change.",
+        "Forecast what will have happened by a future date.",
+        "Describe what you will be doing this time next year.",
+        "Finish with one bold, confident prediction.",
+    ],
+    'speech': [
+        ("By 2030, demand will have doubled.", "Ate 2030, a demanda tera dobrado."),
+        ("This time next year, we will be running eco-tours.", "Nesta epoca no ano que vem, estaremos oferecendo eco-tours."),
+        ("The biggest trend right now is sustainability.", "A maior tendencia agora e a sustentabilidade."),
+        ("What was a niche is quickly going mainstream.", "O que era um nicho esta se tornando predominante."),
+        ("Emerging markets will have taken a big share.", "Os mercados emergentes terao conquistado uma grande fatia."),
+    ],
+    'quiz': [
+        ("A journalist asks about demand by 2030. You forecast:",
+         [("A", "By 2030, demand will have doubled.", True),
+          ("B", "By 2030, demand will double.", False),
+          ("C", "By 2030, demand doubles.", False)]),
+        ("You describe your agency's activity next year. You say:",
+         [("A", "This time next year, we will be offering retreats.", True),
+          ("B", "This time next year, we will offer retreats.", False),
+          ("C", "This time next year, we offer retreats.", False)]),
+        ("You describe emerging markets by 2030. You say:",
+         [("A", "By then, emerging markets will have taken a share.", True),
+          ("B", "By then, emerging markets will taking a share.", False),
+          ("C", "By then, emerging markets take a share.", False)]),
+        ("You describe a trend that is becoming common. You say:",
+         [("A", "What was a niche is going mainstream.", True),
+          ("B", "What was a niche is going niche.", False),
+          ("C", "What was a mainstream is going niche.", False)]),
+    ],
+    'think': "Imagine a journalist has asked you to forecast the future of tourism. Record a one-minute forecast for Escape Turismo. Name the biggest trend, use the future perfect to say what will have changed by 2030 ('demand will have doubled'), use the future continuous to say what you will be doing next year ('we will be running...'), and finish with one bold prediction. Take your time.",
+
+    'media': [
+        ('series', "Down to Earth with Zac Efron (Netflix)",
+         "A travel documentary that explores sustainable, eco-friendly, and wellness-focused ways to live and travel -- exactly the trends shaping the future of tourism. Rich, natural English about change and the environment. Connection to Lesson 14: trends, sustainability, and forecasting the future.",
+         'Tip: after an episode, write two forecasts about that destination using the future perfect and future continuous.',
+         'https://www.imdb.com/title/tt12585152/'),
+        ('podcast', 'TED Talks Daily (TED)',
+         "Short, idea-rich talks, many about the future, technology, and sustainability. Perfect for hearing forecasting language and future forms used by expert speakers. Connection to Lesson 14: making predictions and talking about trends.",
+         'Tip: pick a talk about the future and note every future continuous or future perfect you hear.',
+         'https://www.ted.com/podcasts/ted-talks-daily'),
+        ('youtube', '"Future perfect, or future perfect continuous?" -- BBC Learning English',
+         "A clear lesson on the exact grammar of this class: the future perfect and how it differs from continuous forms. Connection to Lesson 14: forecasting with 'By 2030, demand will have doubled'.",
+         'Tip: after each example, make a forecast about tourism using the same structure.',
+         'https://www.youtube.com/watch?v=iISY9FgeYpU'),
+    ],
+}
