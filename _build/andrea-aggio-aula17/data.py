@@ -1,0 +1,375 @@
+# -*- coding: utf-8 -*-
+BG1 = "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1400&q=80"
+BG2 = "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1400&q=80"
+BG3 = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=80"
+BG4 = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80"
+BG5 = "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1400&q=80"
+BG6 = "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80"
+
+D = {
+    'n': 17,
+    'reading': True,
+    'partner_name': 'felix',
+    'grammar_point_pt': "oracoes clivadas (cleft sentences) com 'What...' e 'It...' para dar enfase ao ponto mais importante: 'What impressed me was your preparation' (o que me impressionou foi a sua preparacao) destaca o elemento fora da oracao com 'what'; 'It was your clarity that made the difference' (foi a sua clareza que fez a diferenca) destaca X com 'it + be + X + that/who' -- estruturas ideais para dar e receber feedback com clareza",
+    'chapter_tag': 'The Honest Review',
+    'title_h1': 'Giving and Responding to <span class="accent">Feedback</span>',
+    'title_sub': 'Praise what worked, name one thing to change, and take a note on board -- all with the emphasis in the right place.',
+    'short_title': 'Giving Feedback',
+    'menu_title': 'Giving and Responding to Feedback',
+    'menu_desc': 'Give and take feedback clearly using cleft sentences for emphasis',
+    'bg_title': BG1, 'bg_vocab': BG2, 'bg_read': BG3, 'bg_gram': BG4,
+    'bg_lesson_card': "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=600&q=80",
+    'stamp_label': 'Feedback Coach',
+    'stamp_img': "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=200&q=80",
+    'phases': ['The Honest Review', 'Feedback Words', 'The Debrief',
+               'Adding Emphasis', 'Voices', 'Your Turn', 'Wrap-Up'],
+
+    'warm_h2': 'From the Numbers to the <span class="accent">People</span>',
+    'warm_p': "Last time you read the quarter's figures and deduced what must have, might have, or can't have driven them. Today the focus shifts from the numbers to the people who produced them. A colleague has just finished a client pitch, and it is your turn to give feedback -- honest, useful, and kind. The best feedback highlights one strength, names one thing to change, and lands so clearly that the other person actually takes it on board. By the end of this hour, you will give and respond to feedback with the emphasis exactly where it belongs.",
+    'warm_prompt': 'In one sentence: what makes a piece of feedback easy to hear and act on?',
+    'missions': [
+        'Learn the language of praise, shortcomings, and useful, actionable feedback.',
+        'Use cleft sentences -- What... / It was... -- to put the emphasis where it matters.',
+        'Give feedback on a real pitch and respond to feedback without getting defensive.',
+    ],
+
+    'vocab_trans_h2': 'Words for the <span class="accent">Debrief</span>',
+    'vocab': [
+        ("Constructive", "meant to help someone improve, not just to criticize (construtivo)", "She gave constructive feedback after the pitch."),
+        ("Candid", "honest and direct, even about difficult things (franco, sincero)", "I'll be candid: the opening ran too long."),
+        ("To commend", "to praise someone, often formally, for what they did well (elogiar, parabenizar)", "I want to commend you on the client research."),
+        ("Shortcoming", "a weakness or fault in someone's work (deficiencia, ponto fraco)", "The one shortcoming was the unclear pricing slide."),
+        ("To pinpoint", "to identify something exactly (identificar com precisao)", "Let me pinpoint what to change next time."),
+        ("Actionable", "clear and specific enough to act on (acionavel, pratico)", "Good feedback is specific and actionable."),
+        ("To take on board", "to accept advice and seriously consider it (levar em conta, absorver)", "I'll take your comments on board for the next meeting."),
+        ("Defensive", "protecting yourself from criticism instead of listening (defensivo, na defensiva)", "Try not to get defensive when you hear feedback."),
+        ("Blind spot", "a weakness in yourself that you cannot easily see (ponto cego)", "Speaking too fast is a blind spot of mine."),
+        ("Tactful", "careful not to offend when saying something difficult (diplomatico, com tato)", "She was tactful about the mistake."),
+        ("To come across", "to appear or seem in a particular way (passar a impressao, soar)", "You came across as confident and prepared."),
+        ("Praise", "words that express approval or admiration (elogio)", "Balance your praise with one clear suggestion."),
+    ],
+
+    'gram_trans_h2': 'Put the Emphasis in <span class="accent">Focus</span>',
+    'gram_trans_sub': 'What + clause + is / was + X &middot; It + is / was + X + that / who',
+    'gram_examples': [
+        ("", "What impressed me most was your preparation.", '"<span class="accent" style="font-weight:700">What impressed me most was</span> your preparation."'),
+        ("", "It was your clarity that made the difference with the client.", '"<span style="color:#15803d;font-weight:700">It was your clarity that</span> made the difference with the client."'),
+        ("", "What you could work on is the timing of the close.", '"<span class="accent" style="font-weight:700">What you could work on is</span> the timing of the close."'),
+    ],
+    'gram_disc_q': 'Each sentence pushes one idea to the front to emphasize it. Two start with "What...", one starts with "It was...". What is each one spotlighting, and which little word joins the two halves of the "It was..." sentence?',
+    'gram_table': [
+        ("What + clause + is / was + X", "spotlight X -- the thing you value or want changed", "<strong>What impressed me was</strong> your preparation."),
+        ("It + is / was + X + that / who + ...", "spotlight X strongly (a person or a thing)", "<strong>It was your clarity that</strong> won them over."),
+        ("What ... could / need to do is + (to) V", "soften and focus a suggestion", "<strong>What you could do is</strong> shorten the intro."),
+    ],
+    'gram_rule_foot': "A cleft sentence takes one part of a normal sentence and moves it into focus. 'Your preparation impressed me' becomes 'What impressed me was your preparation.' Use 'What + clause + is/was' or 'It + is/was + X + that/who' to highlight the single most important point. It makes praise land warmly and suggestions land clearly -- perfect for feedback.",
+
+    'lf_h2': 'Focus the <span class="accent">Feedback</span>',
+    'lf_title': 'Read each line and add the emphasis with a cleft',
+    'lf_items': [
+        ["A", "", "What impressed me most", " was how calm you stayed.", "strong"],
+        ["B", "", "It was your clarity", " that won the client over.", "strong"],
+        ["C", "", "What you could work on", " is the timing of the close.", "soft"],
+        ["D", "", "What I really appreciated", " was your honesty in the review.", "soft"],
+    ],
+    'lf_followup': "Cleft sentences move the key idea into the spotlight. 'What + clause + was...' and 'It was + X + that...' both highlight what matters most -- so your praise feels genuine and your one suggestion is impossible to miss.",
+
+    'mistakes': [
+        ("What impressed me your preparation.", 'What impressed me <strong>was</strong> your preparation.'),
+        ("It was your clarity what made the difference.", 'It was your clarity <strong>that</strong> made the difference.'),
+    ],
+    'mistake_note': "A cleft sentence still needs its linking verb: 'What impressed me WAS your preparation', never 'What impressed me your preparation.' And in an it-cleft, join the two halves with 'that' or 'who' -- 'It was your clarity THAT made the difference' -- never with 'what'.",
+
+    'read_trans_h2': 'Read the <span class="accent">Debrief</span>',
+    'reading_h2': 'Feedback People Can <span class="accent">Actually Use</span>',
+    'read_block': {
+        'rtitle': 'Feedback People Can Actually Use',
+        'paras': [
+            "Everyone says they want honest feedback, but most of us brace for it like bad weather. The problem is rarely honesty itself -- it is the delivery. Vague praise ('great job!') tells you nothing, and blunt criticism ('that was weak') puts you on the defensive before you have heard a single useful word. Feedback only works when it is candid and kind at the same time: specific about what worked, specific about what to change, and framed so the other person can act on it.",
+            "The best reviewers do three things. First, they commend something real -- not to soften the blow, but because noticing a genuine strength builds trust. Second, they pinpoint one shortcoming, not ten; a single clear point is easier to take on board than a long list. Third, they make the suggestion actionable: 'What you could work on is the close' beats 'be more convincing', because it tells you exactly what to do next. Notice how a cleft sentence quietly does the heavy lifting -- 'What impressed me was...', 'It was your clarity that...' -- putting the emphasis precisely where it belongs.",
+            "Responding to feedback is a skill of its own. The instinct is to defend, explain, or argue, but that turns a gift into a fight. The stronger move is to listen for the point beneath the words, thank the person, and name the one thing you will change. 'That's fair -- I'll take it on board' costs you nothing and earns you a great deal. Everyone has a blind spot; the people who grow fastest are simply the ones who let others help them see it.",
+        ],
+        'source': 'Adapted from a workplace communication guide',
+        'link': 'https://www.radicalcandor.com/podcast',
+        'gist_prompt': 'What is the main idea of the text?',
+        'gist_choices': [
+            ["a", "Honest feedback should always be blunt so the point is clear.", False],
+            ["b", "Good feedback is candid and kind: commend something real, pinpoint one actionable change, and respond without getting defensive.", True],
+            ["c", "The best response to feedback is to explain why the criticism is wrong.", False],
+        ],
+        'tf': [
+            ["The text says the main problem with feedback is usually honesty itself.", "f", "It says the problem is rarely honesty -- it is the delivery; vague praise and blunt criticism are what fail."],
+            ["According to the text, good reviewers pinpoint one shortcoming rather than a long list.", "t", "The second paragraph says they pinpoint one shortcoming, not ten, because a single clear point is easier to take on board."],
+            ["The text says 'be more convincing' is a good, actionable suggestion.", "f", "It contrasts that vague phrase with 'What you could work on is the close', which is the actionable one."],
+            ["The text says the fastest learners let others help them see their blind spots.", "t", "The last sentence says the people who grow fastest are the ones who let others help them see their blind spot."],
+        ],
+    },
+
+    'dialogue_h2': 'Andrea Debriefs the Pitch with <span class="accent">Felix</span>',
+    'dialogue': [
+        ('felix', 'arthur', "So, how did I do in the client pitch? Be candid -- I can take it.",
+         "So, how did I do in the client pitch? Be <span class=\"vocab-highlight\">candid</span> -- I can take it."),
+        ('andrea', 'ellen', "Happy to. First, I want to commend you on the research. What impressed me most was how prepared you were.",
+         "Happy to. First, I want to <span class=\"vocab-highlight\">commend</span> you on the research. What impressed me most was how prepared you were."),
+        ('felix', 'arthur', "Thanks. I was worried the pricing slide came across as confusing.",
+         "Thanks. I was worried the pricing slide <span class=\"vocab-highlight\">came across</span> as confusing."),
+        ('andrea', 'ellen', "It did, a little. It was that pricing slide that lost them for a moment -- that's the one shortcoming I'd pinpoint.",
+         "It did, a little. It was that pricing slide that lost them for a moment -- that's the one <span class=\"vocab-highlight\">shortcoming</span> I'd <span class=\"vocab-highlight\">pinpoint</span>."),
+        ('felix', 'arthur', "Fair enough. So what could I do differently next time?",
+         "Fair enough. So what could I do differently next time?"),
+        ('andrea', 'ellen', "What you could work on is the close. Make the next step actionable -- tell them exactly what happens after the meeting.",
+         "What you could work on is the close. Make the next step <span class=\"vocab-highlight\">actionable</span> -- tell them exactly what happens after the meeting."),
+        ('felix', 'arthur', "That's really helpful. I'll take it on board. Honestly, it's easier to hear when it's this specific.",
+         "That's really helpful. I'll <span class=\"vocab-highlight\">take</span> it <span class=\"vocab-highlight\">on board</span>. Honestly, it's easier to hear when it's this specific."),
+        ('andrea', 'ellen', "That's the goal. Good feedback isn't about being harsh -- it's about being clear and tactful. You came across really well today.",
+         "That's the goal. Good feedback isn't about being harsh -- it's about being clear and <span class=\"vocab-highlight\">tactful</span>. You <span class=\"vocab-highlight\">came across</span> really well today."),
+    ],
+    'comprehension': [
+        ("1. What was Felix worried about in his pitch?", "That the pricing slide came across as confusing."),
+        ("2. What does Andrea commend Felix on?", "His research and how prepared he was."),
+        ("3. What does Felix say makes feedback easier to hear?", "When it is specific."),
+    ],
+
+    'listen1_h2': 'The <span class="accent">Team Debrief</span>',
+    'listen1_sub': 'A manager gives a team feedback after a campaign. Sound first -- no text.',
+    'listen1_qs': [
+        ("1. What does the manager say impressed them most?", "How well the team prepared -- the research."),
+        ("2. What single shortcoming does the manager pinpoint?", "The pricing slide, which came across as confusing."),
+        ("3. What does the manager ask the team to work on next time?", "The close -- making the next step clear and actionable."),
+    ],
+    'listen2_h2': 'How to <span class="accent">Give Feedback</span>',
+    'listen2_sub': 'A short tip on giving and taking feedback well. Sound first -- no text.',
+    'listen2_qs': [
+        ("1. What two qualities should good feedback have at the same time?", "It should be candid and kind."),
+        ("2. How many shortcomings should you pinpoint at once?", "One clear point, not a long list."),
+        ("3. What is the strong way to respond to feedback?", "Thank the person and name the one thing you will change, without getting defensive."),
+    ],
+    'listenings': [
+        {'file': 'a17_listening_debrief.mp3', 'voice': 'arthur',
+         'text': "Alright team, let's debrief the campaign while it's fresh. First, the praise, and I mean it. What impressed me most was how prepared you all were. The client research was thorough, and it showed in every answer. That groundwork is exactly why they trusted us so quickly. Now, one thing to work on. It was the pricing slide that lost them for a moment. It came across as confusing, and I'd pinpoint that as the single shortcoming today. So here is the actionable part. What you could work on for the next pitch is the close. Don't just thank them and stop. Tell them exactly what happens next, who does what, and by when. Make the next step so clear that nobody leaves the room guessing. Take that one point on board, keep everything else you did, and the next pitch will be even stronger."},
+        {'file': 'a17_listening_feedbacktip.mp3', 'voice': 'ellen',
+         'text': "Welcome to this short segment on giving and taking feedback well. Good feedback has to be two things at once, candid and kind. If you are only kind, the person learns nothing. If you are only blunt, they get defensive and stop listening. So start by commending something real, then pinpoint one shortcoming, not ten, because a single clear point is far easier to take on board. Make your suggestion actionable. Instead of saying be more convincing, say what you could work on is the close. And when the feedback is about you, resist the urge to defend or explain. The stronger move is to thank the person and name the one thing you will change. Everyone has a blind spot, and the people who grow the fastest are simply the ones who let others help them see it."},
+    ],
+
+    'gapfill_parts': [
+        "Andrea debriefs the pitch with Felix. She commends his research -- what impressed her most ",
+        ["1"], " his preparation. The main ",
+        ["2"], " she pinpoints is the pricing slide, which came across as confusing. What she suggests he work on is the close: making the next step ",
+        ["3"], ". Felix doesn't get ",
+        ["4"], "; he says he'll take the advice on ",
+        ["5"], ".",
+    ],
+    'gapfill_bank': ["was", "shortcoming", "actionable", "defensive", "board"],
+    'vocabnote': "Cleft sentences add emphasis. 'What + clause + is/was + X' spotlights X ('what impressed me WAS his preparation'); 'It + was + X + that/who' spotlights X strongly ('it was the pricing slide THAT lost them'). Use them to make praise warm and one suggestion crystal clear.",
+
+    'bank_label_top': 'The Debrief',
+    'bank_label': 'Useful language for giving and responding to feedback',
+    'bank_items': [
+        "What impressed me most was your preparation.",
+        "It was your clarity that won them over.",
+        "I want to commend you on the research.",
+        "The one shortcoming I'd pinpoint is the pricing slide.",
+        "What you could work on is the close.",
+        "Make the next step clear and actionable.",
+        "That's fair -- I'll take it on board.",
+        "Good feedback is candid, but tactful.",
+    ],
+
+    'scenarios_h2': 'Give the <span class="accent">Feedback</span>',
+    'scenario_items': [
+        ["Scenario 1", "Praise a colleague's work. Highlight one real strength using 'What impressed me was...'."],
+        ["Scenario 2", "Point out one shortcoming gently. Use 'What you could work on is...' to make it actionable."],
+        ["Scenario 3", "Emphasize the single thing that made the difference, using 'It was ... that ...'."],
+        ["Scenario 4", "Respond to feedback about your own work without getting defensive: acknowledge it and name what you'll change."],
+    ],
+    'answerkey_list': [
+        "Gap-fill: 1 = was, 2 = shortcoming, 3 = actionable, 4 = defensive, 5 = board.",
+        "What-cleft (praise): 'What impressed me was your preparation.'",
+        "It-cleft (emphasis): 'It was your clarity that made the difference.'",
+        "What-cleft (suggestion): 'What you could work on is the close.'",
+    ],
+    'answerkey_note': "What + clause + is/was + X and It + is/was + X + that/who both move the key idea into focus. The cleft needs its linking verb, and the it-cleft joins the halves with 'that' or 'who' -- never 'what'.",
+
+    'roleplays': [
+        {'h2': 'The Genuine <span class="accent">Praise</span>',
+         'scenario': "A colleague just finished a strong presentation. Give them feedback that opens with real, specific praise, using a 'What impressed me was...' cleft.",
+         'keywords': ["what impressed me was...", "I want to commend you on...", "you came across as..."]},
+        {'h2': 'The One <span class="accent">Suggestion</span>',
+         'scenario': "The same presentation had one weak point. Pinpoint a single shortcoming tactfully and make it actionable with 'What you could work on is...'.",
+         'keywords': ["the one shortcoming...", "what you could work on is...", "make it actionable"]},
+        {'h2': 'Taking It <span class="accent">On Board</span>',
+         'scenario': "Now the roles switch: a colleague gives YOU candid feedback about your own work. Respond without getting defensive, thank them, and name the one thing you will change.",
+         'keywords': []},
+    ],
+
+    'survival_h2': 'Feedback That <span class="accent">Lands</span>',
+    'survival': [
+        ("What impressed me most was your preparation.", "O que mais me impressionou foi a sua preparacao."),
+        ("It was your clarity that made the difference.", "Foi a sua clareza que fez a diferenca."),
+        ("What you could work on is the close.", "O que voce poderia melhorar e o fechamento."),
+        ("That's fair -- I'll take it on board.", "E justo -- vou levar isso em conta."),
+        ("Good feedback is candid, but tactful.", "Um bom feedback e franco, mas com tato."),
+    ],
+    'learned': [
+        "I can use a 'What... was...' cleft to spotlight the strength I want to praise.",
+        "I can use an 'It was ... that ...' cleft to emphasize the one thing that mattered most.",
+        "I can turn a suggestion into 'What you could work on is...' to make it clear and actionable.",
+        "I can respond to feedback without getting defensive -- acknowledge it and name what I'll change.",
+        "I know the words: constructive, candid, to commend, shortcoming, to pinpoint, actionable, to take on board, defensive, blind spot, tactful, to come across, praise.",
+    ],
+    'badge_name': 'Feedback Coach Badge',
+    'badge_p': 'You can give and take feedback that is candid, kind, and clear -- with the emphasis exactly where it belongs, Andrea.',
+    'next_lesson': 'Coaching and Developing Your Team',
+
+    # ----- new B2 slides (pipeline v2) -----
+    'spot_errors': [
+        ("What impressed me your preparation.", "What impressed me was your preparation."),
+        ("It was your clarity what made the difference.", "It was your clarity that made the difference."),
+        ("What you could work is the close.", "What you could work on is the close."),
+        ("It were your questions that helped the most.", "It was your questions that helped the most."),
+    ],
+    'bridge5': {
+        'h2': 'Voices in the <span class="accent">Debrief</span>',
+        'sub': 'Listen to a team debrief, then give the feedback out loud.',
+        'bg': BG5,
+    },
+    'register': [
+        ("Your pitch was a mess.", "There were some strong parts; what you could work on is the structure of the close."),
+        ("You talked way too fast, it was annoying.", "It was the pace that lost them a little -- try slowing down at the pricing slide."),
+        ("You're wrong, just take the note.", "I hear you; what I'm suggesting is one small change to the close."),
+        ("The pricing slide was terrible.", "The one shortcoming I'd pinpoint is the pricing slide -- it came across as confusing."),
+    ],
+    'artifact': {
+        'label': 'The Feedback Note',
+        'h2': 'Post-Pitch <span class="accent">Feedback</span>',
+        'meta': [
+            ("To:", "Felix -- Account Manager"),
+            ("From:", "Andrea Aggio -- Commercial Director"),
+            ("Re:", "Debrief of the client pitch"),
+        ],
+        'paras': [
+            "What worked: your preparation was outstanding. What impressed me most was the depth of your client research -- it was that groundwork that built their trust early, and you came across as calm and credible throughout.",
+            "What to refine: the one shortcoming I'd pinpoint is the pricing slide, which came across as confusing for a moment. What you could work on is the close -- make the next step clear and actionable so the client knows exactly what happens after the meeting.",
+            "Overall: this was a strong, candid, well-prepared pitch. Take one point on board -- the close -- and the next one will be sharper still. Genuinely well done.",
+        ],
+    },
+    'artifact_qs': [
+        ("1. According to the note, what impressed Andrea most?", "The depth of Felix's client research."),
+        ("2. What single shortcoming does the note pinpoint?", "The pricing slide, which came across as confusing."),
+        ("3. What one thing does the note ask Felix to work on?", "The close -- making the next step clear and actionable."),
+    ],
+    'pron_lines': [
+        ("What impressed me was your prep.", "'What impressed me was' links -- whadim-pressed-mi-wuz; stress PREP at the end."),
+        ("It was your clarity that won them over.", "'It was' reduces -- itwuz; stress CLARITY, link 'won-them-over'."),
+        ("What you could work on is the close.", "'work on is' links -- wor-ko-niz; stress CLOSE."),
+        ("I'll take that on board.", "'take that on board' links -- tay-tha-ton-board; light stress on BOARD."),
+    ],
+    'bridge6': {
+        'h2': 'Now You <span class="accent">Coach</span>',
+        'sub': 'Your turn: give and take feedback out loud, with the emphasis in place.',
+        'bg': BG6,
+    },
+    'quickfire': [
+        {'situation': "A colleague did great client research. Praise it and highlight it.",
+         'tips': ["Use 'What impressed me was...'.", "'What impressed me was your research.'", "Be specific about the strength."]},
+        {'situation': "You need to point out one weak slide, gently.",
+         'tips': ["'The one shortcoming I'd pinpoint is...'", "Stay tactful.", "Offer a fix, not just a fault."]},
+        {'situation': "Emphasize the single thing that won the client over.",
+         'tips': ["Use 'It was ... that ...'.", "'It was your clarity that won them.'", "Name one thing, not five."]},
+        {'situation': "Give an actionable suggestion for next time.",
+         'tips': ["Use 'What you could work on is...'.", "Make it concrete.", "'...is the close.'"]},
+        {'situation': "Someone gives YOU tough feedback. Respond well.",
+         'tips': ["Don't get defensive.", "'That's fair -- I'll take it on board.'", "Name what you'll change."]},
+    ],
+
+    'preclass_title': 'Giving and Responding to Feedback',
+    'preclass_desc': "How to give and take feedback that is candid, kind, and clear, using cleft sentences for emphasis. Key words: constructive, candid, to commend, shortcoming, to pinpoint, actionable, to take on board, defensive, blind spot, tactful, to come across, praise. Structure: What + clause + is/was + X and It + is/was + X + that/who to spotlight the key point.",
+    'context': ("After a client pitch, Andrea gives Felix <strong>constructive</strong> feedback. She is "
+                "<strong>candid</strong> but kind. First she wants to <strong>commend</strong> him: 'What impressed me "
+                "most <strong>was</strong> your preparation.' Then she names one <strong>shortcoming</strong>. 'It "
+                "<strong>was</strong> the pricing slide <strong>that</strong> lost them for a moment,' she says, 'and "
+                "that's the point I'd <strong>pinpoint</strong>.' Her suggestion is <strong>actionable</strong>: 'What you "
+                "could work on <strong>is</strong> the close.' Felix doesn't get <strong>defensive</strong>; he simply "
+                "says he'll <strong>take</strong> it <strong>on board</strong>. Both know that everyone has a "
+                "<strong>blind spot</strong>, and that good feedback, delivered with <strong>tact</strong>, is how you "
+                "<strong>come across</strong> as a leader worth learning from."),
+    'context_quiz': [
+        ("1. 'What impressed me was your research' puts the emphasis on:",
+         [("A", "your research.", True),
+          ("B", "me.", False),
+          ("C", "nothing in particular.", False)]),
+        ("2. In an it-cleft, which word joins the two halves?",
+         [("A", "what", False),
+          ("B", "that or who", True),
+          ("C", "was", False)]),
+        ("3. Which sentence is correct?",
+         [("A", "What you could work on is the close.", True),
+          ("B", "What you could work the close.", False),
+          ("C", "What you could work on the close.", False)]),
+    ],
+    'tip_title': 'Cleft Sentences for Emphasis',
+    'tip_sub': "Como destacar o ponto mais importante ao dar feedback (explicacao em ingles e portugues).",
+    'tip_rows': [
+        ("What + clause + is / was + X", "destaca X (o ponto-chave). emphasizes X, the key point.", "<strong>What impressed me was</strong> your prep."),
+        ("It + is / was + X + that / who", "destaca X com forca. strongly emphasizes X.", "<strong>It was your clarity that</strong> won them."),
+        ("What ... could do is + V", "foca uma sugestao. focuses a suggestion.", "<strong>What you could do is</strong> shorten it."),
+        ("Regra de ouro / Golden rule", "cleft precisa do verbo de ligacao + that/who. cleft needs its linking verb + that/who.", "What matters <strong>is</strong>... / It was X <strong>that</strong>..."),
+    ],
+    'fill': [
+        ('"What impressed me ', "was", "Dica: verbo de ligacao que a cleft precisa (was / is)", "What impressed me was your preparation.", ' your preparation."'),
+        ('"It was your clarity ', "that", "Dica: liga as duas metades da it-cleft (nao 'what')", "It was your clarity that made the difference.", ' made the difference."'),
+        ('"I want to ', "commend", "Dica: elogiar formalmente por algo bem feito", "I want to commend you on the research.", ' you on the research."'),
+        ('"The one ', "shortcoming", "Dica: um ponto fraco no trabalho de alguem", "The one shortcoming I would pinpoint is the pricing slide.", ' I''d pinpoint is the pricing slide."'),
+        ('"I''ll take your comments on ', "board", "Dica: aceitar e levar em conta o conselho (take on ___)", "I'll take your comments on board for next time.", ' for next time."'),
+        ('"Good feedback is candid but ', "tactful", "Dica: com tato, cuidadoso para nao ofender", "Good feedback is candid but tactful.", '."'),
+    ],
+    'order_intro': "Coloque os passos de um bom feedback na ordem correta.",
+    'order': [
+        "Open with genuine praise for one real strength.",
+        "Pinpoint a single shortcoming, not a long list.",
+        "Use a cleft sentence to spotlight the key point.",
+        "Make your suggestion specific and actionable.",
+        "Check the other person has taken it on board.",
+    ],
+    'speech': [
+        ("What impressed me most was your preparation.", "O que mais me impressionou foi a sua preparacao."),
+        ("It was your clarity that made the difference.", "Foi a sua clareza que fez a diferenca."),
+        ("What you could work on is the close.", "O que voce poderia melhorar e o fechamento."),
+        ("That's fair -- I'll take it on board.", "E justo -- vou levar isso em conta."),
+        ("Good feedback is candid, but tactful.", "Um bom feedback e franco, mas com tato."),
+    ],
+    'quiz': [
+        ("You want to praise a colleague and spotlight one strength. You say:",
+         [("A", "What impressed me was your preparation.", True),
+          ("B", "What impressed me your preparation.", False),
+          ("C", "What impressed me is were your preparation.", False)]),
+        ("You emphasize the one thing that won the client over. You say:",
+         [("A", "It was your clarity that made the difference.", True),
+          ("B", "It was your clarity what made the difference.", False),
+          ("C", "It was your clarity made the difference.", False)]),
+        ("You give an actionable suggestion for the close. You say:",
+         [("A", "What you could work on is the close.", True),
+          ("B", "What you could work the close.", False),
+          ("C", "What you could working on is the close.", False)]),
+        ("A colleague criticizes your slide and you respond well. You say:",
+         [("A", "That's fair -- I'll take it on board.", True),
+          ("B", "No, you're completely wrong about that.", False),
+          ("C", "That's not my fault, end of story.", False)]),
+    ],
+    'think': "Imagine a member of your team at Escape Turismo has just delivered a client pitch. Record a one-minute piece of feedback for them. Open with genuine praise using a 'What impressed me was...' cleft, emphasize one thing that worked with 'It was ... that ...', then pinpoint a single shortcoming and turn it into an actionable suggestion with 'What you could work on is...'. Keep it candid but tactful. Take your time.",
+
+    'media': [
+        ('series', "Ted Lasso (Apple TV+)",
+         "A warm-hearted comedy-drama about an American coach leading an English soccer team. Almost every episode turns on giving feedback, coaching people through their blind spots, and responding to criticism with humor and grace. Rich, natural workplace and coaching English. Connection to Lesson 17: giving and receiving feedback, candidly and kindly.",
+         'Tip: pick a locker-room scene and note every time Ted commends someone before he pinpoints one thing to work on.',
+         'https://www.imdb.com/title/tt10986410/'),
+        ('podcast', 'Radical Candor: Communication at Work',
+         "The podcast built around Kim Scott's framework for feedback that is both caring and direct -- exactly the balance of this lesson. Hosts break down how to praise well, criticize kindly, and take feedback on board without getting defensive. Connection to Lesson 17: candid, kind, actionable feedback.",
+         'Tip: after an episode, write one piece of praise as a What-cleft and one suggestion as a What-cleft.',
+         'https://www.radicalcandor.com/podcast'),
+        ('youtube', '"The Art of Cleft Sentences" -- Emphasis & Advanced English Grammar',
+         "A clear lesson on the exact grammar of this class: cleft sentences with 'What...' and 'It...' to move the emphasis where you want it. Connection to Lesson 17: 'What impressed me was your preparation' and 'It was your clarity that made the difference'.",
+         'Tip: after each example, build your own cleft about a piece of feedback you might give at work.',
+         'https://www.youtube.com/watch?v=PKr7p6KBvp4'),
+    ],
+}
