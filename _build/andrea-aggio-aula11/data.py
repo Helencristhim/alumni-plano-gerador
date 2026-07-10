@@ -1,0 +1,372 @@
+# -*- coding: utf-8 -*-
+BG1 = "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1400&q=80"
+BG2 = "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=1400&q=80"
+BG3 = "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1400&q=80"
+BG4 = "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1400&q=80"
+BG5 = "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80"
+BG6 = "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1400&q=80"
+
+D = {
+    'n': 11,
+    'reading': True,
+    'partner_name': 'lukas',
+    'grammar_point_pt': "a voz passiva (passive voice): be + particípio passado, para soar calmo e profissional ao lidar com reclamações (the problem is being handled, your refund has been processed)",
+    'chapter_tag': 'Handling Complaints',
+    'title_h1': 'Handling Complaints and <span class="accent">Difficult Situations</span>',
+    'title_sub': 'Stay calm, apologize with confidence, and turn an unhappy client into a loyal one.',
+    'short_title': 'Handling Complaints',
+    'menu_title': 'Handling Complaints and Difficult Situations',
+    'menu_desc': 'Handle complaints and service problems professionally using the passive voice',
+    'bg_title': BG1, 'bg_vocab': BG2, 'bg_read': BG3, 'bg_gram': BG4,
+    'bg_lesson_card': "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=80",
+    'stamp_label': 'Service Recovery',
+    'stamp_img': "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&q=80",
+    'phases': ['The Unhappy Client', 'The Language of Recovery', 'The Recovery Story',
+               'The Passive Voice', 'Voices', 'Your Turn', 'Wrap-Up'],
+
+    'warm_h2': 'From Advice to the <span class="accent">Angry Client</span>',
+    'warm_p': "Last time you learned to advise clients with the second conditional: 'If I were you, I would...'. Today the client is not asking for advice -- something has gone wrong, and they are upset. You will learn to apologize, stay calm, and resolve the complaint with professional English.",
+    'warm_prompt': 'In one sentence: what is the very first thing you say when a client tells you something has gone wrong?',
+    'missions': [
+        'Learn the language of apology, reassurance, and service recovery.',
+        'Master the passive voice to sound calm and professional.',
+        'Handle a real complaint from start to finish, without ever arguing.',
+    ],
+
+    'vocab_trans_h2': 'The Language of <span class="accent">Recovery</span>',
+    'vocab': [
+        ("Complaint", "a formal statement that something is wrong (reclamacao)", "I received a complaint about the rooms."),
+        ("To apologize", "to say sorry sincerely (pedir desculpas)", "I would like to apologize for the delay."),
+        ("Inconvenience", "trouble or difficulty caused to someone (transtorno)", "I am so sorry for the inconvenience."),
+        ("To resolve", "to find a solution to a problem (resolver)", "We will resolve this issue today."),
+        ("Refund", "money given back to a customer (reembolso)", "A full refund has been processed."),
+        ("Compensation", "something given to make up for a problem (compensacao)", "The group received compensation for the trouble."),
+        ("To reassure", "to remove someone's worry or doubt (tranquilizar)", "Let me reassure you: it is being handled."),
+        ("Overbooked", "with more reservations than places available (com reservas em excesso)", "The hotel was overbooked that night."),
+        ("Goodwill gesture", "a kind action to keep a customer happy (cortesia, gentileza)", "As a goodwill gesture, dinner is on us."),
+        ("To escalate", "to pass a serious problem to a manager (encaminhar ao superior)", "I have escalated this to the manager."),
+        ("Faulty", "not working correctly; defective (com defeito)", "The air conditioning was faulty all week."),
+        ("To follow through", "to complete what you promised to do (dar seguimento, cumprir)", "I always follow through on a promise."),
+    ],
+
+    'gram_trans_h2': 'The Passive <span class="accent">Voice</span>',
+    'gram_trans_sub': 'be + past participle &middot; calm, professional, solution-focused',
+    'gram_examples': [
+        ("", "The room was double-booked by mistake.", '"The room <span style="color:#15803d;font-weight:700">was double-booked</span> by mistake."'),
+        ("", "Your refund has already been processed.", '"Your refund <span class="accent" style="font-weight:700">has been processed</span>."'),
+        ("", "The problem is being handled right now.", '"The problem <span style="color:#15803d;font-weight:700">is being handled</span> right now."'),
+    ],
+    'gram_disc_q': 'Who does the action in these sentences? Where is the focus -- on the person, or on the problem and the solution?',
+    'gram_table': [
+        ("be + past participle", "The action is done TO the subject", "The room <strong>was booked</strong>."),
+        ("Tense comes from 'be'", "is / was / has been / will be + p.p.", "It <strong>has been resolved</strong>."),
+        ("by + agent (optional)", "Name who did it only if it matters", "It was cancelled <strong>by the hotel</strong>."),
+    ],
+    'gram_rule_foot': "Passive voice = be + past participle. Match the tense to 'be' (is / was / has been / will be). It keeps the focus on the solution, not on blame.",
+
+    'lf_h2': 'Complete the <span class="accent">Response</span>',
+    'lf_title': 'Complete the passive sentence',
+    'lf_items': [
+        ["A", "Your refund has already been ", "processed", ".", "strong"],
+        ["B", "The problem is being ", "handled", " right now.", "soft"],
+        ["C", "New rooms have been ", "arranged", " at a nearby hotel.", "soft"],
+        ["D", "You will be fully ", "compensated", " for the trouble.", "strong"],
+    ],
+    'lf_followup': "Every response uses be + past participle: has been processed, is being handled, have been arranged, will be compensated. The tense lives in the verb 'be'.",
+
+    'mistakes': [
+        ("The problem is handling right now.", 'The problem <strong>is being handled</strong> right now.'),
+        ("Your refund has processed.", 'Your refund <strong>has been processed</strong>.'),
+    ],
+    'mistake_note': "In the passive voice, always use be + past participle. For a present action in progress use 'is being handled' (not 'is handling'); for present perfect use 'has been processed' (not 'has processed').",
+
+    'read_trans_h2': 'Read the <span class="accent">Recovery</span>',
+    'reading_h2': 'The Art of the <span class="accent">Recovery</span>',
+    'read_block': {
+        'rtitle': 'The Art of the Recovery',
+        'paras': [
+            "In tourism, things go wrong. A flight is delayed, a room is double-booked, a transfer never arrives. No company is perfect, and clients know that. What they judge is not the mistake itself, but how it is handled. A complaint is not the end of a relationship -- it is a test of it.",
+            "The best professionals follow the same steps. First, they listen and let the client finish. Then they apologize sincerely, even when the fault lies elsewhere: 'I am so sorry for the inconvenience.' Notice how they speak about the problem. Instead of pointing fingers, they use the passive voice: 'The room was double-booked,' 'Your refund has been processed,' 'The issue is being handled.' This sounds calm and professional, and it keeps the focus on the solution, not on blame.",
+            "Finally, they offer something concrete -- a refund, an upgrade, or a small goodwill gesture -- and, above all, they follow through. A promise that is not kept turns one complaint into two. Handled well, a service failure can actually build loyalty: research shows that a customer whose problem is resolved quickly often becomes more loyal than one who never had a problem at all.",
+        ],
+        'source': 'Adapted from a hospitality service guide, The Recovery Paradox',
+        'link': 'https://hbr.org/2020/01/the-recovery-paradox',
+        'gist_prompt': 'What is the main idea of the text?',
+        'gist_choices': [
+            ["a", "Companies that make mistakes always lose their clients.", False],
+            ["b", "Clients judge how a problem is handled: apologize, use calm passive language, offer a solution, and follow through.", True],
+            ["c", "The best way to handle a complaint is to explain whose fault it was.", False],
+        ],
+        'tf': [
+            ["The text says clients judge the mistake itself more than how it is handled.", "f", "It says clients judge not the mistake itself, but how it is handled."],
+            ["Professionals apologize even when the fault lies elsewhere.", "t", "The second paragraph says they apologize sincerely, even when the fault lies elsewhere."],
+            ["The passive voice keeps the focus on the solution, not on blame.", "t", "The text says the passive voice sounds calm and professional and keeps the focus on the solution, not on blame."],
+            ["A promise that is not kept solves the problem completely.", "f", "It says a promise that is not kept turns one complaint into two."],
+        ],
+    },
+
+    'dialogue_h2': 'The Overbooked <span class="accent">Hotel</span>',
+    'dialogue': [
+        ('lukas', 'arthur', "Andrea, I need to make a formal complaint. My group arrived, but the hotel was overbooked and three rooms were not ready.",
+         "Andrea, I need to make a formal <span class=\"vocab-highlight\">complaint</span>. My group arrived, but the hotel was <span class=\"vocab-highlight\">overbooked</span> and three rooms were not ready."),
+        ('andrea', 'ellen', "I am so sorry, Lukas. Please accept my apology. This should never have happened, and it is being resolved as we speak.",
+         "I am so sorry, Lukas. Please accept my apology. This should never have happened, and it is being <span class=\"vocab-highlight\">resolved</span> as we speak."),
+        ('lukas', 'arthur', "The guests are very upset. This is a serious inconvenience after a ten-hour flight.",
+         "The guests are very upset. This is a serious <span class=\"vocab-highlight\">inconvenience</span> after a ten-hour flight."),
+        ('andrea', 'ellen', "I completely understand, and I want to reassure you. Three equivalent rooms have already been arranged at a hotel nearby, and the transfers will be covered by us.",
+         "I completely understand, and I want to <span class=\"vocab-highlight\">reassure</span> you. Three equivalent rooms have already been arranged at a hotel nearby, and the transfers will be covered by us."),
+        ('lukas', 'arthur', "That is a relief. And the rooms were promised weeks ago, so I hope this will not happen again.",
+         "That is a relief. And the rooms were promised weeks ago, so I hope this will not happen again."),
+        ('andrea', 'ellen', "You have my word. The issue has been escalated to the hotel manager, and as a goodwill gesture, the first night will be fully refunded.",
+         "You have my word. The issue has been <span class=\"vocab-highlight\">escalated</span> to the hotel manager, and as a <span class=\"vocab-highlight\">goodwill gesture</span>, the first night will be fully <span class=\"vocab-highlight\">refunded</span>."),
+        ('lukas', 'arthur', "Thank you, Andrea. Honestly, this is exactly why I keep working with you.",
+         "Thank you, Andrea. Honestly, this is exactly why I keep working with you."),
+        ('andrea', 'ellen', "I appreciate that. Everything I promised will be followed through today, and you will receive written confirmation within the hour.",
+         "I appreciate that. Everything I promised will be <span class=\"vocab-highlight\">followed through</span> today, and you will receive written confirmation within the hour."),
+    ],
+    'comprehension': [
+        ("1. What was the problem when Lukas's group arrived?", "The hotel was overbooked and three of their rooms were not ready."),
+        ("2. How do the guests feel, and why?", "Very upset -- it happened after a long, ten-hour flight."),
+        ("3. Why does Lukas keep working with Andrea?", "Because she handles problems professionally and follows through."),
+    ],
+
+    'listen1_h2': 'A Second <span class="accent">Complaint</span>',
+    'listen1_sub': 'Lukas leaves a voicemail about a more serious problem. Sound first -- no text.',
+    'listen1_qs': [
+        ("1. What two problems does Lukas describe?", "The clients were charged twice for the booking, and the minibar was faulty."),
+        ("2. What are the guests threatening to do?", "Leave a bad review online."),
+        ("3. What does Lukas ask Andrea to do?", "Look into the double charge, arrange a refund, and call him back today."),
+    ],
+    'listen2_h2': 'How to Handle a <span class="accent">Complaint</span>',
+    'listen2_sub': 'A short business tip on service recovery with the passive voice. Sound first -- no text.',
+    'listen2_qs': [
+        ("1. What should you do first when a customer is upset?", "Apologize sincerely, and never argue."),
+        ("2. Why use the passive voice?", "To sound calm and professional, and keep the focus on the solution, not on blame."),
+        ("3. What turns one complaint into two?", "A promise that is not kept -- failing to follow through."),
+    ],
+    'listenings': [
+        {'file': 'a11_listening_lukas.mp3', 'voice': 'arthur',
+         'text': "Hi Andrea, it is Lukas again. I am afraid I have another complaint, and this one is more serious. My clients checked out this morning, and they were charged twice for the same booking. On top of that, the minibar was faulty, so the drinks were warm all week. The group is now threatening to leave a bad review online. I really need this resolved quickly. Could you look into the double charge, arrange a refund, and call me back today? I know it is not directly your fault, but you are my contact, and I trust you to sort it out. Thanks a lot, and talk soon."},
+        {'file': 'a11_listening_recovery.mp3', 'voice': 'ellen',
+         'text': "Welcome to this short segment on handling complaints. When a customer is upset, the words you choose matter enormously. First, never argue. Apologize sincerely, even if the mistake was not yours: say, I am sorry, this should not have happened. Second, use the passive voice to sound calm and professional. Instead of, I will fix it, say, the problem is being handled, or, your refund has been processed. This keeps the focus on the solution, not on blame. Third, always offer something concrete: a refund, an upgrade, or a small goodwill gesture. And finally, follow through. A promise that is not kept turns one complaint into two. Handle it well, and an angry customer often becomes your most loyal one."},
+    ],
+
+    'gapfill_parts': [
+        "When something goes wrong, never argue. First, a sincere apology is ", ["1"],
+        ". Then the customer is ", ["2"], " that the problem is being ", ["3"],
+        ". A concrete solution -- a refund or a small ", ["4"],
+        " gesture -- is provided, and every promise is ", ["5"], " through.",
+    ],
+    'gapfill_bank': ["offered", "reassured", "handled", "goodwill", "followed"],
+    'vocabnote': "Passive voice = be + past participle. The tense comes from 'be': is offered (present), was booked (past), has been resolved (present perfect), will be refunded (future). Add 'by + agent' only if it matters who did it.",
+
+    'bank_label_top': 'Recover',
+    'bank_label': 'Useful language for handling complaints',
+    'bank_items': [
+        "I am so sorry for the inconvenience.",
+        "The problem is being handled right now.",
+        "Your refund has already been processed.",
+        "New rooms have been arranged at a nearby hotel.",
+        "You will be fully compensated for the trouble.",
+        "This has been escalated to the manager.",
+        "As a goodwill gesture, the first night is on us.",
+        "Everything I promised will be followed through today.",
+    ],
+
+    'scenarios_h2': 'Recover the <span class="accent">Situation</span>',
+    'scenario_items': [
+        ["Scenario 1", "A guest's room was double-booked. Apologize and explain how it is being resolved, using the passive voice."],
+        ["Scenario 2", "A client was charged twice. Reassure them: 'Your refund has been processed.'"],
+        ["Scenario 3", "A group complains that the air conditioning was faulty all week. Offer compensation and a goodwill gesture."],
+        ["Scenario 4", "An angry client threatens a bad review. Stay calm, apologize, and offer one concrete solution."],
+    ],
+    'answerkey_list': [
+        "Gap-fill: 1 = offered, 2 = reassured, 3 = handled, 4 = goodwill, 5 = followed.",
+        "Passive: 'The room was double-booked.' (was + past participle).",
+        "Present perfect passive: 'Your refund has been processed.' (has been + p.p.).",
+        "Never say 'the problem is handling' -- say 'the problem is being handled'.",
+    ],
+    'answerkey_note': "Passive voice: be + past participle. Match the tense to 'be' (is / was / has been / will be). Use it to sound calm and keep the focus on the solution.",
+
+    'roleplays': [
+        {'h2': 'The Room Not <span class="accent">Ready</span>',
+         'scenario': "A guest's room was not ready on arrival. Apologize and explain what is being done, using the passive voice.",
+         'keywords': ["I am so sorry...", "is being handled", "has been arranged"]},
+        {'h2': 'The Double <span class="accent">Charge</span>',
+         'scenario': "A client was charged twice and is angry. Reassure them, and offer a refund and compensation.",
+         'keywords': ["has been refunded", "compensation", "goodwill gesture"]},
+        {'h2': 'Recover with <span class="accent">Confidence</span>',
+         'scenario': "Handle a full complaint from start to finish: listen, apologize, reassure, offer a concrete solution, and follow through. Never argue.",
+         'keywords': []},
+    ],
+
+    'survival_h2': 'Recover Like a <span class="accent">Pro</span>',
+    'survival': [
+        ("I am so sorry for the inconvenience.", "Sinto muito pelo transtorno."),
+        ("The problem is being handled right now.", "O problema está sendo resolvido agora."),
+        ("Your refund has already been processed.", "Seu reembolso já foi processado."),
+        ("As a goodwill gesture, this is on us.", "Como cortesia, isso é por nossa conta."),
+        ("You have my word -- I will follow through today.", "Tem a minha palavra -- vou dar seguimento hoje."),
+    ],
+    'learned': [
+        "I can apologize sincerely and stay calm when a client complains.",
+        "I can use the passive voice to sound professional (is being handled, has been refunded).",
+        "I can reassure a client and offer a concrete solution.",
+        "I can turn a blunt phrase into a polished, professional one.",
+        "I know the words: complaint, to apologize, inconvenience, to resolve, refund, compensation, to reassure, overbooked, goodwill gesture, to escalate, faulty, to follow through.",
+    ],
+    'badge_name': 'Service Recovery Badge',
+    'badge_p': 'You can turn an angry client into a loyal one -- apologizing, reassuring, and resolving any complaint with calm, professional English, Andrea.',
+    'next_lesson': 'Negotiating Partnerships and Contracts',
+
+    # ----- new B2 slides (pipeline v2) -----
+    'spot_errors': [
+        ("The room was book by the hotel.", "The room was booked by the hotel."),
+        ("Your refund has processed.", "Your refund has been processed."),
+        ("The problem is handling right now.", "The problem is being handled right now."),
+        ("You will refunded within 24 hours.", "You will be refunded within 24 hours."),
+    ],
+    'bridge5': {
+        'h2': 'Voices in a Difficult <span class="accent">Moment</span>',
+        'sub': 'Listen to a real complaint, then produce the language of recovery yourself.',
+        'bg': BG5,
+    },
+    'register': [
+        ("That is not my problem.", "I completely understand, and I will make sure it is resolved."),
+        ("You booked the wrong dates.", "It looks like there may have been a mix-up with the dates -- let me fix it."),
+        ("Please calm down.", "I hear you, and I am going to sort this out for you right now."),
+        ("We cannot do anything.", "Here is what can be done for you today."),
+    ],
+    'artifact': {
+        'label': 'The Complaint',
+        'h2': 'A Guest <span class="accent">Review</span>',
+        'meta': [
+            ("Rating:", "2 out of 5 stars"),
+            ("Guest:", "M. Ferreira -- group traveller"),
+            ("Stay:", "Partner hotel, three nights"),
+        ],
+        'paras': [
+            "We were really looking forward to this trip, but the arrival was a disaster. The hotel was overbooked, and our three rooms were not ready. After a ten-hour flight, we waited two hours in the lobby with no explanation and no apology.",
+            "To be fair, the agency handled it far better than the hotel. The next morning we were contacted by Andrea from Escape Turismo. She apologized properly, and by lunchtime new rooms had been arranged at a nicer hotel. Our transfers were covered, and the first night was refunded.",
+            "So two stars for the hotel, but honestly four for the agency. The problem was resolved quickly and professionally. If the booking is made through Escape Turismo again, I would feel reassured -- I just hope the hotel itself does better next time.",
+        ],
+    },
+    'artifact_qs': [
+        ("1. What went wrong when the group arrived?", "The hotel was overbooked; their three rooms were not ready and they waited two hours with no apology."),
+        ("2. What did Andrea do to resolve it?", "She apologized, arranged new rooms at a nicer hotel, covered the transfers, and refunded the first night."),
+        ("3. Why did the guest give the agency four stars?", "Because the problem was resolved quickly and professionally."),
+    ],
+    'pron_lines': [
+        ("I am so sorry about that.", "Linking: 'sorry about that' flows together -- sor-ry-a-bout-that."),
+        ("It is being taken care of.", "'taken care of' links as one unit -- tay-ken-care-uhv."),
+        ("You will be fully refunded.", "Stress the key word: fully re-FUN-ded."),
+        ("Let me look into it for you.", "'look into it' links smoothly -- loo-kin-too-it."),
+    ],
+    'bridge6': {
+        'h2': 'Now You <span class="accent">Recover</span>',
+        'sub': 'Your turn: handle each complaint out loud, calmly and professionally.',
+        'bg': BG6,
+    },
+    'quickfire': [
+        {'situation': "A client calls: their airport transfer never arrived and they had to pay for a taxi.",
+         'tips': ["Apologize: 'I am so sorry about that.'", "Passive: 'The taxi cost will be refunded.'", "Follow through: confirm in writing."]},
+        {'situation': "A guest emails that the room was dirty on arrival.",
+         'tips': ["'Please accept my apology for the inconvenience.'", "'The room is being cleaned again right now.'", "Offer a goodwill gesture."]},
+        {'situation': "A group leader says the tour guide never showed up.",
+         'tips': ["Reassure: 'Let me reassure you...'", "'A replacement guide has been arranged.'", "'You will be compensated for the missed hour.'"]},
+        {'situation': "A client was double-charged and is threatening a bad review.",
+         'tips': ["Stay calm, do not argue.", "'The duplicate charge has been cancelled.'", "'This has been escalated to my manager.'"]},
+        {'situation': "A guest complains the air conditioning was faulty all week.",
+         'tips': ["'I am so sorry -- that should never have happened.'", "'A partial refund is being processed.'", "Offer a goodwill gesture for the next stay."]},
+    ],
+
+    'preclass_title': 'Handling Complaints and Difficult Situations',
+    'preclass_desc': "How to handle complaints and service problems in tourism. Key words: complaint, to apologize, inconvenience, to resolve, refund, compensation, to reassure, overbooked, goodwill gesture, to escalate, faulty, to follow through. Structure: the passive voice (be + past participle) to sound calm and professional -- the problem is being handled, your refund has been processed.",
+    'context': ("Andrea receives a <strong>complaint</strong> from her partner Lukas: the hotel was "
+                "<strong>overbooked</strong> and three rooms were not ready. She never argues. First, she "
+                "<strong>apologizes</strong> for the <strong>inconvenience</strong>. Then she speaks about the "
+                "problem in the passive voice, to sound calm: 'The rooms <strong>were double-booked</strong>, "
+                "and the issue <strong>is being handled</strong>.' She <strong>reassures</strong> Lukas that new "
+                "rooms <strong>have been arranged</strong>, the first night <strong>will be refunded</strong>, and "
+                "the matter <strong>has been escalated</strong> to the manager. Above all, she "
+                "<strong>follows through</strong> -- and Lukas trusts her even more."),
+    'context_quiz': [
+        ("1. 'The rooms were double-booked' is an example of:",
+         [("A", "the passive voice (be + past participle).", True),
+          ("B", "the second conditional.", False),
+          ("C", "the present continuous active.", False)]),
+        ("2. To describe a problem in progress, the passive is:",
+         [("A", "is handling.", False),
+          ("B", "is being handled.", True),
+          ("C", "has handling.", False)]),
+        ("3. Which response sounds calm and professional?",
+         [("A", "Your refund has been processed.", True),
+          ("B", "I will process your refund maybe.", False),
+          ("C", "You must wait for the refund.", False)]),
+    ],
+    'tip_title': 'The Passive Voice',
+    'tip_sub': "Como soar calmo e profissional ao lidar com reclamações (explicação em inglês e português).",
+    'tip_rows': [
+        ("be + past participle", "A ação é feita AO sujeito. The action is done to the subject.", "The room <strong>was booked</strong>."),
+        ("O tempo vem do 'be'", "is / was / has been / will be + particípio.", "It <strong>has been resolved</strong>."),
+        ("Ação em progresso / In progress", "is/are being + particípio.", "It <strong>is being handled</strong>."),
+        ("by + agente (opcional)", "Diga quem fez só se importar. Name who did it only if it matters.", "It was cancelled <strong>by the hotel</strong>."),
+    ],
+    'fill': [
+        ('"Your refund has been ', "processed", "Dica: be + particípio (process)", "Your refund has been processed.", '."'),
+        ('"The problem is being ', "handled", "Dica: ação em progresso (handle)", "The problem is being handled right now.", ' right now."'),
+        ('"New rooms have been ', "arranged", "Dica: present perfect passivo (arrange)", "New rooms have been arranged at a nearby hotel.", ' at a nearby hotel."'),
+        ('"You will be fully ', "compensated", "Dica: futuro passivo (compensate)", "You will be fully compensated for the trouble.", ' for the trouble."'),
+        ('"The issue has been ', "escalated", "Dica: encaminhado ao superior (escalate)", "The issue has been escalated to the manager.", ' to the manager."'),
+        ('"I am so sorry for the ', "inconvenience", "Dica: o transtorno causado", "I am so sorry for the inconvenience.", '."'),
+    ],
+    'order_intro': "Coloque os passos de uma boa recuperação de serviço na ordem correta.",
+    'order': [
+        "Listen carefully and let the client explain the problem.",
+        "Apologize sincerely, even if it was not your fault.",
+        "Reassure the client that it is being handled.",
+        "Offer a concrete solution: a refund or compensation.",
+        "Follow through and confirm everything in writing.",
+    ],
+    'speech': [
+        ("I am so sorry for the inconvenience.", "Sinto muito pelo transtorno."),
+        ("The issue is being handled right now.", "O problema está sendo resolvido agora."),
+        ("Your refund has been processed.", "Seu reembolso foi processado."),
+        ("You will be fully compensated.", "Você será totalmente compensado."),
+        ("Everything will be followed through today.", "Tudo terá seguimento hoje."),
+    ],
+    'quiz': [
+        ("A guest complains that their room is not ready. You say:",
+         [("A", "I am so sorry -- the room is being cleaned right now.", True),
+          ("B", "The room is cleaning, wait please.", False),
+          ("C", "Not my problem, ask reception.", False)]),
+        ("A client was charged twice. You reassure them:",
+         [("A", "The duplicate charge has been cancelled and refunded.", True),
+          ("B", "You charged two times yourself.", False),
+          ("C", "Maybe the money comes back sometime.", False)]),
+        ("You want to sound calm and professional. You say:",
+         [("A", "The issue is being handled by our team.", True),
+          ("B", "Someone is doing the issue now.", False),
+          ("C", "The issue handles itself soon.", False)]),
+        ("An angry client threatens a bad review. You respond:",
+         [("A", "I hear you, and this is what can be done for you today.", True),
+          ("B", "Please calm down, it is not serious.", False),
+          ("C", "Write the review if you want.", False)]),
+    ],
+    'think': "Imagine a client calls you, upset: their group's rooms were overbooked and no one apologized. Record a short service-recovery response. Apologize for the inconvenience, use the passive voice to explain what is being done ('the rooms are being arranged', 'you will be refunded'), reassure them, and offer one goodwill gesture. Never argue. Take your time.",
+
+    'media': [
+        ('series', "The White Lotus (HBO / Max) -- Season 1",
+         "A sharp drama set in a luxury resort, full of guests with problems and staff who must handle them with a smile. Listen for how the manager responds to complaints and difficult requests. Connection to Lesson 11: service recovery and handling difficult clients.",
+         'Tip: pick one guest complaint and write how you would answer it in the passive voice.',
+         'https://www.imdb.com/title/tt13406094/'),
+        ('podcast', '6 Minute English (BBC Learning English)',
+         "A short, learner-friendly podcast on everyday English. Choose an episode on complaints, apologies, or customer service to hear the language of this lesson used naturally. Connection to Lesson 11: apologizing and reassuring in professional English.",
+         'Tip: listen twice, then write one apology and one reassurance using the passive voice.',
+         'https://www.bbc.co.uk/learningenglish/english/features/6-minute-english'),
+        ('youtube', '"How to use the active and passive voice" -- 6 Minute Grammar, BBC Learning English',
+         "A clear lesson on the exact grammar of this class: the passive voice (be + past participle) and when to use it. Connection to Lesson 11: sounding calm and professional with 'the problem is being handled'.",
+         'Tip: after each example, make your own passive sentence for handling a complaint at Escape Turismo.',
+         'https://www.youtube.com/watch?v=38QqDrckyxM'),
+    ],
+}
