@@ -106,16 +106,13 @@ def insert(hub_path, cfg, content_dir, is_aluno):
     s = s.replace('</div><!-- /tab-complementary -->', '\n' + comp + '\n\n</div><!-- /tab-complementary -->', 1)
 
     # 5. audioMap: mescla pcN_/[order-lN] logo após "var audioMap = {"
+    # Dedup CONTRA AS CHAVES do audioMap existente — NÃO contra o documento inteiro:
+    # uma frase de Pre-class também aparece como data-phrase="..." no accordion, então
+    # `chave in s` dava falso-positivo e DERRUBAVA a entrada de áudio (frase ficava muda).
     new_lines = hub_audiomap_lines(cfg, content_dir)
+    existing_keys = set(re.findall(r'\n\s*("(?:[^"\\]|\\.)*"|\'[^\']*\'):\s*"/audio', s))
 
     def add_amap(m):
-        # Dedup SÓ contra as chaves já existentes no audioMap — NÃO contra o HTML
-        # inteiro. Antes checava `not in s`: uma frase nova cujo texto aparece num
-        # atributo data-phrase="..." (fill-blank, speech-card) era vista como já
-        # presente e caía fora do audioMap (áudio some no hub). Ver validate_lesson.
-        block_end = s.index('};', m.end())
-        existing_block = s[m.end():block_end]
-        existing_keys = set(re.findall(r'"(?:[^"\\]|\\.)*"(?=\s*:\s*")', existing_block))
         adds = '\n'.join(l for l in new_lines if l.split(':')[0].strip() not in existing_keys)
         return 'var audioMap = {\n' + adds + '\n' if adds else m.group(0)
     s = re.sub(r'var audioMap = \{', add_amap, s, count=1)
