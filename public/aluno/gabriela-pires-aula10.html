@@ -1967,7 +1967,7 @@ function injectPronunciationBtn(card,audioUrl){
 
 var activeRecognition = null;
 
-function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Please use Google Chrome for voice recognition.');return}var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');
+function startRecording(btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;var hasSR=!!SR;var card=btn.closest('.speech-card');var target=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9' ]/g,'');var resultDiv=card.querySelector('.speech-result');var stopBtn=card.querySelector('.btn-stop');if(btn.classList.contains('recording'))return;btn.classList.add('recording','hidden');stopBtn.classList.add('visible');
 var mediaRec=null,mediaChunks=[],mediaStream=null,recDone=false;
 navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
   mediaStream=stream;
@@ -1982,6 +1982,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
       var blob=new Blob(mediaChunks,{type:mediaRec.mimeType});
       var audioUrl=URL.createObjectURL(blob);
       injectPronunciationBtn(card,audioUrl);
+      if(!hasSR){resultDiv.classList.add('show','good');resultDiv.classList.remove('try-again','bad');resultDiv.innerHTML='<strong>&#10003; Recording saved</strong> — listen back with "Your Pronunciation".';if(typeof updateProgress==='function')updateProgress();finish()}
       var phraseSlug=card.dataset.phrase.toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,50);
       var slug=window.STUDENT_SLUG||'unknown';
       var ext=blob.type.indexOf('mp4')!==-1?'mp4':'webm';
@@ -1990,17 +1991,22 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
     }
   };
   mediaRec.start(100);
-  var r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=3;r.continuous=true;
-  activeRecognition={recognition:r,btn:btn,stopBtn:stopBtn,card:card,mediaRec:mediaRec};
-  r.start();
   var ended=false;
   function finish(){if(ended)return;ended=true;btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');activeRecognition=null;
     setTimeout(function(){if(mediaRec&&mediaRec.state==='recording')mediaRec.stop()},200);
   }
+  if(hasSR){
+  var r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=3;r.continuous=true;
+  activeRecognition={recognition:r,btn:btn,stopBtn:stopBtn,card:card,mediaRec:mediaRec};
+  r.start();
   r.onresult=function(event){var best=event.results[event.results.length-1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g,'');var analysis=analyzeWords(target,best);var totalWords=analysis.expected.length;var correctWords=analysis.expected.filter(function(w){return w.status==='correct'}).length;resultDiv.classList.add('show');resultDiv.classList.remove('good','try-again','bad');var html='';if(analysis.score>=0.8){resultDiv.classList.add('good');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Excellent!';updateProgress()}else if(analysis.score>=0.5){resultDiv.classList.add('try-again');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Almost there!'}else{resultDiv.classList.add('bad');html+='<strong>Score: '+correctWords+'/'+totalWords+'</strong> — Keep practicing!'}html+='<div class="word-comparison"><div class="comp-label">Word-by-word:</div><div class="comp-words">';analysis.expected.forEach(function(w){html+='<span class="word-box word-'+(w.status==='correct'?'correct':'missing')+'">'+w.word+'</span>'});html+='</div></div>';resultDiv.innerHTML=html;finish()};
   r.onerror=function(){finish();resultDiv.classList.add('show','try-again');resultDiv.innerHTML='Could not hear you. Check your microphone.'};
   r.onend=function(){finish()};
   setTimeout(function(){if(!ended){try{r.stop()}catch(e){}finish()}},30000);
+  }else{
+  activeRecognition={recognition:null,btn:btn,stopBtn:stopBtn,card:card,mediaRec:mediaRec};
+  setTimeout(function(){if(!ended)finish()},30000);
+  }
 }).catch(function(){btn.classList.remove('recording','hidden');stopBtn.classList.remove('visible');alert('Could not access microphone.')})}
 function stopRecording(stopBtn){if(activeRecognition){try{activeRecognition.recognition.stop()}catch(e){}if(activeRecognition.mediaRec&&activeRecognition.mediaRec.state==='recording'){try{activeRecognition.mediaRec.stop()}catch(e){}}}}
 
