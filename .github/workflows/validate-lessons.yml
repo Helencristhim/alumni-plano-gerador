@@ -69,6 +69,21 @@ jobs:
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: python3 scripts/check_forbidden_patterns.py --base "origin/${{ github.base_ref }}" ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
+      - name: "GATE 7 — botão morto: JS inline que não compila (novos E modificados)"
+        # Pega o BOTÃO QUE NÃO FUNCIONA. O gerador concatena o inglês do aluno dentro
+        # de uma string JS dentro de um atributo HTML; o apóstrofo vira &#39;, o browser
+        # DESESCAPA antes de compilar, a string fecha errado e o handler morre:
+        #   onclick="speakText('Rachel&#39;s task is done.',this)"  -> SyntaxError no clique
+        # Invisível para todo mundo: HTML válido, página abre, console limpo — o Chrome
+        # só compila handler inline NA HORA DO CLIQUE. Nenhum validador olhava os
+        # ATRIBUTOS (o audiomap checker só parseia dentro do <script>). Era o ponto cego,
+        # e é exatamente onde o texto do aluno entra: 324 botões mortos em 48 arquivos
+        # (169 de áudio = a aula não toca som; 155 de gabarito = a resposta não abre).
+        # Usa new Function() = V8 = o motor do Chrome. Não simula o browser: usa o browser.
+        # Critério "não piorou vs a base" (igual GATE 6) enquanto o legado não é consertado.
+        if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
+        run: node scripts/check_inline_js.mjs --base "origin/${{ github.base_ref }}" ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
+
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''
         continue-on-error: true
