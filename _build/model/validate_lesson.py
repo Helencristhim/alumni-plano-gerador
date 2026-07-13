@@ -216,6 +216,44 @@ def check_handlers_exist(c, fails):
                      f'— exercício/elemento estruturalmente quebrado')
 
 
+def check_audio_collision(c, fails):
+    """Duas frases DIFERENTES apontando para o MESMO mp3 = o aluno ouve a frase errada.
+
+    O snake() do builder corta o nome do arquivo em 48 chars e NÃO é injetivo. Duas
+    frases com o mesmo começo caem no mesmo arquivo:
+
+        "I started my career in technology ten years ago."  ┐
+        "I got my first job in 2008."                       ┘ -> mesmo .mp3
+
+    O aluno lê uma frase na tela e ouve OUTRA. Silencioso e invisível: o arquivo
+    EXISTE, e existência é a única coisa que o check_lesson_integrity sabe perguntar.
+    De novo o padrão do dia: o gate testa o proxy, não o comportamento.
+
+    Encontrado em 13/07: 224 colisões em 45 alunos em produção. O builder já foi
+    corrigido (sufixo de hash só quando há colisão real, então nada é renomeado);
+    este gate impede que a classe volte a entrar.
+
+    Ponto final / caixa / espaço extra NÃO são colisão — o speakText normaliza e as
+    duas devem mesmo compartilhar o áudio.
+    """
+    bloco = re.search(r'(?:var|const|let)\s+audioMap\s*=\s*\{.*?\n\};', c, re.S)
+    if not bloco:
+        return
+    por_mp3 = {}
+    for k, v in re.findall(r'"((?:[^"\\]|\\.)*)"\s*:\s*"([^"]+\.mp3)"', bloco.group(0)):
+        chave = k.replace('\\"', '"').replace("\\'", "'").replace('\\\\', '\\')
+        norm = re.sub(r'\s+', ' ', chave).strip().rstrip('.').lower()
+        por_mp3.setdefault(v.split('?')[0], set()).add(norm)
+
+    for mp3, frases in sorted(por_mp3.items()):
+        if len(frases) > 1:
+            a, b = sorted(frases)[:2]
+            fails.append(
+                f'COLISÃO DE ÁUDIO: {len(frases)} frases distintas apontam para '
+                f'{mp3.split("/")[-1]} — o aluno lê uma e OUVE OUTRA. '
+                f'Ex: "{a[:45]}..." vs "{b[:45]}..."')
+
+
 def check_speaktext_escaping(c, fails):
     """speakText('...') com apóstrofo que fecha a string JS no meio: o onclick quebra
     (áudio não toca) E o áudio sai truncado (gerador lê a mesma frase cortada).
@@ -528,6 +566,7 @@ def validate(path):
     check_fix_regressions(c, css, is_standalone_slides, fails, warns)
     check_handlers_exist(c, fails)
     check_speaktext_escaping(c, fails)
+    check_audio_collision(c, fails)
     check_b2_blocks(c, fails, warns)
     check_persistence_wiring(c, path, fails, warns)
 
