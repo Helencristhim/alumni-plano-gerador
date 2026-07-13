@@ -46,8 +46,18 @@ def parse_map(block):
             out[k.replace("\\'","'").replace('\\"','"')]=vc
     return out
 def speaktext_keys(h):
+    # 1) forma antiga: o texto DENTRO da string JS -> speakText('...')
     ks=set(re.findall(r"speakText\('((?:[^'\\]|\\.)*)'",h))|set(re.findall(r'speakText\("((?:[^"\\]|\\.)*)"',h))
-    return {k.replace("\\'","'").replace('\\"','"') for k in ks}
+    # 2) forma nova: o texto vive num ATRIBUTO -> data-speak="..." onclick="speakText(this.dataset.speak,this)"
+    #    (é a forma que NÃO quebra com apóstrofo do inglês; ver scripts/check_inline_js.mjs)
+    ks|=set(re.findall(r'data-speak="([^"]*)"',h))
+    ks={k.replace("\\'","'").replace('\\"','"') for k in ks}
+    # 3) DESESCAPA AS ENTIDADES. Era ESTE o bug que deixava 127 frases sem áudio:
+    #    o extrator gravava a chave como está no HTML ("Rachel&#39;s task"), mas em runtime
+    #    o navegador entrega ao speakText o texto já desescapado ("Rachel's task"). As duas
+    #    nunca casavam -> audioMap furado -> a frase caía em TTS robótico (viola REGRA 7).
+    #    A chave tem de ser o que o speakText RECEBE, não o que está escrito no arquivo.
+    return {_html.unescape(k) for k in ks}
 def order_events(h,n):
     cm=re.search(r'id="order-l%d"(.*?)<button class="verify-all-btn"'%n,h,re.S)
     evs=[]
