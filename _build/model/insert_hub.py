@@ -57,12 +57,77 @@ def hub_audiomap_lines(cfg, content_dir):
     return [f'  {json.dumps(k, ensure_ascii=False)}: {json.dumps(v)},' for k, v in lines.items()]
 
 
+def merge_audiomap(s, cfg, content_dir):
+    """Mescla as entradas pcN_/[order-lN] no audioMap do hub.
+
+    Dedup CONTRA AS CHAVES do audioMap existente — NÃO contra o documento inteiro:
+    uma frase de Pre-class também aparece como data-phrase="..." no accordion, então
+    `chave in s` dava falso-positivo e DERRUBAVA a entrada de áudio (frase ficava muda).
+
+    Chave que JÁ EXISTE com valor DIFERENTE é ATUALIZADA, não descartada. Descartar
+    deixava entrada podre no hub PARA SEMPRE: nenhum rebuild conseguia corrigir um MP3
+    errado, porque o merge só olhava a chave e ignorava o valor. (Foi assim que a colisão
+    de nome de arquivo do snake() sobreviveu ao rebuild — felipe-pimenta, 13/07/2026.)
+    """
+    # A chave PODE conter ':' ("Let me be unequivocal: we will not break the covenant.").
+    # split(':')/partition(':') quebram DENTRO da chave, produzem um fragmento que nunca
+    # bate com nada e a linha era re-inserida a cada insert -> chave DUPLICADA no audioMap.
+    # Só um parser de verdade (chave entre aspas, com escapes) serve aqui.
+    ENTRY = re.compile(r'^\s*("(?:[^"\\]|\\.)*")\s*:\s*("[^"]*")\s*,?\s*$')
+
+    def parse(line):
+        m = ENTRY.match(line)
+        assert m, f'linha de audioMap não parseável: {line!r}'
+        return m.group(1), m.group(2)
+
+    existing = dict(re.findall(r'\n\s*("(?:[^"\\]|\\.)*")\s*:\s*("/audio[^"]*")', s))
+
+    fresh = []
+    for line in hub_audiomap_lines(cfg, content_dir):
+        k, v = parse(line)
+        old = existing.get(k)
+        if old is None:
+            fresh.append(line)
+            existing[k] = v
+        elif old != v:  # entrada podre: MESMA frase, arquivo DIFERENTE -> corrige
+            s = re.sub(r'(\n\s*' + re.escape(k) + r'\s*:\s*)"/audio[^"]*"',
+                       lambda m: m.group(1) + v, s)
+
+    def add_amap(m):
+        return 'var audioMap = {\n' + '\n'.join(fresh) + '\n' if fresh else m.group(0)
+    s = re.sub(r'var audioMap = \{', add_amap, s, count=1)
+
+    # dedup: chave duplicada no audioMap (herdada dos inserts com o parser quebrado).
+    # Objeto JS aceita, o último vence — mas é podridão e esconde entrada errada.
+    def dedup(m):
+        seen, out = set(), []
+        for line in m.group(1).split('\n'):
+            if not line.strip():
+                continue
+            k = ENTRY.match(line)
+            if k and k.group(1) in seen:
+                continue
+            if k:
+                seen.add(k.group(1))
+            out.append(line)
+        return 'var audioMap = {\n' + '\n'.join(out) + '\n};'
+    return re.sub(r'var audioMap = \{\n(.*?)\n\s*\};', dedup, s, count=1, flags=re.S)
+
+
 def insert(hub_path, cfg, content_dir, is_aluno):
     n = cfg['lesson']['n']
     slug = cfg['slug']
     s = read(hub_path)
     if f'id="ex-lesson-{n}"' in s:
-        print(f'  ex-lesson-{n} já presente em {os.path.basename(hub_path)} — pulando')
+        # Aula já inserida: NÃO re-insere card/stamp/complementares (aditivo, nunca
+        # duplica). Mas o audioMap AINDA é reconciliado — senão um MP3 errado no hub
+        # é permanente, imune a qualquer rebuild.
+        s2 = merge_audiomap(s, cfg, content_dir)
+        if s2 != s:
+            write(hub_path, s2)
+            print(f'  ex-lesson-{n} já presente em {os.path.basename(hub_path)} — audioMap reconciliado')
+        else:
+            print(f'  ex-lesson-{n} já presente em {os.path.basename(hub_path)} — pulando')
         return
     folder = 'aluno' if is_aluno else 'professor'
     target = f'/{folder}/{slug}-aula{n}.html?autostart=1'
@@ -106,16 +171,7 @@ def insert(hub_path, cfg, content_dir, is_aluno):
     s = s.replace('</div><!-- /tab-complementary -->', '\n' + comp + '\n\n</div><!-- /tab-complementary -->', 1)
 
     # 5. audioMap: mescla pcN_/[order-lN] logo após "var audioMap = {"
-    # Dedup CONTRA AS CHAVES do audioMap existente — NÃO contra o documento inteiro:
-    # uma frase de Pre-class também aparece como data-phrase="..." no accordion, então
-    # `chave in s` dava falso-positivo e DERRUBAVA a entrada de áudio (frase ficava muda).
-    new_lines = hub_audiomap_lines(cfg, content_dir)
-    existing_keys = set(re.findall(r'\n\s*("(?:[^"\\]|\\.)*"|\'[^\']*\'):\s*"/audio', s))
-
-    def add_amap(m):
-        adds = '\n'.join(l for l in new_lines if l.split(':')[0].strip() not in existing_keys)
-        return 'var audioMap = {\n' + adds + '\n' if adds else m.group(0)
-    s = re.sub(r'var audioMap = \{', add_amap, s, count=1)
+    s = merge_audiomap(s, cfg, content_dir)
 
     # 6. totalLessons -> N (a barra das aulas só enche até totalLessons — REGRA 18)
     s = re.sub(r'var totalLessons\s*=\s*\d+', f'var totalLessons={n}', s)
