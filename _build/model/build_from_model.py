@@ -56,6 +56,9 @@ import os
 import re
 import sys
 import unicodedata
+# `from ... import` de propósito: vários parâmetros aqui se chamam `html` e
+# importar o módulo inteiro o sombrearia.
+from html import unescape as html_unescape
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
@@ -282,17 +285,42 @@ def expand_inclass_blocks(slides, cfg):
 
 
 def extract_phrases(html):
-    """(texto, voz_sugerida|None) em ordem de documento; data-voice na mesma linha vence."""
+    """(texto, voz_sugerida|None) em ordem de documento; data-voice na mesma linha vence.
+
+    O TEXTO SAI DAQUI JÁ DESESCAPADO — e isso é a espinha de todo o áudio.
+
+    Este é o ponto de entrada que envenenava a cadeia inteira. Ele lia a frase COMO
+    ESTÁ ESCRITA NO HTML — ou seja, com as entidades: "Rachel&#39;s task". Mas em
+    runtime o navegador desescapa o atributo e entrega ao speakText o texto de
+    verdade: "Rachel's task". As duas chaves NUNCA casavam. Consequência em cascata:
+
+      audioMap    chave "Rachel&#39;s task"  -> lookup falha em runtime -> TTS robótico
+      manifest    text  "Rachel&#39;s task"  -> a ElevenLabs FALA a entidade
+      arquivo     snake("Rachel&#39;s task") -> nome de MP3 lixo
+
+    Foi por isso que 127 frases nunca ganharam áudio e 36 apontavam para MP3
+    inexistente. A chave tem de ser o que o speakText RECEBE, não o que está
+    ESCRITO no arquivo. (Ver scripts/check_inline_js.mjs e PR #1261.)
+    """
     out = []
     for line in html.split('\n'):
         mv = re.search(r'data-voice="([a-z]+)"', line)
         hint = mv.group(1) if mv else None
+        # forma ANTIGA: o texto dentro da string JS. Frágil — apóstrofo do inglês
+        # quebra o handler (o browser desescapa antes de compilar). Ainda lida para
+        # não cegar o áudio das aulas legadas.
         for m in re.finditer(r"speakText\('((?:[^'\\]|\\.)*)'", line):
-            t = m.group(1).replace("\\'", "'")
+            t = html_unescape(m.group(1).replace("\\'", "'"))
+            if not t.startswith('['):
+                out.append((t, hint))
+        # forma NOVA (correta): o texto vive num ATRIBUTO, onde apóstrofo e aspa são
+        # caracteres comuns e não há string JS para fechar.
+        for m in re.finditer(r'data-speak="([^"]*)"', line):
+            t = html_unescape(m.group(1))
             if not t.startswith('['):
                 out.append((t, hint))
         for m in re.finditer(r'data-phrase="([^"]*)"', line):
-            out.append((m.group(1), hint))
+            out.append((html_unescape(m.group(1)), hint))
     return out
 
 

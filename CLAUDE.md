@@ -511,6 +511,37 @@ const audioMap = {
 - **Speed control**: `currentAudio.playbackRate = audioSpeed`
 - **Validacao pre-deploy**: Contar speakText() no HTML e comparar com arquivos em `/audio/{slug}/`. Se houver QUALQUER frase sem MP3 correspondente → BLOQUEAR deploy
 
+### 7.1 — O TEXTO NUNCA VAI DENTRO DA STRING JS (REGRA BLOQUEANTE)
+
+> **PROIBIDO**: `onclick="speakText('It&#39;s ready.', this)"`
+> **OBRIGATORIO**: `<button data-speak="It's ready." onclick="speakText(this.dataset.speak, this)">`
+
+**Por que.** Texto dentro de uma string JS dentro de um atributo HTML precisa sobreviver a DOIS niveis de escape ao mesmo tempo. Em ingles isso falha sempre, porque o ingles tem apostrofo (`don't`, `it's`, `let's`, `Rachel's`). O navegador **desescapa as entidades ANTES de compilar** o handler: `&#39;` vira `'`, a string fecha no lugar errado, e o **botao morre**.
+
+**E invisivel.** O HTML e valido, a pagina abre, o console fica limpo — o Chrome so compila handler inline NA HORA DO CLIQUE. O aluno clica e nada acontece, e nada em lugar nenhum registra.
+
+**Um bug, TRES sintomas** (o mesmo erro: tratar o HTML ESCRITO como se fosse o JS EXECUTADO):
+1. o botao nao compila (morto);
+2. o audio nunca e gerado (o extrator le a frase ainda escapada);
+3. o audio nunca e encontrado (chave do audioMap = `Rachel&#39;s task`, mas em runtime o speakText recebe `Rachel's task` — nunca casam → TTS robotico, viola a REGRA 7).
+
+Incidente de 13/07/2026: **324 botoes mortos** em 48 arquivos, ~20 alunos, vivos desde 20/06 — nasceram assim, nunca funcionaram (PR #1261).
+
+**NUNCA "conserte" escapando** (`\'`) — isso so adia. E NUNCA tire o apostrofo do ingles ("do not" no lugar de "don't") — isso sabota a pedagogia. **O texto muda de LUGAR, o ingles nao muda.** Em atributo, apostrofo e aspa sao caracteres comuns: nao ha string para fechar, nao ha o que quebrar.
+
+Vale para TODO handler inline, nao so audio:
+
+```html
+<!-- audio -->
+<button data-speak="Let's start." onclick="speakText(this.dataset.speak,this)">Listen</button>
+
+<!-- revelar resposta -->
+<p data-t="Show answer" data-a="I don't work in one department."
+   onclick="this.textContent=this.textContent===this.dataset.t?this.dataset.a:this.dataset.t">Show answer</p>
+```
+
+**GATE 7 (bloqueante, no CI)**: `node scripts/check_inline_js.mjs --base origin/main <arquivos>` compila cada handler no **V8 — o motor do Chrome**. Nao simula o navegador: usa o navegador. A base esta em **0 botoes mortos**, entao qualquer botao morto novo BARRA o PR.
+
 ---
 
 ## REGRA 8 — PRONUNCIA (startRecording)

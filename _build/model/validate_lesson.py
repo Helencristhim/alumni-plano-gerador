@@ -35,6 +35,7 @@ import json
 import os
 import re
 import sys
+from html import unescape as html_unescape
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 VOICES = json.load(open(os.path.join(HERE, 'voices.json'), encoding='utf-8'))
@@ -216,10 +217,22 @@ def check_handlers_exist(c, fails):
 
 
 def check_speaktext_escaping(c, fails):
-    """speakText('...') com apóstrofo CRU fecha a string JS no meio: o onclick quebra
-    (áudio não toca) E o áudio sai truncado (gerador lê a mesma frase cortada). O furo
-    que deixava passar: extrair a frase com regex que para no apóstrofo = truncado vs
-    truncado. Aqui varremos char a char achando o terminador REAL da string."""
+    """speakText('...') com apóstrofo que fecha a string JS no meio: o onclick quebra
+    (áudio não toca) E o áudio sai truncado (gerador lê a mesma frase cortada).
+
+    DESESCAPA ANTES DE VARRER — e é ESTE o furo que deixou 208 botões passarem.
+    A versão anterior varria a fonte CRUA procurando o caractere `'`. Só que no HTML
+    o apóstrofo quase sempre está escrito `&#39;` — que não é um apóstrofo, são cinco
+    caracteres. O validador não via nada de errado. Mas o NAVEGADOR desescapa o
+    atributo ANTES de compilar o handler: para ele, `&#39;` É um apóstrofo, e a string
+    fecha no lugar errado. O botão morre.
+
+    Ou seja: o validador cometia o mesmo erro conceitual que o bug que ele deveria
+    pegar — tratar o HTML ESCRITO como se fosse o JS EXECUTADO. Varremos o texto já
+    desescapado, exatamente como o browser o vê. (Ver scripts/check_inline_js.mjs,
+    que compila o handler no V8 — o motor do Chrome — e é a rede definitiva.)
+    """
+    c = html_unescape(c)
     broken = []
     for m in re.finditer(r"speakText\('", c):
         k = m.end()
@@ -237,8 +250,13 @@ def check_speaktext_escaping(c, fails):
                 break
             k += 1
     if broken:
-        fails.append(f'{len(broken)} speakText() com APÓSTROFO NÃO-ESCAPADO (fecha a string JS no meio '
-                     f'-> onclick quebra + áudio truncado). Escapar como \\\' . Ex: "{broken[0]}..."')
+        fails.append(
+            f'{len(broken)} speakText() com apóstrofo que FECHA A STRING JS no meio '
+            f'-> o botão morre (o aluno clica e nada acontece) + o áudio sai truncado. '
+            f'Ex: "{broken[0]}...". '
+            f'NÃO conserte escapando (\\\' só adia): tire o texto de dentro da string JS. '
+            f'Em ATRIBUTO, apóstrofo é caractere comum e não há string para fechar: '
+            f'<button data-speak="It\'s ready." onclick="speakText(this.dataset.speak,this)">')
 
 
 def check_b2_blocks(c, fails, warns):
