@@ -51,6 +51,7 @@ SAÍDAS:
 AULAS PASSADAS NÃO SÃO TOCADAS: o builder só escreve os arquivos da aula nova
 (e o hub apenas no modo "new", de aluno que ainda não tem hub).
 """
+import hashlib
 import json
 import os
 import re
@@ -324,6 +325,33 @@ def extract_phrases(html):
     return out
 
 
+def audio_filename(text, prefix, taken):
+    """Nome do MP3 a partir da frase — GARANTIDAMENTE UNICO.
+
+    snake() trunca em 48 chars e NAO e injetivo: duas frases distintas que
+    compartilham o mesmo prefixo de 48 chars caem no MESMO arquivo. Quando isso
+    acontece, o audioMap fica com DUAS chaves apontando pro MESMO MP3 e uma delas
+    toca o audio da OUTRA frase — o aluno clica em "It was the approvals cycle
+    that broke the quarter, not the market." e ouve "...that broke the quarter."
+    Bug silencioso: nenhum gate pega, porque o arquivo EXISTE.
+    (felipe-pimenta, 13/07/2026: 3 colisoes nas aulas 7, 8 e 9.)
+
+    Frase sem colisao mantem o nome IDENTICO ao de antes (hash so entra no
+    desempate), entao material ja gerado nao muda de nome.
+    """
+    base = snake(text)
+    name = f'{prefix}{base}.mp3'
+    if taken.get(name, text) == text:
+        taken[name] = text
+        return name
+    # colisao real: 2 frases distintas, mesmo prefixo de 48 chars
+    h = hashlib.sha1(text.encode('utf-8')).hexdigest()[:6]
+    name = f'{prefix}{base}_{h}.mp3'
+    assert taken.get(name, text) == text, f'colisao de nome de audio irredutivel: {text!r}'
+    taken[name] = text
+    return name
+
+
 def assign_voices(phrases, prefix, cfg):
     """REGRA 7: 1-2 palavras = arthur; frases alternam; data-voice (diálogo) vence;
     falas em 1a pessoa do aluno = voz do gênero do aluno."""
@@ -331,6 +359,7 @@ def assign_voices(phrases, prefix, cfg):
     first = re.escape(cfg['first_name'])
     first_person = re.compile(rf"\bI am {first}\b|\bI'm {first}\b|\bMy name is {first}\b")
     entries = {}
+    taken = {}
     alt = 0
     for text, hint in phrases:
         if text in entries:
@@ -350,7 +379,7 @@ def assign_voices(phrases, prefix, cfg):
             voice = 'ellen' if alt % 2 == 0 else 'arthur'
             alt += 1
         assert voice in VOICES, f'voz desconhecida "{voice}" (disponíveis: {sorted(VOICES)})'
-        entries[text] = dict(voice=voice, file=f'{prefix}{snake(text)}.mp3')
+        entries[text] = dict(voice=voice, file=audio_filename(text, prefix, taken))
     return entries
 
 
