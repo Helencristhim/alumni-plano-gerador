@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { id, professor, horarios, alocacao } = req.body;
+    const { id, professor, horarios, zoomLink, alocacao } = req.body;
     if (!id) return res.status(400).json({ error: 'id is required' });
     if (!supabase) return res.status(500).json({ error: 'Supabase not configured' });
 
@@ -21,7 +21,10 @@ module.exports = async (req, res) => {
       ...existingData,
       alocacao: alocacao || existingData.alocacao || {},
       professor: professor !== undefined ? professor : (existingData.professor || ''),
-      horarios: horarios !== undefined ? horarios : (existingData.horarios || '')
+      horarios: horarios !== undefined ? horarios : (existingData.horarios || ''),
+      // Link do Zoom guardado no JSON `data` (a tabela `perfis` nao tem coluna zoom_link,
+      // e `data` sempre existe). O CX preenche pelo card ou pelo modal de alocacao.
+      zoomLink: zoomLink !== undefined ? zoomLink : (existingData.zoomLink || '')
     };
 
     // Update data JSON column (guaranteed to exist) + try top-level columns

@@ -377,7 +377,7 @@
                 <input type="text" class="input" id="alocDias" placeholder="Ex: Terças e quintas, 8h" style="width:100%;">
             </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin-bottom:var(--space-xl);">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin-bottom:var(--space-md);">
             <div>
                 <label style="font:600 0.75rem/1.4 var(--font-body);color:var(--text-dim);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Início das Aulas</label>
                 <input type="date" class="input" id="alocInicio" style="width:100%;">
@@ -386,6 +386,10 @@
                 <label style="font:600 0.75rem/1.4 var(--font-body);color:var(--text-dim);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Previsão de Término</label>
                 <input type="date" class="input" id="alocTermino" style="width:100%;">
             </div>
+        </div>
+        <div style="margin-bottom:var(--space-xl);">
+            <label style="font:600 0.75rem/1.4 var(--font-body);color:var(--text-dim);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Link do Zoom</label>
+            <input type="text" class="input" id="alocZoom" placeholder="https://zoom.us/j/..." style="width:100%;">
         </div>
         <button class="btn-novo" onclick="salvarAlocacao()" style="width:100%;justify-content:center;">Salvar Alocação</button>
     </div>
@@ -523,6 +527,7 @@
                 _professor: row.professor || (row.alocacao&&row.alocacao.professor) || (row.data&&row.data.professor) || '',
                 _horarios: row.horarios || (row.alocacao&&row.alocacao.diasHorarios) || (row.data&&row.data.horarios) || '',
                 _alocacao: row.alocacao || (row.data&&row.data.alocacao) || {},
+                _zoom: (row.data&&row.data.zoomLink) || (row.alocacao&&row.alocacao.zoomLink) || '',
                 _dataEvento: d.dataEvento || '',
                 _tipoEvento: d.tipoEvento || '',
                 _updatedAt: row.updated_at,
@@ -589,7 +594,7 @@
     }
 
     async function salvarCardField(id, field, value) {
-        var col = field==='professor'?'professor':'horarios';
+        var col = field==='professor'?'professor':field==='zoom'?'zoomLink':'horarios';
         var payload = { id: id };
         payload[col] = value;
         try {
@@ -682,6 +687,8 @@
 
             var profName = a._professor || '';
             var schedule = a._horarios || '';
+            var zoom = a._zoom || '';
+            var zoomHref = zoom ? (/^https?:\/\//i.test(zoom) ? zoom : 'https://' + zoom) : '';
 
             var nivelSimples = a.nivel || '';
             var nivelMatch = nivelSimples.match(/^(A0|A1|A2|B1|B2|C1\+?|C2)/i);
@@ -720,6 +727,12 @@
                 (schedule
                     ? '<span style="font:500 13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#4a4a5a;">' + esc(schedule) + '</span>'
                     : '<input type="text" placeholder="Dias e horários" onchange="salvarCardField(\'' + escAttr(a.id) + '\',\'horarios\',this.value);filterAlunos();" style="flex:1;border:none;border-bottom:1px solid #e5e7eb;padding:4px 0;font:13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#374151;background:transparent;outline:none;" onfocus="this.style.borderColor=\'#003080\'" onblur="this.style.borderColor=\'#e5e7eb\'">') +
+                '</div>' +
+                '<div style="grid-column:1 / -1;display:flex;align-items:center;gap:6px;">' +
+                '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + (zoom ? '#003080' : '#9ca3af') + '" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>' +
+                (zoom
+                    ? '<a href="' + escAttr(zoomHref) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="' + escAttr(zoom) + '" style="font:500 13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#003080;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Link do Zoom</a>'
+                    : '<input type="text" placeholder="Link do Zoom" onchange="salvarCardField(\'' + escAttr(a.id) + '\',\'zoom\',this.value);filterAlunos();" onclick="event.stopPropagation()" style="flex:1;border:none;border-bottom:1px solid #e5e7eb;padding:4px 0;font:13px/1.4 -apple-system,BlinkMacSystemFont,\'Inter\',sans-serif;color:#374151;background:transparent;outline:none;" onfocus="this.style.borderColor=\'#003080\'" onblur="this.style.borderColor=\'#e5e7eb\'">') +
                 '</div></div>';
 
             var updAt = a._updatedAt ? new Date(a._updatedAt) : null;
@@ -892,6 +905,7 @@
         document.getElementById('alocDias').value = (a && a._horarios) || aloc.diasHorarios || '';
         document.getElementById('alocInicio').value = aloc.inicio || '';
         document.getElementById('alocTermino').value = aloc.termino || '';
+        document.getElementById('alocZoom').value = (a && a._zoom) || aloc.zoomLink || '';
         document.getElementById('alocacaoModal').classList.add('show');
     }
     function fecharAlocacao() { document.getElementById('alocacaoModal').classList.remove('show'); alocacaoAlunoId = null; }
@@ -902,19 +916,20 @@
             professor: document.getElementById('alocProf').value.trim(),
             diasHorarios: document.getElementById('alocDias').value.trim(),
             inicio: document.getElementById('alocInicio').value,
-            termino: document.getElementById('alocTermino').value
+            termino: document.getElementById('alocTermino').value,
+            zoomLink: document.getElementById('alocZoom').value.trim()
         };
         try {
             var resp = await fetch('/api/save-alocacao', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: alocacaoAlunoId, professor: alocacao.professor, horarios: alocacao.diasHorarios, alocacao: alocacao })
+                body: JSON.stringify({ id: alocacaoAlunoId, professor: alocacao.professor, horarios: alocacao.diasHorarios, zoomLink: alocacao.zoomLink, alocacao: alocacao })
             });
             var result = await resp.json();
             if (!resp.ok) throw new Error(result.error || 'Erro ao salvar');
             showToast('Alocação salva', 'success');
             var a=allAlunos.find(function(x){return x.id===alocacaoAlunoId;});
-            if(a){a._alocacao=alocacao;a._professor=alocacao.professor;a._horarios=alocacao.diasHorarios;}
+            if(a){a._alocacao=alocacao;a._professor=alocacao.professor;a._horarios=alocacao.diasHorarios;a._zoom=alocacao.zoomLink;}
         } catch(e) {
             console.error('Erro ao salvar alocação:', e);
             showToast('Erro ao salvar: ' + e.message, 'error');
