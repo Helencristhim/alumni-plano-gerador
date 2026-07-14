@@ -1714,3 +1714,46 @@ ordens de grandeza maior que o dano de deixar quieto.
 que **nenhum arquivo ganhe um defeito que nao tinha**. Ele **nunca** exige que o legado seja
 consertado. Se um conserto legitimo (pedido pelo Dan) reduzir a divida, rode `--update` para
 recongelar a base — ela so pode CAIR.
+
+---
+
+## REGRA 31 — GERAR AULA E GERAR AULA. NAO E AUDITAR. (REGRA BLOQUEANTE)
+
+Ordem do Dan (13/07/2026):
+
+> "os defeitos na hora de gerar tudo bem, o que NAO pode acontecer e eu comecar a gerar e
+> voce achar defeito num aluno nada a ver, antigo, numa aula la longe."
+
+### O que acontece se esta regra nao existir
+
+Gerar a aula 21 do aluno X **toca o hub dele**, que e antigo. O validador entao cospe os
+defeitos LEGADOS daquele hub (o do Diogo tem 11). Sem esta regra, o agente reporta isso ao
+Dan, propoe consertar, abre PR — e a tarefa "gerar 1 aula" vira uma auditoria de 3.243
+defeitos e um susto. Ja aconteceu (13/07: pediram Felipe, voltaram 5 PRs).
+
+### A pergunta certa
+
+Quando um gate acusa defeito num arquivo, a pergunta NAO e *"esse arquivo tem defeito?"*.
+E:
+
+    ESSE DEFEITO ESTA NO scripts/legacy-baseline.json?
+
+- **Esta** => e pre-existente. **NAO conserte. NAO reporte. NAO mencione.** Nao e seu, nao e
+  de hoje, e o Dan ja decidiu que fica (REGRA 30). Siga gerando.
+- **Nao esta** => voce acabou de criar. **Conserte antes do merge.** Isso sim e seu.
+
+Quem responde essa pergunta e `python3 scripts/check_legacy_baseline.py` — ele ja filtra o
+legado por construcao. **Nao leia a saida crua do validate_lesson e conclua dela.**
+
+### Durante uma tarefa de geracao
+
+- ❌ NAO varrer o repo atras de outros problemas.
+- ❌ NAO auditar outros alunos, nem "de passagem".
+- ❌ NAO reportar defeito de aula antiga, nem como observacao, nem como "aproveitando".
+- ❌ NAO abrir PR fora do escopo do aluno pedido.
+- ✅ Gerar a aula. Rodar os gates. Consertar SO o que este PR criou. Mergear. Parar.
+
+Achou algo grave e fora do escopo? **Anote e termine a tarefa.** Reporte no FIM, em uma
+linha, e so se for de fato grave. Nao interrompa a geracao para investigar.
+
+**Escopo pedido = escopo entregue. Nada a mais.**
