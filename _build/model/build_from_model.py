@@ -285,6 +285,135 @@ def expand_inclass_blocks(slides, cfg):
     return out
 
 
+# ============================================================================
+# A TAREFA VEM ANTES DA EXPOSIÇÃO (CLAUDE.md REGRA 2.2)
+# ============================================================================
+def _texto(s):
+    """texto puro de um fragmento HTML (sem tags, espaços normalizados)."""
+    return ' '.join(re.sub(r'<[^>]+>', ' ', s).split())
+
+
+def _estrutura(ch):
+    """O slide SEM o data-teacher.
+
+    Detecção de estrutura NUNCA pode olhar o data-teacher: ele é PROSA para o professor e
+    pode conter qualquer palavra — inclusive o nome das classes que estamos procurando.
+    Foi exatamente o que aconteceu: o data-teacher do slide de True/False da aula 3 cita
+    "ic-reading", a busca por substring achou que aquele slide era uma LEITURA, abortou o
+    lookahead e o slide de tarefa da leitura não nasceu no arquivo do PROFESSOR — mas
+    nasceu no do ALUNO, onde o data-teacher é removido. Prof e aluno divergiram.
+    Estrutura se lê na CLASSE, não no texto do professor.
+    """
+    return re.sub(r'\sdata-teacher="(?:[^"\\]|\\.)*"', '', ch)
+
+
+def _exposicao(ch):
+    """'dialogue' | 'reading' | None — pela CLASSE, no slide sem data-teacher."""
+    est = _estrutura(ch)
+    if 'class="dialogue-line' in est:
+        return 'dialogue'
+    if 'class="ic-reading"' in est:
+        return 'reading'
+    return None
+
+
+def _perguntas_da_checagem(ch):
+    """(kind, [perguntas]) do slide de CHECAGEM — a fonte ÚNICA das perguntas.
+
+    dialogue -> .q-text do slide de Comprehension
+    reading  -> .ic-stmt do True/False, SEM a justificativa (.ic-just), que é gabarito.
+    """
+    ch = _estrutura(ch)
+    if 'ic-tfrow' in ch:
+        out = []
+        for st in re.findall(r'<span class="ic-stmt">(.*?)</span>\s*<span class="ic-verdict', ch, re.S):
+            out.append(_texto(re.sub(r'<span class="ic-just">.*?</span>', '', st, flags=re.S)))
+        return 'tf', [q for q in out if q]
+    if 'class="comp-q"' in ch and 'mock-player' not in ch:
+        return 'comp', [_texto(q) for q in re.findall(r'<div class="q-text">(.*?)</div>', ch, re.S)]
+    return None, []
+
+
+def _slide_de_tarefa(kind, perguntas, phase):
+    """O slide de TAREFA. Só a pergunta — o gabarito NÃO existe no HTML (nem escondido:
+    o professor compartilha a tela, e 'display:none' ainda está no DOM, a um Ctrl+U
+    de distância). Sem onclick: não há o que revelar aqui."""
+    if kind == 'reading':
+        label, head, acc = 'Before you read', 'Read', 'for this'
+        t = ('<strong>Antes do texto (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA '
+             'ANTES de mostrar o texto. É isto que ela vai procurar enquanto lê — sem a tarefa antes, '
+             'compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide '
+             'de checagem, depois.')
+    else:
+        label, head, acc = 'Before you listen', 'Listen', 'for this'
+        t = ('<strong>Antes do diálogo (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA '
+             'ANTES de abrir o diálogo. É isto que ela vai procurar enquanto ouve — sem a tarefa antes, '
+             'compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide '
+             'de checagem, depois.')
+    qs = '\n      '.join(
+        f'<div class="comp-q comp-q-task"><div class="q-text">{q}</div></div>' for q in perguntas)
+    return (f'<div class="slide slide-light" data-slide="0" data-phase="{phase}" '
+            f'data-task-for="{kind}" data-teacher="{t}">\n'
+            f'  <div class="slide-inner">\n'
+            f'    <div class="chapter-label">{label}</div>\n'
+            f'    <h2 class="slide-heading">{head} <span class="accent">{acc}</span></h2>\n'
+            f'    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">\n'
+            f'      {qs}\n'
+            f'    </div>\n'
+            f'  </div>\n'
+            f'</div>\n\n')
+
+
+def inject_task_slides(slides):
+    """Emite o slide de TAREFA antes de todo diálogo / leitura. IDEMPOTENTE.
+
+    O PRINCÍPIO: o aluno tem de saber O QUE PROCURAR antes de ser exposto ao conteúdo.
+    Sem a tarefa antes, compreensão vira teste de MEMÓRIA — que é outra habilidade.
+
+        [TAREFA: as perguntas, sem resposta]  ->  [o diálogo / o texto]  ->  [checagem: as
+        MESMAS perguntas, com click-to-reveal]
+
+    UMA FONTE, DOIS SLIDES: as perguntas do slide de tarefa são EXTRAÍDAS do slide de
+    checagem que já existe. É impossível os dois divergirem — e o autor do conteúdo não
+    precisa lembrar de nada. Foi exatamente por depender da memória do autor que o
+    DEFEITO 2 (perguntas escondidas) se replicou em 224 arquivos: a regra dizia uma
+    coisa, o LLM obedeceu, e ninguém viu.
+
+    NÃO toca no slide de ARTEFATO (email/boarding pass): lá as perguntas já dividem a
+    tela com o objeto, e o aluno pode olhar enquanto responde. Não é o mesmo defeito.
+    """
+    partes = re.split(r'(?=<div class="slide )', slides)
+    out, i = [], 0
+    while i < len(partes):
+        ch = partes[i]
+        kind = _exposicao(ch)
+        # já tem slide de tarefa antes? (idempotência)
+        ja_tem = bool(out and 'data-task-for=' in out[-1])
+        if kind and not ja_tem:
+            perguntas, phase = [], (re.search(r'data-phase="(\d+)"', ch) or [None, '1'])[1]
+            for j in range(i + 1, min(i + 6, len(partes))):
+                nxt = partes[j]
+                if _exposicao(nxt):
+                    break  # outra exposição antes da checagem: para
+                _, qs = _perguntas_da_checagem(nxt)
+                if qs:
+                    perguntas = qs
+                    break
+            if perguntas:
+                out.append(_slide_de_tarefa(kind, perguntas, phase))
+        out.append(ch)
+        i += 1
+    novo = ''.join(out)
+    # RENUMERA data-slide em ordem de documento (a inserção desloca todo mundo).
+    cont = [0]
+
+    def _n(m):
+        cont[0] += 1
+        return f'data-slide="{cont[0]}"'
+
+    return re.sub(r'data-slide="\d+"', _n, novo)
+
+
 def extract_phrases(html):
     """(texto, voz_sugerida|None) em ordem de documento; data-voice na mesma linha vence.
 
@@ -466,7 +595,10 @@ def menu_card(cfg, target):
 
 
 def inclass_menu(cards):
-    return ('\n  <h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Selecione a Aula</h3>\n'
+    # Título do menu IN CLASS: vai pra TELA DO ALUNO (o espelho /aluno/ também tem a aba).
+    # Estava em português ("Selecione a Aula") — viola a REGRA 13 em A2+. Aluno A0/A1
+    # traduz via ui_strings no config. (apply_ui_strings roda no write, por último.)
+    return ('\n  <h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Select your Lesson</h3>\n'
             '  <div style="display:flex;flex-direction:column;gap:1rem">\n' + '\n'.join(cards) + '\n  </div>\n</div>\n\n')
 
 
@@ -489,6 +621,17 @@ def final_asserts(s, cfg, label, is_hub=False):
                 f'{label}: check-grid sem data-lesson — lesson-progress.js não detecta a aula, ' \
                 f'inclass_done nunca salva (barra do pacote/stamps travados — REGRA 28)'
     assert 'toggleListening' not in s, f'{label}: listening fake presente'
+    # A FORMA carrega o bilíngue; o NÍVEL decide se ele é usado.
+    # helen-mendes é A2, então o conteúdo dela não tem .sp-pt/.speech-translation — mas o
+    # CSS deles DEVE continuar no shell, senão nenhum aluno A0/A1 pode mais existir
+    # (o material sairia com a tradução SEM ESTILO). A ausência de PT no modelo é
+    # consequência do NÍVEL dele, não uma propriedade da FORMA. REGRA 13.
+    if is_hub:
+        for cls in ('.sp-pt', '.speech-translation'):
+            assert re.search(re.escape(cls) + r'\s*\{', s), (
+                f'{label}: o CSS de {cls} sumiu do shell — isso MATA o bilíngue de A0/A1 '
+                f'(a traducao sai sem estilo). O modelo e A2 e nao USA a classe, mas a FORMA '
+                f'tem de continuar suportando o nivel que USA. NAO remover.')
     if not is_hub:
         assert 'function mpToggle' in s or 'slidesContainer' not in s, f'{label}: player de listening ausente'
     if not is_model:
@@ -502,6 +645,10 @@ def build_standalone(cfg, content_dir, manifest):
     audio_base = f'/audio/{cfg["slug"]}/'
     slides = read(os.path.join(content_dir, 'slides.html'))
     slides = expand_inclass_blocks(slides, cfg)  # B2 blocks (no-op se a aula não usar)
+    # A TAREFA VEM ANTES DA EXPOSIÇÃO (REGRA 2.2): emite o slide de perguntas antes de
+    # todo diálogo/leitura, a partir das perguntas do slide de checagem. Idempotente e
+    # renumera os data-slide. Aula sem diálogo nem leitura = no-op.
+    slides = inject_task_slides(slides)
     # REGRA 28: o checklist "What I Learned" DEVE chamar toggleCheck(this) — é ele que o
     # lesson-progress.js faz wrap para salvar inclass_done (barra do pacote + stamps).
     # onclick="this.classList.toggle('checked')" só alterna a classe visual: os tics somem
