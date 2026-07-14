@@ -71,6 +71,48 @@ module.exports = async (req, res) => {
     // Contexto de blocos anteriores para continuidade pedagógica
     let contextoAnteriores = '';
     if (temasAnteriores && temasAnteriores.length > 0) {
+      // Normaliza cada entrada. O cliente correto manda OBJETOS {aula,tema,focoLinguistico};
+      // clientes antigos/cacheados mandavam a string "N: tema" — aqui os dois viram objeto,
+      // então o prompt nunca mais renderiza "Aula undefined: undefined | Foco:".
+      const anteriores = temasAnteriores.map(t => {
+        if (t && typeof t === 'object') {
+          return { aula: t.aula, tema: t.tema || '', foco: t.focoLinguistico || '' };
+        }
+        const s = String(t == null ? '' : t);
+        const m = s.match(/^\s*(?:aula\s*)?(\d+)\s*[:\-]\s*(.*)$/i);
+        return m ? { aula: m[1], tema: m[2], foco: '' } : { aula: '', tema: s, foco: '' };
+      });
+
+      // Listas negras ACHATADAS e EXPLÍCITAS — lista bate prosa. A causa-raiz da repetição
+      // era o prompt mandar "não repita" sem dizer O QUÊ. Aqui extraímos do focoLinguistico
+      // (que carrega gramática + vocabulário) duas listas literais do que já foi ensinado.
+      // Vocabulário vive entre parênteses/colchetes e entre aspas; a gramática são as
+      // cláusulas estruturais que sobram ao remover esses trechos.
+      const vocabSet = new Set();
+      const gramSet = new Set();
+      anteriores.forEach(a => {
+        const foco = a.foco;
+        if (!foco) return;
+        let m;
+        const reBracket = /[\(\[]([^\)\]]+)[\)\]]/g;
+        while ((m = reBracket.exec(foco)) !== null) {
+          m[1].split(/[;,/]/).forEach(w => { const t = w.trim(); if (t.length > 1) vocabSet.add(t); });
+        }
+        const reQuote = /['"“”]([^'"“”]{2,})['"“”]/g;
+        while ((m = reQuote.exec(foco)) !== null) {
+          const t = m[1].trim(); if (t) vocabSet.add(t);
+        }
+        foco.split(/;/).forEach(seg => {
+          const clean = seg
+            .replace(/[\(\[][^\)\]]*[\)\]]/g, '')
+            .replace(/['"“”][^'"“”]*['"“”]/g, '')
+            .trim().replace(/[.,;]+$/, '');
+          if (clean && /[a-zA-ZÀ-ÿ]/.test(clean) && clean.length <= 90) gramSet.add(clean);
+        });
+      });
+      const gramList = [...gramSet];
+      const vocabList = [...vocabSet];
+
       contextoAnteriores = `
 CONTEXTO DE AULAS JÁ GERADAS (blocos anteriores — use para CONTINUIDADE):
 Os seguintes temas já foram planejados. Você DEVE:
@@ -78,9 +120,9 @@ Os seguintes temas já foram planejados. Você DEVE:
 - NUNCA repetir vocabulário como novo conteúdo (Regra 140) — pode referenciar para revisão
 - Manter coerência temática e progressão de complexidade
 - Construir sobre o que já foi ensinado
-
-Temas já planejados:
-${temasAnteriores.map(t => '- Aula ' + t.aula + ': ' + t.tema + ' | Foco: ' + (t.focoLinguistico || '').substring(0, 100)).join('\n')}
+${gramList.length ? '\nGRAMÁTICA JÁ ENSINADA (PROIBIDO reapresentar como nova; pode revisar/integrar em atividades):\n' + gramList.map(g => '- ' + g).join('\n') + '\n' : ''}${vocabList.length ? '\nVOCABULÁRIO JÁ ENSINADO (PROIBIDO reapresentar como novo; pode revisar/reciclar):\n' + vocabList.map(v => '- ' + v).join('\n') + '\n' : ''}
+Temas já planejados (foco linguístico COMPLETO, sem truncar):
+${anteriores.map(a => '- Aula ' + a.aula + ': ' + a.tema + ' | Foco: ' + a.foco).join('\n')}
 `;
     }
 

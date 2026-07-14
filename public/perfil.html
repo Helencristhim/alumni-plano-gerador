@@ -1525,7 +1525,7 @@
                         bloco: batch + 1,
                         aulaInicio: bStart,
                         aulaFim: bEnd,
-                        temasAnteriores: allTemas.map(function(t) { return (t.aula || '') + ': ' + (t.tema || ''); }),
+                        temasAnteriores: allTemas.map(function(t) { return { aula: t.aula, tema: t.tema, focoLinguistico: t.focoLinguistico || '' }; }),
                         profissao: getField('profissao') || '',
                         cidade: getField('cidade') || '',
                         idade: getField('idade') || '',
@@ -1601,7 +1601,10 @@
         perfil._geracaoNivel = nivel;
         perfil._geracaoNumAulas = numAulas;
 
-        var tam = 5;
+        // 1 aula por bloco (num == numero da aula). DEVE bater com getBlocosState (tam=1):
+        // com tam=5 o botao "gerar aula N" gerava as aulas (N-1)*5+1..N*5 e as gravava no
+        // indice errado de blocosGeracoes (corrompia o curriculo — aula 2 virava aulas 6-10).
+        var tam = 1;
         var inicio = (num - 1) * tam + 1;
         var fim = Math.min(num * tam, numAulas);
         if (window._gerarTudo) {
