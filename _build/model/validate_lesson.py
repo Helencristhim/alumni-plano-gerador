@@ -96,6 +96,12 @@ PT_RE = re.compile(r'\b(?:' + '|'.join(PT_MARCADORES) + r')\b', re.I)
 ACENTO_RE = re.compile(r'\b[\wÀ-ÿ]*[àáâãéêíóôõúüç][\wÀ-ÿ]*\b')
 # sufixos PT sem acento que o resto da heurística não pegaria
 SUFIXO_RE = re.compile(r'\b\w+(?:mente|acao|acoes|avel)\b', re.I)
+# HOMÓGRAFOS DO SUFIXO. Mesma razão pela qual 'do'/'complete'/'imagine' ficam de fora da
+# lista de marcadores: são palavras INGLESAS que a heurística de PT vê como português.
+# 'tr-avel' e 'gr-avel' terminam em -avel (o sufixo de 'responsavel', 'amavel') e viravam
+# PORTUGUÊS aos olhos do gate. Numa aluna cujo programa é "English for Travel", isso reprova
+# TODA aula correta — e gate que grita em material certo é gate que a equipe desliga.
+SUFIXO_EN_OK = {'travel', 'gravel', 'ravel', 'unravel'}
 
 
 def nivel_do_html(c):
@@ -132,7 +138,7 @@ def pt_na_tela(html):
     alvo_txt = texto + ' \n ' + ' \n '.join(atributos)
     achados = {t for t in ACENTO_RE.findall(alvo_txt) if t[:1].islower()}
     achados |= {w.lower() for w in PT_RE.findall(alvo_txt)}
-    achados |= {w.lower() for w in SUFIXO_RE.findall(alvo_txt)}
+    achados |= {w.lower() for w in SUFIXO_RE.findall(alvo_txt)} - SUFIXO_EN_OK
     return sorted(achados)
 
 
