@@ -32,6 +32,15 @@ import sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = os.path.join(RAIZ, 'scripts', 'legacy-baseline.json')
 
+AVISO = [
+    '*** ISTO NAO E UMA LISTA DE TAREFAS. E UM ALVARA. (CLAUDE.md, REGRA 30) ***',
+    'Cada entrada aqui e um defeito que JA EXISTIA e que tem PERMISSAO para continuar existindo.',
+    'AULA QUE JA FOI DADA NAO SE MEXE — ordem do Dan (13/07/2026). As aulas FUNCIONAM.',
+    'A funcao deste arquivo e o GATE 8 saber o que IGNORAR, nao o que consertar.',
+    'NAO abra PR para "limpar o legado". NAO rode retrofit em cima destes arquivos.',
+    'So mexa numa aula daqui se o Dan pedir AQUELA aula, DAQUELE aluno, explicitamente.',
+]
+
 # Os dois auditores mais ricos. Ambos varrem lista de arquivos e imprimem
 # "arquivo" + linhas de defeito; a diferença é só o formato.
 FAIL_V = re.compile(r'^\s*❌ FAIL\s+(\S+)\s+\[(\w+)\]')
@@ -107,13 +116,21 @@ def main():
     atual = varrer(fs)
 
     if '--update' in sys.argv:
-        json.dump(atual, open(BASE, 'w', encoding='utf-8'),
+        # O aviso mora DENTRO do arquivo. Sem ele, uma lista de 3.243 defeitos com
+        # arquivo e categoria LÊ-SE como um TODO — e a próxima pessoa (ou agente) que
+        # abrir isso vai querer "limpar". É um ALVARÁ, não uma lista de tarefas.
+        saida = {'_LEIA-ME': {k: 0 for k in AVISO}}
+        saida.update(atual)
+        json.dump(saida, open(BASE, 'w', encoding='utf-8'),
                   ensure_ascii=False, indent=1, sort_keys=True)
         n = sum(sum(c.values()) for c in atual.values())
         print(f'baseline congelado: {len(atual)} arquivo(s), {n} defeito(s), {len(fs)} varridos')
         return 0
 
     if '--report' in sys.argv:
+        for l in AVISO:
+            print(l)
+        print()
         cats = {}
         for c in atual.values():
             for k, v in c.items():
@@ -125,7 +142,9 @@ def main():
 
     if not os.path.exists(BASE):
         sys.exit('legacy-baseline.json não existe. Rode --update uma vez.')
-    base = json.load(open(BASE, encoding='utf-8'))
+    # chaves com "_" são metadados (o aviso), não arquivos
+    base = {k: v for k, v in json.load(open(BASE, encoding='utf-8')).items()
+            if not k.startswith('_')}
 
     # A PERGUNTA: algum arquivo ganhou defeito que não tinha?
     # (Arquivo NOVO tem baseline vazio -> tolerância zero, de graça.)
