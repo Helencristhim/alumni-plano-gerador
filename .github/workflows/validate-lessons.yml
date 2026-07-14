@@ -27,6 +27,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      # ╔══════════════════════════════════════════════════════════════════════╗
+      # ║ CANARIO — o vigia que nao confia no verde do gate.                    ║
+      # ╚══════════════════════════════════════════════════════════════════════╝
+      # Roda ANTES de tudo e SEM condicao: mesmo que a classificacao de arquivos
+      # quebre de novo (foi o bug de 14/07 que dormiu os GATES 1-7), o canario
+      # ainda roda. Ele pega fixtures propositalmente quebrados e exige que os
+      # gates os REPROVEM. Se um gate passar um fixture — porque morreu, foi
+      # pulado, ou teve a logica quebrada — o canario fica VERMELHO aqui, na hora,
+      # em vez de meses depois quando alguem abrir a aula. Um gate verde nao prova
+      # que o gate funciona; o canario prova, a cada PR, que ele ainda MORDE.
+      - name: "CANARIO — prova que os gates ainda reprovam defeito conhecido"
+        run: python3 scripts/canary/run.py
+
       - name: Classifica arquivos de aula do PR
         id: files
         # ╔══════════════════════════════════════════════════════════════════════╗
