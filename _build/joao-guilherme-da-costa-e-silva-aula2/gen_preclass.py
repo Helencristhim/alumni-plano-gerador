@@ -73,7 +73,7 @@ def vocab_cards():
             f'        <div class="vocab-card-pc"><div class="vocab-card-content">'
             f'<div class="vocab-card-header"><span class="vocab-card-word">{esc(word)}</span>'
             f'<span class="vocab-card-dot"> -- </span>'
-            f'<span class="vocab-card-def">{esc(d)} ({esc(pt)})</span></div>'
+            f'<span class="vocab-card-def">{esc(d)}</span></div>'
             f'<div class="vocab-card-example">{esc(ex)}</div></div>'
             f'<button class="audio-btn" data-speak="{esc(word)}" onclick="speakText(this.dataset.speak,this)">Listen</button></div>')
     return '\n'.join(rows)
@@ -102,18 +102,18 @@ CONTEXT = """<p>Jo&#227;o Guilherme <strong>is responsible for</strong> the sign
         <p>Today the <strong>handover</strong> to the operator is still officially planned for June, and nobody believes that date. As Jo&#227;o says on the call with the new supplier: "Honestly, the late document is only the <strong>tip of the iceberg</strong>. One of the main challenges we face is the <strong>lead time</strong>, and I would rather bring a realistic date than an optimistic one."</p>"""
 
 QUIZZES_CONTEXT = [
-    ("1. \"If the interface document had arrived in January, the team would have completed the design review before the summer.\" O documento chegou em janeiro?",
-     [("N&#227;o. O third conditional descreve um passado IMAGINADO &mdash; a condi&#231;&#227;o n&#227;o aconteceu, e o resultado tamb&#233;m n&#227;o.", True),
-      ("Sim. Chegou em janeiro e a revis&#227;o foi conclu&#237;da.", False),
-      ("Ainda n&#227;o sabemos &mdash; a frase fala do futuro.", False)]),
-    ("2. Qual e a forma correta da CONDICAO no third conditional?",
-     [("If + would have + partic&#237;pio", False),
-      ("If + had + partic&#237;pio", True),
+    ("1. \"If the interface document had arrived in January, the team would have completed the design review before the summer.\" Did the document arrive in January?",
+     [("No. The third conditional describes an IMAGINED past &mdash; the condition did not happen, so the result did not happen either.", True),
+      ("Yes. It arrived in January and the design review was closed.", False),
+      ("We still don&#39;t know &mdash; the sentence is about the future.", False)]),
+    ("2. What is the correct form of the CONDITION in the third conditional?",
+     [("If + would have + past participle", False),
+      ("If + had + past participle", True),
       ("If + past simple", False)]),
-    ("3. \"If procurement had been involved earlier, the order would have been placed in January.\" Por que essa frase e mais profissional do que \"Procurement forgot the order\"?",
-     [("Porque &#233; mais longa e soa mais formal.", False),
-      ("Porque descreve o PROCESSO que falhou, sem acusar uma pessoa ou empresa &mdash; a linguagem da retrospectiva.", True),
-      ("Porque evita falar do atraso.", False)]),
+    ("3. \"If procurement had been involved earlier, the order would have been placed in January.\" Why is this sentence more professional than \"Procurement forgot the order\"?",
+     [("Because it is longer and sounds more formal.", False),
+      ("Because it describes the PROCESS that failed, without blaming a person or a company &mdash; the language of a retrospective.", True),
+      ("Because it avoids mentioning the delay.", False)]),
     ("4. Which sentence is correct?",
      [("\"If they would have signed the document, we would have finished on time.\"", False),
       ("\"If they had signed the document, we would finished on time.\"", False),
@@ -121,22 +121,22 @@ QUIZZES_CONTEXT = [
 ]
 
 BLANKS = [
-    ("had arrived", "Dica: a CONDI&#199;&#195;O do third conditional &mdash; had + partic&#237;pio",
+    ("had arrived", "Hint: the CONDITION of the third conditional &mdash; had + past participle",
      "If the interface document had arrived in January, we would have completed the handover on time.",
      '"If the interface document ', ' in January, we would have completed the handover on time."'),
-    ("would have completed", "Dica: o RESULTADO do third conditional &mdash; would have + partic&#237;pio",
+    ("would have completed", "Hint: the RESULT of the third conditional &mdash; would have + past participle",
      "If the supplier had delivered on time, we would have completed the commissioning in March.",
      '"If the supplier had delivered on time, we ', ' the commissioning in March."'),
-    ("liaise with", "Dica: fazer a ponte com, trocar informa&#231;&#227;o com os dois lados",
+    ("liaise with", "Hint: to be the bridge between two sides and exchange information with them",
      "I liaise with every supplier on the signaling package.",
      '"I ', ' every supplier on the signaling package."'),
-    ("carry out", "Dica: realizar, executar uma inspe&#231;&#227;o (nunca \"realize an inspection\")",
+    ("carry out", "Hint: to perform and complete an inspection (never say realize an inspection)",
      "We carry out the inspection at the factory before the shipment.",
      '"We ', ' the inspection at the factory before the shipment."'),
-    ("responsible for", "Dica: nunca \"responsible OF\" &mdash; a preposi&#231;&#227;o &#233; for",
+    ("responsible for", "Hint: never responsible OF &mdash; the preposition is for",
      "I am responsible for the signaling workstream on the Line 5 extension.",
      '"I am ', ' the signaling workstream on the Line 5 extension."'),
-    ("lead time", "Dica: o tempo entre o pedido e o recebimento do equipamento",
+    ("lead time", "Hint: the time between placing an order and receiving the equipment",
      "The lead time for the interlocking is nine months.",
      '"The ', ' for the interlocking is nine months."'),
 ]
@@ -233,7 +233,6 @@ def speech_html():
         out.append(
             f'      <div class="speech-card" data-phrase="{esc(en)}">\n'
             f'        <div class="speech-phrase">{esc(en)}</div>\n'
-            f'        <div class="speech-translation">{esc(pt)}</div>\n'
             f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
             f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
             f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -247,32 +246,32 @@ def survival_html():
     for i, (en, pt) in enumerate(SURVIVAL, 1):
         out.append(
             f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-            f'<span class="sp-en">{esc(en)}</span><span class="sp-pt">{esc(pt)}</span>'
+            f'<span class="sp-en">{esc(en)}</span>'
             f'<button class="btn btn-listen" data-speak="{esc(en)}" onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>')
     return '\n'.join(out)
 
 
 GRAMMAR_TIP = """      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use / Uso</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Afirmativa<br>If + <strong>had</strong> + partic&#237;pio, <strong>would have</strong> + partic&#237;pio</td><td style="padding:.6rem">Um passado IMAGINADO: a condi&#231;&#227;o n&#227;o aconteceu, ent&#227;o o resultado tamb&#233;m n&#227;o. An imagined past.</td><td style="padding:.6rem">If the supplier <strong>had delivered</strong> on time, we <strong>would have completed</strong> the handover in March.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Negativa</td><td style="padding:.6rem"><strong>wouldn't have</strong> + partic&#237;pio. Na fala, sempre contra&#237;do.</td><td style="padding:.6rem">If we <strong>had involved</strong> procurement earlier, we <strong>wouldn't have missed</strong> the milestone.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Interrogativa</td><td style="padding:.6rem">What <strong>would have happened</strong> if + had + partic&#237;pio?</td><td style="padding:.6rem"><strong>What would have happened if</strong> the order <strong>had been placed</strong> in January?</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Na fala (contra&#231;&#227;o)</td><td style="padding:.6rem">Os dois lados contraem &mdash; &#233; o que voc&#234; realmente ouve numa call.</td><td style="padding:.6rem">If they<strong>'d</strong> sent the drawings, we<strong>'d have</strong> caught the error.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Second conditional (contraste)<br>If + past simple, would + verbo</td><td style="padding:.6rem">Presente/futuro IRREAL &mdash; n&#227;o &#233; o passado.</td><td style="padding:.6rem">If we <strong>had</strong> more time, we <strong>would run</strong> another test tomorrow.</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">Para que serve</td><td style="padding:.6rem" colspan="2">O third conditional permite revisar um marco perdido como falha de <strong>processo</strong>, e n&#227;o como culpa de uma pessoa. &#201; a linguagem da retrospectiva profissional &mdash; e o que separa um engenheiro s&#234;nior de um engenheiro irritado.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Affirmative<br>If + <strong>had</strong> + past participle, <strong>would have</strong> + past participle</td><td style="padding:.6rem">An imagined past: the condition did not happen, so the result did not happen either.</td><td style="padding:.6rem">If the supplier <strong>had delivered</strong> on time, we <strong>would have completed</strong> the handover in March.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Negative</td><td style="padding:.6rem"><strong>wouldn't have</strong> + past participle. In speech, always contracted.</td><td style="padding:.6rem">If we <strong>had involved</strong> procurement earlier, we <strong>wouldn't have missed</strong> the milestone.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Question</td><td style="padding:.6rem">What <strong>would have happened</strong> if + had + past participle?</td><td style="padding:.6rem"><strong>What would have happened if</strong> the order <strong>had been placed</strong> in January?</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">In speech (contraction)</td><td style="padding:.6rem">Both halves contract &mdash; this is what you actually hear on a call.</td><td style="padding:.6rem">If they<strong>'d</strong> sent the drawings, we<strong>'d have</strong> caught the error.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Second conditional (contrast)<br>If + past simple, would + verb</td><td style="padding:.6rem">An unreal present or future &mdash; not the past.</td><td style="padding:.6rem">If we <strong>had</strong> more time, we <strong>would run</strong> another test tomorrow.</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">Why it matters</td><td style="padding:.6rem" colspan="2">The third conditional lets you review a missed milestone as a <strong>process</strong> failure instead of one person&#39;s fault. It is the language of a professional retrospective &mdash; and what separates a senior engineer from an angry one.</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (erro de brasileiro):</strong> em portugu&#234;s dizemos "se o fornecedor <em>teria entregado</em>..." e a tenta&#231;&#227;o &#233; traduzir por "if the supplier <strong>would have</strong> delivered". Em ingl&#234;s isso est&#225; ERRADO: a condi&#231;&#227;o SEMPRE leva <strong>had + partic&#237;pio</strong> ("if the supplier <strong>had delivered</strong>"). O <strong>would have</strong> aparece s&#243; no RESULTADO.</p>"""
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (classic mistake):</strong> the temptation is to put <strong>would have</strong> in BOTH halves &mdash; "if the supplier <strong>would have</strong> delivered". In English that is WRONG: the condition ALWAYS takes <strong>had + past participle</strong> ("if the supplier <strong>had delivered</strong>"). <strong>Would have</strong> belongs only in the RESULT.</p>"""
 
 
 HTML = f"""<div class="lesson-card" id="ex-lesson-2">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 02 -- Pre-class</div>
+      <div class="lesson-number">Lesson 02 -- Pre-class</div>
       <h3>Reactivating Your Professional Voice -- Roles, Responsibilities and Ongoing Projects</h3>
-      <div class="lesson-desc">Descrever o seu papel na Motiva e conduzir uma retrospectiva de projeto sem culpar ningu&#233;m. Key words: to specialize in, to coordinate, to liaise with, to carry out, to look into, to come up with, interface document, subcontractor, procurement, handover, workstream, counterpart, lead time, tip of the iceberg. Structure: third conditional (If + had + partic&#237;pio, would have + partic&#237;pio) + patterns "I'm responsible for / My role involves / We're currently in the process of".</div>
+      <div class="lesson-desc">Describe your role at Motiva and run a project retrospective without blaming anyone. Key words: to specialize in, to coordinate, to liaise with, to carry out, to look into, to come up with, interface document, subcontractor, procurement, handover, workstream, counterpart, lead time, tip of the iceberg. Structure: third conditional (If + had + past participle, would have + past participle) + the patterns "I'm responsible for / My role involves / We're currently in the process of".</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="2" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="2">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -281,7 +280,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-2">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Na aula 1 voc&#234; nomeou as COISAS do projeto. Aqui voc&#234; nomeia as A&#199;&#213;ES: o que voc&#234; faz, com quem faz e o que entrega. Ou&#231;a cada termo e leia o exemplo.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">In Lesson 1 you named the THINGS on a project. Here you name the ACTIONS: what you do, who you do it with, and what you deliver. Listen to each term and read the example sentence.</p>
       <div class="vocab-cards">
 {vocab_cards()}
       </div>
@@ -289,7 +288,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-2">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match every term with the right definition.</p>
       <div class="match-grid" id="match-l2">
 {match_grid()}
       </div>
@@ -297,7 +296,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-2">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text, then answer the questions below it.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         {CONTEXT}
       </div>
@@ -306,19 +305,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-2">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Third Conditional</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Como contar o que DEVERIA ter acontecido num projeto &mdash; sem acusar ningu&#233;m (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">How to tell the story of what SHOULD have happened on a project &mdash; without blaming anyone.</p>
 {GRAMMAR_TIP}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a forma correta. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete every sentence with the right form. Tap Listen to hear the full sentence.</p>
 {blanks_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the Project Update in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque as etapas de um project update para um fornecedor novo na ordem correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the steps of a project update to a new supplier in the right order.</p>
       <div class="order-container" id="order-l2">
 {order_html()}
       </div>
@@ -327,19 +326,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-2">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesmo dizendo-a. S&#227;o as cinco frases que descrevem o seu papel em qualquer reuni&#227;o internacional.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to the sentence, then record yourself saying it. These five sentences describe your role in any international meeting.</p>
 {speech_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real de um project update em ingl&#234;s.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Pick the strongest answer for these real moments of a project update.</p>
 {quiz_html(QUIZZES_SIT)}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesmo respondendo &#224; pergunta abaixo. Fale por 90 segundos, sem script e sem parar para se corrigir.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the prompt below. Speak for 90 seconds, with no script and no stopping to fix yourself.</p>
       <div class="think-card">
         <div class="think-question">A new international supplier joins your project today. Introduce your role (I'm responsible for... / My role involves...), describe where the project stands (We're currently in the process of...), explain ONE thing that went wrong using the third conditional (If the interface document had arrived in January, we would have...), and name the main challenge ahead (One of the main challenges we face is...). Do not blame anyone -- describe the process.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

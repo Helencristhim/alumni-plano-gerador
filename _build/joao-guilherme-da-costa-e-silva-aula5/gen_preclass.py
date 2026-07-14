@@ -74,7 +74,7 @@ def vocab_cards():
             f'        <div class="vocab-card-pc"><div class="vocab-card-content">'
             f'<div class="vocab-card-header"><span class="vocab-card-word">{esc(word)}</span>'
             f'<span class="vocab-card-dot"> -- </span>'
-            f'<span class="vocab-card-def">{esc(d)} ({esc(pt)})</span></div>'
+            f'<span class="vocab-card-def">{esc(d)}</span></div>'
             f'<div class="vocab-card-example">{esc(ex)}</div></div>'
             f'<button class="audio-btn" data-speak="{esc(word)}" onclick="speakText(this.dataset.speak,this)">Listen</button></div>')
     return '\n'.join(rows)
@@ -103,18 +103,18 @@ CONTEXT = """<p>It is four o'clock on a Tuesday and Jo&#227;o Guilherme is sitti
         <p>Then comes the uncomfortable question, the one he did not prepare in March: there was a period when he was not using English. He does not apologize. He <strong>accounts for</strong> it. "<strong>What I learned from that experience was</strong> that fluency is a habit, not a memory. <strong>It was an interview, in March, that</strong> made me rebuild the habit." He did not <strong>throw in the towel</strong>, and the word for that, in an interview, is <strong>resilience</strong>. <strong>Stakeholder management</strong>, a <strong>cross-functional</strong> team, a <strong>high-stakes</strong> discipline where the failure mode is a collision: the engineering was always there. Tonight, so was the English."""
 
 QUIZZES_CONTEXT = [
-    ("1. \"What I bring to this role is seven years in signaling.\" Por que o verbo &#233; <em>is</em>, e n&#227;o <em>are</em>, se \"seven years\" &#233; plural?",
-     [("Porque <em>What...</em> funciona como \"the thing that\" &mdash; um sujeito SINGULAR. O verbo concorda com ele, nunca com o complemento.", True),
-      ("Porque o ingl&#234;s ignora concord&#226;ncia depois de <em>what</em>.", False),
-      ("Porque \"seven years\" &#233; tratado como dinheiro e vira singular.", False)]),
-    ("2. \"It was in San Francisco that I ran my first commissioning cycle.\" O que essa estrutura FAZ com a frase?",
-     [("Adiciona uma informa&#231;&#227;o nova sobre S&#227;o Francisco.", False),
-      ("Coloca UM fato sob o holofote &mdash; o lugar &mdash; e diz &#224; banca onde olhar. A informa&#231;&#227;o &#233; a mesma; o peso, n&#227;o.", True),
-      ("Torna a frase mais formal, mas o efeito &#233; apenas decorativo.", False)]),
-    ("3. Por que \"What I bring to this role is seven years...\" funciona melhor numa entrevista do que \"I have seven years of experience\"?",
-     [("Porque &#233; mais longa, e frases longas soam mais profissionais.", False),
-      ("Porque anuncia que algo importante vem, guarda a informa&#231;&#227;o decisiva para o FIM &mdash; e ainda compra meio segundo de tempo para voc&#234; pensar.", True),
-      ("Porque evita o verbo <em>have</em>, que &#233; informal demais.", False)]),
+    ("1. \"What I bring to this role is seven years in signaling.\" Why is the verb <em>is</em>, and not <em>are</em>, if \"seven years\" is plural?",
+     [("Because <em>What...</em> works like \"the thing that\" &mdash; a SINGULAR subject. The verb agrees with it, never with what follows.", True),
+      ("Because English drops subject-verb agreement after <em>what</em>.", False),
+      ("Because \"seven years\" is treated like an amount of money, so it turns singular.", False)]),
+    ("2. \"It was in San Francisco that I ran my first commissioning cycle.\" What does this structure DO to the sentence?",
+     [("It adds a new piece of information about San Francisco.", False),
+      ("It puts ONE fact under the spotlight &mdash; the place &mdash; and tells the panel where to look. The information is the same; the weight is not.", True),
+      ("It makes the sentence more formal, but the effect is purely decorative.", False)]),
+    ("3. Why does \"What I bring to this role is seven years...\" work better in an interview than \"I have seven years of experience\"?",
+     [("Because it is longer, and long sentences sound more professional.", False),
+      ("Because it announces that something important is coming, saves the decisive information for the END &mdash; and buys you half a second to think.", True),
+      ("Because it avoids the verb <em>have</em>, which is far too informal.", False)]),
     ("4. Which sentence is correct?",
      [("\"It was in San Francisco where I ran my first commissioning cycle.\"", False),
       ("\"What I bring to this role, it is deep expertise in signaling.\"", False),
@@ -122,22 +122,22 @@ QUIZZES_CONTEXT = [
 ]
 
 BLANKS = [
-    ("What I bring to this role is", "Dica: wh-cleft &mdash; anuncie primeiro, entregue depois. O verbo &#233; <em>is</em>, no singular",
+    ("What I bring to this role is", "Hint: wh-cleft &mdash; announce first, deliver second. The verb is <em>is</em>, singular",
      "What I bring to this role is seven years in railway signaling.",
      '"', ' seven years in railway signaling."'),
-    ("It was in San Francisco that", "Dica: it-cleft &mdash; o holofote cai no LUGAR. E a palavra &#233; <em>that</em>, nunca <em>where</em>",
+    ("It was in San Francisco that", "Hint: it-cleft &mdash; the spotlight falls on the PLACE. And the word is <em>that</em>, never <em>where</em>",
      "It was in San Francisco that I ran my first full commissioning cycle.",
      '"', ' I ran my first full commissioning cycle."'),
-    ("What sets me apart is", "Dica: a sua proposta de valor em uma linha s&#243;",
+    ("What sets me apart is", "Hint: your value proposition in a single line",
      "What sets me apart is that I read the standard and I run the site.",
      '"', ' that I read the standard and I run the site."'),
-    ("account for", "Dica: explicar um per&#237;odo ou uma decis&#227;o &mdash; e a preposi&#231;&#227;o &#233; FOR",
+    ("account for", "Hint: to explain a period or a decision &mdash; and the preposition is FOR",
      "I can account for the two years when I stopped using English.",
      '"I can ', ' the two years when I stopped using English."'),
-    ("set out", "Dica: expor a sua trajet&#243;ria de forma clara e em ordem",
+    ("set out", "Hint: to lay out your background clearly and in order",
      "Let me set out my background in three steps.",
      '"Let me ', ' my background in three steps."'),
-    ("track record", "Dica: n&#227;o &#233; tempo de experi&#234;ncia &mdash; &#233; a evid&#234;ncia: projeto, decis&#227;o, resultado",
+    ("track record", "Hint: it is not length of service &mdash; it is the evidence: a project, a decision, an outcome",
      "I can demonstrate a track record of delivering signaling packages on time.",
      '"I can demonstrate a ', ' of delivering signaling packages on time."'),
 ]
@@ -234,7 +234,6 @@ def speech_html():
         out.append(
             f'      <div class="speech-card" data-phrase="{esc(en)}">\n'
             f'        <div class="speech-phrase">{esc(en)}</div>\n'
-            f'        <div class="speech-translation">{esc(pt)}</div>\n'
             f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
             f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
             f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -248,34 +247,34 @@ def survival_html():
     for i, (en, pt) in enumerate(SURVIVAL, 1):
         out.append(
             f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-            f'<span class="sp-en">{esc(en)}</span><span class="sp-pt">{esc(pt)}</span>'
+            f'<span class="sp-en">{esc(en)}</span>'
             f'<button class="btn btn-listen" data-speak="{esc(en)}" onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>')
     return '\n'.join(out)
 
 
 GRAMMAR_TIP = """      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Function / Fun&#231;&#227;o</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Function</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">wh-cleft<br><strong>What</strong> + sujeito + verbo + <strong>is</strong> + o ponto</td><td style="padding:.6rem">Voc&#234; ANUNCIA que algo importante vem, e s&#243; ent&#227;o entrega. A banca se inclina para a frente. Em portugu&#234;s: "O que eu trago para este cargo &#233;...".</td><td style="padding:.6rem">"<strong>What I bring to this role is</strong> seven years in signaling."</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">it-cleft<br><strong>It was</strong> + o fato + <strong>that</strong> + o resto</td><td style="padding:.6rem">Voc&#234; coloca UM fato sob o holofote: um lugar, uma data, uma pessoa, uma decis&#227;o. A palavra &#233; sempre <strong>that</strong> &mdash; nunca <em>where</em>, nunca <em>when</em>.</td><td style="padding:.6rem">"<strong>It was in San Francisco that</strong> I ran my first commissioning cycle."</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><strong>The reason</strong> + ora&#231;&#227;o + <strong>is that</strong></td><td style="padding:.6rem">Voc&#234; assume o controle da hist&#243;ria por tr&#225;s de uma decis&#227;o, antes que algu&#233;m a interprete mal.</td><td style="padding:.6rem">"<strong>The reason I moved into signaling is that</strong> safety is non-negotiable."</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Concord&#226;ncia</td><td style="padding:.6rem">Depois de <em>What...</em>, o verbo &#233; SEMPRE <strong>is</strong> / <strong>was</strong>, mesmo diante de um plural &mdash; porque <em>What</em> equivale a "the thing that", um sujeito singular.</td><td style="padding:.6rem">"What I bring <strong>is</strong> seven years." (nunca <em>are</em>)</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Interrogativa / negativa</td><td style="padding:.6rem">Funciona igual: <strong>What</strong> he wants <strong>is</strong> a date. / <strong>What I do not do is</strong> promise dates I cannot defend.</td><td style="padding:.6rem">"<strong>What I do not do is</strong> promise a date I cannot defend."</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Na fala</td><td style="padding:.6rem">A pausa cai logo ANTES do <em>is</em>. Essa pausa &#233; tempo de pensar &mdash; e voc&#234; tem direito a ela.</td><td style="padding:.6rem">"What I learned from that experience &#8230; <strong>was</strong> that fluency is a habit."</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">Para que serve</td><td style="padding:.6rem" colspan="2">Sob press&#227;o, o candidato nervoso despeja tudo o que sabe numa frase longa &mdash; e a banca para de ouvir. A cleft sentence faz o contr&#225;rio: ela diz &#224; banca <strong>onde olhar</strong>. Mesma informa&#231;&#227;o, candidato completamente diferente.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">wh-cleft<br><strong>What</strong> + subject + verb + <strong>is</strong> + the point</td><td style="padding:.6rem">You ANNOUNCE that something important is coming, and only then deliver it. The panel leans forward. The listener knows a headline is on its way.</td><td style="padding:.6rem">"<strong>What I bring to this role is</strong> seven years in signaling."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">it-cleft<br><strong>It was</strong> + the fact + <strong>that</strong> + the rest</td><td style="padding:.6rem">You put ONE fact under the spotlight: a place, a date, a person, a decision. The linking word is always <strong>that</strong> &mdash; never <em>where</em>, never <em>when</em>.</td><td style="padding:.6rem">"<strong>It was in San Francisco that</strong> I ran my first commissioning cycle."</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><strong>The reason</strong> + clause + <strong>is that</strong></td><td style="padding:.6rem">You take control of the story behind a decision before anybody reads it the wrong way.</td><td style="padding:.6rem">"<strong>The reason I moved into signaling is that</strong> safety is non-negotiable."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Agreement</td><td style="padding:.6rem">After <em>What...</em>, the verb is ALWAYS <strong>is</strong> / <strong>was</strong>, even in front of a plural &mdash; because <em>What</em> means "the thing that", a singular subject.</td><td style="padding:.6rem">"What I bring <strong>is</strong> seven years." (never <em>are</em>)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Question / negative</td><td style="padding:.6rem">It behaves the same way: <strong>What</strong> he wants <strong>is</strong> a date. / <strong>What I do not do is</strong> promise dates I cannot defend.</td><td style="padding:.6rem">"<strong>What I do not do is</strong> promise a date I cannot defend."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">In speech</td><td style="padding:.6rem">The pause falls right BEFORE the <em>is</em>. That pause is thinking time &mdash; and it belongs to you.</td><td style="padding:.6rem">"What I learned from that experience &#8230; <strong>was</strong> that fluency is a habit."</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">Why it matters</td><td style="padding:.6rem" colspan="2">Under pressure, a nervous candidate dumps everything he knows into one long sentence &mdash; and the panel stops listening. A cleft sentence does the opposite: it tells the panel <strong>where to look</strong>. Same information, completely different candidate.</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (dois erros de brasileiro):</strong> (1) o pronome repetido &mdash; em portugu&#234;s dizemos "O que eu trago para esse cargo, <em>isso &#233;</em>..."; em ingl&#234;s o pronome N&#195;O volta: "What I bring to this role <em>it is</em>..." est&#225; errado, o correto &#233; "What I bring to this role <strong>is</strong>..."; (2) o <em>where</em> &mdash; dizemos "foi em S&#227;o Francisco ONDE...", mas o it-cleft ingl&#234;s exige <strong>that</strong>: "It was in San Francisco <strong>that</strong> I ran my first commissioning cycle."</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Os quatro padr&#245;es da entrevista:</strong> "<strong>One example that comes to mind is...</strong>" (a pergunta comportamental), "<strong>What I learned from that experience was...</strong>" (o fechamento de qualquer hist&#243;ria), "<strong>The way I approach this kind of challenge is...</strong>" (a pergunta de m&#233;todo) e "<strong>I would say my greatest strength in this area is...</strong>" (a pergunta direta). S&#227;o quatro esqueletos: voc&#234; s&#243; troca o recheio."""
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (two classic mistakes):</strong> (1) the repeated pronoun &mdash; the subject pronoun does NOT come back after the cleft: "What I bring to this role <em>it is</em>..." is wrong; the correct form is "What I bring to this role <strong>is</strong>..."; (2) the <em>where</em> &mdash; the English it-cleft demands <strong>that</strong>, even when you are pointing at a place: "It was in San Francisco <strong>that</strong> I ran my first commissioning cycle."</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>The four interview patterns:</strong> "<strong>One example that comes to mind is...</strong>" (the behavioral question), "<strong>What I learned from that experience was...</strong>" (the closing line of any story), "<strong>The way I approach this kind of challenge is...</strong>" (the method question) and "<strong>I would say my greatest strength in this area is...</strong>" (the direct question). Four skeletons: all you change is the filling."""
 
 
 HTML = f"""<div class="lesson-card" id="ex-lesson-5">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1553773077-91673524aafa?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 05 -- Pre-class</div>
+      <div class="lesson-number">Lesson 05 -- Pre-class</div>
       <h3>Performing Under Pressure -- The International Job Interview</h3>
-      <div class="lesson-desc">A entrevista internacional: como transformar sete anos de experi&#234;ncia em EVID&#202;NCIA, controlar o que a banca ouve primeiro e responder &#224; pergunta desconfort&#225;vel sem pedir desculpas. Key words: track record, cross-functional, high-stakes, resilience, stakeholder management, value proposition, technical lead, subject matter expert, performance-driven, results-oriented, to set out, to account for, to burn the midnight oil, to throw in the towel. Structure: cleft sentences ("What I bring to this role is...", "It was in San Francisco that...", "The reason I... is that...") + os quatro padr&#245;es de resposta de entrevista.</div>
+      <div class="lesson-desc">The international interview: how to turn seven years of experience into EVIDENCE, control what the panel hears first, and answer the uncomfortable question without apologizing. Key words: track record, cross-functional, high-stakes, resilience, stakeholder management, value proposition, technical lead, subject matter expert, performance-driven, results-oriented, to set out, to account for, to burn the midnight oil, to throw in the towel. Structure: cleft sentences ("What I bring to this role is...", "It was in San Francisco that...", "The reason I... is that...") + the four interview answer patterns.</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="5" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="5">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -284,7 +283,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-5">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Nas aulas 2 a 4 voc&#234; nomeou o trabalho: as a&#231;&#245;es, a inspe&#231;&#227;o, o contrato. Aqui voc&#234; nomeia a SI MESMO &mdash; as palavras que uma banca de entrevista est&#225; esperando ouvir. Voc&#234; j&#225; FEZ tudo isto na Motiva; o que falta &#233; a etiqueta em ingl&#234;s. Ou&#231;a cada termo e leia o exemplo.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Lessons 2 to 4 gave a name to the work: the actions, the inspection, the contract. This one gives a name to YOU &mdash; the words an interview panel is waiting to hear. You have already DONE all of this at Motiva; what is missing is the English label. Listen to each term and read the example.</p>
       <div class="vocab-cards">
 {vocab_cards()}
       </div>
@@ -292,7 +291,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-5">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
       <div class="match-grid" id="match-l5">
 {match_grid()}
       </div>
@@ -300,7 +299,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-5">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions below.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         {CONTEXT}
       </div>
@@ -309,19 +308,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-5">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Cleft Sentences</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Como dividir a frase em duas para controlar o que a banca ouve primeiro &mdash; e comprar meio segundo para pensar (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">How to split a sentence in two so that you control what the panel hears first &mdash; and buy yourself half a second to think.</p>
 {GRAMMAR_TIP}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a estrutura correta. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct structure. Tap Listen to hear the whole sentence.</p>
 {blanks_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the Interview in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque as etapas de uma resposta de entrevista internacional na ordem correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the stages of an international interview answer in the right order.</p>
       <div class="order-container" id="order-l5">
 {order_html()}
       </div>
@@ -330,19 +329,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-5">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesmo dizendo-a. S&#227;o as cinco frases que abrem, sustentam e fecham qualquer entrevista em ingl&#234;s. Repare na pausa que cai logo ANTES do <em>is</em> &mdash; ela &#233; sua, e ela &#233; tempo de pensar.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. These are the five sentences that open, carry and close any interview. Notice the pause that falls right BEFORE the <em>is</em> &mdash; it belongs to you, and it is thinking time.</p>
 {speech_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real de uma entrevista internacional &mdash; inclusive a pergunta desconfort&#225;vel sobre o seu ingl&#234;s.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the strongest answer for each real moment of an international interview &mdash; including the uncomfortable question about your English.</p>
 {quiz_html(QUIZZES_SIT)}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesmo respondendo &#224; pergunta abaixo. Fale por 2 minutos, sem script e sem parar para se corrigir. Tom: profissional, confiante, direto ao valor.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. Speak for 2 minutes, with no script and without stopping to correct yourself. Tone: professional, confident, straight to the value.</p>
       <div class="think-card">
         <div class="think-question">"Tell me about yourself." You have ninety seconds with an international panel. Set out your background in three steps (Let me set out...), say what you bring to the role (What I bring to this role is...), prove it with one project (It was in San Francisco, in 2023, that...), state what makes you different from the other candidates (What sets me apart is...), and finish by accounting for the period when your English went quiet (I can account for it. What I learned from that experience was...).</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

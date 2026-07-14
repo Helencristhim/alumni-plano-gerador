@@ -74,7 +74,7 @@ def vocab_cards():
             f'        <div class="vocab-card-pc"><div class="vocab-card-content">'
             f'<div class="vocab-card-header"><span class="vocab-card-word">{esc(word)}</span>'
             f'<span class="vocab-card-dot"> -- </span>'
-            f'<span class="vocab-card-def">{esc(d)} ({esc(pt)})</span></div>'
+            f'<span class="vocab-card-def">{esc(d)}</span></div>'
             f'<div class="vocab-card-example">{esc(ex)}</div></div>'
             f'<button class="audio-btn" data-speak="{esc(word)}" onclick="speakText(this.dataset.speak,this)">Listen</button></div>')
     return '\n'.join(rows)
@@ -103,18 +103,18 @@ CONTEXT = """<p>The fourth deadline is close, and the file on Jo&#227;o Guilherm
         <p>So Jo&#227;o writes the email he has been avoiding. He states the position: "<strong>Under no circumstances do</strong> we want to <strong>invoke</strong> the penalty clause &mdash; but if the fourth deadline is missed, I am afraid we are left with no alternative." Then he <strong>puts forward</strong> a recovery plan, proposes <strong>mediation</strong> before anyone mentions <strong>arbitration</strong>, and asks for the minutes of the next call to be treated as a <strong>binding agreement</strong>. Escalation is <strong>a double-edged sword</strong>: it protects the date and it can cost the relationship. This time he decides to <strong>bite the bullet</strong>, and the <strong>dispute resolution</strong> procedure stays in the drawer &mdash; for now."""
 
 QUIZZES_CONTEXT = [
-    ("1. \"Never has a supplier on this package missed three consecutive deadlines.\" Por que o verbo vem ANTES do sujeito?",
-     [("Porque e&#769; uma pergunta disfar&#231;ada.", False),
-      ("Porque depois de uma express&#227;o negativa no in&#237;cio da frase (<em>Never</em>), o ingl&#234;s usa a ordem de PERGUNTA: auxiliar + sujeito + verbo. &#201; a invers&#227;o, e ela d&#225; PESO &#224; frase.", True),
-      ("Porque o sujeito &#233; longo demais e vai para o fim.", False)]),
-    ("2. \"Not only did they fail to submit the schedule...\" Por que <em>fail</em> e n&#227;o <em>failed</em>?",
-     [("Porque depois do auxiliar <em>did</em> o verbo volta &#224; FORMA BASE &mdash; o passado j&#225; est&#225; no <em>did</em>.", True),
-      ("Porque a frase fala do presente.", False),
-      ("Porque <em>fail</em> &#233; um verbo irregular sem passado.", False)]),
-    ("3. Por que \"I'm afraid we're left with no alternative but to invoke the penalty clause\" &#233; mais eficaz do que \"We will fine you\"?",
-     [("Porque &#233; mais longa e soa mais formal.", False),
-      ("Porque combina firmeza e sa&#237;da: afirma a consequ&#234;ncia contratual sem hostilidade, e deixa a porta aberta &mdash; o fornecedor pode agir sem perder a face.", True),
-      ("Porque evita mencionar a penalidade.", False)]),
+    ("1. \"Never has a supplier on this package missed three consecutive deadlines.\" Why does the verb come BEFORE the subject?",
+     [("Because it is a disguised question.", False),
+      ("Because after a negative expression at the start of the sentence (<em>Never</em>), English switches to QUESTION order: auxiliary + subject + verb. That is inversion, and it gives the statement WEIGHT.", True),
+      ("Because the subject is too long and moves to the end.", False)]),
+    ("2. \"Not only did they fail to submit the schedule...\" Why <em>fail</em> and not <em>failed</em>?",
+     [("Because after the auxiliary <em>did</em> the verb goes back to the BASE FORM &mdash; the past tense is already carried by <em>did</em>.", True),
+      ("Because the sentence is about the present.", False),
+      ("Because <em>fail</em> is an irregular verb with no past form.", False)]),
+    ("3. Why is \"I'm afraid we're left with no alternative but to invoke the penalty clause\" more effective than \"We will fine you\"?",
+     [("Because it is longer and sounds more formal.", False),
+      ("Because it combines firmness with a way out: it states the contractual consequence without hostility and leaves the door open &mdash; the supplier can act without losing face.", True),
+      ("Because it avoids mentioning the penalty.", False)]),
     ("4. Which sentence is correct?",
      [("\"Under no circumstances we will accept a fourth revision.\"", False),
       ("\"Under no circumstances will we accept a fourth revision.\"", True),
@@ -122,22 +122,22 @@ QUIZZES_CONTEXT = [
 ]
 
 BLANKS = [
-    ("Never has", "Dica: express&#227;o negativa no in&#237;cio &rarr; auxiliar ANTES do sujeito (Never + has + sujeito + partic&#237;pio)",
+    ("Never has", "Hint: a negative expression at the start &rarr; auxiliary BEFORE the subject (Never + has + subject + past participle)",
      "Never has this package been three weeks behind the baseline schedule.",
      '"', ' this package been three weeks behind the baseline schedule."'),
-    ("Not only did", "Dica: ap&#243;s o gatilho vem o auxiliar <em>did</em> + sujeito + verbo na FORMA BASE",
+    ("Not only did", "Hint: after the trigger comes the auxiliary <em>did</em> + subject + verb in the BASE FORM",
      "Not only did the schedule slip, but no new date has been confirmed in writing.",
      '"', ' the schedule slip, but no new date has been confirmed in writing."'),
-    ("Hardly had", "Dica: dois eventos passados quase simult&#226;neos &mdash; Hardly + had + sujeito + partic&#237;pio ... when ...",
+    ("Hardly had", "Hint: two past events almost at the same time &mdash; Hardly + had + subject + past participle ... when ...",
      "Hardly had we begun the factory acceptance test when a non-conformance was identified.",
      '"', ' we begun the factory acceptance test when a non-conformance was identified."'),
-    ("will we accept", "Dica: a recusa mais forte do ingl&#234;s profissional &mdash; Under no circumstances + auxiliar + sujeito",
+    ("will we accept", "Hint: the strongest refusal in professional English &mdash; Under no circumstances + auxiliary + subject",
      "Under no circumstances will we accept a fourth revision of the schedule.",
      '"Under no circumstances ', ' a fourth revision of the schedule."'),
-    ("invoke", "Dica: o verbo que combina com <em>penalty clause</em> &mdash; acionar formalmente uma cl&#225;usula",
+    ("invoke", "Hint: the verb that goes with <em>penalty clause</em> &mdash; to put a clause formally into effect",
      "I am afraid we are left with no alternative but to invoke the penalty clause.",
      '"I am afraid we are left with no alternative but to ', ' the penalty clause."'),
-    ("put forward", "Dica: apresentar uma proposta para o outro lado considerar",
+    ("put forward", "Hint: to present a proposal for the other side to consider",
      "Let me put forward a recovery plan before anyone mentions arbitration.",
      '"Let me ', ' a recovery plan before anyone mentions arbitration."'),
 ]
@@ -235,7 +235,6 @@ def speech_html():
         out.append(
             f'      <div class="speech-card" data-phrase="{esc(en)}">\n'
             f'        <div class="speech-phrase">{esc(en)}</div>\n'
-            f'        <div class="speech-translation">{esc(pt)}</div>\n'
             f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
             f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
             f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -249,34 +248,34 @@ def survival_html():
     for i, (en, pt) in enumerate(SURVIVAL, 1):
         out.append(
             f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-            f'<span class="sp-en">{esc(en)}</span><span class="sp-pt">{esc(pt)}</span>'
+            f'<span class="sp-en">{esc(en)}</span>'
             f'<button class="btn btn-listen" data-speak="{esc(en)}" onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>')
     return '\n'.join(out)
 
 
 GRAMMAR_TIP = """      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Gatilho</th><th style="padding:.7rem;text-align:left">Estrutura / Structure</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Trigger</th><th style="padding:.7rem;text-align:left">Structure</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><strong>Never</strong> / Never before</td><td style="padding:.6rem">+ auxiliar + sujeito + verbo. A ordem vira ordem de PERGUNTA. Sinaliza que aquilo n&#227;o tem precedente &mdash; e que voc&#234; est&#225; contando.</td><td style="padding:.6rem">"<strong>Never has</strong> this package been three weeks behind the baseline schedule."</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600"><strong>Not only</strong> ... but ... <strong>also</strong></td><td style="padding:.6rem">+ auxiliar + sujeito + verbo na FORMA BASE. Sem outro auxiliar, use <em>did</em>. Empilha duas falhas numa frase s&#243;.</td><td style="padding:.6rem">"<strong>Not only did they miss</strong> the date, but they <strong>also</strong> sent an incomplete revision."</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><strong>Hardly / Scarcely</strong> ... when<br><strong>No sooner</strong> ... than</td><td style="padding:.6rem">+ <em>had</em> + sujeito + partic&#237;pio. Dois eventos passados quase simult&#226;neos &mdash; mostra padr&#227;o, n&#227;o acidente.</td><td style="padding:.6rem">"<strong>Hardly had we begun</strong> the FAT <strong>when</strong> the connector failed."</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Negativa forte<br><strong>Under no circumstances</strong><br>At no time / On no account</td><td style="padding:.6rem">+ auxiliar + sujeito. A recusa mais forte do ingl&#234;s profissional. Use UMA vez &mdash; e para valer.</td><td style="padding:.6rem">"<strong>Under no circumstances will we</strong> accept a fourth revision."</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Interrogativa</td><td style="padding:.6rem">A invers&#227;o J&#193; usa a ordem de pergunta &mdash; por isso ela nunca aparece dentro de uma pergunta de verdade. A pergunta continua normal: <em>Are you going to invoke the penalty clause?</em></td><td style="padding:.6rem">"<strong>Are you going to invoke</strong> the penalty clause?" (sem invers&#227;o)</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Hedging antes da exig&#234;ncia</td><td style="padding:.6rem">A f&#243;rmula que sustenta firmeza sem agress&#227;o: um amortecedor ANTES do fato duro.</td><td style="padding:.6rem">"<strong>It would be remiss of us not to flag that...</strong>" &middot; "<strong>I'm afraid we're left with no alternative but to...</strong>"</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">Para que serve</td><td style="padding:.6rem" colspan="2">"They have never missed three deadlines" &#233; um fato. "<strong>Never have they missed</strong> three deadlines" &#233; um fato COM UM CASO ATR&#193;S. A invers&#227;o eleva o registro e diz, em um segundo, que voc&#234; leu o contrato &mdash; e que este e-mail pode ser encaminhado ao diretor dele. Use <strong>uma ou duas vezes</strong> por e-mail. Tr&#234;s vezes soa teatral.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><strong>Never</strong> / Never before</td><td style="padding:.6rem">+ auxiliary + subject + verb. The word order becomes QUESTION order. It signals that there is no precedent &mdash; and that you have been keeping count.</td><td style="padding:.6rem">"<strong>Never has</strong> this package been three weeks behind the baseline schedule."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600"><strong>Not only</strong> ... but ... <strong>also</strong></td><td style="padding:.6rem">+ auxiliary + subject + verb in the BASE FORM. With no other auxiliary available, use <em>did</em>. It stacks two failures into one sentence.</td><td style="padding:.6rem">"<strong>Not only did they miss</strong> the date, but they <strong>also</strong> sent an incomplete revision."</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><strong>Hardly / Scarcely</strong> ... when<br><strong>No sooner</strong> ... than</td><td style="padding:.6rem">+ <em>had</em> + subject + past participle. Two past events almost at the same time &mdash; it shows a pattern, not an accident.</td><td style="padding:.6rem">"<strong>Hardly had we begun</strong> the FAT <strong>when</strong> the connector failed."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Strong negative<br><strong>Under no circumstances</strong><br>At no time / On no account</td><td style="padding:.6rem">+ auxiliary + subject. The strongest refusal in professional English. Use it ONCE &mdash; and mean it.</td><td style="padding:.6rem">"<strong>Under no circumstances will we</strong> accept a fourth revision."</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Questions</td><td style="padding:.6rem">Inversion ALREADY uses question order &mdash; which is why it never appears inside a real question. The question itself stays normal: <em>Are you going to invoke the penalty clause?</em></td><td style="padding:.6rem">"<strong>Are you going to invoke</strong> the penalty clause?" (no inversion)</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Hedging before the demand</td><td style="padding:.6rem">The formula that holds firmness without aggression: a cushion BEFORE the hard fact.</td><td style="padding:.6rem">"<strong>It would be remiss of us not to flag that...</strong>" &middot; "<strong>I'm afraid we're left with no alternative but to...</strong>"</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">Why it works</td><td style="padding:.6rem" colspan="2">"They have never missed three deadlines" is a fact. "<strong>Never have they missed</strong> three deadlines" is a fact WITH A CASE BEHIND IT. Inversion raises the register and says, in one second, that you have read the contract &mdash; and that this email can be forwarded to their director. Use it <strong>once or twice</strong> per email. Three times sounds theatrical.</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (dois erros de brasileiro):</strong> (1) manter a ordem normal depois do gatilho &mdash; "Never <em>the supplier has</em> missed..." est&#225; errado; o correto &#233; "Never <strong>has the supplier</strong> missed..."; (2) usar o passado depois de <em>did</em> &mdash; "Not only did they <em>failed</em>" est&#225; errado; depois do auxiliar vem a forma base: "Not only did they <strong>fail</strong>".</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Colloca&#231;&#245;es do contrato:</strong> <strong>invoke</strong> a penalty clause (nunca "activate"), <strong>claim</strong> force majeure, <strong>put forward</strong> a proposal, <strong>pursue</strong> a formal complaint, <strong>address</strong> contractual obligations, <strong>reach</strong> a resolution, <strong>make</strong> a compelling case."""
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (two classic mistakes):</strong> (1) keeping normal word order after the trigger &mdash; "Never <em>the supplier has</em> missed..." is wrong; the correct form is "Never <strong>has the supplier</strong> missed..."; (2) using the past tense after <em>did</em> &mdash; "Not only did they <em>failed</em>" is wrong; after the auxiliary comes the base form: "Not only did they <strong>fail</strong>".</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Contract collocations:</strong> <strong>invoke</strong> a penalty clause (never "activate"), <strong>claim</strong> force majeure, <strong>put forward</strong> a proposal, <strong>pursue</strong> a formal complaint, <strong>address</strong> contractual obligations, <strong>reach</strong> a resolution, <strong>make</strong> a compelling case."""
 
 
 HTML = f"""<div class="lesson-card" id="ex-lesson-4">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 04 -- Pre-class</div>
+      <div class="lesson-number">Lesson 04 -- Pre-class</div>
       <h3>Navigating Conflict and Escalation -- Diplomatic Assertiveness in High-Stakes Negotiations</h3>
-      <div class="lesson-desc">O quarto prazo perdido: p&#244;r o contrato na mesa sem perder o fornecedor. Key words: contractual obligation, penalty clause, breach of contract, force majeure, liability, indemnity, binding agreement, dispute resolution, mediation, arbitration, to invoke, to put forward, to bite the bullet, a double-edged sword. Structure: inversion for emphasis (Never has... / Not only did... but also... / Hardly had... when... / Under no circumstances will...) + hedging de escalonamento ("It would be remiss of us not to flag that...", "I'm afraid we're left with no alternative but to...").</div>
+      <div class="lesson-desc">The fourth missed deadline: putting the contract on the table without losing the supplier. Key words: contractual obligation, penalty clause, breach of contract, force majeure, liability, indemnity, binding agreement, dispute resolution, mediation, arbitration, to invoke, to put forward, to bite the bullet, a double-edged sword. Structure: inversion for emphasis (Never has... / Not only did... but also... / Hardly had... when... / Under no circumstances will...) + escalation hedging ("It would be remiss of us not to flag that...", "I'm afraid we're left with no alternative but to...").</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="4" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="4">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -285,7 +284,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-4">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Na aula 3 voc&#234; nomeou a PAUTA da reuni&#227;o. Aqui voc&#234; nomeia o que acontece quando a reuni&#227;o falha e o atraso vira contrato: o que o contrato obriga, o que ele custa e como a disputa termina. Ou&#231;a cada termo e leia o exemplo.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">In Lesson 3 you named the AGENDA of the meeting. Here you name what happens when the meeting fails and the delay turns into a contract matter: what the contract requires, what it costs, and how the dispute ends. Listen to each term and read the example.</p>
       <div class="vocab-cards">
 {vocab_cards()}
       </div>
@@ -293,7 +292,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-4">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
       <div class="match-grid" id="match-l4">
 {match_grid()}
       </div>
@@ -301,7 +300,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-4">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions below.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         {CONTEXT}
       </div>
@@ -310,19 +309,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-4">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Inversion for Emphasis</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Como dar PESO a um fato sem levantar a voz &mdash; e como amortecer a exig&#234;ncia formal (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">How to give WEIGHT to a fact without raising your voice &mdash; and how to cushion a formal demand.</p>
 {GRAMMAR_TIP}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a forma correta. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct form. Tap Listen to hear the full sentence.</p>
 {blanks_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the Escalation Call in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque as etapas de uma chamada de escalonamento na ordem correta &mdash; da abertura ao acordo vinculante.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the steps of an escalation call in the right order &mdash; from the opening line to the binding agreement.</p>
       <div class="order-container" id="order-l4">
 {order_html()}
       </div>
@@ -331,19 +330,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-4">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesmo dizendo-a. S&#227;o as cinco frases que abrem, sustentam e fecham um escalonamento. Repare no acento: ele cai no gatilho da invers&#227;o (NEVER has..., NOT ONLY did...).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. These are the five sentences that open, sustain and close an escalation. Notice the stress: it falls on the inversion trigger (NEVER has..., NOT ONLY did...).</p>
 {speech_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real de uma negocia&#231;&#227;o de conflito &mdash; inclusive quando o fornecedor pergunta, de frente, se voc&#234; vai acionar a penalidade.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best reply for each real moment of a conflict negotiation &mdash; including the one where the supplier asks you, point blank, whether you will invoke the penalty.</p>
 {quiz_html(QUIZZES_SIT)}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesmo respondendo &#224; pergunta abaixo. Fale por 2 minutos, sem script e sem parar para se corrigir. Tom: firme no contrato, aberto na rela&#231;&#227;o.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the prompt below. Speak for two minutes, with no script and without stopping to correct yourself. Tone: firm on the contract, open on the relationship.</p>
       <div class="think-card">
         <div class="think-question">Open an escalation call with a supplier who has missed a third milestone. Flag it with one inversion (Never has... / Not only did...), state the contractual position (Under Clause 14... the penalty clause becomes applicable after thirty days), answer the force majeure claim with the fact (the strike was announced six weeks in advance), say what happens if the fourth deadline is missed (I'm afraid we're left with no alternative but to...), and close by putting forward a recovery plan and proposing mediation before anyone mentions arbitration.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

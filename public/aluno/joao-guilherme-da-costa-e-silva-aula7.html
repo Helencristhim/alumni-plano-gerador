@@ -327,6 +327,18 @@ body.slide-mode .teacher-t { display:flex; }
 .error-card.revealed .error-fix { display:block;animation:fadeUp .3s ease; }
 .error-score { text-align:center;margin-top:1rem;font-weight:700;color:var(--accent);font-size:1.1rem; }
 
+/* Sentence Building (.oral-*): nasceu SEM estilo-base — o bloco saía como uma lista
+   <div> nua enquanto o resto do deck é todo em cards. Mesmo vocabulário visual do
+   .error-card/.challenge-card vizinhos. A VISIBILIDADE do gabarito NÃO se define aqui:
+   .oral-model{display:none} + .oral-item.revealed .oral-model{display:block} ficam
+   juntos, mais abaixo, e continuam sendo a única fonte do reveal. */
+.oral-grid { display:flex;flex-direction:column;gap:.8rem;max-width:560px;margin:1.5rem auto 0; }
+.oral-item { background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s; }
+.oral-item:hover { border-color:var(--accent); }
+.oral-item:focus-visible { outline:3px solid var(--accent);outline-offset:2px; }
+.oral-situation { font-size:.95rem;line-height:1.5;color:var(--text);font-weight:600; }
+@media (prefers-reduced-motion:reduce) { .oral-item { transition:none; } }
+
 .roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:500px;margin:0 auto; }
 .roleplay-body { padding:1.5rem; }
 .roleplay-scenario { font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem; }
@@ -372,6 +384,10 @@ body.slide-mode .teacher-t { display:flex; }
 .comp-q .q-text { font-weight:500; }
 .comp-q .q-answer { display:none;margin-top:.5rem;color:var(--accent);font-weight:600;font-size:.9rem; }
 .comp-q.revealed .q-answer { display:block;animation:fadeUp .3s ease; }
+/* Slide de TAREFA (REGRA 2.2): a pergunta ANTES da exposição. Não é clicável — não há
+   gabarito aqui para revelar (ele nem existe no HTML). Logo, não finge ser botão. */
+.comp-q-task { cursor:default; }
+.comp-q-task:hover { border-color:#e8e4df;background:#fff; }
 
 .lost-bag-report { background:#fff;border-radius:12px;max-width:460px;margin:0 auto;box-shadow:0 12px 40px rgba(0,0,0,.1);overflow:hidden;border:2px solid #e8e4df; }
 .lbr-header { background:linear-gradient(135deg,#1D6A96,#4BA3CC);padding:1.2rem 1.5rem;display:flex;align-items:center;justify-content:space-between; }
@@ -450,8 +466,9 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .oral-item,
 .slide-dark .oral-item * { color: #1a1a2e !important; }
 .slide-dark .oral-item .oral-model { color: var(--accent) !important; }
-.oral-model { display:none; }
+.oral-model { display:none;margin-top:.6rem;font-size:.95rem;line-height:1.5;font-style:italic;color:var(--accent);font-weight:600; }
 .oral-item.revealed .oral-model { display:block; animation:fadeUp .3s ease; }
+@media (prefers-reduced-motion:reduce) { .oral-item.revealed .oral-model { animation:none; } }
 .slide-dark .error-card { background: #fff !important; }
 .slide-dark .error-card,
 .slide-dark .error-card * { color: #1a1a2e !important; }
@@ -713,7 +730,7 @@ body.slide-mode .nav-bar { display:flex; }
 
 <!-- ========== TAB 3: IN CLASS ========== -->
 <div class="tab-content active" id="tab-inclass">
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Selecione a Aula</h3>
+  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Select your Lesson</h3>
   <div style="display:flex;flex-direction:column;gap:1rem">
     <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">07</div>
@@ -1099,7 +1116,20 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 20: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="20" data-phase="4">
+<div class="slide slide-light" data-slide="20" data-phase="4" data-task-for="dialogue">
+  <div class="slide-inner">
+    <div class="chapter-label">Before you listen</div>
+    <h2 class="slide-heading">Listen <span class="accent">for this</span></h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
+      <div class="comp-q comp-q-task"><div class="q-text">1. How does Elena open the meeting, and why?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">2. Who does she say is responsible for the delay?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">3. She denies promising the fifteenth. What ends that argument?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">4. What does she do once the record is read out?</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="21" data-phase="4">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">The <span class="accent">Quarterly Review</span></h2>
@@ -1118,7 +1148,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: COMPREHENSION (about Elena) ========== -->
-<div class="slide slide-light" data-slide="21" data-phase="4">
+<div class="slide slide-light" data-slide="22" data-phase="4">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About <span class="accent">Elena</span></h2>
@@ -1132,7 +1162,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: LISTENING 1 (Elena's voicemail, the night before) ========== -->
-<div class="slide slide-dark" data-slide="22" data-phase="4">
+<div class="slide slide-dark" data-slide="23" data-phase="4">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">The Night Before the <span class="accent">Review</span></h2>
@@ -1153,7 +1183,7 @@ body.slide-mode .nav-bar { display:flex; }
         <button class="lp-speed-btn" onclick="mpSpeed('mp-listen1',1.25,this)" style="background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.82);border-radius:6px;padding:.2rem .6rem;font-size:.7rem;cursor:pointer">1.25x</button>
       </div>
     </div>
-    <div class="comp-questions" id="listening1Qs" style="display:none;max-width:600px;margin:1.2rem auto 0">
+    <div class="comp-questions" id="listening1Qs" style="max-width:600px;margin:1.2rem auto 0">
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. Why is she calling the night before, and not in the meeting?</div><div class="q-answer">Because she wants him to hear the real reason from her, privately, before it is said in front of her director: a subcontractor lost the cable batch and she did not escalate it for three weeks.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What does she acknowledge, and what does she still not accept?</div><div class="q-answer">She acknowledges that the recovery schedule was never sent and that she should have called. She does not accept that the whole variance is hers: the interface drawings were eight days late.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What does she ask for &mdash; and what is the price she offers?</div><div class="q-answer">She asks him not to take it to the steering committee in April. In exchange she offers a recovery schedule by Friday, a second crew at her company's cost, and a weekly call.</div></div>
@@ -1162,7 +1192,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: LISTENING 2 (planning director briefing) ========== -->
-<div class="slide slide-dark" data-slide="23" data-phase="4">
+<div class="slide slide-dark" data-slide="24" data-phase="4">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">Three Rules Before You <span class="accent">Chair It</span></h2>
@@ -1183,7 +1213,7 @@ body.slide-mode .nav-bar { display:flex; }
         <button class="lp-speed-btn" onclick="mpSpeed('mp-listen2',1.25,this)" style="background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.82);border-radius:6px;padding:.2rem .6rem;font-size:.7rem;cursor:pointer">1.25x</button>
       </div>
     </div>
-    <div class="comp-questions" id="listening2Qs" style="display:none;max-width:600px;margin:1.2rem auto 0">
+    <div class="comp-questions" id="listening2Qs" style="max-width:600px;margin:1.2rem auto 0">
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What does he say a review meeting is actually for?</div><div class="q-answer">Not to establish who is guilty. To establish what is true, what has changed, and who does what by when. Blame is a by-product; the date is the product.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. Why must you never agree a new date before you know the cause?</div><div class="q-answer">Because a date agreed without a cause is a guess, and it will slip a second time &mdash; on your schedule and at your cost. Ask what happened, then ask for the plan, and only then talk about dates.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What does he say about float?</div><div class="q-answer">The float belongs to the project, not to the supplier. The moment you let somebody consume it to cover their own delay, you have paid for their mistake with time you will need later.</div></div>
@@ -1192,7 +1222,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="24" data-phase="5" style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="25" data-phase="5" style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train the <span class="accent">Record</span></h2>
@@ -1201,7 +1231,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: SPOT THE ERROR ========== -->
-<div class="slide slide-light" data-slide="25" data-phase="5">
+<div class="slide slide-light" data-slide="26" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label">Detective</div>
     <h2 class="slide-heading">Spot the <span class="accent">Error</span></h2>
@@ -1216,7 +1246,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: QUICK FIRE ========== -->
-<div class="slide slide-light" data-slide="26" data-phase="5">
+<div class="slide slide-light" data-slide="27" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label">Quick Fire</div>
     <h2 class="slide-heading">Answer From the <span class="accent">Record</span></h2>
@@ -1225,7 +1255,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: SENTENCE BUILDING ========== -->
-<div class="slide slide-light" data-slide="27" data-phase="5">
+<div class="slide slide-light" data-slide="28" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label">Build</div>
     <h2 class="slide-heading">Sentence <span class="accent">Building</span></h2>
@@ -1241,7 +1271,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: LANGUAGE BANK ========== -->
-<div class="slide slide-light" data-slide="28" data-phase="5">
+<div class="slide slide-light" data-slide="29" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label">The Bank</div>
     <h2 class="slide-heading">Your Review <span class="accent">Language Bank</span></h2>
@@ -1253,7 +1283,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 29: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="29" data-phase="6" style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="30" data-phase="6" style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Chair the <span class="accent">Review</span></h2>
@@ -1262,7 +1292,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 30: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="30" data-phase="6">
+<div class="slide slide-light" data-slide="31" data-phase="6">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Ninety Seconds: <span class="accent">Open the Meeting</span></h2>
@@ -1281,7 +1311,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6">
+<div class="slide slide-light" data-slide="32" data-phase="6">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">She Denies It, Then Asks for Your <span class="accent">Float</span></h2>
@@ -1300,7 +1330,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 32: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="32" data-phase="6">
+<div class="slide slide-light" data-slide="33" data-phase="6">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">The Whole <span class="accent">Review</span></h2>
@@ -1312,7 +1342,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 33: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="33" data-phase="7" style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="34" data-phase="7" style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-Up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">You Chaired the <span class="accent">Review</span></h2>
@@ -1320,7 +1350,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 34: SURVIVAL CARD ========== -->
-<div class="slide slide-dark" data-slide="34" data-phase="7">
+<div class="slide slide-dark" data-slide="35" data-phase="7">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Survival Card</div>
     <h2 class="slide-heading" style="color:#fff">Five Phrases for the <span class="accent">Review</span></h2>
@@ -1335,7 +1365,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 35: SELF-ASSESSMENT ========== -->
-<div class="slide slide-dark" data-slide="35" data-phase="7">
+<div class="slide slide-dark" data-slide="36" data-phase="7">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading" style="color:#fff">What I Can Do <span class="accent">Now</span></h2>
@@ -1350,7 +1380,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 36: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="36" data-phase="7">
+<div class="slide slide-dark" data-slide="37" data-phase="7">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1472,7 +1502,7 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 36;
+var totalSlides = 37;
 var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
 
 function changeSlide(dir) {
