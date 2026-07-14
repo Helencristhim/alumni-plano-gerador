@@ -10,6 +10,14 @@ on:
     paths:
       - 'public/professor/**.html'
       - 'public/aluno/**.html'
+      # O estrago que mais dói NÃO chega por um arquivo de aula: chega pelo BUILDER e
+      # pelo MODELO, que reescrevem centenas de aulas de uma vez. Sem estes paths, um PR
+      # que mexe só no _build/ ou no scripts/ não acionava gate NENHUM — foi assim que o
+      # snake() não-injetivo (2 frases -> 1 mp3) viveu meses. O GATE 8 varre o repo
+      # inteiro, então é aqui que ele ganha os dentes.
+      - '_build/**'
+      - 'scripts/**'
+      - '.github/workflows/validate-lessons.yml'
 
 jobs:
   gates:
@@ -83,6 +91,23 @@ jobs:
         # Critério "não piorou vs a base" (igual GATE 6) enquanto o legado não é consertado.
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: node scripts/check_inline_js.mjs --base "origin/${{ github.base_ref }}" ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
+
+      - name: "GATE 8 — o legado não piora (varre o REPO INTEIRO, não só o diff)"
+        # TODOS os outros gates olham apenas os arquivos que o PR mudou. Um arquivo que
+        # quebrou e que ninguém mais tocou nunca mais é olhado — o defeito fica escondido
+        # até alguém encostar naquele aluno, e aí "aparece", como se tivesse nascido ali.
+        #
+        # E o jeito que as coisas quebram aqui NÃO é pelo diff: é por efeito colateral.
+        # Mexer no builder / no modelo / rodar um retrofit escreve em centenas de arquivos
+        # que o PR nem lista. Casos reais: o checkout defasado que apagou as aulas 6-10 de
+        # 4 hubs; um regex guloso que ia reescrever 2.182 arquivos em vez de 48.
+        #
+        # Este gate NÃO exige legado limpo (são 3.243 defeitos herdados, 1.428 arquivos —
+        # isso é campanha, não gate; e aula já dada NÃO se mexe). Ele exige uma coisa só:
+        #   NENHUM ARQUIVO GANHA UM DEFEITO QUE NÃO TINHA.
+        # O legado é o alvará congelado em scripts/legacy-baseline.json. Só pode CAIR.
+        # ~45s para 2.217 arquivos. Não escreve em nada: é alarme, não é reforma.
+        run: python3 scripts/check_legacy_baseline.py
 
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''
