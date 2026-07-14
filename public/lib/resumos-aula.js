@@ -85,7 +85,7 @@
   async function load() {
     try {
       var resp = await sb.from('analises')
-        .select('id,data_aula,duracao_min')
+        .select('id,data_aula')
         .eq('student_slug', slug)
         .order('data_aula', { ascending: false });
       if (resp.error) throw new Error(resp.error.message);
@@ -114,13 +114,14 @@
       var mon = fmt(d, { month: 'short' }).replace('.', '');
       var full = fmt(d, { day: '2-digit', month: '2-digit', year: 'numeric' });
       var weekday = fmt(d, { weekday: 'long' });
-      var dur = r.duracao_min ? (r.duracao_min + ' min') : 'duração não registrada';
 
+      // Duração NUNCA é exibida (pedido do Dan, 14/07/2026) — nem quando `duracao_min`
+      // existe. Por isso ela também não é mais buscada no select().
       return '<div class="resumo-item">' +
         '<div class="resumo-date" aria-hidden="true"><span class="rd-day">' + escHTML(dd) + '</span><span class="rd-mon">' + escHTML(mon) + '</span></div>' +
         '<div class="resumo-info">' +
           '<div class="ri-main">Aula de ' + escHTML(full) + '</div>' +
-          '<div class="ri-sub">' + escHTML(cap(weekday)) + ' &middot; ' + escHTML(dur) + '</div>' +
+          '<div class="ri-sub">' + escHTML(cap(weekday)) + '</div>' +
         '</div>' +
         '<a class="resumo-link" href="' + escAttrHTML(resumoUrl(r, d)) + '" target="_blank" rel="noopener" ' +
           'aria-label="Ver resumo da aula de ' + escAttrHTML(full) + '">Ver resumo</a>' +
