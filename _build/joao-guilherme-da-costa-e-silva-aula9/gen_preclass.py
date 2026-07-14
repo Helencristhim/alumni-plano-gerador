@@ -75,7 +75,7 @@ def vocab_cards():
             f'        <div class="vocab-card-pc"><div class="vocab-card-content">'
             f'<div class="vocab-card-header"><span class="vocab-card-word">{esc(word)}</span>'
             f'<span class="vocab-card-dot"> -- </span>'
-            f'<span class="vocab-card-def">{esc(d)} ({esc(pt)})</span></div>'
+            f'<span class="vocab-card-def">{esc(d)}</span></div>'
             f'<div class="vocab-card-example">{esc(ex)}</div></div>'
             f'<button class="audio-btn" data-speak="{esc(word)}" onclick="speakText(this.dataset.speak,this)">Listen</button></div>')
     return '\n'.join(rows)
@@ -104,41 +104,41 @@ CONTEXT = """<p>The call starts at eight and Fiona Hartley, the project director
         <p>Then comes the part that decides the money. <strong>Provisional acceptance</strong> at the end of the third quarter; <strong>final acceptance</strong> twelve months later, with the <strong>defects liability period</strong> running in between. And the manual workarounds, Fiona says, get <strong>phased out</strong> BEFORE provisional acceptance, not after &mdash; she has seen too many projects where the temporary fix quietly becomes the design. Jo&#227;o asks her to <strong>run</strong> the acceptance dates <strong>by</strong> him one more time, because he wants to <strong>factor</strong> them <strong>in</strong> before he sends the three-week <strong>look-ahead schedule</strong>. And he closes the call the way a call has to be closed: <em>Just to confirm &mdash; are you saying that no workaround survives provisional acceptance? Then by the thirtieth we will have cleared every <strong>outstanding item</strong> on that list.</em> He did not understand every word she said. He understood every date &mdash; and that is the entire job."""
 
 QUIZZES_CONTEXT = [
-    ("1. \"<em>By the fifteenth we will have energized the power supply.</em>\" O que essa estrutura promete, exatamente?",
-     [("Que a energiza&#231;&#227;o vai ACONTECER no dia quinze.", False),
-      ("Que a energiza&#231;&#227;o estar&#225; CONCLU&#205;DA ANTES do dia quinze &mdash; <em>will have</em> + partic&#237;pio &#233; o tempo do PRAZO, e &#233; ele que o contrato l&#234;.", True),
-      ("Que a energiza&#231;&#227;o come&#231;a no dia quinze e continua depois.", False)]),
-    ("2. \"<em>This time next week we will be running a dry run.</em>\" Por que <em>will be running</em>, e n&#227;o <em>will run</em>?",
-     [("Porque <em>will be running</em> &#233; mais formal.", False),
-      ("Porque a a&#231;&#227;o estar&#225; EM ANDAMENTO naquele momento &mdash; nem terminada, nem come&#231;ando. <em>Will run</em> soaria como uma decis&#227;o tomada na hora.", True),
-      ("Porque com <em>next week</em> o ingl&#234;s pro&#237;be o futuro simples.", False)]),
-    ("3. \"<em>By the time the ramp-up starts, the workarounds will have been phased out.</em>\" Por que <em>starts</em>, e n&#227;o <em>will start</em>?",
-     [("Porque depois de <em>by the time / when / before / as soon as</em> o ingl&#234;s escreve o futuro no PRESENTE. \"By the time it will start\" n&#227;o existe.", True),
-      ("Porque o ramp-up j&#225; come&#231;ou.", False),
-      ("Porque <em>start</em> &#233; um verbo irregular.", False)]),
-    ("4. Fiona diz a nova data no MEIO de uma frase longa, sem &#234;nfase. Qual &#233; a rea&#231;&#227;o profissional?",
-     [("Anotar o que deu para entender e conferir depois por e-mail, para n&#227;o parecer lento.", False),
-      ("Interromper e confirmar em voz alta: \"Just to confirm &mdash; are you saying that provisional acceptance has moved to the twenty-third?\" Cinco segundos ali evitam tr&#234;s semanas de trabalho para a data errada.", True),
-      ("Continuar a call e pedir que ela fale mais devagar da pr&#243;xima vez.", False)]),
+    ("1. \"<em>By the fifteenth we will have energized the power supply.</em>\" What exactly does this structure promise?",
+     [("That the energization will HAPPEN on the fifteenth.", False),
+      ("That the energization will be COMPLETE BEFORE the fifteenth &mdash; <em>will have</em> + past participle is the tense of the DEADLINE, and the deadline is what the contract reads.", True),
+      ("That the energization begins on the fifteenth and carries on after that.", False)]),
+    ("2. \"<em>This time next week we will be running a dry run.</em>\" Why <em>will be running</em> and not <em>will run</em>?",
+     [("Because <em>will be running</em> sounds more formal.", False),
+      ("Because the action will be IN PROGRESS at that moment &mdash; neither finished nor starting. <em>Will run</em> would sound like a decision taken on the spot.", True),
+      ("Because English does not allow the simple future after <em>next week</em>.", False)]),
+    ("3. \"<em>By the time the ramp-up starts, the workarounds will have been phased out.</em>\" Why <em>starts</em> and not <em>will start</em>?",
+     [("Because after <em>by the time / when / before / as soon as</em>, English writes the future in the PRESENT. \"By the time it will start\" does not exist.", True),
+      ("Because the ramp-up has already begun.", False),
+      ("Because <em>start</em> is an irregular verb.", False)]),
+    ("4. Fiona drops the new date in the MIDDLE of a long sentence, with no emphasis at all. What is the professional reaction?",
+     [("Note down whatever you managed to catch and check it later by email, so you do not look slow.", False),
+      ("Stop her and confirm it out loud: \"Just to confirm &mdash; are you saying that provisional acceptance has moved to the twenty-third?\" Five seconds there save three weeks of work toward the wrong date.", True),
+      ("Carry on with the call and ask her to speak more slowly next time.", False)]),
 ]
 
 BLANKS = [
-    ("will have confirmed", "Dica: PRAZO -- conclu&#237;do ANTES da data. <em>will have</em> + partic&#237;pio",
+    ("will have confirmed", "Hint: DEADLINE -- done BEFORE that date. <em>will have</em> + past participle",
      "By the twelfth we will have confirmed site readiness in writing.",
      '"By the twelfth we ', ' site readiness in writing."'),
-    ("will be running", "Dica: EM ANDAMENTO naquele momento. <em>will be</em> + verbo com -ing",
+    ("will be running", "Hint: IN PROGRESS at that moment. <em>will be</em> + verb with -ing",
      "This time next week we will be running a dry run of the failover procedure.",
      '"This time next week we ', ' a dry run of the failover procedure."'),
-    ("starts", "Dica: depois de <em>by the time</em> o verbo vai no PRESENTE, mesmo falando do futuro. Nunca <em>will start</em>",
+    ("starts", "Hint: after <em>by the time</em> the verb goes in the PRESENT, even when you are talking about the future. Never <em>will start</em>",
      "By the time the ramp-up starts, the manual workarounds will have been phased out.",
      '"By the time the ramp-up ', ', the manual workarounds will have been phased out."'),
-    ("will have been working", "Dica: mede a DURA&#199;&#195;O at&#233; aquele ponto: <em>will have been</em> + verbo com -ing",
+    ("will have been working", "Hint: it measures the DURATION built up to that point: <em>will have been</em> + verb with -ing",
      "By September the crews will have been working nights for six weeks.",
      '"By September the crews ', ' nights for six weeks."'),
-    ("factor in", "Dica: incluir no c&#225;lculo ANTES de assumir a data (nunca \"consider in\")",
+    ("factor in", "Hint: to include it in the calculation BEFORE you commit to the date &mdash; never &quot;consider in&quot;",
      "I need to factor in the night-shift restrictions before I commit to that date.",
      '"I need to ', ' the night-shift restrictions before I commit to that date."'),
-    ("run that by me", "Dica: pedir que repitam para voc&#234; conferir -- a frase que salva a call",
+    ("run that by me", "Hint: to ask someone to repeat something so that you can check it -- the sentence that saves the call",
      "Could you run that by me one more time?",
      '"Could you ', ' one more time?"'),
 ]
@@ -166,23 +166,23 @@ SPEECH = [
 ]
 
 QUIZZES_SIT = [
-    ("Fiona abre a call em velocidade m&#225;xima: \"Where are we on site readiness? By the twelfth I need that power supply energized.\" Voc&#234; responde:",
+    ("Fiona opens the call at full speed: \"Where are we on site readiness? By the twelfth I need that power supply energized.\" You reply:",
      [("\"I want to make sure I'm following -- the deadline you're referring to is the twelfth, and that is for site readiness, not for the integration test itself. Is that right?\"", True),
       ("\"Sorry, could you speak more slowly, please? My English is not very good.\"", False),
       ("\"Yes, yes, no problem, everything is on track.\"", False)]),
-    ("Ela pede o status. A resposta mais forte &#233;:",
+    ("She asks for the status. The strongest answer is:",
      [("\"We are working on it and I think we will finish before the test.\"", False),
       ("\"By the fifteenth we will have energized the power supply and closed the two open actions on the cable route, and we will be working nights from the eighth to hold that date.\"", True),
       ("\"The site will be ready, do not worry about that.\"", False)]),
-    ("No meio de uma frase longa ela diz que a aceita&#231;&#227;o provis&#243;ria mudou para o dia 23. Voc&#234;:",
-     [("Anota e confere depois no e-mail dela, para n&#227;o interromper.", False),
-      ("Interrompe: \"Just to confirm -- are you saying that provisional acceptance has moved to the twenty-third? Then by the twenty-third we will have cleared every outstanding item.\"", True),
-      ("Assume que ouviu errado e segue a call normalmente.", False)]),
-    ("\"Let us just keep the manual workarounds until final acceptance, to be safe.\" Voc&#234; recusa:",
+    ("Halfway through a long sentence she says that provisional acceptance has moved to the twenty-third. You:",
+     [("Write it down and check it later against her email, so as not to interrupt her.", False),
+      ("Stop her: \"Just to confirm -- are you saying that provisional acceptance has moved to the twenty-third? Then by the twenty-third we will have cleared every outstanding item.\"", True),
+      ("Assume you misheard the date and carry on with the call as usual.", False)]),
+    ("\"Let us just keep the manual workarounds until final acceptance, to be safe.\" You push back:",
      [("\"The workarounds are phased out before provisional acceptance, not after. A temporary fix with no end date quietly becomes the design, and the operator pays to maintain it for thirty years.\"", True),
       ("\"All right, if that is easier for your team, we can keep them.\"", False),
       ("\"I do not have the authority to decide that.\"", False)]),
-    ("Ela pergunta se voc&#234; mant&#233;m a data mesmo com a restri&#231;&#227;o de trabalho noturno no canteiro. Voc&#234; diz:",
+    ("She asks whether you still hold the date, even with the night-shift restriction on site. You say:",
      [("\"Yes, of course, we will make it work somehow.\"", False),
       ("\"I need to factor in the night-shift restrictions before I commit to that date. You will have the three-week look-ahead schedule tonight, and the date will be in it.\"", True),
       ("\"That is impossible. Nobody can work with these restrictions.\"", False)]),
@@ -235,7 +235,6 @@ def speech_html():
         out.append(
             f'      <div class="speech-card" data-phrase="{esc(en)}">\n'
             f'        <div class="speech-phrase">{esc(en)}</div>\n'
-            f'        <div class="speech-translation">{esc(pt)}</div>\n'
             f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
             f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
             f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -249,34 +248,34 @@ def survival_html():
     for i, (en, pt) in enumerate(SURVIVAL, 1):
         out.append(
             f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-            f'<span class="sp-en">{esc(en)}</span><span class="sp-pt">{esc(pt)}</span>'
+            f'<span class="sp-en">{esc(en)}</span>'
             f'<button class="btn btn-listen" data-speak="{esc(en)}" onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>')
     return '\n'.join(out)
 
 
 GRAMMAR_TIP = """      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Estrutura / Structure</th><th style="padding:.7rem;text-align:left">O que promete / What it promises</th><th style="padding:.7rem;text-align:left">Na call / On the call</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Structure</th><th style="padding:.7rem;text-align:left">What it promises</th><th style="padding:.7rem;text-align:left">On the call</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><strong>will have</strong> + partic&#237;pio<br><span style="font-size:.78rem;color:var(--text-dim)">future perfect</span></td><td style="padding:.6rem">CONCLU&#205;DO antes daquele ponto no futuro. &#201; o tempo do PRAZO &mdash; o que o contrato l&#234; e o que algu&#233;m pode cobrar. Em portugu&#234;s: "at&#233; o dia doze <em>teremos confirmado</em>".</td><td style="padding:.6rem">"By the twelfth we <strong>will have confirmed</strong> site readiness."</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600"><strong>will be</strong> + verbo -ing<br><span style="font-size:.78rem;color:var(--text-dim)">future continuous</span></td><td style="padding:.6rem">EM ANDAMENTO naquele momento: nem terminado, nem come&#231;ando &mdash; acontecendo. Em portugu&#234;s: "semana que vem a esta hora <em>estaremos rodando</em>".</td><td style="padding:.6rem">"This time next week we <strong>will be running</strong> the dry run."</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><strong>will have been</strong> + verbo -ing<br><span style="font-size:.78rem;color:var(--text-dim)">future perfect continuous</span></td><td style="padding:.6rem">Mede a DURA&#199;&#195;O acumulada at&#233; aquele ponto. &#201; com ela que se justifica um custo ou um pedido de prazo.</td><td style="padding:.6rem">"By September the crews <strong>will have been working</strong> nights for six weeks."</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600"><em>by</em> x <em>until</em></td><td style="padding:.6rem"><strong>BY</strong> = o prazo (n&#227;o mais tarde que). <strong>UNTIL</strong> = a dura&#231;&#227;o inteira. O portugu&#234;s cobre os dois com "at&#233;" &mdash; e por isso o brasileiro escreve "until Friday we will have finished", que em ingl&#234;s n&#227;o quer dizer nada.</td><td style="padding:.6rem">"<strong>By</strong> Friday" (prazo) &middot; "We will be testing <strong>until</strong> Friday" (dura&#231;&#227;o)</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><em>by the time</em> + PRESENTE</td><td style="padding:.6rem">Depois de <em>by the time / when / before / as soon as / until</em>, o futuro se escreve no PRESENTE. "By the time the ramp-up <em>will start</em>" N&#195;O existe.</td><td style="padding:.6rem">"By the time the ramp-up <strong>starts</strong>, the workarounds will have been phased out."</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">Como isso SOA</td><td style="padding:.6rem" colspan="2">Ningu&#233;m pronuncia esses tempos como eles s&#227;o escritos. <em>will have</em> vira <strong>/w&#618;l&#601;v/</strong> ("will'uv"), <em>we will have</em> vira <strong>"we'll've"</strong>, e <em>will be</em> quase desaparece. O tempo verbal N&#195;O some junto: ele sobrevive no <strong>PARTIC&#205;PIO, no fim da frase</strong> (<em>...we'll've CONFIRMED it</em>). Pare de ca&#231;ar o auxiliar que voc&#234; aprendeu na escola: escute a &#218;LTIMA palavra.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><strong>will have</strong> + past participle<br><span style="font-size:.78rem;color:var(--text-dim)">future perfect</span></td><td style="padding:.6rem">DONE before that point in the future. This is the tense of the DEADLINE &mdash; the one the contract reads, and the one somebody can hold you to.</td><td style="padding:.6rem">"By the twelfth we <strong>will have confirmed</strong> site readiness."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600"><strong>will be</strong> + verb -ing<br><span style="font-size:.78rem;color:var(--text-dim)">future continuous</span></td><td style="padding:.6rem">IN PROGRESS at that moment: not finished, not starting &mdash; happening. The simple future would sound like a decision taken on the spot.</td><td style="padding:.6rem">"This time next week we <strong>will be running</strong> the dry run."</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><strong>will have been</strong> + verb -ing<br><span style="font-size:.78rem;color:var(--text-dim)">future perfect continuous</span></td><td style="padding:.6rem">It measures the DURATION built up to that point. This is the one that justifies a cost or an extension of time.</td><td style="padding:.6rem">"By September the crews <strong>will have been working</strong> nights for six weeks."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600"><em>by</em> vs. <em>until</em></td><td style="padding:.6rem"><strong>BY</strong> = the deadline (no later than). <strong>UNTIL</strong> = the whole duration. Portuguese covers both with a single word, which is why Brazilian engineers write "until Friday we will have finished" &mdash; a sentence that means nothing in English.</td><td style="padding:.6rem">"<strong>By</strong> Friday" (deadline) &middot; "We will be testing <strong>until</strong> Friday" (duration)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600"><em>by the time</em> + PRESENT</td><td style="padding:.6rem">After <em>by the time / when / before / as soon as / until</em>, the future is written in the PRESENT. "By the time the ramp-up <em>will start</em>" DOES NOT exist.</td><td style="padding:.6rem">"By the time the ramp-up <strong>starts</strong>, the workarounds will have been phased out."</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">How it SOUNDS</td><td style="padding:.6rem" colspan="2">Nobody says these tenses the way they are written. <em>will have</em> becomes <strong>/w&#618;l&#601;v/</strong> ("will'uv"), <em>we will have</em> becomes <strong>"we'll've"</strong>, and <em>will be</em> almost vanishes. The tense itself does NOT vanish with it: it survives in the <strong>PARTICIPLE, at the end of the sentence</strong> (<em>...we'll've CONFIRMED it</em>). Stop hunting for the auxiliary you were taught at school: listen for the LAST word.</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (tr&#234;s erros de brasileiro):</strong> (1) <em>"Until the twelfth we will have confirmed..."</em> &mdash; &#233; <strong>BY</strong> the twelfth: <em>until</em> &#233; dura&#231;&#227;o, <em>by</em> &#233; prazo; (2) <em>"By the time the test will start..."</em> &mdash; depois de <em>by the time</em> vai o PRESENTE: <strong>starts</strong>; (3) <em>"At ten we will run the test"</em> quando o que se quer dizer &#233; "estaremos rodando" &mdash; o correto &#233; <strong>we will be running</strong>: o futuro simples soa como uma decis&#227;o tomada naquele instante.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Colloca&#231;&#245;es do comissionamento:</strong> <strong>confirm</strong> site readiness (nunca "guarantee") &middot; <strong>close</strong> an open action (nunca "finish") &middot; <strong>clear</strong> the outstanding items &middot; <strong>grant</strong> provisional acceptance (o cliente CONCEDE; o fornecedor OBT&#201;M) &middot; <strong>phase out</strong> a workaround &middot; <strong>factor in</strong> a constraint (NUNCA "consider in") &middot; <strong>run</strong> a dry run &middot; <strong>manage</strong> the interfaces.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Clarifica&#231;&#227;o sob press&#227;o (decore as tr&#234;s):</strong> "<em>Could you run that by me one more time?</em>" &middot; "<em>Just to confirm &mdash; are you saying that...?</em>" &middot; "<em>I want to make sure I'm following: the deadline you're referring to is...</em>" &mdash; nenhuma delas &#233; um pedido de desculpas. S&#227;o o que um nativo diz quando perde uma data, e custam cinco segundos.</p>"""
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (three classic mistakes):</strong> (1) <em>"Until the twelfth we will have confirmed..."</em> &mdash; it is <strong>BY</strong> the twelfth: <em>until</em> is duration, <em>by</em> is a deadline; (2) <em>"By the time the test will start..."</em> &mdash; after <em>by the time</em> you use the PRESENT: <strong>starts</strong>; (3) <em>"At ten we will run the test"</em> when you mean that the test will be under way &mdash; the right form is <strong>we will be running</strong>: the simple future sounds like a decision made at that very instant.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Commissioning collocations:</strong> <strong>confirm</strong> site readiness (never "guarantee") &middot; <strong>close</strong> an open action (never "finish") &middot; <strong>clear</strong> the outstanding items &middot; <strong>grant</strong> provisional acceptance (the client GRANTS it; the supplier OBTAINS it) &middot; <strong>phase out</strong> a workaround &middot; <strong>factor in</strong> a constraint (NEVER "consider in") &middot; <strong>run</strong> a dry run &middot; <strong>manage</strong> the interfaces.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Clarifying under pressure (learn these three by heart):</strong> "<em>Could you run that by me one more time?</em>" &middot; "<em>Just to confirm &mdash; are you saying that...?</em>" &middot; "<em>I want to make sure I'm following: the deadline you're referring to is...</em>" &mdash; none of them is an apology. They are what a native speaker says when a date gets past him, and they cost five seconds.</p>"""
 
 
 HTML = f"""<div class="lesson-card" id="ex-lesson-9">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1590650153855-d9e808231d41?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 09 -- Pre-class</div>
+      <div class="lesson-number">Lesson 09 -- Pre-class</div>
       <h3>Say That Again -- The Commissioning Call at Full Speed</h3>
-      <div class="lesson-desc">Uma diretora de projeto britanica, quarenta minutos e um cronograma de comissionamento em velocidade nativa: como PREVER com data (o que estar&#225; PRONTO x o que estar&#225; ACONTECENDO), onde o tempo verbal se esconde na fala r&#225;pida (o auxiliar some, o partic&#237;pio fica), e as tr&#234;s frases que param a call sem perder a cara. Key words: integration test, site readiness, look-ahead schedule, open action, outstanding item, provisional acceptance, final acceptance, defects liability period, ramp-up, interface management, dry run, to phase out, to factor in, to run something by someone. Structure: future perfect e future continuous (By the twelfth we <em>will have confirmed</em>... / This time next week we <em>will be running</em>...).</div>
+      <div class="lesson-desc">A British project director, forty minutes and a commissioning schedule at native speed: how to FORECAST with a date attached (what will be DONE vs. what will be HAPPENING), where the tense hides in fast speech (the auxiliary collapses, the participle survives), and the three sentences that stop the call without losing face. Key words: integration test, site readiness, look-ahead schedule, open action, outstanding item, provisional acceptance, final acceptance, defects liability period, ramp-up, interface management, dry run, to phase out, to factor in, to run something by someone. Structure: future perfect and future continuous (By the twelfth we <em>will have confirmed</em>... / This time next week we <em>will be running</em>...).</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="9" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="9">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -285,7 +284,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-9">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Na aula 8 voc&#234; escreveu a pergunta com tempo. Agora a fase final do projeto chega FALADA, r&#225;pida, e no ritmo de outra pessoa. Estas s&#227;o as palavras do &#250;ltimo quil&#244;metro: quem aceita, quando, e o que ainda est&#225; em aberto. Ou&#231;a cada termo e leia o exemplo.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">In Lesson 8 you wrote the question with all the time in the world. Now the last phase of the project arrives SPOKEN, fast, and at somebody else's pace. These are the words of the final stretch: who accepts, when, and what is still open. Listen to each term and read the example.</p>
       <div class="vocab-cards">
 {vocab_cards()}
       </div>
@@ -293,7 +292,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-9">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
       <div class="match-grid" id="match-l9">
 {match_grid()}
       </div>
@@ -301,7 +300,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-9">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         {CONTEXT}
       </div>
@@ -310,19 +309,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-9">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Future Perfect &amp; Future Continuous</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Os dois tempos com que se comanda um projeto &mdash; e por que eles quase somem na fala r&#225;pida (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">The two tenses a project is run with &mdash; and why they almost disappear in fast speech.</p>
 {GRAMMAR_TIP}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a estrutura correta. Toque em Listen para ouvir a frase inteira &mdash; e repare em como o auxiliar quase desaparece.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct structure. Tap Listen to hear the whole sentence &mdash; and notice how the auxiliary almost disappears.</p>
 {blanks_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the Conference Call in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque na ordem correta os passos de quem NAO perde uma data numa call r&#225;pida &mdash; de pegar a informa&#231;&#227;o escondida at&#233; assumir o compromisso com o tempo verbal certo.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put in the right order the steps of somebody who never loses a date on a fast call &mdash; from catching the information she buried to committing with the right tense.</p>
       <div class="order-container" id="order-l9">
 {order_html()}
       </div>
@@ -331,19 +330,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-9">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesmo dizendo-a. Diga r&#225;pido, colando as palavras: <em>will have</em> vira "will'uv" e <em>will be</em> quase some &mdash; produzir a forma reduzida &#233; o que ensina o ouvido a reconhec&#234;-la. Aten&#231;&#227;o ao stress: pro-VI-sion-al, li-a-BI-li-ty, RED-i-ness (curto, como em "ready").</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. Say it fast, running the words together: <em>will have</em> becomes "will'uv" and <em>will be</em> almost vanishes &mdash; producing the reduced form is what trains your ear to catch it. Watch the stress: pro-VI-sion-al, li-a-BI-li-ty, RED-i-ness (short, as in "ready").</p>
 {speech_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real da call &mdash; inclusive quando ela esconde a data nova no meio de uma frase longa.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best answer for each real moment of the call &mdash; including the one where she buries the new date in the middle of a long sentence.</p>
 {quiz_html(QUIZZES_SIT)}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesmo respondendo &#224; pergunta abaixo. Fale por 2 minutos, sem script e sem parar para se corrigir. Tom: r&#225;pido o suficiente para acompanhar, preciso o bastante para nunca prometer a coisa errada.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. Speak for two minutes, with no script and without stopping to correct yourself. Tone: fast enough to keep up, precise enough never to promise the wrong thing.</p>
       <div class="think-card">
         <div class="think-question">You are on the commissioning call with the project director in London, and she is running the schedule at full speed. In two minutes: give her the status of site readiness with a date in front of every sentence, say what will have been finished by the twelfth and what your crews will be doing in between, catch the acceptance date she gives you and confirm it out loud, refuse to carry the manual workarounds past provisional acceptance, and close by summarizing what each side will have done by the end of the month.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

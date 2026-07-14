@@ -104,7 +104,7 @@ def vocab_cards():
             f'        <div class="vocab-card-pc"><div class="vocab-card-content">'
             f'<div class="vocab-card-header"><span class="vocab-card-word">{esc(word)}</span>'
             f'<span class="vocab-card-dot"> -- </span>'
-            f'<span class="vocab-card-def">{esc(d)} ({esc(pt)})</span></div>'
+            f'<span class="vocab-card-def">{esc(d)}</span></div>'
             f'<div class="vocab-card-example">{esc(ex)}</div></div>'
             f'<button class="audio-btn" data-speak="{esc(speak)}" onclick="speakText(this.dataset.speak,this)">Listen</button></div>')
     return '\n'.join(rows)
@@ -133,18 +133,18 @@ CONTEXT = """<p>Forty <strong>interlocking</strong> units were delivered for Lin
         <p>So he writes it the way it has to be written. The six units <strong>that failed</strong> are to be reworked at the supplier's cost. The grounding configuration<strong>, which is common to all forty units,</strong> must be re-verified &mdash; a fact about the whole batch, stated as a fact, without pretending the whole batch failed. Then he compresses, the way every standard on his shelf compresses: the report <strong>issued on 14 July</strong> does not cover the configuration, and the units <strong>radiating above the limit</strong> are the six on the northbound platform. And he closes with the two questions that no <strong>ambiguity</strong> survives: please confirm the standard <strong>to which the design was certified</strong>, and <strong>spell out</strong> the conditions <strong>under which</strong> the EMC test was performed &mdash; on the bench, or as installed? The supplier's answer arrives nine days later. Their team has <strong>devised</strong> a <strong>workaround</strong>, ferrite filters, and they are careful too: the filters will meet the <strong>acceptance criteria</strong> applicable <em>to the trial run</em>. Not to the handover. In a technical document, nobody writes a relative clause by accident."""
 
 QUIZZES_CONTEXT = [
-    ("1. \"The interlocking units <em>that failed the EMC test</em> must be reworked.\" Quantas unidades o fornecedor tem de retrabalhar?",
-     [("As quarenta &mdash; a ora&#231;&#227;o descreve as unidades em geral.", False),
-      ("As SEIS &mdash; sem v&#237;rgulas, a ora&#231;&#227;o RESTRINGE: ela diz QUAIS unidades. Tire a ora&#231;&#227;o e voc&#234; nem sabe mais do que se est&#225; falando.", True),
-      ("Depende do contrato; a gram&#225;tica n&#227;o decide isso.", False)]),
-    ("2. E na vers&#227;o \"The interlocking units<em>, which failed the EMC test,</em> must be reworked\"? O que MUDA?",
-     [("Nada &mdash; a v&#237;rgula em ingl&#234;s &#233; s&#243; uma pausa de leitura.", False),
-      ("Fica mais formal, mas o sentido &#233; o mesmo.", False),
-      ("MUDA TUDO: com as duas v&#237;rgulas a ora&#231;&#227;o deixa de restringir e passa a ACRESCENTAR um fato sobre TODAS. A frase agora afirma que as quarenta reprovaram &mdash; o que &#233; falso, e ser&#225; usado contra quem escreveu.", True)]),
-    ("3. \"The report <em>issued on 14 July</em> does not cover the grounding.\" Que estrutura &#233; essa?",
-     [("Uma relativa REDUZIDA: caiu o <em>which was</em>. Sobrou o partic&#237;pio passado, com sentido PASSIVO &mdash; o relat&#243;rio QUE FOI emitido. &#201; assim que toda norma t&#233;cnica &#233; escrita.", True),
-      ("Um erro: falta o verbo principal.", False),
-      ("Um ger&#250;ndio, como em portugu&#234;s (\"o relat&#243;rio emitindo\").", False)]),
+    ("1. \"The interlocking units <em>that failed the EMC test</em> must be reworked.\" How many units does the supplier have to rework?",
+     [("All forty &mdash; the clause simply describes the units in general.", False),
+      ("SIX &mdash; with no commas, the clause DEFINES: it says WHICH units. Take the clause out and you no longer know what is being talked about.", True),
+      ("It depends on the contract; grammar does not decide it.", False)]),
+    ("2. And in the version \"The interlocking units<em>, which failed the EMC test,</em> must be reworked\"? What CHANGES?",
+     [("Nothing &mdash; in English the comma is only a reading pause.", False),
+      ("It sounds more formal, but the meaning is the same.", False),
+      ("EVERYTHING: with the two commas the clause stops defining and starts ADDING a fact about ALL of them. The sentence now states that all forty failed &mdash; which is false, and it will be used against whoever wrote it.", True)]),
+    ("3. \"The report <em>issued on 14 July</em> does not cover the grounding.\" What structure is this?",
+     [("A REDUCED relative: <em>which was</em> has dropped out and the PAST participle is left, with a PASSIVE meaning &mdash; the report THAT WAS issued. This is how every technical standard is written.", True),
+      ("A mistake: the main verb is missing.", False),
+      ("An active <em>-ing</em> form: the report is issuing something.", False)]),
     ("4. Which sentence is correct?",
      [("\"Please confirm the standard to that the design was certified.\"", False),
       ("\"Please confirm the standard to which the design was certified.\"", True),
@@ -152,22 +152,22 @@ QUIZZES_CONTEXT = [
 ]
 
 BLANKS = [
-    ("that failed", "Dica: sem v&#237;rgulas, para RESTRINGIR &mdash; s&#243; as seis, e mais ningu&#233;m",
+    ("that failed", "Hint: no commas, so the clause DEFINES &mdash; those six units, and nobody else",
      "The six interlocking units that failed the EMC test must be reworked at the supplier's cost.",
      '"The six interlocking units ', ' the EMC test must be reworked at the supplier\'s cost."'),
-    ("which is common to all forty units", "Dica: entre v&#237;rgulas, para ACRESCENTAR um fato sobre TODAS &mdash; e nunca <em>that</em> depois de v&#237;rgula",
+    ("which is common to all forty units", "Hint: between commas, so the clause ADDS a fact about ALL of them &mdash; and never <em>that</em> after a comma",
      "The grounding configuration, which is common to all forty units, must be re-verified.",
      '"The grounding configuration, ', ', must be re-verified."'),
-    ("issued", "Dica: relativa REDUZIDA &mdash; caiu o <em>which was</em> e ficou o partic&#237;pio PASSADO (sentido passivo)",
+    ("issued", "Hint: a REDUCED relative &mdash; <em>which was</em> has dropped out and the PAST participle is left (passive meaning)",
      "The report issued on 14 July does not cover the grounding configuration.",
      '"The report ', ' on 14 July does not cover the grounding configuration."'),
-    ("radiating", "Dica: relativa reduzida ATIVA &mdash; caiu o <em>which are</em> e ficou o <em>-ing</em>: as unidades que EST&#195;O emitindo",
+    ("radiating", "Hint: an ACTIVE reduced relative &mdash; <em>which are</em> has dropped out and the <em>-ing</em> is left: the units that ARE emitting",
      "The units radiating above the limit are the six on the northbound platform.",
      '"The units ', ' above the limit are the six on the northbound platform."'),
-    ("to which", "Dica: a preposi&#231;&#227;o vem ANTES de <em>which</em> &mdash; e depois de preposi&#231;&#227;o nunca cabe <em>that</em>",
+    ("to which", "Hint: the preposition comes BEFORE <em>which</em> &mdash; and <em>that</em> can never follow a preposition",
      "Please confirm the standard to which the design was certified.",
      '"Please confirm the standard ', ' the design was certified."'),
-    ("under which", "Dica: mesma estrutura formal &mdash; preposi&#231;&#227;o + <em>which</em>: em que CONDI&#199;&#213;ES o ensaio foi feito",
+    ("under which", "Hint: the same formal structure &mdash; preposition + <em>which</em>: under what CONDITIONS the test was run",
      "Please spell out the conditions under which the EMC test was performed.",
      '"Please spell out the conditions ', ' the EMC test was performed."'),
 ]
@@ -195,23 +195,23 @@ SPEECH = [
 ]
 
 QUIZZES_SIT = [
-    ("Voc&#234; quer que o fornecedor retrabalhe APENAS as seis unidades reprovadas. Voc&#234; escreve:",
+    ("You want the supplier to rework ONLY the six units that failed. You write:",
      [("\"The interlocking units, which failed the EMC test, must be reworked at your cost.\"", False),
       ("\"The six interlocking units that failed the EMC test on 14 July must be reworked at your cost.\"", True),
       ("\"Please rework the units with the interference problem as soon as possible.\"", False)]),
-    ("Voc&#234; quer registrar que o aterramento &#233; o MESMO nas quarenta &mdash; sem afirmar que as quarenta reprovaram:",
+    ("You want to put on record that the grounding is the SAME on all forty &mdash; without stating that all forty failed:",
      [("\"The forty units, which failed the EMC test, share the same grounding configuration.\"", False),
       ("\"The grounding configuration, which is common to all forty units, has not been verified in the installed condition.\"", True),
       ("\"All the units have a grounding problem that needs to be looked at.\"", False)]),
-    ("Ingrid diz: \"Trinta e quatro unidades passaram, logo o projeto est&#225; correto.\" A resposta mais forte &#233;:",
+    ("Ingrid says: \"Thirty-four units passed, so the design is correct.\" The strongest reply is:",
      [("\"That is a reasonable hypothesis, and it may well be right. But thirty-four units passing a test does not demonstrate a design &mdash; and two of them passed by almost nothing.\"", True),
       ("\"That is not true and you know it.\"", False),
       ("\"All right. If thirty-four passed, let us close the design question.\"", False)]),
-    ("Ela oferece filtros de ferrite \"que resolvem em uma semana\". Voc&#234; responde:",
+    ("She offers ferrite filters \"that fix it in a week\". You answer:",
      [("\"Perfect. If the emissions come down, we can consider it closed.\"", False),
       ("\"I will take the filters for the trial run. I will not take them for the handover, because a workaround does not meet the acceptance criteria that apply at handover.\"", True),
       ("\"We do not accept workarounds under any circumstances.\"", False)]),
-    ("Voc&#234; precisa saber COMO eles ensaiaram (na bancada ou instalado). Voc&#234; pergunta:",
+    ("You need to know HOW they ran the test (on the bench or as installed). You ask:",
      [("\"How did you do the test exactly? Can you explain it to me?\"", False),
       ("\"Please spell out the conditions under which the EMC test was performed, and confirm the standard to which the design was certified.\"", True),
       ("\"The conditions which you tested the design in them are not clear.\"", False)]),
@@ -264,7 +264,6 @@ def speech_html():
         out.append(
             f'      <div class="speech-card" data-phrase="{esc(en)}">\n'
             f'        <div class="speech-phrase">{esc(en)}</div>\n'
-            f'        <div class="speech-translation">{esc(pt)}</div>\n'
             f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
             f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
             f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -278,34 +277,34 @@ def survival_html():
     for i, (en, pt) in enumerate(SURVIVAL, 1):
         out.append(
             f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-            f'<span class="sp-en">{esc(en)}</span><span class="sp-pt">{esc(pt)}</span>'
+            f'<span class="sp-en">{esc(en)}</span>'
             f'<button class="btn btn-listen" data-speak="{esc(en)}" onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>')
     return '\n'.join(out)
 
 
 GRAMMAR_TIP = """      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Estrutura / Structure</th><th style="padding:.7rem;text-align:left">O que faz / What it does</th><th style="padding:.7rem;text-align:left">Exemplo</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Structure</th><th style="padding:.7rem;text-align:left">What it does</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Relativa RESTRITIVA<br><em>sem v&#237;rgulas</em><br>(<em>that</em> / <em>which</em> / <em>who</em>)</td><td style="padding:.6rem">RESTRINGE: diz QUAIS. Tire a ora&#231;&#227;o e voc&#234; n&#227;o sabe mais do que se fala. &#201; ela que define o ESCOPO do trabalho &mdash; e escopo &#233; dinheiro.</td><td style="padding:.6rem">"The six units <strong>that failed the EMC test</strong> must be reworked." &mdash; <em>s&#243; aquelas seis.</em></td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Relativa N&#195;O-RESTRITIVA<br><em>entre duas v&#237;rgulas</em><br>(NUNCA <em>that</em>)</td><td style="padding:.6rem">ACRESCENTA um fato sobre TODAS. Tire a ora&#231;&#227;o e a frase continua de p&#233;. Depois de v&#237;rgula, s&#243; <em>which</em> (coisas) ou <em>who</em> (pessoas).</td><td style="padding:.6rem">"The units<strong>,</strong> which failed the test<strong>,</strong> must be reworked." &mdash; <em>TODAS as quarenta reprovaram.</em></td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Relativa REDUZIDA<br><em>partic&#237;pio passado</em></td><td style="padding:.6rem">Cai o <em>which was / that were</em> quando o sentido &#233; PASSIVO. &#201; a compress&#227;o de toda norma t&#233;cnica que ele l&#234;.</td><td style="padding:.6rem">"the report <em>which was</em> <strong>issued</strong> on 14 July" &rarr; "the report <strong>issued on 14 July</strong>"</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Relativa REDUZIDA<br><em>-ing</em></td><td style="padding:.6rem">Cai o <em>which is / that are</em> quando o sentido &#233; ATIVO: a unidade est&#225; FAZENDO, n&#227;o sofrendo.</td><td style="padding:.6rem">"the units <em>which are</em> <strong>radiating</strong> above the limit" &rarr; "the units <strong>radiating above the limit</strong>"</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Preposi&#231;&#227;o + <em>which</em></td><td style="padding:.6rem">O registro formal do RFI e da especifica&#231;&#227;o. A preposi&#231;&#227;o vem ANTES de <em>which</em> &mdash; e depois de preposi&#231;&#227;o nunca cabe <em>that</em>.</td><td style="padding:.6rem">"the standard <strong>to which</strong> the design was certified" &middot; "the conditions <strong>under which</strong> the test was performed"</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">Para que serve</td><td style="padding:.6rem" colspan="2">Seis unidades reprovaram. Quarenta t&#234;m o mesmo aterramento. "The units <strong>that failed</strong>" compromete o fornecedor com <strong>seis</strong>. "The units<strong>, which failed,</strong>" afirma que as <strong>quarenta</strong> reprovaram &mdash; o que &#233; falso, e o advogado deles vai apontar isso na primeira leitura. E "the grounding configuration<strong>, which is common to all forty units,</strong> must be re-verified" consegue as quarenta <em>pelo motivo certo</em>. A gram&#225;tica aqui n&#227;o &#233; enfeite: ela &#233; o escopo do contrato.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">DEFINING relative<br><em>no commas</em><br>(<em>that</em> / <em>which</em> / <em>who</em>)</td><td style="padding:.6rem">It DEFINES: it says WHICH ones. Take the clause out and you no longer know what is being talked about. This is the clause that sets the SCOPE of the work &mdash; and scope is money.</td><td style="padding:.6rem">"The six units <strong>that failed the EMC test</strong> must be reworked." &mdash; <em>those six, and no others.</em></td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">NON-DEFINING relative<br><em>between two commas</em><br>(NEVER <em>that</em>)</td><td style="padding:.6rem">It ADDS a fact about ALL of them. Take the clause out and the sentence still stands. After a comma, only <em>which</em> (things) or <em>who</em> (people).</td><td style="padding:.6rem">"The units<strong>,</strong> which failed the test<strong>,</strong> must be reworked." &mdash; <em>ALL forty failed.</em></td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">REDUCED relative<br><em>past participle</em></td><td style="padding:.6rem"><em>which was / that were</em> drops out when the meaning is PASSIVE. It is the compression that every technical standard on his shelf is built on.</td><td style="padding:.6rem">"the report <em>which was</em> <strong>issued</strong> on 14 July" &rarr; "the report <strong>issued on 14 July</strong>"</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">REDUCED relative<br><em>-ing</em></td><td style="padding:.6rem"><em>which is / that are</em> drops out when the meaning is ACTIVE: the unit is DOING it, not receiving it.</td><td style="padding:.6rem">"the units <em>which are</em> <strong>radiating</strong> above the limit" &rarr; "the units <strong>radiating above the limit</strong>"</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Preposition + <em>which</em></td><td style="padding:.6rem">The formal register of the RFI and of the specification. The preposition comes BEFORE <em>which</em> &mdash; and <em>that</em> can never follow a preposition.</td><td style="padding:.6rem">"the standard <strong>to which</strong> the design was certified" &middot; "the conditions <strong>under which</strong> the test was performed"</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">Why it matters</td><td style="padding:.6rem" colspan="2">Six units failed. All forty share the same grounding. "The units <strong>that failed</strong>" commits the supplier to <strong>six</strong>. "The units<strong>, which failed,</strong>" states that all <strong>forty</strong> failed &mdash; which is false, and their lawyer will point it out on the first reading. And "the grounding configuration<strong>, which is common to all forty units,</strong> must be re-verified" gets all forty <em>for the right reason</em>. The grammar here is not decoration: it is the scope of the contract.</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (tr&#234;s erros de brasileiro):</strong> (1) <em>"The RFI that we submitted <span style="color:#dc2626">it</span> on Monday"</em> &mdash; em portugu&#234;s dizemos "o RFI que a gente mandou ELE"; em ingl&#234;s o pronome N&#195;O se repete: o <em>that</em> j&#225; &#233; o objeto; (2) <em>"the configuration, <span style="color:#dc2626">that</span> is common to all forty"</em> &mdash; depois de v&#237;rgula, <strong>that</strong> &#233; imposs&#237;vel: use <strong>which</strong>; (3) <em>"the cable <span style="color:#dc2626">installing</span> last week"</em> &mdash; o cabo n&#227;o est&#225; instalando nada: ele FOI instalado, ent&#227;o &#233; <strong>installed</strong> (partic&#237;pio passado). O portugu&#234;s cobre os dois casos com a mesma forma; o ingl&#234;s n&#227;o.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Colloca&#231;&#245;es do RFI:</strong> <strong>submit</strong> an RFI (nunca "send"), <strong>respond to</strong> technical queries (nunca "answer to"), <strong>verify compliance with</strong> the specs (nunca "compliance TO"), <strong>ensure</strong> interoperability, <strong>validate</strong> the design, <strong>exceed</strong> the emission limit, <strong>implement</strong> a workaround, <strong>fall outside</strong> the scope, <strong>meet</strong> the acceptance criteria.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>A pergunta que se faz antes de enviar:</strong> "<em>Can this sentence be read in a second way that costs me money?</em>" Se puder, ela ainda n&#227;o est&#225; pronta. Ambiguidade n&#227;o &#233; confus&#227;o: a frase amb&#237;gua parece perfeitamente clara &mdash; e &#233; exatamente por isso que passa.</p>"""
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (three habits carried over from Portuguese):</strong> (1) <em>"The RFI that we submitted <span style="color:#dc2626">it</span> on Monday"</em> &mdash; the object pronoun is NOT repeated in English: <em>that</em> is already the object; (2) <em>"the configuration, <span style="color:#dc2626">that</span> is common to all forty"</em> &mdash; after a comma, <strong>that</strong> is impossible: use <strong>which</strong>; (3) <em>"the cable <span style="color:#dc2626">installing</span> last week"</em> &mdash; the cable is not installing anything: it WAS installed, so it is <strong>installed</strong> (past participle). One form covers both cases in your first language; English needs two.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>RFI collocations:</strong> <strong>submit</strong> an RFI (never "send"), <strong>respond to</strong> technical queries (never "answer to"), <strong>verify compliance with</strong> the specs (never "compliance TO"), <strong>ensure</strong> interoperability, <strong>validate</strong> the design, <strong>exceed</strong> the emission limit, <strong>implement</strong> a workaround, <strong>fall outside</strong> the scope, <strong>meet</strong> the acceptance criteria.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>The question to ask before you hit send:</strong> "<em>Can this sentence be read in a second way that costs me money?</em>" If it can, it is not ready. Ambiguity is not confusion: an ambiguous sentence looks completely clear &mdash; and that is precisely why it gets through.</p>"""
 
 
 HTML = f"""<div class="lesson-card" id="ex-lesson-8">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 08 -- Pre-class</div>
+      <div class="lesson-number">Lesson 08 -- Pre-class</div>
       <h3>Say Exactly What You Mean -- Writing the RFI</h3>
-      <div class="lesson-desc">Seis unidades de intertravamento reprovaram no ensaio de EMC &mdash; e as quarenta foram constru&#237;das com a mesma configura&#231;&#227;o de aterramento. Como escrever o RFI que fecha o escopo nas seis, registra o fato sobre as quarenta e n&#227;o pode ser lido de dois jeitos. Key words: request for information (RFI), request for proposal (RFP), interoperability, electromagnetic compatibility (EMC), grounding, interlocking, fail-safe, redundancy, acceptance criteria, workaround, ambiguity, to spell out, to devise, to pin down. Structure: ora&#231;&#245;es relativas &mdash; restritiva x n&#227;o-restritiva (a v&#237;rgula que muda o contrato), relativas reduzidas e preposi&#231;&#227;o + <em>which</em>.</div>
+      <div class="lesson-desc">Six interlocking units failed the EMC test &mdash; and all forty were built to the same grounding configuration. How to write the RFI that locks the scope onto the six, puts the fact about the forty on record, and cannot be read in two ways. Key words: request for information (RFI), request for proposal (RFP), interoperability, electromagnetic compatibility (EMC), grounding, interlocking, fail-safe, redundancy, acceptance criteria, workaround, ambiguity, to spell out, to devise, to pin down. Structure: relative clauses &mdash; defining vs. non-defining (the comma that rewrites the contract), reduced relatives, and preposition + <em>which</em>.</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="8" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="8">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -314,7 +313,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-8">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Na aula 7 voc&#234; transformou mem&#243;ria em registro. Aqui voc&#234; escreve o documento &mdash; e um documento t&#233;cnico n&#227;o &#233; lido, &#233; interpretado. S&#227;o as palavras do esclarecimento formal: o que se pergunta, o que se mede, e o que se aceita s&#243; provisoriamente. Ou&#231;a cada termo e leia o exemplo.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">In lesson 7 you turned memory into a record. Here you write the document &mdash; and a technical document is not read, it is interpreted. These are the words of the formal clarification: what you ask, what you measure, and what you accept only as a temporary arrangement. Listen to each term and read the example.</p>
       <div class="vocab-cards">
 {vocab_cards()}
       </div>
@@ -322,7 +321,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-8">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
       <div class="match-grid" id="match-l8">
 {match_grid()}
       </div>
@@ -330,7 +329,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-8">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions below.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         {CONTEXT}
       </div>
@@ -339,19 +338,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-8">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Relative Clauses &amp; Precision</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Como a v&#237;rgula decide o escopo &mdash; e por que a mesma frase, com e sem ela, compromete o fornecedor com seis unidades ou com quarenta (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">How the comma decides the scope &mdash; and why one sentence, with it and without it, commits the supplier to six units or to forty.</p>
 {GRAMMAR_TIP}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a estrutura correta. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct structure. Tap Listen to hear the whole sentence.</p>
 {blanks_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the RFI in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque os passos do RFI na ordem correta &mdash; do escopo restrito at&#233; o prazo de morte da solu&#231;&#227;o paliativa.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the steps of the RFI in the correct order &mdash; from locking the scope down to the date on which the workaround dies.</p>
       <div class="order-container" id="order-l8">
 {order_html()}
       </div>
@@ -360,19 +359,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-8">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesmo dizendo-a. Repare na PAUSA das v&#237;rgulas na segunda frase: em ingl&#234;s falado a n&#227;o-restritiva se OUVE &mdash; h&#225; uma pausa antes e depois, e ela &#233; o que avisa o interlocutor de que voc&#234; est&#225; falando de todas as quarenta. E diga in-ter-op-er-a-BIL-i-ty, com o acento na quinta s&#237;laba.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. Notice the PAUSE around the commas in the second one: in spoken English a non-defining clause can be HEARD &mdash; there is a pause on either side of it, and that pause is what tells the other side you are talking about all forty units. And say in-ter-op-er-a-BIL-i-ty, with the stress on the fifth syllable.</p>
 {speech_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real da call de esclarecimento t&#233;cnico &mdash; inclusive quando a fornecedora argumenta que trinta e quatro aprova&#231;&#245;es provam o projeto, ou oferece um paliativo como se fosse a solu&#231;&#227;o.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Pick the best answer for every real moment of the technical clarification call &mdash; including the moment the supplier argues that thirty-four passes prove the design, or offers a temporary fix as if it were the solution.</p>
 {quiz_html(QUIZZES_SIT)}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesmo respondendo &#224; pergunta abaixo. Fale por 2 minutos, sem script e sem parar para se corrigir. Tom: preciso no escopo, honesto na incerteza, e imposs&#237;vel de reinterpretar.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. Speak for 2 minutes, with no script and with no stopping to correct yourself. Tone: precise about the scope, honest about what is still unknown, and impossible to reinterpret.</p>
       <div class="think-card">
         <div class="think-question">You are opening the clarification call on RFI-114. In ninety seconds: restrict the scope to the six interlocking units that failed the EMC test on 14 July, add the fact about the grounding configuration that is common to all forty without claiming that all forty failed, refuse the argument that thirty-four passes prove the design, accept the ferrite filters for the trial run only and give them an end date, and close with the two questions you need in writing -- the standard to which the design was certified, and the conditions under which the test was performed.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

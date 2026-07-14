@@ -74,7 +74,7 @@ def vocab_cards():
             f'        <div class="vocab-card-pc"><div class="vocab-card-content">'
             f'<div class="vocab-card-header"><span class="vocab-card-word">{esc(word)}</span>'
             f'<span class="vocab-card-dot"> -- </span>'
-            f'<span class="vocab-card-def">{esc(d)} ({esc(pt)})</span></div>'
+            f'<span class="vocab-card-def">{esc(d)}</span></div>'
             f'<div class="vocab-card-example">{esc(ex)}</div></div>'
             f'<button class="audio-btn" data-speak="{esc(word)}" onclick="speakText(this.dataset.speak,this)">Listen</button></div>')
     return '\n'.join(rows)
@@ -103,18 +103,18 @@ CONTEXT = """<p>The factory acceptance test <strong>was carried out</strong> on 
         <p>So he states what has to happen, and he states it in the passive, because the obligation belongs to the procedure and not to him. "A corrective action <strong>must be implemented</strong> before the retest. We need to <strong>have the report resubmitted</strong> through the <strong>approval workflow</strong> by Friday, and we will <strong>have the relay retested</strong> with a valid certificate in place. I would also like to <strong>raise a concern</strong> about the <strong>traceability</strong> of that batch. <strong>Sign-off</strong> <strong>cannot be granted</strong> while the hold point remains open." Nobody <strong>was accused</strong>. Nothing <strong>was denied</strong>. And the relay is being retested on Thursday."""
 
 QUIZZES_CONTEXT = [
-    ("1. \"The relay was found to be out of tolerance.\" Por que o engenheiro escolhe o passivo, em vez de \"Your technician calibrated it badly\"?",
-     [("Porque o passivo &#233; mais educado, ainda que mais fraco.", False),
-      ("Porque o passivo tira a PESSOA da frase e deixa o FATO. Uma acusa&#231;&#227;o se contesta e se defende; uma constata&#231;&#227;o s&#243; pode ser FECHADA &mdash; e &#233; por isso que todo relat&#243;rio de inspe&#231;&#227;o &#233; escrito assim.", True),
-      ("Porque em ingl&#234;s t&#233;cnico &#233; proibido usar a voz ativa.", False)]),
-    ("2. \"The calibration certificate had not been issued at the time of the test.\" O que o passivo PERFEITO faz aqui que o passivo simples n&#227;o faria?",
-     [("Data a aus&#234;ncia: no MOMENTO do teste, aquele documento ainda n&#227;o existia &mdash; e por isso ele n&#227;o cobre o teste. Emitir depois n&#227;o resolve.", True),
-      ("Apenas soa mais formal; o sentido &#233; o mesmo de \"was not issued\".", False),
-      ("Indica que o certificado nunca ser&#225; emitido.", False)]),
-    ("3. \"We need to have the report resubmitted by Friday.\" QUEM reenvia o relat&#243;rio?",
-     [("Eu mesmo, porque <em>have</em> significa \"ter que fazer\".", False),
-      ("Ningu&#233;m &mdash; a frase apenas descreve uma inten&#231;&#227;o.", False),
-      ("O FORNECEDOR. O causativo <em>have something done</em> diz que a a&#231;&#227;o &#233; EXIGIDA por mim e EXECUTADA por outro. Eu n&#227;o fa&#231;o o trabalho; eu o determino.", True)]),
+    ("1. \"The relay was found to be out of tolerance.\" Why does the engineer choose the passive here, instead of \"Your technician calibrated it badly\"?",
+     [("Because the passive is more polite, even though it is weaker.", False),
+      ("Because the passive takes the PERSON out of the sentence and leaves the FACT. An accusation can be disputed and defended; a finding can only be CLOSED &mdash; and that is why every inspection report is written this way.", True),
+      ("Because the active voice is not allowed in technical English.", False)]),
+    ("2. \"The calibration certificate had not been issued at the time of the test.\" What does the PERFECT passive do here that the simple passive would not do?",
+     [("It dates the absence: at the MOMENT of the test, that document did not exist yet &mdash; so it does not cover the test. Issuing it afterwards solves nothing.", True),
+      ("It only sounds more formal; the meaning is the same as \"was not issued\".", False),
+      ("It means the certificate will never be issued.", False)]),
+    ("3. \"We need to have the report resubmitted by Friday.\" WHO resubmits the report?",
+     [("I do, because <em>have</em> means \"to have to do something\".", False),
+      ("Nobody &mdash; the sentence only describes an intention.", False),
+      ("THE SUPPLIER. The causative <em>have something done</em> says the action is DEMANDED by me and CARRIED OUT by somebody else. I do not do the work; I require it.", True)]),
     ("4. Which sentence is correct?",
      [("\"We need to have resubmitted the report by Friday.\"", False),
       ("\"We need to have the report resubmitted by Friday.\"", True),
@@ -122,22 +122,22 @@ QUIZZES_CONTEXT = [
 ]
 
 BLANKS = [
-    ("was found to be", "Dica: passivo de constata&#231;&#227;o &mdash; <em>be</em> + partic&#237;pio + <em>to be</em>. O rel&#234; &#233; o sujeito; o inspetor sumiu",
+    ("was found to be", "Hint: the passive of a finding &mdash; <em>be</em> + participle + <em>to be</em>. The relay is the subject; the inspector has disappeared",
      "The relay was found to be out of tolerance during the functional test.",
      '"The relay ', ' out of tolerance during the functional test."'),
-    ("had not been issued", "Dica: passivo PERFEITO &mdash; <em>had been</em> + partic&#237;pio. Na data do teste, o documento ainda n&#227;o existia",
+    ("had not been issued", "Hint: the PERFECT passive &mdash; <em>had been</em> + participle. On the date of the test, the document did not exist yet",
      "The calibration certificate had not been issued at the time of the test.",
      '"The calibration certificate ', ' at the time of the test."'),
-    ("must be implemented", "Dica: passivo com modal &mdash; modal + <strong>be</strong> + PARTIC&#205;PIO (nunca a forma base)",
+    ("must be implemented", "Hint: the modal passive &mdash; modal + <strong>be</strong> + PARTICIPLE (never the base form)",
      "A corrective action must be implemented before the retest.",
      '"A corrective action ', ' before the retest."'),
-    ("have the report resubmitted", "Dica: causativo &mdash; <em>have</em> + OBJETO + partic&#237;pio. O objeto vem ANTES do partic&#237;pio",
+    ("have the report resubmitted", "Hint: the causative &mdash; <em>have</em> + OBJECT + participle. The object comes BEFORE the participle",
      "We need to have the report resubmitted by Friday.",
      '"We need to ', ' by Friday."'),
-    ("cannot be granted", "Dica: passivo com modal negativo &mdash; o aceite n&#227;o pode ser concedido por ningu&#233;m enquanto o hold point estiver aberto",
+    ("cannot be granted", "Hint: the negative modal passive &mdash; sign-off can be granted by nobody while the hold point is open",
      "Sign-off cannot be granted while the hold point remains open.",
      '"Sign-off ', ' while the hold point remains open."'),
-    ("root cause", "Dica: n&#227;o &#233; o sintoma (os 11 ms) &mdash; &#233; a raz&#227;o ATR&#193;S do sintoma",
+    ("root cause", "Hint: not the symptom (the eleven milliseconds) &mdash; the reason BEHIND the symptom",
      "The root cause has not been identified yet, so the corrective action is premature.",
      '"The ', ' has not been identified yet, so the corrective action is premature."'),
 ]
@@ -234,7 +234,6 @@ def speech_html():
         out.append(
             f'      <div class="speech-card" data-phrase="{esc(en)}">\n'
             f'        <div class="speech-phrase">{esc(en)}</div>\n'
-            f'        <div class="speech-translation">{esc(pt)}</div>\n'
             f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
             f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
             f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -248,34 +247,34 @@ def survival_html():
     for i, (en, pt) in enumerate(SURVIVAL, 1):
         out.append(
             f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-            f'<span class="sp-en">{esc(en)}</span><span class="sp-pt">{esc(pt)}</span>'
+            f'<span class="sp-en">{esc(en)}</span>'
             f'<button class="btn btn-listen" data-speak="{esc(en)}" onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>')
     return '\n'.join(out)
 
 
 GRAMMAR_TIP = """      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Fun&#231;&#227;o / Function</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Function</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Passivo simples<br><em>be</em> + partic&#237;pio</td><td style="padding:.6rem">O objeto vira sujeito e o agente CAI &mdash; porque &#233; &#243;bvio, porque &#233; desconhecido, ou porque nome&#225;-lo comecaria uma briga.</td><td style="padding:.6rem">"The submittal <strong>was returned</strong> with comments."</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Passivo de constata&#231;&#227;o<br><em>be</em> + <em>found / reported / believed</em> + <strong>to be</strong></td><td style="padding:.6rem">O registro de todo relat&#243;rio de inspe&#231;&#227;o. Voc&#234; enuncia o FATO, n&#227;o a pessoa. Repare: <em>is believed to have been caused</em> N&#195;O &#233; o mesmo que <em>has been identified</em> &mdash; o fornecedor usa o primeiro justamente para n&#227;o assumir o segundo.</td><td style="padding:.6rem">"The relay <strong>was found to be</strong> out of tolerance."</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Passivo perfeito<br><em>had been</em> + partic&#237;pio</td><td style="padding:.6rem">Data a AUS&#202;NCIA: no momento do teste, aquele documento ainda n&#227;o existia. &#201; a frase que impede o fornecedor de resolver o problema emitindo o certificado depois.</td><td style="padding:.6rem">"The certificate <strong>had not been issued</strong> at the time of the test."</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Passivo com modal<br>modal + <strong>be</strong> + partic&#237;pio</td><td style="padding:.6rem">A obriga&#231;&#227;o pertence ao PROCEDIMENTO, n&#227;o a voc&#234; &mdash; e por isso ningu&#233;m a leva para o lado pessoal. Depois do modal vem <strong>be</strong>, sempre.</td><td style="padding:.6rem">"A corrective action <strong>must be implemented</strong>." &middot; "Sign-off <strong>cannot be granted</strong>."</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Causativo<br><em>have</em> + OBJETO + partic&#237;pio</td><td style="padding:.6rem">Voc&#234; EXIGE a a&#231;&#227;o; outro a EXECUTA. A ordem &#233; fixa: a coisa vem antes do partic&#237;pio. <em>get something done</em> &#233; o mesmo, menos formal.</td><td style="padding:.6rem">"We need to <strong>have the report resubmitted</strong>." &middot; "I will <strong>get the relay retested</strong>."</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Causativo com pessoa<br><em>have somebody</em> + FORMA BASE</td><td style="padding:.6rem">Quando voc&#234; PRECISA nomear quem faz. A&#237; o verbo volta &#224; forma base &mdash; sem <em>to</em>, sem partic&#237;pio.</td><td style="padding:.6rem">"I will <strong>have your team resubmit</strong> the report."</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">Para que serve</td><td style="padding:.6rem" colspan="2">"You calibrated it badly" &#233; uma acusa&#231;&#227;o &mdash; e tudo o que vier depois ser&#225; defesa. "<strong>The relay was found to be out of tolerance</strong>" &#233; o MESMO fato com a pessoa removida: ningu&#233;m &#233; atacado e nada pode ser negado. Depois, o causativo devolve o trabalho a quem pertence: "<strong>we need to have it retested</strong>" &mdash; n&#227;o por n&#243;s, por ELES, e at&#233; sexta.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Simple passive<br><em>be</em> + participle</td><td style="padding:.6rem">The object becomes the subject and the agent DROPS OUT &mdash; because it is obvious, because it is unknown, or because naming it would start a fight.</td><td style="padding:.6rem">"The submittal <strong>was returned</strong> with comments."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Passive of a finding<br><em>be</em> + <em>found / reported / believed</em> + <strong>to be</strong></td><td style="padding:.6rem">The register of every inspection report. You state the FACT, not the person. Note: <em>is believed to have been caused</em> is NOT the same as <em>has been identified</em> &mdash; the supplier reaches for the first one precisely in order not to commit to the second.</td><td style="padding:.6rem">"The relay <strong>was found to be</strong> out of tolerance."</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Perfect passive<br><em>had been</em> + participle</td><td style="padding:.6rem">It dates the ABSENCE: at the time of the test, that document did not exist yet. This is the sentence that stops the supplier from making the problem go away by issuing the certificate afterwards.</td><td style="padding:.6rem">"The certificate <strong>had not been issued</strong> at the time of the test."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Modal passive<br>modal + <strong>be</strong> + participle</td><td style="padding:.6rem">The obligation belongs to the PROCEDURE, not to you &mdash; and that is why nobody takes it personally. After the modal comes <strong>be</strong>, always.</td><td style="padding:.6rem">"A corrective action <strong>must be implemented</strong>." &middot; "Sign-off <strong>cannot be granted</strong>."</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Causative<br><em>have</em> + OBJECT + participle</td><td style="padding:.6rem">You DEMAND the action; somebody else CARRIES IT OUT. The order is fixed: the thing comes before the participle. <em>get something done</em> is the same, only less formal.</td><td style="padding:.6rem">"We need to <strong>have the report resubmitted</strong>." &middot; "I will <strong>get the relay retested</strong>."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Causative with a person<br><em>have somebody</em> + BASE FORM</td><td style="padding:.6rem">For when you DO need to name who does the work. Then the verb goes back to the base form &mdash; no <em>to</em>, no participle.</td><td style="padding:.6rem">"I will <strong>have your team resubmit</strong> the report."</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">Why it matters</td><td style="padding:.6rem" colspan="2">"You calibrated it badly" is an accusation &mdash; and everything that follows it will be a defense. "<strong>The relay was found to be out of tolerance</strong>" is the SAME fact with the person removed: nobody is attacked and nothing can be denied. Then the causative hands the work back to whoever owns it: "<strong>we need to have it retested</strong>" &mdash; not by us, by THEM, and by Friday.</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (dois erros de brasileiro):</strong> (1) esquecer o <em>be</em> ou o partic&#237;pio depois do modal &mdash; "The report must be <em>resubmit</em>" e "A corrective action must <em>implemented</em>" est&#227;o errados; o certo &#233; "must <strong>be resubmitted</strong>" e "must <strong>be implemented</strong>"; (2) a ordem do causativo &mdash; em portugu&#234;s dizemos "preciso reenviar o relat&#243;rio", e sai "We need to have <em>resubmitted the report</em>", que em ingl&#234;s &#233; outro tempo verbal e outro sentido. No causativo o OBJETO vem ANTES: "have <strong>the report</strong> resubmitted".</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Colloca&#231;&#245;es da reuni&#227;o de aprova&#231;&#227;o:</strong> <strong>carry out</strong> a test, <strong>issue</strong> a certificate (NUNCA "emit" &mdash; o falso amigo cl&#225;ssico), <strong>trigger</strong> a hold point, <strong>identify</strong> the root cause, <strong>raise</strong> a concern, <strong>grant</strong> sign-off, <strong>resubmit</strong> a report through the approval workflow.</p>"""
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (the two classic traps):</strong> (1) dropping the <em>be</em> or the participle after the modal &mdash; "The report must be <em>resubmit</em>" and "A corrective action must <em>implemented</em>" are both wrong; the right forms are "must <strong>be resubmitted</strong>" and "must <strong>be implemented</strong>"; (2) the word order of the causative &mdash; the temptation is to say "We need to have <em>resubmitted the report</em>", which in English is a different tense and a different meaning altogether. In the causative the OBJECT comes FIRST: "have <strong>the report</strong> resubmitted".</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Collocations of the approval meeting:</strong> <strong>carry out</strong> a test, <strong>issue</strong> a certificate (NEVER "emit" &mdash; the classic false friend), <strong>trigger</strong> a hold point, <strong>identify</strong> the root cause, <strong>raise</strong> a concern, <strong>grant</strong> sign-off, <strong>resubmit</strong> a report through the approval workflow.</p>"""
 
 
 HTML = f"""<div class="lesson-card" id="ex-lesson-6">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 06 -- Pre-class</div>
+      <div class="lesson-number">Lesson 06 -- Pre-class</div>
       <h3>Holding Your Ground -- The Supplier Approval Meeting</h3>
-      <div class="lesson-desc">O rel&#234; de seguran&#231;a reprovou no FAT e o fornecedor chama de "minor deviation": como enunciar a falha sem acusar ningu&#233;m, exigir a a&#231;&#227;o corretiva sem fazer o trabalho, e manter o hold point fechado. Key words: deviation, submittal, approval workflow, inspection release, out of tolerance, calibration certificate, traceability, root cause, rework, sign-off, to downplay, to raise a concern, to hold your ground, to pass the buck. Structure: voz passiva avan&#231;ada (was found to be... / had not been issued / must be implemented) + causativo have something done ("We need to have the report resubmitted by Friday").</div>
+      <div class="lesson-desc">The safety relay failed the factory acceptance test and the supplier calls it a "minor deviation": how to state the failure without accusing anybody, how to demand the corrective action without doing the work yourself, and how to keep the hold point closed. Key words: deviation, submittal, approval workflow, inspection release, out of tolerance, calibration certificate, traceability, root cause, rework, sign-off, to downplay, to raise a concern, to hold your ground, to pass the buck. Structure: the advanced passive (was found to be... / had not been issued / must be implemented) + the causative have something done ("We need to have the report resubmitted by Friday").</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="6" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="6">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -284,7 +283,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-6">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Na aula 5 voc&#234; nomeou a si mesmo diante de uma banca. Aqui voc&#234; nomeia o DEFEITO &mdash; e quem paga por ele. S&#227;o as palavras da reuni&#227;o de aprova&#231;&#227;o: o que foi encontrado, o que ainda n&#227;o foi emitido, e o que o fornecedor vai tentar chamar de "menor". Ou&#231;a cada termo e leia o exemplo.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">In Lesson 5 you put a name to yourself in front of an interview panel. Here you put a name to the DEFECT &mdash; and to whoever pays for it. These are the words of the approval meeting: what was found, what had not been issued yet, and what the supplier will try to call "minor". Listen to every term and read the example.</p>
       <div class="vocab-cards">
 {vocab_cards()}
       </div>
@@ -292,7 +291,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-6">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match every term with the right definition.</p>
       <div class="match-grid" id="match-l6">
 {match_grid()}
       </div>
@@ -300,7 +299,7 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-6">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text, then answer the questions below.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         {CONTEXT}
       </div>
@@ -309,19 +308,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-6">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Advanced Passive &amp; Causative</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Como enunciar uma falha sem acusar uma pessoa &mdash; e como exigir o conserto sem fazer o trabalho (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">How to state a failure without accusing a person &mdash; and how to demand the fix without doing the work yourself.</p>
 {GRAMMAR_TIP}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a estrutura correta. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete every sentence with the right structure. Tap Listen to hear the whole sentence.</p>
 {blanks_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the Approval Meeting in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque as etapas de uma reuni&#227;o de hold point na ordem correta &mdash; da constata&#231;&#227;o at&#233; a recusa do aceite.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the stages of a hold-point meeting in the right order &mdash; from the finding to the refusal of sign-off.</p>
       <div class="order-container" id="order-l6">
 {order_html()}
       </div>
@@ -330,19 +329,19 @@ HTML = f"""<div class="lesson-card" id="ex-lesson-6">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesmo dizendo-a. S&#227;o as cinco frases que abrem, sustentam e fecham uma reuni&#227;o de aprova&#231;&#227;o. Repare no acento: ele cai no partic&#237;pio (was FOUND to be out of TOLerance) &mdash; e "certificate" termina em <em>-kit</em>, &#225;tono, nunca em <em>-keit</em>.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to every sentence, then record yourself saying it. These are the five sentences that open, hold and close an approval meeting. Watch the stress: it falls on the participle (was FOUND to be out of TOLerance) &mdash; and "certificate" ends in <em>-kit</em>, unstressed, never <em>-keit</em>.</p>
 {speech_html()}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real de uma reuni&#227;o de FAT &mdash; inclusive quando o fornecedor minimiza a falha ou empurra a culpa para o subcontratado.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best answer for every real moment of a factory acceptance test meeting &mdash; including the moment when the supplier downplays the failure or shifts the blame onto the subcontractor.</p>
 {quiz_html(QUIZZES_SIT)}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesmo respondendo &#224; pergunta abaixo. Fale por 2 minutos, sem script e sem parar para se corrigir. Tom: t&#233;cnico, impessoal na constata&#231;&#227;o, firme na exig&#234;ncia.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. Speak for two minutes, with no script and with no stopping to correct yourself. Tone: technical, impersonal in the finding, firm in the demand.</p>
       <div class="think-card">
         <div class="think-question">You are opening a hold-point meeting with the supplier's quality manager. In ninety seconds: state what was found during the functional test (The relay was found to be...), state what had not been done at the time of the test (The calibration certificate had not been...), refuse the word "deviation" and give the criterion, demand the root cause and the corrective action with a date (We need to have the report resubmitted...), and close by saying why sign-off cannot be granted yet.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>
