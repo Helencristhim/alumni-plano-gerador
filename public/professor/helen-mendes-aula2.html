@@ -321,6 +321,18 @@ body.slide-mode .teacher-t { display:flex; }
 .error-card.revealed .error-fix { display:block;animation:fadeUp .3s ease; }
 .error-score { text-align:center;margin-top:1rem;font-weight:700;color:var(--accent);font-size:1.1rem; }
 
+/* Sentence Building (.oral-*): nasceu SEM estilo-base — o bloco saía como uma lista
+   <div> nua enquanto o resto do deck é todo em cards. Mesmo vocabulário visual do
+   .error-card/.challenge-card vizinhos. A VISIBILIDADE do gabarito NÃO se define aqui:
+   .oral-model{display:none} + .oral-item.revealed .oral-model{display:block} ficam
+   juntos, mais abaixo, e continuam sendo a única fonte do reveal. */
+.oral-grid { display:flex;flex-direction:column;gap:.8rem;max-width:560px;margin:1.5rem auto 0; }
+.oral-item { background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s; }
+.oral-item:hover { border-color:var(--accent); }
+.oral-item:focus-visible { outline:3px solid var(--accent);outline-offset:2px; }
+.oral-situation { font-size:.95rem;line-height:1.5;color:var(--text);font-weight:600; }
+@media (prefers-reduced-motion:reduce) { .oral-item { transition:none; } }
+
 .roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:500px;margin:0 auto; }
 .roleplay-body { padding:1.5rem; }
 .roleplay-scenario { font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem; }
@@ -444,8 +456,9 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .oral-item,
 .slide-dark .oral-item * { color: #1a1a2e !important; }
 .slide-dark .oral-item .oral-model { color: var(--accent) !important; }
-.oral-model { display:none; }
+.oral-model { display:none;margin-top:.6rem;font-size:.95rem;line-height:1.5;font-style:italic;color:var(--accent);font-weight:600; }
 .oral-item.revealed .oral-model { display:block; animation:fadeUp .3s ease; }
+@media (prefers-reduced-motion:reduce) { .oral-item.revealed .oral-model { animation:none; } }
 .slide-dark .error-card { background: #fff !important; }
 .slide-dark .error-card,
 .slide-dark .error-card * { color: #1a1a2e !important; }
@@ -584,7 +597,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div style="display:flex;flex-direction:column;gap:1rem">
     <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">02</div>
-      <div><div style="font-weight:600;font-size:.95rem">My Workday</div><div style="font-size:.8rem;color:var(--text-dim)">Routines + frequency adverbs, the Tuesday call -- 27 slides</div></div>
+      <div><div style="font-weight:600;font-size:.95rem">My Workday</div><div style="font-size:.8rem;color:var(--text-dim)">Routines + frequency adverbs, the Tuesday call -- 28 slides</div></div>
     </div>
   </div>
 </div>
@@ -816,7 +829,18 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="13" data-phase="4" data-teacher="<strong>Diálogo (6 min):</strong> Diga: 'I am James on the call. You are you!' Clique 'Next Line' para cada fala. Para cada fala da Helen, peça que ELA fale primeiro, depois toque o áudio para comparar.">
+<div class="slide slide-light" data-slide="13" data-phase="4" data-task-for="dialogue" data-teacher="<strong>Antes do diálogo (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA ANTES de abrir o diálogo. É isto que ela vai procurar enquanto ouve — sem a tarefa antes, compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide de checagem, depois.">
+  <div class="slide-inner">
+    <div class="chapter-label">Before you listen</div>
+    <h2 class="slide-heading">Listen <span class="accent">for this</span></h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
+      <div class="comp-q comp-q-task"><div class="q-text">1. Why does James want to know Helen's routine?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">2. What does James propose at the end?</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Diálogo (6 min):</strong> Diga: 'I am James on the call. You are you!' Clique 'Next Line' para cada fala. Para cada fala da Helen, peça que ELA fale primeiro, depois toque o áudio para comparar.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">Walk Me Through <span class="accent">Your Day</span></h2>
@@ -837,7 +861,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Listen to Carla, from the team, describe her workday.' Toque SEM texto, 2 vezes. As perguntas aparecem ao final. 0.75x se pedir.">
+<div class="slide slide-dark" data-slide="15" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Listen to Carla, from the team, describe her workday.' Toque SEM texto, 2 vezes. As perguntas aparecem ao final. 0.75x se pedir.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">Carla's <span class="accent">Workday</span></h2>
@@ -866,7 +890,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: COMPREHENSION ========== -->
-<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Comprehension (2 min):</strong> Pergunte sobre o JAMES, não sobre a Helen. Clique para revelar.">
+<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Comprehension (2 min):</strong> Pergunte sobre o JAMES, não sobre a Helen. Clique para revelar.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About <span class="accent">James</span></h2>
@@ -878,7 +902,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now a model: listen to a manager describe a perfect workday — this is YOUR model for the homework.' Toque o áudio. As perguntas aparecem ao final.">
+<div class="slide slide-dark" data-slide="17" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> Diga: 'Now a model: listen to a manager describe a perfect workday — this is YOUR model for the homework.' Toque o áudio. As perguntas aparecem ao final.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">The Model <span class="accent">Day</span></h2>
@@ -907,7 +931,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="17" data-phase="5" data-teacher="<strong>Transição practice (1 min):</strong> Diga: 'Time to train. Detective, speaking, building. Ready?' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="18" data-phase="5" data-teacher="<strong>Transição practice (1 min):</strong> Diga: 'Time to train. Detective, speaking, building. Ready?' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train the <span class="accent">Rhythm</span></h2>
@@ -916,7 +940,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: DETECTIVE ========== -->
-<div class="slide slide-light" data-slide="18" data-phase="5" data-teacher="<strong>Detective (4 min):</strong> Leia cada frase com erro. Helen corrige ANTES de clicar. Foco: posição do advérbio e 3ª pessoa.">
+<div class="slide slide-light" data-slide="19" data-phase="5" data-teacher="<strong>Detective (4 min):</strong> Leia cada frase com erro. Helen corrige ANTES de clicar. Foco: posição do advérbio e 3ª pessoa.">
   <div class="slide-inner">
     <div class="chapter-label">Detective</div>
     <h2 class="slide-heading">Spot the <span class="accent">Error</span></h2>
@@ -931,7 +955,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: SPEAKING ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="5" data-teacher="<strong>Speaking (4 min):</strong> Faça cada pergunta e espere resposta COMPLETA com advérbio de frequência. Depois inverta: ela pergunta sobre o SEU dia.">
+<div class="slide slide-light" data-slide="20" data-phase="5" data-teacher="<strong>Speaking (4 min):</strong> Faça cada pergunta e espere resposta COMPLETA com advérbio de frequência. Depois inverta: ela pergunta sobre o SEU dia.">
   <div class="slide-inner">
     <div class="chapter-label">Speaking</div>
     <h2 class="slide-heading">Your Real <span class="accent">Routine</span></h2>
@@ -945,7 +969,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 20: BUILD ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="5" data-teacher="<strong>Sentence Building (4 min):</strong> Mostre as keywords. Helen monta a frase COMPLETA em voz alta, depois clica para comparar. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="21" data-phase="5" data-teacher="<strong>Sentence Building (4 min):</strong> Mostre as keywords. Helen monta a frase COMPLETA em voz alta, depois clica para comparar. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">Build</div>
     <h2 class="slide-heading">Sentence <span class="accent">Building</span></h2>
@@ -960,7 +984,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="21" data-phase="6" data-teacher="<strong>Transição role-play (1 min):</strong> Diga: 'The final test: three calls. I am every caller. Ready?' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="22" data-phase="6" data-teacher="<strong>Transição role-play (1 min):</strong> Diga: 'The final test: three calls. I am every caller. Ready?' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Your <span class="accent">Day</span>, Live</h2>
@@ -969,7 +993,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="22" data-phase="6" data-teacher="<strong>Role-play Guided (4 min):</strong> Você é James perguntando sobre a manhã dela. Helen responde com os advérbios. Use as keywords.">
+<div class="slide slide-light" data-slide="23" data-phase="6" data-teacher="<strong>Role-play Guided (4 min):</strong> Você é James perguntando sobre a manhã dela. Helen responde com os advérbios. Use as keywords.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">The Morning <span class="accent">Questions</span></h2>
@@ -986,7 +1010,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="6" data-teacher="<strong>Role-play Semi-free (4 min):</strong> Você é James montando o cronograma da campanha: pergunte quando ela está livre e quando está ocupada. Helen negocia os horários. Menos pistas.">
+<div class="slide slide-light" data-slide="24" data-phase="6" data-teacher="<strong>Role-play Semi-free (4 min):</strong> Você é James montando o cronograma da campanha: pergunte quando ela está livre e quando está ocupada. Helen negocia os horários. Menos pistas.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Plan the <span class="accent">Campaign</span></h2>
@@ -1002,7 +1026,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="6" data-teacher="<strong>Free Practice (5 min):</strong> A missão: Helen descreve o dia COMPLETO dela, das 8h ao fim — com pelo menos 4 advérbios de frequência. ZERO pistas. NÃO interrompa. Anote erros. CELEBRE.">
+<div class="slide slide-light" data-slide="25" data-phase="6" data-teacher="<strong>Free Practice (5 min):</strong> A missão: Helen descreve o dia COMPLETO dela, das 8h ao fim — com pelo menos 4 advérbios de frequência. ZERO pistas. NÃO interrompa. Anote erros. CELEBRE.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">My Day, From <span class="accent">8 to 6</span></h2>
@@ -1014,7 +1038,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: CH7 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="25" data-phase="7" data-teacher="<strong>Transição wrap-up (1 min):</strong> Diga: 'Call complete! Let's check your progress.' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="26" data-phase="7" data-teacher="<strong>Transição wrap-up (1 min):</strong> Diga: 'Call complete! Let's check your progress.' Passe ao próximo." style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 7: Wrap-Up</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Call <span class="accent">Complete</span></h2>
@@ -1022,7 +1046,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: SELF-ASSESSMENT ========== -->
-<div class="slide slide-dark" data-slide="26" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Click each item if you feel confident.' Todos os 5 checks = aula completa e stamp 2.">
+<div class="slide slide-dark" data-slide="27" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Click each item if you feel confident.' Todos os 5 checks = aula completa e stamp 2.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading" style="color:#fff">What I <span class="accent">Learned</span></h2>
@@ -1037,7 +1061,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="27" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Diga: 'Lesson 2 complete, Helen! You earned your Rhythm Badge!' Homework (oralmente): escrever a agenda de um dia típico (6 frases, com advérbios). Próxima aula: My Team (3ª pessoa).">
+<div class="slide slide-dark" data-slide="28" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Diga: 'Lesson 2 complete, Helen! You earned your Rhythm Badge!' Homework (oralmente): escrever a agenda de um dia típico (6 frases, com advérbios). Próxima aula: My Team (3ª pessoa).">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1159,7 +1183,7 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 27;
+var totalSlides = 28;
 var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
 
 function changeSlide(dir) {

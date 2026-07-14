@@ -67,6 +67,97 @@ def audio_existe(root, ref):
 # funções nativas/inline aceitas em handlers sem definição no arquivo
 BUILTIN_OK = {'event', 'window', 'document', 'this', 'location', 'localStorage', 'alert', 'confirm'}
 
+# ===== IDIOMA (REGRA 13 / docs/RULEBOOK-PEDAGOGICO.md) =====
+# "Português é permitido APENAS nos níveis A0 e A1. A partir do A2, ZERO português em
+#  QUALQUER parte do material. Única exceção: instruções ao professor via ícone T."
+#
+# Marcadores de PT que NÃO são palavras inglesas. Os homógrafos ficam DE FORA de
+# propósito — 'do', 'no', 'so', 'a', 'as', 'complete', 'imagine', 'combine', 'use',
+# 'real', 'total' existem nas DUAS línguas e dariam falso positivo em TODA aula de
+# inglês (medido: o Pre-class do modelo, já 100% em inglês, casa 'complete', 'imagine'
+# e 'do'). Um gate que grita em material correto é desligado pela equipe — e aí não
+# gateia nada.
+PT_MARCADORES = [
+    'nao', 'voce', 'voces', 'dica', 'dicas', 'aula', 'aulas', 'frase', 'frases',
+    'palavra', 'palavras', 'ouvir', 'ouca', 'gravar', 'selecione', 'traducao',
+    'resposta', 'respostas', 'pergunta', 'perguntas', 'exemplo', 'exemplos',
+    'trabalho', 'rotina', 'texto', 'conteudo', 'conteudos', 'marque', 'leia',
+    'pratique', 'descreva', 'apresente', 'escolha', 'antes', 'depois', 'melhor',
+    'cada', 'muito', 'tambem', 'entao', 'assim', 'apenas', 'ainda', 'agora',
+    'aqui', 'isso', 'este', 'esta', 'esse', 'essa', 'materiais', 'complementares',
+    'estruturas', 'missao', 'para', 'uma', 'seu', 'sua', 'seus', 'suas', 'sobre',
+    'quando', 'onde', 'porque', 'sem', 'pelo', 'pela', 'mais', 'menos', 'todos',
+    'todas', 'primeiro', 'segundo', 'coisa', 'coisas', 'fazer', 'usando', 'sempre',
+    'nunca', 'exercicio', 'livre', 'assista', 'assistir', 'ouvindo', 'traga',
+]
+PT_RE = re.compile(r'\b(?:' + '|'.join(PT_MARCADORES) + r')\b', re.I)
+# palavra acentuada em MINÚSCULA. Maiúscula é nome próprio legítimo em texto inglês
+# ("I work in São Paulo", "Renê"), então não conta.
+ACENTO_RE = re.compile(r'\b[\wÀ-ÿ]*[àáâãéêíóôõúüç][\wÀ-ÿ]*\b')
+# sufixos PT sem acento que o resto da heurística não pegaria
+SUFIXO_RE = re.compile(r'\b\w+(?:mente|acao|acoes|avel)\b', re.I)
+
+
+def nivel_do_html(c):
+    """Nível CEFR lido do header (student-info) — funciona sem config de build."""
+    m = re.search(r'<div class="student-info">(.*?)</div>', c, re.S)
+    if not m:
+        return None
+    for sp in re.findall(r'<span>([^<]+)</span>', m.group(1)):
+        mm = re.match(r'^\s*([ABC][0-2])\b', sp.strip())
+        if mm:
+            return mm.group(1)
+    return None
+
+
+def pt_na_tela(html):
+    """Português VISÍVEL AO ALUNO dentro de `html` (bloco de Pre-class ou cards da aula).
+
+    Varre TEXTO **e ATRIBUTO**. Só limpar as tags é um furo: o strip apaga
+    data-hint="Dica: ...", <option>público</option> e placeholder — e as 30 dicas em
+    português passariam invisíveis pelo gate que existe para pegá-las. Atributo também
+    é tela: o aluno lê a dica e escolhe a opção.
+
+    data-teacher fica de FORA: é a exceção do rulebook (instrução ao professor, removida
+    do espelho do aluno pelo builder). PT ali é obrigatório, não defeito.
+    """
+    alvo = re.sub(r'\sdata-teacher="(?:[^"\\]|\\.)*"', '', html)
+    alvo = re.sub(r'<script\b.*?</script>', '', alvo, flags=re.S)
+    atributos = []
+    for a in ('data-hint', 'data-answer', 'placeholder', 'aria-label'):
+        atributos += re.findall(rf'{a}="([^"]*)"', alvo)
+    atributos += re.findall(r'<option value="[^"]*">([^<]*)</option>', alvo)
+    texto = re.sub(r'<[^>]+>', ' ', alvo)
+    texto = re.sub(r'https?://\S+', ' ', texto)          # URL não é prosa
+    alvo_txt = texto + ' \n ' + ' \n '.join(atributos)
+    achados = {t for t in ACENTO_RE.findall(alvo_txt) if t[:1].islower()}
+    achados |= {w.lower() for w in PT_RE.findall(alvo_txt)}
+    achados |= {w.lower() for w in SUFIXO_RE.findall(alvo_txt)}
+    return sorted(achados)
+
+
+def matching_nao_ingles(blk):
+    """Linhas de matching cuja RESPOSTA não é uma definição em inglês.
+
+    Acento não basta aqui e foi exatamente por isso que 32 opções passaram: as opções do
+    matching são palavras PT CURTAS e SEM ACENTO — 'marca', 'meta', 'prazo', 'parceiro',
+    'tarefa', 'limite', 'marco'. Nenhuma heurística de acento as vê.
+
+    Em vez de tentar adivinhar a língua de uma palavra solta (insolúvel), exige-se o
+    FORMATO que a REGRA 13 manda em A2+: palavra EN <-> DEFINIÇÃO EM INGLÊS (o mesmo
+    formato que o IN CLASS já usa). Uma definição em inglês SEMPRE carrega uma function
+    word ("a company or person who works with you"). 'marca' não carrega — e é isso que
+    se quer barrar.
+    """
+    FW = (r"\b(?:a|an|the|to|of|that|who|what|which|you|your|it|its|is|are|be|for|with|"
+          r"and|or|from|in|on|at|when|someone|something|not|no|more|than|other|others)\b")
+    ruins = []
+    for m in re.finditer(r'<div class="match-row"[^>]*data-answer="([^"]*)"', blk):
+        ans = m.group(1)
+        if ans and not re.search(FW, ans, re.I):
+            ruins.append(ans)
+    return ruins
+
 
 def strip_code(c):
     c = re.sub(r'<script\b.*?</script>', '', c, flags=re.S | re.I)
@@ -230,6 +321,148 @@ def check_fix_regressions(c, css, is_standalone_slides, fails, warns):
         if not (hidden and reveal):
             fails.append('Sentence Building VAZA o gabarito: .oral-model precisa começar com display:none '
                          'e ser revelado por ".oral-item.revealed .oral-model" (ou .open) no clique')
+        # ESTILO-BASE do card (irmão do gate acima: aquele cuida do COMPORTAMENTO, este do
+        # VISUAL). O .oral-item nasceu sem NENHUM layout — background/border/padding todos
+        # ausentes — e o bloco saía como uma lista <div> nua no meio de um deck todo em
+        # cards. O override .slide-dark .oral-item{background:#fff} existia e enganava:
+        # dava a impressão de que havia estilo. NÃO basta: fora do slide escuro não há nada.
+        # Exige o estilo-base REAL (regra .oral-item sem prefixo .slide-dark).
+        decl = ''
+        for m in re.finditer(r'(?:^|[},])\s*([^{},]*\.oral-item[^{},]*)\{([^}]*)\}', css):
+            sel = m.group(1)
+            if ('.slide-dark' not in sel and ':hover' not in sel and ':focus' not in sel
+                    and '.revealed' not in sel and '.oral-model' not in sel):
+                decl += m.group(2) + ';'
+        falta = [p for p in ('background', 'border', 'padding') if not re.search(rf'\b{p}\b\s*:', decl)]
+        if falta:
+            fails.append(f'Sentence Building SEM ESTILO-BASE: .oral-item não define '
+                         f'{", ".join(falta) or "nada"} — o bloco sai como lista nua enquanto o resto do '
+                         f'deck é em cards. Definir .oral-item{{background;border;padding;border-radius}} '
+                         f'junto dos .error-card/.challenge-card (o override .slide-dark NÃO conta)')
+
+    # LISTENING: a PERGUNTA vem ANTES do áudio (CLAUDE.md REGRA 2.1, bloqueante).
+    # O container .comp-questions NUNCA nasce escondido. Se o aluno só vê a pergunta
+    # DEPOIS de ouvir, ele ouviu sem saber o que procurar: listening virou teste de
+    # MEMÓRIA. A pergunta É a tarefa de escuta.
+    # "Sound-first" = esconder a TRANSCRIÇÃO, jamais a PERGUNTA.
+    # O bug nasceu da REGRA errada no CLAUDE.md ("perguntas aparecem após audio.ended"):
+    # o shell do modelo sempre esteve certo, mas o LLM que escrevia a aula injetava
+    # style="display:none" no container. 224 arquivos saíram assim.
+    # Os handlers play/ended do shell podem seguir fazendo display='block' (no-op com o
+    # container já visível) — o que se proíbe aqui é o ESTADO INICIAL escondido.
+    for m in re.finditer(r'<div[^>]*class="comp-questions"[^>]*>', c):
+        tag = m.group(0)
+        ms = re.search(r'style="([^"]*)"', tag)
+        if ms and re.search(r'display\s*:\s*none|visibility\s*:\s*hidden|opacity\s*:\s*0(?![.\d])', ms.group(1)):
+            mid = re.search(r'id="([^"]*)"', tag)
+            fails.append(f'LISTENING com a PERGUNTA ESCONDIDA (#{mid.group(1) if mid else "?"}): '
+                         f'.comp-questions nasce com display:none/visibility:hidden/opacity:0 e só aparece '
+                         f'no fim do áudio — o aluno ouve SEM SABER O QUE PROCURAR (listening vira teste de '
+                         f'memória). As perguntas ficam VISÍVEIS desde a entrada no slide, ANTES do play. '
+                         f'"Sound-first" = esconder a TRANSCRIÇÃO, nunca a PERGUNTA (CLAUDE.md REGRA 2.1)')
+    if re.search(r'class="comp-questions"', c):
+        if re.search(r'\.comp-questions\b[^{]*\{[^}]*(?:display\s*:\s*none|visibility\s*:\s*hidden)', css):
+            fails.append('LISTENING com a PERGUNTA ESCONDIDA: o CSS de .comp-questions tem '
+                         'display:none/visibility:hidden — as perguntas devem estar VISÍVEIS antes do play '
+                         '(CLAUDE.md REGRA 2.1)')
+
+
+def _sem_teacher(ch):
+    """O slide SEM data-teacher. Estrutura se lê na CLASSE, nunca na prosa do professor —
+    o data-teacher pode CITAR o nome de uma classe ("volte ao ic-reading") e um match por
+    substring passa a ver estrutura onde só há texto. (Foi assim que o slide de tarefa da
+    leitura sumiu do arquivo do professor e não do aluno, na aula 3 do modelo.)"""
+    return re.sub(r'\sdata-teacher="(?:[^"\\]|\\.)*"', '', ch)
+
+
+def _txt(s):
+    return ' '.join(re.sub(r'<[^>]+>', ' ', s).split())
+
+
+def check_task_before_exposure(c, fails, warns):
+    """A TAREFA VEM ANTES DA EXPOSIÇÃO (CLAUDE.md REGRA 2.2, bloqueante).
+
+        [TAREFA: as perguntas, sem resposta] -> [diálogo/texto] -> [checagem: as MESMAS
+        perguntas, com click-to-reveal]
+
+    O aluno precisa saber O QUE PROCURAR antes de ser exposto. Sem a tarefa antes, a
+    compreensão testa MEMÓRIA — outra habilidade, que não é a que se está ensinando.
+    Mesmo princípio do listening (REGRA 2.1), aplicado a diálogo e leitura.
+
+    O slide de ARTEFATO (email/boarding pass) fica FORA: lá a pergunta já divide a tela
+    com o objeto, e o aluno pode olhar enquanto responde.
+    """
+    i = c.find('<div class="slides-container"')
+    j = c.find('</div><!-- /slides-container -->')
+    if i < 0 or j < 0:
+        return
+    partes = [p for p in re.split(r'(?=<div class="slide )', c[i:j]) if 'data-slide=' in p]
+
+    def expo(ch):
+        e = _sem_teacher(ch)
+        if 'class="dialogue-line' in e:
+            return 'dialogue'
+        if 'class="ic-reading"' in e:
+            return 'reading'
+        return None
+
+    def perguntas_checagem(ch):
+        e = _sem_teacher(ch)
+        if 'ic-tfrow' in e:
+            out = []
+            for st in re.findall(r'<span class="ic-stmt">(.*?)</span>\s*<span class="ic-verdict', e, re.S):
+                out.append(_txt(re.sub(r'<span class="ic-just">.*?</span>', '', st, flags=re.S)))
+            return [q for q in out if q]
+        if 'class="comp-q"' in e and 'mock-player' not in e:
+            return [_txt(q) for q in re.findall(r'<div class="q-text">(.*?)</div>', e, re.S)]
+        return []
+
+    for k, ch in enumerate(partes):
+        kind = expo(ch)
+        if not kind:
+            continue
+        n = (re.search(r'data-slide="(\d+)"', ch) or [None, '?'])[1]
+        # perguntas do slide de CHECAGEM que vem depois (a fonte)
+        alvo = []
+        for m in range(k + 1, min(k + 6, len(partes))):
+            if expo(partes[m]):
+                break
+            alvo = perguntas_checagem(partes[m])
+            if alvo:
+                break
+        if not alvo:
+            warns.append(f'slide {n} ({kind}) sem slide de checagem depois — tarefa não verificável')
+            continue
+        ant = partes[k - 1] if k > 0 else ''
+        mt = re.search(r'data-task-for="(\w+)"', ant)
+        if not mt:
+            fails.append(
+                f'TAREFA AUSENTE antes do {kind} (slide {n}): o aluno é exposto ao '
+                f'{"diálogo" if kind == "dialogue" else "texto"} SEM saber o que procurar — a '
+                f'compreensão vira teste de MEMÓRIA. Falta o slide de tarefa ANTES, com as '
+                f'{len(alvo)} pergunta(s) do slide de checagem e SEM as respostas '
+                f'(CLAUDE.md REGRA 2.2). O builder emite esse slide sozinho: '
+                f'build_from_model.inject_task_slides()')
+            continue
+        if mt.group(1) != kind:
+            fails.append(f'slide de tarefa antes do {kind} (slide {n}) está marcado como '
+                         f'data-task-for="{mt.group(1)}" — deveria ser "{kind}"')
+            continue
+        # o GABARITO não pode estar no HTML do slide de tarefa — nem escondido.
+        # (o professor compartilha a tela; display:none continua no DOM, a um Ctrl+U de distância)
+        vaza = [x for x in ('q-answer', 'ic-verdict', 'ic-just', 'data-answer', 'revealComp')
+                if x in _sem_teacher(ant)]
+        if vaza:
+            fails.append(f'slide de TAREFA antes do slide {n} CARREGA O GABARITO no HTML '
+                         f'({", ".join(vaza)}) — a resposta não pode existir nesse slide nem escondida '
+                         f'(display:none continua no DOM). Só a pergunta (REGRA 2.2)')
+        # a tarefa TEM de ser a mesma coisa que a checagem cobra
+        tq = [_txt(q) for q in re.findall(r'<div class="q-text">(.*?)</div>', _sem_teacher(ant), re.S)]
+        if tq != alvo:
+            fails.append(f'as perguntas do slide de TAREFA não casam com as da CHECAGEM (slide {n}, '
+                         f'{kind}): tarefa={len(tq)} vs checagem={len(alvo)}. Se a tarefa não é a mesma '
+                         f'coisa que se cobra depois, ela não é a tarefa. Devem sair da MESMA fonte '
+                         f'(inject_task_slides)')
 
 
 def check_handlers_exist(c, fails):
@@ -504,11 +737,13 @@ def validate(path):
             # precisa de um <a href="http..."> clicável (série/filme, podcast, vídeo).
             # Card sem link = bug bloqueante (saíram cards sem link em alunos novos).
             comp_i = hc.find('id="tab-complementary"')
+            comp_cards = []
             if comp_i >= 0 and n_media > 0:
                 comp_seg = hc[comp_i:]
                 cards = re.findall(
                     rf'data-media="l{N}-[^"]*".*?(?=<div class="media-card-wrapper"|</div><!-- /tab-complementary -->|$)',
                     comp_seg, re.S)
+                comp_cards = cards
                 no_link = [c for c in cards if 'href="http' not in c]
                 if no_link:
                     fails.append(f'aula {N}: {len(no_link)} de {len(cards)} complementar(es) SEM link '
@@ -551,23 +786,72 @@ def validate(path):
                 missing = [f'{k} ({blk.count(k)}/{mn})' for k, mn in REQ if blk.count(k) < mn]
                 if missing:
                     fails.append(f'Pre-class da aula {N} INCOMPLETO no hub: ' + ', '.join(missing))
-            # DOSAGEM por nível (lê o config do build da aula; sem config = pulado)
+            # DOSAGEM + IDIOMA por nível.
+            # O nível vem do HTML (student-info do header) e, na falta dele, do config do
+            # build. Antes vinha SÓ do config — e sem config o gate inteiro era pulado EM
+            # SILÊNCIO (inclusive no próprio MODELO, que não tem config: gate desligado,
+            # não gate passando).
             cfg_p = os.path.join(root, '_build', f'{slug}-aula{N}', 'config.json')
+            level, lesson_lang = None, 'en'  # 'en' (padrão) | 'es' (espanhol) | ...
             if os.path.exists(cfg_p):
                 try:
                     cfg = json.load(open(cfg_p, encoding='utf-8'))
                     level = next((h for h in cfg.get('header', []) if re.match(r'^[ABC]\d', str(h))), None)
-                    lesson_lang = cfg.get('lang', 'en')  # 'en' (padrão, aula de inglês) | 'es' (espanhol) | ...
+                    lesson_lang = cfg.get('lang', 'en')
                 except Exception:
-                    level = None
-                    lesson_lang = 'en'
-                if level:
+                    pass
+            level = nivel_do_html(c) or level
+            if not level:
+                # Nível desconhecido NÃO pode virar buraco: o gate de idioma é BIDIRECIONAL
+                # (A0/A1 EXIGE português; A2+ PROÍBE). Sem nível, ele não roda — e "não roda"
+                # tem de ser BARULHENTO, nunca um PASS silencioso.
+                warns.append(f'IDIOMA: nível CEFR não encontrado (nem no header student-info do HTML, '
+                             f'nem no _build/{slug}-aula{N}/config.json) — o gate de idioma da REGRA 13 '
+                             f'foi PULADO nesta aula. Declarar o nível para que ele rode.')
+            if level:
                     beginner = level[:2] in ('A0', 'A1')
-                    if level[:2] in ('A0', 'A1', 'A2') and bi >= 0:
+                    if beginner and bi >= 0:
+                        # A0/A1: o bilíngue é OBRIGATÓRIO (é o único nível em que PT entra).
+                        # O gate é BIDIRECIONAL de propósito: um gate que só PROIBISSE português
+                        # estragaria todo material A0/A1, que PRECISA dele — o erro simétrico
+                        # exato do que este PR conserta.
                         for need, desc in [('sp-pt', 'survival sem tradução PT (.sp-pt)'),
                                            ('speech-translation', 'pronúncia sem tradução PT (.speech-translation)')]:
                             if need not in blk:
                                 fails.append(f'DOSAGEM {level}: Pre-class da aula {N} — {desc}')
+                        # matching de A0/A1 = palavra EN <-> TRADUÇÃO PT. Se NENHUMA resposta é PT,
+                        # a aula veio no formato de A2+ (definição em inglês) — nível errado.
+                        if blk.count('match-row') and not matching_nao_ingles(blk):
+                            fails.append(f'DOSAGEM {level}: MATCHING da aula {N} está no formato de A2+ '
+                                         f'(palavra EN <-> definição em INGLÊS), mas {level} exige '
+                                         f'palavra EN <-> TRADUÇÃO em português (REGRA 13)')
+                    elif bi >= 0 and lesson_lang == 'en':
+                        # A2+: ZERO português na tela do aluno (REGRA 13 / RULEBOOK).
+                        # Esta checagem era INVERTIDA: até 14/07/2026 ela EXIGIA .sp-pt e
+                        # .speech-translation em A2 — ou seja, o gate COBRAVA o defeito.
+                        # Quem manda é o docs/RULEBOOK-PEDAGOGICO.md: PT só em A0/A1.
+                        pt = pt_na_tela(blk)
+                        if pt:
+                            fails.append(f'IDIOMA {level}: PORTUGUÊS no Pre-class da aula {N} — em A2+ é '
+                                         f'ZERO português na tela do aluno (REGRA 13 / RULEBOOK). '
+                                         f'Achado: {", ".join(pt[:8])}'
+                                         f'{" ..." if len(pt) > 8 else ""}. '
+                                         f'(Tradução -> definição em inglês simples; "Dica:" -> "Hint:"; '
+                                         f'remover .sp-pt e .speech-translation. PT do PROFESSOR — '
+                                         f'aba Planejamento e data-teacher — continua permitido.)')
+                        ruins = matching_nao_ingles(blk)
+                        if ruins:
+                            fails.append(f'IDIOMA {level}: MATCHING em português na aula {N} '
+                                         f'({len(ruins)} de {blk.count("match-row")} linhas): '
+                                         f'{", ".join(repr(r) for r in ruins[:5])}. Em A2+ o matching é '
+                                         f'palavra EN <-> DEFINIÇÃO EM INGLÊS (formato do IN CLASS). '
+                                         f'O checkMatch() só compara string (select.value === data-answer): '
+                                         f'trocar para inglês custa ZERO mudança de JS.')
+                        ptc = pt_na_tela('\n'.join(comp_cards))
+                        if ptc:
+                            fails.append(f'IDIOMA {level}: PORTUGUÊS nos Complementares da aula {N} — '
+                                         f'Complementares são TELA DO ALUNO (REGRA 13). '
+                                         f'Achado: {", ".join(ptc[:8])}')
                     if not beginner:
                         si = c.find('<div class="slides-container"')
                         sj = c.find('</div><!-- /slides-container -->')
@@ -596,6 +880,7 @@ def validate(path):
     # ===== regras novas do modelo =====
     check_dialogue_voices(c, path, root, fails, warns)
     check_fix_regressions(c, css, is_standalone_slides, fails, warns)
+    check_task_before_exposure(c, fails, warns)
     check_handlers_exist(c, fails)
     check_speaktext_escaping(c, fails)
     check_audio_collision(c, fails)

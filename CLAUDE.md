@@ -251,11 +251,94 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 - Slide escuro com player de audio completo (NAO apenas botao play simples)
 - Player OBRIGATORIO com: seekbar clicavel (barra de progresso), tempo atual/total, botao play/pause, botao voltar 5s, botao avancar 5s
 - Controle de velocidade LOCAL ao slide: botoes 0.5x | 0.75x | 1x | 1.25x (independente do controle global do Pre-class)
-- Audio toca PRIMEIRO, aluno ouve SEM texto. Perguntas de compreensao aparecem apos audio terminar (audio.ended)
+- **AS PERGUNTAS DE COMPREENSAO FICAM VISIVEIS ANTES DO PLAY (REGRA BLOQUEANTE)**. Ver 2.1 abaixo.
 - Audio deve ser MP3 UNICO por listening (nao sequencia de speakText calls). Gerar MP3 completo via ElevenLabs
 - Minimo 2 listenings por aula (contextos diferentes)
 - Cada slide de Listening E Dialogue tem controle de velocidade independente
 - Implementacao: usar `data-src` no container do player apontando para o MP3, inicializar com `initPlayer(id)`, controlar via `togglePlayer(id)`, `skipAudio(id, seconds)`, `seekAudio(event, id)`, `setPlayerSpeed(id, speed)`
+
+### 2.1 — A PERGUNTA VEM ANTES DO AUDIO (REGRA BLOQUEANTE)
+
+> **PROIBIDO**: `<div class="comp-questions" id="listening1Qs" style="display:none;...">`
+> **OBRIGATORIO**: `<div class="comp-questions" id="listening1Qs" style="max-width:520px;...">`
+
+**A regra.** As perguntas de compreensao do listening ficam **VISIVEIS desde a entrada no
+slide, ANTES do aluno dar play**. O aluno LE as perguntas, DEPOIS ouve. O container
+`.comp-questions` **NUNCA** nasce com `display:none` / `visibility:hidden` / `opacity:0`.
+
+**Por que.** A pergunta E a tarefa de escuta: ela diz ao aluno O QUE PROCURAR no audio.
+Sem ela na tela, o aluno ouve sem foco e so depois descobre o que deveria ter captado —
+**listening vira teste de MEMORIA**, que e outra habilidade (e nao e a que estamos
+ensinando). Ouvir com a pergunta em mente e o que se faz em qualquer exame real (TOEFL,
+IELTS, Cambridge) e na vida.
+
+**"Sound-first" significa SEM TRANSCRICAO — nunca sem PERGUNTA.** O que se esconde do
+aluno e o TEXTO DO QUE E DITO no audio (o transcript), para que ele tenha de decodificar
+pelo ouvido. As perguntas nao sao o audio: sao a tarefa. Esconder a tarefa nao e
+sound-first, e so tirar o andaime.
+
+**Historico (por que esta regra existe).** Ate 14/07/2026 este documento mandava
+*"Perguntas de compreensao aparecem apos audio terminar (audio.ended)"* — o CONTRARIO do
+certo. O shell do modelo sempre esteve correto (o container nasce visivel), mas o LLM que
+escrevia o conteudo da aula obedecia ao documento e injetava `style="display:none"` no
+container. Resultado: **224 arquivos** com a tarefa escondida do aluno. A regra era a
+origem do bug, nao o codigo.
+
+- Os handlers de `play`/`ended` do shell podem continuar chamando `q.style.display='block'`
+  — com o container ja visivel isso e um no-op inofensivo. O que e PROIBIDO e o **estado
+  inicial escondido**.
+- O `data-teacher` do slide de listening DEVE instruir o professor a **ler as perguntas COM
+  o aluno ANTES de tocar** — nunca "as perguntas aparecem quando o audio termina".
+
+**GATE (bloqueante, `validate_lesson.py`)**: `.comp-questions` com `display:none` /
+`visibility:hidden` / `opacity:0` (no style inline OU no CSS) = FAIL.
+
+### 2.2 — A TAREFA VEM ANTES DA EXPOSICAO (REGRA BLOQUEANTE)
+
+> A 2.1 e um caso particular DISTO. Aqui a regra generaliza para **dialogo** e **leitura**.
+
+**A sequencia obrigatoria de todo bloco de compreensao:**
+
+```
+[SLIDE DE TAREFA: as perguntas, SEM resposta]   <- o aluno descobre O QUE PROCURAR
+[o dialogo / o texto / o audio]                  <- a exposicao
+[SLIDE DE CHECAGEM: as MESMAS perguntas, com click-to-reveal]  <- a conferencia
+```
+
+| Exercicio | O que fazer |
+|---|---|
+| **Listening** | As perguntas ja convivem com o player na MESMA tela — basta NAO esconder (REGRA 2.1). Nao precisa de slide novo. |
+| **Dialogo** (`dialogue-line`) | Slide de tarefa ANTES do dialogo, com as perguntas do slide de Comprehension que vem depois. |
+| **Leitura** (`ic-reading`) | Slide de tarefa ANTES do texto, com as afirmacoes do True/False que vem depois, SEM o veredito. |
+| **Artefato** (email, boarding pass) | **NAO se aplica.** Ali a pergunta ja divide a tela com o objeto, e o aluno olha enquanto responde. |
+
+**O slide de tarefa:**
+- Reaproveita `.comp-q` (+ classe `.comp-q-task`, que tira o cursor de clicavel).
+- **O gabarito NAO EXISTE no HTML** — nem escondido. `display:none` continua no DOM, a um
+  Ctrl+U (ou um F12 da aluna) de distancia, e o professor compartilha a tela.
+- Label claro: `Before you listen` / `Before you read`. Titulo: "Listen **for this**".
+- `data-teacher` manda a professora LER AS PERGUNTAS EM VOZ ALTA COM A ALUNA antes de expor.
+- ZERO portugues na tela (A2+). O `data-teacher` continua em PT (e do professor).
+
+**UMA FONTE, DOIS SLIDES.** Quem emite o slide de tarefa e o **builder**
+(`inject_task_slides()` em `build_from_model.py`), EXTRAINDO as perguntas do slide de
+checagem que ja existe. E impossivel os dois divergirem, e **o autor do conteudo nao
+precisa lembrar de nada**. A funcao e IDEMPOTENTE (nao duplica) e renumera os `data-slide`.
+
+> **NUNCA deixe isto a cargo de quem escreve o conteudo.** Foi exatamente assim que o
+> DEFEITO da 2.1 nasceu e se replicou em 224 arquivos: a regra dizia uma coisa, o LLM
+> obedeceu, e ninguem viu. Regra que depende de memoria humana/LLM nao e regra — e sorte.
+> Se o builder emite, o defeito nao tem por onde entrar.
+
+> **Deteccao de estrutura se le na CLASSE, nunca no `data-teacher`.** O `data-teacher` e
+> PROSA e pode CITAR o nome de uma classe ("volte ao ic-reading"). Um match por substring
+> ve estrutura onde so ha texto — foi assim que o slide de tarefa da leitura nasceu no
+> arquivo do ALUNO (onde o `data-teacher` e removido) e NAO no do PROFESSOR.
+
+**GATE (bloqueante, `validate_lesson.py`)**: todo slide de dialogo/leitura DEVE ser
+precedido por um slide `data-task-for` cujas perguntas CASAM (mesma quantidade, mesmo
+texto) com as do slide de checagem; o slide de tarefa NAO pode conter `q-answer` /
+`ic-verdict` / `ic-just` / `data-answer` / `revealComp`.
 
 **ARTEFATOS REAIS**
 - Minimo 1 artefato CSS por aula (boarding pass, hotel confirmation, email, menu, etc.)
@@ -351,11 +434,15 @@ Badge do header: `ALUNO` (em vez de `PROFESSOR VIEW`)
 Cada aula no Pre-class DEVE conter estas 5 etapas, nesta ordem:
 
 ### Etapa 1: Vocabulario + Expressoes (TODAS as 5 sub-etapas obrigatorias)
-- **1.1 Vocab Cards** com audio (`speakText`) + traducao — **OBRIGATORIO**
-- **1.2 Matching** (dropdown `checkMatch`) — opcoes EMBARALHADAS — **OBRIGATORIO**
+> **IDIOMA (REGRA 13)**: as 5 sub-etapas existem em TODOS os niveis. O que muda e o IDIOMA:
+> **A0/A1 = bilingue; A2+ = ZERO portugues** (definicao em ingles simples no lugar da
+> traducao). Pular a etapa por causa do idioma e BUG; traduzir em A2+ tambem e.
+
+- **1.1 Vocab Cards** com audio (`speakText`) + **traducao (A0/A1) ou definicao em ingles simples (A2+)** — **OBRIGATORIO**
+- **1.2 Matching** (dropdown `checkMatch`) — opcoes EMBARALHADAS. **A0/A1: palavra EN ↔ traducao PT. A2+: palavra EN ↔ definicao/sinonimo em INGLES** — **OBRIGATORIO**
 - **1.3 Contexto** — texto curto usando o vocabulario + quiz de compreensao (`selectQuiz`). Formato: "Stage 1.2: Grammar in Context" com badge GRAMMAR, texto narrativo usando a gramatica da aula com palavras em **negrito**, seguido de perguntas de compreensao — **OBRIGATORIO, NUNCA PULAR**
-- **1.4 Explicacao Gramatical** — bilingue (EN + PT-BR). Formato: "Grammar Tip" com tabela/explicacao da estrutura gramatical, exemplos afirmativo/negativo/interrogativo, e traducao — **OBRIGATORIO, NUNCA PULAR**
-- **1.5 Aplicacao** — fill-in-the-blank (`checkBlank`) com hints e audio — **OBRIGATORIO**
+- **1.4 Explicacao Gramatical** — **bilingue (EN + PT-BR) SO em A0/A1; A2+ e em INGLES**. Formato: "Grammar Tip" com tabela/explicacao da estrutura gramatical, exemplos afirmativo/negativo/interrogativo — **OBRIGATORIO, NUNCA PULAR** (o que muda com o nivel e o idioma, NAO a existencia da etapa)
+- **1.5 Aplicacao** — fill-in-the-blank (`checkBlank`) com hints e audio. **Hint em PT ("Dica: ...") so em A0/A1; A2+ leva hint em INGLES ("Hint: ...")** — **OBRIGATORIO**
 
 > **CHECKLIST DE VERIFICACAO**: Antes de considerar UMA aula pronta, confirmar que existem no HTML: (1) vocab cards com audio, (2) match-grid com dropdown, (3) texto "Grammar in Context" com quiz, (4) "Grammar Tip" com explicacao bilingue, (5) fill-in-the-blank. Se QUALQUER um faltar → a aula NAO esta pronta.
 
@@ -384,19 +471,40 @@ Cada aula no Pre-class DEVE conter estas 5 etapas, nesta ordem:
 **OBRIGATORIO**: HTML manual com funcoes inline. Tipos de exercicio:
 
 ### A. Matching (dropdown)
+
+**A2+ (padrao) — palavra em ingles ↔ DEFINICAO EM INGLES** (REGRA 13):
 ```html
 <div class="match-grid" id="match-l1">
-    <div class="match-row" data-answer="apresentacao">
-        <span class="match-word">introduction</span>
+    <div class="match-row" data-answer="a company or person who works with you">
+        <span class="match-word">Partner</span>
         <select onchange="checkMatch(this)">
             <option value="">Select...</option>
-            <option value="gerenciar">gerenciar</option>
-            <option value="apresentacao">apresentacao</option>
+            <option value="the group of people you want to reach">the group of people you want to reach</option>
+            <option value="a company or person who works with you">a company or person who works with you</option>
         </select>
     </div>
 </div>
 <button class="verify-all-btn" onclick="verifyAllMatches('match-l1')">Check Answers</button>
 ```
+
+**A0/A1 — palavra em ingles ↔ traducao PT** (unico nivel onde PT e permitido):
+```html
+<div class="match-row" data-answer="apresentacao">
+    <span class="match-word">introduction</span>
+    <select onchange="checkMatch(this)">
+        <option value="">Selecione...</option>
+        <option value="gerenciar">gerenciar</option>
+        <option value="apresentacao">apresentacao</option>
+    </select>
+</div>
+```
+
+> **O JS e AGNOSTICO DE IDIOMA — trocar para ingles custa ZERO codigo.** O `checkMatch()`
+> so compara `select.value === row.dataset.answer` (string pura). Nao ha dicionario, nao ha
+> deteccao de lingua, nao ha nada a mudar no JS. A unica exigencia e que `data-answer` seja
+> **identico** ao `value` da `<option>` correta. Referencia pronta do formato certo: o
+> matching do IN CLASS ja e word ↔ English definition (`build_from_model.py`, `kind:"matching"`).
+> Em A2+ o `Selecione...` vira `Select...`.
 
 ### B. Fill-in-the-blank
 ```html
@@ -446,26 +554,30 @@ Cada aula no Pre-class DEVE conter estas 5 etapas, nesta ordem:
 ```
 
 ### E. Pronuncia (speech card)
+
+**A2+ (padrao) — SEM `.speech-translation`, botoes em ingles** (REGRA 13):
 ```html
 <div class="speech-card" data-phrase="Hi, I'm Daniela. Nice to meet you.">
     <div class="speech-phrase">Hi, I'm Daniela. Nice to meet you.</div>
-    <div class="speech-translation">Oi, eu sou a Daniela. Prazer.</div>
     <div class="speech-controls">
-        <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Ouvir</button>
-        <button class="btn btn-record" onclick="startRecording(this)">&#9679; Gravar</button>
-        <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Parar</button>
+        <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>
+        <button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>
+        <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Stop</button>
     </div>
     <div class="speech-result"></div>
 </div>
 ```
+
+**A0/A1** — mesma estrutura + `<div class="speech-translation">Oi, eu sou a Daniela. Prazer.</div>`
+logo apos o `.speech-phrase` (e ok usar Ouvir/Gravar/Parar nos botoes).
 
 ### F. Think (reflexao + gravacao livre)
 ```html
 <div class="think-card">
     <div class="think-question">Imagine you are at a conference...</div>
     <div class="speech-controls">
-        <button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Gravar Livre</button>
-        <button class="btn btn-stop" onclick="stopFreeRecording(this)">&#9632; Parar</button>
+        <button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Free Record</button>
+        <button class="btn btn-stop" onclick="stopFreeRecording(this)">&#9632; Stop</button>
     </div>
     <div id="think-result-1"></div>
 </div>
@@ -638,12 +750,12 @@ Cores fixas Alumni (usadas em TODOS): `#003080` (azul), `#d70c0c` (vermelho), `#
 
 NENHUM material e "pronto" sem passar por TODOS os 7 checks:
 
-1. **Portugues/Acentuacao** — Zero palavras sem acento correto nas traducoes
+1. **IDIOMA (REGRA 13)** — **A2+: ZERO portugues na tela do aluno** (Pre-class, IN CLASS e Complementares — incluindo `data-hint`, `<option>`, `placeholder`). A0/A1: bilingue, com acentuacao correta em TODAS as traducoes. PT do professor (Planejamento, `data-teacher`) continua em ambos
 2. **Ingles** — Gramatica perfeita, American English 100%
 3. **Nivel x Aula** — Conteudo adequado ao CEFR do aluno
 4. **Audios ElevenLabs** — TODAS as frases com `speakText`/`data-phrase` tem MP3 no `audioMap`. ZERO fallback Web Speech como metodo principal
 5. **Funcionalidade** — Zero `data-exercise`. HTML manual com checkBlank/selectQuiz/etc.
-6. **Etapas Completas (REGRA 4)** — CADA aula DEVE conter: (a) Vocab Cards, (b) Matching, (c) Grammar in Context com texto + quiz, (d) Grammar Tip com explicacao bilingue, (e) Fill-in-the-blank, (f) Pratica, (g) Pronuncia, (h) Quiz Situacional, (i) Producao Livre. Buscar no HTML por "Grammar in Context" e "Grammar Tip" — se NAO encontrar em TODAS as aulas, REJEITAR.
+6. **Etapas Completas (REGRA 4)** — CADA aula DEVE conter: (a) Vocab Cards, (b) Matching, (c) Grammar in Context com texto + quiz, (d) Grammar Tip (bilingue em A0/A1, **em ingles em A2+** — REGRA 13), (e) Fill-in-the-blank, (f) Pratica, (g) Pronuncia, (h) Quiz Situacional, (i) Producao Livre. Buscar no HTML por "Grammar in Context" e "Grammar Tip" — se NAO encontrar em TODAS as aulas, REJEITAR. **A etapa nunca some por causa do nivel — so muda de idioma.**
 
 7. **IN CLASS Completa** — Aba IN CLASS DEVE ter: (a) minimo 25 slides para 60min / 35 para 90min, (b) narrativa com 7 capitulos, (c) reveal cards no vocab, (d) grammar discovery, (e) dialogo line-by-line, (f) 2+ listenings com play/pause, (g) quick fire uma por vez, (h) 3 role-plays (guided>semi-free>free), (i) survival card + checklist checkbox, (j) icone T com instrucoes em TODOS os slides, (k) ZERO portugues na tela, (l) TODOS os audios no audioMap (zero missing), (m) aba IN CLASS DEVE mostrar menu de selecao de aula primeiro — NUNCA entrar em slide-mode direto no switchTab. O switchTab SEMPRE remove slide-mode. Slides so abrem via enterSlideMode() chamado por click explicito no menu
 
@@ -667,15 +779,81 @@ Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao d
 
 ---
 
-## REGRA 13 — ADAPTACAO POR NIVEL CEFR
+## REGRA 13 — IDIOMA POR NIVEL CEFR (REGRA BLOQUEANTE)
 
-| Nivel | Vocabulario | Traducao | Frases | Gramatica |
-|-------|------------|----------|--------|-----------|
-| A0-A1 | 5-7 palavras/aula | 100% bilingue | 3-5 palavras | Presente simples, to be |
-| A2 | 8-10 palavras/aula | 80% bilingue | 5-7 palavras | Past simple, can/could |
-| B1 | 10-12 palavras/aula | 50% bilingue | 7-10 palavras | Present perfect, modals |
-| B2 | 12-15 palavras/aula | 30% bilingue | 10-15 palavras | Conditionals, passive |
-| C1+ | 15-20 palavras/aula | Minimo | Complexas | Nuances, register |
+> **A REGRA DE IDIOMA e da chefe** (`docs/RULEBOOK-PEDAGOGICO.md`, secao 1). Onde este
+> documento divergir do rulebook, **o RULEBOOK VENCE**:
+>
+> > *"Portugues e permitido APENAS nos niveis A0 e A1. A partir do A2, ZERO portugues em
+> > QUALQUER parte do material. Unica excecao: instrucoes ao professor via icone T
+> > (invisivel ao aluno)."*
+
+### O EIXO QUE NAO SE MISTURA: o MOLDE carrega a FORMA, o NIVEL dita o CONTEUDO
+
+| INVARIANTE — vem do molde, igual para TODOS os niveis | VARIANTE — vem do NIVEL |
+|---|---|
+| As 5 etapas da REGRA 4 e a ORDEM delas | **Idioma**: A0/A1 bilingue · **A2+ ZERO portugues** |
+| Mecanica do matching (dropdown + `checkMatch`) | **O que vai no dropdown**: A0/A1 = traducao PT · A2+ = definicao em INGLES |
+| CSS dos cards, click-to-reveal, player de listening | Nº de palavras novas (A1 5-7 · A2 8-10 · B1 10-12 · B2 12-15) |
+| Perguntas do listening visiveis ANTES do play (2.1) | Tamanho da frase, complexidade da gramatica |
+
+**O matching prova o principio.** O `checkMatch()` compara `select.value === row.dataset.answer`
+— string pura, **agnostica de idioma**. O MESMO HTML serve para os dois:
+
+```html
+<!-- A1 -->  <div class="match-row" data-answer="marca"> ... <option value="marca">marca</option>
+<!-- B2 -->  <div class="match-row" data-answer="a company's identity in the market"> ...
+```
+
+**Zero mudanca de JS. Muda so o TEXTO dentro.** NUNCA invente um componente novo para A2+.
+
+> **A ETAPA NUNCA SOME POR CAUSA DO NIVEL — so muda de IDIOMA e de DENSIDADE.** Vocab card,
+> matching, grammar tip, survival card: obrigatorios em TODOS os niveis. Omitir uma etapa
+> "porque o aluno e A1" e BUG; traduzir em A2+ tambem e.
+
+> **O molde e A2 (helen-mendes), entao o conteudo dele nao tem `.sp-pt`. Mas o CSS de
+> `.sp-pt`/`.speech-translation` CONTINUA no shell** — e o que permite A0/A1 existir. A
+> ausencia de PT no modelo e consequencia do NIVEL DELE, nao propriedade da FORMA. Um
+> assert no builder impede que alguem "limpe" esse CSS.
+
+### A linha e A1/A2. Nao ha meio-termo.
+
+| Nivel | Portugues na TELA DO ALUNO | Vocabulario | Frases | Gramatica |
+|-------|---------------------------|-------------|--------|-----------|
+| A0-A1 | **SIM — 100% bilingue** (traducao, grammar tip bilingue, survival bilingue) | 5-7 palavras/aula | 3-5 palavras | Presente simples, to be |
+| A2 | **ZERO** | 8-10 palavras/aula | 5-7 palavras | Past simple, can/could |
+| B1 | **ZERO** | 10-12 palavras/aula | 7-10 palavras | Present perfect, modals |
+| B2 | **ZERO** | 12-15 palavras/aula | 10-15 palavras | Conditionals, passive |
+| C1+ | **ZERO** | 15-20 palavras/aula | Complexas | Nuances, register |
+
+**NAO EXISTE "80% bilingue" / "50% bilingue" / "30% bilingue".** Ate 14/07/2026 esta tabela
+dizia isso e era a razao de TODO material A2+ sair com portugues. Foi corrigida: de A2 em
+diante e ZERO, nao "menos".
+
+### O que muda de A2 pra cima (A ETAPA CONTINUA — muda o IDIOMA, nunca a existencia)
+
+| Elemento | A0/A1 | A2+ |
+|---|---|---|
+| Vocab card (REGRA 4, 1.1) | palavra + **traducao PT** | palavra + **definicao em ingles simples** |
+| Matching (REGRA 4, 1.2 / REGRA 5A) | palavra EN ↔ **traducao PT** | palavra EN ↔ **definicao/sinonimo em INGLES** |
+| Grammar Tip (REGRA 4, 1.4) | **bilingue** (EN + PT-BR) | **so ingles** |
+| Enunciado / instrucao ("Ouca cada palavra...") | PT | **ingles** |
+| `data-hint` do fill-in-the-blank | "Dica: ..." | **"Hint: ..." em ingles** |
+| Survival card (REGRA 16) | `.sp-en` + `.sp-pt` | **so `.sp-en`** (sem `.sp-pt`) |
+| Speech card (REGRA 5E) | `.speech-phrase` + `.speech-translation` | **so `.speech-phrase`** |
+| Quiz / think card | PT ou bilingue | **so ingles** |
+| Complementares (descricao, `.media-tip`, CTA) | PT | **ingles** |
+
+### O PORTUGUES DO PROFESSOR CONTINUA (a excecao do rulebook)
+
+PT segue **obrigatorio** onde o ALUNO NAO VE — nunca "limpe" estes:
+- aba **Planejamento** (`tab-planning`) — e o material de trabalho do professor brasileiro
+- atributo **`data-teacher`** (icone T) — removido do espelho do aluno pelo builder
+- comentarios HTML, nomes de arquivo, este documento
+
+**GATE (bloqueante, `validate_lesson.py`)**: em material A2+, portugues no Pre-class
+(`ex-lesson-N`) ou nos Complementares = FAIL. Varre inclusive `data-hint`, `data-answer`,
+`placeholder` e `<option>` — atributo tambem e tela.
 
 ---
 
@@ -719,19 +897,31 @@ Se QUALQUER check falhar → REJEITAR → corrigir → re-validar → so entao d
 
 ## REGRA 16 — SURVIVAL CARD
 
-Ao final de cada aula, incluir card com 5 frases-chave + audio:
+Ao final de cada aula, incluir card com 5 frases-chave + audio.
 
+**A2+ (padrao) — SEM `.sp-pt`** (REGRA 13: zero portugues):
 ```html
 <div class="survival-card">
     <h4>Survival Card — Lesson {N}</h4>
     <div class="survival-phrase">
         <span class="sp-num">1</span>
         <span class="sp-en">Hi, I'm Daniela. Nice to meet you.</span>
-        <span class="sp-pt">Oi, sou a Daniela. Prazer.</span>
-        <button class="btn btn-listen" onclick="speakText('Hi, I am Daniela. Nice to meet you.', this)">&#9835;</button>
+        <button class="audio-btn" data-speak="Hi, I'm Daniela. Nice to meet you." onclick="speakText(this.dataset.speak,this)">Listen</button>
     </div>
 </div>
 ```
+
+**A0/A1 — COM `.sp-pt`** (unico nivel onde a traducao entra):
+```html
+<div class="survival-phrase">
+    <span class="sp-num">1</span>
+    <span class="sp-en">Hi, I'm Daniela. Nice to meet you.</span>
+    <span class="sp-pt">Oi, sou a Daniela. Prazer.</span>
+    <button class="audio-btn" data-speak="Hi, I'm Daniela. Nice to meet you." onclick="speakText(this.dataset.speak,this)">Listen</button>
+</div>
+```
+
+> O texto vai no ATRIBUTO `data-speak`, nunca dentro da string JS (REGRA 7.1).
 
 ---
 
@@ -739,22 +929,32 @@ Ao final de cada aula, incluir card com 5 frases-chave + audio:
 
 3 recomendacoes por aula: serie/filme + podcast + YouTube
 
+> **IDIOMA (REGRA 13)**: os Complementares sao TELA DO ALUNO. Em **A2+**, tipo, descricao,
+> `.media-tip` e o CTA do link vao **em ingles**. Em A0/A1, em portugues.
+
+**A2+ (padrao)**:
 ```html
 <div class="media-card-wrapper" data-media="l1-series">
     <label class="media-check">
         <input type="checkbox" onchange="toggleMediaDone(this)">
     </label>
     <div class="media-card">
-        <div class="media-thumb">{emoji}</div>
+        <div class="media-thumb"><!-- SVG inline, nunca emoji --></div>
         <div class="media-info">
-            <div class="media-type">Serie</div>
+            <div class="media-type">Series</div>
             <h5>Suits — Season 1, Episode 1</h5>
-            <p>Descricao e por que assistir</p>
-            <p class="media-tip">Dica: assista com legenda em ingles</p>
+            <p>What it is and why it is worth watching.</p>
+            <p class="media-tip">Tip: watch with English subtitles.</p>
+            <a href="https://..." target="_blank" rel="noopener">Watch on ... &#8594;</a>
         </div>
     </div>
 </div>
 ```
+
+**A0/A1**: mesma estrutura, com tipo/descricao/dica/CTA em portugues ("Serie", "Dica: assista
+com legenda em ingles", "Assistir no YouTube").
+
+O link e OBRIGATORIO e vai ao episodio/video EXATO (nunca link de busca — REGRA 17 no validador).
 
 ---
 

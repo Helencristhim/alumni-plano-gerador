@@ -323,6 +323,18 @@ body.slide-mode .teacher-t { display:flex; }
 .error-card.revealed .error-fix { display:block;animation:fadeUp .3s ease; }
 .error-score { text-align:center;margin-top:1rem;font-weight:700;color:var(--accent);font-size:1.1rem; }
 
+/* Sentence Building (.oral-*): nasceu SEM estilo-base — o bloco saía como uma lista
+   <div> nua enquanto o resto do deck é todo em cards. Mesmo vocabulário visual do
+   .error-card/.challenge-card vizinhos. A VISIBILIDADE do gabarito NÃO se define aqui:
+   .oral-model{display:none} + .oral-item.revealed .oral-model{display:block} ficam
+   juntos, mais abaixo, e continuam sendo a única fonte do reveal. */
+.oral-grid { display:flex;flex-direction:column;gap:.8rem;max-width:560px;margin:1.5rem auto 0; }
+.oral-item { background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s; }
+.oral-item:hover { border-color:var(--accent); }
+.oral-item:focus-visible { outline:3px solid var(--accent);outline-offset:2px; }
+.oral-situation { font-size:.95rem;line-height:1.5;color:var(--text);font-weight:600; }
+@media (prefers-reduced-motion:reduce) { .oral-item { transition:none; } }
+
 .roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:500px;margin:0 auto; }
 .roleplay-body { padding:1.5rem; }
 .roleplay-scenario { font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem; }
@@ -446,8 +458,9 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .oral-item,
 .slide-dark .oral-item * { color: #1a1a2e !important; }
 .slide-dark .oral-item .oral-model { color: var(--accent) !important; }
-.oral-model { display:none; }
+.oral-model { display:none;margin-top:.6rem;font-size:.95rem;line-height:1.5;font-style:italic;color:var(--accent);font-weight:600; }
 .oral-item.revealed .oral-model { display:block; animation:fadeUp .3s ease; }
+@media (prefers-reduced-motion:reduce) { .oral-item.revealed .oral-model { animation:none; } }
 .slide-dark .error-card { background: #fff !important; }
 .slide-dark .error-card,
 .slide-dark .error-card * { color: #1a1a2e !important; }
@@ -710,7 +723,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div style="display:flex;flex-direction:column;gap:1rem">
     <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">05</div>
-      <div><div style="font-weight:600;font-size:.95rem">Giving Recommendations</div><div style="font-size:.8rem;color:var(--text-dim)">Recommendation modals + Quick Fire: coach a decision -- 28 slides</div></div>
+      <div><div style="font-weight:600;font-size:.95rem">Giving Recommendations</div><div style="font-size:.8rem;color:var(--text-dim)">Recommendation modals + Quick Fire: coach a decision -- 30 slides</div></div>
     </div>
   </div>
 </div>
@@ -861,7 +874,19 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 9: B2 READING + GIST ========== -->
-<div class="slide slide-light" data-slide="9" data-phase="3" data-teacher="<strong>Reading + Gist (5 min):</strong> D&ecirc; 2 minutos de leitura silenciosa. Depois fa&ccedil;a a pergunta de gist: 'What is the best title?' Helen clica a alternativa, o card certo fica verde. N&atilde;o pe&ccedil;a tradu&ccedil;&atilde;o palavra a palavra.">
+<div class="slide slide-light" data-slide="9" data-phase="3" data-task-for="reading" data-teacher="<strong>Antes do texto (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA ANTES de mostrar o texto. É isto que ela vai procurar enquanto lê — sem a tarefa antes, compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide de checagem, depois.">
+  <div class="slide-inner">
+    <div class="chapter-label">Before you read</div>
+    <h2 class="slide-heading">Read <span class="accent">for this</span></h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
+      <div class="comp-q comp-q-task"><div class="q-text">Each option in the text has both a benefit and a drawback.</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">A good advisor simply answers "it depends."</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">The goal is to choose the most impressive tool.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="10" data-phase="3" data-teacher="<strong>Reading + Gist (5 min):</strong> D&ecirc; 2 minutos de leitura silenciosa. Depois fa&ccedil;a a pergunta de gist: 'What is the best title?' Helen clica a alternativa, o card certo fica verde. N&atilde;o pe&ccedil;a tradu&ccedil;&atilde;o palavra a palavra.">
   <div class="slide-inner">
     <div class="chapter-label">Read for the Main Idea</div>
     <h2 class="slide-heading">The Advisor's <span class="accent">Job</span></h2>
@@ -871,7 +896,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 10: B2 TRUE/FALSE ========== -->
-<div class="slide slide-light" data-slide="10" data-phase="3" data-teacher="<strong>True / False (4 min):</strong> Helen decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma est&aacute; certa ou errada, voltando ao texto.">
+<div class="slide slide-light" data-slide="11" data-phase="3" data-teacher="<strong>True / False (4 min):</strong> Helen decide TRUE ou FALSE para cada frase ANTES de clicar. Ao clicar, o veredito e a justificativa aparecem. Discuta por que cada uma est&aacute; certa ou errada, voltando ao texto.">
   <div class="slide-inner">
     <div class="chapter-label">Check Understanding</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
@@ -881,7 +906,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 11: LISTENING 1 (full player) ========== -->
-<div class="slide slide-dark" data-slide="11" data-phase="3" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'A colleague leaves you a voicemail. Sound first, no text.' Toque 2 vezes. As perguntas aparecem ao final do &aacute;udio. 0.75x se pedir.">
+<div class="slide slide-dark" data-slide="12" data-phase="3" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'A colleague leaves you a voicemail. Sound first, no text.' Toque 2 vezes. As perguntas aparecem ao final do &aacute;udio. 0.75x se pedir.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">James's <span class="accent">Voicemail</span></h2>
@@ -911,7 +936,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: GRAMMAR TRANSITION ========== -->
-<div class="slide slide-image" data-slide="12" data-phase="4" data-teacher="<strong>Transi&ccedil;&atilde;o gram&aacute;tica (1 min):</strong> Diga: 'An advisor recommends all day. Listen to HOW they say it, the modals.'" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="13" data-phase="4" data-teacher="<strong>Transi&ccedil;&atilde;o gram&aacute;tica (1 min):</strong> Diga: 'An advisor recommends all day. Listen to HOW they say it, the modals.'" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: The Strength of Advice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">How Advisors <span class="accent">Recommend</span></h2>
@@ -920,7 +945,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: GRAMMAR DISCOVERY ========== -->
-<div class="slide slide-light" data-slide="13" data-phase="4" data-teacher="<strong>Grammar discovery (5 min):</strong> Leia os 4 exemplos. Pergunte: 'These all recommend, but are they equally strong?' Clique 'Reveal the Rule'. CCQ: 'Is could softer or stronger than had better? (Softer, it is just one possibility.)'">
+<div class="slide slide-light" data-slide="14" data-phase="4" data-teacher="<strong>Grammar discovery (5 min):</strong> Leia os 4 exemplos. Pergunte: 'These all recommend, but are they equally strong?' Clique 'Reveal the Rule'. CCQ: 'Is could softer or stronger than had better? (Softer, it is just one possibility.)'">
   <div class="slide-inner">
     <div class="chapter-label">Grammar Discovery</div>
     <h2 class="slide-heading">Listen and <span class="accent">Notice</span></h2>
@@ -946,7 +971,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: B2 MODALS GUIDE ========== -->
-<div class="slide slide-light" data-slide="14" data-phase="4" data-teacher="<strong>Meaning guide (3 min):</strong> O modals-guide resume a for&ccedil;a de cada estrutura em cart&otilde;es. Use como refer&ecirc;ncia r&aacute;pida. Pe&ccedil;a que Helen leia cada um em voz alta com um exemplo pr&oacute;prio.">
+<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Meaning guide (3 min):</strong> O modals-guide resume a for&ccedil;a de cada estrutura em cart&otilde;es. Use como refer&ecirc;ncia r&aacute;pida. Pe&ccedil;a que Helen leia cada um em voz alta com um exemplo pr&oacute;prio.">
   <div class="slide-inner">
     <div class="chapter-label">Meaning Guide</div>
     <h2 class="slide-heading">How Strong Is the <span class="accent">Recommendation?</span></h2>
@@ -955,7 +980,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="15" data-phase="4" data-teacher="<strong>Common mistake (3 min):</strong> O cl&aacute;ssico do brasileiro: 'recommend you to take' e 'could to compare'. Mostre certo (verde) vs errado (vermelho). Pe&ccedil;a que ela leia as vers&otilde;es certas em voz alta 2 vezes.">
+<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Common mistake (3 min):</strong> O cl&aacute;ssico do brasileiro: 'recommend you to take' e 'could to compare'. Mostre certo (verde) vs errado (vermelho). Pe&ccedil;a que ela leia as vers&otilde;es certas em voz alta 2 vezes.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Right vs <span class="accent">Wrong</span></h2>
@@ -974,7 +999,19 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Di&aacute;logo (6 min):</strong> Diga: 'You are Helen, the advisor. James is your colleague.' Clique 'Next Line' para cada fala. Para cada fala da Helen, pe&ccedil;a que ELA fale primeiro, depois toque o &aacute;udio para comparar.">
+<div class="slide slide-light" data-slide="17" data-phase="4" data-task-for="dialogue" data-teacher="<strong>Antes do diálogo (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA ANTES de abrir o diálogo. É isto que ela vai procurar enquanto ouve — sem a tarefa antes, compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide de checagem, depois.">
+  <div class="slide-inner">
+    <div class="chapter-label">Before you listen</div>
+    <h2 class="slide-heading">Listen <span class="accent">for this</span></h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
+      <div class="comp-q comp-q-task"><div class="q-text">1. What does James need to choose?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">2. What is the drawback of Option A?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">3. Why does James think Option B could be worthwhile?</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="18" data-phase="4" data-teacher="<strong>Di&aacute;logo (6 min):</strong> Diga: 'You are Helen, the advisor. James is your colleague.' Clique 'Next Line' para cada fala. Para cada fala da Helen, pe&ccedil;a que ELA fale primeiro, depois toque o &aacute;udio para comparar.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">Choosing the <span class="accent">Right Tool</span></h2>
@@ -994,7 +1031,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: DIALOGUE COMPREHENSION (tests James) ========== -->
-<div class="slide slide-light" data-slide="17" data-phase="4" data-teacher="<strong>Comprehension (3 min):</strong> Perguntas sobre o JAMES, n&atilde;o sobre a Helen. Helen tenta antes de revelar. Click para mostrar a resposta.">
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>Comprehension (3 min):</strong> Perguntas sobre o JAMES, n&atilde;o sobre a Helen. Helen tenta antes de revelar. Click para mostrar a resposta.">
   <div class="slide-inner">
     <div class="chapter-label">Did You Catch It?</div>
     <h2 class="slide-heading">About <span class="accent">James</span></h2>
@@ -1007,7 +1044,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: LISTENING 2 (full player) ========== -->
-<div class="slide slide-dark" data-slide="18" data-phase="4" data-teacher="<strong>Listening 2 (5 min):</strong> Diga: 'Now a consultant leaves a short voice memo with her recommendation. Sound first.' Toque 2 vezes. As perguntas aparecem ao final.">
+<div class="slide slide-dark" data-slide="20" data-phase="4" data-teacher="<strong>Listening 2 (5 min):</strong> Diga: 'Now a consultant leaves a short voice memo with her recommendation. Sound first.' Toque 2 vezes. As perguntas aparecem ao final.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">The Consultant's <span class="accent">Memo</span></h2>
@@ -1037,7 +1074,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: QUICK FIRE (THE NEW COMPONENT) ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="5" data-teacher="<strong>Quick Fire (6 min):</strong> Uma situa&ccedil;&atilde;o ABERTA por vez. Helen d&aacute; uma recomenda&ccedil;&atilde;o em voz alta ANTES de abrir as Tips. As Tips s&atilde;o apoio, n&atilde;o gabarito. Use Previous/Next para navegar. Celebre boas recomenda&ccedil;&otilde;es.">
+<div class="slide slide-light" data-slide="21" data-phase="5" data-teacher="<strong>Quick Fire (6 min):</strong> Uma situa&ccedil;&atilde;o ABERTA por vez. Helen d&aacute; uma recomenda&ccedil;&atilde;o em voz alta ANTES de abrir as Tips. As Tips s&atilde;o apoio, n&atilde;o gabarito. Use Previous/Next para navegar. Celebre boas recomenda&ccedil;&otilde;es.">
   <div class="slide-inner">
     <div class="chapter-label">Chapter 5: Quick Fire</div>
     <h2 class="slide-heading">Recommend on the <span class="accent">Spot</span></h2>
@@ -1047,7 +1084,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 20: PRACTICE TRANSITION ========== -->
-<div class="slide slide-image" data-slide="20" data-phase="6" data-teacher="<strong>Transi&ccedil;&atilde;o pr&aacute;tica (1 min):</strong> Diga: 'Now you give the advice. A colleague needs your call.'" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="22" data-phase="6" data-teacher="<strong>Transi&ccedil;&atilde;o pr&aacute;tica (1 min):</strong> Diga: 'Now you give the advice. A colleague needs your call.'" style="background-image:linear-gradient(rgba(20,20,30,.78),rgba(20,20,30,.88)),url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Your Turn to <span class="accent">Advise</span></h2>
@@ -1056,7 +1093,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: B2 SCENARIOS + REPHRASE ========== -->
-<div class="slide slide-light" data-slide="21" data-phase="6" data-teacher="<strong>Scenarios + Rephrase (5 min):</strong> Para cada cena, Helen d&aacute; uma recomenda&ccedil;&atilde;o. Depois, transforme cada frase-pista usando o modal entre par&ecirc;nteses. Ela diz a frase completa em voz alta. Sem gabarito vis&iacute;vel, ela produz.">
+<div class="slide slide-light" data-slide="23" data-phase="6" data-teacher="<strong>Scenarios + Rephrase (5 min):</strong> Para cada cena, Helen d&aacute; uma recomenda&ccedil;&atilde;o. Depois, transforme cada frase-pista usando o modal entre par&ecirc;nteses. Ela diz a frase completa em voz alta. Sem gabarito vis&iacute;vel, ela produz.">
   <div class="slide-inner">
     <div class="chapter-label">Give the Advice</div>
     <h2 class="slide-heading">Coach the <span class="accent">Decision</span></h2>
@@ -1066,7 +1103,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: SPOT THE ERROR ========== -->
-<div class="slide slide-light" data-slide="22" data-phase="6" data-teacher="<strong>Detective (4 min):</strong> Leia cada frase com erro de recomenda&ccedil;&atilde;o. Pergunte 'What is wrong here?' Helen corrige ANTES de clicar. Score no topo.">
+<div class="slide slide-light" data-slide="24" data-phase="6" data-teacher="<strong>Detective (4 min):</strong> Leia cada frase com erro de recomenda&ccedil;&atilde;o. Pergunte 'What is wrong here?' Helen corrige ANTES de clicar. Score no topo.">
   <div class="slide-inner">
     <div class="chapter-label">Detective</div>
     <h2 class="slide-heading">Spot the <span class="accent">Error</span></h2>
@@ -1081,7 +1118,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: SENTENCE BUILDING ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="6" data-teacher="<strong>Sentence Building (4 min):</strong> Mostre as keywords. Helen monta a recomenda&ccedil;&atilde;o COMPLETA em voz alta, depois clica para comparar. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="25" data-phase="6" data-teacher="<strong>Sentence Building (4 min):</strong> Mostre as keywords. Helen monta a recomenda&ccedil;&atilde;o COMPLETA em voz alta, depois clica para comparar. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">Build</div>
     <h2 class="slide-heading">Sentence <span class="accent">Building</span></h2>
@@ -1096,7 +1133,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: B2 ANSWER KEY (accordion) ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="6" data-teacher="<strong>Answer key (2 min):</strong> O accordion fica fechado por padr&atilde;o. Helen s&oacute; clica depois de tentar todas. &Eacute; controle do professor (toggle). Use para conferir as respostas do bloco de pr&aacute;tica.">
+<div class="slide slide-light" data-slide="26" data-phase="6" data-teacher="<strong>Answer key (2 min):</strong> O accordion fica fechado por padr&atilde;o. Helen s&oacute; clica depois de tentar todas. &Eacute; controle do professor (toggle). Use para conferir as respostas do bloco de pr&aacute;tica.">
   <div class="slide-inner">
     <div class="chapter-label">Check Your Work</div>
     <h2 class="slide-heading">Model <span class="accent">Answers</span></h2>
@@ -1108,7 +1145,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: FREE PRACTICE / ROLE-PLAY ========== -->
-<div class="slide slide-light" data-slide="25" data-phase="6" data-teacher="<strong>Free Practice (5 min):</strong> A miss&atilde;o da aula: Helen aconselha um colega numa decis&atilde;o real. ZERO pistas. N&atilde;o interrompa. Anote erros para a pr&oacute;xima aula. CELEBRE muito.">
+<div class="slide slide-light" data-slide="27" data-phase="6" data-teacher="<strong>Free Practice (5 min):</strong> A miss&atilde;o da aula: Helen aconselha um colega numa decis&atilde;o real. ZERO pistas. N&atilde;o interrompa. Anote erros para a pr&oacute;xima aula. CELEBRE muito.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Be the <span class="accent">Advisor</span></h2>
@@ -1120,7 +1157,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: SURVIVAL CARD ========== -->
-<div class="slide slide-dark" data-slide="26" data-phase="7" data-teacher="<strong>Survival lines (3 min):</strong> Leia cada frase, toque o &aacute;udio, pe&ccedil;a que Helen repita. S&atilde;o as frases-chave de recomenda&ccedil;&atilde;o para levar para a semana.">
+<div class="slide slide-dark" data-slide="28" data-phase="7" data-teacher="<strong>Survival lines (3 min):</strong> Leia cada frase, toque o &aacute;udio, pe&ccedil;a que Helen repita. S&atilde;o as frases-chave de recomenda&ccedil;&atilde;o para levar para a semana.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Survival Lines</div>
     <h2 class="slide-heading" style="color:#fff">Say It with <span class="accent">Confidence</span></h2>
@@ -1135,7 +1172,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: WHAT I LEARNED (checklist) ========== -->
-<div class="slide slide-dark" data-slide="27" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Click each item if you feel confident.' Leia cada item. Todos os 5 checks = aula completa e stamp 5 no passaporte.">
+<div class="slide slide-dark" data-slide="29" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Click each item if you feel confident.' Leia cada item. Todos os 5 checks = aula completa e stamp 5 no passaporte.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading" style="color:#fff">What I <span class="accent">Learned</span></h2>
@@ -1150,7 +1187,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: BADGE ========== -->
-<div class="slide slide-dark" data-slide="28" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Diga: 'Lesson 5 complete, Helen! You earned your Trusted Advisor Badge!' Homework (oralmente): gravar 60 segundos recomendando uma op&ccedil;&atilde;o entre duas, com benef&iacute;cio e drawback. Pr&oacute;xima aula: Negotiation Basics.">
+<div class="slide slide-dark" data-slide="30" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Diga: 'Lesson 5 complete, Helen! You earned your Trusted Advisor Badge!' Homework (oralmente): gravar 60 segundos recomendando uma op&ccedil;&atilde;o entre duas, com benef&iacute;cio e drawback. Pr&oacute;xima aula: Negotiation Basics.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1272,7 +1309,7 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 28;
+var totalSlides = 30;
 var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
 
 function changeSlide(dir) {
