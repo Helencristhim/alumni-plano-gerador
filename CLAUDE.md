@@ -1670,3 +1670,47 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
    Pre-class disjunto do vocab da aula. Aula de review/consolidacao e excecao (titulo da
    AULA contem review/checkpoint). Auditoria do roster em
    `_build/model/AUDIT-preclass-coherence.md`.
+
+---
+
+## REGRA 30 — O LEGADO E INTOCAVEL (REGRA BLOQUEANTE)
+
+**Aula que ja foi dada NAO SE MEXE.** Ordem direta do Dan (13/07/2026):
+
+> "nao pode sair consertando pq tem coisa MUITO antiga que ja ate passou e pode acabar
+> destruindo o futuro. nao destrua nada que funciona. se ta no passado deixa."
+
+O repo carrega **3.243 defeitos herdados em 1.428 arquivos** (media-card sem link, nav-bar
+flutuando, personagem com duas vozes, data-voice inexistente...). Todos sao **anteriores** a
+qualquer sessao atual. As aulas **funcionam** — os alunos tem aula todo dia com elas.
+
+### O que e PROIBIDO (sem ordem explicita e especifica do Dan, por aluno)
+
+- ❌ Consertar defeito de aula ja gerada. Nao importa quao obvio, barato ou "seguro" pareca.
+- ❌ Rodar retrofit/varredura que escreva em aula existente.
+- ❌ Tratar `scripts/legacy-baseline.json` como lista de tarefas. **Ele NAO e um TODO.**
+  E um **ALVARA**: a prova de que aquele defeito ja existia e tem permissao para continuar
+  existindo. A funcao dele e o gate saber o que **ignorar**.
+- ❌ Propor a limpeza do legado como "proximo passo natural" ao fim de uma tarefa.
+
+### O que e PERMITIDO
+
+- ✅ Gerar aula NOVA (arquivo novo = baseline vazio = tolerancia zero, de graca).
+- ✅ Consertar o **builder / o modelo / os gates** — a FORMA, nunca o passado ja publicado.
+- ✅ Consertar uma aula especifica **quando o Dan pedir aquela aula, daquele aluno**.
+
+### Por que (o raciocinio, para nao ser reinterpretado)
+
+Um defeito cosmetico numa aula que o aluno **ja teve** custa zero. Um script que reescreve
+1.428 arquivos para "consertar" isso pode custar tudo — e ja quase custou: um regex guloso
+ia reescrever **2.182 arquivos** em vez dos 48 com defeito real. O risco de mexer e
+ordens de grandeza maior que o dano de deixar quieto.
+
+**"Ninguem reclamou" nao autoriza conserto. Autoriza deixar como esta.**
+
+### A trava
+
+`GATE 8` (`scripts/check_legacy_baseline.py`, roda em todo PR, ~45s, repo inteiro) garante
+que **nenhum arquivo ganhe um defeito que nao tinha**. Ele **nunca** exige que o legado seja
+consertado. Se um conserto legitimo (pedido pelo Dan) reduzir a divida, rode `--update` para
+recongelar a base — ela so pode CAIR.
