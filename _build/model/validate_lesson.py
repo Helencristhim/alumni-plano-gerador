@@ -34,11 +34,35 @@ import glob
 import json
 import os
 import re
+import subprocess
 import sys
 from html import unescape as html_unescape
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 VOICES = json.load(open(os.path.join(HERE, 'voices.json'), encoding='utf-8'))
+
+# O DISCO NÃO É A FONTE DA VERDADE — o repositório é.
+# O repo usa sparse-checkout com `!/public/audio/`: os 60 mil MP3s estão versionados
+# mas não materializados na árvore local. Um os.path.exists() puro responde "não existe"
+# para TODO áudio do projeto e este check acusa "N MP3s faltando" numa aula cujos MP3s
+# estão commitados. Já mordeu na geração do Diogo (24 falsos positivos, 0 reais).
+# Mesmo conserto que o scripts/check_lesson_integrity.py.
+_VERSIONADOS = {}
+
+
+def audio_existe(root, ref):
+    """ref = '/audio/slug/x.mp3'. Existe se estiver no disco OU versionado no git."""
+    ref = ref.split('?')[0]         # tira o cache-buster (?v=2): no disco o arquivo não o tem
+    if os.path.exists(os.path.join(root, 'public' + ref)):
+        return True
+    if root not in _VERSIONADOS:
+        try:
+            saida = subprocess.run(['git', 'ls-files', 'public/audio'], cwd=root,
+                                   capture_output=True, text=True, timeout=60).stdout
+            _VERSIONADOS[root] = {l.strip() for l in saida.splitlines() if l.strip()}
+        except Exception:
+            _VERSIONADOS[root] = set()      # sem git: cai para o disco (comportamento antigo)
+    return ('public' + ref) in _VERSIONADOS[root]
 
 # funções nativas/inline aceitas em handlers sem definição no arquivo
 BUILTIN_OK = {'event', 'window', 'document', 'this', 'location', 'localStorage', 'alert', 'confirm'}
@@ -56,11 +80,19 @@ def get_css(c):
     return re.sub(r'/\*.*?\*/', '', css, flags=re.S)
 
 
+def _e_raiz(p):
+    # A raiz é onde há .git + public/. NÃO usar public/audio/ como sinal: sob
+    # sparse-checkout esse diretório não existe, repo_root_for devolvia None e a
+    # checagem de áudio inteira era PULADA em silêncio — gate desligado, não gate
+    # falhando. (.git é diretório no clone e ARQUIVO num worktree.)
+    return os.path.exists(os.path.join(p, '.git')) and os.path.isdir(os.path.join(p, 'public'))
+
+
 def repo_root_for(path):
     p = os.path.abspath(path)
-    while p != '/' and not os.path.isdir(os.path.join(p, 'public', 'audio')):
+    while p != '/' and not _e_raiz(p):
         p = os.path.dirname(p)
-    return p if os.path.isdir(os.path.join(p, 'public', 'audio')) else None
+    return p if _e_raiz(p) else None
 
 
 def find_manifest(path, root):
@@ -436,9 +468,9 @@ def validate(path):
     if phrases and missing_map:
         fails.append(f'{len(missing_map)} frase(s) SEM entrada no audioMap (ex: "{missing_map[0][:50]}")')
     if root and amap_norm:
-        missing_disk = [v for v in set(amap_norm.values()) if not os.path.exists(os.path.join(root, 'public' + v))]
+        missing_disk = [v for v in set(amap_norm.values()) if not audio_existe(root, v)]
         if missing_disk:
-            fails.append(f'{len(missing_disk)} MP3(s) do audioMap NÃO existem no disco (ex: {sorted(missing_disk)[0]})')
+            fails.append(f'{len(missing_disk)} MP3(s) do audioMap NÃO existem (ex: {sorted(missing_disk)[0]})')
 
     # integração hub + espelho (standalone de professor)
     m = re.search(r'/professor/(.+)-aula(\d+)\.html$', path.replace('\\', '/'))
