@@ -327,6 +327,18 @@ body.slide-mode .teacher-t { display:flex; }
 .error-card.revealed .error-fix { display:block;animation:fadeUp .3s ease; }
 .error-score { text-align:center;margin-top:1rem;font-weight:700;color:var(--accent);font-size:1.1rem; }
 
+/* Sentence Building (.oral-*): nasceu SEM estilo-base — o bloco saía como uma lista
+   <div> nua enquanto o resto do deck é todo em cards. Mesmo vocabulário visual do
+   .error-card/.challenge-card vizinhos. A VISIBILIDADE do gabarito NÃO se define aqui:
+   .oral-model{display:none} + .oral-item.revealed .oral-model{display:block} ficam
+   juntos, mais abaixo, e continuam sendo a única fonte do reveal. */
+.oral-grid { display:flex;flex-direction:column;gap:.8rem;max-width:560px;margin:1.5rem auto 0; }
+.oral-item { background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s; }
+.oral-item:hover { border-color:var(--accent); }
+.oral-item:focus-visible { outline:3px solid var(--accent);outline-offset:2px; }
+.oral-situation { font-size:.95rem;line-height:1.5;color:var(--text);font-weight:600; }
+@media (prefers-reduced-motion:reduce) { .oral-item { transition:none; } }
+
 .roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:500px;margin:0 auto; }
 .roleplay-body { padding:1.5rem; }
 .roleplay-scenario { font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem; }
@@ -372,6 +384,10 @@ body.slide-mode .teacher-t { display:flex; }
 .comp-q .q-text { font-weight:500; }
 .comp-q .q-answer { display:none;margin-top:.5rem;color:var(--accent);font-weight:600;font-size:.9rem; }
 .comp-q.revealed .q-answer { display:block;animation:fadeUp .3s ease; }
+/* Slide de TAREFA (REGRA 2.2): a pergunta ANTES da exposição. Não é clicável — não há
+   gabarito aqui para revelar (ele nem existe no HTML). Logo, não finge ser botão. */
+.comp-q-task { cursor:default; }
+.comp-q-task:hover { border-color:#e8e4df;background:#fff; }
 
 .lost-bag-report { background:#fff;border-radius:12px;max-width:460px;margin:0 auto;box-shadow:0 12px 40px rgba(0,0,0,.1);overflow:hidden;border:2px solid #e8e4df; }
 .lbr-header { background:linear-gradient(135deg,#6A1B4D,#C2549B);padding:1.2rem 1.5rem;display:flex;align-items:center;justify-content:space-between; }
@@ -450,8 +466,9 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .oral-item,
 .slide-dark .oral-item * { color: #1a1a2e !important; }
 .slide-dark .oral-item .oral-model { color: var(--accent) !important; }
-.oral-model { display:none; }
+.oral-model { display:none;margin-top:.6rem;font-size:.95rem;line-height:1.5;font-style:italic;color:var(--accent);font-weight:600; }
 .oral-item.revealed .oral-model { display:block; animation:fadeUp .3s ease; }
+@media (prefers-reduced-motion:reduce) { .oral-item.revealed .oral-model { animation:none; } }
 .slide-dark .error-card { background: #fff !important; }
 .slide-dark .error-card,
 .slide-dark .error-card * { color: #1a1a2e !important; }
@@ -710,7 +727,7 @@ body.slide-mode .nav-bar { display:flex; }
 
 <!-- ========== TAB 3: IN CLASS ========== -->
 <div class="tab-content active" id="tab-inclass">
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Selecione a Aula</h3>
+  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Select your Lesson</h3>
   <div style="display:flex;flex-direction:column;gap:1rem">
     <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">02</div>
@@ -933,7 +950,20 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: READING + GIST ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Reading + gist (7 min):</strong> Ela l&ecirc; em sil&ecirc;ncio (2 min), depois em voz alta o par&aacute;grafo 3 &mdash; &eacute; onde mora o third conditional. N&Atilde;O explique a gram&aacute;tica ainda: pe&ccedil;a s&oacute; que ela note as frases que come&ccedil;am com 'If'. Depois, gist: ela escolhe a ideia principal. Se errar, volte ao &uacute;ltimo par&aacute;grafo e releia junto.">
+<div class="slide slide-light" data-slide="12" data-phase="3" data-task-for="reading" data-teacher="<strong>Antes do texto (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA ANTES de mostrar o texto. É isto que ela vai procurar enquanto lê — sem a tarefa antes, compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide de checagem, depois.">
+  <div class="slide-inner">
+    <div class="chapter-label">Before you read</div>
+    <h2 class="slide-heading">Read <span class="accent">for this</span></h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
+      <div class="comp-q comp-q-task"><div class="q-text">Northline Academy had written core values.</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">The company ran a cultural diagnosis in the first year.</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">Disengagement showed up before the turnover rate moved.</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">The case says the culture was toxic.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="13" data-phase="3" data-teacher="<strong>Reading + gist (7 min):</strong> Ela l&ecirc; em sil&ecirc;ncio (2 min), depois em voz alta o par&aacute;grafo 3 &mdash; &eacute; onde mora o third conditional. N&Atilde;O explique a gram&aacute;tica ainda: pe&ccedil;a s&oacute; que ela note as frases que come&ccedil;am com 'If'. Depois, gist: ela escolhe a ideia principal. Se errar, volte ao &uacute;ltimo par&aacute;grafo e releia junto.">
   <div class="slide-inner">
     <div class="chapter-label">Case Study</div>
     <h2 class="slide-heading">Read for the <span class="accent">Main Idea</span></h2>
@@ -943,7 +973,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: TRUE / FALSE ========== -->
-<div class="slide slide-light" data-slide="13" data-phase="3" data-teacher="<strong>True / False (5 min):</strong> Ela responde ANTES de revelar, e tem de justificar com a linha do texto. O item 4 &eacute; o mais importante: o caso N&Atilde;O diz que a cultura era t&oacute;xica &mdash; e essa distin&ccedil;&atilde;o (t&oacute;xico vs problema espec&iacute;fico n&atilde;o nomeado) &eacute; exatamente o erro que o Nathan pede que ela n&atilde;o cometa no Canad&aacute;.">
+<div class="slide slide-light" data-slide="14" data-phase="3" data-teacher="<strong>True / False (5 min):</strong> Ela responde ANTES de revelar, e tem de justificar com a linha do texto. O item 4 &eacute; o mais importante: o caso N&Atilde;O diz que a cultura era t&oacute;xica &mdash; e essa distin&ccedil;&atilde;o (t&oacute;xico vs problema espec&iacute;fico n&atilde;o nomeado) &eacute; exatamente o erro que o Nathan pede que ela n&atilde;o cometa no Canad&aacute;.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
@@ -952,7 +982,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: LISTENING 1 (exit interview) ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="3" data-teacher="<strong>Listening 1 (6 min):</strong> Diga: 'This is a real exit interview. She has already resigned, so she has nothing to lose. Just listen &mdash; no text.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o &aacute;udio termina. Depois pergunte: 'At which exact moment did she disengage?' &mdash; a resposta (a reuni&atilde;o em que culparam quem falou) &eacute; a ponte perfeita para o cap&iacute;tulo do third conditional.">
+<div class="slide slide-dark" data-slide="15" data-phase="3" data-teacher="<strong>Listening 1 (6 min):</strong> Diga: 'This is a real exit interview. She has already resigned, so she has nothing to lose. Just listen &mdash; no text.' LEIA AS PERGUNTAS EM VOZ ALTA COM ELA ANTES de tocar &mdash; elas j&aacute; est&atilde;o na tela, e s&atilde;o a TAREFA de escuta: dizem O QUE procurar. Ouvir sem a pergunta vira teste de mem&oacute;ria. Depois toque SEM texto, 2 vezes. Depois pergunte: 'At which exact moment did she disengage?' &mdash; a resposta (a reuni&atilde;o em que culparam quem falou) &eacute; a ponte perfeita para o cap&iacute;tulo do third conditional.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">The Exit <span class="accent">Interview</span></h2>
@@ -973,7 +1003,7 @@ body.slide-mode .nav-bar { display:flex; }
         <button class="lp-speed-btn" onclick="mpSpeed('mp-listen1',1.25,this)" style="background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.82);border-radius:6px;padding:.2rem .6rem;font-size:.7rem;cursor:pointer">1.25x</button>
       </div>
     </div>
-    <div class="comp-questions" id="listening1Qs" style="display:none;max-width:540px;margin:1.2rem auto 0">
+    <div class="comp-questions" id="listening1Qs" style="max-width:540px;margin:1.2rem auto 0">
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. Why does she say she left?</div><div class="q-answer">Not the salary &mdash; nobody looked into what was actually happening on her team.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What does she say about her onboarding experience?</div><div class="q-answer">It was excellent: two people welcomed her, the framework was clear, and she was proud to be there.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What exactly happened in the meeting she describes?</div><div class="q-answer">The person who spoke up was blamed in front of everyone &mdash; and after that, nobody spoke up again.</div></div>
@@ -982,7 +1012,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: CH4 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="15" data-phase="4" data-teacher="<strong>Transi&ccedil;&atilde;o grammar (1 min):</strong> Diga: 'Now the grammar of a diagnosis. Every diagnosis says the same thing: this did not happen, and because of that, this happened.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="16" data-phase="4" data-teacher="<strong>Transi&ccedil;&atilde;o grammar (1 min):</strong> Diga: 'Now the grammar of a diagnosis. Every diagnosis says the same thing: this did not happen, and because of that, this happened.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: The Code</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">The Past That <span class="accent">Never Happened</span></h2>
@@ -991,7 +1021,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: GRAMMAR DISCOVERY ========== -->
-<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Grammar discovery (7 min):</strong> N&Atilde;O d&ecirc; a regra primeiro (REGRA 27). Leia os quatro exemplos (todos sa&iacute;ram do caso), toque os &aacute;udios. Pergunte: 'Did they run the survey? Did they read the interviews? So are we talking about the real past, or a past that never happened?'. Espere ela nomear. S&oacute; ent&atilde;o clique 'Reveal the Rule'. CCQ: 'If they had run a pulse survey, they would have seen it. Did they run it? (No.) Did they see it? (No.) Is it too late? (Yes &mdash; the past cannot change.)'">
+<div class="slide slide-light" data-slide="17" data-phase="4" data-teacher="<strong>Grammar discovery (7 min):</strong> N&Atilde;O d&ecirc; a regra primeiro (REGRA 27). Leia os quatro exemplos (todos sa&iacute;ram do caso), toque os &aacute;udios. Pergunte: 'Did they run the survey? Did they read the interviews? So are we talking about the real past, or a past that never happened?'. Espere ela nomear. S&oacute; ent&atilde;o clique 'Reveal the Rule'. CCQ: 'If they had run a pulse survey, they would have seen it. Did they run it? (No.) Did they see it? (No.) Is it too late? (Yes &mdash; the past cannot change.)'">
   <div class="slide-inner">
     <div class="chapter-label">Grammar Discovery</div>
     <h2 class="slide-heading">Listen and <span class="accent">Notice</span></h2>
@@ -1020,7 +1050,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: MODAL PERFECTS ========== -->
-<div class="slide slide-light" data-slide="17" data-phase="4" data-teacher="<strong>Modal perfects (5 min):</strong> A diferen&ccedil;a aqui &eacute; POL&Iacute;TICA, n&atilde;o gramatical. 'Should have' julga; 'could have' abre op&ccedil;&otilde;es; 'might have' especula com prud&ecirc;ncia. Numa sala de doutores canadenses, 'you should have' soa a acusa&ccedil;&atilde;o &mdash; 'the team might have felt' soa a diagn&oacute;stico. Pe&ccedil;a que ela reformule uma cr&iacute;tica dura da Maple Bear Brasil usando 'might have' em vez de 'should have'.">
+<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Modal perfects (5 min):</strong> A diferen&ccedil;a aqui &eacute; POL&Iacute;TICA, n&atilde;o gramatical. 'Should have' julga; 'could have' abre op&ccedil;&otilde;es; 'might have' especula com prud&ecirc;ncia. Numa sala de doutores canadenses, 'you should have' soa a acusa&ccedil;&atilde;o &mdash; 'the team might have felt' soa a diagn&oacute;stico. Pe&ccedil;a que ela reformule uma cr&iacute;tica dura da Maple Bear Brasil usando 'might have' em vez de 'should have'.">
   <div class="slide-inner">
     <div class="chapter-label">Register</div>
     <h2 class="slide-heading">Three Modals, Three <span class="accent">Levels of Blame</span></h2>
@@ -1034,7 +1064,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Common mistake (4 min):</strong> Erro n&uacute;mero 1 do brasileiro no third conditional: 'if I would have...' &mdash; o <em>would</em> NUNCA entra na parte do <em>if</em>. O segundo erro &eacute; o 'have' virar 'of' na escrita ('should of'), coisa que ela vai ver at&eacute; em e-mail de nativo, e n&atilde;o pode copiar. Pe&ccedil;a que ela leia as vers&otilde;es certas em voz alta DUAS vezes, com a contra&ccedil;&atilde;o.">
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>Common mistake (4 min):</strong> Erro n&uacute;mero 1 do brasileiro no third conditional: 'if I would have...' &mdash; o <em>would</em> NUNCA entra na parte do <em>if</em>. O segundo erro &eacute; o 'have' virar 'of' na escrita ('should of'), coisa que ela vai ver at&eacute; em e-mail de nativo, e n&atilde;o pode copiar. Pe&ccedil;a que ela leia as vers&otilde;es certas em voz alta DUAS vezes, com a contra&ccedil;&atilde;o.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Right vs <span class="accent">Wrong</span></h2>
@@ -1061,7 +1091,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: GRAMMAR PRACTICE ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>Practice (5 min):</strong> Leia cada frase. A Danielle completa ORALMENTE antes de clicar. Se travar, pergunte: 'Real past, or a past that never happened?'. Todas as frases s&atilde;o do caso ou do exit interview &mdash; ela j&aacute; tem o conte&uacute;do, s&oacute; precisa da forma.">
+<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Practice (5 min):</strong> Leia cada frase. A Danielle completa ORALMENTE antes de clicar. Se travar, pergunte: 'Real past, or a past that never happened?'. Todas as frases s&atilde;o do caso ou do exit interview &mdash; ela j&aacute; tem o conte&uacute;do, s&oacute; precisa da forma.">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Which <span class="accent">Form?</span></h2>
@@ -1078,7 +1108,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 20: HEDGING (say the hard thing) ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Hedging / registro (6 min):</strong> ESTE &eacute; o cora&ccedil;&atilde;o pol&iacute;tico da aula. &Agrave; esquerda, a verdade dita de forma que perde a sala. &Agrave; direita, a MESMA verdade dita de forma que a sala escuta. Ela tenta a vers&atilde;o diplom&aacute;tica ANTES de revelar. Insista: nenhuma das vers&otilde;es da direita &eacute; mais fraca &mdash; s&atilde;o mais dif&iacute;ceis de rejeitar. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="21" data-phase="4" data-teacher="<strong>Hedging / registro (6 min):</strong> ESTE &eacute; o cora&ccedil;&atilde;o pol&iacute;tico da aula. &Agrave; esquerda, a verdade dita de forma que perde a sala. &Agrave; direita, a MESMA verdade dita de forma que a sala escuta. Ela tenta a vers&atilde;o diplom&aacute;tica ANTES de revelar. Insista: nenhuma das vers&otilde;es da direita &eacute; mais fraca &mdash; s&atilde;o mais dif&iacute;ceis de rejeitar. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">Diplomatic Language</div>
     <h2 class="slide-heading">Same Truth. The Room <span class="accent">Stays.</span></h2>
@@ -1094,7 +1124,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="21" data-phase="5" data-teacher="<strong>Transi&ccedil;&atilde;o practice (1 min):</strong> Diga: 'Now we train under pressure: detective, the report, and speed.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="22" data-phase="5" data-teacher="<strong>Transi&ccedil;&atilde;o practice (1 min):</strong> Diga: 'Now we train under pressure: detective, the report, and speed.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train Under <span class="accent">Pressure</span></h2>
@@ -1103,7 +1133,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: SPOT THE ERROR ========== -->
-<div class="slide slide-light" data-slide="22" data-phase="5" data-teacher="<strong>Detective (4 min):</strong> Leia cada frase com erro. Pergunte 'What is wrong here?'. Ela corrige ANTES de clicar. O item 3 &eacute; collocation ('do a diagnosis' n&atilde;o existe: &eacute; run / carry out / conduct a diagnosis) e o item 4 &eacute; transfer&ecirc;ncia do portugu&ecirc;s ('discuss about'). Trate como vit&oacute;ria quando ela achar sozinha.">
+<div class="slide slide-light" data-slide="23" data-phase="5" data-teacher="<strong>Detective (4 min):</strong> Leia cada frase com erro. Pergunte 'What is wrong here?'. Ela corrige ANTES de clicar. O item 3 &eacute; collocation ('do a diagnosis' n&atilde;o existe: &eacute; run / carry out / conduct a diagnosis) e o item 4 &eacute; transfer&ecirc;ncia do portugu&ecirc;s ('discuss about'). Trate como vit&oacute;ria quando ela achar sozinha.">
   <div class="slide-inner">
     <div class="chapter-label">Detective</div>
     <h2 class="slide-heading">Spot the <span class="accent">Error</span></h2>
@@ -1118,7 +1148,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: ARTEFATO CSS (pulse survey report) ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="5" data-teacher="<strong>Artefato (6 min):</strong> Este &eacute; o relat&oacute;rio real que o Nathan vai colocar na frente dela em agosto. Pe&ccedil;a que ela leia os n&uacute;meros em voz alta e depois DIAGNOSTIQUE, em uma frase, usando hedging. O achado que ela precisa ver: belonging alto + psychological safety baixo = as pessoas gostam de estar l&aacute; e ainda assim n&atilde;o discordam. Se ela disser 'toxic culture', corrija com carinho e devolva ao slide 20.">
+<div class="slide slide-light" data-slide="24" data-phase="5" data-teacher="<strong>Artefato (6 min):</strong> Este &eacute; o relat&oacute;rio real que o Nathan vai colocar na frente dela em agosto. Pe&ccedil;a que ela leia os n&uacute;meros em voz alta e depois DIAGNOSTIQUE, em uma frase, usando hedging. O achado que ela precisa ver: belonging alto + psychological safety baixo = as pessoas gostam de estar l&aacute; e ainda assim n&atilde;o discordam. Se ela disser 'toxic culture', corrija com carinho e devolva ao slide 20.">
   <div class="slide-inner">
     <div class="chapter-label">The Artifact</div>
     <h2 class="slide-heading">The Pulse Survey <span class="accent">Report</span></h2>
@@ -1144,7 +1174,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: QUICK FIRE ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="5" data-teacher="<strong>Quick fire (6 min):</strong> UMA pergunta por vez. Ela responde em voz alta, frase COMPLETA, antes de voc&ecirc; mostrar as tips. N&atilde;o aceite resposta de tr&ecirc;s palavras. Cobre o third conditional e o hedging em velocidade &mdash; &eacute; a simula&ccedil;&atilde;o da reuni&atilde;o real.">
+<div class="slide slide-light" data-slide="25" data-phase="5" data-teacher="<strong>Quick fire (6 min):</strong> UMA pergunta por vez. Ela responde em voz alta, frase COMPLETA, antes de voc&ecirc; mostrar as tips. N&atilde;o aceite resposta de tr&ecirc;s palavras. Cobre o third conditional e o hedging em velocidade &mdash; &eacute; a simula&ccedil;&atilde;o da reuni&atilde;o real.">
   <div class="slide-inner">
     <div class="chapter-label">Quick Fire</div>
     <h2 class="slide-heading">Answer Like the Board Is <span class="accent">Waiting</span></h2>
@@ -1153,7 +1183,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: SENTENCE BUILDING ========== -->
-<div class="slide slide-light" data-slide="25" data-phase="5" data-teacher="<strong>Sentence Building (4 min):</strong> Mostre as keywords. Ela monta a frase COMPLETA em voz alta, depois clica para comparar. Exija a contra&ccedil;&atilde;o na fala (they'd have seen). Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Sentence Building (4 min):</strong> Mostre as keywords. Ela monta a frase COMPLETA em voz alta, depois clica para comparar. Exija a contra&ccedil;&atilde;o na fala (they'd have seen). Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">Build</div>
     <h2 class="slide-heading">Sentence <span class="accent">Building</span></h2>
@@ -1169,7 +1199,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: LISTENING 2 (Nathan) ========== -->
-<div class="slide slide-dark" data-slide="26" data-phase="5" data-teacher="<strong>Listening 2 (5 min):</strong> Diga: 'Nathan has the survey in front of him. Listen &mdash; no text.' Toque 2 vezes. Este &aacute;udio &eacute; o briefing real da miss&atilde;o dela: ele PROIBE a palavra 'toxic' e pede um diagn&oacute;stico, n&atilde;o um plano. Depois pergunte: 'What is he asking you NOT to do?' &mdash; e conecte direto ao role-play.">
+<div class="slide slide-dark" data-slide="27" data-phase="5" data-teacher="<strong>Listening 2 (5 min):</strong> Diga: 'Nathan has the survey in front of him. Listen &mdash; no text.' LEIA AS PERGUNTAS EM VOZ ALTA COM ELA ANTES de tocar &mdash; elas j&aacute; est&atilde;o na tela, e s&atilde;o a TAREFA de escuta: dizem O QUE procurar. Ouvir sem a pergunta vira teste de mem&oacute;ria. Depois toque 2 vezes. Este &aacute;udio &eacute; o briefing real da miss&atilde;o dela: ele PROIBE a palavra 'toxic' e pede um diagn&oacute;stico, n&atilde;o um plano. Depois pergunte: 'What is he asking you NOT to do?' &mdash; e conecte direto ao role-play.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">Nathan Has the <span class="accent">Numbers</span></h2>
@@ -1190,7 +1220,7 @@ body.slide-mode .nav-bar { display:flex; }
         <button class="lp-speed-btn" onclick="mpSpeed('mp-listen2',1.25,this)" style="background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.82);border-radius:6px;padding:.2rem .6rem;font-size:.7rem;cursor:pointer">1.25x</button>
       </div>
     </div>
-    <div class="comp-questions" id="listening2Qs" style="display:none;max-width:540px;margin:1.2rem auto 0">
+    <div class="comp-questions" id="listening2Qs" style="max-width:540px;margin:1.2rem auto 0">
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What are the two numbers Nathan gives, and which one worries him?</div><div class="q-answer">Belonging at seventy eight percent, psychological safety at forty one &mdash; the forty one is the problem.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What does he explicitly ask her NOT to say?</div><div class="q-answer">That they have a toxic culture &mdash; he says she would lose the room in thirty seconds.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What does he want her to bring: a plan or a diagnosis?</div><div class="q-answer">A diagnosis. He says it twice, and he says explicitly: not a plan.</div></div>
@@ -1199,7 +1229,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="27" data-phase="6" data-teacher="<strong>Transi&ccedil;&atilde;o role-play (1 min):</strong> Diga: 'Now the real thing. I am Nathan, the survey is on the table, and the academic team is waiting for your reading of it.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="28" data-phase="6" data-teacher="<strong>Transi&ccedil;&atilde;o role-play (1 min):</strong> Diga: 'Now the real thing. I am Nathan, the survey is on the table, and the academic team is waiting for your reading of it.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Deliver the <span class="accent">Diagnosis</span></h2>
@@ -1208,7 +1238,19 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="28" data-phase="6" data-teacher="<strong>Di&aacute;logo (7 min):</strong> Voc&ecirc; &eacute; o Nathan (masculino, canadense). Clique 'Next Line' a cada fala. Para CADA fala da Danielle, pe&ccedil;a que ELA produza primeiro e s&oacute; depois toque o &aacute;udio para comparar. CELEBRE quando o third conditional sair sem travar &mdash; e quando ela usar 'It would appear that' em vez de 'Your culture is broken'.">
+<div class="slide slide-light" data-slide="29" data-phase="6" data-task-for="dialogue" data-teacher="<strong>Antes do diálogo (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA ANTES de abrir o diálogo. É isto que ela vai procurar enquanto ouve — sem a tarefa antes, compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide de checagem, depois.">
+  <div class="slide-inner">
+    <div class="chapter-label">Before you listen</div>
+    <h2 class="slide-heading">Listen <span class="accent">for this</span></h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
+      <div class="comp-q comp-q-task"><div class="q-text">1. What does Nathan want from her before the academic team joins?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">2. What will some of the directors say about the survey?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">3. What is his real worry about the way she delivers it?</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="30" data-phase="6" data-teacher="<strong>Di&aacute;logo (7 min):</strong> Voc&ecirc; &eacute; o Nathan (masculino, canadense). Clique 'Next Line' a cada fala. Para CADA fala da Danielle, pe&ccedil;a que ELA produza primeiro e s&oacute; depois toque o &aacute;udio para comparar. CELEBRE quando o third conditional sair sem travar &mdash; e quando ela usar 'It would appear that' em vez de 'Your culture is broken'.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">Reading the <span class="accent">Numbers</span></h2>
@@ -1225,7 +1267,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 29: DIALOGUE COMPREHENSION (sobre o Nathan) ========== -->
-<div class="slide slide-light" data-slide="29" data-phase="6" data-teacher="<strong>Comprehension (2 min):</strong> Pergunte sobre o NATHAN, nunca sobre a pr&oacute;pria Danielle (REGRA 27F). Clique para revelar cada resposta depois que ela responder.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Comprehension (2 min):</strong> Pergunte sobre o NATHAN, nunca sobre a pr&oacute;pria Danielle (REGRA 27F). Clique para revelar cada resposta depois que ela responder.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About <span class="accent">Nathan</span></h2>
@@ -1238,7 +1280,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 30: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Role-play Guided (4 min):</strong> Voc&ecirc; &eacute; o Nathan. Pe&ccedil;a: 'Walk me through the survey.' Ela usa as keywords na tela. Exija UM third conditional e UMA frase de hedging. Deixe-a conduzir.">
+<div class="slide slide-light" data-slide="32" data-phase="6" data-teacher="<strong>Role-play Guided (4 min):</strong> Voc&ecirc; &eacute; o Nathan. Pe&ccedil;a: 'Walk me through the survey.' Ela usa as keywords na tela. Exija UM third conditional e UMA frase de hedging. Deixe-a conduzir.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Walk Me Through the <span class="accent">Survey</span></h2>
@@ -1256,7 +1298,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Role-play Semi-free (5 min):</strong> Agora voc&ecirc; &eacute; a Dra. Reid, diretora acad&ecirc;mica, e est&aacute; NA DEFENSIVA: 'We have been here for fifteen years and nobody ever complained.' Menos pistas. A Danielle tem de discordar sem acusar &mdash; 'might have', 'to some extent' &mdash; e ainda assim n&atilde;o recuar do diagn&oacute;stico. Este &eacute; o cen&aacute;rio real de agosto.">
+<div class="slide slide-light" data-slide="33" data-phase="6" data-teacher="<strong>Role-play Semi-free (5 min):</strong> Agora voc&ecirc; &eacute; a Dra. Reid, diretora acad&ecirc;mica, e est&aacute; NA DEFENSIVA: 'We have been here for fifteen years and nobody ever complained.' Menos pistas. A Danielle tem de discordar sem acusar &mdash; 'might have', 'to some extent' &mdash; e ainda assim n&atilde;o recuar do diagn&oacute;stico. Este &eacute; o cen&aacute;rio real de agosto.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">The Director Pushes <span class="accent">Back</span></h2>
@@ -1274,7 +1316,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 32: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="32" data-phase="6" data-teacher="<strong>Free Practice (6 min):</strong> A miss&atilde;o da aula: o diagn&oacute;stico inteiro, sem pistas, sobre a MAPLE BEAR BRASIL &mdash; um desafio cultural real que ela viveu. N&Atilde;O interrompa, N&Atilde;O corrija no meio: anote e devolva depois, focando em (1) third conditional correto e (2) hedging em vez de acusa&ccedil;&atilde;o. CELEBRE muito no final.">
+<div class="slide slide-light" data-slide="34" data-phase="6" data-teacher="<strong>Free Practice (6 min):</strong> A miss&atilde;o da aula: o diagn&oacute;stico inteiro, sem pistas, sobre a MAPLE BEAR BRASIL &mdash; um desafio cultural real que ela viveu. N&Atilde;O interrompa, N&Atilde;O corrija no meio: anote e devolva depois, focando em (1) third conditional correto e (2) hedging em vez de acusa&ccedil;&atilde;o. CELEBRE muito no final.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Your Own <span class="accent">Case</span></h2>
@@ -1286,7 +1328,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 33: SURVIVAL CARD ========== -->
-<div class="slide slide-dark" data-slide="33" data-phase="7" data-teacher="<strong>Survival card (3 min):</strong> Leia cada frase e toque o &aacute;udio. Pe&ccedil;a que a Danielle repita. Estas cinco frases s&atilde;o o esqueleto do primeiro diagn&oacute;stico cultural dela no Canad&aacute; &mdash; ela pode literalmente us&aacute;-las na ordem em que est&atilde;o.">
+<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Survival card (3 min):</strong> Leia cada frase e toque o &aacute;udio. Pe&ccedil;a que a Danielle repita. Estas cinco frases s&atilde;o o esqueleto do primeiro diagn&oacute;stico cultural dela no Canad&aacute; &mdash; ela pode literalmente us&aacute;-las na ordem em que est&atilde;o.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Survival Card</div>
     <h2 class="slide-heading" style="color:#fff">Five Phrases for the <span class="accent">Diagnosis</span></h2>
@@ -1301,7 +1343,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 34: SELF-ASSESSMENT ========== -->
-<div class="slide slide-dark" data-slide="34" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Click each item if you feel confident.' Leia cada item. Os 5 checks marcados = aula completa e stamp 2 no passaporte (registra no Supabase).">
+<div class="slide slide-dark" data-slide="36" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Click each item if you feel confident.' Leia cada item. Os 5 checks marcados = aula completa e stamp 2 no passaporte (registra no Supabase).">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading" style="color:#fff">What I Can Do <span class="accent">Now</span></h2>
@@ -1316,7 +1358,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 35: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Diga: 'Lesson 2 complete, Danielle. You earned your Culture Badge.' HOMEWORK (ORALMENTE, nunca escrito na tela): (1) escrever um par&aacute;grafo diagn&oacute;stico de 8 a 10 frases sobre um desafio cultural real da Maple Bear Brasil, com 3 third conditionals, 2 modal perfects e 5 palavras da aula; (2) gravar 90 segundos respondendo: 'If you had been brought in as a consultant at a company with high attrition, what should leadership have done before the problem escalated?'; (3) ler os 2 primeiros par&aacute;grafos de um artigo da HBR sobre organizational culture e trazer 3 express&otilde;es novas. Pr&oacute;xima aula: Speaking Like a Senior &mdash; comunica&ccedil;&atilde;o executiva em 1:1s, OKRs e alinhamento estrat&eacute;gico.">
+<div class="slide slide-dark" data-slide="37" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Diga: 'Lesson 2 complete, Danielle. You earned your Culture Badge.' HOMEWORK (ORALMENTE, nunca escrito na tela): (1) escrever um par&aacute;grafo diagn&oacute;stico de 8 a 10 frases sobre um desafio cultural real da Maple Bear Brasil, com 3 third conditionals, 2 modal perfects e 5 palavras da aula; (2) gravar 90 segundos respondendo: 'If you had been brought in as a consultant at a company with high attrition, what should leadership have done before the problem escalated?'; (3) ler os 2 primeiros par&aacute;grafos de um artigo da HBR sobre organizational culture e trazer 3 express&otilde;es novas. Pr&oacute;xima aula: Speaking Like a Senior &mdash; comunica&ccedil;&atilde;o executiva em 1:1s, OKRs e alinhamento estrat&eacute;gico.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1438,7 +1480,7 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 35;
+var totalSlides = 37;
 var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
 
 function changeSlide(dir) {

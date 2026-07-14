@@ -88,7 +88,7 @@ for w, d, pt, ex in VOCAB:
         '        <div class="vocab-card-pc"><div class="vocab-card-content">'
         f'<div class="vocab-card-header"><span class="vocab-card-word">{w}</span>'
         f'<span class="vocab-card-dot"> -- </span>'
-        f'<span class="vocab-card-def">{d} ({pt})</span></div>'
+        f'<span class="vocab-card-def">{d}</span></div>'
         f'<div class="vocab-card-example">"{ex}"</div></div>'
         f'{speak_btn(w)}</div>'
     )
@@ -114,27 +114,27 @@ match_rows = '\n'.join(rows)
 # ---------- Stage 1.5 fill-in-the-blank ----------
 BLANKS = [
     ("Never", "have I seen",
-     "Dica: invers&#227;o &mdash; depois de Never o auxiliar vem ANTES do sujeito (ordem de pergunta)",
+     "Hint: inversion &mdash; after Never the auxiliary comes BEFORE the subject (question word order)",
      "Never have I seen a people strategy succeed without an owner in the room.",
      "a people strategy succeed without an owner in the room."),
     ("Not only", "did we redesign",
-     "Dica: depois de Not only entra DID + verbo na FORMA BASE (redesign, nunca redesigned)",
+     "Hint: after Not only you use DID + the BASE FORM of the verb (redesign, never redesigned)",
      "Not only did we redesign the performance cycle, but we also rebuilt the onboarding.",
      "the performance cycle, but we also rebuilt the onboarding."),
     ("Hardly", "had we launched",
-     "Dica: Hardly + HAD + sujeito + partic&#237;pio, e a segunda metade abre com when",
+     "Hint: Hardly + HAD + subject + past participle, and the second half opens with when",
      "Hardly had we launched the pilot when the engagement scores began to rise.",
      "the pilot when the engagement scores began to rise."),
     ("Only when the directors owned the plan", "did it start",
-     "Dica: Only when + ora&#231;&#227;o &mdash; a invers&#227;o cai na SEGUNDA metade da frase",
+     "Hint: Only when + a clause &mdash; the inversion falls in the SECOND half of the sentence",
      "Only when the directors owned the plan did it start to move.",
      "to move."),
     ("What the data", "shows us is",
-     "Dica: cleft de apresenta&#231;&#227;o &mdash; o dado antes da opini&#227;o",
+     "Hint: presentation cleft &mdash; the data first, the opinion after it",
      "What the data shows us is that one senior departure costs us eleven months of hiring.",
      "that one senior departure costs us eleven months of hiring."),
     ("I would like to", "draw your attention to",
-     "Dica: collocation de apresenta&#231;&#227;o &mdash; nunca 'call your attention for'",
+     "Hint: presentation collocation &mdash; never 'call your attention for'",
      "I would like to draw your attention to our succession coverage: two of nine critical roles.",
      "our succession coverage: two of nine critical roles."),
 ]
@@ -169,7 +169,6 @@ for phrase, pt in SPEECH:
     sp.append(
         f'      <div class="speech-card" data-phrase="{phrase}">\n'
         f'        <div class="speech-phrase">{phrase}</div>\n'
-        f'        <div class="speech-translation">{pt}</div>\n'
         f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
         f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
         f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -183,7 +182,7 @@ sv = []
 for i, (en, pt) in enumerate(SPEECH, 1):
     sv.append(
         f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-        f'<span class="sp-en">{en}</span><span class="sp-pt">{pt}</span>'
+        f'<span class="sp-en">{en}</span>'
         f'{speak_btn(en, cls="btn btn-listen", label="&#9835;")}</div>'
     )
 survival = '\n'.join(sv)
@@ -192,9 +191,9 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-4">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 04 -- Pre-class</div>
+      <div class="lesson-number">Lesson 04 -- Pre-class</div>
       <h3>Influencing Without Authority -- Presenting Your People Strategy to Canadian Leadership</h3>
-      <div class="lesson-desc">Apresentar a estrat&#233;gia de pessoas a cinco l&#237;deres canadenses que N&#195;O se reportam a voc&#234;: abrir pelo dado, responder o custo com o custo de n&#227;o fazer nada, nomear o trade-off antes que a sala o nomeie, e sair da reuni&#227;o com um dono para cada pilar. Key words: talent retention, engagement survey, performance cycle, succession planning, employer brand, people analytics, workforce planning, change management, psychological contract, diversity and inclusion, influence without authority, employee value proposition, to make a compelling case, to phase out, a double-edged sword. Structure: invers&#227;o para &#234;nfase (Never have I seen... / Not only did we..., but we also... / Hardly had we... when...) + linguagem de apresenta&#231;&#227;o executiva (What the data shows us is... / I would like to draw your attention to... / The rationale behind this approach is... / What this means in practice is...).</div>
+      <div class="lesson-desc">Presenting your people strategy to five Canadian leaders who do NOT report to you: open with the data, answer the cost objection with the cost of doing nothing, name the trade-off before the room names it, and leave the meeting with an owner for every pillar. Key words: talent retention, engagement survey, performance cycle, succession planning, employer brand, people analytics, workforce planning, change management, psychological contract, diversity and inclusion, influence without authority, employee value proposition, to make a compelling case, to phase out, a double-edged sword. Structure: inversion for emphasis (Never have I seen... / Not only did we..., but we also... / Hardly had we... when...) + executive presentation language (What the data shows us is... / I would like to draw your attention to... / The rationale behind this approach is... / What this means in practice is...).</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="4" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="4">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -203,7 +202,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-4">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada termo e leia o exemplo. Este &#233; o vocabul&#225;rio em que uma estrat&#233;gia de pessoas &#233; escrita &mdash; e o &#250;nico em que um board canadense est&#225; disposto a financiar uma.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each term and read the example. This is the vocabulary a people strategy is written in &mdash; and the only one in which a Canadian board is willing to fund it.</p>
       <div class="vocab-cards">
 {vocab_cards}
       </div>
@@ -211,7 +210,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-4">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
       <div class="match-grid" id="match-l4">
 {match_rows}
       </div>
@@ -219,48 +218,48 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-4">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         <p>When Marina Ortiz joined the Halden Group as its first Director of People and Culture, she was given a title, almost no budget, and no authority whatsoever. The five regional directors did not report to her, they had built the company, and they had never once been asked to adopt a people strategy written by somebody who had been in the building for six weeks. Her predecessor had presented a beautiful framework to the board, had watched it approved, and had watched nothing happen afterwards. The plan was never rejected. It was simply never carried by anyone. <strong>Influence without authority</strong> was not a soft skill in that room. It was the only skill available to her.</p>
         <p style="margin-top:.8rem">So Marina spent a quarter inside the numbers before she proposed anything. The <strong>engagement survey</strong> had been running for four years, and nobody had ever read it region by region. When she did, the story stopped being about culture and started being about money: one region was losing its senior teachers at three times the rate of the others, every departure was costing eleven months of hiring, and that region had not completed a <strong>performance cycle</strong> since the pandemic. <strong>Talent retention</strong>, presented as a value, had been ignored for four years. Talent retention, presented as <strong>people analytics</strong>, took eleven minutes.</p>
         <p style="margin-top:.8rem">The board adopted her strategy in a single meeting. <strong>Never had</strong> she seen a plan survive because it was right; plans survive because somebody in the room decides to carry them. So she made <strong>a compelling case</strong>, and then she named the trade-off before anyone else could. <strong>Not only did</strong> the flexible model widen the talent pool, she told them, <strong>but it also</strong> weakened the informal culture that had held the company together for twenty years. It was <strong>a double-edged sword</strong>, and she intended to manage it rather than deny it. <strong>Hardly had</strong> she finished <strong>when</strong> the regional director who had quietly killed her predecessor's framework asked to own the first pilot.</p>
       </div>
-      <div class="quiz-item"><div class="quiz-question">1. Por que a frase &#233; "Never had she seen a plan survive" e n&#227;o "Never she had seen a plan survive"?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Porque, quando a palavra de &#234;nfase (Never) vai para a frente, a frase pega emprestada a <strong>ordem de pergunta</strong>: o auxiliar vem ANTES do sujeito.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Porque &#233; uma pergunta ret&#243;rica disfar&#231;ada.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Porque o sujeito &#233; feminino e vem depois do verbo.</div></div></div>
-      <div class="quiz-item"><div class="quiz-question">2. "Not only <strong>did</strong> the flexible model <strong>widen</strong> the talent pool..." &mdash; por que <em>widen</em> e n&#227;o <em>widened</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Porque a frase est&#225; no presente.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Porque o <strong>did</strong> j&#225; carrega o passado &mdash; o verbo principal volta para a <strong>forma base</strong>, exatamente como em "Did you widen it?".</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Porque depois de "not only" o verbo nunca &#233; conjugado.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">1. Why is it "Never had she seen a plan survive" and not "Never she had seen a plan survive"?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Because, once the emphasis word (Never) moves to the front, the sentence borrows the <strong>word order of a question</strong>: the auxiliary comes BEFORE the subject.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Because it is a rhetorical question in disguise.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because the subject is feminine and therefore follows the verb.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">2. "Not only <strong>did</strong> the flexible model <strong>widen</strong> the talent pool..." &mdash; why <em>widen</em> and not <em>widened</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Because the sentence is in the present.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Because <strong>did</strong> already carries the past &mdash; the main verb goes back to its <strong>base form</strong>, exactly as in "Did you widen it?".</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because after "not only" the verb is never conjugated.</div></div></div>
       <div class="quiz-item"><div class="quiz-question">3. According to the text, why did the previous framework fail?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> The board rejected it because it was badly written.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> The board approved it, and then nobody in the room ever carried it.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> The regional directors were never shown the framework at all.</div></div></div>
       <div class="quiz-item"><div class="quiz-question">4. What made the board adopt Marina's strategy, according to the text?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Her authority over the five regional directors.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> The fact that her strategy was more correct than her predecessor's.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> She argued it with data, named the trade-off first, and somebody in the room decided to carry it.</div></div></div>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Inversion for Emphasis</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">A gram&#225;tica do peso: a palavra de &#234;nfase vai para a FRENTE da frase e o verbo auxiliar passa na frente do sujeito, como numa pergunta &mdash; mas n&#227;o &#233; pergunta, &#233; autoridade (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">The grammar of weight: the emphasis word moves to the FRONT of the sentence and the auxiliary steps ahead of the subject, exactly as it does in a question &mdash; but this is not a question, it is authority.</p>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use / Uso</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Never / Rarely / At no point<br>+ auxiliar + sujeito</td><td style="padding:.6rem">Convic&#231;&#227;o. Voc&#234; p&#245;e a sua carreira inteira atr&#225;s de uma afirma&#231;&#227;o. Conviction.</td><td style="padding:.6rem"><strong>Never have I seen</strong> a strategy succeed without an owner.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Not only + <strong>did</strong> + sujeito + verbo base<br>..., but ... also ...</td><td style="padding:.6rem">Escala. Duas conquistas num f&#244;lego s&#243;, sem virar lista. Scale.</td><td style="padding:.6rem"><strong>Not only did we redesign</strong> the cycle, <strong>but we also</strong> rebuilt the onboarding.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Hardly / Scarcely + <strong>had</strong><br>+ sujeito + partic&#237;pio + <strong>when</strong></td><td style="padding:.6rem">Velocidade. O resultado chegou antes da d&#250;vida. Speed.</td><td style="padding:.6rem"><strong>Hardly had we launched</strong> the pilot <strong>when</strong> the scores rose.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Only when / Only after<br>+ ora&#231;&#227;o + auxiliar + sujeito</td><td style="padding:.6rem">Condi&#231;&#227;o &#250;nica. S&#243; assim, e de nenhum outro jeito. The only condition.</td><td style="padding:.6rem"><strong>Only when they owned it did</strong> the plan move.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Negativa</td><td style="padding:.6rem">A pr&#243;pria invers&#227;o J&#193; &#233; a negativa &mdash; nunca acrescente "not"</td><td style="padding:.6rem"><strong>At no point was</strong> succession planning discussed. (nunca "was not")</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Interrogativa</td><td style="padding:.6rem">Invers&#227;o &#233; recurso de AFIRMA&#199;&#195;O. Em pergunta, use a ordem normal.</td><td style="padding:.6rem">Have you <strong>ever</strong> seen a plan survive without an owner?</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">Presentation language</td><td style="padding:.6rem" colspan="2"><strong>What the data shows us is...</strong> (o que os dados nos mostram &#233;...) &middot; <strong>I would like to draw your attention to...</strong> (eu gostaria de chamar a aten&#231;&#227;o de voc&#234;s para...) &middot; <strong>The rationale behind this approach is...</strong> (a raz&#227;o por tr&#225;s dessa abordagem &#233;...) &middot; <strong>What this means in practice is...</strong> (o que isso significa na pr&#225;tica &#233;...)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Never / Rarely / At no point<br>+ auxiliary + subject</td><td style="padding:.6rem">Conviction. You put your whole career behind a single statement.</td><td style="padding:.6rem"><strong>Never have I seen</strong> a strategy succeed without an owner.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Not only + <strong>did</strong> + subject + base verb<br>..., but ... also ...</td><td style="padding:.6rem">Scale. Two achievements in one breath, without turning into a list.</td><td style="padding:.6rem"><strong>Not only did we redesign</strong> the cycle, <strong>but we also</strong> rebuilt the onboarding.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Hardly / Scarcely + <strong>had</strong><br>+ subject + past participle + <strong>when</strong></td><td style="padding:.6rem">Speed. The result arrived before the doubt did.</td><td style="padding:.6rem"><strong>Hardly had we launched</strong> the pilot <strong>when</strong> the scores rose.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Only when / Only after<br>+ clause + auxiliary + subject</td><td style="padding:.6rem">The only condition. This way, and no other way.</td><td style="padding:.6rem"><strong>Only when they owned it did</strong> the plan move.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Negative</td><td style="padding:.6rem">The inversion IS the negative &mdash; never add &ldquo;not&rdquo;</td><td style="padding:.6rem"><strong>At no point was</strong> succession planning discussed. (never &ldquo;was not&rdquo;)</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Question</td><td style="padding:.6rem">Inversion is a device for STATEMENTS. In a question, keep the normal word order.</td><td style="padding:.6rem">Have you <strong>ever</strong> seen a plan survive without an owner?</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">Presentation language</td><td style="padding:.6rem" colspan="2"><strong>What the data shows us is...</strong> &middot; <strong>I would like to draw your attention to...</strong> &middot; <strong>The rationale behind this approach is...</strong> &middot; <strong>What this means in practice is...</strong></td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (o erro n&#186; 1):</strong> depois da palavra de &#234;nfase, o sujeito N&#195;O pode vir antes do auxiliar. "Never <em>I have</em> seen" est&#225; errado &mdash; o certo &#233; "Never <strong>have I</strong> seen". A frase pega a ordem da pergunta, e s&#243; a ordem: nada de ponto de interroga&#231;&#227;o.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Aten&#231;&#227;o (o erro n&#186; 2):</strong> se a frase original n&#227;o tem auxiliar, o ingl&#234;s <strong>empresta um</strong>: <em>We redesigned it</em> &rarr; "Not only <strong>did</strong> we <strong>redesign</strong> it". E o verbo principal volta &#224; forma base (redesign, nunca redesigned).</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Dosagem:</strong> invers&#227;o &#233; tempero, n&#227;o o prato. <strong>Duas ou tr&#234;s</strong> numa apresenta&#231;&#227;o de dez minutos soam a autoridade. <strong>Seis</strong> soam a teatro &mdash; e a sala p&#225;ra de ouvir o argumento para ouvir a performance.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Collocation:</strong> em ingl&#234;s &#233; <strong>make</strong> a compelling case (nunca "do a case"), <strong>draw</strong> your attention <strong>to</strong> (nunca "call your attention for"), e <strong>phase out</strong> a practice (nunca "phase off").</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (slip number one):</strong> after the emphasis word, the subject cannot come before the auxiliary. &ldquo;Never <em>I have</em> seen&rdquo; is wrong &mdash; the correct form is &ldquo;Never <strong>have I</strong> seen&rdquo;. The sentence borrows the word order of a question, and only the word order: no question mark.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Watch out (slip number two):</strong> if the original sentence has no auxiliary, English <strong>borrows one</strong>: <em>We redesigned it</em> &rarr; &ldquo;Not only <strong>did</strong> we <strong>redesign</strong> it&rdquo;. And the main verb goes back to its base form (redesign, never redesigned).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Dosage:</strong> inversion is the seasoning, not the dish. <strong>Two or three</strong> of them in a ten-minute presentation sound like authority. <strong>Six</strong> sound like theater &mdash; and the room stops listening to the argument in order to watch the performance.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Collocation:</strong> it is <strong>make</strong> a compelling case (never &ldquo;do a case&rdquo;), <strong>draw</strong> your attention <strong>to</strong> (never &ldquo;call your attention for&rdquo;), and <strong>phase out</strong> a practice (never &ldquo;phase off&rdquo;).</p>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a forma correta. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct form. Tap Listen to hear the full sentence.</p>
 {fill_items}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the Board Presentation in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque os cinco movimentos da apresenta&#231;&#227;o na ordem em que voc&#234; vai conduzi-la diante da lideran&#231;a canadense.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the five moves of the presentation in the order in which you will run it in front of the Canadian leadership.</p>
       <div class="order-container" id="order-l4">
         <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l4')"><span class="order-num">?</span><span class="order-text">Name the trade-off yourself, before the room does: it is a double-edged sword, and here is how I manage it.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l4')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l4')">&#9660;</button></span></div>
         <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l4')"><span class="order-num">?</span><span class="order-text">Open with the data, never with the belief: what the data shows us is that one senior departure costs eleven months of hiring.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l4')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l4')">&#9660;</button></span></div>
@@ -273,13 +272,13 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-4">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesma dizendo-a. S&#227;o as cinco frases da sua apresenta&#231;&#227;o de 1&#186; de agosto, na ordem em que voc&#234; vai dizer.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. These are the five sentences of your August first presentation, in the order you will say them.</p>
 {speech_cards}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real da sua apresenta&#231;&#227;o ao board canadense.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best answer for each real moment of your presentation to the Canadian board.</p>
       <div class="quiz-item"><div class="quiz-question">You have one slide and a board that only wants to talk about cost. How do you open?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "People are our greatest asset, and I believe culture is what makes this company different."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "What the data shows us is that one senior departure costs us eleven months of hiring, and we have had four this year."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I would like to start by thanking everyone for the opportunity to be here today."</div></div></div>
       <div class="quiz-item"><div class="quiz-question">The CFO says retention is a problem for a good year, not for a year of budget cuts. The most senior answer is:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> "I would not argue with the budget. Not only did our last two departures cost us eleven months of hiring, but they also took the succession plan with them &mdash; that is the cost of doing nothing."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "I understand. Perhaps we can revisit the people strategy next year, then."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "But retention is about our values, and our values cannot have a budget line."</div></div></div>
       <div class="quiz-item"><div class="quiz-question">Which sentence uses inversion correctly?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "Not only we redesigned the performance cycle, but we also rebuilt the onboarding."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "Never I have seen a people strategy succeed without an owner."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> "Hardly had we launched the pilot when the engagement scores began to rise."</div></div></div>
@@ -289,7 +288,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-4">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesma respondendo &#224; pergunta abaixo. Fale por 2 a 3 minutos, sem script.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. Speak for two or three minutes, with no script.</p>
       <div class="think-card">
         <div class="think-question">It is August first. You are presenting your People &amp; Culture strategy for Maple Bear Canada to five leaders, and not one of them reports to you. Open with what the data shows, draw their attention to the gap, answer the cost objection with the cost of doing nothing, name one trade-off before they do, and close by asking each of them to own something. Use at least two inversions and six words from this lesson.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

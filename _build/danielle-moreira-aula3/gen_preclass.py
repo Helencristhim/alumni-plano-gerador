@@ -88,7 +88,7 @@ for w, d, pt, ex in VOCAB:
         '        <div class="vocab-card-pc"><div class="vocab-card-content">'
         f'<div class="vocab-card-header"><span class="vocab-card-word">{w}</span>'
         f'<span class="vocab-card-dot"> -- </span>'
-        f'<span class="vocab-card-def">{d} ({pt})</span></div>'
+        f'<span class="vocab-card-def">{d}</span></div>'
         f'<div class="vocab-card-example">"{ex}"</div></div>'
         f'{speak_btn(w)}</div>'
     )
@@ -114,27 +114,27 @@ match_rows = '\n'.join(rows)
 # ---------- Stage 1.5 fill-in-the-blank ----------
 BLANKS = [
     ("If we had shipped the deliverable in the first quarter, we", "would be measuring",
-     "Dica: o resultado &#233; AGORA &mdash; would + verbo (nunca would have been)",
+     "Hint: the result is NOW &mdash; would + verb (never would have been)",
      "If we had shipped the deliverable in the first quarter, we would be measuring engagement right now.",
      "engagement right now."),
     ("If the goals", "had cascaded",
-     "Dica: metade do IF, no passado &mdash; had + partic&#237;pio",
+     "Hint: the IF half, in the past &mdash; had + past participle",
      "If the goals had cascaded last year, every academic team would have its own OKR today.",
      "last year, every academic team would have its own OKR today."),
     ("If I", "were not",
-     "Dica: condi&#231;&#227;o do PRESENTE, registro formal &mdash; were (nunca was, nunca would be)",
+     "Hint: a PRESENT condition, formal register &mdash; were (never was, never would be)",
      "If I were not leading two countries, I would have delivered the diagnostic in July.",
      "leading two countries, I would have delivered the diagnostic in July."),
     ("If the group had more bandwidth, they", "would have hit",
-     "Dica: o resultado ficou no PASSADO &mdash; would have + partic&#237;pio",
+     "Hint: the result stayed in the PAST &mdash; would have + past participle",
      "If the group had more bandwidth, they would have hit the milestone in June.",
      "the milestone in June."),
     ("If someone", "had owned",
-     "Dica: a causa est&#225; no passado, o custo &#233; hoje &mdash; had + partic&#237;pio",
+     "Hint: the cause is in the past, the cost is today &mdash; had + past participle",
      "If someone had owned that deliverable, we would not be having this conversation today.",
      "that deliverable, we would not be having this conversation today."),
     ("What I would like to", "put forward",
-     "Dica: propor formalmente &mdash; phrasal verb da aula",
+     "Hint: to formally offer an idea so a group can decide on it &mdash; a phrasal verb from this lesson",
      "What I would like to put forward is one owner, one milestone and one date.",
      "is one owner, one milestone and one date."),
 ]
@@ -169,7 +169,6 @@ for phrase, pt in SPEECH:
     sp.append(
         f'      <div class="speech-card" data-phrase="{phrase}">\n'
         f'        <div class="speech-phrase">{phrase}</div>\n'
-        f'        <div class="speech-translation">{pt}</div>\n'
         f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
         f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
         f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -183,7 +182,7 @@ sv = []
 for i, (en, pt) in enumerate(SPEECH, 1):
     sv.append(
         f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-        f'<span class="sp-en">{en}</span><span class="sp-pt">{pt}</span>'
+        f'<span class="sp-en">{en}</span>'
         f'{speak_btn(en, cls="btn btn-listen", label="&#9835;")}</div>'
     )
 survival = '\n'.join(sv)
@@ -192,9 +191,9 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-3">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 03 -- Pre-class</div>
+      <div class="lesson-number">Lesson 03 -- Pre-class</div>
       <h3>Speaking Like a Senior -- Executive Communication in 1:1s, OKRs and Strategic Alignment</h3>
-      <div class="lesson-desc">Conduzir um 1:1, ler um painel de OKR e liderar uma reuni&#227;o de alinhamento estrat&#233;gico em ingl&#234;s: abrir pelo n&#250;mero, propor, discordar de um superior e fechar com um respons&#225;vel e uma data. Key words: OKR, key performance indicator, cascading goals, deliverable, milestone, accountability, cross-functional, bandwidth, buy-in, to put forward, to push back, to move the needle, to cut to the chase, to bring about, to circle back to. Structure: mixed conditionals (causa no passado com custo hoje / condi&#231;&#227;o do presente com resultado no passado) + discourse markers executivos (Building on that... / My take on this is... / What I would like to propose is...).</div>
+      <div class="lesson-desc">Run a 1:1, read an OKR dashboard and lead a strategic alignment meeting in English: open with the number, put a proposal forward, disagree with a senior leader and close with one owner and one date. Key words: OKR, key performance indicator, cascading goals, deliverable, milestone, accountability, cross-functional, bandwidth, buy-in, to put forward, to push back, to move the needle, to cut to the chase, to bring about, to circle back to. Structure: mixed conditionals (a past cause with a cost today / a present condition with a past result) + executive discourse markers (Building on that... / My take on this is... / What I would like to propose is...).</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="3" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="3">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -203,7 +202,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-3">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada termo e leia o exemplo. Este &#233; o vocabul&#225;rio que os seus pares canadenses j&#225; usam todos os dias &mdash; o que separa quem relata a reuni&#227;o de quem conduz a reuni&#227;o.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each term and read the example. This is the vocabulary your Canadian peers already use every day &mdash; what separates the person who reports the meeting from the person who runs it.</p>
       <div class="vocab-cards">
 {vocab_cards}
       </div>
@@ -211,7 +210,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-3">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
       <div class="match-grid" id="match-l3">
 {match_rows}
       </div>
@@ -219,46 +218,46 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-3">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         <p>It is the last week of the quarter at Maple Bear Canada, and the <strong>OKR</strong> dashboard is not kind. Two of the four objectives are off track. The onboarding <strong>deliverable</strong> slipped by six weeks; the <strong>cross-functional</strong> group that was supposed to own it has met exactly twice; and the engagement <strong>key performance indicator</strong> is still marked as not measured, because there is nothing live to measure. <strong>If</strong> someone <strong>had owned</strong> that deliverable in the first quarter, the team <strong>would not be having</strong> this conversation today. <strong>If</strong> the goals <strong>had cascaded</strong> across the nine academic teams last year, every one of them <strong>would have</strong> its own version of the objective right now, instead of nine different interpretations of it.</p>
         <p style="margin-top:.8rem">The directors blame <strong>bandwidth</strong>. Claire, the VP, does not. Her reading is colder and more useful: nobody owns the date, so nobody carries the <strong>accountability</strong> for it, and a <strong>milestone</strong> without an owner is a wish with a calendar. What she wants on Monday is not a status report. She wants the one milestone that would actually <strong>move the needle</strong>, and a proposal to reach it. And she wants Danielle to <strong>push back</strong> on her if the target itself is wrong &mdash; because half the leadership team agrees with everything she says, and that is not accountability. That is silence with good manners. <strong>If</strong> Claire <strong>were not</strong> the kind of leader who asks to be contradicted, she <strong>would have lost</strong> this team a long time ago.</p>
         <p style="margin-top:.8rem">So Danielle opens with the number, not the story. She <strong>cuts to the chase</strong>: two of four, six weeks late, no owner. Then she <strong>puts forward</strong> one owner, one milestone and one date &mdash; September fifteenth. The academic directors will resist, and she wants them to resist in the room rather than after it, because their <strong>buy-in</strong> is not a nice-to-have: it is the deliverable itself. That single change, she argues, is what would <strong>bring about</strong> real accountability. Before she closes, she <strong>circles back to</strong> the engagement number, and names the week it will finally be measured.</p>
       </div>
-      <div class="quiz-item"><div class="quiz-question">1. Por que a frase "If someone had owned that deliverable, we would not be having this conversation today" usa <em>would not be having</em> e n&#227;o <em>would not have had</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Porque a causa est&#225; no passado, mas o resultado &#233; <strong>agora</strong> &mdash; e resultado no presente pede <strong>would + verbo</strong>, nunca <em>would have</em>.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Porque as duas metades da frase est&#227;o no passado.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Porque a conversa ainda pode acontecer no futuro.</div></div></div>
-      <div class="quiz-item"><div class="quiz-question">2. "If Claire were not the kind of leader who asks to be contradicted, she would have lost this team a long time ago." Que dire&#231;&#227;o &#233; essa?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Causa no passado, resultado no presente.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Condi&#231;&#227;o do <strong>presente</strong> (ela &#233; assim, permanentemente) com resultado no <strong>passado</strong> &mdash; por isso <em>were</em> + <em>would have lost</em>.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Uma condi&#231;&#227;o real sobre o futuro.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">1. Why does "If someone had owned that deliverable, we would not be having this conversation today" use <em>would not be having</em> and not <em>would not have had</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Because the cause is in the past, but the result is <strong>now</strong> &mdash; and a present result takes <strong>would + verb</strong>, never <em>would have</em>.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Because both halves of the sentence are in the past.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because the conversation can still happen in the future.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">2. "If Claire were not the kind of leader who asks to be contradicted, she would have lost this team a long time ago." Which direction is this?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> A past cause with a present result.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> A <strong>present</strong> condition (this is how she is, permanently) with a <strong>past</strong> result &mdash; hence <em>were</em> + <em>would have lost</em>.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> A real condition about the future.</div></div></div>
       <div class="quiz-item"><div class="quiz-question">3. According to the text, what is the real reason the onboarding deliverable is late?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> The cross-functional group does not have the bandwidth to do the work.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Nobody owns the date, so nobody carries the accountability for it.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> The engagement KPI was measured too late in the quarter.</div></div></div>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Mixed Conditionals</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">A gram&#225;tica da comunica&#231;&#227;o executiva: as duas metades da frase ficam em <strong>tempos diferentes</strong>, porque a decis&#227;o est&#225; num tempo e o custo est&#225; em outro (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">The grammar of executive communication: the two halves of the sentence sit in <strong>different tenses</strong>, because the decision belongs to one time and the cost belongs to another.</p>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use / Uso</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Dire&#231;&#227;o 1 &mdash; condi&#231;&#227;o<br>if + had + partic&#237;pio</td><td style="padding:.6rem">A decis&#227;o que N&#195;O foi tomada, no passado. The past cause.</td><td style="padding:.6rem"><strong>If</strong> we <strong>had shipped</strong> it in Q1...</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Dire&#231;&#227;o 1 &mdash; resultado<br>would + verbo (base)</td><td style="padding:.6rem">O custo que voc&#234; sente <strong>hoje</strong>. The present result.</td><td style="padding:.6rem">...we <strong>would be measuring</strong> engagement right now.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Dire&#231;&#227;o 2 &mdash; condi&#231;&#227;o<br>if + past simple / <strong>were</strong></td><td style="padding:.6rem">Um limite permanente do presente. The present cause.</td><td style="padding:.6rem"><strong>If</strong> I <strong>were not</strong> leading two countries...</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Dire&#231;&#227;o 2 &mdash; resultado<br>would have + partic&#237;pio</td><td style="padding:.6rem">A consequ&#234;ncia j&#225; encerrada, no passado. The past result.</td><td style="padding:.6rem">...I <strong>would have delivered</strong> the diagnostic in July.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Negativa</td><td style="padding:.6rem">had <strong>not</strong> + partic&#237;pio / would <strong>not</strong> be + -ing</td><td style="padding:.6rem">If nobody <strong>had owned</strong> it, we <strong>wouldn't be</strong> here today.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Interrogativa</td><td style="padding:.6rem">Where + would + sujeito + be + -ing + if...?</td><td style="padding:.6rem"><strong>Where would we be</strong> today if we had shipped it in Q1?</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">Discourse markers</td><td style="padding:.6rem" colspan="2"><strong>Building on that...</strong> (partindo disso...) &middot; <strong>My take on this is...</strong> (a minha leitura &#233;...) &middot; <strong>What I would like to propose is...</strong> (o que eu gostaria de propor &#233;...) &middot; <strong>To circle back to...</strong> (retomando...)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Direction 1 &mdash; condition<br>if + had + past participle</td><td style="padding:.6rem">The decision that was NOT taken, back in the past. The past cause.</td><td style="padding:.6rem"><strong>If</strong> we <strong>had shipped</strong> it in Q1...</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Direction 1 &mdash; result<br>would + base verb</td><td style="padding:.6rem">The cost you feel <strong>today</strong>. The present result.</td><td style="padding:.6rem">...we <strong>would be measuring</strong> engagement right now.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Direction 2 &mdash; condition<br>if + past simple / <strong>were</strong></td><td style="padding:.6rem">A permanent limit of the present. The present cause.</td><td style="padding:.6rem"><strong>If</strong> I <strong>were not</strong> leading two countries...</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Direction 2 &mdash; result<br>would have + past participle</td><td style="padding:.6rem">The consequence that is already closed, in the past. The past result.</td><td style="padding:.6rem">...I <strong>would have delivered</strong> the diagnostic in July.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Negative</td><td style="padding:.6rem">had <strong>not</strong> + past participle / would <strong>not</strong> be + -ing</td><td style="padding:.6rem">If nobody <strong>had owned</strong> it, we <strong>wouldn't be</strong> here today.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Question</td><td style="padding:.6rem">Where + would + subject + be + -ing + if...?</td><td style="padding:.6rem"><strong>Where would we be</strong> today if we had shipped it in Q1?</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">Discourse markers</td><td style="padding:.6rem" colspan="2"><strong>Building on that...</strong> (add to what was just said) &middot; <strong>My take on this is...</strong> (give your own reading) &middot; <strong>What I would like to propose is...</strong> (open a proposal) &middot; <strong>To circle back to...</strong> (return to an open point)</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (o erro do misto):</strong> se o resultado est&#225; acontecendo <strong>agora</strong>, o resultado &#233; <strong>would be</strong> &mdash; nunca "would have been". "If we had launched in Q1, we <em>would have been</em> hitting our KPI now" est&#225; errado; o certo &#233; "we <strong>would be</strong> hitting our KPI now".</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Aten&#231;&#227;o (o erro de sempre):</strong> o <em>would</em> <strong>NUNCA</strong> entra na metade do <em>if</em>. "If I <em>would be</em> less busy" est&#225; errado &mdash; o certo &#233; "If I <strong>were</strong> less busy". E no registro formal &#233; sempre <strong>if I were</strong>, nunca "if I was".</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Collocation:</strong> em ingl&#234;s &#233; <strong>align on</strong> priorities (nunca "align in"), <strong>reach</strong> a milestone (nunca "make a milestone"), e <strong>explain</strong> something <strong>to</strong> someone (nunca "explain me the OKR").</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (the mixed-conditional slip):</strong> if the result is happening <strong>now</strong>, the result half is <strong>would be</strong> &mdash; never "would have been". "If we had launched in Q1, we <em>would have been</em> hitting our KPI now" is wrong; the correct form is "we <strong>would be</strong> hitting our KPI now".</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Watch out (the classic slip):</strong> <em>would</em> <strong>NEVER</strong> goes into the <em>if</em> half. "If I <em>would be</em> less busy" is wrong &mdash; the correct form is "If I <strong>were</strong> less busy". And in formal register it is always <strong>if I were</strong>, never "if I was".</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Collocation:</strong> in English it is <strong>align on</strong> priorities (never "align in"), <strong>reach</strong> a milestone (never "make a milestone"), and <strong>explain</strong> something <strong>to</strong> someone (never "explain me the OKR").</p>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a forma correta. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct form. Tap Listen to hear the full sentence.</p>
 {fill_items}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the 1:1 in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque os cinco movimentos de um 1:1 executivo na ordem em que voc&#234; vai conduzi-lo no Canad&#225;.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the five moves of an executive 1:1 in the order you will run them in Canada.</p>
       <div class="order-container" id="order-l3">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l3')"><span class="order-num">?</span><span class="order-text">Put forward one owner, one milestone and one date.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l3')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l3')">&#9660;</button></span></div>
         <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l3')"><span class="order-num">?</span><span class="order-text">Cut to the chase: open with the number, not with the story.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l3')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l3')">&#9660;</button></span></div>
@@ -271,13 +270,13 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-3">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesma dizendo-a. S&#227;o as cinco frases do seu primeiro 1:1 com cada l&#237;der canadense.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. These are the five sentences of your first 1:1 with each Canadian leader.</p>
 {speech_cards}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real do seu primeiro 1:1 e da reuni&#227;o de alinhamento estrat&#233;gico.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best answer for each real moment of your first 1:1 and of the strategic alignment meeting.</p>
       <div class="quiz-item"><div class="quiz-question">Nathan opens the 1:1 with: "Quick sync. Where are we on the onboarding milestone?" You say:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "Well, it is a long story. In March the group was formed, and then we had some issues with the schedule, and after that..."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "Let me cut to the chase: it slipped six weeks, nobody owns the date, and I have a proposal."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "Sorry, we are a bit late with that one. I will send you an update by email."</div></div></div>
       <div class="quiz-item"><div class="quiz-question">You want to say that a decision from Q1 is still costing the company today. Which sentence is correct?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "If we had shipped it in Q1, we would have been measuring engagement now."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "If we had shipped it in Q1, we would be measuring engagement right now."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "If we would have shipped it in Q1, we would be measuring engagement right now."</div></div></div>
       <div class="quiz-item"><div class="quiz-question">Claire, the VP, says September is unrealistic and asks for December. You disagree. The most senior answer is:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "You are wrong. December makes no sense at all."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "Okay, December is fine. I will adjust the plan."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> "Building on that, my take on this is different: if we moved it to December, we would lose the buy-in we already have &mdash; and here is the number behind that."</div></div></div>
@@ -287,7 +286,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-3">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesma respondendo &#224; pergunta abaixo. Fale por 2 a 3 minutos, sem script.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. Speak for two or three minutes, with no script.</p>
       <div class="think-card">
         <div class="think-question">You are opening the strategic alignment meeting with the Canadian leadership on August 1st. Three items: where the culture initiative stands, the onboarding milestone, and your proposal for the diagnostic with the academic team. Open with the number, put forward one owner and one date, and say what the delay is costing you today. Use at least two mixed conditionals and five words from this lesson.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

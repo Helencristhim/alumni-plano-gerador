@@ -158,12 +158,18 @@ def insert(hub_path, cfg, content_dir, is_aluno):
     # 3. card IN CLASS — antes de fechar a lista de cards do menu.
     #    Só o hub do PROFESSOR tem a aba IN CLASS (aluno = 2 abas, REGRA 3):
     #    no aluno a âncora não existe e o card é (corretamente) pulado.
+    #    A âncora é a CLASSE/ID da aba (id="tab-inclass"), NUNCA o TEXTO do título:
+    #    o título é PROSA e mudou ("Selecione a Aula" -> "Select your Lesson", REGRA 13),
+    #    o que fazia esta busca falhar EM SILÊNCIO e o card do menu sumir do hub.
     if f'{slug}-aula{n}.html' not in s.split('<!-- ========== TAB 4')[0]:
-        mlist = re.search(r'(IN CLASS -- Selecione a Aula.*?)(\n\s*</div>\s*</div>\s*\n\s*<!-- ========== TAB 4)',
+        mlist = re.search(r'(id="tab-inclass".*?)(\n\s*</div>\s*</div>\s*\n\s*<!-- ========== TAB 4)',
                           s, flags=re.S)
         if mlist:
             inject_at = mlist.start(2)
             s = s[:inject_at] + '\n' + card + s[inject_at:]
+        elif not is_aluno:
+            raise AssertionError(f'{os.path.basename(hub_path)}: aba IN CLASS nao encontrada — '
+                                 'card do menu NAO foi inserido (ancora id="tab-inclass")')
 
     # 4. Complementares lN- — antes de </div><!-- /tab-complementary -->
     comp = B.normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg).strip()
@@ -177,6 +183,7 @@ def insert(hub_path, cfg, content_dir, is_aluno):
     s = re.sub(r'var totalLessons\s*=\s*\d+', f'var totalLessons={n}', s)
 
     assert f'id="ex-lesson-{n}"' in s and f'id="stamp{n}"' in s and f'data-media="l{n}-' in s
+    assert is_aluno or f'{slug}-aula{n}.html' in s, f'card do menu IN CLASS ausente no hub prof (aula {n})'
     write(hub_path, s)
 
 
