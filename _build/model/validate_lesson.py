@@ -674,6 +674,24 @@ def validate(path):
     if emojis:
         warns.append(f'{len(emojis)} possível(is) emoji(s) na tela: {" ".join(sorted(set(emojis))[:8])} (REGRA: SVG)')
 
+    # HEADER EM PORTUGUÊS (REGRA 13). O <p class="subtitle"> e o <title> são TELA: o subtitle
+    # aparece no header que o aluno lê (A2+ = ZERO português) e que o professor compartilha no
+    # Zoom. "Aula 6 -- ..." é português e passava BATIDO pelo gate de idioma — que (a) só varre
+    # o Pre-class do hub, nunca o header do standalone, e (b) caça ACENTO, e "Aula" não tem.
+    # Ancora na ESTRUTURA (a classe .subtitle e a tag <title>), não em heurística de acento.
+    # O certo é INGLÊS: "Lesson 6 -- ...". O "Aula N" português continua legítimo onde é do
+    # PROFESSOR (aba Planejamento, data-teacher) — que NÃO casa este seletor. O padrão
+    # \bAula\s+\d (palavra INTEIRA + número) não colide com nenhuma palavra inglesa.
+    AULA_HEADER_RE = re.compile(r'\bAula\s+\d')
+    sub_m = re.search(r'<p class="subtitle">([^<]*)</p>', c)
+    if sub_m and AULA_HEADER_RE.search(sub_m.group(1)):
+        fails.append(f'HEADER em português: subtitle "{sub_m.group(1)[:50]}" traz "Aula N" — '
+                     f'é TELA (A2+ = zero PT), usar "Lesson N" em inglês (REGRA 13)')
+    ttl_m = re.search(r'<title>([^<]*)</title>', c)
+    if ttl_m and AULA_HEADER_RE.search(ttl_m.group(1)):
+        fails.append(f'HEADER em português: <title> "{ttl_m.group(1)[:60]}" traz "Aula N" — '
+                     f'usar "Lesson N" em inglês (REGRA 13)')
+
     if not is_aluno:
         tabs = set(re.findall(r"switchTab\('(planning|exercises|inclass|complementary)'\)", c))
         miss = {'planning', 'exercises', 'inclass', 'complementary'} - tabs
