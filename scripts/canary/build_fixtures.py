@@ -37,6 +37,14 @@ def defeito_sentence_sem_css(html):
         '.oral-item{cursor:pointer}',   # sobra sem background/border/padding
         html, count=1)
 
+def defeito_header_portugues(html):
+    # devolve "Aula N" ao subtitle e ao <title> (o PT no header que o gate #1316
+    # trava). A heuristica de acento NAO pega "Aula" — por isso o gate ancora na
+    # estrutura (.subtitle / <title>), e o canario prova que ele ainda ancora.
+    h = re.sub(r'(<p class="subtitle"[^>]*>)\s*Lesson(\s+\d)', r'\1Aula\2', html, count=1)
+    h = re.sub(r'(<title>[^<]*?)Lesson(\s+\d)', r'\1Aula\2', h, count=1)
+    return h
+
 def defeito_gabarito_no_reveal(html):
     # faz TODA regra .oral-model que esconde (display:none) passar a mostrar
     # (display:block) — o gabarito vaza. Precisa pegar TODAS: o arquivo tem varias
@@ -52,6 +60,7 @@ DEFEITOS = [
     ('pergunta-escondida.html', defeito_pergunta_escondida, 'PERGUNTA ESCONDIDA'),
     ('sentence-sem-css.html',   defeito_sentence_sem_css,   'SEM ESTILO-BASE'),
     ('gabarito-vazado.html',    defeito_gabarito_no_reveal, 'VAZA o gabarito'),
+    ('header-portugues.html',   defeito_header_portugues,   'HEADER em português'),
 ]
 
 
