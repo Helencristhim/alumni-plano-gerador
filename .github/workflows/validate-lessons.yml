@@ -10,6 +10,14 @@ on:
     paths:
       - 'public/professor/**.html'
       - 'public/aluno/**.html'
+      # O estrago que mais dói NÃO chega por um arquivo de aula: chega pelo BUILDER e
+      # pelo MODELO, que reescrevem centenas de aulas de uma vez. Sem estes paths, um PR
+      # que mexe só no _build/ ou no scripts/ não acionava gate NENHUM — foi assim que o
+      # snake() não-injetivo (2 frases -> 1 mp3) viveu meses. O GATE 8 varre o repo
+      # inteiro, então é aqui que ele ganha os dentes.
+      - '_build/**'
+      - 'scripts/**'
+      - '.github/workflows/validate-lessons.yml'
 
 jobs:
   gates:
