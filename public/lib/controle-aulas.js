@@ -295,6 +295,16 @@
     }
   }
 
+  // ── Tab irmã: "Resumos das Aulas" ──
+  // Carregada daqui de propósito: os 139 hubs já publicados incluem controle-aulas.js, então
+  // a tab nova chega em todos sem editar nenhum HTML de aluno (REGRA 30 — o legado é intocável).
+  // Novos hubs herdam pelo mesmo caminho; o guard __RESUMOS_AULA_LOADED evita carga dupla.
+  if (!window.__RESUMOS_AULA_LOADED && !document.querySelector('script[src="/lib/resumos-aula.js"]')) {
+    var resumosScript = document.createElement('script');
+    resumosScript.src = '/lib/resumos-aula.js';
+    document.body.appendChild(resumosScript);
+  }
+
   // ── Helpers ──
   function escHTML(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
   function escAttrHTML(s) { return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
