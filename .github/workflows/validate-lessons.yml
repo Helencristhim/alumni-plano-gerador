@@ -29,13 +29,52 @@ jobs:
 
       - name: Classifica arquivos de aula do PR
         id: files
+        # ╔══════════════════════════════════════════════════════════════════════╗
+        # ║ ESTE PASSO JA FALHOU EM SILENCIO — e levou os GATES 1-7 junto.       ║
+        # ╚══════════════════════════════════════════════════════════════════════╝
+        # O `git fetch --depth=1` deixava origin/main SEM HISTORICO. O `A...B` do git
+        # precisa de merge base, nao achava, e morria:
+        #
+        #     fatal: origin/main...HEAD: no merge base
+        #
+        # So que o erro era ENGOLIDO pelo `| tr`: o exit code de um pipeline e o do
+        # ULTIMO comando, e o tr sempre sai 0. Resultado: passo VERDE, listas VAZIAS,
+        # e os sete gates seguintes saindo `skipped`. Meses de PRs de aula entraram no
+        # main sem UM gate rodar — com o check verde do lado. Gate que falha em silencio
+        # e pior que gate nenhum: da a sensacao de protecao sem proteger.
+        #
+        # Tres travas agora:
+        #   1. fetch COMPLETO do base ref (sem --depth), pra existir merge base;
+        #   2. `set -euo pipefail`, pra que erro em pipeline NAO seja mais engolido;
+        #   3. checagem explicita: se o PR toca HTML de aula e a classificacao sai
+        #      vazia, o passo FALHA em vez de passar verde sem checar nada.
         run: |
-          git fetch origin ${{ github.base_ref }} --depth=1
-          BASE="origin/${{ github.base_ref }}"
+          set -euo pipefail
+          BASE_REF="${{ github.base_ref }}"
+          BASE="origin/$BASE_REF"
+
+          git fetch --no-tags --prune origin "+refs/heads/$BASE_REF:refs/remotes/origin/$BASE_REF"
+
+          if ! git merge-base "$BASE" HEAD >/dev/null 2>&1; then
+            echo "::error::Sem merge base entre $BASE e HEAD — impossivel classificar os arquivos do PR."
+            echo "::error::Os gates NAO podem rodar. Falhando de proposito, em vez de passar verde sem checar."
+            exit 1
+          fi
+
           ADDED=$(git diff --name-only --diff-filter=A "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
           MODIFIED=$(git diff --name-only --diff-filter=M "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
+          TOCADOS=$(git diff --name-only "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | wc -l)
+
+          # Anti-skip-silencioso: HTML de aula no diff, mas classificacao vazia = bug aqui.
+          if [ "$TOCADOS" -gt 0 ] && [ -z "${ADDED// }${MODIFIED// }" ]; then
+            echo "::error::$TOCADOS arquivo(s) de aula no diff, mas a classificacao saiu VAZIA."
+            echo "::error::Isso significa que os GATES 1-7 seriam pulados. Falhando de proposito."
+            exit 1
+          fi
+
           echo "added=$ADDED" >> "$GITHUB_OUTPUT"
           echo "modified=$MODIFIED" >> "$GITHUB_OUTPUT"
+          echo "Arquivos de aula tocados: $TOCADOS"
           echo "Novos: $ADDED"
           echo "Modificados: $MODIFIED"
 
