@@ -88,7 +88,7 @@ for w, d, pt, ex in VOCAB:
         '        <div class="vocab-card-pc"><div class="vocab-card-content">'
         f'<div class="vocab-card-header"><span class="vocab-card-word">{w}</span>'
         f'<span class="vocab-card-dot"> -- </span>'
-        f'<span class="vocab-card-def">{d} ({pt})</span></div>'
+        f'<span class="vocab-card-def">{d}</span></div>'
         f'<div class="vocab-card-example">"{ex}"</div></div>'
         f'{speak_btn(w)}</div>'
     )
@@ -114,27 +114,27 @@ match_rows = '\n'.join(rows)
 # ---------- Stage 1.5 fill-in-the-blank ----------
 BLANKS = [
     ("We had the questionnaire", "designed",
-     "Dica: causativa passiva &mdash; have + OBJETO + particípio. O particípio vem DEPOIS do objeto",
+     "Hint: causative passive &mdash; have + OBJECT + past participle. The participle comes AFTER the object",
      "We had the questionnaire designed by an external specialist.",
      "by an external specialist."),
     ("I am", "having",
-     "Dica: a causativa tamb&#233;m vive no cont&#237;nuo &mdash; I am HAVING the focus groups facilitated",
+     "Hint: the causative works in the continuous too &mdash; I am HAVING the focus groups facilitated",
      "I am having the focus groups facilitated in-house.",
      "the focus groups facilitated in-house."),
     ("Our goal is to have the baseline", "completed",
-     "Dica: o padr&#227;o de prazo &mdash; to have + X + COMPLETED by + data",
+     "Hint: the deadline pattern &mdash; to have + X + COMPLETED by + a date",
      "Our goal is to have the baseline completed before we change anything.",
      "before we change anything."),
     ("I had Marc", "review",
-     "Dica: have + PESSOA + verbo na forma base. NUNCA 'to review'",
+     "Hint: have + PERSON + the base form of the verb. Never 'to review'",
      "I had Marc review the questions before they went out.",
      "the questions before they went out."),
     ("The data would", "suggest that",
-     "Dica: hedging de leitura de dado &mdash; the data would SUGGEST THAT (nunca 'the data suggests strongly')",
+     "Hint: hedging on a data reading &mdash; the data would SUGGEST THAT (never 'the data suggests strongly')",
      "The data would suggest that the response rate is itself the first finding.",
      "the response rate is itself the first finding."),
     ("Attrition is not a", "root cause",
-     "Dica: o sintoma n&#227;o &#233; a causa &mdash; e a express&#227;o &#233; sempre no singular aqui",
+     "Hint: the symptom is not the cause &mdash; and the expression stays singular here",
      "Attrition is not a root cause. It is what a root cause looks like nine months later.",
      ". It is what a root cause looks like nine months later."),
 ]
@@ -169,7 +169,6 @@ for phrase, pt in SPEECH:
     sp.append(
         f'      <div class="speech-card" data-phrase="{phrase}">\n'
         f'        <div class="speech-phrase">{phrase}</div>\n'
-        f'        <div class="speech-translation">{pt}</div>\n'
         f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
         f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
         f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -183,7 +182,7 @@ sv = []
 for i, (en, pt) in enumerate(SPEECH, 1):
     sv.append(
         f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-        f'<span class="sp-en">{en}</span><span class="sp-pt">{pt}</span>'
+        f'<span class="sp-en">{en}</span>'
         f'{speak_btn(en, cls="btn btn-listen", label="&#9835;")}</div>'
     )
 survival = '\n'.join(sv)
@@ -192,9 +191,9 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-6">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 06 -- Pre-class</div>
+      <div class="lesson-number">Lesson 06 -- Pre-class</div>
       <h3>Diagnosing Culture -- Running a Cultural Assessment with the Canadian Team</h3>
-      <div class="lesson-desc">Conduzir a avalia&#231;&#227;o cultural com o time canadense &mdash; e defender o instrumento diante de uma sala que j&#225; foi pesquisada uma vez e nunca soube o resultado: escolher a ferramenta, medir a linha de base antes de mudar qualquer coisa, e devolver os achados. Key words: cultural assessment, diagnostic tool, baseline, response rate, focus group, trust index, root cause, gap analysis, findings, benchmark, to run a diagnostic, to gather insights, to surface an issue, to come up with, to open a can of worms. Structure: causative passive (We had the questionnaire designed by... / I am having the focus groups facilitated... / Our goal is to have the baseline completed by...) + hedging de dado (The data would suggest that... / To some extent, the findings indicate...).</div>
+      <div class="lesson-desc">Running the cultural assessment with the Canadian team &mdash; and defending the instrument in front of a room that was surveyed once and never told the outcome: choose the tool, take the baseline before you change anything, and read the findings back. Key words: cultural assessment, diagnostic tool, baseline, response rate, focus group, trust index, root cause, gap analysis, findings, benchmark, to run a diagnostic, to gather insights, to surface an issue, to come up with, to open a can of worms. Structure: causative passive (We had the questionnaire designed by... / I am having the focus groups facilitated... / Our goal is to have the baseline completed by...) + hedging on data (The data would suggest that... / To some extent, the findings indicate...).</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="6" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="6">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -203,7 +202,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-6">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada termo e leia o exemplo. &#201; o vocabul&#225;rio do deck que a lideran&#231;a canadense l&#234; &mdash; a partir de setembro, &#233; o deck que voc&#234; escreve.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each term and read the example. This is the vocabulary of the deck the Canadian leadership reads &mdash; and from September on, it is the deck you write.</p>
       <div class="vocab-cards">
 {vocab_cards}
       </div>
@@ -211,7 +210,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-6">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
       <div class="match-grid" id="match-l6">
 {match_rows}
       </div>
@@ -219,48 +218,48 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-6">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         <p>Every People and Culture leader who arrives in a new division wants to <strong>run a diagnostic</strong>. Very few of them stop to ask what a diagnostic does to the people being diagnosed. The <strong>diagnostic tool</strong> is never neutral. The moment a questionnaire lands in an inbox, the organization starts answering a question nobody wrote: is it safe to be honest here?</p>
         <p style="margin-top:.8rem">This is why the <strong>response rate</strong> is the first <strong>finding</strong>, and not a footnote. A team that has had its opinion collected before and was never told the outcome will answer at thirty percent &mdash; and the thirty percent who do answer are not a random sample. They are the angriest and the most loyal, and the middle of the organization is missing from the data. <strong>The data would suggest that</strong> a low response rate is not a technical failure at all. It is a <strong>trust index</strong> with no survey attached to it.</p>
         <p style="margin-top:.8rem">So the sequence matters more than the instrument. <strong>Have the baseline taken</strong> before you change anything, so that in March you can prove what moved instead of arguing about it. <strong>Have the expectations set out</strong> in writing before the first question is asked: who reads the <strong>findings</strong>, when, and what happens to them. One director in Toronto <strong>had the questionnaire designed</strong> by an external specialist and then <strong>had it reviewed</strong> by two people inside her own building, precisely so that the faculty could not dismiss it as a document written somewhere else. <strong>To some extent, the findings indicate</strong> that this single decision did more for her response rate than the questions ever did.</p>
         <p style="margin-top:.8rem">And when the results arrive, resist the symptom. Attrition is not a <strong>root cause</strong>; it is what a root cause looks like nine months later. A good <strong>focus group</strong> will not collect opinions &mdash; it will <strong>surface issues</strong> that have been quiet for a decade, and some of them will not be culture problems at all. You will <strong>open a can of worms</strong>. The <strong>gap analysis</strong> you present to the board will be clean; the room you leave behind will not. That is not a reason to skip the assessment. It is a reason to <strong>come up with</strong> a plan for the second week, and not only for the first.</p>
       </div>
-      <div class="quiz-item"><div class="quiz-question">1. Por que se diz "We <strong>had the questionnaire designed</strong> by a specialist" e n&#227;o "We <strong>had designed the questionnaire</strong> by a specialist"?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Porque na causativa passiva o particípio vem <strong>depois</strong> do objeto (have + objeto + particípio). "We had designed" &#233; past perfect e significa que N&#211;S desenhamos.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Porque "design" n&#227;o admite voz passiva em ingl&#234;s.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Porque o sujeito &#233; plural e exige invers&#227;o.</div></div></div>
-      <div class="quiz-item"><div class="quiz-question">2. "I <strong>had Marc review</strong> the questions." &mdash; por que N&#195;O se diz "I had Marc <em>to review</em> the questions"?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Porque "review" &#233; substantivo nessa posi&#231;&#227;o.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Porque depois de <strong>have + pessoa</strong> o verbo vem na forma base, sem "to". O "to" &#233; o portugu&#234;s "mandei ELE revisar" vazando.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Porque Marc &#233; nome pr&#243;prio e nomes pr&#243;prios n&#227;o levam infinitivo depois.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">1. Why do we say &ldquo;We <strong>had the questionnaire designed</strong> by a specialist&rdquo; and not &ldquo;We <strong>had designed the questionnaire</strong> by a specialist&rdquo;?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Because in the causative passive the past participle comes <strong>after</strong> the object (have + object + past participle). &ldquo;We had designed&rdquo; is past perfect, and it means WE did the designing.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Because &ldquo;design&rdquo; cannot be used in the passive voice in English.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because the subject is plural, which forces inversion.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">2. &ldquo;I <strong>had Marc review</strong> the questions.&rdquo; &mdash; why do we NOT say &ldquo;I had Marc <em>to review</em> the questions&rdquo;?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Because &ldquo;review&rdquo; is a noun in that position.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Because after <strong>have + person</strong> the verb takes the base form, with no &ldquo;to&rdquo;. That &ldquo;to&rdquo; is a direct translation from your first language.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because Marc is a proper name, and proper names are never followed by an infinitive.</div></div></div>
       <div class="quiz-item"><div class="quiz-question">3. According to the text, why is a low response rate a <em>finding</em> rather than a technical failure?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Because the questionnaire was too long and people gave up halfway through it.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Because a team that was asked once and never told the outcome answers at thirty percent &mdash; so the rate is a trust index with no survey attached to it.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because thirty percent is statistically sufficient for any cultural assessment.</div></div></div>
       <div class="quiz-item"><div class="quiz-question">4. What does the Toronto director's decision (an external specialist, then an in-house review) actually buy her?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> A cheaper instrument, because the review work was not paid for.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> A shorter questionnaire, because two reviewers cut half of the questions.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> Credibility &mdash; the faculty could not dismiss the survey as a document written somewhere else, and the text says it did more for the response rate than the questions did.</div></div></div>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Causative Passive &amp; Hedging Data</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">A gram&#225;tica de quem MANDA fazer: o sujeito n&#227;o executa a a&#231;&#227;o, mas responde por ela &mdash; que &#233; exatamente a posi&#231;&#227;o de uma gestora de People &amp; Culture (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">The grammar of the person who has it done: the subject does not perform the action, but answers for it &mdash; which is exactly where a People &amp; Culture leader stands.</p>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use / Uso</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Causativa passiva<br><strong>have</strong> + objeto + <strong>particípio</strong></td><td style="padding:.6rem">Voc&#234; mandou fazer; outra pessoa executou. You arranged it, someone else performed it.</td><td style="padding:.6rem">We <strong>had the questionnaire designed</strong> by an external specialist.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Causativa ativa<br><strong>have</strong> + pessoa + <strong>verbo base</strong></td><td style="padding:.6rem">Voc&#234; nomeia quem voc&#234; acionou. Sem "to". Never "to review".</td><td style="padding:.6rem">I <strong>had Marc review</strong> the questions before they went out.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Padr&#227;o de prazo<br><strong>to have</strong> + X + <strong>completed by</strong></td><td style="padding:.6rem">O compromisso de entrega, sem prometer quem faz o qu&#234;.</td><td style="padding:.6rem">Our goal is <strong>to have the baseline completed by</strong> the end of September.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600"><strong>get</strong> no lugar de <strong>have</strong></td><td style="padding:.6rem" colspan="2">Mesma estrutura, menos formal, e sugere esfor&#231;o: "I finally <strong>got</strong> the 2024 data <strong>re-coded</strong>." Use <strong>have</strong> com o board; <strong>get</strong> com o time.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Passiva comum vs causativa</td><td style="padding:.6rem" colspan="2">"The survey <strong>was designed</strong> by a consultant" diz quem digitou &mdash; e apaga voc&#234;. "We <strong>had</strong> the survey <strong>designed</strong>" diz quem DECIDIU. Numa sala de diagn&#243;stico, ningu&#233;m pergunta quem digitou.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Hedging de dado</td><td style="padding:.6rem">Uma leitura do dado, n&#227;o um veredito. An interpretation, not a verdict.</td><td style="padding:.6rem"><strong>The data would suggest that</strong>... &middot; <strong>To some extent, the findings indicate</strong>...</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">Collocation</td><td style="padding:.6rem" colspan="2"><strong>run</strong> a diagnostic &middot; <strong>gather</strong> insights &middot; <strong>surface</strong> an issue &middot; come up <strong>with</strong> a framework (nunca "come up a framework") &middot; <strong>open</strong> a can of worms</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Causative Passive<br><strong>have</strong> + object + <strong>past participle</strong></td><td style="padding:.6rem">You arranged it; somebody else performed it. The action is theirs, the decision is yours.</td><td style="padding:.6rem">We <strong>had the questionnaire designed</strong> by an external specialist.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Causative Active<br><strong>have</strong> + person + <strong>base verb</strong></td><td style="padding:.6rem">You name the person you called on. No &ldquo;to&rdquo;. Never &ldquo;to review&rdquo;.</td><td style="padding:.6rem">I <strong>had Marc review</strong> the questions before they went out.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Deadline pattern<br><strong>to have</strong> + X + <strong>completed by</strong></td><td style="padding:.6rem">The delivery commitment, without promising who does what.</td><td style="padding:.6rem">Our goal is <strong>to have the baseline completed by</strong> the end of September.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600"><strong>get</strong> instead of <strong>have</strong></td><td style="padding:.6rem" colspan="2">Same structure, less formal, and it hints at effort: &ldquo;I finally <strong>got</strong> the 2024 data <strong>re-coded</strong>.&rdquo; Use <strong>have</strong> with the board; <strong>get</strong> with your team.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Plain passive vs causative</td><td style="padding:.6rem" colspan="2">&ldquo;The survey <strong>was designed</strong> by a consultant&rdquo; names the person who typed it &mdash; and erases you. &ldquo;We <strong>had</strong> the survey <strong>designed</strong>&rdquo; names the person who DECIDED. In a diagnostic room, nobody asks who typed it.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Hedging on data</td><td style="padding:.6rem">A reading of the data, not a verdict. An interpretation, which the room can still argue with.</td><td style="padding:.6rem"><strong>The data would suggest that</strong>... &middot; <strong>To some extent, the findings indicate</strong>...</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">Collocation</td><td style="padding:.6rem" colspan="2"><strong>run</strong> a diagnostic &middot; <strong>gather</strong> insights &middot; <strong>surface</strong> an issue &middot; come up <strong>with</strong> a framework (never &ldquo;come up a framework&rdquo;) &middot; <strong>open</strong> a can of worms</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (o erro n&#186; 1):</strong> a ORDEM. Em portugu&#234;s o verbo vem antes do objeto ("mandamos desenhar o question&#225;rio"); em ingl&#234;s o particípio vem DEPOIS ("had <em>the questionnaire</em> designed"). "We had designed the questionnaire" &#233; past perfect &mdash; significa que voc&#234; mesma o desenhou.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Aten&#231;&#227;o (o erro n&#186; 2):</strong> nada de "to" depois de <strong>have + pessoa</strong>. "I had Marc <em>to review</em>" &#233; o "mandei ele revisar" chegando inteiro. O certo &#233; "I had Marc <strong>review</strong>".</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>A combina&#231;&#227;o que voc&#234; quer:</strong> causativa + hedge na MESMA frase. "<strong>The data would suggest that</strong> we should <strong>have the baseline taken</strong> before September, rather than after." &#201; a frase mais s&#234;nior desta aula.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (the number one slip):</strong> the ORDER. In English the past participle comes AFTER the object: &ldquo;had <em>the questionnaire</em> designed&rdquo;. &ldquo;We had designed the questionnaire&rdquo; is past perfect &mdash; it says you designed it yourself, which is not what happened.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Watch out (the other slip):</strong> no &ldquo;to&rdquo; after <strong>have + person</strong>. &ldquo;I had Marc <em>to review</em>&rdquo; is a word-for-word translation arriving whole. The correct form is &ldquo;I had Marc <strong>review</strong>&rdquo;.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>The combination you want:</strong> a causative and a hedge in the SAME sentence. &ldquo;<strong>The data would suggest that</strong> we should <strong>have the baseline taken</strong> before September, rather than after.&rdquo; It is the most senior line in this lesson.</p>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a forma correta. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct form. Tap Listen to hear the full sentence.</p>
 {fill_items}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the Assessment in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque os cinco movimentos na ordem em que voc&#234; vai conduzir a avalia&#231;&#227;o cultural com o time canadense.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the five moves in the order you will run the cultural assessment with the Canadian team.</p>
       <div class="order-container" id="order-l6">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l6')"><span class="order-num">?</span><span class="order-text">Go deeper: have the focus groups facilitated in-house, and gather the insights the survey could not capture.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l6')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l6')">&#9660;</button></span></div>
         <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l6')"><span class="order-num">?</span><span class="order-text">Read the findings back to the faculty first, before the board sees them, exactly as you promised in week one.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l6')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l6')">&#9660;</button></span></div>
@@ -273,13 +272,13 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-6">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesma dizendo-a. S&#227;o as cinco frases do seu kickoff de diagn&#243;stico com o time canadense.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. These are the five sentences of your diagnostic kickoff with the Canadian team.</p>
 {speech_cards}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real da sua avalia&#231;&#227;o cultural no Canad&#225;.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best answer for each real moment of your cultural assessment in Canada.</p>
       <div class="quiz-item"><div class="quiz-question">A Canadian director asks: &ldquo;Who wrote this questionnaire? If it came from Brazil, we will see it in the first line.&rdquo; The most senior answer is:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;It was written by our team in Brazil, but we adapted it for you.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;We had the questionnaire designed by an external specialist here, and I had it reviewed by two people in this building before it went out.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;I do not think it matters who wrote it, as long as the questions are good.&rdquo;</div></div></div>
       <div class="quiz-item"><div class="quiz-question">Only thirty-one percent of the faculty answered the survey. What do you say to the leadership team?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> &ldquo;The data would suggest that the response rate is itself the first finding: a team that was asked once and never told the outcome answers at thirty.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> &ldquo;The survey failed. We should send it again next month with a reminder.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;Thirty-one percent is enough. I will present the results as if the whole faculty had answered.&rdquo;</div></div></div>
       <div class="quiz-item"><div class="quiz-question">Which sentence uses the causative correctly?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;We had designed the survey by an external specialist.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> &ldquo;I had the consultant to present the findings to the faculty.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> &ldquo;I am having the focus groups facilitated in-house, and I had Marc review the questions first.&rdquo;</div></div></div>
@@ -289,7 +288,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-6">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesma respondendo &#224; pergunta abaixo. Fale por 2 a 3 minutos, sem script.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. Speak for two or three minutes, with no script.</p>
       <div class="think-card">
         <div class="think-question">You are opening the diagnostic kickoff with the Canadian academic team. In two minutes: explain what cultural assessment you plan to have carried out, who arranged each part of it, when the baseline is taken, what you expect to find, and what happens to the findings. Use at least two causative structures, one hedge on a number, and six words from this lesson. End by naming the resistance you already know is in the room.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

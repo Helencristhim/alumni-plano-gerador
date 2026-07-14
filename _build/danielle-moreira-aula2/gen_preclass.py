@@ -88,7 +88,7 @@ for w, d, pt, ex in VOCAB:
         '        <div class="vocab-card-pc"><div class="vocab-card-content">'
         f'<div class="vocab-card-header"><span class="vocab-card-word">{w}</span>'
         f'<span class="vocab-card-dot"> -- </span>'
-        f'<span class="vocab-card-def">{d} ({pt})</span></div>'
+        f'<span class="vocab-card-def">{d}</span></div>'
         f'<div class="vocab-card-example">"{ex}"</div></div>'
         f'{speak_btn(w)}</div>'
     )
@@ -113,25 +113,25 @@ match_rows = '\n'.join(rows)
 
 # ---------- Stage 1.5 fill-in-the-blank ----------
 BLANKS = [
-    ("If leadership", "had run", "Dica: metade do IF &mdash; had + partic&#237;pio (nunca would)",
+    ("If leadership", "had run", "Hint: the IF half &mdash; had + past participle (never would)",
      "If leadership had run a pulse survey, they would have seen it coming.",
      "a pulse survey, they would have seen it coming."),
     ("If someone had read the exit interviews, they", "would have found",
-     "Dica: metade do resultado &mdash; would have + partic&#237;pio",
+     "Hint: the result half &mdash; would have + past participle",
      "If someone had read the exit interviews, they would have found the problem.",
      "the problem."),
-    ("We", "should have addressed", "Dica: cr&#237;tica ao que n&#227;o foi feito &mdash; should have + partic&#237;pio",
+    ("We", "should have addressed", "Hint: a criticism of what was not done &mdash; should have + past participle",
      "We should have addressed the disengagement in the first quarter.",
      "the disengagement in the first quarter."),
     ("The coordinators", "might not have resigned",
-     "Dica: especula&#231;&#227;o prudente &mdash; might not have + partic&#237;pio",
+     "Hint: careful speculation &mdash; might not have + past participle",
      "The coordinators might not have resigned if psychological safety had been higher.",
      "if psychological safety had been higher."),
-    ("They", "could have fostered", "Dica: uma op&#231;&#227;o que existia &mdash; could have + partic&#237;pio",
+    ("They", "could have fostered", "Hint: an option that was there &mdash; could have + past participle",
      "They could have fostered a culture of speaking up.",
      "a culture of speaking up."),
     ("If the onboarding experience", "had continued",
-     "Dica: metade do IF, no passado &mdash; had + partic&#237;pio",
+     "Hint: the IF half, in the past &mdash; had + past participle",
      "If the onboarding experience had continued after week one, she would have stayed.",
      "after week one, she would have stayed."),
 ]
@@ -166,7 +166,6 @@ for phrase, pt in SPEECH:
     sp.append(
         f'      <div class="speech-card" data-phrase="{phrase}">\n'
         f'        <div class="speech-phrase">{phrase}</div>\n'
-        f'        <div class="speech-translation">{pt}</div>\n'
         f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
         f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
         f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -180,7 +179,7 @@ sv = []
 for i, (en, pt) in enumerate(SPEECH, 1):
     sv.append(
         f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-        f'<span class="sp-en">{en}</span><span class="sp-pt">{pt}</span>'
+        f'<span class="sp-en">{en}</span>'
         f'{speak_btn(en, cls="btn btn-listen", label="&#9835;")}</div>'
     )
 survival = '\n'.join(sv)
@@ -189,9 +188,9 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-2">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 02 -- Pre-class</div>
+      <div class="lesson-number">Lesson 02 -- Pre-class</div>
       <h3>The Language of Culture -- Diagnosing and Describing Culture</h3>
-      <div class="lesson-desc">Diagnosticar e descrever cultura organizacional em ingl&#234;s: ler os n&#250;meros, nomear o problema e dizer a verdade dif&#237;cil sem perder a sala. Key words: cultural diagnosis, core values, psychological safety, onboarding experience, culture fit, belonging, disengagement, attrition, turnover rate, toxic culture, exit interview, pulse survey, to foster a culture of, to look into, the elephant in the room. Structures: third conditional (if + had + partic&#237;pio / would have + partic&#237;pio) e modal perfects (should have / could have / might have) + hedging executivo (It would appear that... / To some extent...).</div>
+      <div class="lesson-desc">Diagnosing and describing organizational culture in English: read the numbers, name the problem and say the hard truth without losing the room. Key words: cultural diagnosis, core values, psychological safety, onboarding experience, culture fit, belonging, disengagement, attrition, turnover rate, toxic culture, exit interview, pulse survey, to foster a culture of, to look into, the elephant in the room. Structures: third conditional (if + had + past participle / would have + past participle) and modal perfects (should have / could have / might have), plus executive hedging (It would appear that... / To some extent...).</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="2" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="2">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -200,7 +199,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-2">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada termo e leia o exemplo. Este &#233; o vocabul&#225;rio em que um diagn&#243;stico cultural &#233; escrito &mdash; o que separa uma opini&#227;o sobre a cultura de uma leitura profissional dela.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each term and read the example. This is the vocabulary a cultural diagnosis is written in &mdash; what separates an opinion about culture from a professional reading of it.</p>
       <div class="vocab-cards">
 {vocab_cards}
       </div>
@@ -208,7 +207,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-2">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
       <div class="match-grid" id="match-l2">
 {match_rows}
       </div>
@@ -216,45 +215,45 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-2">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o caso e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         <p>Northline Academy was a network of bilingual schools with an excellent reputation and a serious problem. In three years, its <strong>turnover rate</strong> climbed from nine percent to twenty six percent. The company had written a beautiful set of <strong>core values</strong>, printed them and hung them in every corridor &mdash; and it had never once run a <strong>cultural diagnosis</strong> to find out whether anyone lived by them. The <strong>onboarding experience</strong> was excellent for one week and abandoned by the second. Managers stopped disagreeing with directors in meetings. The people who stayed delivered the curriculum and quietly stopped bringing new ideas: that is <strong>disengagement</strong>, and it is far more expensive than the <strong>attrition</strong> it produces. When the board finally asked what had gone wrong, the answer was uncomfortable. <strong>If</strong> leadership <strong>had run</strong> a <strong>pulse survey</strong> in that first year, they <strong>would have seen</strong> <strong>psychological safety</strong> collapsing. <strong>If</strong> someone <strong>had looked into</strong> the <strong>exit interviews</strong> instead of filing them, they <strong>would have found</strong> <strong>the elephant in the room</strong> by the second one. They <strong>should have addressed</strong> it during onboarding, and they <strong>could have fostered a culture of</strong> speaking up at almost no cost. The two coordinators who resigned <strong>might not have left</strong> if the culture <strong>had felt</strong> safe. The culture did not fail because it was a <strong>toxic culture</strong>. It failed because nobody was willing to name what everybody could already see.</p>
       </div>
-      <div class="quiz-item"><div class="quiz-question">1. Por que a frase "If leadership had run a pulse survey, they would have seen it" usa <em>had run</em> e n&#227;o <em>would have run</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Porque a metade do <em>if</em> sempre leva <strong>had + partic&#237;pio</strong> &mdash; o <em>would</em> fica s&#243; na metade do resultado.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Porque a pesquisa foi feita, s&#243; que tarde demais.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Porque a a&#231;&#227;o ainda pode acontecer no futuro.</div></div></div>
-      <div class="quiz-item"><div class="quiz-question">2. "The two coordinators might not have left" &mdash; por que <em>might</em> e n&#227;o <em>would</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Porque &#233; uma cr&#237;tica direta &#224; lideran&#231;a.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Porque especula com prud&#234;ncia: era prov&#225;vel, mas ningu&#233;m pode afirmar com certeza.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Porque o fato aconteceu e est&#225; confirmado.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">1. Why does "If leadership had run a pulse survey, they would have seen it" use <em>had run</em> and not <em>would have run</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Because the <em>if</em> half always takes <strong>had + past participle</strong> &mdash; <em>would</em> belongs only in the result half.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Because the survey was run, only too late.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because the action can still happen in the future.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">2. "The two coordinators might not have left" &mdash; why <em>might</em> and not <em>would</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Because it is a direct criticism of leadership.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Because it speculates carefully: it was likely, but nobody can state it as a certainty.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because the fact happened and is confirmed.</div></div></div>
       <div class="quiz-item"><div class="quiz-question">3. According to the text, what came FIRST at Northline Academy?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> The attrition &mdash; people resigned, and only then did they stop caring.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> The disengagement &mdash; people stopped bringing ideas long before anyone resigned.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> The toxic culture &mdash; the text says fear and blame were normal from day one.</div></div></div>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Third Conditional + Modal Perfects</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">A gram&#225;tica do diagn&#243;stico: todo diagn&#243;stico cultural fala de um passado que N&#195;O aconteceu &mdash; "se tivessem feito X, n&#227;o teria acontecido Y" (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">The grammar of the diagnosis: every cultural diagnosis talks about a past that did NOT happen &mdash; "if they had done X, Y would not have happened".</p>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use / Uso</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Condi&#231;&#227;o (if)<br>if + had + partic&#237;pio</td><td style="padding:.6rem">O passado que N&#195;O aconteceu. The past that did not happen.</td><td style="padding:.6rem"><strong>If</strong> they <strong>had run</strong> a pulse survey...</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Resultado<br>would have + partic&#237;pio</td><td style="padding:.6rem">A consequ&#234;ncia que, por isso, tamb&#233;m n&#227;o aconteceu.</td><td style="padding:.6rem">...they <strong>would have seen</strong> it coming.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">should have + partic&#237;pio</td><td style="padding:.6rem">Cr&#237;tica: era obriga&#231;&#227;o e n&#227;o foi feito. Judges.</td><td style="padding:.6rem">We <strong>should have addressed</strong> it earlier.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">could have + partic&#237;pio</td><td style="padding:.6rem">Op&#231;&#227;o que existia e n&#227;o foi usada. Softer.</td><td style="padding:.6rem">They <strong>could have fostered</strong> a culture of speaking up.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">might have + partic&#237;pio</td><td style="padding:.6rem">Especula&#231;&#227;o prudente, sem acusar. Speculates.</td><td style="padding:.6rem">The team <strong>might have felt</strong> unsafe.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Negativa</td><td style="padding:.6rem">had <strong>not</strong> + partic&#237;pio / would <strong>not</strong> have + partic&#237;pio</td><td style="padding:.6rem">If they <strong>hadn't</strong> ignored it, she <strong>wouldn't have</strong> resigned.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Interrogativa</td><td style="padding:.6rem">What + would + sujeito + have + partic&#237;pio + if...?</td><td style="padding:.6rem"><strong>What would you have done</strong> if you had known?</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">Hedging executivo</td><td style="padding:.6rem" colspan="2"><strong>It would appear that...</strong> (tudo indica que...) &middot; <strong>To some extent...</strong> (at&#233; certo ponto...) &mdash; a mesma verdade, dita de um jeito que a sala aceita ouvir.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Condition (if)<br>if + had + past participle</td><td style="padding:.6rem">The past that did NOT happen.</td><td style="padding:.6rem"><strong>If</strong> they <strong>had run</strong> a pulse survey...</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Result<br>would have + past participle</td><td style="padding:.6rem">The consequence that, for that reason, did not happen either.</td><td style="padding:.6rem">...they <strong>would have seen</strong> it coming.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">should have + past participle</td><td style="padding:.6rem">Criticism: it was an obligation and it was not done. Judges.</td><td style="padding:.6rem">We <strong>should have addressed</strong> it earlier.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">could have + past participle</td><td style="padding:.6rem">An option that was there and was not taken. Softer.</td><td style="padding:.6rem">They <strong>could have fostered</strong> a culture of speaking up.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">might have + past participle</td><td style="padding:.6rem">Careful speculation, with no accusation. Speculates.</td><td style="padding:.6rem">The team <strong>might have felt</strong> unsafe.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Negative</td><td style="padding:.6rem">had <strong>not</strong> + past participle / would <strong>not</strong> have + past participle</td><td style="padding:.6rem">If they <strong>hadn't</strong> ignored it, she <strong>wouldn't have</strong> resigned.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Question</td><td style="padding:.6rem">What + would + subject + have + past participle + if...?</td><td style="padding:.6rem"><strong>What would you have done</strong> if you had known?</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">Executive hedging</td><td style="padding:.6rem" colspan="2"><strong>It would appear that...</strong> &middot; <strong>To some extent...</strong> &mdash; the same truth, said in a way the room is willing to hear.</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (erro n&#186;1 do brasileiro):</strong> o <em>would</em> <strong>NUNCA</strong> entra na metade do <em>if</em>. "If we <em>would have</em> known" est&#225; errado &mdash; o certo &#233; "If we <strong>had</strong> known, we <strong>would have</strong> acted". Na fala, tudo contrai: <em>If we'd known, we'd have acted</em>.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Escrita:</strong> &#233; sempre <strong>should have</strong>, nunca "should of" &mdash; mesmo que, na boca de um nativo em velocidade normal, os dois soem exatamente iguais.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Collocation:</strong> em ingl&#234;s n&#227;o se diz "do a diagnosis" &mdash; diz-se <strong>run</strong> / <strong>carry out</strong> / <strong>conduct</strong> a cultural diagnosis. E &#233; <strong>discuss the results</strong>, nunca "discuss <em>about</em> the results".</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (the classic slip):</strong> <em>would</em> <strong>NEVER</strong> goes in the <em>if</em> half. "If we <em>would have</em> known" is wrong &mdash; the correct form is "If we <strong>had</strong> known, we <strong>would have</strong> acted". In speech, everything contracts: <em>If we'd known, we'd have acted</em>.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>In writing:</strong> it is always <strong>should have</strong>, never "should of" &mdash; even though, at native speed, the two sound exactly the same.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Collocation:</strong> in English we do not say "do a diagnosis" &mdash; we <strong>run</strong> / <strong>carry out</strong> / <strong>conduct</strong> a cultural diagnosis. And it is <strong>discuss the results</strong>, never "discuss <em>about</em> the results".</p>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a forma correta. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct form. Tap Listen to hear the full sentence.</p>
 {fill_items}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the Diagnosis in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque as etapas de um diagn&#243;stico cultural na ordem em que voc&#234; vai conduzi-lo no Canad&#225;.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the steps of a cultural diagnosis in the order you will run it in Canada.</p>
       <div class="order-container" id="order-l2">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l2')"><span class="order-num">?</span><span class="order-text">Name the elephant in the room, with the number that proves it.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l2')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l2')">&#9660;</button></span></div>
         <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l2')"><span class="order-num">?</span><span class="order-text">Look into the evidence first: the pulse survey and the exit interviews.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l2')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l2')">&#9660;</button></span></div>
@@ -267,13 +266,13 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-2">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesma dizendo-a. S&#227;o as cinco frases do seu primeiro diagn&#243;stico cultural no Canad&#225;.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. These are the five sentences of your first cultural diagnosis in Canada.</p>
 {speech_cards}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real da sua primeira sess&#227;o de diagn&#243;stico com o time acad&#234;mico.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best answer for each real moment of your first diagnosis session with the academic team.</p>
       <div class="quiz-item"><div class="quiz-question">The pulse survey shows belonging at 78% and psychological safety at 41%. Nathan asks what it means. You say:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "Your culture is toxic. People are afraid of each other."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "It would appear that the issue is safety, not belonging: people are proud to be here, and they still do not feel safe enough to disagree."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "The numbers are fine. Forty one percent is normal in academia."</div></div></div>
       <div class="quiz-item"><div class="quiz-question">Nine exit interviews were filed and never read. Which sentence is grammatically correct?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "If someone would have read them, we would have known."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "If someone had read them, we would have known."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "If someone had read them, we would know it a year ago."</div></div></div>
       <div class="quiz-item"><div class="quiz-question">You want to criticize a decision the directors made, without turning them into the accused. The most senior form is:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "You should have seen this coming. It was obvious."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "To some extent, the team might have felt that disagreeing carried a cost &mdash; that is a system problem, not a people problem."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "Nobody here has the courage to say what they think."</div></div></div>
@@ -283,7 +282,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-2">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesma respondendo &#224; pergunta abaixo. Fale por 2 a 3 minutos, sem script.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. Speak for two or three minutes, with no script.</p>
       <div class="think-card">
         <div class="think-question">Think of a real cultural challenge you saw or led at Maple Bear Brazil. Walk me through it: what happened, what you did, and &mdash; with what you know now &mdash; what you would have done differently if you had known then what you know today. Use at least two third conditionals, one modal perfect (should have / could have / might have), and five words from this lesson.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

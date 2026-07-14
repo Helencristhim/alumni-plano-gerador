@@ -89,7 +89,7 @@ for w, d, pt, ex in VOCAB:
         '        <div class="vocab-card-pc"><div class="vocab-card-content">'
         f'<div class="vocab-card-header"><span class="vocab-card-word">{w}</span>'
         f'<span class="vocab-card-dot"> -- </span>'
-        f'<span class="vocab-card-def">{d} ({pt})</span></div>'
+        f'<span class="vocab-card-def">{d}</span></div>'
         f'<div class="vocab-card-example">"{ex}"</div></div>'
         f'{speak_btn(w)}</div>'
     )
@@ -115,19 +115,19 @@ match_rows = '\n'.join(rows)
 # ---------- Stage 1.5 fill-in-the-blank ----------
 # forma PLENA no drill (e o que a gramatica ensina); data-phrase = atributo (seguro)
 BLANKS = [
-    ("I", "lead", "Dica: cargo permanente &mdash; present simple",
+    ("I", "lead", "Hint: a permanent role &mdash; present simple",
      "I lead People and Culture at Maple Bear.", "People and Culture at Maple Bear."),
-    ("At the moment, we", "are rolling out", "Dica: em andamento agora &mdash; present continuous",
+    ("At the moment, we", "are rolling out", "Hint: in progress right now &mdash; present continuous",
      "At the moment, we are rolling out the new employee journey.",
      "the new employee journey."),
-    ("I", "have been leading", "Dica: come&#231;ou em 2023 e continua &mdash; have been + -ing",
+    ("I", "have been leading", "Hint: it started in 2023 and it is still going &mdash; have been + -ing",
      "I have been leading the culture transformation since 2023.",
      "the culture transformation since 2023."),
-    ("I", "have carried out", "Dica: resultado contado, sem tempo dito &mdash; have + partic&#237;pio",
+    ("I", "have carried out", "Hint: a countable result, no time said &mdash; have + past participle",
      "I have carried out four cultural assessments.", "four cultural assessments."),
-    ("I have been working in People and Culture", "for", "Dica: per&#237;odo (eight years)",
+    ("I have been working in People and Culture", "for", "Hint: a period of time (eight years)",
      "I have been working in People and Culture for eight years.", "eight years."),
-    ("I have been leading the culture transformation", "since", "Dica: ponto de partida (2023)",
+    ("I have been leading the culture transformation", "since", "Hint: a starting point (2023)",
      "I have been leading the culture transformation since 2023.", "2023."),
 ]
 fills = []
@@ -161,7 +161,6 @@ for phrase, pt in SPEECH:
     sp.append(
         f'      <div class="speech-card" data-phrase="{phrase}">\n'
         f'        <div class="speech-phrase">{phrase}</div>\n'
-        f'        <div class="speech-translation">{pt}</div>\n'
         f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
         f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
         f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -175,7 +174,7 @@ sv = []
 for i, (en, pt) in enumerate(SPEECH, 1):
     sv.append(
         f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-        f'<span class="sp-en">{en}</span><span class="sp-pt">{pt}</span>'
+        f'<span class="sp-en">{en}</span>'
         f'{speak_btn(en, cls="btn btn-listen", label="&#9835;")}</div>'
     )
 survival = '\n'.join(sv)
@@ -184,9 +183,9 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-1">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 01 -- Pre-class</div>
+      <div class="lesson-number">Lesson 01 -- Pre-class</div>
       <h3>Diagnostic Session -- Who Is Danielle in English?</h3>
-      <div class="lesson-desc">Posicionamento executivo em People &amp; Culture: apresentar quem voc&#234; &#233;, o que o seu cargo abrange e o que voc&#234; lidera &mdash; no registro s&#234;nior que o time canadense espera. Key words: organizational culture, employee journey, people strategy, framework, stakeholder, alignment, to roll out, headquarters, franchisor, bilingual education, hybrid model, senior leadership, to make headway, to take a stance, to carry out. Structures: present simple (cargo permanente) vs present continuous (em andamento) vs present perfect continuous (for/since).</div>
+      <div class="lesson-desc">Executive self-positioning in People &amp; Culture: say who you are, what your role involves and what you lead &mdash; in the senior register the Canadian team expects. Key words: organizational culture, employee journey, people strategy, framework, stakeholder, alignment, to roll out, headquarters, franchisor, bilingual education, hybrid model, senior leadership, to make headway, to take a stance, to carry out. Structures: present simple (permanent role) vs present continuous (in progress) vs present perfect continuous (for/since).</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="1" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="1">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -195,7 +194,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-1">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada termo e leia o exemplo. S&#227;o as palavras que voc&#234; j&#225; usa em portugu&#234;s todo dia &mdash; agora em ingl&#234;s, no registro que o time canadense usa.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each term and read the example. These are the words you already use every day &mdash; now in the register the Canadian team uses.</p>
       <div class="vocab-cards">
 {vocab_cards}
       </div>
@@ -203,7 +202,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-1">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
       <div class="match-grid" id="match-l1">
 {match_rows}
       </div>
@@ -211,43 +210,43 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-1">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         <p>Danielle <strong>leads</strong> People and Culture at Maple Bear, a <strong>franchisor</strong> in <strong>bilingual education</strong>. Her role <strong>involves</strong> the <strong>employee journey</strong> &mdash; every stage, from the first interview to the last day &mdash; and the <strong>people strategy</strong> behind it. She <strong>works</strong> closely with <strong>senior leadership</strong>, and she <strong>reports</strong> to the Chief People Officer at <strong>headquarters</strong>. "I <strong>have been leading</strong> the culture transformation since 2023," she says, "and I <strong>have been working</strong> in People and Culture <strong>for</strong> eight years." She <strong>has carried out</strong> four cultural assessments, and she <strong>has built</strong> a <strong>framework</strong> that every <strong>stakeholder</strong> can read. Right now the picture <strong>is</strong> different: at the moment, her team <strong>is rolling out</strong> the new employee journey across every region, and this year she <strong>is preparing</strong> to take on Canada. They <strong>are making headway</strong> on the <strong>hybrid model</strong>, although <strong>alignment</strong> between leadership and the schools <strong>is</strong> still the hardest part. In August she <strong>will meet</strong> the Canadian academic team &mdash; and, before she proposes anything, she <strong>wants</strong> to <strong>carry out</strong> a cultural assessment and <strong>take a stance</strong> of her own.</p>
       </div>
-      <div class="quiz-item"><div class="quiz-question">1. Por que dizemos "I have been leading the culture transformation since 2023" e n&#227;o "I am leading it since 2023"?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Porque come&#231;ou no passado e continua at&#233; agora &mdash; present perfect continuous com since.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Porque a a&#231;&#227;o terminou e n&#227;o tem mais liga&#231;&#227;o com o presente.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Porque &#233; uma rotina permanente do cargo dela.</div></div></div>
-      <div class="quiz-item"><div class="quiz-question">2. "At the moment, her team is rolling out the new employee journey" usa present continuous porque:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &#201; uma responsabilidade permanente do cargo.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &#201; algo em andamento agora, tempor&#225;rio &mdash; n&#227;o o estado permanente das coisas.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &#201; um resultado j&#225; conclu&#237;do e contado.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">1. Why do we say "I have been leading the culture transformation since 2023" and not "I am leading it since 2023"?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Because it started in the past and is still going now &mdash; present perfect continuous with since.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Because the action is over and has no link to the present.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because it is a permanent part of her role.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">2. "At the moment, her team is rolling out the new employee journey" uses the present continuous because:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> It is a permanent responsibility of the role.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> It is in progress right now, temporary &mdash; not the permanent state of things.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> It is a finished result, already counted.</div></div></div>
       <div class="quiz-item"><div class="quiz-question">3. Which sentence about her permanent role is correct?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "She is leading People and Culture since eight years."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "She leads People and Culture, and her role involves the employee journey."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "She has been leading People and Culture in 2023."</div></div></div>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Present Simple vs Present Continuous vs Present Perfect (Continuous)</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">As tr&#234;s formas que carregam a sua hist&#243;ria profissional &mdash; e que o time canadense vai ouvir nos seus primeiros dois minutos (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">The three forms that carry your professional story &mdash; the ones the Canadian team will hear in your first two minutes.</p>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use / Uso</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Present Simple<br>I / we + verb (she + s)</td><td style="padding:.6rem">Cargo permanente e o que ele abrange. Permanent role and what it involves.</td><td style="padding:.6rem">I <strong>lead</strong> People and Culture.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Present Continuous<br>am / is / are + -ing</td><td style="padding:.6rem">Em andamento agora, tempor&#225;rio. In progress right now (at the moment, this year).</td><td style="padding:.6rem">We <strong>are rolling out</strong> the framework.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Present Perfect Continuous<br>have been + -ing</td><td style="padding:.6rem">Come&#231;ou no passado e <strong>continua</strong> &mdash; com for / since. Started in the past, still going.</td><td style="padding:.6rem">I <strong>have been leading</strong> it since 2023.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Present Perfect<br>have + past participle</td><td style="padding:.6rem">Resultado conclu&#237;do e cont&#225;vel, sem tempo dito. A finished, countable result.</td><td style="padding:.6rem">I <strong>have carried out</strong> four assessments.</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Negativa</td><td style="padding:.6rem">have / has + not + partic&#237;pio. Na fala, contra&#237;do: <strong>haven't</strong>.</td><td style="padding:.6rem">We <strong>haven't</strong> rolled it out in Canada yet.</td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Interrogativa</td><td style="padding:.6rem">How long + have + sujeito + been + -ing?</td><td style="padding:.6rem"><strong>How long have you been leading</strong> this?</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">for vs since</td><td style="padding:.6rem" colspan="2"><strong>for</strong> + per&#237;odo (for eight years) &middot; <strong>since</strong> + ponto de partida (since 2023)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Present Simple<br>I / we + verb (she + s)</td><td style="padding:.6rem">Permanent role and what it involves.</td><td style="padding:.6rem">I <strong>lead</strong> People and Culture.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Present Continuous<br>am / is / are + -ing</td><td style="padding:.6rem">In progress right now, temporary (at the moment, this year).</td><td style="padding:.6rem">We <strong>are rolling out</strong> the framework.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Present Perfect Continuous<br>have been + -ing</td><td style="padding:.6rem">Started in the past and is <strong>still going</strong> &mdash; with for / since.</td><td style="padding:.6rem">I <strong>have been leading</strong> it since 2023.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Present Perfect<br>have + past participle</td><td style="padding:.6rem">A finished, countable result, with no time said.</td><td style="padding:.6rem">I <strong>have carried out</strong> four assessments.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Negative</td><td style="padding:.6rem">have / has + not + past participle. In speech, contracted: <strong>haven't</strong>.</td><td style="padding:.6rem">We <strong>haven't</strong> rolled it out in Canada yet.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Question</td><td style="padding:.6rem">How long + have + subject + been + -ing?</td><td style="padding:.6rem"><strong>How long have you been leading</strong> this?</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">for vs since</td><td style="padding:.6rem" colspan="2"><strong>for</strong> + a period (for eight years) &middot; <strong>since</strong> + a starting point (since 2023)</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (erro de brasileiro s&#234;nior):</strong> em portugu&#234;s dizemos "lidero essa transforma&#231;&#227;o desde 2023" com o presente. Em ingl&#234;s, dura&#231;&#227;o at&#233; agora <strong>nunca</strong> usa present simple nem present continuous: "I am leading this transformation since 2023" est&#225; errado &mdash; o certo &#233; "I <strong>have been leading</strong> this transformation since 2023" (na fala, <strong>I've been leading</strong>). Nada faz voc&#234; soar j&#250;nior mais r&#225;pido do que esse deslize.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Collocation (o outro deslize):</strong> em ingl&#234;s n&#227;o se diz "make a research" nem "make an assessment" &mdash; diz-se <strong>carry out</strong> research / <strong>carry out</strong> an assessment. E n&#227;o &#233; "responsible <em>by</em>", &#233; <strong>responsible for</strong>.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (the classic senior slip):</strong> duration up to now <strong>never</strong> takes the present simple or the present continuous. "I am leading this transformation since 2023" is wrong &mdash; the correct form is "I <strong>have been leading</strong> this transformation since 2023" (in speech, <strong>I've been leading</strong>). Nothing makes you sound junior faster than this one.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Collocation (the other slip):</strong> we do not say "make a research" or "make an assessment" &mdash; we say <strong>carry out</strong> research / <strong>carry out</strong> an assessment. And it is not "responsible <em>by</em>", it is <strong>responsible for</strong>.</p>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a forma correta. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct form. Tap Listen to hear the full sentence.</p>
 {fill_items}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the First Call in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque as etapas da sua primeira conversa com a lideran&#231;a canadense na ordem correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the steps of your first conversation with the Canadian leadership in the correct order.</p>
       <div class="order-container" id="order-l1">
         <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">Take a stance: say what you bring and what you don't bring.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l1')">&#9660;</button></span></div>
         <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">Say what your role involves: the employee journey and the people strategy.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l1')">&#9660;</button></span></div>
@@ -260,13 +259,13 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-1">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesma dizendo-a. S&#227;o as cinco frases que abrem qualquer conversa sua no Canad&#225;.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. These are the five sentences that open any conversation of yours in Canada.</p>
 {speech_cards}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real da sua primeira semana no Canad&#225;.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best answer for each real moment of your first week in Canada.</p>
       <div class="quiz-item"><div class="quiz-question">A Canadian director asks: "So, what do you do?" You answer:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "I work with the people in the company."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "I lead People and Culture at Maple Bear, and my role involves the employee journey and the people strategy behind it."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I am responsible by the culture things in the company."</div></div></div>
       <div class="quiz-item"><div class="quiz-question">He asks: "How long have you been doing this?" The best answer is:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "I am leading the culture transformation since 2023."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "I've been leading the culture transformation since 2023."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I lead the culture transformation for three years."</div></div></div>
       <div class="quiz-item"><div class="quiz-question">You want to describe what your team is doing right now, this quarter. Which is correct?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> "At the moment, we're rolling out the new employee journey across every region."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "At the moment, we roll out the new employee journey across every region."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "At the moment, we have rolled out the new employee journey since every region."</div></div></div>
@@ -276,7 +275,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-1">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesma respondendo &#224; pergunta abaixo. N&#227;o h&#225; resposta certa ou errada &mdash; fale por 2 a 3 minutos, sem script. Esta grava&#231;&#227;o &#233; a sua linha de base do programa.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. There is no right or wrong answer &mdash; speak for two or three minutes, with no script. This recording is your baseline for the programme.</p>
       <div class="think-card">
         <div class="think-question">You've just joined a video call with two Canadian directors you have never met. Introduce yourself: your role (present simple), what you're rolling out right now (present continuous), how long you've been leading the culture transformation (present perfect continuous, for/since), and what you want to carry out in your first thirty days in Canada. Take your time, and don't read from a script.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

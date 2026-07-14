@@ -104,7 +104,7 @@ for w, d, pt, ex in VOCAB:
         '        <div class="vocab-card-pc"><div class="vocab-card-content">'
         f'<div class="vocab-card-header"><span class="vocab-card-word">{w}</span>'
         f'<span class="vocab-card-dot"> -- </span>'
-        f'<span class="vocab-card-def">{d} ({pt})</span></div>'
+        f'<span class="vocab-card-def">{d}</span></div>'
         f'<div class="vocab-card-example">"{ex}"</div></div>'
         f'{speak_btn(w)}</div>'
     )
@@ -130,27 +130,27 @@ match_rows = '\n'.join(rows)
 # ---------- Stage 1.5 fill-in-the-blank (as 4 formas de participle clause) ----------
 BLANKS = [
     ("", "Having reviewed",
-     "Dica: perfect participle (having + partic&#237;pio) = a a&#231;&#227;o que veio ANTES. Nunca 'Having review'",
+     "Hint: perfect participle (having + past participle) = the action that came FIRST. Never 'Having review'",
      "Having reviewed the focus groups, I would propose that we build on them rather than start again.",
      "the focus groups, I would propose that we build on them rather than start again."),
     ("The trust index came back at fifty-eight,", "leaving",
-     "Dica: present participle (-ing) para o RESULTADO da a&#231;&#227;o anterior. Nunca 'and it left'",
+     "Hint: present participle (-ing) for the RESULT of the previous action. Never 'and it left'",
      "The trust index came back at fifty-eight, leaving us nine points below the benchmark.",
      "us nine points below the benchmark."),
     ("", "Asked",
-     "Dica: past participle para sentido PASSIVO ('Quando foram perguntados...'). Nunca 'Asking'",
+     "Hint: past participle for a PASSIVE meaning ('When they were asked...'). Never 'Asking'",
      "Asked about the timeline, most of the faculty said exactly the same thing.",
      "about the timeline, most of the faculty said exactly the same thing."),
     ("", "Given",
-     "Dica: abertura fixa 'Given + substantivo' = 'Considerando / Diante de'",
+     "Hint: fixed opening &mdash; 'Given + noun' = 'Considering / In view of'",
      "Given the response rate, the caveat belongs on the first slide, not the last.",
      "the response rate, the caveat belongs on the first slide, not the last."),
     ("", "Based on",
-     "Dica: abertura fixa 'Based on + substantivo' = 'Com base em'. E o participio se refere ao SUJEITO da frase",
+     "Hint: fixed opening &mdash; 'Based on + noun'. The participle must refer to the SUBJECT of the main clause",
      "Based on the preliminary findings, I am proposing two quick wins and one long piece of work.",
      "the preliminary findings, I am proposing two quick wins and one long piece of work."),
     ("Three teams asked to join without being invited,", "suggesting",
-     "Dica: present participle para o que a a&#231;&#227;o SUGERE / produz. Nunca 'what suggests'",
+     "Hint: present participle for what the action SUGGESTS / produces. Never 'what suggests'",
      "Three teams asked to join without being invited, suggesting that the program is finally gaining traction.",
      "that the program is finally gaining traction."),
 ]
@@ -186,7 +186,6 @@ for phrase, pt in SPEECH:
     sp.append(
         f'      <div class="speech-card" data-phrase="{phrase}">\n'
         f'        <div class="speech-phrase">{phrase}</div>\n'
-        f'        <div class="speech-translation">{pt}</div>\n'
         f'        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>'
         f'<button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>'
         f'<button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>\n'
@@ -200,7 +199,7 @@ sv = []
 for i, (en, pt) in enumerate(SPEECH, 1):
     sv.append(
         f'      <div class="survival-phrase"><span class="sp-num">{i}</span>'
-        f'<span class="sp-en">{en}</span><span class="sp-pt">{pt}</span>'
+        f'<span class="sp-en">{en}</span>'
         f'{speak_btn(en, cls="btn btn-listen", label="&#9835;")}</div>'
     )
 survival = '\n'.join(sv)
@@ -209,9 +208,9 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-8">
   <div class="lesson-header" onclick="toggleLesson(this)">
     <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80')"></div>
     <div class="lesson-header-content">
-      <div class="lesson-number">Aula 08 -- Pre-class</div>
+      <div class="lesson-number">Lesson 08 -- Pre-class</div>
       <h3>Midpoint Review -- Consolidating HR Leadership Language for Canada</h3>
-      <div class="lesson-desc">Meio do caminho: a aula em que voc&#234; para, faz um balan&#231;o e APRESENTA o que encontrou &mdash; sem inflar o que deu certo e sem enterrar o que ficou aqu&#233;m. Toda a lingua das aulas 1 a 7 volta aqui como REVIS&#195;O (causative passive, cleft, invers&#227;o, third conditional, reporting verbs, hedging), dentro de uma &#250;nica apresenta&#231;&#227;o executiva. Key words: takeaway, caveat, rationale, trade-off, traction, quick win, roadblock, track record, preliminary, tangible, to take stock of, to fall short of, to build on, to iron out, the jury is still out. Structure (NOVA): participle clauses &mdash; a gram&#225;tica do sum&#225;rio executivo (Having reviewed the findings... / ...leaving us nine points below the benchmark / Asked about the timeline... / Given the response rate...).</div>
+      <div class="lesson-desc">The midpoint: the lesson where you stop, take stock and PRESENT what you found &mdash; without inflating what worked or burying what fell short. All the language of lessons 1 to 7 comes back here as REVIEW (causative passive, cleft, inversion, third conditional, reporting verbs, hedging), inside a single executive presentation. Key words: takeaway, caveat, rationale, trade-off, traction, quick win, roadblock, track record, preliminary, tangible, to take stock of, to fall short of, to build on, to iron out, the jury is still out. New structure: participle clauses &mdash; the grammar of the executive summary (Having reviewed the findings... / ...leaving us nine points below the benchmark / Asked about the timeline... / Given the response rate...).</div>
       <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="8" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="8">0%</span></div>
     </div>
     <div class="expand-icon">&#9660;</div>
@@ -220,7 +219,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-8">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada termo e leia o exemplo. Este &#233; o vocabul&#225;rio de quem apresenta um balan&#231;o &mdash; e sobrevive &#224;s perguntas que v&#234;m depois dele.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each term and read the example. This is the vocabulary of someone who presents a midpoint review &mdash; and survives the questions that come after it.</p>
       <div class="vocab-cards">
 {vocab_cards}
       </div>
@@ -228,7 +227,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-8">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Relacione cada termo com a defini&#231;&#227;o correta.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
       <div class="match-grid" id="match-l8">
 {match_rows}
       </div>
@@ -236,47 +235,47 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-8">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia o texto e responda &#224;s perguntas.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions.</p>
       <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
         <p>Mariana Vidal had twenty-two slides and eleven minutes, and she lost the room on slide three. <strong>Having spent</strong> six months on the most careful cultural work of her career, she opened the midpoint review by explaining her methodology. By the time she arrived at what she had actually found, the Chief Operating Officer had stopped taking notes. The work was excellent. The review was a failure, and the two facts have nothing to do with each other.</p>
         <p style="margin-top:.8rem">The mistake was not nerves, and it was not her English. It was sequence. A senior room does not want the journey; it wants the <strong>takeaway</strong>, and it wants it first. <strong>Asked</strong> afterwards what he had needed, the COO was blunt: one <strong>tangible</strong> number, the <strong>rationale</strong> behind her recommendation, and the <strong>caveat</strong> she was clearly holding back. <strong>Given</strong> eleven minutes, he said, spend one of them telling me what you found and ten defending it.</p>
         <p style="margin-top:.8rem">She rebuilt the deck in a single evening. The new version opened with a sentence, not a slide: the culture here is not broken, it is unheard, and the response rate is the proof. Then the number, then the <strong>trade-off</strong>. <strong>Based on</strong> the <strong>preliminary</strong> findings, she proposed two <strong>quick wins</strong> and one long piece of work, naming what each would cost. She said out loud that the survey had <strong>fallen short of</strong> the target she had promised in June, <strong>leaving</strong> her with a smaller sample than she had wanted &mdash; and that she would rather report that than bury it. On the new onboarding, she said, the <strong>jury is still out</strong>: ask me again in March.</p>
         <p style="margin-top:.8rem">The COO approved the plan in four minutes. What convinced him was not the confidence. It was the <strong>caveat</strong>. A leader who names the limit of her own data is a leader whose numbers can be trusted the next time she brings some &mdash; and that, more than any single result, is how a <strong>track record</strong> begins.</p>
       </div>
-      <div class="quiz-item"><div class="quiz-question">1. "<strong>Having spent</strong> six months on the work, she opened by explaining her methodology." &mdash; o que o perfect participle (<em>having</em> + partic&#237;pio) est&#225; dizendo aqui?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Que as duas a&#231;&#245;es aconteceram ao mesmo tempo: ela gastou seis meses enquanto abria a apresenta&#231;&#227;o.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Que a a&#231;&#227;o do participle veio <strong>ANTES</strong> da outra: primeiro os seis meses de trabalho, depois a abertura. &#201; a forma de empacotar a hist&#243;ria toda numa or&#231;&#227;o subordinada e ir direto ao ponto.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Que ela ainda est&#225; gastando os seis meses, porque <em>having</em> indica presente cont&#237;nuo.</div></div></div>
-      <div class="quiz-item"><div class="quiz-question">2. "<strong>Asked</strong> afterwards what he had needed, the COO was blunt." &mdash; por que <em>Asked</em> e n&#227;o <em>Asking</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Porque o sujeito (o COO) <strong>SOFRE</strong> a a&#231;&#227;o: algu&#233;m perguntou A ELE. Participle passivo = past participle. "Asking" significaria que era ELE quem perguntava.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Porque depois de v&#237;rgula o ingl&#234;s sempre exige past participle.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Porque "ask" &#233; um verbo irregular e n&#227;o aceita a forma -ing.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">1. "<strong>Having spent</strong> six months on the work, she opened by explaining her methodology." &mdash; what is the perfect participle (<em>having</em> + past participle) saying here?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> That both actions happened at the same time: she spent six months while she was opening the presentation.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> That the participle action came <strong>FIRST</strong>: the six months of work, then the opening. It is how you pack the whole story into one subordinate clause and go straight to the point.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> That she is still spending the six months, because <em>having</em> marks the present continuous.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">2. "<strong>Asked</strong> afterwards what he had needed, the COO was blunt." &mdash; why <em>Asked</em> and not <em>Asking</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Because the subject (the COO) <strong>RECEIVES</strong> the action: somebody asked HIM. A passive participle = past participle. "Asking" would mean HE was the one asking.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Because after a comma English always requires a past participle.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because "ask" is an irregular verb and does not take an -ing form.</div></div></div>
       <div class="quiz-item"><div class="quiz-question">3. According to the text, why exactly did Mariana lose the room on slide three?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Because her English was not precise enough for a senior Canadian audience.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Because of sequence: she opened with her methodology instead of her takeaway, and by the time she reached what she had found, the COO had stopped listening.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because the cultural work itself was weak, and the room could see it immediately.</div></div></div>
       <div class="quiz-item"><div class="quiz-question">4. What actually convinced the COO to approve the plan in four minutes?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Her confidence, and the fact that she never admitted any weakness in the data.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> The two quick wins, which meant the project would show results before December.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">C</span> The caveat &mdash; because a leader who names the limit of her own data is a leader whose numbers can be trusted the next time, and that is where a track record begins.</div></div></div>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Participle Clauses</h4><span class="badge badge-vocab">GRAMMAR</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">A gram&#225;tica do sum&#225;rio executivo: ela pega DUAS frases e transforma a menos importante numa or&#231;&#227;o curta, sem sujeito e sem conectivo &mdash; deixando a frase principal com todo o peso. &#201; o que separa quem NARRA de quem RESUME (explica&#231;&#227;o em ingl&#234;s e portugu&#234;s).</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">The grammar of the executive summary: it takes TWO sentences and turns the less important one into a short clause, with no subject and no connector &mdash; leaving the main clause with all the weight. It is what separates someone who NARRATES from someone who SUMMARIZES.</p>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use / Uso</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Form</th><th style="padding:.7rem;text-align:left">Use</th><th style="padding:.7rem;text-align:left">Example</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">1. Perfect participle<br><strong>Having</strong> + partic&#237;pio</td><td style="padding:.6rem">A a&#231;&#227;o que veio ANTES. Empacota o passado inteiro em cinco palavras. <em>The action that came first.</em></td><td style="padding:.6rem"><strong>Having reviewed</strong> the findings, I would propose two quick wins.<br><span style="color:var(--text-dim)">= After I reviewed the findings, I would propose...</span></td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">2. Present participle<br>verbo + <strong>-ing</strong></td><td style="padding:.6rem">O RESULTADO ou a consequ&#234;ncia da frase principal. Vem quase sempre DEPOIS da v&#237;rgula. <em>The result of what you just said.</em></td><td style="padding:.6rem">The index came back at fifty-eight, <strong>leaving</strong> us nine points below the benchmark.<br><span style="color:var(--text-dim)">= ...and this left us nine points below.</span></td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">3. Past participle<br>partic&#237;pio sozinho</td><td style="padding:.6rem">Sentido PASSIVO: o sujeito SOFRE a a&#231;&#227;o. <em>Something was done TO the subject.</em></td><td style="padding:.6rem"><strong>Asked</strong> about the timeline, most of the faculty said the same thing.<br><span style="color:var(--text-dim)">= When they were asked about the timeline...</span></td></tr>
-          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">4. Aberturas fixas<br><strong>Given</strong> / <strong>Based on</strong> / <strong>Drawing on</strong></td><td style="padding:.6rem">A abertura de executivo. Ancora a recomenda&#231;&#227;o na evid&#234;ncia, antes de dizer qual &#233;.</td><td style="padding:.6rem"><strong>Given</strong> the response rate, the caveat belongs on slide one.<br><strong>Based on</strong> the preliminary findings, I am proposing...</td></tr>
-          <tr><td style="padding:.6rem;font-weight:600">A regra de ouro</td><td style="padding:.6rem" colspan="2">O participle e a frase principal t&#234;m de ter o <strong>MESMO SUJEITO</strong>. Se n&#227;o tiverem, a frase desaba (o cl&#225;ssico <em>dangling participle</em>) &mdash; e em ingl&#234;s ela n&#227;o soa estranha: ela soa <em>errada</em>.</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">1. Perfect participle<br><strong>Having</strong> + past participle</td><td style="padding:.6rem">The action that came FIRST. It packs the whole past into five words.</td><td style="padding:.6rem"><strong>Having reviewed</strong> the findings, I would propose two quick wins.<br><span style="color:var(--text-dim)">= After I reviewed the findings, I would propose...</span></td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">2. Present participle<br>verbo + <strong>-ing</strong></td><td style="padding:.6rem">The RESULT or consequence of the main clause. It almost always comes AFTER the comma.</td><td style="padding:.6rem">The index came back at fifty-eight, <strong>leaving</strong> us nine points below the benchmark.<br><span style="color:var(--text-dim)">= ...and this left us nine points below.</span></td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">3. Past participle<br>the participle alone</td><td style="padding:.6rem">A PASSIVE meaning: something was done TO the subject.</td><td style="padding:.6rem"><strong>Asked</strong> about the timeline, most of the faculty said the same thing.<br><span style="color:var(--text-dim)">= When they were asked about the timeline...</span></td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">4. Fixed openings<br><strong>Given</strong> / <strong>Based on</strong> / <strong>Drawing on</strong></td><td style="padding:.6rem">The executive opening. It anchors the recommendation in the evidence, before you say what it is.</td><td style="padding:.6rem"><strong>Given</strong> the response rate, the caveat belongs on slide one.<br><strong>Based on</strong> the preliminary findings, I am proposing...</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">The golden rule</td><td style="padding:.6rem" colspan="2">The participle and the main clause must share the <strong>SAME SUBJECT</strong>. If they do not, the sentence collapses (the classic <em>dangling participle</em>) &mdash; and in English it does not sound odd: it sounds <em>wrong</em>.</td></tr>
         </tbody>
       </table></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Aten&#231;&#227;o (o erro n&#186; 1 &mdash; dangling participle):</strong> "<em>Having reviewed the findings, the response rate was disappointing</em>" est&#225; ERRADO: quem revisou os findings foi VOC&#202;, n&#227;o a taxa de resposta. O sujeito da frase principal tem de ser quem executa o participle. Certo: "Having reviewed the findings, <strong>I</strong> found the response rate disappointing." Teste infal&#237;vel: pergunte "quem fez isso?" &#8594; a resposta tem de ser o sujeito da frase principal.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Aten&#231;&#227;o (o erro n&#186; 2):</strong> <em>having</em> pede PARTIC&#205;PIO, nunca infinitivo nem presente. "Having <em>review</em> the data" &#8594; "Having <strong>reviewed</strong> the data". E o participle passivo &#233; s&#243; o partic&#237;pio, sem <em>being</em>: "<em>Being asked</em> about the timeline" &#233; poss&#237;vel, mas o registro executivo prefere o seco "<strong>Asked</strong> about the timeline".</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Por que isto importa para voc&#234;:</strong> voc&#234; tem 11 minutos e um COO que para de anotar no slide tr&#234;s. O participle clause &#233; a ferramenta que comprime "N&#243;s revisamos os achados, e depois disso eu preparei uma proposta" em "<strong>Having reviewed the findings, I would propose...</strong>" &mdash; e devolve os seus segundos para a &#250;nica parte que a sala quer ouvir: o que voc&#234; encontrou, e o que voc&#234; vai fazer.</p>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Revis&#227;o das aulas 1-7 (hoje tudo volta):</strong> causative passive (<em>We had the survey designed by...</em>), cleft (<em>What the team needs is...</em>), invers&#227;o (<em>Never have I seen...</em>), third conditional + modal perfects (<em>If we had asked earlier, we would have known / we should have addressed it</em>), reporting verbs (<em>He acknowledged that... / She agreed to...</em>) e hedging (<em>It would appear that... / To a certain extent...</em>). N&#227;o s&#227;o conte&#250;do novo: s&#227;o as suas ferramentas. Hoje voc&#234; usa TODAS numa apresenta&#231;&#227;o s&#243;.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (mistake no. 1 &mdash; the dangling participle):</strong> "<em>Having reviewed the findings, the response rate was disappointing</em>" is WRONG: YOU reviewed the findings, not the response rate. The subject of the main clause has to be the one who performs the participle. Correct: "Having reviewed the findings, <strong>I</strong> found the response rate disappointing." Foolproof test: ask "who did it?" &#8594; the answer has to be the subject of the main clause.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Watch out (mistake no. 2):</strong> <em>having</em> takes a PAST PARTICIPLE, never an infinitive or a base form. "Having <em>review</em> the data" &#8594; "Having <strong>reviewed</strong> the data". And the passive participle is the participle alone, without <em>being</em>: "<em>Being asked</em> about the timeline" is possible, but the executive register prefers the dry "<strong>Asked</strong> about the timeline".</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Why this matters to you:</strong> you have eleven minutes and a COO who stops taking notes on slide three. The participle clause is the tool that compresses "We reviewed the findings, and after that I prepared a proposal" into "<strong>Having reviewed the findings, I would propose...</strong>" &mdash; and gives your seconds back to the only part the room wants to hear: what you found, and what you are going to do.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem"><strong>Review of lessons 1-7 (today it all comes back):</strong> causative passive (<em>We had the survey designed by...</em>), cleft (<em>What the team needs is...</em>), inversion (<em>Never have I seen...</em>), third conditional + modal perfects (<em>If we had asked earlier, we would have known / we should have addressed it</em>), reporting verbs (<em>He acknowledged that... / She agreed to...</em>) and hedging (<em>It would appear that... / To a certain extent...</em>). This is not new content: these are your tools. Today you use them ALL in a single presentation.</p>
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete cada frase com a forma correta do participle. Toque em Listen para ouvir a frase inteira.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct participle form. Tap Listen to hear the full sentence.</p>
 {fill_items}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 2: Put the Midpoint Review in Order</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque os cinco movimentos na ordem em que voc&#234; vai conduzir a apresenta&#231;&#227;o do balan&#231;o &#224; lideran&#231;a canadense. Lembre-se do erro da Mariana: a sala quer o fim primeiro.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the five moves in the order you will run the midpoint review with the Canadian leadership. Remember Mariana's mistake: the room wants the end first.</p>
       <div class="order-container" id="order-l8">
         <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l8')"><span class="order-num">?</span><span class="order-text">Name the caveat yourself, before anyone else does: what you fell short of, and what the jury is still out on.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l8')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l8')">&#9660;</button></span></div>
         <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l8')"><span class="order-num">?</span><span class="order-text">Close by asking for the one decision you actually came for, with a date attached to it.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l8')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l8')">&#9660;</button></span></div>
@@ -289,13 +288,13 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-8">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ou&#231;a cada frase e depois grave voc&#234; mesma dizendo-a. S&#227;o as cinco frases que sustentam a sua apresenta&#231;&#227;o de balan&#231;o do come&#231;o ao fim.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. These are the five sentences that hold your midpoint review together, from start to finish.</p>
 {speech_cards}
     </div>
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escolha a melhor resposta para cada momento real da sua apresenta&#231;&#227;o de meio de percurso &#224; lideran&#231;a canadense.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best answer for each real moment of your midpoint review with the Canadian leadership.</p>
       <div class="quiz-item"><div class="quiz-question">You have eleven minutes with the COO. Your first sentence is:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;Let me start by walking you through the methodology we used and the four phases of the assessment.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;The takeaway first: the culture here is not broken, it is unheard &mdash; and the response rate is the evidence. Everything else I say today defends that sentence.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;Thank you all so much for your time today. I know how busy everyone is at this time of year.&rdquo;</div></div></div>
       <div class="quiz-item"><div class="quiz-question">Which sentence uses the participle clause correctly?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> &ldquo;Having reviewed the findings, the response rate was disappointing.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> &ldquo;Having reviewed the findings, I would propose that we build on the focus groups rather than start again.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;Having review the findings, I am proposing two quick wins.&rdquo;</div></div></div>
       <div class="quiz-item"><div class="quiz-question">You promised a seventy percent response rate in June. It came back at thirty-eight. The COO has not asked about it yet. You:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> &ldquo;One caveat, and I would rather give it to you than have you find it: we fell short of the rate I projected in June. It leaves me a smaller sample, and it is itself a finding about how heard this team feels.&rdquo;</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Say nothing about it. He has not asked, the work is strong, and the number would only distract from the recommendation.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> &ldquo;The response rate was low, but honestly that happens with every survey, so I would not read anything into it.&rdquo;</div></div></div>
@@ -305,7 +304,7 @@ HTML = f'''<div class="lesson-card" id="ex-lesson-8">
 
     <div class="exercise-section">
       <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
-      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Grave voc&#234; mesma respondendo &#224; pergunta abaixo. Fale por 2 a 3 minutos, sem script.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. Speak for two or three minutes, with no script.</p>
       <div class="think-card">
         <div class="think-question">You have eleven minutes with the Canadian leadership team, and this is the midpoint review. Give it. Open with your takeaway in ONE sentence, before any detail. Then: one tangible number and the rationale behind it; the caveat you are holding (what you fell short of, and what the jury is still out on); and what you propose next -- two quick wins to build on, one long piece of work, and the trade-off each one costs. Open at least two sentences with a participle clause (Having reviewed... / Given... / Based on...), and use six words from this lesson.</div>
         <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>

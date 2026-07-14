@@ -326,6 +326,18 @@ body.slide-mode .teacher-t { display:flex; }
 .error-card.revealed .error-fix { display:block;animation:fadeUp .3s ease; }
 .error-score { text-align:center;margin-top:1rem;font-weight:700;color:var(--accent);font-size:1.1rem; }
 
+/* Sentence Building (.oral-*): nasceu SEM estilo-base — o bloco saía como uma lista
+   <div> nua enquanto o resto do deck é todo em cards. Mesmo vocabulário visual do
+   .error-card/.challenge-card vizinhos. A VISIBILIDADE do gabarito NÃO se define aqui:
+   .oral-model{display:none} + .oral-item.revealed .oral-model{display:block} ficam
+   juntos, mais abaixo, e continuam sendo a única fonte do reveal. */
+.oral-grid { display:flex;flex-direction:column;gap:.8rem;max-width:560px;margin:1.5rem auto 0; }
+.oral-item { background:#fff;border:1px solid #e8e4df;border-radius:10px;padding:1rem 1.2rem;cursor:pointer;transition:all .3s; }
+.oral-item:hover { border-color:var(--accent); }
+.oral-item:focus-visible { outline:3px solid var(--accent);outline-offset:2px; }
+.oral-situation { font-size:.95rem;line-height:1.5;color:var(--text);font-weight:600; }
+@media (prefers-reduced-motion:reduce) { .oral-item { transition:none; } }
+
 .roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:500px;margin:0 auto; }
 .roleplay-body { padding:1.5rem; }
 .roleplay-scenario { font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem; }
@@ -371,6 +383,10 @@ body.slide-mode .teacher-t { display:flex; }
 .comp-q .q-text { font-weight:500; }
 .comp-q .q-answer { display:none;margin-top:.5rem;color:var(--accent);font-weight:600;font-size:.9rem; }
 .comp-q.revealed .q-answer { display:block;animation:fadeUp .3s ease; }
+/* Slide de TAREFA (REGRA 2.2): a pergunta ANTES da exposição. Não é clicável — não há
+   gabarito aqui para revelar (ele nem existe no HTML). Logo, não finge ser botão. */
+.comp-q-task { cursor:default; }
+.comp-q-task:hover { border-color:#e8e4df;background:#fff; }
 
 .lost-bag-report { background:#fff;border-radius:12px;max-width:460px;margin:0 auto;box-shadow:0 12px 40px rgba(0,0,0,.1);overflow:hidden;border:2px solid #e8e4df; }
 .lbr-header { background:linear-gradient(135deg,#6A1B4D,#C2549B);padding:1.2rem 1.5rem;display:flex;align-items:center;justify-content:space-between; }
@@ -449,8 +465,9 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .oral-item,
 .slide-dark .oral-item * { color: #1a1a2e !important; }
 .slide-dark .oral-item .oral-model { color: var(--accent) !important; }
-.oral-model { display:none; }
+.oral-model { display:none;margin-top:.6rem;font-size:.95rem;line-height:1.5;font-style:italic;color:var(--accent);font-weight:600; }
 .oral-item.revealed .oral-model { display:block; animation:fadeUp .3s ease; }
+@media (prefers-reduced-motion:reduce) { .oral-item.revealed .oral-model { animation:none; } }
 .slide-dark .error-card { background: #fff !important; }
 .slide-dark .error-card,
 .slide-dark .error-card * { color: #1a1a2e !important; }
@@ -709,7 +726,7 @@ body.slide-mode .nav-bar { display:flex; }
 
 <!-- ========== TAB 3: IN CLASS ========== -->
 <div class="tab-content active" id="tab-inclass">
-  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Selecione a Aula</h3>
+  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem">IN CLASS -- Select your Lesson</h3>
   <div style="display:flex;flex-direction:column;gap:1rem">
     <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit" onclick="enterSlideMode();" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
       <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">04</div>
@@ -935,7 +952,21 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 12: READING + GIST ========== -->
-<div class="slide slide-light" data-slide="12" data-phase="3" data-teacher="<strong>Reading + gist (7 min):</strong> Ela l&ecirc; em sil&ecirc;ncio (2 min), depois em voz alta o par&aacute;grafo 3 &mdash; &eacute; onde moram as invers&otilde;es. N&Atilde;O explique a gram&aacute;tica ainda: pe&ccedil;a s&oacute; que ela note as frases que come&ccedil;am com 'Never', 'Not only' e 'Hardly' e que soam 'de tr&aacute;s para a frente'. Depois, gist: ela escolhe a ideia principal. Se errar, releiam juntos o &uacute;ltimo par&aacute;grafo.">
+<div class="slide slide-light" data-slide="12" data-phase="3" data-task-for="reading" data-teacher="<strong>Antes do texto (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA ANTES de mostrar o texto. É isto que ela vai procurar enquanto lê — sem a tarefa antes, compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide de checagem, depois.">
+  <div class="slide-inner">
+    <div class="chapter-label">Before you read</div>
+    <h2 class="slide-heading">Read <span class="accent">for this</span></h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
+      <div class="comp-q comp-q-task"><div class="q-text">Marina had formal authority over the five regional directors.</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">The board rejected the framework her predecessor presented.</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">Nobody had read the engagement survey region by region before Marina did.</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">Marina named the weakness of the flexible model herself, before the board could.</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">The director who had blocked the previous plan asked to own the first pilot.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-light" data-slide="13" data-phase="3" data-teacher="<strong>Reading + gist (7 min):</strong> Ela l&ecirc; em sil&ecirc;ncio (2 min), depois em voz alta o par&aacute;grafo 3 &mdash; &eacute; onde moram as invers&otilde;es. N&Atilde;O explique a gram&aacute;tica ainda: pe&ccedil;a s&oacute; que ela note as frases que come&ccedil;am com 'Never', 'Not only' e 'Hardly' e que soam 'de tr&aacute;s para a frente'. Depois, gist: ela escolhe a ideia principal. Se errar, releiam juntos o &uacute;ltimo par&aacute;grafo.">
   <div class="slide-inner">
     <div class="chapter-label">Case Study</div>
     <h2 class="slide-heading">Read for the <span class="accent">Main Idea</span></h2>
@@ -945,7 +976,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 13: TRUE / FALSE ========== -->
-<div class="slide slide-light" data-slide="13" data-phase="3" data-teacher="<strong>True / False (5 min):</strong> Ela responde ANTES de revelar, e justifica com a linha do texto. O item 2 &eacute; o mais importante: o plano do antecessor N&Atilde;O foi rejeitado &mdash; foi aprovado e nunca carregado. Essa distin&ccedil;&atilde;o (aprova&ccedil;&atilde;o n&atilde;o &eacute; ado&ccedil;&atilde;o) &eacute; a tese inteira da aula e o risco real dela em agosto.">
+<div class="slide slide-light" data-slide="14" data-phase="3" data-teacher="<strong>True / False (5 min):</strong> Ela responde ANTES de revelar, e justifica com a linha do texto. O item 2 &eacute; o mais importante: o plano do antecessor N&Atilde;O foi rejeitado &mdash; foi aprovado e nunca carregado. Essa distin&ccedil;&atilde;o (aprova&ccedil;&atilde;o n&atilde;o &eacute; ado&ccedil;&atilde;o) &eacute; a tese inteira da aula e o risco real dela em agosto.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">True or <span class="accent">False?</span></h2>
@@ -954,7 +985,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: LISTENING 1 (Claire, VP) ========== -->
-<div class="slide slide-dark" data-slide="14" data-phase="3" data-teacher="<strong>Listening 1 (6 min):</strong> Diga: 'Claire is the VP. This is the voicemail she leaves you the night before the board. Just listen &mdash; no text.' Toque SEM texto, 2 vezes. As perguntas aparecem quando o &aacute;udio termina. Depois pergunte: 'What is the one thing she tells you NOT to answer with?' &mdash; a resposta (values) &eacute; a ponte perfeita para o cap&iacute;tulo da gram&aacute;tica e para o argumento de custo.">
+<div class="slide slide-dark" data-slide="15" data-phase="3" data-teacher="<strong>Listening 1 (6 min):</strong> Diga: 'Claire is the VP. This is the voicemail she leaves you the night before the board. Just listen &mdash; no text.' LEIA AS PERGUNTAS EM VOZ ALTA COM ELA ANTES de tocar &mdash; elas j&aacute; est&atilde;o na tela, e s&atilde;o a TAREFA de escuta: dizem O QUE procurar. Ouvir sem a pergunta vira teste de mem&oacute;ria. Depois toque SEM texto, 2 vezes. Depois pergunte: 'What is the one thing she tells you NOT to answer with?' &mdash; a resposta (values) &eacute; a ponte perfeita para o cap&iacute;tulo da gram&aacute;tica e para o argumento de custo.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">The Night Before the <span class="accent">Board</span></h2>
@@ -975,7 +1006,7 @@ body.slide-mode .nav-bar { display:flex; }
         <button class="lp-speed-btn" onclick="mpSpeed('mp-listen1',1.25,this)" style="background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.82);border-radius:6px;padding:.2rem .6rem;font-size:.7rem;cursor:pointer">1.25x</button>
       </div>
     </div>
-    <div class="comp-questions" id="listening1Qs" style="display:none;max-width:540px;margin:1.2rem auto 0">
+    <div class="comp-questions" id="listening1Qs" style="max-width:540px;margin:1.2rem auto 0">
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. Why does Claire say nothing gets adopted because Danielle presented it?</div><div class="q-answer">Because nobody in that room reports to her. It gets adopted only when somebody in the room decides to carry it.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What will the board argue with &mdash; the strategy or the cost?</div><div class="q-answer">The cost. Claire says they will not argue with the strategy itself.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What does she tell Danielle NOT to answer the cost objection with?</div><div class="q-answer">With values. She says answer it with people analytics &mdash; the number that says what one senior departure costs.</div></div>
@@ -984,7 +1015,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 15: CH4 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="15" data-phase="4" data-teacher="<strong>Transi&ccedil;&atilde;o grammar (1 min):</strong> Diga: 'Now the grammar of weight. English has a way of moving a word to the front of the sentence so that the room stops. It sounds backwards, and that is exactly why it lands.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="16" data-phase="4" data-teacher="<strong>Transi&ccedil;&atilde;o grammar (1 min):</strong> Diga: 'Now the grammar of weight. English has a way of moving a word to the front of the sentence so that the room stops. It sounds backwards, and that is exactly why it lands.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 4: The Code</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">The Sentence That <span class="accent">Stops the Room</span></h2>
@@ -993,7 +1024,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 16: GRAMMAR DISCOVERY (inversion) ========== -->
-<div class="slide slide-light" data-slide="16" data-phase="4" data-teacher="<strong>Grammar discovery (7 min):</strong> N&Atilde;O d&ecirc; a regra primeiro (REGRA 27). Leia os quatro exemplos (todos sa&iacute;ram do caso), toque os &aacute;udios. Pergunte: 'Where is the subject? Look at the first three words of each sentence. What jumped in front of it?'. Espere ela notar que o verbo auxiliar vem ANTES do sujeito, como numa pergunta. S&oacute; ent&atilde;o clique 'Reveal the Rule'. CCQ: 'Never have I seen &mdash; is this a question? (No.) Does it use question word order? (Yes.) Why? (Because the emphasis word went to the front, and the verb had to follow it.)'">
+<div class="slide slide-light" data-slide="17" data-phase="4" data-teacher="<strong>Grammar discovery (7 min):</strong> N&Atilde;O d&ecirc; a regra primeiro (REGRA 27). Leia os quatro exemplos (todos sa&iacute;ram do caso), toque os &aacute;udios. Pergunte: 'Where is the subject? Look at the first three words of each sentence. What jumped in front of it?'. Espere ela notar que o verbo auxiliar vem ANTES do sujeito, como numa pergunta. S&oacute; ent&atilde;o clique 'Reveal the Rule'. CCQ: 'Never have I seen &mdash; is this a question? (No.) Does it use question word order? (Yes.) Why? (Because the emphasis word went to the front, and the verb had to follow it.)'">
   <div class="slide-inner">
     <div class="chapter-label">Grammar Discovery</div>
     <h2 class="slide-heading">Listen and <span class="accent">Notice</span></h2>
@@ -1022,7 +1053,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 17: REGISTER (as tres inversoes, tres trabalhos) ========== -->
-<div class="slide slide-light" data-slide="17" data-phase="4" data-teacher="<strong>Registro (5 min):</strong> A diferen&ccedil;a aqui &eacute; RET&Oacute;RICA, n&atilde;o gramatical. Cada invers&atilde;o faz UM trabalho: convic&ccedil;&atilde;o, escala, velocidade. Insista no aviso do rodap&eacute;: invers&atilde;o &eacute; tempero. Duas ou tr&ecirc;s numa apresenta&ccedil;&atilde;o de dez minutos = autoridade; seis = teatro, e ela perde a sala. Pe&ccedil;a que ela escolha AGORA em que momento da apresenta&ccedil;&atilde;o de agosto vai usar cada uma.">
+<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Registro (5 min):</strong> A diferen&ccedil;a aqui &eacute; RET&Oacute;RICA, n&atilde;o gramatical. Cada invers&atilde;o faz UM trabalho: convic&ccedil;&atilde;o, escala, velocidade. Insista no aviso do rodap&eacute;: invers&atilde;o &eacute; tempero. Duas ou tr&ecirc;s numa apresenta&ccedil;&atilde;o de dez minutos = autoridade; seis = teatro, e ela perde a sala. Pe&ccedil;a que ela escolha AGORA em que momento da apresenta&ccedil;&atilde;o de agosto vai usar cada uma.">
   <div class="slide-inner">
     <div class="chapter-label">Register</div>
     <h2 class="slide-heading">Three Inversions, Three <span class="accent">Jobs</span></h2>
@@ -1036,7 +1067,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: COMMON MISTAKE ========== -->
-<div class="slide slide-light" data-slide="18" data-phase="4" data-teacher="<strong>Common mistake (4 min):</strong> Erro n&uacute;mero 1: manter a ordem normal depois do 'Never' &mdash; 'Never I have seen'. Erro n&uacute;mero 2: esquecer o <em>did</em> depois de 'Not only' &mdash; o portugu&ecirc;s n&atilde;o tem auxiliar a&iacute;, ent&atilde;o a transfer&ecirc;ncia &eacute; autom&aacute;tica. Pe&ccedil;a que ela leia as duas vers&otilde;es certas em voz alta DUAS vezes, sentindo a pausa depois do 'Never' e do 'Not only'.">
+<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>Common mistake (4 min):</strong> Erro n&uacute;mero 1: manter a ordem normal depois do 'Never' &mdash; 'Never I have seen'. Erro n&uacute;mero 2: esquecer o <em>did</em> depois de 'Not only' &mdash; o portugu&ecirc;s n&atilde;o tem auxiliar a&iacute;, ent&atilde;o a transfer&ecirc;ncia &eacute; autom&aacute;tica. Pe&ccedil;a que ela leia as duas vers&otilde;es certas em voz alta DUAS vezes, sentindo a pausa depois do 'Never' e do 'Not only'.">
   <div class="slide-inner">
     <div class="chapter-label">Common Mistake</div>
     <h2 class="slide-heading">Right vs <span class="accent">Wrong</span></h2>
@@ -1063,7 +1094,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 19: GRAMMAR PRACTICE ========== -->
-<div class="slide slide-light" data-slide="19" data-phase="4" data-teacher="<strong>Practice (5 min):</strong> Leia cada frase. A Danielle completa ORALMENTE antes de clicar. Se travar, pergunte: 'What is the auxiliary here, and where does it have to go?'. Todas as frases s&atilde;o do caso ou do painel &mdash; ela j&aacute; tem o conte&uacute;do, s&oacute; precisa da forma.">
+<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Practice (5 min):</strong> Leia cada frase. A Danielle completa ORALMENTE antes de clicar. Se travar, pergunte: 'What is the auxiliary here, and where does it have to go?'. Todas as frases s&atilde;o do caso ou do painel &mdash; ela j&aacute; tem o conte&uacute;do, s&oacute; precisa da forma.">
   <div class="slide-inner">
     <div class="chapter-label">Practice</div>
     <h2 class="slide-heading">Which <span class="accent">Form?</span></h2>
@@ -1080,7 +1111,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 20: PRESENTATION LANGUAGE (flat -> executive) ========== -->
-<div class="slide slide-light" data-slide="20" data-phase="4" data-teacher="<strong>Linguagem de apresenta&ccedil;&atilde;o (6 min):</strong> ESTE &eacute; o cora&ccedil;&atilde;o pr&aacute;tico da aula. &Agrave; esquerda, a frase que faz a Danielle soar j&uacute;nior (e ela N&Atilde;O &eacute; j&uacute;nior &mdash; ela s&oacute; n&atilde;o tem o repert&oacute;rio ainda). &Agrave; direita, a MESMA ideia, dita como uma l&iacute;der s&ecirc;nior. Ela tenta a vers&atilde;o executiva ANTES de revelar. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="21" data-phase="4" data-teacher="<strong>Linguagem de apresenta&ccedil;&atilde;o (6 min):</strong> ESTE &eacute; o cora&ccedil;&atilde;o pr&aacute;tico da aula. &Agrave; esquerda, a frase que faz a Danielle soar j&uacute;nior (e ela N&Atilde;O &eacute; j&uacute;nior &mdash; ela s&oacute; n&atilde;o tem o repert&oacute;rio ainda). &Agrave; direita, a MESMA ideia, dita como uma l&iacute;der s&ecirc;nior. Ela tenta a vers&atilde;o executiva ANTES de revelar. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">Presentation Language</div>
     <h2 class="slide-heading">Same Idea. The Board <span class="accent">Listens.</span></h2>
@@ -1096,7 +1127,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 21: CH5 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="21" data-phase="5" data-teacher="<strong>Transi&ccedil;&atilde;o practice (1 min):</strong> Diga: 'Now we train under pressure: detective, the dashboard, and speed.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="22" data-phase="5" data-teacher="<strong>Transi&ccedil;&atilde;o practice (1 min):</strong> Diga: 'Now we train under pressure: detective, the dashboard, and speed.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 5: Practice</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Train Under <span class="accent">Pressure</span></h2>
@@ -1105,7 +1136,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 22: SPOT THE ERROR ========== -->
-<div class="slide slide-light" data-slide="22" data-phase="5" data-teacher="<strong>Detective (4 min):</strong> Leia cada frase com erro. Pergunte 'What is wrong here?'. Ela corrige ANTES de clicar. O item 3 &eacute; collocation ('do a case' n&atilde;o existe: &eacute; MAKE a case) e o item 4 &eacute; a invers&atilde;o incompleta com 'Hardly'. Trate como vit&oacute;ria quando ela achar sozinha &mdash; e n&atilde;o entregue a resposta antes de ela tentar.">
+<div class="slide slide-light" data-slide="23" data-phase="5" data-teacher="<strong>Detective (4 min):</strong> Leia cada frase com erro. Pergunte 'What is wrong here?'. Ela corrige ANTES de clicar. O item 3 &eacute; collocation ('do a case' n&atilde;o existe: &eacute; MAKE a case) e o item 4 &eacute; a invers&atilde;o incompleta com 'Hardly'. Trate como vit&oacute;ria quando ela achar sozinha &mdash; e n&atilde;o entregue a resposta antes de ela tentar.">
   <div class="slide-inner">
     <div class="chapter-label">Detective</div>
     <h2 class="slide-heading">Spot the <span class="accent">Error</span></h2>
@@ -1120,7 +1151,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 23: ARTEFATO CSS (people dashboard) ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="5" data-teacher="<strong>Artefato (6 min):</strong> Este &eacute; o painel que ela vai colocar NA FRENTE do board em agosto. Pe&ccedil;a que leia os n&uacute;meros em voz alta e escolha UM para abrir a apresenta&ccedil;&atilde;o. O achado que ela precisa ver: o &uacute;nico n&uacute;mero que o board de fato entende &eacute; o custo (eleven months of hiring). Se ela escolher 'engagement' ou 'employer brand' para abrir, devolva ao listening da Claire: 'answer cost with cost'.">
+<div class="slide slide-light" data-slide="24" data-phase="5" data-teacher="<strong>Artefato (6 min):</strong> Este &eacute; o painel que ela vai colocar NA FRENTE do board em agosto. Pe&ccedil;a que leia os n&uacute;meros em voz alta e escolha UM para abrir a apresenta&ccedil;&atilde;o. O achado que ela precisa ver: o &uacute;nico n&uacute;mero que o board de fato entende &eacute; o custo (eleven months of hiring). Se ela escolher 'engagement' ou 'employer brand' para abrir, devolva ao listening da Claire: 'answer cost with cost'.">
   <div class="slide-inner">
     <div class="chapter-label">The Artifact</div>
     <h2 class="slide-heading">The People <span class="accent">Dashboard</span></h2>
@@ -1146,7 +1177,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 24: QUICK FIRE ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="5" data-teacher="<strong>Quick fire (6 min):</strong> UMA pergunta por vez. Ela responde em voz alta, frase COMPLETA, antes de voc&ecirc; mostrar as tips. N&atilde;o aceite resposta de tr&ecirc;s palavras. &Eacute; a simula&ccedil;&atilde;o da interrup&ccedil;&atilde;o real do board: eles V&Atilde;O cortar no meio, e ela precisa responder sem perder o fio.">
+<div class="slide slide-light" data-slide="25" data-phase="5" data-teacher="<strong>Quick fire (6 min):</strong> UMA pergunta por vez. Ela responde em voz alta, frase COMPLETA, antes de voc&ecirc; mostrar as tips. N&atilde;o aceite resposta de tr&ecirc;s palavras. &Eacute; a simula&ccedil;&atilde;o da interrup&ccedil;&atilde;o real do board: eles V&Atilde;O cortar no meio, e ela precisa responder sem perder o fio.">
   <div class="slide-inner">
     <div class="chapter-label">Quick Fire</div>
     <h2 class="slide-heading">Answer While the Board <span class="accent">Interrupts</span></h2>
@@ -1155,7 +1186,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 25: SENTENCE BUILDING ========== -->
-<div class="slide slide-light" data-slide="25" data-phase="5" data-teacher="<strong>Sentence Building (4 min):</strong> Mostre as keywords. Ela monta a frase COMPLETA em voz alta, depois clica para comparar. Exija a pausa depois do 'Never' e do 'Not only' &mdash; a invers&atilde;o s&oacute; funciona com a prosa certa. Toggle: clicar de novo fecha.">
+<div class="slide slide-light" data-slide="26" data-phase="5" data-teacher="<strong>Sentence Building (4 min):</strong> Mostre as keywords. Ela monta a frase COMPLETA em voz alta, depois clica para comparar. Exija a pausa depois do 'Never' e do 'Not only' &mdash; a invers&atilde;o s&oacute; funciona com a prosa certa. Toggle: clicar de novo fecha.">
   <div class="slide-inner">
     <div class="chapter-label">Build</div>
     <h2 class="slide-heading">Sentence <span class="accent">Building</span></h2>
@@ -1171,7 +1202,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 26: LISTENING 2 (Nathan) ========== -->
-<div class="slide slide-dark" data-slide="26" data-phase="5" data-teacher="<strong>Listening 2 (5 min):</strong> Diga: 'Nathan has watched a lot of people present to this board. Listen &mdash; no text.' Toque 2 vezes. Este &aacute;udio &eacute; o manual t&aacute;tico da apresenta&ccedil;&atilde;o dela: abrir com dado, nomear o trade-off primeiro, responder custo com custo. Depois pergunte: 'What happens the moment you say I feel?' &mdash; e conecte direto ao role-play.">
+<div class="slide slide-dark" data-slide="27" data-phase="5" data-teacher="<strong>Listening 2 (5 min):</strong> Diga: 'Nathan has watched a lot of people present to this board. Listen &mdash; no text.' LEIA AS PERGUNTAS EM VOZ ALTA COM ELA ANTES de tocar &mdash; elas j&aacute; est&atilde;o na tela, e s&atilde;o a TAREFA de escuta: dizem O QUE procurar. Ouvir sem a pergunta vira teste de mem&oacute;ria. Depois toque 2 vezes. Este &aacute;udio &eacute; o manual t&aacute;tico da apresenta&ccedil;&atilde;o dela: abrir com dado, nomear o trade-off primeiro, responder custo com custo. Depois pergunte: 'What happens the moment you say I feel?' &mdash; e conecte direto ao role-play.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">How This Board <span class="accent">Decides</span></h2>
@@ -1192,7 +1223,7 @@ body.slide-mode .nav-bar { display:flex; }
         <button class="lp-speed-btn" onclick="mpSpeed('mp-listen2',1.25,this)" style="background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.82);border-radius:6px;padding:.2rem .6rem;font-size:.7rem;cursor:pointer">1.25x</button>
       </div>
     </div>
-    <div class="comp-questions" id="listening2Qs" style="display:none;max-width:540px;margin:1.2rem auto 0">
+    <div class="comp-questions" id="listening2Qs" style="max-width:540px;margin:1.2rem auto 0">
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. According to Nathan, why do most presenters fail with this board?</div><div class="q-answer">They present a plan. The board does not adopt plans &mdash; it adopts arguments.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What happens the moment you say &ldquo;I feel&rdquo;?</div><div class="q-answer">You become a consultant &mdash; and consultants get thanked and then ignored.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What sentence does he tell her to say when they push on cost?</div><div class="q-answer">&ldquo;Not only did our last two departures cost us eleven months of hiring, but they also took the succession plan with them.&rdquo;</div></div>
@@ -1201,7 +1232,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 27: CH6 TRANSITION ========== -->
-<div class="slide slide-image" data-slide="27" data-phase="6" data-teacher="<strong>Transi&ccedil;&atilde;o role-play (1 min):</strong> Diga: 'Now the real thing. I am Nathan, the dashboard is on the screen, and the board is about to interrupt you.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-image" data-slide="28" data-phase="6" data-teacher="<strong>Transi&ccedil;&atilde;o role-play (1 min):</strong> Diga: 'Now the real thing. I am Nathan, the dashboard is on the screen, and the board is about to interrupt you.' Passe ao pr&oacute;ximo." style="background-image:linear-gradient(rgba(15,15,30,.78),rgba(15,15,30,.9)),url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Chapter 6: Your Turn</div>
     <h2 class="slide-heading" style="font-size:2rem;color:#fff">Make the <span class="accent">Case</span></h2>
@@ -1210,7 +1241,19 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 28: DIALOGUE ========== -->
-<div class="slide slide-dark" data-slide="28" data-phase="6" data-teacher="<strong>Di&aacute;logo (7 min):</strong> Voc&ecirc; &eacute; o Nathan (masculino, canadense). Clique 'Next Line' a cada fala. Para CADA fala da Danielle, pe&ccedil;a que ELA produza primeiro e s&oacute; depois toque o &aacute;udio para comparar. CELEBRE quando a invers&atilde;o sair sem travar &mdash; e quando ela responder o custo com custo, em vez de responder com valores.">
+<div class="slide slide-light" data-slide="29" data-phase="6" data-task-for="dialogue" data-teacher="<strong>Antes do diálogo (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA ANTES de abrir o diálogo. É isto que ela vai procurar enquanto ouve — sem a tarefa antes, compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide de checagem, depois.">
+  <div class="slide-inner">
+    <div class="chapter-label">Before you listen</div>
+    <h2 class="slide-heading">Listen <span class="accent">for this</span></h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
+      <div class="comp-q comp-q-task"><div class="q-text">1. What does Nathan ask her for before the board joins?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">2. Which objection does he warn her about?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">3. What will two of the directors say about the flexible model?</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-dark" data-slide="30" data-phase="6" data-teacher="<strong>Di&aacute;logo (7 min):</strong> Voc&ecirc; &eacute; o Nathan (masculino, canadense). Clique 'Next Line' a cada fala. Para CADA fala da Danielle, pe&ccedil;a que ELA produza primeiro e s&oacute; depois toque o &aacute;udio para comparar. CELEBRE quando a invers&atilde;o sair sem travar &mdash; e quando ela responder o custo com custo, em vez de responder com valores.">
   <div class="slide-inner">
     <div class="chapter-label">Dialogue</div>
     <h2 class="slide-heading" style="color:#fff">The First Line of the <span class="accent">Presentation</span></h2>
@@ -1227,7 +1270,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 29: DIALOGUE COMPREHENSION (sobre o Nathan) ========== -->
-<div class="slide slide-light" data-slide="29" data-phase="6" data-teacher="<strong>Comprehension (2 min):</strong> Pergunte sobre o NATHAN, nunca sobre a pr&oacute;pria Danielle (REGRA 27F). Clique para revelar cada resposta depois que ela responder.">
+<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Comprehension (2 min):</strong> Pergunte sobre o NATHAN, nunca sobre a pr&oacute;pria Danielle (REGRA 27F). Clique para revelar cada resposta depois que ela responder.">
   <div class="slide-inner">
     <div class="chapter-label">Comprehension</div>
     <h2 class="slide-heading">About <span class="accent">Nathan</span></h2>
@@ -1240,7 +1283,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 30: ROLE-PLAY GUIDED ========== -->
-<div class="slide slide-light" data-slide="30" data-phase="6" data-teacher="<strong>Role-play Guided (4 min):</strong> Voc&ecirc; &eacute; o Nathan. Pe&ccedil;a: 'Open your presentation. You have ninety seconds before somebody interrupts.' Ela usa as keywords da tela. Exija UMA invers&atilde;o e UMA frase de presentation language. Deixe-a conduzir e cronometre de verdade &mdash; a press&atilde;o de tempo &eacute; parte do exerc&iacute;cio.">
+<div class="slide slide-light" data-slide="32" data-phase="6" data-teacher="<strong>Role-play Guided (4 min):</strong> Voc&ecirc; &eacute; o Nathan. Pe&ccedil;a: 'Open your presentation. You have ninety seconds before somebody interrupts.' Ela usa as keywords da tela. Exija UMA invers&atilde;o e UMA frase de presentation language. Deixe-a conduzir e cronometre de verdade &mdash; a press&atilde;o de tempo &eacute; parte do exerc&iacute;cio.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">Ninety Seconds Before They <span class="accent">Interrupt</span></h2>
@@ -1258,7 +1301,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 31: ROLE-PLAY SEMI-FREE ========== -->
-<div class="slide slide-light" data-slide="31" data-phase="6" data-teacher="<strong>Role-play Semi-free (5 min):</strong> Agora voc&ecirc; &eacute; o CFO, e ele est&aacute; IMPACIENTE: 'We are cutting eight percent this year. Retention is a problem for a good year, not for this one.' Menos pistas. A Danielle N&Atilde;O pode responder com valores &mdash; tem de responder com o custo de n&atilde;o fazer nada. Se ela recuar, interrompa e devolva ao listening da Claire. Este &eacute; o cen&aacute;rio real de agosto.">
+<div class="slide slide-light" data-slide="33" data-phase="6" data-teacher="<strong>Role-play Semi-free (5 min):</strong> Agora voc&ecirc; &eacute; o CFO, e ele est&aacute; IMPACIENTE: 'We are cutting eight percent this year. Retention is a problem for a good year, not for this one.' Menos pistas. A Danielle N&Atilde;O pode responder com valores &mdash; tem de responder com o custo de n&atilde;o fazer nada. Se ela recuar, interrompa e devolva ao listening da Claire. Este &eacute; o cen&aacute;rio real de agosto.">
   <div class="slide-inner">
     <div class="chapter-label">Role-Play</div>
     <h2 class="slide-heading">The CFO Wants <span class="accent">Cuts</span></h2>
@@ -1276,7 +1319,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 32: FREE PRACTICE ========== -->
-<div class="slide slide-light" data-slide="32" data-phase="6" data-teacher="<strong>Free Practice (6 min):</strong> A miss&atilde;o da aula: a apresenta&ccedil;&atilde;o inteira, sem pistas, sobre a MAPLE BEAR CANAD&Aacute; real &mdash; os primeiros 90 dias dela. N&Atilde;O interrompa, N&Atilde;O corrija no meio: anote e devolva depois, focando em (1) invers&atilde;o correta, (2) custo respondido com custo, (3) trade-off nomeado por ela antes do board. CELEBRE muito no final &mdash; esta &eacute; literalmente a aula que ela vai viver em 1&ordm; de agosto.">
+<div class="slide slide-light" data-slide="34" data-phase="6" data-teacher="<strong>Free Practice (6 min):</strong> A miss&atilde;o da aula: a apresenta&ccedil;&atilde;o inteira, sem pistas, sobre a MAPLE BEAR CANAD&Aacute; real &mdash; os primeiros 90 dias dela. N&Atilde;O interrompa, N&Atilde;O corrija no meio: anote e devolva depois, focando em (1) invers&atilde;o correta, (2) custo respondido com custo, (3) trade-off nomeado por ela antes do board. CELEBRE muito no final &mdash; esta &eacute; literalmente a aula que ela vai viver em 1&ordm; de agosto.">
   <div class="slide-inner">
     <div class="chapter-label">Free Practice</div>
     <h2 class="slide-heading">Your First <span class="accent">Ninety Days</span></h2>
@@ -1288,7 +1331,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 33: SURVIVAL CARD ========== -->
-<div class="slide slide-dark" data-slide="33" data-phase="7" data-teacher="<strong>Survival card (3 min):</strong> Leia cada frase e toque o &aacute;udio. Pe&ccedil;a que a Danielle repita. Estas cinco frases s&atilde;o o esqueleto da apresenta&ccedil;&atilde;o dela em 1&ordm; de agosto &mdash; ela pode literalmente us&aacute;-las na ordem em que est&atilde;o: abre com o dado, aponta o buraco, crava a convic&ccedil;&atilde;o, nomeia o trade-off, fecha com o pedido.">
+<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Survival card (3 min):</strong> Leia cada frase e toque o &aacute;udio. Pe&ccedil;a que a Danielle repita. Estas cinco frases s&atilde;o o esqueleto da apresenta&ccedil;&atilde;o dela em 1&ordm; de agosto &mdash; ela pode literalmente us&aacute;-las na ordem em que est&atilde;o: abre com o dado, aponta o buraco, crava a convic&ccedil;&atilde;o, nomeia o trade-off, fecha com o pedido.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Survival Card</div>
     <h2 class="slide-heading" style="color:#fff">Five Phrases for the <span class="accent">Board</span></h2>
@@ -1303,7 +1346,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 34: SELF-ASSESSMENT ========== -->
-<div class="slide slide-dark" data-slide="34" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Click each item if you feel confident.' Leia cada item. Os 5 checks marcados = aula completa e stamp 4 no passaporte (registra no Supabase).">
+<div class="slide slide-dark" data-slide="36" data-phase="7" data-teacher="<strong>Checklist (2 min):</strong> Diga: 'Click each item if you feel confident.' Leia cada item. Os 5 checks marcados = aula completa e stamp 4 no passaporte (registra no Supabase).">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Self-Assessment</div>
     <h2 class="slide-heading" style="color:#fff">What I Can Do <span class="accent">Now</span></h2>
@@ -1318,7 +1361,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 35: LESSON COMPLETE ========== -->
-<div class="slide slide-dark" data-slide="35" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Diga: 'Lesson 4 complete, Danielle. You earned your Influence Badge.' HOMEWORK (ORALMENTE, nunca escrito na tela): (1) escrever o 'First 90 Days People &amp; Culture Plan for Maple Bear Canada' &mdash; 3 pilares, 3 bullets cada, com invers&atilde;o em 2 bullets, 6 palavras novas, presentation language e UM trade-off nomeado com 'a double-edged sword'; (2) gravar 3 minutos apresentando UM dos pilares a uma plateia canadense imagin&aacute;ria, com registro formal e pelo menos uma invers&atilde;o; (3) achar no LinkedIn um l&iacute;der de People &amp; Culture de uma empresa canadense, ler o perfil ou um post, e trazer 3 express&otilde;es que ela gostaria de saber dizer. Pr&oacute;xima aula: Brazil vs. Canada &mdash; articular diferen&ccedil;as culturais com times acad&ecirc;micos e executivos.">
+<div class="slide slide-dark" data-slide="37" data-phase="7" data-teacher="<strong>Encerramento (2 min):</strong> Diga: 'Lesson 4 complete, Danielle. You earned your Influence Badge.' HOMEWORK (ORALMENTE, nunca escrito na tela): (1) escrever o 'First 90 Days People &amp; Culture Plan for Maple Bear Canada' &mdash; 3 pilares, 3 bullets cada, com invers&atilde;o em 2 bullets, 6 palavras novas, presentation language e UM trade-off nomeado com 'a double-edged sword'; (2) gravar 3 minutos apresentando UM dos pilares a uma plateia canadense imagin&aacute;ria, com registro formal e pelo menos uma invers&atilde;o; (3) achar no LinkedIn um l&iacute;der de People &amp; Culture de uma empresa canadense, ler o perfil ou um post, e trazer 3 express&otilde;es que ela gostaria de saber dizer. Pr&oacute;xima aula: Brazil vs. Canada &mdash; articular diferen&ccedil;as culturais com times acad&ecirc;micos e executivos.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson Complete</div>
     <div class="badge-card">
@@ -1440,7 +1483,7 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 35;
+var totalSlides = 37;
 var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
 
 function changeSlide(dir) {
