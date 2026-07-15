@@ -31,6 +31,15 @@
     (mesmo tema/gramatica/vocab). Falha se o Pre-class for de OUTRA aula — sinal mais forte
     = vocab do Pre-class disjunto do vocab da aula (incidentes Sandra a5, Pricila B2). Roda
     depois do hub montado (passo 7). Auditoria do roster: AUDIT-preclass-coherence.md.
+5d. GRAMATICA NAO REPETE (GATE):         python3 _build/model/check_grammar_progression.py public/professor/{slug}-aula*.html
+    REGRA 22 para GRAMATICA — o irmao do check_vocab_progression. Le o data-grammar que o
+    builder emite no slide de Grammar Discovery (via lesson.grammar_point no config) e falha
+    se o MESMO ponto gramatical aparecer como ENSINADO em 2+ aulas do aluno. LEGADO-TOLERANTE:
+    aula sem data-grammar e ignorada (o legado nunca dispara nem exige retrofit). Aula de
+    review/checkpoint (titulo) e isenta; whitelist opcional em grammar_allow_repeat.json.
+    Para o gate cobrir a aula, preencha lesson.grammar_point com o ponto canonico
+    (ex.: "past perfect", "second conditional") — campo OPCIONAL, mas sem ele o gate nao ve
+    a aula. Roda no CI (GATE 9) por slug tocado, contra as aulas irmas ja publicadas.
 6. Contraste computado (GATE):          python3 check_computed_contrast.py (headless; 0 ilegível obrigatório)
 7. Hub: inserir _build/{slug}-aula{N}/hub_snippets.html no hub existente (modo "snippets")
    ou usar hub "new" no config (aluno novo, sem hub)
