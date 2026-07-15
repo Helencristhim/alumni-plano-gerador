@@ -34,6 +34,10 @@ CONFIG (JSON):
     "menu_title": "...", "menu_desc": "... -- 27 slides",
     "subtitle": "Aula 1 -- ...",
     "title_tag": "Professor View -- Fulano | Aula 1 -- ...",
+    "grammar_point": "past perfect",   // OPCIONAL: ponto gramatical canônico da aula.
+                                       // Emite data-grammar no slide de Grammar Discovery
+                                       // (REGRA 22, lido por check_grammar_progression.py).
+                                       // Sem ele, nenhum marcador é emitido (config legado ok).
     "phases": ["...", "...", "...", "...", "...", "...", "..."],
     "listenings": [ {"file": "a1_listening1.mp3", "voice": "ellen", "text": "..."} ],
     "extra_audio": [ {"key": "[order-l1]", "file": "pc_order_l1.mp3", "voice": "arthur", "text": "..."} ]
@@ -639,6 +643,64 @@ def final_asserts(s, cfg, label, is_hub=False):
             f'{label}: paleta do modelo vazou'
 
 
+def _attr_escape(v):
+    """Escapa uma string para caber com segurança dentro de um atributo HTML (aspas duplas)."""
+    return (str(v).replace('&', '&amp;').replace('"', '&quot;')
+            .replace('<', '&lt;').replace('>', '&gt;'))
+
+
+def _opening_tag_end(s, start):
+    """Índice do '>' que FECHA a tag aberta em `start`, respeitando aspas.
+    O data-teacher dos slides contém HTML ('<strong>...</strong>'), então um
+    s.find('>') ingênuo pararia DENTRO do valor do atributo. Aqui pulamos as
+    strings entre aspas para achar o '>' real da tag."""
+    i, q = start, None
+    while i < len(s):
+        c = s[i]
+        if q:
+            if c == q:
+                q = None
+        elif c in '"\'':
+            q = c
+        elif c == '>':
+            return i
+        i += 1
+    return -1
+
+
+def inject_grammar_marker(slides, grammar_point):
+    """REGRA 22 (gramática não repete) — o IRMÃO gramatical do vocab-card-word.
+
+    Marca o slide de Grammar Discovery com data-grammar="<ponto canônico>". É esse
+    marcador — uniforme, um-por-aula, emitido pelo BUILDER — que o
+    check_grammar_progression.py lê para saber qual gramática a aula ENSINA como nova.
+    Espelha o que o vocab-card-word faz para o vocabulário: um-conceito-por-elemento,
+    posto pelo builder, impossível de divergir.
+
+    Tolerante por construção: sem `lesson.grammar_point` no config (config legado, ou
+    aula de leitura/review sem slide de Grammar Discovery), NÃO injeta nada. A aula
+    passa incólume e o gate simplesmente a ignora (nunca compara aula sem marcador —
+    é assim que o legado nunca dispara falso-positivo). Idempotente: não duplica."""
+    if not grammar_point:
+        return slides
+    g = ' '.join(str(grammar_point).split()).strip()
+    if not g:
+        return slides
+    marker = 'chapter-label">Grammar Discovery'
+    idx = slides.find(marker)
+    if idx == -1:
+        return slides  # aula sem slide de Grammar Discovery — no-op silencioso
+    start = slides.rfind('<div class="slide', 0, idx)
+    if start == -1:
+        return slides
+    tag_end = _opening_tag_end(slides, start)
+    if tag_end == -1:
+        return slides
+    if 'data-grammar=' in slides[start:tag_end]:
+        return slides  # idempotente
+    return slides[:tag_end] + f' data-grammar="{_attr_escape(g)}"' + slides[tag_end:]
+
+
 def build_standalone(cfg, content_dir, manifest):
     L = cfg['lesson']
     n = L['n']
@@ -662,6 +724,21 @@ def build_standalone(cfg, content_dir, manifest):
     # e nesses casos o save nunca disparava. Normaliza na fonte (N = número da aula).
     slides = re.sub(r'<div class="check-grid"(?![^>]*\bdata-lesson=)',
                     f'<div class="check-grid" data-lesson="{n}"', slides)
+    # REGRA 22 (gramática não repete): marca o slide de Grammar Discovery com
+    # data-grammar=<ponto canônico>, o irmão gramatical do vocab-card-word. É esse
+    # marcador que o check_grammar_progression.py lê. Campo OPCIONAL (lesson.grammar_point):
+    # sem ele — config legado ou aula sem Grammar Discovery — não injeta nada e a aula passa
+    # incólume (o gate ignora aula sem marcador, então o legado nunca dispara).
+    gp = L.get('grammar_point')
+    if gp:
+        slides = inject_grammar_marker(slides, gp)
+    elif 'chapter-label">Grammar Discovery' in slides:
+        # Nudge não-bloqueante: a aula ENSINA gramática mas o config não declarou o ponto,
+        # então o gate da REGRA 22 fica cego para ela. Não é erro (campo opcional p/ não
+        # quebrar config legado), mas o autor deveria preencher lesson.grammar_point.
+        print(f'  aviso: aula {n} tem slide de Grammar Discovery mas sem "grammar_point" no '
+              f'config — data-grammar NÃO emitido (gate de gramática não cobre esta aula).',
+              file=sys.stderr)
     # Common Mistake: riscar a FRASE INTEIRA (<s>"..."</s>) fica ilegível/feio. O erro já
     # vem marcado com <strong>; move o <s> para envolver SÓ o <strong>, deixando o resto
     # da frase legível ("I <s><strong>check always</strong></s> the schedule first.").

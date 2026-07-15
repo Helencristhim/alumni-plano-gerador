@@ -161,6 +161,28 @@ jobs:
         # ~45s para 2.217 arquivos. Não escreve em nada: é alarme, não é reforma.
         run: python3 scripts/check_legacy_baseline.py
 
+      - name: "GATE 9 — gramática não repete entre aulas (REGRA 22, data-grammar)"
+        # O irmão gramatical do check_vocab_progression: um data-grammar (posto pelo builder
+        # no slide de Grammar Discovery) ensinado como NOVO em 2+ aulas do MESMO aluno = FAIL.
+        # LEGADO-TOLERANTE por construção: aula sem data-grammar é ignorada, então nunca
+        # dispara em aula antiga (que não tem o marcador) nem exige retrofit. Roda por SLUG
+        # tocado, comparando a aula nova contra as irmãs já publicadas do mesmo aluno.
+        if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
+        run: |
+          set -euo pipefail
+          slugs=$(for f in ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}; do
+            b=$(basename "$f" .html); echo "$b" | sed -E 's/-aula[0-9]+$//'
+          done | sort -u)
+          rc=0
+          for s in $slugs; do
+            files=$(ls public/professor/${s}-aula*.html 2>/dev/null || true)
+            if [ -n "$files" ]; then
+              echo "— aluno: $s"
+              python3 _build/model/check_grammar_progression.py $files || rc=1
+            fi
+          done
+          exit $rc
+
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''
         continue-on-error: true
