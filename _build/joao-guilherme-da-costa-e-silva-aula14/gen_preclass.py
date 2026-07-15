@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Gera preclass.html (ex-lesson-14) para joao-guilherme aula 14.
+B2: ZERO portugues na tela. Gramatica: reduced relative clauses.
+Emite matching com opcoes EMBARALHADAS (REGRA 24) e data-answer == option correta."""
+import random
+
+random.seed(1414)
+
+# (word, english definition, example)
+VOCAB = [
+    ("Executive summary", "a short opening section that states the key points for a busy decision-maker",
+     "\"The executive summary is three sentences: what happened, the cause, and what I'm asking for.\""),
+    ("Findings", "the results or conclusions your investigation has produced",
+     "\"The findings point to a single component: one late axle-counter delivery.\""),
+    ("Recommendation", "the course of action you advise, based on the findings",
+     "\"My recommendation is a three-workstream recovery plan run on night shifts.\""),
+    ("Supporting data", "the figures and evidence that back up a claim",
+     "\"The supporting data attached to the note shows a realistic four-week recovery.\""),
+    ("Headline figure", "the single most important number you want the audience to remember",
+     "\"Twelve weeks lost, four to recover -- four weeks is the headline figure I lead with.\""),
+    ("Takeaway", "the one main point you want people to leave the room with",
+     "\"If they remember one thing, the takeaway is: recoverable to four weeks.\""),
+    ("To walk someone through", "to guide someone step by step through something",
+     "\"Let me walk you through the recovery plan, one workstream at a time.\""),
+    ("To highlight", "to draw attention to the most important point",
+     "\"I'll highlight one figure on this slide and let the handout carry the rest.\""),
+    ("To take questions", "to invite and answer questions from the audience",
+     "\"I'll take any questions now -- and if you can approve the access, we hold the date.\""),
+    ("To circle back to", "to return to a topic mentioned earlier",
+     "\"That question comes a little early -- can I circle back to the cost in two slides?\""),
+    ("Call to action", "a clear statement of what you want the audience to do next",
+     "\"The call to action is one decision: approve night-shift access on this call.\""),
+    ("To wrap up", "to bring a point or a presentation to a close",
+     "\"To wrap up: one slip, one cause, one plan, and one decision I need from you.\""),
+]
+
+defs = [d for (_, d, _) in VOCAB]
+
+def esc(s):
+    return s
+
+# ---- Stage 1.1 vocab cards ----
+vc = []
+for w, d, ex in VOCAB:
+    vc.append(
+        f'<div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header">'
+        f'<span class="vocab-card-word">{w}</span><span class="vocab-card-dot"> -- </span>'
+        f'<span class="vocab-card-def">{d}</span></div>'
+        f'<div class="vocab-card-example">{ex}</div></div>'
+        f'<button class="audio-btn" data-speak="{w}" onclick="speakText(this.dataset.speak,this)">Listen</button></div>'
+    )
+vocab_cards = "\n        ".join(vc)
+
+# ---- Stage 1.2 matching (shuffled options) ----
+rows = []
+for w, d, ex in VOCAB:
+    opts = defs[:]
+    random.shuffle(opts)
+    # ensure order differs from source order (REGRA 24) -- reshuffle if identical
+    while opts == defs:
+        random.shuffle(opts)
+    opt_html = '<option value="">Select...</option>' + "".join(
+        f'<option value="{o}">{o}</option>' for o in opts)
+    rows.append(
+        f'<div class="match-row" data-answer="{d}"><span class="match-word" style="flex:0 0 210px">{w}</span>'
+        f'<select style="flex:1;width:100%" onchange="checkMatch(this)">{opt_html}</select></div>'
+    )
+match_rows = "\n        ".join(rows)
+
+HTML = f'''<div class="lesson-card" id="ex-lesson-14">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1560439514-4e9645039924?w=600&q=80')"></div>
+    <div class="lesson-header-content">
+      <div class="lesson-number">Lesson 14 -- Pre-class</div>
+      <h3>Making Your Case -- Presenting Technical Findings</h3>
+      <div class="lesson-desc">A three-month commissioning slip on Line 4 has to be presented to a European client's senior engineer. This is how you make the case: structure before detail -- an executive summary and a headline figure first, then findings, recommendation, and one clear call to action -- delivered under hard questions without freezing. Key words: executive summary, findings, recommendation, supporting data, headline figure, takeaway, to walk someone through, to highlight, to take questions, to circle back to, call to action, to wrap up. Structure: reduced relative clauses -- "the equipment (which was) delivered late", "the team (that is) running the test".</div>
+      <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="14" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="14">0%</span></div>
+    </div>
+    <div class="expand-icon">&#9660;</div>
+  </div>
+  <div class="lesson-body">
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Last week you read the fine print of a contract. Tonight you stop reading other people's cases and make your own -- a structured technical update a busy client can act on in minutes. These are the words of a presentation that gets a decision: how you open, how you point to the numbers, how you take questions, and how you close with a clear ask. Listen to each term and read the example.</p>
+      <div class="vocab-cards">
+        {vocab_cards}
+      </div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with the correct definition.</p>
+      <div class="match-grid" id="match-l14">
+        {match_rows}
+      </div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions below.</p>
+      <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
+        <p>The interlocking commissioning on Line 4 has slipped by three months, and this afternoon Jo&#227;o Guilherme presents it to Nordic Rail's senior engineer. His manager's brief is exact: do not open with the apology or the detail. Open with the <strong>executive summary</strong> -- one sentence on what happened, one on the cause, one on the ask -- and lead with the <strong>headline figure</strong>: a twelve-week slip, recoverable to four. A busy client decides in the first minute whether to trust you.</p>
+        <p>The grammar of a technical briefing is dense, and one structure does most of the work: the <em>reduced relative clause</em>. Watch how a full relative clause loses its <em>who / which / that + be</em>. <em>"The equipment <strong>which was delivered</strong> late"</em> becomes <em>"the equipment <strong>delivered</strong> late"</em> -- a past participle, because the equipment <strong>receives</strong> the action. <em>"The team <strong>that is running</strong> the test"</em> becomes <em>"the team <strong>running</strong> the test"</em> -- an <strong>-ing</strong> form, because the team <strong>does</strong> the action. So the <strong>findings</strong> read like this: "the axle counters <strong>manufactured</strong> in Shenzhen arrived late, and two of the units <strong>delivered</strong> failed the inspection <strong>carried out</strong> at our depot."</p>
+        <p>Then the <strong>recommendation</strong>, and only then the ask. Jo&#227;o will <strong>walk</strong> the client <strong>through</strong> the recovery plan, <strong>highlight</strong> the one number in the <strong>supporting data</strong>, and close with a single <strong>call to action</strong>: approve the night-shift access. If a hard question interrupts him and the answer is not ready, he will not freeze or invent -- he will say, "that's a good question, let me think about that for a moment", give the part he is sure of, and promise to <strong>circle back to</strong> the detail. The <strong>takeaway</strong> he wants them to leave with is one line: recoverable to four weeks. Then he will <strong>take questions</strong> and <strong>wrap up</strong>.</p>
+      </div>
+      <div class="quiz-item"><div class="quiz-question">1. "The equipment <em>delivered</em> late was the cause of the slip." Why is it <em>delivered</em> and not <em>delivering</em>?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Because <em>-ing</em> and past participle mean the same thing here.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Because the equipment RECEIVES the action (it was delivered) -- passive, so the past participle. The full clause was "which was delivered".</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because <em>delivered</em> is a noun here.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">2. Which reduced relative clause is correct?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "The team ran the test flagged the issue."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "The team running the test flagged the issue."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "The team who running the test flagged the issue."</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">3. The manager tells Jo&#227;o to open with the executive summary and the headline figure. Why?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Because the client wants a long, detailed story first.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Because a busy client decides in the first minute whether to trust you -- structure before detail.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Because the summary replaces the recommendation.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">4. A hard question interrupts and Jo&#227;o's answer is not ready. What does he do?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Invents a number so he doesn't look unprepared.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Names the silence -- "let me think about that for a moment" -- gives the part he is sure of, and promises to circle back to the detail.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Stops the presentation until he finds the answer.</div></div></div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Reduced Relative Clauses</h4><span class="badge badge-vocab">GRAMMAR</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">A relative clause loses its <strong>who / which / that + be</strong>. What is left is a participle -- and one question decides which one: does the noun DO the action, or RECEIVE it?</p>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Full relative clause</th><th style="padding:.7rem;text-align:left">Reduced form</th><th style="padding:.7rem;text-align:left">Why</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem">the equipment <strong>which was delivered</strong> late</td><td style="padding:.6rem">the equipment <strong>delivered</strong> late</td><td style="padding:.6rem">The noun RECEIVES the action &rarr; <strong>past participle</strong> (passive).</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem">the team <strong>that is running</strong> the test</td><td style="padding:.6rem">the team <strong>running</strong> the test</td><td style="padding:.6rem">The noun DOES the action &rarr; <strong>-ing</strong> form (active).</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem">the units <strong>that are</strong> still in transit</td><td style="padding:.6rem">the units <strong>still in transit</strong></td><td style="padding:.6rem">A state or a phrase &rarr; drop <strong>that + be</strong>, keep the description.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem">the supplier <strong>that we chose</strong></td><td style="padding:.6rem"><span style="color:#dc2626">no reduction</span> &rarr; use "chosen by us"</td><td style="padding:.6rem">Here <em>that</em> is the OBJECT. You can only reduce a <strong>subject</strong> relative clause.</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">Why it matters</td><td style="padding:.6rem" colspan="2">Reduced relative clauses are what make a briefing note read as <strong>dense and precise</strong>: "the recommendation set out below", "the action requested from the client", "the data attached to this note". Half the noun phrases in a real technical document are reduced relatives -- and producing them is what makes your English sound professional, not just correct.</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>Watch out (habits carried over from Portuguese):</strong> (1) <em>"The data <span style="color:#dc2626">presenting</span> on this slide..."</em> -- the data RECEIVES the action, so use the PAST PARTICIPLE: "the data <strong>presented</strong> on this slide". Ask: does it present, or is it presented? (2) <em>"The supplier chosen for Line 4, <span style="color:#dc2626">it</span> missed the deadline"</em> -- once you reduce the clause, do NOT repeat the subject: "the supplier chosen for Line 4 <strong>missed</strong> the deadline"; (3) <em>"the engineer <span style="color:#dc2626">who presenting</span>..."</em> -- drop who/which/that AND be together: "the engineer <strong>presenting</strong>...".</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>Presentation collocations:</strong> <strong>present</strong> findings, <strong>outline</strong> a recommendation, <strong>support</strong> a claim with data, <strong>walk</strong> someone <strong>through</strong> a plan, <strong>draw attention to</strong> a figure, <strong>highlight</strong> a key finding, <strong>take</strong> questions, <strong>circle back to</strong> a point, <strong>wrap up</strong> with a call to action.</p>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.6rem"><strong>The question to ask before you write a technical noun phrase:</strong> "<em>Does this noun DO the action or RECEIVE it?</em>" Does it &rarr; -ing. Receives it &rarr; past participle. That one test gives you the whole grammar.</p>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct participle or phrase. Tap Listen to hear the whole sentence.</p>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"The equipment <input class="blank-input" data-answer="delivered" data-hint="Hint: the equipment RECEIVES the action -- passive, so the past participle" data-phrase="The equipment delivered late was the single cause of the slip." placeholder="___"> late was the single cause of the slip."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"The team <input class="blank-input" data-answer="running" data-hint="Hint: the team DOES the action -- active, so the -ing form" data-phrase="The team running the factory test flagged the firmware issue." placeholder="___"> the factory test flagged the firmware issue."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"I'll open with a three-sentence <input class="blank-input" data-answer="executive summary" data-hint="Hint: the short opening section for a busy decision-maker" data-phrase="I'll open with a three-sentence executive summary." placeholder="___">."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"Let me <input class="blank-input" data-answer="walk" data-hint="Hint: guide the client step by step" data-phrase="Let me walk you through the recovery plan, one workstream at a time." placeholder="___"> you through the recovery plan, one workstream at a time."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"That's a good question -- let me think about that for a moment; I'll <input class="blank-input" data-answer="circle back to" data-hint="Hint: promise to return to a topic later (and do it)" data-phrase="I'll circle back to the exact date after the call." placeholder="___"> the exact date after the call."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"To wrap up, the one <input class="blank-input" data-answer="call to action" data-hint="Hint: the single clear thing you want them to do next" data-phrase="The one call to action is a decision: approve night-shift access." placeholder="___"> is a decision: approve night-shift access."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 2: Build the Presentation in Order</h4><span class="badge badge-order">Order</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the moves of a structured technical update in order -- from the executive summary to taking questions.</p>
+      <div class="order-container" id="order-l14">
+        <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Close with one call to action: approve the night-shift access to hold the opening date.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Present the findings: the axle counters delivered late were the single cause.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Open with the executive summary and the headline figure: twelve weeks, recoverable to four.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="6" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Take questions -- and if a hard one lands, name the silence and promise to circle back.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Outline the recommendation: a three-workstream recovery run on night shifts.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Draw attention to the one number in the supporting data, and let the handout carry the rest.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+      </div>
+      <button class="verify-all-btn" onclick="checkOrder('order-l14')">Check Order</button>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. Stress "eg-ZEK-yu-tiv" and "rek-uh-men-DAY-shun" on the right syllable, and keep the reduced participles crisp: "delivered", "set out", "running".</p>
+      <div class="speech-card" data-phrase="Let me start with the headline figure: a twelve-week slip, recoverable to four.">
+        <div class="speech-phrase">Let me start with the headline figure: a twelve-week slip, recoverable to four.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="The equipment delivered late was the single cause of the slip.">
+        <div class="speech-phrase">The equipment delivered late was the single cause of the slip.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="I'll draw your attention to one figure and let the handout carry the rest.">
+        <div class="speech-phrase">I'll draw your attention to one figure and let the handout carry the rest.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="That's a good question -- let me think about that for a moment, and I'll circle back to the detail.">
+        <div class="speech-phrase">That's a good question -- let me think about that for a moment, and I'll circle back to the detail.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="To wrap up: one slip, one cause, one plan, and one decision I need from you today.">
+        <div class="speech-phrase">To wrap up: one slip, one cause, one plan, and one decision I need from you today.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Pick the best answer for every real moment of the presentation -- the opening, the data, the hard question, the timing, and the close.</p>
+      <div class="quiz-item"><div class="quiz-question">You open the status update to a busy senior engineer. Your strongest first move is:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "Let me explain everything from the beginning -- in January we ran the factory test, then..."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "The headline is a twelve-week slip, recoverable to four; one late component caused it, and I need one decision today."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I'm so sorry, this is a serious delay and it's been very difficult on our side."</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">The slide shows a table with twelve numbers. To highlight the key finding, you:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Read every row of the table out loud in order.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Draw attention to the one figure that matters and let the handout carry the rest.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Skip the data entirely and hope no one asks.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">A hard question interrupts you and you don't have the exact answer ready. You say:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Anything, quickly, to fill the silence -- even a number you're not sure of.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "That's a good question -- let me think about that for a moment," give the part you're sure of, and promise to circle back.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Nothing -- you go silent and lose the thread.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">A question belongs later in your presentation. Without losing your thread, you say:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> "That's exactly where I'm heading -- can I circle back to the cost in two slides, once the plan is on the table?"</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "I don't know, let's talk about it now instead."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Ignore the question and keep going as if it wasn't asked.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">You reach the end of the update. To close with a clean call to action, you say:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> "To wrap up: one slip, one cause, one plan -- and one decision I need from you today, which is night-shift access."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "So, that's more or less everything, I think. Any thoughts?"</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "There are about ten things I'd like you to approve, in no particular order."</div></div></div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. Speak for 2 minutes, with no script and with no stopping to correct yourself. Structure: summary, findings, recommendation, call to action.</p>
+      <div class="think-card">
+        <div class="think-question">Deliver the opening two minutes of your Line 4 status update to Nordic Rail. Lead with the executive summary and the headline figure, present the findings using at least one reduced relative clause ("the equipment delivered late", "the team running the test"), highlight one number, and close with a single call to action. If you imagine a hard question, name the silence and circle back -- do not freeze.</div>
+        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div id="think-result-14"></div>
+      </div>
+    </div>
+
+    <div class="survival-card">
+      <h4>Survival Card -- Lesson 14</h4>
+      <div class="survival-phrase"><span class="sp-num">1</span><span class="sp-en">Let me start with the headline figure, then walk you through the findings and the recommendation.</span><button class="btn btn-listen" data-speak="Let me start with the headline figure, then walk you through the findings and the recommendation." onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">2</span><span class="sp-en">The equipment delivered late was the single cause of the slip.</span><button class="btn btn-listen" data-speak="The equipment delivered late was the single cause of the slip." onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">3</span><span class="sp-en">I'll draw your attention to one figure and let the handout carry the rest.</span><button class="btn btn-listen" data-speak="I'll draw your attention to one figure and let the handout carry the rest." onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">4</span><span class="sp-en">That's a good question -- let me think about that for a moment, and I'll circle back to the detail.</span><button class="btn btn-listen" data-speak="That's a good question, let me think about that for a moment, and I'll circle back to the detail." onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">5</span><span class="sp-en">To wrap up: one slip, one cause, one plan -- and one decision I need from you today.</span><button class="btn btn-listen" data-speak="To wrap up: one slip, one cause, one plan, and one decision I need from you today." onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>
+    </div>
+
+  </div>
+</div>
+'''
+
+open("preclass.html", "w", encoding="utf-8").write(HTML)
+print("wrote preclass.html", len(HTML), "bytes")
