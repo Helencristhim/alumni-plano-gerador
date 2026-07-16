@@ -52,6 +52,37 @@ jobs:
           pip install pyyaml --quiet
           python3 scripts/check_workflows.py
 
+      # ╔══════════════════════════════════════════════════════════════════════╗
+      # ║ GATE M — o MOLDE passa em TODO gate, em TODO PR. Sem excecao.        ║
+      # ╚══════════════════════════════════════════════════════════════════════╝
+      # Sem condicao, igual ao canario, e pelo mesmo motivo. TODOS os outros
+      # gates (1-7, 9) so rodam nos arquivos DO PR (steps.files.outputs.*), entao
+      # o modelo so era checado se o PR por acaso o tocasse. E o GATE 8, que varre
+      # o repo inteiro, filtra pelo legacy-baseline — que dava ALVARA ao modelo
+      # para seguir quebrado, igual a qualquer aula velha.
+      #
+      # Isso ja custou caro duas vezes:
+      #   - #1316 criou o gate do header ("Lesson N", nao "Aula N") e consertou 4
+      #     alunos — deixando o MODELO com "Aula 1" por semanas.
+      #   - o modelo carregou 7.812 bytes de JS morto dentro de
+      #     <script src="/lib/contrast-guard.js"> (as funcoes de gravacao, REGRA 8
+      #     e 26; tag com src descarta o corpo inline). O builder CLONA o shell do
+      #     modelo, entao virou ~2.000 arquivos e 10 botoes mortos na Eduarda.
+      #
+      # Consertar o aluno e enxugar gelo: o molde reimprime o defeito na proxima
+      # aula. Por isso o molde tem tolerancia ZERO — sem baseline, sem alvara, sem
+      # depender de alguem lembrar de rodar o gate nele.
+      #
+      # O ganho e composto: todo gate FUTURO plugado no validate_lesson passa a
+      # valer para o molde de graca, sem ninguem lembrar de nada. Regra que depende
+      # de memoria humana nao e regra — e sorte.
+      - name: "GATE M — o modelo (molde de toda aula) passa em todos os gates"
+        run: |
+          python3 _build/model/validate_lesson.py \
+            public/professor/helen-mendes-aula1.html \
+            public/professor/helen-mendes.html \
+            public/aluno/helen-mendes.html
+
       - name: Classifica arquivos de aula do PR
         id: files
         # ╔══════════════════════════════════════════════════════════════════════╗
