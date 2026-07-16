@@ -830,10 +830,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Which <span class="accent">Tense?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Decide first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I ___ the project last week." &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">finished (past simple &mdash; last week is exact)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"She ___ for this company for five years." &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">has worked (present perfect &mdash; for + duration, no exact end)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"___ you ever managed a team?" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">Have (present perfect &mdash; ever = experience)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We ___ the new system in December." &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">launched (past simple &mdash; in December is exact)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I ___ the project last week." &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">finished (past simple &mdash; last week is exact)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"She ___ for this company for five years." &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">has worked (present perfect &mdash; for + duration, no exact end)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"___ you ever managed a team?" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">Have (present perfect &mdash; ever = experience)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We ___ the new system in December." &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">launched (past simple &mdash; in December is exact)</span></div></div>
     </div>
   </div>
 </div>
@@ -1315,7 +1315,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

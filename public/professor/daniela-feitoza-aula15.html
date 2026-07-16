@@ -835,10 +835,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Build the <span class="accent">Scene</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">scene: I / test the system &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I was testing the system." (long action in progress)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">surprise: ...when the server / crash &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"...when the server crashed." (short event, past simple)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">while / we / monitor the alerts, the outage / start &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"While we were monitoring the alerts, the outage started."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I monitoring the dashboard when it spiked" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I was monitoring the dashboard when it spiked." (add was)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">scene: I / test the system &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I was testing the system." (long action in progress)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">surprise: ...when the server / crash &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"...when the server crashed." (short event, past simple)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">while / we / monitor the alerts, the outage / start &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"While we were monitoring the alerts, the outage started."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I monitoring the dashboard when it spiked" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I was monitoring the dashboard when it spiked." (add was)</span></div></div>
     </div>
   </div>
 </div>
@@ -1320,7 +1320,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

@@ -932,10 +932,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Build the <span class="accent">Condition</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">1st: if / test / pass &rarr; we / migrate &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"If the test passes, we will migrate."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">1st: if / server / go down &rarr; we / escalate &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"If the server goes down, we will escalate."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">2nd: if / we / have more time &rarr; we / test more &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"If we had more time, we would test more."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "If we would have a bigger budget, we would migrate" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"If we had a bigger budget, we would migrate." (if + past, no "would" in the if)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">1st: if / test / pass &rarr; we / migrate &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"If the test passes, we will migrate."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">1st: if / server / go down &rarr; we / escalate &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"If the server goes down, we will escalate."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">2nd: if / we / have more time &rarr; we / test more &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"If we had more time, we would test more."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "If we would have a bigger budget, we would migrate" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"If we had a bigger budget, we would migrate." (if + past, no "would" in the if)</span></div></div>
     </div>
   </div>
 </div>
@@ -1418,7 +1418,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 // ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====

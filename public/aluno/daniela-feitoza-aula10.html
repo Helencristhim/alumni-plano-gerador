@@ -831,10 +831,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Which Words Are <span class="accent">Strong?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I sent the email." &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">sent, email (content words)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"She works in finance." &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">works, finance (content words)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I am going to call." &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">going, call (say I'm, soft to)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We can fix the problem." &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">fix, problem (can stays soft)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I sent the email." &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">sent, email (content words)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"She works in finance." &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">works, finance (content words)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I am going to call." &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">going, call (say I'm, soft to)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We can fix the problem." &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">fix, problem (can stays soft)</span></div></div>
     </div>
   </div>
 </div>
@@ -1316,7 +1316,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

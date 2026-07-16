@@ -832,11 +832,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Pick the <span class="accent">Structure</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Pitch: "If we <span class="fill-blank">___</span><span class="fill-a" style="display:none">added</span> a night shift, we would clear the backlog." (2nd conditional)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Deal: "If you <span class="fill-blank">___</span><span class="fill-a" style="display:none">approve</span> the budget, we will start next week." (1st conditional)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Read: "He keeps checking his phone, so he <span class="fill-blank">___</span><span class="fill-a" style="display:none">might</span> be under time pressure." (weak signal)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Tension: "I <span class="fill-blank">___</span><span class="fill-a" style="display:none">was</span> hoping we could find a middle path." (tentative)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Story: "By March we <span class="fill-blank">___</span><span class="fill-a" style="display:none">had</span> rebuilt the pipeline, then we launched." (backstory)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Pitch: "If we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">added</span> a night shift, we would clear the backlog." (2nd conditional)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Deal: "If you <span class="fill-blank">___</span><span class="fill-answer" style="display:none">approve</span> the budget, we will start next week." (1st conditional)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Read: "He keeps checking his phone, so he <span class="fill-blank">___</span><span class="fill-answer" style="display:none">might</span> be under time pressure." (weak signal)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Tension: "I <span class="fill-blank">___</span><span class="fill-answer" style="display:none">was</span> hoping we could find a middle path." (tentative)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Story: "By March we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">had</span> rebuilt the pipeline, then we launched." (backstory)</div></div>
     </div>
   </div>
 </div>
@@ -1341,7 +1341,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

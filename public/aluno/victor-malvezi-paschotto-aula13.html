@@ -826,11 +826,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Pick the <span class="accent">Tool</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Indirect: "Could you tell me what the budget <span class="fill-blank">___</span><span class="fill-a" style="display:none">is</span>?" (normal word order)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Clarify: "Could you clarify <span class="fill-blank">___</span><span class="fill-a" style="display:none">whether</span> you mean cost or timing?" (which of two)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Hedge: "<span class="fill-blank">___</span><span class="fill-a" style="display:none">As</span> far as I can tell, the numbers hold." (qualifier)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Buy time: "That's a fair question. Let me <span class="fill-blank">___</span><span class="fill-a" style="display:none">think</span> for a second." (bridge)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Defer: "I don't have it to hand, but I'll <span class="fill-blank">___</span><span class="fill-a" style="display:none">circle</span> back after the session." (clean defer)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Indirect: "Could you tell me what the budget <span class="fill-blank">___</span><span class="fill-answer" style="display:none">is</span>?" (normal word order)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Clarify: "Could you clarify <span class="fill-blank">___</span><span class="fill-answer" style="display:none">whether</span> you mean cost or timing?" (which of two)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Hedge: "<span class="fill-blank">___</span><span class="fill-answer" style="display:none">As</span> far as I can tell, the numbers hold." (qualifier)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Buy time: "That's a fair question. Let me <span class="fill-blank">___</span><span class="fill-answer" style="display:none">think</span> for a second." (bridge)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Defer: "I don't have it to hand, but I'll <span class="fill-blank">___</span><span class="fill-answer" style="display:none">circle</span> back after the session." (clean defer)</div></div>
     </div>
   </div>
 </div>
@@ -1335,7 +1335,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

@@ -838,11 +838,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Fill the <span class="accent">Gap</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Since January, the team <span class="fill-blank">___</span><span class="fill-a" style="display:none">has outperformed</span> the benchmark. (achievement)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">If we <span class="fill-blank">___</span><span class="fill-a" style="display:none">had aligned</span> the leads earlier, we would have avoided the friction. (unreal past)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">The board <span class="fill-blank">___</span><span class="fill-a" style="display:none">must have</span> noticed the variance in the figures. (speculation)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">She confirmed that the budget <span class="fill-blank">___</span><span class="fill-a" style="display:none">would be</span> cut by fifteen percent. (debrief)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">I would appreciate it if you <span class="fill-blank">___</span><span class="fill-a" style="display:none">could circulate</span> the summary by Friday. (register)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Since January, the team <span class="fill-blank">___</span><span class="fill-answer" style="display:none">has outperformed</span> the benchmark. (achievement)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">If we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">had aligned</span> the leads earlier, we would have avoided the friction. (unreal past)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">The board <span class="fill-blank">___</span><span class="fill-answer" style="display:none">must have</span> noticed the variance in the figures. (speculation)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">She confirmed that the budget <span class="fill-blank">___</span><span class="fill-answer" style="display:none">would be</span> cut by fifteen percent. (debrief)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">I would appreciate it if you <span class="fill-blank">___</span><span class="fill-answer" style="display:none">could circulate</span> the summary by Friday. (register)</div></div>
     </div>
   </div>
 </div>
@@ -1345,7 +1345,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

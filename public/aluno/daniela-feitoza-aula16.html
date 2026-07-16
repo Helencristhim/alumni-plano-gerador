@@ -837,10 +837,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Order the <span class="accent">Events</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">earlier action: I / escalate it (before he arrived) &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I had escalated it." (had + past participle)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">by the time he logged in, we / restore the service &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"By the time he logged in, we had restored the service."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">put in order: spike / crash / escalate &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"First it spiked, then it crashed, and after that I escalated it."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I escalated it before he arrived" (show order) &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I had escalated it before he arrived." (earlier = had + done)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">earlier action: I / escalate it (before he arrived) &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I had escalated it." (had + past participle)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">by the time he logged in, we / restore the service &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"By the time he logged in, we had restored the service."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">put in order: spike / crash / escalate &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"First it spiked, then it crashed, and after that I escalated it."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I escalated it before he arrived" (show order) &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I had escalated it before he arrived." (earlier = had + done)</span></div></div>
     </div>
   </div>
 </div>
@@ -1323,7 +1323,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

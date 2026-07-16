@@ -841,10 +841,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Soften the <span class="accent">Message</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">soften "The project is late" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"It seems we are a little behind." (soften the fact)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">soften "We will miss the deadline" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"We might miss the deadline." (might = less certain)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">soften "It is a disaster" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"It is a slight setback." (shrink the problem)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "We might to revisit the numbers" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"We might revisit the numbers." (might + base verb, no "to")</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">soften "The project is late" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"It seems we are a little behind." (soften the fact)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">soften "We will miss the deadline" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"We might miss the deadline." (might = less certain)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">soften "It is a disaster" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"It is a slight setback." (shrink the problem)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "We might to revisit the numbers" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"We might revisit the numbers." (might + base verb, no "to")</span></div></div>
     </div>
   </div>
 </div>
@@ -1326,7 +1326,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

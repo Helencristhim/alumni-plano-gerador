@@ -812,11 +812,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Pick the <span class="accent">Form</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Persuade: "I got finance <span class="fill-blank">___</span><span class="fill-a" style="display:none">to</span> back the rollout." (get + person + TO + verb)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Arrange: "I'll have IT <span class="fill-blank">___</span><span class="fill-a" style="display:none">review</span> the plan first." (have + person + bare verb)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Reason: "I framed it <span class="fill-blank">___</span><span class="fill-a" style="display:none">so</span> that they owned the how." (so that + clause)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Purpose: "I met them early in <span class="fill-blank">___</span><span class="fill-a" style="display:none">order</span> to enlist their support." (in order to + verb)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Enlist: "Could I get you <span class="fill-blank">___</span><span class="fill-a" style="display:none">to</span> champion this in the meeting?" (get + person + TO + verb)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Persuade: "I got finance <span class="fill-blank">___</span><span class="fill-answer" style="display:none">to</span> back the rollout." (get + person + TO + verb)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Arrange: "I'll have IT <span class="fill-blank">___</span><span class="fill-answer" style="display:none">review</span> the plan first." (have + person + bare verb)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Reason: "I framed it <span class="fill-blank">___</span><span class="fill-answer" style="display:none">so</span> that they owned the how." (so that + clause)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Purpose: "I met them early in <span class="fill-blank">___</span><span class="fill-answer" style="display:none">order</span> to enlist their support." (in order to + verb)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Enlist: "Could I get you <span class="fill-blank">___</span><span class="fill-answer" style="display:none">to</span> champion this in the meeting?" (get + person + TO + verb)</div></div>
     </div>
   </div>
 </div>
@@ -1320,7 +1320,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

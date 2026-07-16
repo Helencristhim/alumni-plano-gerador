@@ -832,10 +832,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Which -ED <span class="accent">Sound?</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">finished &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">/t/</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">called &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">/d/</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">started &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">/id/ (extra syllable)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">stopped &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">/t/</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">finished &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">/t/</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">called &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">/d/</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">started &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">/id/ (extra syllable)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">stopped &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">/t/</span></div></div>
     </div>
   </div>
 </div>
@@ -1316,7 +1316,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

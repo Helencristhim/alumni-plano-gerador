@@ -850,11 +850,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Complete the <span class="accent">Sentence</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"The team <span class="fill-blank">___</span><span class="fill-a" style="display:none">should have communicated</span> the changes before the deadline."</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"The client <span class="fill-blank">___</span><span class="fill-a" style="display:none">must have received</span> the wrong information from our counterpart."</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"The regional director <span class="fill-blank">___</span><span class="fill-a" style="display:none">might have misunderstood</span> the scope of the project."</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We <span class="fill-blank">___</span><span class="fill-a" style="display:none">could have avoided</span> the escalation if we had mediated earlier."</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"They <span class="fill-blank">___</span><span class="fill-a" style="display:none">should have leveraged</span> the Q3 data to negotiate a better deal."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"The team <span class="fill-blank">___</span><span class="fill-answer" style="display:none">should have communicated</span> the changes before the deadline."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"The client <span class="fill-blank">___</span><span class="fill-answer" style="display:none">must have received</span> the wrong information from our counterpart."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"The regional director <span class="fill-blank">___</span><span class="fill-answer" style="display:none">might have misunderstood</span> the scope of the project."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We <span class="fill-blank">___</span><span class="fill-answer" style="display:none">could have avoided</span> the escalation if we had mediated earlier."</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"They <span class="fill-blank">___</span><span class="fill-answer" style="display:none">should have leveraged</span> the Q3 data to negotiate a better deal."</div></div>
     </div>
   </div>
 </div>
@@ -1339,7 +1339,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

@@ -934,10 +934,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Mark the <span class="accent">Stress</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first with the right stress, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">word stress: priority &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">pri-O-ri-ty (strong on O)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">word stress: recommendation &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">re-com-men-DA-tion (strong on DA)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">sentence stress: the / report / is / ready &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">The REPORT is READY. (the/is weak)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">intonation: "Are you free?" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">Rising tone &#8599; (yes/no question goes up)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">word stress: priority &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">pri-O-ri-ty (strong on O)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">word stress: recommendation &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">re-com-men-DA-tion (strong on DA)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">sentence stress: the / report / is / ready &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">The REPORT is READY. (the/is weak)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">intonation: "Are you free?" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">Rising tone &#8599; (yes/no question goes up)</span></div></div>
     </div>
   </div>
 </div>
@@ -1419,7 +1419,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 // ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====

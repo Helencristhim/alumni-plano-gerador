@@ -823,11 +823,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Choose the <span class="accent">Layer</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Backstory: "By the time we presented, the market <span class="fill-blank">___</span><span class="fill-a" style="display:none">had</span> already shifted." (past perfect)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Scene: "While we <span class="fill-blank">___</span><span class="fill-a" style="display:none">were</span> rebuilding the pipeline, revenue kept dropping." (past continuous)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Key event: "In March we <span class="fill-blank">___</span><span class="fill-a" style="display:none">launched</span> the new route." (past simple)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Vivid moment: "So I walk in, and the whole room <span class="fill-blank">___</span><span class="fill-a" style="display:none">goes</span> quiet." (dramatic present)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Backstory: "We <span class="fill-blank">___</span><span class="fill-a" style="display:none">had</span> missed Q1, so the pressure was high." (past perfect)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Backstory: "By the time we presented, the market <span class="fill-blank">___</span><span class="fill-answer" style="display:none">had</span> already shifted." (past perfect)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Scene: "While we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">were</span> rebuilding the pipeline, revenue kept dropping." (past continuous)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Key event: "In March we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">launched</span> the new route." (past simple)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Vivid moment: "So I walk in, and the whole room <span class="fill-blank">___</span><span class="fill-answer" style="display:none">goes</span> quiet." (dramatic present)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Backstory: "We <span class="fill-blank">___</span><span class="fill-answer" style="display:none">had</span> missed Q1, so the pressure was high." (past perfect)</div></div>
     </div>
   </div>
 </div>
@@ -1329,7 +1329,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;
