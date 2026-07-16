@@ -40,6 +40,18 @@ jobs:
       - name: "CANARIO — prova que os gates ainda reprovam defeito conhecido"
         run: python3 scripts/canary/run.py
 
+      # Irmao do canario, e pelo mesmo motivo: o canario prova que o gate ainda
+      # MORDE; este prova que o gate ainda EXISTE. Workflow com YAML invalido nao
+      # falha — ele NAO RODA (startup failure: zero jobs, zero log, zero alerta).
+      # O guard-main.yml passou UM MES assim, 100 runs sem um unico job, e levou
+      # junto a tag `last-good`, que ele deveria avancar a cada push limpo e ficou
+      # congelada 1.683 commits atras — enquanto o arquivo mandava usa-la pra
+      # "restaurar tudo a qualquer momento".
+      - name: "GATE 0 — todo workflow do CI parseia e roda de verdade"
+        run: |
+          pip install pyyaml --quiet
+          python3 scripts/check_workflows.py
+
       - name: Classifica arquivos de aula do PR
         id: files
         # ╔══════════════════════════════════════════════════════════════════════╗

@@ -73,10 +73,13 @@ jobs:
             git checkout "$BEFORE" -- "$f"
             echo "↩  restaurado $f -> $BEFORE"
           done
-          git commit -m "guard: restaura aula(s) removida(s) por push defasado [guard-auto]
-
-Restaurado para o estado anterior ao push ${{ github.event.after }}.
-Arquivos: ${{ steps.scan.outputs.regressed }}" || { echo "nada pra commitar"; exit 0; }
+          # Assunto e corpo em -m separados. NUNCA uma string multi-linha: dentro de
+          # "run: |" toda linha tem de ficar indentada, e uma continuação na coluna 0
+          # ENCERRA o bloco — foi o que manteve este arquivo sem parsear por um mês.
+          git commit \
+            -m "guard: restaura aula(s) removida(s) por push defasado [guard-auto]" \
+            -m "Restaurado para o estado anterior ao push ${{ github.event.after }}. Arquivos: ${{ steps.scan.outputs.regressed }}" \
+            || { echo "nada pra commitar"; exit 0; }
           git push origin HEAD:main
 
       - name: Avança o ponto seguro rolante (push limpo, sem regressão)
@@ -93,11 +96,18 @@ Arquivos: ${{ steps.scan.outputs.regressed }}" || { echo "nada pra commitar"; ex
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Corpo via heredoc + --body-file, pelo mesmo motivo do commit acima: texto
+          # multi-linha solto dentro de "run: |" quebra o YAML do arquivo INTEIRO.
+          # O heredoc funciona indentado porque o YAML tira a indentacao do bloco
+          # antes de entregar ao bash — o EOF chega na coluna 0 por conta propria.
+          cat > /tmp/guard-issue.md <<EOF
+          O push \`${{ github.event.after }}\` (por @${{ github.event.pusher.name }}) removeu aula(s)/encolheu hub(s) e foi **restaurado automaticamente** pela guarda do main.
+
+          **Arquivos restaurados:** ${{ steps.scan.outputs.regressed }}
+
+          Provável causa: commit de um checkout defasado por cima do main (mesmo padrão do incidente 6cd5b3b9). O conteúdo voltou ao estado anterior ao push. Se a remoção foi intencional, refaça a partir do main atualizado (\`git pull\`) e empurre de novo.
+          EOF
           gh issue create \
             --title "⚠️ Guarda do main reverteu uma regressão automaticamente" \
-            --body "O push \`${{ github.event.after }}\` (por @${{ github.event.pusher.name }}) removeu aula(s)/encolheu hub(s) e foi **restaurado automaticamente** pela guarda do main.
-
-**Arquivos restaurados:** ${{ steps.scan.outputs.regressed }}
-
-Provável causa: commit de um checkout defasado por cima do main (mesmo padrão do incidente 6cd5b3b9). O conteúdo voltou ao estado anterior ao push. Se a remoção foi intencional, refaça a partir do main atualizado (\`git pull\`) e empurre de novo." \
+            --body-file /tmp/guard-issue.md \
             || echo "não consegui abrir issue (segue o jogo)"
