@@ -821,11 +821,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Fill the <span class="accent">Gap</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Last year I <span class="fill-blank">___</span><span class="fill-a" style="display:none">started</span> learning English. (finished time)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">I <span class="fill-blank">___</span><span class="fill-a" style="display:none">have traveled</span> abroad, and I loved it. (life experience)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Have you <span class="fill-blank">___</span><span class="fill-a" style="display:none">ever</span> cooked for a big family? (whole life)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">I have not become fluent <span class="fill-blank">___</span><span class="fill-a" style="display:none">yet</span>, but I am close. (up to now)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Lately I <span class="fill-blank">___</span><span class="fill-a" style="display:none">have felt</span> more confident. (recent past)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Last year I <span class="fill-blank">___</span><span class="fill-answer" style="display:none">started</span> learning English. (finished time)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">I <span class="fill-blank">___</span><span class="fill-answer" style="display:none">have traveled</span> abroad, and I loved it. (life experience)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Have you <span class="fill-blank">___</span><span class="fill-answer" style="display:none">ever</span> cooked for a big family? (whole life)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">I have not become fluent <span class="fill-blank">___</span><span class="fill-answer" style="display:none">yet</span>, but I am close. (up to now)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Lately I <span class="fill-blank">___</span><span class="fill-answer" style="display:none">have felt</span> more confident. (recent past)</div></div>
     </div>
   </div>
 </div>
@@ -1328,7 +1328,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

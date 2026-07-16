@@ -827,11 +827,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Fill the <span class="accent">Gap</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">They haven't answered &mdash; they <span class="fill-blank">___</span><span class="fill-a" style="display:none">might be</span> still discussing it internally. (possible)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">She keeps checking the clock &mdash; punctuality <span class="fill-blank">___</span><span class="fill-a" style="display:none">must</span> matter a lot to them. (almost sure)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">A long silence isn't always bad &mdash; it <span class="fill-blank">___</span><span class="fill-a" style="display:none">might</span> mean they are still thinking. (possible)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">She runs the whole account, so she <span class="fill-blank">___</span><span class="fill-a" style="display:none">can't</span> be a junior assistant. (impossible)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">After a modal, use the base verb: "He must <span class="fill-blank">___</span><span class="fill-a" style="display:none">be</span> the decision-maker." (no "to")</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">They haven't answered &mdash; they <span class="fill-blank">___</span><span class="fill-answer" style="display:none">might be</span> still discussing it internally. (possible)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">She keeps checking the clock &mdash; punctuality <span class="fill-blank">___</span><span class="fill-answer" style="display:none">must</span> matter a lot to them. (almost sure)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">A long silence isn't always bad &mdash; it <span class="fill-blank">___</span><span class="fill-answer" style="display:none">might</span> mean they are still thinking. (possible)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">She runs the whole account, so she <span class="fill-blank">___</span><span class="fill-answer" style="display:none">can't</span> be a junior assistant. (impossible)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">After a modal, use the base verb: "He must <span class="fill-blank">___</span><span class="fill-answer" style="display:none">be</span> the decision-maker." (no "to")</div></div>
     </div>
   </div>
 </div>
@@ -1333,7 +1333,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

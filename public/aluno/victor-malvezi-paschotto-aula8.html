@@ -827,11 +827,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Fill the <span class="accent">Gap</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">If you <span class="fill-blank">___</span><span class="fill-a" style="display:none">commit</span> to the annual volume, we will lock in this price. (if-clause)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">We can't sign <span class="fill-blank">___</span><span class="fill-a" style="display:none">unless</span> the lead time comes down to four weeks. (= if not)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">We'll renew for two years, <span class="fill-blank">___</span><span class="fill-a" style="display:none">as long as</span> you hold the current rate. (one condition)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">We'll increase the order, <span class="fill-blank">___</span><span class="fill-a" style="display:none">provided that</span> delivery stays under five days. (one condition)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">If you reduced the price a little, we <span class="fill-blank">___</span><span class="fill-a" style="display:none">would</span> revisit the volume. (softer, second conditional)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">If you <span class="fill-blank">___</span><span class="fill-answer" style="display:none">commit</span> to the annual volume, we will lock in this price. (if-clause)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">We can't sign <span class="fill-blank">___</span><span class="fill-answer" style="display:none">unless</span> the lead time comes down to four weeks. (= if not)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">We'll renew for two years, <span class="fill-blank">___</span><span class="fill-answer" style="display:none">as long as</span> you hold the current rate. (one condition)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">We'll increase the order, <span class="fill-blank">___</span><span class="fill-answer" style="display:none">provided that</span> delivery stays under five days. (one condition)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">If you reduced the price a little, we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">would</span> revisit the volume. (softer, second conditional)</div></div>
     </div>
   </div>
 </div>
@@ -1335,7 +1335,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

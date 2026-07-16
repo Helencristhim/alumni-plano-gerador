@@ -836,10 +836,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Then and <span class="accent">Now</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">past habit: I / work on call + but now / a rotation &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I used to work on call, but now we have a rotation."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">repeated past: every night / the system / crash &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"Every night, the system would crash." (repeated action)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">past state: we / have a big backlog &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"We used to have a big backlog." (state = used to, not would)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I would have an old laptop" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I used to have an old laptop." (state needs used to)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">past habit: I / work on call + but now / a rotation &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I used to work on call, but now we have a rotation."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">repeated past: every night / the system / crash &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"Every night, the system would crash." (repeated action)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">past state: we / have a big backlog &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"We used to have a big backlog." (state = used to, not would)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I would have an old laptop" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I used to have an old laptop." (state needs used to)</span></div></div>
     </div>
   </div>
 </div>
@@ -1322,7 +1322,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

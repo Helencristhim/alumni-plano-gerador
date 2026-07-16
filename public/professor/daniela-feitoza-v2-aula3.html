@@ -926,10 +926,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Build the <span class="accent">Pitch</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">role: I / be / an IT Manager / at SPF Group &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I am an IT Manager at SPF Group."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">company: we / distribute / Nike and Centauro products &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"We distribute Nike and Centauro products."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">responsibility: I / oversee / all technology projects &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I oversee all technology projects."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I am leading a team of twelve" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I lead a team of twelve." (daily job = present simple)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">role: I / be / an IT Manager / at SPF Group &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I am an IT Manager at SPF Group."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">company: we / distribute / Nike and Centauro products &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"We distribute Nike and Centauro products."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">responsibility: I / oversee / all technology projects &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I oversee all technology projects."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I am leading a team of twelve" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I lead a team of twelve." (daily job = present simple)</span></div></div>
     </div>
   </div>
 </div>
@@ -1411,7 +1411,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 // ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====

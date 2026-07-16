@@ -834,10 +834,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Choose the <span class="accent">Future</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">a plan we decided: pilot in two stores &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"We are going to pilot it in two stores." (decided plan)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">a prediction: this tool / save time &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"This tool will save time." (prediction)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">a fixed arrangement: meet the vendor / Friday &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"We are meeting the vendor on Friday." (arrangement)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I will to call you tomorrow" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I will call you tomorrow." (will + base verb, no "to")</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">a plan we decided: pilot in two stores &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"We are going to pilot it in two stores." (decided plan)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">a prediction: this tool / save time &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"This tool will save time." (prediction)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">a fixed arrangement: meet the vendor / Friday &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"We are meeting the vendor on Friday." (arrangement)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I will to call you tomorrow" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I will call you tomorrow." (will + base verb, no "to")</span></div></div>
     </div>
   </div>
 </div>
@@ -1320,7 +1320,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

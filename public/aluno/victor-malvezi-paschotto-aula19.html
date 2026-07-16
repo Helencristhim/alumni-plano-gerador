@@ -944,11 +944,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Make It <span class="accent">Reported</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I am proud of this quarter." &rarr; She said she <span class="fill-blank">___</span><span class="fill-a" style="display:none">was</span> proud of that quarter. (present &rarr; past)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I will raise the bar next time." &rarr; He said he <span class="fill-blank">___</span><span class="fill-a" style="display:none">would</span> raise the bar next time. (will &rarr; would)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I finished the dashboard." &rarr; She said she <span class="fill-blank">___</span><span class="fill-a" style="display:none">had finished</span> the dashboard. (past &rarr; past perfect)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I need more support." &rarr; He <span class="fill-blank">___</span><span class="fill-a" style="display:none">told</span> me he needed more support. (tell + person)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I'll send it today." &rarr; She said she would send it <span class="fill-blank">___</span><span class="fill-a" style="display:none">that day</span>. (today &rarr; that day)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I am proud of this quarter." &rarr; She said she <span class="fill-blank">___</span><span class="fill-answer" style="display:none">was</span> proud of that quarter. (present &rarr; past)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I will raise the bar next time." &rarr; He said he <span class="fill-blank">___</span><span class="fill-answer" style="display:none">would</span> raise the bar next time. (will &rarr; would)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I finished the dashboard." &rarr; She said she <span class="fill-blank">___</span><span class="fill-answer" style="display:none">had finished</span> the dashboard. (past &rarr; past perfect)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I need more support." &rarr; He <span class="fill-blank">___</span><span class="fill-answer" style="display:none">told</span> me he needed more support. (tell + person)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I'll send it today." &rarr; She said she would send it <span class="fill-blank">___</span><span class="fill-answer" style="display:none">that day</span>. (today &rarr; that day)</div></div>
     </div>
   </div>
 </div>
@@ -1441,7 +1441,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 // ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====

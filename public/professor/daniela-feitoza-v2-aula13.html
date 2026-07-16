@@ -834,10 +834,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Make It <span class="accent">Polite</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">open an opinion that we should wait &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"In my view, we should wait." (Open)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">soften "it will be late" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"It might be a little late." (Soften / hedge)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">disagree politely with "let us launch now" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I see your point, but I would test it first." (Disagree politely)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I am agree with the plan" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I agree with the plan." (agree is a verb, no "am")</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">open an opinion that we should wait &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"In my view, we should wait." (Open)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">soften "it will be late" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"It might be a little late." (Soften / hedge)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">disagree politely with "let us launch now" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I see your point, but I would test it first." (Disagree politely)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I am agree with the plan" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I agree with the plan." (agree is a verb, no "am")</span></div></div>
     </div>
   </div>
 </div>
@@ -1319,7 +1319,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

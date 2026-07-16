@@ -845,11 +845,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Soften the <span class="accent">Request</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"Send the contract." &rarr; I would <span class="fill-blank">___</span><span class="fill-a" style="display:none">appreciate it if you could</span> send the contract.</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"Answer my email." &rarr; I am writing to <span class="fill-blank">___</span><span class="fill-a" style="display:none">follow up on</span> my previous email.</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">If we <span class="fill-blank">___</span><span class="fill-a" style="display:none">do not</span> receive the files by Friday, we will escalate.</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">If the supplier ignores us, we <span class="fill-blank">___</span><span class="fill-a" style="display:none">will</span> raise the matter with the director.</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"Fix the discrepancy." &rarr; I was <span class="fill-blank">___</span><span class="fill-a" style="display:none">wondering if you could</span> clarify the discrepancy.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"Send the contract." &rarr; I would <span class="fill-blank">___</span><span class="fill-answer" style="display:none">appreciate it if you could</span> send the contract.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"Answer my email." &rarr; I am writing to <span class="fill-blank">___</span><span class="fill-answer" style="display:none">follow up on</span> my previous email.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">If we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">do not</span> receive the files by Friday, we will escalate.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">If the supplier ignores us, we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">will</span> raise the matter with the director.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"Fix the discrepancy." &rarr; I was <span class="fill-blank">___</span><span class="fill-answer" style="display:none">wondering if you could</span> clarify the discrepancy.</div></div>
     </div>
   </div>
 </div>
@@ -1358,7 +1358,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

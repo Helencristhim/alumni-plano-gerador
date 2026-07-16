@@ -934,10 +934,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Make the <span class="accent">Superlative</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">large &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"the largest" (short adjective = -est)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">big &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"the biggest" (double the g, then -est)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">important &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"the most important" (long adjective = the most)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">good &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"the best" (irregular form)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">large &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"the largest" (short adjective = -est)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">big &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"the biggest" (double the g, then -est)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">important &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"the most important" (long adjective = the most)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">good &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"the best" (irregular form)</span></div></div>
     </div>
   </div>
 </div>
@@ -1420,7 +1420,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 // ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====

@@ -828,11 +828,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Pick the <span class="accent">Form</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Acknowledge: "There's <span class="fill-blank">___</span><span class="fill-a" style="display:none">merit</span> in both positions." (validate both sides)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Converge: "Where we all <span class="fill-blank">___</span><span class="fill-a" style="display:none">agree</span> is a healthy company in a year." (common ground)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Propose: "What if we <span class="fill-blank">___</span><span class="fill-a" style="display:none">funded</span> one region first?" (what if + past simple)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Build on: "<span class="fill-blank">___</span><span class="fill-a" style="display:none">Building</span> on Adriana's point, we could cap the spend." (add, don't override)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Confirm: "Can everyone <span class="fill-blank">___</span><span class="fill-a" style="display:none">live</span> with that?" (check real buy-in)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Acknowledge: "There's <span class="fill-blank">___</span><span class="fill-answer" style="display:none">merit</span> in both positions." (validate both sides)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Converge: "Where we all <span class="fill-blank">___</span><span class="fill-answer" style="display:none">agree</span> is a healthy company in a year." (common ground)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Propose: "What if we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">funded</span> one region first?" (what if + past simple)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Build on: "<span class="fill-blank">___</span><span class="fill-answer" style="display:none">Building</span> on Adriana's point, we could cap the spend." (add, don't override)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Confirm: "Can everyone <span class="fill-blank">___</span><span class="fill-answer" style="display:none">live</span> with that?" (check real buy-in)</div></div>
     </div>
   </div>
 </div>
@@ -1337,7 +1337,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

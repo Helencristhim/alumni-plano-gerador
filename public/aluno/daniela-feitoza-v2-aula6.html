@@ -937,10 +937,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Describe the <span class="accent">System</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">affirmative: the finance module / track / payments &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"The finance module tracks payments." (it + verb + s)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">negative: the system / not / make / mistakes &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"The system does not make mistakes." (does not + base verb)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">question: SAP / integrate / with our CRM &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"Does SAP integrate with our CRM?" (Does + subject + base verb)</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "The system process orders" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"The system processes orders." (it = processes)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">affirmative: the finance module / track / payments &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"The finance module tracks payments." (it + verb + s)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">negative: the system / not / make / mistakes &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"The system does not make mistakes." (does not + base verb)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">question: SAP / integrate / with our CRM &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"Does SAP integrate with our CRM?" (Does + subject + base verb)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "The system process orders" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"The system processes orders." (it = processes)</span></div></div>
     </div>
   </div>
 </div>
@@ -1423,7 +1423,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 // ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====

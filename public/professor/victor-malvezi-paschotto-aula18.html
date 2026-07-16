@@ -846,11 +846,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Pick the <span class="accent">Structure</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Q&amp;A: "Could you tell me how the figure <span class="fill-blank">___</span><span class="fill-a" style="display:none">was</span> reached?" (indirect question, statement order)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Damage: "I'm afraid <span class="fill-blank">___</span><span class="fill-a" style="display:none">we</span> missed the date, and I own it." (softener + active voice)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Consensus: "If we <span class="fill-blank">___</span><span class="fill-a" style="display:none">phased</span> it, would you back the plan?" (second conditional, if + past)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Consensus: "If we phased it, <span class="fill-blank">___</span><span class="fill-a" style="display:none">would</span> you back the plan?" (would + bare verb)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Chair: "Shall we <span class="fill-blank">___</span><span class="fill-a" style="display:none">move</span> on and circle back to that?" (soft imperative + bare verb)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Q&amp;A: "Could you tell me how the figure <span class="fill-blank">___</span><span class="fill-answer" style="display:none">was</span> reached?" (indirect question, statement order)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Damage: "I'm afraid <span class="fill-blank">___</span><span class="fill-answer" style="display:none">we</span> missed the date, and I own it." (softener + active voice)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Consensus: "If we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">phased</span> it, would you back the plan?" (second conditional, if + past)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Consensus: "If we phased it, <span class="fill-blank">___</span><span class="fill-answer" style="display:none">would</span> you back the plan?" (would + bare verb)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Chair: "Shall we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">move</span> on and circle back to that?" (soft imperative + bare verb)</div></div>
     </div>
   </div>
 </div>
@@ -1342,7 +1342,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

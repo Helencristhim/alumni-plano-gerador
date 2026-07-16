@@ -863,11 +863,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Report the <span class="accent">Sentence</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We are hiring ten people." &rarr; The CFO said they <span class="fill-blank">___</span><span class="fill-a" style="display:none">were hiring</span> ten people.</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I will circulate the notes tomorrow." &rarr; He told me he <span class="fill-blank">___</span><span class="fill-a" style="display:none">would circulate</span> the notes the next day.</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"The team has reached a consensus." &rarr; She confirmed that the team <span class="fill-blank">___</span><span class="fill-a" style="display:none">had reached</span> a consensus.</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We can proceed with the plan." &rarr; They mentioned they <span class="fill-blank">___</span><span class="fill-a" style="display:none">could proceed</span> with the plan.</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I am outlining the new directive." &rarr; He said he <span class="fill-blank">___</span><span class="fill-a" style="display:none">was outlining</span> the new directive.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We are hiring ten people." &rarr; The CFO said they <span class="fill-blank">___</span><span class="fill-answer" style="display:none">were hiring</span> ten people.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I will circulate the notes tomorrow." &rarr; He told me he <span class="fill-blank">___</span><span class="fill-answer" style="display:none">would circulate</span> the notes the next day.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"The team has reached a consensus." &rarr; She confirmed that the team <span class="fill-blank">___</span><span class="fill-answer" style="display:none">had reached</span> a consensus.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"We can proceed with the plan." &rarr; They mentioned they <span class="fill-blank">___</span><span class="fill-answer" style="display:none">could proceed</span> with the plan.</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">"I am outlining the new directive." &rarr; He said he <span class="fill-blank">___</span><span class="fill-answer" style="display:none">was outlining</span> the new directive.</div></div>
     </div>
   </div>
 </div>
@@ -1349,7 +1349,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

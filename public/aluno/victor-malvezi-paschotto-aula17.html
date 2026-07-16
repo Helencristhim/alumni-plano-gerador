@@ -814,11 +814,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Pick the <span class="accent">Form</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Propose: "Shall we <span class="fill-blank">___</span><span class="fill-a" style="display:none">start</span> with the agenda?" (shall we + bare verb)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Ask politely: "Would you mind <span class="fill-blank">___</span><span class="fill-a" style="display:none">keeping</span> it to two minutes?" (would you mind + -ing)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Redirect: "Could we <span class="fill-blank">___</span><span class="fill-a" style="display:none">come</span> back to that as a sidebar?" (could we + bare verb)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Guard the clock: "In the <span class="fill-blank">___</span><span class="fill-a" style="display:none">interest</span> of time, let's move on." (steering marker)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Bring in: "Why don't we <span class="fill-blank">___</span><span class="fill-a" style="display:none">hear</span> from Carla on this?" (why don't we + bare verb)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Propose: "Shall we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">start</span> with the agenda?" (shall we + bare verb)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Ask politely: "Would you mind <span class="fill-blank">___</span><span class="fill-answer" style="display:none">keeping</span> it to two minutes?" (would you mind + -ing)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Redirect: "Could we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">come</span> back to that as a sidebar?" (could we + bare verb)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Guard the clock: "In the <span class="fill-blank">___</span><span class="fill-answer" style="display:none">interest</span> of time, let's move on." (steering marker)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Bring in: "Why don't we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">hear</span> from Carla on this?" (why don't we + bare verb)</div></div>
     </div>
   </div>
 </div>
@@ -1322,7 +1322,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

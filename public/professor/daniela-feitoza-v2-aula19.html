@@ -931,10 +931,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Build the <span class="accent">Invitation</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">invite (formal): you / join / us &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"Would you like to join us?"</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">invite (casual): dinner / tonight &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"How about dinner tonight?"</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">accept the invitation &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I'd love to! That sounds great."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "How about to grab a coffee?" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"How about grabbing a coffee?" (How about + -ing, no "to")</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">invite (formal): you / join / us &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"Would you like to join us?"</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">invite (casual): dinner / tonight &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"How about dinner tonight?"</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">accept the invitation &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I'd love to! That sounds great."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "How about to grab a coffee?" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"How about grabbing a coffee?" (How about + -ing, no "to")</span></div></div>
     </div>
   </div>
 </div>
@@ -1416,7 +1416,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 // ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====

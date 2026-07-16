@@ -282,6 +282,45 @@ def check_dialogue_voices(c, path, root, fails, warns):
         warns.append('audio_manifest.json não encontrado em _build/ — cross-check de voz dos MP3s pulado')
 
 
+def divs_da_classe(c, cls):
+    """O HTML interno de cada <div class="cls ..."> com as tags balanceadas.
+
+    Existe porque varrer o arquivo INTEIRO atrás de um span confunde componentes que
+    apenas se parecem: `.fill-reveal` também usa <span class="fill-answer"> com display
+    inline, e revela por outro caminho — acusá-lo pelo contrato do `.fill-item` é alarme
+    falso. Escopo errado é a diferença entre gate e adivinhação.
+    """
+    for m in re.finditer(r'<div[^>]*class="' + re.escape(cls) + r'(?:[\s"])[^>]*>', c):
+        i, prof = m.end(), 1
+        while i < len(c) and prof:
+            ab = c.find('<div', i)
+            fe = c.find('</div', i)
+            if fe == -1:
+                break
+            if ab != -1 and ab < fe:
+                prof += 1
+                i = ab + 4
+            else:
+                prof -= 1
+                i = fe + 5
+        yield c[m.end():max(m.end(), i - 6)]
+
+
+def corpo_funcao(c, nome):
+    """O corpo de `function nome(...) { ... }`, com chaves balanceadas. None se não existir."""
+    m = re.search(r'function\s+' + re.escape(nome) + r'\s*\([^)]*\)\s*\{', c)
+    if not m:
+        return None
+    i, prof = m.end(), 1
+    while i < len(c) and prof:
+        if c[i] == '{':
+            prof += 1
+        elif c[i] == '}':
+            prof -= 1
+        i += 1
+    return c[m.end():i - 1]
+
+
 def check_fix_regressions(c, css, is_standalone_slides, fails, warns):
     """Cada fix global vira regra permanente — regressão = FAIL."""
     if 'slidesContainer' in c and 'data-slide=' in c:
@@ -371,6 +410,83 @@ def check_fix_regressions(c, css, is_standalone_slides, fails, warns):
             fails.append('LISTENING com a PERGUNTA ESCONDIDA: o CSS de .comp-questions tem '
                          'display:none/visibility:hidden — as perguntas devem estar VISÍVEIS antes do play '
                          '(CLAUDE.md REGRA 2.1)')
+
+    # FILL-IN do slide (.fill-item): a RESPOSTA tem de APARECER no clique.
+    # Irmão do gate do .oral-item logo acima — aquele trava o gabarito que VAZA; este, o
+    # gabarito que NUNCA CHEGA. Sintoma na tela: a aluna clica na frase, o "___" some e no
+    # lugar não vem nada. A frase fica agramatical ("What kind of work you do?") e o
+    # exercício vira um beco sem saída, EM AULA, com a professora compartilhando a tela.
+    #
+    # O revealFill ingênuo — `item.classList.toggle('revealed')` — terceiriza 100% da
+    # revelação para o CSS (.fill-item.revealed .fill-answer{display:inline}). Isso é uma
+    # aposta em duas coisas que o AUTOR da aula escreve à mão, e erra calado:
+    #   1. a CLASSE do span: `fill-a` no lugar de `fill-answer` => nenhuma regra casa;
+    #   2. style="display:none" INLINE no span => inline VENCE regra de classe, e a resposta
+    #      segue escondida MESMO com a classe certa (foi o caso da elaine-mieko-pinho).
+    # Nada disso dá erro: o HTML é válido, o clique não lança exceção, o console fica limpo.
+    # Some em silêncio — e foi assim que 721 lacunas em 124 arquivos (7 alunos) nasceram
+    # mortas e nunca funcionaram, até a Helen ver na aula 8 da Daniela em 16/07/2026.
+    #
+    # A cura é o revealFill ROBUSTO: ele mesmo tira o display inline do caminho e normaliza
+    # a classe, então a resposta aparece qualquer que seja o HTML que o autor escreveu.
+    # Referência: public/professor/helen-mendes-aula1.html (o modelo).
+    # O gate acusa a fragilidade que SE MANIFESTA, nunca a fragilidade teórica. O revealFill
+    # ingênuo é a função do próprio modelo e funciona em ~1.8 mil arquivos de HTML limpo:
+    # reprovar todos eles encheria o legacy-baseline de defeito que não existe e viraria
+    # ruído. Só é defeito quando o revealFill frágil encontra HTML que ele não dá conta.
+    if re.search(r'class="fill-item[\s"]', c):
+        corpo = corpo_funcao(c, 'revealFill')
+        robusto = corpo is not None and 'querySelector' in corpo and 'style.display' in corpo
+        # Há material que dispensa a função e revela com onclick inline no próprio item
+        # (`onclick="this.classList.toggle('revealed')"`). É mecanismo legítimo e funciona —
+        # exige do HTML exatamente o mesmo que o revealFill ingênuo, então cai no mesmo check.
+        toggle_inline = bool(re.search(r'<div[^>]*class="fill-item"[^>]*onclick="[^"]*classList', c))
+        if corpo is None and not toggle_inline:
+            fails.append('FILL-IN sem mecanismo de revelação: o slide tem .fill-item mas não existe '
+                         'nem função revealFill() nem onclick que alterne a classe — clicar não faz nada')
+        elif not robusto:
+            # A revelação é 100% do CSS => o span da resposta tem de estar impecável. Duas
+            # formas de errar, com sintomas OPOSTOS — e as duas passam por cima do CSS:
+            #   inline display:none  => MORTA   (inline vence regra de classe; nunca aparece)
+            #   classe "fill-a" órfã => SPOILER (nada casa, nem o display:none base: nasce visível)
+            # "fill-a" só é órfã quando o arquivo não define CSS para ela (há material que
+            # define .fill-item.revealed .fill-a e funciona — esse passa).
+            fill_a_orfa = not re.search(r'\.fill-item\.revealed\s+\.fill-a\b', css)
+            # !important é o único jeito de o CSS ganhar de um style inline. Quem já escreveu
+            # ".fill-item.revealed .fill-answer{display:inline!important}" imunizou o arquivo
+            # contra a causa 1 — e passa (juliana-marques resolveu assim, e funciona).
+            def vence_inline(classe):
+                return bool(re.search(r'\.fill-item\.revealed\s+\.' + classe +
+                                      r'\b[^{]*\{[^}]*display\s*:[^;}]*!important', css))
+            spans = [m for bloco in divs_da_classe(c, 'fill-item')
+                     for m in re.finditer(r'<span[^>]*class="(fill-a|fill-answer)"[^>]*>', bloco)]
+            for m in spans:
+                st = re.search(r'style="([^"]*)"', m.group(0))
+                inline = bool(st and re.search(r'display\s*:\s*none', st.group(1)))
+                if inline and vence_inline(m.group(1)):
+                    continue
+                if inline:
+                    fails.append(
+                        'FILL-IN que NUNCA REVELA a resposta: o span tem display:none INLINE, e estilo '
+                        'inline VENCE regra de classe — ".fill-item.revealed .fill-answer{display:inline}" '
+                        'nunca ganha dele. A aluna clica, o "___" some e no lugar não vem nada ("What kind '
+                        'of work you do?"), EM AULA, com a tela compartilhada. Nada acusa: HTML válido, '
+                        'clique sem erro, console limpo. Conserto: o revealFill do modelo '
+                        '(helen-mendes-aula1.html), que zera o display inline e normaliza a classe — aí a '
+                        'resposta aparece com QUALQUER HTML: '
+                        "var on=item.classList.toggle('revealed'); "
+                        "var a=item.querySelector('.fill-a, .fill-answer'); "
+                        "if (a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }")
+                    break
+                if m.group(1) == 'fill-a' and fill_a_orfa:
+                    fails.append(
+                        'FILL-IN com o GABARITO NA TELA: o span da resposta usa class="fill-a", que não '
+                        'casa com regra nenhuma deste arquivo — nem com o ".fill-item .fill-answer'
+                        '{display:none}" que deveria escondê-la. Resultado: a resposta nasce visível e o '
+                        'exercício não existe (a aluna lê "What kind of work do you do?" antes de pensar). '
+                        'Use class="fill-answer", ou o revealFill do modelo (helen-mendes-aula1.html), que '
+                        'normaliza a classe sozinho.')
+                    break
 
 
 def _sem_teacher(ch):

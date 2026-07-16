@@ -833,10 +833,10 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Build the <span class="accent">Duration</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">affirmative: I / work / on the migration / two years &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I have been working on the migration for two years."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">since: the team / test / the platform / January &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"The team has been testing the platform since January."</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">question: how long / you / work / on this? &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"How long have you been working on this?"</span></div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I am setting up the servers since Monday" &rarr; <span class="fill-blank">___</span><span class="fill-a" style="display:none">"I have been setting up the servers since Monday." (have been + -ing)</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">affirmative: I / work / on the migration / two years &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I have been working on the migration for two years."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">since: the team / test / the platform / January &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"The team has been testing the platform since January."</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">question: how long / you / work / on this? &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"How long have you been working on this?"</span></div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">fix "I am setting up the servers since Monday" &rarr; <span class="fill-blank">___</span><span class="fill-answer" style="display:none">"I have been setting up the servers since Monday." (have been + -ing)</span></div></div>
     </div>
   </div>
 </div>
@@ -1318,7 +1318,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;

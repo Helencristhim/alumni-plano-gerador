@@ -821,11 +821,11 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Soften the <span class="accent">Line</span></h2>
     <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">Say it first, then click to check</p>
     <div class="fill-grid">
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Instead of "You messed up": "I <span class="fill-blank">___</span><span class="fill-a" style="display:none">was hoping</span> we could look at what happened." (soften a request)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Instead of "Talk to me now": "I was <span class="fill-blank">___</span><span class="fill-a" style="display:none">wondering</span> if you'd have a moment today." (ask gently)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Instead of "Fix this": "It <span class="fill-blank">___</span><span class="fill-a" style="display:none">would</span> help if we set one clear owner." (suggest gently)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Instead of "You're wrong": "I <span class="fill-blank">___</span><span class="fill-a" style="display:none">see</span> it a little differently." (I-statement)</div></div>
-      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Instead of "Do it my way": "Perhaps we <span class="fill-blank">___</span><span class="fill-a" style="display:none">could</span> try another approach together." (suggest, base verb)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Instead of "You messed up": "I <span class="fill-blank">___</span><span class="fill-answer" style="display:none">was hoping</span> we could look at what happened." (soften a request)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Instead of "Talk to me now": "I was <span class="fill-blank">___</span><span class="fill-answer" style="display:none">wondering</span> if you'd have a moment today." (ask gently)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Instead of "Fix this": "It <span class="fill-blank">___</span><span class="fill-answer" style="display:none">would</span> help if we set one clear owner." (suggest gently)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Instead of "You're wrong": "I <span class="fill-blank">___</span><span class="fill-answer" style="display:none">see</span> it a little differently." (I-statement)</div></div>
+      <div class="fill-item" onclick="revealFill(this)"><div class="fill-text">Instead of "Do it my way": "Perhaps we <span class="fill-blank">___</span><span class="fill-answer" style="display:none">could</span> try another approach together." (suggest, base verb)</div></div>
     </div>
   </div>
 </div>
@@ -1327,7 +1327,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 var errorCount = 0;
