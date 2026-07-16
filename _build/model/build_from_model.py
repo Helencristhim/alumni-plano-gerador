@@ -617,6 +617,15 @@ def final_asserts(s, cfg, label, is_hub=False):
     if not is_model:
         assert 'helen' not in low, f'{label}: sobrou referência ao modelo (helen)'
     assert '/lib/contrast-guard.js' in s, f'{label}: contrast-guard NÃO plugado'
+    # "Plugado" tem de significar QUE RODA, não que a string aparece. Este assert já
+    # passava com a tag <script src="/lib/contrast-guard.js"> carregando 7.812 bytes de
+    # JS morto dentro dela: a string estava lá, o contrast-guard carregava, e o corpo
+    # inline era descartado pelo navegador (spec do HTML: src => conteúdo ignorado).
+    # Verde falso. O builder clona o shell do modelo, então isso se replicou sozinho.
+    for m in re.finditer(r'<script\b[^>]*\bsrc\s*=[^>]*>(.*?)</script\s*>', s, re.S | re.I):
+        assert len(m.group(1).strip()) <= 50, (
+            f'{label}: <script src> com {len(m.group(1).strip()):,} bytes de JS inline — o '
+            f'navegador IGNORA esse corpo. Feche a tag do src e ponha o JS num <script> próprio.')
     assert "class=\"check-item\" onclick=\"this.classList.toggle('checked')\"" not in s, \
         f'{label}: checklist com onclick inline não persiste (use toggleCheck(this) — REGRA 28)'
     if 'class="check-item"' in s:
