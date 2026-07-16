@@ -321,8 +321,43 @@ def corpo_funcao(c, nome):
     return c[m.end():i - 1]
 
 
+def scripts_src_com_inline(c):
+    """<script src="..."> COM corpo inline. O navegador IGNORA o corpo — sempre.
+
+    Quando a tag tem src, o HTML manda buscar o arquivo e tratar o conteúdo interno
+    como se não existisse. Não é bug de navegador, é a spec. O resultado é o pior tipo
+    de defeito: o HTML é válido, a página abre, o console fica limpo, e o JS ali dentro
+    NUNCA roda. Nada reclama — nem o parser, nem o linter, nem o assert do builder, que
+    só checava se a string '/lib/contrast-guard.js' aparecia no arquivo (aparecia: numa
+    tag quebrada).
+
+    Foi assim que o modelo (helen-mendes-aula1.html) carregou 7.812 bytes de JS morto
+    dentro de <script src="/lib/contrast-guard.js"> — as funções de gravação
+    (injectPronunciationBtn/startFreeRecording/stopFreeRecording/startRecording/
+    analyzeWords, REGRA 8 e 26). O builder CLONA o shell do modelo, então o bloco morto
+    se replicou por ~2.000 arquivos. Na maioria era inofensivo (função morta sem
+    chamador), mas em 10 aulas da Eduarda Gabriel o botão de Free Record ficou morto de
+    verdade: a aluna clica e não acontece nada.
+
+    Mesma família da REGRA 7.1: o defeito é invisível porque nada reclama.
+    """
+    for m in re.finditer(r'<script\b([^>]*\bsrc\s*=[^>]*)>(.*?)</script\s*>', c, re.S | re.I):
+        corpo = m.group(2).strip()
+        if len(corpo) > 50:
+            src = re.search(r'src\s*=\s*["\']([^"\']+)', m.group(1))
+            yield (src.group(1) if src else '?'), len(corpo)
+
+
 def check_fix_regressions(c, css, is_standalone_slides, fails, warns):
     """Cada fix global vira regra permanente — regressão = FAIL."""
+    for src, n in scripts_src_com_inline(c):
+        fails.append(
+            f'JS MORTO dentro de <script src="{src}">: {n:,} bytes de JavaScript que o '
+            f'navegador IGNORA (tag com src descarta o conteúdo inline — é a spec do HTML, '
+            f'não um bug). O HTML é válido e o console fica limpo, então nada acusa: se uma '
+            f'dessas funções tiver um onclick apontando pra ela, o botão está MORTO na tela '
+            f'da aluna. Conserto: feche a tag do src (<script src="..."></script>) e ponha o '
+            f'JS num <script> próprio logo abaixo.')
     if 'slidesContainer' in c and 'data-slide=' in c:
         if 'body.slide-mode .slides-wrapper { display:flex;flex-direction:column; }' not in c:
             fails.append('REGRESSÃO fix nav-bar (e615c853): slide-mode sem display:flex;flex-direction:column '
