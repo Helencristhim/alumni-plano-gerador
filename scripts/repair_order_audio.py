@@ -15,6 +15,7 @@ USO:
 import re,os,sys,glob,html as _html,json,urllib.request,time
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FLOOR=40000
+BYTES_PER_CHAR=400  # < isso por char = truncado (text-aware)
 VOICES=json.load(open(os.path.join(ROOT,'_build/model/voices.json')))
 
 def blobsize_disk(p):
@@ -57,9 +58,12 @@ def find_targets(slug):
                     bh=subprocess.check_output(['git','ls-files','-s',fp]).split()
                     sz=int(subprocess.check_output(['git','cat-file','-s',bh[1]])) if bh else None
                 except: sz=None
-            if sz is not None and sz<FLOOR:
+            if sz is not None:
                 sents=order_sentences(h,n)
-                res.append((f,k,fp,sz,sents))
+                if sents:
+                    chars=len(' '.join(sents))
+                    if sz < chars*BYTES_PER_CHAR:   # text-aware: curto p/ o texto = truncado
+                        res.append((f,k,fp,sz,sents))
     return res
 
 def gen(text,voice,fp,key):
