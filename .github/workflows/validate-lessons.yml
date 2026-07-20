@@ -161,6 +161,18 @@ jobs:
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: python3 scripts/check_lesson_integrity.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
+      - name: "GATE 5b — áudio de ordenação [order-lN] truncado (arquivos do PR)"
+        # O GATE 5 pega áudio FALTANDO; este pega áudio VÁLIDO porém TRUNCADO. O
+        # exercício "Put in Order" toca uma frase única concatenada; se a API do
+        # ElevenLabs devolveu ~1s (e o gerador PULA arquivos existentes, nunca
+        # regenerando), o aluno ouve 1 segundo de nada e o defeito é invisível
+        # (MP3 válido, HTML válido). Aconteceu em 9 arquivos da Anna + 25 em 8 alunos.
+        # TEXT-AWARE: compara o tamanho do MP3 com o ESPERADO pelo texto do exercício
+        # (nº de chars), então NÃO flagra word-scramble (1 frase curta, ~2s é o certo) —
+        # um piso fixo de bytes dava falso-positivo. Auto-reparo: repair_order_audio.py.
+        if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
+        run: python3 scripts/check_order_audio_len.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
+
       - name: "GATE 6 — reintrodução de padrão já consertado (novos E modificados)"
         # BLOQUEANTE também em arquivo MODIFICADO, ao contrário do validador abaixo.
         # É esse o buraco que ele tapa: uma branch ramificada ANTES de um conserto
