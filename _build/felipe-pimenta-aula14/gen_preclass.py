@@ -1,0 +1,219 @@
+# -*- coding: utf-8 -*-
+"""Gera preclass.html da aula 14 (B2, ZERO portugues na tela do aluno)."""
+
+WORDS = [
+    ("To quantify", "to put a hard number on a result, so it can be measured",
+     "\"Don't just say you cut costs -- quantify it: by how much, over what period?\""),
+    ("Tangible", "real and measurable; something you can point to",
+     "\"Give me one tangible result, not a list of responsibilities.\""),
+    ("To back up", "to support a claim with evidence or a real example",
+     "\"Any candidate can claim leadership; the good ones back it up with a story.\""),
+    ("A turning point", "the moment a situation changed direction, in a story",
+     "\"The refinancing was the turning point that saved the company.\""),
+    ("A curveball", "an unexpected, difficult question meant to test you",
+     "\"Then she threw me a curveball: 'Tell me about your biggest failure.'\""),
+    ("To think on your feet", "to respond well and quickly, without preparation",
+     "\"A good CFO has to think on their feet when the board pushes hard.\""),
+    ("To probe", "to ask deeper follow-up questions to test an answer",
+     "\"A sharp interviewer will probe until the story either holds or falls apart.\""),
+    ("To dodge", "to avoid answering a question directly",
+     "\"If you dodge the hard question, the interviewer stops trusting the easy answers.\""),
+    ("To rehearse", "to practise an answer out loud before the interview",
+     "\"Rehearse your three best stories until you can tell each in ninety seconds.\""),
+    ("Rapport", "an easy, warm connection between two people",
+     "\"The best interviews feel less like a test and more like rapport.\""),
+    ("A competency question", "a question that asks for a real past example of a skill",
+     "\"Almost every CFO interview opens with a competency question.\""),
+    ("A hypothetical", "a what-if question about an imagined situation",
+     "\"She gave me a hypothetical: 'What if you found a hole in the accounts on day one?'\""),
+]
+
+VOL = "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polygon points=\"11 5 6 9 2 9 2 15 6 15 11 19 11 5\"/><path d=\"M15.54 8.46a5 5 0 010 7.07\"/></svg>"
+
+
+def vocab_cards():
+    out = []
+    for w, d, ex in WORDS:
+        out.append(
+            f'        <div class="vocab-card-pc"><div class="vocab-card-content">'
+            f'<div class="vocab-card-header"><span class="vocab-card-word">{w}</span>'
+            f'<span class="vocab-card-dot"> -- </span><span class="vocab-card-def">{d}</span></div>'
+            f'<div class="vocab-card-example">{ex}</div></div>'
+            f'<button class="audio-btn" data-speak="{w}" onclick="speakText(this.dataset.speak,this)">{VOL} Listen</button></div>')
+    return "\n".join(out)
+
+
+def match_rows():
+    defs = [d for _, d, _ in WORDS]
+    out = []
+    for i, (w, d, _) in enumerate(WORDS):
+        # ordem embaralhada e DIFERENTE da ordem das palavras (rotacao + espelho)
+        rot = defs[i + 3:] + defs[:i + 3]
+        opts = list(reversed(rot))
+        if opts[i % len(opts)] == d:  # garante que a correta nao caia na mesma posicao do indice
+            opts = opts[1:] + opts[:1]
+        options = "".join(f'<option value="{o}">{o}</option>' for o in opts)
+        out.append(
+            f'        <div class="match-row" data-answer="{d}">'
+            f'<span class="match-word" style="flex:0 0 150px">{w}</span>'
+            f'<select style="flex:1;width:100%" onchange="checkMatch(this)">'
+            f'<option value="">Select...</option>{options}</select></div>')
+    return "\n".join(out)
+
+
+TEMPLATE = '''<div class="lesson-card" id="ex-lesson-14">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&q=80')"></div>
+    <div class="lesson-header-content">
+      <div class="lesson-number">Lesson 14 -- Pre-class</div>
+      <h3>The CFO Interview -- Owning the Room</h3>
+      <div class="lesson-desc">An interview does not test your CV; it tests whether you can make one year of it land, out loud, in ninety seconds, with a number at the end. Key words: to quantify, tangible, to back up, a turning point, a curveball, to think on your feet, to probe, to dodge, to rehearse, rapport, a competency question, a hypothetical. Structure: the STAR competency answer (Situation, Task, Action, Result) and result language -- linking an action to a measurable outcome with which took, which meant, so that, resulting in.</div>
+      <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="14" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="14">0%</span></div>
+    </div>
+    <div class="expand-icon">&#9660;</div>
+  </div>
+  <div class="lesson-body">
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each term and read the example. Every example is a real line from a CFO interview -- this is how an answer sounds out loud, not how a CV reads on paper.</p>
+      <div class="vocab-cards">
+{VOCAB}
+      </div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each term with its correct definition.</p>
+      <div class="match-grid" id="match-l14">
+{MATCH}
+      </div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions.</p>
+      <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
+        <p>The panel opened with a <strong>competency question</strong>: tell us about a turnaround. The weaker candidate listed his duties -- he was responsible for reporting, he managed a budget -- and said nothing about what he had changed. The stronger candidate told a story. <strong>There was</strong> a division losing money; her job <strong>was to</strong> find the cause; <strong>so she</strong> rebuilt the pricing model, <strong>which took</strong> margin from minus three per cent to plus six. Every claim she made, she could <strong>back up</strong> with something <strong>tangible</strong> she could <strong>quantify</strong>. When the panel began to <strong>probe</strong> and then threw her a <strong>curveball</strong> -- tell us about a failure -- she did not <strong>dodge</strong> it. She named a real one, said what it cost, and closed on what she built afterwards, <strong>resulting in</strong> a control that never failed again. She had <strong>rehearsed</strong> the story until she could tell it in ninety seconds, and she could still <strong>think on her feet</strong> when they pushed. Notice the shape of every strong answer: a situation in one line, one action that was hers, and a number at the end.</p>
+      </div>
+      <div class="quiz-item"><div class="quiz-question">1. Why does the weaker candidate's answer fail, even though every sentence is true?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> He lists his responsibilities instead of telling one story with an action and a measurable result.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> He talks about a turnaround, which the panel did not ask for.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> He speaks for too long and runs out of time.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">2. What does "which took margin from minus three to plus six" add to her answer?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Nothing -- it just repeats the action in different words.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> It links her action to a measurable result, which is where the answer lands.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> It hedges the claim so she does not over-commit.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">3. When the panel throws the failure curveball, what does she do?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> She dodges it with a fake weakness dressed up as a strength.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> She names a real failure, quantifies the cost, and closes on what she built afterwards.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> She refuses to answer and moves on to another question.</div></div></div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- STAR Competency Answers and Result Language</h4><span class="badge badge-vocab">GRAMMAR</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">An interview answer is a story with a shape. STAR gives you the shape -- Situation, Task, Action, Result -- and result language is what links the action to a number, so the answer lands on something the panel can measure.</p>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">STAR step</th><th style="padding:.7rem;text-align:left">What it does</th><th style="padding:.7rem;text-align:left">Language</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Situation</td><td style="padding:.6rem">set the scene in one line</td><td style="padding:.6rem">"There was a division losing money every month."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Task</td><td style="padding:.6rem">name your job in it</td><td style="padding:.6rem">"My job was to find the root cause."</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Action</td><td style="padding:.6rem">one clean thing YOU did</td><td style="padding:.6rem">"So I rebuilt the pricing model over one quarter."</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Result (the number)</td><td style="padding:.6rem">tie the action to a measurable outcome</td><td style="padding:.6rem">which took / which meant / so that / resulting in &rarr; "...margin from &minus;3% to +6%."</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">The curveball</td><td style="padding:.6rem">own a failure, do not dodge</td><td style="padding:.6rem">name it &middot; quantify the cost &middot; land on the lesson</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem"><strong>The test that never fails:</strong> read your answer back and ask -- where is the action, and where is the number? Situation and Task stay short; the Action is one thing you did; the Result is where you land, tied on with <strong>which took, which meant, so that,</strong> or <strong>resulting in</strong>. A story with no number at the end is still just a job description -- and the panel already has your CV.</p>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence with the correct word. Tap Listen to hear the whole sentence.</p>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"Don't just say you cut costs -- <input class="blank-input" data-answer="quantify" data-hint="Hint: put a hard number on it" data-phrase="Don't just say you cut costs; quantify it: by how much, over what period?" placeholder="___"> it: by how much, over what period?"</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"Any candidate can claim leadership; the good ones <input class="blank-input" data-answer="back it up" data-hint="Hint: support the claim with a real example" data-phrase="The good ones back it up with a story." placeholder="___"> with a story."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"I rebuilt the pricing model, <input class="blank-input" data-answer="which took" data-hint="Hint: links the action to the number" data-phrase="I rebuilt the pricing model, which took margin from minus three to plus six." placeholder="___"> margin from minus three to plus six."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"When they threw me a <input class="blank-input" data-answer="curveball" data-hint="Hint: an unexpected, hard question" data-phrase="When they threw me a curveball, I did not dodge it." placeholder="___">, I did not dodge it."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"Give me one <input class="blank-input" data-answer="tangible" data-hint="Hint: real and measurable" data-phrase="Give me one tangible result, not a list of responsibilities." placeholder="___"> result, not a list of responsibilities."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"I disclosed the error early, <input class="blank-input" data-answer="resulting in" data-hint="Hint: links the action to the outcome" data-phrase="I disclosed the error early, resulting in zero audit adjustments." placeholder="___"> zero audit adjustments."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 2: Put the STAR Answer in Order</h4><span class="badge badge-order">Order</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the steps of a strong competency answer in the right order. Opening with a list of your duties -- and no action and no number -- is the mistake that loses the room.</p>
+      <div class="order-container" id="order-l14">
+        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Describe the one action that was yours.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Set the situation in one line.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Land it on a measurable result -- the number.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Name your task -- what you had to do.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l14')"><span class="order-num">?</span><span class="order-text">Link the action to the outcome (which took, so that, resulting in).</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l14')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l14')">&#9660;</button></span></div>
+      </div>
+      <button class="verify-all-btn" onclick="checkOrder('order-l14')">Check Order</button>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it. For each one, name the STAR step you are on -- situation, action, or result.</p>
+      <div class="speech-card" data-phrase="There was a division losing money, so I rebuilt the pricing model.">
+        <div class="speech-phrase">There was a division losing money, so I rebuilt the pricing model.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="I rebuilt the model, which took margin from minus three to plus six per cent.">
+        <div class="speech-phrase">I rebuilt the model, which took margin from minus three to plus six per cent.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="Let me back that up with something tangible I can quantify.">
+        <div class="speech-phrase">Let me back that up with something tangible I can quantify.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="I won't dodge it: it was my call, and here is what I changed.">
+        <div class="speech-phrase">I won't dodge it: it was my call, and here is what I changed.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="If I found a hole on day one, I'd quantify it, disclose it early, then fix the control.">
+        <div class="speech-phrase">If I found a hole on day one, I'd quantify it, disclose it early, then fix the control.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the strongest interview answer in each situation.</p>
+      <div class="quiz-item"><div class="quiz-question">"Tell me about a time you improved a process." The strongest opening is:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "I was responsible for the monthly reporting cycle."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "There was a close taking twelve days; I redesigned it, which took it to five."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I've always been good at improving processes."</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">The panel asks: "How do we know that result was you, not the market?" You:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Back it up with something tangible: "the market was flat; only the products I repriced moved."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "You'll have to trust me on that one."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "It was a team effort, so it's hard to say."</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">"Tell me about your biggest failure." The strongest answer:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "Honestly, I work too hard and care too much."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Names a real failure, quantifies what it cost, and closes on what changed afterwards.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I can't really think of one right now."</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">A hypothetical: "You find a hole in the accounts on day one." You:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> "First I'd quantify it, then disclose it early, then fix the control -- in that order."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "I'd wait and see if anyone else noticed."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "That would never happen on my watch."</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">"Where do you see yourself in five years?" The answer that builds rapport:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "In your job, ideally."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "Leading finance for a business operating internationally -- which is exactly why this role matters to me."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I haven't really thought about it."</div></div></div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the prompt below. There is no right or wrong answer -- speak for 2 to 3 minutes, without a script.</p>
+      <div class="think-card">
+        <div class="think-question">An interviewer asks you to describe your biggest professional achievement. Answer it in STAR: set the situation in one line, name your task, describe the one action that was yours, and land it on a measurable result -- tie the action to the number with which took, which meant, so that, or resulting in. Then take a curveball: name a real failure, quantify what it cost, and close on what you built afterwards. Do not list your responsibilities, and do not dodge the failure.</div>
+        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div id="think-result-14"></div>
+      </div>
+    </div>
+
+    <div class="survival-card">
+      <h4>Survival Card -- Lesson 14</h4>
+      <div class="survival-phrase"><span class="sp-num">1</span><span class="sp-en">There was a problem; so I did one thing; and it took the number from here to there.</span><button class="btn btn-listen" data-speak="There was a problem; so I did one thing; and it took the number from here to there." onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">2</span><span class="sp-en">Let me back that up with something tangible I can quantify.</span><button class="btn btn-listen" data-speak="Let me back that up with something tangible I can quantify." onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">3</span><span class="sp-en">I won't dodge it: it was my call, it cost us this much, and here is what I changed.</span><button class="btn btn-listen" data-speak="I won't dodge it. It was my call, it cost us this much, and here is what I changed." onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">4</span><span class="sp-en">If that happened, I'd quantify it, disclose it early, then fix the control.</span><button class="btn btn-listen" data-speak="If that happened, I'd quantify it, disclose it early, then fix the control." onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">5</span><span class="sp-en">That is exactly why this role, and this company, matter to me.</span><button class="btn btn-listen" data-speak="That is exactly why this role, and this company, matter to me." onclick="speakText(this.dataset.speak,this)">&#9835;</button></div>
+    </div>
+
+  </div>
+</div>
+'''
+
+out = TEMPLATE.replace("{VOCAB}", vocab_cards()).replace("{MATCH}", match_rows())
+with open("_build/felipe-pimenta-aula14/preclass.html", "w", encoding="utf-8") as f:
+    f.write(out)
+print("preclass.html written; words:", len(WORDS))
+import re
+rows = re.findall(r'<div class="match-row" data-answer="([^"]+)">(.*?)</select>', out, re.S)
+bad = 0
+for ans, body in rows:
+    opts = re.findall(r'<option value="([^"]*)">', body)
+    if ans not in opts:
+        bad += 1
+        print("MISSING option for answer:", ans)
+print("match rows:", len(rows), "bad:", bad)
