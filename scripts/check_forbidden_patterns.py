@@ -40,6 +40,11 @@ PATTERNS = [
      "(REGRA 8.1). Use o fallback hasSR do modelo (public/professor/helen-mendes-aula1.html)."),
     (re.compile(r'href="[^"]*(?:youtube\.com/results\?search_query|google\.com/search\?)'),
      "link de BUSCA em Complementares — use a URL canonica do recurso (REGRA 17)."),
+    (re.compile(r'href="[^"]*(?:businessenglishpod\.com|eslpod\.com|englishclass101\.com|hbr\.org)'),
+     "link de conteudo PAGO/cadastro em Complementares — curso pago "
+     "(BusinessEnglishPod/ESLPod/EnglishClass101) ou paywall (HBR). O aluno tem de so "
+     "clicar e acessar, sem cadastro nem dinheiro: use recurso gratuito e aberto "
+     "(YouTube/TED/VOA Learning English/BBC Learning English) — REGRA 17."),
 ]
 
 TARGET = re.compile(r"public/(aluno|professor)/[^/]+\.html$")
