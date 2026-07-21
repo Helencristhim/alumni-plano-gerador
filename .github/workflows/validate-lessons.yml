@@ -199,6 +199,17 @@ jobs:
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: node scripts/check_inline_js.mjs --base "origin/${{ github.base_ref }}" ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
+      - name: "GATE 7b — handler chama função INDEFINIDA (botão morto silencioso)"
+        # O irmão do GATE 7: aquele COMPILA o handler (pega sintaxe); este casa a função
+        # CHAMADA (`onclick="X(...)"`) com uma DEFINIÇÃO no <script> inline. `X` chamado e
+        # não definido = botão que quebra no CLIQUE (ReferenceError) — o GATE 7 não vê,
+        # compila liso. Foi assim que o "Check Answers" morto (verifyAllMatches ausente do
+        # shell) ficou escondido em 1400+ hubs. Corrigido no MODELO helen-mendes (FORMA);
+        # este gate impede reintrodução. Critério "não piorou vs base" (igual 6/7) — o
+        # legado não dispara nem exige retrofit; arquivo NOVO = tolerância zero.
+        if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
+        run: python3 scripts/check_undefined_handlers.py --base "origin/${{ github.base_ref }}" ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
+
       - name: "GATE 8 — o legado não piora (varre o REPO INTEIRO, não só o diff)"
         # TODOS os outros gates olham apenas os arquivos que o PR mudou. Um arquivo que
         # quebrou e que ninguém mais tocou nunca mais é olhado — o defeito fica escondido
