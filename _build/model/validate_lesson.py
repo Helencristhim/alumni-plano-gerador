@@ -798,6 +798,52 @@ def check_persistence_wiring(c, path, fails, warns):
         warns.append('PERSISTÊNCIA (REGRA 28): falta window.TOTAL_AULAS (barra de progresso global do header)')
 
 
+def check_wrapup_checklist(c, fails):
+    """O checklist "What I Learned" (última tela do IN CLASS) é o que grava inclass_done
+    no Supabase e ACENDE o quadrado/stamp da aula. Para o professor conseguir marcar, o
+    item PRECISA reagir ao clique VISUALMENTE. O padrão do molde é:
+
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg…></div>TEXT</div>
+
+    A CSS `.check-item.checked .check-box{fundo verde}` + `.check-box svg{opacity:0→1}` faz o
+    check aparecer quando marcado. DUAS divergências matam esse feedback — e matam em
+    SILÊNCIO: o clique até salva, mas nada muda na tela, então o professor acha que quebrou,
+    desiste, e os 5/5 (única condição que grava inclass_done) nunca são atingidos:
+
+      1. item SEM `.check-box` (svg solto, ex. `class="check-svg"`) → não existe CSS reagindo
+         ao `.checked`, o check fica igual marcado ou não;
+      2. `background`/`border` INLINE no `.check-item` → vence a classe `.check-item.checked`
+         (inline > classe) e a linha NUNCA fica verde.
+
+    Incidente walyson-ginaldo-silva (aulas 2–20, legado): stamps não acendiam porque o clique
+    era invisível — o professor não conseguia fechar o checklist. Nenhum gate pegava (o
+    builder só checa `toggleCheck(this)` + `data-lesson`, não o feedback visual). Este gate
+    impede a classe de voltar em aula NOVA. Não roda sobre o legado: validate_lesson só é
+    chamado nos arquivos da aula sendo gerada (REGRA 20/31)."""
+    if 'toggleCheck(this)' not in c:
+        return
+    partes = re.split(r'(<div class="check-item"[^>]*>)', c)
+    sem_box = inline_bg = 0
+    for i in range(1, len(partes), 2):
+        tag = partes[i]
+        corpo = partes[i + 1][:300] if i + 1 < len(partes) else ''
+        if re.search(r'style="[^"]*\bbackground\b', tag):
+            inline_bg += 1
+        if 'class="check-box"' not in corpo:
+            sem_box += 1
+    if sem_box:
+        fails.append(
+            f'{sem_box} item(ns) do checklist "What I Learned" SEM <div class="check-box"> — '
+            f'o check não reage ao .checked, o professor clica e NADA muda (o stamp nunca '
+            f'acende). Use o padrão do molde: '
+            f'<div class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg…></div>TEXT</div>')
+    if inline_bg:
+        fails.append(
+            f'{inline_bg} item(ns) do checklist "What I Learned" com background/border INLINE no '
+            f'.check-item — vence a classe .check-item.checked (inline > classe) e a linha nunca '
+            f'fica verde. Tire o style inline do item (o fundo do estado marcado vem da CSS).')
+
+
 def validate(path):
     fails, warns = [], []
     if not os.path.exists(path):
@@ -1061,6 +1107,7 @@ def validate(path):
     check_audio_collision(c, fails)
     check_b2_blocks(c, fails, warns)
     check_persistence_wiring(c, path, fails, warns)
+    check_wrapup_checklist(c, fails)
 
     return fails, warns
 
