@@ -35,6 +35,14 @@ os.makedirs(OUT, exist_ok=True)
 
 # Vozes: voices.json (arthur/ellen, inglês) + override por config (cfg['voices']).
 # REGRA: material NÃO-inglês (lang != 'en') NUNCA pode usar voz de inglês — exige
+# MODELO KIDS: vozes de CRIANÇA por padrão, substituindo arthur/ellen SÓ pro kids
+# (o adulto mantém arthur/ellen intocados). Leo = "Cute Energetic Young Kid" (personagem
+# masculino/Bento); Candy = "Young & Sweet" (personagem feminino/Maya) — o PAR do diálogo
+# é criança+criança. Override explícito no cfg['voices'] ainda vence. Ver memória
+# kids-voices-crianca. Para separar NARRAÇÃO do diálogo no futuro, usar Ana (children story
+# narrator, fBJDfBxPazPKo9oZ1P8t) num data-voice próprio.
+if cfg.get('model') == 'kids':
+    VOICES = {**VOICES, 'arthur': '1tDEBGOo8EqEPApM49eJ', 'ellen': 'Nggzl2QAXh3OijoXD116'}
 # override com vozes do idioma-alvo (ex: espanhol = vozes de Espanha). Trava de código.
 VOICES = {**VOICES, **cfg.get('voices', {})}
 LANG = cfg.get('lang', 'en')
