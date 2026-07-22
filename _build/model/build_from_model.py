@@ -549,6 +549,20 @@ def base_swaps(s, cfg, n=None):
     s = s.replace('Helen', cfg['first_name'])
     s = re.sub(r'window\.TOTAL_AULAS=\d+', f'window.TOTAL_AULAS={cfg["total_aulas"]}', s)
     s = re.sub(r'Business English (--|—) 30 Aulas', f'{cfg["program"]} \\1 {cfg["total_aulas"]} Aulas', s)
+    # PROVENIÊNCIA (rastreio modelo × nível — CONTRATOS-E-RASTREIO.md §3): toda aula nasce
+    # declarando de qual MOLDE e NÍVEL herdou. É o que torna o retrofit ESCOPADO possível e
+    # seguro num mundo com >1 modelo (um conserto no Modelo Kids nunca toca uma aula do
+    # Adulto) e deixa o catálogo saber quem herdou o quê. Default 'adulto' → configs antigos
+    # (sem a chave) seguem corretos. Nível vem do config OU do 1º item do header (CEFR).
+    # Idempotente: só injeta se ainda não houver a etiqueta.
+    if 'name="alumni-model"' not in s:
+        prov_model = cfg.get('model', 'adulto')
+        prov_level = cfg.get('level') or (cfg['header'][0] if cfg.get('header') else '')
+        prov = f'<meta name="alumni-model" content="{prov_model}">'
+        if prov_level:
+            prov += f'\n    <meta name="alumni-level" content="{prov_level}">'
+        s = re.sub(r'(<meta name="viewport"[^>]*>)',
+                   lambda m: m.group(1) + '\n    ' + prov, s, count=1)
     return s
 
 
