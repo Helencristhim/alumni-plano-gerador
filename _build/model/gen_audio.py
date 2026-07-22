@@ -21,7 +21,16 @@ cfg = json.load(open(cfg_path, encoding='utf-8'))
 manifest = json.load(open(os.path.join(os.path.dirname(cfg_path), 'audio_manifest.json'), encoding='utf-8'))
 OUT = os.path.join(ROOT, 'public', 'audio', cfg['slug'])
 KEY = os.environ.get('ELEVENLABS_API_KEY')
-assert KEY, 'ELEVENLABS_API_KEY not set'
+if not KEY:
+    # Fallback PERMANENTE: a key fica fora do repo público (nunca commitada), em
+    # ~/.config/alumni/elevenlabs.key. Assim o áudio roda sem precisar passar a key
+    # toda vez (env continua tendo prioridade). Ver memória elevenlabs-key-local.
+    _keyfile = os.path.expanduser('~/.config/alumni/elevenlabs.key')
+    if os.path.exists(_keyfile):
+        with open(_keyfile, encoding='utf-8') as _kf:
+            KEY = _kf.read().strip()
+assert KEY, ('ELEVENLABS_API_KEY não setada e ~/.config/alumni/elevenlabs.key não existe. '
+             'Crie o arquivo com a key (chmod 600) ou exporte a variável.')
 os.makedirs(OUT, exist_ok=True)
 
 # Vozes: voices.json (arthur/ellen, inglês) + override por config (cfg['voices']).
