@@ -66,22 +66,26 @@
         .model-foot li svg { width: 15px; height: 15px; flex: 0 0 auto; margin-top: 3px; color: var(--success); }
         .model-foot code { font: 500 0.78rem/1.5 var(--font-mono); background: var(--bg-subtle); padding: 1px 5px; border-radius: var(--radius-sm); color: var(--text-body); }
 
-        /* Persona cards */
-        .personas { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-lg); }
-        .persona { display: flex; flex-direction: column; text-decoration: none; color: inherit; background: var(--bg-card);
-                   border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);
-                   transition: box-shadow var(--transition-base), transform var(--transition-base); }
-        .persona:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-        .persona-top { padding: var(--space-lg) var(--space-lg) var(--space-md); display: flex; align-items: center; gap: var(--space-md); }
-        .persona-av { width: 54px; height: 54px; border-radius: var(--radius-md); flex: 0 0 auto; display: grid; place-items: center; }
-        .persona-av svg { width: 30px; height: 30px; }
-        .persona h4 { font: var(--text-h2); color: var(--text-primary); }
-        .persona .role { font: var(--text-small); color: var(--text-muted); }
-        .persona-body { padding: 0 var(--space-lg) var(--space-md); flex: 1; }
-        .persona-body p { font: var(--text-small); color: var(--text-muted); line-height: 1.6; }
-        .persona-foot { padding: var(--space-md) var(--space-lg); border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
-        .persona-foot .tag { font: var(--text-micro); letter-spacing: .05em; text-transform: uppercase; }
-        .persona-foot .go { font: var(--text-small); font-weight: 600; color: var(--alumni-navy); display: inline-flex; align-items: center; gap: 5px; }
+        /* Personas por nível — matriz modelo × CEFR */
+        .lv-legend { display: flex; flex-wrap: wrap; gap: var(--space-lg); margin-bottom: var(--space-lg); }
+        .lv-legend .lg { display: inline-flex; align-items: center; gap: 8px; font: var(--text-small); color: var(--text-muted); }
+        .lv-legend .sw { width: 26px; height: 15px; border-radius: 4px; flex: 0 0 auto; }
+        .matrix-wrap { overflow-x: auto; padding-bottom: 4px; }
+        .matrix { min-width: 680px; display: grid; grid-template-columns: 108px repeat(6, 1fr); gap: var(--space-sm); }
+        .matrix .lvh { text-align: center; padding: 6px 4px 10px; border-bottom: 2px solid var(--border-light); }
+        .matrix .lvh .lvl { font: var(--text-h3); color: var(--text-primary); }
+        .matrix .lvh .pt { display: block; font: var(--text-micro); letter-spacing: .04em; text-transform: uppercase; margin-top: 3px; }
+        .matrix .lvh.bi .pt { color: var(--warning); }
+        .matrix .lvh.en .pt { color: var(--alumni-navy); }
+        .matrix .rlab { display: flex; align-items: center; gap: 8px; font: var(--text-h3); color: var(--text-primary); }
+        .matrix .rlab .dot { width: 11px; height: 11px; border-radius: 3px; flex: 0 0 auto; }
+        .cell { min-height: 62px; border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6px; }
+        .cell.na { border: none; }
+        .cell.vaga { border: 1px dashed var(--border); color: var(--text-dim); background: var(--bg-card); font: var(--text-micro); letter-spacing: .06em; text-transform: uppercase; }
+        a.cell.filled { text-decoration: none; color: inherit; background: var(--bg-card); border: 1px solid var(--cell-accent, var(--alumni-navy)); box-shadow: var(--shadow-sm); transition: box-shadow var(--transition-base), transform var(--transition-base); }
+        a.cell.filled:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .cell .nm { font: var(--text-h3); color: var(--text-primary); }
+        .cell .go { font: var(--text-micro); color: var(--cell-accent, var(--alumni-navy)); letter-spacing: .04em; text-transform: uppercase; margin-top: 2px; }
 
         /* Gate note */
         .gate-note { background: var(--info-bg); border: 1px solid var(--info-border); border-radius: var(--radius-lg); padding: var(--space-lg); display: flex; gap: var(--space-md); align-items: flex-start; }
@@ -236,28 +240,53 @@
         </article>
     </section>
 
-    <!-- ═══════════ PERSONAS ═══════════ -->
+    <!-- ═══════════ PERSONAS POR NÍVEL ═══════════ -->
     <section class="cat-section">
-        <h2>Alunos de exemplo</h2>
-        <div class="sub">As personas fictícias — a referência viva de cada modelo.</div>
-        <div class="personas">
-            <a class="persona" href="/professor/helen-mendes.html" target="_blank" rel="noopener">
-                <div class="persona-top">
-                    <span class="persona-av" style="background:var(--alumni-navy-dim)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--alumni-navy)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/></svg></span>
-                    <div><h4>Helen Mendes</h4><div class="role">Marketing · A2</div></div>
-                </div>
-                <div class="persona-body"><p>A persona-exemplo do Modelo Adulto. Material completo com as 5 aulas de referência (fala, leitura, B2).</p></div>
-                <div class="persona-foot"><span class="tag chip">Modelo Adulto</span><span class="go">Abrir material &#8599;</span></div>
-            </a>
+        <h2>Personas por nível</h2>
+        <div class="sub">Geramos por <b>modelo × nível CEFR</b>: o nível decide o conteúdo — idioma (a maior variação), densidade de vocabulário, alguns tipos de exercício e o Pre-class/Complementares. Os gostos da persona são só a pele. "Vaga" = nível ainda sem exemplo.</div>
 
-            <a class="persona" href="/perfil-kids-bento.html" target="_blank" rel="noopener">
-                <div class="persona-top">
-                    <span class="persona-av" style="background:rgba(30,158,95,.10)"><svg viewBox="0 0 24 24" fill="none" stroke="#1e9e5f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15c0-5 4-9 9-9 3 0 4 2 7 2 0 4-2 7-6 8l-1 3H8l-1-3c-2-.6-4-2-4-4Z"/></svg></span>
-                    <div><h4>Bento</h4><div class="role">8 anos · A1</div></div>
-                </div>
-                <div class="persona-body"><p>A persona-exemplo do Modelo Kids. Perfil 360 pronto (dino, Minecraft, Disney); material lúdico em construção.</p></div>
-                <div class="persona-foot"><span class="tag chip">Modelo Kids</span><span class="go">Abrir Perfil 360 &#8599;</span></div>
-            </a>
+        <div class="lv-legend">
+            <span class="lg"><span class="sw" style="background:var(--warning-bg);border:1px solid var(--warning-border)"></span>A0–A1: <b style="color:var(--text-body)">bilíngue</b> (PT + EN)</span>
+            <span class="lg"><span class="sw" style="background:var(--alumni-navy-dim);border:1px solid var(--alumni-navy-ring)"></span>A2 → C1: <b style="color:var(--text-body)">zero português</b> (só inglês) — REGRA 13</span>
+        </div>
+
+        <div class="matrix-wrap">
+          <div class="matrix">
+            <div></div>
+            <div class="lvh bi"><span class="lvl">A0</span><span class="pt">bilíngue</span></div>
+            <div class="lvh bi"><span class="lvl">A1</span><span class="pt">bilíngue</span></div>
+            <div class="lvh en"><span class="lvl">A2</span><span class="pt">zero PT</span></div>
+            <div class="lvh en"><span class="lvl">B1</span><span class="pt">zero PT</span></div>
+            <div class="lvh en"><span class="lvl">B2</span><span class="pt">zero PT</span></div>
+            <div class="lvh en"><span class="lvl">C1</span><span class="pt">zero PT</span></div>
+
+            <!-- Adulto: A2 → C1 -->
+            <div class="rlab"><span class="dot" style="background:#1e6f8f"></span>Adulto</div>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+            <a class="cell filled" style="--cell-accent:#1e6f8f" href="/professor/helen-mendes.html" target="_blank" rel="noopener"><span class="nm">Helen</span><span class="go">abrir &#8599;</span></a>
+            <div class="cell vaga">vaga</div>
+            <div class="cell vaga">vaga</div>
+            <div class="cell vaga">vaga</div>
+
+            <!-- Kids: A0 → A1 -->
+            <div class="rlab"><span class="dot" style="background:#1e9e5f"></span>Kids</div>
+            <div class="cell vaga">vaga</div>
+            <a class="cell filled" style="--cell-accent:#1e9e5f" href="/perfil-kids-bento.html" target="_blank" rel="noopener"><span class="nm">Bento</span><span class="go">perfil &#8599;</span></a>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+
+            <!-- Teens: A2 → B1 (depois) -->
+            <div class="rlab"><span class="dot" style="background:#b0aca2"></span>Teens</div>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+            <div class="cell vaga">vaga</div>
+            <div class="cell vaga">vaga</div>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+          </div>
         </div>
     </section>
 
