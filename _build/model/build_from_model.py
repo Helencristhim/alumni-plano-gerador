@@ -732,6 +732,35 @@ def inject_grammar_marker(slides, grammar_point):
     return slides[:tag_end] + f' data-grammar="{_attr_escape(g)}"' + slides[tag_end:]
 
 
+def inject_kids_images(s):
+    """MODELO KIDS — ilustração real no vocab card. Troca o ícone SVG do `card-icon` pela
+    imagem da BIBLIOTECA COMPARTILHADA public/assets/kids/{word}.{jpg|png}: foto (.jpg) para
+    concretos, cartoon (.png) para abstratos. Chaveada por PALAVRA → reaproveitada entre TODOS
+    os alunos kids: 'dinosaur' usa sempre dinosaur.jpg, em qualquer aula. Palavra sem imagem na
+    biblioteca MANTÉM o SVG (fallback seguro). O autor do conteúdo não wire imagem — o builder
+    emite (mesma filosofia das task-slides). Idempotente. Ver memória kids-image-library."""
+    assets = os.path.join(ROOT, 'public', 'assets', 'kids')
+
+    def find_img(word):
+        for ext in ('jpg', 'jpeg', 'webp', 'png'):
+            if os.path.exists(os.path.join(assets, f'{word}.{ext}')):
+                return f'{word}.{ext}', ('photo' if ext != 'png' else 'cartoon')
+        return None, None
+
+    def repl(m):
+        word = m.group(2).strip().lower()
+        img, typ = find_img(word)
+        if not img:
+            return m.group(0)
+        return (f'<div class="card-icon voc-icon"><img src="/assets/kids/{img}" alt="{word}" '
+                f'class="voc-img {typ}"></div>' + m.group(1))
+
+    return re.sub(
+        r'<div class="card-icon"[^>]*>.*?<div class="card-hint">[^<]*</div></div>'
+        r'(\s*<div class="card-body"><div class="card-word">([^<]+)</div>)',
+        repl, s, flags=re.S)
+
+
 def build_standalone(cfg, content_dir, manifest):
     L = cfg['lesson']
     n = L['n']
@@ -806,6 +835,8 @@ def build_standalone(cfg, content_dir, manifest):
                         inclass_menu([menu_card(cfg, 'enterSlideMode')]))
     s = replace_between(s, '<div class="slides-container" id="slidesContainer">', '</div><!-- /slides-container -->',
                         '\n' + slides + '\n')
+    if cfg.get('model') == 'kids':
+        s = inject_kids_images(s)
     s = s.replace('>LESSON 1<', f'>LESSON {n}<')
     # Update totalSlides to match actual slide count
     actual_slides = len(re.findall(r'data-slide=', slides))

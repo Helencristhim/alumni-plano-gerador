@@ -695,6 +695,12 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
    O CSS base já existe no shell; aqui só garantimos leitura confortável pra criança. */
 .sp-pt, .speech-translation { display: block !important; font-size: .95rem; color: var(--text-dim); margin-top: 2px; }
 
+/* Vocab card com ILUSTRAÇÃO REAL (foto p/ concretos, cartoon p/ abstratos) — kids */
+.card-icon.voc-icon{overflow:hidden!important;padding:0!important;background:var(--accent-dim)!important;display:grid!important;place-items:center}
+.voc-icon .voc-img{display:block}
+.voc-icon .voc-img.photo{width:100%;height:100%;object-fit:cover}
+.voc-icon .voc-img.cartoon{width:76%;height:76%;object-fit:contain}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -858,19 +864,19 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
     <p style="color:var(--text-dim);font-size:.95rem;margin-top:.4rem">Toque para descobrir. Clique de novo para fechar.</p>
     <div class="vocab-grid" id="vocabGrid1" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:640px;margin:1.4rem auto 0">
       <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#14532d,#166534)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M4 18V6M4 12h8M20 18V6M12 12V6"/></svg><div class="card-hint">not small -- very tall</div></div>
+        <div class="card-icon voc-icon"><img src="/assets/kids/big.png" alt="big" class="voc-img cartoon"></div>
         <div class="card-body"><div class="card-word">Big</div><div class="card-def">grande</div><div class="card-example">"It's a big dinosaur!"</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Big. It's a big dinosaur!" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
       </div>
       <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#0c4a6e,#0e7490)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><circle cx="12" cy="12" r="4"/></svg><div class="card-hint">not big -- very little</div></div>
+        <div class="card-icon voc-icon"><img src="/assets/kids/small.png" alt="small" class="voc-img cartoon"></div>
         <div class="card-body"><div class="card-word">Small</div><div class="card-def">pequeno</div><div class="card-example">"It's a small dinosaur!"</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Small. It's a small dinosaur!" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
       </div>
       <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#14532d,#15803d)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M11 20a7 7 0 0 1-7-7c0-5 7-10 7-10s7 5 7 10a7 7 0 0 1-7 7Z"/></svg><div class="card-hint">the color of the jungle</div></div>
+        <div class="card-icon voc-icon"><img src="/assets/kids/green.png" alt="green" class="voc-img cartoon"></div>
         <div class="card-body"><div class="card-word">Green</div><div class="card-def">verde</div><div class="card-example">"The dinosaur is green."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Green. The dinosaur is green." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
       </div>
       <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#7c2d12,#b45309)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M13 3 4 14h7l-1 7 9-11h-7l1-7Z"/></svg><div class="card-hint">to move very fast with your legs</div></div>
+        <div class="card-icon voc-icon"><img src="/assets/kids/run.png" alt="run" class="voc-img cartoon"></div>
         <div class="card-body"><div class="card-word">Run</div><div class="card-def">correr</div><div class="card-example">"The dinosaur can run!"</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Run. The dinosaur can run!" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
       </div>
     </div>
@@ -885,15 +891,15 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
     <h2 class="slide-heading">Three more <span class="accent">words</span></h2>
     <div class="vocab-grid" id="vocabGrid2" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:640px;margin:1.4rem auto 0">
       <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#7f1d1d,#b91c1c)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><circle cx="12" cy="12" r="9"/><path d="M8 15c1.5 1.5 6.5 1.5 8 0M9 10h.01M15 10h.01"/></svg><div class="card-hint">the big sound a dino makes</div></div>
+        <div class="card-icon voc-icon"><img src="/assets/kids/roar.png" alt="roar" class="voc-img cartoon"></div>
         <div class="card-body"><div class="card-word">Roar</div><div class="card-def">rugir</div><div class="card-example">"The dinosaur says roar!"</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Roar! The dinosaur says roar!" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
       </div>
       <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#172554,#1d4ed8)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><div class="card-hint">use your eyes -- see!</div></div>
+        <div class="card-icon voc-icon"><img src="/assets/kids/look.png" alt="look" class="voc-img cartoon"></div>
         <div class="card-body"><div class="card-word">Look</div><div class="card-def">olha</div><div class="card-example">"Look! A dinosaur!"</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Look! Look, a dinosaur!" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
       </div>
       <div class="vocab-card" onclick="revealVocab(this)">
-        <div class="card-icon" style="background:linear-gradient(135deg,#14532d,#166534)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M3 15c0-5 4-9 9-9 3 0 4 2 7 2 0 4-2 7-6 8l-1 3H8l-1-3c-2-.6-4-2-4-4Z"/><circle cx="9" cy="12" r="1"/></svg><div class="card-hint">a very big, very old animal</div></div>
+        <div class="card-icon voc-icon"><img src="/assets/kids/dinosaur.jpg" alt="dinosaur" class="voc-img photo"></div>
         <div class="card-body"><div class="card-word">Dinosaur</div><div class="card-def">dinossauro</div><div class="card-example">"The dinosaur is my friend."</div><div class="card-audio"><button class="audio-btn-sm" data-speak="Dinosaur. The dinosaur is my friend." onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg> Listen</button></div></div>
       </div>
     </div>
