@@ -563,6 +563,14 @@ def base_swaps(s, cfg, n=None):
             prov += f'\n    <meta name="alumni-level" content="{prov_level}">'
         s = re.sub(r'(<meta name="viewport"[^>]*>)',
                    lambda m: m.group(1) + '\n    ' + prov, s, count=1)
+    # PELE KIDS (CONTRATOS-E-RASTREIO.md §1): quando o modelo é kids, injeta o reskin
+    # (forma/fonte/tamanho/playfulness) antes de </style>. A COR vem da paleta do aluno; os
+    # OSSOS e classes-mecanismo continuam os do adulto — então os 12 Contratos passam de graça
+    # e um conserto de estrutura no shell vale pros dois modelos. Idempotente.
+    if cfg.get('model') == 'kids' and 'PELE KIDS (injetada' not in s:
+        theme = read(os.path.join(os.path.dirname(__file__), 'kids-theme.css'))
+        s = s.replace('</style>',
+                      f'\n/* PELE KIDS (injetada pelo builder — model=kids) */\n{theme}\n</style>', 1)
     return s
 
 
