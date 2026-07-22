@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni — Catálogo de Modelos</title>
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="stylesheet" href="/styles/design-system.css">
+    <style>
+        /* ══════════════════════════════════════
+           CATÁLOGO DE MODELOS — LAYOUT
+           ══════════════════════════════════════ */
+        .cat-intro { max-width: 70ch; margin-bottom: var(--space-xl); }
+        .cat-intro p { font: var(--text-base); color: var(--text-muted); }
+
+        /* Modelo vs Perfil — concept row */
+        .concept { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-bottom: var(--space-2xl); }
+        .concept .c { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: var(--space-lg); }
+        .concept .c h3 { font: var(--text-h3); color: var(--text-primary); display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .concept .c h3 svg { width: 20px; height: 20px; }
+        .concept .c p { font: var(--text-small); color: var(--text-muted); line-height: 1.6; }
+        .concept .c .ex { margin-top: 10px; font: var(--text-small); color: var(--text-dim); }
+        .concept .c .ex b { color: var(--text-body); }
+
+        /* Section heading */
+        .cat-section { margin-bottom: var(--space-2xl); }
+        .cat-section > h2 { font: var(--text-h2); color: var(--text-primary); margin-bottom: 4px; }
+        .cat-section > .sub { font: var(--text-small); color: var(--text-dim); margin-bottom: var(--space-lg); }
+
+        /* Model card */
+        .model { background: var(--bg-card); border: 1px solid var(--border-light); border-left: 4px solid var(--m-accent, var(--alumni-navy));
+                 border-radius: var(--radius-lg); padding: var(--space-xl); margin-bottom: var(--space-lg); box-shadow: var(--shadow-sm); }
+        .model-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); }
+        .model-icon { width: 52px; height: 52px; border-radius: var(--radius-md); flex: 0 0 auto; display: grid; place-items: center; background: var(--m-dim, var(--alumni-navy-dim)); }
+        .model-icon svg { width: 28px; height: 28px; color: var(--m-accent, var(--alumni-navy)); }
+        .model-head .mt { flex: 1 1 220px; min-width: 0; }
+        .model-head h3 { font: var(--text-h2); color: var(--text-primary); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .model-head .mt .sub { font: var(--text-small); color: var(--text-muted); margin-top: 2px; }
+        .model-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+        .chip { font: var(--text-micro); letter-spacing: .04em; text-transform: uppercase; padding: 5px 10px; border-radius: var(--radius-sm);
+                background: var(--bg-subtle); color: var(--text-muted); border: 1px solid var(--border-light); white-space: nowrap; }
+        .status { font: var(--text-micro); letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: var(--radius-full); white-space: nowrap; }
+        .status--live { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+        .status--wip { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
+
+        .eyebrow { font: var(--text-micro); letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: var(--space-sm); }
+
+        /* Types grid — each type is a link to its reference lesson */
+        .types { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: var(--space-md); }
+        .type { display: block; text-decoration: none; color: inherit; background: var(--bg-primary); border: 1px solid var(--border-light);
+                border-radius: var(--radius-md); padding: var(--space-md); transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base); }
+        a.type:hover { border-color: var(--m-accent, var(--alumni-navy)); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+        .type h4 { font: var(--text-h3); color: var(--text-primary); display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .type h4 svg { width: 17px; height: 17px; color: var(--m-accent, var(--alumni-navy)); flex: 0 0 auto; }
+        .type p { font: var(--text-small); color: var(--text-muted); line-height: 1.55; }
+        .type .ref { margin-top: 10px; font: var(--text-micro); letter-spacing: .04em; text-transform: uppercase; color: var(--m-accent, var(--alumni-navy)); display: inline-flex; align-items: center; gap: 5px; }
+        .type.disabled { opacity: .6; cursor: not-allowed; }
+        .type.disabled .ref { color: var(--text-dim); }
+
+        /* Model footer: rules + gates */
+        .model-foot { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-top: var(--space-lg); padding-top: var(--space-lg); border-top: 1px solid var(--border-light); }
+        .model-foot .fb .eyebrow { margin-bottom: var(--space-sm); }
+        .model-foot ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 7px; }
+        .model-foot li { display: flex; gap: 8px; align-items: flex-start; font: var(--text-small); color: var(--text-body); }
+        .model-foot li svg { width: 15px; height: 15px; flex: 0 0 auto; margin-top: 3px; color: var(--success); }
+        .model-foot code { font: 500 0.78rem/1.5 var(--font-mono); background: var(--bg-subtle); padding: 1px 5px; border-radius: var(--radius-sm); color: var(--text-body); }
+
+        /* Personas por nível — matriz modelo × CEFR */
+        .lv-legend { display: flex; flex-wrap: wrap; gap: var(--space-lg); margin-bottom: var(--space-lg); }
+        .lv-legend .lg { display: inline-flex; align-items: center; gap: 8px; font: var(--text-small); color: var(--text-muted); }
+        .lv-legend .sw { width: 26px; height: 15px; border-radius: 4px; flex: 0 0 auto; }
+        .matrix-wrap { overflow-x: auto; padding-bottom: 4px; }
+        .matrix { min-width: 680px; display: grid; grid-template-columns: 108px repeat(6, 1fr); gap: var(--space-sm); }
+        .matrix .lvh { text-align: center; padding: 6px 4px 10px; border-bottom: 2px solid var(--border-light); }
+        .matrix .lvh .lvl { font: var(--text-h3); color: var(--text-primary); }
+        .matrix .lvh .pt { display: block; font: var(--text-micro); letter-spacing: .04em; text-transform: uppercase; margin-top: 3px; }
+        .matrix .lvh.bi .pt { color: var(--warning); }
+        .matrix .lvh.en .pt { color: var(--alumni-navy); }
+        .matrix .rlab { display: flex; align-items: center; gap: 8px; font: var(--text-h3); color: var(--text-primary); }
+        .matrix .rlab .dot { width: 11px; height: 11px; border-radius: 3px; flex: 0 0 auto; }
+        .cell { min-height: 62px; border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6px; }
+        .cell.na { border: none; }
+        .cell.vaga { border: 1px dashed var(--border); color: var(--text-dim); background: var(--bg-card); font: var(--text-micro); letter-spacing: .06em; text-transform: uppercase; }
+        a.cell.filled { text-decoration: none; color: inherit; background: var(--bg-card); border: 1px solid var(--cell-accent, var(--alumni-navy)); box-shadow: var(--shadow-sm); transition: box-shadow var(--transition-base), transform var(--transition-base); }
+        a.cell.filled:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .cell .nm { font: var(--text-h3); color: var(--text-primary); }
+        .cell .go { font: var(--text-micro); color: var(--cell-accent, var(--alumni-navy)); letter-spacing: .04em; text-transform: uppercase; margin-top: 2px; }
+
+        /* Gate note */
+        .gate-note { background: var(--info-bg); border: 1px solid var(--info-border); border-radius: var(--radius-lg); padding: var(--space-lg); display: flex; gap: var(--space-md); align-items: flex-start; }
+        .gate-note svg { width: 22px; height: 22px; color: var(--info); flex: 0 0 auto; margin-top: 2px; }
+        .gate-note h3 { font: var(--text-h3); color: var(--text-primary); margin-bottom: 4px; }
+        .gate-note p { font: var(--text-small); color: var(--text-muted); line-height: 1.6; }
+
+        /* Future models */
+        .future { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: var(--space-md); }
+        .fchip { border: 1px dashed var(--border); border-radius: var(--radius-md); padding: var(--space-md); text-align: center; background: var(--bg-card); }
+        .fchip b { display: block; font: var(--text-h3); color: var(--text-body); }
+        .fchip span { font: var(--text-small); color: var(--text-dim); }
+
+        @media (max-width: 640px) {
+            .concept, .model-foot { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="alumni-header">
+    <img src="/assets/logo-alumni.png" alt="Alumni by Better" class="alumni-header__logo">
+    <h1 class="alumni-header__title">Catálogo de Modelos</h1>
+    <span class="alumni-header__badge">GERADOR</span>
+</header>
+
+<nav class="alumni-nav">
+    <a href="index.html">Novo Aluno</a>
+    <a href="dashboard.html">Painel de Alunos</a>
+    <a href="catalogo.html" class="active">Catálogo de Modelos</a>
+    <a href="controle-aulas.html">Controle de Aulas</a>
+    <a href="governanca.html">Governança</a>
+</nav>
+
+<div class="container container--wide">
+
+    <div class="cat-intro">
+        <p>O <b>Modelo</b> é o molde reutilizável — shell (layout/CSS/JS), os tipos de aula que ele monta e os gates que o validam. Todo aluno nasce de um modelo. O <b>Perfil</b> é a persona: um aluno de exemplo com seu Perfil 360, que escolhe um modelo e o preenche.</p>
+    </div>
+
+    <!-- CONCEITO -->
+    <div class="concept">
+        <div class="c">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="var(--alumni-navy)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg>Modelo = o molde</h3>
+            <p>A estrutura reutilizável. Não tem nome de gente. Bug de layout se corrige aqui e chega a todos os alunos via builder.</p>
+            <div class="ex">Ex.: <b>Modelo Adulto</b> · <b>Modelo Kids</b></div>
+        </div>
+        <div class="c">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="var(--alumni-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/></svg>Perfil = a persona</h3>
+            <p>Um aluno concreto com seu Perfil 360. Escolhe um modelo e traz o conteúdo dele (interesses, nível, objetivos).</p>
+            <div class="ex">Ex.: <b>Helen Mendes</b> (adulto) · <b>Bento</b> (kids)</div>
+        </div>
+    </div>
+
+    <!-- ═══════════ MODELOS ═══════════ -->
+    <section class="cat-section">
+        <h2>Modelos</h2>
+        <div class="sub">O molde que cada aluno herda. Os gates precisam passar em TODAS as aulas de qualquer modelo.</div>
+
+        <!-- MODELO ADULTO -->
+        <article class="model" style="--m-accent:#1e6f8f; --m-dim:rgba(30,111,143,.09)">
+            <div class="model-head">
+                <span class="model-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20a8 8 0 0 1 16 0"/><circle cx="12" cy="7" r="4"/></svg></span>
+                <div class="mt">
+                    <h3>Modelo Adulto <span class="status status--live">Ativo</span></h3>
+                    <div class="sub">A2 → C1 · zero português na tela · tom profissional · 60–90 min</div>
+                </div>
+                <div class="model-meta"><span class="chip">Shell: helen-mendes</span><span class="chip">28–30 slides</span><span class="chip">Arthur + Ellen</span></div>
+            </div>
+
+            <span class="eyebrow">Tipos de aula — clique para abrir a referência</span>
+            <div class="types">
+                <a class="type" href="/professor/helen-mendes-aula2.html" target="_blank" rel="noopener">
+                    <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.5 7.2L3 21l1.8-6.5A8 8 0 1 1 21 12Z"/></svg>Fala</h4>
+                    <p>Diálogo line-by-line com <code>data-voice</code>, role-play guiado→livre, 2 listenings. Aulas ímpares.</p>
+                    <span class="ref">Referência: helen aula 2 &#8599;</span>
+                </a>
+                <a class="type" href="/professor/helen-mendes-aula3.html" target="_blank" rel="noopener">
+                    <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Leitura</h4>
+                    <p>Texto central <code>ic-reading</code> + gist (achar a ideia) + true/false com justificativa. Aulas pares.</p>
+                    <span class="ref">Referência: helen aula 3 &#8599;</span>
+                </a>
+                <a class="type" href="/professor/helen-mendes-aula5.html" target="_blank" rel="noopener">
+                    <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.5 5 5.5.8-4 3.9 1 5.5L12 21l-5 2.6 1-5.5-4-3.9 5.5-.8Z"/></svg>Camada B2</h4>
+                    <p>Blocos avançados via <code>inclass_blocks</code>: modals, rephrase, matching, gapfill, scenarios, quickfire.</p>
+                    <span class="ref">Referência: helen aula 5 &#8599;</span>
+                </a>
+                <a class="type" href="/professor/helen-mendes-aula1.html" target="_blank" rel="noopener">
+                    <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Diagnóstica</h4>
+                    <p>Primeira aula: híbrida (diálogo + leitura) pra mapear o aluno. Checklist final sem pressão.</p>
+                    <span class="ref">Referência: helen aula 1 &#8599;</span>
+                </a>
+            </div>
+
+            <div class="model-foot">
+                <div class="fb">
+                    <span class="eyebrow">Regras do modelo</span>
+                    <ul>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12l6 6L20 6"/></svg>A2+ = zero português na tela (REGRA 13)</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12l6 6L20 6"/></svg>Alterna Fala (ímpar) / Leitura (par) — REGRA 29</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12l6 6L20 6"/></svg>Vozes Arthur (♂) / Ellen (♀), 1 por personagem</li>
+                    </ul>
+                </div>
+                <div class="fb">
+                    <span class="eyebrow">Gates que o validam</span>
+                    <ul>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 12l2 2 4-4"/></svg><code>validate_lesson</code> · <code>check_inclass_patterns</code></li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 12l2 2 4-4"/></svg>coerência pre-class · progressão vocab/gramática</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 12l2 2 4-4"/></svg>contraste headless · estrutura de hub · checklist</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- MODELO KIDS -->
+        <article class="model" style="--m-accent:#1e9e5f; --m-dim:rgba(30,158,95,.10)">
+            <div class="model-head">
+                <span class="model-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15c0-5 4-9 9-9 3 0 4 2 7 2 0 4-2 7-6 8l-1 3H8l-1-3c-2-.6-4-2-4-4Z"/><circle cx="9" cy="12" r="1" fill="currentColor"/></svg></span>
+                <div class="mt">
+                    <h3>Modelo Kids <span class="status status--wip">Em construção</span></h3>
+                    <div class="sub">A0/A1 · bilíngue PT+EN · lúdico · 30 min · ritmo tranquilo</div>
+                </div>
+                <div class="model-meta"><span class="chip">Shell: a criar</span><span class="chip">SVG ilustrado</span><span class="chip">mascote + jogo</span></div>
+            </div>
+
+            <span class="eyebrow">Tipos de aula — por enquanto um, incrementável</span>
+            <div class="types">
+                <span class="type disabled" aria-disabled="true">
+                    <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.7 5.5 6 .9-4.3 4.2 1 6L12 17l-5.4 2.6 1-6L3.3 9.4l6-.9Z"/></svg>Aventura lúdica</h4>
+                    <p>Narrativa de missão, mascote, TPR (mão na massa), reveal por clique, ilustração SVG e jogo com pontos.</p>
+                    <span class="ref">Shell em construção</span>
+                </span>
+            </div>
+
+            <div class="model-foot">
+                <div class="fb">
+                    <span class="eyebrow">Regras do modelo</span>
+                    <ul>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12l6 6L20 6"/></svg>A0/A1 = bilíngue PT+EN (REGRA 13 permite)</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12l6 6L20 6"/></svg>Celebra a tentativa · troca de atividade a cada 5 min</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12l6 6L20 6"/></svg>Ilustração SVG inline (zero risco de 404)</li>
+                    </ul>
+                </div>
+                <div class="fb">
+                    <span class="eyebrow">Gates (a criar junto do shell)</span>
+                    <ul>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 12l2 2 4-4"/></svg>Herda os gates de estrutura/áudio do adulto</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 12l2 2 4-4"/></svg>+ regra kids: bilíngue permitido, SVG obrigatório</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <!-- ═══════════ PERSONAS POR NÍVEL ═══════════ -->
+    <section class="cat-section">
+        <h2>Personas por nível</h2>
+        <div class="sub">Geramos por <b>modelo × nível CEFR</b>: o nível decide o conteúdo — idioma (a maior variação), densidade de vocabulário, alguns tipos de exercício e o Pre-class/Complementares. Os gostos da persona são só a pele. "Vaga" = nível ainda sem exemplo.</div>
+
+        <div class="lv-legend">
+            <span class="lg"><span class="sw" style="background:var(--warning-bg);border:1px solid var(--warning-border)"></span>A0–A1: <b style="color:var(--text-body)">bilíngue</b> (PT + EN)</span>
+            <span class="lg"><span class="sw" style="background:var(--alumni-navy-dim);border:1px solid var(--alumni-navy-ring)"></span>A2 → C1: <b style="color:var(--text-body)">zero português</b> (só inglês) — REGRA 13</span>
+        </div>
+
+        <div class="matrix-wrap">
+          <div class="matrix">
+            <div></div>
+            <div class="lvh bi"><span class="lvl">A0</span><span class="pt">bilíngue</span></div>
+            <div class="lvh bi"><span class="lvl">A1</span><span class="pt">bilíngue</span></div>
+            <div class="lvh en"><span class="lvl">A2</span><span class="pt">zero PT</span></div>
+            <div class="lvh en"><span class="lvl">B1</span><span class="pt">zero PT</span></div>
+            <div class="lvh en"><span class="lvl">B2</span><span class="pt">zero PT</span></div>
+            <div class="lvh en"><span class="lvl">C1</span><span class="pt">zero PT</span></div>
+
+            <!-- Adulto: A2 → C1 -->
+            <div class="rlab"><span class="dot" style="background:#1e6f8f"></span>Adulto</div>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+            <a class="cell filled" style="--cell-accent:#1e6f8f" href="/professor/helen-mendes.html" target="_blank" rel="noopener"><span class="nm">Helen</span><span class="go">abrir &#8599;</span></a>
+            <div class="cell vaga">vaga</div>
+            <div class="cell vaga">vaga</div>
+            <div class="cell vaga">vaga</div>
+
+            <!-- Kids: A0 → A1 -->
+            <div class="rlab"><span class="dot" style="background:#1e9e5f"></span>Kids</div>
+            <div class="cell vaga">vaga</div>
+            <a class="cell filled" style="--cell-accent:#1e9e5f" href="/perfil-kids-bento.html" target="_blank" rel="noopener"><span class="nm">Bento</span><span class="go">perfil &#8599;</span></a>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+
+            <!-- Teens: A2 → B1 (depois) -->
+            <div class="rlab"><span class="dot" style="background:#b0aca2"></span>Teens</div>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+            <div class="cell vaga">vaga</div>
+            <div class="cell vaga">vaga</div>
+            <div class="cell na"></div>
+            <div class="cell na"></div>
+          </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ GATES ═══════════ -->
+    <section class="cat-section">
+        <div class="gate-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 8 10 8 10s8-5 8-10V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+            <div>
+                <h3>Os gates valem para TODAS as aulas de TODOS os modelos</h3>
+                <p>Um modelo só é "pronto" quando cada aula passa em todos os gates dele. Modelo novo (ou tipo novo) entra primeiro no shell, com seus gates próprios — e sempre que um defeito escapar, cria-se um gate novo pra ele nunca mais voltar. Correção de layout se faz no modelo, nunca num aluno solto.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ FUTURO ═══════════ -->
+    <section class="cat-section">
+        <h2>Incrementável</h2>
+        <div class="sub">Próximos modelos entram pelo mesmo caminho: shell + tipos + gates.</div>
+        <div class="future">
+            <div class="fchip"><b>Teen</b><span>11–15 · pop culture</span></div>
+            <div class="fchip"><b>Business Pro</b><span>reuniões, e-mail, calls</span></div>
+            <div class="fchip"><b>Exam Prep</b><span>Cambridge / TOEFL</span></div>
+            <div class="fchip"><b>+ novo tipo</b><span>shell + gate</span></div>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>
