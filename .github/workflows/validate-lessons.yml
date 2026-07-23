@@ -244,7 +244,13 @@ jobs:
       - name: "GATE 10 — selftest: prova que o gate de vocab reveal ainda morde"
         run: python3 scripts/check_vocab_reveal.py --selftest
 
-      - name: "GATE 10 — vocab reveal nasce escondido em reveal 100% CSS (repo inteiro)"
+      - name: "GATE 10 — conteúdo de reveal nasce escondido (repo inteiro)"
+        # Cobre as 3 famílias de reveal: .vocab-back (a PALAVRA), .q-answer (a RESPOSTA
+        # da compreensão) e .error-fix (a CORREÇÃO do Spot the Error). A checagem é POR
+        # INSTÂNCIA: cada alvo escondido é amarrado ao onclick do SEU próprio card, porque
+        # um mesmo arquivo tem vários handlers (revealError, revealError1, revealError7...).
+        # Checar por arquivo dava falso positivo — foi o que inocentou elaine-mieko-pinho,
+        # tuca-dias e luiz-bressane-backup-a2, que a checagem grosseira acusava por engano.
         run: python3 scripts/check_vocab_reveal.py
 
       - name: "GATE 9 — gramática não repete entre aulas (REGRA 22, data-grammar)"
