@@ -227,6 +227,26 @@ jobs:
         # ~45s para 2.217 arquivos. Não escreve em nada: é alarme, não é reforma.
         run: python3 scripts/check_legacy_baseline.py
 
+      # ╔══════════════════════════════════════════════════════════════════════╗
+      # ║ GATE 10 — VOCAB REVEAL NASCIDO ESCONDIDO (varre o REPO INTEIRO).     ║
+      # ╚══════════════════════════════════════════════════════════════════════╝
+      # O card de "Vocabulary Reveal" esconde a PALAVRA num .vocab-back e a mostra
+      # no clique. Há dois mecanismos: (A) reveal 100% CSS — revealVocab só faz
+      # classList.add('revealed') e o CSS (.revealed .vocab-back{opacity:1}) mostra;
+      # (B) reveal por JS — revealVocab faz back.style.display=''. Num reveal (A), um
+      # display:none/visibility:hidden/opacity:0 INLINE no back sobrevive ao
+      # .revealed (inline vence stylesheet) e a palavra NUNCA aparece — o professor
+      # clica e nada acontece (luiz-bressane aulas 7/8; eduarda-gabriel x2). O gate
+      # distingue A de B, então NÃO flagra os arquivos do mecanismo B (que têm
+      # display:none de propósito e funcionam). Repo inteiro, como o GATE 8, porque
+      # o defeito nasce escondido e some do diff. O --selftest roda antes e prova, a
+      # cada PR, que o gate ainda REPROVA o padrão quebrado (filosofia do CANARIO).
+      - name: "GATE 10 — selftest: prova que o gate de vocab reveal ainda morde"
+        run: python3 scripts/check_vocab_reveal.py --selftest
+
+      - name: "GATE 10 — vocab reveal nasce escondido em reveal 100% CSS (repo inteiro)"
+        run: python3 scripts/check_vocab_reveal.py
+
       - name: "GATE 9 — gramática não repete entre aulas (REGRA 22, data-grammar)"
         # O irmão gramatical do check_vocab_progression: um data-grammar (posto pelo builder
         # no slide de Grammar Discovery) ensinado como NOVO em 2+ aulas do MESMO aluno = FAIL.
