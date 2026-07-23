@@ -1,0 +1,203 @@
+# -*- coding: utf-8 -*-
+import random
+random.seed(911)
+
+vocab = [
+    ("Prediction", "a statement about what you think will happen in the future", "My prediction is that it will rain this afternoon."),
+    ("To promise", "to say firmly that you will certainly do something", "I promise I will call you tonight."),
+    ("To guess", "to give an answer when you are not completely sure", "I can't be sure, but I'll guess it's about five o'clock."),
+    ("To expect", "to think that something will probably happen", "I expect the train will be a little late again."),
+    ("To doubt", "to think that something is probably not true", "I doubt it will snow here in April."),
+    ("Likely", "probably going to happen", "It is likely that prices will rise next year."),
+    ("Certain", "completely sure about something", "I am certain she will win the game."),
+    ("Forecast", "a report that says what will happen, especially the weather", "The forecast says it will be sunny tomorrow."),
+    ("To wonder", "to think about something you are curious about", "I wonder if he will come to the party."),
+    ("To warn", "to tell someone about a possible danger or problem", "I must warn you: the roads will be icy tonight."),
+    ("Spontaneous", "decided suddenly, without planning it before", "It was a spontaneous decision to travel this weekend."),
+    ("To offer", "to say you are happy to do something for someone", "She offered to drive me home after work."),
+]
+
+match_defs = {
+    "Prediction": "a guess about what will happen",
+    "To promise": "to say you will surely do something",
+    "To guess": "to answer without being sure",
+    "To expect": "to think something will probably happen",
+    "To doubt": "to think something is probably not true",
+    "Likely": "probably going to happen",
+    "Certain": "completely sure about something",
+    "Forecast": "a report about future weather",
+    "To wonder": "to think about something you want to know",
+    "To warn": "to tell someone about a danger",
+    "Spontaneous": "decided suddenly, with no plan",
+    "To offer": "to say you will help someone",
+}
+all_defs = [match_defs[w] for w, _, _ in vocab]
+
+# --- Vocab cards ---
+vc = []
+for w, d, ex in vocab:
+    vc.append(
+        f'        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">{w}</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">{d}</span></div><div class="vocab-card-example">"{ex}"</div></div><button class="audio-btn" onclick="speakText(\'{w}\',this)">Listen</button></div>'
+    )
+vocab_cards = "\n".join(vc)
+
+# --- Matching (shuffled; correct option never at same row index) ---
+rows = []
+for i, (w, _, _) in enumerate(vocab):
+    ans = match_defs[w]
+    opts = all_defs[:]
+    while True:
+        random.shuffle(opts)
+        if opts.index(ans) != i:
+            break
+    opt_html = '<option value="">Select...</option>' + "".join(
+        f'<option value="{o}">{o}</option>' for o in opts
+    )
+    rows.append(
+        f'        <div class="match-row" data-answer="{ans}"><span class="match-word" style="flex:0 0 150px">{w}</span><select style="flex:1;width:100%" onchange="checkMatch(this)">{opt_html}</select></div>'
+    )
+match_rows = "\n".join(rows)
+
+TEMPLATE = f'''<div class="lesson-card" id="ex-lesson-11">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=600&q=80')"></div>
+    <div class="lesson-header-content">
+      <div class="lesson-number">Lesson 11 -- Pre-class</div>
+      <h3>Predictions &amp; Promises</h3>
+      <div class="lesson-desc">Talking about the future in everyday life. Key words: prediction, to promise, to guess, to expect, to doubt, likely, certain, forecast, to wonder, to warn, spontaneous, to offer. Structure: will and won't for predictions, promises, and spontaneous decisions, always followed by the base verb.</div>
+      <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="11" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="11">0%</span></div>
+    </div>
+    <div class="expand-icon">&#9660;</div>
+  </div>
+  <div class="lesson-body">
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.1: Vocabulary Cards</h4><span class="badge badge-vocab">Vocabulary</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each word and read the example. Tap Listen to hear it.</p>
+      <div class="vocab-cards">
+{vocab_cards}
+      </div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.2: Matching</h4><span class="badge badge-practice">Practice</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Match each word with the correct definition.</p>
+      <div class="match-grid" id="match-l11">
+{match_rows}
+      </div>
+      <button class="verify-all-btn" onclick="verifyAllMatches('match-l11')">Check Answers</button>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-vocab">GRAMMAR</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Read the text and answer the questions.</p>
+      <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;line-height:1.7;font-size:.9rem">
+        <p>Ana Paula is planning a weekend picnic, so she checks the weather <strong>forecast</strong>. The <strong>prediction</strong> is good: it <strong>will</strong> be sunny and warm on Saturday. She is <strong>certain</strong> the day will be perfect, and she <strong>expects</strong> at least ten friends. She <strong>doubts</strong> that anyone will stay home, because rain is not <strong>likely</strong>. Her friend Ben is nervous, so she makes a <strong>promise</strong>: she <strong>will</strong> bring a big salad and she will help him set everything up. She also has one small <strong>warning</strong>: their friend Chris will probably be late, as always. It was a <strong>spontaneous</strong> idea, but Ana Paula is sure it will be a wonderful afternoon.</p>
+      </div>
+      <div class="quiz-item"><div class="quiz-question">1. Why do we say "it will rain" and not "it will rains"?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> After will, we use the base verb, with no -s.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "Rain" has no third-person form.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "Will" is only used with "it" and "you".</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">2. In "she will bring a big salad", what does "will" show here?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> A plan she made a long time ago.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> A promise or an offer to help.</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> Something that happened in the past.</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">3. Which sentence makes a correct prediction?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "I think it will to rain."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "I think it will rain."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I think it will raining."</div></div></div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.4: Grammar Tip -- Will and Won't</h4><span class="badge badge-vocab">GRAMMAR</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem">Use will for predictions, promises, and decisions you make right now. After will, use the base verb.</p>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+        <thead><tr style="background:var(--accent);color:#fff"><th style="padding:.7rem;text-align:left">Use</th><th style="padding:.7rem;text-align:left">Affirmative</th><th style="padding:.7rem;text-align:left">Negative &amp; Question</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:.6rem;font-weight:600">Prediction</td><td style="padding:.6rem">It <strong>will rain</strong> later.<br><em>what you think happens</em></td><td style="padding:.6rem">It <strong>won't rain</strong> today.<br><strong>Will</strong> it rain?</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-elevated)"><td style="padding:.6rem;font-weight:600">Promise &amp; decision</td><td style="padding:.6rem">I <strong>will call</strong> you.<br><em>I'll help you now.</em></td><td style="padding:.6rem">I <strong>won't forget</strong>.<br><strong>Will</strong> you help me?</td></tr>
+          <tr><td style="padding:.6rem;font-weight:600">After will</td><td style="padding:.6rem" colspan="2">Always the <strong>base verb</strong>: no <strong>to</strong>, no <strong>-ing</strong>, no <strong>-s</strong>. "She <strong>will call</strong>" (not "calls", not "to call"). In speech: <strong>I'll, she'll, they'll</strong>.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 1.5: Fill in the Blank</h4><span class="badge badge-practice">Practice</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Complete each sentence. Tap Listen to hear the whole sentence.</p>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"Look at those clouds. I think it <input class="blank-input" data-answer="will" data-hint="Hint: a prediction about the future" data-phrase="Look at those clouds. I think it will rain soon." placeholder="___"> rain soon."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"Don't worry, I promise I <input class="blank-input" data-answer="won't" data-alt="will not" data-hint="Hint: the negative of will (a promise not to do it)" data-phrase="Don't worry, I promise I won't be late." placeholder="___"> be late."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"That box looks heavy. I <input class="blank-input" data-answer="will" data-hint="Hint: a decision you make right now to help" data-phrase="That box looks heavy. I will carry it for you." placeholder="___"> carry it for you."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"The forecast is bad, so the game <input class="blank-input" data-answer="won't" data-alt="will not" data-hint="Hint: negative prediction with will" data-phrase="The forecast is bad, so the game won't happen today." placeholder="___"> happen today."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"She studies hard, so I am certain she will <input class="blank-input" data-answer="pass" data-hint="Hint: base verb after will -- no to, no -s" data-phrase="She studies hard, so I am certain she will pass the exam." placeholder="___"> the exam."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+      <div class="fill-blank-item"><div class="fill-blank-sentence">"In this traffic, I doubt they will <input class="blank-input" data-answer="arrive" data-hint="Hint: base verb after will" data-phrase="In this traffic, I doubt they will arrive before noon." placeholder="___"> before noon."</div><button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button><button class="check-btn" onclick="checkBlank(this)">Check</button></div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 2: Put the Steps in Order</h4><span class="badge badge-order">Order</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Put the steps of making a friendly prediction and a promise in the correct order. Tap Listen to hear the full description.</p>
+      <button class="btn btn-listen" onclick="speakText('[order-l11]', this)" style="margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg> Listen</button>
+      <div class="order-container" id="order-l11">
+        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l11')"><span class="order-num">?</span><span class="order-text">Offer some help or make a promise with will.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l11')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l11')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l11')"><span class="order-num">?</span><span class="order-text">Start with what you notice or the weather forecast.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l11')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l11')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="5" onclick="selectOrderItem(this,'order-l11')"><span class="order-num">?</span><span class="order-text">End with a friendly warning or a kind word.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l11')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l11')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l11')"><span class="order-num">?</span><span class="order-text">Make your prediction using will.</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l11')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l11')">&#9660;</button></span></div>
+        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l11')"><span class="order-num">?</span><span class="order-text">Say how certain you are, with "I am certain" or "I doubt".</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l11')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l11')">&#9660;</button></span></div>
+      </div>
+      <button class="verify-all-btn" onclick="checkOrder('order-l11')">Check Order</button>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 3: Pronunciation</h4><span class="badge badge-speak">Speaking</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Listen to each sentence, then record yourself saying it.</p>
+      <div class="speech-card" data-phrase="I think it will be sunny this weekend.">
+        <div class="speech-phrase">I think it will be sunny this weekend.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="I promise I will call you tonight.">
+        <div class="speech-phrase">I promise I will call you tonight.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="I am certain the picnic will be great.">
+        <div class="speech-phrase">I am certain the picnic will be great.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="I doubt it will rain tomorrow.">
+        <div class="speech-phrase">I doubt it will rain tomorrow.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+      <div class="speech-card" data-phrase="That bag looks heavy. I will help you.">
+        <div class="speech-phrase">That bag looks heavy. I will help you.</div>
+        <div class="speech-controls"><button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button><button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div class="speech-result"></div>
+      </div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 4: Situational Quiz</h4><span class="badge badge-quiz">Quiz</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Choose the best answer for each real situation.</p>
+      <div class="quiz-item"><div class="quiz-question">You see dark clouds. You make a prediction:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "I think it will raining."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "I think it will rain soon."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I think it rains soon."</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">You promise a friend you will not be late. You say:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> "I promise I won't be late."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "I promise I not will be late."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "I promise I won't to be late."</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">Someone drops their books next to you. You offer help right now:</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> "Wait, I'll help you."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> "Wait, I helping you."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "Wait, I will helped you."</div></div></div>
+      <div class="quiz-item"><div class="quiz-question">You make a prediction about someone else (third person). Which is correct?</div><div class="quiz-options"><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> "She will calls you later."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> "She will call you later."</div><div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">C</span> "She wills call you later."</div></div></div>
+    </div>
+
+    <div class="exercise-section">
+      <div class="section-header-row"><h4>Stage 5: Free Production</h4><span class="badge badge-think">Reflection</span></div>
+      <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Record yourself answering the question below. There is no right or wrong answer.</p>
+      <div class="think-card">
+        <div class="think-question">Look ahead one year. Make three real predictions about your life or your work using will. Say how certain you are, with certain, likely, expect, or doubt. Then finish with one promise you want to keep. Take your time.</div>
+        <div class="speech-controls"><button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Record</button><button class="btn btn-stop" onclick="stopFreeRecording(this)" style="display:none">&#9632; Stop</button></div>
+        <div id="think-result-11"></div>
+      </div>
+    </div>
+
+    <div class="survival-card">
+      <h4>Survival Card -- Lesson 11</h4>
+      <div class="survival-phrase"><span class="sp-num">1</span><span class="sp-en">I think it will be sunny this weekend.</span><button class="btn btn-listen" onclick="speakText('I think it will be sunny this weekend.',this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">2</span><span class="sp-en">I promise I will call you tonight.</span><button class="btn btn-listen" onclick="speakText('I promise I will call you tonight.',this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">3</span><span class="sp-en">Do not worry, I will help you.</span><button class="btn btn-listen" onclick="speakText('Do not worry, I will help you.',this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">4</span><span class="sp-en">I am certain it will be fine.</span><button class="btn btn-listen" onclick="speakText('I am certain it will be fine.',this)">&#9835;</button></div>
+      <div class="survival-phrase"><span class="sp-num">5</span><span class="sp-en">I doubt it will rain, but I will bring an umbrella.</span><button class="btn btn-listen" onclick="speakText('I doubt it will rain, but I will bring an umbrella.',this)">&#9835;</button></div>
+    </div>
+
+  </div>
+</div>
+'''
+
+open("_build/ana-paula-porto-de-oliveira-fornazari-aula11/preclass.html", "w", encoding="utf-8").write(TEMPLATE)
+print("wrote preclass.html")
