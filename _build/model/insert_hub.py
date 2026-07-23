@@ -210,9 +210,18 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     if f'id="stamp{n}"' not in s:
         stamp_html = (f'<div class="stamp" id="stamp{n}" data-label="{st["label"]}" '
                       f"style=\"background-image:url('{st['img']}')\"></div>\n")
-        anchor = s.index(f'id="stamp{n-1}"')
-        end = s.index('</div>', anchor) + len('</div>') + 1
-        s = s[:end] + stamp_html + s[end:]
+        if n > 1 and f'id="stamp{n-1}"' in s:
+            anchor = s.index(f'id="stamp{n-1}"')
+            end = s.index('</div>', anchor) + len('</div>') + 1
+            s = s[:end] + stamp_html + s[end:]
+        else:
+            # AULA 1 (ou stamp anterior ausente): não existe stamp{n-1} para ancorar.
+            # Acontece em --replace da aula 1 (o remove_lesson_blocks tira o stamp1 e a
+            # reinserção procurava "stamp0" -> ValueError). O stamp entra como PRIMEIRO
+            # da stamps-row. Nunca contornar montando o hub à mão (REGRA 20).
+            m = re.search(r'<div class="stamps-row"[^>]*>', s)
+            assert m, 'stamps-row não encontrada no hub — não dá para inserir o stamp'
+            s = s[:m.end()] + '\n' + stamp_html + s[m.end():]
 
     # 2. accordion ex-lesson-N — antes de </div><!-- /tab-exercises -->
     preclass = B.inject_kids_game(read(os.path.join(content_dir, 'preclass.html')).strip(), cfg)
