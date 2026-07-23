@@ -152,7 +152,7 @@ def insert(hub_path, cfg, content_dir, is_aluno):
         s = s[:end] + stamp_html + s[end:]
 
     # 2. accordion ex-lesson-N — antes de </div><!-- /tab-exercises -->
-    preclass = read(os.path.join(content_dir, 'preclass.html')).strip()
+    preclass = B.inject_kids_game(read(os.path.join(content_dir, 'preclass.html')).strip(), cfg)
     s = s.replace('</div><!-- /tab-exercises -->', '\n' + preclass + '\n\n</div><!-- /tab-exercises -->', 1)
 
     # 3. card IN CLASS — antes de fechar a lista de cards do menu.
