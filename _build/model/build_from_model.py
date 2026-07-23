@@ -571,6 +571,13 @@ def base_swaps(s, cfg, n=None):
         theme = read(os.path.join(os.path.dirname(__file__), 'kids-theme.css'))
         s = s.replace('</style>',
                       f'\n/* PELE KIDS (injetada pelo builder — model=kids) */\n{theme}\n</style>', 1)
+    # JS KIDS: canal analogo ao css (mini-games do Pre-class). SO model==kids => adulto
+    # intocado. Vai antes de </body> (depois do script principal do shell, que ja definiu
+    # speakText/updateProgress que o engine usa). Idempotente.
+    if cfg.get('model') == 'kids' and 'kids-theme.js (injetada' not in s and '</body>' in s:
+        kjs = read(os.path.join(os.path.dirname(__file__), 'kids-theme.js'))
+        s = s.replace('</body>',
+                      f'<script>\n/* kids-theme.js (injetada pelo builder — model=kids) */\n{kjs}\n</script>\n</body>', 1)
     return s
 
 
@@ -759,6 +766,45 @@ def inject_kids_images(s):
         r'<div class="card-icon"[^>]*>.*?<div class="card-hint">[^<]*</div></div>'
         r'(\s*<div class="card-body"><div class="card-word">([^<]+)</div>)',
         repl, s, flags=re.S)
+
+
+# Palavras "tappable": concretas, com imagem NITIDA e nao-ambigua na lib kids. Adjetivo
+# relacional (big/small) e cor (green) NAO entram — no game "toque a figura" a imagem
+# vira ambigua (big.png e small.png sao quase iguais). Ver [[kids-image-library]].
+TAPPABLE_KIDS = {'dinosaur', 'tree', 'rocket', 'star', 'moon', 'planet', 'cat', 'dog', 'run'}
+
+
+def inject_kids_game(preclass, cfg):
+    """MODELO KIDS — injeta o mini-game 'Dino Tap' (Listen and tap) como card de pratica no
+    Pre-class de cada aula (REGRA 4 etapa 2). Deck = palavras DA AULA que sao TAPPABLE. O
+    widget e .think-card (conta no updateProgress do shell) + .dino-tap-game (engine em
+    kids-theme.js). Idempotente. So model==kids. Aula sem palavra tappable => sem game."""
+    if cfg.get('model') != 'kids':
+        return preclass
+    assets = os.path.join(ROOT, 'public', 'assets', 'kids')
+
+    def has_img(w):
+        return any(os.path.exists(os.path.join(assets, f'{w}.{ext}'))
+                   for ext in ('png', 'jpg', 'jpeg', 'webp'))
+
+    def repl(m):
+        block, lid = m.group(0), m.group(1)
+        if 'dino-tap-game' in block:
+            return block  # idempotente
+        deck = []
+        for w in re.findall(r'class="vocab-card-word">([^<]+)<', block):
+            lw = w.strip().lower()
+            if lw in TAPPABLE_KIDS and has_img(lw) and lw not in deck:
+                deck.append(lw)
+        if not deck or '<div class="survival-card">' not in block:
+            return block
+        game = (f'<div class="think-card dino-tap-game" data-key="{cfg["slug"]}-{lid}" '
+                f"data-deck='{json.dumps(deck)}'></div>\n")
+        return block.replace('<div class="survival-card">', game + '<div class="survival-card">', 1)
+
+    return re.sub(
+        r'<div class="lesson-card" id="ex-lesson-(\d+)">.*?(?=<div class="lesson-card" id="ex-lesson-|\Z)',
+        repl, preclass, flags=re.S)
 
 
 def build_standalone(cfg, content_dir, manifest):
@@ -958,6 +1004,7 @@ def build_hub_new(cfg, content_dir, manifest):
     L = cfg['lesson']
     audio_base = f'/audio/{cfg["slug"]}/'
     preclass = read(os.path.join(content_dir, 'preclass.html'))
+    preclass = inject_kids_game(preclass, cfg)  # MODELO KIDS: mini-game Dino Tap (no-op p/ adulto)
     planning = read(os.path.join(content_dir, 'planning.html'))
     complementary = normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg)
 

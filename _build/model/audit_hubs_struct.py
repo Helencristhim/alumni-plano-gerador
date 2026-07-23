@@ -15,6 +15,7 @@ Uso (de dentro de alumni-plano-gerador/, após git fetch):
     python3 ../audit_hubs_struct.py            # lê do origin/main
     python3 ../audit_hubs_struct.py --local    # lê do working tree
 """
+import json
 import os
 import re
 import subprocess
@@ -115,6 +116,20 @@ def flags_for(txt):
     # que nenhum hub do modelo usa. Fica visualmente diferente de todos.
     if '/components/exercises.js' in txt or '/components/activity-tracker.js' in txt:
         flags.append("OLD_SHELL")
+    # DINOTAP — mini-game kids "Listen and tap" (REGRA 20: tipo novo tem gate). Se o hub
+    # tem widget, ele DEVE: (a) ser .think-card (conta no updateProgress sem tocar o shell),
+    # (b) ter data-deck JSON nao-vazio, (c) ter o engine (kids-theme.js) presente.
+    if 'dino-tap-game' in txt:
+        if 'kids-theme.js (injetada' not in txt:
+            flags.append("DINOTAP_NOENGINE")
+        for m in re.finditer(r'class="([^"]*dino-tap-game[^"]*)"[^>]*data-deck=\'([^\']*)\'', txt):
+            try:
+                deck = json.loads(m.group(2))
+            except Exception:
+                deck = None
+            if 'think-card' not in m.group(1) or not deck:
+                flags.append("DINOTAP_BAD")
+                break
     return flags
 
 

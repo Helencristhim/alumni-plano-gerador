@@ -64,3 +64,42 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 .card-icon.voc-icon{overflow:hidden!important;padding:10px!important;background:var(--accent-dim)!important;display:flex!important;align-items:center!important;justify-content:center!important;height:160px!important}
 .voc-icon .voc-img{display:block}
 .voc-icon .voc-img.photo,.voc-icon .voc-img.cartoon{max-width:100%!important;max-height:100%!important;width:auto!important;height:auto!important;object-fit:contain}
+
+/* ===== DINO TAP — mini-game "Listen and tap" no Pre-class (engine em kids-theme.js) =====
+   O widget e um .think-card (pra contar no updateProgress do shell), mas re-estilizado. */
+.dino-tap-game{background:linear-gradient(135deg,var(--accent-dim),rgba(255,255,255,.5))!important;
+  border:2px solid var(--accent)!important;border-radius:18px!important;padding:1.1rem!important;margin-top:1rem}
+.dino-tap-game .dt-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.dino-tap-game .dt-title{font-weight:800;font-size:1.05rem;color:var(--text)}
+.dino-tap-game .dt-title small{display:block;font-weight:600;font-size:.78rem;color:var(--text-dim)}
+.dino-tap-game .dt-hud{display:flex;gap:.4rem}
+.dino-tap-game .dt-chip{background:#fff;border:1px solid var(--border);border-radius:999px;padding:.25rem .65rem;font-weight:700;font-size:.82rem}
+.dino-tap-game .dt-star{color:#f5b301}
+.dino-tap-game .dt-progress{height:8px;background:rgba(0,0,0,.08);border-radius:999px;overflow:hidden;margin:.7rem 0}
+.dino-tap-game .dt-progress>i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.dino-tap-game .dt-listen{display:flex;justify-content:center;margin:.4rem 0 .7rem}
+.dino-tap-game .dt-listen-btn{display:inline-flex;align-items:center;gap:.5rem;border:none;cursor:pointer;
+  background:var(--accent);color:#fff;font-weight:800;font-size:1rem;font-family:inherit;padding:.8rem 1.7rem;
+  border-radius:14px;box-shadow:0 5px 16px rgba(30,158,95,.28)}
+.dino-tap-game .dt-listen-btn.playing{animation:dtPulse .6s ease infinite}
+@keyframes dtPulse{50%{transform:scale(1.06)}}
+.dino-tap-game .dt-hint{text-align:center;color:var(--text-dim);font-size:.85rem;margin-bottom:.7rem}
+.dino-tap-game .dt-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;max-width:420px;margin:0 auto}
+.dino-tap-game .dt-opt{background:#fff;border:3px solid var(--border);border-radius:16px;aspect-ratio:1/1;
+  display:flex;align-items:center;justify-content:center;padding:10px;cursor:pointer;min-height:44px;transition:transform .12s,border-color .2s,background .2s}
+.dino-tap-game .dt-opt:active{transform:scale(.96)}
+.dino-tap-game .dt-opt img{max-width:100%;max-height:100%;object-fit:contain;pointer-events:none}
+.dino-tap-game .dt-opt.correct{border-color:var(--success);background:rgba(22,163,74,.1);animation:dtPop .4s ease}
+.dino-tap-game .dt-opt.wrong{border-color:var(--danger);background:rgba(220,38,38,.08);animation:dtShake .4s ease}
+@keyframes dtPop{50%{transform:scale(1.08)}}
+@keyframes dtShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.dino-tap-game .dt-feedback{text-align:center;font-weight:800;font-size:1.1rem;height:1.5rem;margin-top:.8rem}
+.dino-tap-game .dt-feedback.good{color:var(--success)}.dino-tap-game .dt-feedback.try{color:var(--warn)}
+.dino-tap-game .dt-win{text-align:center;padding:1rem}
+.dino-tap-game .dt-win img{width:96px;height:96px;object-fit:contain}
+.dino-tap-game .dt-win h4{font-size:1.3rem;margin:.5rem 0 .2rem}
+.dino-tap-game .dt-win p{color:var(--text-dim);font-size:.9rem;margin:0}
+.dino-tap-game .dt-again{margin-top:.9rem;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:.7rem 1.5rem;font-weight:800;font-family:inherit;cursor:pointer}
+.dt-confetti{position:fixed;top:-10px;width:10px;height:10px;pointer-events:none;z-index:50;border-radius:2px}
+@keyframes dtFall{to{transform:translateY(105vh) rotate(720deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){.dino-tap-game *{animation:none!important}}
