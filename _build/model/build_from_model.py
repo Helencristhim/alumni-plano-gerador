@@ -418,6 +418,49 @@ def inject_task_slides(slides):
     return re.sub(r'data-slide="\d+"', _n, novo)
 
 
+# Ícone de áudio inline por fala do diálogo — MESMO markup do modelo (helen-mendes):
+# .audio-inline + data-speak + speakText. O texto vive num ATRIBUTO (REGRA 7.1), então
+# apóstrofo do inglês não quebra nada.
+_DLG_AUDIO = ('<span class="audio-inline" data-speak="{t}" '
+              'onclick="speakText(this.dataset.speak,this)">'
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+              '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>'
+              '<path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span>')
+
+
+def inject_dialogue_audio(slides):
+    """Todo diálogo line-by-line DEVE poder ser OUVIDO (REGRA 7 + REGRA 2.2).
+
+    O slide de tarefa diz "Listen for this" e o `data-teacher` manda "Toque cada audio" —
+    mas a fala só tem áudio se a linha carregar um gatilho (data-speak). O modelo
+    (helen-mendes) traz um ícone `.audio-inline` em CADA fala; conteúdo autoral (kids,
+    Bento) saiu SEM — diálogo mudo, e o extract_phrases nem gerava o MP3 (sem data-speak
+    não há frase a sintetizar). Resultado: "Listen for this" -> diálogo silencioso
+    (reportado 23/07, Bento aula 1 e 2).
+
+    Aqui o BUILDER injeta o ícone em toda `.dialogue-bubble` que ainda não tem áudio,
+    derivando o texto falado da própria bolha (sem o rótulo do falante `<b>Nome:</b>` e
+    sem tags). IDEMPOTENTE (pula bolha que já tem audio-inline/data-speak, então o modelo
+    e o adulto passam intactos). Como o data-speak entra na MESMA linha física do
+    data-voice do diálogo, o extract_phrases herda a voz certa e o MP3 nasce no manifest.
+    """
+    def repl(m):
+        inner = m.group(1)
+        if 'audio-inline' in inner or 'data-speak' in inner:
+            return m.group(0)  # já tem áudio — não duplica (modelo/adulto intactos)
+        spoken = _texto(re.sub(r'^\s*<b>[^<]*</b>', '', inner))  # tira "Nome:" e tags
+        # _texto troca cada tag por espaço; quando uma tag inline é seguida de pontuação
+        # ("...<span>green</span>.") isso vira "green ." — espaço solto antes do ponto.
+        # Cola a pontuação de volta (senão a frase falada e a chave do audioMap ficam feias).
+        spoken = re.sub(r'\s+([.,!?;:])', r'\1', spoken)
+        if not spoken:
+            return m.group(0)
+        esc = (spoken.replace('&', '&amp;').replace('<', '&lt;')
+               .replace('>', '&gt;').replace('"', '&quot;'))  # apóstrofo fica literal (REGRA 7.1)
+        return m.group(0)[:-len('</div>')] + ' ' + _DLG_AUDIO.format(t=esc) + '</div>'
+    return re.sub(r'<div class="dialogue-bubble[^"]*">(.*?)</div>', repl, slides, flags=re.S)
+
+
 def extract_phrases(html):
     """(texto, voz_sugerida|None) em ordem de documento; data-voice na mesma linha vence.
 
@@ -817,6 +860,9 @@ def build_standalone(cfg, content_dir, manifest):
     # todo diálogo/leitura, a partir das perguntas do slide de checagem. Idempotente e
     # renumera os data-slide. Aula sem diálogo nem leitura = no-op.
     slides = inject_task_slides(slides)
+    # REGRA 7 + 2.2: toda fala do diálogo ganha botão de áudio (senão "Listen for this"
+    # leva a um diálogo mudo). Idempotente — modelo/adulto (que já têm audio-inline) passam.
+    slides = inject_dialogue_audio(slides)
     # REGRA 28: o checklist "What I Learned" DEVE chamar toggleCheck(this) — é ele que o
     # lesson-progress.js faz wrap para salvar inclass_done (barra do pacote + stamps).
     # onclick="this.classList.toggle('checked')" só alterna a classe visual: os tics somem
