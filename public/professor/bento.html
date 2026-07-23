@@ -915,12 +915,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 .sp-pt, .speech-translation { display: block !important; font-size: .95rem; color: var(--text-dim); margin-top: 2px; }
 
 /* Vocab card com ILUSTRAÇÃO REAL (foto p/ concretos, cartoon p/ abstratos) — kids */
-/* imagem do vocab card: SEMPRE inteira (contain) e o maior possivel dentro de uma
-   moldura com respiro. padding da moldura + img 100% => nada corta e fica grande. */
-.card-icon.voc-icon{overflow:hidden!important;padding:8px!important;background:var(--accent-dim)!important;display:grid!important;place-items:center}
+/* imagem do vocab card: SEMPRE inteira e o maior possivel dentro de uma moldura com
+   respiro. A moldura base do shell tem so 120px de altura e centraliza via grid, o que NAO
+   resolve height:100% no <img> => a imagem quadrada (256px) vazava e o overflow:hidden
+   CORTAVA topo/base (bug reportado 23/07). Correcao: moldura mais alta + flex + a imagem
+   limitada por max-width/max-height (nunca excede a moldura, nunca corta, nunca distorce). */
+.card-icon.voc-icon{overflow:hidden!important;padding:10px!important;background:var(--accent-dim)!important;display:flex!important;align-items:center!important;justify-content:center!important;height:160px!important}
 .voc-icon .voc-img{display:block}
-.voc-icon .voc-img.photo{width:100%;height:100%;object-fit:contain}
-.voc-icon .voc-img.cartoon{width:100%;height:100%;object-fit:contain}
+.voc-icon .voc-img.photo,.voc-icon .voc-img.cartoon{max-width:100%!important;max-height:100%!important;width:auto!important;height:auto!important;object-fit:contain}
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
