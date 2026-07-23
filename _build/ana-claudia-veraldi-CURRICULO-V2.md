@@ -54,7 +54,7 @@ Legenda de fio: 🗣️ fala/desbloqueio · 👂 listening-sotaques · 🧩 gram
 | 1 | **Who Is Ana, Really?** — apresentar-se pela vida, não pelo cargo (cachorras, casa, sossego) | Present simple vs continuous (quem eu sou / o que faço agora) | 🗣️ |
 | 2 | **Growing Up in Butantan** — de São Paulo pro interior | Past simple vs past continuous (contar histórias) | 🗣️👂 |
 | 3 | **Life in a Town of 40,000** — cidade pequena vs metrópole | Comparatives & superlatives | 🗣️ |
-| 4 | **My Dogs** — rotina, personalidade das cachorras | Present continuous / stative verbs; describing | 🗣️ |
+| 4 | **My Dogs** — rotina, personalidade das cachorras | Adjective order + `-ed`/`-ing` adjectives (describing) | 🗣️ |
 | 5 | **The Things I've Done** — experiências de vida | Present perfect (ever/never, been/gone) | 🧩🗣️ |
 | 6 | **How Long Have You...?** — hobbies e "fuçar" há anos | Present perfect continuous (for/since, duração) | 🧩 |
 | 7 | **The House I'm Restoring** — projetos de DIY/restauro | Passive voice em contexto real (how things get done) | 🧩🗣️ |
