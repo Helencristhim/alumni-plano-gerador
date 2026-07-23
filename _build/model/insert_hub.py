@@ -114,21 +114,84 @@ def merge_audiomap(s, cfg, content_dir):
     return re.sub(r'var audioMap = \{\n(.*?)\n\s*\};', dedup, s, count=1, flags=re.S)
 
 
-def insert(hub_path, cfg, content_dir, is_aluno):
+def _block_end(s, start, open_tag='<div', close_tag='</div>'):
+    """Dado `start` no '<' da tag de abertura, devolve o índice logo APÓS a tag de
+    fechamento balanceada. Conta profundidade de open_tag/close_tag. HTML gerado pelo
+    builder é bem-formado, então isto é exato. ('<div' não casa dentro de '</div>'.)"""
+    depth, i = 0, start
+    while i < len(s):
+        no = s.find(open_tag, i)
+        nc = s.find(close_tag, i)
+        assert nc != -1, f'fechamento {close_tag} não encontrado a partir de {start}'
+        if no != -1 and no < nc:
+            depth += 1
+            i = no + len(open_tag)
+        else:
+            depth -= 1
+            i = nc + len(close_tag)
+            if depth == 0:
+                return i
+    raise AssertionError('bloco não balanceado')
+
+
+def _strip_enclosing(s, needle, open_tag='<div', close_tag='</div>'):
+    """Remove o bloco balanceado (open_tag..close_tag) que CONTÉM `needle`.
+    Devolve (s_sem_bloco, achou_bool). Remove também 1 linha em branco à esquerda."""
+    pos = s.find(needle)
+    if pos == -1:
+        return s, False
+    start = s.rfind(open_tag, 0, pos + len(needle))
+    assert start != -1, f'abertura {open_tag} não encontrada antes de {needle!r}'
+    end = _block_end(s, start, open_tag, close_tag)
+    # apara whitespace/linha em branco imediatamente antes do bloco
+    left = start
+    while left > 0 and s[left - 1] in ' \t':
+        left -= 1
+    if left > 0 and s[left - 1] == '\n':
+        left -= 1
+    return s[:left] + s[end:], True
+
+
+def remove_lesson_blocks(s, n, slug, is_aluno):
+    """REPLACE-mode (re-nivelamento): remove SÓ os blocos da aula N do hub — accordion
+    ex-lesson-N, os wrappers de Complementares lN-, o card do menu IN CLASS (só prof) e o
+    stampN — para que a inserção normal recoloque as versões novas. NÃO toca em nenhuma
+    outra aula. As entradas antigas de audioMap ficam como chaves órfãs inofensivas; as
+    novas são mescladas/atualizadas por merge_audiomap na inserção."""
+    s, _ = _strip_enclosing(s, f'id="ex-lesson-{n}"')          # accordion Pre-class
+    while True:                                                # todos os media-card l{n}-
+        s, found = _strip_enclosing(s, f'data-media="l{n}-')
+        if not found:
+            break
+    if not is_aluno:                                           # card do menu (só prof)
+        s, _ = _strip_enclosing(s, f'{slug}-aula{n}.html', open_tag='<a', close_tag='</a>')
+    s, _ = _strip_enclosing(s, f'id="stamp{n}"')              # stamp do header
+    assert f'id="ex-lesson-{n}"' not in s and f'data-media="l{n}-' not in s, \
+        f'remoção incompleta da aula {n}'
+    return s
+
+
+def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     n = cfg['lesson']['n']
     slug = cfg['slug']
     s = read(hub_path)
     if f'id="ex-lesson-{n}"' in s:
-        # Aula já inserida: NÃO re-insere card/stamp/complementares (aditivo, nunca
-        # duplica). Mas o audioMap AINDA é reconciliado — senão um MP3 errado no hub
-        # é permanente, imune a qualquer rebuild.
-        s2 = merge_audiomap(s, cfg, content_dir)
-        if s2 != s:
-            write(hub_path, s2)
-            print(f'  ex-lesson-{n} já presente em {os.path.basename(hub_path)} — audioMap reconciliado')
+        if replace:
+            # Re-nivelamento explícito (--replace): troca os blocos da aula N pelos novos.
+            s = remove_lesson_blocks(s, n, slug, is_aluno)
+            print(f'  ex-lesson-{n} REMOVIDO (replace) em {os.path.basename(hub_path)} — reinserindo')
+            # cai no fluxo normal de inserção abaixo
         else:
-            print(f'  ex-lesson-{n} já presente em {os.path.basename(hub_path)} — pulando')
-        return
+            # Aula já inserida: NÃO re-insere card/stamp/complementares (aditivo, nunca
+            # duplica). Mas o audioMap AINDA é reconciliado — senão um MP3 errado no hub
+            # é permanente, imune a qualquer rebuild.
+            s2 = merge_audiomap(s, cfg, content_dir)
+            if s2 != s:
+                write(hub_path, s2)
+                print(f'  ex-lesson-{n} já presente em {os.path.basename(hub_path)} — audioMap reconciliado')
+            else:
+                print(f'  ex-lesson-{n} já presente em {os.path.basename(hub_path)} — pulando')
+            return
     folder = 'aluno' if is_aluno else 'professor'
     target = f'/{folder}/{slug}-aula{n}.html?autostart=1'
     card = B.menu_card(cfg, target)
@@ -179,8 +242,11 @@ def insert(hub_path, cfg, content_dir, is_aluno):
     # 5. audioMap: mescla pcN_/[order-lN] logo após "var audioMap = {"
     s = merge_audiomap(s, cfg, content_dir)
 
-    # 6. totalLessons -> N (a barra das aulas só enche até totalLessons — REGRA 18)
-    s = re.sub(r'var totalLessons\s*=\s*\d+', f'var totalLessons={n}', s)
+    # 6. totalLessons -> MAIOR aula presente no hub (a barra só enche até totalLessons —
+    #    REGRA 18). NUNCA baixar: em --replace de uma aula do meio (ex: 13 num hub que já
+    #    vai até 20), usar n=13 quebraria a barra. Pega o max de todas as ex-lesson-K.
+    all_n = [int(x) for x in re.findall(r'id="ex-lesson-(\d+)"', s)] + [n]
+    s = re.sub(r'var totalLessons\s*=\s*\d+', f'var totalLessons={max(all_n)}', s)
 
     assert f'id="ex-lesson-{n}"' in s and f'id="stamp{n}"' in s and f'data-media="l{n}-' in s
     assert is_aluno or f'{slug}-aula{n}.html' in s, f'card do menu IN CLASS ausente no hub prof (aula {n})'
@@ -188,10 +254,12 @@ def insert(hub_path, cfg, content_dir, is_aluno):
 
 
 def main():
-    if len(sys.argv) != 2:
+    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+    replace = '--replace' in sys.argv  # re-nivelamento: troca os blocos de uma aula já no hub
+    if len(args) != 1:
         print(__doc__)
         sys.exit(2)
-    cfg_path = os.path.abspath(sys.argv[1])
+    cfg_path = os.path.abspath(args[0])
     content_dir = os.path.dirname(cfg_path)
     cfg = json.load(open(cfg_path, encoding='utf-8'))
     assert cfg.get('hub') == 'snippets', "insert_hub só p/ hub 'snippets' (hub existente)"
@@ -199,10 +267,10 @@ def main():
     prof = os.path.join(ROOT, 'public', 'professor', f'{slug}.html')
     aluno = os.path.join(ROOT, 'public', 'aluno', f'{slug}.html')
     assert os.path.exists(prof), f'hub prof inexistente: {prof} (aluno novo usa hub "new")'
-    print(f'== hub professor (aula {n}) ==')
-    insert(prof, cfg, content_dir, is_aluno=False)
-    print(f'== hub aluno (aula {n}) ==')
-    insert(aluno, cfg, content_dir, is_aluno=True)
+    print(f'== hub professor (aula {n}){" REPLACE" if replace else ""} ==')
+    insert(prof, cfg, content_dir, is_aluno=False, replace=replace)
+    print(f'== hub aluno (aula {n}){" REPLACE" if replace else ""} ==')
+    insert(aluno, cfg, content_dir, is_aluno=True, replace=replace)
 
 
 if __name__ == '__main__':
