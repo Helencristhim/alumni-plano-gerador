@@ -17,7 +17,12 @@ var audioMap = {
   "Sky. The sky is dark.": "/audio/bento/a2_sky_the_sky_is_dark.mp3",
   "Up. Go up, up, up!": "/audio/bento/a2_up_go_up_up_up.mp3",
   "Go. Ready? Go!": "/audio/bento/a2_go_ready_go.mp3",
-  "Three, two, one, go!": "/audio/bento/a2_three_two_one_go.mp3",
+  "Ready, Bento? Let's count!": "/audio/bento/a2_ready_bento_let_s_count.mp3",
+  "Three, two, one... go!": "/audio/bento/a2_three_two_one_go.mp3",
+  "Blast off! The rocket goes up!": "/audio/bento/a2_blast_off_the_rocket_goes_up.mp3",
+  "Look! A star!": "/audio/bento/a2_look_a_star.mp3",
+  "Yes! One, two, three stars! And the moon!": "/audio/bento/a2_yes_one_two_three_stars_and_the_moon.mp3",
+  "Three, two, one, go!": "/audio/bento/a2_three_two_one_go_9889ca.mp3",
   "The rocket goes up!": "/audio/bento/a2_the_rocket_goes_up.mp3",
   "I can see a star!": "/audio/bento/a2_i_can_see_a_star.mp3",
 };
@@ -705,6 +710,45 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 .voc-icon .voc-img{display:block}
 .voc-icon .voc-img.photo,.voc-icon .voc-img.cartoon{max-width:100%!important;max-height:100%!important;width:auto!important;height:auto!important;object-fit:contain}
 
+/* ===== DINO TAP — mini-game "Listen and tap" no Pre-class (engine em kids-theme.js) =====
+   O widget e um .think-card (pra contar no updateProgress do shell), mas re-estilizado. */
+.dino-tap-game{background:linear-gradient(135deg,var(--accent-dim),rgba(255,255,255,.5))!important;
+  border:2px solid var(--accent)!important;border-radius:18px!important;padding:1.1rem!important;margin-top:1rem}
+.dino-tap-game .dt-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.dino-tap-game .dt-title{font-weight:800;font-size:1.05rem;color:var(--text)}
+.dino-tap-game .dt-title small{display:block;font-weight:600;font-size:.78rem;color:var(--text-dim)}
+.dino-tap-game .dt-hud{display:flex;gap:.4rem}
+.dino-tap-game .dt-chip{background:#fff;border:1px solid var(--border);border-radius:999px;padding:.25rem .65rem;font-weight:700;font-size:.82rem}
+.dino-tap-game .dt-star{color:#f5b301}
+.dino-tap-game .dt-progress{height:8px;background:rgba(0,0,0,.08);border-radius:999px;overflow:hidden;margin:.7rem 0}
+.dino-tap-game .dt-progress>i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.dino-tap-game .dt-listen{display:flex;justify-content:center;margin:.4rem 0 .7rem}
+.dino-tap-game .dt-listen-btn{display:inline-flex;align-items:center;gap:.5rem;border:none;cursor:pointer;
+  background:var(--accent);color:#fff;font-weight:800;font-size:1rem;font-family:inherit;padding:.8rem 1.7rem;
+  border-radius:14px;box-shadow:0 5px 16px rgba(30,158,95,.28)}
+.dino-tap-game .dt-listen-btn.playing{animation:dtPulse .6s ease infinite}
+@keyframes dtPulse{50%{transform:scale(1.06)}}
+.dino-tap-game .dt-hint{text-align:center;color:var(--text-dim);font-size:.85rem;margin-bottom:.7rem}
+.dino-tap-game .dt-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;max-width:420px;margin:0 auto}
+.dino-tap-game .dt-opt{background:#fff;border:3px solid var(--border);border-radius:16px;aspect-ratio:1/1;
+  display:flex;align-items:center;justify-content:center;padding:10px;cursor:pointer;min-height:44px;transition:transform .12s,border-color .2s,background .2s}
+.dino-tap-game .dt-opt:active{transform:scale(.96)}
+.dino-tap-game .dt-opt img{max-width:100%;max-height:100%;object-fit:contain;pointer-events:none}
+.dino-tap-game .dt-opt.correct{border-color:var(--success);background:rgba(22,163,74,.1);animation:dtPop .4s ease}
+.dino-tap-game .dt-opt.wrong{border-color:var(--danger);background:rgba(220,38,38,.08);animation:dtShake .4s ease}
+@keyframes dtPop{50%{transform:scale(1.08)}}
+@keyframes dtShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.dino-tap-game .dt-feedback{text-align:center;font-weight:800;font-size:1.1rem;height:1.5rem;margin-top:.8rem}
+.dino-tap-game .dt-feedback.good{color:var(--success)}.dino-tap-game .dt-feedback.try{color:var(--warn)}
+.dino-tap-game .dt-win{text-align:center;padding:1rem}
+.dino-tap-game .dt-win img{width:96px;height:96px;object-fit:contain}
+.dino-tap-game .dt-win h4{font-size:1.3rem;margin:.5rem 0 .2rem}
+.dino-tap-game .dt-win p{color:var(--text-dim);font-size:.9rem;margin:0}
+.dino-tap-game .dt-again{margin-top:.9rem;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:.7rem 1.5rem;font-weight:800;font-family:inherit;cursor:pointer}
+.dt-confetti{position:fixed;top:-10px;width:10px;height:10px;pointer-events:none;z-index:50;border-radius:2px}
+@keyframes dtFall{to{transform:translateY(105vh) rotate(720deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){.dino-tap-game *{animation:none!important}}
+
 .teacher-t{display:none !important}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -1001,11 +1045,11 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
     <div class="chapter-label">In Space</div>
     <h2 class="slide-heading" style="color:#fff">Ready to <span class="accent">launch</span></h2>
     <div class="dialogue-box" style="max-width:560px;margin:1.2rem auto 0;display:flex;flex-direction:column;gap:.7rem">
-      <div class="dialogue-line visible" data-line="1" data-voice="ellen"><div class="dialogue-avatar maya">M</div><div class="dialogue-bubble maya-bubble"><b>Maya:</b> Ready, Bento? Let's <span class="accent">count!</span></div></div>
-      <div class="dialogue-line" data-line="2" data-voice="arthur"><div class="dialogue-avatar bento">B</div><div class="dialogue-bubble bento-bubble"><b>Bento:</b> Three, two, one... <span class="accent">go!</span></div></div>
-      <div class="dialogue-line" data-line="3" data-voice="ellen"><div class="dialogue-avatar maya">M</div><div class="dialogue-bubble maya-bubble"><b>Maya:</b> Blast off! The <span class="accent">rocket</span> goes up!</div></div>
-      <div class="dialogue-line" data-line="4" data-voice="arthur"><div class="dialogue-avatar bento">B</div><div class="dialogue-bubble bento-bubble"><b>Bento:</b> Look! A <span class="accent">star!</span></div></div>
-      <div class="dialogue-line" data-line="5" data-voice="ellen"><div class="dialogue-avatar maya">M</div><div class="dialogue-bubble maya-bubble"><b>Maya:</b> Yes! One, two, three stars! And the <span class="accent">moon!</span></div></div>
+      <div class="dialogue-line visible" data-line="1" data-voice="ellen"><div class="dialogue-avatar maya">M</div><div class="dialogue-bubble maya-bubble"><b>Maya:</b> Ready, Bento? Let's <span class="accent">count!</span> <span class="audio-inline" data-speak="Ready, Bento? Let's count!" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="2" data-voice="arthur"><div class="dialogue-avatar bento">B</div><div class="dialogue-bubble bento-bubble"><b>Bento:</b> Three, two, one... <span class="accent">go!</span> <span class="audio-inline" data-speak="Three, two, one... go!" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="3" data-voice="ellen"><div class="dialogue-avatar maya">M</div><div class="dialogue-bubble maya-bubble"><b>Maya:</b> Blast off! The <span class="accent">rocket</span> goes up! <span class="audio-inline" data-speak="Blast off! The rocket goes up!" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="4" data-voice="arthur"><div class="dialogue-avatar bento">B</div><div class="dialogue-bubble bento-bubble"><b>Bento:</b> Look! A <span class="accent">star!</span> <span class="audio-inline" data-speak="Look! A star!" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
+      <div class="dialogue-line" data-line="5" data-voice="ellen"><div class="dialogue-avatar maya">M</div><div class="dialogue-bubble maya-bubble"><b>Maya:</b> Yes! One, two, three stars! And the <span class="accent">moon!</span> <span class="audio-inline" data-speak="Yes! One, two, three stars! And the moon!" onclick="speakText(this.dataset.speak,this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></span></div></div>
     </div>
     <div style="text-align:center;margin-top:1rem"><button class="next-line-btn" onclick="nextDialogueLine(this)" style="background:var(--accent);color:#fff;border:none;border-radius:999px;padding:.6rem 1.5rem;font-weight:700;cursor:pointer">Next Line</button></div>
   </div>
@@ -1688,6 +1732,161 @@ function stopFreeRecording(stopBtn) {
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
 }
+</script>
+<script>
+/* kids-theme.js (injetada pelo builder — model=kids) */
+/* ============================================================================
+   KIDS-THEME.JS — injetado pelo builder SOMENTE quando model==kids (analogo ao
+   kids-theme.css). NUNCA entra no material adulto => caminho do adulto intocado
+   (memoria nao-tocar-adulto). Contem o(s) mini-game(s) do Pre-class kids.
+
+   DINO TAP ("Listen and tap") — REGRA 4 etapa 2 (pratica de vocabulario), ludico
+   pra A1. Toca a palavra (speakText do shell = MP3 ElevenLabs, REGRA 7) e a
+   crianca toca a figura certa. Score/streak/confete (padroes reaproveitados do
+   word-arena, better-learn).
+
+   PROGRESSO (REGRA 18) SEM tocar o shell: o widget tem class `think-card` — o
+   updateProgress do shell ja conta think-card (done quando `.recorded`). O
+   save/load de think-card e no-op aqui (nao ha `.think-question`), entao a
+   persistencia fica por conta DESTE engine (localStorage proprio). Ao completar:
+   adiciona `recorded completed`, persiste e chama updateProgress().
+   ============================================================================ */
+(function () {
+  'use strict';
+
+  // Pool de distratores: TODA palavra concreta/distinta da biblioteca kids.
+  // (imagens em /assets/kids/{w}.png). O builder so coloca como ALVO as palavras
+  // da aula que estao aqui; os distratores saem deste pool.
+  var POOL = ['dinosaur', 'tree', 'rocket', 'star', 'moon', 'planet', 'cat', 'dog', 'run', 'green'];
+  var IMG = function (w) { return '/assets/kids/' + w + '.png'; };
+  var OPTIONS = 4;
+  var PRAISE = ['Nice!', 'Great!', 'You got it!', 'Awesome!', 'Perfect!'];
+  var TRY = ['Try again!', 'Almost!', 'Listen again!'];
+
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+  function sfx(ok) {
+    try {
+      var C = window.__kidsActx || (window.__kidsActx = new (window.AudioContext || window.webkitAudioContext)());
+      var seq = ok ? [[660, 0], [880, 0.1]] : [[300, 0]];
+      seq.forEach(function (s) {
+        var o = C.createOscillator(), g = C.createGain(); o.type = 'sine'; o.frequency.value = s[0];
+        o.connect(g); g.connect(C.destination); var t = C.currentTime + s[1];
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.2, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22); o.start(t); o.stop(t + 0.24);
+      });
+    } catch (e) { }
+  }
+
+  function say(word) {
+    // Reusa o pipeline de audio do shell (audioMap -> MP3 ElevenLabs; TTS so fallback).
+    if (typeof window.speakText === 'function') window.speakText(word, null);
+  }
+
+  function persistKey(el) { return 'dinotap-' + (el.getAttribute('data-key') || 'x'); }
+
+  function markDone(el) {
+    el.classList.add('recorded', 'completed');
+    try { localStorage.setItem(persistKey(el), '1'); } catch (e) { }
+    if (typeof window.updateProgress === 'function') window.updateProgress();
+  }
+
+  function confetti() {
+    var COL = ['#1E9E5F', '#3FD489', '#f5b301', '#e74c3c', '#3498db'];
+    for (var i = 0; i < 60; i++) {
+      var c = document.createElement('div'); c.className = 'dt-confetti';
+      c.style.left = Math.random() * 100 + 'vw'; c.style.background = COL[i % COL.length];
+      c.style.animation = 'dtFall ' + (1.6 + Math.random() * 1.4) + 's linear ' + (Math.random() * 0.5) + 's forwards';
+      document.body.appendChild(c); (function (el) { setTimeout(function () { el.remove(); }, 3600); })(c);
+    }
+  }
+
+  function build(el) {
+    var targets;
+    try { targets = JSON.parse(el.getAttribute('data-deck') || '[]'); } catch (e) { targets = []; }
+    targets = targets.filter(function (w) { return POOL.indexOf(w) !== -1; });
+    if (targets.length < 1) { el.style.display = 'none'; return; }
+    var rounds = targets.length;
+
+    // Estado ja concluido (voltou de outra sessao)? mostra tela de vitoria direto.
+    var done = false; try { done = localStorage.getItem(persistKey(el)) === '1'; } catch (e) { }
+
+    el.innerHTML =
+      '<div class="dt-head"><div class="dt-title">Listen and tap!<small>Ouça e toque no certo</small></div>' +
+      '<div class="dt-hud"><span class="dt-chip"><span class="dt-star">★</span> <b class="dt-streak">0</b></span>' +
+      '<span class="dt-chip"><b class="dt-qn">1</b>/' + rounds + '</span></div></div>' +
+      '<div class="dt-progress"><i></i></div>' +
+      '<div class="dt-listen"><button type="button" class="dt-listen-btn" aria-label="Play the word">' +
+      '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg> Listen</button></div>' +
+      '<div class="dt-hint">Tap Listen, then choose the picture</div>' +
+      '<div class="dt-grid"></div><div class="dt-feedback"></div>';
+
+    var grid = el.querySelector('.dt-grid'), listen = el.querySelector('.dt-listen-btn'),
+      fb = el.querySelector('.dt-feedback'), hint = el.querySelector('.dt-hint'),
+      streakEl = el.querySelector('.dt-streak'), qnEl = el.querySelector('.dt-qn'),
+      bar = el.querySelector('.dt-progress > i');
+    var order = shuffle(targets.slice()), qi = 0, streak = 0, busy = false;
+
+    function playCur() { if (order[qi]) { listen.classList.add('playing'); say(order[qi]); setTimeout(function () { listen.classList.remove('playing'); }, 1400); } }
+    listen.addEventListener('click', playCur);
+
+    function render() {
+      busy = false; fb.textContent = ''; fb.className = 'dt-feedback';
+      qnEl.textContent = qi + 1; bar.style.width = (qi / rounds * 100) + '%';
+      var correct = order[qi];
+      var distract = shuffle(POOL.filter(function (w) { return w !== correct; })).slice(0, OPTIONS - 1);
+      var opts = shuffle([correct].concat(distract));
+      grid.innerHTML = '';
+      opts.forEach(function (w) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'dt-opt'; b.setAttribute('aria-label', w);
+        b.innerHTML = '<img src="' + IMG(w) + '" alt="' + w + '">';
+        b.addEventListener('click', function () { choose(b, w, correct); });
+        grid.appendChild(b);
+      });
+      hint.style.visibility = 'visible';
+      setTimeout(playCur, 350);
+    }
+    function choose(btn, w, correct) {
+      if (busy) return;
+      if (w === correct) {
+        busy = true; btn.classList.add('correct'); sfx(true);
+        streak++; streakEl.textContent = streak; hint.style.visibility = 'hidden';
+        fb.textContent = PRAISE[Math.floor(Math.random() * PRAISE.length)]; fb.className = 'dt-feedback good';
+        qi++; setTimeout(function () { qi >= rounds ? win() : render(); }, 850);
+      } else {
+        btn.classList.add('wrong'); sfx(false); streak = 0; streakEl.textContent = 0;
+        fb.textContent = TRY[Math.floor(Math.random() * TRY.length)]; fb.className = 'dt-feedback try';
+        setTimeout(function () { btn.classList.remove('wrong'); }, 400);
+      }
+    }
+    function win() {
+      bar.style.width = '100%';
+      el.innerHTML = '<div class="dt-win"><img src="' + IMG(targets[0]) + '" alt="done">' +
+        '<h4>You did it! &#127881;</h4><p>Você acertou as palavras!</p>' +
+        '<button type="button" class="dt-again">Play again</button></div>';
+      el.querySelector('.dt-again').addEventListener('click', function () { el.classList.remove('completed', 'recorded'); try { localStorage.removeItem(persistKey(el)); } catch (e) { } build(el); });
+      markDone(el); confetti();
+    }
+
+    if (done) { // ja concluido: tela de vitoria calma (sem confete/som), permite jogar de novo
+      el.innerHTML = '<div class="dt-win"><img src="' + IMG(targets[0]) + '" alt="done">' +
+        '<h4>Completed ✓</h4><p>Toque pra jogar de novo</p><button type="button" class="dt-again">Play again</button></div>';
+      el.classList.add('recorded', 'completed');
+      el.querySelector('.dt-again').addEventListener('click', function () { el.classList.remove('completed', 'recorded'); try { localStorage.removeItem(persistKey(el)); } catch (e) { } build(el); });
+      if (typeof window.updateProgress === 'function') window.updateProgress();
+    } else {
+      render();
+    }
+  }
+
+  function initAll() {
+    var games = document.querySelectorAll('.dino-tap-game');
+    for (var i = 0; i < games.length; i++) build(games[i]);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll);
+  else initAll();
+})();
+
 </script>
 </body>
 </html>

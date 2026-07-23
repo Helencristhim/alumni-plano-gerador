@@ -282,6 +282,31 @@ def check_dialogue_voices(c, path, root, fails, warns):
         warns.append('audio_manifest.json não encontrado em _build/ — cross-check de voz dos MP3s pulado')
 
 
+def check_dialogue_audible(c, fails, warns):
+    """Toda fala de diálogo DEVE poder ser OUVIDA (REGRA 7 + 2.2).
+
+    O slide de tarefa diz "Listen for this" e o data-teacher manda "Toque cada audio" —
+    mas a fala só toca se a linha carregar um gatilho de áudio. O modelo traz um ícone
+    `.audio-inline` (data-speak) em CADA fala; conteúdo autoral kids saiu SEM, e o
+    diálogo ficou MUDO (Bento aula 1/2, reportado 23/07). O builder passou a injetar o
+    ícone (inject_dialogue_audio); este gate garante que nenhum diálogo mudo volte a
+    passar. Escopo por LINHA (divs_da_classe balanceia as tags) pra um botão da linha
+    seguinte não mascarar a linha muda anterior.
+    """
+    for inner in divs_da_classe(c, 'dialogue-line'):
+        if 'data-speak=' in inner or 'speakText(' in inner or 'audio-inline' in inner:
+            continue
+        bubble = re.search(r'<div class="dialogue-bubble[^"]*">(.*?)</div>', inner, re.S)
+        txt = re.sub(r'<[^>]+>', ' ', bubble.group(1) if bubble else inner)
+        # tira aspas literais da fala ANTES de embutir: falas legadas vêm entre aspas
+        # ("...") e aspas aninhadas quebram a normalização do categoria() no
+        # legacy-baseline (cada linha virava uma categoria distinta em vez de UMA com
+        # contagem). Sem aspas internas, o categoria colapsa tudo em 1 categoria/arquivo.
+        fala = ' '.join(txt.replace('"', '').split())[:70]
+        fails.append(f'dialogue-line SEM áudio (fala muda, viola REGRA 7): '
+                     f'"{fala}" — falta data-speak/audio-inline')
+
+
 def divs_da_classe(c, cls):
     """O HTML interno de cada <div class="cls ..."> com as tags balanceadas.
 
@@ -1100,6 +1125,7 @@ def validate(path):
 
     # ===== regras novas do modelo =====
     check_dialogue_voices(c, path, root, fails, warns)
+    check_dialogue_audible(c, fails, warns)
     check_fix_regressions(c, css, is_standalone_slides, fails, warns)
     check_task_before_exposure(c, fails, warns)
     check_handlers_exist(c, fails)
