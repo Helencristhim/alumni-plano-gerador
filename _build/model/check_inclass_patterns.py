@@ -40,6 +40,22 @@ def check(path):
             f'(visual chapado). Use as classes do modelo: '
             f'<div class="mistake-item mistake-wrong"> / mistake-right.')
 
+    # Bug 3 (badge do menu nao-quadrado): o numero da aula no menu IN CLASS e um
+    # <div style="width:48px;height:48px;...border-radius:8px"> dentro de um flex row.
+    # SEM flex-shrink:0 o flex ESPREME a largura do quadrado quando a descricao e
+    # longa (2-3 linhas) -> o "quadradinho" vira RETANGULO VERTICAL. O menu_card do
+    # builder ja emite flex-shrink:0; so cards feitos fora do builder (ad-hoc/legado)
+    # nascem sem. (Incidente maria-claudia: 20 badges sem flex-shrink.)
+    # Assinatura INLINE exata do badge do menu (dimensao -> background accent, direto,
+    # sem flex-shrink no meio). Casar so isto evita pegar CSS solto no <style> (svg de
+    # icone, .nav-btn circular) — o [^"] ganancioso atravessava as regras do <style>.
+    bad_badges = re.findall(r'width:48px;height:48px;background:var\(--accent\);border-radius:8px', s)
+    if bad_badges:
+        problems.append(
+            f'{len(bad_badges)}x badge 48x48 do menu IN CLASS SEM flex-shrink:0 '
+            f'(descricao longa espreme o quadrado num retangulo vertical). Use '
+            f'width:48px;height:48px;flex-shrink:0;... como o menu_card do builder.')
+
     # Bug A (template leitura): .ic-reading sem rolagem -> texto+alternativas estouram a tela
     if 'class="ic-reading"' in s and not re.search(r'\.ic-reading\s*\{[^}]*max-height', s):
         problems.append(
