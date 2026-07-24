@@ -237,8 +237,22 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
         mlist = re.search(r'(id="tab-inclass".*?)(\n\s*</div>\s*</div>\s*\n\s*<!-- ========== TAB 4)',
                           s, flags=re.S)
         if mlist:
-            inject_at = mlist.start(2)
-            s = s[:inject_at] + '\n' + card + s[inject_at:]
+            region_start, region_end = mlist.start(1), mlist.start(2)
+            # Insere o card na POSIÇÃO NUMÉRICA certa — nunca só "no fim da lista". O anchor
+            # de fim fazia a ordem do MENU seguir a ORDEM DE INSERÇÃO em vez do número da
+            # aula: gerar fora de ordem (aula 20 de review antes da 14) ou --replace de uma
+            # aula do meio empilhava o card no lugar errado (incidente maria-claudia: o menu
+            # saiu 20,19,18,17,16,15,14). Acha o 1º card cuja aula K > n e insere ANTES dele;
+            # se nenhum (n é a maior), insere no fim — mesmo comportamento de antes.
+            after = [region_start + m.start()
+                     for m in re.finditer(re.escape(slug) + r'-aula(\d+)\.html',
+                                          s[region_start:region_end])
+                     if int(m.group(1)) > n]
+            if after:
+                line_start = s.rfind('\n', region_start, min(after)) + 1
+                s = s[:line_start] + card + '\n' + s[line_start:]
+            else:
+                s = s[:region_end] + '\n' + card + s[region_end:]
         elif not is_aluno:
             raise AssertionError(f'{os.path.basename(hub_path)}: aba IN CLASS nao encontrada — '
                                  'card do menu NAO foi inserido (ancora id="tab-inclass")')
