@@ -135,6 +135,32 @@ def check(path):
             '<div class="ic-answer"> presente mas SEM onclick="icToggleAnswer(this)" no '
             '<div class="ic-ans-head"> (Check Your Work nao revela ao clicar).')
 
+    # Bug 4 (stamps do header): a lib acende por id="stampN". IDs precisam ser UNICOS e,
+    # no HUB, ASCENDENTES e CONTIGUOS (1..N). Insert ad-hoc empilhava fora de ordem
+    # (maria/fernanda/patricia-ruffo -> quadro aceso na posicao errada) e ja duplicou id
+    # (carolina stamp5 -> getElementById acha so o 1o, aula fica sem quadro).
+    stamp_ids = [int(x) for x in re.findall(r'id="stamp(\d+)"', s)]
+    if stamp_ids:
+        dups = sorted({n for n in stamp_ids if stamp_ids.count(n) > 1})
+        if dups:
+            problems.append(
+                f'{len(dups)} ID(s) de stamp DUPLICADO(S) (stamp{dups}) — dois <div '
+                f'id="stampN"> iguais: getElementById acha so o 1o e o quadro da aula '
+                f'nunca acende certo. Cada aula = um id="stampN" unico.')
+        is_hub = not re.search(r'-aula\d+\.html$', path)
+        if is_hub:
+            if stamp_ids != sorted(stamp_ids):
+                problems.append(
+                    f'stamps do header FORA DE ORDEM (DOM: {stamp_ids}) — devem estar '
+                    f'ascendentes 1..N. Insert ad-hoc empilhou ao contrario; o quadro '
+                    f'aceso aparece na posicao errada na fileira.')
+            uniq = sorted(set(stamp_ids))
+            gaps = [n for n in range(1, uniq[-1] + 1) if n not in uniq]
+            if gaps:
+                problems.append(
+                    f'stamps do header com LACUNA (faltam stamp{gaps}) — a fileira deve '
+                    f'cobrir 1..{uniq[-1]} sem buraco; aula sem stamp nunca acende.')
+
     return problems
 
 

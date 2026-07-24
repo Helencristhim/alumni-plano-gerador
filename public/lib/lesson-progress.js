@@ -24,6 +24,7 @@
   var packagePct = 0;
   var packageCompleted = 0;
   var completedSet = {};
+  var maxCompleted = 0;  // MAIOR aula concluída (inclass_done). Base do acender CUMULATIVO.
 
   function applyPackageProgress() {
     // O TEXTO mostra "feitas/contratadas" (ex: 2/48) — facilita contato de renovação.
@@ -32,12 +33,17 @@
     var pp = document.getElementById('progressPercent');
     if (pp) pp.textContent = packageCompleted + '/' + totalAulas;
     if (!packageLoaded) return;
-    // Stamps/cards acendem EXCLUSIVAMENTE pela conclusão do checklist (inclass_done)
+    // Stamps acendem CUMULATIVO: toda aula ATÉ a maior concluída (maxCompleted), não só
+    // as marcadas individualmente. Aluno "na aula 7" tem 1..7 acesos mesmo que só 1,2,7
+    // tenham inclass_done no Supabase (progresso é sequencial — decisão Dan 24/07/2026).
+    // MONOTÔNICO: só ACENDE, nunca apaga. Progresso NÃO PODE SUMIR — se um load do
+    // Supabase vier vazio/parcial (rede, race, erro), o que já acendeu FICA aceso.
+    // (Ordem do Dan 24/07/2026: "que os quadros acendam e não apaguem".) Sem o `else
+    // remove`, nenhum caminho tira o .earned de um stamp já ganho.
     document.querySelectorAll('[id^="stamp"]').forEach(function(st) {
       if (!/^stamp\d+$/.test(st.id)) return;
       var n = parseInt(st.id.replace('stamp', ''), 10);
-      if (completedSet[n]) st.classList.add('earned');
-      else st.classList.remove('earned');
+      if (n <= maxCompleted) st.classList.add('earned');
     });
     // Barra (largura visual) = concluídas ÷ contratadas em %
     var pb = document.getElementById('progressBar');
@@ -256,10 +262,12 @@
         }
         var completedLessons = 0;
         completedSet = {};
+        maxCompleted = 0;
         res.data.forEach(function(row) {
           if (row.inclass_done) {
             completedLessons++;
             completedSet[row.lesson_number] = true;
+            if (row.lesson_number > maxCompleted) maxCompleted = row.lesson_number;
           }
         });
         console.log('lesson-progress: ' + completedLessons + ' aulas concluídas de ' + totalAulas);
@@ -274,12 +282,24 @@
             });
           }
         });
+        // NUNCA REGREDIR: se este load vier com menos do que já vimos (rede/partial),
+        // mantém o maior já conhecido (cache local). Progresso nunca anda pra trás — nem
+        // a barra, nem os stamps. Só sobe. (Ordem do Dan 24/07/2026.)
+        try {
+          var prevCache = JSON.parse(localStorage.getItem(slug + '-global-progress') || 'null');
+          if (prevCache && typeof prevCache.completed === 'number' && prevCache.completed > maxCompleted) {
+            maxCompleted = prevCache.completed;
+          }
+        } catch(e) {}
         var denom = totalAulas > 0 ? totalAulas : 1;
-        packagePct = Math.min(100, Math.round(completedLessons / denom * 100));
-        packageCompleted = completedLessons;
+        // CUMULATIVO (decisão Dan 24/07/2026): barra e texto refletem a MAIOR aula
+        // concluída, não a CONTAGEM. Aluno que fez 1,2,7 está "na aula 7" -> barra 7/N,
+        // stamps 1..7 acesos. completedLessons segue só para o log de diagnóstico.
+        packagePct = Math.min(100, Math.round(maxCompleted / denom * 100));
+        packageCompleted = maxCompleted;
         packageLoaded = true;
         applyPackageProgress();
-        try { localStorage.setItem(slug + '-global-progress', JSON.stringify({ completed: completedLessons, total: totalAulas, pct: packagePct })); } catch(e) {}
+        try { localStorage.setItem(slug + '-global-progress', JSON.stringify({ completed: maxCompleted, total: totalAulas, pct: packagePct })); } catch(e) {}
       })
       .catch(function(err) {
         console.error('lesson-progress load catch:', err);
