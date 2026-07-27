@@ -11,24 +11,24 @@ PC = os.path.join(HERE, 'preclass.html')
 
 # (palavra, definicao == data-answer)
 PAIRS = [
-    ("Condition", "a state that must be true for something else to happen"),
-    ("Dependency", "something a task or feature relies on to work"),
-    ("Threshold", "the level or point at which something starts to happen"),
-    ("Load", "the amount of traffic or work a system has to handle"),
-    ("To overload", "to give a system more work than it can handle"),
-    ("Bottleneck", "a single slow point that holds up the whole system"),
-    ("Timeout", "an error when a system waits too long for a response"),
-    ("Fallback", "a backup option the system uses if the main one fails"),
-    ("Retry", "an automatic new attempt after something fails"),
-    ("Rollout", "the process of releasing a feature to users"),
-    ("To cascade", "to spread from one failure to many in a chain"),
-    ("Consequence", "the result or effect that follows an action"),
+    ("To adjust", "to slowly change your habits so that a new situation feels normal"),
+    ("Culture shock", "the confused feeling you get when everything around you works differently"),
+    ("Overwhelming", "so strong or so much that you cannot deal with it easily"),
+    ("Eerie", "strange and slightly frightening, in a very quiet way"),
+    ("Homesick", "sad because you are far from the place you think of as home"),
+    ("To crave", "to want something so badly that the feeling is almost physical"),
+    ("Solitude", "time alone that you choose and enjoy"),
+    ("Self-sufficient", "able to provide what you need without depending on other people"),
+    ("To make do", "to manage with what you have, because nothing better is available"),
+    ("To grow on you", "to become something you like, slowly, after not liking it at first"),
+    ("A trade-off", "something good you give up in order to get something else"),
+    ("Pitch-black", "completely dark, with no light at all"),
 ]
 
 defs = [d for _, d in PAIRS]
 rows = []
 for i, (word, answer) in enumerate(PAIRS):
-    rnd = random.Random(1111 + i)
+    rnd = random.Random(11100 + i)
     opts = defs[:]
     # embaralha ate que a definicao correta NAO caia na posicao i (REGRA 24)
     while True:
