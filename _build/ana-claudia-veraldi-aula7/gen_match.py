@@ -11,18 +11,18 @@ PC = os.path.join(HERE, 'preclass.html')
 
 # (palavra, definicao == data-answer)
 PAIRS = [
-    ("Test case", "a written set of steps and an expected result"),
-    ("Precondition", "something that must be ready before the test starts"),
-    ("Input", "the data you enter into the system"),
-    ("Outcome", "the final result after the steps"),
-    ("Edge case", "an unusual situation at the limit of normal use"),
-    ("Sequence", "the fixed order in which steps happen"),
-    ("To walk through", "to explain something step by step"),
-    ("To set up", "to prepare something before you use it"),
-    ("To trigger", "to make an action or event happen"),
-    ("To proceed", "to continue to the next step"),
-    ("To submit", "to send information or a form to the system"),
-    ("Straightforward", "simple, clear, and easy to follow"),
+    ("Renovation", "the work of repairing and improving an old building"),
+    ("Beam", "a long, thick piece of wood that holds up a roof or a floor"),
+    ("Plumbing", "the system of pipes that carries water through a building"),
+    ("Wiring", "the system of electric cables inside the walls"),
+    ("Leak", "a crack or a hole that lets water escape"),
+    ("Damp", "slightly wet, in a way that damages walls and wood"),
+    ("To sand down", "to rub a surface with rough paper until it is smooth"),
+    ("To strip", "to remove the old paint or covering from a surface"),
+    ("To salvage", "to save something old and useful before it is thrown away"),
+    ("To knock down", "to destroy a wall or a building on purpose"),
+    ("Rewarding", "giving a good feeling because the effort produced something real"),
+    ("To be worth it", "good enough to justify the time, money and effort"),
 ]
 
 defs = [d for _, d in PAIRS]
