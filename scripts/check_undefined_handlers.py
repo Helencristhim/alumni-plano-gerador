@@ -29,7 +29,13 @@ ALLOW = set('''if for while switch catch return typeof void new delete in of do 
     blur brightness contrast grayscale invert saturate sepia opacity drop-shadow cubic-bezier'''.split())
 
 CALL   = re.compile(r'(?<![.\w$])([A-Za-z_$][\w$]*)\s*\(')          # ident( não precedido de . ou \w
-HANDLER= re.compile(r'on[a-z]+\s*=\s*"([^"]*)"')                    # on*="..." (aspas duplas — padrão do repo)
+# on*="..." (aspas duplas — padrão do repo). O `(?<=[\s<])` é OBRIGATÓRIO: sem ele o
+# regex casa o FINAL de qualquer atributo terminado em "on" — `content="B1 (Intermediário)"`
+# vira handler `ontent=` e o "B1 (" vira uma chamada `B1(...)` inexistente. Foi o que
+# aconteceu com o <meta name="alumni-level" content="B1 (...)"> que o builder passou a
+# emitir: aula PERFEITA barrada por um falso-positivo do próprio gate. Nome de atributo
+# HTML sempre vem precedido de espaço ou do `<` da tag.
+HANDLER= re.compile(r'(?<=[\s<])on[a-z]+\s*=\s*"([^"]*)"')
 DEFS   = [re.compile(p) for p in (
     r'function\s+([A-Za-z_$][\w$]*)',
     r'\b(?:var|let|const)\s+([A-Za-z_$][\w$]*)\s*=',
