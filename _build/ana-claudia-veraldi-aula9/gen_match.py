@@ -11,18 +11,18 @@ PC = os.path.join(HERE, 'preclass.html')
 
 # (palavra, definicao == data-answer)
 PAIRS = [
-    ("Specification", "a detailed written description of what the software must do"),
-    ("Scope", "the boundaries of what a project includes and excludes"),
-    ("Acceptance criteria", "the conditions a feature must meet to be accepted"),
-    ("Use case", "how a user interacts with the system to reach a goal"),
-    ("Assumption", "something you treat as true without checking it"),
-    ("Constraint", "a limit or restriction you have to work within"),
-    ("End user", "the real person who will actually use the software"),
-    ("To gather", "to collect information from different people or sources"),
-    ("To sign off", "to formally approve that something is correct or complete"),
-    ("To double-check", "to check something again to be completely sure"),
-    ("Ambiguous", "not clear because it has more than one meaning"),
-    ("Feasible", "possible to do within the time and limits you have"),
+    ("To mumble", "to speak quietly and unclearly, so the words run together"),
+    ("To catch", "to hear and understand something that was said"),
+    ("The gist", "the general meaning of something, without every single word"),
+    ("Word for word", "every single word, exactly as it was said"),
+    ("To trail off", "to stop speaking gradually, so the end of the sentence disappears"),
+    ("To keep up", "to follow something that is moving too fast for you"),
+    ("Filler word", "a small sound people use while they think, like um or you know"),
+    ("To zone out", "to stop paying attention without deciding to"),
+    ("Slang", "very informal words used inside one group or one region"),
+    ("To rephrase", "to say the same idea again in different words"),
+    ("To speak up", "to talk more loudly so that people can hear you"),
+    ("To drown out", "to be so loud that another sound cannot be heard"),
 ]
 
 defs = [d for _, d in PAIRS]
