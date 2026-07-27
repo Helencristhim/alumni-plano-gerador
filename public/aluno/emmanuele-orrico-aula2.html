@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="alumni-model" content="adulto">
+    <meta name="alumni-level" content="A2 (B&#225;sico)">
 <meta name="robots" content="noindex, nofollow">
 <title>Aluno -- Emmanuele Orrico | Lesson 2 -- Your Day and Your Work Routine</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
@@ -553,6 +555,23 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-chip .ic-k { flex: 0 0 auto; font-weight: 800; color: #003080; min-width: 1.2rem; }
 .ic-chip.ic-def .ic-k { color: var(--accent); }
 .ic-chip.ic-word { font-weight: 600; color: #003080; background: var(--bg-card); }
+/* matching CLICAVEL: clica a palavra, clica o significado. Clicar num par feito desfaz
+   (REGRA 27.E). Sem estes estilos o bloco vira so uma lista lado a lado -- e o aluno
+   tenta clicar/arrastar e nada acontece. */
+.ic-match[data-interactive] .ic-chip { cursor: pointer; transition: border-color .18s ease, background .18s ease, box-shadow .18s ease; }
+.ic-match[data-interactive] .ic-chip:hover { border-color: var(--accent); }
+.ic-match[data-interactive] .ic-chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ic-match .ic-chip.ic-sel { border-color: var(--accent); background: var(--accent-glow); box-shadow: 0 0 0 2px var(--accent-dim); }
+.ic-match .ic-chip.ic-ok { border-color: var(--success); background: var(--success-bg); cursor: pointer; }
+.ic-match .ic-chip.ic-ok .ic-k { color: var(--success); }
+.ic-match .ic-chip.ic-bad { border-color: var(--danger); background: var(--danger-bg); animation: icShake .34s ease; }
+@keyframes icShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+.ic-match .ic-pair { flex: 0 0 auto; margin-left: auto; padding-left: .5rem; font-weight: 800; font-size: .8rem; color: var(--success); opacity: 0; transition: opacity .18s ease; }
+.ic-match .ic-chip.ic-ok .ic-pair { opacity: 1; }
+.ic-match-hint { text-align: center; font-size: .78rem; color: var(--text-dim); margin: -.2rem 0 .9rem; }
+.ic-match-score { text-align: center; font-size: .8rem; font-weight: 700; color: var(--text-dim); margin: -.5rem 0 1rem; }
+.ic-match-score.ic-done { color: var(--success); }
+@media (prefers-reduced-motion: reduce) { .ic-match .ic-chip.ic-bad { animation: none; } }
 /* reading text + source */
 .ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
 .slide:has(.ic-reading:not(.ic-collapsed)){align-items:flex-start}
@@ -879,7 +898,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="slide-inner">
     <div class="chapter-label">Consolidate</div>
     <h2 class="slide-heading">Match the <span class="accent">Meaning</span></h2>
-    <div class="ic-card"><div class="ic-card-h3">Match each word to its meaning</div><div class="ic-match"><div class="ic-match-col"><h4>Words &amp; expressions</h4><div class="ic-chip ic-word"><span class="ic-k">1</span><span>schedule</span></div><div class="ic-chip ic-word"><span class="ic-k">2</span><span>report</span></div><div class="ic-chip ic-word"><span class="ic-k">3</span><span>field visit</span></div><div class="ic-chip ic-word"><span class="ic-k">4</span><span>medical rep</span></div><div class="ic-chip ic-word"><span class="ic-k">5</span><span>demand plan</span></div><div class="ic-chip ic-word"><span class="ic-k">6</span><span>headquarters</span></div><div class="ic-chip ic-word"><span class="ic-k">7</span><span>to attend</span></div><div class="ic-chip ic-word"><span class="ic-k">8</span><span>to review</span></div></div><div class="ic-match-col"><h4>Definitions</h4><div class="ic-chip ic-def"><span class="ic-k">a</span><span>the person who talks to doctors about our medicines</span></div><div class="ic-chip ic-def"><span class="ic-k">b</span><span>to look at something again and check it</span></div><div class="ic-chip ic-def"><span class="ic-k">c</span><span>the plan of your week: what happens and when</span></div><div class="ic-chip ic-def"><span class="ic-k">d</span><span>the main office of the company</span></div><div class="ic-chip ic-def"><span class="ic-k">e</span><span>a day outside the office, with the team, visiting doctors</span></div><div class="ic-chip ic-def"><span class="ic-k">f</span><span>a document with numbers and information about the business</span></div><div class="ic-chip ic-def"><span class="ic-k">g</span><span>to go to a meeting or a call</span></div><div class="ic-chip ic-def"><span class="ic-k">h</span><span>the plan that says how much medicine the market needs</span></div></div></div></div>
+    <div class="ic-card"><div class="ic-card-h3">Match each word to its meaning</div><p class="ic-match-hint">Tap a word, then tap its meaning</p><div class="ic-match-score">0 / 8 matched</div><div class="ic-match" data-interactive="1"><div class="ic-match-col"><h4>Words &amp; expressions</h4><div class="ic-chip ic-word" role="button" tabindex="0" data-k="1" data-match="c" onclick="icPickMatch(this)"><span class="ic-k">1</span><span>schedule</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="2" data-match="f" onclick="icPickMatch(this)"><span class="ic-k">2</span><span>report</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="3" data-match="e" onclick="icPickMatch(this)"><span class="ic-k">3</span><span>field visit</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="4" data-match="a" onclick="icPickMatch(this)"><span class="ic-k">4</span><span>medical rep</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="5" data-match="h" onclick="icPickMatch(this)"><span class="ic-k">5</span><span>demand plan</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="6" data-match="d" onclick="icPickMatch(this)"><span class="ic-k">6</span><span>headquarters</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="7" data-match="g" onclick="icPickMatch(this)"><span class="ic-k">7</span><span>to attend</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="8" data-match="b" onclick="icPickMatch(this)"><span class="ic-k">8</span><span>to review</span><span class="ic-pair"></span></div></div><div class="ic-match-col"><h4>Definitions</h4><div class="ic-chip ic-def" role="button" tabindex="0" data-k="a" onclick="icPickMatch(this)"><span class="ic-k">a</span><span>the person who talks to doctors about our medicines</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="b" onclick="icPickMatch(this)"><span class="ic-k">b</span><span>to look at something again and check it</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="c" onclick="icPickMatch(this)"><span class="ic-k">c</span><span>the plan of your week: what happens and when</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="d" onclick="icPickMatch(this)"><span class="ic-k">d</span><span>the main office of the company</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="e" onclick="icPickMatch(this)"><span class="ic-k">e</span><span>a day outside the office, with the team, visiting doctors</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="f" onclick="icPickMatch(this)"><span class="ic-k">f</span><span>a document with numbers and information about the business</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="g" onclick="icPickMatch(this)"><span class="ic-k">g</span><span>to go to a meeting or a call</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="h" onclick="icPickMatch(this)"><span class="ic-k">h</span><span>the plan that says how much medicine the market needs</span><span class="ic-pair"></span></div></div></div></div>
   </div>
 </div>
 
@@ -1532,7 +1551,7 @@ function revealVocab(card) {
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
-function revealFill(item) { item.classList.toggle('revealed'); }
+function revealFill(item) { var on = item.classList.toggle('revealed'); item.querySelectorAll('.fill-a, .fill-answer').forEach(function(a) { a.classList.add('fill-answer'); a.style.display = on ? '' : 'none'; }); }
 function revealComp(q) { q.classList.toggle('revealed'); }
 
 // ===== B2 IN-CLASS BLOCKS (gist / tf / reveal-answer) =====
@@ -1546,6 +1565,70 @@ function icPickGist(choice) {
 function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
 function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
 function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
+
+// ===== IC MATCHING (palavra <-> significado, click-to-pair) =====
+// Clica a palavra, clica o significado. Certo = os dois ficam verdes e mostram a chave
+// do par; errado = shake vermelho e a selecao cai. Clicar num par ja feito DESFAZ
+// (REGRA 27.E). O gabarito vive no data-match da palavra, emitido pelo builder.
+var icSelChip = null;
+function icPairSpan(chip) {
+  var el = chip.querySelector('.ic-pair');
+  if (!el) { el = document.createElement('span'); el.className = 'ic-pair'; chip.appendChild(el); }
+  return el;
+}
+function icMatchScore(box) {
+  var card = box.parentElement || box;
+  var el = card.querySelector('.ic-match-score');
+  if (!el) { el = document.createElement('div'); el.className = 'ic-match-score'; card.appendChild(el); }
+  var total = box.querySelectorAll('.ic-chip.ic-word').length;
+  var done = box.querySelectorAll('.ic-chip.ic-word.ic-ok').length;
+  el.textContent = done + ' / ' + total + ' matched';
+  el.classList.toggle('ic-done', total > 0 && done === total);
+}
+function icClearSel() { if (icSelChip) icSelChip.classList.remove('ic-sel'); icSelChip = null; }
+function icUnpair(box, chip) {
+  var mateSel = (chip.classList.contains('ic-word') ? '.ic-def' : '.ic-word') + '.ic-ok[data-k="' + chip.dataset.pair + '"]';
+  var mate = box.querySelector(mateSel);
+  [chip, mate].forEach(function(c) {
+    if (!c) return;
+    c.classList.remove('ic-ok'); c.removeAttribute('data-pair'); icPairSpan(c).textContent = '';
+  });
+  icMatchScore(box);
+}
+function icPickMatch(chip) {
+  var box = chip.closest('.ic-match');
+  if (!box) return;
+  if (chip.classList.contains('ic-ok')) { icClearSel(); icUnpair(box, chip); return; }
+  var isWord = chip.classList.contains('ic-word');
+  if (icSelChip && icSelChip !== chip && icSelChip.closest('.ic-match') === box &&
+      icSelChip.classList.contains('ic-word') !== isWord) {
+    var word = isWord ? chip : icSelChip;
+    var def = isWord ? icSelChip : chip;
+    icClearSel();
+    if (word.dataset.match && word.dataset.match === def.dataset.k) {
+      word.classList.add('ic-ok'); def.classList.add('ic-ok');
+      word.dataset.pair = def.dataset.k; def.dataset.pair = word.dataset.k;
+      icPairSpan(word).textContent = def.dataset.k; icPairSpan(def).textContent = word.dataset.k;
+    } else {
+      word.classList.add('ic-bad'); def.classList.add('ic-bad');
+      setTimeout(function() { word.classList.remove('ic-bad'); def.classList.remove('ic-bad'); }, 700);
+    }
+    icMatchScore(box);
+    return;
+  }
+  var same = icSelChip === chip;
+  icClearSel();
+  if (!same) { icSelChip = chip; chip.classList.add('ic-sel'); }
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+  var chip = e.target && e.target.closest ? e.target.closest('.ic-match[data-interactive] .ic-chip') : null;
+  if (!chip) return;
+  e.preventDefault(); icPickMatch(chip);
+});
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.ic-match[data-interactive]').forEach(function(box) { icMatchScore(box); });
+});
 
 var errorCount = 0;
 function revealError(card) {
@@ -1771,7 +1854,8 @@ if (initSlide) document.getElementById('teacherPanel').innerHTML = initSlide.get
 <script>
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && document.body.classList.contains('slide-mode')) { e.preventDefault(); exitSlideMode(); } });
 </script>
-<script src="/lib/contrast-guard.js">
+<script src="/lib/contrast-guard.js"></script>
+<script>
 function injectPronunciationBtn(card,audioUrl){
   var old=card.querySelector('.btn-your-pronunciation');if(old)old.remove();
   var playBtn=document.createElement('button');

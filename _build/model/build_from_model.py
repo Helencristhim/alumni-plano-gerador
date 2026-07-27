@@ -120,7 +120,10 @@ def hex_to_rgb(h):
 #   {"kind":"answer","title":"Reveal answer key","key":["1 = c", ...]}                     (interativo, accordion)
 #   {"kind":"answer","title":"...","list":["resposta 1", ...],"note":"opcional"}
 #   {"kind":"reading","rtitle":"...","paras":["...", ...],"source":"...","link":"..."}
-#   {"kind":"matching","title":"...","words":[["1","word"], ...],"defs":[["a","def"], ...]}
+#   {"kind":"matching","title":"...","words":[["1","word","c"], ...],"defs":[["a","def"], ...]}
+#       3o item da palavra = LETRA da definicao certa (gabarito). E OBRIGATORIO: sem ele o
+#       bloco vira duas listas mortas na tela e o aluno tenta clicar/arrastar e nada
+#       acontece. As definicoes seguem EMBARALHADAS (REGRA 24) -- o gabarito e que liga.
 #   {"kind":"gapfill","parts":["texto ",["1"]," mais texto"],"bank":["w1","w2"]}
 #   {"kind":"modals","cards":[["should","Strong","..."],["could","Softer","..."]]}
 #   {"kind":"rephrase","title":"...","items":[["cue sentence","modal"], ...]}
@@ -154,10 +157,38 @@ def render_block(b):
         head = f'<div class="ic-card-h3"><span class="ic-tag">{_esc(b["title"])}</span></div>' if b.get('title') else ''
         return f'<div class="ic-card">{head}<{tag} class="ic-qs{extra}">{lis}</{tag}></div>'
     if k == 'matching':
-        words = ''.join(f'<div class="ic-chip ic-word"><span class="ic-k">{_esc(w[0])}</span><span>{_esc(w[1])}</span></div>' for w in b['words'])
-        defs = ''.join(f'<div class="ic-chip ic-def"><span class="ic-k">{_esc(d[0])}</span><span>{_esc(d[1])}</span></div>' for d in b['defs'])
+        # O bloco e CLICAVEL: cada palavra carrega no data-match a letra da definicao
+        # certa, e o icPickMatch() do shell resolve o par. Duas listas sem gabarito nao
+        # sao exercicio -- sao decoracao (o aluno clica, arrasta, e nada acontece).
+        defkeys = [str(d[0]) for d in b['defs']]
+        assert len(set(defkeys)) == len(defkeys), f'matching: letras de defs repetidas: {defkeys}'
+        keys = []
+        for w in b['words']:
+            assert len(w) >= 3 and str(w[2]).strip(), (
+                f'matching: a palavra "{w[1] if len(w) > 1 else w}" nao declara a definicao certa. '
+                f'Use ["{w[0]}", "{w[1] if len(w) > 1 else "..."}", "<letra da def>"] — '
+                f'o 3o item e o gabarito e e OBRIGATORIO (sem ele o exercicio nao clica).')
+            k2 = str(w[2]).strip()
+            assert k2 in defkeys, f'matching: palavra "{w[1]}" aponta para a definicao "{k2}", que nao existe em defs {defkeys}'
+            keys.append(k2)
+        assert len(set(keys)) == len(keys), f'matching: duas palavras apontam para a mesma definicao: {keys}'
+        words = ''.join(
+            f'<div class="ic-chip ic-word" role="button" tabindex="0" data-k="{_esc(w[0])}" '
+            f'data-match="{_esc(w[2])}" onclick="icPickMatch(this)">'
+            f'<span class="ic-k">{_esc(w[0])}</span><span>{_esc(w[1])}</span><span class="ic-pair"></span></div>'
+            for w in b['words'])
+        defs = ''.join(
+            f'<div class="ic-chip ic-def" role="button" tabindex="0" data-k="{_esc(d[0])}" '
+            f'onclick="icPickMatch(this)">'
+            f'<span class="ic-k">{_esc(d[0])}</span><span>{_esc(d[1])}</span><span class="ic-pair"></span></div>'
+            for d in b['defs'])
         head = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
-        return (f'<div class="ic-card">{head}<div class="ic-match">'
+        hint = _esc(b.get('hint') or 'Tap a word, then tap its meaning')
+        # o contador vai ANTES da grade: com 8 pares a lista e alta e um contador no
+        # rodape cai fora da tela (o slide-inner rola) -- a aluna nunca veria.
+        return (f'<div class="ic-card">{head}<p class="ic-match-hint">{hint}</p>'
+                f'<div class="ic-match-score">0 / {len(b["words"])} matched</div>'
+                f'<div class="ic-match" data-interactive="1">'
                 f'<div class="ic-match-col"><h4>Words &amp; expressions</h4>{words}</div>'
                 f'<div class="ic-match-col"><h4>Definitions</h4>{defs}</div></div></div>')
     if k == 'gapfill':

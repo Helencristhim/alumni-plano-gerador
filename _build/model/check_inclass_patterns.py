@@ -122,6 +122,43 @@ def check(path):
             '<div class="ic-match"> presente mas SEM <div class="ic-match-col"> '
             '(Consolidate/matching sem as colunas de palavras e definicoes).')
 
+    # Matching MORTO: duas colunas numeradas (1..N / a..h) tem CARA de exercicio, entao
+    # a aluna clica, arrasta, clica de novo -- e nada acontece, porque o bloco nunca teve
+    # handler nem gabarito. Nao e "leitura guiada": e um exercicio que nao existe.
+    # (Reportado pelo Dan em 27/07/2026 na emmanuele-orrico-aula2.)
+    if 'class="ic-match"' in s:
+        for m in re.finditer(r'<div class="ic-match"([^>]*)>', s):
+            attrs = m.group(1)
+            fim = s.find('class="slide"', m.end())
+            body = s[m.end():min(fim if fim > 0 else len(s), m.end() + 20000)]
+            words = re.findall(r'<div class="ic-chip ic-word"([^>]*)>', body)
+            defs = re.findall(r'<div class="ic-chip ic-def"([^>]*)>', body)
+            if 'data-interactive' not in attrs:
+                problems.append(
+                    '<div class="ic-match"> SEM data-interactive: o bloco parece exercicio '
+                    'mas nao clica (a aluna tenta clicar/arrastar e nada acontece). '
+                    'Emita pelo builder (kind:"matching" com o gabarito na palavra).')
+                break
+            defkeys = set(re.search(r'data-k="([^"]*)"', d).group(1) for d in defs if 'data-k="' in d)
+            for w in words:
+                key = re.search(r'data-match="([^"]*)"', w)
+                if not key or 'icPickMatch(this)' not in w:
+                    problems.append(
+                        'palavra do matching SEM data-match/onclick="icPickMatch(this)" '
+                        '(par sem gabarito = clique que nunca acerta).')
+                    break
+                if key.group(1) not in defkeys:
+                    problems.append(
+                        f'matching: palavra aponta para a definicao "{key.group(1)}", que nao '
+                        f'existe entre as defs {sorted(defkeys)}.')
+                    break
+            if any('icPickMatch(this)' not in d for d in defs):
+                problems.append('definicao do matching SEM onclick="icPickMatch(this)" (nao da pra fechar o par).')
+        if 'function icPickMatch' not in s:
+            problems.append(
+                '.ic-match presente mas o JS icPickMatch() NAO existe no arquivo '
+                '(clique morto). O shell do modelo (helen-mendes-aula1) traz a funcao.')
+
     # Give the Advice (cenarios): .ic-scenario sem o rotulo .ic-who.
     if 'class="ic-scenario"' in s and 'class="ic-who"' not in s:
         problems.append(
