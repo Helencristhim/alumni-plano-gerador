@@ -880,6 +880,22 @@ def validate(path):
     root = repo_root_for(path)
     is_standalone_slides = bool(re.search(r'-aula\d+\.html$', path)) and 'data-slide=' in c
 
+    # ═══ ESCOPO POR FRAMEWORK — "escopar, não generalizar" (decisão do Dan, 27/07/2026) ═══
+    # Este validador nasceu do Imersivo e carrega regras que são DELE, não universais: as 5
+    # etapas do Pre-class (REGRA 4) e o mínimo de 25 slides. O PPP do documento pedagógico
+    # manda o OPOSTO em ambas — Pre-class é flipped (o input, entregue antes) e a aula tem
+    # 7 a 15 slides.
+    #
+    # A saída NÃO é afrouxar essas regras: afrouxar vale para as 1.221 aulas do Imersivo,
+    # que é justamente onde elas precisam continuar estritas. A saída é ESCOPAR: a regra
+    # continua exigindo exatamente o que exige, mas só de quem é do framework dela.
+    #
+    # Aula SEM a etiqueta = legado = Imersivo por definição => nada muda para elas.
+    # Ver _build/model/FRAMEWORKS.md §3.2 e scripts/check_ppp_lesson.py.
+    m_fw = re.search(r'<meta name="alumni-framework" content="([^"]*)"', c)
+    framework = (m_fw.group(1).strip() if m_fw else 'imersivo-prototipo')
+    eh_imersivo = (framework == 'imersivo-prototipo')
+
     # ===== regras herdadas do validar_aula.py =====
     o, cl = body.count('<div'), body.count('</div>')
     if o != cl:
@@ -921,7 +937,10 @@ def validate(path):
             fails.append(f'abas faltando: {", ".join(sorted(miss))} (professor tem 4)')
     if 'data-slide=' in c:
         nslide = len(re.findall(r'data-slide="\d+"', c))
-        if nslide and nslide < 25:
+        # O piso de 25 slides é do IMERSIVO (aula-narrativa de 7 capítulos). Outros
+        # frameworks têm a própria faixa — o PPP manda 7-15 — e são checados pelo gate
+        # deles. Ver o escopo por framework no topo desta função.
+        if eh_imersivo and nslide and nslide < 25:
             warns.append(f'só {nslide} slides (REGRA: >=25 p/ 60min)')
         if not is_aluno and nslide:
             nteacher = len(re.findall(r'data-teacher=', c))
@@ -1027,11 +1046,28 @@ def validate(path):
                 if bj < 0:
                     bj = hc.find('tab-inclass', bi)
                 blk = hc[bi:bj if bj > 0 else len(hc)]
-                REQ = [('vocab-card-pc', 6), ('match-row', 4), ('quiz-item', 3), ('fill-blank-item', 3),
-                       ('order-container', 1), ('speech-card', 2), ('think-card', 1), ('survival-card', 1)]
+                # As 5 etapas da REGRA 4 são a forma do PRE-CLASS DO IMERSIVO — onde a aula
+                # PREPARA o aluno com vocab+matching+gramática+fill antes da aula.
+                # No PPP o pre-class é FLIPPED: o documento pedagógico manda entregar o INPUT
+                # antes (texto, áudio, glossário) e fazer a descoberta EM AULA, no Diving Deep.
+                # Exigir matching e ordering dele seria exigir que o PPP fosse Imersivo.
+                # Cada framework traz o piso do seu pre-class no gate próprio.
+                if eh_imersivo:
+                    REQ = [('vocab-card-pc', 6), ('match-row', 4), ('quiz-item', 3), ('fill-blank-item', 3),
+                           ('order-container', 1), ('speech-card', 2), ('think-card', 1), ('survival-card', 1)]
+                else:
+                    # Piso UNIVERSAL, válido para qualquer framework: o aluno tem de receber
+                    # palavras com áudio, produzir algo falado e sair com um survival card.
+                    REQ = [('vocab-card-pc', 6), ('speech-card', 2), ('think-card', 1), ('survival-card', 1)]
                 missing = [f'{k} ({blk.count(k)}/{mn})' for k, mn in REQ if blk.count(k) < mn]
                 if missing:
-                    fails.append(f'Pre-class da aula {N} INCOMPLETO no hub: ' + ', '.join(missing))
+                    # A MENSAGEM do Imersivo fica IDÊNTICA, byte a byte. O GATE 8 usa o texto
+                    # do erro como chave do baseline: acrescentar um "[framework]" aqui fez
+                    # 31 arquivos que ninguém tocou aparecerem como defeito NOVO. O sufixo só
+                    # entra quando NÃO é Imersivo — aí a chave é nova de qualquer forma.
+                    sufixo = '' if eh_imersivo else f' [{framework}]'
+                    fails.append(f'Pre-class da aula {N} INCOMPLETO no hub{sufixo}: '
+                                 + ', '.join(missing))
             # DOSAGEM + IDIOMA por nível.
             # O nível vem do HTML (student-info do header) e, na falta dele, do config do
             # build. Antes vinha SÓ do config — e sem config o gate inteiro era pulado EM
