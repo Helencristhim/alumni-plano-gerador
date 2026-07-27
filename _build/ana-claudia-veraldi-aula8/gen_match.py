@@ -9,20 +9,20 @@ import random
 HERE = os.path.dirname(os.path.abspath(__file__))
 PC = os.path.join(HERE, 'preclass.html')
 
-# (palavra, definicao == data-answer) -- 12 palavras de revisao do Bloco 1 (aulas 1-7)
+# (palavra, definicao == data-answer)
 PAIRS = [
-    ("Requirement", "something the software must do"),
-    ("To deploy", "to put new code on a server so people can use it"),
-    ("Milestone", "an important point or achievement in a project"),
-    ("Challenge", "a difficult task that tests your skills"),
-    ("Workflow", "the steps a task goes through from start to finish"),
-    ("To prioritize", "to decide what is most important to do first"),
-    ("Severity", "how serious a bug is"),
-    ("Root cause", "the real reason a problem happens"),
-    ("Blocker", "something that stops you from making progress"),
-    ("To follow up", "to check on something again later"),
-    ("To clarify", "to make something clearer or easier to understand"),
-    ("Edge case", "an unusual situation at the limit of what is expected"),
+    ("To settle in", "to slowly start to feel at home in a new place"),
+    ("A fresh start", "a chance to begin again, leaving the old life behind"),
+    ("To end up", "to reach a place or a situation you did not plan"),
+    ("To take stock", "to stop and think carefully about where you are now"),
+    ("To stick with", "to continue with something even when it gets hard or slow"),
+    ("Steady", "regular and unhurried, without sudden changes"),
+    ("To unwind", "to let go of stress and relax after a busy day"),
+    ("To get by", "to manage with the little money or help you have"),
+    ("Sense of purpose", "the feeling that what you do every day matters"),
+    ("To look forward to", "to feel happy about something that is coming"),
+    ("Worn out", "very tired, or old and damaged by long use"),
+    ("On the whole", "when you consider everything together"),
 ]
 
 defs = [d for _, d in PAIRS]
