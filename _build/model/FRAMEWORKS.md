@@ -78,17 +78,88 @@ As três regras, todas bloqueantes:
 |---|---|---|
 | 1 | Framework declarado tem de existir **naquela categoria** | Pega typo e framework não cadastrado |
 | 2 | Framework com status ≠ `producao` só em slug listado em `mocks` | **É a ordem do Dan.** Aluno real nunca recebe método em validação |
-| 3 | Um slug não pode ter aulas de frameworks diferentes | Um aluno segue um método; misturar no meio do curso confunde aluno e professora |
+| 3 | Troca de framework só passa se **declarada em `migracoes`** — e o corte tem de ser cumprido | Troca intencional é legítima; a acidental não |
+| 4 | Aulas do mesmo aluno declaram **um só** `TOTAL_AULAS` | Garantia financeira: a barra do pacote é `concluídas / TOTAL_AULAS` |
 
 ### Legado-tolerante (REGRA 30/31)
 
 Aula **sem** a etiqueta `alumni-framework` é ignorada pelo gate. As ~1.240 aulas anteriores
-a este eixo não têm a etiqueta e **não serão tocadas para ganhar uma** — elas já são
+a este eixo não têm a etiqueta e **não serão tocadas em varredura** — elas já são
 identificáveis pela estrutura (7 capítulos), e aula que já foi dada não se mexe.
+
+Etiqueta-se **por aluno, sob demanda** (`scripts/tag_framework.py`), no PR em que se for
+mexer no framework daquele aluno. Duas razões para nunca fazer em massa: a REGRA 30 (foi
+uma varredura gulosa que quase reescreveu 2.182 arquivos por engano) e a operacional — o
+repo tem dezenas de gerações em paralelo o tempo todo, e um commit tocando 1.221 arquivos
+conflitaria com quase toda branch aberta.
 
 > **Exceção conhecida:** `sandra-hayasaki-aula5` foi refeita em PPP antes desta conversa —
 > é a única aula de aluno real fora do Imersivo. Sem etiqueta ⇒ o gate não a vê, de
 > propósito: ela é legado, não um caso novo. Fica registrada aqui para não virar surpresa.
+
+---
+
+## 3.1 Migrar um aluno de framework (sem quebrar o pacote dele)
+
+> Decisão do Dan, 27/07/2026: *"é necessário ser possível a alteração de frameworks sem
+> influenciar nas aulas passadas e no que já aconteceu, mas ao mesmo tempo mantendo o
+> progresso do pacote do aluno — financeiramente."*
+
+**O progresso é imune ao framework por construção.** `lesson_progress` grava
+`(student_slug, lesson_number, inclass_done)` — não há coluna de framework nem de
+estrutura. A aula 13 conta como a 13ª do pacote tenha ela nascido em qualquer método, e as
+aulas passadas não são tocadas. O que precisa de vigilância é o **denominador**: a barra é
+`concluídas / TOTAL_AULAS`, então duas aulas do mesmo aluno declarando totais diferentes
+fazem o aluno ver percentuais diferentes conforme a aula que abrir. Daí a **regra 4**.
+
+> Medição de 27/07/2026: **9 alunos já têm esse defeito no legado** (nilo 40 vs 96, simone
+> 12 vs 48, natalie 5/6/26, diogo 36 vs 40, tania 10 vs 20…) — anterior a tudo isto e sem
+> relação nenhuma com framework. A regra 4 só olha aula **etiquetada**, então nasce em 0 e
+> não cobra retrofit (REGRA 30).
+
+**O passo a passo:**
+
+1. Etiquete as aulas existentes do aluno — `python3 scripts/tag_framework.py --slug fulano`
+   (dry-run; `--write` para valer). Sem isso o gate não sabe o que as aulas antigas são e
+   não consegue conferir o corte.
+2. Declare a migração em `migracoes` de `frameworks.json`:
+   `{"slug": "fulano", "de": "imersivo-prototipo", "para": "ppp", "a_partir_da_aula": 13}`.
+3. Gere a aula 13 em diante com `"framework": "ppp"` no config, **`hub: "snippets"`**.
+   ⚠️ **Nunca `hub: "new"` numa migração** — ele reescreve o hub do zero e as aulas
+   anteriores somem do menu. É o único jeito conhecido de a migração machucar o pacote.
+4. `TOTAL_AULAS` **não muda**: o pacote comprado é o mesmo, só o método mudou.
+
+Declarar e não cumprir também é erro: se a declaração diz "imersivo até a 12" e a aula 2
+aparece em PPP, o gate barra. Sem isso a declaração viraria carta branca — buraco real,
+pego em teste em 27/07/2026 (migrando **todas** as aulas o slug voltava a ter um framework
+só, a checagem de mistura não disparava, e a declaração passava a mentir).
+
+---
+
+## 3.2 Gate novo por framework — **escopar, não generalizar**
+
+> Decisão do Dan, 27/07/2026: *"não precisa generalizar, apenas caso os frameworks
+> compartilhem o mesmo tipo de exercício; do contrário os mocks novos gerarão gates
+> diferentes futuros."*
+
+**Generalizar um gate é afrouxá-lo.** Ensinar o `validate_lesson` a aceitar aula sem
+"Grammar Tip" o torna permissivo para **todo mundo** — inclusive para as 1.221 aulas do
+Imersivo, que é justamente onde ele precisa continuar estrito.
+
+**Escopar é outra coisa:** o gate continua exigindo exatamente o que exige hoje, mas só de
+quem é **do framework dele**. Aula de outro framework ele não é dono, e ignora. Na prática
+é ler a etiqueta `alumni-framework`: *"não é do meu framework? não é comigo."* A regra não
+muda em nada.
+
+O critério para o mock novo:
+
+- **Mesmo tipo de exercício** (matching, gap-fill, true/false…) → **reusa o gate que já
+  existe**: mesma classe-mecanismo, mesma checagem.
+- **Tipo que não existe** (o Task Cycle do TBL, o Focus on Form diferido) → **nasce gate
+  novo junto com o mock**, já escopado àquele framework.
+
+Consequência: promover um framework a `producao` deixa de ser mudar uma palavra no JSON —
+é promover algo que já tem trava própria.
 
 ---
 
