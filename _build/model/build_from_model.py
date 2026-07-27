@@ -812,10 +812,18 @@ def inject_grammar_marker(slides, grammar_point):
     g = ' '.join(str(grammar_point).split()).strip()
     if not g:
         return slides
-    marker = 'chapter-label">Grammar Discovery'
-    idx = slides.find(marker)
+    # O rótulo do slide de descoberta NÃO é sempre "Grammar Discovery": uma aula de
+    # pronúncia/prosódia descobre um SISTEMA que não é gramática, e forçá-la a se rotular
+    # "Grammar Discovery" na tela seria mentir para a aluna só para agradar ao gate.
+    # Aceita-se também o rótulo curto "Discovery" — o marcador continua sendo emitido pelo
+    # BUILDER, um por aula, e só quando lesson.grammar_point existe (opt-in explícito).
+    idx = -1
+    for marker in ('chapter-label">Grammar Discovery', 'chapter-label">Discovery'):
+        idx = slides.find(marker)
+        if idx != -1:
+            break
     if idx == -1:
-        return slides  # aula sem slide de Grammar Discovery — no-op silencioso
+        return slides  # aula sem slide de descoberta — no-op silencioso
     start = slides.rfind('<div class="slide', 0, idx)
     if start == -1:
         return slides
