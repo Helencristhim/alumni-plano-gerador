@@ -9,26 +9,26 @@ import random
 HERE = os.path.dirname(os.path.abspath(__file__))
 PC = os.path.join(HERE, 'preclass.html')
 
-# (palavra, definicao == data-answer) -- 12 palavras NOVAS da aula 12 (second conditional / decisions)
+# (palavra, definicao == data-answer) -- 12 palavras NOVAS da aula 12 (first conditional / planning)
 PAIRS = [
-    ("Trade-off", "a balance between two good things you cannot both fully have"),
-    ("Hypothetical", "imagined, not real; used to think about a possible situation"),
-    ("Contingency", "a plan for something that might go wrong"),
-    ("To mitigate", "to make a risk or a problem less serious"),
-    ("Downside", "the negative part or disadvantage of a choice"),
-    ("To postpone", "to move something to a later time"),
-    ("To justify", "to give a good reason for a decision"),
-    ("To assess", "to judge how good, bad or risky something is"),
-    ("Alternative", "another option you can choose instead"),
-    ("Reasonable", "fair and sensible"),
-    ("To reconsider", "to think again about a decision"),
-    ("Cost-effective", "giving good value for the time or money spent"),
+    ("A forecast", "a statement about what the weather is probably going to do"),
+    ("A downpour", "a short period of very heavy rain"),
+    ("To call off", "to cancel something that was already arranged"),
+    ("To postpone", "to move an event to a later date"),
+    ("A backup plan", "a second plan you keep ready in case the first one fails"),
+    ("To fall through", "to fail before it happens, after it was already arranged"),
+    ("To squeeze in", "to find time for something in a day that is already full"),
+    ("On short notice", "with very little warning before something happens"),
+    ("To count on", "to trust that something will happen or that somebody will help"),
+    ("To run out of", "to use all of something so that none is left"),
+    ("Chances are", "it is very likely that something will happen"),
+    ("To be up to you", "to be your decision to make, and nobody can make it for you"),
 ]
 
 defs = [d for _, d in PAIRS]
 rows = []
 for i, (word, answer) in enumerate(PAIRS):
-    rnd = random.Random(1210 + i)
+    rnd = random.Random(1220 + i)
     opts = defs[:]
     # embaralha ate que a definicao correta NAO caia na posicao i (REGRA 24)
     while True:
