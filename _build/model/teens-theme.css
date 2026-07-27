@@ -1,0 +1,116 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   PELE TEENS — reskin sobre o shell adulto do Modelo.
+   Só FORMA / FONTE / RITMO / TOM. A COR vem da paleta do aluno (config.palette),
+   igual ao adulto e ao kids — não fixamos cor aqui.
+   O builder injeta este bloco no fim do CSS do shell quando existe
+   `_build/model/teens-theme.css` e config.model == "teens".
+   Ossos e classes-mecanismo = os do adulto → os 12 Contratos Universais passam.
+   Ver _build/model/CONTRATOS-E-RASTREIO.md.
+
+   PRINCÍPIO: teen NÃO é criança grande. Onde o kids arredonda tudo (18px) e
+   engorda a fonte, o teen faz o oposto — canto médio (12px), densidade maior,
+   contraste alto, HUD de game. O que o kids ganha em fofura, o teen ganha em
+   "isto parece um app que eu uso", que é o que segura um gamer de 15 anos.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Tipografia: corpo neutro e legível; títulos pesados e apertados (estilo esports) */
+body, .slide, .slide-inner { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif; }
+.slide-heading, .slide h1, .slide h2, .chapter-label, .lesson-number {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif !important;
+  letter-spacing: -.02em;
+}
+.slide-heading { font-weight: 800 !important; }
+/* Rótulo de capítulo vira tag de HUD: caixa alta, tracking largo, pequeno */
+.chapter-label {
+  text-transform: uppercase; letter-spacing: .14em; font-size: .72rem !important;
+  font-weight: 700 !important;
+}
+
+/* Cantos MÉDIOS — nem quadrado corporativo, nem bolha infantil */
+.slide-inner, .vocab-card, .comp-q, .comp-questions, .check-item, .roleplay-card,
+.mistake-card, .fill-item, .error-card, .email-card, .lesson-card, .exercise-section,
+.think-card, .speech-card, .survival-card, .media-card, .match-row, .quiz-option,
+.ic-reading, .ic-choice, .ic-tfrow { border-radius: 12px !important; }
+.btn, button:not(.tab-btn):not(.arrow-btn), .audio-btn, .listen, .verify-all-btn,
+.check-btn, .nav-btn { border-radius: 10px !important; }
+/* Chips/keywords continuam pílula — é a forma que o teen reconhece de tag/badge */
+.keyword-chip, .chip, .kw span { border-radius: 999px !important; font-weight: 600 !important; }
+
+/* Vocab reveal: palavra em destaque, dica em caixa alta pequena (parece card de item) */
+.vocab-card .vocab-word, .vocab-card-word { font-size: 1.2rem !important; font-weight: 800 !important; letter-spacing: -.01em; }
+.vocab-card .card-hint { text-transform: uppercase; letter-spacing: .08em; font-size: .68rem; }
+
+/* Slide de conclusão (Contrato #1) — check em quadrado de checkbox de app, não bolha */
+.check-item { padding: .8rem 1rem !important; gap: .9rem !important; }
+.check-item .check-box { border-radius: 7px !important; border-width: 2px !important; }
+
+/* Barras de progresso finas e retas (HUD), não gordinhas */
+.progress-bar, .mini-bar, .track { border-radius: 4px !important; }
+
+/* Foco visível (REGRA 25) — mantido forte, no accent do aluno */
+.check-item:focus-visible, .vocab-card:focus-visible, .btn:focus-visible,
+button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* A2+ = ZERO português na tela (REGRA 13). O CSS de .sp-pt/.speech-translation CONTINUA
+   vivo no shell (é o que permite A0/A1 existir) — aqui o conteúdo simplesmente não emite
+   a classe. NÃO escondemos por CSS: quem não deve traduzir é o AUTOR, não a folha de
+   estilo. Se um dia um teen A1 aparecer, a tradução aparece sem tocar nesta pele. */
+
+/* ===== WORD ARENA — arcade de vocabulário embutido (engine em teens-theme.js) =====
+   Motor reaproveitado do jogo /games/word-arena (que veio do app interno better-learn).
+   Diferenças obrigatórias da versão standalone: ZERO emoji (SVG inline) e áudio pelo
+   speakText do shell (MP3 ElevenLabs — REGRA 7), nunca speechSynthesis como principal. */
+.word-arena {
+  background: linear-gradient(150deg, rgba(15,14,30,.97), rgba(30,26,60,.97));
+  border: 1px solid var(--accent); border-radius: 14px; padding: 1.2rem;
+  max-width: 620px; margin: 1.2rem auto 0; color: #fff;
+}
+.word-arena .wa-hud { display: flex; align-items: center; justify-content: space-between; gap: .6rem; flex-wrap: wrap; }
+.word-arena .wa-tag {
+  text-transform: uppercase; letter-spacing: .14em; font-size: .68rem; font-weight: 700;
+  color: var(--accent-light);
+}
+.word-arena .wa-stats { display: flex; gap: .4rem; }
+.word-arena .wa-chip {
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px; padding: .22rem .7rem; font-size: .78rem; font-weight: 700; color: #fff;
+  display: inline-flex; align-items: center; gap: .3rem;
+}
+.word-arena .wa-chip svg { width: 13px; height: 13px; }
+.word-arena .wa-bar { height: 4px; background: rgba(255,255,255,.14); border-radius: 4px; overflow: hidden; margin: .9rem 0 1.1rem; }
+.word-arena .wa-bar > i { display: block; height: 100%; width: 0; background: var(--accent-light); transition: width .3s }
+.word-arena .wa-word { text-align: center; font-size: 2rem; font-weight: 800; letter-spacing: -.02em; color: #fff; }
+.word-arena .wa-say {
+  display: flex; justify-content: center; margin: .6rem 0 1.1rem;
+}
+.word-arena .wa-say-btn {
+  display: inline-flex; align-items: center; gap: .45rem; cursor: pointer;
+  background: var(--accent); color: #fff; border: none; font-family: inherit;
+  font-weight: 700; font-size: .85rem; padding: .5rem 1.2rem; border-radius: 999px;
+}
+.word-arena .wa-say-btn.playing { animation: waPulse .6s ease infinite }
+@keyframes waPulse { 50% { transform: scale(1.05) } }
+.word-arena .wa-opts { display: grid; gap: .6rem }
+.word-arena .wa-opt {
+  background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.16);
+  border-radius: 10px; padding: .85rem 1rem; text-align: left; cursor: pointer;
+  font-family: inherit; font-size: .95rem; color: #fff; min-height: 44px;
+  transition: border-color .2s, background .2s, transform .1s;
+}
+.word-arena .wa-opt:hover:not(.disabled) { border-color: var(--accent-light); background: rgba(255,255,255,.1) }
+.word-arena .wa-opt:active { transform: scale(.99) }
+.word-arena .wa-opt.correct { border-color: #22c55e; background: rgba(34,197,94,.18) }
+.word-arena .wa-opt.wrong { border-color: #ef4444; background: rgba(239,68,68,.18) }
+.word-arena .wa-opt.disabled { cursor: default }
+.word-arena .wa-end { text-align: center; padding: .6rem 0 }
+.word-arena .wa-end h4 { font-size: 1.4rem; font-weight: 800; margin: .2rem 0 .3rem; color: #fff }
+.word-arena .wa-end p { color: rgba(255,255,255,.72); font-size: .9rem; margin: 0 }
+.word-arena .wa-stars { font-size: 1.5rem; letter-spacing: .2rem; color: var(--accent-light); margin-bottom: .3rem }
+.word-arena .wa-again {
+  margin-top: 1rem; background: var(--accent); color: #fff; border: none; border-radius: 10px;
+  padding: .6rem 1.4rem; font-weight: 700; font-family: inherit; cursor: pointer; min-height: 44px;
+}
+.word-arena .wa-say-btn:focus-visible, .word-arena .wa-opt:focus-visible,
+.word-arena .wa-again:focus-visible { outline: 3px solid var(--accent-light); outline-offset: 2px }
+@media (prefers-reduced-motion: reduce) { .word-arena * { animation: none !important; transition: none !important } }
+@media (max-width: 520px) { .word-arena .wa-word { font-size: 1.6rem } }

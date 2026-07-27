@@ -33,6 +33,12 @@ generaliza o gate ANTES** — nunca se pula o gate.
 > (mesmas classes-mecanismo acima), muda só a pele (CSS/ilustração/tom). Assim os 12 gates
 > valem de graça. Se um contrato precisar de estrutura diferente, **primeiro** se generaliza
 > o gate (pra reconhecer as duas formas), **depois** se muda o shell. Nunca o inverso.
+>
+> **O canal da pele é CONVENÇÃO DE ARQUIVO, não `if` no builder.** `_build/model/{model}-theme.css`
+> e `{model}-theme.js` existem => o builder injeta (CSS antes de `</style>`, JS antes de
+> `</body>`); não existem => no-op. Por isso o **Adulto** não tem arquivo nenhum e segue
+> intocado, e um modelo novo entra **sem tocar no `build_from_model.py`**. Hoje: `kids-theme.*`
+> (pele lúdica + mini-game Dino Tap) e `teens-theme.*` (pele esports + Word Arena).
 
 ---
 

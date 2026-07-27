@@ -644,21 +644,28 @@ def base_swaps(s, cfg, n=None):
             prov += f'\n    <meta name="alumni-level" content="{prov_level}">'
         s = re.sub(r'(<meta name="viewport"[^>]*>)',
                    lambda m: m.group(1) + '\n    ' + prov, s, count=1)
-    # PELE KIDS (CONTRATOS-E-RASTREIO.md §1): quando o modelo é kids, injeta o reskin
-    # (forma/fonte/tamanho/playfulness) antes de </style>. A COR vem da paleta do aluno; os
-    # OSSOS e classes-mecanismo continuam os do adulto — então os 12 Contratos passam de graça
-    # e um conserto de estrutura no shell vale pros dois modelos. Idempotente.
-    if cfg.get('model') == 'kids' and 'PELE KIDS (injetada' not in s:
-        theme = read(os.path.join(os.path.dirname(__file__), 'kids-theme.css'))
+    # PELE DO MODELO (CONTRATOS-E-RASTREIO.md §1): quando o modelo tem pele própria
+    # (kids, teens, ...), injeta o reskin (forma/fonte/tamanho/tom) antes de </style>. A COR
+    # vem da paleta do aluno; os OSSOS e classes-mecanismo continuam os do adulto — então os
+    # 12 Contratos passam de graça e um conserto de estrutura no shell vale pra TODOS os
+    # modelos. O canal é por CONVENÇÃO DE ARQUIVO: `{model}-theme.css` existe => é injetado;
+    # não existe (adulto) => nada acontece. Modelo novo não precisa tocar no builder.
+    # Idempotente.
+    model = cfg.get('model', 'adulto')
+    theme_css = os.path.join(os.path.dirname(__file__), f'{model}-theme.css')
+    if os.path.exists(theme_css) and f'PELE {model.upper()} (injetada' not in s:
+        theme = read(theme_css)
         s = s.replace('</style>',
-                      f'\n/* PELE KIDS (injetada pelo builder — model=kids) */\n{theme}\n</style>', 1)
-    # JS KIDS: canal analogo ao css (mini-games do Pre-class). SO model==kids => adulto
-    # intocado. Vai antes de </body> (depois do script principal do shell, que ja definiu
-    # speakText/updateProgress que o engine usa). Idempotente.
-    if cfg.get('model') == 'kids' and 'kids-theme.js (injetada' not in s and '</body>' in s:
-        kjs = read(os.path.join(os.path.dirname(__file__), 'kids-theme.js'))
+                      f'\n/* PELE {model.upper()} (injetada pelo builder — model={model}) */\n{theme}\n</style>', 1)
+    # JS DO MODELO: canal analogo ao css (mini-games — dino-tap no kids, word arena no
+    # teens). SO quando o modelo tem o arquivo => adulto intocado. Vai antes de </body>
+    # (depois do script principal do shell, que ja definiu speakText/updateProgress que os
+    # engines usam). Idempotente.
+    theme_js = os.path.join(os.path.dirname(__file__), f'{model}-theme.js')
+    if os.path.exists(theme_js) and f'{model}-theme.js (injetada' not in s and '</body>' in s:
+        mjs = read(theme_js)
         s = s.replace('</body>',
-                      f'<script>\n/* kids-theme.js (injetada pelo builder — model=kids) */\n{kjs}\n</script>\n</body>', 1)
+                      f'<script>\n/* {model}-theme.js (injetada pelo builder — model={model}) */\n{mjs}\n</script>\n</body>', 1)
     return s
 
 
