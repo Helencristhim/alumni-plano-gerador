@@ -73,6 +73,10 @@ ALUNO = os.path.join(ROOT, 'public', 'aluno')
 VOICES = json.load(open(os.path.join(HERE, 'voices.json'), encoding='utf-8'))
 
 MODEL = 'helen-mendes'
+# EIXO FRAMEWORK (public/data/frameworks.json é a FONTE ÚNICA — ver _build/model/FRAMEWORKS.md).
+# `model` no config = CATEGORIA (adulto/kids/teens). `framework` = o MÉTODO dentro dela.
+# Config sem a chave => o framework da casa, que é o que gera tudo hoje.
+FRAMEWORK_DEFAULT = 'imersivo-prototipo'
 MODEL_ACCENT = ('#BE123C', '#be123c')
 MODEL_ACCENT_LIGHT = ('#F43F5E', '#f43f5e')
 MODEL_ACCENT_RGB = 'rgba(190,18,60'
@@ -82,6 +86,46 @@ MODEL_CHARS = ['helen', 'james']  # classes de diálogo do shell, em ordem (1o =
 def read(p):
     with open(p, encoding='utf-8') as f:
         return f.read()
+
+
+def assert_framework(cfg):
+    """Falha CEDO (antes de escrever qualquer arquivo) se o config declarar um framework
+    que não existe na categoria, ou se puser framework experimental num aluno real.
+
+    É a mesma regra do GATE 11 (scripts/check_framework_isolation.py), aplicada aqui na
+    entrada em vez de só no PR: melhor o builder recusar do que gerar 25 slides + 50 MP3
+    de uma aula que o gate vai barrar depois. Fonte única: public/data/frameworks.json.
+    """
+    fw = cfg.get('framework', FRAMEWORK_DEFAULT)
+    cat = cfg.get('model', 'adulto')
+    path = os.path.join(ROOT, 'public', 'data', 'frameworks.json')
+    if not os.path.exists(path):          # repo sem o catálogo ainda: não trava a geração
+        return
+    try:
+        data = json.load(open(path, encoding='utf-8'))
+    except (json.JSONDecodeError, OSError) as e:
+        # NUNCA derrubar uma geração em andamento por causa deste arquivo. Se ele estiver
+        # ilegível, avisa alto e segue: quem barra de verdade é o GATE 11 no CI, e lá o
+        # JSON quebrado aparece como erro do próprio gate, no PR certo.
+        print(f'  aviso: frameworks.json ilegível ({e}) — validação de framework PULADA '
+              f'nesta geração. O GATE 11 ainda roda no PR.', file=sys.stderr)
+        return
+    cats = {c['id']: c for c in data['categorias']}
+    assert cat in cats, (
+        f'categoria "{cat}" não existe em public/data/frameworks.json '
+        f'(disponíveis: {sorted(cats)})')
+    disponiveis = {f['id']: f for f in cats[cat]['frameworks']}
+    assert fw in disponiveis, (
+        f'framework "{fw}" não está cadastrado na categoria "{cat}". '
+        f'Disponíveis: {sorted(disponiveis)}. Para criar um novo, acrescente o objeto em '
+        f'public/data/frameworks.json (é a fonte única — nada mais precisa mudar).')
+    if disponiveis[fw]['status'] != 'producao':
+        mocks = set(data.get('mocks', {}).get(fw, []))
+        assert cfg['slug'] in mocks, (
+            f'framework "{fw}" tem status "{disponiveis[fw]["status"]}" (não é de produção) '
+            f'e o slug "{cfg["slug"]}" não está em mocks["{fw}"] de frameworks.json. '
+            f'Aluno real NÃO recebe framework em validação — gere num aluno mock primeiro '
+            f'(ordem do Dan, 27/07/2026).')
 
 
 def write(p, s):
@@ -642,6 +686,10 @@ def base_swaps(s, cfg, n=None):
         prov = f'<meta name="alumni-model" content="{prov_model}">'
         if prov_level:
             prov += f'\n    <meta name="alumni-level" content="{prov_level}">'
+        # FRAMEWORK (o MÉTODO, dentro da categoria). É esta etiqueta que o GATE 11
+        # (scripts/check_framework_isolation.py) lê pra garantir que aluno real nunca
+        # receba framework em validação. Aula sem a etiqueta = legado, e o gate ignora.
+        prov += f'\n    <meta name="alumni-framework" content="{cfg.get("framework", FRAMEWORK_DEFAULT)}">'
         s = re.sub(r'(<meta name="viewport"[^>]*>)',
                    lambda m: m.group(1) + '\n    ' + prov, s, count=1)
     # PELE DO MODELO (CONTRATOS-E-RASTREIO.md §1): quando o modelo tem pele própria
@@ -1184,6 +1232,7 @@ def main():
     assert len(cfg['characters']) <= 3, 'máx 3 personagens por diálogo (e só há 2 vozes — ver voices.json)'
     for v in cfg['characters'].values():
         assert v in VOICES, f'voz desconhecida no characters: {v}'
+    assert_framework(cfg)
 
     manifest = []
     print('== standalone ==')

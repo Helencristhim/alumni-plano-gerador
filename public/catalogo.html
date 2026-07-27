@@ -58,6 +58,25 @@
         .type.disabled { opacity: .6; cursor: not-allowed; }
         .type.disabled .ref { color: var(--text-dim); }
 
+        /* Prateleira de FRAMEWORKS — renderizada de /data/frameworks.json (fonte única).
+           Acrescentar framework = acrescentar objeto no JSON; este HTML não muda. */
+        .fw-shelf { margin-bottom: var(--space-lg); }
+        .fw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-md); }
+        .fw { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--radius-md);
+              padding: var(--space-md); border-top: 3px solid var(--m-accent, var(--alumni-navy)); }
+        .fw.is-todo { border-top-color: var(--border-light); background: transparent; }
+        .fw-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+        .fw-name { font: var(--text-h3); color: var(--text-primary); }
+        .fw.is-todo .fw-name { color: var(--text-muted); }
+        .fw p { font: var(--text-small); color: var(--text-muted); line-height: 1.55; }
+        .fw-foot { margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+                   font: var(--text-micro); letter-spacing: .04em; text-transform: uppercase; }
+        .fw-foot a { color: var(--m-accent, var(--alumni-navy)); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+        .fw-foot a:hover { text-decoration: underline; }
+        .fw-foot .count { color: var(--text-dim); }
+        .status--spec { background: var(--alumni-navy-dim); color: var(--alumni-navy); border: 1px solid var(--alumni-navy-ring); }
+        .status--todo { background: transparent; color: var(--text-dim); border: 1px dashed var(--border-light); }
+
         /* Model footer: rules + gates */
         .model-foot { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-top: var(--space-lg); padding-top: var(--space-lg); border-top: 1px solid var(--border-light); }
         .model-foot .fb .eyebrow { margin-bottom: var(--space-sm); }
@@ -157,6 +176,8 @@
                 <div class="model-meta"><span class="chip">Shell: helen-mendes</span><span class="chip">28–30 slides</span><span class="chip">Arthur + Ellen</span></div>
             </div>
 
+            <div class="fw-shelf" data-cat="adulto"></div>
+
             <span class="eyebrow">Tipos de aula — as 2 construções de IN CLASS da Helen (Fala e Leitura, de 2 documentos), cada uma com sua aula-exemplo</span>
             <div class="types">
                 <a class="type" href="/professor/helen-mendes-aula2.html" target="_blank" rel="noopener">
@@ -212,6 +233,8 @@
                 <div class="model-meta"><span class="chip">Shell: pronto</span><span class="chip">Ilustração Fluent 3D</span><span class="chip">vozes de criança</span></div>
             </div>
 
+            <div class="fw-shelf" data-cat="kids"></div>
+
             <span class="eyebrow">Tipos de aula — Aventura lúdica (2 aulas-exemplo), incrementável</span>
             <div class="types">
                 <a class="type" href="/professor/bento-aula1.html" target="_blank" rel="noopener">
@@ -255,6 +278,8 @@
                 </div>
                 <div class="model-meta"><span class="chip">Shell: pronto</span><span class="chip">Word Arena embutido</span><span class="chip">gamificado</span></div>
             </div>
+
+            <div class="fw-shelf" data-cat="teens"></div>
 
             <span class="eyebrow">Tipos de aula — Missão gamificada (1 aula-exemplo), incrementável</span>
             <div class="types">
@@ -370,5 +395,64 @@
     </section>
 
 </div>
+<script>
+/* PRATELEIRA DE FRAMEWORKS — desenha, dentro de cada categoria, os frameworks dela.
+   FONTE ÚNICA: /data/frameworks.json. Acrescentar um framework (pra Adulto, Kids ou
+   Teens) = acrescentar um objeto no JSON. Nada aqui muda. Ver _build/model/FRAMEWORKS.md. */
+(function () {
+  'use strict';
+  var ROTULO = { producao: 'Em produção', mock: 'Mock em validação',
+                 especificado: 'Especificado', documentado: 'A construir' };
+  var CLASSE = { producao: 'status--live', mock: 'status--wip',
+                 especificado: 'status--spec', documentado: 'status--todo' };
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function cardHtml(fw) {
+    var todo = fw.status !== 'producao' && fw.status !== 'mock';
+    var pes = [];
+    if (fw.aulas) pes.push('<span class="count">' + fw.aulas + (fw.aulas === 1 ? ' aula' : ' aulas') + '</span>');
+    if (fw.ref && fw.ref.url) {
+      pes.push('<a href="' + esc(fw.ref.url) + '" target="_blank" rel="noopener">' +
+               esc(fw.ref.label || 'ver aula') + ' &#8599;</a>');
+    }
+    if (fw.spec) pes.push('<span class="count">spec: ' + esc(fw.spec) + '</span>');
+    return '<div class="fw' + (todo ? ' is-todo' : '') + '">' +
+      '<div class="fw-top"><span class="fw-name">' + esc(fw.label) + '</span>' +
+      '<span class="status ' + (CLASSE[fw.status] || 'status--todo') + '">' +
+      esc(ROTULO[fw.status] || fw.status) + '</span></div>' +
+      '<p>' + esc(fw.resumo || '') + '</p>' +
+      (pes.length ? '<div class="fw-foot">' + pes.join('') + '</div>' : '') +
+      '</div>';
+  }
+
+  // cache:'no-store' de propósito: a promessa deste eixo é "editou o JSON, apareceu".
+  // Com o JSON em cache, quem já visitou o catálogo continuaria vendo a lista velha
+  // depois do deploy — e a promessa seria falsa justamente pra quem usa a página.
+  fetch('/data/frameworks.json', { cache: 'no-store' }).then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+  }).then(function (data) {
+    var porId = {};
+    (data.categorias || []).forEach(function (c) { porId[c.id] = c; });
+    document.querySelectorAll('.fw-shelf').forEach(function (el) {
+      var cat = porId[el.dataset.cat];
+      if (!cat || !cat.frameworks || !cat.frameworks.length) { el.remove(); return; }
+      var n = cat.frameworks.length;
+      el.innerHTML =
+        '<span class="eyebrow">Frameworks de ' + esc(cat.label) + ' — ' + n +
+        (n === 1 ? ' método' : ' métodos') + ' nesta categoria</span>' +
+        '<div class="fw-grid">' + cat.frameworks.map(cardHtml).join('') + '</div>';
+    });
+  }).catch(function () {
+    // Sem o JSON a página continua íntegra: some a prateleira, o resto do catálogo fica.
+    document.querySelectorAll('.fw-shelf').forEach(function (el) { el.remove(); });
+  });
+})();
+</script>
 </body>
 </html>
