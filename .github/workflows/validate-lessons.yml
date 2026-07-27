@@ -253,6 +253,16 @@ jobs:
         # tuca-dias e luiz-bressane-backup-a2, que a checagem grosseira acusava por engano.
         run: python3 scripts/check_vocab_reveal.py
 
+      - name: "GATE 12 — selftest: prova que o gate do PPP ainda morde"
+        run: python3 scripts/check_ppp_lesson.py --selftest
+
+      - name: "GATE 12 — aula do framework PPP (7-15 slides, capítulos, answer key, gramática implícita)"
+        # O primeiro gate ESCOPADO A UM FRAMEWORK ("escopar, não generalizar" — decisão do
+        # Dan, 27/07/2026). O validate_lesson foi escopado ao Imersivo; este cobra as regras
+        # do PPP. Só olha arquivo com <meta name="alumni-framework" content="ppp"> — qualquer
+        # outra aula é ignorada, então nasce sem tocar em nada do que já existe.
+        run: python3 scripts/check_ppp_lesson.py
+
       - name: "GATE 11 — isolamento de framework (aluno real nunca recebe método em validação)"
         # Ordem do Dan (27/07/2026): "não quero que NADA DE ALUNOS JÁ ATUAIS utilize os
         # frameworks que vamos inserir agora [...] gerar alunos mock, validar, pra só

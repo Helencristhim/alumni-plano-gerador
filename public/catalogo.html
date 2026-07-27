@@ -76,6 +76,15 @@
         .fw-foot .count { color: var(--text-dim); }
         .status--spec { background: var(--alumni-navy-dim); color: var(--alumni-navy); border: 1px solid var(--alumni-navy-ring); }
         .status--todo { background: transparent; color: var(--text-dim); border: 1px dashed var(--border-light); }
+        /* Persona do mock — quem é o aluno de exemplo daquele framework */
+        .fw-persona { display: flex; align-items: center; gap: 10px; margin-top: 12px;
+                      padding: 10px; background: var(--m-dim, var(--alumni-navy-dim)); border-radius: var(--radius-sm); }
+        .fw-avatar { width: 32px; height: 32px; flex: 0 0 auto; border-radius: 50%; display: grid; place-items: center;
+                     background: var(--m-accent, var(--alumni-navy)); color: #fff; font-weight: 700; font-size: .9rem; }
+        .fw-persona b { font: var(--text-small); color: var(--text-primary); font-weight: 700; }
+        .fw-persona span { font: var(--text-micro); color: var(--text-muted); display: block; }
+        .fw-persona .fw-lvl { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: var(--radius-full);
+                              background: var(--bg-primary); border: 1px solid var(--border-light); color: var(--text-body); }
 
         /* Model footer: rules + gates */
         .model-foot { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-top: var(--space-lg); padding-top: var(--space-lg); border-top: 1px solid var(--border-light); }
@@ -420,12 +429,24 @@
       pes.push('<a href="' + esc(fw.ref.url) + '" target="_blank" rel="noopener">' +
                esc(fw.ref.label || 'ver aula') + ' &#8599;</a>');
     }
+    (fw.extras || []).forEach(function (x) {
+      if (x && x.url) pes.push('<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' +
+                               esc(x.label) + ' &#8599;</a>');
+    });
     if (fw.spec) pes.push('<span class="count">spec: ' + esc(fw.spec) + '</span>');
+    if (fw.gate) pes.push('<span class="count">gate: ' + esc(fw.gate) + '</span>');
+    // A PERSONA é o que faz o mock ser encontrável de relance: quem é o aluno, que nível,
+    // e o que ele precisa resolver. Sem isso o card vira uma lista de nomes de método.
+    var p = fw.persona;
+    var personaHtml = p ? ('<div class="fw-persona"><span class="fw-avatar">' +
+        esc((p.nome || '?').charAt(0)) + '</span><div><b>' + esc(p.nome) +
+        '</b> <span class="fw-lvl">' + esc(p.nivel || '') + '</span><span>' +
+        esc(p.perfil || '') + '</span></div></div>') : '';
     return '<div class="fw' + (todo ? ' is-todo' : '') + '">' +
       '<div class="fw-top"><span class="fw-name">' + esc(fw.label) + '</span>' +
       '<span class="status ' + (CLASSE[fw.status] || 'status--todo') + '">' +
       esc(ROTULO[fw.status] || fw.status) + '</span></div>' +
-      '<p>' + esc(fw.resumo || '') + '</p>' +
+      '<p>' + esc(fw.resumo || '') + '</p>' + personaHtml +
       (pes.length ? '<div class="fw-foot">' + pes.join('') + '</div>' : '') +
       '</div>';
   }
