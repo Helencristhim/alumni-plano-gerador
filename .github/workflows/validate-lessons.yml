@@ -253,6 +253,19 @@ jobs:
         # tuca-dias e luiz-bressane-backup-a2, que a checagem grosseira acusava por engano.
         run: python3 scripts/check_vocab_reveal.py
 
+      - name: "GATE 11 — isolamento de framework (aluno real nunca recebe método em validação)"
+        # Ordem do Dan (27/07/2026): "não quero que NADA DE ALUNOS JÁ ATUAIS utilize os
+        # frameworks que vamos inserir agora [...] gerar alunos mock, validar, pra só
+        # depois implementar". Este gate é o que torna isso IMPOSSÍVEL em vez de combinado.
+        # Fonte da verdade: public/data/frameworks.json (categorias × frameworks + mocks).
+        # LEGADO-TOLERANTE por construção: aula SEM a etiqueta <meta name="alumni-framework">
+        # é ignorada — as ~1.240 aulas anteriores a este eixo não têm a etiqueta e NÃO serão
+        # tocadas pra ganhar uma (REGRA 30). Por isso o gate nasce em 0 e não exige retrofit.
+        # Repo inteiro (como o 8 e o 10): a violação pode estar num arquivo que este PR não
+        # tocou — ex.: alguém promover um framework a "produção" no JSON sem perceber que
+        # isso libera aula experimental que já estava no ar.
+        run: python3 scripts/check_framework_isolation.py
+
       - name: "GATE 9 — gramática não repete entre aulas (REGRA 22, data-grammar)"
         # O irmão gramatical do check_vocab_progression: um data-grammar (posto pelo builder
         # no slide de Grammar Discovery) ensinado como NOVO em 2+ aulas do MESMO aluno = FAIL.
