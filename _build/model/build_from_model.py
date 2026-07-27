@@ -453,6 +453,13 @@ def inject_dialogue_audio(slides):
         # ("...<span>green</span>.") isso vira "green ." — espaço solto antes do ponto.
         # Cola a pontuação de volta (senão a frase falada e a chave do audioMap ficam feias).
         spoken = re.sub(r'\s+([.,!?;:])', r'\1', spoken)
+        # DESESCAPA ANTES DE REESCAPAR. A bolha vem do HTML AUTORAL, onde travessão e "&"
+        # vivem como ENTIDADE (`&mdash;`, `&amp;`). Escapar direto transformava `&mdash;` em
+        # `&amp;mdash;`; o extract_phrases desescapa UMA vez e entrega a STRING LITERAL
+        # "&mdash;" pra ElevenLabs — a voz LÊ "ampersand m dash" no meio da fala, e a chave
+        # do audioMap fica com o lixo dentro. O texto falado tem de ser o texto que o humano
+        # LÊ na tela, não o que está ESCRITO no arquivo (mesmo princípio da REGRA 7.1).
+        spoken = html_unescape(spoken)
         if not spoken:
             return m.group(0)
         esc = (spoken.replace('&', '&amp;').replace('<', '&lt;')
