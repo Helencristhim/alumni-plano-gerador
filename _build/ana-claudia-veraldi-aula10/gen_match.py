@@ -9,26 +9,26 @@ import random
 HERE = os.path.dirname(os.path.abspath(__file__))
 PC = os.path.join(HERE, 'preclass.html')
 
-# (palavra, definicao == data-answer) -- 12 palavras NOVAS da aula 10 (reporting a problem)
+# (palavra, definicao == data-answer)
 PAIRS = [
-    ("Impact", "how badly a problem affects users or the business"),
-    ("Symptom", "a visible sign that something is wrong"),
-    ("Frequency", "how often a problem happens"),
-    ("To resolve", "to fix a problem and close it"),
-    ("Regression", "when something that worked before breaks after a change"),
-    ("Reproducible", "able to be made to happen again in the same way"),
-    ("Patch", "a small update that fixes a specific problem"),
-    ("Downtime", "a period when the system is not available to users"),
-    ("To roll back", "to return the software to an earlier working version"),
-    ("Evidence", "facts, like logs or screenshots, that show what happened"),
-    ("Concise", "giving clear information in few words"),
-    ("Vague", "not clear or not specific enough"),
+    ("A creature of habit", "someone who always does the same things in the same order"),
+    ("An errand", "a short trip you make to do one small necessary job"),
+    ("To be stuck in a rut", "to be trapped in a routine that never changes and never improves"),
+    ("Hectic", "very busy and fast, in a way that feels out of control"),
+    ("To juggle", "to handle two or more demanding things at the same time"),
+    ("To dread", "to feel fear or heavy dislike about something before it happens"),
+    ("To bump into", "to meet someone by chance, with no plan at all"),
+    ("To swap", "to give one thing up and take another in its place"),
+    ("Second nature", "something you do so automatically that it takes no thought"),
+    ("To cut back on", "to reduce how much of something you do or use"),
+    ("Restless", "unable to relax, sit still or stay in one place"),
+    ("Nowadays", "in the present period of time, in contrast with the past"),
 ]
 
 defs = [d for _, d in PAIRS]
 rows = []
 for i, (word, answer) in enumerate(PAIRS):
-    rnd = random.Random(1010 + i)
+    rnd = random.Random(10100 + i)
     opts = defs[:]
     # embaralha ate que a definicao correta NAO caia na posicao i (REGRA 24)
     while True:
