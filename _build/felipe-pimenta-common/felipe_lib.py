@@ -304,7 +304,11 @@ def s_comprehension(n, phase, teacher, h_a, h_b, qs):
 
 def s_listening(n, phase, teacher, idx, label, h_a, h_b, sub, mp3, slug, qs):
     """Listening sound-first, MP3 unico + player completo do shell (mpToggle/mpSeek/
-    mpSkip/mpSpeed). Perguntas so aparecem quando o audio termina."""
+    mpSkip/mpSpeed).
+
+    REGRA 2.1 (BLOQUEANTE): as perguntas de compreensao nascem VISIVEIS, antes do play.
+    Sound-first e esconder a TRANSCRICAO, nunca a TAREFA — o aluno le o que procurar e
+    so entao ouve. O container .comp-questions JAMAIS sai daqui com display:none."""
     pid = f'mp-listen{idx}'
     wf = f'waveform{idx}'
     qid = f'listening{idx}Qs'
@@ -348,7 +352,7 @@ def s_listening(n, phase, teacher, idx, label, h_a, h_b, sub, mp3, slug, qs):
              f'      </div>\n'
              f'      <div style="display:flex;gap:.4rem;justify-content:center">{spd}</div>\n'
              f'    </div>\n'
-             f'    <div class="comp-questions" id="{qid}" style="display:none;max-width:520px;margin:1.2rem auto 0">\n'
+             f'    <div class="comp-questions" id="{qid}" style="max-width:520px;margin:1.2rem auto 0">\n'
              + _comp_qs(qs) + '    </div>\n  </div>')
     return _slide(n, phase, 'slide-dark', teacher, inner)
 
