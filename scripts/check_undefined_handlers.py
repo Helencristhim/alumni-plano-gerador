@@ -32,6 +32,7 @@ CALL   = re.compile(r'(?<![.\w$])([A-Za-z_$][\w$]*)\s*\(')          # ident( nã
 # on*="..." (aspas duplas — padrão do repo). O (?<![\w-]) é OBRIGATÓRIO: sem ele o
 # "ontent=" de <meta content="A2 (Básico)"> casa como handler e o gate acusa `function A2`
 # inexistente — botão morto que não existe, em TODA aula A2 nova (falso positivo de 27/07).
+# Nome de atributo só começa depois de espaço, `<` ou `/`, nunca depois de letra/hífen.
 HANDLER= re.compile(r'(?<![\w-])on[a-z]+\s*=\s*"([^"]*)"')
 DEFS   = [re.compile(p) for p in (
     r'function\s+([A-Za-z_$][\w$]*)',
