@@ -540,7 +540,12 @@ def inject_dialogue_audio(slides):
         esc = (spoken.replace('&', '&amp;').replace('<', '&lt;')
                .replace('>', '&gt;').replace('"', '&quot;'))  # apóstrofo fica literal (REGRA 7.1)
         return m.group(0)[:-len('</div>')] + ' ' + _DLG_AUDIO.format(t=esc) + '</div>'
-    return re.sub(r'<div class="dialogue-bubble[^"]*">(.*?)</div>', repl, slides, flags=re.S)
+    # `[^>]*` depois da classe: a bolha do conteúdo autoral costuma trazer style inline
+    # (`class="dialogue-bubble x-bubble" style="...">`). Com a classe obrigatoriamente
+    # colada no `>`, essas bolhas NUNCA casavam e o diálogo nascia MUDO sem ninguém ver —
+    # o gate só acusa depois, e o autor acaba escrevendo o ícone na mão (aulas 17/18 da
+    # Izabel). Idempotente: a bolha que já tem audio-inline/data-speak segue intocada.
+    return re.sub(r'<div class="dialogue-bubble[^"]*"[^>]*>(.*?)</div>', repl, slides, flags=re.S)
 
 
 def extract_phrases(html):
