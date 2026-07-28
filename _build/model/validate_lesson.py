@@ -306,9 +306,12 @@ def check_dialogue_voices(c, path, root, fails, warns):
             continue
         voice = mv.group(1)
         if voice not in voices:
-            fails.append(f'data-voice="{voice}" não declarado (disponíveis: {sorted(voices)}). '
-                         f'Voz de sotaque vai em cfg["voices"] do config.json DA AULA, '
-                         f'nunca no voices.json global (compartilhado com o roster inteiro)')
+            # NÃO reescreva este texto. O GATE 8 usa o PREFIXO da mensagem como
+            # impressão digital do defeito (scripts/check_legacy_baseline.py, categoria()).
+            # Trocar 'não existe em voices.json' por qualquer outra coisa faz TODO defeito
+            # de voz legado do repo virar "defeito NOVO" e o gate reprova ~39 arquivos que
+            # este PR nem tocou. A orientação sobre cfg['voices'] vive no README.
+            fails.append(f'data-voice="{voice}" não existe em voices.json (disponíveis: {sorted(voices)})')
             continue
         lines.append((slide_of(m.start()), ma.group(1) if ma else '?',
                       voice, mt.group(1).replace("\\'", "'") if mt else None, m.start()))
