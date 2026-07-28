@@ -218,6 +218,41 @@ def find_manifest(path, root):
     return None
 
 
+def find_config(path, root):
+    """config.json da aula — irmão do audio_manifest.json."""
+    m = re.search(r'/(?:professor|aluno)/(.+)-aula(\d+)\.html$', path.replace('\\', '/'))
+    if not (m and root):
+        return None
+    for d in (f'{m.group(1)}-aula{m.group(2)}', m.group(1)):
+        p = os.path.join(root, '_build', d, 'config.json')
+        if os.path.exists(p):
+            return p
+    return None
+
+
+def voices_for(path, root):
+    """Vozes VÁLIDAS nesta aula = voices.json + o override cfg['voices'] do config.
+
+    O gen_audio.py já resolve a voz assim (`VOICES = {**VOICES, **cfg.get('voices', {})}`)
+    — o validador não resolvia, e o resultado era um gate que reprovava material CERTO:
+    uma aula com eixo de sotaque (`data-voice="nordic_m"`, voz declarada no config e MP3
+    gerado corretamente) falhava com "não existe em voices.json". Gate que grita em
+    material certo é gate que a equipe desliga.
+
+    O voices.json global segue sendo só arthur/ellen de propósito: voz de sotaque é
+    decisão POR ALUNO e não pode vazar para o roster inteiro.
+    """
+    cp = find_config(path, root)
+    if not cp:
+        return dict(VOICES)
+    try:
+        cfg = json.load(open(cp, encoding='utf-8'))
+    except (ValueError, OSError):
+        return dict(VOICES)
+    extra = cfg.get('voices') or {}
+    return {**VOICES, **extra} if isinstance(extra, dict) else dict(VOICES)
+
+
 def check_dialogue_voices(c, path, root, fails, warns):
     """Vozes por personagem: data-voice obrigatório, 1 voz por personagem,
     personagens distintos = vozes distintas, cross-check com o manifest."""
@@ -1303,9 +1338,15 @@ def validate(path):
                 # (eduardo-chiba, nilo-mesquita) aparecerem como defeito NOVO — elas ja
                 # falhavam por isto, so que sob o texto velho. O defeito e o mesmo; mudar a
                 # redacao inventaria divida que nao existe.
-                if eh_imersivo and not any(x in blk for x in
-                                           ('order-container', 'True or False</span>',
-                                            'Complete the text</span>')):
+                # PRATICA e um EXERCICIO, nao um nome de exercicio. A primeira versao
+                # listava os tres tipos aprovados na troca do ordering — e reprovou a aula 3
+                # do Rafael, cujo Stage 2 e multipla escolha de vocabulario: pratica
+                # legitima, so nao batia com a lista. Gate que reprova material certo e o
+                # mesmo defeito que ele veio consertar, do outro lado.
+                # Agora exige o que importa: que exista pelo menos UM exercicio interativo
+                # no Pre-class alem do vocab card.
+                praticas = ('order-container', 'quiz-item', 'blank-input', 'match-row')
+                if eh_imersivo and not any(x in blk for x in praticas):
                     missing.append(f'order-container ({blk.count("order-container")}/1)')
                 if missing:
                     # A MENSAGEM do Imersivo fica IDÊNTICA, byte a byte. O GATE 8 usa o texto
