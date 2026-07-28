@@ -235,7 +235,7 @@ def voices_for(path, root):
 
     O gen_audio.py já resolve a voz assim (`VOICES = {**VOICES, **cfg.get('voices', {})}`)
     — o validador não resolvia, e o resultado era um gate que reprovava material CERTO:
-    uma aula com eixo de sotaque (`data-voice="nordic_m"`, voz declarada no config e MP3
+    uma aula com eixo de sotaque (`data-voice="nordic_m"`, voz declarada no config e o MP3
     gerado corretamente) falhava com "não existe em voices.json". Gate que grita em
     material certo é gate que a equipe desliga.
 
@@ -267,10 +267,16 @@ def check_dialogue_voices(c, path, root, fails, warns):
             cur = n
         return cur
 
+    # Vozes válidas AQUI = voices.json + cfg['voices'] da aula (eixo de sotaque por aluno).
+    voices = voices_for(path, root)
+
     lines = []  # (slide, speaker, voice, frase, pos)
     for m in re.finditer(r'<div class="dialogue-line[^"]*"[^>]*>', c):
         tag = m.group(0)
-        mv = re.search(r'data-voice="([a-z]+)"', tag)
+        # [a-z0-9_]+ e NÃO [a-z]+: chave de voz de sotaque tem underscore (nordic_m,
+        # indian_f). Com o regex antigo o match falhava e a fala era reportada como
+        # "SEM data-voice" — erro que apontava para o lugar errado.
+        mv = re.search(r'data-voice="([a-z0-9_]+)"', tag)
         seg = c[m.end():m.end() + 1200]
         # QUEM FALA: primeiro o data-speaker do proprio dialogue-line, depois a classe do
         # avatar. Ler so a classe produzia falso positivo em todo material que nomeia o
@@ -299,8 +305,13 @@ def check_dialogue_voices(c, path, root, fails, warns):
             fails.append(f'dialogue-line SEM data-voice (pos {m.start()}): {tag[:90]}')
             continue
         voice = mv.group(1)
-        if voice not in VOICES:
-            fails.append(f'data-voice="{voice}" não existe em voices.json (disponíveis: {sorted(VOICES)})')
+        if voice not in voices:
+            # NÃO reescreva este texto. O GATE 8 usa o PREFIXO da mensagem como
+            # impressão digital do defeito (scripts/check_legacy_baseline.py, categoria()).
+            # Trocar 'não existe em voices.json' por qualquer outra coisa faz TODO defeito
+            # de voz legado do repo virar "defeito NOVO" e o gate reprova ~39 arquivos que
+            # este PR nem tocou. A orientação sobre cfg['voices'] vive no README.
+            fails.append(f'data-voice="{voice}" não existe em voices.json (disponíveis: {sorted(voices)})')
             continue
         lines.append((slide_of(m.start()), ma.group(1) if ma else '?',
                       voice, mt.group(1).replace("\\'", "'") if mt else None, m.start()))
@@ -321,10 +332,10 @@ def check_dialogue_voices(c, path, root, fails, warns):
     for sl, sp, v, t, pos in lines:
         by_slide.setdefault(sl, {}).setdefault(sp, set()).add(v)
     for sl, speakers in by_slide.items():
-        if len(speakers) > len(VOICES):
+        if len(speakers) > len(voices):
             fails.append(f'diálogo do slide {sl} tem {len(speakers)} falantes ({", ".join(speakers)}) '
-                         f'mas só há {len(VOICES)} vozes ({", ".join(sorted(VOICES))}) — impossível diferenciar. '
-                         f'Reescrever com menos falantes ou adicionar voz em voices.json')
+                         f'mas só há {len(voices)} vozes ({", ".join(sorted(voices))}) — impossível diferenciar. '
+                         f'Reescrever com menos falantes ou declarar vozes em cfg["voices"] da aula')
         used = {}
         for sp, vs in speakers.items():
             for v in vs:

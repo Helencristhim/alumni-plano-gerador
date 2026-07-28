@@ -71,6 +71,11 @@ PROF = os.path.join(ROOT, 'public', 'professor')
 ALUNO = os.path.join(ROOT, 'public', 'aluno')
 
 VOICES = json.load(open(os.path.join(HERE, 'voices.json'), encoding='utf-8'))
+# Voz de sotaque e decisao POR ALUNO: entra em cfg['voices'] da aula, nunca no
+# voices.json global (que vale pro roster inteiro). O gen_audio.py e o
+# validate_lesson.py resolvem pelo MESMO caminho — se o builder nao resolvesse,
+# ele abortaria em material correto antes mesmo de o gate rodar. Preenchido em
+# main(), assim que o config e lido. Ver README, secao 'Vozes'.
 
 MODEL = 'helen-mendes'
 # EIXO FRAMEWORK (public/data/frameworks.json é a FONTE ÚNICA — ver _build/model/FRAMEWORKS.md).
@@ -822,7 +827,11 @@ def extract_phrases(html):
     """
     out = []
     for line in html.split('\n'):
-        mv = re.search(r'data-voice="([a-z]+)"', line)
+        # [a-z0-9_]+ e NAO [a-z]+: chave de voz de sotaque tem underscore (dutch_m,
+        # nordic_m). Com [a-z]+ o hint NAO casava, a fala caia na alternancia
+        # arthur/ellen e o MP3 do personagem estrangeiro nascia com voz americana —
+        # o data-voice dizia uma coisa e o audio era outra.
+        mv = re.search(r'data-voice="([a-z0-9_]+)"', line)
         hint = mv.group(1) if mv else None
         # forma ANTIGA: o texto dentro da string JS. Frágil — apóstrofo do inglês
         # quebra o handler (o browser desescapa antes de compilar). Ainda lida para
@@ -1520,9 +1529,19 @@ def main():
     cfg_path = os.path.abspath(sys.argv[1])
     content_dir = os.path.dirname(cfg_path)
     cfg = json.load(open(cfg_path, encoding='utf-8'))
-    assert len(cfg['characters']) <= 3, 'máx 3 personagens por diálogo (e só há 2 vozes — ver voices.json)'
+    # vozes da AULA = global + cfg['voices'] (eixo de sotaque por aluno). MESMA resolucao
+    # do gen_audio.py e do validate_lesson.py.
+    global VOICES
+    _extra = cfg.get('voices') or {}
+    if isinstance(_extra, dict):
+        VOICES = {**VOICES, **_extra}
+    # 3 e limite do SHELL (so ha 3 cores de dialogo: 2 + .guest), nao de vozes.
+    assert len(cfg['characters']) <= 3, \
+        'máx 3 personagens por diálogo — o shell só tem 3 cores (2 + .guest)'
     for v in cfg['characters'].values():
-        assert v in VOICES, f'voz desconhecida no characters: {v}'
+        assert v in VOICES, (f'voz desconhecida no characters: {v} '
+                             f'(disponíveis: {sorted(VOICES)}). Voz de sotaque vai em '
+                             f'cfg["voices"] da aula — ver _build/model/README.md)')
     assert_framework(cfg)
 
     manifest = []

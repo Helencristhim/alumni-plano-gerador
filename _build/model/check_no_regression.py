@@ -76,8 +76,20 @@ def main():
                 else:
                     fails.append(f'{k} DIMINUIU: {old[k]} -> {cur[k]}')
         if old['bytes'] and cur['bytes'] < old['bytes'] * 0.9:
-            fails.append(f'arquivo ENCOLHEU {100 - cur["bytes"]*100//old["bytes"]}% '
-                         f'({old["bytes"]} -> {cur["bytes"]} bytes) — possível overwrite com versão velha')
+            # bytes honra o MESMO allowlist das outras métricas. Antes não honrava, e o
+            # resultado era um gate impossível de satisfazer: quem removia aula DE
+            # PROPÓSITO declarava ex-lesson/stamp por transição exata e mesmo assim
+            # levava ✗ no byte. Sobrava desligar o gate inteiro (perdendo a proteção das
+            # outras métricas) ou não remover nada. A exceção continua sendo por
+            # TRANSIÇÃO EXATA — não cobre nenhuma outra redução daquele arquivo.
+            motivo = declarado(path, 'bytes', old['bytes'], cur['bytes'])
+            pct = 100 - cur['bytes'] * 100 // old['bytes']
+            if motivo:
+                print(f'   ⚠ bytes diminuiu {pct}% ({old["bytes"]} -> {cur["bytes"]}), '
+                      f'DECLARADO: {motivo}')
+            else:
+                fails.append(f'arquivo ENCOLHEU {pct}% '
+                             f'({old["bytes"]} -> {cur["bytes"]} bytes) — possível overwrite com versão velha')
         if fails:
             rc = 1
             print(f'❌ {path}:')
