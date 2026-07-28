@@ -35,7 +35,14 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STAGES = ["Warm-up", "Check it out", "Language for Communication",
           "Pre-communicative", "Communicative Task", "Feedback"]
-MIN_SLIDES, MAX_SLIDES = 6, 10
+# O TETO subiu de 10 para 12 em 28/07/2026. O que o documento pedagógico fixa é a
+# sequência de STAGES — e essa continua checada uma a uma, logo abaixo. Slide é
+# APRESENTAÇÃO: um stage cabe em dois slides quando juntar os dois na mesma tela
+# confunde. Foi o que o feedback da chefe cobrou: separar gist e detail (estavam na
+# mesma tela e "fica confuso") e fechar com uma discussão sobre as tarefas, porque
+# "finalizar só com a atividade comunicativa é um corte muito abrupto". Nos dois casos
+# o número de stages não mudou — mudou onde a quebra de tela cai.
+MIN_SLIDES, MAX_SLIDES = 6, 12
 
 RE_FW = re.compile(r'<meta name="alumni-framework" content="([^"]*)"')
 RE_SLIDE = re.compile(r'data-slide="\d+"')

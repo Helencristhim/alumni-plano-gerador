@@ -588,8 +588,25 @@ def check_task_before_exposure(c, fails, warns):
             return 'reading'
         return None
 
+    # A preferência por GIST vale só para a geração nova (carimbo alumni-gen). Aula já
+    # publicada nasceu com a regra antiga — o slide de tarefa dela carrega as afirmações
+    # do true/false, e é assim que ela tem de continuar passando. Trocar a regra para
+    # todo mundo acusaria ~50 aulas no ar por não terem previsto uma decisão de hoje:
+    # exatamente o erro que o carimbo existe para impedir (REGRA 30).
+    nova_geracao = _gen(c) >= GEN_PLAYER_E_PREDICAO
+
     def perguntas_checagem(ch):
         e = _sem_teacher(ch)
+        # GIST PRIMEIRO — espelha _perguntas_da_checagem() do builder. A tarefa de
+        # pré-leitura é de IDEIA, não de detalhe: pedir cinco afirmações de true/false
+        # antes da primeira leitura cobra detalhe e gist ao mesmo tempo, e ainda entrega
+        # de graça o que o exercício seguinte ia perguntar (feedback da chefe, 28/07).
+        # As duas funções TÊM de concordar: se divergirem, o builder emite uma coisa e
+        # o gate cobra outra — e a aula não passa nunca.
+        if nova_geracao and 'class="ic-choices"' in e:
+            m = re.search(r'<div class="ic-card-h3">(.*?)</div><div class="ic-choices">', e, re.S)
+            if m:
+                return [_txt(m.group(1))]
         if 'ic-tfrow' in e:
             out = []
             for st in re.findall(r'<span class="ic-stmt">(.*?)</span>\s*<span class="ic-verdict', e, re.S):
@@ -732,6 +749,44 @@ def check_predicao(c, fails):
             f'perguntas em expectativa em vez de teste. O builder emite sozinho '
             f'(build_from_model.inject_predict_prompts / _slide_de_tarefa); .ic-predict some '
             f'só se alguém apagou')
+
+
+def check_input_no_detalhe(c, fails):
+    """O INPUT VOLTA PARA A ETAPA DE DETALHE (bloqueante, escopado à geração nova).
+
+    Feedback da chefe (28/07/2026):
+        *"Antes do slide 07, para a parte do detail/true or false, o texto deveria
+        aparecer novamente."* (Lara) · *"Slide 3 — atividade de True or False, mas falta
+        ter o áudio novamente."* (Vitor)
+
+    Compreensão acontece em DUAS passadas: a primeira busca a IDEIA e pode ser feita com
+    o input longe; a segunda cobra DETALHE, e aí o aluno precisa voltar ao texto/áudio
+    para localizar a evidência. True/false sem o input na tela é o mesmo defeito da
+    REGRA 2.1 um estágio adiante — testa memória, não compreensão.
+
+    Quem injeta é o builder (inject_input_recap); este gate garante que ninguém removeu.
+    """
+    if _gen(c) < GEN_PLAYER_E_PREDICAO:
+        return
+    i, j = c.find('<div class="slides-container"'), c.find('</div><!-- /slides-container -->')
+    if i < 0 or j < 0:
+        return
+    partes = [p for p in re.split(r'(?=<div class="slide )', c[i:j]) if 'data-slide=' in p]
+    houve_input, faltando = False, []
+    for ch in partes:
+        e = _sem_teacher(ch)
+        tem_tf = 'ic-tfrow' in e
+        tem_input_aqui = 'ic-reading-recap' in e or 'ic-reading' in e or 'lp-play' in e
+        if tem_tf and houve_input and not tem_input_aqui:
+            faltando.append((re.search(r'data-slide="(\d+)"', ch) or [None, '?'])[1])
+        if 'class="ic-reading"' in e or 'lp-play' in e:
+            houve_input = True
+    if faltando:
+        fails.append(
+            f'DETALHE SEM O INPUT NA TELA (slides {", ".join(faltando)}): o true/false cobra '
+            f'evidência de um texto/áudio que não está mais visível — vira teste de memória, o '
+            f'mesmo defeito da REGRA 2.1 um estágio adiante. O builder traz o input de volta '
+            f'sozinho: build_from_model.inject_input_recap()')
 
 
 def check_handlers_exist(c, fails):
@@ -1255,6 +1310,7 @@ def validate(path):
     # defeito NÃO é tocado nem reportado — REGRA 30/31.
     check_player_vivo(c, fails)
     check_predicao(c, fails)
+    check_input_no_detalhe(c, fails)
     check_handlers_exist(c, fails)
     check_speaktext_escaping(c, fails)
     check_audio_collision(c, fails)

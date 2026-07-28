@@ -333,6 +333,10 @@ body.slide-mode .teacher-t { display:flex; }
 .slide-dark .lp .lp-speed-btn { border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.85); }
 .lp .lp-speed-active { background:var(--accent);border-color:var(--accent);color:#fff; }
 .slide-dark .lp .lp-speed-active { background:var(--accent);border-color:var(--accent);color:#fff; }
+/* O texto de volta na etapa de DETALHE: menor, para caber com o true/false na mesma tela.
+   Leitura de detalhe se faz COM o texto na frente — sem ele o exercicio testa memoria. */
+.ic-reading-recap { font-size:.86rem;line-height:1.5;max-height:34vh;overflow-y:auto;margin-bottom:.9rem;opacity:.95 }
+.ic-reading-recap .ic-rtitle { font-size:.9rem }
 /* Pergunta de predicao: vem ANTES da exposicao, e nao e item de compreensao (REGRA 2.2) */
 .ic-predict { max-width:560px;margin:0 auto 1rem;padding:.7rem 1rem;border-left:3px solid var(--accent);background:var(--accent-dim);border-radius:0 8px 8px 0;font-size:.92rem;font-style:italic;color:var(--text); }
 .slide-dark .ic-predict { background:rgba(255,255,255,.07);color:rgba(255,255,255,.92); }
@@ -615,6 +619,11 @@ body.slide-mode .nav-bar { display:flex; }
    o scroll interno proprio — assim da pra rolar ate a ultima alternativa sem cortar nada. */
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner { max-height: calc(100vh - 11rem); overflow-y: auto; padding-right: .5rem; padding-bottom: 1rem; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .ic-reading { max-height: none; overflow: visible; }
+/* EXCECAO: no slide de DETALHE o texto divide a tela com o true/false, entao ele NAO pode
+   largar a altura (a regra acima existe para o slide do texto SOZINHO). Sem este cap, o
+   texto empurra o exercicio para baixo da dobra — medido: primeiro .ic-tfrow em 778px num
+   viewport de 720. Seletor tem de bater a especificidade da regra acima E vir depois. */
+.slide:has(.ic-reading-recap) .ic-reading.ic-reading-recap { max-height: 28vh; overflow-y: auto; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar { width: 8px; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 .ic-reading::-webkit-scrollbar { width: 8px; }

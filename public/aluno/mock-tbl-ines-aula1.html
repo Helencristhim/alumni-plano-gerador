@@ -300,6 +300,10 @@ body.slide-mode .teacher-t { display:flex; }
 .slide-dark .lp .lp-speed-btn { border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.85); }
 .lp .lp-speed-active { background:var(--accent);border-color:var(--accent);color:#fff; }
 .slide-dark .lp .lp-speed-active { background:var(--accent);border-color:var(--accent);color:#fff; }
+/* O texto de volta na etapa de DETALHE: menor, para caber com o true/false na mesma tela.
+   Leitura de detalhe se faz COM o texto na frente — sem ele o exercicio testa memoria. */
+.ic-reading-recap { font-size:.86rem;line-height:1.5;max-height:34vh;overflow-y:auto;margin-bottom:.9rem;opacity:.95 }
+.ic-reading-recap .ic-rtitle { font-size:.9rem }
 /* Pergunta de predicao: vem ANTES da exposicao, e nao e item de compreensao (REGRA 2.2) */
 .ic-predict { max-width:560px;margin:0 auto 1rem;padding:.7rem 1rem;border-left:3px solid var(--accent);background:var(--accent-dim);border-radius:0 8px 8px 0;font-size:.92rem;font-style:italic;color:var(--text); }
 .slide-dark .ic-predict { background:rgba(255,255,255,.07);color:rgba(255,255,255,.92); }
@@ -582,6 +586,11 @@ body.slide-mode .nav-bar { display:flex; }
    o scroll interno proprio — assim da pra rolar ate a ultima alternativa sem cortar nada. */
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner { max-height: calc(100vh - 11rem); overflow-y: auto; padding-right: .5rem; padding-bottom: 1rem; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .ic-reading { max-height: none; overflow: visible; }
+/* EXCECAO: no slide de DETALHE o texto divide a tela com o true/false, entao ele NAO pode
+   largar a altura (a regra acima existe para o slide do texto SOZINHO). Sem este cap, o
+   texto empurra o exercicio para baixo da dobra — medido: primeiro .ic-tfrow em 778px num
+   viewport de 720. Seletor tem de bater a especificidade da regra acima E vir depois. */
+.slide:has(.ic-reading-recap) .ic-reading.ic-reading-recap { max-height: 28vh; overflow-y: auto; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar { width: 8px; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 .ic-reading::-webkit-scrollbar { width: 8px; }
@@ -819,10 +828,7 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Read <span class="accent">for this</span></h2>
     <div class="ic-predict">Before you start: what do you think this text is going to be about?</div>
     <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
-      <div class="comp-q comp-q-task"><div class="q-text">The earn-out is the part of the price paid at closing.</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">In the example, the buyer acted improperly.</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">English courts readily imply a duty to protect the earn-out.</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">The text advises spending leverage on the measuring machinery rather than on price.</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">Which sentence best captures the argument?</div></div>
     </div>
   </div>
 </div>
@@ -841,13 +847,21 @@ body.slide-mode .nav-bar { display:flex; }
     <div class="chapter-label">Input &amp; Pre-task</div>
     <h2 class="slide-heading">Did you get the <span class="accent">argument?</span></h2>
     <div class="ic-card"><div class="ic-card-h3">Which sentence best captures the argument?</div><div class="ic-choices"><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">a</span><span>Earn-outs are unfair and should be avoided in cross-border deals.</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="true" onclick="icPickGist(this)"><span class="ic-opt">b</span><span>In an earn-out, the definitions matter more than the number.</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">c</span><span>English courts usually protect sellers in earn-out disputes.</span><span class="ic-badge">&#10003; Main idea</span></div></div></div>
-    <div style="margin-top:1.1rem"><div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The earn-out is the part of the price paid at closing.<span class="ic-just">&#8594; It is paid only if the business hits targets AFTER closing.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">In the example, the buyer acted improperly.<span class="ic-just">&#8594; "nothing improper has happened" — the investment was defensible.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">English courts readily imply a duty to protect the earn-out.<span class="ic-just">&#8594; "have been reluctant to imply that duty where the contract is silent"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The text advises spending leverage on the measuring machinery rather than on price.<span class="ic-just">&#8594; "spend its remaining leverage not on price, but on the machinery that measures performance"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
-<div class="ic-answer"><div class="ic-ans-head" onclick="icToggleAnswer(this)"><span class="ic-ico">+</span>Reveal answer key</div><div class="ic-ans-body"><div class="ic-ans-inner"><div class="ic-akey"><span class="ic-a">1 = False</span><span class="ic-a">2 = False</span><span class="ic-a">3 = False</span><span class="ic-a">4 = True</span></div></div></div></div></div>
+  </div>
+</div>
+
+<!-- ========== S3b · INPUT & PRE-TASK — detail (texto de volta na tela) ========== -->
+<div class="slide slide-light" data-slide="5" data-lesson="1" data-phase="2">
+  <div class="slide-inner">
+    <div class="chapter-label">Input &amp; Pre-task</div>
+    <h2 class="slide-heading">True or false &mdash; and <span class="accent">where</span></h2>
+    <div class="ic-reading ic-reading-recap"><div class="ic-rtitle">When the earn-out went quiet</div><p>In cross-border deals, the clause that causes the most litigation is rarely the one the parties argued about. It is the earn-out: the part of the price that the seller only receives if the business hits certain targets after closing. On paper it looks like a fair compromise. In practice it hands the buyer control of the very numbers that determine what the seller gets paid.</p><p>A common pattern goes like this. The seller accepts a lower headline price in exchange for an earn-out worth thirty per cent of the total. The buyer, now running the company, decides to invest heavily in a new market. The investment is defensible, even sensible, and it depresses profit for exactly the two years the earn-out is measured over. The seller receives nothing, and nothing improper has happened.</p><p>Experienced counsel therefore stop negotiating the number and start negotiating the definitions. What counts as profit. Who prepares the accounts. Whether the buyer owes any duty to operate the business so as to give the earn-out a fair chance. English courts have been reluctant to imply that duty where the contract is silent, which means silence is a choice with consequences.</p><p>The practical lesson is uncomfortable. In an earn-out, the party with less leverage should spend its remaining leverage not on price, but on the machinery that measures performance. Ask who holds the pen after closing. Whatever the answer, write it down.</p><div class="ic-src">Autoral, para uso pedag&oacute;gico</div></div><div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The earn-out is the part of the price paid at closing.<span class="ic-just">&#8594; It is paid only if the business hits targets AFTER closing.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">In the example, the buyer acted improperly.<span class="ic-just">&#8594; "nothing improper has happened" — the investment was defensible.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">English courts readily imply a duty to protect the earn-out.<span class="ic-just">&#8594; "have been reluctant to imply that duty where the contract is silent"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The text advises spending leverage on the measuring machinery rather than on price.<span class="ic-just">&#8594; "spend its remaining leverage not on price, but on the machinery that measures performance"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+<div class="ic-answer"><div class="ic-ans-head" onclick="icToggleAnswer(this)"><span class="ic-ico">+</span>Reveal answer key</div><div class="ic-ans-body"><div class="ic-ans-inner"><div class="ic-akey"><span class="ic-a">1 = False</span><span class="ic-a">2 = False</span><span class="ic-a">3 = False</span><span class="ic-a">4 = True</span></div></div></div></div>
   </div>
 </div>
 
 <!-- ========== S4 · LANGUAGE FOR THE TASK ========== -->
-<div class="slide slide-light" data-slide="5" data-lesson="1" data-phase="3">
+<div class="slide slide-light" data-slide="6" data-lesson="1" data-phase="3">
   <div class="slide-inner">
     <div class="chapter-label">Language for the Task</div>
     <h2 class="slide-heading">Six <span class="accent">moves</span>, not six words</h2>
@@ -858,28 +872,29 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== S5 · TASK CYCLE — task 1 (obrigatoria) ========== -->
-<div class="slide slide-light" data-slide="6" data-lesson="1" data-phase="4">
+<div class="slide slide-light" data-slide="7" data-lesson="1" data-phase="4">
   <div class="slide-inner">
     <div class="chapter-label">Task Cycle</div>
     <h2 class="slide-heading">Negotiate the <span class="accent">machinery</span></h2>
-    <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Task 1 &mdash; obligatory &middot; 16 min</div><p>You act for the SELLER of a logistics company. The buyer (your teacher, as Mr Hall) has proposed: lower headline price, plus an earn-out worth 30% measured on EBITDA over two years, accounts prepared by the buyer, no operating covenants.</p></div><div class="ic-scenario"><div class="ic-who">The outcome you must produce</div><p>By the end, you and Mr Hall must have agreed OUT LOUD on three things: (1) who prepares the accounts, (2) one definition you have changed and how, and (3) what happens if the buyer opens a new market. Write nothing until you have all three.</p></div><div class="ic-scenario"><div class="ic-who">The constraint</div><p>You may not simply demand a higher price. If you go there, Mr Hall will accept &mdash; and remove the earn-out protections you actually need.</p></div></div>
+    <div class="ic-block"><div class="ic-scenario"><div class="ic-who">The case on your desk</div><p>You act for the SELLER of a logistics company. The buyer's draft has landed and it says four things: headline price 18% below the original offer &middot; an earn-out worth 30% of the total &middot; measured on EBITDA over two years &middot; accounts prepared by the buyer, with no operating covenants.</p></div><div class="ic-scenario"><div class="ic-who">What you produce</div><p>Talk your client through it, out loud, as if she were on the call. Three fixes, ranked: which one you would spend your leverage on first, second, third &mdash; and what you would say to the buyer to get each one. Not a summary of the risks: the fixes, in order, in your words.</p></div><div class="ic-scenario"><div class="ic-who">The constraint that makes it hard</div><p>Price is off the table. Your client has already said she will not reopen the number. Everything you win, you win on the machinery.</p></div></div>
+<div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Your teacher will keep pushing &mdash; expect these</span></div><ul class="ic-qs"><li><span class="ic-qnum">1</span><span>Why that one first? What makes it worth more than the other two?</span></li><li><span class="ic-qnum">2</span><span>The buyer says no to your first fix. What is your second sentence?</span></li><li><span class="ic-qnum">3</span><span>How do you explain the risk to a client who is not a lawyer, in one sentence?</span></li><li><span class="ic-qnum">4</span><span>If you could only have ONE of the three, which do you drop last, and why?</span></li></ul></div>
 <div class="ic-card"><div class="ic-card-h3">Useful language</div><div class="ic-bank"><span class="ic-b">I'd want to understand what sits behind that number.</span><span class="ic-b">That's workable in principle, provided that...</span><span class="ic-b">Let me push back on one thing.</span><span class="ic-b">Where does that leave my client if...?</span><span class="ic-b">I can live with the number if we fix the definition.</span><span class="ic-b">Can we park that and come back to it?</span><span class="ic-b">Help me understand the rationale.</span><span class="ic-b">On that basis, yes.</span></div></div>
   </div>
 </div>
 
 <!-- ========== S6 · TASK CYCLE — task 2 (contingente) ========== -->
-<div class="slide slide-light" data-slide="7" data-lesson="1" data-phase="4">
+<div class="slide slide-light" data-slide="8" data-lesson="1" data-phase="4">
   <div class="slide-inner">
     <div class="chapter-label">Task Cycle</div>
     <h2 class="slide-heading">One minute. Sign, or <span class="accent">walk?</span></h2>
-    <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Task 2 &mdash; contingent on time &middot; 10 min</div><p>Not a negotiation this time. Your client, the seller, is on the phone. Mr Hall will not move on the accounts point. She has sixty seconds and one question: sign, or walk?</p></div><div class="ic-scenario"><div class="ic-who">The three options on the table</div><p>(1) Sign as it stands and accept the risk. (2) Walk away and go back to the second bidder, who offered less cash but no earn-out. (3) Sign, but only with an independent reviewer on the accounts &mdash; which means another two weeks and a buyer who may lose patience.</p></div></div>
+    <div class="ic-block"><div class="ic-scenario"><div class="ic-who">The situation</div><p>Not a negotiation this time. Your client, the seller, is on the phone. Mr Hall will not move on the accounts point. She has sixty seconds and one question: sign, or walk?</p></div><div class="ic-scenario"><div class="ic-who">The three options on the table</div><p>(1) Sign as it stands and accept the risk. (2) Walk away and go back to the second bidder, who offered less cash but no earn-out. (3) Sign, but only with an independent reviewer on the accounts &mdash; which means another two weeks and a buyer who may lose patience.</p></div></div>
 <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">What your client needs from you, in this order</span></div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>The recommendation &mdash; one of the three, said in the first sentence. Not a summary of the options.</span></li><li><span class="ic-qnum">2</span><span>The reason, compressed into one sentence a non-lawyer can repeat to her board.</span></li><li><span class="ic-qnum">3</span><span>The risk you are asking her to accept, named out loud. Not hedged.</span></li><li><span class="ic-qnum">4</span><span>What you need from her to move: a decision, a date, or a number.</span></li></ol></div>
 <div class="ic-followup">Your teacher will take the opposite view and give you one hard objection. Hold the recommendation or change it &mdash; either is fine, as long as the reason changes with it.</div>
   </div>
 </div>
 
 <!-- ========== S7 · FOCUS ON FORM — correcao diferida ========== -->
-<div class="slide slide-dark" data-slide="8" data-lesson="1" data-phase="5">
+<div class="slide slide-dark" data-slide="9" data-lesson="1" data-phase="5">
   <div class="slide-inner">
     <div class="chapter-label" style="color:var(--accent-light)">Focus on Form</div>
     <h2 class="slide-heading" style="color:#fff">Now we look at the <span class="accent">form</span></h2>
@@ -888,7 +903,7 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== S8 · WRAP-UP ========== -->
-<div class="slide slide-dark" data-slide="9" data-lesson="1" data-phase="6">
+<div class="slide slide-dark" data-slide="10" data-lesson="1" data-phase="6">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label" style="color:var(--accent-light)">Wrap-up</div>
     <h2 class="slide-heading" style="color:#fff">Before you <span class="accent">go</span></h2>
@@ -1007,7 +1022,7 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 9;
+var totalSlides = 10;
 var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
 
 function changeSlide(dir) {

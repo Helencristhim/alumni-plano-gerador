@@ -82,8 +82,9 @@ FRAMEWORK_DEFAULT = 'imersivo-prototipo'
 # invariante nova, e a aula carrega para sempre a versão em que nasceu. É isso que
 # permite criar gate novo sem acusar o passado: o gate roda só em quem nasceu depois
 # dele (ver check_player_vivo / check_predicao em validate_lesson.py).
-#   1 = player de listening completo + pergunta de predição + banco do gap-fill
-#       desembaralhado (28/07/2026, feedback da chefe nos mocks de framework)
+#   1 = player de listening completo · pergunta de predição · banco do gap-fill
+#       desembaralhado · tarefa de pré-leitura em nível de GIST · input de volta na
+#       etapa de detalhe (28/07/2026, feedback da chefe nos mocks de framework)
 BUILDER_GEN = 1
 MODEL_ACCENT = ('#BE123C', '#be123c')
 MODEL_ACCENT_LIGHT = ('#F43F5E', '#f43f5e')
@@ -413,12 +414,37 @@ def _exposicao(ch):
     return None
 
 
+def _pergunta_de_gist(ch):
+    """A pergunta de GIST do slide (o prompt do bloco kind:'gist'), sem as alternativas."""
+    ch = _estrutura(ch)
+    if 'class="ic-choices"' not in ch:
+        return None
+    m = re.search(r'<div class="ic-card-h3">(.*?)</div><div class="ic-choices">', ch, re.S)
+    return _texto(m.group(1)) if m else None
+
+
 def _perguntas_da_checagem(ch):
     """(kind, [perguntas]) do slide de CHECAGEM — a fonte ÚNICA das perguntas.
 
+    ORDEM DE PREFERÊNCIA: gist > true/false > comp-q.
+
+    A TAREFA DE PRÉ-LEITURA É DE GIST, NUNCA DE DETALHE. Até 28/07/2026 esta função
+    pegava as afirmações do True/False, e o slide de tarefa abria com cinco frases
+    afirmativas sobre um texto que a aluna ainda não tinha visto. Feedback da chefe:
+    *"o slide 4 pode ser um exercício de prediction antes do input, mas não faz muito
+    sentido ser algo de detail; tem que ser de gist, senão a sequência fica confusa."*
+
+    Ela está certa e o motivo é a ordem em que se lê: primeiro se busca a IDEIA (uma
+    passada rápida), depois o DETALHE (com o texto na frente). Uma tarefa de detalhe
+    antes da primeira leitura pede as duas coisas ao mesmo tempo — e ainda entrega, de
+    graça, cinco afirmações que o exercício seguinte ia cobrar.
+
     dialogue -> .q-text do slide de Comprehension
-    reading  -> .ic-stmt do True/False, SEM a justificativa (.ic-just), que é gabarito.
+    reading  -> o prompt do gist; só na falta dele, as .ic-stmt do True/False.
     """
+    g = _pergunta_de_gist(ch)
+    if g:
+        return 'gist', [g]
     ch = _estrutura(ch)
     if 'ic-tfrow' in ch:
         out = []
@@ -558,6 +584,56 @@ def expand_audio_players(slides):
         return _LP_TPL.format(id=pid, src=src.group(1), style=st, qs=qs)
 
     return re.sub(r'<div class="audio-player"([^>]*)>\s*</div>', repl, slides)
+
+
+def inject_input_recap(slides):
+    """O INPUT VOLTA PARA O DETALHE (feedback da chefe, 28/07/2026).
+
+        *"Antes do slide 07, para a parte do detail/true or false, o texto deveria
+        aparecer novamente."* (Lara)  ·  *"Slide 3 — atividade de True or False, mas
+        falta ter o áudio novamente."* (Vitor)
+
+    Leitura/escuta acontece em DUAS passadas com propósitos diferentes: a primeira busca
+    a ideia (gist) e pode ser feita com o texto longe; a segunda cobra DETALHE — e aí o
+    aluno precisa VOLTAR ao input para localizar a evidência. Sem o texto na tela, o
+    true/false vira memória, que é exatamente o defeito que a REGRA 2.1/2.2 combate, só
+    que um estágio adiante.
+
+    O que injeta, antes do bloco de true/false:
+      leitura -> uma cópia compacta do texto (.ic-reading-recap)
+      áudio   -> o player de novo, com ID PRÓPRIO (mp-r*). Copiar o id do player
+                 original faria getElementById devolver o primeiro, e o segundo player
+                 ficaria morto — dois controles disputando o mesmo áudio.
+
+    IDEMPOTENTE. Aula sem true/false depois de exposição = no-op.
+    """
+    partes = re.split(r'(?=<div class="slide )', slides)
+    ultimo_texto, ultimo_audio, n = None, None, [0]
+    out = []
+    for ch in partes:
+        est = _estrutura(ch)
+        i = est.find('<div class="ic-reading">')
+        if i >= 0:
+            fim = _match_div_end(est, i)          # o bloco tem divs aninhados (rtitle/src):
+            if fim > 0:                            # regex .*? cortaria no primeiro </div>
+                ultimo_texto = est[i:fim]
+        ma = re.search(r'data-src="([^"]+\.mp3)"', est)
+        if ma and 'lp-play' in est:
+            ultimo_audio = ma.group(1)
+        if 'ic-tfrow' in est and 'ic-reading-recap' not in est and 'id="mp-r' not in est:
+            recap = None
+            if ultimo_texto:
+                recap = ultimo_texto.replace('<div class="ic-reading">',
+                                             '<div class="ic-reading ic-reading-recap">', 1)
+            elif ultimo_audio:
+                n[0] += 1
+                recap = _LP_TPL.format(id=f'mp-r{n[0]}', src=ultimo_audio, qs='',
+                                       style=' style="max-width:460px;margin:0 auto 1rem"')
+            if recap:
+                ch = ch.replace('<div class="ic-card"><div class="ic-tf">',
+                                recap + '<div class="ic-card"><div class="ic-tf">', 1)
+        out.append(ch)
+    return ''.join(out)
 
 
 def inject_task_slides(slides):
@@ -1100,6 +1176,9 @@ def build_standalone(cfg, content_dir, manifest):
     # A pergunta de PREDIÇÃO antes do áudio (o slide de tarefa ganha a dele em
     # _slide_de_tarefa). Idempotente; aula sem listening = no-op.
     slides = inject_predict_prompts(slides)
+    # O INPUT VOLTA para a etapa de DETALHE: leitura de detalhe se faz COM o texto na
+    # frente; sem ele o true/false vira memória. Idempotente; sem true/false = no-op.
+    slides = inject_input_recap(slides)
     # A TAREFA VEM ANTES DA EXPOSIÇÃO (REGRA 2.2): emite o slide de perguntas antes de
     # todo diálogo/leitura, a partir das perguntas do slide de checagem. Idempotente e
     # renumera os data-slide. Aula sem diálogo nem leitura = no-op.

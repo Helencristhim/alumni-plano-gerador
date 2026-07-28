@@ -300,6 +300,10 @@ body.slide-mode .teacher-t { display:flex; }
 .slide-dark .lp .lp-speed-btn { border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.85); }
 .lp .lp-speed-active { background:var(--accent);border-color:var(--accent);color:#fff; }
 .slide-dark .lp .lp-speed-active { background:var(--accent);border-color:var(--accent);color:#fff; }
+/* O texto de volta na etapa de DETALHE: menor, para caber com o true/false na mesma tela.
+   Leitura de detalhe se faz COM o texto na frente — sem ele o exercicio testa memoria. */
+.ic-reading-recap { font-size:.86rem;line-height:1.5;max-height:34vh;overflow-y:auto;margin-bottom:.9rem;opacity:.95 }
+.ic-reading-recap .ic-rtitle { font-size:.9rem }
 /* Pergunta de predicao: vem ANTES da exposicao, e nao e item de compreensao (REGRA 2.2) */
 .ic-predict { max-width:560px;margin:0 auto 1rem;padding:.7rem 1rem;border-left:3px solid var(--accent);background:var(--accent-dim);border-radius:0 8px 8px 0;font-size:.92rem;font-style:italic;color:var(--text); }
 .slide-dark .ic-predict { background:rgba(255,255,255,.07);color:rgba(255,255,255,.92); }
@@ -582,6 +586,11 @@ body.slide-mode .nav-bar { display:flex; }
    o scroll interno proprio — assim da pra rolar ate a ultima alternativa sem cortar nada. */
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner { max-height: calc(100vh - 11rem); overflow-y: auto; padding-right: .5rem; padding-bottom: 1rem; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .ic-reading { max-height: none; overflow: visible; }
+/* EXCECAO: no slide de DETALHE o texto divide a tela com o true/false, entao ele NAO pode
+   largar a altura (a regra acima existe para o slide do texto SOZINHO). Sem este cap, o
+   texto empurra o exercicio para baixo da dobra — medido: primeiro .ic-tfrow em 778px num
+   viewport de 720. Seletor tem de bater a especificidade da regra acima E vir depois. */
+.slide:has(.ic-reading-recap) .ic-reading.ic-reading-recap { max-height: 28vh; overflow-y: auto; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar { width: 8px; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 .ic-reading::-webkit-scrollbar { width: 8px; }
@@ -795,7 +804,7 @@ body.slide-mode .nav-bar { display:flex; }
     <div class="chapter-label">Let's Get Started</div>
     <h2 class="slide-heading">When the plan <span class="accent">changes</span></h2>
     <div style="max-width:620px;margin:1.3rem auto 0;display:flex;flex-direction:column;gap:.7rem">
-      <div class="comp-q comp-q-task"><div class="q-text">1. Think of a project that changed after it started. What changed?</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">1. Think of a project at your work that changed after it started. What changed?</div></div>
       <div class="comp-q comp-q-task"><div class="q-text">2. Who had to be told? How did that conversation go?</div></div>
       <div class="comp-q comp-q-task"><div class="q-text">3. When something goes wrong at work, do you prefer to call or to write? Why?</div></div>
       <div class="comp-q comp-q-task"><div class="q-text">4. Listen to this voicemail. What does the client actually want?</div></div>
@@ -831,11 +840,7 @@ body.slide-mode .nav-bar { display:flex; }
     <h2 class="slide-heading">Read <span class="accent">for this</span></h2>
     <div class="ic-predict">Before you start: what do you think this text is going to be about?</div>
     <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
-      <div class="comp-q comp-q-task"><div class="q-text">The windows were going to arrive three weeks late.</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">Marina chose to keep the original blueprint.</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">The revision cost the client more money.</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">The final delay was four days.</div></div>
-      <div class="comp-q comp-q-task"><div class="q-text">The client liked the solution more than the phone call.</div></div>
+      <div class="comp-q comp-q-task"><div class="q-text">What is the main idea of the text?</div></div>
     </div>
   </div>
 </div>
@@ -862,7 +867,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="slide-inner">
     <div class="chapter-label">Brainstorming</div>
     <h2 class="slide-heading">True or false &mdash; and <span class="accent">why</span></h2>
-    <div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The windows were going to arrive three weeks late.<span class="ic-just">&#8594; "the special windows would arrive three weeks late"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">Marina chose to keep the original blueprint.<span class="ic-just">&#8594; She changed the layout of the back wall instead.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The revision cost the client more money.<span class="ic-just">&#8594; "nothing extra, because the new windows were inside the same budget"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The final delay was four days.<span class="ic-just">&#8594; "the deadline would move by four days, not three weeks"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">5</span><span class="ic-stmt">The client liked the solution more than the phone call.<span class="ic-just">&#8594; "what he liked was not the solution. It was that she called"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
+    <div class="ic-reading ic-reading-recap"><div class="ic-rtitle">The email nobody wants to write</div><p>Marina is an architect in Porto Alegre. Last Tuesday she opened her laptop and found a problem. The glass supplier for the Ribeiro house had just written to her: the special windows would arrive three weeks late.</p><p>She had two options. She could keep the original blueprint and accept a long delay, or she could change the layout of the back wall and use a different window. The second option was faster, but it meant a revision, and the client had already approved the first plan.</p><p>Marina did not send a long email. She called. She told the client what had happened, explained why she was suggesting the change, and said what it would cost: nothing extra, because the new windows were inside the same budget. She also said the deadline would move by four days, not three weeks.</p><p>The client asked two questions and then said yes. Later he told her that what he liked was not the solution. It was that she called before he had to ask.</p></div><div class="ic-card"><div class="ic-tf"><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">1</span><span class="ic-stmt">The windows were going to arrive three weeks late.<span class="ic-just">&#8594; "the special windows would arrive three weeks late"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">2</span><span class="ic-stmt">Marina chose to keep the original blueprint.<span class="ic-just">&#8594; She changed the layout of the back wall instead.</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">3</span><span class="ic-stmt">The revision cost the client more money.<span class="ic-just">&#8594; "nothing extra, because the new windows were inside the same budget"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="true" onclick="icRevealTf(this)"><span class="ic-qnum">4</span><span class="ic-stmt">The final delay was four days.<span class="ic-just">&#8594; "the deadline would move by four days, not three weeks"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div><div class="ic-tfrow" data-answer="false" onclick="icRevealTf(this)"><span class="ic-qnum">5</span><span class="ic-stmt">The client liked the solution more than the phone call.<span class="ic-just">&#8594; "what he liked was not the solution. It was that she called"</span></span><span class="ic-verdict ic-t">TRUE</span><span class="ic-verdict ic-f">FALSE</span></div></div></div>
   </div>
 </div>
 
@@ -912,7 +917,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="slide-inner">
     <div class="chapter-label">Your Turn</div>
     <h2 class="slide-heading">Make the <span class="accent">call</span></h2>
-    <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Situation</div><p>You are the architect. The client approved a plan last month. Today you found out the stone he chose is out of stock for six weeks. There is a similar stone, same price, available now.</p></div><div class="ic-scenario"><div class="ic-who">Your task</div><p>Call the client. Announce the change, give the reason, offer the alternative, and say what it costs him. Your teacher plays the client and will ask at least two questions.</p></div></div>
+    <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Situation</div><p>You are the architect. The client approved a plan last month. Today you found out the stone he chose is out of stock for six weeks. There is a similar stone, same price, available now.</p></div><div class="ic-scenario"><div class="ic-who">Part 1 &mdash; you speak first, without interruption</div><p>Make the call. Say the whole thing before anyone answers you: what changed, why it changed, what you can do instead, and what it costs him. Nobody will interrupt you. Take the time you need.</p></div><div class="ic-scenario"><div class="ic-who">Part 2 &mdash; then the client answers</div><p>Your teacher becomes the client and asks two questions. Answer them with the same four steps, in your own words.</p></div></div>
 <div class="ic-card"><div class="ic-card-h3">Useful language</div><div class="ic-bank"><span class="ic-b">We had to ...</span><span class="ic-b">That happened because of ...</span><span class="ic-b">Instead of ..., we can ...</span><span class="ic-b">That way, ...</span><span class="ic-b">The good news is ...</span><span class="ic-b">It will take about ...</span><span class="ic-b">Nothing changes on your side.</span></div></div>
   </div>
 </div>
