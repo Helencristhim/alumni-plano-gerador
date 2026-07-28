@@ -155,8 +155,23 @@ def matching_nao_ingles(blk):
     word ("a company or person who works with you"). 'marca' não carrega — e é isso que
     se quer barrar.
     """
+    # A lista PRECISA ser larga. Com a versao curta, definicoes em ingles perfeito eram
+    # acusadas de portugues: "staying calm under pressure" (under), "shared by both sides"
+    # (by, both), "total money earned" (nenhuma da lista curta). Falso positivo em gate de
+    # idioma e caro — manda reescrever o que ja esta certo, e a equipe aprende a ignorar.
+    # So entram palavras INEQUIVOCAMENTE inglesas: nenhuma delas existe em portugues, entao
+    # alargar aqui nao deixa PT passar. As respostas em PT que se quer barrar sao palavras
+    # SOLTAS ('marca', 'meta', 'prazo') — continuam sem nenhuma function word.
     FW = (r"\b(?:a|an|the|to|of|that|who|what|which|you|your|it|its|is|are|be|for|with|"
-          r"and|or|from|in|on|at|when|someone|something|not|no|more|than|other|others)\b")
+          r"and|or|from|in|on|at|when|someone|something|not|no|more|than|other|others|"
+          r"by|under|over|both|into|onto|after|before|during|without|within|about|"
+          r"between|through|across|around|against|towards|each|every|only|still|"
+          r"already|been|being|does|do|did|has|have|had|will|would|can|could|should|"
+          r"they|them|their|he|she|his|her|we|us|our|i|my|me|this|these|those|there|"
+          r"how|why|where|whose|whom|because|so|but|if|then|else|also|just|very|much|"
+          r"many|few|less|least|most|up|out|off|down|back|again|new|old|good|bad|"
+          r"way|thing|things|people|person|time|part|end|make|makes|made|say|says|"
+          r"said|give|gives|given|take|takes|taken|get|gets|got|put|keep|keeps)\b")
     ruins = []
     for m in re.finditer(r'<div class="match-row"[^>]*data-answer="([^"]*)"', blk):
         ans = m.group(1)
