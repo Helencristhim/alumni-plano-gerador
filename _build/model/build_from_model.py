@@ -813,7 +813,11 @@ def extract_phrases(html):
     """
     out = []
     for line in html.split('\n'):
-        mv = re.search(r'data-voice="([a-z]+)"', line)
+        # [a-z0-9_]+ e NAO [a-z]+: chave de voz de sotaque tem underscore (dutch_m,
+        # nordic_m). Com [a-z]+ o hint NAO casava, a fala caia na alternancia
+        # arthur/ellen e o MP3 do personagem estrangeiro nascia com voz americana —
+        # o data-voice dizia uma coisa e o audio era outra.
+        mv = re.search(r'data-voice="([a-z0-9_]+)"', line)
         hint = mv.group(1) if mv else None
         # forma ANTIGA: o texto dentro da string JS. Frágil — apóstrofo do inglês
         # quebra o handler (o browser desescapa antes de compilar). Ainda lida para
