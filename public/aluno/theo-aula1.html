@@ -6,6 +6,7 @@
     <meta name="alumni-model" content="teens">
     <meta name="alumni-level" content="A2">
     <meta name="alumni-framework" content="imersivo-prototipo">
+    <meta name="alumni-gen" content="1">
 <meta name="robots" content="noindex, nofollow">
 <title>Aluno -- Th&eacute;o | Lesson 1 -- Game Night</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
@@ -311,6 +312,34 @@ body.slide-mode .teacher-t { display:flex; }
 @keyframes wave { 0%,100%{height:8px} 50%{height:100%} }
 .waveform .bar:nth-child(1){animation-delay:0s;height:20px}.waveform .bar:nth-child(2){animation-delay:.1s;height:35px}.waveform .bar:nth-child(3){animation-delay:.2s;height:50px}.waveform .bar:nth-child(4){animation-delay:.15s;height:40px}.waveform .bar:nth-child(5){animation-delay:.3s;height:25px}.waveform .bar:nth-child(6){animation-delay:.05s;height:45px}.waveform .bar:nth-child(7){animation-delay:.25s;height:30px}.waveform .bar:nth-child(8){animation-delay:.12s;height:55px}.waveform .bar:nth-child(9){animation-delay:.35s;height:20px}.waveform .bar:nth-child(10){animation-delay:.08s;height:42px}.waveform .bar:nth-child(11){animation-delay:.22s;height:28px}.waveform .bar:nth-child(12){animation-delay:.18s;height:48px}
 .waveform-paused .bar { animation-play-state:paused; }
+/* ── Player de listening emitido pelo builder (shorthand .audio-player[data-src]).
+   Escopado em .lp: NAO toca no markup inline dos players antigos (.mock-player sem .lp).
+   Serve slide claro E escuro — o mesmo player, duas peles, sem duplicar HTML. ── */
+.lp { background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem; }
+.slide-dark .lp { background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18); }
+.lp .lp-seekbar { width:100%;height:6px;background:var(--border);border-radius:3px;cursor:pointer;position:relative; }
+.slide-dark .lp .lp-seekbar { background:rgba(255,255,255,.16); }
+.lp .lp-progress { width:0;height:100%;background:var(--accent);border-radius:3px;transition:width .1s; }
+.lp .lp-times { display:flex;justify-content:space-between;margin:.4rem 0 .6rem;font-size:.72rem;color:var(--text-mid); }
+.slide-dark .lp .lp-times { color:rgba(255,255,255,.82); }
+.lp .lp-row { display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:.6rem; }
+.lp .lp-btn { background:transparent;border:1px solid var(--border-light);color:var(--text);border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:.68rem;font-weight:700;transition:all .2s; }
+.slide-dark .lp .lp-btn { border-color:rgba(255,255,255,.32);color:#fff; }
+.lp .lp-btn:hover { border-color:var(--accent); }
+.lp .lp-play { background:var(--accent);border:none;color:#fff;width:52px;height:52px;display:inline-flex;align-items:center;justify-content:center; }
+.lp .lp-play:hover { transform:scale(1.06); }
+.lp .lp-speeds { display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap; }
+.lp .lp-speed-btn { background:transparent;border:1px solid var(--border-light);color:var(--text-mid);border-radius:6px;padding:.32rem .7rem;font-size:.72rem;cursor:pointer;transition:all .2s; }
+.slide-dark .lp .lp-speed-btn { border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.85); }
+.lp .lp-speed-active { background:var(--accent);border-color:var(--accent);color:#fff; }
+.slide-dark .lp .lp-speed-active { background:var(--accent);border-color:var(--accent);color:#fff; }
+/* O texto de volta na etapa de DETALHE: menor, para caber com o true/false na mesma tela.
+   Leitura de detalhe se faz COM o texto na frente — sem ele o exercicio testa memoria. */
+.ic-reading-recap { font-size:.86rem;line-height:1.5;max-height:34vh;overflow-y:auto;margin-bottom:.9rem;opacity:.95 }
+.ic-reading-recap .ic-rtitle { font-size:.9rem }
+/* Pergunta de predicao: vem ANTES da exposicao, e nao e item de compreensao (REGRA 2.2) */
+.ic-predict { max-width:560px;margin:0 auto 1rem;padding:.7rem 1rem;border-left:3px solid var(--accent);background:var(--accent-dim);border-radius:0 8px 8px 0;font-size:.92rem;font-style:italic;color:var(--text); }
+.slide-dark .ic-predict { background:rgba(255,255,255,.07);color:rgba(255,255,255,.92); }
 .play-btn { width:64px;height:64px;border-radius:50%;background:var(--accent);border:none;color:#fff;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;margin:1rem auto; }
 .play-btn:hover { transform:scale(1.08);box-shadow:0 8px 32px rgba(91,75,196,.4); }
 .play-btn svg { width:24px;height:24px;fill:#fff;stroke:none; }
@@ -590,6 +619,11 @@ body.slide-mode .nav-bar { display:flex; }
    o scroll interno proprio — assim da pra rolar ate a ultima alternativa sem cortar nada. */
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner { max-height: calc(100vh - 11rem); overflow-y: auto; padding-right: .5rem; padding-bottom: 1rem; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .ic-reading { max-height: none; overflow: visible; }
+/* EXCECAO: no slide de DETALHE o texto divide a tela com o true/false, entao ele NAO pode
+   largar a altura (a regra acima existe para o slide do texto SOZINHO). Sem este cap, o
+   texto empurra o exercicio para baixo da dobra — medido: primeiro .ic-tfrow em 778px num
+   viewport de 720. Seletor tem de bater a especificidade da regra acima E vir depois. */
+.slide:has(.ic-reading-recap) .ic-reading.ic-reading-recap { max-height: 28vh; overflow-y: auto; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar { width: 8px; }
 .slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 .ic-reading::-webkit-scrollbar { width: 8px; }
@@ -1133,6 +1167,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
   <div class="slide-inner">
     <div class="chapter-label">Before you listen</div>
     <h2 class="slide-heading">Listen <span class="accent">for this</span></h2>
+    <div class="ic-predict">Before you start: what do you think this conversation is going to be about?</div>
     <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">
       <div class="comp-q comp-q-task"><div class="q-text">1. Who did Nina play with last night?</div></div>
       <div class="comp-q comp-q-task"><div class="q-text">2. Did Nina win?</div></div>
@@ -1178,7 +1213,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
   <div class="slide-inner">
     <div class="chapter-label" style="color:var(--accent-light)">Listening 1</div>
     <h2 class="slide-heading" style="color:#fff">Voice message from a <span class="accent">teammate</span></h2>
-    <div class="audio-player" data-src="/audio/theo/a1_listening1_voice_message.mp3" style="max-width:560px;margin:1.2rem auto 0"></div>
+    <div class="mock-player lp" id="mp-a1" data-src="/audio/theo/a1_listening1_voice_message.mp3" style="max-width:560px;margin:1.2rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-a1')"><div class="lp-progress" id="progress-mp-a1"></div></div><div class="lp-times"><span id="time-current-mp-a1">0:00</span><span id="time-total-mp-a1">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-a1',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-a1" onclick="mpToggle('mp-a1')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-a1',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-a1',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a1',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-a1',1,this)">1x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a1',1.25,this)">1.25x</button></div></div>
+    <div class="ic-predict">Before you start: what do you think this audio is going to be about?</div>
     <div class="comp-questions" id="listening1Qs" style="max-width:560px;margin:1.2rem auto 0;display:flex;flex-direction:column;gap:.7rem">
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. How many matches did they play?</div><div class="q-answer">Four.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. Why did they lose the third match?</div><div class="q-answer">He made a bad call at the end.</div></div>
@@ -1192,7 +1228,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
   <div class="slide-inner">
     <div class="chapter-label" style="color:var(--accent-light)">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">A streamer ends the <span class="accent">stream</span></h2>
-    <div class="audio-player" data-src="/audio/theo/a1_listening2_streamer_recap.mp3" style="max-width:560px;margin:1.2rem auto 0"></div>
+    <div class="mock-player lp" id="mp-a2" data-src="/audio/theo/a1_listening2_streamer_recap.mp3" style="max-width:560px;margin:1.2rem auto 0"><div class="lp-seekbar" onclick="mpSeek(event,'mp-a2')"><div class="lp-progress" id="progress-mp-a2"></div></div><div class="lp-times"><span id="time-current-mp-a2">0:00</span><span id="time-total-mp-a2">0:00</span></div><div class="lp-row"><button class="lp-btn" onclick="mpSkip('mp-a2',-5)" aria-label="Back 5 seconds">-5s</button><button class="lp-btn lp-play" id="play-mp-a2" onclick="mpToggle('mp-a2')" aria-label="Play or pause"><svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg><svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg></button><button class="lp-btn" onclick="mpSkip('mp-a2',5)" aria-label="Forward 5 seconds">+5s</button></div><div class="lp-speeds"><button class="lp-speed-btn" onclick="mpSpeed('mp-a2',0.5,this)">0.5x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a2',0.75,this)">0.75x</button><button class="lp-speed-btn lp-speed-active" onclick="mpSpeed('mp-a2',1,this)">1x</button><button class="lp-speed-btn" onclick="mpSpeed('mp-a2',1.25,this)">1.25x</button></div></div>
+    <div class="ic-predict">Before you start: what do you think this audio is going to be about?</div>
     <div class="comp-questions" id="listening2Qs" style="max-width:560px;margin:1.2rem auto 0;display:flex;flex-direction:column;gap:.7rem">
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. How did the stream start?</div><div class="q-answer">She lost the first two matches.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What did she change?</div><div class="q-answer">She stopped rushing and played slower.</div></div>

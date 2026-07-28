@@ -77,6 +77,15 @@ MODEL = 'helen-mendes'
 # `model` no config = CATEGORIA (adulto/kids/teens). `framework` = o MÉTODO dentro dela.
 # Config sem a chave => o framework da casa, que é o que gera tudo hoje.
 FRAMEWORK_DEFAULT = 'imersivo-prototipo'
+
+# Versão do BUILDER que gerou a aula (<meta name="alumni-gen">). Sobe UMA vez por
+# invariante nova, e a aula carrega para sempre a versão em que nasceu. É isso que
+# permite criar gate novo sem acusar o passado: o gate roda só em quem nasceu depois
+# dele (ver check_player_vivo / check_predicao em validate_lesson.py).
+#   1 = player de listening completo · pergunta de predição · banco do gap-fill
+#       desembaralhado · tarefa de pré-leitura em nível de GIST · input de volta na
+#       etapa de detalhe (28/07/2026, feedback da chefe nos mocks de framework)
+BUILDER_GEN = 1
 MODEL_ACCENT = ('#BE123C', '#be123c')
 MODEL_ACCENT_LIGHT = ('#F43F5E', '#f43f5e')
 MODEL_ACCENT_RGB = 'rgba(190,18,60'
@@ -242,7 +251,16 @@ def render_block(b):
                 html += f'<span class="ic-blank"><span class="ic-n">{_esc(p[0])}</span>&nbsp;&nbsp;&nbsp;</span>'
             else:
                 html += _esc(p)
-        bank = ''.join(f'<span class="ic-b">{_esc(w)}</span>' for w in b['bank'])
+        # O BANCO NUNCA SAI NA ORDEM DAS RESPOSTAS (REGRA 24, o mesmo princípio do matching).
+        # Autorado, o banco tende a sair na ordem em que as lacunas aparecem — e aí o
+        # exercício vira cópia: a aluna lê de cima para baixo e acerta sem entender nada
+        # (achado no feedback dos mocks, 28/07/2026). Aqui a ordem é DESFEITA pelo builder,
+        # de forma determinística (ímpares e depois pares): não há como autorar errado, e
+        # o mesmo config gera sempre o mesmo HTML.
+        ordem = b['bank'][1::2] + b['bank'][0::2]
+        assert len(b['bank']) < 2 or ordem != list(b['bank']), (
+            f'gapfill: o banco {b["bank"]!r} ficou na ordem original depois do embaralho')
+        bank = ''.join(f'<span class="ic-b">{_esc(w)}</span>' for w in ordem)
         return f'<div class="ic-card"><div class="ic-gaptext">{html}</div><div class="ic-bank ic-soft">{bank}</div></div>'
     if k == 'reading':
         ps = ''.join(f'<p>{_esc(p)}</p>' for p in b['paras'])
@@ -396,12 +414,37 @@ def _exposicao(ch):
     return None
 
 
+def _pergunta_de_gist(ch):
+    """A pergunta de GIST do slide (o prompt do bloco kind:'gist'), sem as alternativas."""
+    ch = _estrutura(ch)
+    if 'class="ic-choices"' not in ch:
+        return None
+    m = re.search(r'<div class="ic-card-h3">(.*?)</div><div class="ic-choices">', ch, re.S)
+    return _texto(m.group(1)) if m else None
+
+
 def _perguntas_da_checagem(ch):
     """(kind, [perguntas]) do slide de CHECAGEM — a fonte ÚNICA das perguntas.
 
+    ORDEM DE PREFERÊNCIA: gist > true/false > comp-q.
+
+    A TAREFA DE PRÉ-LEITURA É DE GIST, NUNCA DE DETALHE. Até 28/07/2026 esta função
+    pegava as afirmações do True/False, e o slide de tarefa abria com cinco frases
+    afirmativas sobre um texto que a aluna ainda não tinha visto. Feedback da chefe:
+    *"o slide 4 pode ser um exercício de prediction antes do input, mas não faz muito
+    sentido ser algo de detail; tem que ser de gist, senão a sequência fica confusa."*
+
+    Ela está certa e o motivo é a ordem em que se lê: primeiro se busca a IDEIA (uma
+    passada rápida), depois o DETALHE (com o texto na frente). Uma tarefa de detalhe
+    antes da primeira leitura pede as duas coisas ao mesmo tempo — e ainda entrega, de
+    graça, cinco afirmações que o exercício seguinte ia cobrar.
+
     dialogue -> .q-text do slide de Comprehension
-    reading  -> .ic-stmt do True/False, SEM a justificativa (.ic-just), que é gabarito.
+    reading  -> o prompt do gist; só na falta dele, as .ic-stmt do True/False.
     """
+    g = _pergunta_de_gist(ch)
+    if g:
+        return 'gist', [g]
     ch = _estrutura(ch)
     if 'ic-tfrow' in ch:
         out = []
@@ -432,15 +475,165 @@ def _slide_de_tarefa(kind, perguntas, phase):
     qs = '\n      '.join(
         f'<div class="comp-q comp-q-task"><div class="q-text">{q}</div></div>' for q in perguntas)
     return (f'<div class="slide slide-light" data-slide="0" data-phase="{phase}" '
-            f'data-task-for="{kind}" data-teacher="{t}">\n'
+            f'data-task-for="{kind}" data-teacher="{t}{_PREDICT_T}">\n'
             f'  <div class="slide-inner">\n'
             f'    <div class="chapter-label">{label}</div>\n'
             f'    <h2 class="slide-heading">{head} <span class="accent">{acc}</span></h2>\n'
+            f'    {_predict_html(kind)}\n'
             f'    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">\n'
             f'      {qs}\n'
             f'    </div>\n'
             f'  </div>\n'
             f'</div>\n\n')
+
+
+def _predict_html(kind):
+    """A pergunta de PREDIÇÃO — o degrau que falta antes da tarefa.
+
+    Feedback da chefe (28/07/2026): mostrar as perguntas antes do texto/áudio faz sentido,
+    "mas seria interessante contextualizar essa etapa". Sem isso o aluno cai direto num
+    true/false sobre um texto que ele ainda não viu, e a tela parece um teste começando
+    pelo meio. A predição custa 20 segundos, ativa o conhecimento prévio e transforma a
+    lista de perguntas numa expectativa.
+
+    NÃO é item de compreensão e por isso NÃO usa .q-text: o gate da REGRA 2.2 compara
+    as .q-text da tarefa com as da checagem, e uma pergunta a mais aqui faria as duas
+    listas divergirem — a tarefa deixaria de ser "a mesma coisa que se cobra depois".
+    Classe própria (.ic-predict), fora da contagem.
+    """
+    alvo = {'reading': 'text', 'dialogue': 'conversation'}.get(kind, 'audio')
+    return (f'<div class="ic-predict">Before you start: what do you think this '
+            f'{alvo} is going to be about?</div>')
+
+
+_PREDICT_T = (' Antes de tudo, faça a pergunta de predição que está na tela: '
+              'aceite QUALQUER palpite, não confirme nem corrija — ela serve para ativar o '
+              'que a aluna já sabe, não para acertar.')
+
+
+def inject_predict_prompts(slides):
+    """Injeta a pergunta de predição nos slides de LISTENING (player + perguntas).
+
+    O slide de TAREFA (diálogo/leitura) já nasce com ela em _slide_de_tarefa(). O
+    listening não tem slide de tarefa — as perguntas dividem a tela com o player
+    (REGRA 2.1) —, então a predição entra aqui, ANTES do bloco de perguntas.
+
+    IDEMPOTENTE: slide que já tem .ic-predict não recebe outra.
+    """
+    partes = re.split(r'(?=<div class="slide )', slides)
+    out = []
+    for ch in partes:
+        est = _estrutura(ch)
+        tem_player = 'data-src="/audio/' in est
+        tem_qs = 'class="comp-questions"' in est
+        if tem_player and tem_qs and 'ic-predict' not in est:
+            ch = ch.replace('<div class="comp-questions"', _predict_html('audio') +
+                            '\n    <div class="comp-questions"', 1)
+            # e o professor precisa saber que a pergunta existe e para que serve
+            ch = re.sub(r'(data-teacher="(?:[^"\\]|\\.)*?)"', lambda m: m.group(1) + _PREDICT_T + '"',
+                        ch, count=1)
+        out.append(ch)
+    return ''.join(out)
+
+
+# Player de listening COMPLETO (REGRA 2.1: seekbar + tempo + play/pause + ±5s + velocidade).
+# O shorthand <div class="audio-player" data-src="..."></div> era um DIV VAZIO: sem
+# controles, sem CSS, sem JS. A aula ia ao ar com o MP3 gerado e um retângulo em branco
+# na tela — a professora abria o slide e não havia o que tocar (achado no feedback dos
+# mocks, 28/07/2026). O builder passa a expandir o shorthand para o markup real, que fala
+# com o mpGet/mpToggle já existentes no shell do modelo.
+_LP_TPL = (
+    '<div class="mock-player lp" id="{id}" data-src="{src}"{qs}{style}>'
+    '<div class="lp-seekbar" onclick="mpSeek(event,\'{id}\')"><div class="lp-progress" id="progress-{id}"></div></div>'
+    '<div class="lp-times"><span id="time-current-{id}">0:00</span><span id="time-total-{id}">0:00</span></div>'
+    '<div class="lp-row">'
+    '<button class="lp-btn" onclick="mpSkip(\'{id}\',-5)" aria-label="Back 5 seconds">-5s</button>'
+    '<button class="lp-btn lp-play" id="play-{id}" onclick="mpToggle(\'{id}\')" aria-label="Play or pause">'
+    '<svg class="lp-icon-play" viewBox="0 0 24 24" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>'
+    '<svg class="lp-icon-pause" viewBox="0 0 24 24" width="18" height="18" style="display:none">'
+    '<rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg>'
+    '</button>'
+    '<button class="lp-btn" onclick="mpSkip(\'{id}\',5)" aria-label="Forward 5 seconds">+5s</button>'
+    '</div>'
+    '<div class="lp-speeds">'
+    '<button class="lp-speed-btn" onclick="mpSpeed(\'{id}\',0.5,this)">0.5x</button>'
+    '<button class="lp-speed-btn" onclick="mpSpeed(\'{id}\',0.75,this)">0.75x</button>'
+    '<button class="lp-speed-btn lp-speed-active" onclick="mpSpeed(\'{id}\',1,this)">1x</button>'
+    '<button class="lp-speed-btn" onclick="mpSpeed(\'{id}\',1.25,this)">1.25x</button>'
+    '</div></div>')
+
+
+def expand_audio_players(slides):
+    """<div class="audio-player" data-src="X"></div>  ->  player COMPLETO.
+
+    IDEMPOTENTE: a saída não tem mais a classe .audio-player, então rodar duas vezes
+    não duplica. Aula sem o shorthand = no-op byte-a-byte.
+    """
+    n = [0]
+
+    def repl(m):
+        attrs = m.group(1)
+        src = re.search(r'data-src="([^"]+)"', attrs)
+        assert src, f'<div class="audio-player"> sem data-src: {m.group(0)[:120]}'
+        n[0] += 1
+        pid = f'mp-a{n[0]}'
+        style = re.search(r'\sstyle="([^"]*)"', attrs)
+        st = f' style="{style.group(1)}"' if style else ' style="max-width:520px;margin:1.2rem auto 0"'
+        q = re.search(r'\sdata-questions="([^"]*)"', attrs)
+        qs = f' data-questions="{q.group(1)}"' if q else ''
+        return _LP_TPL.format(id=pid, src=src.group(1), style=st, qs=qs)
+
+    return re.sub(r'<div class="audio-player"([^>]*)>\s*</div>', repl, slides)
+
+
+def inject_input_recap(slides):
+    """O INPUT VOLTA PARA O DETALHE (feedback da chefe, 28/07/2026).
+
+        *"Antes do slide 07, para a parte do detail/true or false, o texto deveria
+        aparecer novamente."* (Lara)  ·  *"Slide 3 — atividade de True or False, mas
+        falta ter o áudio novamente."* (Vitor)
+
+    Leitura/escuta acontece em DUAS passadas com propósitos diferentes: a primeira busca
+    a ideia (gist) e pode ser feita com o texto longe; a segunda cobra DETALHE — e aí o
+    aluno precisa VOLTAR ao input para localizar a evidência. Sem o texto na tela, o
+    true/false vira memória, que é exatamente o defeito que a REGRA 2.1/2.2 combate, só
+    que um estágio adiante.
+
+    O que injeta, antes do bloco de true/false:
+      leitura -> uma cópia compacta do texto (.ic-reading-recap)
+      áudio   -> o player de novo, com ID PRÓPRIO (mp-r*). Copiar o id do player
+                 original faria getElementById devolver o primeiro, e o segundo player
+                 ficaria morto — dois controles disputando o mesmo áudio.
+
+    IDEMPOTENTE. Aula sem true/false depois de exposição = no-op.
+    """
+    partes = re.split(r'(?=<div class="slide )', slides)
+    ultimo_texto, ultimo_audio, n = None, None, [0]
+    out = []
+    for ch in partes:
+        est = _estrutura(ch)
+        i = est.find('<div class="ic-reading">')
+        if i >= 0:
+            fim = _match_div_end(est, i)          # o bloco tem divs aninhados (rtitle/src):
+            if fim > 0:                            # regex .*? cortaria no primeiro </div>
+                ultimo_texto = est[i:fim]
+        ma = re.search(r'data-src="([^"]+\.mp3)"', est)
+        if ma and 'lp-play' in est:
+            ultimo_audio = ma.group(1)
+        if 'ic-tfrow' in est and 'ic-reading-recap' not in est and 'id="mp-r' not in est:
+            recap = None
+            if ultimo_texto:
+                recap = ultimo_texto.replace('<div class="ic-reading">',
+                                             '<div class="ic-reading ic-reading-recap">', 1)
+            elif ultimo_audio:
+                n[0] += 1
+                recap = _LP_TPL.format(id=f'mp-r{n[0]}', src=ultimo_audio, qs='',
+                                       style=' style="max-width:460px;margin:0 auto 1rem"')
+            if recap:
+                ch = ch.replace('<div class="ic-card"><div class="ic-tf">',
+                                recap + '<div class="ic-card"><div class="ic-tf">', 1)
+        out.append(ch)
+    return ''.join(out)
 
 
 def inject_task_slides(slides):
@@ -697,6 +890,21 @@ def base_swaps(s, cfg, n=None):
         prov += f'\n    <meta name="alumni-framework" content="{cfg.get("framework", FRAMEWORK_DEFAULT)}">'
         s = re.sub(r'(<meta name="viewport"[^>]*>)',
                    lambda m: m.group(1) + '\n    ' + prov, s, count=1)
+    # CARIMBO DE GERAÇÃO — a data de nascimento da aula, em versões do builder.
+    #
+    # Sem ele, toda invariante NOVA nasce cobrando o PASSADO. Foi o que aconteceu ao criar
+    # o gate da pergunta de predição: a etiqueta de framework existe desde 27/07 e já está
+    # em ~8 aulas PUBLICADAS de alunos reais, que passaram a ser acusadas por não terem uma
+    # coisa que não existia quando foram geradas. Isso é exatamente o que a REGRA 30 proíbe
+    # — subir a baseline de legado sem melhorar aula nenhuma.
+    #
+    # O carimbo separa "geração nova" de "já publicada" por FATO, não por proxy. Gate de
+    # regra nova roda só em quem tem GEN >= a versão em que a regra entrou; o resto passa
+    # intocado, para sempre. SOBE quando uma invariante nova entra no builder — nunca por
+    # mudança cosmética (senão volta a ser um proxy de data).
+    if 'name="alumni-gen"' not in s:
+        s = re.sub(r'(<meta name="alumni-framework"[^>]*>)',
+                   lambda m: m.group(1) + f'\n    <meta name="alumni-gen" content="{BUILDER_GEN}">', s, count=1)
     # PELE DO MODELO (CONTRATOS-E-RASTREIO.md §1): quando o modelo tem pele própria
     # (kids, teens, ...), injeta o reskin (forma/fonte/tamanho/tom) antes de </style>. A COR
     # vem da paleta do aluno; os OSSOS e classes-mecanismo continuam os do adulto — então os
@@ -962,6 +1170,15 @@ def build_standalone(cfg, content_dir, manifest):
     audio_base = f'/audio/{cfg["slug"]}/'
     slides = read(os.path.join(content_dir, 'slides.html'))
     slides = expand_inclass_blocks(slides, cfg)  # B2 blocks (no-op se a aula não usar)
+    # O player de listening COMPLETO (REGRA 2.1). O shorthand .audio-player era um div
+    # vazio: MP3 gerado, e nada na tela para tocar. Aula sem shorthand = no-op.
+    slides = expand_audio_players(slides)
+    # A pergunta de PREDIÇÃO antes do áudio (o slide de tarefa ganha a dele em
+    # _slide_de_tarefa). Idempotente; aula sem listening = no-op.
+    slides = inject_predict_prompts(slides)
+    # O INPUT VOLTA para a etapa de DETALHE: leitura de detalhe se faz COM o texto na
+    # frente; sem ele o true/false vira memória. Idempotente; sem true/false = no-op.
+    slides = inject_input_recap(slides)
     # A TAREFA VEM ANTES DA EXPOSIÇÃO (REGRA 2.2): emite o slide de perguntas antes de
     # todo diálogo/leitura, a partir das perguntas do slide de checagem. Idempotente e
     # renumera os data-slide. Aula sem diálogo nem leitura = no-op.

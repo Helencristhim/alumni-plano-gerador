@@ -173,3 +173,41 @@ Consequência: promover um framework a `producao` deixa de ser mudar uma palavra
    `producao` — e é a promoção que o libera para aluno real.
 
 O catálogo se atualiza sozinho: ele desenha a prateleira a partir do JSON.
+
+---
+
+## 5. `alumni-gen` — como criar regra nova sem acusar o passado
+
+Toda aula nasce carimbada com a versão do builder que a gerou:
+
+```html
+<meta name="alumni-gen" content="1">
+```
+
+**O problema que isso resolve.** Uma invariante nova (a pergunta de predição, 28/07/2026)
+não existe nas aulas já publicadas — por definição. Sem um critério de data, o gate novo
+sai acusando aula que está no ar, funcionando, que o aluno **já teve**. Foi o que
+aconteceu na primeira versão deste gate: ele usou "tem etiqueta de framework?" como proxy
+de "é nova?", e a etiqueta já estava em ~8 aulas publicadas de alunos reais. Oito falsos
+positivos, zero aulas melhoradas, baseline de legado subindo — exatamente o que a
+REGRA 30 proíbe.
+
+**A regra.** Gate de invariante nova roda **só em quem nasceu depois dela**:
+
+```python
+GEN_MINHA_REGRA = 2                      # a versão em que a regra entrou
+if _gen(c) < GEN_MINHA_REGRA:
+    return                               # nasceu antes: não é comigo
+```
+
+`BUILDER_GEN` (em `build_from_model.py`) **sobe quando uma invariante nova entra** — nunca
+por mudança cosmética, senão volta a ser um proxy de data. Aula sem o carimbo = `0` =
+passado = intocável.
+
+| GEN | O que entrou |
+|-----|--------------|
+| 1 | player de listening completo · pergunta de predição · banco do gap-fill desembaralhado |
+
+**Por que não usar a data do arquivo ou o git log.** Porque o carimbo tem de viajar
+DENTRO do HTML: o gate roda sobre o conteúdo, o arquivo é reescrito a cada rebuild, e o
+git log conta a história do commit, não a da geração.
