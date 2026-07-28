@@ -71,6 +71,11 @@ PROF = os.path.join(ROOT, 'public', 'professor')
 ALUNO = os.path.join(ROOT, 'public', 'aluno')
 
 VOICES = json.load(open(os.path.join(HERE, 'voices.json'), encoding='utf-8'))
+# Voz de sotaque e decisao POR ALUNO: entra em cfg['voices'] da aula, nunca no
+# voices.json global (que vale pro roster inteiro). O gen_audio.py e o
+# validate_lesson.py resolvem pelo MESMO caminho — se o builder nao resolvesse,
+# ele abortaria em material correto antes mesmo de o gate rodar. Preenchido em
+# main(), assim que o config e lido. Ver README, secao 'Vozes'.
 
 MODEL = 'helen-mendes'
 # EIXO FRAMEWORK (public/data/frameworks.json é a FONTE ÚNICA — ver _build/model/FRAMEWORKS.md).
@@ -462,20 +467,6 @@ def _perguntas_da_checagem(ch):
         return 'tf', [q for q in out if q]
     if 'class="comp-q"' in ch and 'mock-player' not in ch:
         return 'comp', [_texto(q) for q in re.findall(r'<div class="q-text">(.*?)</div>', ch, re.S)]
-    # VARIANTE LEGADA: material antigo escreve a checagem como
-    #   <div class="comp-question" onclick="this.classList.toggle('revealed')">
-    #     <p>a pergunta</p><p>a resposta</p></div>
-    # em vez de .comp-q + .q-text. Sem reconhecer isto, inject_task_slides nao acha o
-    # slide de checagem, nao emite a tarefa, e a REGRA 2.2 fica sem como ser cumprida
-    # em toda aula ja gerada nesse formato. A PERGUNTA e o PRIMEIRO <p>; o segundo e o
-    # gabarito e NAO pode ir para o slide de tarefa.
-    if 'class="comp-question"' in ch:
-        out = []
-        for bloco in re.findall(r'<div class="comp-question"[^>]*>(.*?)</div>', ch, re.S):
-            ps = re.findall(r'<p[^>]*>(.*?)</p>', bloco, re.S)
-            if ps:
-                out.append(_texto(ps[0]))
-        return 'comp', [q for q in out if q]
     return None, []
 
 
@@ -1520,9 +1511,19 @@ def main():
     cfg_path = os.path.abspath(sys.argv[1])
     content_dir = os.path.dirname(cfg_path)
     cfg = json.load(open(cfg_path, encoding='utf-8'))
-    assert len(cfg['characters']) <= 3, 'máx 3 personagens por diálogo (e só há 2 vozes — ver voices.json)'
+    # vozes da AULA = global + cfg['voices'] (eixo de sotaque por aluno). MESMA resolucao
+    # do gen_audio.py e do validate_lesson.py.
+    global VOICES
+    _extra = cfg.get('voices') or {}
+    if isinstance(_extra, dict):
+        VOICES = {**VOICES, **_extra}
+    # 3 e limite do SHELL (so ha 3 cores de dialogo: 2 + .guest), nao de vozes.
+    assert len(cfg['characters']) <= 3, \
+        'máx 3 personagens por diálogo — o shell só tem 3 cores (2 + .guest)'
     for v in cfg['characters'].values():
-        assert v in VOICES, f'voz desconhecida no characters: {v}'
+        assert v in VOICES, (f'voz desconhecida no characters: {v} '
+                             f'(disponíveis: {sorted(VOICES)}). Voz de sotaque vai em '
+                             f'cfg["voices"] da aula — ver _build/model/README.md)')
     assert_framework(cfg)
 
     manifest = []

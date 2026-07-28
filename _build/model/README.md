@@ -85,13 +85,42 @@ com player completo (mpToggle/mpSeek/mpSkip/mpSpeed) · revealError dinâmico ·
 
 ## Vozes (voices.json)
 
-Só **arthur** e **ellen** existem na conta ElevenLabs (REGRA 35 — Ash/Kristen NÃO existem).
+O `voices.json` global tem só **arthur** e **ellen** — e continua assim de propósito.
 Regras bloqueantes do validador:
 - toda `dialogue-line` tem `data-voice`
 - 1 voz consistente por personagem no arquivo inteiro
 - personagens distintos no MESMO diálogo = vozes distintas
-- diálogo com mais falantes que vozes disponíveis = ERRO (reescrever ou adicionar voz)
+- diálogo com mais falantes que vozes disponíveis = ERRO (reescrever ou declarar voz)
 - cross-check: o MP3 de cada fala (audio_manifest.json) foi gerado com a voz do `data-voice`
+
+### Voz de sotaque: `cfg["voices"]` da AULA, nunca o voices.json global
+
+Aluno com eixo de sotaque (ex.: Ana Claudia — listening de língua franca) declara as
+vozes extras **no `config.json` da própria aula**:
+
+```json
+"voices": {
+  "arthur": "sfJopaWaOtauCD3HKX6Q", "ellen": "BIvP0GN1cAtSRTxNHnWS",
+  "nordic_m": "6moWX0dfuSmryJkGegeK", "indian_f": "fBJDfBxPazPKo9oZ1P8t"
+}
+```
+
+e usa no HTML como qualquer outra: `<div class="dialogue-line" data-voice="nordic_m">`.
+O `gen_audio.py` e o `validate_lesson.py` resolvem a voz pelo MESMO caminho
+(`voices.json + cfg["voices"]`), então o que gera é o que valida. A chave pode ter
+underscore e dígito (`nordic_m`, `indian_f`).
+
+**Por que não no global:** voz de sotaque é decisão pedagógica POR ALUNO. No
+`voices.json` ela valeria para o roster inteiro, e um `data-voice` errado em qualquer
+aluno passaria batido. Mantendo o global em arthur/ellen, quem não declarou segue com
+tolerância zero de graça.
+
+> Adicionadas à conta em 28/07/2026, nomeadas `Accent XX - Nome` (a conta é
+> compartilhada): norueguês, nórdica, holandês, francesa, italiana, alemã. Já existiam
+> indiana, irlandesa, britânica e australiana. **Nenhuma validada de ouvido ainda.**
+>
+> Lembrete que combina com isto: **listening é MONÓLOGO de 1 voz** (ver seção acima).
+> Um sotaque por listening; conversa multi-sotaque vai SEMPRE no diálogo line-by-line.
 
 ## Exercício novo (nível/idade/tipo de aula diferente)
 
