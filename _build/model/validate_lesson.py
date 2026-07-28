@@ -278,7 +278,28 @@ def check_dialogue_voices(c, path, root, fails, warns):
         # "SEM data-voice" — erro que apontava para o lugar errado.
         mv = re.search(r'data-voice="([a-z0-9_]+)"', tag)
         seg = c[m.end():m.end() + 1200]
-        ma = re.search(r'dialogue-avatar ([\w-]+)', seg)
+        # QUEM FALA: primeiro o data-speaker do proprio dialogue-line, depois a classe do
+        # avatar. Ler so a classe produzia falso positivo em todo material que nomeia o
+        # personagem no atributo e deixa o avatar sem classe (<div class="dialogue-avatar"
+        # style="...">R</div>): TODAS as falas viravam o personagem "?" e o gate acusava
+        # "? com mais de uma voz" — num dialogo perfeitamente correto, com Rafael=arthur e
+        # Catherine=ellen. Gate que grita em material certo e gate que a equipe desliga.
+        # QUEM FALA — o material tem TRES marcacoes diferentes para a mesma coisa, e o
+        # gate so conhecia uma. Resultado: em dois terços dos formatos toda fala virava o
+        # personagem "?" e o gate acusava "? com mais de uma voz" num dialogo correto,
+        # com Rafael=arthur e Catherine=ellen. Gate que grita em material certo e gate
+        # que a equipe desliga.
+        #   1. data-speaker="Rafael"            no proprio dialogue-line
+        #   2. class="dialogue-avatar sarah"    a classe do avatar
+        #   3. <div class="dialogue-name">Rafael</div>   o nome escrito ao lado
+        msp = re.search(r'data-speaker="([^"]+)"', tag)
+        ma = msp or re.search(r'dialogue-avatar ([\w-]+)', seg)
+        if not ma:
+            mn = re.search(r'class="dialogue-name"[^>]*>(.*?)</div>', seg, re.S)
+            if mn:
+                nome = ' '.join(re.sub(r'<[^>]+>', ' ', mn.group(1)).split())
+                if nome:
+                    ma = re.match(r'(.+)', nome)
         mt = re.search(r"speakText\('((?:[^'\\]|\\.)*)'", seg)
         if not mv:
             fails.append(f'dialogue-line SEM data-voice (pos {m.start()}): {tag[:90]}')
@@ -1325,9 +1346,15 @@ def validate(path):
                 # (eduardo-chiba, nilo-mesquita) aparecerem como defeito NOVO — elas ja
                 # falhavam por isto, so que sob o texto velho. O defeito e o mesmo; mudar a
                 # redacao inventaria divida que nao existe.
-                if eh_imersivo and not any(x in blk for x in
-                                           ('order-container', 'True or False</span>',
-                                            'Complete the text</span>')):
+                # PRATICA e um EXERCICIO, nao um nome de exercicio. A primeira versao
+                # listava os tres tipos aprovados na troca do ordering — e reprovou a aula 3
+                # do Rafael, cujo Stage 2 e multipla escolha de vocabulario: pratica
+                # legitima, so nao batia com a lista. Gate que reprova material certo e o
+                # mesmo defeito que ele veio consertar, do outro lado.
+                # Agora exige o que importa: que exista pelo menos UM exercicio interativo
+                # no Pre-class alem do vocab card.
+                praticas = ('order-container', 'quiz-item', 'blank-input', 'match-row')
+                if eh_imersivo and not any(x in blk for x in praticas):
                     missing.append(f'order-container ({blk.count("order-container")}/1)')
                 if missing:
                     # A MENSAGEM do Imersivo fica IDÊNTICA, byte a byte. O GATE 8 usa o texto

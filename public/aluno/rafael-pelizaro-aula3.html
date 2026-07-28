@@ -1106,14 +1106,14 @@ body.slide-mode .nav-bar { display:flex; }
 </div><!-- /tab-complementary -->
 
 </div><!-- /container -->
-</div><!-- /main-content -->
+<!-- /main-content -->
 
 
 
 
 
   <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)" style="width:auto;padding:0 1.2rem;font-size:.85rem;font-weight:600;letter-spacing:.5px;">Next &#8594;</button>
-</div>
+
 
 
 <script>
@@ -1249,6 +1249,12 @@ function updatePhaseBar() {
 // Build dots
 (function() {
   var dotsEl = document.getElementById('slideDots');
+  // O espelho do ALUNO nao tem slides (o IN CLASS e do professor), entao #slideDots nao
+  // existe aqui. Sem esta guarda o script morre na primeira iteracao com
+  // "Cannot read properties of null (reading 'appendChild')" — e TUDO que e definido
+  // depois deste bloco deixa de existir na pagina. Erro silencioso: o console acusa, a
+  // tela nao.
+  if (!dotsEl) return;
   for (var i = 1; i <= totalSlides; i++) {
     var dot = document.createElement('div');
     dot.className = 'slide-dot' + (i === 1 ? ' active' : '');
