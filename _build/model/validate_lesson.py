@@ -218,6 +218,41 @@ def find_manifest(path, root):
     return None
 
 
+def find_config(path, root):
+    """config.json da aula — irmão do audio_manifest.json."""
+    m = re.search(r'/(?:professor|aluno)/(.+)-aula(\d+)\.html$', path.replace('\\', '/'))
+    if not (m and root):
+        return None
+    for d in (f'{m.group(1)}-aula{m.group(2)}', m.group(1)):
+        p = os.path.join(root, '_build', d, 'config.json')
+        if os.path.exists(p):
+            return p
+    return None
+
+
+def voices_for(path, root):
+    """Vozes VÁLIDAS nesta aula = voices.json + o override cfg['voices'] do config.
+
+    O gen_audio.py já resolve a voz assim (`VOICES = {**VOICES, **cfg.get('voices', {})}`)
+    — o validador não resolvia, e o resultado era um gate que reprovava material CERTO:
+    uma aula com eixo de sotaque (`data-voice="nordic_m"`, voz declarada no config e o MP3
+    gerado corretamente) falhava com "não existe em voices.json". Gate que grita em
+    material certo é gate que a equipe desliga.
+
+    O voices.json global segue sendo só arthur/ellen de propósito: voz de sotaque é
+    decisão POR ALUNO e não pode vazar para o roster inteiro.
+    """
+    cp = find_config(path, root)
+    if not cp:
+        return dict(VOICES)
+    try:
+        cfg = json.load(open(cp, encoding='utf-8'))
+    except (ValueError, OSError):
+        return dict(VOICES)
+    extra = cfg.get('voices') or {}
+    return {**VOICES, **extra} if isinstance(extra, dict) else dict(VOICES)
+
+
 def check_dialogue_voices(c, path, root, fails, warns):
     """Vozes por personagem: data-voice obrigatório, 1 voz por personagem,
     personagens distintos = vozes distintas, cross-check com o manifest."""
@@ -232,10 +267,16 @@ def check_dialogue_voices(c, path, root, fails, warns):
             cur = n
         return cur
 
+    # Vozes válidas AQUI = voices.json + cfg['voices'] da aula (eixo de sotaque por aluno).
+    voices = voices_for(path, root)
+
     lines = []  # (slide, speaker, voice, frase, pos)
     for m in re.finditer(r'<div class="dialogue-line[^"]*"[^>]*>', c):
         tag = m.group(0)
-        mv = re.search(r'data-voice="([a-z]+)"', tag)
+        # [a-z0-9_]+ e NÃO [a-z]+: chave de voz de sotaque tem underscore (nordic_m,
+        # indian_f). Com o regex antigo o match falhava e a fala era reportada como
+        # "SEM data-voice" — erro que apontava para o lugar errado.
+        mv = re.search(r'data-voice="([a-z0-9_]+)"', tag)
         seg = c[m.end():m.end() + 1200]
         ma = re.search(r'dialogue-avatar ([\w-]+)', seg)
         mt = re.search(r"speakText\('((?:[^'\\]|\\.)*)'", seg)
@@ -243,8 +284,10 @@ def check_dialogue_voices(c, path, root, fails, warns):
             fails.append(f'dialogue-line SEM data-voice (pos {m.start()}): {tag[:90]}')
             continue
         voice = mv.group(1)
-        if voice not in VOICES:
-            fails.append(f'data-voice="{voice}" não existe em voices.json (disponíveis: {sorted(VOICES)})')
+        if voice not in voices:
+            fails.append(f'data-voice="{voice}" não declarado (disponíveis: {sorted(voices)}). '
+                         f'Voz de sotaque vai em cfg["voices"] do config.json DA AULA, '
+                         f'nunca no voices.json global (compartilhado com o roster inteiro)')
             continue
         lines.append((slide_of(m.start()), ma.group(1) if ma else '?',
                       voice, mt.group(1).replace("\\'", "'") if mt else None, m.start()))
@@ -265,10 +308,10 @@ def check_dialogue_voices(c, path, root, fails, warns):
     for sl, sp, v, t, pos in lines:
         by_slide.setdefault(sl, {}).setdefault(sp, set()).add(v)
     for sl, speakers in by_slide.items():
-        if len(speakers) > len(VOICES):
+        if len(speakers) > len(voices):
             fails.append(f'diálogo do slide {sl} tem {len(speakers)} falantes ({", ".join(speakers)}) '
-                         f'mas só há {len(VOICES)} vozes ({", ".join(sorted(VOICES))}) — impossível diferenciar. '
-                         f'Reescrever com menos falantes ou adicionar voz em voices.json')
+                         f'mas só há {len(voices)} vozes ({", ".join(sorted(voices))}) — impossível diferenciar. '
+                         f'Reescrever com menos falantes ou declarar vozes em cfg["voices"] da aula')
         used = {}
         for sp, vs in speakers.items():
             for v in vs:
