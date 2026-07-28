@@ -1195,13 +1195,33 @@ def validate(path):
                 # Exigir matching e ordering dele seria exigir que o PPP fosse Imersivo.
                 # Cada framework traz o piso do seu pre-class no gate próprio.
                 if eh_imersivo:
+                    # O Stage 2 e um exercicio de PRATICA — nao obrigatoriamente ordering.
+                    # Ate 28/07/2026 esta lista exigia 'order-container' literalmente, e o
+                    # efeito era que o Pre-class de TODA aula tinha o mesmo exercicio em outro
+                    # contexto. A Stephanie mediu isso no material do Rafael: "toda aula tem o
+                    # mesmo exercicio, so que em outro contexto, ai fica cansativo e realmente
+                    # nao agrega". A regra COBRAVA a monotonia.
+                    # Agora exige o que importa — que exista pratica — e aceita as tres formas
+                    # que o pedagogico aprovou: ordering, true/false e complete-the-text.
                     REQ = [('vocab-card-pc', 6), ('match-row', 4), ('quiz-item', 3), ('fill-blank-item', 3),
-                           ('order-container', 1), ('speech-card', 2), ('think-card', 1), ('survival-card', 1)]
+                           ('speech-card', 2), ('think-card', 1), ('survival-card', 1)]
                 else:
                     # Piso UNIVERSAL, válido para qualquer framework: o aluno tem de receber
                     # palavras com áudio, produzir algo falado e sair com um survival card.
                     REQ = [('vocab-card-pc', 6), ('speech-card', 2), ('think-card', 1), ('survival-card', 1)]
                 missing = [f'{k} ({blk.count(k)}/{mn})' for k, mn in REQ if blk.count(k) < mn]
+                # PRATICA no Stage 2: uma das tres formas aprovadas basta.
+                #
+                # A MENSAGEM CONTINUA SENDO "order-container (0/1)", byte a byte. Nao e
+                # descuido: o GATE 8 usa o TEXTO do erro como chave do baseline. Trocar o
+                # texto por "exercicio de pratica..." fez 15 aulas ANTIGAS de outros alunos
+                # (eduardo-chiba, nilo-mesquita) aparecerem como defeito NOVO — elas ja
+                # falhavam por isto, so que sob o texto velho. O defeito e o mesmo; mudar a
+                # redacao inventaria divida que nao existe.
+                if eh_imersivo and not any(x in blk for x in
+                                           ('order-container', 'True or False</span>',
+                                            'Complete the text</span>')):
+                    missing.append(f'order-container ({blk.count("order-container")}/1)')
                 if missing:
                     # A MENSAGEM do Imersivo fica IDÊNTICA, byte a byte. O GATE 8 usa o texto
                     # do erro como chave do baseline: acrescentar um "[framework]" aqui fez
