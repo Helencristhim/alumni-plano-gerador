@@ -647,6 +647,93 @@ def check_task_before_exposure(c, fails, warns):
                          f'(inject_task_slides)')
 
 
+# Versão do builder em que cada invariante entrou. O gate roda SÓ em aula que nasceu
+# depois — nunca no passado (REGRA 30). Ver BUILDER_GEN em build_from_model.py.
+GEN_PLAYER_E_PREDICAO = 1
+
+
+def _gen(c):
+    """<meta name="alumni-gen"> — em que versão do builder esta aula nasceu.
+
+    Ausente = nasceu ANTES do carimbo existir = passado. Invariante nova NÃO se cobra
+    do passado: a aula está no ar, funciona, e o aluno já teve essa aula. Um gate que
+    acusa o que não existia quando o arquivo foi gerado não conserta nada — só sobe a
+    baseline de legado e transforma "gerar uma aula" em auditoria (REGRA 31).
+    """
+    m = re.search(r'<meta name="alumni-gen" content="(\d+)"', c)
+    return int(m.group(1)) if m else 0
+
+
+def check_player_vivo(c, fails):
+    """O PLAYER DE LISTENING TEM DE TER CONTROLES (REGRA 2.1, bloqueante).
+
+    O shorthand `<div class="audio-player" data-src="...">` era um DIV VAZIO: sem CSS,
+    sem JS, sem um único botão. A aula ia ao ar com o MP3 gerado, o audioMap correto,
+    todos os gates verdes — e um retângulo em branco no lugar do player. A professora
+    abria o slide e não havia o que tocar. Foi assim que 3 mocks chegaram na chefe, e
+    ela leu o sintoma certo pelo motivo errado: "parece que era pra ter algum áudio".
+
+    Áudio existir no disco não é áudio existir NA TELA. Este gate mede a TELA: todo
+    container com data-src de MP3 precisa de um play (mpToggle) dentro dele.
+
+    ESCOPO: só aula gerada a partir de BUILDER_GEN >= 1 (<meta name="alumni-gen">).
+    Aula já publicada com o mesmo defeito NÃO se conserta e NÃO se reporta (REGRA 30/31):
+    um gate global só subiria a baseline de legado sem melhorar uma aula sequer.
+    """
+    if _gen(c) < GEN_PLAYER_E_PREDICAO:
+        return
+    mortos = []
+    # Um player só é player se algum botão o aciona. O elo é o id: mpGet/mpToggle acham
+    # o container por getElementById, então o id do container TEM de aparecer num
+    # mpToggle('<id>') em algum lugar do arquivo. Sem isso não há play na tela.
+    for tag in re.findall(r'<div\b[^>]*data-src="[^"]+\.mp3"[^>]*>', c):
+        src = re.search(r'data-src="([^"]+)"', tag).group(1)
+        pid = re.search(r'\sid="([^"]+)"', tag)
+        if not pid or f"mpToggle('{pid.group(1)}')" not in c:
+            mortos.append(src)
+    if mortos:
+        fails.append(
+            f'PLAYER DE LISTENING SEM CONTROLES ({len(mortos)}): '
+            f'{", ".join(os.path.basename(s) for s in mortos[:3])}. O container declara o MP3 mas '
+            f'não tem play/seekbar/velocidade dentro — na tela é um retângulo vazio e a aula não '
+            f'tem como tocar o áudio (REGRA 2.1). O builder emite o player completo sozinho: '
+            f'build_from_model.expand_audio_players()')
+
+
+def check_predicao(c, fails):
+    """A PREDIÇÃO VEM ANTES DA TAREFA (bloqueante, escopado à geração nova).
+
+    Feedback da chefe (28/07/2026): as perguntas antes do texto/áudio estão certas, mas
+    "seria interessante contextualizar essa etapa" — uma pergunta geral do tipo "what do
+    you think the text is going to be about?" antes de mostrar a lista. Sem ela o slide
+    abre com um interrogatório sobre algo que a aluna ainda não viu.
+
+    Quem emite é o builder (_slide_de_tarefa / inject_predict_prompts) — este gate só
+    garante que ninguém removeu.
+
+    ESCOPO: BUILDER_GEN >= 1. A predição nasceu em 28/07/2026; aula gerada antes disso
+    não tem como tê-la, e cobrá-la seria acusar o passado de não prever o futuro.
+    """
+    if _gen(c) < GEN_PLAYER_E_PREDICAO:
+        return
+    faltando = []
+    for ch in re.split(r'(?=<div class="slide )', c):
+        if 'data-slide=' not in ch:
+            continue
+        est = _sem_teacher(ch)
+        eh_tarefa = 'data-task-for=' in est
+        eh_listening = 'data-src="/audio/' in est and 'class="comp-questions"' in est
+        if (eh_tarefa or eh_listening) and 'ic-predict' not in est:
+            faltando.append((re.search(r'data-slide="(\d+)"', ch) or [None, '?'])[1])
+    if faltando:
+        fails.append(
+            f'SEM PERGUNTA DE PREDIÇÃO nos slides {", ".join(faltando)}: antes de expor o '
+            f'texto/áudio a aluna precisa arriscar sobre o que é — é o que transforma a lista de '
+            f'perguntas em expectativa em vez de teste. O builder emite sozinho '
+            f'(build_from_model.inject_predict_prompts / _slide_de_tarefa); .ic-predict some '
+            f'só se alguém apagou')
+
+
 def check_handlers_exist(c, fails):
     """Todo onclick/onchange chama função que existe no arquivo (pega exercício novo quebrado)."""
     defined = set(re.findall(r'function\s+([A-Za-z_$][\w$]*)\s*\(', c))
@@ -1164,6 +1251,10 @@ def validate(path):
     check_dialogue_audible(c, fails, warns)
     check_fix_regressions(c, css, is_standalone_slides, fails, warns)
     check_task_before_exposure(c, fails, warns)
+    # Escopados à geração nova (arquivo com etiqueta de framework). Legado com o mesmo
+    # defeito NÃO é tocado nem reportado — REGRA 30/31.
+    check_player_vivo(c, fails)
+    check_predicao(c, fails)
     check_handlers_exist(c, fails)
     check_speaktext_escaping(c, fails)
     check_audio_collision(c, fails)
