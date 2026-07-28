@@ -275,6 +275,19 @@ jobs:
       - name: "GATE 14 — selftest: prova que o gate do Task-Based ainda morde"
         run: python3 scripts/check_tbl_lesson.py --selftest
 
+      - name: "GATE 15 — selftest: prova que o gate dos modos de produção ainda morde"
+        run: python3 scripts/check_produce_modes.py --selftest
+
+      - name: "GATE 15 — modos de produção do IN CLASS (pelo menos 2 por aula, role-play fora)"
+        # A tabela que o pedagógico fechou em 28/07/2026 define QUAIS atividades podem
+        # ocupar a etapa de produção e quantas por aula (pelo menos 2). Role-play saiu do
+        # menu: em aula PARTICULAR ele põe o professor como interlocutor, e a fala do
+        # aluno passa a depender da atuação dele.
+        # Por que virou gate e não só regra escrita: role-play é o formato mais fácil de
+        # escrever e o mais tentador — era exatamente o que a produção da Lara era antes.
+        # Regra que depende de alguém lembrar não é regra.
+        run: python3 scripts/check_produce_modes.py
+
       - name: "GATE 14 — aula do framework Task-Based (Focus on Form DEPOIS da produção)"
         # O mais opinativo dos três gates de framework, porque o TBL é o que mais se
         # parece com os outros por fora e o que mais diverge por dentro. A regra central:

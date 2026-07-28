@@ -739,7 +739,13 @@ def check_predicao(c, fails):
             continue
         est = _sem_teacher(ch)
         eh_tarefa = 'data-task-for=' in est
-        eh_listening = 'data-src="/audio/' in est and 'class="comp-questions"' in est
+        # O LEAD-IN (phase 1) NAO leva predicao. Feedback da chefe (28/07/2026): "aqui no
+        # lead-in nao precisa". O motivo e estrutural: ali o audio e contextualizacao, nao
+        # ha tarefa de compreensao a preparar, e o aluno ainda nao tem contexto sobre o
+        # qual arriscar uma hipotese. Espelha inject_predict_prompts() do builder — se as
+        # duas divergirem, o builder emite uma coisa e o gate cobra outra.
+        eh_listening = ('data-src="/audio/' in est and 'class="comp-questions"' in est
+                        and 'data-phase="1"' not in est)
         if (eh_tarefa or eh_listening) and 'ic-predict' not in est:
             faltando.append((re.search(r'data-slide="(\d+)"', ch) or [None, '?'])[1])
     if faltando:
@@ -787,6 +793,49 @@ def check_input_no_detalhe(c, fails):
             f'evidência de um texto/áudio que não está mais visível — vira teste de memória, o '
             f'mesmo defeito da REGRA 2.1 um estágio adiante. O builder traz o input de volta '
             f'sozinho: build_from_model.inject_input_recap()')
+
+
+def check_pt_na_tela_inclass(c, fails, nivel):
+    """ZERO PORTUGUES NA TELA DO IN CLASS (REGRA 13, bloqueante, A2+).
+
+    O gate de idioma sempre varreu o Pre-class (ex-lesson-N) e os Complementares — e
+    nunca os SLIDES. O IN CLASS e a tela que o professor compartilha no Zoom: e a tela
+    MAIS vista da aula, e era a unica sem trava de idioma.
+
+    Custou caro: a linha de fonte da leitura saiu como "Texto autoral, escrito para esta
+    aula (nao e fonte externa)" no rodape do texto, em portugues, na tela de uma aluna B1.
+    Passou por todos os gates e foi a chefe quem viu, num screenshot (28/07/2026).
+
+    O `data-teacher` e removido antes de olhar: ele e do professor, e em portugues por
+    obrigacao (REGRA 13). Detecta-se com o MESMO detector do Pre-class — acento em
+    minuscula, marcadores e sufixos — entao nao ha heuristica nova para calibrar.
+
+    ESCOPO: geracao nova (alumni-gen) e A2+. Aula publicada nao se conserta (REGRA 30), e
+    em A0/A1 o portugues na tela e OBRIGATORIO, nao defeito.
+    """
+    if _gen(c) < GEN_PLAYER_E_PREDICAO:
+        return
+    if not nivel or nivel[:2] in ('A0', 'A1'):
+        return
+    i, j = c.find('<div class="slides-container"'), c.find('</div><!-- /slides-container -->')
+    if i < 0 or j < 0:
+        return
+    achados = []
+    for ch in re.split(r'(?=<div class="slide )', c[i:j]):
+        if 'data-slide=' not in ch:
+            continue
+        txt = _txt(_sem_teacher(ch))
+        for w in set(ACENTO_RE.findall(txt)):
+            if w.islower() and w.lower() not in SUFIXO_EN_OK:
+                achados.append((re.search(r'data-slide="(\d+)"', ch).group(1), w))
+        for w in set(PT_RE.findall(txt)):
+            achados.append((re.search(r'data-slide="(\d+)"', ch).group(1), w))
+    if achados:
+        amostra = ', '.join(f'slide {n}: "{w}"' for n, w in achados[:5])
+        fails.append(
+            f'PORTUGUES NA TELA DO IN CLASS ({len(achados)}) em material {nivel}: {amostra}. '
+            f'O IN CLASS e a tela compartilhada no Zoom — em A2+ ela e ZERO portugues '
+            f'(REGRA 13). O PT do professor vive no data-teacher, que o aluno nao ve.')
 
 
 def check_handlers_exist(c, fails):
@@ -1311,6 +1360,7 @@ def validate(path):
     check_player_vivo(c, fails)
     check_predicao(c, fails)
     check_input_no_detalhe(c, fails)
+    check_pt_na_tela_inclass(c, fails, nivel_do_html(c))
     check_handlers_exist(c, fails)
     check_speaktext_escaping(c, fails)
     check_audio_collision(c, fails)

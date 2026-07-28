@@ -342,6 +342,15 @@ def render_block(b):
                f'<button class="qf-prev" onclick="qfNav(-1)" style="{nav_prev}">&#8592; Previous</button>'
                f'<button class="primary-btn qf-next" onclick="qfNav(1)" style="{btn_st}">Next &#8594;</button></div>')
         return f'{score}<div id="qfContainer" style="max-width:560px;margin:1rem auto 0">{cards}{nav}</div>'
+    if k == 'whiteboard':
+        # CAIXA EM BRANCO — nada escrito. Feedback da chefe (28/07/2026) sobre o Focus on
+        # Form: "desnecessaria essas informacoes. Tem que ser so um box branco pro
+        # professor escrever o feedback". Ela esta certa: o slide da correcao diferida e
+        # uma LOUSA, e um texto explicando o que a lousa e ocupa o espaco de escrever
+        # nela. A explicacao pertence ao data-teacher, que o aluno nao ve.
+        lbl = _esc(b.get('label', ''))
+        head = f'<div class="ic-wb-label">{lbl}</div>' if lbl else ''
+        return f'<div class="ic-whiteboard">{head}</div>'
     if k == 'bank':
         items = ''.join(f'<span class="ic-b">{_esc(w)}</span>' for w in b['items'])
         head = f'<div class="ic-card-h3">{_esc(b.get("label", "Useful language"))}</div>'
@@ -456,7 +465,7 @@ def _perguntas_da_checagem(ch):
     return None, []
 
 
-def _slide_de_tarefa(kind, perguntas, phase):
+def _slide_de_tarefa(kind, perguntas, phase, ancora=None):
     """O slide de TAREFA. Só a pergunta — o gabarito NÃO existe no HTML (nem escondido:
     o professor compartilha a tela, e 'display:none' ainda está no DOM, a um Ctrl+U
     de distância). Sem onclick: não há o que revelar aqui."""
@@ -479,7 +488,7 @@ def _slide_de_tarefa(kind, perguntas, phase):
             f'  <div class="slide-inner">\n'
             f'    <div class="chapter-label">{label}</div>\n'
             f'    <h2 class="slide-heading">{head} <span class="accent">{acc}</span></h2>\n'
-            f'    {_predict_html(kind)}\n'
+            f'    {_predict_html(kind, ancora)}\n'
             f'    <div style="display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:1.2rem auto 0">\n'
             f'      {qs}\n'
             f'    </div>\n'
@@ -487,23 +496,36 @@ def _slide_de_tarefa(kind, perguntas, phase):
             f'</div>\n\n')
 
 
-def _predict_html(kind):
-    """A pergunta de PREDIÇÃO — o degrau que falta antes da tarefa.
+def _primeira_frase(txt, maxlen=170):
+    """A primeira frase de um texto puro — a ANCORA da predicao."""
+    t = ' '.join(re.sub(r'<[^>]+>', ' ', txt or '').split())
+    m = re.match(r'(.{20,%d}?[.!?])\s' % maxlen, t + ' ')
+    return (m.group(1) if m else t[:maxlen]).strip()
 
-    Feedback da chefe (28/07/2026): mostrar as perguntas antes do texto/áudio faz sentido,
-    "mas seria interessante contextualizar essa etapa". Sem isso o aluno cai direto num
-    true/false sobre um texto que ele ainda não viu, e a tela parece um teste começando
-    pelo meio. A predição custa 20 segundos, ativa o conhecimento prévio e transforma a
-    lista de perguntas numa expectativa.
 
-    NÃO é item de compreensão e por isso NÃO usa .q-text: o gate da REGRA 2.2 compara
-    as .q-text da tarefa com as da checagem, e uma pergunta a mais aqui faria as duas
-    listas divergirem — a tarefa deixaria de ser "a mesma coisa que se cobra depois".
-    Classe própria (.ic-predict), fora da contagem.
+def _predict_html(kind, ancora=None):
+    """A pergunta de PREDICAO — com uma ANCORA, nunca no vacuo.
+
+    Feedback da chefe (28/07/2026), sobre a primeira versao: *"Esse daqui ficou sem
+    sentido. Nao tem nenhuma informacao sobre o texto pra fazer prediction."* Ela estava
+    certa: um slide que so pergunta "what do you think this text is going to be about?"
+    diante de uma tela vazia nao pede predicao, pede adivinhacao. Predicao e uma hipotese
+    a partir de ALGUMA evidencia — sem evidencia nao ha o que ativar.
+
+    A saida veio do Luiz: *"podemos fornecer um trecho ou uma linha do texto, ou do audio
+    em questao e ai sim debater 'What will it be about? What do you think it'll happen?'"*
+
+    Entao aqui vai UMA linha do proprio input (a primeira frase, extraida pelo builder) e
+    so entao a pergunta. Uma linha nao entrega o texto — ela da o fio.
+
+    NAO usa .q-text: o gate da REGRA 2.2 compara as .q-text da tarefa com as da checagem,
+    e a predicao nao e item de compreensao. Classe propria, fora da contagem.
     """
     alvo = {'reading': 'text', 'dialogue': 'conversation'}.get(kind, 'audio')
-    return (f'<div class="ic-predict">Before you start: what do you think this '
-            f'{alvo} is going to be about?</div>')
+    linha = (f'<div class="ic-predict-line">&ldquo;{ancora}&rdquo;</div>' if ancora else '')
+    return (f'<div class="ic-predict">{linha}'
+            f'<div class="ic-predict-q">This is the first line. What do you think this '
+            f'{alvo} is going to be about &mdash; and what do you think happens?</div></div>')
 
 
 _PREDICT_T = (' Antes de tudo, faça a pergunta de predição que está na tela: '
@@ -511,26 +533,43 @@ _PREDICT_T = (' Antes de tudo, faça a pergunta de predição que está na tela:
               'que a aluna já sabe, não para acertar.')
 
 
-def inject_predict_prompts(slides):
-    """Injeta a pergunta de predição nos slides de LISTENING (player + perguntas).
+def inject_predict_prompts(slides, cfg=None):
+    """Injeta a predicao nos slides de LISTENING que sao EXPOSICAO — nunca no lead-in.
 
-    O slide de TAREFA (diálogo/leitura) já nasce com ela em _slide_de_tarefa(). O
-    listening não tem slide de tarefa — as perguntas dividem a tela com o player
-    (REGRA 2.1) —, então a predição entra aqui, ANTES do bloco de perguntas.
+    O slide de TAREFA (dialogo/leitura) ja nasce com ela em _slide_de_tarefa(). O
+    listening nao tem slide de tarefa (as perguntas dividem a tela com o player, REGRA
+    2.1), entao a predicao entra aqui, antes do bloco de perguntas.
 
-    IDEMPOTENTE: slide que já tem .ic-predict não recebe outra.
+    POR QUE O LEAD-IN FICA DE FORA. Feedback da chefe (28/07/2026): *"Acho que ele
+    interpretou a sugestao do Luis de colocar essa pergunta como fixa para todo momento
+    que tiver audio/texto, mas aqui no lead-in nao precisa."* Ela esta certa e o motivo e
+    estrutural: no lead-in o audio e CONTEXTUALIZACAO — nao ha tarefa de compreensao a
+    preparar, e o aluno ainda nao tem contexto nenhum sobre o qual arriscar uma hipotese.
+    Predicao no primeiro slide da aula nao ativa conhecimento previo: nao ha o que ativar.
+    Regra: data-phase="1" nao recebe predicao.
+
+    A ANCORA vem da primeira frase do script do listening (config.lesson.listenings), que
+    o builder ja tem em maos. Uma linha nao e transcricao — o sound-first continua de pe.
+
+    IDEMPOTENTE.
     """
+    scripts = {}
+    for ls in ((cfg or {}).get('lesson') or {}).get('listenings', []) or []:
+        if ls.get('file'):
+            scripts[ls['file']] = ls.get('text', '')
     partes = re.split(r'(?=<div class="slide )', slides)
     out = []
     for ch in partes:
         est = _estrutura(ch)
         tem_player = 'data-src="/audio/' in est
         tem_qs = 'class="comp-questions"' in est
-        if tem_player and tem_qs and 'ic-predict' not in est:
-            ch = ch.replace('<div class="comp-questions"', _predict_html('audio') +
+        eh_leadin = 'data-phase="1"' in est
+        if tem_player and tem_qs and not eh_leadin and 'ic-predict' not in est:
+            m = re.search(r'data-src="[^"]*/([^"/]+\.mp3)"', est)
+            ancora = _primeira_frase(scripts.get(m.group(1), '')) if m else None
+            ch = ch.replace('<div class="comp-questions"', _predict_html('audio', ancora) +
                             '\n    <div class="comp-questions"', 1)
-            # e o professor precisa saber que a pergunta existe e para que serve
-            ch = re.sub(r'(data-teacher="(?:[^"\\]|\\.)*?)"', lambda m: m.group(1) + _PREDICT_T + '"',
+            ch = re.sub(r'(data-teacher="(?:[^"\\]|\\.)*?)"', lambda m2: m2.group(1) + _PREDICT_T + '"',
                         ch, count=1)
         out.append(ch)
     return ''.join(out)
@@ -672,7 +711,15 @@ def inject_task_slides(slides):
                     perguntas = qs
                     break
             if perguntas:
-                out.append(_slide_de_tarefa(kind, perguntas, phase))
+                # ANCORA: a primeira frase do proprio input. Predicao sem evidencia e
+                # adivinhacao — ver _predict_html().
+                exp = _estrutura(ch)
+                if kind == 'reading':
+                    mtxt = re.search(r'<div class="ic-reading">.*?<p>(.*?)</p>', exp, re.S)
+                else:
+                    mtxt = re.search(r'class="dialogue-line[^>]*>.*?<p[^>]*>(.*?)</p>', exp, re.S)
+                ancora = _primeira_frase(mtxt.group(1)) if mtxt else None
+                out.append(_slide_de_tarefa(kind, perguntas, phase, ancora))
         out.append(ch)
         i += 1
     novo = ''.join(out)
@@ -1175,7 +1222,7 @@ def build_standalone(cfg, content_dir, manifest):
     slides = expand_audio_players(slides)
     # A pergunta de PREDIÇÃO antes do áudio (o slide de tarefa ganha a dele em
     # _slide_de_tarefa). Idempotente; aula sem listening = no-op.
-    slides = inject_predict_prompts(slides)
+    slides = inject_predict_prompts(slides, cfg)
     # O INPUT VOLTA para a etapa de DETALHE: leitura de detalhe se faz COM o texto na
     # frente; sem ele o true/false vira memória. Idempotente; sem true/false = no-op.
     slides = inject_input_recap(slides)
