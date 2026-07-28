@@ -462,6 +462,20 @@ def _perguntas_da_checagem(ch):
         return 'tf', [q for q in out if q]
     if 'class="comp-q"' in ch and 'mock-player' not in ch:
         return 'comp', [_texto(q) for q in re.findall(r'<div class="q-text">(.*?)</div>', ch, re.S)]
+    # VARIANTE LEGADA: material antigo escreve a checagem como
+    #   <div class="comp-question" onclick="this.classList.toggle('revealed')">
+    #     <p>a pergunta</p><p>a resposta</p></div>
+    # em vez de .comp-q + .q-text. Sem reconhecer isto, inject_task_slides nao acha o
+    # slide de checagem, nao emite a tarefa, e a REGRA 2.2 fica sem como ser cumprida
+    # em toda aula ja gerada nesse formato. A PERGUNTA e o PRIMEIRO <p>; o segundo e o
+    # gabarito e NAO pode ir para o slide de tarefa.
+    if 'class="comp-question"' in ch:
+        out = []
+        for bloco in re.findall(r'<div class="comp-question"[^>]*>(.*?)</div>', ch, re.S):
+            ps = re.findall(r'<p[^>]*>(.*?)</p>', bloco, re.S)
+            if ps:
+                out.append(_texto(ps[0]))
+        return 'comp', [q for q in out if q]
     return None, []
 
 

@@ -218,6 +218,41 @@ def find_manifest(path, root):
     return None
 
 
+def find_config(path, root):
+    """config.json da aula — irmão do audio_manifest.json."""
+    m = re.search(r'/(?:professor|aluno)/(.+)-aula(\d+)\.html$', path.replace('\\', '/'))
+    if not (m and root):
+        return None
+    for d in (f'{m.group(1)}-aula{m.group(2)}', m.group(1)):
+        p = os.path.join(root, '_build', d, 'config.json')
+        if os.path.exists(p):
+            return p
+    return None
+
+
+def voices_for(path, root):
+    """Vozes VÁLIDAS nesta aula = voices.json + o override cfg['voices'] do config.
+
+    O gen_audio.py já resolve a voz assim (`VOICES = {**VOICES, **cfg.get('voices', {})}`)
+    — o validador não resolvia, e o resultado era um gate que reprovava material CERTO:
+    uma aula com eixo de sotaque (`data-voice="nordic_m"`, voz declarada no config e MP3
+    gerado corretamente) falhava com "não existe em voices.json". Gate que grita em
+    material certo é gate que a equipe desliga.
+
+    O voices.json global segue sendo só arthur/ellen de propósito: voz de sotaque é
+    decisão POR ALUNO e não pode vazar para o roster inteiro.
+    """
+    cp = find_config(path, root)
+    if not cp:
+        return dict(VOICES)
+    try:
+        cfg = json.load(open(cp, encoding='utf-8'))
+    except (ValueError, OSError):
+        return dict(VOICES)
+    extra = cfg.get('voices') or {}
+    return {**VOICES, **extra} if isinstance(extra, dict) else dict(VOICES)
+
+
 def check_dialogue_voices(c, path, root, fails, warns):
     """Vozes por personagem: data-voice obrigatório, 1 voz por personagem,
     personagens distintos = vozes distintas, cross-check com o manifest."""
@@ -237,7 +272,28 @@ def check_dialogue_voices(c, path, root, fails, warns):
         tag = m.group(0)
         mv = re.search(r'data-voice="([a-z]+)"', tag)
         seg = c[m.end():m.end() + 1200]
-        ma = re.search(r'dialogue-avatar ([\w-]+)', seg)
+        # QUEM FALA: primeiro o data-speaker do proprio dialogue-line, depois a classe do
+        # avatar. Ler so a classe produzia falso positivo em todo material que nomeia o
+        # personagem no atributo e deixa o avatar sem classe (<div class="dialogue-avatar"
+        # style="...">R</div>): TODAS as falas viravam o personagem "?" e o gate acusava
+        # "? com mais de uma voz" — num dialogo perfeitamente correto, com Rafael=arthur e
+        # Catherine=ellen. Gate que grita em material certo e gate que a equipe desliga.
+        # QUEM FALA — o material tem TRES marcacoes diferentes para a mesma coisa, e o
+        # gate so conhecia uma. Resultado: em dois terços dos formatos toda fala virava o
+        # personagem "?" e o gate acusava "? com mais de uma voz" num dialogo correto,
+        # com Rafael=arthur e Catherine=ellen. Gate que grita em material certo e gate
+        # que a equipe desliga.
+        #   1. data-speaker="Rafael"            no proprio dialogue-line
+        #   2. class="dialogue-avatar sarah"    a classe do avatar
+        #   3. <div class="dialogue-name">Rafael</div>   o nome escrito ao lado
+        msp = re.search(r'data-speaker="([^"]+)"', tag)
+        ma = msp or re.search(r'dialogue-avatar ([\w-]+)', seg)
+        if not ma:
+            mn = re.search(r'class="dialogue-name"[^>]*>(.*?)</div>', seg, re.S)
+            if mn:
+                nome = ' '.join(re.sub(r'<[^>]+>', ' ', mn.group(1)).split())
+                if nome:
+                    ma = re.match(r'(.+)', nome)
         mt = re.search(r"speakText\('((?:[^'\\]|\\.)*)'", seg)
         if not mv:
             fails.append(f'dialogue-line SEM data-voice (pos {m.start()}): {tag[:90]}')
@@ -1282,9 +1338,15 @@ def validate(path):
                 # (eduardo-chiba, nilo-mesquita) aparecerem como defeito NOVO — elas ja
                 # falhavam por isto, so que sob o texto velho. O defeito e o mesmo; mudar a
                 # redacao inventaria divida que nao existe.
-                if eh_imersivo and not any(x in blk for x in
-                                           ('order-container', 'True or False</span>',
-                                            'Complete the text</span>')):
+                # PRATICA e um EXERCICIO, nao um nome de exercicio. A primeira versao
+                # listava os tres tipos aprovados na troca do ordering — e reprovou a aula 3
+                # do Rafael, cujo Stage 2 e multipla escolha de vocabulario: pratica
+                # legitima, so nao batia com a lista. Gate que reprova material certo e o
+                # mesmo defeito que ele veio consertar, do outro lado.
+                # Agora exige o que importa: que exista pelo menos UM exercicio interativo
+                # no Pre-class alem do vocab card.
+                praticas = ('order-container', 'quiz-item', 'blank-input', 'match-row')
+                if eh_imersivo and not any(x in blk for x in praticas):
                     missing.append(f'order-container ({blk.count("order-container")}/1)')
                 if missing:
                     # A MENSAGEM do Imersivo fica IDÊNTICA, byte a byte. O GATE 8 usa o texto
