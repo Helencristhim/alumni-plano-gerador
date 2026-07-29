@@ -340,6 +340,57 @@ precedido por um slide `data-task-for` cujas perguntas CASAM (mesma quantidade, 
 texto) com as do slide de checagem; o slide de tarefa NAO pode conter `q-answer` /
 `ic-verdict` / `ic-just` / `data-answer` / `revealComp`.
 
+### 2.3 — O LISTENING TEM DUAS ESCUTAS, EM DOIS SLIDES (REGRA BLOQUEANTE)
+
+```
+[PREDICAO: a primeira linha + "what is this going to be about?" + player]  <- 1a escuta
+[as PERGUNTAS + o mesmo audio de novo]                                     <- 2a escuta
+```
+
+**A regra.** Todo listening de exposicao (fora do lead-in) e precedido por um slide
+**so de predicao** (`data-predict-for`): uma linha do proprio audio como ancora, a pergunta
+de predicao, e o player. A aluna arrisca, ouve UMA vez e confere o palpite. So no slide
+seguinte aparecem as perguntas de compreensao — com o player de novo, para a segunda
+escuta, agora procurando as respostas.
+
+**Por que.** Feedback da chefe (29/07/2026): com a lista de perguntas ja visivel ao lado,
+**ninguem arrisca hipotese nenhuma** — o olho vai direto no que vai ser cobrado, e a
+predicao, que existe para ativar o que a aluna ja sabe, vira enfeite que se pula. As duas
+coisas competem pela mesma tela. Separadas, cada escuta tem UM proposito.
+
+**Nao conflita com a 2.1.** O que a 2.1 proibe e esconder a TAREFA. Na primeira escuta a
+tarefa E a predicao, escrita na tela. As perguntas continuam visiveis desde a entrada no
+slide em que sao cobradas.
+
+**UMA FONTE.** Quem emite o slide e o builder (`inject_predict_prompts`), a partir do
+`lesson.listenings[].text` do config — o autor do conteudo nao escreve nem lembra de nada.
+O slide de tarefa do dialogo/leitura (2.2) ja e separado por construcao e nao muda.
+
+**GATE (bloqueante, `validate_lesson.py`, `BUILDER_GEN >= 2`)**: slide com player +
+`.comp-questions` fora da fase 1 DEVE ser precedido por um slide `data-predict-for`.
+
+### 2.4 — GAP-FILL DE VOCABULARIO: BANCO DE PALAVRAS + SO O QUE FOI ENSINADO
+
+- **Banco obrigatorio** (`.ic-bank`, embaralhado pelo builder). Sem as candidatas na tela,
+  "complete a frase" nao e recuperacao lexical: ou a palavra exata vem a cabeca, ou a aluna
+  trava sem saida. **So no gap-fill de VOCABULARIO** — no de GRAMATICA a lacuna cobra a
+  FORMA do verbo ("I ___ (paint) the kitchen") e o banco entregaria a resposta.
+- **Toda resposta tem de ser palavra que a aula ensinou** num reveal card. Exercicio que
+  pede palavra nao apresentada nao e recuperacao, e adivinhacao.
+
+O criterio nao e um flag que alguem marca: se TODA resposta do slide e vocab ensinado, o
+builder trata como exercicio de vocabulario e injeta o banco (`inject_gap_banks`).
+
+> **De onde veio.** Aula 1 da Ana Claudia: os reveal cards foram trocados numa
+> repersonalizacao e o gap-fill seguinte ficou com o vocabulario da versao anterior — cinco
+> palavras que a aula nao ensina em lugar nenhum. O exercicio estava perfeitamente formado,
+> e por isso nenhum gate viu. **Ao trocar o vocab de uma aula, varra tambem os slides que
+> COBRAM aquele vocab**, nao so os que o apresentam.
+
+**GATE (bloqueante, `validate_lesson.py`, `BUILDER_GEN >= 2`)**: no capitulo de vocabulario
+(a fase dos reveal cards), `.fill-answer` fora do vocab ensinado = FAIL; gap-fill de vocab
+sem `.ic-bank` = FAIL.
+
 **ARTEFATOS REAIS**
 - Minimo 1 artefato CSS por aula (boarding pass, hotel confirmation, email, menu, etc.)
 - Construidos em HTML/CSS (NUNCA imagem) — com nome do aluno personalizado

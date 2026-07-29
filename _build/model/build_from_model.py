@@ -90,7 +90,11 @@ FRAMEWORK_DEFAULT = 'imersivo-prototipo'
 #   1 = player de listening completo · pergunta de predição · banco do gap-fill
 #       desembaralhado · tarefa de pré-leitura em nível de GIST · input de volta na
 #       etapa de detalhe (28/07/2026, feedback da chefe nos mocks de framework)
-BUILDER_GEN = 1
+#   2 = a predição do listening em SLIDE PRÓPRIO, antes das perguntas (1a escuta confere
+#       o palpite; a 2a, com as perguntas na tela, responde) · banco de palavras também
+#       no gap-fill de vocabulário autorado em .fill-grid (29/07/2026, feedback da chefe
+#       na aula 1 da Ana Claudia)
+BUILDER_GEN = 2
 MODEL_ACCENT = ('#BE123C', '#be123c')
 MODEL_ACCENT_LIGHT = ('#F43F5E', '#f43f5e')
 MODEL_ACCENT_RGB = 'rgba(190,18,60'
@@ -539,25 +543,75 @@ def _predict_html(kind, ancora=None):
 
     NAO usa .q-text: o gate da REGRA 2.2 compara as .q-text da tarefa com as da checagem,
     e a predicao nao e item de compreensao. Classe propria, fora da contagem.
+
+    NAO pergunta mais "and what do you think happens?". Feedback da chefe (29/07/2026):
+    *"Acredito que da pra remover tambem a parte que ta escrito: 'What do you think
+    happens?'"* Sao DUAS perguntas onde cabe uma: a segunda so faz sentido para narrativa
+    com enredo, e diante de um depoimento ou de uma conversa ela nao tem o que responder.
+    Sobre o que e? ja e a hipotese inteira.
     """
     alvo = {'reading': 'text', 'dialogue': 'conversation'}.get(kind, 'audio')
     linha = (f'<div class="ic-predict-line">&ldquo;{ancora}&rdquo;</div>' if ancora else '')
     return (f'<div class="ic-predict">{linha}'
             f'<div class="ic-predict-q">This is the first line. What do you think this '
-            f'{alvo} is going to be about &mdash; and what do you think happens?</div></div>')
+            f'{alvo} is going to be about?</div></div>')
 
 
-_PREDICT_T = (' Antes de tudo, faça a pergunta de predição que está na tela: '
-              'aceite QUALQUER palpite, não confirme nem corrija — ela serve para ativar o '
-              'que a aluna já sabe, não para acertar.')
+_PREDICT_T = ('<strong>Predição (2 min):</strong> leia a frase da tela com a aluna e faça a '
+              'pergunta. Aceite QUALQUER palpite, não confirme nem corrija — ela serve para '
+              'ativar o que a aluna já sabe, não para acertar. Depois toque o áudio UMA vez, '
+              'inteiro e sem pausa: a única tarefa aqui é ver se o palpite dela bateu. As '
+              'perguntas de compreensão só aparecem no PRÓXIMO slide.')
+
+_SEGUNDA_ESCUTA_T = (' Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna '
+                     'ANTES de tocar de novo — agora ela ouve procurando as respostas, não '
+                     'mais para descobrir o assunto.')
+
+
+def _slide_de_predicao(ancora, src, phase, label, idx):
+    """O slide de PREDICAO do listening — sozinho, ANTES das perguntas.
+
+    Feedback da chefe (29/07/2026), sobre a primeira versao (predicao dentro do proprio
+    slide de listening, em cima das perguntas):
+
+        *"vale a pena essa etapa de 'previsao' do audio vir em um slide separado, antes
+        das perguntas. Porque ai o aluno debate sobre o que ele acha o que vai acontecer
+        no audio, escuta uma vez, e ve se o que ele achava ta certo ou nao. Depois podemos
+        exibir as perguntas, pra tocar o audio uma segunda vez e o aluno responder."*
+
+    Ela esta certa, e o motivo e que as duas coisas competem pela MESMA tela. Com a lista
+    de perguntas ja visivel ao lado, ninguem arrisca hipotese nenhuma: o olho vai direto
+    no que vai ser cobrado, e a predicao — que existe para ativar o que a aluna ja sabe —
+    vira um enfeite que a professora pula. Separadas, cada escuta tem UM proposito:
+
+        [predicao: a linha + o palpite + 1a escuta]  ->  [perguntas + 2a escuta]
+
+    Isto NAO viola a REGRA 2.1. O que ela proibe e esconder a TAREFA do aluno; aqui a
+    tarefa da primeira escuta e a propria predicao, escrita na tela. As perguntas de
+    compreensao continuam visiveis desde a entrada no slide em que sao cobradas.
+    """
+    player = _LP_TPL.format(id=f'mp-pred{idx}', src=src, qs='',
+                            style=' style="max-width:460px;margin:1.4rem auto 0"')
+    return ('<div class="slide slide-dark" data-slide="0" data-phase="{phase}" '
+            'data-predict-for="audio" data-teacher="{t}">\n'
+            '  <div class="slide-inner" style="text-align:center">\n'
+            '    <div class="chapter-label">{label}</div>\n'
+            '    <h2 class="slide-heading" style="color:#fff">Before You '
+            '<span class="accent">Listen</span></h2>\n'
+            '    {predict}\n'
+            '    {player}\n'
+            '  </div>\n'
+            '</div>\n\n').format(phase=phase, t=_PREDICT_T, label=label,
+                                 predict=_predict_html('audio', ancora), player=player)
 
 
 def inject_predict_prompts(slides, cfg=None):
-    """Injeta a predicao nos slides de LISTENING que sao EXPOSICAO — nunca no lead-in.
+    """Emite o slide de PREDICAO antes de todo listening de EXPOSICAO — nunca no lead-in.
 
-    O slide de TAREFA (dialogo/leitura) ja nasce com ela em _slide_de_tarefa(). O
-    listening nao tem slide de tarefa (as perguntas dividem a tela com o player, REGRA
-    2.1), entao a predicao entra aqui, antes do bloco de perguntas.
+    O slide de TAREFA (dialogo/leitura) ja nasce com a predicao em _slide_de_tarefa() — e
+    ele ja e um slide separado, que e exatamente a forma pedida. O listening nao tem slide
+    de tarefa (as perguntas dividem a tela com o player, REGRA 2.1), entao quem cria o
+    slate separado dele e esta funcao. Ver _slide_de_predicao() para o porque.
 
     POR QUE O LEAD-IN FICA DE FORA. Feedback da chefe (28/07/2026): *"Acho que ele
     interpretou a sugestao do Luis de colocar essa pergunta como fixa para todo momento
@@ -570,26 +624,41 @@ def inject_predict_prompts(slides, cfg=None):
     A ANCORA vem da primeira frase do script do listening (config.lesson.listenings), que
     o builder ja tem em maos. Uma linha nao e transcricao — o sound-first continua de pe.
 
-    IDEMPOTENTE.
+    IDEMPOTENTE, inclusive sobre a forma ANTIGA: se o listening ainda carrega o
+    .ic-predict inline (aula gerada antes de 29/07/2026 e reconstruida agora), ele sai de
+    dentro do slide e vira o slide novo. Rodar duas vezes nao duplica.
     """
     scripts = {}
     for ls in ((cfg or {}).get('lesson') or {}).get('listenings', []) or []:
         if ls.get('file'):
             scripts[ls['file']] = ls.get('text', '')
     partes = re.split(r'(?=<div class="slide )', slides)
-    out = []
+    out, idx = [], 0
     for ch in partes:
         est = _estrutura(ch)
         tem_player = 'data-src="/audio/' in est
         tem_qs = 'class="comp-questions"' in est
         eh_leadin = 'data-phase="1"' in est
-        if tem_player and tem_qs and not eh_leadin and 'ic-predict' not in est:
-            m = re.search(r'data-src="[^"]*/([^"/]+\.mp3)"', est)
-            ancora = _primeira_frase(scripts.get(m.group(1), '')) if m else None
-            ch = ch.replace('<div class="comp-questions"', _predict_html('audio', ancora) +
-                            '\n    <div class="comp-questions"', 1)
-            ch = re.sub(r'(data-teacher="(?:[^"\\]|\\.)*?)"', lambda m2: m2.group(1) + _PREDICT_T + '"',
-                        ch, count=1)
+        ja_tem = bool(out and 'data-predict-for=' in out[-1])
+        if tem_player and tem_qs and not eh_leadin and not ja_tem:
+            # forma antiga: a predicao morava DENTRO do slide de listening. Tira de la.
+            # _match_div_end porque o bloco tem divs aninhados (.ic-predict-line/-q): um
+            # regex .*?</div> cortaria no primeiro fechamento e deixaria lixo na tela.
+            i = ch.find('<div class="ic-predict">')
+            if i >= 0:
+                fim = _match_div_end(ch, i)
+                if fim > 0:
+                    ch = ch[:i] + ch[fim:].lstrip('\n')
+            m = re.search(r'data-src="([^"]*/([^"/]+\.mp3))"', est)
+            if m:
+                idx += 1
+                ancora = _primeira_frase(scripts.get(m.group(2), ''))
+                lab = re.search(r'<div class="chapter-label">([^<]*)</div>', _estrutura(ch))
+                phase = (re.search(r'data-phase="(\d+)"', est) or [None, '4'])[1]
+                out.append(_slide_de_predicao(ancora, m.group(1), phase,
+                                              lab.group(1) if lab else 'Listening', idx))
+                ch = re.sub(r'(data-teacher="(?:[^"\\]|\\.)*?)"',
+                            lambda m2: m2.group(1) + _SEGUNDA_ESCUTA_T + '"', ch, count=1)
         out.append(ch)
     return ''.join(out)
 
@@ -690,6 +759,69 @@ def inject_input_recap(slides):
             if recap:
                 ch = ch.replace('<div class="ic-card"><div class="ic-tf">',
                                 recap + '<div class="ic-card"><div class="ic-tf">', 1)
+        out.append(ch)
+    return ''.join(out)
+
+
+def vocab_ensinado(slides):
+    """As palavras que a aula ENSINA: o .card-word de cada reveal card de vocabulario."""
+    return [_texto(w) for w in re.findall(r'class="card-word">(.*?)</div>', slides, re.S)]
+
+
+def norm_vocab(w):
+    """Forma canonica para comparar palavra ensinada x resposta de exercicio.
+
+    Tira pontuacao, caixa e o 'to' do infinitivo: o card ensina "To settle down" e a
+    lacuna pede "settle down" — e a MESMA palavra, e um exercicio nao pode ser acusado de
+    cobrar vocabulario nao ensinado por causa de uma particula.
+    """
+    w = re.sub(r'[^a-z ]', ' ', (w or '').lower())
+    w = ' '.join(w.split())
+    return re.sub(r'^(to be|to|a|an|the) ', '', w).strip()
+
+
+def inject_gap_banks(slides):
+    """BANCO DE PALAVRAS no gap-fill de VOCABULARIO. IDEMPOTENTE.
+
+    Feedback da chefe (29/07/2026): *"senti falta do banco de palavras tambem no exercicio
+    do slide 9."*
+
+    Sem o banco, "complete a frase" nao e recuperacao lexical — e adivinhacao com uma so
+    tentativa: ou a palavra exata vem a cabeca, ou o exercicio nao tem saida e a aluna
+    trava. Com o banco, ela LE as candidatas e decide qual cabe, que e a operacao que a
+    gente quer treinar. O banco sai EMBARALHADO pelo builder (REGRA 24: em ordem, o
+    exercicio vira copia de cima para baixo).
+
+    SO no gap-fill de VOCABULARIO. O gap-fill de GRAMATICA ("I ___ (paint) the kitchen
+    right now") cobra a FORMA do verbo, e o banco entregaria a resposta pronta — o verbo
+    ali nao e o desafio, a conjugacao e. O criterio nao e um flag que alguem marca: e o
+    proprio conteudo. Se TODA resposta do slide e uma palavra que a aula ensinou nos
+    reveal cards, o exercicio e de vocabulario e ganha banco. Senao, nao ganha nada.
+
+    O componente ja existe (.ic-bank .ic-b, do bloco B2 gapfill) — CSS no shell do modelo,
+    nada novo a manter.
+    """
+    ensinado = {norm_vocab(w) for w in vocab_ensinado(slides)}
+    if not ensinado:
+        return slides
+    partes = re.split(r'(?=<div class="slide )', slides)
+    out = []
+    for ch in partes:
+        i = ch.find('<div class="fill-grid"')
+        if i < 0 or 'ic-bank' in ch:
+            out.append(ch)
+            continue
+        fim = _match_div_end(ch, i)
+        if fim <= 0:
+            out.append(ch)
+            continue
+        respostas = [_texto(a) for a in re.findall(r'class="fill-answer">(.*?)</span>', ch[i:fim], re.S)]
+        if not respostas or not all(norm_vocab(r) in ensinado for r in respostas):
+            out.append(ch)          # gap-fill de gramatica (ou vocab nao ensinado): sem banco
+            continue
+        ordem = respostas[1::2] + respostas[0::2]
+        bank = ''.join(f'<span class="ic-b">{_esc(w)}</span>' for w in ordem)
+        ch = ch[:fim] + f'\n    <div class="ic-bank ic-soft">{bank}</div>' + ch[fim:]
         out.append(ch)
     return ''.join(out)
 
@@ -1249,6 +1381,9 @@ def build_standalone(cfg, content_dir, manifest):
     # O INPUT VOLTA para a etapa de DETALHE: leitura de detalhe se faz COM o texto na
     # frente; sem ele o true/false vira memória. Idempotente; sem true/false = no-op.
     slides = inject_input_recap(slides)
+    # BANCO DE PALAVRAS no gap-fill de VOCABULÁRIO (nunca no de gramática, que cobra a
+    # forma do verbo). Idempotente; aula sem .fill-grid de vocab = no-op.
+    slides = inject_gap_banks(slides)
     # A TAREFA VEM ANTES DA EXPOSIÇÃO (REGRA 2.2): emite o slide de perguntas antes de
     # todo diálogo/leitura, a partir das perguntas do slide de checagem. Idempotente e
     # renumera os data-slide. Aula sem diálogo nem leitura = no-op.
