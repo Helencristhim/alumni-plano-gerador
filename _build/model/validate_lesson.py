@@ -749,6 +749,7 @@ def check_task_before_exposure(c, fails, warns):
 # Versão do builder em que cada invariante entrou. O gate roda SÓ em aula que nasceu
 # depois — nunca no passado (REGRA 30). Ver BUILDER_GEN em build_from_model.py.
 GEN_PLAYER_E_PREDICAO = 1
+GEN_PREDICAO_EM_SLIDE = 2   # predição do listening em slide próprio · banco no gap-fill de vocab
 
 
 def _gen(c):
@@ -812,10 +813,19 @@ def check_predicao(c, fails):
 
     ESCOPO: BUILDER_GEN >= 1. A predição nasceu em 28/07/2026; aula gerada antes disso
     não tem como tê-la, e cobrá-la seria acusar o passado de não prever o futuro.
+
+    A PARTIR DA GERAÇÃO 2 a predição do LISTENING mora em slide PRÓPRIO, antes do slide
+    das perguntas (feedback da chefe, 29/07/2026 — ver _slide_de_predicao no builder).
+    Então o que se cobra muda com a geração: gen 1 quer .ic-predict DENTRO do slide de
+    listening; gen 2+ quer um slide data-predict-for IMEDIATAMENTE ANTES dele. Cobrar a
+    forma nova de quem nasceu na antiga seria acusar o passado de não prever o futuro —
+    de novo (REGRA 30).
     """
     if _gen(c) < GEN_PLAYER_E_PREDICAO:
         return
-    faltando = []
+    novo = _gen(c) >= GEN_PREDICAO_EM_SLIDE
+    faltando, sem_slide = [], []
+    anterior = ''
     for ch in re.split(r'(?=<div class="slide )', c):
         if 'data-slide=' not in ch:
             continue
@@ -828,8 +838,18 @@ def check_predicao(c, fails):
         # duas divergirem, o builder emite uma coisa e o gate cobra outra.
         eh_listening = ('data-src="/audio/' in est and 'class="comp-questions"' in est
                         and 'data-phase="1"' not in est)
-        if (eh_tarefa or eh_listening) and 'ic-predict' not in est:
-            faltando.append((re.search(r'data-slide="(\d+)"', ch) or [None, '?'])[1])
+        n = (re.search(r'data-slide="(\d+)"', ch) or [None, '?'])[1]
+        # O slide de TAREFA (diálogo/leitura) já é um slide separado nas duas gerações:
+        # nele a predição continua morando dentro.
+        if eh_tarefa and 'ic-predict' not in est:
+            faltando.append(n)
+        if eh_listening:
+            if novo:
+                if 'data-predict-for=' not in anterior:
+                    sem_slide.append(n)
+            elif 'ic-predict' not in est:
+                faltando.append(n)
+        anterior = est
     if faltando:
         fails.append(
             f'SEM PERGUNTA DE PREDIÇÃO nos slides {", ".join(faltando)}: antes de expor o '
@@ -837,6 +857,88 @@ def check_predicao(c, fails):
             f'perguntas em expectativa em vez de teste. O builder emite sozinho '
             f'(build_from_model.inject_predict_prompts / _slide_de_tarefa); .ic-predict some '
             f'só se alguém apagou')
+    if sem_slide:
+        fails.append(
+            f'PREDIÇÃO NA MESMA TELA DAS PERGUNTAS nos slides {", ".join(sem_slide)}: o listening '
+            f'precisa ser precedido por um slide SÓ de predição (data-predict-for), com a primeira '
+            f'linha e o player para a 1a escuta. Com a lista de perguntas já visível ao lado, '
+            f'ninguém arrisca hipótese nenhuma — o olho vai direto no que vai ser cobrado. O '
+            f'builder emite sozinho (build_from_model.inject_predict_prompts)')
+
+
+def _norm_vocab(w):
+    """Espelha build_from_model.norm_vocab — se divergirem, o builder emite banco onde o
+    gate não cobra (ou o contrário)."""
+    w = re.sub(r'[^a-z ]', ' ', (w or '').lower())
+    w = ' '.join(w.split())
+    return re.sub(r'^(to be|to|a|an|the) ', '', w).strip()
+
+
+def check_gapfill_vocab(c, fails):
+    """O GAP-FILL DE VOCABULÁRIO COBRA O QUE A AULA ENSINOU — e com banco (bloqueante).
+
+    Feedback da chefe (29/07/2026), na aula 1 da Ana Claudia:
+
+        *"senti falta do banco de palavras também no exercício do slide 9. E percebi que
+        as palavras do exercício não foram apresentadas antes."*
+
+    Ela pegou DOIS defeitos que têm a mesma raiz. Aquela aula foi repersonalizada: os
+    slides de vocabulário ganharam 10 palavras novas (countryside, commute, rush hour…),
+    mas o exercício logo abaixo continuou com as palavras da versão anterior (stray,
+    handy, backyard…) — zero delas ensinada em lugar nenhum. Nenhum gate viu, porque
+    "existe um .fill-grid com respostas" era tudo que se checava. O exercício estava lá,
+    perfeitamente formado, cobrando vocabulário de outra aula.
+
+    O que se cobra aqui, no capítulo de VOCABULÁRIO (a fase em que vivem os reveal cards):
+
+      1. toda resposta do gap-fill é uma palavra que a aula ensinou (.card-word);
+      2. tendo passado em 1, o slide tem o banco de palavras (.ic-bank).
+
+    O capítulo de GRAMÁTICA fica de fora de propósito: lá a lacuna cobra a FORMA do verbo
+    ("I ___ (paint) the kitchen"), a palavra não é o desafio e um banco entregaria a
+    resposta. Por isso o critério é a FASE, não o formato do exercício.
+
+    ESCOPO: BUILDER_GEN >= 2 (29/07/2026). Aula anterior não é tocada nem reportada.
+    """
+    if _gen(c) < GEN_PREDICAO_EM_SLIDE:
+        return
+    partes = [ch for ch in re.split(r'(?=<div class="slide )', c) if 'data-slide=' in ch]
+    ensinado, fases_vocab = set(), set()
+    for ch in partes:
+        palavras = re.findall(r'class="card-word">(.*?)</div>', ch, re.S)
+        if palavras:
+            fases_vocab.add((re.search(r'data-phase="(\d+)"', ch) or [None, ''])[1])
+            ensinado |= {_norm_vocab(_txt(w)) for w in palavras}
+    if not ensinado:
+        return
+    nao_ensinado, sem_banco = [], []
+    for ch in partes:
+        est = _sem_teacher(ch)
+        fase = (re.search(r'data-phase="(\d+)"', ch) or [None, ''])[1]
+        if 'class="fill-grid"' not in est or fase not in fases_vocab:
+            continue
+        if 'data-grammar=' in est or 'Grammar' in (
+                re.search(r'<div class="chapter-label">([^<]*)</div>', est) or [None, ''])[1]:
+            continue
+        n = (re.search(r'data-slide="(\d+)"', ch) or [None, '?'])[1]
+        respostas = [_txt(a) for a in re.findall(r'class="fill-answer">(.*?)</span>', est, re.S)]
+        fora = [r for r in respostas if _norm_vocab(r) not in ensinado]
+        if fora:
+            nao_ensinado.append(f'{n} ({", ".join(fora[:4])})')
+        elif respostas and 'ic-bank' not in est:
+            sem_banco.append(n)
+    if nao_ensinado:
+        fails.append(
+            f'GAP-FILL COBRA PALAVRA NÃO ENSINADA — slides {"; ".join(nao_ensinado)}. O exercício '
+            f'está no capítulo de vocabulário e pede palavra que nenhum reveal card apresentou: '
+            f'não é recuperação, é adivinhação. Quase sempre é sobra de uma versão anterior da '
+            f'aula, cujo vocabulário foi trocado e o exercício não')
+    if sem_banco:
+        fails.append(
+            f'GAP-FILL DE VOCABULÁRIO SEM BANCO DE PALAVRAS — slides {", ".join(sem_banco)}. Sem as '
+            f'candidatas na tela a aluna ou lembra a palavra exata ou trava, e o exercício não tem '
+            f'saída. O builder emite sozinho e já embaralhado '
+            f'(build_from_model.inject_gap_banks)')
 
 
 def check_input_no_detalhe(c, fails):
@@ -1467,6 +1569,7 @@ def validate(path):
     # defeito NÃO é tocado nem reportado — REGRA 30/31.
     check_player_vivo(c, fails)
     check_predicao(c, fails)
+    check_gapfill_vocab(c, fails)
     check_input_no_detalhe(c, fails)
     check_pt_na_tela_inclass(c, fails, nivel_do_html(c))
     check_handlers_exist(c, fails)
