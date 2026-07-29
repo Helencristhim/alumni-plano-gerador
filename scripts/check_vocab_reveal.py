@@ -42,15 +42,52 @@ import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# (classe do alvo escondido, classes possiveis do card clicavel que o contem)
+# (classe do alvo escondido, classes possiveis do card clicavel que o contem, so_gen_nova)
+#
+# `so_gen_nova` restringe a familia as aulas com <meta name="alumni-gen"> (geracao nova).
+# Use quando a divida de legado for grande demais para caber num conserto (REGRA 30: aula
+# publicada nao se mexe) — o gate entao serve para impedir que o defeito NASCA de novo.
 FAMILIAS = [
-    ('vocab-back', ('vocab-card-ic', 'vocab-card')),   # a PALAVRA (Vocabulary Reveal)
-    ('q-answer', ('comp-q',)),                          # a RESPOSTA (comprehension)
-    ('error-fix', ('error-card',)),                     # a CORRECAO (Spot the Error)
+    ('vocab-back', ('vocab-card-ic', 'vocab-card'), False),  # a PALAVRA (Vocabulary Reveal)
+    ('q-answer', ('comp-q',), False),                        # a RESPOSTA (comprehension)
+    ('error-fix', ('error-card',), False),                   # a CORRECAO (Spot the Error)
+    # MESMO defeito do .error-fix, com a classe ERRADA no alvo: o conteudo usa
+    # `.fill-answer` (a classe do gap-fill) dentro de um `.error-card`. Nao existe regra
+    # `.error-card.revealed .fill-answer` no stylesheet, entao o display:none inline nunca
+    # sai: o contador sobe a cada clique e a correcao NUNCA aparece. Medido no navegador em
+    # walyson-ginaldo-silva-aula8 (4 de 4 cards mortos, reportado pelo Dan em 29/07/2026).
+    # `.fill-item` entra pelo mesmo motivo: a regra base e `.fill-item.revealed
+    # .fill-answer{display:inline}`, que o inline vence. NAO vale para `.comp-question`,
+    # onde a regra do stylesheet usa !important e portanto ganha do inline.
+    ('fill-answer', ('error-card', 'fill-item'), True),
 ]
 
 # nasce escondido: um dos tres jeitos de esconder via style inline.
 _HIDE = r'(?:display\s*:\s*none|visibility\s*:\s*hidden|opacity\s*:\s*0(?![.\d]))'
+
+# TODOS os cards clicaveis conhecidos disputam a proximidade, nao so os da familia. Sem
+# isso, um `.fill-answer` dentro de `.comp-question` (que o stylesheet mostra com
+# !important, logo NAO e bug) seria amarrado ao `.error-card` anterior do arquivo, que pode
+# estar centenas de linhas acima — falso positivo.
+CARDS = ('vocab-card-ic', 'vocab-card', 'comp-question', 'comp-q', 'error-card', 'fill-item')
+
+
+def _gen(html):
+    """<meta name="alumni-gen"> — 0 quando a aula e anterior ao builder (legado)."""
+    m = re.search(r'<meta name="alumni-gen" content="(\d+)"', html)
+    return int(m.group(1)) if m else 0
+
+
+def card_que_contem(html, pos):
+    """(classe, tag de abertura) do card clicavel conhecido mais proximo ANTES de pos."""
+    melhor, classe = -1, None
+    for c in CARDS:
+        p = html.rfind('<div class="%s' % c, 0, pos)
+        if p > melhor:
+            melhor, classe = p, c
+    if melhor == -1:
+        return None, ''
+    return classe, html[melhor:html.find('>', melhor) + 1]
 
 
 def corpo_funcao(html, nome):
@@ -87,23 +124,21 @@ def falhas_no_arquivo(path):
     with open(path, encoding='utf-8', errors='ignore') as f:
         html = f.read()
     rel = os.path.relpath(path, RAIZ)
+    gen = _gen(html)
     falhas = []
-    for alvo, pais in FAMILIAS:
+    for alvo, pais, so_gen_nova in FAMILIAS:
+        if so_gen_nova and not gen:
+            continue
         rx = re.compile(r'class="%s"[^>]*\bstyle="[^"]*%s' % (re.escape(alvo), _HIDE),
                         re.IGNORECASE)
         quebrados = 0
         for m in rx.finditer(html):
             # amarra ESTA instancia ao card clicavel que a contem
-            k = -1
-            for pai in pais:
-                p = html.rfind('<div class="%s' % pai, 0, m.start())
-                if p > k:
-                    k = p
-            onclick = ''
-            if k != -1:
-                tag = html[k:html.find('>', k) + 1]
-                oc = re.search(r'onclick="([^"]*)"', tag)
-                onclick = oc.group(1) if oc else ''
+            classe, tag = card_que_contem(html, m.start())
+            if classe is None or not any(classe.startswith(p) for p in pais):
+                continue    # o alvo esta em OUTRO componente — nao e desta familia
+            oc = re.search(r'onclick="([^"]*)"', tag)
+            onclick = oc.group(1) if oc else ''
             if not handler_desconde(html, onclick):
                 quebrados += 1
         if quebrados:
@@ -144,6 +179,21 @@ def selftest():
          '<script>function revealVocab(c){c.classList.add("revealed");}</script>'
          '<div class="vocab-card-ic" onclick="revealVocab(this)">'
          '<div class="vocab-back" style="display:none">word</div></div>', True),
+        # o caso walyson-aula8: classe ERRADA no alvo (fill-answer dentro de error-card).
+        ('QUEBRADO: fill-answer dentro de error-card (geracao nova)',
+         '<meta name="alumni-gen" content="3">'
+         '<script>function revealError(c){c.classList.toggle("revealed");}</script>'
+         '<div class="error-card" onclick="revealError(this)">'
+         '<p class="fill-answer" style="display:none">fix</p></div>', True),
+        ('OK: mesmo defeito, mas em aula LEGADA (sem carimbo) — REGRA 30',
+         '<script>function revealError(c){c.classList.toggle("revealed");}</script>'
+         '<div class="error-card" onclick="revealError(this)">'
+         '<p class="fill-answer" style="display:none">fix</p></div>', False),
+        ('OK: fill-answer dentro de comp-question (stylesheet usa !important)',
+         '<meta name="alumni-gen" content="3">'
+         '<div class="error-card" onclick="revealError(this)"><div class="error-fix">a</div></div>'
+         '<div class="comp-question" onclick="this.classList.toggle(\'revealed\')">'
+         '<p class="fill-answer" style="display:none">resposta</p></div>', False),
     ]
     ok = True
     for nome, html, espera in casos:
