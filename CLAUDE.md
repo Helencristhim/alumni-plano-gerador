@@ -2008,3 +2008,68 @@ Achou algo grave e fora do escopo? **Anote e termine a tarefa.** Reporte no FIM,
 linha, e so se for de fato grave. Nao interrompa a geracao para investigar.
 
 **Escopo pedido = escopo entregue. Nada a mais.**
+
+---
+
+## REGRA 32 — UMA AULA, UM DEPLOY (o material cresce em tempo real)
+
+> Ordem do Dan (29/07/2026): *"podemos criar uma regra de deployar aula por aula, pro
+> material ir crescendo em tempo real?"* — com gatilho **verde mergeia sozinho**.
+
+**Aula validada e aula MERGEADA.** Nao acumule PR. Assim que a aula passa nos gates e o CI
+conclui verde, ela vai pro `main` e a Vercel deploya. O material do aluno cresce enquanto o
+programa e gerado, em vez de aparecer inteiro no fim.
+
+### Por que isto NAO e so conveniencia
+
+**Acumular PR cria uma pilha.** Enquanto a aula 1 nao mergeia, a aula 2 tem de sair da branch
+da aula 1 (e a 3 da 2...), porque o hub que o builder edita so existe la. Vinte aulas sem
+mergear = pilha de 20 PRs encadeados, e qualquer correcao na aula 1 obriga rebase de tudo
+acima. Mergeando por aula, **cada aula sai do `main` limpo** e o encadeamento desaparece.
+
+### Mergear NAO entrega ao aluno
+
+O merge publica o ARQUIVO numa URL. Quem entrega ao aluno e o link e o `perfis.status`
+(`rascunho -> em_revisao -> aprovado -> material_publicado`) + o booleano `ativo`, que e o que
+governa a dashboard. **A revisao pedagogica continua sendo o portao do aluno** — mergear cedo
+nao pula revisao, so faz o material existir e ser previsivel numa URL real.
+
+### Use SEMPRE o script, nunca `gh pr merge` na mao
+
+```
+python3 scripts/merge_aula.py <PR>            # confere e mergeia
+python3 scripts/merge_aula.py <PR> --wait     # espera o gate concluir
+python3 scripts/merge_aula.py <PR> --dry-run  # so diz o que faria
+```
+
+**O `main` NAO tem branch protection** (a API devolve 404): nenhum check e obrigatorio do lado
+do GitHub, entao `gh pr merge` mergeia PR VERMELHO sem reclamar. O script e a unica trava.
+
+Ele bloqueia por: PR fechado · base != `main` · PR que deleta arquivo · PR que toca mais de um
+aluno · qualquer check com conclusao de falha · o check `gates` ausente ou ainda rodando.
+
+### "Verde" tem definicao exata — pendente NAO e verde
+
+O rollup mistura duas formas: `CheckRun` (status + conclusion) e `StatusContext` (state). O
+deploy preview da Vercel entra como `StatusContext` e fica **PENDING por tempo
+indeterminado**. Exigir "todos SUCCESS" trava o merge pra sempre; aceitar "nao-falhou" mergeia
+com o gate ainda rodando — foi assim que um PR vermelho ja passou. A regra:
+
+- qualquer check com conclusao de falha **bloqueia, sempre**;
+- o check **`gates`** TEM de estar `COMPLETED` + `SUCCESS` (ausente ou rodando = NAO mergeia);
+- pendencia em check de **deploy preview** nao bloqueia (e previa, nao correcao).
+
+### Reaponte os dependentes ANTES de mergear
+
+O `--delete-branch` apaga a branch base do PR filho e o GitHub **FECHA** o filho em vez de
+reapontar — e depois nao deixa reabrir (*"Cannot change the base branch of a closed pull
+request"*). Aconteceu em 29/07/2026: o #1671 morreu no merge do #1669 e teve de ser recriado
+como #1672. O trabalho nao se perde (a branch head sobrevive), mas o PR e a revisao vao junto.
+O `merge_aula.py` ja reaponta sozinho; se mergear na mao, reaponte antes.
+
+### A aula N+1 sai do `main` atualizado
+
+Depois de mergear, `git fetch origin && git rebase origin/main` antes de gerar a proxima. Se a
+branch da proxima aula ja existir encadeada, rebaseie com `--onto`: mergeamos com **squash**,
+entao o commit da aula anterior tem SHA diferente do que foi pro `main`, o merge-base fica pra
+tras e o PR novo mostra a aula anterior inteira de novo.
