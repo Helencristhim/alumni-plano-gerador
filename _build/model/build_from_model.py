@@ -1644,6 +1644,15 @@ def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
         pc = read(pc_path)
         pc_entries = assign_voices(extract_phrases(pc), prefix=f'pc{L["n"]}_', cfg=cfg)
         parts.append('<!-- 3. ACCORDION Pre-class (inserir após o ex-lesson anterior, prof E aluno) -->\n')
+        # CARIMBO DE GERAÇÃO NO BLOCO, não no arquivo. O hub é antigo e o insert_hub só
+        # injeta trechos nele: ele nunca ganha <meta name="alumni-gen">, e por isso TODO
+        # gate escopado por geração era cego para o Pre-class inteiro (achado em 29/07/2026,
+        # ao tentar cobrir os fill-in-the-blank da aula 1 da Ana Claudia). Carimbar o hub
+        # inteiro seria pior: passaria a cobrar as invariantes novas dos blocos LEGADOS que
+        # convivem nele (REGRA 30). O carimbo vai no accordion que este build emitiu — e só
+        # nele.
+        pc = re.sub(r'<div class="lesson-card"(?![^>]*\bdata-gen=)',
+                    f'<div class="lesson-card" data-gen="{BUILDER_GEN}"', pc, count=1)
         parts.append(pc + '\n\n')
     # COMPLEMENTARES da aula: obrigatório (classe de bug do PR #106 — aula sem
     # complementares no hub). data-media deve usar prefixo l{N}- (validador cobra).

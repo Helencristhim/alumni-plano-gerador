@@ -874,6 +874,73 @@ def _norm_vocab(w):
     return re.sub(r'^(to be|to|a|an|the) ', '', w).strip()
 
 
+def check_preclass_blanks(c, fails):
+    """A FRASE COMPLETADA TEM DE SER A FRASE DO ÁUDIO (bloqueante, escopado).
+
+    Todo `.blank-input` do Pre-class carrega três coisas que descrevem a MESMA frase:
+    o texto ao redor do input (o que a aluna lê), o `data-answer` (o que falta) e o
+    `data-phrase` (o que o botão Listen toca). Some as duas primeiras e você tem de obter
+    exatamente a terceira. Quando não obtém, uma delas é de outra aula.
+
+    Achado na aula 1 da Ana Claudia (29/07/2026), depois que a chefe pegou o mesmo defeito
+    no slide 9 do IN CLASS: os SEIS itens do Stage 1.5 tinham frases da versão anterior
+    ("This month I ___ an old wooden cabinet.") e respostas da gramática nova ("have
+    lived"). Completadas, davam frases que não existem em inglês, e o Listen tocava um
+    áudio sem relação nenhuma com o que estava na tela.
+
+    E era INVISÍVEL para todo mundo: o `checkBlank()` compara o que a aluna digita com o
+    `data-answer`, então a resposta declarada sempre passa em verde. Medido no navegador,
+    os seis "funcionavam". O exercício estava quebrado do único jeito que nenhum teste de
+    comportamento pega — era impossível CHEGAR na resposta pelo raciocínio.
+
+    ESCOPO, e por que ele é POR BLOCO. O Pre-class mora no HUB, e o hub nunca ganha
+    `<meta name="alumni-gen">`: o insert_hub só injeta trechos num arquivo antigo. Escopar
+    por arquivo tornaria este gate cego (foi o que aconteceu na primeira tentativa), e
+    carimbar o hub inteiro seria pior — passaria a cobrar as invariantes novas dos blocos
+    LEGADOS que convivem nele (REGRA 30). Então o carimbo vive no accordion: o builder põe
+    `data-gen` no `.lesson-card` que ele emitiu, e aqui só esses são checados. Bloco sem o
+    atributo é passado, para sempre. No standalone (sem lesson-card) vale o gen do arquivo.
+    """
+    if '<div class="lesson-card"' in c:
+        alvo = ''.join(b for g, b in
+                       ((int(m.group(1)), m.group(0)) for m in re.finditer(
+                           r'<div class="lesson-card"[^>]*data-gen="(\d+)"[^>]*>.*?(?=<div class="lesson-card"|\Z)',
+                           c, re.S))
+                       if g >= GEN_PREDICAO_EM_SLIDE)
+        if not alvo:
+            return
+        c = alvo
+    elif _gen(c) < GEN_PREDICAO_EM_SLIDE:
+        return
+
+    def norm(t):
+        t = re.sub(r'&[a-z]+;|&#\d+;', ' ', t or '')
+        t = re.sub(r'[^a-z0-9 ]', ' ', t.lower())
+        return ' '.join(t.split())
+
+    ruins = []
+    for m in re.finditer(r'<div class="fill-blank-sentence">(.*?)</div>', c, re.S):
+        bloco = m.group(1)
+        inp = re.search(r'<input[^>]*class="blank-input"[^>]*>', bloco)
+        if not inp:
+            continue
+        attrs = inp.group(0)
+        ans = (re.search(r'data-answer="([^"]*)"', attrs) or [None, ''])[1]
+        frase = (re.search(r'data-phrase="([^"]*)"', attrs) or [None, ''])[1]
+        if not ans or not frase:
+            continue
+        completada = norm(_txt(bloco.replace(attrs, f' {ans} ')))
+        if completada != norm(frase):
+            ruins.append(f'{completada[:52]!r} vs áudio {norm(frase)[:52]!r}')
+    if ruins:
+        fails.append(
+            f'FILL-IN-THE-BLANK NÃO FECHA COM O PRÓPRIO ÁUDIO ({len(ruins)}): '
+            f'{"; ".join(ruins[:3])}. A frase da tela mais o data-answer TÊM de dar o '
+            f'data-phrase — se não dão, a resposta esperada não cabe na frase e o botão '
+            f'Listen toca outra coisa. Quase sempre é sobra de uma versão anterior da aula, '
+            f'cujo vocabulário/gramática mudou e o exercício não')
+
+
 def check_gapfill_vocab(c, fails):
     """O GAP-FILL DE VOCABULÁRIO COBRA O QUE A AULA ENSINOU — e com banco (bloqueante).
 
@@ -1570,6 +1637,7 @@ def validate(path):
     check_player_vivo(c, fails)
     check_predicao(c, fails)
     check_gapfill_vocab(c, fails)
+    check_preclass_blanks(c, fails)
     check_input_no_detalhe(c, fails)
     check_pt_na_tela_inclass(c, fails, nivel_do_html(c))
     check_handlers_exist(c, fails)
