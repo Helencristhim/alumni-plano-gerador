@@ -223,9 +223,28 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
             assert m, 'stamps-row não encontrada no hub — não dá para inserir o stamp'
             s = s[:m.end()] + '\n' + stamp_html + s[m.end():]
 
-    # 2. accordion ex-lesson-N — antes de </div><!-- /tab-exercises -->
+    # 2. accordion ex-lesson-N
     preclass = B.inject_kids_game(read(os.path.join(content_dir, 'preclass.html')).strip(), cfg)
-    s = s.replace('</div><!-- /tab-exercises -->', '\n' + preclass + '\n\n</div><!-- /tab-exercises -->', 1)
+    # CARIMBO DE GERAÇÃO NO BLOCO. O hub nunca ganha <meta name="alumni-gen"> (o insert_hub
+    # só injeta trechos num arquivo antigo), então gate escopado por geração era CEGO para
+    # o Pre-class inteiro. Carimbar o hub seria pior: passaria a cobrar as invariantes novas
+    # dos blocos LEGADOS que convivem nele (REGRA 30). O carimbo vai no accordion que ESTE
+    # build emitiu — e o gate lê o bloco. Espelha build_from_model.build_hub_snippets().
+    preclass = re.sub(r'<div class="lesson-card"(?![^>]*\bdata-gen=)',
+                      f'<div class="lesson-card" data-gen="{B.BUILDER_GEN}"', preclass, count=1)
+    # POSIÇÃO NUMÉRICA, nunca "no fim da aba". Mesma classe de bug já corrigida no menu IN
+    # CLASS (incidente maria-claudia) — aqui tinha ficado para trás: em --replace de uma aula
+    # do MEIO, o accordion voltava depois de todos os outros e a aluna via a aula 1 embaixo
+    # da aula 2. Acha o 1º ex-lesson-K com K > n e insere ANTES dele; se nenhum, no fim.
+    fim_aba = s.find('</div><!-- /tab-exercises -->')
+    assert fim_aba > 0, 'aba Pre-class não encontrada no hub (</div><!-- /tab-exercises -->)'
+    depois = [m.start() for m in re.finditer(r'<div class="lesson-card"[^>]*id="ex-lesson-(\d+)"',
+                                             s[:fim_aba]) if int(m.group(1)) > n]
+    if depois:
+        ini = s.rfind('\n', 0, min(depois)) + 1
+        s = s[:ini] + preclass + '\n\n' + s[ini:]
+    else:
+        s = s[:fim_aba] + '\n' + preclass + '\n\n' + s[fim_aba:]
 
     # 3. card IN CLASS — antes de fechar a lista de cards do menu.
     #    Só o hub do PROFESSOR tem a aba IN CLASS (aluno = 2 abas, REGRA 3):
