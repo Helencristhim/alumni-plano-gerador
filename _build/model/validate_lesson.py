@@ -764,6 +764,35 @@ def _gen(c):
     return int(m.group(1)) if m else 0
 
 
+def check_um_slide_ativo(c, fails):
+    """SO UM SLIDE NASCE COM `active` (bloqueante).
+
+    Os `.slide` sao `position:absolute` empilhados: o que aparece e o que tem `active`.
+    Se DOIS nascem ativos, o que vem depois no HTML fica por cima e cobre a aula inteira
+    — e como `goToSlide()` so tira o `active` do slide que casa com `currentSlide`, o
+    intruso nunca sai. O professor abre QUALQUER aula e ve a tela de outra; fechar e
+    reabrir "conserta" porque `exitSlideMode()` limpa todos de uma vez.
+
+    Sintoma cruel: o contador mostra o numero CERTO ("01 / 28"). O JS foi pro slide certo
+    — so nao da pra ver. Nada no console, nada quebrado: so a tela errada.
+
+    Elaine (slide 421, abertura da aula 16) e rafael-gasparelli-lima (5 strays) tinham
+    isso. O `goToSlide` blindado (limpa TODOS) e a cura; este gate e a prevencao.
+
+    ESCOPO: geracao nova (<meta name="alumni-gen">). Legado com o mesmo defeito NAO se
+    conserta nem se reporta (REGRA 30/31) — so quando o Dan pedir aquele aluno.
+    """
+    if _gen(c) < GEN_PLAYER_E_PREDICAO:
+        return
+    ativos = re.findall(r'<div class="slide[^"]*\bactive\b[^"]*"[^>]*data-slide="(\d+)"', c)
+    if len(ativos) > 1:
+        fails.append(
+            f'MAIS DE UM SLIDE NASCE ATIVO ({len(ativos)}): data-slide {", ".join(ativos)}. '
+            f'Os .slide sao position:absolute empilhados — o ultimo do HTML fica por cima e '
+            f'cobre a aula toda (o contador mostra o slide certo, a tela mostra o errado). '
+            f'So o primeiro slide da aula leva `active`.')
+
+
 def check_player_vivo(c, fails):
     """O PLAYER DE LISTENING TEM DE TER CONTROLES (REGRA 2.1, bloqueante).
 
@@ -1635,6 +1664,7 @@ def validate(path):
     # Escopados à geração nova (arquivo com etiqueta de framework). Legado com o mesmo
     # defeito NÃO é tocado nem reportado — REGRA 30/31.
     check_player_vivo(c, fails)
+    check_um_slide_ativo(c, fails)
     check_predicao(c, fails)
     check_gapfill_vocab(c, fails)
     check_preclass_blanks(c, fails)
