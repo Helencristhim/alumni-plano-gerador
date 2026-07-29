@@ -736,7 +736,15 @@ def inject_task_slides(slides):
                 if kind == 'reading':
                     mtxt = re.search(r'<div class="ic-reading">.*?<p>(.*?)</p>', exp, re.S)
                 else:
-                    mtxt = re.search(r'class="dialogue-line[^>]*>.*?<p[^>]*>(.*?)</p>', exp, re.S)
+                    # A fala do diálogo vive num <div class="dialogue-bubble">, NUNCA num
+                    # <p> — é assim no shell do modelo (helen-mendes) e em tudo que o
+                    # builder emite. Procurando só por <p>, a âncora NUNCA casava e o
+                    # slide ia ao ar dizendo "This is the first line." sem linha nenhuma
+                    # acima: predição sem evidência, que é exatamente o que a chefe
+                    # reprovou em 28/07/2026. O <p> fica primeiro por causa de material
+                    # antigo que escreve a fala assim.
+                    mtxt = (re.search(r'class="dialogue-line[^>]*>.*?<p[^>]*>(.*?)</p>', exp, re.S)
+                            or re.search(r'class="dialogue-bubble[^"]*"[^>]*>(.*?)</div>', exp, re.S))
                 ancora = _primeira_frase(mtxt.group(1)) if mtxt else None
                 out.append(_slide_de_tarefa(kind, perguntas, phase, ancora))
         out.append(ch)
