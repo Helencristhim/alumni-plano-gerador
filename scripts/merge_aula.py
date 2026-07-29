@@ -190,7 +190,21 @@ def main():
             continue
 
         reapontar_dependentes(d["headRefName"])
-        gh("pr", "merge", str(pr), "--squash", "--delete-branch", parse=False)
+        try:
+            gh("pr", "merge", str(pr), "--squash", "--delete-branch", parse=False)
+        except RuntimeError as e:
+            # O `--delete-branch` tambem apaga a copia LOCAL, e o git recusa quando a
+            # branch esta presa por uma worktree (que e como geramos aula). O merge
+            # server-side JA aconteceu — tratar isso como falha reportaria "nao mergeou"
+            # para uma aula que esta em producao, que e pior que o lixo da branch local.
+            if "used by worktree" not in str(e) and "failed to delete local branch" not in str(e):
+                raise
+            print(f"  (branch local presa pela worktree — nao deletada; irrelevante)")
+        estado = gh("pr", "view", str(pr), "--json", "state")["state"]
+        if estado != "MERGED":
+            print(f"  ERRO: depois do merge o PR esta {estado}, nao MERGED")
+            saida = 1
+            continue
         print(f"  MERGEADO — a aula esta em producao (deploy automatico pela Vercel)")
         print(f"  LEMBRETE: a proxima aula deve sair do main atualizado "
               f"(git fetch && git rebase origin/main), nao desta branch.")
