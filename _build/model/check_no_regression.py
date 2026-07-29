@@ -45,7 +45,11 @@ def counts(c):
     return {
         'ex-lesson': len(re.findall(r'id="ex-lesson-', c)),
         'stamp': len(re.findall(r'id="stamp\d', c)),
-        'slides': len(re.findall(r'data-slide="', c)),
+        # data-slide="\d — o ATRIBUTO do slide, nunca a string JS. O seletor
+        # '.slide[data-slide="' + currentSlide + '"]' tambem casa com data-slide="
+        # cru: em 23/07/2026 apagar UMA linha de JS derrubou a contagem 563->562 e a
+        # guarda do main REVERTEU o fix da Elaine (#1542) como se um slide tivesse sumido.
+        'slides': len(re.findall(r'data-slide="\d', c)),
         'bytes': len(c),
     }
 
