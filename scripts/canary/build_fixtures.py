@@ -80,12 +80,27 @@ def defeito_gabarito_no_reveal(html):
         html)
 
 # (arquivo, funcao, marca esperada no FAIL, base). base='standalone' (slides) ou 'hub' (Pre-class).
+def defeito_audio_faltando(html):
+    """Aponta UMA entrada do audioMap para um MP3 que nao existe em lugar nenhum.
+
+    Este fixture existe por causa do sparse-checkout: o CI deixou de materializar
+    public/audio (4,94 GiB) na arvore do runner, e o `audio_existe` passou a
+    depender inteiramente do fallback `git ls-files`. Se alguem quebrar esse
+    fallback, TODA aula passa a "ter audio" e o gate vira enfeite — em silencio,
+    porque no disco do runner nao ha mp3 nenhum mesmo. O canario prova o
+    contrario: com o audio FORA da arvore, o gate ainda reprova audio que nao
+    existe nem no git.
+    """
+    return re.sub(r'"/audio/[^"]+\.mp3"',
+                  '"/audio/canario-nao-existe/nao_existe.mp3"', html, count=1)
+
 DEFEITOS = [
     ('pergunta-escondida.html', defeito_pergunta_escondida, 'PERGUNTA ESCONDIDA', 'standalone'),
     ('sentence-sem-css.html',   defeito_sentence_sem_css,   'SEM ESTILO-BASE',    'standalone'),
     ('gabarito-vazado.html',    defeito_gabarito_no_reveal, 'VAZA o gabarito',    'standalone'),
     ('header-portugues.html',   defeito_header_portugues,   'HEADER em português', 'standalone'),
     ('tarefa-ausente.html',     defeito_tarefa_ausente,     'TAREFA AUSENTE',     'standalone'),
+    ('audio-faltando.html',     defeito_audio_faltando,     'do audioMap NÃO existem', 'standalone'),
     # NOTA: o gate de PORTUGUES no Pre-class (A2+) le o HUB (public/professor/{slug}.html),
     # nao o arquivo passado — um fixture renomeado nunca satisfaz esse lookup, entao ele
     # nao vira fixture-arquivo. O canario cobre o CORACAO desse gate (pt_na_tela +

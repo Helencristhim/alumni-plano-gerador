@@ -25,7 +25,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # fetch-depth: 0 CONTINUA obrigatorio — sem historico completo o
+          # `git merge-base` falha e a classificacao de arquivos do PR morre
+          # ("fatal: origin/main...HEAD: no merge base"; ver comentario abaixo).
           fetch-depth: 0
+          # ── public/audio NAO vem pro runner ────────────────────────────────
+          # Sao 4,94 GiB de MP3 no HEAD, ~86% do repo. Todo run baixava isso
+          # ANTES do primeiro gate. Em 29/07/2026 o `actions/checkout` pendurou
+          # QUATRO vezes, de 30 a 50 min, travando a entrega de 3 alunos; o
+          # `gh run cancel` nem pegava (runner pendurado nao aceita cancelamento)
+          # e so fechar+reabrir o PR redisparava.
+          #
+          # Tirar o audio da ARVORE e seguro porque os gates que dependem dele ja
+          # perguntam ao GIT, nao ao disco — e isso ja estava escrito no codigo:
+          #   validate_lesson.audio_existe()      -> disco OU `git ls-files`
+          #   check_lesson_integrity.py           -> idem ("NAO materializados
+          #                                          na arvore local (sao gigabytes)")
+          #   check_order_audio_len.py            -> `git cat-file -s` do blob
+          # O `blob:none` completa: os blobs de audio nao sao nem baixados, e o
+          # que algum gate precisar abrir e buscado sob demanda (dezenas de
+          # arquivos, nao 78 mil).
+          #
+          # PROVA de que isto nao afrouxa nada: o CANARIO roda o fixture
+          # `audio-faltando.html` — audioMap apontando pra MP3 inexistente — e
+          # exige que o gate REPROVE. Se alguem quebrar o fallback do git, toda
+          # aula passaria a "ter audio" em silencio (no disco do runner nao ha
+          # mp3 nenhum mesmo) e o canario fica VERMELHO na hora.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/public/audio
 
       # ╔══════════════════════════════════════════════════════════════════════╗
       # ║ CANARIO — o vigia que nao confia no verde do gate.                    ║
