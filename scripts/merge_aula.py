@@ -54,7 +54,13 @@ def gh(*args, parse=True):
 
 def avaliar(rollup):
     """-> (veredito, [motivos]). veredito in {'ok','falhou','esperando'}."""
-    falhas, pendentes, gate = [], [], None
+    # `gates` pode aparecer VARIAS vezes no rollup — cada rerun (ou cada
+    # fechar/reabrir do PR, que e como a gente destrava checkout pendurado) soma
+    # uma entrada. Todas sao do MESMO head SHA, entao um SUCCESS ja prova que o
+    # codigo passou; uma duplicata ainda rodando e redundante, nao um bloqueio.
+    # Guardar so a ULTIMA vista fazia o PR verde ficar preso — travou a aula 4 da
+    # ana-luiza-sellmann com dois SUCCESS no rollup.
+    falhas, pendentes, gates = [], [], []
     for c in rollup:
         nome = c.get("name") or c.get("context") or "?"
         if c.get("__typename") == "CheckRun":
@@ -69,20 +75,25 @@ def avaliar(rollup):
         elif not concluido:
             pendentes.append(nome)
         if nome == GATE_OBRIGATORIO:
-            gate = (concluido, conclusao)
+            gates.append((concluido, conclusao))
 
     if falhas:
         return "falhou", falhas
-    if gate is None:
+    if not gates:
         return "falhou", [f"o check '{GATE_OBRIGATORIO}' nao existe neste PR — "
                           "sem ele nao da pra afirmar que a aula passou"]
-    concluido, conclusao = gate
-    if not concluido:
+    if any(c and x not in OK for c, x in gates):
+        return "falhou", [f"'{GATE_OBRIGATORIO}': "
+                          + ", ".join(x for c, x in gates if c and x not in OK)]
+    if not any(c and x in OK for c, x in gates):
         return "esperando", [f"'{GATE_OBRIGATORIO}' ainda rodando"]
-    if conclusao not in OK:
-        return "falhou", [f"'{GATE_OBRIGATORIO}': {conclusao}"]
-    # Gate verde. Pendencia sobrando so bloqueia se NAO for preview de deploy.
-    trava = [p for p in pendentes if not PREVIEW.search(p)]
+    # Gate verde. Pendencia sobrando so bloqueia se NAO for preview de deploy —
+    # e o proprio `gates` sai da conta: o veredito dele ja foi dado acima, e uma
+    # DUPLICATA ainda rodando (rerun/reopen) nao pode desfazer um SUCCESS do
+    # mesmo SHA. Sem esta excecao a aula 4 da ana-luiza-sellmann ficava presa com
+    # dois SUCCESS e um rerun em andamento.
+    trava = [p for p in pendentes
+             if not PREVIEW.search(p) and p != GATE_OBRIGATORIO]
     if trava:
         return "esperando", [f"pendente: {', '.join(trava)}"]
     return "ok", [f"'{GATE_OBRIGATORIO}' SUCCESS" +
@@ -197,9 +208,15 @@ def main():
             # branch esta presa por uma worktree (que e como geramos aula). O merge
             # server-side JA aconteceu — tratar isso como falha reportaria "nao mergeou"
             # para uma aula que esta em producao, que e pior que o lixo da branch local.
-            if "used by worktree" not in str(e) and "failed to delete local branch" not in str(e):
+            msg = str(e)
+            if "Merge already in progress" in msg:
+                # Corrida: o subagente do aluno tambem chamou o merge deste PR.
+                # Nao e erro — o estado do PR abaixo diz quem ganhou.
+                print("  (merge ja em andamento por outro processo — conferindo o estado)")
+            elif "used by worktree" in msg or "failed to delete local branch" in msg:
+                print("  (branch local presa pela worktree — nao deletada; irrelevante)")
+            else:
                 raise
-            print(f"  (branch local presa pela worktree — nao deletada; irrelevante)")
         estado = gh("pr", "view", str(pr), "--json", "state")["state"]
         if estado != "MERGED":
             print(f"  ERRO: depois do merge o PR esta {estado}, nao MERGED")
