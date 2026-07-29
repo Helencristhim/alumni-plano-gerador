@@ -25,7 +25,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # fetch-depth: 0 CONTINUA obrigatorio: sem historico completo o
+          # `git merge-base` falha e a classificacao de arquivos do PR morre
+          # ("fatal: origin/main...HEAD: no merge base" — ver comentario abaixo).
           fetch-depth: 0
+          # ... mas historico completo NAO precisa dos BLOBS. O peso deste repo e
+          # audio: ~5 GiB empacotados, quase tudo MP3 de aula. Com fetch-depth: 0
+          # puro, TODO run baixava os 5 GiB antes do primeiro gate, e sob
+          # concorrencia o `actions/checkout` pendurava por 30-50 min (3 vezes em
+          # 29/07/2026, travando a entrega de 3 alunos). O `blob:none` traz commits
+          # e trees inteiros — merge-base intacto — e busca blob so quando alguem
+          # le o arquivo. A arvore de trabalho do HEAD e materializada normalmente,
+          # entao os gates, que leem os HTMLs do working tree, nao mudam em nada.
+          filter: blob:none
 
       # ╔══════════════════════════════════════════════════════════════════════╗
       # ║ CANARIO — o vigia que nao confia no verde do gate.                    ║
