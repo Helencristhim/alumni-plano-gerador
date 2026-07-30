@@ -2027,24 +2027,31 @@ da aula 1 (e a 3 da 2...), porque o hub que o builder edita so existe la. Vinte 
 mergear = pilha de 20 PRs encadeados, e qualquer correcao na aula 1 obriga rebase de tudo
 acima. Mergeando por aula, **cada aula sai do `main` limpo** e o encadeamento desaparece.
 
-### Mergear NAO entrega ao aluno
+### COM MATERIAL NO DASHBOARD = `ativo` + `aprovado` (ordem do Dan, 31/07/2026)
 
-O merge publica o ARQUIVO numa URL. Quem entrega ao aluno e o link e o `perfis.status`
-(`rascunho -> em_revisao -> aprovado -> material_publicado`) + o booleano `ativo`, que e o que
-governa a dashboard. **A revisao pedagogica continua sendo o portao do aluno** — mergear cedo
-nao pula revisao, so faz o material existir e ser previsivel numa URL real.
+> *"apareceu no dashboard COM MATERIAL e ativo/aprovado, ok?"*
 
-### Aluno com material NAO fica em `rascunho` (ordem do Dan, 30/07/2026)
+Ao mergear a aula, o `merge_aula.py` (funcao `promover_status`) poe o perfil nos DOIS campos
+que a dashboard le:
 
-Ao mergear a aula, o `merge_aula.py` promove `perfis.status` de `rascunho`/`em_revisao` para
-**`aprovado`** (funcao `promover_status`). So o rotulo — `perfis.ativo`, que e o que entrega ao
-aluno, **nao e tocado**.
+| campo | vira | por que |
+|---|---|---|
+| `perfis.status` | `aprovado` (se estava em `rascunho`/`em_revisao`) | a dashboard **conta** por status: rascunho/em_revisao = "Em criacao", aprovado/material_publicado = "Em andamento" |
+| `perfis.ativo` | `true` | e o que **entrega** o material ao aluno |
 
-Por que: a dashboard conta por status (rascunho/em_revisao = "Em criacao";
-aprovado/material_publicado = "Em andamento"). Aluno com 21 aulas no ar aparecendo como
-"Rascunho" mente na tela e some da contagem de quem ja tem material — foi o que aconteceu com
-Leonardo Constantino e Lucia Nishiyama. Na pratica o time nao usa mais o ciclo de status a mao,
-entao ele so envelhece se ninguem o mover: **quem move e o merge**, nao a memoria de alguem.
+**Isto substitui a regra de 30/07**, que mandava promover so o rotulo e deixar `ativo` para a
+revisao pedagogica. Nao e mais assim: material gerado ja entra ativo. O que sobrou de portao e
+a geracao em si — se a aula nao passa nos gates, ela nao mergeia, e sem merge nao ha promocao.
+
+**`deactivated` continua INTOCADO, e isso nao e esquecimento.** E o soft-delete que a propria
+dashboard oferece, usado para esconder DUPLICATAS de perfil (Zilaudio, Daniela, Vanessa, em
+30/07). Um perfil escondido de proposito que ganhasse `ativo=true` voltaria a aparecer na tela
+e desfaria aquele trabalho — por isso o `ativo` so sobe para quem **nao** esta `deactivated`.
+
+Aluno com 21 aulas no ar aparecendo como "Rascunho" mente na tela e some da contagem de quem ja
+tem material — foi o que aconteceu com Leonardo Constantino e Lucia Nishiyama, corrigidos a
+mao. O time nao move mais o ciclo de status manualmente, entao ele so envelhece se ninguem o
+mover: **quem move e o merge**, nao a memoria de alguem.
 
 ### Use SEMPRE o script, nunca `gh pr merge` na mao
 
