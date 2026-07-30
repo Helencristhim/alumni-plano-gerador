@@ -198,12 +198,21 @@ def check_one(browser, rel_url: str, path: Path, timeout_ms=25000):
         elif not probe["upserts"]:
             res["reason"] = "NAO GRAVA: 5/5 marcados e nenhum upsert em lesson_progress"
         else:
-            got = [u["row"].get("lesson_number") for u in probe["upserts"]]
+            # As aulas ANTERIORES vao num upsert em LOTE (row = lista) e a aula marcada
+            # vai sozinha (row = objeto). Achata os dois casos antes de conferir.
+            rows = []
+            for u in probe["upserts"]:
+                r = u["row"]
+                rows.extend(r if isinstance(r, list) else [r])
+            got = sorted({r.get("lesson_number") for r in rows})
             res["saved_lessons"] = got
             if expected is not None and expected not in got:
                 res["reason"] = f"AULA ERRADA: marcou a aula {expected} e gravou {got}"
-            elif not any(u["row"].get("inclass_done") for u in probe["upserts"]):
+            elif not any(r.get("inclass_done") for r in rows):
                 res["reason"] = "inclass_done nao veio true"
+            elif expected is not None and got != list(range(1, expected + 1)):
+                # progresso e sequencial: marcar a N grava 1..N (ver saveInclassDone)
+                res["reason"] = f"NAO CUMULATIVO: aula {expected} gravou {got}, esperado 1..{expected}"
             else:
                 res["ok"] = True
     except Exception as e:
