@@ -235,6 +235,42 @@
       showToast('Erro: Supabase não conectado', 'error');
       return;
     }
+    // Grava a aula marcada E TODAS AS ANTERIORES (1..N), nao so a N.
+    //
+    // Por que. O progresso e SEQUENCIAL: quem esta na aula 15 ja teve as 14 antes.
+    // Os stamps e a barra do material ja tratavam assim desde 24/07/2026 (maxCompleted),
+    // mas o BANCO guardava so as marcadas — e os paineis (controle-aulas, roster-status,
+    // roster_dashboard) CONTAM LINHAS. O resultado era os dois discordarem: a Maria
+    // Claudia aparecia com 7/60 no material dela e "3 concluidas" no painel, porque a
+    // professora so marcou 1, 2 e 7. Marcar a 15 depois de meses sem marcar mostraria
+    // "1 concluida" no painel.
+    //
+    // Consertar aqui, na ESCRITA, e o que faz todo consumidor concordar sozinho —
+    // inclusive os que ainda nao existem. Consertar cada painel para usar max() em vez
+    // de contar exigiria que todo consumidor novo lembrasse da regra.
+    //
+    // SAO DOIS UPSERTS, e a separacao e proposital.
+    //
+    // O upsert do PostgREST atualiza as colunas QUE ESTAO no payload. Se as anteriores
+    // fossem no mesmo lote com `inclass_marked_at: null`, esse null SOBRESCREVERIA a
+    // data real de uma aula que a professora marcou de verdade meses atras — o
+    // historico de quando cada aula foi dada iria embora.
+    //
+    // Entao: a aula N vai com o timestamp; as anteriores vao SEM a coluna de data, o
+    // que deixa intacto o que ja estiver la (e nasce null nas que nao existiam — elas
+    // foram INFERIDAS, nao marcadas, e e correto que nao tenham data).
+    var anteriores = [];
+    for (var i = 1; i < lessonNum; i++) {
+      anteriores.push({ student_slug: slug, lesson_number: i, inclass_done: true });
+    }
+    if (anteriores.length) {
+      supabase.from('lesson_progress')
+        .upsert(anteriores, { onConflict: 'student_slug,lesson_number' })
+        .then(function(r) {
+          if (r.error) console.error('lesson-progress backfill error:', r.error.message);
+          else console.log('lesson-progress: aulas 1-' + (lessonNum - 1) + ' marcadas por inferencia');
+        });
+    }
     supabase.from('lesson_progress')
       .upsert({
         student_slug: slug,
