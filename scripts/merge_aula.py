@@ -30,10 +30,13 @@ passou. A regra correta esta em `avaliar()`:
 """
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.request
 
 # Conclusoes de CheckRun que contam como "nao passou".
 FALHA = {"FAILURE", "TIMED_OUT", "CANCELLED", "ACTION_REQUIRED", "STARTUP_FAILURE", "STALE"}
@@ -112,6 +115,57 @@ def slugs_do_pr(arquivos):
                 achados.add(m.group(1))
                 break
     return achados
+
+
+def _supabase():
+    """URL + chave publicavel, lidas do MESMO arquivo que o site usa.
+
+    Duplicar a chave aqui criaria uma segunda fonte que envelhece sozinha."""
+    cfg = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                       "public", "lib", "supabase-config.js")
+    with open(cfg, encoding="utf-8") as f:
+        txt = f.read()
+    url = re.search(r"SUPABASE_URL\s*=\s*'([^']+)'", txt)
+    key = re.search(r"SUPABASE_ANON_KEY\s*=\s*'([^']+)'", txt)
+    return (url.group(1), key.group(1)) if url and key else (None, None)
+
+
+def promover_status(slug):
+    """Aluno com material gerado nao e mais 'rascunho' (ordem do Dan, 30/07/2026).
+
+    O dashboard ordena e conta por `perfis.status`: rascunho/em_revisao caem em
+    "Em criacao" e aprovado/material_publicado em "Em andamento". Aula mergeada e
+    material NO AR — deixar o perfil em rascunho mente na tela e o aluno some da
+    contagem de quem ja tem material.
+
+    Isto NAO reativa nem publica nada: `perfis.ativo` (o que governa a entrega ao
+    aluno) fica exatamente como esta. E so o rotulo alcancando o fato.
+
+    Falha aqui NUNCA derruba o merge — a aula ja esta em producao.
+    """
+    url, key = _supabase()
+    if not (url and key):
+        print("  (status: nao achei a config do Supabase — perfil nao promovido)")
+        return
+    h = {"apikey": key, "Authorization": f"Bearer {key}",
+         "Content-Type": "application/json", "Prefer": "return=representation"}
+    try:
+        req = urllib.request.Request(
+            f"{url}/rest/v1/perfis?id=eq.{slug}&select=id,status", headers=h)
+        atual = json.load(urllib.request.urlopen(req, timeout=20))
+        if not atual:
+            print(f"  (status: '{slug}' nao esta na tabela perfis — nada a promover)")
+            return
+        st = atual[0].get("status")
+        if st not in ("rascunho", "em_revisao"):
+            return
+        req = urllib.request.Request(
+            f"{url}/rest/v1/perfis?id=eq.{slug}", headers=h, method="PATCH",
+            data=json.dumps({"status": "aprovado"}).encode())
+        novo = json.load(urllib.request.urlopen(req, timeout=20))
+        print(f"  status do perfil: {st} -> {novo[0]['status']}")
+    except (urllib.error.URLError, OSError, ValueError, KeyError, IndexError) as e:
+        print(f"  (status nao promovido: {type(e).__name__} — a aula esta mergeada mesmo assim)")
 
 
 def reapontar_dependentes(head):
@@ -223,6 +277,8 @@ def main():
             saida = 1
             continue
         print(f"  MERGEADO — a aula esta em producao (deploy automatico pela Vercel)")
+        if len(slugs) == 1:
+            promover_status(next(iter(slugs)))
         print(f"  LEMBRETE: a proxima aula deve sair do main atualizado "
               f"(git fetch && git rebase origin/main), nao desta branch.")
 

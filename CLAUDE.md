@@ -2034,6 +2034,18 @@ O merge publica o ARQUIVO numa URL. Quem entrega ao aluno e o link e o `perfis.s
 governa a dashboard. **A revisao pedagogica continua sendo o portao do aluno** — mergear cedo
 nao pula revisao, so faz o material existir e ser previsivel numa URL real.
 
+### Aluno com material NAO fica em `rascunho` (ordem do Dan, 30/07/2026)
+
+Ao mergear a aula, o `merge_aula.py` promove `perfis.status` de `rascunho`/`em_revisao` para
+**`aprovado`** (funcao `promover_status`). So o rotulo — `perfis.ativo`, que e o que entrega ao
+aluno, **nao e tocado**.
+
+Por que: a dashboard conta por status (rascunho/em_revisao = "Em criacao";
+aprovado/material_publicado = "Em andamento"). Aluno com 21 aulas no ar aparecendo como
+"Rascunho" mente na tela e some da contagem de quem ja tem material — foi o que aconteceu com
+Leonardo Constantino e Lucia Nishiyama. Na pratica o time nao usa mais o ciclo de status a mao,
+entao ele so envelhece se ninguem o mover: **quem move e o merge**, nao a memoria de alguem.
+
 ### Use SEMPRE o script, nunca `gh pr merge` na mao
 
 ```
