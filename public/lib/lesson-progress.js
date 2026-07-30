@@ -73,6 +73,17 @@
   }
 
   // ===== DETECT LESSON NUMBER FOR A SLIDE =====
+  // Ultimo recurso: a aula pelo NOME DO ARQUIVO. Material standalone chama-se
+  // {slug}-aula{N}.html e contem UMA aula so. Quando nem o slide nem o container
+  // do checklist declaram data-lesson (andrea-aggio aula7/8), sem isto lessonNum
+  // fica null e o material NUNCA registra a aula: a professora marca os 5 checks,
+  // ve o visual mudar e nada e gravado — falha silenciosa. So entra depois que
+  // todo o resto falhou, e nao vale para hub multi-aula (sem "-aulaN" no nome).
+  function lessonFromFilename() {
+    var m = (window.location.pathname || '').match(/-aula(\d+)\.html?$/i);
+    return m ? parseInt(m[1], 10) : null;
+  }
+
   function detectLesson(slide) {
     if (!slide) return null;
     if (slide.dataset.lesson) return parseInt(slide.dataset.lesson);
@@ -108,12 +119,25 @@
     window.toggleCheck = function(item) {
       _originalToggleCheck(item);
       var slide = item.closest('.slide');
-      var grid = item.closest('.check-grid');
+      // O container do checklist NAO tem um nome so no roster: e .check-grid, e
+      // .check-list (milton-sayegh 11-20), e as vezes um <div> sem classe nenhuma
+      // (luiz-bressane 13-20). Procurar so por .check-grid deixava `grid` null e o
+      // `return` abaixo engolia o registro: 18 aulas em que a professora marcava os
+      // 5 checks, via o visual mudar, e a aula NUNCA era concluida — por causa do
+      // nome de uma classe CSS. Por isso o ultimo recurso e o PAI dos itens, aceito
+      // so quando ele agrupa 2+ check-items (senao cada item viraria seu proprio
+      // "grid completo" e a aula fecharia no primeiro clique).
+      var grid = item.closest('.check-grid, .check-list');
+      if (!grid) {
+        var parent = item.parentElement;
+        if (parent && parent.querySelectorAll('.check-item').length > 1) grid = parent;
+      }
       // detecta a aula pelo slide (template novo) OU pelo data-lesson do próprio
-      // check-grid (template antigo retrofitado). NUNCA confiar no id="checklist-N":
+      // container (template antigo retrofitado). NUNCA confiar no id="checklist-N":
       // é inconsistente entre alunos (patricia-xavier aula5 = checklist-1).
       var lessonNum = detectLesson(slide);
       if (!lessonNum && grid && grid.dataset.lesson) lessonNum = parseInt(grid.dataset.lesson);
+      if (!lessonNum) lessonNum = lessonFromFilename();
       if (!lessonNum) {
         console.warn('lesson-progress: could not detect lesson number for check item');
         return;
@@ -272,10 +296,11 @@
         });
         console.log('lesson-progress: ' + completedLessons + ' aulas concluídas de ' + totalAulas);
         // Restore visual checks on professor pages
-        document.querySelectorAll('.check-grid').forEach(function(grid) {
+        document.querySelectorAll('.check-grid, .check-list').forEach(function(grid) {
           var slide = grid.closest('.slide');
           var lessonNum = detectLesson(slide);
           if (!lessonNum && grid.dataset.lesson) lessonNum = parseInt(grid.dataset.lesson);
+          if (!lessonNum) lessonNum = lessonFromFilename();
           if (lessonNum && completedSet[lessonNum]) {
             grid.querySelectorAll('.check-item').forEach(function(item) {
               item.classList.add('checked');
