@@ -131,17 +131,28 @@ def _supabase():
 
 
 def promover_status(slug):
-    """Aluno com material gerado nao e mais 'rascunho' (ordem do Dan, 30/07/2026).
+    """Aluno que APARECE NO DASHBOARD COM MATERIAL e ativo E aprovado.
 
-    O dashboard ordena e conta por `perfis.status`: rascunho/em_revisao caem em
-    "Em criacao" e aprovado/material_publicado em "Em andamento". Aula mergeada e
-    material NO AR — deixar o perfil em rascunho mente na tela e o aluno some da
-    contagem de quem ja tem material.
+    Ordem do Dan, 31/07/2026: "apareceu no dashboard COM MATERIAL e ativo/aprovado".
+    Aula mergeada e material NO AR, numa URL real — os dois campos que a dashboard
+    le tem de refletir isso:
 
-    Isto NAO reativa nem publica nada: `perfis.ativo` (o que governa a entrega ao
-    aluno) fica exatamente como esta. E so o rotulo alcancando o fato.
+      * `perfis.status`  — ordena e CONTA: rascunho/em_revisao caem em "Em criacao",
+        aprovado/material_publicado em "Em andamento". Perfil com aula no ar marcado
+        como Rascunho mente na tela e some da contagem (foi o caso do Leonardo
+        Constantino e da Lucia Nishiyama, corrigidos a mao em 30/07).
+      * `perfis.ativo`   — e o que efetivamente ENTREGA o material ao aluno. Ate
+        30/07 este script nao o tocava de proposito, tratando a revisao pedagogica
+        como portao. O Dan reverteu: material gerado ja entra ativo.
 
-    Falha aqui NUNCA derruba o merge — a aula ja esta em producao.
+    UM campo continua intocado, e nao por esquecimento: **`deactivated`**. Ele e o
+    soft-delete que a propria dashboard oferece e foi usado para esconder DUPLICATAS
+    (Zilaudio, Daniela, Vanessa — 30/07). Perfil escondido de proposito que ganhasse
+    `ativo=true` voltaria a aparecer na tela e desfaria aquele trabalho. Por isso o
+    `ativo` so sobe para quem NAO esta deactivated.
+
+    Idempotente: so faz PATCH do que esta fora do lugar. Falha aqui NUNCA derruba o
+    merge — a aula ja esta em producao.
     """
     url, key = _supabase()
     if not (url and key):
@@ -151,19 +162,29 @@ def promover_status(slug):
          "Content-Type": "application/json", "Prefer": "return=representation"}
     try:
         req = urllib.request.Request(
-            f"{url}/rest/v1/perfis?id=eq.{slug}&select=id,status", headers=h)
+            f"{url}/rest/v1/perfis?id=eq.{slug}&select=id,status,ativo,deactivated",
+            headers=h)
         atual = json.load(urllib.request.urlopen(req, timeout=20))
         if not atual:
             print(f"  (status: '{slug}' nao esta na tabela perfis — nada a promover)")
             return
-        st = atual[0].get("status")
-        if st not in ("rascunho", "em_revisao"):
+        p = atual[0]
+        patch = {}
+        if p.get("status") in ("rascunho", "em_revisao"):
+            patch["status"] = "aprovado"
+        if not p.get("ativo"):
+            if p.get("deactivated"):
+                print(f"  (perfil '{slug}' esta deactivated — NAO reativado de proposito)")
+            else:
+                patch["ativo"] = True
+        if not patch:
             return
         req = urllib.request.Request(
             f"{url}/rest/v1/perfis?id=eq.{slug}", headers=h, method="PATCH",
-            data=json.dumps({"status": "aprovado"}).encode())
-        novo = json.load(urllib.request.urlopen(req, timeout=20))
-        print(f"  status do perfil: {st} -> {novo[0]['status']}")
+            data=json.dumps(patch).encode())
+        novo = json.load(urllib.request.urlopen(req, timeout=20))[0]
+        print(f"  perfil: status {p.get('status')} -> {novo['status']}, "
+              f"ativo {p.get('ativo')} -> {novo['ativo']}")
     except (urllib.error.URLError, OSError, ValueError, KeyError, IndexError) as e:
         print(f"  (status nao promovido: {type(e).__name__} — a aula esta mergeada mesmo assim)")
 
