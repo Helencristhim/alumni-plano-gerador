@@ -145,6 +145,22 @@ def assert_framework(cfg):
             f'Aluno real NÃO recebe framework em validação — gere num aluno mock primeiro '
             f'(ordem do Dan, 27/07/2026).')
 
+    # RODÍZIO (30/07/2026) — se este aluno tem uma sequência declarada, a aula que está
+    # sendo gerada TEM de trazer o framework que a posição dela pede. Aqui a checagem vale
+    # ainda mais do que no CI: o config é a ÚNICA fonte da aula, e um framework trocado só
+    # apareceria depois de 25 slides e ~50 MP3 gerados.
+    rod = next((r for r in data.get('rodizios', []) if r['slug'] == cfg['slug']), None)
+    if rod:
+        ciclo, desde = rod.get('ciclo') or [], rod.get('desde_aula', 1)
+        n = (cfg.get('lesson') or {}).get('n')
+        if ciclo and n and n >= desde:
+            esperado = ciclo[(n - desde) % len(ciclo)]
+            assert fw == esperado, (
+                f'rodízio declarado para "{cfg["slug"]}": o ciclo {" > ".join(ciclo)} '
+                f'(a partir da aula {desde}) pede "{esperado}" na aula {n}, mas o config '
+                f'declara "{fw}". Corrija o config ou o rodizios[] de frameworks.json — '
+                f'o GATE 11 barraria isto no PR de qualquer forma.')
+
 
 def write(p, s):
     os.makedirs(os.path.dirname(p), exist_ok=True)

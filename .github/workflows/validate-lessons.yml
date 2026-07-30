@@ -326,6 +326,12 @@ jobs:
         # documento proíbe explicitamente antes da tarefa.
         run: python3 scripts/check_tbl_lesson.py
 
+      - name: "GATE 11 — selftest: prova que o gate de framework ainda morde"
+        # Inclui os casos do RODÍZIO (30/07/2026): a aula N tem de trazer o framework que a
+        # sequência declarada pede. Sem selftest, "declarei rodízio" viraria uma forma de
+        # DESLIGAR a checagem de mistura sem ninguém notar.
+        run: python3 scripts/check_framework_isolation.py --selftest
+
       - name: "GATE 11 — isolamento de framework (aluno real nunca recebe método em validação)"
         # Ordem do Dan (27/07/2026): "não quero que NADA DE ALUNOS JÁ ATUAIS utilize os
         # frameworks que vamos inserir agora [...] gerar alunos mock, validar, pra só

@@ -41,6 +41,18 @@ REGRAS (as tres, todas bloqueantes)
    respeitam o corte declarado (antes da aula N = framework "de"; da N em diante =
    framework "para"). Declarar sem cumprir tambem e erro.
 
+3b. RODIZIO NAO CUMPRIDO — a partir de 30/07/2026 um aluno pode ter os frameworks
+   ALTERNANDO por posicao de aula (a nova estrategia do Black adulto: "intercalar a
+   rodada de frameworks nas aulas"). Isso e outra TOPOLOGIA, nao um caso particular de
+   migracao: migracao tem um corte e dois frameworks; rodizio tem N frameworks e nenhum
+   corte. Declara-se em `rodizios` de frameworks.json:
+
+       {"slug": "...", "desde_aula": 1, "ciclo": ["ppp", "communicative", "task-based"]}
+
+   O framework esperado da aula N e ciclo[(N - desde_aula) % len(ciclo)], e o gate
+   confere aula a aula — mesma severidade da regra 3. Slug com rodizio E migracao ao
+   mesmo tempo e erro: nao ha resposta unica para "qual framework a aula N devia ter".
+
 4. PACOTE INCONSISTENTE — aulas do mesmo aluno declarando `TOTAL_AULAS` diferentes.
 
    Esta e a garantia FINANCEIRA (pedido do Dan, 27/07/2026): trocar de framework nao
@@ -104,7 +116,8 @@ def carrega_catalogo():
                 status[fw['id']] = 'producao' if fw['status'] == 'producao' else 'nao-producao'
     mocks = {k: set(v) for k, v in data.get('mocks', {}).items()}
     migracoes = {m['slug']: m for m in data.get('migracoes', [])}
-    return por_categoria, status, mocks, migracoes
+    rodizios = {r['slug']: r for r in data.get('rodizios', [])}
+    return por_categoria, status, mocks, migracoes, rodizios
 
 
 def arquivos_alvo(argv):
@@ -121,8 +134,56 @@ def arquivos_alvo(argv):
     return out
 
 
+def selftest():
+    """Prova que o gate MORDE — em especial a regra do rodízio, que é nova (30/07/2026).
+
+    Exercita `checa_sequencia` direto: ela é pura, então o selftest não precisa de disco
+    nem de HTML de mentira. Cada caso descreve uma situação real de geração.
+    """
+    st = {'ppp': 'nao-producao', 'communicative': 'nao-producao',
+          'task-based': 'nao-producao', 'imersivo-prototipo': 'producao'}
+    ciclo = ['ppp', 'communicative', 'task-based']
+    rod = {'ciclo': ciclo, 'desde_aula': 1}
+    certo = {1: 'ppp', 2: 'communicative', 3: 'task-based', 4: 'ppp', 5: 'communicative'}
+    fws = lambda aulas: {fw: ['x.html'] for fw in set(aulas.values())}
+
+    casos = [
+        ('rodízio cumprido (5 aulas, ciclo de 3)', certo, rod, None, 0),
+        ('aula 4 saiu em TBL (devia ser PPP)', {**certo, 4: 'task-based'}, rod, None, 1),
+        ('aula 2 saiu em imersivo (fora do ciclo)', {**certo, 2: 'imersivo-prototipo'},
+         rod, None, 1),
+        ('rodízio de 1 framework só (declaração vazia de efeito)',
+         {1: 'ppp', 2: 'ppp'}, {'ciclo': ['ppp'], 'desde_aula': 1}, None, 1),
+        ('rodízio cita framework que não existe', certo,
+         {'ciclo': ['ppp', 'ppppp'], 'desde_aula': 1}, None, 1),
+        ('rodízio começa na aula 3 (1 e 2 são de antes)',
+         {1: 'imersivo-prototipo', 2: 'imersivo-prototipo', 3: 'ppp', 4: 'communicative'},
+         {'ciclo': ciclo, 'desde_aula': 3}, None, 0),
+        ('rodízio + migração ao mesmo tempo', certo, rod,
+         {'de': 'ppp', 'para': 'communicative', 'a_partir_da_aula': 3}, 1),
+        # As regras que já existiam continuam mordendo — o rodízio não pode tê-las afrouxado.
+        ('mistura SEM declaração nenhuma', {1: 'ppp', 2: 'communicative'}, None, None, 1),
+        ('migração declarada e cumprida',
+         {1: 'imersivo-prototipo', 2: 'imersivo-prototipo', 3: 'ppp'}, None,
+         {'de': 'imersivo-prototipo', 'para': 'ppp', 'a_partir_da_aula': 3}, 0),
+        ('migração declarada e NÃO cumprida',
+         {1: 'ppp', 2: 'imersivo-prototipo', 3: 'ppp'}, None,
+         {'de': 'imersivo-prototipo', 'para': 'ppp', 'a_partir_da_aula': 3}, 1),
+    ]
+    ruim = 0
+    for nome, aulas, r, mig, esperado in casos:
+        n = len(checa_sequencia('selftest', fws(aulas), aulas, mig, r, st))
+        ok = (n > 0) == (esperado > 0)
+        ruim += not ok
+        print(f'  {"OK  " if ok else "FALHOU"} {nome}: {n} erro(s)')
+    print('\nselftest: ' + ('✅ o gate morde' if not ruim else f'❌ {ruim} caso(s) errado(s)'))
+    return 1 if ruim else 0
+
+
 def main():
-    por_categoria, status, mocks, migracoes = carrega_catalogo()
+    if '--selftest' in sys.argv:
+        return selftest()
+    por_categoria, status, mocks, migracoes, rodizios = carrega_catalogo()
     erros = []
     # slug -> {framework: [arquivos]}  (so entra quem TEM etiqueta)
     por_slug = defaultdict(lambda: defaultdict(list))
@@ -180,31 +241,8 @@ def main():
     #       mistura não dispara, e a declaração passa a dizer uma coisa enquanto os
     #       arquivos fazem outra. Pego em teste, 27/07/2026.
     for slug, fws in por_slug.items():
-        mig = migracoes.get(slug)
-        if not mig:
-            if len(fws) > 1:
-                detalhe = ' vs '.join(f'{k} ({len(v)} aula(s))' for k, v in sorted(fws.items()))
-                erros.append(
-                    f'{slug}: aulas de frameworks DIFERENTES sem migração declarada -> '
-                    f'{detalhe}. Se a troca é intencional, declare em migracoes[] de '
-                    f'frameworks.json ({{"slug","de","para","a_partir_da_aula"}}); se não é, '
-                    f'alguém trocou o framework deste aluno por engano.')
-            continue
-        corte, de, para = mig.get('a_partir_da_aula'), mig.get('de'), mig.get('para')
-        if not (corte and de and para):
-            erros.append(f'{slug}: migração declarada incompleta — exige "de", "para" e '
-                         f'"a_partir_da_aula".')
-            continue
-        fora = {fw for fw in fws if fw not in (de, para)}
-        if fora:
-            erros.append(f'{slug}: migração declara {de} -> {para}, mas há aula em '
-                         f'{sorted(fora)}.')
-        for n, fw in sorted(aula_fw[slug].items()):
-            esperado = de if n < corte else para
-            if fw != esperado:
-                erros.append(
-                    f'{slug}-aula{n}: framework "{fw}" contraria a migração declarada '
-                    f'({de} até a aula {corte - 1}, {para} da {corte} em diante).')
+        erros.extend(checa_sequencia(slug, fws, aula_fw[slug], migracoes.get(slug),
+                                     rodizios.get(slug), status))
 
     # REGRA 4 — o pacote do aluno tem UM tamanho só (garantia financeira)
     for slug, vals in totais.items():
@@ -226,6 +264,79 @@ def main():
         return 1
     print('✅ OK — nenhum aluno real com framework experimental.')
     return 0
+
+
+def checa_sequencia(slug, fws, aulas, mig, rod, status):
+    """As regras 3 / 3b: o aluno tem os frameworks que ALGUÉM DECLAROU que ele teria.
+
+    `fws`   {framework: [arquivos]} — tudo que este slug tem etiquetado (hub inclusive)
+    `aulas` {numero_da_aula: framework} — só arquivos {slug}-aulaN.html
+    Função PURA (não lê disco) — é o que o --selftest exercita.
+    """
+    erros = []
+    # RODIZIO — o método ALTERNA por posição de aula, para sempre (pedido do Dan,
+    # 30/07/2026). É outra topologia, não um caso particular de migração: migração tem UM
+    # corte e dois frameworks; rodízio tem N frameworks e nenhum corte. Espremer rodízio em
+    # migracoes[] transformaria a declaração de migração em carta branca ("declarei, agora
+    # vale qualquer coisa") — exatamente o buraco que a regra 3 fechou em 27/07.
+    #
+    # A severidade é a MESMA da regra 3: a pergunta continua sendo "esta aula tem o
+    # framework que alguém declarou que ela teria?". Só muda quem responde — a sequência,
+    # em vez do corte.
+    if rod and mig:
+        return [f'{slug}: tem rodízio E migração declarados ao mesmo tempo. São regras '
+                f'incompatíveis (uma alterna para sempre, a outra corta uma vez); com as '
+                f'duas, não há resposta única para "qual framework a aula N devia ter".']
+    if rod:
+        ciclo = rod.get('ciclo') or []
+        desde = rod.get('desde_aula', 1)
+        if len(ciclo) < 2:
+            return [f'{slug}: rodízio declarado com ciclo de {len(ciclo)} framework(s) — '
+                    f'rodízio exige pelo menos 2 (com um só é o framework do aluno, e a '
+                    f'declaração não faria nada além de desligar a checagem de mistura).']
+        desconhecidos = sorted({fw for fw in ciclo if fw not in status})
+        if desconhecidos:
+            return [f'{slug}: rodízio cita framework inexistente: '
+                    f'{", ".join(desconhecidos)}.']
+        # O HUB ({slug}.html, sem número) carrega a etiqueta da ÚLTIMA aula gerada — num
+        # rodízio isso é ruído, não declaração: ele contém aulas de vários métodos. Por
+        # isso a conferência é só sobre arquivos com número de aula.
+        for n, fw in sorted(aulas.items()):
+            if n < desde:
+                continue  # antes de o rodízio começar: fora do alcance desta regra
+            esperado = ciclo[(n - desde) % len(ciclo)]
+            if fw != esperado:
+                erros.append(
+                    f'{slug}-aula{n}: framework "{fw}" contraria o rodízio declarado — o '
+                    f'ciclo {" > ".join(ciclo)} (a partir da aula {desde}) pede '
+                    f'"{esperado}" nesta posição.')
+        return erros
+
+    if not mig:
+        if len(fws) > 1:
+            detalhe = ' vs '.join(f'{k} ({len(v)} aula(s))' for k, v in sorted(fws.items()))
+            erros.append(
+                f'{slug}: aulas de frameworks DIFERENTES sem migração declarada -> '
+                f'{detalhe}. Se a troca é intencional, declare em migracoes[] de '
+                f'frameworks.json ({{"slug","de","para","a_partir_da_aula"}}); se alternam '
+                f'de propósito, declare em rodizios[]; se não é nem um nem outro, alguém '
+                f'trocou o framework deste aluno por engano.')
+        return erros
+    corte, de, para = mig.get('a_partir_da_aula'), mig.get('de'), mig.get('para')
+    if not (corte and de and para):
+        return [f'{slug}: migração declarada incompleta — exige "de", "para" e '
+                f'"a_partir_da_aula".']
+    fora = {fw for fw in fws if fw not in (de, para)}
+    if fora:
+        erros.append(f'{slug}: migração declara {de} -> {para}, mas há aula em '
+                     f'{sorted(fora)}.')
+    for n, fw in sorted(aulas.items()):
+        esperado = de if n < corte else para
+        if fw != esperado:
+            erros.append(
+                f'{slug}-aula{n}: framework "{fw}" contraria a migração declarada '
+                f'({de} até a aula {corte - 1}, {para} da {corte} em diante).')
+    return erros
 
 
 if __name__ == '__main__':
