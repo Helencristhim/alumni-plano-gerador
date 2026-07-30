@@ -186,7 +186,16 @@ def reapontar_dependentes(head):
     return [d["number"] for d in dependentes]
 
 
-def conferir(pr):
+def conferir(pr, retrofit=False):
+    """`retrofit=True` relaxa UMA regra: a de um aluno so.
+
+    Ela existe para PR de AULA — a geracao nao pode sprawlar por varios alunos (REGRA 32).
+    Um retrofit autorizado pelo Dan (ex.: o Spot the Error, 708 arquivos em 30 alunos, PR
+    #1731) e outra coisa: toca muitos alunos POR DEFINICAO, e quebrar em 30 PRs deixaria a
+    revisao pior, nao melhor. Todo o resto continua valendo, inclusive a unica trava que
+    realmente protege producao: `gates` COMPLETED+SUCCESS e nenhum check vermelho. Nao ha
+    branch protection no main — se este script afrouxar, nao ha segunda linha.
+    """
     d = gh("pr", "view", str(pr), "--json",
            "number,state,title,baseRefName,headRefName,files,statusCheckRollup")
     problemas = []
@@ -206,8 +215,10 @@ def conferir(pr):
         problemas.append(f"o PR DELETA arquivo(s): {delecoes[:5]}")
 
     slugs = slugs_do_pr(caminhos)
-    if len(slugs) > 1:
-        problemas.append(f"PR toca mais de um aluno: {sorted(slugs)}")
+    if len(slugs) > 1 and not retrofit:
+        problemas.append(
+            f"PR toca mais de um aluno: {sorted(slugs)}"
+            f"\n      (retrofit autorizado pelo Dan? --retrofit relaxa SO esta regra)")
 
     veredito, motivos = avaliar(d.get("statusCheckRollup") or [])
     return d, problemas, veredito, motivos, slugs
@@ -218,6 +229,8 @@ def main():
     ap.add_argument("prs", nargs="+", type=int)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--wait", action="store_true", help="espera o gate concluir (ate 20 min por PR)")
+    ap.add_argument("--retrofit", action="store_true",
+                    help="PR de retrofit autorizado: relaxa SO a regra de um aluno so")
     a = ap.parse_args()
 
     saida = 0
@@ -225,7 +238,7 @@ def main():
         print(f"\n=== PR #{pr}")
         prazo = time.time() + 20 * 60
         while True:
-            d, problemas, veredito, motivos, slugs = conferir(pr)
+            d, problemas, veredito, motivos, slugs = conferir(pr, retrofit=a.retrofit)
             if veredito != "esperando" or not a.wait or time.time() > prazo:
                 break
             print(f"  ... {motivos[0]} — reconferindo em 60s")
