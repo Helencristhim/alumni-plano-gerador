@@ -32,24 +32,31 @@ do que ouve, o bloco pesa deliberadamente para o listening na segunda metade.
 
 ## 3. Linguagem-alvo e vocabulário (REGRA 22 — nada repete como novidade)
 
-### Aula 1 — PPP — *The Update Nobody Read*
+> Escrito ANTES de gerar e **corrigido depois** para bater com o que as cinco aulas de fato
+> ensinam — o syllabus é o mapa, e mapa que diverge do território não serve para nada. As
+> aulas de framework **Communicative** ensinam LINHAS funcionais nos vocab cards, não
+> palavras soltas: é o que o método pede (chunks extraídos do input), e é o que está lá.
+
+### Aula 1 — PPP — *The Update Nobody Read* — 13 slides · Reading
 - **Funcional:** `We're on track for…` · `We're running about X behind` · `The blocker is…` ·
   `What I need from you is…` · `By Friday we'll have…`
-- **Vocab (10):** update · on track · behind schedule · blocker · milestone · lead time ·
-  batch · shipment · rework · sign-off
-- **Artefato:** o e-mail de status que ninguém leu (HTML/CSS), base do gist.
+- **Vocab (8):** update · on track · behind schedule · blocker · lead time · batch ·
+  shipment · sign-off
+- **Input:** o texto "Four hundred words nobody read" — a coordenadora cujo relatório
+  completo nunca chegava a ninguém.
 
-### Aula 2 — Communicative — *What They Actually Need*
-- **Funcional:** `Just to be clear…` · `Do you mean X or Y?` · `So what you need is…` ·
-  `Can I check one thing?` · `Let me repeat that back to you.`
-- **Vocab (10):** requirement · assumption · scope · deadline vs. target date · spec ·
-  clarify · confirm · misunderstanding · follow-up · workaround
-- **Task:** a professora é a compradora do cliente e pede uma coisa querendo outra. O aluno
-  tem de sair da call com o requisito real escrito. *Information gap por PAPEL* — a
-  assimetria é de posição, não de conhecimento.
-- **Callback da 1:** o update da aula 1 é o que abre a call.
+### Aula 2 — Communicative — *What They Actually Need* — 9 slides · Listening
+- **Funcional / vocab cards (8):** `Before I confirm, can I check one thing?` ·
+  `Can I ask what's driving this?` · `What happens if we don't?` · `Just to be clear…` ·
+  `Do you mean X or Y?` · `So what you need is…` · `Would it help if…?` ·
+  `I'll confirm by Thursday.`
+- **Task:** a professora é a compradora do cliente e pede uma coisa querendo outra (peça mais
+  fina, quando o problema é o peso da caixa). O aluno tem de sair da call com o requisito
+  real. *Information gap por PAPEL* — a assimetria é de posição, não de conhecimento, e o
+  motivo sai em três camadas, só se ele perguntar.
+- **Callback da 1:** o warm-up abre com o update de 60s que ele gravou de homework.
 
-### Aula 3 — Task-Based — *Two Suppliers, One Slot*
+### Aula 3 — Task-Based — *Two Suppliers, One Slot* — 9 slides · Reading
 - **Funcional (exposta antes, ENSINADA só depois — é a inversão do TBL):**
   `A is cheaper, but…` · `The main trade-off is…` · `I'd go with…` · `What worries me is…` ·
   `If we go with A, we…`
@@ -60,23 +67,24 @@ do que ouve, o bloco pesa deliberadamente para o listening na segunda metade.
   comparativos e hedging.
 - **Callback da 2:** a decisão depende do requisito que ele extraiu na aula 2.
 
-### Aula 4 — PPP — *Before It Becomes a Problem*
-- **Funcional:** `Heads-up:…` · `There's a risk that…` · `Unless we…, we'll…` ·
-  `I need a decision by…` · `The impact would be…`
-- **Vocab (10):** heads-up · risk · impact · contingency · to escalate · to flag ·
-  bottleneck · downtime · buffer · to postpone
-- **Skill:** Listening principal (o oposto da aula 1, que foi Reading) — uma call ruim, com
-  ruído, que é onde ele mais sofre.
-- **Callback da 3:** o risco que ele sinaliza nasce do fornecedor que escolheu na aula 3.
+### Aula 4 — PPP — *Before It Becomes a Problem* — 13 slides · Listening
+- **Funcional (as 4 partes de um alerta):** `Heads-up:…` · `There's a risk that…` ·
+  `Unless we…, we'll…` · `The impact would be…` · `I need a decision by…`
+- **Vocab (8):** heads-up · risk · impact · contingency · to escalate · to flag ·
+  bottleneck · downtime
+- **Skill:** Listening principal (o oposto da aula 1, que foi Reading) — um recado gravado no
+  chão de fábrica, difícil de propósito, que é onde ele mais sofre. O recado tem só as duas
+  primeiras partes do alerta, e o exercício é completar as outras duas.
+- **Callback da 3:** o risco nasce do fornecedor que ele escolheu na aula 3.
 
-### Aula 5 — Communicative — *The Meeting That Ends On Time*
-- **Funcional:** `Let's park that for now.` · `Can we agree on…?` · `Who owns this?` ·
-  `To recap:…` · `Anything else before we close?`
-- **Vocab (10):** agenda · action item · owner · to park · to recap · minutes · next steps ·
-  to wrap up · off-topic · deadline extension
+### Aula 5 — Communicative — *The Meeting That Ends On Time* — 9 slides · Listening
+- **Funcional / vocab cards (8):** `We have ten minutes` · `Can I stop you there?` ·
+  `Let's park that for now` · `That's a separate conversation` · `Who owns this?` ·
+  `Let's put a date on that` · `To recap` · `We're at time`
 - **Task:** conduzir 10 minutos de reunião com 3 pontos, com a professora como participante
-  que foge do assunto. Fechar com action items nomeados.
-- **Callback da 4:** um dos 3 pontos da pauta é a decisão que ele pediu na aula 4.
+  que diverge e traz assunto fora de pauta. Cada item sai com dono e data, ou parqueado.
+  Segunda task (`project`): a ata falada em 90 segundos.
+- **Callback da 4:** o primeiro ponto da pauta é a decisão que ele pediu na aula 4.
 
 ## 4. Como as aulas se conectam (por que este bloco é UM curso, não 5 aulas soltas)
 
@@ -112,6 +120,26 @@ acumula: na aula 5 ele ainda precisa do update da aula 1 para abrir a pauta.
 os GATES 12/13/14 barram). Para o aluno isso é o oposto do Imersivo, onde a regra é
 descoberta e mostrada numa tabela. É o ponto mais visível do experimento e o que o Dan
 precisa julgar: **um B1 que traduz do português aguenta 5 aulas sem uma tabela sequer?**
+
+## 5.1 O que o rodízio produziu de fato (medido, 30/07/2026)
+
+**A pré-aula é onde a diferença mais aparece** — e ela não foi decidida aula a aula: cada
+framework traz a sua, e o ciclo a distribui.
+
+| Aula | Framework | Desenho do Pre-class | O que fica de fora, de propósito |
+|---|---|---|---|
+| 1 | PPP | **Flipped** — glossário + texto + check + fill + speech + think | nada: no PPP o input vai antes |
+| 2 | Communicative | **Ensaio + coleta** — linhas, gravação, 2 casos reais dele | o áudio da aula (é o núcleo receptivo) |
+| 3 | Task-Based | **Priming + noticing** — texto, 12 linhas para observar, 2 casos | qualquer exercício de FORMA (viraria PPP) |
+| 4 | PPP | **Flipped** de novo | o áudio (aqui a skill principal é Listening) |
+| 5 | Communicative | **Ensaio + coleta** de novo | o áudio da aula |
+
+Outros números: 13 · 9 · 9 · 13 · 9 slides · 72 MP3 ElevenLabs, 0 podres · 5 PRs, um por
+aula, todos mergeados no verde (REGRA 32).
+
+**O que o ciclo NÃO trivializou:** repetir o framework não repetiu a aula. As duas de PPP
+diferem na skill (Reading → Listening) e as duas de Communicative diferem no papel do aluno
+(responder → conduzir). O que se repete é a FORMA; o syllabus decide o resto.
 
 ## 6. O que este bloco NÃO cobre (transparência)
 
