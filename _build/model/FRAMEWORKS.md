@@ -136,6 +136,45 @@ só, a checagem de mistura não disparava, e a declaração passava a mentir).
 
 ---
 
+## 3.1b RODÍZIO — o método alterna por posição de aula (30/07/2026)
+
+> Pedido do Dan: *"a ideia é intercalar a rodada de frameworks nas aulas"* — a nova
+> estratégia de produção do Black adulto.
+
+**Rodízio não é migração.** Migração tem UM corte e dois frameworks ("imersivo até a 12,
+PPP da 13 em diante"). Rodízio tem N frameworks e **nenhum corte**: o método alterna por
+posição, para sempre. Espremer um no outro transformaria `migracoes[]` em carta branca —
+exatamente o buraco que a regra 3 fechou em 27/07. Por isso é uma declaração própria:
+
+```json
+"rodizios": [
+  {"slug": "mock-rodizio-tiago", "desde_aula": 1,
+   "ciclo": ["ppp", "communicative", "task-based"]}
+]
+```
+
+Framework esperado da aula N = `ciclo[(N - desde_aula) % len(ciclo)]`. O **GATE 11** confere
+aula a aula, com a mesma severidade da troca acidental, e o **builder** (`assert_framework`)
+confere antes de escrever o primeiro arquivo — aqui isso importa mais que no CI, porque o
+config é a única fonte da aula e o erro só apareceria depois de ~50 MP3 gerados.
+
+Detalhes que já custaram tempo:
+
+- **Slug com rodízio precisa estar em `mocks[]` de CADA framework do ciclo** enquanto nenhum
+  deles for de produção. São regras independentes (a 2 é "quem pode receber", a 3b é "o quê,
+  em que ordem").
+- **Rodízio + migração no mesmo slug = erro.** Com os dois, não há resposta única para "qual
+  framework a aula N devia ter".
+- **Ciclo de 1 framework = erro.** Não é rodízio: é o framework do aluno, e a declaração só
+  serviria para desligar a checagem de mistura.
+- **O hub (`{slug}.html`) fica com a etiqueta da ÚLTIMA aula gerada** e isso é ruído, não
+  declaração — ele contém aulas de vários métodos. O gate só confere arquivos com número de
+  aula.
+
+Primeiro caso: `mock-rodizio-tiago` (perfil e syllabus em `_build/mock-rodizio-tiago/`).
+
+---
+
 ## 3.2 Gate novo por framework — **escopar, não generalizar**
 
 > Decisão do Dan, 27/07/2026: *"não precisa generalizar, apenas caso os frameworks
