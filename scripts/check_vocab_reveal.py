@@ -59,7 +59,20 @@ FAMILIAS = [
     # `.fill-item` entra pelo mesmo motivo: a regra base e `.fill-item.revealed
     # .fill-answer{display:inline}`, que o inline vence. NAO vale para `.comp-question`,
     # onde a regra do stylesheet usa !important e portanto ganha do inline.
-    ('fill-answer', ('error-card', 'fill-item'), True),
+    #
+    # NASCEU escopada (so_gen_nova=True) porque havia 708 arquivos publicados com a mesma
+    # forma morta e a REGRA 30 nao deixa mexer no legado por capricho. Em 30/07/2026 o Dan
+    # mandou varrer: `scripts/retrofit_spot_the_error.py` converteu os 708 (2.832 cards)
+    # para a marcacao do modelo e a divida do SPOT THE ERROR foi a ZERO — por isso a linha
+    # do `error-card` perdeu o escopo e agora vale para o repo INTEIRO, legado inclusive.
+    # O defeito nao tem mais por onde voltar: nem em aula nova, nem numa edicao manual de
+    # aula antiga.
+    ('fill-answer', ('error-card',), False),
+    # O gap-fill segue ESCOPADO: sobrou 1 arquivo legado (public/professor/juliana-marques
+    # .html, 5 cards) que a varredura nao cobriu de proposito — e outro componente, nao era
+    # o que o Dan mandou varrer. Desescopar esta linha antes de consertar aquele arquivo
+    # travaria o CI do repo inteiro por um defeito que ninguem autorizou tocar.
+    ('fill-answer', ('fill-item',), True),
 ]
 
 # nasce escondido: um dos tres jeitos de esconder via style inline.
@@ -185,10 +198,24 @@ def selftest():
          '<script>function revealError(c){c.classList.toggle("revealed");}</script>'
          '<div class="error-card" onclick="revealError(this)">'
          '<p class="fill-answer" style="display:none">fix</p></div>', True),
-        ('OK: mesmo defeito, mas em aula LEGADA (sem carimbo) — REGRA 30',
+        # Antes de 30/07/2026 este caso esperava False: a familia era escopada por causa
+        # dos 708 legados. A varredura zerou a divida e o escopo caiu — agora o MESMO
+        # defeito numa aula sem carimbo TEM de reprovar. E disso que vem o "nunca mais".
+        ('QUEBRADO: fill-answer dentro de error-card em aula LEGADA (sem carimbo)',
          '<script>function revealError(c){c.classList.toggle("revealed");}</script>'
          '<div class="error-card" onclick="revealError(this)">'
-         '<p class="fill-answer" style="display:none">fix</p></div>', False),
+         '<p class="fill-answer" style="display:none">fix</p></div>', True),
+        # o mecanismo `so_gen_nova` continua vivo e testado — hoje quem usa e o gap-fill,
+        # que ainda tem 1 arquivo legado por consertar (juliana-marques).
+        ('OK: fill-answer dentro de fill-item em aula LEGADA (familia ainda escopada)',
+         '<script>function revealFill(c){c.classList.toggle("revealed");}</script>'
+         '<div class="fill-item" onclick="revealFill(this)">'
+         '<span class="fill-answer" style="display:none">resposta</span></div>', False),
+        ('QUEBRADO: o mesmo fill-item, agora em aula com carimbo',
+         '<meta name="alumni-gen" content="3">'
+         '<script>function revealFill(c){c.classList.toggle("revealed");}</script>'
+         '<div class="fill-item" onclick="revealFill(this)">'
+         '<span class="fill-answer" style="display:none">resposta</span></div>', True),
         ('OK: fill-answer dentro de comp-question (stylesheet usa !important)',
          '<meta name="alumni-gen" content="3">'
          '<div class="error-card" onclick="revealError(this)"><div class="error-fix">a</div></div>'

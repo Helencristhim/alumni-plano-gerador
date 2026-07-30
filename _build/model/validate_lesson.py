@@ -793,6 +793,42 @@ def check_um_slide_ativo(c, fails):
             f'So o primeiro slide da aula leva `active`.')
 
 
+def check_spot_the_error_nao_entrega(c, fails):
+    """O SPOT THE ERROR NAO PODE ENTREGAR O ERRO ANTES DO CLIQUE (bloqueante).
+
+    A tarefa do slide e a aluna ACHAR o erro. Quando o conteudo nasce com o risco aplicado
+    num `<span style="text-decoration:line-through">` dentro da frase, a frase ja entra
+    riscada: o erro vem de graca e o exercicio deixa de existir — vira leitura.
+
+    O risco correto vem da folha de estilo, `.error-card.revealed .error-sentence`, ou
+    seja, SO DEPOIS do clique. Marcacao certa (modelo helen-mendes), sem style inline:
+
+        <div class="error-card" onclick="revealError(this)">
+          <div class="error-sentence">"He go always to the clinic."</div>
+          <div class="error-fix">"He <strong>always goes</strong> to the clinic."</div>
+        </div>
+
+    Vinha junto do gabarito morto (`.fill-answer` dentro de `.error-card`), consertado em
+    708 arquivos por `scripts/retrofit_spot_the_error.py` — mas era a metade que NENHUM
+    gate via, porque o card funcionava: revelava, contava, so tinha entregado a resposta
+    antes. Reportado pelo Dan em walyson-aula8 e fabiana-aula5.
+
+    ESCOPO: geracao nova (<meta name="alumni-gen">). Sobraram 23 arquivos legados com o
+    risco baked em OUTRAS classes (.error-wrong, elaine-mieko-pinho e cia) — nao se
+    consertam nem se reportam sem ordem do Dan (REGRA 30/31).
+    """
+    if _gen(c) < GEN_PLAYER_E_PREDICAO:
+        return
+    cards = re.findall(r'<div class="error-card"[^>]*>(?:(?!</?div\b).)*?</div>', c, re.S)
+    ruins = [x for x in cards if 'line-through' in x]
+    if ruins:
+        fails.append(
+            f'SPOT THE ERROR ENTREGA O ERRO: {len(ruins)} card(s) com `line-through` no '
+            f'HTML — a frase ja entra riscada e a aluna nao precisa achar nada. O risco vem '
+            f'da regra `.error-card.revealed .error-sentence` (so apos o clique): use '
+            f'`<div class="error-sentence">` sem style inline.')
+
+
 def check_player_vivo(c, fails):
     """O PLAYER DE LISTENING TEM DE TER CONTROLES (REGRA 2.1, bloqueante).
 
@@ -1665,6 +1701,7 @@ def validate(path):
     # defeito NÃO é tocado nem reportado — REGRA 30/31.
     check_player_vivo(c, fails)
     check_um_slide_ativo(c, fails)
+    check_spot_the_error_nao_entrega(c, fails)
     check_predicao(c, fails)
     check_gapfill_vocab(c, fails)
     check_preclass_blanks(c, fails)
