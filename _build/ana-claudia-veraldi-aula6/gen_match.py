@@ -11,18 +11,18 @@ PC = os.path.join(HERE, 'preclass.html')
 
 # (palavra, definicao == data-answer)
 PAIRS = [
-    ("Accent", "the way people from a country or region pronounce a language"),
-    ("Intonation", "the way the voice rises and falls when we speak"),
-    ("Word stress", "the part of a word we say with more force"),
-    ("Pace", "the speed at which someone speaks"),
-    ("To clarify", "to make something clearer or easier to understand"),
-    ("To rephrase", "to say the same idea again using different words"),
-    ("To catch", "to hear and understand what someone says"),
-    ("Filler word", "a small sound or word, like um, used while thinking"),
-    ("To mishear", "to hear something wrongly"),
-    ("Context", "the situation around a word that helps you guess its meaning"),
-    ("To confirm", "to check that something is true or correct"),
-    ("Unclear", "hard to hear or understand"),
+    ("A turning point", "the moment where an important change begins"),
+    ("The last straw", "the final small problem that makes you act, after many others"),
+    ("To snap", "to suddenly lose your patience after holding it for a long time"),
+    ("Gridlocked", "so blocked by traffic that nothing moves at all"),
+    ("To dawn on somebody", "to become clear to somebody for the very first time"),
+    ("On a whim", "suddenly, with no planning at all behind it"),
+    ("To talk somebody out of it", "to persuade somebody not to do what they were planning"),
+    ("Reckless", "acting without thinking about the risk"),
+    ("To hand in your notice", "to tell your employer formally that you are leaving"),
+    ("To go through with", "to actually do the difficult thing you had decided to do"),
+    ("To burn your bridges", "to destroy any chance of going back to what you left"),
+    ("Second thoughts", "the doubts that arrive after you have already decided"),
 ]
 
 defs = [d for _, d in PAIRS]
@@ -39,7 +39,7 @@ for i, (word, answer) in enumerate(PAIRS):
         f'<option value="{o}">{o}</option>' for o in opts)
     rows.append(
         f'        <div class="match-row" data-answer="{answer}">'
-        f'<span class="match-word" style="flex:0 0 150px">{word}</span>'
+        f'<span class="match-word" style="flex:0 0 190px">{word}</span>'
         f'<select style="flex:1;width:100%" onchange="checkMatch(this)">{options}</select></div>')
 
 block = '\n'.join(rows)
