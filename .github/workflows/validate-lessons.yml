@@ -345,6 +345,28 @@ jobs:
         # isso libera aula experimental que já estava no ar.
         run: python3 scripts/check_framework_isolation.py
 
+      - name: "BANCO — os exercícios oferecidos existem mesmo no builder"
+        # O banco (public/data/exercicios.json) é o que o editor do catálogo oferece pra
+        # montar framework. Ele NÃO é uma lista digitada: o gerador chama render_block()
+        # do builder pra cada exercício e guarda as classes que sairam. Este passo refaz
+        # essa prova. Falha aqui = o builder perdeu (ou ganhou) um exercício e o banco
+        # ficou mentindo — e um banco que promete o que o builder não monta quebra a aula
+        # na geração, não aqui.
+        run: python3 scripts/gen_banco_exercicios.py --check
+
+      - name: "GATE 12 — selftest: prova que o gate de contrato ainda morde"
+        run: python3 scripts/check_contrato_aula.py --selftest
+
+      - name: "GATE 12 — a aula entrega o contrato do framework dela"
+        # "Gere 3 aulas do tipo X" só vale se algo CONFERIR que saiu o tipo X. Os outros
+        # gates são universais; este é o único que sabe o que CADA método promete.
+        # LEGADO-TOLERANTE por construção, em dois níveis: aula sem <meta alumni-contrato>
+        # é ignorada (todo o passado, REGRA 30), e aula carimbada é julgada pela VERSÃO do
+        # contrato em que nasceu — editar o contrato hoje no catálogo não reprova nada de
+        # ontem. Repo inteiro, como o 8/10/11: a violação pode nascer de uma edição no
+        # JSON, não num arquivo que o PR tocou.
+        run: python3 scripts/check_contrato_aula.py
+
       - name: "CATÁLOGO — o índice de aulas modelo bate com as aulas que existem"
         # /catalogo.html desenha public/data/modelos-aulas.json (título, nº de slides,
         # capítulos, framework e componentes de CADA aula modelo). Se o JSON não for
