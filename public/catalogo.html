@@ -173,6 +173,64 @@
             .am-lessons { grid-template-columns: 1fr; }
         }
 
+        /* ── EDITOR DE FRAMEWORK ─────────────────────────────────────────────
+           O catálogo deixa de ser vitrine: dá pra criar método novo e mexer no
+           contrato (quais exercícios ele exige). Salvar NÃO grava em produção —
+           abre um PR, e os gates decidem. Ver api/save-framework.js. */
+        .fw-edit { margin-left: auto; font: var(--text-micro); letter-spacing: .04em; text-transform: uppercase;
+                   color: var(--m-accent, var(--alumni-navy)); background: transparent; cursor: pointer;
+                   border: 1px solid var(--border-light); border-radius: var(--radius-full); padding: 3px 10px; }
+        .fw-edit:hover { border-color: var(--m-accent, var(--alumni-navy)); }
+        .fw-cv { font: var(--text-micro); color: var(--text-dim); }
+        .fw-novo { margin-left: 10px; font: var(--text-micro); letter-spacing: .04em; text-transform: uppercase;
+                   color: var(--m-accent, var(--alumni-navy)); background: transparent; cursor: pointer;
+                   border: 1px dashed var(--border); border-radius: var(--radius-full); padding: 3px 10px; }
+        .fw-novo:hover { border-style: solid; }
+
+        .ed-back { position: fixed; inset: 0; background: rgba(15,15,20,.55); display: grid; place-items: center;
+                   padding: var(--space-md); z-index: 100; }
+        .ed { background: var(--bg-card); border-radius: var(--radius-lg); width: min(760px, 100%);
+              max-height: 90vh; overflow: auto; box-shadow: var(--shadow-lg, 0 20px 50px rgba(0,0,0,.3)); }
+        .ed-head { position: sticky; top: 0; background: var(--bg-card); padding: var(--space-lg) var(--space-xl);
+                   border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: var(--space-md); }
+        .ed-head h3 { font: var(--text-h2); color: var(--text-primary); flex: 1; }
+        .ed-x { background: transparent; border: none; cursor: pointer; font-size: 1.6rem; line-height: 1;
+                color: var(--text-dim); padding: 0 4px; }
+        .ed-body { padding: var(--space-lg) var(--space-xl); display: flex; flex-direction: column; gap: var(--space-lg); }
+        .ed-f { display: flex; flex-direction: column; gap: 5px; }
+        .ed-f label { font: var(--text-micro); letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); }
+        .ed-f input, .ed-f textarea { font: var(--text-small); color: var(--text-body); background: var(--bg-primary);
+                                      border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 9px 11px; }
+        .ed-f input:disabled { color: var(--text-dim); background: var(--bg-subtle); }
+        .ed-f textarea { min-height: 74px; resize: vertical; }
+        .ed-f .hint { font: var(--text-micro); color: var(--text-dim); }
+        .ed-grupo { font: var(--text-micro); letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim);
+                    margin: var(--space-sm) 0 4px; }
+        .ex-row { display: flex; align-items: center; gap: var(--space-md); padding: 7px 0; border-bottom: 1px solid var(--border-light); }
+        .ex-row .nm { flex: 1; min-width: 0; }
+        .ex-row .nm b { font: var(--text-small); color: var(--text-primary); font-weight: 600; display: block; }
+        .ex-row .nm span { font: var(--text-micro); color: var(--text-muted); }
+        .ex-row .nv { font: var(--text-micro); color: var(--warning); }
+        .ex-opts { display: flex; gap: 4px; flex: 0 0 auto; }
+        .ex-opts label { font: var(--text-micro); letter-spacing: .03em; text-transform: uppercase; cursor: pointer;
+                         border: 1px solid var(--border-light); border-radius: var(--radius-full); padding: 3px 9px; color: var(--text-dim); }
+        .ex-opts input { position: absolute; opacity: 0; pointer-events: none; }
+        .ex-opts input:checked + span { display: inline; }
+        .ex-opts label:has(input:checked) { border-color: var(--alumni-navy); color: var(--alumni-navy); font-weight: 600; }
+        .ex-opts label.pro:has(input:checked) { border-color: var(--danger); color: var(--danger); }
+        .ed-aviso { background: var(--info-bg); border: 1px solid var(--info-border); border-radius: var(--radius-md);
+                    padding: var(--space-md); font: var(--text-small); color: var(--text-body); line-height: 1.6; }
+        .ed-foot { position: sticky; bottom: 0; background: var(--bg-card); border-top: 1px solid var(--border-light);
+                   padding: var(--space-md) var(--space-xl); display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center; }
+        .ed-foot .msg { flex: 1 1 200px; font: var(--text-small); color: var(--text-muted); }
+        .ed-foot .msg.erro { color: var(--danger); }
+        .ed-foot .msg.ok { color: var(--success); }
+        .ed-btn { font: var(--text-small); font-weight: 600; cursor: pointer; border-radius: var(--radius-sm); padding: 9px 16px;
+                  border: 1px solid var(--alumni-navy); background: transparent; color: var(--alumni-navy); }
+        .ed-btn.primary { background: var(--alumni-navy); color: #fff; }
+        .ed-btn:disabled { opacity: .5; cursor: not-allowed; }
+        @media (max-width: 640px) { .ex-row { flex-wrap: wrap; } .ed-body, .ed-head, .ed-foot { padding-left: var(--space-md); padding-right: var(--space-md); } }
+
         /* Gate note */
         .gate-note { background: var(--info-bg); border: 1px solid var(--info-border); border-radius: var(--radius-lg); padding: var(--space-lg); display: flex; gap: var(--space-md); align-items: flex-start; }
         .gate-note svg { width: 22px; height: 22px; color: var(--info); flex: 0 0 auto; margin-top: 2px; }
@@ -506,10 +564,12 @@
         esc((p.nome || '?').charAt(0)) + '</span><div><b>' + esc(p.nome) +
         '</b> <span class="fw-lvl">' + esc(p.nivel || '') + '</span><span>' +
         esc(p.perfil || '') + '</span></div></div>') : '';
+    var vc = fw.contrato ? '<span class="fw-cv">contrato v' + esc(fw.contrato.versao) + '</span>' : '';
     return '<div class="fw' + (todo ? ' is-todo' : '') + '">' +
       '<div class="fw-top"><span class="fw-name">' + esc(fw.label) + '</span>' +
       '<span class="status ' + (CLASSE[fw.status] || 'status--todo') + '">' +
-      esc(ROTULO[fw.status] || fw.status) + '</span></div>' +
+      esc(ROTULO[fw.status] || fw.status) + '</span>' + vc +
+      '<button type="button" class="fw-edit" data-edit="' + esc(fw.id) + '">Editar</button></div>' +
       '<p>' + esc(fw.resumo || '') + '</p>' + personaHtml +
       (pes.length ? '<div class="fw-foot">' + pes.join('') + '</div>' : '') +
       '</div>';
@@ -528,10 +588,12 @@
       var cat = porId[el.dataset.cat];
       if (!cat || !cat.frameworks || !cat.frameworks.length) { el.remove(); return; }
       var n = cat.frameworks.length;
+      el.dataset.catId = cat.id;
       el.innerHTML =
         '<span class="eyebrow">Frameworks de ' + esc(cat.label) + ' — ' + n +
-        (n === 1 ? ' método' : ' métodos') + ' nesta categoria</span>' +
-        '<div class="fw-grid">' + cat.frameworks.map(cardHtml).join('') + '</div>';
+        (n === 1 ? ' método' : ' métodos') + ' nesta categoria' +
+        '<button type="button" class="fw-novo" data-novo="' + esc(cat.id) + '">+ novo método</button>' +
+        '</span><div class="fw-grid">' + cat.frameworks.map(cardHtml).join('') + '</div>';
     });
   }).catch(function () {
     // Sem o JSON a página continua íntegra: some a prateleira, o resto do catálogo fica.
@@ -646,6 +708,207 @@
     // Sem o JSON a página continua íntegra: some a seção, o resto do catálogo fica.
     var sec = alvo.closest('.cat-section');
     if (sec) sec.remove();
+  });
+})();
+</script>
+<script src="/lib/framework-edit.js"></script>
+<script>
+/* EDITOR DE FRAMEWORK — o catálogo vira interface.
+   A MUTAÇÃO não mora aqui: mora em /lib/framework-edit.js, o MESMO arquivo que a
+   função serverless carrega. Por isso o JSON do botão "baixar" é byte-a-byte o que
+   entra no PR. Aqui só tem tela. */
+(function () {
+  'use strict';
+  var banco = null, frameworks = null, atual = null;
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function acha(catId, id) {
+    // O MESMO framework existe em mais de uma categoria (imersivo-prototipo está em
+    // adulto, kids e teens) e cada um tem contrato PRÓPRIO. Procurar só pelo id pegava
+    // o último e a edição caía na categoria errada — em silêncio.
+    var cat = (frameworks.categorias || []).filter(function (c) { return c.id === catId; })[0];
+    if (!cat) return null;
+    var fw = (cat.frameworks || []).filter(function (f) { return f.id === id; })[0];
+    return fw ? { cat: cat, fw: fw } : null;
+  }
+
+  function linhaExercicio(e, contrato) {
+    var estado = (contrato.obrigatorios || []).indexOf(e.id) !== -1 ? 'obr'
+               : (contrato.proibidos || []).indexOf(e.id) !== -1 ? 'pro' : 'livre';
+    // "não verificável" é dito na tela porque muda o que o gate consegue prometer:
+    // esses o GATE 12 não sabe distinguir de outro exercício, então nunca reprova por eles.
+    var nv = e.verificavel === false
+      ? ' <span class="nv">— o gate não consegue conferir este</span>' : '';
+    function opt(v, txt, cls) {
+      return '<label class="' + (cls || '') + '"><input type="radio" name="ex-' + esc(e.id) + '" value="' + v + '"' +
+             (estado === v ? ' checked' : '') + '>' + txt + '</label>';
+    }
+    return '<div class="ex-row"><div class="nm"><b>' + esc(e.label) + '</b><span>' + esc(e.descricao) + nv + '</span></div>' +
+      '<div class="ex-opts">' + opt('livre', 'livre') + opt('obr', 'obrigatório') + opt('pro', 'proibido', 'pro') + '</div></div>';
+  }
+
+  function abrir(catId, fwId) {
+    var alvo = fwId ? acha(catId, fwId) : null;
+    var fw = alvo ? alvo.fw : null;
+    var cat = alvo ? alvo.cat : (frameworks.categorias || []).filter(function (c) { return c.id === catId; })[0];
+    if (!cat) return;
+    var contrato = (fw && fw.contrato) || { obrigatorios: [], proibidos: [], min_slides: null };
+    atual = { catId: cat.id, fwId: fwId || null, contratoAtual: fw ? fw.contrato : null };
+
+    var porGrupo = {};
+    (banco.exercicios || []).forEach(function (e) { (porGrupo[e.grupo] = porGrupo[e.grupo] || []).push(e); });
+    var listas = Object.keys(banco.grupos || {}).map(function (g) {
+      if (!porGrupo[g]) return '';
+      return '<div class="ed-grupo">' + esc(banco.grupos[g]) + '</div>' +
+             porGrupo[g].map(function (e) { return linhaExercicio(e, contrato); }).join('');
+    }).join('');
+
+    var aviso = fw && fw.contrato
+      ? 'Este método está no <b>contrato v' + esc(fw.contrato.versao) + '</b>. Se você mudar os exercícios ' +
+        'ou o mínimo de slides, nasce a <b>v' + (Number(fw.contrato.versao) + 1) + '</b> e a atual vai para o histórico — ' +
+        'as aulas já geradas continuam sendo julgadas pela versão delas e <b>não são afetadas</b>.'
+      : 'Método novo nasce com status <b>mock</b>: fica disponível para aluno de teste e <b>não toca aluno real</b> ' +
+        'até ser promovido no código (é a trava do GATE 11).';
+
+    var el = document.createElement('div');
+    el.className = 'ed-back';
+    el.innerHTML =
+      '<div class="ed" role="dialog" aria-modal="true" aria-label="Editar método">' +
+      '<div class="ed-head"><h3>' + (fw ? 'Editar “' + esc(fw.label) + '”' : 'Novo método em ' + esc(cat.label)) + '</h3>' +
+      '<button class="ed-x" type="button" aria-label="Fechar">&times;</button></div>' +
+      '<div class="ed-body">' +
+        '<div class="ed-f"><label for="ed-id">Identificador</label>' +
+        '<input id="ed-id" value="' + esc(fw ? fw.id : '') + '"' + (fw ? ' disabled' : '') +
+        ' placeholder="ex.: dogme, lexical-approach">' +
+        '<span class="hint">' + (fw ? 'não muda: é a etiqueta carimbada nas aulas já geradas' :
+          'minúsculo, sem espaço — é o que vai carimbado em cada aula') + '</span></div>' +
+        '<div class="ed-f"><label for="ed-label">Nome</label><input id="ed-label" value="' + esc(fw ? fw.label : '') + '"></div>' +
+        '<div class="ed-f"><label for="ed-resumo">Resumo</label><textarea id="ed-resumo">' + esc(fw ? (fw.resumo || '') : '') + '</textarea>' +
+        '<span class="hint">a descrição que aparece no card do catálogo</span></div>' +
+        '<div class="ed-f"><label for="ed-min">Mínimo de slides</label>' +
+        '<input id="ed-min" type="number" min="0" max="80" value="' + esc(contrato.min_slides || '') + '">' +
+        '<span class="hint">piso, não média — contrato apertado demais barra aula legítima</span></div>' +
+        '<div><div class="ed-grupo" style="margin-top:0">Exercícios do contrato</div>' +
+        '<span class="hint">“obrigatório” = toda aula deste método precisa ter. “proibido” = nenhuma pode ter.</span>' +
+        listas + '</div>' +
+        '<div class="ed-aviso">' + aviso + '</div>' +
+      '</div>' +
+      '<div class="ed-foot"><span class="msg"></span>' +
+        '<button class="ed-btn" type="button" data-acao="baixar">Baixar JSON</button>' +
+        '<button class="ed-btn primary" type="button" data-acao="pr">Salvar e abrir PR</button>' +
+      '</div></div>';
+    document.body.appendChild(el);
+
+    function fechar() { el.remove(); document.removeEventListener('keydown', esc2); }
+    function esc2(ev) { if (ev.key === 'Escape') fechar(); }
+    document.addEventListener('keydown', esc2);
+    el.querySelector('.ed-x').onclick = fechar;
+    el.addEventListener('click', function (ev) { if (ev.target === el) fechar(); });
+    el.querySelector('[data-acao="baixar"]').onclick = function () { acao(el, 'baixar'); };
+    el.querySelector('[data-acao="pr"]').onclick = function () { acao(el, 'pr'); };
+  }
+
+  function payload(el) {
+    var obr = [], pro = [];
+    (banco.exercicios || []).forEach(function (e) {
+      var m = el.querySelector('input[name="ex-' + e.id + '"]:checked');
+      if (!m) return;
+      if (m.value === 'obr') obr.push(e.id);
+      if (m.value === 'pro') pro.push(e.id);
+    });
+    var min = parseInt(el.querySelector('#ed-min').value, 10);
+    return {
+      categoria: atual.catId,
+      id: (atual.fwId || el.querySelector('#ed-id').value || '').trim(),
+      label: el.querySelector('#ed-label').value.trim(),
+      resumo: el.querySelector('#ed-resumo').value.trim(),
+      contrato: { obrigatorios: obr, proibidos: pro, min_slides: isNaN(min) ? null : min }
+    };
+  }
+
+  function acao(el, tipo) {
+    var msg = el.querySelector('.msg');
+    msg.className = 'msg';
+    var p = payload(el);
+    var copia = JSON.parse(JSON.stringify(frameworks));
+    var r;
+    try {
+      r = window.FrameworkEdit.aplicarEdicao(copia, banco, p);   // valida ANTES de sair daqui
+    } catch (e) {
+      msg.className = 'msg erro'; msg.textContent = e.message; return;
+    }
+
+    if (tipo === 'baixar') {
+      var blob = new Blob([JSON.stringify(r.dados, null, 2) + '\n'], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'frameworks.json'; a.click();
+      URL.revokeObjectURL(a.href);
+      msg.className = 'msg ok'; msg.textContent = 'Baixado (' + r.resumoMudanca + '). Esse arquivo é o que entraria no PR.';
+      return;
+    }
+
+    var senha = sessionStorage.getItem('catalogo-senha') || window.prompt('Senha do catálogo:');
+    if (!senha) return;
+    var botoes = el.querySelectorAll('.ed-btn');
+    botoes.forEach(function (b) { b.disabled = true; });
+    msg.textContent = 'abrindo PR…';
+    p.autor = 'catálogo';
+    fetch('/api/save-framework', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-catalogo-senha': senha },
+      body: JSON.stringify(p)
+    }).then(function (res) {
+      // Resposta pode NÃO ser JSON: em ambiente sem a função publicada vem o HTML de
+      // erro do host, e res.json() estoura "Unexpected token '<'" — mensagem que não
+      // diz nada a quem está editando. Medido no navegador (501 do servidor estático).
+      return res.text().then(function (t) {
+        var j;
+        try { j = JSON.parse(t); } catch (e) {
+          j = { error: res.status === 404 || res.status === 405 || res.status === 501
+            ? 'O endpoint /api/save-framework não respondeu neste ambiente (ele só existe no site publicado). '
+              + 'Use “Baixar JSON” — o arquivo é exatamente o que entraria no PR.'
+            : 'Resposta inesperada do servidor (HTTP ' + res.status + ').' };
+        }
+        return { ok: res.ok, j: j };
+      });
+    })
+      .then(function (out) {
+        botoes.forEach(function (b) { b.disabled = false; });
+        if (!out.ok) {
+          if (out.j && /senha/i.test(out.j.error || '')) sessionStorage.removeItem('catalogo-senha');
+          msg.className = 'msg erro'; msg.textContent = out.j.error || 'falhou'; return;
+        }
+        sessionStorage.setItem('catalogo-senha', senha);
+        msg.className = 'msg ok';
+        msg.innerHTML = 'PR <a href="' + esc(out.j.pr) + '" target="_blank" rel="noopener">#' + esc(out.j.numero) +
+                        '</a> aberto — ' + esc(out.j.contrato) + '. Ele entra quando os gates ficarem verdes.';
+      }).catch(function (e) {
+        botoes.forEach(function (b) { b.disabled = false; });
+        msg.className = 'msg erro'; msg.textContent = String(e);
+      });
+  }
+
+  Promise.all([
+    fetch('/data/exercicios.json', { cache: 'no-store' }).then(function (r) { return r.json(); }),
+    fetch('/data/frameworks.json', { cache: 'no-store' }).then(function (r) { return r.json(); })
+  ]).then(function (v) {
+    banco = v[0]; frameworks = v[1];
+    document.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[data-edit]');
+      if (b) {
+        var prateleira = b.closest('.fw-shelf');
+        return abrir(prateleira && prateleira.dataset.cat, b.dataset.edit);
+      }
+      var n = ev.target.closest('[data-novo]');
+      if (n) return abrir(n.dataset.novo, null);
+    });
+  }).catch(function () {
+    // Sem os dados, o editor simplesmente não existe — o catálogo continua inteiro.
+    document.querySelectorAll('.fw-edit, .fw-novo').forEach(function (b) { b.remove(); });
   });
 })();
 </script>

@@ -329,3 +329,75 @@ itens (`checklist`, `role-play`, `slide-tarefa`, `vocab-reveal`) sobre 183 aulas
 publicadas; o `min_slides` veio da REGRA 11 (piso), não da média, e é menor no Kids
 porque a aula lá é de 30–45 min. Contrato apertado demais barra aula legítima, e o
 prejuízo disso é maior que o de um contrato frouxo que se aperta depois no editor.
+
+---
+
+## 8. O EDITOR — o catálogo virou interface
+
+`/catalogo.html` deixou de ser vitrine. Em cada método há **Editar**, e em cada
+prateleira **+ novo método**. Dá pra criar um método, trocar o resumo e mexer no
+contrato (marcar exercício como *obrigatório*, *proibido* ou *livre*, e o mínimo de
+slides). A lista de exercícios oferecida é o banco — provado contra o builder, então
+**não dá pra exigir o que o builder não sabe montar**.
+
+### Salvar NÃO grava em produção — abre um PR
+
+`api/save-framework.js` cria branch, commita o `frameworks.json` e abre PR. Os gates
+rodam ali (GATE 12, GATE 11, banco) e o merge acontece no verde. A interface é rápida;
+a segurança fica onde ela já morava.
+
+O botão **Baixar JSON** existe sempre e não depende de backend. O arquivo baixado é
+**byte-a-byte** o que entraria no PR, porque a mutação mora em um lugar só
+(`public/lib/framework-edit.js`, carregado pelo navegador **e** pela função). Duas
+cópias divergiriam no primeiro ajuste, e as duas "funcionariam".
+
+### O que o editor NÃO deixa fazer, de propósito
+
+| Bloqueio | Por quê |
+|---|---|
+| mudar `status` | promover a `producao` libera **aluno real** (GATE 11). É decisão pedagógica, não clique de tela. Método novo nasce `mock`. |
+| editar contrato no lugar | toda mudança **sobe a versão** e empurra a anterior pro histórico — é o que impede a edição de hoje reprovar aula de ontem |
+| exigir exercício fora do banco | o banco é gerado do builder; exigir o que ele não monta quebraria a aula na geração |
+
+### Pelo terminal (sem token, sem navegador)
+
+A MESMA regra, pela linha de comando — `scripts/framework-edit.mjs` carrega o mesmo
+`public/lib/framework-edit.js`. **Três portas, uma regra só**: navegador, função
+serverless e terminal. Editar o JSON na mão é a única porta que não sobe a versão
+sozinha — e é por isso que ela não deve ser usada.
+
+```
+node scripts/framework-edit.mjs --listar               # métodos, contrato e versão
+node scripts/framework-edit.mjs --ver adulto/ppp       # o contrato inteiro
+node scripts/framework-edit.mjs --exercicios           # o banco, agrupado
+
+node scripts/framework-edit.mjs --cat adulto --id ppp --tirar gapfill        # sobe pra v2
+node scripts/framework-edit.mjs --cat adulto --id ppp --por reading --min 12
+node scripts/framework-edit.mjs --cat adulto --id dogme --label "Dogme" \
+  --obrigatorios dialogo,slide-tarefa,checklist --min 20                     # nasce mock
+```
+
+`--dry-run` mostra o resultado sem gravar. Depois é o fluxo de sempre: branch, commit,
+PR, gates, merge.
+
+### Configuração do editor por PR (opcional)
+
+Vercel → Settings → Environment Variables:
+
+| Variável | O que é |
+|---|---|
+| `GITHUB_TOKEN` | fine-grained token, só neste repo, com **Contents: RW** e **Pull requests: RW** |
+| `CATALOGO_SENHA` | senha combinada — **o site é público**, e sem isso qualquer um abriria PR |
+
+Sem as duas o endpoint responde 503 com mensagem clara e o editor continua servindo
+pelo "Baixar JSON".
+
+### Medido no navegador (31/07/2026)
+
+Chromium dirigido: abre o editor do PPP com os 13 obrigatórios já marcados e o mínimo
+de 14; desmarcar um exercício muda a prévia para `v1 → v2`; Escape fecha; "+ novo
+método" abre em branco com o aviso de `mock`. Dois defeitos foram achados **assim** e
+corrigidos: (1) o mesmo `imersivo-prototipo` existe em Adulto, Kids e Teens, e a busca
+só por id abria o contrato da categoria errada — hoje cada prateleira abre o seu (25,
+20 e 24 slides de piso); (2) resposta não-JSON estourava `Unexpected token '<'` na cara
+de quem editava.
