@@ -116,6 +116,63 @@
         .cell .links a { font: var(--text-micro); letter-spacing: .03em; text-transform: uppercase; color: var(--cell-accent, var(--alumni-navy)); text-decoration: none; border: 1px solid var(--cell-accent, var(--alumni-navy)); border-radius: 999px; padding: 3px 9px; transition: background var(--transition-base), color var(--transition-base); }
         .cell .links a:hover { background: var(--cell-accent, var(--alumni-navy)); color: #fff; }
 
+        /* ── AULAS MODELO, POR ALUNO ──────────────────────────────────────────
+           Renderizado de /data/modelos-aulas.json (gerado por
+           scripts/gen_catalogo_modelos.py, que MEDE o HTML de cada aula).
+           Um bloco por aluno modelo; dentro, uma aula por card. Aulas com a mesma
+           estrutura compartilham a cor da VARIANTE — é o que deixa visível que,
+           num mesmo aluno, umas aulas são de um tipo e outras de outro. */
+        .am-persona { background: var(--bg-card); border: 1px solid var(--border-light);
+                      border-left: 4px solid var(--p-accent, var(--alumni-navy));
+                      border-radius: var(--radius-lg); padding: var(--space-lg) var(--space-xl);
+                      margin-bottom: var(--space-lg); box-shadow: var(--shadow-sm); }
+        .am-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md); }
+        .am-avatar { width: 44px; height: 44px; border-radius: var(--radius-md); flex: 0 0 auto; display: grid; place-items: center;
+                     background: var(--p-dim, var(--alumni-navy-dim)); color: var(--p-accent, var(--alumni-navy));
+                     font: var(--text-h2); font-weight: 700; }
+        .am-id { flex: 1 1 240px; min-width: 0; }
+        .am-id h3 { font: var(--text-h2); color: var(--text-primary); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .am-id .papel { font: var(--text-small); color: var(--text-muted); margin-top: 2px; }
+        .am-links { display: flex; gap: 6px; flex-wrap: wrap; }
+        .am-links a { font: var(--text-micro); letter-spacing: .04em; text-transform: uppercase; text-decoration: none;
+                      color: var(--p-accent, var(--alumni-navy)); border: 1px solid var(--p-accent, var(--alumni-navy));
+                      border-radius: var(--radius-full); padding: 4px 11px; transition: background var(--transition-base), color var(--transition-base); }
+        .am-links a:hover { background: var(--p-accent, var(--alumni-navy)); color: #fff; }
+        .am-badge { font: var(--text-micro); letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: var(--radius-full);
+                    background: var(--p-dim, var(--alumni-navy-dim)); color: var(--p-accent, var(--alumni-navy)); border: 1px solid currentColor; }
+
+        /* Legenda das variantes — a frase que responde "o que muda entre as aulas" */
+        .am-vars { display: flex; flex-direction: column; gap: 6px; margin: var(--space-md) 0 var(--space-md); }
+        .am-var { display: flex; align-items: baseline; gap: 8px; font: var(--text-small); color: var(--text-muted); flex-wrap: wrap; }
+        .am-var .tag { font: var(--text-micro); font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+                       color: var(--v); background: var(--v-dim); border: 1px solid var(--v); border-radius: var(--radius-sm); padding: 2px 8px; white-space: nowrap; }
+        .am-var b { color: var(--text-body); }
+
+        /* Grade de aulas */
+        .am-lessons { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--space-md); }
+        .lsn { background: var(--bg-primary); border: 1px solid var(--border-light); border-top: 3px solid var(--v);
+               border-radius: var(--radius-md); padding: var(--space-md); display: flex; flex-direction: column; gap: 8px; }
+        .lsn-top { display: flex; align-items: center; gap: 8px; }
+        .lsn-n { font: var(--text-micro); font-weight: 700; letter-spacing: .06em; color: #fff; background: var(--v);
+                 border-radius: var(--radius-sm); padding: 3px 8px; white-space: nowrap; }
+        .lsn-v { font: var(--text-micro); letter-spacing: .06em; text-transform: uppercase; color: var(--v); }
+        .lsn-slides { margin-left: auto; font: var(--text-micro); color: var(--text-dim); white-space: nowrap; }
+        .lsn h4 { font: var(--text-h3); color: var(--text-primary); line-height: 1.3; }
+        .lsn .fwtag { font: var(--text-micro); letter-spacing: .04em; text-transform: uppercase; color: var(--v);
+                      background: var(--v-dim); border-radius: var(--radius-sm); padding: 3px 8px; align-self: flex-start; }
+        .lsn .chaps { font: var(--text-micro); color: var(--text-dim); line-height: 1.6; }
+        .lsn .comps { display: flex; flex-wrap: wrap; gap: 4px; }
+        .lsn .comps span { font: var(--text-micro); color: var(--text-muted); background: var(--bg-subtle);
+                           border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 2px 7px; }
+        .lsn .lsn-links { margin-top: auto; padding-top: 6px; display: flex; gap: 10px; flex-wrap: wrap;
+                          font: var(--text-micro); letter-spacing: .04em; text-transform: uppercase; }
+        .lsn .lsn-links a { color: var(--v); text-decoration: none; }
+        .lsn .lsn-links a:hover { text-decoration: underline; }
+        @media (max-width: 640px) {
+            .am-persona { padding: var(--space-md); }
+            .am-lessons { grid-template-columns: 1fr; }
+        }
+
         /* Gate note */
         .gate-note { background: var(--info-bg); border: 1px solid var(--info-border); border-radius: var(--radius-lg); padding: var(--space-lg); display: flex; gap: var(--space-md); align-items: flex-start; }
         .gate-note svg { width: 22px; height: 22px; color: var(--info); flex: 0 0 auto; margin-top: 2px; }
@@ -330,6 +387,13 @@
         </article>
     </section>
 
+    <!-- ═══════════ AULAS MODELO, POR ALUNO ═══════════ -->
+    <section class="cat-section">
+        <h2>Aulas modelo, por aluno</h2>
+        <div class="sub">Toda aula-exemplo que existe hoje, agrupada pelo aluno a que pertence — <b>o aluno é o mesmo, as aulas é que mudam</b>. A <b>variante</b> agrupa as aulas de mesma estrutura: a Helen tem 5 aulas, as 2 primeiras sem a camada de blocos B2 que as 3 seguintes têm; o Tiago tem 5 aulas e cada uma roda um método diferente (o rodízio). Tudo abaixo é medido no HTML de cada aula por <code>scripts/gen_catalogo_modelos.py</code> — nada é digitado à mão.</div>
+        <div id="aulasModelo"></div>
+    </section>
+
     <!-- ═══════════ PERSONAS POR NÍVEL ═══════════ -->
     <section class="cat-section">
         <h2>Personas por nível</h2>
@@ -472,6 +536,116 @@
   }).catch(function () {
     // Sem o JSON a página continua íntegra: some a prateleira, o resto do catálogo fica.
     document.querySelectorAll('.fw-shelf').forEach(function (el) { el.remove(); });
+  });
+})();
+</script>
+
+<script>
+/* AULAS MODELO, POR ALUNO — desenha /data/modelos-aulas.json.
+   FONTE ÚNICA: o JSON, gerado por scripts/gen_catalogo_modelos.py, que MEDE cada
+   aula (título, nº de slides, capítulos, framework, componentes de IN CLASS). Aula
+   nova do mesmo aluno aparece só rodando o gerador; nada aqui muda. */
+(function () {
+  'use strict';
+
+  // Cores das VARIANTES. A cor é o que faz "quais aulas são iguais entre si"
+  // aparecer sem ler nada: mesma cor = mesma estrutura, dentro daquele aluno.
+  var VAR_CORES = ['#1e6f8f', '#b4531a', '#5b3fa8', '#1e7a4f', '#8a1f57', '#4a5568'];
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function dim(hex, a) {
+    var n = parseInt(hex.slice(1), 16);
+    return 'rgba(' + [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(',') + ',' + a + ')';
+  }
+
+  function corDaVariante(persona) {
+    var m = {};
+    (persona.variantes || []).forEach(function (v, i) { m[v.id] = VAR_CORES[i % VAR_CORES.length]; });
+    return m;
+  }
+
+  function faixa(ns) {
+    // [3,4,5] -> "3–5" · [1,4] -> "1 e 4" · [2,5] em sequência quebrada fica legível
+    if (ns.length === 1) return 'aula ' + ns[0];
+    var seq = ns.every(function (n, i) { return i === 0 || n === ns[i - 1] + 1; });
+    if (seq) return 'aulas ' + ns[0] + '–' + ns[ns.length - 1];
+    return 'aulas ' + ns.slice(0, -1).join(', ') + ' e ' + ns[ns.length - 1];
+  }
+
+  function lessonHtml(a, cores) {
+    var cor = cores[a.variante] || VAR_CORES[0];
+    var links = ['<a href="' + esc(a.professor) + '" target="_blank" rel="noopener">Professor &#8599;</a>'];
+    if (a.aluno) links.push('<a href="' + esc(a.aluno) + '" target="_blank" rel="noopener">Aluno &#8599;</a>');
+    return '<article class="lsn" style="--v:' + cor + ';--v-dim:' + dim(cor, .10) + '">' +
+      '<div class="lsn-top"><span class="lsn-n">Aula ' + ('0' + a.n).slice(-2) + '</span>' +
+      '<span class="lsn-v">Variante ' + esc(a.variante) + '</span>' +
+      '<span class="lsn-slides">' + a.slides + ' slides</span></div>' +
+      '<h4>' + esc(a.titulo || ('Aula ' + a.n)) + '</h4>' +
+      (a.framework ? '<span class="fwtag">' + esc(a.framework_label || a.framework) + '</span>' : '') +
+      (a.capitulos && a.capitulos.length
+        ? '<div class="chaps">' + a.capitulos.map(esc).join(' &rsaquo; ') + '</div>' : '') +
+      (a.componentes && a.componentes.length
+        ? '<div class="comps">' + a.componentes.map(function (c) {
+            return '<span>' + esc(c.label) + '</span>';
+          }).join('') + '</div>' : '') +
+      '<div class="lsn-links">' + links.join('') + '</div>' +
+      '</article>';
+  }
+
+  function personaHtml(p) {
+    var cores = corDaVariante(p);
+    var hub = [];
+    if (p.hub_professor) hub.push('<a href="' + esc(p.hub_professor) + '" target="_blank" rel="noopener">Hub professor &#8599;</a>');
+    if (p.hub_aluno) hub.push('<a href="' + esc(p.hub_aluno) + '" target="_blank" rel="noopener">Hub aluno &#8599;</a>');
+
+    var vars = (p.variantes || []).map(function (v) {
+      var cor = cores[v.id];
+      return '<div class="am-var" style="--v:' + cor + ';--v-dim:' + dim(cor, .10) + '">' +
+        '<span class="tag">Variante ' + esc(v.id) + '</span>' +
+        '<span><b>' + esc(faixa(v.aulas)) + '</b> — ' + esc(v.resumo) +
+        (v.framework ? ' · método <b>' + esc(v.framework_label || v.framework) + '</b>' : '') +
+        '</span></div>';
+    }).join('');
+
+    var n = p.aulas.length;
+    var quantas = n + (n === 1 ? ' aula' : ' aulas') +
+      ', ' + p.variantes.length + (p.variantes.length === 1 ? ' variante' : ' variantes');
+
+    return '<section class="am-persona" style="--p-accent:' + p.accent + ';--p-dim:' + dim(p.accent, .10) + '">' +
+      '<div class="am-head">' +
+        '<span class="am-avatar" aria-hidden="true">' + esc((p.nome || '?').charAt(0)) + '</span>' +
+        '<div class="am-id"><h3>' + esc(p.nome) +
+          '<span class="am-badge">' + esc(p.modelo_label) + (p.nivel ? ' · ' + esc(p.nivel) : '') + '</span></h3>' +
+          '<div class="papel">' + esc(p.papel) + (p.perfil ? ' <span style="color:var(--text-dim)">— ' + esc(p.perfil) + '</span>' : '') + '</div>' +
+        '</div>' +
+        (hub.length ? '<div class="am-links">' + hub.join('') + '</div>' : '') +
+      '</div>' +
+      '<div class="am-vars"><span class="eyebrow" style="margin-bottom:0">' + esc(quantas) + '</span>' + vars + '</div>' +
+      '<div class="am-lessons">' + p.aulas.map(function (a) { return lessonHtml(a, cores); }).join('') + '</div>' +
+      '</section>';
+  }
+
+  var alvo = document.getElementById('aulasModelo');
+  if (!alvo) return;
+
+  fetch('/data/modelos-aulas.json', { cache: 'no-store' }).then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+  }).then(function (data) {
+    var ps = data.personas || [];
+    if (!ps.length) throw new Error('vazio');
+    // Destaque primeiro (o molde e o rodízio), depois o resto na ordem do roster.
+    ps = ps.slice().sort(function (a, b) { return (b.destaque ? 1 : 0) - (a.destaque ? 1 : 0); });
+    alvo.innerHTML = ps.map(personaHtml).join('');
+  }).catch(function () {
+    // Sem o JSON a página continua íntegra: some a seção, o resto do catálogo fica.
+    var sec = alvo.closest('.cat-section');
+    if (sec) sec.remove();
   });
 })();
 </script>

@@ -250,3 +250,33 @@ passado = intocável.
 **Por que não usar a data do arquivo ou o git log.** Porque o carimbo tem de viajar
 DENTRO do HTML: o gate roda sobre o conteúdo, o arquivo é reescrito a cada rebuild, e o
 git log conta a história do commit, não a da geração.
+
+---
+
+## 6. O catálogo de AULAS MODELO (por aluno)
+
+O catálogo mostra três camadas, e elas respondem perguntas diferentes:
+
+| Camada | Pergunta que responde | Fonte |
+|---|---|---|
+| **Modelo** | Que molde é esse (adulto/kids/teens)? | escrito em `public/catalogo.html` |
+| **Framework** | Que método a aula roda? | `public/data/frameworks.json` |
+| **Aula modelo** | *Dentro do mesmo aluno, quais aulas são diferentes entre si?* | `public/data/modelos-aulas.json` |
+
+A terceira é a que some sem ninguém notar: a Helen tem 5 aulas, e as 2 primeiras não têm a
+camada de blocos B2 que as 3 seguintes têm; o Tiago tem 5 aulas e cada uma roda um método
+(o rodízio da seção 3.1b). Sem ver lado a lado, "aula modelo" vira uma lista de links.
+
+**Nada ali é digitado.** `scripts/gen_catalogo_modelos.py` MEDE cada aula no HTML — título,
+nº de slides, capítulos (`.phase-label`), framework (`<meta name="alumni-framework">`) e os
+componentes de IN CLASS presentes — e agrupa em **variantes** as aulas de mesma estrutura.
+O único texto humano é o `ROSTER` de personas dentro do script.
+
+```
+python3 scripts/gen_catalogo_modelos.py            # regera o JSON
+python3 scripts/gen_catalogo_modelos.py --check    # o passo do CI: falha se estiver velho
+```
+
+Aula modelo nova (ou mexida) sem regerar = **PR vermelho**, porque catálogo que mente é pior
+que catálogo nenhum: ninguém desconfia dele. Aula de aluno REAL não entra no ROSTER e nunca
+dispara esse passo.
