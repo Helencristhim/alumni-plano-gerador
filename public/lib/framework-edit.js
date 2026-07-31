@@ -83,9 +83,9 @@
     var resumoMudanca = novo ? 'método criado (status mock)' : 'rótulo/resumo atualizados';
     if (p.contrato) {
       var atual = fw.contrato;
-      var autoria = p.autor ? ' por ' + p.autor : '';
+      var autoria = p.origem || ('editado' + (p.autor ? ' por ' + p.autor : ''));
       if (!atual) {
-        fw.contrato = { versao: 1, origem: 'criado no catálogo' + autoria,
+        fw.contrato = { versao: 1, origem: p.origem || ('criado no catálogo' + (p.autor ? ' por ' + p.autor : '')),
                         obrigatorios: obr, proibidos: pro,
                         min_slides: p.contrato.min_slides || null };
         fw.contrato_historico = [];
@@ -93,7 +93,7 @@
       } else if (!contratoIgual(atual, p.contrato)) {
         fw.contrato_historico = fw.contrato_historico || [];
         fw.contrato_historico.push(atual);
-        fw.contrato = { versao: Number(atual.versao) + 1, origem: 'editado no catálogo' + autoria,
+        fw.contrato = { versao: Number(atual.versao) + 1, origem: autoria,
                         obrigatorios: obr, proibidos: pro,
                         min_slides: p.contrato.min_slides || null };
         resumoMudanca = 'contrato v' + atual.versao + ' → v' + fw.contrato.versao +

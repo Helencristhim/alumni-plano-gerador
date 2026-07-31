@@ -359,7 +359,28 @@ cópias divergiriam no primeiro ajuste, e as duas "funcionariam".
 | editar contrato no lugar | toda mudança **sobe a versão** e empurra a anterior pro histórico — é o que impede a edição de hoje reprovar aula de ontem |
 | exigir exercício fora do banco | o banco é gerado do builder; exigir o que ele não monta quebraria a aula na geração |
 
-### Configuração (uma vez)
+### Pelo terminal (sem token, sem navegador)
+
+A MESMA regra, pela linha de comando — `scripts/framework-edit.mjs` carrega o mesmo
+`public/lib/framework-edit.js`. **Três portas, uma regra só**: navegador, função
+serverless e terminal. Editar o JSON na mão é a única porta que não sobe a versão
+sozinha — e é por isso que ela não deve ser usada.
+
+```
+node scripts/framework-edit.mjs --listar               # métodos, contrato e versão
+node scripts/framework-edit.mjs --ver adulto/ppp       # o contrato inteiro
+node scripts/framework-edit.mjs --exercicios           # o banco, agrupado
+
+node scripts/framework-edit.mjs --cat adulto --id ppp --tirar gapfill        # sobe pra v2
+node scripts/framework-edit.mjs --cat adulto --id ppp --por reading --min 12
+node scripts/framework-edit.mjs --cat adulto --id dogme --label "Dogme" \
+  --obrigatorios dialogo,slide-tarefa,checklist --min 20                     # nasce mock
+```
+
+`--dry-run` mostra o resultado sem gravar. Depois é o fluxo de sempre: branch, commit,
+PR, gates, merge.
+
+### Configuração do editor por PR (opcional)
 
 Vercel → Settings → Environment Variables:
 
