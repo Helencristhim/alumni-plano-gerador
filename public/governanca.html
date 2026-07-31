@@ -187,14 +187,15 @@ var students = [];
 
 async function loadStudentsFromSupabase() {
   try {
-    var resp = await sb.from('perfis').select('id,data,deactivated').order('id');
+    /* Projetar as chaves usadas em vez de baixar `data` inteiro: a coluna carrega
+       blocosGeracoes/curriculo (~26MB no roster) e a query estourava o statement
+       timeout do Postgres (57014), deixando a tela no fallback hardcoded. */
+    var resp = await sb.from('perfis').select('id,deactivated,dForm:data->dadosFormulario,dExtr:data->dadosExtraidos,pExtr:data->perfil->dadosExtraidos,dNome:data->>nome').order('id');
     if (resp.error) throw resp.error;
     students = (resp.data || []).map(function(row) {
-      var d = row.data || {};
-      var form = d.dadosFormulario || {};
-      var perfil = d.perfil || {};
-      var de = (perfil.dadosExtraidos || d.dadosExtraidos || {});
-      var nome = form.nome || d.nome || row.id;
+      var form = row.dForm || {};
+      var de = (row.pExtr || row.dExtr || {});
+      var nome = form.nome || row.dNome || row.id;
       var nivelFull = (de.nivel && de.nivel.valor) || form.nivel || '';
       /* Truncate level to just the code: "A2 (Pré-Intermediário — ...)" → "A2" */
       var nivel = nivelFull.replace(/\s*\(.*$/, '').trim() || nivelFull.substring(0, 10);
