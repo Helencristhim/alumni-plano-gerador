@@ -106,6 +106,23 @@ def read(p):
         return f.read()
 
 
+def contrato_versao(fw):
+    """Versão ATUAL do contrato daquele framework, ou None se ele não tem contrato.
+    Fonte única: public/data/frameworks.json (o mesmo arquivo que o catálogo edita).
+    Ilegível/ausente => None: o carimbo some, o GATE 12 ignora a aula, e a geração
+    segue. Um arquivo de dados quebrado não pode impedir aula de nascer."""
+    try:
+        with open(os.path.join(ROOT, 'public', 'data', 'frameworks.json'), encoding='utf-8') as f:
+            d = json.load(f)
+    except Exception:
+        return None
+    for cat in d.get('categorias', []):
+        for f_ in cat.get('frameworks', []):
+            if f_['id'] == fw and f_.get('contrato'):
+                return int(f_['contrato']['versao'])
+    return None
+
+
 def assert_framework(cfg):
     """Falha CEDO (antes de escrever qualquer arquivo) se o config declarar um framework
     que não existe na categoria, ou se puser framework experimental num aluno real.
@@ -1113,7 +1130,15 @@ def base_swaps(s, cfg, n=None):
         # FRAMEWORK (o MÉTODO, dentro da categoria). É esta etiqueta que o GATE 11
         # (scripts/check_framework_isolation.py) lê pra garantir que aluno real nunca
         # receba framework em validação. Aula sem a etiqueta = legado, e o gate ignora.
-        prov += f'\n    <meta name="alumni-framework" content="{cfg.get("framework", FRAMEWORK_DEFAULT)}">'
+        fw_id = cfg.get('framework', FRAMEWORK_DEFAULT)
+        prov += f'\n    <meta name="alumni-framework" content="{fw_id}">'
+        # CONTRATO (GATE 12): a versão do contrato em que esta aula NASCEU. É o que
+        # permite editar o contrato no catálogo sem reprovar aula antiga — o gate
+        # julga cada aula pela versão dela, não pela versão de hoje. Framework sem
+        # contrato não carimba nada, e o gate simplesmente ignora a aula.
+        v = contrato_versao(fw_id)
+        if v:
+            prov += f'\n    <meta name="alumni-contrato" content="{fw_id}@{v}">'
         s = re.sub(r'(<meta name="viewport"[^>]*>)',
                    lambda m: m.group(1) + '\n    ' + prov, s, count=1)
     # CARIMBO DE GERAÇÃO — a data de nascimento da aula, em versões do builder.

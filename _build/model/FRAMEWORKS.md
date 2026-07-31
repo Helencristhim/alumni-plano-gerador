@@ -280,3 +280,52 @@ python3 scripts/gen_catalogo_modelos.py --check    # o passo do CI: falha se est
 Aula modelo nova (ou mexida) sem regerar = **PR vermelho**, porque catálogo que mente é pior
 que catálogo nenhum: ninguém desconfia dele. Aula de aluno REAL não entra no ROSTER e nunca
 dispara esse passo.
+
+---
+
+## 7. CONTRATO — o que cada método promete entregar (GATE 12)
+
+`framework` diz QUAL método a aula roda. O **contrato** diz o que aquela aula tem de
+TER. Sem ele, *"gere 3 aulas do tipo Leitura"* é um pedido sem conferência: os gates
+são todos universais (áudio, vozes, português na tela) e nenhum sabe que uma aula de
+leitura precisa de texto central, gist e true/false.
+
+### As três peças
+
+| Peça | Onde | Como se prova |
+|---|---|---|
+| **Banco de exercícios** | `public/data/exercicios.json` | gerado por `scripts/gen_banco_exercicios.py`, que **chama `render_block()` do builder** para cada exercício e guarda as classes que sairam. Componente de shell (vocab reveal, diálogo, player) é provado pela presença da classe no molde. |
+| **Contrato** | `contrato` de cada framework em `frameworks.json` | decisão humana, semeada por medição (`--sugerir`) |
+| **Gate** | `scripts/check_contrato_aula.py` | casa contrato × HTML pela classe-marcador |
+
+### A regra de ouro ao editar um contrato
+
+> **Suba a versão e empurre a anterior pra `contrato_historico`. Nunca edite a versão
+> em uso.**
+
+A aula carimba `<meta name="alumni-contrato" content="ppp@1">` ao nascer, e o gate a
+julga pela versão **dela**. É isso que torna o editor do catálogo seguro: tirar um
+exercício do contrato hoje cria a versão 2 e não encosta em nada que nasceu na 1. Sem
+o histórico, uma edição de dois cliques viraria centenas de aulas vermelhas — e a saída
+seria desligar o gate, que é como gate morre.
+
+Duas travas herdadas, no mesmo espírito: aula **sem** o carimbo é ignorada (todo o
+legado, REGRA 30), e exercício sem classe exclusiva (`verificavel: false` no banco —
+hoje `questions`, `analyse` e `bank`) nunca reprova, porque o gate não consegue
+distingui-lo de outro.
+
+```
+python3 scripts/gen_banco_exercicios.py            # regera o banco (prova contra o builder)
+python3 scripts/check_contrato_aula.py             # GATE 12 no repo inteiro
+python3 scripts/check_contrato_aula.py --selftest  # prova que morde
+python3 scripts/check_contrato_aula.py --sugerir ppp   # mede as aulas e propõe contrato
+```
+
+### Semente dos contratos (31/07/2026)
+
+Nenhum contrato foi inventado: cada um saiu da **interseção medida** das aulas que já
+rodam aquele método — o que está em TODAS elas. Para o `imersivo-prototipo` isso deu 4
+itens (`checklist`, `role-play`, `slide-tarefa`, `vocab-reveal`) sobre 183 aulas adultas
+publicadas; o `min_slides` veio da REGRA 11 (piso), não da média, e é menor no Kids
+porque a aula lá é de 30–45 min. Contrato apertado demais barra aula legítima, e o
+prejuízo disso é maior que o de um contrato frouxo que se aperta depois no editor.
