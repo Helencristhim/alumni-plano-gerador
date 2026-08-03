@@ -103,6 +103,30 @@ def avaliar(rollup):
                   (f"; preview ignorado: {', '.join(pendentes)}" if pendentes else "")]
 
 
+def arquivos_removidos(pr, files):
+    """Quais arquivos este PR REMOVE de fato — nao "quais so perderam linhas".
+
+    `gh pr view --json files` nao traz o status por arquivo, entao a versao antiga
+    inferia delecao de `deletions>0 and additions==0`. Isso confunde duas coisas
+    diferentes: um PR que APAGA a pagina de uma aluna, e um PR que so RETIRA LINHAS
+    dela (limpar HTML morto nao adiciona nada, entao cai na mesma heuristica). O
+    segundo e trabalho legitimo e ficava impossivel de mergear — barrou a limpeza
+    das 6 secoes vazias de Complementares da ana-claudia-veraldi (PR #1892), onde
+    os dois arquivos seguiam vivos na branch.
+
+    A REST API traz `status` por arquivo, e so diz `removed` quando o arquivo
+    realmente sumiu. Se a chamada falhar, caimos na heuristica antiga DE PROPOSITO:
+    barrar um PR legitimo custa uma mensagem de erro; deixar passar a delecao de uma
+    pagina publicada vira 404 no link que a aluna ja tem no WhatsApp.
+    """
+    try:
+        api = gh("api", f"repos/{{owner}}/{{repo}}/pulls/{pr}/files", "--paginate")
+        return [f["filename"] for f in api if f.get("status") == "removed"]
+    except Exception:
+        return [f["path"] for f in files
+                if f.get("deletions", 0) and not f.get("additions", 0)]
+
+
 def url_coberta_por_redirect(caminho):
     """A URL deste arquivo continua respondendo depois de ele sumir?
 
@@ -256,7 +280,7 @@ def conferir(pr, retrofit=False, apaga_ok=False):
             f"(o GitHub reaponta esta pro main ao deletar a branch base)")
 
     caminhos = [f["path"] for f in d["files"]]
-    delecoes = [f["path"] for f in d["files"] if f.get("deletions", 0) and not f.get("additions", 0)]
+    delecoes = arquivos_removidos(pr, d["files"])
     if delecoes:
         # Apagar pagina de aluno e o erro mais caro que este script pode deixar passar:
         # um link que a aluna tem no WhatsApp vira 404 sem aviso e sem ninguem saber.
