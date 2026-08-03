@@ -10,6 +10,15 @@ on:
     paths:
       - 'public/professor/**.html'
       - 'public/aluno/**.html'
+      # As paginas do sistema (dashboard, index, perfil, governanca) nao acionavam gate
+      # NENHUM — nem o canario, nem o GATE 8, nem o check de handler morto. O PR #1859
+      # mexeu no dashboard e foi mergeado na mao porque o check `gates` nem existia, e o
+      # merge_aula.py (com razao) se recusa a mergear sem ele. A dashboard e a tela por
+      # onde a chefe entrega material ao aluno: um botao morto ali custa mais que num
+      # slide. O classificador de arquivos abaixo so olha professor/aluno, entao para
+      # estes PRs os gates por-arquivo saem vazios e o que roda e o que faz sentido:
+      # canario, YAML valido e GATE 8 (repo inteiro).
+      - 'public/*.html'
       # O estrago que mais dói NÃO chega por um arquivo de aula: chega pelo BUILDER e
       # pelo MODELO, que reescrevem centenas de aulas de uma vez. Sem estes paths, um PR
       # que mexe só no _build/ ou no scripts/ não acionava gate NENHUM — foi assim que o
