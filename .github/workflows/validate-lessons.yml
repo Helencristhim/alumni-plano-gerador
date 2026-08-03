@@ -19,6 +19,11 @@ on:
       # estes PRs os gates por-arquivo saem vazios e o que roda e o que faz sentido:
       # canario, YAML valido e GATE 8 (repo inteiro).
       - 'public/*.html'
+      # O vercel.json decide o ROTEAMENTO de producao (redirects, headers, functions).
+      # Um erro aqui nao quebra uma aula — quebra o site inteiro, e ele nao acionava
+      # gate nenhum. O job so classifica arquivos de professor/aluno, entao aqui rodam
+      # o canario, o YAML valido e o GATE 8.
+      - 'vercel.json'
       # O estrago que mais dói NÃO chega por um arquivo de aula: chega pelo BUILDER e
       # pelo MODELO, que reescrevem centenas de aulas de uma vez. Sem estes paths, um PR
       # que mexe só no _build/ ou no scripts/ não acionava gate NENHUM — foi assim que o
