@@ -859,6 +859,18 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-rank-btn{width:44px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--text-mid);background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s}
 .ic-rank-btn:hover{border-color:var(--accent);color:var(--accent)}
 .ic-rank-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic-timer{display:flex;align-items:center;justify-content:center;gap:1rem;max-width:430px;margin:1.2rem auto 0;background:var(--bg-card);border:2px solid var(--accent);border-radius:14px;padding:1rem 1.3rem}
+.ic-timer-display{font:700 2.6rem/1 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:var(--accent);font-variant-numeric:tabular-nums;min-width:110px;text-align:center}
+.ic-timer.ic-timer-over .ic-timer-display{color:var(--danger)}
+.ic-timer-btn{padding:.5rem 1.1rem;font:600 .82rem/1 inherit;color:#fff;background:var(--accent);border:2px solid var(--accent);border-radius:8px;cursor:pointer;transition:all .15s}
+.ic-timer-btn:hover{filter:brightness(1.1)}
+.ic-timer-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic-timer-btn.ghost{color:var(--accent);background:transparent}
+.ic-blank-filled{background:var(--success-bg);border-radius:4px;padding:0 .25rem}
+.ic-w{font-weight:700;color:var(--success)}
+.ic-reveal-btn{display:block;margin:1rem auto 0;padding:.55rem 1.3rem;font:600 .82rem/1 inherit;color:var(--accent);background:transparent;border:2px solid var(--accent);border-radius:8px;cursor:pointer;transition:all .15s}
+.ic-reveal-btn:hover{background:var(--accent);color:#fff}
+.ic-reveal-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.ic-purpose-card,.ic-sort-item,.ic-map-node,.ic-stance-btn{transition:none}}
 </style>
 
@@ -883,6 +895,49 @@ function icSort(btn){
   item.classList.toggle('done', ok);
 }
 function icMap(node){ node.classList.toggle('open'); }
+/* Cronometro de tarefa. O data-teacher pedia "cronometro visivel" e nao existia
+   nenhum na tela -- a professora tinha de contar no relogio dela. */
+var icTimers = {};
+function icTimerToggle(btn){
+  var box = btn.closest('.ic-timer'); if(!box) return;
+  var id = box.dataset.tid, disp = box.querySelector('.ic-timer-display');
+  if (icTimers[id]) { clearInterval(icTimers[id]); icTimers[id] = null; btn.textContent = 'Resume'; return; }
+  if (!box.dataset.left) box.dataset.left = box.dataset.seconds;
+  btn.textContent = 'Pause';
+  icTimers[id] = setInterval(function(){
+    var left = parseInt(box.dataset.left, 10) - 1;
+    if (left <= 0) { left = 0; clearInterval(icTimers[id]); icTimers[id] = null; btn.textContent = 'Time'; box.classList.add('ic-timer-over'); }
+    box.dataset.left = left;
+    disp.textContent = Math.floor(left/60) + ':' + ('0' + (left % 60)).slice(-2);
+  }, 1000);
+}
+function icTimerReset(btn){
+  var box = btn.closest('.ic-timer'); if(!box) return;
+  var id = box.dataset.tid;
+  if (icTimers[id]) { clearInterval(icTimers[id]); icTimers[id] = null; }
+  var total = parseInt(box.dataset.seconds, 10);
+  box.dataset.left = total; box.classList.remove('ic-timer-over');
+  box.querySelector('.ic-timer-display').textContent = Math.floor(total/60) + ':00';
+  var t = box.querySelector('.ic-timer-toggle'); if (t) t.textContent = 'Start';
+}
+/* Gabarito do gap-fill DENTRO do slide. Antes as respostas so existiam no answer
+   key do fim da aula, 7 slides adiante. Toggle (REGRA 27E): fecha no 2o clique. */
+function icGapReveal(btn){
+  var slide = btn.closest('.slide'); if(!slide) return;
+  var answers = (btn.dataset.answers || '').split('|');
+  var blanks = slide.querySelectorAll('.ic-blank');
+  if (btn.dataset.shown === '1') {
+    blanks.forEach(function(b){ var w = b.querySelector('.ic-w'); if (w) w.remove(); b.classList.remove('ic-blank-filled'); });
+    btn.dataset.shown = '0'; btn.textContent = 'Show the answers'; return;
+  }
+  blanks.forEach(function(b, i){
+    if (b.querySelector('.ic-w')) return;
+    var w = document.createElement('span');
+    w.className = 'ic-w'; w.textContent = ' ' + (answers[i] || '') + ' ';
+    b.appendChild(w); b.classList.add('ic-blank-filled');
+  });
+  btn.dataset.shown = '1'; btn.textContent = 'Hide the answers';
+}
 function icRank(btn, dir){
   var item = btn.closest('.ic-rank-item'); if(!item) return;
   var list = item.parentElement;
@@ -1140,7 +1195,7 @@ function icRank(btn, dir){
   <div class="slide-inner">
     <div class="chapter-label">Stage 5: Language Bridge</div>
     <h2 class="slide-heading">Three Frames for <span class="accent">Tonight</span></h2>
-    <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Analyse</span>Complete each frame with the expression that fits</div><div class="ic-lf-list"><div class="ic-lf"><span class="ic-lbl">A</span><span>What <span class="ic-mod ic-strong">stands out</span> to me is how ordinary the examples are.</span></div><div class="ic-lf"><span class="ic-lbl">B</span><span>I <span class="ic-mod ic-strong">tend to</span> leave the harder decisions until the end of the day.</span></div><div class="ic-lf"><span class="ic-lbl">C</span><span>One change I <span class="ic-mod">could make</span> is deciding the small things the night before.</span></div><div class="ic-lf"><span class="ic-lbl">D</span><span>Nine times <span class="ic-mod">out of ten</span>, I default to whatever is nearest.</span></div></div></div>
+    <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Analyse</span>The three frames you will use tonight -- and what each one does</div><div class="ic-lf-list"><div class="ic-lf"><span class="ic-lbl">A</span><span>What <span class="ic-mod ic-strong">stands out</span> to me is how ordinary the examples are.</span></div><div class="ic-lf"><span class="ic-lbl">B</span><span>I <span class="ic-mod ic-strong">tend to</span> leave the harder decisions until the end of the day.</span></div><div class="ic-lf"><span class="ic-lbl">C</span><span>One change I <span class="ic-mod">could make</span> is deciding the small things the night before.</span></div><div class="ic-lf"><span class="ic-lbl">D</span><span>Nine times <span class="ic-mod">out of ten</span>, I default to whatever is nearest.</span></div></div></div>
   </div>
 </div>
 
@@ -1201,6 +1256,7 @@ function icRank(btn, dir){
     <div class="chapter-label">Stage 5: Language Bridge</div>
     <h2 class="slide-heading">Written English into <span class="accent">Spoken English</span></h2>
     <div class="ic-card"><div class="ic-card-h3">Written English into spoken English. Say each one again using the frame in brackets.</div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>Decision fatigue affects the quality of evening choices.<span class="ic-rephrase-cue">(I tend to)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">2</span><span>The example of the judges is the most persuasive element of the text.<span class="ic-rephrase-cue">(What stands out to me is)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">3</span><span>A reduction in daily options would be beneficial.<span class="ic-rephrase-cue">(One change I could make is)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">4</span><span>The author concedes a disadvantage to the approach.<span class="ic-rephrase-cue">(To be fair to the writer)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li></ol></div>
+<div class="ic-answer"><div class="ic-ans-head" onclick="icToggleAnswer(this)"><span class="ic-ico">+</span>Show one possible version</div><div class="ic-ans-body"><div class="ic-ans-inner"><div style="font-size:.78rem;color:var(--text-dim);margin-bottom:.6rem">These are not the only correct answers. Compare the rhythm, not the words.</div><ol><li>I tend to decide worse in the evening -- the choices are the same, I am not.</li><li>What stands out to me is the bit about the judges. That one is hard to argue with.</li><li>One change I could make is cutting the options before I start comparing them.</li><li>To be fair to the writer, he does admit there is a cost to living with fewer decisions.</li></ol></div></div></div>
   </div>
 </div>
 
@@ -1210,6 +1266,7 @@ function icRank(btn, dir){
     <div class="chapter-label">Stage 5: Language Bridge</div>
     <h2 class="slide-heading">Put the Words <span class="accent">Back</span></h2>
     <div class="ic-card"><div class="ic-gaptext">By seven in the evening the decisions are still small and still <span class="ic-blank"><span class="ic-n">1</span>&nbsp;&nbsp;&nbsp;</span>, but I am already <span class="ic-blank"><span class="ic-n">2</span>&nbsp;&nbsp;&nbsp;</span>. So I stop <span class="ic-blank"><span class="ic-n">3</span>&nbsp;&nbsp;&nbsp;</span> the options and I just <span class="ic-blank"><span class="ic-n">4</span>&nbsp;&nbsp;&nbsp;</span> whatever is nearest. The honest word for it is a <span class="ic-blank"><span class="ic-n">5</span>&nbsp;&nbsp;&nbsp;</span>: I lose a little quality and I buy back some attention.</div><div class="ic-bank ic-soft"><span class="ic-b">worn down</span><span class="ic-b">default to</span><span class="ic-b">mundane</span><span class="ic-b">weighing up</span><span class="ic-b">trade-off</span></div></div>
+    <button class="ic-reveal-btn" data-answers="mundane|worn down|weighing up|default to|trade-off" data-shown="0" onclick="icGapReveal(this)">Show the answers</button>
   </div>
 </div>
 
@@ -1218,6 +1275,7 @@ function icRank(btn, dir){
   <div class="slide-inner">
     <div class="chapter-label">Stage 6: Oral Preparation</div>
     <h2 class="slide-heading">Keywords, <span class="accent">Not Sentences</span></h2>
+    <p style="text-align:center;font-size:.92rem;color:var(--text);margin:0 auto .4rem;max-width:600px"><strong>Choose four or five.</strong> Copy only those into your notebook and leave the rest here &mdash; deciding what to drop is already half of organising an answer.</p>
     <div class="ic-card"><div class="ic-card-h3">Keywords only. Take these into the three minutes, not sentences.</div><div class="ic-bank"><span class="ic-b">the same limited supply</span><span class="ic-b">decide worse, not less</span><span class="ic-b">shoppers / judges / same clothes</span><span class="ic-b">attention, not willpower</span><span class="ic-b">settle the trivial ones once</span><span class="ic-b">the hours when you are still fresh</span><span class="ic-b">cut the options before comparing</span><span class="ic-b">worth the tank</span></div></div>
   </div>
 </div>
@@ -1246,29 +1304,33 @@ function icRank(btn, dir){
 </div>
 
 <!-- ========== SLIDE 21: A TAREFA ORAL (o produto) ========== -->
-<div class="slide slide-light" data-slide="23" data-phase="7" data-teacher="<strong>Etapa 7 &mdash; Text-based speaking task (5 de 11 min). O CENTRO DA AULA.</strong><br><strong>Mec&acirc;nica:</strong> minipresenta&ccedil;&atilde;o + compara&ccedil;&atilde;o com a pr&oacute;pria experi&ecirc;ncia (pool da etapa 7).<br><strong>Fun&ccedil;&atilde;o:</strong> a produ&ccedil;&atilde;o que TODA a aula servia. Tem de depender do texto: sem a leitura ela n&atilde;o consegue fazer.<br><strong>Opera&ccedil;&atilde;o cognitiva:</strong> sintetizar, relacionar e sustentar.<br><strong>Controle:</strong> nenhum &mdash; sem roteiro, s&oacute; o mapa.<br><strong>Apoio:</strong> o mapa do slide 12 e os frames do slide 14.<br><strong>Evid&ecirc;ncia esperada (syllabus):</strong> conversa de 3 min sem roteiro, com pelo menos um frame usado naturalmente.<br><br>CRON&Ocirc;METRO VIS&Iacute;VEL, 3 minutos. N&Atilde;O interrompa &mdash; nem para corrigir, nem para ajudar. Anote em silêncio. Se ela parar antes de 1 min, uma &uacute;nica pergunta de sustenta&ccedil;&atilde;o: 'and where does that show up in your week?' Corre&ccedil;&atilde;o &eacute; s&oacute; na etapa 8." >
+<div class="slide slide-light" data-slide="23" data-phase="7" data-teacher="<strong>Etapa 7 &mdash; Text-based speaking task (5 de 11 min). O CENTRO DA AULA.</strong><br><strong>Mec&acirc;nica:</strong> minipresenta&ccedil;&atilde;o + compara&ccedil;&atilde;o com a pr&oacute;pria experi&ecirc;ncia (pool da etapa 7).<br><strong>Controle:</strong> nenhum &mdash; sem roteiro, s&oacute; o mapa do slide 13.<br><strong>Evid&ecirc;ncia esperada (syllabus):</strong> 3 min sem roteiro, com pelo menos um frame usado naturalmente.<br><br><strong>CONDU&Ccedil;&Atilde;O:</strong> clique START no cron&ocirc;metro da tela e N&Atilde;O interrompa &mdash; nem para corrigir, nem para ajudar. Anote em sil&ecirc;ncio (as anota&ccedil;&otilde;es viram os 3 pontos do slide 26). Se ela parar antes de 1 min, UMA pergunta de sustenta&ccedil;&atilde;o: 'and where does that show up in your week?'. Se estourar os 3 min, deixe terminar a frase. Corre&ccedil;&atilde;o s&oacute; na etapa 8.">
   <div class="slide-inner">
     <div class="chapter-label">Stage 7: Speaking Task</div>
     <h2 class="slide-heading">Three Minutes. <span class="accent">Your Map, No Script.</span></h2>
-    <div style="max-width:660px;margin:1.2rem auto 0;background:var(--bg-card);border:2px solid var(--accent);border-radius:14px;padding:1.5rem">
-      <p style="font-size:1rem;line-height:1.65">Talk me through the purpose you chose at the start. Use the text where it helps you, and your own week where the text runs out.</p>
-      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem">
-        <span style="padding:.35rem .8rem;background:var(--accent-dim);border:1px solid var(--accent);border-radius:999px;font-size:.8rem;font-weight:600">the claim</span>
-        <span style="padding:.35rem .8rem;background:var(--accent-dim);border:1px solid var(--accent);border-radius:999px;font-size:.8rem;font-weight:600">one example</span>
-        <span style="padding:.35rem .8rem;background:var(--accent-dim);border:1px solid var(--accent);border-radius:999px;font-size:.8rem;font-weight:600">your Tuesday</span>
-        <span style="padding:.35rem .8rem;background:var(--accent-dim);border:1px solid var(--accent);border-radius:999px;font-size:.8rem;font-weight:600">one change</span>
-      </div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-top:1rem">Keywords only in front of you. Full sentences happen out loud.</p>
+    <p style="text-align:center;font-size:.95rem;color:var(--text);margin:.7rem auto 0;max-width:640px">Talk me through <strong>the purpose you chose at the start</strong>. Use the text where it helps you, and your own week where the text runs out.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;max-width:700px;margin:1rem auto 0">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center"><div style="font-size:.7rem;font-weight:700;color:var(--accent);letter-spacing:.06em">FIRST</div><p style="font-size:.84rem;margin-top:.2rem">the claim, in your words</p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center"><div style="font-size:.7rem;font-weight:700;color:var(--accent);letter-spacing:.06em">THEN</div><p style="font-size:.84rem;margin-top:.2rem">one example that convinced you</p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center"><div style="font-size:.7rem;font-weight:700;color:var(--accent);letter-spacing:.06em">THEN</div><p style="font-size:.84rem;margin-top:.2rem">your own Tuesday</p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center"><div style="font-size:.7rem;font-weight:700;color:var(--accent);letter-spacing:.06em">END ON</div><p style="font-size:.84rem;margin-top:.2rem">the one change</p></div>
     </div>
+    <div class="ic-timer" data-tid="t23" data-seconds="180">
+      <span class="ic-timer-display">3:00</span>
+      <button class="ic-timer-btn ic-timer-toggle" onclick="icTimerToggle(this)">Start</button>
+      <button class="ic-timer-btn ghost" onclick="icTimerReset(this)">Reset</button>
+    </div>
+    <p style="text-align:center;font-size:.85rem;color:var(--text-dim);margin-top:.8rem">Keywords only in front of you. Full sentences happen out loud.</p>
   </div>
 </div>
 
-<!-- ========== SLIDE 22: DISCUSSAO COM DECISAO ========== -->
-<div class="slide slide-light" data-slide="24" data-phase="7" data-teacher="<strong>Etapa 7 &mdash; Text-based speaking task (4 de 11 min).</strong><br><strong>Mec&acirc;nica:</strong> discuss&atilde;o com decis&atilde;o + defesa de perspectiva (pool da etapa 7).<br><strong>Fun&ccedil;&atilde;o:</strong> tr&ecirc;s degraus, do guiado ao livre.<br><strong>Controle:</strong> decrescente.<br><strong>Evid&ecirc;ncia esperada:</strong> no round 2 ela CONCEDE antes de discordar.<br><br>No round 2 voc&ecirc; assume o lado contr&aacute;rio de verdade &mdash; press&atilde;o real, sem ironia. &Eacute; a primeira vez que ela sustenta desacordo em ingl&ecirc;s neste programa.">
+<!-- ========== SLIDE 22: ESCALADA (2 rounds, menos apoio a cada um) ========== -->
+<div class="slide slide-light" data-slide="24" data-phase="7" data-teacher="<strong>Etapa 7 &mdash; Text-based speaking task (4 de 11 min).</strong><br><strong>Mec&acirc;nica:</strong> defesa de perspectiva + decis&atilde;o (pool da etapa 7).<br><strong>Fun&ccedil;&atilde;o:</strong> ESCALADA do slide anterior &mdash; ela j&aacute; disse a ideia uma vez com o mapa na m&atilde;o; agora a mesma ideia com menos apoio e com press&atilde;o.<br><strong>Controle:</strong> decrescente.<br><strong>Evid&ecirc;ncia esperada:</strong> no round 2 ela CONCEDE antes de discordar; no round 3 ela fala sem nenhuma nota.<br><br>Antes existia um 'Round 1 -- Guided' aqui que era o slide 21 outra vez. Foi cortado: a corrida guiada J&Aacute; ACONTECEU. Diga isso a ela &mdash; 'you have done it once; now twice more, with less to hold on to.'<br><br>No round 2 assuma o lado contr&aacute;rio DE VERDADE, sem ironia. &Eacute; a primeira vez neste programa que ela sustenta desacordo em ingl&ecirc;s.">
   <div class="slide-inner">
     <div class="chapter-label">Stage 7: Speaking Task</div>
-    <h2 class="slide-heading">Three Rounds: Guided, <span class="accent">Then Free</span></h2>
-    <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Round 1 -- Guided</div><p>Explain the argument of the text to somebody who has not read it, in four sentences. Use one example from the text and one frame from tonight.</p></div><div class="ic-scenario"><div class="ic-who">Round 2 -- Semi-free</div><p>Your teacher takes the opposite side: this is an excuse for lazy thinking, and people simply need more discipline. Concede one point, then disagree with evidence from the text.</p></div><div class="ic-scenario"><div class="ic-who">Round 3 -- Free</div><p>Decide out loud which single change you are making this week, and defend why that one and not the other three. No notes.</p></div></div>
+    <h2 class="slide-heading">Again, With <span class="accent">Less to Hold On To</span></h2>
+    <p style="text-align:center;font-size:.95rem;color:var(--text);margin:.7rem auto .2rem;max-width:660px">You have said it once, with your map. Now the same thinking twice more &mdash; each time with less support and more pressure.</p>
+    <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Round 2 -- Semi-free</div><p>Same idea, harder room. Your teacher takes the opposite side: this is an excuse for lazy thinking, and people simply need more discipline. Concede one point, then disagree using evidence from the text.</p></div><div class="ic-scenario"><div class="ic-who">Round 3 -- Free</div><p>No map, no notes, no preparation. Decide out loud which single change you are making this week, and defend why that one and not the other three.</p></div></div>
   </div>
 </div>
 
@@ -1282,31 +1344,31 @@ function icRank(btn, dir){
 </div>
 
 <!-- ========== SLIDE 24: FEEDBACK E UPGRADE ========== -->
-<div class="slide slide-light" data-slide="26" data-phase="8" data-teacher="<strong>Etapa 8 &mdash; Feedback and upgrade (3 de 4 min).</strong><br><strong>Mec&acirc;nica:</strong> segunda vers&atilde;o de uma resposta + inclus&atilde;o de evid&ecirc;ncia ausente (pool da etapa 8).<br><strong>Fun&ccedil;&atilde;o:</strong> transformar corre&ccedil;&atilde;o em PRODU&Ccedil;&Atilde;O nova &mdash; o perfil dela pede reparo seletivo e retask com evid&ecirc;ncia de melhora, nunca corre&ccedil;&atilde;o excessiva.<br><strong>Opera&ccedil;&atilde;o cognitiva:</strong> reformular sob crit&eacute;rio.<br><strong>Controle:</strong> m&eacute;dio.<br><strong>Evid&ecirc;ncia esperada:</strong> a mesma ideia dita de novo, melhor, em at&eacute; 40 s.<br><br>REPARO SELETIVO: escolha NO M&Aacute;XIMO 3 pontos das anota&ccedil;&otilde;es &mdash; priorize (1) state verb com -ing, (2) posi&ccedil;&atilde;o do adv&eacute;rbio de frequ&ecirc;ncia, (3) um chunk que soaria mais natural. Escreva os 3 na tela ao vivo. Depois pe&ccedil;a UMA das ideias de novo, com a corre&ccedil;&atilde;o incorporada. &Eacute; a evid&ecirc;ncia de melhora dentro da pr&oacute;pria aula." >
+<div class="slide slide-light" data-slide="26" data-phase="8" data-teacher="<strong>Etapa 8 &mdash; Feedback and upgrade (3 de 4 min).</strong><br><strong>Mec&acirc;nica:</strong> segunda vers&atilde;o de uma resposta + inclus&atilde;o de evid&ecirc;ncia ausente (pool da etapa 8).<br><strong>Fun&ccedil;&atilde;o:</strong> transformar corre&ccedil;&atilde;o em PRODU&Ccedil;&Atilde;O nova &mdash; o perfil dela pede reparo seletivo, nunca corre&ccedil;&atilde;o excessiva.<br><strong>Evid&ecirc;ncia esperada:</strong> a mesma ideia dita de novo, melhor, em at&eacute; 40 s.<br><br><strong>NA ORDEM:</strong><br>1. Escreva (anota&ccedil;&atilde;o do Zoom) SEUS 3 pontos na caixa branca. No m&aacute;ximo 3. Prioridade: (a) state verb com -ing, (b) posi&ccedil;&atilde;o do adv&eacute;rbio de frequ&ecirc;ncia, (c) um chunk que soaria mais natural.<br>2. Pe&ccedil;a que ela escolha UMA coisa que disse nos slides 21 ou 22.<br>3. Ela diz de novo, 40 s, com os 3 pontos dentro + UMA linha do texto que ficou de fora.<br><br>Ela ouve a diferen&ccedil;a na pr&oacute;pria voz: &eacute; a evid&ecirc;ncia de melhora dentro da pr&oacute;pria aula.">
   <div class="slide-inner">
     <div class="chapter-label">Stage 8: Feedback and Upgrade</div>
-    <h2 class="slide-heading">Say One of Them <span class="accent">Again, Better</span></h2>
-    <div style="max-width:660px;margin:1.2rem auto 0">
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem">
-        <p style="font-size:.9rem;color:var(--text-dim);font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:.72rem">Three things, then one more go</p>
-        <p style="font-size:.95rem;line-height:1.6;margin-top:.7rem">Your teacher will put three short notes on the screen. Pick the idea you liked least when you said it, and say it once more &mdash; with the notes inside it, and one piece of evidence from the text that you left out the first time.</p>
+    <h2 class="slide-heading">Say One Thing <span class="accent">Again, Better</span></h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:.65rem;max-width:780px;margin:.9rem auto .3rem">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.85rem">
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)">Step 1</div>
+        <p style="font-size:.86rem;line-height:1.45;margin-top:.25rem">Choose <strong>one thing you said</strong> in the last ten minutes that you were not happy with.</p>
       </div>
-      <p style="text-align:center;font-size:.88rem;color:var(--text-dim);margin-top:1rem">Forty seconds. Not a new speech &mdash; the same idea, upgraded.</p>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.85rem">
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)">Step 2</div>
+        <p style="font-size:.86rem;line-height:1.45;margin-top:.25rem">Say it again with the <strong>three notes below</strong> inside it.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.85rem">
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)">Step 3</div>
+        <p style="font-size:.86rem;line-height:1.45;margin-top:.25rem">Add <strong>one line from the text</strong> you left out the first time.</p>
+      </div>
     </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 25: ANSWER KEY ========== -->
-<div class="slide slide-light" data-slide="27" data-phase="8" data-teacher="<strong>Etapa 8 &mdash; refer&ecirc;ncia.</strong> S&oacute; abra DEPOIS da produ&ccedil;&atilde;o. Serve para ela conferir sozinha depois da aula &mdash; n&atilde;o gaste tempo de aula lendo item por item.">
-  <div class="slide-inner">
-    <div class="chapter-label">Stage 8: Feedback and Upgrade</div>
-    <h2 class="slide-heading">Answer <span class="accent">Key</span></h2>
-    <div class="ic-answer"><div class="ic-ans-head" onclick="icToggleAnswer(this)"><span class="ic-ico">+</span>Reveal the answer key</div><div class="ic-ans-body"><div class="ic-ans-inner"><ol><li>Gist = b. The argument is structural, not moral: fewer decisions, not more effort.</li><li>True/False = F, T, F, F, T.</li><li>Idea and evidence: 1-c, 2-a, 3-d, 4-b.</li><li>Vocabulary: 1-e, 2-h, 3-a, 4-f, 5-c, 6-g, 7-b, 8-d.</li><li>Rhetorical function: thesis / example / recommendation / example / recommendation.</li><li>Gap-fill: mundane, worn down, weighing up, default to, trade-off.</li><li>Function of each phrase: 1-c, 2-a, 3-d, 4-b.</li><li>State verbs take no -ing: know, seem, prefer, matter. Action verbs do: weigh up, compare, postpone, decide.</li></ol></div></div></div>
+    <p style="text-align:center;font-size:.85rem;color:var(--text-dim);margin:0 0 .2rem">Forty seconds. Not a new speech &mdash; the same idea, upgraded.</p>
+    <div class="ic-whiteboard"><div class="ic-wb-label">Your teacher's three notes</div></div>
   </div>
 </div>
 
 <!-- ========== SLIDE 26: WHAT I LEARNED ========== -->
-<div class="slide slide-light" data-slide="28" data-phase="8" data-teacher="<strong>Encerramento (1 min).</strong> Os 5 checks s&atilde;o o registro de conclus&atilde;o da aula (REGRA 28: marcar 5/5 grava inclass_done no Supabase). Leia em voz alta e marque COM ela &mdash; n&atilde;o marque sozinho. Se ela hesitar em algum, esse &eacute; o item que volta na aula 5 (Reading R2, bloco EXPLORE)." >
+<div class="slide slide-light" data-slide="27" data-phase="8" data-teacher="<strong>Encerramento (1 min).</strong> Os 5 checks s&atilde;o o registro de conclus&atilde;o da aula (REGRA 28: marcar 5/5 grava inclass_done no Supabase). Leia em voz alta e marque COM ela &mdash; n&atilde;o marque sozinho. Se ela hesitar em algum, esse &eacute; o item que volta na aula 5 (Reading R2, bloco EXPLORE)." >
   <div class="slide-inner">
     <div class="chapter-label">Lesson 1 Complete</div>
     <h2 class="slide-heading">What You <span class="accent">Did Tonight</span></h2>
@@ -1321,7 +1383,7 @@ function icRank(btn, dir){
 </div>
 
 <!-- ========== SLIDE 27: CLOSING ========== -->
-<div class="slide slide-dark" data-slide="29" data-phase="8" data-teacher="<strong>Fechamento (30 s).</strong> HOMEWORK, dito ORALMENTE e nunca escrito na tela: (1) gravar 2 min respondendo 'the one change I am actually making this week, and why that one'; (2) reparar em uma conversa real (podcast, s&eacute;rie, reuni&atilde;o) UM momento em que algu&eacute;m diz o quanto faz algo, e anotar a express&atilde;o exata de frequ&ecirc;ncia. <br><br>Pr&oacute;xima aula &eacute; LISTENING (aula 2 do syllabus, bloco BUILD): conversa espont&acirc;nea sobre planos de fim de semana &mdash; e o primeiro contato dela com o rod&iacute;zio de sotaques. Avise: 'next time you will not read anything. You will only listen, and it will be fast.'" style="background-image:linear-gradient(rgba(28,12,26,.86),rgba(28,12,26,.94)),url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1400&q=80');background-size:cover;background-position:center">
+<div class="slide slide-dark" data-slide="28" data-phase="8" data-teacher="<strong>Fechamento (30 s).</strong> HOMEWORK, dito ORALMENTE e nunca escrito na tela: (1) gravar 2 min respondendo 'the one change I am actually making this week, and why that one'; (2) reparar em uma conversa real (podcast, s&eacute;rie, reuni&atilde;o) UM momento em que algu&eacute;m diz o quanto faz algo, e anotar a express&atilde;o exata de frequ&ecirc;ncia. <br><br>Pr&oacute;xima aula &eacute; LISTENING (aula 2 do syllabus, bloco BUILD): conversa espont&acirc;nea sobre planos de fim de semana &mdash; e o primeiro contato dela com o rod&iacute;zio de sotaques. Avise: 'next time you will not read anything. You will only listen, and it will be fast.'" style="background-image:linear-gradient(rgba(28,12,26,.86),rgba(28,12,26,.94)),url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1400&q=80');background-size:cover;background-position:center">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Lesson 1 &middot; Complete</div>
     <h2 class="slide-heading" style="color:#fff">You Read to <span class="accent">Speak</span></h2>
@@ -1436,7 +1498,7 @@ function listenBlank(btn) {
 
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
-var totalSlides = 29;
+var totalSlides = 28;
 var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
 
 function changeSlide(dir) {
