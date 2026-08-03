@@ -65,9 +65,12 @@ ICONS = [
 
 # ---- REGRA 13: B1 = zero portugues na tela. Trava simples e barulhenta. -----------
 PT_WORDS = re.compile(
+    # Só palavras que NÃO existem em inglês. "complete", "professor", "no" e afins são
+    # homógrafos e davam falso-positivo: um gate que grita em texto correto é desligado
+    # no dia seguinte.
     r'\b(voc[eê]|n[aã]o|com|para|pelo|pela|uma|dos|das|que|ele|ela|isso|aqui|ent[aã]o|'
-    r'muito|mais|sobre|quando|porque|tamb[eé]m|fazer|dizer|frase|palavra|aula|professor|'
-    r'aluno|exerc[ií]cio|resposta|pergunta|traduza|escolha|complete|ou[çc]a|leia|escreva)\b',
+    r'muito|mais|sobre|quando|porque|tamb[eé]m|fazer|dizer|frase|palavra|aula|'
+    r'aluno|exerc[ií]cio|resposta|pergunta|traduza|escolha|ou[çc]a|leia|escreva)\b',
     re.I)
 
 
@@ -869,6 +872,14 @@ def emit(spec, slides_html, root, outdir, slide_count=None):
     # REGRA 2.1: as perguntas do listening NUNCA nascem escondidas
     assert not re.search(r'class="comp-questions"[^>]*display:\s*none', slides_html), \
         'REGRA 2.1: .comp-questions nasceu escondido'
+
+    # REGRA 13 (B1 = zero portugues na TELA): varredura GLOBAL do slides.html, com o
+    # data-teacher e os comentarios fora. Os asserts por-emissor cobrem so os campos que
+    # cada um recebe; um campo novo (uma celula de tabela de regra, por exemplo) escapava
+    # deles e so o gate pegava. Esta varredura fecha o buraco na autoria.
+    screen = re.sub(r'data-teacher="[^"]*"', '', slides_html)
+    screen = re.sub(r'<!--.*?-->', '', screen, flags=re.S)
+    _no_pt(screen, f'slides.html aula {n}')
 
     open(os.path.join(outdir, 'slides.html'), 'w', encoding='utf-8').write(slides_html)
     open(os.path.join(outdir, 'preclass.html'), 'w', encoding='utf-8').write(preclass(spec))
