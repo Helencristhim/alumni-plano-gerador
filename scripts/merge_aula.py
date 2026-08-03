@@ -103,6 +103,27 @@ def avaliar(rollup):
                   (f"; preview ignorado: {', '.join(pendentes)}" if pendentes else "")]
 
 
+def url_coberta_por_redirect(caminho):
+    """A URL deste arquivo continua respondendo depois de ele sumir?
+
+    Le os `redirects` do vercel.json NO MAIN. Se houver um source apontando para a
+    URL publica do arquivo, apagar o arquivo nao mata o link — a borda responde 308 e
+    leva ao destino. Sem isso, apagar = 404 silencioso no link que a aluna ja tem.
+    """
+    if not caminho.startswith("public/") or not caminho.endswith(".html"):
+        return False
+    url = caminho[len("public"):]                      # public/aluno/x.html -> /aluno/x.html
+    try:
+        raw = subprocess.run(["git", "show", "origin/main:vercel.json"],
+                             capture_output=True, text=True, check=True).stdout
+        for r in (json.loads(raw).get("redirects") or []):
+            if r.get("source") == url:
+                return True
+    except Exception:
+        return False
+    return False
+
+
 def slugs_do_pr(arquivos):
     """Slugs de aluno tocados pelo PR — o merge tem de ser de UM aluno so."""
     achados = set()
@@ -207,8 +228,12 @@ def reapontar_dependentes(head):
     return [d["number"] for d in dependentes]
 
 
-def conferir(pr, retrofit=False):
+def conferir(pr, retrofit=False, apaga_ok=False):
     """`retrofit=True` relaxa UMA regra: a de um aluno so.
+
+    `apaga_ok=True` relaxa OUTRA, e so ela: a de nao deletar arquivo — e ainda assim
+    apenas para arquivos cuja URL o vercel.json ja serve por redirect. Arquivo sem
+    cobertura barra do mesmo jeito, com ou sem a flag.
 
     Ela existe para PR de AULA — a geracao nao pode sprawlar por varios alunos (REGRA 32).
     Um retrofit autorizado pelo Dan (ex.: o Spot the Error, 708 arquivos em 30 alunos, PR
@@ -233,7 +258,19 @@ def conferir(pr, retrofit=False):
     caminhos = [f["path"] for f in d["files"]]
     delecoes = [f["path"] for f in d["files"] if f.get("deletions", 0) and not f.get("additions", 0)]
     if delecoes:
-        problemas.append(f"o PR DELETA arquivo(s): {delecoes[:5]}")
+        # Apagar pagina de aluno e o erro mais caro que este script pode deixar passar:
+        # um link que a aluna tem no WhatsApp vira 404 sem aviso e sem ninguem saber.
+        # Mas EXISTE um caso legitimo — a pagina virou ponte e o vercel.json passou a
+        # servir aquela URL por redirect. Entao a licenca nao e "confie em mim": e
+        # PROVAR que a URL continua respondendo. Quem nao estiver coberto, barra.
+        orfaos = [c for c in delecoes if not url_coberta_por_redirect(c)]
+        if orfaos or not apaga_ok:
+            alvo = orfaos if orfaos else delecoes
+            problemas.append(
+                f"o PR DELETA arquivo(s): {alvo[:5]}"
+                + ("\n      (nenhum redirect no vercel.json cobre essa(s) URL(s) — o link morreria)"
+                   if orfaos else
+                   "\n      (todas cobertas por redirect no vercel.json; --apaga-arquivo libera)"))
 
     slugs = slugs_do_pr(caminhos)
     if len(slugs) > 1 and not retrofit:
@@ -250,6 +287,8 @@ def main():
     ap.add_argument("prs", nargs="+", type=int)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--wait", action="store_true", help="espera o gate concluir (ate 20 min por PR)")
+    ap.add_argument("--apaga-arquivo", dest="apaga_arquivo", action="store_true",
+                    help="permite APAGAR pagina — so se o vercel.json ja servir aquela URL por redirect")
     ap.add_argument("--retrofit", action="store_true",
                     help="PR de retrofit autorizado: relaxa SO a regra de um aluno so")
     a = ap.parse_args()
@@ -259,7 +298,7 @@ def main():
         print(f"\n=== PR #{pr}")
         prazo = time.time() + 20 * 60
         while True:
-            d, problemas, veredito, motivos, slugs = conferir(pr, retrofit=a.retrofit)
+            d, problemas, veredito, motivos, slugs = conferir(pr, retrofit=a.retrofit, apaga_ok=a.apaga_arquivo)
             if veredito != "esperando" or not a.wait or time.time() > prazo:
                 break
             print(f"  ... {motivos[0]} — reconferindo em 60s")
