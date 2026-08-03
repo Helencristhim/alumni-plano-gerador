@@ -36,6 +36,10 @@ jobs:
 
       - name: Detecta regressão nos hubs tocados pelo push
         id: scan
+        # A mensagem vem por env, NUNCA interpolada dentro do script: mensagem de
+        # commit e texto de terceiro, e `${{ }}` solto no meio do bash e injecao.
+        env:
+          HEAD_MSG: ${{ github.event.head_commit.message }}
         run: |
           BEFORE='${{ github.event.before }}'
           # Primeira push da branch (sem "antes"): nada a comparar
@@ -49,6 +53,20 @@ jobs:
           REGRESSED=""
           for f in $CHANGED; do
             if [ ! -f "$f" ]; then
+              # Apagar aula PODE ser de proposito (aluno renivelado, aula
+              # descontinuada). Ate 03/08/2026 nao havia como dizer isso: a guarda
+              # restaurava, o autor removia de novo, a guarda restaurava de novo. E
+              # o restore volta so os ARQUIVOS, nunca o hub -- entao as aulas
+              # renasciam ORFAS (sem stamp, sem complementares, sem MP3) e o GATE 8
+              # travava TODO PR do repo. Foi o que aconteceu com a ana-claudia 5-13:
+              # o #1894 removeu, a guarda desfez 3h depois, e o repo ficou vermelho.
+              # `[remove-ok]` no assunto do commit e o "eu sei o que estou fazendo".
+              case "$HEAD_MSG" in
+                *'[remove-ok]'*)
+                  echo "🗑  $f: apagado de propósito ([remove-ok]) — não restaura"
+                  continue
+                  ;;
+              esac
               echo "❌ $f: arquivo APAGADO no push"
               REGRESSED="$REGRESSED $f"
               continue
@@ -105,7 +123,9 @@ jobs:
 
           **Arquivos restaurados:** ${{ steps.scan.outputs.regressed }}
 
-          Provável causa: commit de um checkout defasado por cima do main (mesmo padrão do incidente 6cd5b3b9). O conteúdo voltou ao estado anterior ao push. Se a remoção foi intencional, refaça a partir do main atualizado (\`git pull\`) e empurre de novo.
+          Provável causa: commit de um checkout defasado por cima do main (mesmo padrão do incidente 6cd5b3b9). O conteúdo voltou ao estado anterior ao push.
+
+          **Se a remoção foi intencional**, refaça a partir do main atualizado (\`git pull\`) e ponha **\`[remove-ok]\`** no assunto do commit — a guarda não restaura quando vê essa marca. Sem ela a remoção nunca pega: você apaga, eu restauro, e as aulas voltam órfãs (sem stamp/complementares/MP3), derrubando o GATE 8 para o repositório inteiro.
           EOF
           gh issue create \
             --title "⚠️ Guarda do main reverteu uma regressão automaticamente" \
