@@ -339,6 +339,12 @@
         <button class="filter-btn" onclick="setFilter('material_publicado',this)">Publicado</button>
         <button class="filter-btn" onclick="setFilter('ativo',this)">Ativos</button>
         <button class="filter-btn" onclick="setFilter('sem_perfil',this)">Sem Perfil</button>
+        <!-- Arquivado e o soft-delete da propria dashboard, usado pra esconder DUPLICATA.
+             Ate 03/08/2026 o card arquivado continuava na tela, so esmaecido e no fim da
+             lista — entao "esconder" nunca escondia de fato. Agora ele sai da lista, e este
+             botao e como voce o traz de volta. Nada e apagado: e um filtro. -->
+        <button class="filter-btn" id="btnArquivados" onclick="toggleArquivados(this)"
+                title="Arquivados ficam fora da lista por padrão">Ver arquivados</button>
     </div>
 
     <div class="count" id="count"></div>
@@ -667,11 +673,32 @@
 
 
 
+    // Arquivado sai da lista por padrao. A preferencia fica no localStorage porque e do
+    // aparelho de quem esta olhando, nao do aluno — e nada aqui altera o banco.
+    var verArquivados = localStorage.getItem('alumni-dash-ver-arquivados') === '1';
+
+    function toggleArquivados(btn) {
+        verArquivados = !verArquivados;
+        localStorage.setItem('alumni-dash-ver-arquivados', verArquivados ? '1' : '0');
+        aplicaBotaoArquivados(btn);
+        filterAlunos();
+    }
+
+    function aplicaBotaoArquivados(btn) {
+        btn = btn || document.getElementById('btnArquivados');
+        if (!btn) return;
+        var n = allAlunos.filter(function(a){ return isDeactivated(a.id); }).length;
+        btn.textContent = (verArquivados ? 'Ocultar arquivados' : 'Ver arquivados') + (n ? ' (' + n + ')' : '');
+        btn.classList.toggle('active', verArquivados);
+    }
+
     function filterAlunos() {
         var s=document.getElementById('searchInput').value.toLowerCase();
         var f=allAlunos.slice(); if(s) f=f.filter(function(a){return a.nome.toLowerCase().includes(s);});
+        if(!verArquivados) f=f.filter(function(a){return !isDeactivated(a.id);});
         if(currentFilter==='ativo') f=f.filter(function(a){return a._ativo===true;});
         else if(currentFilter!=='todos') f=f.filter(function(a){return a.perfilStatus===currentFilter;});
+        aplicaBotaoArquivados();
         sortAlunos(f); renderAlunos(f);
     }
 
