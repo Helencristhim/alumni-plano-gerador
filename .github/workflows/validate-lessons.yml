@@ -164,9 +164,15 @@ jobs:
           ADDED=$(git diff --name-only --diff-filter=A "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
           MODIFIED=$(git diff --name-only --diff-filter=M "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
           TOCADOS=$(git diff --name-only "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | wc -l)
+          # DELETADO e a terceira categoria, e ela existe. Um PR que so APAGA pagina nao tem
+          # nada em A nem em M — e o anti-skip abaixo lia isso como "classificacao vazia = bug"
+          # e reprovava. Deletado E classificado; o que ele nao tem e gate por-arquivo pra
+          # rodar (o arquivo nao existe mais). Quem defende a delecao e o merge_aula.py, que
+          # so libera se o vercel.json ja servir aquela URL por redirect.
+          DELETADO=$(git diff --name-only --diff-filter=D "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
 
           # Anti-skip-silencioso: HTML de aula no diff, mas classificacao vazia = bug aqui.
-          if [ "$TOCADOS" -gt 0 ] && [ -z "${ADDED// }${MODIFIED// }" ]; then
+          if [ "$TOCADOS" -gt 0 ] && [ -z "${ADDED// }${MODIFIED// }${DELETADO// }" ]; then
             echo "::error::$TOCADOS arquivo(s) de aula no diff, mas a classificacao saiu VAZIA."
             echo "::error::Isso significa que os GATES 1-7 seriam pulados. Falhando de proposito."
             exit 1
@@ -177,6 +183,7 @@ jobs:
           echo "Arquivos de aula tocados: $TOCADOS"
           echo "Novos: $ADDED"
           echo "Modificados: $MODIFIED"
+          echo "Deletados: $DELETADO"
 
       - name: "GATE 1 — estrutura + vozes por personagem (arquivos novos)"
         if: steps.files.outputs.added != ''
