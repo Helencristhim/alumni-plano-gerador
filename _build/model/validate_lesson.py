@@ -906,7 +906,13 @@ def check_predicao(c, fails):
         n = (re.search(r'data-slide="(\d+)"', ch) or [None, '?'])[1]
         # O slide de TAREFA (diálogo/leitura) já é um slide separado nas duas gerações:
         # nele a predição continua morando dentro.
-        if eh_tarefa and 'ic-predict' not in est:
+        # EXCEÇÃO DECLARADA NO PRÓPRIO SLIDE (`data-predict-off="motivo"`). O padrão NÃO
+        # muda: o builder continua emitindo a predição no slide de tarefa para todo mundo,
+        # e quem não declarar nada continua sendo cobrado aqui. A saída só existe para o
+        # caso em que a chefe olha UMA aula e decide que ali o quadro atrapalha — e então
+        # a decisão fica escrita no arquivo, com motivo, em vez de virar um gate afrouxado
+        # para o roster inteiro. (1o uso: ana-claudia-veraldi aula 2, 03/08/2026.)
+        if eh_tarefa and 'ic-predict' not in est and 'data-predict-off=' not in ch:
             faltando.append(n)
         if eh_listening:
             if novo:
