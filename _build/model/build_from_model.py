@@ -1468,26 +1468,9 @@ def build_standalone(cfg, content_dir, manifest):
         print(f'  aviso: aula {n} tem slide de Grammar Discovery mas sem "grammar_point" no '
               f'config — data-grammar NÃO emitido (gate de gramática não cobre esta aula).',
               file=sys.stderr)
-    # Common Mistake: riscar a FRASE INTEIRA (<s>"..."</s>) fica ilegível/feio. O erro já
-    # vem marcado com <strong>; move o <s> para envolver SÓ o <strong>, deixando o resto
-    # da frase legível ("I <s><strong>check always</strong></s> the schedule first.").
-    slides = re.sub(r'<s>"([^"<]*)<strong>([^<]*)</strong>([^"<]*)"</s>',
-                    r'"\1<s><strong>\2</strong></s>\3"', slides)
-    # Common Mistake: padding:1rem deixa as frases apertadas em cima/embaixo. Mais respiro.
-    slides = slides.replace(
-        'class="mistake-item" style="display:flex;align-items:flex-start;gap:.8rem;padding:1rem;',
-        'class="mistake-item" style="display:flex;align-items:flex-start;gap:.8rem;padding:1.4rem 1.2rem;')
-    # Common Mistake: margem UNIFORME nos 4 lados. O card ganha padding+gap+stretch; os blocos
-    # coloridos preenchem (max-width:none) e o divisor (border-bottom) sai — antes topo/base
-    # encostavam na borda enquanto as laterais tinham margem (max-width:500px centralizado).
-    slides = re.sub(r'(class="mistake-card" style="[^"]*?border-radius:12px);overflow:hidden"',
-                    r'\1;padding:1.1rem;display:flex;flex-direction:column;gap:1.1rem;align-items:stretch"', slides)
-    slides = slides.replace(
-        'gap:.8rem;padding:1.4rem 1.2rem;border-bottom:1px solid var(--border);background:var(--danger-bg)"',
-        'gap:.8rem;padding:1.4rem 1.2rem;background:var(--danger-bg);max-width:none"')
-    slides = slides.replace(
-        'gap:.8rem;padding:1.4rem 1.2rem;background:var(--success-bg)"',
-        'gap:.8rem;padding:1.4rem 1.2rem;background:var(--success-bg);max-width:none"')
+    # O slide "Common Mistake" (erro em vermelho vs correcao em verde) saiu do material
+    # por decisao do coordenador (04/08/2026). O polimento cosmetico dele vivia aqui e foi
+    # removido junto. Se o slide reaparecer num config, o GATE do validate_lesson barra.
 
     s = read(os.path.join(PROF, f'{MODEL}-aula1.html'))
     s = base_swaps(s, cfg, n=n)

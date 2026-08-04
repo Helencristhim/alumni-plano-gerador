@@ -22,10 +22,11 @@
     esses com GEN_AUDIO_FORCE=1 e revalide até 0 podre.
 5. Validar (GATE, bloqueante):          python3 _build/model/validate_lesson.py public/professor/{slug}-aula{N}.html public/aluno/{slug}-aula{N}.html
 5b. PADROES IN CLASS (GATE):             python3 _build/model/check_inclass_patterns.py public/professor/{slug}-aula{N}.html
-    Anti-regressao dos 2 bugs sistemicos: (1) Comprehension com .comp-question SEM a
-    regra CSS de reveal (clicar nao revela — use .comp-q/.q-answer do modelo); (2)
-    slide Common Mistake com .mistake-item cru (background inline) em vez de
-    .mistake-wrong/.mistake-right. Sai != 0 se a aula nova reproduzir qualquer um.
+    Anti-regressao: (1) Comprehension com .comp-question SEM a regra CSS de reveal
+    (clicar nao revela — use .comp-q/.q-answer do modelo); (2) uso das classes
+    .mistake-* — o slide "Common Mistake" (Right vs Wrong) foi REMOVIDO do material
+    em 04/08/2026 e nao deve voltar (o Spot the Error continua valendo). Sai != 0 se
+    a aula nova reproduzir qualquer um.
 5c. COERENCIA PRE-CLASS (GATE):          python3 _build/model/check_preclass_coherence.py public/professor/{slug}.html
     REGRA 29: o bloco Pre-class (id="ex-lesson-N" no hub) tem de PREVIEWAR a aula IN CLASS
     (mesmo tema/gramatica/vocab). Falha se o Pre-class for de OUTRA aula — sinal mais forte

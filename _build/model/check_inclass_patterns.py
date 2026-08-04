@@ -32,13 +32,14 @@ def check(path):
             f'do modelo, ou adicione a regra .comp-question.revealed .fill-answer'
             f'{{display:block!important}}.')
 
-    # Bug 2: mistake-item com background inline em vez de .mistake-wrong/.mistake-right
-    bad_items = re.findall(r'<div class="mistake-item"\s+style="[^"]*(?:danger-bg|success-bg|background)[^"]*"', s)
-    if bad_items:
+    # Bug 2 (era: mistake-item chapado): o slide Common Mistake SAIU do material em
+    # 04/08/2026 por decisao do coordenador, entao nao ha mais como ele nascer chapado.
+    # A proibicao do slide vive no validate_lesson.py, que checa slide a slide e poupa
+    # o Spot the Error. Aqui so resta barrar o uso das classes orfas.
+    if re.search(r'class="mistake-(?:card|item|wrong|right)', s):
         problems.append(
-            f'{len(bad_items)}x <div class="mistake-item" style="...background..."> cru '
-            f'(visual chapado). Use as classes do modelo: '
-            f'<div class="mistake-item mistake-wrong"> / mistake-right.')
+            'usa .mistake-card/.mistake-item — o slide "Common Mistake" (Right vs Wrong) '
+            'foi removido do material e nao deve voltar. Ver CLAUDE.md REGRA 2.')
 
     # Bug 3 (badge do menu nao-quadrado): o numero da aula no menu IN CLASS e um
     # <div style="width:48px;height:48px;...border-radius:8px"> dentro de um flex row.

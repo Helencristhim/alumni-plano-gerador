@@ -68,7 +68,11 @@ def is_common_mistake(block):
     """True se o bloco e o slide Common Mistake. Spot the Error nunca conta."""
     if 'revealError(' in block or 'class="error-card' in block:
         return False
-    if 'mistake-card' in block or '<div class="mistake-item' in block:
+    # variantes de classe que ja apareceram no repo: card/item (modelo atual) e
+    # box/comparison/text/wrong/right (template legado — diogo-leal, patricia-ruffo,
+    # maria-claudia). mistake-icon sozinho e so o SVG e nao decide nada.
+    if re.search(r'class="[^"]*\bmistake-(?:card|item|box|comparison|text|wrong|right)\b',
+                 block):
         return True
     if re.search(r'chapter-label"[^>]*>\s*Common Mistakes?\s*<', block):
         return True
@@ -187,14 +191,23 @@ def process_file(path, text):
     if not any(is_common_mistake(s) for _a, _b, s in blocks):
         return None, 0, 0, 0
 
-    # todo slide precisa de data-slide, senao nao da pra remapear com seguranca
-    nums = []
+    # Dois motores de navegacao convivem no repo:
+    #  - por ATRIBUTO: goToSlide(n) -> .slide[data-slide="n"], base 1  (modelo atual)
+    #  - por INDICE  : goToSlide(i) -> slides[i] do NodeList, base 0   (template legado,
+    #                  patricia-ruffo/diogo-leal/maria-claudia — sem data-slide nenhum)
+    # Um arquivo MISTO nao e tratado: e sinal de formato imprevisto, entao pula.
+    nums, missing = [], 0
     for _a, _b, s in blocks:
         m = DATA_SLIDE.search(s[:tag_end(s)])
-        if not m:
-            raise ValueError('slide sem data-slide')
-        nums.append(int(m.group(1)))
-    if len(set(nums)) != len(nums):
+        if m:
+            nums.append(int(m.group(1)))
+        else:
+            missing += 1
+            nums.append(None)
+    indexed = missing == len(blocks)
+    if missing and not indexed:
+        raise ValueError('data-slide so em parte dos slides')
+    if not indexed and len(set(nums)) != len(nums):
         raise ValueError('data-slide duplicado')
 
     # Slide hibrido (Common Mistake + pratica na mesma tela) NAO e apagado:
@@ -210,16 +223,19 @@ def process_file(path, text):
             keep.append(i)
     removed = len(blocks) - len(keep)
 
-    # old -> new (1..N). Um numero removido aponta para o proximo sobrevivente,
-    # para que qualquer link legado caia no slide seguinte em vez de no vazio.
+    # old -> new. Um slide removido aponta para o proximo sobrevivente, para que
+    # qualquer link legado caia no slide seguinte em vez de no vazio.
+    base = 0 if indexed else 1
+    key = (lambda i: i) if indexed else (lambda i: nums[i])
     old2new = {}
-    for new_i, old_i in enumerate(keep, start=1):
-        old2new[nums[old_i]] = new_i
-    for old_i, old_num in enumerate(nums):
-        if old_num in old2new:
+    for new_i, old_i in enumerate(keep, start=base):
+        old2new[key(old_i)] = new_i
+    for old_i in range(len(blocks)):
+        if key(old_i) in old2new:
             continue
         nxt = next((j for j in keep if j > old_i), None)
-        old2new[old_num] = old2new[nums[nxt]] if nxt is not None else len(keep)
+        old2new[key(old_i)] = (old2new[key(nxt)] if nxt is not None
+                               else max(len(keep) - 1 + base, base))
 
     # --- recorta os blocos removidos (com o comentario-cabecalho junto) ---
     out = []
@@ -228,7 +244,8 @@ def process_file(path, text):
         head = text[cursor:a]
         if i in keep:
             out.append(head)
-            out.append(set_data_slide(stripped.get(i, s), old2new[nums[i]]))
+            blk = stripped.get(i, s)
+            out.append(blk if indexed else set_data_slide(blk, old2new[nums[i]]))
             cursor = b
             continue
         out.append(COMMENT_TAIL.sub('', head))
