@@ -243,6 +243,12 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
   revelar) CONTINUA valendo: e outro exercicio, interativo, e nao foi o que saiu.
   **GATE (bloqueante, `validate_lesson.py`)**: slide de Common Mistake = FAIL.
   Se a decisao for revertida, o estado anterior esta na tag `pre-remove-common-mistake`.
+  **Se o gate barrar uma aula que ja estava sendo gerada** (branch aberta antes de
+  04/08/2026, que saiu do modelo antigo): rode na branch
+  `python3 scripts/remove_common_mistake.py --apply` — e idempotente, leva ~17s, remove o
+  slide e ja renumera `data-slide`/`totalSlides`/`lessonRanges`/contagem do menu. NAO
+  apague o slide na mao: sem renumerar, `goToSlide(n)` procura um `data-slide` que nao
+  existe mais e a navegacao para.
 - Slide de Grammar Practice com fill-in clicaveis (click → revela resposta)
 
 **DIALOGO — LINE BY LINE**
