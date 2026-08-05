@@ -198,10 +198,19 @@ def promover_status(slug):
 
     Idempotente: so faz PATCH do que esta fora do lugar. Falha aqui NUNCA derruba o
     merge — a aula ja esta em producao.
+
+    NENHUM CAMINHO E SILENCIOSO (corrigido em 05/08/2026). Antes, o caso "nada a
+    fazer" saia com um `return` mudo e era indistinguivel de sucesso: em 05/08 a Ana
+    Paula e a Viviane ficaram `rascunho` depois do merge e ninguem viu, porque a
+    funcao nao imprimiu NADA nas duas vezes. Quem le a saida do merge nao consegue
+    diferenciar "ja estava certo" de "falhou calado" — e como a excecao aqui e
+    engolida de proposito (a aula ja esta no ar), o silencio era a unica pista.
+    Agora toda saida IMPRIME o que aconteceu, e o PATCH e RECONFERIDO na origem:
+    dizer "promovi" sem reler e so repetir o que a gente pediu, nao o que ficou.
     """
     url, key = _supabase()
     if not (url and key):
-        print("  (status: nao achei a config do Supabase — perfil nao promovido)")
+        print("  (status: nao achei a config do Supabase — perfil NAO promovido)")
         return
     h = {"apikey": key, "Authorization": f"Bearer {key}",
          "Content-Type": "application/json", "Prefer": "return=representation"}
@@ -223,15 +232,30 @@ def promover_status(slug):
             else:
                 patch["ativo"] = True
         if not patch:
+            print(f"  perfil: ja estava status={p.get('status')} ativo={p.get('ativo')} "
+                  f"— nada a promover")
             return
         req = urllib.request.Request(
             f"{url}/rest/v1/perfis?id=eq.{slug}", headers=h, method="PATCH",
             data=json.dumps(patch).encode())
+        json.load(urllib.request.urlopen(req, timeout=20))
+        # RELE da origem: o retorno do PATCH e o que pedimos, nao prova do que ficou.
+        req = urllib.request.Request(
+            f"{url}/rest/v1/perfis?id=eq.{slug}&select=id,status,ativo", headers=h)
         novo = json.load(urllib.request.urlopen(req, timeout=20))[0]
         print(f"  perfil: status {p.get('status')} -> {novo['status']}, "
               f"ativo {p.get('ativo')} -> {novo['ativo']}")
+        pendente = [k for k, v in patch.items() if novo.get(k) != v]
+        if pendente:
+            print(f"  !! ATENCAO: {', '.join(pendente)} NAO ficou como pedido "
+                  f"(a aula esta no ar, mas o aluno pode nao aparecer na dashboard). "
+                  f"Rode: python3 -c \"import sys;sys.path.insert(0,'scripts');"
+                  f"import merge_aula;merge_aula.promover_status('{slug}')\"")
     except (urllib.error.URLError, OSError, ValueError, KeyError, IndexError) as e:
-        print(f"  (status nao promovido: {type(e).__name__} — a aula esta mergeada mesmo assim)")
+        print(f"  !! status NAO promovido ({type(e).__name__}: {e}) — a aula esta "
+              f"mergeada mesmo assim, mas CONFIRA a dashboard e rode: python3 -c "
+              f"\"import sys;sys.path.insert(0,'scripts');import merge_aula;"
+              f"merge_aula.promover_status('{slug}')\"")
 
 
 def reapontar_dependentes(head):
