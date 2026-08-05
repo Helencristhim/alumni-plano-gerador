@@ -235,7 +235,20 @@ Quando um material tem mais de 1 aula, os slides de TODAS as aulas ficam no mesm
 - Mostrar 3-4 exemplos com estrutura em destaque (cor accent)
 - Pergunta: "What do the orange words have in common?"
 - Botao "Reveal the Rule" → tabela gramatical com fade-in
-- Slide extra "Common Mistake" com comparacao visual (X vermelho vs check verde). Classe `slide-light` (NUNCA slide-dark). Texto DIRETO no div (NUNCA dentro de `<p>` ou `<strong>` — o `display:flex` do `.mistake-item` espalha elementos inline). SVG 24x24 padrão Patricia. Explicação pedagógica em `<p>` EMBAIXO do mistake-card
+- **PROIBIDO o slide "Common Mistake" / "Right vs Wrong"** — o erro em vermelho ao lado da
+  correcao em verde (`.mistake-card` / `.mistake-item` / `.mistake-wrong` / `.mistake-right`,
+  ou grid inline `WRONG` vs `RIGHT`). Removido de TODO o material em 04/08/2026 por decisao
+  do coordenador: 2.882 slides em 2.782 arquivos. NAO reintroduzir em aula nova.
+  O **Spot the Error** (`.error-card` + `revealError` — a aluna acha o erro e clica pra
+  revelar) CONTINUA valendo: e outro exercicio, interativo, e nao foi o que saiu.
+  **GATE (bloqueante, `validate_lesson.py`)**: slide de Common Mistake = FAIL.
+  Se a decisao for revertida, o estado anterior esta na tag `pre-remove-common-mistake`.
+  **Se o gate barrar uma aula que ja estava sendo gerada** (branch aberta antes de
+  04/08/2026, que saiu do modelo antigo): rode na branch
+  `python3 scripts/remove_common_mistake.py --apply` — e idempotente, leva ~17s, remove o
+  slide e ja renumera `data-slide`/`totalSlides`/`lessonRanges`/contagem do menu. NAO
+  apague o slide na mao: sem renumerar, `goToSlide(n)` procura um `data-slide` que nao
+  existe mais e a navegacao para.
 - Slide de Grammar Practice com fill-in clicaveis (click → revela resposta)
 
 **DIALOGO — LINE BY LINE**

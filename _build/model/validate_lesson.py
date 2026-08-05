@@ -483,11 +483,32 @@ def check_fix_regressions(c, css, is_standalone_slides, fails, warns):
     for m in re.finditer(r'<script src="[^"]+">([^<]*)</script>', c):
         if m.group(1).strip():
             fails.append(f'código DENTRO de <script src=...> (nunca executa): {m.group(1).strip()[:60]}')
-    # mistake-item: texto direto, sem <p>/<strong> filhos (flex espalha inline)
-    for m in re.finditer(r'<div class="mistake-item[^"]*"[^>]*>(.{0,200})', c, flags=re.S):
-        seg = m.group(1)
-        if re.match(r'\s*<(p|strong)\b', seg):
-            fails.append('mistake-item com <p>/<strong> direto — texto deve ser direto no div (display:flex espalha)')
+    # Common Mistake / "Right vs Wrong" SAIU do material (decisao do coordenador,
+    # 04/08/2026 — 2.882 slides removidos). O que se proibe e o slide PASSIVO que poe o
+    # erro em vermelho ao lado da correcao em verde. O Spot the Error (.error-card +
+    # revealError) e outro exercicio e CONTINUA valendo — por isso a checagem ignora
+    # qualquer trecho que o contenha.
+    cm_slides = []
+    for m in re.finditer(r'<div class="slide[ "][^>]*>', c):
+        i, depth, end = m.start(), 0, None
+        for t in re.finditer(r'<div\b|</div>', c[i:]):
+            depth += 1 if t.group(0) == '<div' else -1
+            if depth == 0:
+                end = i + t.end()
+                break
+        blk = c[i:end] if end else c[i:i + 4000]
+        if 'class="error-card' in blk or 'revealError(' in blk:
+            continue                     # Spot the Error: permitido
+        if (re.search(r'class="mistake-(?:card|item|wrong|right)', blk)
+                or re.search(r'chapter-label"[^>]*>\s*Common Mistakes?\s*<', blk)
+                or ('&#10007; WRONG' in blk and '&#10003; RIGHT' in blk)):
+            n = re.search(r'data-slide="(\d+)"', blk[:blk.find('>') + 400])
+            cm_slides.append(n.group(1) if n else '?')
+    if cm_slides:
+        fails.append(
+            f'slide "Common Mistake" (Right vs Wrong) presente — slide(s) {", ".join(cm_slides)}. '
+            f'REMOVIDO do material por decisao do coordenador (04/08/2026). Nao reintroduzir. '
+            f'O Spot the Error (.error-card + revealError) continua permitido.')
     # Rolagem de slide (#1071/#1073/#1074, "centraliza-se-cabe / rola-se-passa"): slide
     # alto (ex: vocab de 5 cards, leitura+atividade) NÃO pode cortar conteúdo atrás da
     # nav-bar sem barra de rolagem. Todo arquivo com slides + .slide-inner DEVE ter o
