@@ -7,6 +7,41 @@ Este conteúdo é INSERIDO INTEGRALMENTE no prompt da API (LLM precisa do conte�
 
 ---
 
+## 0. Obrigatoriedade é propriedade do MOLDE, não do sistema
+
+> Ordem do Dan (06/08/2026):
+>
+> *"TUDO QUE FOR OBRIGATÓRIO até agora é na verdade obrigatório apenas pro modelo helen
+> mendes. O modelo stephanie vicente está iniciando, então vai ter suas próprias aberturas
+> até ter suas próprias obrigatoriedades também."*
+
+Este documento nasceu quando existia **um** molde. Tudo que ele chama de "obrigatório" foi
+escrito olhando para a anatomia da **helen-mendes** — e continua valendo integralmente para
+ela e para os 1.221 materiais que dela saíram.
+
+A partir de agosto/2026 existe mais de um molde. Então cada regra deste documento pertence a
+uma de três pilhas:
+
+| Pilha | Vale para | Exemplos |
+|---|---|---|
+| **Doutrina** | **todos os moldes, sempre** | idioma por nível (§1), princípios não-negociáveis (§4), inglês americano, fonte com estatuto, delayed feedback |
+| **Anatomia da helen-mendes** | **só ela** | Modelo PPP obrigatório (§3), as 5 etapas do Pre-class, survival card, mínimo de 25 slides, media cards |
+| **Aberto** | molde novo, até ele ganhar as suas | tudo que o molde ainda não decidiu |
+
+**Como saber a qual pilha uma regra pertence.** A pergunta é: *ela descreve uma FORMA ou uma
+CORREÇÃO?* Português na tela de um B1 é erro em qualquer molde — doutrina. "Sete capítulos na
+ordem X" só faz sentido para quem tem sete capítulos — anatomia.
+
+Isso não é convite a relaxar. O molde novo não herda as obrigações da helen-mendes, mas
+**herda a doutrina inteira** e ganha as suas próprias assim que forem medidas. Molde sem
+obrigação nenhuma não vai para aluno: `public/data/frameworks.json` guarda o contrato de cada
+framework, e `scripts/gates.json` diz qual gate cobre qual molde.
+
+**Moldes vivos:** `helen-mendes` (adulto, protótipo) · `theo` (teens, protótipo) ·
+`bento` (kids, protótipo) · `stephanie-vicente` (adulto, **oficial**, em construção).
+
+---
+
 ## 1. Rulebook de Adequação por Nível (A0 a C2)
 
 > **REGRA DE IDIOMA**: Português é permitido APENAS nos níveis A0 e A1 (traduções, grammar tip bilingue, survival card bilingue). A partir do A2, ZERO português em QUALQUER parte do material. Única exceção: instruções ao professor via ícone T (invisível ao aluno).
@@ -119,7 +154,17 @@ Cada nível define 8 dimensões: vocabulário, tradução, frases, drilling/CCQ,
 
 ---
 
-## 3. Modelo PPP Obrigatório (5 etapas)
+## 3. Modelo PPP Obrigatório (5 etapas) — molde `helen-mendes`
+
+> **ESCOPO (§0).** Esta seção é **anatomia da helen-mendes**. Vale para ela e para todo
+> material adulto publicado até 08/2026.
+>
+> **NÃO vale para o molde `stephanie-vicente`**, que usa os quatro frameworks de
+> `public/data/frameworks.json` — Reading into Speaking, Listening into Interaction,
+> Grammar for Communication e Personalized Real-World English. Ali a sequência é outra por
+> desenho: a Grammar abre por **diagnóstico** e clarifica depois da hipótese; o ESP abre por
+> **tentativa sem apoio nenhum**. Aplicar "apresenta → pratica → produz" a esses frameworks
+> destruiria exatamente o mecanismo que eles existem para operar.
 
 1. **Warm-up + Lead-in** (5-10 min): 3-5 perguntas abertas, pessoal → tema
 2. **Presentation — Pre-teach** (10 min): vocabulário + tradução conforme nível + exemplo + drilling

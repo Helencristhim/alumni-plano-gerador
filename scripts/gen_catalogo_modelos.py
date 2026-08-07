@@ -35,10 +35,20 @@ FRAMEWORKS = RAIZ / "public" / "data" / "frameworks.json"
 # ── QUEM E CADA PERSONA (unico texto humano deste arquivo) ────────────────────
 ROSTER = [
     {
+        "slug": "stephanie-vicente",
+        "nome": "Stephanie Vicente",
+        "modelo": "adulto",
+        "papel": "O molde adulto OFICIAL, em construção. Ciclo de 20 aulas em 5 blocos, "
+                 "com as 4 modalidades (Reading, Listening, Grammar, ESP) girando em cada "
+                 "bloco. Sucede a helen-mendes, que passa a ser protótipo.",
+        "destaque": True,
+    },
+    {
         "slug": "helen-mendes",
         "nome": "Helen Mendes",
         "modelo": "adulto",
-        "papel": "O molde. Layout, CSS e JS de todo material adulto saem daqui.",
+        "papel": "O protótipo adulto. Layout, CSS e JS de todo material adulto publicado "
+                 "até 08/2026 saem daqui.",
         "destaque": True,
     },
     {
