@@ -927,6 +927,19 @@ body.slide-mode .nav-bar { display:flex; }
 .slide>.slide-inner{margin:auto 0;max-height:calc(100vh - 11rem);overflow-y:auto;padding-bottom:1rem}
 .slide>.slide-inner::-webkit-scrollbar{width:8px}
 .slide>.slide-inner::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px}
+
+/* ===== FICHA / CHECKPOINT (ic-cp) — portado do artefato (CP/cpBuild/cpTick/cpScore).
+   E a aba Evidencias: a ficha que o professor preenche depois de cada aula, e o instrumento
+   do checkpoint da aula 4 que essa ficha alimenta. Sem esse registro as aulas 5-20 nao
+   podem ser geradas — elas dependem do estado ATUALIZADO da aluna, nao do perfil inicial.
+   PORTUGUES AQUI E CORRETO: e material de trabalho do professor, e o aluno nao abre esta
+   aba (REGRA 13 — o PT do professor continua). */
+.ic-cp{margin-top:.6rem}
+.ic-cp label{display:flex;gap:.6rem;align-items:flex-start;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.86rem;cursor:pointer;color:var(--text-mid)}
+.ic-cp input[type=checkbox]{margin-top:.35rem;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0}
+.ic-cp label:hover{color:var(--text)}
+.ic-cp-out{margin-top:.7rem;font-size:.85rem;font-weight:600;color:var(--text-mid)}
+.ic-cp-aviso{margin-top:.9rem;padding:.75rem .9rem;border-left:3px solid var(--warn);background:var(--warn-bg);font-size:.82rem;line-height:1.55;color:var(--text-mid)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -2606,5 +2619,42 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 <script src="/lib/controle-aulas.js"></script>
 <script src="/lib/activity-sync.js"></script>
 <script src="/lib/contrast-guard.js"></script>
+<script>
+/* ===== FICHA / CHECKPOINT (ic-cp) — ver comentario no CSS.
+   Persiste em localStorage, como o artefato. E o artefato e HONESTO sobre o limite disso,
+   entao o aviso na tela repete o que ele diz: sobrevive a recarregar e fechar, mas fica
+   PRESO ao navegador e ao computador em que foi digitado. Nao e o perfil da aluna e nao ha
+   integracao com o sistema. Enquanto isso nao existir, o que precisa persistir tem de ser
+   transcrito para onde o historico dela realmente vive. */
+function icCpKey(box){ return 'cp-' + (box.getAttribute('data-id') || 'x'); }
+function icCpLoad(box){
+  try { return JSON.parse(localStorage.getItem(icCpKey(box)) || '{}'); } catch (e) { return {}; }
+}
+function icCpTick(cb){
+  var box = cb.closest('.ic-cp');
+  var d = icCpLoad(box);
+  d[cb.getAttribute('data-cp')] = cb.checked;
+  try { localStorage.setItem(icCpKey(box), JSON.stringify(d)); } catch (e) {}
+  icCpScore(box);
+}
+function icCpScore(box){
+  var cbs = box.querySelectorAll('input[type=checkbox]'), n = 0, i;
+  for (i = 0; i < cbs.length; i++) { if (cbs[i].checked) n++; }
+  var out = box.querySelector('.ic-cp-out');
+  if (out) out.textContent = n + ' de ' + cbs.length + ' concluidos' +
+    (n === cbs.length && cbs.length ? ' \u2014 checkpoint pronto.' : '');
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var boxes = document.querySelectorAll('.ic-cp'), i, j;
+  for (i = 0; i < boxes.length; i++) {
+    var d = icCpLoad(boxes[i]);
+    var cbs = boxes[i].querySelectorAll('input[type=checkbox]');
+    for (j = 0; j < cbs.length; j++) {
+      if (d[cbs[j].getAttribute('data-cp')]) cbs[j].checked = true;
+    }
+    icCpScore(boxes[i]);
+  }
+});
+</script>
 </body>
 </html>

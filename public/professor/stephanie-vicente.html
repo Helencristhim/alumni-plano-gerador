@@ -831,6 +831,19 @@ body.slide-mode .nav-bar { display:flex; }
 .slide>.slide-inner{margin:auto 0;max-height:calc(100vh - 11rem);overflow-y:auto;padding-bottom:1rem}
 .slide>.slide-inner::-webkit-scrollbar{width:8px}
 .slide>.slide-inner::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px}
+
+/* ===== FICHA / CHECKPOINT (ic-cp) — portado do artefato (CP/cpBuild/cpTick/cpScore).
+   E a aba Evidencias: a ficha que o professor preenche depois de cada aula, e o instrumento
+   do checkpoint da aula 4 que essa ficha alimenta. Sem esse registro as aulas 5-20 nao
+   podem ser geradas — elas dependem do estado ATUALIZADO da aluna, nao do perfil inicial.
+   PORTUGUES AQUI E CORRETO: e material de trabalho do professor, e o aluno nao abre esta
+   aba (REGRA 13 — o PT do professor continua). */
+.ic-cp{margin-top:.6rem}
+.ic-cp label{display:flex;gap:.6rem;align-items:flex-start;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.86rem;cursor:pointer;color:var(--text-mid)}
+.ic-cp input[type=checkbox]{margin-top:.35rem;width:17px;height:17px;accent-color:var(--accent);flex-shrink:0}
+.ic-cp label:hover{color:var(--text)}
+.ic-cp-out{margin-top:.7rem;font-size:.85rem;font-weight:600;color:var(--text-mid)}
+.ic-cp-aviso{margin-top:.9rem;padding:.75rem .9rem;border-left:3px solid var(--warn);background:var(--warn-bg);font-size:.82rem;line-height:1.55;color:var(--text-mid)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1106,9 +1119,109 @@ body.slide-mode .nav-bar { display:flex; }
      atualizado do aluno, nao do perfil inicial. Substitui a aba Complementares, que sai
      da anatomia guided-discovery por decisao do Dan (06/08/2026). -->
 <div class="tab-content" id="tab-evidencias">
-<div class="evi-field">
-<p style="font-size:.9rem;color:var(--text-dim);text-align:center;padding:2rem">Ficha p&#243;s-aula e checkpoint.</p>
+<!--
+  ABA EVIDENCIAS — material de trabalho do professor. PORTUGUES aqui e correto: o aluno nao
+  abre esta aba (REGRA 13, o PT do professor continua).
+
+  Duas coisas vivem aqui, e sao as que o normativo exige:
+    A. a ficha que o professor preenche DEPOIS de cada aula
+    B. o instrumento do checkpoint da aula 4, que essa ficha alimenta
+  Sem esse registro as aulas 5-20 nao podem ser geradas: elas dependem do estado ATUALIZADO
+  da aluna, nao do perfil inicial.
+-->
+
+<div class="teacher-section">
+  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:.5rem">A · Ficha pós-aula 1</h3>
+  <p style="font-size:.87rem;line-height:1.6;color:var(--text-mid);margin-bottom:.6rem">
+    Nenhum campo desta ficha decide uma hipótese sozinho, e nenhum tem limiar numérico. Ela
+    descreve <strong>o que aconteceu</strong>; a interpretação vem no checkpoint da aula 4,
+    cruzando as quatro aulas. Um único exercício gera evidência inicial — nunca conclusão.
+  </p>
+  <p style="font-size:.85rem;line-height:1.6;color:var(--text-dim);margin-bottom:.8rem">
+    Ao interpretar qualquer erro, distinga: desconhecimento · domínio parcial · reconhecimento
+    sem produção · dificuldade de recuperação sob pressão · erro ocasional.
+  </p>
+
+  <div class="tbl-wrap">
+  <table class="data">
+    <thead><tr><th>Dimensão</th><th>O que descrever</th><th>Registro</th></tr></thead>
+    <tbody>
+      <tr><td><strong>A cena</strong></td><td>Ao descrever o que viu, saiu <em>were working</em> ou virou <em>worked</em>? (H3)</td><td></td></tr>
+      <tr><td><strong>A recomendação</strong></td><td>Saiu como <em>you have to</em>? Apareceu alguma alternativa espontânea? (H1)</td><td></td></tr>
+      <tr><td><strong>Sob interrupção</strong></td><td>Sustentou, recuou, ou concordou para encerrar? (H2)</td><td></td></tr>
+      <tr><td><strong>Organização</strong></td><td>Quanto da fala foi contínua; onde a estrutura se perdeu.</td><td></td></tr>
+      <tr><td><strong>Autocorreção</strong></td><td>Onde ocorreu · interrompeu a mensagem? · custou o turno?</td><td></td></tr>
+      <tr><td><strong>Na premissa nova</strong></td><td>Reconstruiu o pedido? Pediu tempo? Parou?</td><td></td></tr>
+      <tr><td><strong>O que funcionou</strong></td><td>A ação que vale nomear no feedback — não o elogio.</td><td></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p style="font-size:.85rem;line-height:1.6;color:var(--text-dim);margin-top:.7rem">
+    <strong>Não conclua H1 aqui.</strong> Reconhecimento é sistematicamente mais fácil que
+    produção, e a carga das duas tarefas é diferente. Familiaridade lexical, atenção dividida
+    e o próprio nervosismo de uma primeira aula também produzem esse contraste.
+  </p>
 </div>
+
+<div class="teacher-section">
+  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:.5rem">B · Checkpoint da aula 4</h3>
+  <p style="font-size:.87rem;line-height:1.6;color:var(--text-mid);margin-bottom:.7rem">
+    Quatro fontes combinadas: perfil inicial, as quatro fichas pós-aula, este checklist e a
+    percepção da própria aluna. A percepção entra, mas <strong>não substitui</strong> evidência
+    de desempenho.
+  </p>
+
+  <div class="ic-cp" data-id="stephanie-vicente-cp4">
+    <label><input type="checkbox" data-cp="0" onchange="icCpTick(this)"><span>Nível demonstrado em cada habilidade, com as assimetrias nomeadas</span></label>
+    <label><input type="checkbox" data-cp="1" onchange="icCpTick(this)"><span>Fluência, precisão gramatical e amplitude lexical registradas separadamente</span></label>
+    <label><input type="checkbox" data-cp="2" onchange="icCpTick(this)"><span>Pronúncia e inteligibilidade avaliadas em fala longa, não em palavra isolada</span></label>
+    <label><input type="checkbox" data-cp="3" onchange="icCpTick(this)"><span>Compreensão verificada com e sem apoio (repetição, velocidade)</span></label>
+    <label><input type="checkbox" data-cp="4" onchange="icCpTick(this)"><span>Produção, interação, gestão de turnos e capacidade de reparo observadas</span></label>
+    <label><input type="checkbox" data-cp="5" onchange="icCpTick(this)"><span>Resposta à imprevisibilidade testada ao menos uma vez sem aviso</span></label>
+    <label><input type="checkbox" data-cp="6" onchange="icCpTick(this)"><span>Estratégias de compensação identificadas (o que ela faz quando falta a palavra)</span></label>
+    <label><input type="checkbox" data-cp="7" onchange="icCpTick(this)"><span>Complexidade tolerada e tipo de scaffolding necessário definidos</span></label>
+    <label><input type="checkbox" data-cp="8" onchange="icCpTick(this)"><span>Resposta ao Guided Discovery avaliada — ela formula hipótese ou espera a regra?</span></label>
+    <label><input type="checkbox" data-cp="9" onchange="icCpTick(this)"><span>Adequação dos temas e contextos confirmada com a própria aluna</span></label>
+    <label><input type="checkbox" data-cp="10" onchange="icCpTick(this)"><span>Cada erro recorrente classificado: desconhecimento, domínio parcial, reconhecimento sem produção, recuperação ou erro ocasional</span></label>
+    <label><input type="checkbox" data-cp="11" onchange="icCpTick(this)"><span>H1 — evidência das aulas 1 e 3 cruzada; leitura registrada como provável, não como fato</span></label>
+    <label><input type="checkbox" data-cp="12" onchange="icCpTick(this)"><span>H2 — padrão de comportamento sob interrupção descrito, sem contagem-limite</span></label>
+    <label><input type="checkbox" data-cp="13" onchange="icCpTick(this)"><span>H3 — o passado contínuo observado sob carga, não em exercício isolado</span></label>
+    <label><input type="checkbox" data-cp="14" onchange="icCpTick(this)"><span>O que permanece indeterminado está registrado como tal, e não preenchido por inferência</span></label>
+    <label><input type="checkbox" data-cp="15" onchange="icCpTick(this)"><span>Preferências e reações presumidas no perfil inicial foram confirmadas ou removidas</span></label>
+    <label><input type="checkbox" data-cp="16" onchange="icCpTick(this)"><span>Decisão registrada: confirmar, ajustar parcialmente ou reconfigurar as aulas 5–20</span></label>
+    <div class="ic-cp-out"></div>
+  </div>
+
+  <div class="ic-cp-aviso">
+    <strong>Persistência — leia antes de usar os campos.</strong> Os checkboxes gravam em
+    <code>localStorage</code>: sobrevivem a recarregar e fechar a página, mas ficam
+    <strong>presos ao navegador e ao computador em que foram marcados</strong>. Não são o
+    perfil da aluna e não há integração com o sistema. Enquanto isso não existir, trate esta
+    aba como rascunho e <strong>transcreva o que precisa persistir</strong> para onde o
+    histórico dela realmente vive.
+  </div>
+</div>
+
+<div class="teacher-section">
+  <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:.5rem">C · Decisão sobre as aulas 5–20</h3>
+  <div class="tbl-wrap">
+  <table class="data">
+    <thead><tr><th>Resultado</th><th>Decisão</th><th>Condição central</th></tr></thead>
+    <tbody>
+      <tr><td>Perfil confirmado</td><td><strong>Confirmar</strong></td><td>Nível, objetivos e complexidade adequados. H1–H3 se sustentaram. O syllabus segue como está.</td></tr>
+      <tr><td>Diferenças pontuais</td><td><strong>Ajustar parcialmente</strong></td><td>Mudanças de peso, ritmo, apoio ou tema que não alteram a arquitetura.</td></tr>
+      <tr><td>Mudança significativa</td><td><strong>Reconfigurar</strong></td><td>Nível por habilidade, objetivo central ou critérios mudaram substancialmente.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:.85rem;color:var(--text-dim);margin-top:.6rem">
+    <strong>Preservação do percurso.</strong> Mesmo em caso de reconfiguração, as aulas 1–4
+    continuam registradas como aprendizagem válida e evidência diagnóstica. Só as aulas 5–20
+    são redesenhadas.
+  </p>
+</div>
+
 </div><!-- /tab-evidencias -->
 
 </div><!-- /container -->
@@ -1919,5 +2032,42 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 <script src="/lib/controle-aulas.js"></script>
 <script src="/lib/activity-sync.js"></script>
 <script src="/lib/contrast-guard.js"></script>
+<script>
+/* ===== FICHA / CHECKPOINT (ic-cp) — ver comentario no CSS.
+   Persiste em localStorage, como o artefato. E o artefato e HONESTO sobre o limite disso,
+   entao o aviso na tela repete o que ele diz: sobrevive a recarregar e fechar, mas fica
+   PRESO ao navegador e ao computador em que foi digitado. Nao e o perfil da aluna e nao ha
+   integracao com o sistema. Enquanto isso nao existir, o que precisa persistir tem de ser
+   transcrito para onde o historico dela realmente vive. */
+function icCpKey(box){ return 'cp-' + (box.getAttribute('data-id') || 'x'); }
+function icCpLoad(box){
+  try { return JSON.parse(localStorage.getItem(icCpKey(box)) || '{}'); } catch (e) { return {}; }
+}
+function icCpTick(cb){
+  var box = cb.closest('.ic-cp');
+  var d = icCpLoad(box);
+  d[cb.getAttribute('data-cp')] = cb.checked;
+  try { localStorage.setItem(icCpKey(box), JSON.stringify(d)); } catch (e) {}
+  icCpScore(box);
+}
+function icCpScore(box){
+  var cbs = box.querySelectorAll('input[type=checkbox]'), n = 0, i;
+  for (i = 0; i < cbs.length; i++) { if (cbs[i].checked) n++; }
+  var out = box.querySelector('.ic-cp-out');
+  if (out) out.textContent = n + ' de ' + cbs.length + ' concluidos' +
+    (n === cbs.length && cbs.length ? ' \u2014 checkpoint pronto.' : '');
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var boxes = document.querySelectorAll('.ic-cp'), i, j;
+  for (i = 0; i < boxes.length; i++) {
+    var d = icCpLoad(boxes[i]);
+    var cbs = boxes[i].querySelectorAll('input[type=checkbox]');
+    for (j = 0; j < cbs.length; j++) {
+      if (d[cbs[j].getAttribute('data-cp')]) cbs[j].checked = true;
+    }
+    icCpScore(boxes[i]);
+  }
+});
+</script>
 </body>
 </html>

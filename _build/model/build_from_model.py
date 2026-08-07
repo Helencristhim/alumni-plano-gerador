@@ -1755,6 +1755,23 @@ def build_hub_new(cfg, content_dir, manifest):
     preclass = read(os.path.join(content_dir, 'preclass.html'))
     preclass = inject_kids_game(preclass, cfg)  # MODELO KIDS: mini-game Dino Tap (no-op p/ adulto)
     planning = read(os.path.join(content_dir, 'planning.html'))
+    # ABAS DA ANATOMIA guided-discovery. Sao OPCIONAIS por arquivo: se o autor nao escreveu
+    # evidencias.html/syllabus.html, o painel fica com o texto de esqueleto do shell em vez
+    # de estourar. Mas a aba Evidencias e onde vive a ficha pos-aula, e sem ela as aulas
+    # 5-20 nao podem ser geradas — entao vale um aviso alto, nao um silencio.
+    evidencias = syllabus_tab = None
+    hub_html_ = read(hub_path(cfg))
+    if 'id="tab-evidencias"' in hub_html_:
+        pe = os.path.join(content_dir, 'evidencias.html')
+        if os.path.exists(pe):
+            evidencias = read(pe)
+        else:
+            print('  AVISO: anatomia tem aba Evidencias e nao ha evidencias.html — '
+                  'a ficha pos-aula fica vazia, e sem ela as aulas 5-20 nao saem.')
+    if 'id="tab-syllabus"' in hub_html_:
+        ps = os.path.join(content_dir, 'syllabus.html')
+        if os.path.exists(ps):
+            syllabus_tab = read(ps)
     # Complementares so e LIDO se a anatomia do hub tiver a aba. Ler incondicionalmente
     # obrigaria a existir um arquivo que nao tem onde entrar.
     complementary = ''
@@ -1780,6 +1797,12 @@ def build_hub_new(cfg, content_dir, manifest):
     s = replace_between(s, '<div class="tab-content" id="tab-inclass">', FIM_DO_INCLASS, inclass_menu([card]))
     if not sem_aba_complementares(s):
         s = replace_between(s, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
+    if evidencias:
+        s = replace_between(s, '<div class="tab-content" id="tab-evidencias">',
+                            '</div><!-- /tab-evidencias -->', '\n' + evidencias + '\n')
+    if syllabus_tab:
+        s = replace_between(s, '<div class="tab-content" id="tab-syllabus">',
+                            '</div><!-- /tab-syllabus -->', '\n' + syllabus_tab + '\n')
     s = re.sub(r'var totalLessons\s*=\s*\d+', 'var totalLessons=1', s)
     s = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, s, count=1, flags=re.S)
     final_asserts(s, cfg, 'hub prof', is_hub=True)

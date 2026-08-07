@@ -63,12 +63,20 @@ BASE = PARES[0][0]
 # Funcoes que so fazem sentido numa das anatomias. Motivo OBRIGATORIO.
 DIFERENCAS_ACEITAS = {
     "hub-guided-discovery.html": {
-        "funcoes_a_mais": {},
+        # A aba Evidencias e a unica que traz JS proprio: e a ficha pos-aula + o checkpoint
+        # da aula 4. A anatomia imersivo nao tem essa aba, entao nao tem essas funcoes.
+        "funcoes_a_mais": {
+            "icCpKey":   "aba Evidencias — ficha pos-aula (chave de persistencia)",
+            "icCpLoad":  "idem",
+            "icCpTick":  "idem (marcar item do checkpoint)",
+            "icCpScore": "idem (contagem de concluidos)",
+        },
         "funcoes_a_menos": {},
         "classes_a_menos": {},
         "classes_a_mais": {
             "syl-block": "aba Syllabus 20 aulas — nao existe na anatomia da helen",
             "evi-field": "aba Evidencias (ficha pos-aula + checkpoint) — idem",
+            "ic-cp":     "o checklist do checkpoint, dentro da aba Evidencias",
         },
     },
     "guided-discovery.html": {
@@ -113,7 +121,7 @@ CLASSES_MECANISMO = [
     "speech-card", "speech-result", "order-container", "order-item", "think-card",
     "lesson-card", "lesson-body", "mini-bar-fill", "slides-wrapper", "slide",
     "nav-bar", "lp-seekbar", "dialogue-line", "audio-btn", "btn-your-pronunciation",
-    "syl-block", "evi-field", "ic-call", "ic-spk", "ic-sortbox", "ic-self",
+    "syl-block", "evi-field", "ic-call", "ic-spk", "ic-sortbox", "ic-self", "ic-cp",
 ]
 
 
