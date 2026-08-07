@@ -305,6 +305,13 @@ def hex_to_rgb(h):
 #   {"kind":"answer","title":"Reveal answer key","key":["1 = c", ...]}                     (interativo, accordion)
 #   {"kind":"answer","title":"...","list":["resposta 1", ...],"note":"opcional"}
 #   {"kind":"reading","rtitle":"...","paras":["...", ...],"source":"...","link":"..."}
+#   {"kind":"evidence","title":"...","items":[["afirmacao","o trecho que sustenta"], ...]}
+#   {"kind":"recap","title":"...","items":["...", ...]}
+#   {"kind":"write","id":"fb1","title":"...","campos":[["Rotulo","chave"], ...]}
+#   {"kind":"qsub","title":"...","items":[["pergunta","como responder"], ...]}
+#   {"kind":"phrases","title":"...","items":[["frase","funcao","fala opcional"], ...]}
+#   {"kind":"reveal","title":"...","sub":"...","dica":"click to reveal",
+#    "items":[["frente","verso","essencial|condicional|extensao"], ...]}
 #   {"kind":"selfassess","title":"...","sub":"...","items":["...", ...],"escala":[4 rotulos EN]}
 #   {"kind":"sorting","title":"...","cols":["Unsorted","A","B"],"items":[["frase",1], ...]}
 #       cols[0] e SEMPRE a caixa de partida ("Unsorted"): o item nasce nela e cicla ao
@@ -370,6 +377,79 @@ def render_block(b):
                 f'<div class="ic-call" data-turnos=\'{turnos}\'>'
                 f'<div class="ic-call-cast">{chips}</div>'
                 f'<div class="ic-call-segs">{segs}</div></div></div>')
+
+    if k == 'evidence':
+        # Cada afirmacao com o TRECHO que a sustenta. As Diretrizes: "nenhum gabarito pode
+        # afirmar mais do que a evidencia apresentada".
+        itens = ''.join(
+            f'<div class="ic-evi"><span class="ic-evi-claim">{_esc(a)}</span>'
+            f'<span class="ic-evi-src">{_esc(f)}</span></div>' for a, f in b['items'])
+        cab = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return f'<div class="ic-card">{cab}<div class="ic-evi-list">{itens}</div></div>'
+
+    if k == 'recap':
+        itens = ''.join(f'<div class="ic-recap-item">{_esc(t)}</div>' for t in b['items'])
+        cab = f'<div class="ic-card-h3">{_esc(b.get("title", "What we built"))}</div>'
+        return f'<div class="ic-card">{cab}<div class="ic-recap">{itens}</div></div>'
+
+    if k == 'write':
+        # O `whiteboard` imprimia um ROTULO e nada mais — a professora nao tinha onde
+        # escrever. Aqui o campo existe. `chave` obrigatoria: e o que separa o texto de um
+        # campo do de outro no localStorage.
+        campos = ''
+        for c in b['campos']:
+            rot, chave = (c if isinstance(c, list) else [c, snake(c)])
+            campos += (f'<div class="ic-write-f"><label class="ic-write-l">{_esc(rot)}</label>'
+                       f'<textarea class="ic-write-t" data-k="{_esc(b["id"])}-{_esc(chave)}" '
+                       f'oninput="icWriteSave(this)" aria-label="{_esc(rot)}"></textarea></div>')
+        cab = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return f'<div class="ic-card">{cab}<div class="ic-write">{campos}</div></div>'
+
+    if k == 'qsub':
+        itens = ''.join(
+            f'<div class="ic-q"><span class="ic-q-t">{_esc(q)}</span>'
+            f'<span class="ic-q-s">{_esc(sub)}</span></div>' for q, sub in b['items'])
+        cab = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return f'<div class="ic-card">{cab}{itens}</div>'
+
+    if k == 'phrases':
+        # A frase e o TRABALHO que ela faz, lado a lado. 6o campo opcional = audio.
+        linhas = ''
+        for it in b['items']:
+            frase, funcao = it[0], it[1]
+            fala = it[2] if len(it) > 2 and it[2] else frase
+            linhas += (f'<div class="ic-phrase"><span class="ic-phrase-en">{_esc(frase)}</span>'
+                       f'<span class="ic-phrase-fn">{_esc(funcao)}</span>'
+                       f'<button class="audio-btn" data-speak="{_esc(fala)}" '
+                       f'onclick="speakText(this.dataset.speak,this)">Listen</button></div>')
+        cab = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return f'<div class="ic-card">{cab}{linhas}</div>'
+
+    if k == 'reveal':
+        # O componente mais usado dos slides do artefato (108). Cada item: frente (o que a
+        # aluna le e responde em voz alta), verso (o que ela confere depois de arriscar), e
+        # status OPCIONAL — essencial (sem tag), condicional ou extensao.
+        #
+        # TOGGLE inline, sem funcao nomeada: `this.classList.toggle` nao precisa de nada no
+        # shell e nao acrescenta superficie ao GATE 18. E toggle, nao one-way (REGRA 27.E).
+        STATUS = {'essencial': ('', ''), 'condicional': (' ic-cond', 'Conditional'),
+                  'extensao': (' ic-ext', 'Extension')}
+        itens = ''
+        for it in b['items']:
+            frente, verso = it[0], it[1]
+            st = it[2] if len(it) > 2 else 'essencial'
+            assert st in STATUS, (
+                f'reveal: status "{st}" invalido — use essencial, condicional ou extensao '
+                f'(Diretrizes: o status tem de aparecer na TELA, nao so no procedimento)')
+            cls, rot = STATUS[st]
+            tag = f'<span class="ic-tag">{rot}</span>' if rot else ''
+            dica = f'<span class="ic-r-hint">{_esc(b.get("dica", "click to reveal"))}</span>'
+            itens += (f'<div class="ic-reveal{cls}" onclick="this.classList.toggle(\'ic-on\')">'
+                      f'{tag}<div class="ic-r-front">{_esc(frente)}{dica}</div>'
+                      f'<div class="ic-r-back">{_esc(verso)}</div></div>')
+        cabecalho = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        sub = f'<p class="ic-sub">{_esc(b["sub"])}</p>' if b.get('sub') else ''
+        return f'<div class="ic-card">{cabecalho}{sub}{itens}</div>'
 
     if k == 'selfassess':
         # Portada do artefato, que a traz no fecho das QUATRO aulas. NAO mede aprendizagem —

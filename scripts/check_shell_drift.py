@@ -96,6 +96,7 @@ DIFERENCAS_ACEITAS = {
             "icCallStop":  "call player — a anatomia imersivo toca UM arquivo; aqui a call e uma sequencia de turnos com falante",
             "icCallMark":  "idem (destaque de quem fala)",
             "icCallPlay":  "idem (recorte por segmento: a call inteira, so as apresentacoes, so a agenda)",
+            "icWriteSave": "area de escrita — o quadro de feedback tem CAMPO, nao so rotulo; a anatomia imersivo nao tem",
             "icSelfPick":  "autoavaliacao de confianca — o artefato a traz no fecho das QUATRO aulas; registra percepcao, nao aprendizagem, e por isso nao entra na barra de progresso",
         },
         "funcoes_a_menos": {},
@@ -110,6 +111,13 @@ DIFERENCAS_ACEITAS = {
             "ic-spk":    "idem (o falante em destaque)",
             "ic-sortbox":"mecanica sorting",
             "ic-self":   "autoavaliacao de confianca no fecho",
+            "ic-reveal": "cartao que vira (frente/verso) — o componente mais usado do artefato; o imersivo revela por accordion, que e outra pedagogia",
+            "ic-tag":    "status da atividade na TELA (Conditional/Extension) — exigido pelas Diretrizes, item 12",
+            "ic-evi":    "evidencia com a fonte que a sustenta",
+            "ic-recap":  "recapitulacao do que a aula construiu",
+            "ic-write":  "area de escrita — o quadro de feedback com campo de verdade",
+            "ic-q":      "pergunta com subprompt (a instrucao de COMO responder)",
+            "ic-phrase": "frase com a funcao que ela cumpre, lado a lado",
         },
     }
 }
@@ -122,6 +130,7 @@ CLASSES_MECANISMO = [
     "lesson-card", "lesson-body", "mini-bar-fill", "slides-wrapper", "slide",
     "nav-bar", "lp-seekbar", "dialogue-line", "audio-btn", "btn-your-pronunciation",
     "syl-block", "evi-field", "ic-call", "ic-spk", "ic-sortbox", "ic-self", "ic-cp",
+    "ic-reveal", "ic-tag", "ic-evi", "ic-recap", "ic-write", "ic-q", "ic-phrase",
 ]
 
 
