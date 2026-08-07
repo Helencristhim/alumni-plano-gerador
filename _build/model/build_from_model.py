@@ -220,6 +220,14 @@ def replace_between(s, start, end, new_inner):
     return s[:i + len(start)] + new_inner + s[j:]
 
 
+# Fim do painel de IN CLASS. Era a string literal "TAB 4", o que amarrava o
+# builder a UMA ordem de abas: na anatomia do molde stephanie-vicente o IN CLASS e a aba 4 e
+# quem vem depois e a 5, e o builder cortava no lugar errado (ou estourava com ValueError).
+# Generico resolve para as duas e para qualquer anatomia futura — o que importa e "o
+# proximo comentario de aba", nao o numero dele.
+FIM_DO_INCLASS = '<!-- ========== TAB '
+
+
 def snake(text, maxlen=48):
     t = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode()
     t = re.sub(r"[^a-z0-9]+", '_', t.lower()).strip('_')
@@ -1511,7 +1519,7 @@ def build_standalone(cfg, content_dir, manifest):
         for i, name in enumerate(L['phases'])) + '\n'
     s = replace_between(s, '<div class="phase-labels" id="phaseLabels">', '</div>', labels)
 
-    s = replace_between(s, '<div class="tab-content active" id="tab-inclass">', '<!-- ========== TAB 4',
+    s = replace_between(s, '<div class="tab-content active" id="tab-inclass">', FIM_DO_INCLASS,
                         inclass_menu([menu_card(cfg, 'enterSlideMode')]))
     s = replace_between(s, '<div class="slides-container" id="slidesContainer">', '</div><!-- /slides-container -->',
                         '\n' + slides + '\n')
@@ -1658,7 +1666,7 @@ def build_hub_new(cfg, content_dir, manifest):
     s = patch_header(s, cfg, cfg.get('hub_subtitle', cfg['program']))
     s = replace_between(s, '<div class="tab-content active" id="tab-planning">', '</div><!-- /tab-planning -->', '\n' + planning + '\n')
     s = replace_between(s, '<div class="tab-content" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
-    s = replace_between(s, '<div class="tab-content" id="tab-inclass">', '<!-- ========== TAB 4', inclass_menu([card]))
+    s = replace_between(s, '<div class="tab-content" id="tab-inclass">', FIM_DO_INCLASS, inclass_menu([card]))
     s = replace_between(s, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
     s = re.sub(r'var totalLessons\s*=\s*\d+', 'var totalLessons=1', s)
     s = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, s, count=1, flags=re.S)
@@ -1708,15 +1716,28 @@ def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
         parts.append(pc + '\n\n')
     # COMPLEMENTARES da aula: obrigatório (classe de bug do PR #106 — aula sem
     # complementares no hub). data-media deve usar prefixo l{N}- (validador cobra).
+    #
+    # EXCECAO: molde cuja ANATOMIA nao tem a aba. O shell decide — se o arquivo de shell
+    # daquele slug nao traz `id="tab-complementary"`, exigir o bloco seria exigir conteudo
+    # para uma aba que nao existe, e ele acabaria injetado no vazio. Nao e afrouxamento: a
+    # obrigacao continua inteira para todo molde que TEM a aba (que e todo o resto hoje).
+    # Ver a secao 0 do RULEBOOK-PEDAGOGICO: obrigatoriedade e propriedade do molde.
+    tem_aba_complementares = 'id="tab-complementary"' in read(shell_path(cfg))
     comp_path = os.path.join(content_dir, 'complementary.html')
-    assert os.path.exists(comp_path), (
-        f'complementary.html FALTANDO em {os.path.relpath(content_dir, ROOT)} — '
-        f'toda aula precisa do bloco de Complementares (data-media="l{L["n"]}-...")')
-    comp = normalize_complementary(read(comp_path), cfg)
-    assert f'data-media="l{L["n"]}-' in comp, (
-        f'complementary.html sem data-media="l{L["n"]}-..." — use o prefixo da aula')
-    parts.append(f'<!-- 3b. COMPLEMENTARES da aula {L["n"]} (inserir na tab-complementary, prof E aluno) -->\n')
-    parts.append(comp + '\n\n')
+    if not tem_aba_complementares:
+        assert not os.path.exists(comp_path), (
+            f'{os.path.relpath(content_dir, ROOT)} tem complementary.html, mas o shell de '
+            f'"{cfg.get("slug")}" nao tem a aba Complementares. O bloco nao teria onde '
+            f'entrar — apague o arquivo ou use um shell que tenha a aba.')
+    else:
+        assert os.path.exists(comp_path), (
+            f'complementary.html FALTANDO em {os.path.relpath(content_dir, ROOT)} — '
+            f'toda aula precisa do bloco de Complementares (data-media="l{L["n"]}-...")')
+        comp = normalize_complementary(read(comp_path), cfg)
+        assert f'data-media="l{L["n"]}-' in comp, (
+            f'complementary.html sem data-media="l{L["n"]}-..." — use o prefixo da aula')
+        parts.append(f'<!-- 3b. COMPLEMENTARES da aula {L["n"]} (inserir na tab-complementary, prof E aluno) -->\n')
+        parts.append(comp + '\n\n')
     parts.append('<!-- 4. ENTRADAS de audioMap (mesclar no audioMap do hub, prof E aluno) -->\n<script>\n')
     for text, meta in {**slide_entries, **pc_entries}.items():
         parts.append(f'  {json.dumps(text, ensure_ascii=False)}: {json.dumps(audio_base + meta["file"])},\n')
