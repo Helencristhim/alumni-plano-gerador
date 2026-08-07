@@ -49,32 +49,6 @@ ROSTER = [
                  "uma skill receptiva principal, Pre-class flipped.",
     },
     {
-        "slug": "mock-rodizio-tiago",
-        "nome": "Tiago",
-        "modelo": "adulto",
-        "papel": "Mock do rodízio de frameworks: o método alterna a cada aula "
-                 "(PPP → Communicative → Task-Based → PPP → Communicative).",
-        "destaque": True,
-    },
-    {
-        "slug": "mock-ppp-lara",
-        "nome": "Lara",
-        "modelo": "adulto",
-        "papel": "Mock do framework PPP.",
-    },
-    {
-        "slug": "mock-cla-vitor",
-        "nome": "Vitor",
-        "modelo": "adulto",
-        "papel": "Mock do framework Communicative Approach.",
-    },
-    {
-        "slug": "mock-tbl-ines",
-        "nome": "Inês",
-        "modelo": "adulto",
-        "papel": "Mock do framework Task-Based (TBL).",
-    },
-    {
         "slug": "bento",
         "nome": "Bento",
         "modelo": "kids",
