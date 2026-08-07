@@ -91,6 +91,12 @@ MODEL = 'helen-mendes'
 # Enquanto existia uma anatomia so, o shell era a aula publicada de alguem — e por isso
 # todo molde novo precisava clonar a aula da Helen para existir. Isso e a soberania que
 # esta ordem desfaz: `imersivo` e `guided-discovery` sao pares, nenhuma e padrao.
+def sem_aba_complementares(s):
+    """A anatomia guided-discovery nao tem a aba. Chamar replace_between nela estouraria
+    com ValueError; devolver o HTML intacto e o comportamento certo."""
+    return 'id="tab-complementary"' not in s
+
+
 ANATOMIAS = {
     # DIVIDA DECLARADA: a anatomia `imersivo` ainda aponta para uma AULA PUBLICADA, que
     # acumula ser aula e template. Extrair para shells/imersivo.html criaria uma COPIA, e
@@ -100,6 +106,31 @@ ANATOMIAS = {
     'imersivo': ('public/professor', 'helen-mendes-aula1.html'),
     'guided-discovery': ('_build/model/shells', 'guided-discovery.html'),
 }
+
+# O HUB tem anatomia propria: no imersivo as aulas sao lista corrida; no guided-discovery
+# sao agrupadas por BLOCO (Build/Explore/Organize/Challenge/Transfer), que e a unidade
+# pedagogica do ciclo. Ordem do Dan (07/08/2026): "o hub dessa nova versao e dividido em
+# blocos e queremos isso". Lista plana de 20 esconde exatamente isso.
+#
+# O hub do imersivo tambem e um par prof/aluno de arquivos PUBLICADOS — mesma divida
+# declarada do shell de aula.
+HUBS = {
+    'imersivo': None,  # usa {MODEL}.html em public/professor e public/aluno
+    'guided-discovery': ('_build/model/shells', 'hub-guided-discovery.html'),
+}
+
+
+def hub_path(cfg, aluno=False):
+    """De qual arquivo sai o HUB. None => o hub publicado da anatomia imersivo."""
+    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    alvo = HUBS.get(anat)
+    if alvo is None:
+        base = ALUNO if aluno else PROF
+        return os.path.join(base, f'{MODEL}.html')
+    p = os.path.join(ROOT, alvo[0], alvo[1])
+    if not os.path.exists(p):
+        raise SystemExit(f'hub da anatomia "{anat}" nao encontrado: {p}')
+    return p
 
 # Que anatomia cada persona usa. Quem nao esta aqui usa `imersivo` — que e o que gera tudo
 # o que existe hoje, entao nenhum material muda de origem.
@@ -1677,7 +1708,7 @@ def build_hub_new(cfg, content_dir, manifest):
 
     card = menu_card(cfg, f'/professor/{cfg["slug"]}-aula{L["n"]}.html?autostart=1')
 
-    s = read(os.path.join(PROF, f'{MODEL}.html'))
+    s = read(hub_path(cfg))
     s = base_swaps(s, cfg)
     s = re.sub(r'<title>[^<]*</title>',
                f'<title>Professor View -- {cfg["student_name"]} | {cfg["program"]}</title>', s, count=1)
@@ -1686,19 +1717,21 @@ def build_hub_new(cfg, content_dir, manifest):
     s = replace_between(s, '<div class="tab-content active" id="tab-planning">', '</div><!-- /tab-planning -->', '\n' + planning + '\n')
     s = replace_between(s, '<div class="tab-content" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
     s = replace_between(s, '<div class="tab-content" id="tab-inclass">', FIM_DO_INCLASS, inclass_menu([card]))
-    s = replace_between(s, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
+    if not sem_aba_complementares(s):
+        s = replace_between(s, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
     s = re.sub(r'var totalLessons\s*=\s*\d+', 'var totalLessons=1', s)
     s = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, s, count=1, flags=re.S)
     final_asserts(s, cfg, 'hub prof', is_hub=True)
     write(os.path.join(PROF, f'{cfg["slug"]}.html'), apply_ui_strings(s, cfg))
 
-    a = read(os.path.join(ALUNO, f'{MODEL}.html'))
+    a = read(hub_path(cfg, aluno=True))
     a = base_swaps(a, cfg)
     a = re.sub(r'<title>[^<]*</title>', f'<title>{cfg["student_name"]} | {cfg["program"]} -- Alumni</title>', a, count=1)
     a = re.sub(r'<h1>[^<]*</h1>', f'<h1>{cfg["student_name"]}</h1>', a, count=1)
     a = patch_header(a, cfg, cfg.get('hub_subtitle', cfg['program']))
     a = replace_between(a, '<div class="tab-content active" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
-    a = replace_between(a, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
+    if not sem_aba_complementares(a):
+        a = replace_between(a, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
     a = re.sub(r'var totalLessons\s*=\s*\d+', 'var totalLessons=1', a)
     a = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, a, count=1, flags=re.S)
     final_asserts(a, cfg, 'hub aluno', is_hub=True)

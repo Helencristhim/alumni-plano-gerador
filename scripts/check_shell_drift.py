@@ -50,13 +50,27 @@ import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-BASE = os.path.join(RAIZ, "public", "professor", "helen-mendes-aula1.html")
-CLONES = [
-    os.path.join(RAIZ, "_build", "model", "shells", "guided-discovery.html"),
+# Cada PAR: (shell da anatomia imersivo, clone da anatomia nova). Sao dois pares — a AULA
+# e o HUB — porque as duas coisas foram clonadas e as duas podem derivar.
+PARES = [
+    (os.path.join(RAIZ, "public", "professor", "helen-mendes-aula1.html"),
+     os.path.join(RAIZ, "_build", "model", "shells", "guided-discovery.html")),
+    (os.path.join(RAIZ, "public", "professor", "helen-mendes.html"),
+     os.path.join(RAIZ, "_build", "model", "shells", "hub-guided-discovery.html")),
 ]
+BASE = PARES[0][0]
 
 # Funcoes que so fazem sentido numa das anatomias. Motivo OBRIGATORIO.
 DIFERENCAS_ACEITAS = {
+    "hub-guided-discovery.html": {
+        "funcoes_a_mais": {},
+        "funcoes_a_menos": {},
+        "classes_a_menos": {},
+        "classes_a_mais": {
+            "syl-block": "aba Syllabus 20 aulas — nao existe na anatomia da helen",
+            "evi-field": "aba Evidencias (ficha pos-aula + checkpoint) — idem",
+        },
+    },
     "guided-discovery.html": {
         # ZERO funcoes de diferenca — e o resultado que se quer. A anatomia nova nao pediu
         # JS nenhum: switchTab() ja e generico (faz getElementById('tab-'+id)), entao aba
@@ -139,13 +153,12 @@ def roda():
     if not os.path.exists(BASE):
         print(f"shell base nao encontrado: {BASE}")
         return 1
-    base_html = le(BASE)
     erros, checados = [], 0
-    for clone in CLONES:
-        if not os.path.exists(clone):
+    for base, clone in PARES:
+        if not (os.path.exists(base) and os.path.exists(clone)):
             continue  # clone ainda nao existe — nada a comparar
         nome = os.path.basename(clone)
-        erros += compara(base_html, le(clone), nome, DIFERENCAS_ACEITAS.get(nome, {}))
+        erros += compara(le(base), le(clone), nome, DIFERENCAS_ACEITAS.get(nome, {}))
         checados += 1
 
     print("=== GATE 18 — deriva entre shells ===")
