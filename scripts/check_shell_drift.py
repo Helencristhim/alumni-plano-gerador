@@ -96,6 +96,11 @@ DIFERENCAS_ACEITAS = {
             "icCallStop":  "call player — a anatomia imersivo toca UM arquivo; aqui a call e uma sequencia de turnos com falante",
             "icCallMark":  "idem (destaque de quem fala)",
             "icCallPlay":  "idem (recorte por segmento: a call inteira, so as apresentacoes, so a agenda)",
+            "icWhyShow":    "racional por item — revela o porque DEPOIS de a aluna arriscar",
+            "icTimerFmt":   "cronometro — o tempo como parte da tarefa",
+            "icTimerRender":"idem",
+            "icTimerStart": "idem",
+            "icTimerReset": "idem",
             "icWriteSave": "area de escrita — o quadro de feedback tem CAMPO, nao so rotulo; a anatomia imersivo nao tem",
             "icSelfPick":  "autoavaliacao de confianca — o artefato a traz no fecho das QUATRO aulas; registra percepcao, nao aprendizagem, e por isso nao entra na barra de progresso",
         },
@@ -118,6 +123,8 @@ DIFERENCAS_ACEITAS = {
             "ic-write":  "area de escrita — o quadro de feedback com campo de verdade",
             "ic-q":      "pergunta com subprompt (a instrucao de COMO responder)",
             "ic-phrase": "frase com a funcao que ela cumpre, lado a lado",
+            "ic-why":    "racional por item, escondido ate a professora revelar",
+            "ic-timer":  "cronometro — o tempo como parte da tarefa",
         },
     }
 }
@@ -131,6 +138,7 @@ CLASSES_MECANISMO = [
     "nav-bar", "lp-seekbar", "dialogue-line", "audio-btn", "btn-your-pronunciation",
     "syl-block", "evi-field", "ic-call", "ic-spk", "ic-sortbox", "ic-self", "ic-cp",
     "ic-reveal", "ic-tag", "ic-evi", "ic-recap", "ic-write", "ic-q", "ic-phrase",
+    "ic-why", "ic-timer",
 ]
 
 

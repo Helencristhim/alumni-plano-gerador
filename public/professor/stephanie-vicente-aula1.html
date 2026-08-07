@@ -803,6 +803,23 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-phrase{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;padding:.5rem 0;border-bottom:1px solid var(--border)}
 .ic-phrase-en{font-size:.92rem;color:var(--text);flex:1 1 60%}
 .ic-phrase-fn{font-size:.76rem;color:var(--accent);font-weight:600;letter-spacing:.3px}
+
+/* ===== RACIONAL POR ITEM (ic-why) — portado do artefato (.rationale/revealRationales).
+   Nao e o gabarito: e POR QUE aquela e a resposta, e por que a errada e tentadora. Nasce
+   escondido e a professora revela DEPOIS que a aluna arriscou — revelar antes transforma o
+   exercicio em leitura. */
+.ic-why{display:none;margin-top:.5rem;padding:.65rem .85rem;background:var(--accent-dim);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;font-size:.81rem;line-height:1.6;color:var(--text-mid)}
+.ic-why.ic-on{display:block}
+
+/* ===== CRONOMETRO (ic-timer) — portado do artefato. Existe onde a tarefa tem TEMPO REAL
+   (a escrita cronometrada, a resposta de 45s). O tempo e parte da tarefa, nao pressao do
+   tom: as Diretrizes pedem que "a pressao venha da situacao". */
+.ic-timer{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:.6rem}
+.ic-timer-n{font:700 1.5rem/1 'Inter',-apple-system,sans-serif;color:var(--accent);font-variant-numeric:tabular-nums;min-width:4.2rem}
+.ic-timer-n.ic-over{color:var(--danger)}
+.ic-timer-b{padding:.45rem 1rem;border-radius:6px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s}
+.ic-timer-b:hover{background:var(--accent);color:#fff}
+.ic-timer-b:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -988,6 +1005,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="stage-pill">2 &middot; Initial attempt</div>
   <h2 class="slide-heading">Three things, out loud</h2>
   <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Say one sentence for each. The way you would say it today.</span></div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>What did you see the students doing?</span></li><li><span class="ic-qnum">2</span><span>What worked, and how do you know it worked?</span></li><li><span class="ic-qnum">3</span><span>What would you change, and what do you want him to do differently on Thursday?</span></li></ol></div>
+<div class="ic-card"><div class="ic-card-h3">Four and a half minutes. Stop where you are when it ends.</div><div class="ic-timer"><span class="ic-timer-n" id="tmr-a1attempt">4:30</span><button class="ic-timer-b" onclick="icTimerStart(this,'tmr-a1attempt',270)">Start / Pause</button><button class="ic-timer-b" onclick="icTimerReset(this,'tmr-a1attempt',270)">Reset</button></div></div>
 </div>
 </div>
 
@@ -1362,6 +1380,46 @@ function icUnpair(box, chip) {
 
 /* ===== AREA DE ESCRITA (ic-write) — persiste em localStorage. Mesma honestidade da aba
    Evidencias: fica presa a ESTE navegador e nao e o registro da aluna. */
+
+/* ===== RACIONAL (ic-why) — revela TODOS os do mesmo slide de uma vez, depois que a aluna
+   arriscou. Escopado ao .slide-inner: revelar o slide inteiro e o gesto da professora, item
+   por item seria seis cliques no meio da aula. */
+function icWhyShow(btn) {
+  var escopo = btn.closest('.slide-inner') || document;
+  var rs = escopo.querySelectorAll('.ic-why'), i;
+  for (i = 0; i < rs.length; i++) rs[i].classList.add('ic-on');
+  btn.style.display = 'none';
+}
+
+/* ===== CRONOMETRO (ic-timer). Conta ate 15s DEPOIS do zero antes de parar — o artefato faz
+   assim, e e certo: a aluna que passou do tempo precisa ver quanto passou, nao um zero
+   parado que nao diz nada. */
+var _icT = {};
+function icTimerFmt(s) {
+  var neg = s < 0; s = Math.abs(s);
+  return (neg ? '-' : '') + Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+}
+function icTimerRender(id, s) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = icTimerFmt(s);
+  el.classList.toggle('ic-over', s <= 0);
+}
+function icTimerStart(btn, id, total) {
+  if (_icT[id]) { clearInterval(_icT[id]); _icT[id] = null; icTimerRender(id, total); return; }
+  var left = total;
+  icTimerRender(id, left);
+  _icT[id] = setInterval(function () {
+    left--;
+    icTimerRender(id, left);
+    if (left <= -15) { clearInterval(_icT[id]); _icT[id] = null; }
+  }, 1000);
+}
+function icTimerReset(btn, id, total) {
+  if (_icT[id]) { clearInterval(_icT[id]); _icT[id] = null; }
+  icTimerRender(id, total);
+}
+
 function icWriteSave(t) {
   var k = 'w-' + (t.getAttribute('data-k') || '');
   try { localStorage.setItem(k, t.value); } catch (e) {}

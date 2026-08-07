@@ -802,6 +802,23 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-phrase{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;padding:.5rem 0;border-bottom:1px solid var(--border)}
 .ic-phrase-en{font-size:.92rem;color:var(--text);flex:1 1 60%}
 .ic-phrase-fn{font-size:.76rem;color:var(--accent);font-weight:600;letter-spacing:.3px}
+
+/* ===== RACIONAL POR ITEM (ic-why) — portado do artefato (.rationale/revealRationales).
+   Nao e o gabarito: e POR QUE aquela e a resposta, e por que a errada e tentadora. Nasce
+   escondido e a professora revela DEPOIS que a aluna arriscou — revelar antes transforma o
+   exercicio em leitura. */
+.ic-why{display:none;margin-top:.5rem;padding:.65rem .85rem;background:var(--accent-dim);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;font-size:.81rem;line-height:1.6;color:var(--text-mid)}
+.ic-why.ic-on{display:block}
+
+/* ===== CRONOMETRO (ic-timer) — portado do artefato. Existe onde a tarefa tem TEMPO REAL
+   (a escrita cronometrada, a resposta de 45s). O tempo e parte da tarefa, nao pressao do
+   tom: as Diretrizes pedem que "a pressao venha da situacao". */
+.ic-timer{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:.6rem}
+.ic-timer-n{font:700 1.5rem/1 'Inter',-apple-system,sans-serif;color:var(--accent);font-variant-numeric:tabular-nums;min-width:4.2rem}
+.ic-timer-n.ic-over{color:var(--danger)}
+.ic-timer-b{padding:.45rem 1rem;border-radius:6px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s}
+.ic-timer-b:hover{background:var(--accent);color:#fff}
+.ic-timer-b:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .teacher-t{display:none !important}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -980,7 +997,7 @@ body.slide-mode .nav-bar { display:flex; }
 <div class="slide-inner">
   <div class="stage-pill">2 &middot; Prediction</div>
   <h2 class="slide-heading">Before you hear it</h2>
-  <div class="ic-card"><div class="ic-card-h3">Before you hear it: on a call like this, who usually speaks first, and why?</div><div class="ic-choices"><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">a</span><span>The publisher, because they called the meeting</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="true" onclick="icPickGist(this)"><span class="ic-opt">b</span><span>The person who already uses the material, because everyone wants the practical answer first</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">c</span><span>The author, because it is their book</span><span class="ic-badge">&#10003; Main idea</span></div></div></div>
+  <div class="ic-card"><div class="ic-card-h3">Before you hear it: on a call like this, who usually speaks first, and why?</div><div class="ic-choices"><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">a</span><span>The publisher, because they called the meeting</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="true" onclick="icPickGist(this)"><span class="ic-opt">b</span><span>The person who already uses the material, because everyone wants the practical answer first</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">c</span><span>The author, because it is their book</span><span class="ic-badge">&#10003; Main idea</span></div></div><div class="ic-why">B. On a call like this the practical answer is what everyone is waiting for, so the person who has actually used the thing speaks first. If you chose A, you were thinking about who organised the call — which is a different question from who the room wants to hear.</div><button class="ic-btn ic-btn-ghost" onclick="icWhyShow(this)">Why?</button></div>
 <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Two quick predictions. We will check them against the recording.</span></div><ul class="ic-qs"><li><span class="ic-qnum">1</span><span>What will the publisher want to talk about?</span></li><li><span class="ic-qnum">2</span><span>What will the teacher who already uses it want to talk about?</span></li></ul></div>
 </div>
 </div>
@@ -992,7 +1009,7 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="stage-pill">3 &middot; First listening</div>
   <h2 class="slide-heading">Listen once, for the big picture</h2>
   <div class="ic-card"><div class="ic-card-h3">Listen once, for the big picture</div><div class="ic-call" data-turnos='[{"s": 1, "f": "/audio/stephanie-vicente/a2_call_01.mp3"}, {"s": 0, "f": "/audio/stephanie-vicente/a2_call_02.mp3"}, {"s": 2, "f": "/audio/stephanie-vicente/a2_call_03.mp3"}, {"s": 0, "f": "/audio/stephanie-vicente/a2_call_04.mp3"}, {"s": 1, "f": "/audio/stephanie-vicente/a2_call_05.mp3"}, {"s": 0, "f": "/audio/stephanie-vicente/a2_call_06.mp3"}, {"s": 2, "f": "/audio/stephanie-vicente/a2_call_07.mp3"}, {"s": 1, "f": "/audio/stephanie-vicente/a2_call_08.mp3"}, {"s": 0, "f": "/audio/stephanie-vicente/a2_call_09.mp3"}]'><div class="ic-call-cast"><span class="ic-spk" data-spk="0">Marta<span class="ic-sub">teacher, already uses it</span></span><span class="ic-spk" data-spk="1">Tom<span class="ic-sub">publisher</span></span><span class="ic-spk" data-spk="2">Priya<span class="ic-sub">author</span></span></div><div class="ic-call-segs"><button class="ic-seg" onclick="icCallPlay(this,null,null)">Play the call</button><button class="ic-seg" onclick="icCallPlay(this,0,2)">Just the introductions</button><button class="ic-seg" onclick="icCallPlay(this,3,6)">Just what each one wants</button><button class="ic-seg" onclick="icCallPlay(this,null,null,0.8)">Slower</button><button class="ic-seg ic-stop" onclick="icCallStop()">Stop</button></div></div></div>
-  <div class="ic-card"><div class="ic-card-h3">What is this call actually for?</div><div class="ic-choices"><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">a</span><span>To decide whether the school adopts the book</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="true" onclick="icPickGist(this)"><span class="ic-opt">b</span><span>To hear what each side needs, before anything is decided</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">c</span><span>To fix the pacing problem in the material</span><span class="ic-badge">&#10003; Main idea</span></div></div></div>
+  <div class="ic-card"><div class="ic-card-h3">What is this call actually for?</div><div class="ic-choices"><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">a</span><span>To decide whether the school adopts the book</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="true" onclick="icPickGist(this)"><span class="ic-opt">b</span><span>To hear what each side needs, before anything is decided</span><span class="ic-badge">&#10003; Main idea</span></div><div class="ic-choice" data-right="false" onclick="icPickGist(this)"><span class="ic-opt">c</span><span>To fix the pacing problem in the material</span><span class="ic-badge">&#10003; Main idea</span></div></div><div class="ic-why">B. Tom says it in the first turn: the idea is not to decide anything. C is tempting because the pacing takes most of the airtime — but nobody proposes a fix, and Priya defends the design. Airtime is not purpose.</div><button class="ic-btn ic-btn-ghost" onclick="icWhyShow(this)">Why?</button></div>
 </div>
 </div>
 
@@ -1073,6 +1090,7 @@ body.slide-mode .nav-bar { display:flex; }
   <h2 class="slide-heading">Two minutes, and one thing to check</h2>
   <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Your side</div><p>You join the same call, for your school. You have two minutes: say where your school stands on the pacing, check one thing you did not catch, and ask the question nobody asked.</p></div><div class="ic-scenario"><div class="ic-who">Their side</div><p>Your teacher plays Tom. He will summarise what you said — and he will get one part of it slightly wrong, on purpose.</p></div></div>
 <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Three things have to happen</span></div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>You say where your school stands, without turning it into a complaint.</span></li><li><span class="ic-qnum">2</span><span>You check something you did not catch — before it goes in the minutes.</span></li><li><span class="ic-qnum">3</span><span>When he summarises you wrongly, you correct how you were understood, not him.</span></li></ol></div>
+<div class="ic-card"><div class="ic-card-h3">Two minutes. That is what you get on a real call.</div><div class="ic-timer"><span class="ic-timer-n" id="tmr-a2call">2:00</span><button class="ic-timer-b" onclick="icTimerStart(this,'tmr-a2call',120)">Start / Pause</button><button class="ic-timer-b" onclick="icTimerReset(this,'tmr-a2call',120)">Reset</button></div></div>
 </div>
 </div>
 
@@ -1339,6 +1357,46 @@ function icUnpair(box, chip) {
 
 /* ===== AREA DE ESCRITA (ic-write) — persiste em localStorage. Mesma honestidade da aba
    Evidencias: fica presa a ESTE navegador e nao e o registro da aluna. */
+
+/* ===== RACIONAL (ic-why) — revela TODOS os do mesmo slide de uma vez, depois que a aluna
+   arriscou. Escopado ao .slide-inner: revelar o slide inteiro e o gesto da professora, item
+   por item seria seis cliques no meio da aula. */
+function icWhyShow(btn) {
+  var escopo = btn.closest('.slide-inner') || document;
+  var rs = escopo.querySelectorAll('.ic-why'), i;
+  for (i = 0; i < rs.length; i++) rs[i].classList.add('ic-on');
+  btn.style.display = 'none';
+}
+
+/* ===== CRONOMETRO (ic-timer). Conta ate 15s DEPOIS do zero antes de parar — o artefato faz
+   assim, e e certo: a aluna que passou do tempo precisa ver quanto passou, nao um zero
+   parado que nao diz nada. */
+var _icT = {};
+function icTimerFmt(s) {
+  var neg = s < 0; s = Math.abs(s);
+  return (neg ? '-' : '') + Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+}
+function icTimerRender(id, s) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = icTimerFmt(s);
+  el.classList.toggle('ic-over', s <= 0);
+}
+function icTimerStart(btn, id, total) {
+  if (_icT[id]) { clearInterval(_icT[id]); _icT[id] = null; icTimerRender(id, total); return; }
+  var left = total;
+  icTimerRender(id, left);
+  _icT[id] = setInterval(function () {
+    left--;
+    icTimerRender(id, left);
+    if (left <= -15) { clearInterval(_icT[id]); _icT[id] = null; }
+  }, 1000);
+}
+function icTimerReset(btn, id, total) {
+  if (_icT[id]) { clearInterval(_icT[id]); _icT[id] = null; }
+  icTimerRender(id, total);
+}
+
 function icWriteSave(t) {
   var k = 'w-' + (t.getAttribute('data-k') || '');
   try { localStorage.setItem(k, t.value); } catch (e) {}

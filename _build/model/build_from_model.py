@@ -305,6 +305,8 @@ def hex_to_rgb(h):
 #   {"kind":"answer","title":"Reveal answer key","key":["1 = c", ...]}                     (interativo, accordion)
 #   {"kind":"answer","title":"...","list":["resposta 1", ...],"note":"opcional"}
 #   {"kind":"reading","rtitle":"...","paras":["...", ...],"source":"...","link":"..."}
+#   {"kind":"timer","id":"w1","segundos":600,"label":"..."}
+#   (o kind gist aceita "why": o racional, que nasce escondido e a professora revela)
 #   {"kind":"evidence","title":"...","items":[["afirmacao","o trecho que sustenta"], ...]}
 #   {"kind":"recap","title":"...","items":["...", ...]}
 #   {"kind":"write","id":"fb1","title":"...","campos":[["Rotulo","chave"], ...]}
@@ -377,6 +379,19 @@ def render_block(b):
                 f'<div class="ic-call" data-turnos=\'{turnos}\'>'
                 f'<div class="ic-call-cast">{chips}</div>'
                 f'<div class="ic-call-segs">{segs}</div></div></div>')
+
+    if k == 'timer':
+        # O tempo e parte da TAREFA (escrita cronometrada, resposta de 45s), nao pressao do
+        # tom. Diretrizes: "a pressao vem da situacao".
+        tid = f'tmr-{_esc(b["id"])}'
+        total = int(b['segundos'])
+        rot = _esc(b.get('label', 'Time yourself'))
+        return (f'<div class="ic-card"><div class="ic-card-h3">{rot}</div>'
+                f'<div class="ic-timer"><span class="ic-timer-n" id="{tid}">'
+                f'{total // 60}:{total % 60:02d}</span>'
+                f'<button class="ic-timer-b" onclick="icTimerStart(this,\'{tid}\',{total})">Start / Pause</button>'
+                f'<button class="ic-timer-b" onclick="icTimerReset(this,\'{tid}\',{total})">Reset</button>'
+                f'</div></div>')
 
     if k == 'evidence':
         # Cada afirmacao com o TRECHO que a sustenta. As Diretrizes: "nenhum gabarito pode
@@ -560,7 +575,15 @@ def render_block(b):
             ch += (f'<div class="ic-choice" data-right="{right}" onclick="icPickGist(this)">'
                    f'<span class="ic-opt">{_esc(c[0])}</span><span>{_esc(c[1])}</span>'
                    f'<span class="ic-badge">&#10003; Main idea</span></div>')
-        return f'<div class="ic-card"><div class="ic-card-h3">{_esc(b["prompt"])}</div><div class="ic-choices">{ch}</div></div>'
+        # RACIONAL opcional: por que aquela e a resposta, e por que a errada e tentadora.
+        # Nasce ESCONDIDO — revelar antes de a aluna arriscar transforma o exercicio em
+        # leitura. Sem o campo, o bloco sai identico ao de antes.
+        why = ''
+        if b.get('why'):
+            why = (f'<div class="ic-why">{_esc(b["why"])}</div>'
+                   f'<button class="ic-btn ic-btn-ghost" onclick="icWhyShow(this)">Why?</button>')
+        return (f'<div class="ic-card"><div class="ic-card-h3">{_esc(b["prompt"])}</div>'
+                f'<div class="ic-choices">{ch}</div>{why}</div>')
     if k == 'tf':
         rows = ''
         for i, it in enumerate(b['items']):
