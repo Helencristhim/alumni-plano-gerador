@@ -88,6 +88,7 @@ DIFERENCAS_ACEITAS = {
             "icCallStop":  "call player — a anatomia imersivo toca UM arquivo; aqui a call e uma sequencia de turnos com falante",
             "icCallMark":  "idem (destaque de quem fala)",
             "icCallPlay":  "idem (recorte por segmento: a call inteira, so as apresentacoes, so a agenda)",
+            "icSelfPick":  "autoavaliacao de confianca — o artefato a traz no fecho das QUATRO aulas; registra percepcao, nao aprendizagem, e por isso nao entra na barra de progresso",
         },
         "funcoes_a_menos": {},
         # O CSS de media-card continua nos DOIS shells: sai a ABA, nao a regra. Remover CSS
@@ -100,6 +101,7 @@ DIFERENCAS_ACEITAS = {
             "ic-call":   "call player — mecanica de Listening into Interaction",
             "ic-spk":    "idem (o falante em destaque)",
             "ic-sortbox":"mecanica sorting",
+            "ic-self":   "autoavaliacao de confianca no fecho",
         },
     }
 }
@@ -111,7 +113,7 @@ CLASSES_MECANISMO = [
     "speech-card", "speech-result", "order-container", "order-item", "think-card",
     "lesson-card", "lesson-body", "mini-bar-fill", "slides-wrapper", "slide",
     "nav-bar", "lp-seekbar", "dialogue-line", "audio-btn", "btn-your-pronunciation",
-    "syl-block", "evi-field", "ic-call", "ic-spk", "ic-sortbox",
+    "syl-block", "evi-field", "ic-call", "ic-spk", "ic-sortbox", "ic-self",
 ]
 
 

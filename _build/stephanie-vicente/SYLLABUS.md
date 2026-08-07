@@ -79,7 +79,7 @@ checkpoint com evidência sobre compreensão de texto denso.
 
 | # | Modalidade | Situação | Produto / evidência |
 |---|---|---|---|
-| 9 | Listening · L3 | Quem fala quando, numa reunião de quatro pessoas | Mapa de turnos + três entradas próprias numa discussão nova |
+| 9 | Listening · L3 | Quem fala quando, numa reunião de quatro pessoas | Grade de turnos + três entradas próprias numa discussão nova |
 | 10 | Grammar · G3 | O que se pode afirmar, sugerir e não prometer | Seis afirmações recalibradas por grau de compromisso |
 | 11 | Reading · R3 | A história de uma mudança de método, em fontes fora de ordem | Apresentação estruturada de 4 min + perguntas imprevistas |
 | 12 | **ESP** · E3 | O resumo escrito da reunião, no tempo real de trabalho | E-mail cronometrado + segunda versão |
@@ -114,6 +114,21 @@ Não se ensina uma vez. Reaparece em contexto e tarefa diferentes:
 | Cena × veredito (contínuo × simples) | Aula 3 | 5, 11, 14 | 18, 20 |
 | Gestão de turno e reparo | Aula 9 | 13, 16, 17 | 20 |
 | Atribuição de fonte | Aula 4 | 7, 11, 15 | 19, 20 |
+
+## As mecânicas — o que a anatomia tem, medido no artefato
+
+O inventário saiu das Diretrizes §4 cruzado com o que o artefato de referência **de fato
+contém**. Duas mecânicas que este syllabus prometia numa versão anterior — *ordering* e
+*information gap* — **não existem na anatomia** e foram retiradas: eram invenção minha, não
+do modelo. Duas outras estavam no artefato e faltavam aqui:
+
+| mecânica | estado |
+|---|---|
+| matching · multiple choice · fill in the blanks · true/false · rephrasing · case/decision · role-play · replay/retask | já existiam no builder |
+| **sorting** | portada do artefato (classificação em colunas) |
+| **call player** | portada — a call é uma sequência de turnos com voz por personagem e recorte por segmento |
+| **autoavaliação de confiança** | portada — fecha as quatro aulas do artefato; registra percepção, não aprendizagem |
+| ~~ordering~~ · ~~information gap~~ | **não existem no artefato** — retiradas |
 
 ## O que NÃO é regra fixa neste ciclo
 

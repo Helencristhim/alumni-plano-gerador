@@ -735,6 +735,23 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-seg:hover{background:var(--accent);color:#fff}
 .ic-seg:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .ic-seg.ic-stop{border-color:var(--border-light);color:var(--text-dim)}
+
+/* ===== AUTOAVALIACAO (ic-self) — portada do artefato (SA/saBuild/saPick/saScore), que a
+   traz no fecho das QUATRO aulas. Nao mede aprendizagem: registra PERCEPCAO. O proprio
+   normativo diz isso — "autoavaliacao de confianca registra percepcao da aluna, nao
+   comprova aprendizagem" — e o valor esta na DISTANCIA entre o que ela marca aqui e o que
+   apareceu na aula.
+   Rotulos em INGLES: em B1 a tela do aluno nao leva portugues (REGRA 13). No pre-class do
+   artefato eles estao em PT, que e outra superficie e outro nivel. */
+.ic-self{margin-top:.6rem}
+.ic-self-row{padding:.7rem 0;border-bottom:1px solid var(--border)}
+.ic-self-q{font-size:.88rem;font-weight:600;margin-bottom:.45rem;color:var(--text)}
+.ic-self-opts{display:flex;flex-wrap:wrap;gap:.4rem}
+.ic-self-b{padding:.35rem .8rem;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:999px;font-size:.78rem;cursor:pointer;transition:all .2s}
+.ic-self-b:hover{border-color:var(--accent)}
+.ic-self-b:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic-self-b.ic-on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.ic-self-out{margin-top:.6rem;font-size:.8rem;font-weight:600;color:var(--text-mid);min-height:1.2em}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1514,6 +1531,28 @@ function icUnpair(box, chip) {
    Toca uma SEQUENCIA de MP3 (um por turno) com destaque de quem fala e recorte por
    segmento. O artefato faz isso com speechSynthesis; aqui cada turno ja e um arquivo,
    entao a voz do personagem nao depende de qual voz esta instalada na maquina. */
+
+/* ===== AUTOAVALIACAO (ic-self) — ver comentario no CSS. Escopada por container: o estado
+   fica em data-state, entao cabem varias por aula. Nao entra na barra de progresso do
+   Pre-class: e registro de percepcao, nao exercicio com gabarito. */
+function icSelfPick(btn) {
+  var box = btn.closest('.ic-self');
+  var linha = btn.closest('.ic-self-row');
+  var i = parseInt(linha.getAttribute('data-i'), 10);
+  var v = parseInt(btn.getAttribute('data-v'), 10);
+  var st = JSON.parse(box.getAttribute('data-state'));
+  st[i] = v;
+  box.setAttribute('data-state', JSON.stringify(st));
+  var irmaos = linha.querySelectorAll('.ic-self-b');
+  for (var k = 0; k < irmaos.length; k++) {
+    irmaos[k].classList.toggle('ic-on', parseInt(irmaos[k].getAttribute('data-v'), 10) === v);
+  }
+  var n = 0;
+  for (var j = 0; j < st.length; j++) { if (st[j] !== null) n++; }
+  box.querySelector('.ic-self-out').textContent =
+    n < st.length ? (n + ' of ' + st.length + ' answered') : 'All answered — no right answer here.';
+}
+
 var _icCall = null;
 function icCallStop() {
   if (_icCall) { try { _icCall.audio.pause(); } catch (e) {} }

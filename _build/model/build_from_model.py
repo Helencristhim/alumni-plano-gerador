@@ -305,6 +305,7 @@ def hex_to_rgb(h):
 #   {"kind":"answer","title":"Reveal answer key","key":["1 = c", ...]}                     (interativo, accordion)
 #   {"kind":"answer","title":"...","list":["resposta 1", ...],"note":"opcional"}
 #   {"kind":"reading","rtitle":"...","paras":["...", ...],"source":"...","link":"..."}
+#   {"kind":"selfassess","title":"...","sub":"...","items":["...", ...],"escala":[4 rotulos EN]}
 #   {"kind":"sorting","title":"...","cols":["Unsorted","A","B"],"items":[["frase",1], ...]}
 #       cols[0] e SEMPRE a caixa de partida ("Unsorted"): o item nasce nela e cicla ao
 #       clique. O 2o valor do item e o INDICE da coluna certa — nunca 0.
@@ -344,6 +345,30 @@ def render_block(b):
             for i, q in enumerate(b['items']))
         head = f'<div class="ic-card-h3"><span class="ic-tag">{_esc(b["title"])}</span></div>' if b.get('title') else ''
         return f'<div class="ic-card">{head}<{tag} class="ic-qs{extra}">{lis}</{tag}></div>'
+    if k == 'selfassess':
+        # Portada do artefato, que a traz no fecho das QUATRO aulas. NAO mede aprendizagem —
+        # registra percepcao. O valor esta na DISTANCIA entre o que ela marca e o que
+        # apareceu na aula; e por isso que o normativo separa "autoavaliacao de confianca"
+        # de "checklist de realizacao".
+        escala = b.get('escala', ['Not yet', 'Getting there', 'Comfortable', 'Confident'])
+        for r in escala:
+            assert not re.search(r'[ãõçáéíóúâêô]', r), (
+                f'selfassess: rotulo "{r}" tem acento — a tela do aluno e em ingles a partir '
+                f'de A2 (REGRA 13). Os rotulos em PT do artefato sao do pre-class, outra '
+                f'superficie e outro nivel.')
+        linhas = ''
+        for i, q in enumerate(b['items']):
+            botoes = ''.join(
+                f'<button class="ic-self-b" data-v="{v}" onclick="icSelfPick(this)">{_esc(r)}</button>'
+                for v, r in enumerate(escala))
+            linhas += (f'<div class="ic-self-row" data-i="{i}"><div class="ic-self-q">{_esc(q)}</div>'
+                       f'<div class="ic-self-opts">{botoes}</div></div>')
+        estado = json.dumps([None] * len(b['items']))
+        cabecalho = f'<div class="ic-card-h3">{_esc(b.get("title", "How confident do you feel right now?"))}</div>'
+        sub = f'<p class="ic-sub">{_esc(b["sub"])}</p>' if b.get('sub') else ''
+        return (f'<div class="ic-card"><div class="ic-self" data-state=\'{estado}\'>'
+                f'{cabecalho}{sub}{linhas}<div class="ic-self-out"></div></div></div>')
+
     if k == 'sorting':
         cols = b['cols']
         assert len(cols) >= 3, 'sorting: precisa de cols[0] (partida) + 2 categorias no minimo'
