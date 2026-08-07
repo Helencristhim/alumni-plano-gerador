@@ -72,10 +72,20 @@ DIFERENCAS_ACEITAS = {
         },
     },
     "guided-discovery.html": {
-        # ZERO funcoes de diferenca — e o resultado que se quer. A anatomia nova nao pediu
-        # JS nenhum: switchTab() ja e generico (faz getElementById('tab-'+id)), entao aba
-        # nova e so markup. Se um dia aparecer funcao aqui, e sinal de que o fork cresceu.
-        "funcoes_a_mais": {},
+        # As abas novas nao pediram JS nenhum — switchTab() ja e generico. O que pediu foi a
+        # MECANICA de sorting, que a anatomia imersivo nao tem: la o Guided Discovery
+        # acontece por reveal, aqui por classificacao em colunas. Portada do artefato da
+        # Stephanie (.sortbox/.sortcol/.sortitem), corrigindo dois defeitos do original:
+        # saida em portugues na tela do aluno e estado global (so cabia UM por aula).
+        #
+        # Se um dia o imersivo tambem precisar de sorting, estas quatro sobem para o shell
+        # base e saem daqui — e a lista encolhe, que e a direcao certa.
+        "funcoes_a_mais": {
+            "icSortPaint": "mecanica sorting — nao existe na anatomia imersivo",
+            "icSortMove":  "idem",
+            "icSortCheck": "idem",
+            "icSortReset": "idem",
+        },
         "funcoes_a_menos": {},
         # O CSS de media-card continua nos DOIS shells: sai a ABA, nao a regra. Remover CSS
         # do clone seria deriva sem ganho — e reintroduzi-lo depois, na unificacao, e
