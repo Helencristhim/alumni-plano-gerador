@@ -345,6 +345,32 @@ def render_block(b):
             for i, q in enumerate(b['items']))
         head = f'<div class="ic-card-h3"><span class="ic-tag">{_esc(b["title"])}</span></div>' if b.get('title') else ''
         return f'<div class="ic-card">{head}<{tag} class="ic-qs{extra}">{lis}</{tag}></div>'
+    if k == 'call':
+        # A call e uma SEQUENCIA de turnos com falante — nao um arquivo so. Medido no
+        # artefato: CAST de 3 falantes, CALL_L1 de 9 turnos, playCall com recorte por
+        # segmento. O MP3 de cada turno vem de audio_da_call(), que le ESTE MESMO bloco:
+        # uma fonte para o markup e para o audio, entao nao ha como divergirem.
+        cast = b['cast']
+        chips = ''.join(
+            f'<span class="ic-spk" data-spk="{i}">{_esc(c["nome"])}<span class="ic-sub">'
+            f'{_esc(c.get("papel", ""))}</span></span>' for i, c in enumerate(cast))
+        turnos = json.dumps(
+            [{'s': t[0], 'f': f'/audio/{b["slug"]}/{b["prefixo"]}{i + 1:02d}.mp3'}
+             for i, t in enumerate(b['turnos'])], ensure_ascii=False)
+        segs = ''
+        for rot, de, ate in b.get('segmentos', [['Play the call', None, None]]):
+            a = 'null' if de is None else de
+            z = 'null' if ate is None else ate
+            segs += (f'<button class="ic-seg" onclick="icCallPlay(this,{a},{z})">'
+                     f'{_esc(rot)}</button>')
+        segs += ('<button class="ic-seg" onclick="icCallPlay(this,null,null,0.8)">Slower</button>'
+                 '<button class="ic-seg ic-stop" onclick="icCallStop()">Stop</button>')
+        cabecalho = f'<div class="ic-card-h3">{_esc(b.get("title", "The call"))}</div>' if b.get('title') else ''
+        return (f'<div class="ic-card">{cabecalho}'
+                f'<div class="ic-call" data-turnos=\'{turnos}\'>'
+                f'<div class="ic-call-cast">{chips}</div>'
+                f'<div class="ic-call-segs">{segs}</div></div></div>')
+
     if k == 'selfassess':
         # Portada do artefato, que a traz no fecho das QUATRO aulas. NAO mede aprendizagem —
         # registra percepcao. O valor esta na DISTANCIA entre o que ela marca e o que
@@ -1123,6 +1149,30 @@ def inject_dialogue_audio(slides):
     return re.sub(r'<div class="dialogue-bubble[^"]*"[^>]*>(.*?)</div>', repl, slides, flags=re.S)
 
 
+def audio_da_call(cfg):
+    """Entradas de audio dos blocos kind=call. UMA FONTE: o mesmo bloco que vira markup
+    gera o manifesto, entao o arquivo que o player pede e o arquivo que o gen_audio grava.
+    Declarar nos dois lugares seria convite a divergir — e divergencia aqui e audio mudo."""
+    out = []
+    blocos = ((cfg.get('lesson') or {}).get('inclass_blocks') or {})
+    for lista in blocos.values():
+        for b in lista:
+            if b.get('kind') != 'call':
+                continue
+            cast = b['cast']
+            for i, (falante, texto) in enumerate(b['turnos']):
+                assert 0 <= falante < len(cast), (
+                    f'call: turno {i + 1} aponta para o falante {falante}, e o cast tem '
+                    f'{len(cast)}')
+                out.append(dict(text=texto, voice=cast[falante]['voz'],
+                                file=f'{b["prefixo"]}{i + 1:02d}.mp3'))
+    vistos = set()
+    for e in out:
+        assert e['file'] not in vistos, f'call: dois turnos gravariam {e["file"]}'
+        vistos.add(e['file'])
+    return out
+
+
 def extract_phrases(html):
     """(texto, voz_sugerida|None) em ordem de documento; data-voice na mesma linha vence.
 
@@ -1649,6 +1699,9 @@ def build_standalone(cfg, content_dir, manifest):
     for item in extra:
         assert item['voice'] in VOICES, f'extra_audio com voz desconhecida: {item["voice"]}'
         manifest.append(dict(text=item['text'], voice=item['voice'], file=item['file']))
+    for item in audio_da_call(cfg):
+        assert item['voice'] in VOICES, f'call com voz desconhecida: {item["voice"]}'
+        manifest.append(item)
 
     final_asserts(s, cfg, f'prof aula{n}')
     write(os.path.join(PROF, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(s, cfg))
