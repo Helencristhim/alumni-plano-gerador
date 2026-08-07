@@ -52,12 +52,12 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 BASE = os.path.join(RAIZ, "public", "professor", "helen-mendes-aula1.html")
 CLONES = [
-    os.path.join(RAIZ, "_build", "model", "shell-stephanie-vicente.html"),
+    os.path.join(RAIZ, "_build", "model", "shells", "guided-discovery.html"),
 ]
 
 # Funcoes que so fazem sentido numa das anatomias. Motivo OBRIGATORIO.
 DIFERENCAS_ACEITAS = {
-    "shell-stephanie-vicente.html": {
+    "guided-discovery.html": {
         # ZERO funcoes de diferenca — e o resultado que se quer. A anatomia nova nao pediu
         # JS nenhum: switchTab() ja e generico (faz getElementById('tab-'+id)), entao aba
         # nova e so markup. Se um dia aparecer funcao aqui, e sinal de que o fork cresceu.
@@ -209,7 +209,7 @@ def selftest():
         for slug, esperado in [
             ("helen-mendes", casa), ("bento", casa), ("theo", casa),
             ("ana-claudia-veraldi-v2", casa), ("", casa),
-            ("stephanie-vicente", "shell-stephanie-vicente.html"),
+            ("stephanie-vicente", "guided-discovery.html"),
         ]:
             got = os.path.basename(bfm.shell_path({"slug": slug} if slug else {}))
             ok = got == esperado
