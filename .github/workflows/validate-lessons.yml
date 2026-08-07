@@ -375,6 +375,47 @@ jobs:
         # na geração, não aqui.
         run: python3 scripts/gen_banco_exercicios.py --check
 
+      - name: "GATE 20 — selftest: prova que o gate de anatomia ainda morde"
+        run: python3 scripts/check_anatomia.py --selftest
+
+      - name: "GATE 20 — a anatomia tem o que declara ter"
+        # A anatomia guided-discovery foi construída lendo um ARTEFATO escrito fora do
+        # sistema. Enquanto o porte acontecia, ele era a especificação — e eu perdi peça
+        # duas vezes por perguntar a coisa errada ("a classe existe no shell?" responde sim
+        # para tudo, porque o shell é clone; "preciso de componente novo?" conta o que EU
+        # usei, não o que a anatomia tem). Resultado: duas aulas dadas como prontas com um
+        # quadro de feedback que não recebia texto.
+        # Terminado o porte, o SHELL é a anatomia e o inventário vive no repo. Este gate
+        # confere um contra o outro — nunca contra o artefato, que não existe no CI.
+        run: python3 scripts/check_anatomia.py
+
+      - name: "GATE 19 — selftest: prova que o gate de áudio declarado ainda morde"
+        run: python3 scripts/check_audio_declarado.py --selftest
+
+      - name: "GATE 19 — anatomia que pede áudio tem áudio"
+        # A aula 1 da stephanie nasceu com audioMap VAZIO e passou em TUDO: os gates de
+        # áudio perguntavam "o MP3 prometido existe?", e audioMap vazio não promete nada.
+        # Zero promessas, zero quebradas, verde. A pergunta que faltava é a anterior:
+        # "foi prometido ALGUM?". A exigência vem do artefato que define a anatomia — 59
+        # botões Listen medidos nele. A necessidade vem do artefato; o motor (ElevenLabs,
+        # REGRA 7) vem do repo, e quem cobra o motor é o GATE 5.
+        run: python3 scripts/check_audio_declarado.py
+
+      - name: "GATE 18 — selftest: prova que o gate de deriva de shell ainda morde"
+        run: python3 scripts/check_shell_drift.py --selftest
+
+      - name: "GATE 18 — os shells não derivam no que tem de ser igual"
+        # O molde stephanie-vicente precisa de outra ANATOMIA DE ABAS, e mexer nisso no
+        # shell compartilhado durante a construção significa editar o arquivo do qual
+        # descende tudo o que já está no ar. Decisão do Dan (07/08/2026): clonar,
+        # temporariamente. "Temporário" é a palavra que mais mente em software — fork
+        # temporário vira permanente no dia em que um conserto entra num shell e não no
+        # outro, e ninguém percebe porque os DOIS continuam funcionando.
+        # Este gate cobra o que TEM de ser igual (funções JS e classes-mecanismo) e exige
+        # que toda diferença legítima esteja DECLARADA com motivo. O dia da unificação é
+        # visível: é quando a lista de diferenças declaradas chegar a zero.
+        run: python3 scripts/check_shell_drift.py
+
       - name: "GATE 17 — selftest: prova que o meta-gate ainda morde"
         run: python3 scripts/check_gates_registry.py --selftest
 

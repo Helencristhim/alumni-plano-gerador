@@ -252,8 +252,13 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     #    A âncora é a CLASSE/ID da aba (id="tab-inclass"), NUNCA o TEXTO do título:
     #    o título é PROSA e mudou ("Selecione a Aula" -> "Select your Lesson", REGRA 13),
     #    o que fazia esta busca falhar EM SILÊNCIO e o card do menu sumir do hub.
-    if f'{slug}-aula{n}.html' not in s.split('<!-- ========== TAB 4')[0]:
-        mlist = re.search(r'(id="tab-inclass".*?)(\n\s*</div>\s*</div>\s*\n\s*<!-- ========== TAB 4)',
+    # O MARCADOR DE FIM E GENERICO. Era a string literal "TAB 4", o que amarrava o insert a
+    # UMA ordem de abas: na anatomia guided-discovery o IN CLASS e a aba 4 e quem vem depois
+    # e a 5, entao a ancora nunca casava e o card do menu nao entrava — a aula nascia ORFA.
+    # O que importa e "o proximo comentario de aba", nao o numero dele.
+    FIM_ABA = '<!-- ========== TAB '
+    if f'{slug}-aula{n}.html' not in s.split(FIM_ABA)[0]:
+        mlist = re.search(r'(id="tab-inclass".*?)(\n\s*</div>\s*</div>\s*\n\s*<!-- ========== TAB )',
                           s, flags=re.S)
         if mlist:
             region_start, region_end = mlist.start(1), mlist.start(2)
@@ -277,9 +282,13 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
                                  'card do menu NAO foi inserido (ancora id="tab-inclass")')
 
     # 4. Complementares lN- — antes de </div><!-- /tab-complementary -->
-    comp = B.normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg).strip()
-    assert f'data-media="l{n}-' in comp, f'complementary.html sem data-media="l{n}-..."'
-    s = s.replace('</div><!-- /tab-complementary -->', '\n' + comp + '\n\n</div><!-- /tab-complementary -->', 1)
+    #    SO em anatomia que TEM a aba. A guided-discovery nao tem (decisao do Dan,
+    #    06/08/2026), e ali o bloco nao teria onde entrar. Quem decide e o HUB, nao um flag:
+    #    a obrigacao continua inteira para todo molde que tem a aba.
+    if '</div><!-- /tab-complementary -->' in s:
+        comp = B.normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg).strip()
+        assert f'data-media="l{n}-' in comp, f'complementary.html sem data-media="l{n}-..."'
+        s = s.replace('</div><!-- /tab-complementary -->', '\n' + comp + '\n\n</div><!-- /tab-complementary -->', 1)
 
     # 5. audioMap: mescla pcN_/[order-lN] logo após "var audioMap = {"
     s = merge_audiomap(s, cfg, content_dir)
@@ -290,7 +299,13 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     all_n = [int(x) for x in re.findall(r'id="ex-lesson-(\d+)"', s)] + [n]
     s = re.sub(r'var totalLessons\s*=\s*\d+', f'var totalLessons={max(all_n)}', s)
 
-    assert f'id="ex-lesson-{n}"' in s and f'id="stamp{n}"' in s and f'data-media="l{n}-' in s
+    # A conferencia final segue exigindo TUDO que a anatomia daquele hub tem. O
+    # data-media so entra na conta se o hub tiver a aba — senao esta linha reprovava o
+    # insert que ela mesma acabou de fazer corretamente.
+    assert f'id="ex-lesson-{n}"' in s, f'accordion do Pre-class ausente no hub (aula {n})'
+    assert f'id="stamp{n}"' in s, f'stamp ausente no hub (aula {n})'
+    if '</div><!-- /tab-complementary -->' in s:
+        assert f'data-media="l{n}-' in s, f'complementares ausentes no hub (aula {n})'
     assert is_aluno or f'{slug}-aula{n}.html' in s, f'card do menu IN CLASS ausente no hub prof (aula {n})'
     write(hub_path, s)
 

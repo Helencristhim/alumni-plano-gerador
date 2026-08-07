@@ -209,6 +209,34 @@ def main():
     erros = verifica(reg, ids, disco)
     print("=== META-GATE — registro de gates ===")
     print(f"{len(reg['gates'])} gates registrados, {len(disco)} check_* no disco")
+
+    # A LISTA E DERIVADA, nunca digitada. Um campo "vale_para_ambos" seria um segundo lugar
+    # dizendo a mesma coisa — e dois lugares divergem. Aqui a resposta sai do ESCOPO, que e
+    # o mesmo dado que o gate usa para decidir se morde.
+    ambos, so_um = [], {}
+    for nome, meta in reg["gates"].items():
+        esc = meta.get("escopo")
+        rot = f"{nome} [{meta.get('tipo')}]"
+        if esc == "repo":
+            ambos.append(rot)
+        elif isinstance(esc, dict) and esc.get("framework"):
+            for f in esc["framework"]:
+                so_um.setdefault(f, []).append(rot)
+        elif isinstance(esc, dict) and esc.get("marcador"):
+            so_um.setdefault(f"(marcador: {esc['marcador']})", []).append(rot)
+    print()
+    print(f"VALEM PARA TODOS OS MOLDES — {len(ambos)}")
+    print("  integridade, autorizacao, regressao e processo: botao morto e botao morto,")
+    print("  MP3 podre e MP3 podre, em qualquer anatomia.")
+    for g in sorted(ambos):
+        print(f"    {g}")
+    print()
+    print("ESCOPADOS A UM MOLDE — anatomia e sequencia, que medem FORMA")
+    for chave in sorted(so_um):
+        print(f"  {chave}")
+        for g in sorted(so_um[chave]):
+            print(f"    {g}")
+    print()
     if erros:
         for e in erros:
             print(f"  ERRO  {e}")

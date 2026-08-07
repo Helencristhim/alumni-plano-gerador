@@ -41,6 +41,46 @@ import build_from_model as B  # noqa: E402
 #
 # "grupo" é só pra UI do editor agrupar. "interativo" = o aluno clica e algo acontece.
 AMOSTRAS = [
+    # ── ANATOMIA guided-discovery ────────────────────────────────────────────
+    # Portadas do artefato de referencia da Stephanie em 07/08/2026. Estao aqui pelo motivo
+    # que o proprio assert deste arquivo diz: componente que o builder emite e o banco nao
+    # conhece fica INVISIVEL para quem monta framework no catalogo. Existir no builder nao
+    # basta — tem de ser ofertavel.
+    ("reveal", "Cartao que vira", "A aluna le a frente, arrisca em voz alta, e so entao clica. Nao e accordion: o accordion dobra texto que ja se sabe estar la.",
+     "descoberta", True, {"kind": "reveal", "title": "Both are true. Which one lands?",
+                          "items": [["The line she reads first.", "What it does to the listener.", "essencial"]]}),
+    ("sorting", "Classificar em colunas", "Itens que a aluna move entre categorias, com correcao. A coluna 0 e a caixa de partida e nunca e gabarito.",
+     "descoberta", True, {"kind": "sorting", "title": "Sort by what it makes them do next",
+                          "cols": ["Unsorted", "They picture it", "They can refuse it"],
+                          "items": [["They were working in pairs.", 1], ["You might try...", 2]]}),
+    ("evidence", "Evidencia com fonte", "Cada afirmacao vem com o trecho que a sustenta. Nenhum gabarito afirma mais do que o material mostra.",
+     "compreensao", False, {"kind": "evidence", "title": "What the text actually says",
+                            "items": [["The claim.", "The line that proves it."]]}),
+    ("recap", "Recapitulacao", "O que a aula construiu, uma linha por item. A professora LE; nao e o checklist que ela marca.",
+     "fecho", False, {"kind": "recap", "title": "What we built today",
+                      "items": ["The first thing.", "The second thing."]}),
+    ("selfassess", "Autoavaliacao de confianca", "Escala de 4 pontos no fecho. Registra PERCEPCAO, nao aprendizagem — nao entra na barra de progresso.",
+     "fecho", True, {"kind": "selfassess", "title": "How confident do you feel right now?",
+                     "sub": "Your own reading, today.",
+                     "items": ["Doing the thing the lesson practised."]}),
+    ("write", "Area de escrita", "Campo de verdade, nao rotulo: o quadro de feedback tem de RECEBER texto. Persiste no navegador.",
+     "producao", True, {"kind": "write", "id": "fb1", "title": "How it went",
+                        "campos": [["What worked", "worked"], ["One point to build on", "build"]]}),
+    ("qsub", "Pergunta com subprompt", "A pergunta e a instrucao de COMO responder, juntas.",
+     "producao", False, {"kind": "qsub", "title": "Three moments",
+                         "items": [["What did you see?", "The moment, not the verdict."]]}),
+    ("phrases", "Frase com funcao declarada", "A frase e o trabalho que ela cumpre, lado a lado. Separa 'decore isto' de 'use quando precisar disto'.",
+     "linguagem", False, {"kind": "phrases", "title": "What each one does",
+                          "items": [["What I noticed was...", "reports before judging"]]}),
+    ("call", "Call de varias vozes", "Sequencia de turnos com voz por personagem e recorte por segmento. Um arquivo so viraria monologo.",
+     "input", True, {"kind": "call", "title": "Listen once", "slug": "exemplo", "prefixo": "a1_call_",
+                     "cast": [{"nome": "A", "papel": "one side", "voz": "ellen"},
+                              {"nome": "B", "papel": "the other", "voz": "arthur"}],
+                     "turnos": [[0, "The first turn."], [1, "The answer."]]}),
+    ("timer", "Cronometro", "O tempo como parte da TAREFA (escrita cronometrada, resposta de 45s), nao pressao do tom.",
+     "producao", True, {"kind": "timer", "id": "t1", "segundos": 240,
+                        "label": "Four minutes. Stop where you are."}),
+
     ("reading", "Texto de leitura", "Texto central da aula, em parágrafos, com fonte opcional.",
      "input", False, {"kind": "reading", "rtitle": "The Title",
                       "paras": ["First paragraph.", "Second paragraph."],
