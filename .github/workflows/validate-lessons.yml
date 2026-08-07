@@ -375,10 +375,24 @@ jobs:
         # na geração, não aqui.
         run: python3 scripts/gen_banco_exercicios.py --check
 
-      - name: "GATE 12 — selftest: prova que o gate de contrato ainda morde"
+      - name: "GATE 17 — selftest: prova que o meta-gate ainda morde"
+        run: python3 scripts/check_gates_registry.py --selftest
+
+      - name: "GATE 17 — todo gate declara tipo, escopo e número único"
+        # O meta-gate. Existe porque o levantamento de 06/08/2026 achou DOIS gates se
+        # declarando "GATE 12" no mesmo arquivo de CI — ninguém percebeu porque nada
+        # conferia. E porque, com um molde novo entrando, gate de ANATOMIA rodando no repo
+        # inteiro passa a reprovar material que nunca teve aquela forma; a saída óbvia
+        # (afrouxar o gate) contaminaria os 1.221 arquivos que dependem dele.
+        # A regra: anatomia e sequência SEMPRE escopados; integridade, autorização,
+        # regressão e processo valem para todos os moldes. Botão morto é botão morto em
+        # qualquer molde; "7 capítulos na ordem X" só vale para quem tem esses capítulos.
+        run: python3 scripts/check_gates_registry.py
+
+      - name: "GATE 16 — selftest: prova que o gate de contrato ainda morde"
         run: python3 scripts/check_contrato_aula.py --selftest
 
-      - name: "GATE 12 — a aula entrega o contrato do framework dela"
+      - name: "GATE 16 — a aula entrega o contrato do framework dela"
         # "Gere 3 aulas do tipo X" só vale se algo CONFERIR que saiu o tipo X. Os outros
         # gates são universais; este é o único que sabe o que CADA método promete.
         # LEGADO-TOLERANTE por construção, em dois níveis: aula sem <meta alumni-contrato>

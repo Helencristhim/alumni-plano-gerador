@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""GATE 12 — a aula entrega o que o CONTRATO do framework dela promete.
+"""GATE 16 — a aula entrega o que o CONTRATO do framework dela promete.
 
 O PROBLEMA QUE ISTO RESOLVE
 --------------------------
@@ -150,11 +150,11 @@ def varre():
             com_contrato += 1
 
     if fails:
-        print(f"GATE 12 FALHOU — {len(fails)} problema(s):", file=sys.stderr)
+        print(f"GATE 16 FALHOU — {len(fails)} problema(s):", file=sys.stderr)
         for f in fails:
             print(f"  {f}", file=sys.stderr)
         return 1
-    print(f"GATE 12 OK — {com_contrato} arquivo(s) com contrato conferido, "
+    print(f"GATE 16 OK — {com_contrato} arquivo(s) com contrato conferido, "
           f"{len(alvos) - com_contrato} sem carimbo (legado, ignorado por regra)")
     return 0
 
@@ -225,7 +225,7 @@ def selftest():
         if not fails3:
             print("selftest FALHOU: versão de contrato sumida passou batido", file=sys.stderr)
             ok = False
-    print("GATE 12 selftest OK — morde no que deve e cala no legado" if ok else "selftest FALHOU")
+    print("GATE 16 selftest OK — morde no que deve e cala no legado" if ok else "selftest FALHOU")
     return 0 if ok else 1
 
 
