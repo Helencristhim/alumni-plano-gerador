@@ -718,6 +718,23 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-sortitem.ic-ok{background:var(--success-bg);border-color:var(--success-border)}
 .ic-sortitem.ic-no{background:var(--danger-bg);border-color:var(--danger-border)}
 .ic-sortout{margin-top:.6rem;font-size:.8rem;font-weight:600;color:var(--text-mid);min-height:1.2em}
+
+/* ===== CALL PLAYER (ic-call) — portado do artefato da Stephanie (playCall/markSpeaker/
+   CAST/CALL_L1). La a call e uma lista de TURNOS com falante, tocada por SEGMENTO (a call
+   inteira, so as apresentacoes, so a agenda) e com destaque de quem fala.
+   Uma mudanca de fundo: o artefato usa TTS do navegador e escolhe a voz por NOME de voz
+   instalada — e ele mesmo avisa na tela quando nao acha (so 1 das 3 vozes com o genero
+   certo, no teste). Aqui cada turno e um MP3 ElevenLabs ja gerado com a voz do personagem
+   (REGRA 7), entao a voz nao depende do computador da professora. */
+.ic-call{margin-top:.7rem}
+.ic-call-cast{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.7rem}
+.ic-spk{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .7rem;border:1px solid var(--border);border-radius:999px;font-size:.78rem;color:var(--text-mid);transition:all .2s}
+.ic-spk.ic-live{border-color:var(--accent);background:var(--accent-dim);color:var(--text);font-weight:600}
+.ic-call-segs{display:flex;flex-wrap:wrap;gap:.5rem}
+.ic-seg{padding:.45rem .9rem;border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s}
+.ic-seg:hover{background:var(--accent);color:#fff}
+.ic-seg:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic-seg.ic-stop{border-color:var(--border-light);color:var(--text-dim)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1492,6 +1509,45 @@ function icUnpair(box, chip) {
 
 /* ===== SORTING (ic-sort) — ver comentario no CSS. Escopado por container: cada .ic-sort
    guarda o proprio estado em data-state, entao cabem quantos a aula precisar. */
+
+/* ===== CALL PLAYER (ic-call) — ver comentario no CSS.
+   Toca uma SEQUENCIA de MP3 (um por turno) com destaque de quem fala e recorte por
+   segmento. O artefato faz isso com speechSynthesis; aqui cada turno ja e um arquivo,
+   entao a voz do personagem nao depende de qual voz esta instalada na maquina. */
+var _icCall = null;
+function icCallStop() {
+  if (_icCall) { try { _icCall.audio.pause(); } catch (e) {} }
+  _icCall = null;
+  var m = document.querySelectorAll('.ic-spk');
+  for (var i = 0; i < m.length; i++) m[i].classList.remove('ic-live');
+}
+function icCallMark(box, s) {
+  var els = box.querySelectorAll('.ic-spk');
+  for (var i = 0; i < els.length; i++) {
+    els[i].classList.toggle('ic-live', parseInt(els[i].getAttribute('data-spk'), 10) === s);
+  }
+}
+function icCallPlay(btn, de, ate, rate) {
+  var box = btn.closest('.ic-call');
+  var turnos = JSON.parse(box.getAttribute('data-turnos'));
+  icCallStop();
+  var a = (de == null ? 0 : de), b = (ate == null ? turnos.length - 1 : ate), i = a;
+  var audio = new Audio();
+  _icCall = { audio: audio, box: box };
+  audio.playbackRate = rate || 1;
+  var proximo = function () {
+    if (!_icCall || _icCall.audio !== audio || i > b) { icCallStop(); return; }
+    var t = turnos[i];
+    icCallMark(box, t.s);
+    audio.src = t.f;
+    audio.play().catch(function () { icCallStop(); });
+    i++;
+  };
+  audio.onended = proximo;
+  audio.onerror = function () { icCallStop(); };
+  proximo();
+}
+
 function icSortPaint(box) {
   var cols = JSON.parse(box.getAttribute('data-cols'));
   var items = JSON.parse(box.getAttribute('data-items'));
