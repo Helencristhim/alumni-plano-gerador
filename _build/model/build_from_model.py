@@ -114,9 +114,13 @@ ANATOMIAS = {
 #
 # O hub do imersivo tambem e um par prof/aluno de arquivos PUBLICADOS — mesma divida
 # declarada do shell de aula.
+# Sao DOIS arquivos por anatomia: o hub do professor e o do aluno. Nao e duplicacao a toa —
+# a aba ativa e o conjunto de abas diferem (o aluno nao ve Planejamento nem Evidencias).
 HUBS = {
     'imersivo': None,  # usa {MODEL}.html em public/professor e public/aluno
-    'guided-discovery': ('_build/model/shells', 'hub-guided-discovery.html'),
+    'guided-discovery': ('_build/model/shells',
+                         'hub-guided-discovery.html',
+                         'hub-guided-discovery-aluno.html'),
 }
 
 
@@ -127,7 +131,7 @@ def hub_path(cfg, aluno=False):
     if alvo is None:
         base = ALUNO if aluno else PROF
         return os.path.join(base, f'{MODEL}.html')
-    p = os.path.join(ROOT, alvo[0], alvo[1])
+    p = os.path.join(ROOT, alvo[0], alvo[2] if aluno else alvo[1])
     if not os.path.exists(p):
         raise SystemExit(f'hub da anatomia "{anat}" nao encontrado: {p}')
     return p
@@ -301,6 +305,9 @@ def hex_to_rgb(h):
 #   {"kind":"answer","title":"Reveal answer key","key":["1 = c", ...]}                     (interativo, accordion)
 #   {"kind":"answer","title":"...","list":["resposta 1", ...],"note":"opcional"}
 #   {"kind":"reading","rtitle":"...","paras":["...", ...],"source":"...","link":"..."}
+#   {"kind":"sorting","title":"...","cols":["Unsorted","A","B"],"items":[["frase",1], ...]}
+#       cols[0] e SEMPRE a caixa de partida ("Unsorted"): o item nasce nela e cicla ao
+#       clique. O 2o valor do item e o INDICE da coluna certa — nunca 0.
 #   {"kind":"matching","title":"...","words":[["1","word","c"], ...],"defs":[["a","def"], ...]}
 #       3o item da palavra = LETRA da definicao certa (gabarito). E OBRIGATORIO: sem ele o
 #       bloco vira duas listas mortas na tela e o aluno tenta clicar/arrastar e nada
@@ -337,6 +344,23 @@ def render_block(b):
             for i, q in enumerate(b['items']))
         head = f'<div class="ic-card-h3"><span class="ic-tag">{_esc(b["title"])}</span></div>' if b.get('title') else ''
         return f'<div class="ic-card">{head}<{tag} class="ic-qs{extra}">{lis}</{tag}></div>'
+    if k == 'sorting':
+        cols = b['cols']
+        assert len(cols) >= 3, 'sorting: precisa de cols[0] (partida) + 2 categorias no minimo'
+        items = b['items']
+        for texto, certa in items:
+            assert 1 <= certa < len(cols), (
+                f'sorting: "{texto[:40]}" aponta para a coluna {certa}; '
+                f'0 e a caixa de partida e nao pode ser gabarito')
+        dados = json.dumps([{'t': t, 'a': a} for t, a in items], ensure_ascii=False)
+        estado = json.dumps([0] * len(items))
+        cabecalho = f'<div class="ic-h">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return (f'<div class="ic-sort" data-cols=\'{json.dumps(cols, ensure_ascii=False)}\' '
+                f'data-items=\'{dados}\' data-state=\'{estado}\'>{cabecalho}'
+                f'<div class="ic-sortbox"></div><div class="ic-sortout"></div>'
+                f'<div class="ic-acts"><button class="ic-btn" onclick="icSortCheck(this)">Check</button>'
+                f'<button class="ic-btn ic-btn-ghost" onclick="icSortReset(this)">Reset</button></div></div>')
+
     if k == 'matching':
         # O bloco e CLICAVEL: cada palavra carrega no data-match a letra da definicao
         # certa, e o icPickMatch() do shell resolve o par. Duas listas sem gabarito nao
@@ -1698,7 +1722,11 @@ def build_hub_new(cfg, content_dir, manifest):
     preclass = read(os.path.join(content_dir, 'preclass.html'))
     preclass = inject_kids_game(preclass, cfg)  # MODELO KIDS: mini-game Dino Tap (no-op p/ adulto)
     planning = read(os.path.join(content_dir, 'planning.html'))
-    complementary = normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg)
+    # Complementares so e LIDO se a anatomia do hub tiver a aba. Ler incondicionalmente
+    # obrigaria a existir um arquivo que nao tem onde entrar.
+    complementary = ''
+    if not sem_aba_complementares(read(hub_path(cfg))):
+        complementary = normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg)
 
     entries = assign_voices(extract_phrases(preclass), prefix='pc_', cfg=cfg)
     extra = L.get('extra_audio', [])
