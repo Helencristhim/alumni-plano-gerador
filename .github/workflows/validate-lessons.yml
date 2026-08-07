@@ -375,6 +375,18 @@ jobs:
         # na geração, não aqui.
         run: python3 scripts/gen_banco_exercicios.py --check
 
+      - name: "GATE 19 — selftest: prova que o gate de áudio declarado ainda morde"
+        run: python3 scripts/check_audio_declarado.py --selftest
+
+      - name: "GATE 19 — anatomia que pede áudio tem áudio"
+        # A aula 1 da stephanie nasceu com audioMap VAZIO e passou em TUDO: os gates de
+        # áudio perguntavam "o MP3 prometido existe?", e audioMap vazio não promete nada.
+        # Zero promessas, zero quebradas, verde. A pergunta que faltava é a anterior:
+        # "foi prometido ALGUM?". A exigência vem do artefato que define a anatomia — 59
+        # botões Listen medidos nele. A necessidade vem do artefato; o motor (ElevenLabs,
+        # REGRA 7) vem do repo, e quem cobra o motor é o GATE 5.
+        run: python3 scripts/check_audio_declarado.py
+
       - name: "GATE 18 — selftest: prova que o gate de deriva de shell ainda morde"
         run: python3 scripts/check_shell_drift.py --selftest
 

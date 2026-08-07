@@ -446,8 +446,16 @@ def render_block(b):
         rows = ''
         for it in b['items']:
             strong = ' ic-strong' if (len(it) > 4 and it[4] == 'strong') else ''
+            # 6o elemento OPCIONAL = a frase a ouvir. Item com 5 elementos sai IDENTICO ao
+            # de antes (aula existente nao muda). O texto vai no ATRIBUTO, nunca dentro da
+            # string JS — REGRA 7.1: apostrofo do ingles mata o handler inline.
+            fala = it[5] if len(it) > 5 and it[5] else None
+            botao = ('' if not fala else
+                     f'<button class="audio-btn" data-speak="{_esc(fala)}" '
+                     f'onclick="speakText(this.dataset.speak,this)">Listen</button>')
             rows += (f'<div class="ic-lf"><span class="ic-lbl">{_esc(it[0])}</span>'
-                     f'<span>{_esc(it[1])}<span class="ic-mod{strong}">{_esc(it[2])}</span>{_esc(it[3])}</span></div>')
+                     f'<span>{_esc(it[1])}<span class="ic-mod{strong}">{_esc(it[2])}</span>{_esc(it[3])}</span>'
+                     f'{botao}</div>')
         head = f'<div class="ic-card-h3"><span class="ic-tag">Analyse</span>{_esc(b.get("title", "Read the advice"))}</div>'
         return f'<div class="ic-card">{head}<div class="ic-lf-list">{rows}</div></div>'
     if k == 'modals':
