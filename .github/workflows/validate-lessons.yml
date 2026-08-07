@@ -375,6 +375,21 @@ jobs:
         # na geração, não aqui.
         run: python3 scripts/gen_banco_exercicios.py --check
 
+      - name: "GATE 18 — selftest: prova que o gate de deriva de shell ainda morde"
+        run: python3 scripts/check_shell_drift.py --selftest
+
+      - name: "GATE 18 — os shells não derivam no que tem de ser igual"
+        # O molde stephanie-vicente precisa de outra ANATOMIA DE ABAS, e mexer nisso no
+        # shell compartilhado durante a construção significa editar o arquivo do qual
+        # descende tudo o que já está no ar. Decisão do Dan (07/08/2026): clonar,
+        # temporariamente. "Temporário" é a palavra que mais mente em software — fork
+        # temporário vira permanente no dia em que um conserto entra num shell e não no
+        # outro, e ninguém percebe porque os DOIS continuam funcionando.
+        # Este gate cobra o que TEM de ser igual (funções JS e classes-mecanismo) e exige
+        # que toda diferença legítima esteja DECLARADA com motivo. O dia da unificação é
+        # visível: é quando a lista de diferenças declaradas chegar a zero.
+        run: python3 scripts/check_shell_drift.py
+
       - name: "GATE 17 — selftest: prova que o meta-gate ainda morde"
         run: python3 scripts/check_gates_registry.py --selftest
 

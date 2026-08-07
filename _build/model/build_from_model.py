@@ -78,6 +78,34 @@ VOICES = json.load(open(os.path.join(HERE, 'voices.json'), encoding='utf-8'))
 # main(), assim que o config e lido. Ver README, secao 'Vozes'.
 
 MODEL = 'helen-mendes'
+
+
+def shell_path(cfg):
+    """De QUAL arquivo sai o shell desta aula.
+
+    Canal por CONVENCAO DE ARQUIVO, o mesmo que rege as peles ({model}-theme.css):
+    existe `_build/model/shell-{slug}.html` => e dele que o shell sai; nao existe => shell
+    da casa. Nenhum material existente muda de origem, e persona nova nao precisa tocar
+    no builder.
+
+    POR SLUG, e nao por framework, de proposito. O shell pertence ao MOLDE, nao ao metodo:
+    declarar no framework faria QUALQUER aluno daquele framework herdar a anatomia nova no
+    proximo rebuild — inclusive quem ja tem aula no ar. Slug alcanca so quem se chama assim.
+
+    POR QUE existe (07/08/2026). O molde stephanie-vicente precisa de outra anatomia de
+    abas (entra Syllabus, entra Evidencias, sai Complementares). Mexer nisso no shell
+    compartilhado durante a construcao seria editar o arquivo do qual descende tudo o que
+    ja esta no ar. Decisao do Dan: clonar temporariamente.
+
+    O clone e vigiado pelo GATE 18 (scripts/check_shell_drift.py), que reprova quando os
+    dois shells divergem nas funcoes JS ou nas classes-mecanismo. Quando os dois voltarem
+    a ser um, basta apagar o clone: esta funcao volta a devolver o shell da casa e o gate
+    se cala sozinho.
+    """
+    proprio = os.path.join(os.path.dirname(__file__), f"shell-{cfg.get('slug', '')}.html")
+    if cfg.get('slug') and os.path.exists(proprio):
+        return proprio
+    return os.path.join(PROF, f'{MODEL}-aula1.html')
 # EIXO FRAMEWORK (public/data/frameworks.json é a FONTE ÚNICA — ver _build/model/FRAMEWORKS.md).
 # `model` no config = CATEGORIA (adulto/kids/teens). `framework` = o MÉTODO dentro dela.
 # Config sem a chave => o framework da casa, que é o que gera tudo hoje.
@@ -1472,7 +1500,7 @@ def build_standalone(cfg, content_dir, manifest):
     # por decisao do coordenador (04/08/2026). O polimento cosmetico dele vivia aqui e foi
     # removido junto. Se o slide reaparecer num config, o GATE do validate_lesson barra.
 
-    s = read(os.path.join(PROF, f'{MODEL}-aula1.html'))
+    s = read(shell_path(cfg))
     s = base_swaps(s, cfg, n=n)
     s = re.sub(r'<title>[^<]*</title>', f'<title>{L["title_tag"]}</title>', s, count=1)
     s = re.sub(r'<h1>[^<]*</h1>', f'<h1>{cfg["student_name"]}</h1>', s, count=1)
