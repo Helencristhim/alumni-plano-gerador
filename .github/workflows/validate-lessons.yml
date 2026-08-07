@@ -375,6 +375,20 @@ jobs:
         # na geração, não aqui.
         run: python3 scripts/gen_banco_exercicios.py --check
 
+      - name: "GATE 20 — selftest: prova que o gate de anatomia ainda morde"
+        run: python3 scripts/check_anatomia.py --selftest
+
+      - name: "GATE 20 — a anatomia tem o que declara ter"
+        # A anatomia guided-discovery foi construída lendo um ARTEFATO escrito fora do
+        # sistema. Enquanto o porte acontecia, ele era a especificação — e eu perdi peça
+        # duas vezes por perguntar a coisa errada ("a classe existe no shell?" responde sim
+        # para tudo, porque o shell é clone; "preciso de componente novo?" conta o que EU
+        # usei, não o que a anatomia tem). Resultado: duas aulas dadas como prontas com um
+        # quadro de feedback que não recebia texto.
+        # Terminado o porte, o SHELL é a anatomia e o inventário vive no repo. Este gate
+        # confere um contra o outro — nunca contra o artefato, que não existe no CI.
+        run: python3 scripts/check_anatomia.py
+
       - name: "GATE 19 — selftest: prova que o gate de áudio declarado ainda morde"
         run: python3 scripts/check_audio_declarado.py --selftest
 
