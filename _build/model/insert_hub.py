@@ -46,26 +46,71 @@ def write(p, s):
 FIM_COMP = '</div><!-- /tab-complementary -->'
 
 
-def fim_tab_complementary(s):
-    """Índice do </div> que FECHA a aba Complementares, em hub SEM o marcador FIM_COMP.
+def fim_da_aba(s, tab_id, nome):
+    """Índice do </div> que FECHA a aba `tab_id`, em hub SEM o marcador de comentário.
 
-    O marcador é convenção do hub que o builder emite ("new"), e só 139 dos 1.670 hubs
-    do repo o têm — os anteriores ao modelo fecham a aba com um </div> mudo. Sem este
-    fallback o insert_hub abortava no assert final em TODO hub legado (mark-kazuyoshi,
-    aula 21), e a saída seria montar o hub à mão — exatamente o que a REGRA 20 proíbe.
+    Os marcadores (`</div><!-- /tab-... -->`) são convenção do hub que o builder emite
+    ("new"), e só uma minoria dos hubs do repo os tem — os anteriores ao modelo fecham a
+    aba com um </div> mudo. Sem este fallback o insert_hub aborta num assert em TODO hub
+    legado (mark-kazuyoshi na aba Complementares, gabriela-pires nas abas Pre-class e IN
+    CLASS), e a saída seria montar o hub à mão — exatamente o que a REGRA 20 proíbe.
 
-    Fecha-se pelo BALANÇO de <div> a partir de id="tab-complementary". Emendar "no fim
-    do arquivo" ou "depois do último media-card" jogaria o bloco FORA da aba, que é o
-    defeito ORPHAN/ESCAPE que o audit_hubs_struct existe para pegar.
+    Fecha-se pelo BALANÇO de <div> a partir do id da aba. Emendar "no fim do arquivo" ou
+    "antes da aba seguinte" jogaria o bloco FORA da aba, que é o defeito ORPHAN/ESCAPE que
+    o audit_hubs_struct existe para pegar.
     """
-    m = re.search(r'<div[^>]*id="tab-complementary"[^>]*>', s)
-    assert m, 'aba Complementares não encontrada no hub (id="tab-complementary")'
+    m = re.search(r'<div[^>]*id="' + re.escape(tab_id) + r'"[^>]*>', s)
+    assert m, f'aba {nome} não encontrada no hub (id="{tab_id}")'
     depth = 1
     for t in re.finditer(r'<div\b|</div\s*>', s[m.end():]):
         depth += 1 if t.group(0).startswith('<div') else -1
         if depth == 0:
             return m.end() + t.start()
-    raise AssertionError('aba Complementares não fecha (<div> desbalanceada no hub)')
+    raise AssertionError(f'aba {nome} não fecha (<div> desbalanceada no hub)')
+
+
+def fim_tab_complementary(s):
+    return fim_da_aba(s, 'tab-complementary', 'Complementares')
+
+
+def fim_tab_exercises(s):
+    return fim_da_aba(s, 'tab-exercises', 'Pre-class')
+
+
+def menu_card_do_hub(s, cfg, target):
+    """O card do menu IN CLASS **no formato QUE AQUELE HUB JÁ USA**.
+
+    O builder emite o card FLEX do modelo. Boa parte dos hubs anteriores ao modelo usa o
+    card HERO (`.inclass-lesson-card` + `.ilc-icon/.ilc-info/.ilc-number/.ilc-title/
+    .ilc-desc/.ilc-arrow`), cujo CSS vive no próprio hub. Enfiar um card flex ali produz
+    duas coisas ao mesmo tempo:
+
+      * a REGRA 11.9 (uniformidade visual) quebrada — cards de tamanhos diferentes na
+        mesma lista, que é exatamente o que a REGRA 2 proíbe ("NUNCA misturar formatos");
+      * a flag **MENU_MIX** do audit_hubs_struct, que BLOQUEIA o PR.
+
+    A saída NÃO é reescrever o menu do hub (isso é mexer no legado — REGRA 30): é o card
+    novo NASCER no formato da casa. Detecta-se pelo que já está na região do tab-inclass;
+    hub do modelo (sem `.inclass-lesson-card`) continua recebendo o card flex, byte a byte
+    igual ao de antes.
+    """
+    i = s.find('id="tab-inclass"')
+    j = s.find('id="tab-complementary"', i) if i >= 0 else -1
+    if i < 0 or j < 0 or 'class="inclass-lesson-card"' not in s[i:j]:
+        return B.menu_card(cfg, target)
+    L = cfg['lesson']
+    return (
+        f'<a class="inclass-lesson-card" href="{target}" style="text-decoration:none;">\n'
+        f'  <div class="ilc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        f'stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'
+        f'</svg></div>\n'
+        f'  <div class="ilc-info">\n'
+        f'    <div class="ilc-number">Lesson {L["menu_num"]}</div>\n'
+        f'    <div class="ilc-title">{L["menu_title"]}</div>\n'
+        f'    <div class="ilc-desc">{L["menu_desc"]}</div>\n'
+        f'  </div>\n'
+        f'  <div class="ilc-arrow">&rarr;</div>\n'
+        f'</a>')
 
 
 def hub_audiomap_lines(cfg, content_dir):
@@ -219,7 +264,7 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
             return
     folder = 'aluno' if is_aluno else 'professor'
     target = f'/{folder}/{slug}-aula{n}.html?autostart=1'
-    card = B.menu_card(cfg, target)
+    card = menu_card_do_hub(s, cfg, target)
 
     # 1. stampN — após stamp{N-1}. Se o config não define um stamp id=N (geração
     #    1-aula-por-vez além do bloco inicial de 5 stamps do modelo), sintetiza a
@@ -262,7 +307,8 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     # do MEIO, o accordion voltava depois de todos os outros e a aluna via a aula 1 embaixo
     # da aula 2. Acha o 1º ex-lesson-K com K > n e insere ANTES dele; se nenhum, no fim.
     fim_aba = s.find('</div><!-- /tab-exercises -->')
-    assert fim_aba > 0, 'aba Pre-class não encontrada no hub (</div><!-- /tab-exercises -->)'
+    if fim_aba < 0:
+        fim_aba = fim_tab_exercises(s)
     depois = [m.start() for m in re.finditer(r'<div class="lesson-card"[^>]*id="ex-lesson-(\d+)"',
                                              s[:fim_aba]) if int(m.group(1)) > n]
     if depois:
@@ -280,7 +326,25 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     if f'{slug}-aula{n}.html' not in s.split('<!-- ========== TAB 4')[0]:
         mlist = re.search(r'(id="tab-inclass".*?)(\n\s*</div>\s*</div>\s*\n\s*<!-- ========== TAB 4)',
                           s, flags=re.S)
-        if mlist:
+        if not mlist and not is_aluno and 'id="tab-inclass"' in s:
+            # HUB LEGADO: a âncora `<!-- ========== TAB 4` é convenção do hub que o builder
+            # emite ("new"). O hub anterior ao modelo fecha a aba IN CLASS com um </div> mudo
+            # e vai direto para a aba Complementares — a regex acima não casa e o card do
+            # menu NÃO nascia (gabriela-pires, aula 21). Mesmo fallback por BALANÇO de <div>
+            # das outras duas abas: o card entra DENTRO da aba, nunca depois dela (senão é o
+            # ORPHAN/ESCAPE que o audit_hubs_struct pega).
+            mi = re.search(r'<div[^>]*id="tab-inclass"[^>]*>', s)
+            region_start, region_end = mi.end(), fim_da_aba(s, 'tab-inclass', 'IN CLASS')
+            after = [region_start + m.start()
+                     for m in re.finditer(re.escape(slug) + r'-aula(\d+)\.html',
+                                          s[region_start:region_end])
+                     if int(m.group(1)) > n]
+            if after:
+                line_start = s.rfind('\n', region_start, min(after)) + 1
+                s = s[:line_start] + card + '\n' + s[line_start:]
+            else:
+                s = s[:region_end] + '\n' + card + '\n' + s[region_end:]
+        elif mlist:
             region_start, region_end = mlist.start(1), mlist.start(2)
             # Insere o card na POSIÇÃO NUMÉRICA certa — nunca só "no fim da lista". O anchor
             # de fim fazia a ordem do MENU seguir a ORDEM DE INSERÇÃO em vez do número da
