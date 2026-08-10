@@ -17,8 +17,12 @@ Insere por âncora de string, no hub prof E aluno:
   5. entradas pcN_ + [order-lN] no audioMap do hub (mescladas, sem duplicar)
   6. var totalLessons -> N
 
-Idempotente: se ex-lesson-N já existe no hub, pula. Só faz sentido p/ hub "snippets"
-(hub já existe). Aluno novo (1a aula) usa hub "new" no build_from_model.py.
+Idempotente POR BLOCO (não por aula): insere o que falta, pula o que já existe. Um
+hub que ficou meio inserido — Pre-class dentro, Complementares fora — se cura ao
+rodar de novo. Até 10/08/2026 um único `if ex-lesson-N in s: return` decidia por
+todos os blocos, e o meio-inserido era permanente: 9 aulas em 5 alunos ficaram sem
+NENHUM card de Complementares. Só faz sentido p/ hub "snippets" (hub já existe).
+Aluno novo (1a aula) usa hub "new" no build_from_model.py.
 
 USO (da raiz): python3 _build/model/insert_hub.py _build/{slug}-aula{N}/config.json
 Depois: python3 _build/model/audit_hubs_struct.py --check public/professor/{slug}.html public/aluno/{slug}.html
@@ -245,23 +249,35 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     n = cfg['lesson']['n']
     slug = cfg['slug']
     s = read(hub_path)
-    if f'id="ex-lesson-{n}"' in s:
-        if replace:
-            # Re-nivelamento explícito (--replace): troca os blocos da aula N pelos novos.
-            s = remove_lesson_blocks(s, n, slug, is_aluno)
-            print(f'  ex-lesson-{n} REMOVIDO (replace) em {os.path.basename(hub_path)} — reinserindo')
-            # cai no fluxo normal de inserção abaixo
-        else:
-            # Aula já inserida: NÃO re-insere card/stamp/complementares (aditivo, nunca
-            # duplica). Mas o audioMap AINDA é reconciliado — senão um MP3 errado no hub
-            # é permanente, imune a qualquer rebuild.
-            s2 = merge_audiomap(s, cfg, content_dir)
-            if s2 != s:
-                write(hub_path, s2)
-                print(f'  ex-lesson-{n} já presente em {os.path.basename(hub_path)} — audioMap reconciliado')
-            else:
-                print(f'  ex-lesson-{n} já presente em {os.path.basename(hub_path)} — pulando')
-            return
+    if replace and f'id="ex-lesson-{n}"' in s:
+        # Re-nivelamento explícito (--replace): troca os blocos da aula N pelos novos.
+        s = remove_lesson_blocks(s, n, slug, is_aluno)
+        print(f'  ex-lesson-{n} REMOVIDO (replace) em {os.path.basename(hub_path)} — reinserindo')
+
+    # ── IDEMPOTÊNCIA POR BLOCO, não por aula (10/08/2026) ────────────────────────
+    # Antes, um único `if ex-lesson-N in s: return` decidia por TODOS os seis blocos.
+    # Consequência: hub que ficou MEIO inserido nunca mais se curava. Se a primeira
+    # execução colocou o accordion do Pre-class e abortou nos Complementares (era o
+    # que o assert de `fim_tab_complementary` fazia em TODO hub legado, consertado
+    # hoje), qualquer nova tentativa via o ex-lesson-N, dizia "já presente — pulando"
+    # e ia embora. O aluno ficava com a aba Complementares VAZIA naquela aula, para
+    # sempre, e nenhum rebuild consertava.
+    #
+    # Medido em 10/08/2026, no roster ativo: 9 aulas em 5 alunos sem NENHUM card de
+    # Complementares — rafael-gasparelli-lima 6-10, e a aula 5 de mark-kazuyoshi,
+    # dienane, andreia-heins e carolina-paludetto. Quatro alunos perdendo EXATAMENTE
+    # a aula 5 não é coincidência: é assinatura desta trava.
+    #
+    # O padrão certo já existia no arquivo — stamp e card do menu sempre tiveram
+    # guarda própria (`if id="stampN" not in s`). Faltava aplicá-lo aos outros dois,
+    # e parar de sair antes de chegar neles.
+    #
+    # Cada bloco também só LÊ seu arquivo quando vai inserir: assim um conserto que
+    # precisa só dos Complementares não exige um preclass.html que talvez nem exista
+    # (é o caso das 9 aulas acima, cujo _build sumiu).
+    tem_preclass = f'id="ex-lesson-{n}"' in s
+    tem_comp = f'data-media="l{n}-' in s
+    feitos, pulados = [], []
     folder = 'aluno' if is_aluno else 'professor'
     target = f'/{folder}/{slug}-aula{n}.html?autostart=1'
     card = menu_card_do_hub(s, cfg, target)
@@ -293,29 +309,33 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
             assert m, 'stamps-row não encontrada no hub — não dá para inserir o stamp'
             s = s[:m.end()] + '\n' + stamp_html + s[m.end():]
 
-    # 2. accordion ex-lesson-N
-    preclass = B.inject_kids_game(read(os.path.join(content_dir, 'preclass.html')).strip(), cfg)
-    # CARIMBO DE GERAÇÃO NO BLOCO. O hub nunca ganha <meta name="alumni-gen"> (o insert_hub
-    # só injeta trechos num arquivo antigo), então gate escopado por geração era CEGO para
-    # o Pre-class inteiro. Carimbar o hub seria pior: passaria a cobrar as invariantes novas
-    # dos blocos LEGADOS que convivem nele (REGRA 30). O carimbo vai no accordion que ESTE
-    # build emitiu — e o gate lê o bloco. Espelha build_from_model.build_hub_snippets().
-    preclass = re.sub(r'<div class="lesson-card"(?![^>]*\bdata-gen=)',
-                      f'<div class="lesson-card" data-gen="{B.BUILDER_GEN}"', preclass, count=1)
-    # POSIÇÃO NUMÉRICA, nunca "no fim da aba". Mesma classe de bug já corrigida no menu IN
-    # CLASS (incidente maria-claudia) — aqui tinha ficado para trás: em --replace de uma aula
-    # do MEIO, o accordion voltava depois de todos os outros e a aluna via a aula 1 embaixo
-    # da aula 2. Acha o 1º ex-lesson-K com K > n e insere ANTES dele; se nenhum, no fim.
-    fim_aba = s.find('</div><!-- /tab-exercises -->')
-    if fim_aba < 0:
-        fim_aba = fim_tab_exercises(s)
-    depois = [m.start() for m in re.finditer(r'<div class="lesson-card"[^>]*id="ex-lesson-(\d+)"',
-                                             s[:fim_aba]) if int(m.group(1)) > n]
-    if depois:
-        ini = s.rfind('\n', 0, min(depois)) + 1
-        s = s[:ini] + preclass + '\n\n' + s[ini:]
+    # 2. accordion ex-lesson-N (só quando falta — ver idempotência por bloco acima)
+    if tem_preclass:
+        pulados.append('pre-class')
     else:
-        s = s[:fim_aba] + '\n' + preclass + '\n\n' + s[fim_aba:]
+        preclass = B.inject_kids_game(read(os.path.join(content_dir, 'preclass.html')).strip(), cfg)
+        # CARIMBO DE GERAÇÃO NO BLOCO. O hub nunca ganha <meta name="alumni-gen"> (o insert_hub
+        # só injeta trechos num arquivo antigo), então gate escopado por geração era CEGO para
+        # o Pre-class inteiro. Carimbar o hub seria pior: passaria a cobrar as invariantes novas
+        # dos blocos LEGADOS que convivem nele (REGRA 30). O carimbo vai no accordion que ESTE
+        # build emitiu — e o gate lê o bloco. Espelha build_from_model.build_hub_snippets().
+        preclass = re.sub(r'<div class="lesson-card"(?![^>]*\bdata-gen=)',
+                          f'<div class="lesson-card" data-gen="{B.BUILDER_GEN}"', preclass, count=1)
+        # POSIÇÃO NUMÉRICA, nunca "no fim da aba". Mesma classe de bug já corrigida no menu IN
+        # CLASS (incidente maria-claudia) — aqui tinha ficado para trás: em --replace de uma aula
+        # do MEIO, o accordion voltava depois de todos os outros e a aluna via a aula 1 embaixo
+        # da aula 2. Acha o 1º ex-lesson-K com K > n e insere ANTES dele; se nenhum, no fim.
+        fim_aba = s.find('</div><!-- /tab-exercises -->')
+        if fim_aba < 0:
+            fim_aba = fim_tab_exercises(s)
+        depois = [m.start() for m in re.finditer(r'<div class="lesson-card"[^>]*id="ex-lesson-(\d+)"',
+                                                 s[:fim_aba]) if int(m.group(1)) > n]
+        if depois:
+            ini = s.rfind('\n', 0, min(depois)) + 1
+            s = s[:ini] + preclass + '\n\n' + s[ini:]
+        else:
+            s = s[:fim_aba] + '\n' + preclass + '\n\n' + s[fim_aba:]
+        feitos.append('pre-class')
 
     # 3. card IN CLASS — antes de fechar a lista de cards do menu.
     #    Só o hub do PROFESSOR tem a aba IN CLASS (aluno = 2 abas, REGRA 3):
@@ -365,18 +385,43 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
             raise AssertionError(f'{os.path.basename(hub_path)}: aba IN CLASS nao encontrada — '
                                  'card do menu NAO foi inserido (ancora id="tab-inclass")')
 
-    # 4. Complementares lN- — no FIM da aba Complementares (marcador do modelo ou
-    #    fallback por balanço de <div>, para hub legado sem o comentário).
-    comp = B.normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg).strip()
-    assert f'data-media="l{n}-' in comp, f'complementary.html sem data-media="l{n}-..."'
-    if FIM_COMP in s:
-        s = s.replace(FIM_COMP, '\n' + comp + '\n\n' + FIM_COMP, 1)
+    # 4. Complementares lN- — em POSIÇÃO NUMÉRICA dentro da aba Complementares.
+    #    Mesma correção que o accordion (#2) e o card do menu (#3) já tinham: emendar
+    #    "no fim da aba" só está certo quando a aula é a MAIS ALTA. Ao curar uma aula do
+    #    meio (a 5 num hub que vai até a 24), o bloco caía depois da 24 e a aluna via
+    #    "Aula 5" no pé da lista. Acha o 1º l{K} com K > n e insere ANTES dele.
+    if tem_comp:
+        pulados.append('complementares')
     else:
-        fim = fim_tab_complementary(s)
-        s = s[:fim] + '\n' + comp + '\n\n' + s[fim:]
+        comp = B.normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg).strip()
+        assert f'data-media="l{n}-' in comp, f'complementary.html sem data-media="l{n}-..."'
+        fim_comp_idx = s.find(FIM_COMP)
+        if fim_comp_idx < 0:
+            fim_comp_idx = fim_tab_complementary(s)
+        ini_comp = s.find('id="tab-complementary"')
+        depois_c = [m.start() for m in re.finditer(r'data-media="l(\d+)-',
+                                                   s[ini_comp:fim_comp_idx])
+                    if int(m.group(1)) > n]
+        if depois_c:
+            # Sobe até o começo do wrapper daquele card — emendar no meio da <div>
+            # partiria o HTML ao meio.
+            alvo = ini_comp + min(depois_c)
+            w = s.rfind('<div class="media-card-wrapper"', ini_comp, alvo)
+            ini = s.rfind('\n', ini_comp, w) + 1 if w > 0 else s.rfind('\n', ini_comp, alvo) + 1
+            s = s[:ini] + comp + '\n\n' + s[ini:]
+        elif FIM_COMP in s:
+            s = s.replace(FIM_COMP, '\n' + comp + '\n\n' + FIM_COMP, 1)
+        else:
+            fim = fim_tab_complementary(s)
+            s = s[:fim] + '\n' + comp + '\n\n' + s[fim:]
+        feitos.append('complementares')
 
     # 5. audioMap: mescla pcN_/[order-lN] logo após "var audioMap = {"
-    s = merge_audiomap(s, cfg, content_dir)
+    #    Depende do preclass.html (é dele que saem as frases). Num conserto que só
+    #    repõe Complementares num hub antigo, esse arquivo não existe mais — e o
+    #    audioMap do Pre-class daquela aula já está no hub desde a geração original.
+    if os.path.exists(os.path.join(content_dir, 'preclass.html')):
+        s = merge_audiomap(s, cfg, content_dir)
 
     # 6. totalLessons -> MAIOR aula presente no hub (a barra só enche até totalLessons —
     #    REGRA 18). NUNCA baixar: em --replace de uma aula do meio (ex: 13 num hub que já
@@ -386,6 +431,11 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
 
     assert f'id="ex-lesson-{n}"' in s and f'id="stamp{n}"' in s and f'data-media="l{n}-' in s
     assert is_aluno or f'{slug}-aula{n}.html' in s, f'card do menu IN CLASS ausente no hub prof (aula {n})'
+    # Diz o que ENTROU e o que já estava. Num hub meio inserido a diferença entre
+    # "curou" e "não fez nada" é exatamente isto — e antes não aparecia em lugar nenhum.
+    if feitos or pulados:
+        print(f'  aula {n} em {os.path.basename(hub_path)}: '
+              f'inserido={feitos or "-"} ja_existia={pulados or "-"}')
     write(hub_path, s)
 
 
