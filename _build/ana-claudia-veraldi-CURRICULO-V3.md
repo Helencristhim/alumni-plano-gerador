@@ -90,13 +90,25 @@ Fios: 🗣️ fala/desbloqueio · 👂 listening lingua franca · 🧩 gramátic
 
 **Âncora intercultural a cada 5 aulas** (4, 9, 14, 19, 24, 29, 34, 39) — nunca fica longe.
 
+> **REGRA DO FATO ÚNICO (10/08/2026).** Nenhum fato biográfico dela pode ser o exemplo
+> padrão de mais de UMA aula. As aulas 5–13 da versão anterior foram apagadas (PR #1894)
+> porque as cachorras viraram o exemplo de nove aulas seguidas — 219 menções, a 5 inteira
+> sobre elas, e até as condicionais da 12 e da 13 saíam em "take the dogs out". O problema
+> era a REPETIÇÃO, não o assunto: um fato pode aparecer de passagem em qualquer aula, mas
+> só sustenta a espinha de uma. Por isso a 5 deixou de ser "My Dogs" e passou a descrever
+> as PESSOAS da cidade — a gramática (adjective order + `-ed`/`-ing`) não mudou.
+>
+> Ao autorar qualquer aula: antes de escolher o veículo, confira quais fatos já
+> sustentaram as aulas anteriores. Casa em restauro = aulas 3 e 7. Mudança SP→interior =
+> aulas 6 e 10. Cidade pequena = aulas 2 e 5.
+
 | # | Tema (a vida dela / o mundo) | Gramática no fluxo | Sotaque do listening | Fio |
 |---|---|---|---|---|
 | 1 | **The Life I've Had** — quem ela é pela vida vivida, não pelo cargo | Present perfect (experience) vs past simple | americano + **holandês** | 🧩🗣️👂 |
 | 2 | **A Town of 40,000** — interior vs metrópole, a escolha do sossego | Comparatives & superlatives (avançados) | **nórdico** + britânico | 🗣️👂 |
 | 3 | **How Long Have You Been Doing That?** — a casa que restaura, o "fuçar" | Present perfect continuous (for/since) | **indiano** + americano | 🧩🗣️ |
 | 4 | **English Around the World** ⚓ — quem fala inglês no planeta | Listening strategy: gist antes de detalhe | **nórdico, indiano, holandês** | 👂🌍 |
-| 5 | **My Dogs** — rotina e personalidade das cachorras | Adjective order + `-ed`/`-ing` adjectives | **italiano** + americano | 🗣️ |
+| 5 | **The People of a Small Town** — vizinhos, feira, quem faz a cidade | Adjective order + `-ed`/`-ing` adjectives | **italiano** + americano | 🗣️ |
 | 6 | **The Day I Decided to Leave** — a virada de SP pro interior | Past simple vs past continuous (narrativa) | britânico + **alemão** | 🧩🗣️ |
 | 7 | **The House I'm Restoring** — projetos de DIY e restauro | Passive voice em contexto real | **holandês** + australiano | 🧩🗣️ |
 | 8 | **Checkpoint — Block 1** (1-7, benchmark de fala) | Review + produção livre | mistura de todos | 🗣️ |

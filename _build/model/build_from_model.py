@@ -91,6 +91,19 @@ MODEL = 'helen-mendes'
 # Enquanto existia uma anatomia so, o shell era a aula publicada de alguem — e por isso
 # todo molde novo precisava clonar a aula da Helen para existir. Isso e a soberania que
 # esta ordem desfaz: `imersivo` e `guided-discovery` sao pares, nenhuma e padrao.
+def tem_aba_complementares(cfg):
+    """A aba existe nesta anatomia? Pergunta a ANATOMIA DECLARADA, nunca ao HTML do hub.
+
+    Ler o SINTOMA ('id="tab-complementary"' ausente) ja custou caro: 9 hubs LEGADOS
+    tambem nao tem a aba, e ali a ausencia e DEFEITO, nao desenho. Um guard por sintoma
+    silenciou os 33 defeitos deles de uma vez (o GATE 8 pegou: -17 -> -50). Anatomia nao
+    declarada => comportamento do legado (a aba existe), que e o default seguro.
+    """
+    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    abas = ANATOMIAS_DECLARADAS.get(anat, {}).get('abas')
+    return 'complementary' in abas if abas else True
+
+
 def sem_aba_complementares(s):
     """A anatomia guided-discovery nao tem a aba. Chamar replace_between nela estouraria
     com ValueError; devolver o HTML intacto e o comportamento certo."""
@@ -138,6 +151,19 @@ def hub_path(cfg, aluno=False):
 
 # Que anatomia cada persona usa. Quem nao esta aqui usa `imersivo` — que e o que gera tudo
 # o que existe hoje, entao nenhum material muda de origem.
+def _carrega_anatomias():
+    """O inventario declarado (anatomias.json) e a fonte de quais abas cada anatomia tem.
+    Ausente => {} , e todo mundo cai no comportamento do legado."""
+    p = os.path.join(ROOT, '_build', 'model', 'anatomias.json')
+    if not os.path.exists(p):
+        return {}
+    with open(p, encoding='utf-8') as fh:
+        return json.load(fh).get('anatomias', {})
+
+
+ANATOMIAS_DECLARADAS = _carrega_anatomias()
+
+
 ANATOMIA_POR_SLUG = {
     'stephanie-vicente': 'guided-discovery',
 }
