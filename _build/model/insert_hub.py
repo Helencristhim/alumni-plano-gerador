@@ -301,7 +301,8 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
             raise AssertionError(f'{os.path.basename(hub_path)}: aba IN CLASS nao encontrada — '
                                  'card do menu NAO foi inserido (ancora id="tab-inclass")')
 
-    # 4. Complementares lN- — antes de </div><!-- /tab-complementary -->
+    # 4. Complementares lN- — no FIM da aba Complementares (marcador do modelo ou
+    #    fallback por balanço de <div>, para hub legado sem o comentário).
     comp = B.normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg).strip()
     assert f'data-media="l{n}-' in comp, f'complementary.html sem data-media="l{n}-..."'
     if FIM_COMP in s:
