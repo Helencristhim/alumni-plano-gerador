@@ -1465,10 +1465,27 @@ def validate(path):
                      f'usar "Lesson N" em inglês (REGRA 13)')
 
     if not is_aluno:
-        tabs = set(re.findall(r"switchTab\('(planning|exercises|inclass|complementary)'\)", c))
-        miss = {'planning', 'exercises', 'inclass', 'complementary'} - tabs
+        # AS ABAS VEM DA ANATOMIA, nao de uma lista cravada. Ordem do Dan (07/08/2026):
+        # "a lista de abas vem da anatomia; quantas abas o artefato tem? faca igual".
+        #   imersivo         -> 4 (Planejamento, Pre-class, IN CLASS, Complementares)
+        #   guided-discovery -> 5 (Planejamento, Syllabus, Pre-class, IN CLASS, Evidencias)
+        # A mensagem do imersivo fica IDENTICA byte a byte: o GATE 8 usa o texto do erro
+        # como chave do baseline, e mudar a redacao ja fez 31 arquivos que ninguem tocou
+        # aparecerem como defeito novo.
+        ABAS = {
+            'imersivo': {'planning', 'exercises', 'inclass', 'complementary'},
+            'guided-discovery': {'planning', 'syllabus', 'exercises', 'inclass', 'evidencias'},
+        }
+        anat = 'guided-discovery' if 'id="tab-evidencias"' in c else 'imersivo'
+        esperadas = ABAS[anat]
+        tabs = set(re.findall(r"switchTab\('([a-z]+)'\)", c))
+        miss = esperadas - tabs
         if miss:
-            fails.append(f'abas faltando: {", ".join(sorted(miss))} (professor tem 4)')
+            if anat == 'imersivo':
+                fails.append(f'abas faltando: {", ".join(sorted(miss))} (professor tem 4)')
+            else:
+                fails.append(f'abas faltando: {", ".join(sorted(miss))} '
+                             f'(anatomia {anat} tem {len(esperadas)})')
     if 'data-slide=' in c:
         nslide = len(re.findall(r'data-slide="\d+"', c))
         # O piso de 25 slides é do IMERSIVO (aula-narrativa de 7 capítulos). Outros
@@ -1527,8 +1544,23 @@ def validate(path):
                              f'{tl_m.group(1)} mas há aulas até ex-lesson-{max_ex} — a barra das aulas '
                              f'> {tl_m.group(1)} nunca enche. Ajustar totalLessons para {max_ex} (REGRA 18)')
             # COMPLEMENTARES da aula no hub (classe de bug do PR #106)
+            #
+            # SO PARA ANATOMIA QUE NAO TEM A ABA. A guided-discovery nao tem —
+            # Complementares saiu dela por decisao do Dan (06/08/2026), e a medicao no
+            # artefato confirma: media-card aparece 0 vez la.
+            #
+            # O TESTE E A ANATOMIA, NAO A AUSENCIA DA ABA. A primeira versao perguntava
+            # 'id="tab-complementary" in hc' — e isso silenciou a checagem em NOVE hubs
+            # LEGADOS que tambem nao tem a aba (daniela-feitoza, elaine-v-a/b, os tres do
+            # nilo, percival-jr...). Neles a ausencia e DEFEITO, nao desenho. O GATE 8 pegou:
+            # a divida caiu 33 defeitos de um PR que nao deveria mexer em legado nenhum.
+            # Escopo se le na ANATOMIA declarada, nunca num sintoma que o legado compartilha.
+            ANAT_SEM_COMPLEMENTARES = ('reading-into-speaking', 'listening-into-interaction',
+                                       'grammar-for-communication', 'esp-real-world')
             n_media = len(re.findall(rf'data-media="l{N}-', hc))
-            if n_media == 0:
+            if framework in ANAT_SEM_COMPLEMENTARES:
+                pass
+            elif n_media == 0:
                 fails.append(f'aula {N} SEM complementares no hub (nenhum data-media="l{N}-...") — gerar complementary.html e inserir o snippet 3b')
             elif n_media < 3:
                 warns.append(f'só {n_media} complementar(es) da aula {N} no hub (padrão do modelo: 3)')
@@ -1598,9 +1630,24 @@ def validate(path):
                     REQ = [('vocab-card-pc', 6), ('match-row', 4), ('quiz-item', 3), ('fill-blank-item', 3),
                            ('speech-card', 2), ('think-card', 1), ('survival-card', 1)]
                 else:
-                    # Piso UNIVERSAL, válido para qualquer framework: o aluno tem de receber
-                    # palavras com áudio, produzir algo falado e sair com um survival card.
-                    REQ = [('vocab-card-pc', 6), ('speech-card', 2), ('think-card', 1), ('survival-card', 1)]
+                    # Este piso era declarado UNIVERSAL. NAO E — e a anatomia do imersivo.
+                    #
+                    # Criterio do Dan (07/08/2026): "so vale se estiver no artefato de
+                    # exemplo". MEDIDO no artefato da Stephanie (as 4 aulas dos frameworks
+                    # novos): vocab-card-pc 0 · speech-card 0 · think-card 0 · survival-card
+                    # 0. As quatro nao existem la. Existem blank-input (110), quiz-item (11)
+                    # e match-row (4) — a anatomia guided-discovery pratica de outro jeito.
+                    #
+                    # Cobrar as quatro dela era pedir a forma da helen a um molde que
+                    # decidiu nao te-la. A anatomia guided-discovery ainda NAO declarou piso
+                    # proprio de Pre-class, e isso e proposital: ela "nasce aberta e ganha as
+                    # suas obrigatoriedades" (secao 0 do RULEBOOK-PEDAGOGICO). Enquanto o
+                    # Pre-class dela for o imersivo emprestado — decisao temporaria do Dan —
+                    # nao ha o que cobrar aqui.
+                    REQ = ([] if framework in ('reading-into-speaking', 'listening-into-interaction',
+                                               'grammar-for-communication', 'esp-real-world')
+                           else [('vocab-card-pc', 6), ('speech-card', 2),
+                                 ('think-card', 1), ('survival-card', 1)])
                 missing = [f'{k} ({blk.count(k)}/{mn})' for k, mn in REQ if blk.count(k) < mn]
                 # PRATICA no Stage 2: uma das tres formas aprovadas basta.
                 #

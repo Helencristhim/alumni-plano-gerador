@@ -78,6 +78,114 @@ VOICES = json.load(open(os.path.join(HERE, 'voices.json'), encoding='utf-8'))
 # main(), assim que o config e lido. Ver README, secao 'Vozes'.
 
 MODEL = 'helen-mendes'
+
+
+# ANATOMIA: a forma da AULA — quantas abas, se o slide rola, quantas telas por etapa.
+# Nao confundir com `model` (a PELE: fonte, cor, tom) nem com `framework` (a arquitetura
+# pedagogica: quais etapas, em que ordem).
+#
+# O nome da anatomia e o da FORMA, nunca o de uma pessoa. Ordem do Dan (07/08/2026):
+#
+#     "o helen mendes nao e soberano ao stephanie, ele e so um tipo de framework"
+#
+# Enquanto existia uma anatomia so, o shell era a aula publicada de alguem — e por isso
+# todo molde novo precisava clonar a aula da Helen para existir. Isso e a soberania que
+# esta ordem desfaz: `imersivo` e `guided-discovery` sao pares, nenhuma e padrao.
+def tem_aba_complementares(cfg):
+    """A aba existe nesta anatomia? Pergunta a ANATOMIA DECLARADA, nunca ao HTML do hub.
+
+    Ler o SINTOMA ('id="tab-complementary"' ausente) ja custou caro: 9 hubs LEGADOS
+    tambem nao tem a aba, e ali a ausencia e DEFEITO, nao desenho. Um guard por sintoma
+    silenciou os 33 defeitos deles de uma vez (o GATE 8 pegou: -17 -> -50). Anatomia nao
+    declarada => comportamento do legado (a aba existe), que e o default seguro.
+    """
+    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    abas = ANATOMIAS_DECLARADAS.get(anat, {}).get('abas')
+    return 'complementary' in abas if abas else True
+
+
+def sem_aba_complementares(s):
+    """A anatomia guided-discovery nao tem a aba. Chamar replace_between nela estouraria
+    com ValueError; devolver o HTML intacto e o comportamento certo."""
+    return 'id="tab-complementary"' not in s
+
+
+ANATOMIAS = {
+    # DIVIDA DECLARADA: a anatomia `imersivo` ainda aponta para uma AULA PUBLICADA, que
+    # acumula ser aula e template. Extrair para shells/imersivo.html criaria uma COPIA, e
+    # copia deriva; a extracao de verdade exige a aula 1 da Helen passar a ser GERADA, o
+    # que mexe em material no ar. Fica assim, com o nome da divida escrito, ate haver ordem
+    # explicita para o refactor.
+    'imersivo': ('public/professor', 'helen-mendes-aula1.html'),
+    'guided-discovery': ('_build/model/shells', 'guided-discovery.html'),
+}
+
+# O HUB tem anatomia propria: no imersivo as aulas sao lista corrida; no guided-discovery
+# sao agrupadas por BLOCO (Build/Explore/Organize/Challenge/Transfer), que e a unidade
+# pedagogica do ciclo. Ordem do Dan (07/08/2026): "o hub dessa nova versao e dividido em
+# blocos e queremos isso". Lista plana de 20 esconde exatamente isso.
+#
+# O hub do imersivo tambem e um par prof/aluno de arquivos PUBLICADOS — mesma divida
+# declarada do shell de aula.
+# Sao DOIS arquivos por anatomia: o hub do professor e o do aluno. Nao e duplicacao a toa —
+# a aba ativa e o conjunto de abas diferem (o aluno nao ve Planejamento nem Evidencias).
+HUBS = {
+    'imersivo': None,  # usa {MODEL}.html em public/professor e public/aluno
+    'guided-discovery': ('_build/model/shells',
+                         'hub-guided-discovery.html',
+                         'hub-guided-discovery-aluno.html'),
+}
+
+
+def hub_path(cfg, aluno=False):
+    """De qual arquivo sai o HUB. None => o hub publicado da anatomia imersivo."""
+    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    alvo = HUBS.get(anat)
+    if alvo is None:
+        base = ALUNO if aluno else PROF
+        return os.path.join(base, f'{MODEL}.html')
+    p = os.path.join(ROOT, alvo[0], alvo[2] if aluno else alvo[1])
+    if not os.path.exists(p):
+        raise SystemExit(f'hub da anatomia "{anat}" nao encontrado: {p}')
+    return p
+
+# Que anatomia cada persona usa. Quem nao esta aqui usa `imersivo` — que e o que gera tudo
+# o que existe hoje, entao nenhum material muda de origem.
+def _carrega_anatomias():
+    """O inventario declarado (anatomias.json) e a fonte de quais abas cada anatomia tem.
+    Ausente => {} , e todo mundo cai no comportamento do legado."""
+    p = os.path.join(ROOT, '_build', 'model', 'anatomias.json')
+    if not os.path.exists(p):
+        return {}
+    with open(p, encoding='utf-8') as fh:
+        return json.load(fh).get('anatomias', {})
+
+
+ANATOMIAS_DECLARADAS = _carrega_anatomias()
+
+
+ANATOMIA_POR_SLUG = {
+    'stephanie-vicente': 'guided-discovery',
+}
+
+
+def shell_path(cfg):
+    """De QUAL arquivo sai o shell desta aula.
+
+    Resolve pela ANATOMIA da persona (ANATOMIA_POR_SLUG), nao pelo framework. O shell e
+    forma, e forma pertence ao molde: declarar no framework faria QUALQUER aluno daquele
+    framework herdar a anatomia nova no proximo rebuild — inclusive quem ja tem aula no ar.
+
+    O GATE 18 (scripts/check_shell_drift.py) vigia as anatomias entre si: reprova quando
+    divergem nas funcoes JS ou nas classes-mecanismo, e exige que toda diferenca legitima
+    esteja declarada com motivo.
+    """
+    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    pasta, arquivo = ANATOMIAS[anat]
+    p = os.path.join(ROOT, pasta, arquivo)
+    if not os.path.exists(p):
+        raise SystemExit(f'shell da anatomia "{anat}" nao encontrado: {p}')
+    return p
 # EIXO FRAMEWORK (public/data/frameworks.json é a FONTE ÚNICA — ver _build/model/FRAMEWORKS.md).
 # `model` no config = CATEGORIA (adulto/kids/teens). `framework` = o MÉTODO dentro dela.
 # Config sem a chave => o framework da casa, que é o que gera tudo hoje.
@@ -192,6 +300,14 @@ def replace_between(s, start, end, new_inner):
     return s[:i + len(start)] + new_inner + s[j:]
 
 
+# Fim do painel de IN CLASS. Era a string literal "TAB 4", o que amarrava o
+# builder a UMA ordem de abas: na anatomia do molde stephanie-vicente o IN CLASS e a aba 4 e
+# quem vem depois e a 5, e o builder cortava no lugar errado (ou estourava com ValueError).
+# Generico resolve para as duas e para qualquer anatomia futura — o que importa e "o
+# proximo comentario de aba", nao o numero dele.
+FIM_DO_INCLASS = '<!-- ========== TAB '
+
+
 def snake(text, maxlen=48):
     t = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode()
     t = re.sub(r"[^a-z0-9]+", '_', t.lower()).strip('_')
@@ -215,6 +331,19 @@ def hex_to_rgb(h):
 #   {"kind":"answer","title":"Reveal answer key","key":["1 = c", ...]}                     (interativo, accordion)
 #   {"kind":"answer","title":"...","list":["resposta 1", ...],"note":"opcional"}
 #   {"kind":"reading","rtitle":"...","paras":["...", ...],"source":"...","link":"..."}
+#   {"kind":"timer","id":"w1","segundos":600,"label":"..."}
+#   (o kind gist aceita "why": o racional, que nasce escondido e a professora revela)
+#   {"kind":"evidence","title":"...","items":[["afirmacao","o trecho que sustenta"], ...]}
+#   {"kind":"recap","title":"...","items":["...", ...]}
+#   {"kind":"write","id":"fb1","title":"...","campos":[["Rotulo","chave"], ...]}
+#   {"kind":"qsub","title":"...","items":[["pergunta","como responder"], ...]}
+#   {"kind":"phrases","title":"...","items":[["frase","funcao","fala opcional"], ...]}
+#   {"kind":"reveal","title":"...","sub":"...","dica":"click to reveal",
+#    "items":[["frente","verso","essencial|condicional|extensao"], ...]}
+#   {"kind":"selfassess","title":"...","sub":"...","items":["...", ...],"escala":[4 rotulos EN]}
+#   {"kind":"sorting","title":"...","cols":["Unsorted","A","B"],"items":[["frase",1], ...]}
+#       cols[0] e SEMPRE a caixa de partida ("Unsorted"): o item nasce nela e cicla ao
+#       clique. O 2o valor do item e o INDICE da coluna certa — nunca 0.
 #   {"kind":"matching","title":"...","words":[["1","word","c"], ...],"defs":[["a","def"], ...]}
 #       3o item da palavra = LETRA da definicao certa (gabarito). E OBRIGATORIO: sem ele o
 #       bloco vira duas listas mortas na tela e o aluno tenta clicar/arrastar e nada
@@ -251,6 +380,159 @@ def render_block(b):
             for i, q in enumerate(b['items']))
         head = f'<div class="ic-card-h3"><span class="ic-tag">{_esc(b["title"])}</span></div>' if b.get('title') else ''
         return f'<div class="ic-card">{head}<{tag} class="ic-qs{extra}">{lis}</{tag}></div>'
+    if k == 'call':
+        # A call e uma SEQUENCIA de turnos com falante — nao um arquivo so. Medido no
+        # artefato: CAST de 3 falantes, CALL_L1 de 9 turnos, playCall com recorte por
+        # segmento. O MP3 de cada turno vem de audio_da_call(), que le ESTE MESMO bloco:
+        # uma fonte para o markup e para o audio, entao nao ha como divergirem.
+        cast = b['cast']
+        chips = ''.join(
+            f'<span class="ic-spk" data-spk="{i}">{_esc(c["nome"])}<span class="ic-sub">'
+            f'{_esc(c.get("papel", ""))}</span></span>' for i, c in enumerate(cast))
+        turnos = json.dumps(
+            [{'s': t[0], 'f': f'/audio/{b["slug"]}/{b["prefixo"]}{i + 1:02d}.mp3'}
+             for i, t in enumerate(b['turnos'])], ensure_ascii=False)
+        segs = ''
+        for rot, de, ate in b.get('segmentos', [['Play the call', None, None]]):
+            a = 'null' if de is None else de
+            z = 'null' if ate is None else ate
+            segs += (f'<button class="ic-seg" onclick="icCallPlay(this,{a},{z})">'
+                     f'{_esc(rot)}</button>')
+        segs += ('<button class="ic-seg" onclick="icCallPlay(this,null,null,0.8)">Slower</button>'
+                 '<button class="ic-seg ic-stop" onclick="icCallStop()">Stop</button>')
+        cabecalho = f'<div class="ic-card-h3">{_esc(b.get("title", "The call"))}</div>' if b.get('title') else ''
+        return (f'<div class="ic-card">{cabecalho}'
+                f'<div class="ic-call" data-turnos=\'{turnos}\'>'
+                f'<div class="ic-call-cast">{chips}</div>'
+                f'<div class="ic-call-segs">{segs}</div></div></div>')
+
+    if k == 'timer':
+        # O tempo e parte da TAREFA (escrita cronometrada, resposta de 45s), nao pressao do
+        # tom. Diretrizes: "a pressao vem da situacao".
+        tid = f'tmr-{_esc(b["id"])}'
+        total = int(b['segundos'])
+        rot = _esc(b.get('label', 'Time yourself'))
+        return (f'<div class="ic-card"><div class="ic-card-h3">{rot}</div>'
+                f'<div class="ic-timer"><span class="ic-timer-n" id="{tid}">'
+                f'{total // 60}:{total % 60:02d}</span>'
+                f'<button class="ic-timer-b" onclick="icTimerStart(this,\'{tid}\',{total})">Start / Pause</button>'
+                f'<button class="ic-timer-b" onclick="icTimerReset(this,\'{tid}\',{total})">Reset</button>'
+                f'</div></div>')
+
+    if k == 'evidence':
+        # Cada afirmacao com o TRECHO que a sustenta. As Diretrizes: "nenhum gabarito pode
+        # afirmar mais do que a evidencia apresentada".
+        itens = ''.join(
+            f'<div class="ic-evi"><span class="ic-evi-claim">{_esc(a)}</span>'
+            f'<span class="ic-evi-src">{_esc(f)}</span></div>' for a, f in b['items'])
+        cab = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return f'<div class="ic-card">{cab}<div class="ic-evi-list">{itens}</div></div>'
+
+    if k == 'recap':
+        itens = ''.join(f'<div class="ic-recap-item">{_esc(t)}</div>' for t in b['items'])
+        cab = f'<div class="ic-card-h3">{_esc(b.get("title", "What we built"))}</div>'
+        return f'<div class="ic-card">{cab}<div class="ic-recap">{itens}</div></div>'
+
+    if k == 'write':
+        # O `whiteboard` imprimia um ROTULO e nada mais — a professora nao tinha onde
+        # escrever. Aqui o campo existe. `chave` obrigatoria: e o que separa o texto de um
+        # campo do de outro no localStorage.
+        campos = ''
+        for c in b['campos']:
+            rot, chave = (c if isinstance(c, list) else [c, snake(c)])
+            campos += (f'<div class="ic-write-f"><label class="ic-write-l">{_esc(rot)}</label>'
+                       f'<textarea class="ic-write-t" data-k="{_esc(b["id"])}-{_esc(chave)}" '
+                       f'oninput="icWriteSave(this)" aria-label="{_esc(rot)}"></textarea></div>')
+        cab = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return f'<div class="ic-card">{cab}<div class="ic-write">{campos}</div></div>'
+
+    if k == 'qsub':
+        itens = ''.join(
+            f'<div class="ic-q"><span class="ic-q-t">{_esc(q)}</span>'
+            f'<span class="ic-q-s">{_esc(sub)}</span></div>' for q, sub in b['items'])
+        cab = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return f'<div class="ic-card">{cab}{itens}</div>'
+
+    if k == 'phrases':
+        # A frase e o TRABALHO que ela faz, lado a lado. 6o campo opcional = audio.
+        linhas = ''
+        for it in b['items']:
+            frase, funcao = it[0], it[1]
+            fala = it[2] if len(it) > 2 and it[2] else frase
+            linhas += (f'<div class="ic-phrase"><span class="ic-phrase-en">{_esc(frase)}</span>'
+                       f'<span class="ic-phrase-fn">{_esc(funcao)}</span>'
+                       f'<button class="audio-btn" data-speak="{_esc(fala)}" '
+                       f'onclick="speakText(this.dataset.speak,this)">Listen</button></div>')
+        cab = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return f'<div class="ic-card">{cab}{linhas}</div>'
+
+    if k == 'reveal':
+        # O componente mais usado dos slides do artefato (108). Cada item: frente (o que a
+        # aluna le e responde em voz alta), verso (o que ela confere depois de arriscar), e
+        # status OPCIONAL — essencial (sem tag), condicional ou extensao.
+        #
+        # TOGGLE inline, sem funcao nomeada: `this.classList.toggle` nao precisa de nada no
+        # shell e nao acrescenta superficie ao GATE 18. E toggle, nao one-way (REGRA 27.E).
+        STATUS = {'essencial': ('', ''), 'condicional': (' ic-cond', 'Conditional'),
+                  'extensao': (' ic-ext', 'Extension')}
+        itens = ''
+        for it in b['items']:
+            frente, verso = it[0], it[1]
+            st = it[2] if len(it) > 2 else 'essencial'
+            assert st in STATUS, (
+                f'reveal: status "{st}" invalido — use essencial, condicional ou extensao '
+                f'(Diretrizes: o status tem de aparecer na TELA, nao so no procedimento)')
+            cls, rot = STATUS[st]
+            tag = f'<span class="ic-tag">{rot}</span>' if rot else ''
+            dica = f'<span class="ic-r-hint">{_esc(b.get("dica", "click to reveal"))}</span>'
+            itens += (f'<div class="ic-reveal{cls}" onclick="this.classList.toggle(\'ic-on\')">'
+                      f'{tag}<div class="ic-r-front">{_esc(frente)}{dica}</div>'
+                      f'<div class="ic-r-back">{_esc(verso)}</div></div>')
+        cabecalho = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+        sub = f'<p class="ic-sub">{_esc(b["sub"])}</p>' if b.get('sub') else ''
+        return f'<div class="ic-card">{cabecalho}{sub}{itens}</div>'
+
+    if k == 'selfassess':
+        # Portada do artefato, que a traz no fecho das QUATRO aulas. NAO mede aprendizagem —
+        # registra percepcao. O valor esta na DISTANCIA entre o que ela marca e o que
+        # apareceu na aula; e por isso que o normativo separa "autoavaliacao de confianca"
+        # de "checklist de realizacao".
+        escala = b.get('escala', ['Not yet', 'Getting there', 'Comfortable', 'Confident'])
+        for r in escala:
+            assert not re.search(r'[ãõçáéíóúâêô]', r), (
+                f'selfassess: rotulo "{r}" tem acento — a tela do aluno e em ingles a partir '
+                f'de A2 (REGRA 13). Os rotulos em PT do artefato sao do pre-class, outra '
+                f'superficie e outro nivel.')
+        linhas = ''
+        for i, q in enumerate(b['items']):
+            botoes = ''.join(
+                f'<button class="ic-self-b" data-v="{v}" onclick="icSelfPick(this)">{_esc(r)}</button>'
+                for v, r in enumerate(escala))
+            linhas += (f'<div class="ic-self-row" data-i="{i}"><div class="ic-self-q">{_esc(q)}</div>'
+                       f'<div class="ic-self-opts">{botoes}</div></div>')
+        estado = json.dumps([None] * len(b['items']))
+        cabecalho = f'<div class="ic-card-h3">{_esc(b.get("title", "How confident do you feel right now?"))}</div>'
+        sub = f'<p class="ic-sub">{_esc(b["sub"])}</p>' if b.get('sub') else ''
+        return (f'<div class="ic-card"><div class="ic-self" data-state=\'{estado}\'>'
+                f'{cabecalho}{sub}{linhas}<div class="ic-self-out"></div></div></div>')
+
+    if k == 'sorting':
+        cols = b['cols']
+        assert len(cols) >= 3, 'sorting: precisa de cols[0] (partida) + 2 categorias no minimo'
+        items = b['items']
+        for texto, certa in items:
+            assert 1 <= certa < len(cols), (
+                f'sorting: "{texto[:40]}" aponta para a coluna {certa}; '
+                f'0 e a caixa de partida e nao pode ser gabarito')
+        dados = json.dumps([{'t': t, 'a': a} for t, a in items], ensure_ascii=False)
+        estado = json.dumps([0] * len(items))
+        cabecalho = f'<div class="ic-h">{_esc(b["title"])}</div>' if b.get('title') else ''
+        return (f'<div class="ic-sort" data-cols=\'{json.dumps(cols, ensure_ascii=False)}\' '
+                f'data-items=\'{dados}\' data-state=\'{estado}\'>{cabecalho}'
+                f'<div class="ic-sortbox"></div><div class="ic-sortout"></div>'
+                f'<div class="ic-acts"><button class="ic-btn" onclick="icSortCheck(this)">Check</button>'
+                f'<button class="ic-btn ic-btn-ghost" onclick="icSortReset(this)">Reset</button></div></div>')
+
     if k == 'matching':
         # O bloco e CLICAVEL: cada palavra carrega no data-match a letra da definicao
         # certa, e o icPickMatch() do shell resolve o par. Duas listas sem gabarito nao
@@ -319,7 +601,15 @@ def render_block(b):
             ch += (f'<div class="ic-choice" data-right="{right}" onclick="icPickGist(this)">'
                    f'<span class="ic-opt">{_esc(c[0])}</span><span>{_esc(c[1])}</span>'
                    f'<span class="ic-badge">&#10003; Main idea</span></div>')
-        return f'<div class="ic-card"><div class="ic-card-h3">{_esc(b["prompt"])}</div><div class="ic-choices">{ch}</div></div>'
+        # RACIONAL opcional: por que aquela e a resposta, e por que a errada e tentadora.
+        # Nasce ESCONDIDO — revelar antes de a aluna arriscar transforma o exercicio em
+        # leitura. Sem o campo, o bloco sai identico ao de antes.
+        why = ''
+        if b.get('why'):
+            why = (f'<div class="ic-why">{_esc(b["why"])}</div>'
+                   f'<button class="ic-btn ic-btn-ghost" onclick="icWhyShow(this)">Why?</button>')
+        return (f'<div class="ic-card"><div class="ic-card-h3">{_esc(b["prompt"])}</div>'
+                f'<div class="ic-choices">{ch}</div>{why}</div>')
     if k == 'tf':
         rows = ''
         for i, it in enumerate(b['items']):
@@ -336,8 +626,16 @@ def render_block(b):
         rows = ''
         for it in b['items']:
             strong = ' ic-strong' if (len(it) > 4 and it[4] == 'strong') else ''
+            # 6o elemento OPCIONAL = a frase a ouvir. Item com 5 elementos sai IDENTICO ao
+            # de antes (aula existente nao muda). O texto vai no ATRIBUTO, nunca dentro da
+            # string JS — REGRA 7.1: apostrofo do ingles mata o handler inline.
+            fala = it[5] if len(it) > 5 and it[5] else None
+            botao = ('' if not fala else
+                     f'<button class="audio-btn" data-speak="{_esc(fala)}" '
+                     f'onclick="speakText(this.dataset.speak,this)">Listen</button>')
             rows += (f'<div class="ic-lf"><span class="ic-lbl">{_esc(it[0])}</span>'
-                     f'<span>{_esc(it[1])}<span class="ic-mod{strong}">{_esc(it[2])}</span>{_esc(it[3])}</span></div>')
+                     f'<span>{_esc(it[1])}<span class="ic-mod{strong}">{_esc(it[2])}</span>{_esc(it[3])}</span>'
+                     f'{botao}</div>')
         head = f'<div class="ic-card-h3"><span class="ic-tag">Analyse</span>{_esc(b.get("title", "Read the advice"))}</div>'
         return f'<div class="ic-card">{head}<div class="ic-lf-list">{rows}</div></div>'
     if k == 'modals':
@@ -980,6 +1278,30 @@ def inject_dialogue_audio(slides):
     return re.sub(r'<div class="dialogue-bubble[^"]*"[^>]*>(.*?)</div>', repl, slides, flags=re.S)
 
 
+def audio_da_call(cfg):
+    """Entradas de audio dos blocos kind=call. UMA FONTE: o mesmo bloco que vira markup
+    gera o manifesto, entao o arquivo que o player pede e o arquivo que o gen_audio grava.
+    Declarar nos dois lugares seria convite a divergir — e divergencia aqui e audio mudo."""
+    out = []
+    blocos = ((cfg.get('lesson') or {}).get('inclass_blocks') or {})
+    for lista in blocos.values():
+        for b in lista:
+            if b.get('kind') != 'call':
+                continue
+            cast = b['cast']
+            for i, (falante, texto) in enumerate(b['turnos']):
+                assert 0 <= falante < len(cast), (
+                    f'call: turno {i + 1} aponta para o falante {falante}, e o cast tem '
+                    f'{len(cast)}')
+                out.append(dict(text=texto, voice=cast[falante]['voz'],
+                                file=f'{b["prefixo"]}{i + 1:02d}.mp3'))
+    vistos = set()
+    for e in out:
+        assert e['file'] not in vistos, f'call: dois turnos gravariam {e["file"]}'
+        vistos.add(e['file'])
+    return out
+
+
 def extract_phrases(html):
     """(texto, voz_sugerida|None) em ordem de documento; data-voice na mesma linha vence.
 
@@ -1472,7 +1794,7 @@ def build_standalone(cfg, content_dir, manifest):
     # por decisao do coordenador (04/08/2026). O polimento cosmetico dele vivia aqui e foi
     # removido junto. Se o slide reaparecer num config, o GATE do validate_lesson barra.
 
-    s = read(os.path.join(PROF, f'{MODEL}-aula1.html'))
+    s = read(shell_path(cfg))
     s = base_swaps(s, cfg, n=n)
     s = re.sub(r'<title>[^<]*</title>', f'<title>{L["title_tag"]}</title>', s, count=1)
     s = re.sub(r'<h1>[^<]*</h1>', f'<h1>{cfg["student_name"]}</h1>', s, count=1)
@@ -1483,7 +1805,7 @@ def build_standalone(cfg, content_dir, manifest):
         for i, name in enumerate(L['phases'])) + '\n'
     s = replace_between(s, '<div class="phase-labels" id="phaseLabels">', '</div>', labels)
 
-    s = replace_between(s, '<div class="tab-content active" id="tab-inclass">', '<!-- ========== TAB 4',
+    s = replace_between(s, '<div class="tab-content active" id="tab-inclass">', FIM_DO_INCLASS,
                         inclass_menu([menu_card(cfg, 'enterSlideMode')]))
     s = replace_between(s, '<div class="slides-container" id="slidesContainer">', '</div><!-- /slides-container -->',
                         '\n' + slides + '\n')
@@ -1506,6 +1828,9 @@ def build_standalone(cfg, content_dir, manifest):
     for item in extra:
         assert item['voice'] in VOICES, f'extra_audio com voz desconhecida: {item["voice"]}'
         manifest.append(dict(text=item['text'], voice=item['voice'], file=item['file']))
+    for item in audio_da_call(cfg):
+        assert item['voice'] in VOICES, f'call com voz desconhecida: {item["voice"]}'
+        manifest.append(item)
 
     final_asserts(s, cfg, f'prof aula{n}')
     write(os.path.join(PROF, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(s, cfg))
@@ -1612,7 +1937,28 @@ def build_hub_new(cfg, content_dir, manifest):
     preclass = read(os.path.join(content_dir, 'preclass.html'))
     preclass = inject_kids_game(preclass, cfg)  # MODELO KIDS: mini-game Dino Tap (no-op p/ adulto)
     planning = read(os.path.join(content_dir, 'planning.html'))
-    complementary = normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg)
+    # ABAS DA ANATOMIA guided-discovery. Sao OPCIONAIS por arquivo: se o autor nao escreveu
+    # evidencias.html/syllabus.html, o painel fica com o texto de esqueleto do shell em vez
+    # de estourar. Mas a aba Evidencias e onde vive a ficha pos-aula, e sem ela as aulas
+    # 5-20 nao podem ser geradas — entao vale um aviso alto, nao um silencio.
+    evidencias = syllabus_tab = None
+    hub_html_ = read(hub_path(cfg))
+    if 'id="tab-evidencias"' in hub_html_:
+        pe = os.path.join(content_dir, 'evidencias.html')
+        if os.path.exists(pe):
+            evidencias = read(pe)
+        else:
+            print('  AVISO: anatomia tem aba Evidencias e nao ha evidencias.html — '
+                  'a ficha pos-aula fica vazia, e sem ela as aulas 5-20 nao saem.')
+    if 'id="tab-syllabus"' in hub_html_:
+        ps = os.path.join(content_dir, 'syllabus.html')
+        if os.path.exists(ps):
+            syllabus_tab = read(ps)
+    # Complementares so e LIDO se a anatomia do hub tiver a aba. Ler incondicionalmente
+    # obrigaria a existir um arquivo que nao tem onde entrar.
+    complementary = ''
+    if not sem_aba_complementares(read(hub_path(cfg))):
+        complementary = normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg)
 
     entries = assign_voices(extract_phrases(preclass), prefix='pc_', cfg=cfg)
     extra = L.get('extra_audio', [])
@@ -1622,7 +1968,7 @@ def build_hub_new(cfg, content_dir, manifest):
 
     card = menu_card(cfg, f'/professor/{cfg["slug"]}-aula{L["n"]}.html?autostart=1')
 
-    s = read(os.path.join(PROF, f'{MODEL}.html'))
+    s = read(hub_path(cfg))
     s = base_swaps(s, cfg)
     s = re.sub(r'<title>[^<]*</title>',
                f'<title>Professor View -- {cfg["student_name"]} | {cfg["program"]}</title>', s, count=1)
@@ -1630,20 +1976,28 @@ def build_hub_new(cfg, content_dir, manifest):
     s = patch_header(s, cfg, cfg.get('hub_subtitle', cfg['program']))
     s = replace_between(s, '<div class="tab-content active" id="tab-planning">', '</div><!-- /tab-planning -->', '\n' + planning + '\n')
     s = replace_between(s, '<div class="tab-content" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
-    s = replace_between(s, '<div class="tab-content" id="tab-inclass">', '<!-- ========== TAB 4', inclass_menu([card]))
-    s = replace_between(s, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
+    s = replace_between(s, '<div class="tab-content" id="tab-inclass">', FIM_DO_INCLASS, inclass_menu([card]))
+    if not sem_aba_complementares(s):
+        s = replace_between(s, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
+    if evidencias:
+        s = replace_between(s, '<div class="tab-content" id="tab-evidencias">',
+                            '</div><!-- /tab-evidencias -->', '\n' + evidencias + '\n')
+    if syllabus_tab:
+        s = replace_between(s, '<div class="tab-content" id="tab-syllabus">',
+                            '</div><!-- /tab-syllabus -->', '\n' + syllabus_tab + '\n')
     s = re.sub(r'var totalLessons\s*=\s*\d+', 'var totalLessons=1', s)
     s = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, s, count=1, flags=re.S)
     final_asserts(s, cfg, 'hub prof', is_hub=True)
     write(os.path.join(PROF, f'{cfg["slug"]}.html'), apply_ui_strings(s, cfg))
 
-    a = read(os.path.join(ALUNO, f'{MODEL}.html'))
+    a = read(hub_path(cfg, aluno=True))
     a = base_swaps(a, cfg)
     a = re.sub(r'<title>[^<]*</title>', f'<title>{cfg["student_name"]} | {cfg["program"]} -- Alumni</title>', a, count=1)
     a = re.sub(r'<h1>[^<]*</h1>', f'<h1>{cfg["student_name"]}</h1>', a, count=1)
     a = patch_header(a, cfg, cfg.get('hub_subtitle', cfg['program']))
     a = replace_between(a, '<div class="tab-content active" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
-    a = replace_between(a, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
+    if not sem_aba_complementares(a):
+        a = replace_between(a, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
     a = re.sub(r'var totalLessons\s*=\s*\d+', 'var totalLessons=1', a)
     a = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, a, count=1, flags=re.S)
     final_asserts(a, cfg, 'hub aluno', is_hub=True)
@@ -1680,15 +2034,28 @@ def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
         parts.append(pc + '\n\n')
     # COMPLEMENTARES da aula: obrigatório (classe de bug do PR #106 — aula sem
     # complementares no hub). data-media deve usar prefixo l{N}- (validador cobra).
+    #
+    # EXCECAO: molde cuja ANATOMIA nao tem a aba. O shell decide — se o arquivo de shell
+    # daquele slug nao traz `id="tab-complementary"`, exigir o bloco seria exigir conteudo
+    # para uma aba que nao existe, e ele acabaria injetado no vazio. Nao e afrouxamento: a
+    # obrigacao continua inteira para todo molde que TEM a aba (que e todo o resto hoje).
+    # Ver a secao 0 do RULEBOOK-PEDAGOGICO: obrigatoriedade e propriedade do molde.
+    tem_aba_complementares = 'id="tab-complementary"' in read(shell_path(cfg))
     comp_path = os.path.join(content_dir, 'complementary.html')
-    assert os.path.exists(comp_path), (
-        f'complementary.html FALTANDO em {os.path.relpath(content_dir, ROOT)} — '
-        f'toda aula precisa do bloco de Complementares (data-media="l{L["n"]}-...")')
-    comp = normalize_complementary(read(comp_path), cfg)
-    assert f'data-media="l{L["n"]}-' in comp, (
-        f'complementary.html sem data-media="l{L["n"]}-..." — use o prefixo da aula')
-    parts.append(f'<!-- 3b. COMPLEMENTARES da aula {L["n"]} (inserir na tab-complementary, prof E aluno) -->\n')
-    parts.append(comp + '\n\n')
+    if not tem_aba_complementares:
+        assert not os.path.exists(comp_path), (
+            f'{os.path.relpath(content_dir, ROOT)} tem complementary.html, mas o shell de '
+            f'"{cfg.get("slug")}" nao tem a aba Complementares. O bloco nao teria onde '
+            f'entrar — apague o arquivo ou use um shell que tenha a aba.')
+    else:
+        assert os.path.exists(comp_path), (
+            f'complementary.html FALTANDO em {os.path.relpath(content_dir, ROOT)} — '
+            f'toda aula precisa do bloco de Complementares (data-media="l{L["n"]}-...")')
+        comp = normalize_complementary(read(comp_path), cfg)
+        assert f'data-media="l{L["n"]}-' in comp, (
+            f'complementary.html sem data-media="l{L["n"]}-..." — use o prefixo da aula')
+        parts.append(f'<!-- 3b. COMPLEMENTARES da aula {L["n"]} (inserir na tab-complementary, prof E aluno) -->\n')
+        parts.append(comp + '\n\n')
     parts.append('<!-- 4. ENTRADAS de audioMap (mesclar no audioMap do hub, prof E aluno) -->\n<script>\n')
     for text, meta in {**slide_entries, **pc_entries}.items():
         parts.append(f'  {json.dumps(text, ensure_ascii=False)}: {json.dumps(audio_base + meta["file"])},\n')

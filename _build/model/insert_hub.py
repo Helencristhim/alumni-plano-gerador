@@ -347,6 +347,12 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     #    A âncora é a CLASSE/ID da aba (id="tab-inclass"), NUNCA o TEXTO do título:
     #    o título é PROSA e mudou ("Selecione a Aula" -> "Select your Lesson", REGRA 13),
     #    o que fazia esta busca falhar EM SILÊNCIO e o card do menu sumir do hub.
+    # O MARCADOR DE FIM E GENERICO. Era a string literal "TAB 4", o que amarrava o insert a
+    # UMA ordem de abas: na anatomia guided-discovery o IN CLASS e a aba 4 e quem vem depois
+    # e a 5, entao a ancora nunca casava e o card do menu nao entrava — a aula nascia ORFA.
+    # O que importa e "o proximo comentario de aba", nao o numero dele.
+    FIM_ABA = '<!-- ========== TAB '
+    #
     #    AULA MONOLITICA NAO GANHA CARD. O card aponta para o standalone
     #    ({slug}-aula{N}.html). Em hub monolitico os slides moram DENTRO do hub e o menu
     #    abre por enterSlideMode(N) — o arquivo nao existe. Sem esta guarda, curar uma
@@ -358,8 +364,8 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
                      f'{slug}-aula{n}.html'))
     if not tem_standalone:
         pulados.append('card-menu(aula monolitica: abre por enterSlideMode)')
-    elif f'{slug}-aula{n}.html' not in s.split('<!-- ========== TAB 4')[0]:
-        mlist = re.search(r'(id="tab-inclass".*?)(\n\s*</div>\s*</div>\s*\n\s*<!-- ========== TAB 4)',
+    elif f'{slug}-aula{n}.html' not in s.split(FIM_ABA)[0]:
+        mlist = re.search(r'(id="tab-inclass".*?)(\n\s*</div>\s*</div>\s*\n\s*<!-- ========== TAB )',
                           s, flags=re.S)
         if not mlist and not is_aluno and 'id="tab-inclass"' in s:
             # HUB LEGADO: a âncora `<!-- ========== TAB 4` é convenção do hub que o builder
@@ -400,12 +406,19 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
             raise AssertionError(f'{os.path.basename(hub_path)}: aba IN CLASS nao encontrada — '
                                  'card do menu NAO foi inserido (ancora id="tab-inclass")')
 
-    # 4. Complementares lN- — em POSIÇÃO NUMÉRICA dentro da aba Complementares.
-    #    Mesma correção que o accordion (#2) e o card do menu (#3) já tinham: emendar
-    #    "no fim da aba" só está certo quando a aula é a MAIS ALTA. Ao curar uma aula do
-    #    meio (a 5 num hub que vai até a 24), o bloco caía depois da 24 e a aluna via
-    #    "Aula 5" no pé da lista. Acha o 1º l{K} com K > n e insere ANTES dele.
-    if tem_comp:
+    # 4. Complementares lN-
+    #    SO em anatomia que TEM a aba. A guided-discovery nao tem (decisao do Dan,
+    #    06/08/2026), e ali o bloco nao teria onde entrar. Quem decide e a ANATOMIA
+    #    DECLARADA, nunca o sintoma "o hub nao tem a aba" — 9 hubs LEGADOS tambem nao
+    #    tem, e neles a ausencia e DEFEITO.
+    if not B.tem_aba_complementares(cfg):
+        pulados.append('complementares(anatomia sem a aba)')
+    #    Onde entra: em POSIÇÃO NUMÉRICA dentro da aba. Mesma correção que o accordion
+    #    (#2) e o card do menu (#3) já tinham: emendar "no fim da aba" só está certo
+    #    quando a aula é a MAIS ALTA. Ao curar uma aula do meio (a 5 num hub que vai até
+    #    a 24), o bloco caía depois da 24 e a aluna via "Aula 5" no pé da lista. Acha o
+    #    1º l{K} com K > n e insere ANTES dele.
+    elif tem_comp:
         pulados.append('complementares')
     else:
         comp = B.normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg).strip()
@@ -456,7 +469,13 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     all_n = [int(x) for x in re.findall(r'id="ex-lesson-(\d+)"', s)] + [n]
     s = re.sub(r'var totalLessons\s*=\s*\d+', f'var totalLessons={max(all_n)}', s)
 
-    assert f'id="ex-lesson-{n}"' in s and f'id="stamp{n}"' in s and f'data-media="l{n}-' in s
+    # A conferencia final exige TUDO que a anatomia daquele hub tem — nem mais, nem menos.
+    # O data-media so entra na conta quando a anatomia TEM a aba: senao esta linha
+    # reprovava o insert que ela mesma acabou de fazer corretamente.
+    assert f'id="ex-lesson-{n}"' in s, f'accordion do Pre-class ausente no hub (aula {n})'
+    assert f'id="stamp{n}"' in s, f'stamp ausente no hub (aula {n})'
+    if B.tem_aba_complementares(cfg):
+        assert f'data-media="l{n}-' in s, f'complementares ausentes no hub (aula {n})'
     assert is_aluno or not tem_standalone or f'{slug}-aula{n}.html' in s, \
         f'card do menu IN CLASS ausente no hub prof (aula {n})'
     # Diz o que ENTROU e o que já estava. Num hub meio inserido a diferença entre
