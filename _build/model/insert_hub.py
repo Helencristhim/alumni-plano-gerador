@@ -43,6 +43,31 @@ def write(p, s):
     print(f'  wrote {os.path.relpath(p, ROOT)} ({len(s)//1024} KB)')
 
 
+FIM_COMP = '</div><!-- /tab-complementary -->'
+
+
+def fim_tab_complementary(s):
+    """Índice do </div> que FECHA a aba Complementares, em hub SEM o marcador FIM_COMP.
+
+    O marcador é convenção do hub que o builder emite ("new"), e só 139 dos 1.670 hubs
+    do repo o têm — os anteriores ao modelo fecham a aba com um </div> mudo. Sem este
+    fallback o insert_hub abortava no assert final em TODO hub legado (mark-kazuyoshi,
+    aula 21), e a saída seria montar o hub à mão — exatamente o que a REGRA 20 proíbe.
+
+    Fecha-se pelo BALANÇO de <div> a partir de id="tab-complementary". Emendar "no fim
+    do arquivo" ou "depois do último media-card" jogaria o bloco FORA da aba, que é o
+    defeito ORPHAN/ESCAPE que o audit_hubs_struct existe para pegar.
+    """
+    m = re.search(r'<div[^>]*id="tab-complementary"[^>]*>', s)
+    assert m, 'aba Complementares não encontrada no hub (id="tab-complementary")'
+    depth = 1
+    for t in re.finditer(r'<div\b|</div\s*>', s[m.end():]):
+        depth += 1 if t.group(0).startswith('<div') else -1
+        if depth == 0:
+            return m.end() + t.start()
+    raise AssertionError('aba Complementares não fecha (<div> desbalanceada no hub)')
+
+
 def hub_audiomap_lines(cfg, content_dir):
     """pcN_ (frases do preclass, via builder) + extra_audio ([order-lN]) keyed."""
     audio_base = f'/audio/{cfg["slug"]}/'
@@ -279,7 +304,11 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     # 4. Complementares lN- — antes de </div><!-- /tab-complementary -->
     comp = B.normalize_complementary(read(os.path.join(content_dir, 'complementary.html')), cfg).strip()
     assert f'data-media="l{n}-' in comp, f'complementary.html sem data-media="l{n}-..."'
-    s = s.replace('</div><!-- /tab-complementary -->', '\n' + comp + '\n\n</div><!-- /tab-complementary -->', 1)
+    if FIM_COMP in s:
+        s = s.replace(FIM_COMP, '\n' + comp + '\n\n' + FIM_COMP, 1)
+    else:
+        fim = fim_tab_complementary(s)
+        s = s[:fim] + '\n' + comp + '\n\n' + s[fim:]
 
     # 5. audioMap: mescla pcN_/[order-lN] logo após "var audioMap = {"
     s = merge_audiomap(s, cfg, content_dir)
