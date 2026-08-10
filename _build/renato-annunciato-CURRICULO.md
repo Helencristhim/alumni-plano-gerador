@@ -111,6 +111,26 @@ gasta **uma vez** como espinha. Ao gerar a aula N, confira: *este fato já foi g
 
 ---
 
+## Duas listas de 80 aulas — qual manda
+
+O `novo_aluno.py --gerar-programa` também gravou um programa de 80 aulas em
+`perfis.curriculo` (Supabase). Ele **não** foi descartado: é o insumo que a professora vê
+no Perfil 360 e a semente dos blocos 2 em diante.
+
+**Onde os dois divergirem, manda ESTE documento** — porque é ele que o material
+implementa. O inventário gramatical dos dois é praticamente o mesmo (present simple ×
+continuous, present perfect × past simple, condicionais, passiva, relativas,
+gerúndio/infinitivo, modais); o que muda é a **ordem** e a **espinha** de cada aula. Aqui
+a ordem obedece à regra do fato único e ao evento âncora de outubro; lá ela obedece só à
+progressão gramatical.
+
+Duas consequências práticas: (1) a linha N da tabela do Planejamento é a **deste**
+documento; (2) ao gerar a aula 11 em diante, cruze os dois — o programa do Supabase é bom
+para achar temas, mas o `grammar_point` só vale se ainda não tiver sido gasto aqui (o
+`check_grammar_progression.py` barra a repetição de qualquer forma).
+
+---
+
 ## Progressão gramatical (REGRA 22 — nada se repete como conteúdo novo)
 
 Cada aula declara seu `grammar_point` canônico no config, e o
