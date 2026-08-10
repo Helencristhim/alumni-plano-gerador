@@ -293,6 +293,10 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
         label = (cfg['lesson'].get('menu_title', '').split(' -- ')[0]
                  .split(' — ')[0].strip()) or f'Lesson {n}'
         st = {'id': n, 'label': label, 'img': base.get('img', '')}
+    if f'id="stamp{n}"' in s:
+        pulados.append('stamp')
+    else:
+        feitos.append('stamp')
     if f'id="stamp{n}"' not in s:
         stamp_html = (f'<div class="stamp" id="stamp{n}" data-label="{st["label"]}" '
                       f"style=\"background-image:url('{st['img']}')\"></div>\n")
@@ -343,7 +347,18 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     #    A âncora é a CLASSE/ID da aba (id="tab-inclass"), NUNCA o TEXTO do título:
     #    o título é PROSA e mudou ("Selecione a Aula" -> "Select your Lesson", REGRA 13),
     #    o que fazia esta busca falhar EM SILÊNCIO e o card do menu sumir do hub.
-    if f'{slug}-aula{n}.html' not in s.split('<!-- ========== TAB 4')[0]:
+    #    AULA MONOLITICA NAO GANHA CARD. O card aponta para o standalone
+    #    ({slug}-aula{N}.html). Em hub monolitico os slides moram DENTRO do hub e o menu
+    #    abre por enterSlideMode(N) — o arquivo nao existe. Sem esta guarda, curar uma
+    #    aula desse tipo plantava um <a href> para 404, DUPLICADO com o card que ja esta
+    #    la. Medido em 10/08/2026: 8 das 9 aulas a consertar (rafael-gasparelli 6-10,
+    #    mark-kazuyoshi 5, andreia-heins 5, carolina-paludetto 5) sao monoliticas.
+    tem_standalone = os.path.exists(
+        os.path.join(ROOT, 'public', 'aluno' if is_aluno else 'professor',
+                     f'{slug}-aula{n}.html'))
+    if not tem_standalone:
+        pulados.append('card-menu(aula monolitica: abre por enterSlideMode)')
+    elif f'{slug}-aula{n}.html' not in s.split('<!-- ========== TAB 4')[0]:
         mlist = re.search(r'(id="tab-inclass".*?)(\n\s*</div>\s*</div>\s*\n\s*<!-- ========== TAB 4)',
                           s, flags=re.S)
         if not mlist and not is_aluno and 'id="tab-inclass"' in s:
@@ -403,11 +418,23 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
                                                    s[ini_comp:fim_comp_idx])
                     if int(m.group(1)) > n]
         if depois_c:
-            # Sobe até o começo do wrapper daquele card — emendar no meio da <div>
-            # partiria o HTML ao meio.
+            # Sobe ACIMA do CABECALHO do grupo da aula K, nao so do card.
+            # A aba e uma sequencia de grupos:
+            #     <h4>Lesson K — ...</h4>
+            #     <div class="media-grid"> ...3 cards... </div>
+            # Parar no primeiro `media-card-wrapper` emendava DENTRO da media-grid da
+            # aula K: o <h4> da aula N virava uma celula do grid da aula K (que e
+            # grid-template-columns:repeat(auto-fill,minmax(280px,1fr))), aparecendo
+            # sob o titulo errado e com os 3 cards espremidos numa celula. Reproduzido
+            # nos 5 alunos em 10/08/2026.
             alvo = ini_comp + min(depois_c)
-            w = s.rfind('<div class="media-card-wrapper"', ini_comp, alvo)
-            ini = s.rfind('\n', ini_comp, w) + 1 if w > 0 else s.rfind('\n', ini_comp, alvo) + 1
+            # O mais EXTERNO que existir antes do card: <h4> do grupo, senao a
+            # media-grid, senao o proprio wrapper. Nesta ordem, sempre.
+            marco = next((k for k in (s.rfind('<h4', ini_comp, alvo),
+                                      s.rfind('<div class="media-grid"', ini_comp, alvo),
+                                      s.rfind('<div class="media-card-wrapper"', ini_comp, alvo))
+                          if k > 0), alvo)
+            ini = s.rfind('\n', ini_comp, marco) + 1
             s = s[:ini] + comp + '\n\n' + s[ini:]
         elif FIM_COMP in s:
             s = s.replace(FIM_COMP, '\n' + comp + '\n\n' + FIM_COMP, 1)
@@ -430,7 +457,8 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     s = re.sub(r'var totalLessons\s*=\s*\d+', f'var totalLessons={max(all_n)}', s)
 
     assert f'id="ex-lesson-{n}"' in s and f'id="stamp{n}"' in s and f'data-media="l{n}-' in s
-    assert is_aluno or f'{slug}-aula{n}.html' in s, f'card do menu IN CLASS ausente no hub prof (aula {n})'
+    assert is_aluno or not tem_standalone or f'{slug}-aula{n}.html' in s, \
+        f'card do menu IN CLASS ausente no hub prof (aula {n})'
     # Diz o que ENTROU e o que já estava. Num hub meio inserido a diferença entre
     # "curou" e "não fez nada" é exatamente isto — e antes não aparecia em lugar nenhum.
     if feitos or pulados:
