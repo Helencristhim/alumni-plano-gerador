@@ -1827,7 +1827,12 @@ def inject_kids_images(s):
 # Palavras "tappable": concretas, com imagem NITIDA e nao-ambigua na lib kids. Adjetivo
 # relacional (big/small) e cor (green) NAO entram — no game "toque a figura" a imagem
 # vira ambigua (big.png e small.png sao quase iguais). Ver [[kids-image-library]].
-TAPPABLE_KIDS = {'dinosaur', 'tree', 'rocket', 'star', 'moon', 'planet', 'cat', 'dog', 'run'}
+TAPPABLE_KIDS = {'dinosaur', 'tree', 'rocket', 'star', 'moon', 'planet', 'cat', 'dog', 'run',
+                 # objetos concretos INTEIROS, nitidos como silhueta no jogo de tocar.
+                 # NAO entram: parte de corpo (wings/claws/tail/scales), lugar (cave),
+                 # abstracao (shift/heavy) e acao com pessoa (lift/ride/carry) — no
+                 # 'toque a figura' elas viram adivinhacao. Ver assets/kids/README.md.
+                 'brick', 'wheel', 'tower', 'bridge', 'street', 'piece', 'battery', 'fix'}
 
 
 def inject_kids_game(preclass, cfg):
