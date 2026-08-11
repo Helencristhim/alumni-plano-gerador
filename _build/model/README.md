@@ -52,6 +52,44 @@ FUNCAO de cada etapa (slides 8-11), nao o nome. A soma dos minutos tem de fechar
 `"phases": ["...", "..."]` (so nomes, sem minutos) e a forma antiga e continua valendo — e o
 que a anatomia imersivo usa, onde a barra e de CAPITULOS da narrativa.
 
+## O CICLO do aluno (anatomia guided-discovery)
+
+Alem dos arquivos da AULA, o aluno do Private Black Adults tem tres arquivos de CICLO em
+`_build/{slug}/`:
+
+| arquivo | o que e | quem le |
+|---|---|---|
+| `PERFIL-360.md` | os 14 campos estruturais da consultoria (docx §1.1) | pessoa |
+| `syllabus.json` | as N aulas do ciclo com os **10 campos do docx §3.1** + a **ficha de especificacao** da fase 1 do prompt controlador | builder (monta a aba "Syllabus") e GATE 24 |
+| `estado.json` | o estado pedagogico acumulativo (docx §5), inclusive `mecanicas_gastas` | builder (escreve) e GATE 24 |
+
+**O builder emite a aba Syllabus a partir do JSON.** Escrita a mao, uma tabela de 20 linhas
+x 10 campos e uma tabela que ninguem mantem: em 11/08/2026 a aba do molde tinha 135 bytes
+("Syllabus do ciclo.") e ZERO aula, enquanto as 20 viviam num `.md` que a interface nao
+abre. Aluno sem `syllabus.json` segue no caminho antigo (`syllabus.html` a mao).
+
+**O builder escreve `mecanicas_gastas` a cada build.** Ele MEDE os `kind` da aula, traduz
+para o vocabulario do banco de mecanicas (03 §4) pela tabela `MECANICA_POR_KIND`, e cruza
+com o que o syllabus declarou. Mecanica usada e nao declarada, ou declarada e nao usada,
+reprova no GATE 24 — salvo as marcadas `sem_widget` (role-play, retask, decisao de caso
+acontecem na CONDUCAO, nao num componente).
+
+### O relatorio de validacao (saida C do prompt controlador)
+
+```
+python3 scripts/relatorio_validacao.py {slug} --escreve   # grava _build/{slug}/VALIDACAO.md
+```
+
+Emite a matriz por camada do 03 §8 com PASSOU / PARCIAL / FALHOU / NAO VERIFICADO **e a
+evidencia**. A regra que ele instala: **PASSOU so sai quando um gate concreto rodou e voltou
+zero**; camada sem trava sai NAO VERIFICADO com o nome de quem tem de olhar. Nao ha caminho
+por onde uma intencao vire PASSOU — e exatamente o GATE DE ENTREGA do 04 ("nao declare
+'validado' com base na intencao de edicao").
+
+Hoje ficam sem trava automatica, e aparecem assim em todo relatorio: **Factual** (fonte,
+data, estatuto), **Coerencia interna** (a instrucao da tela contra a nota e o gabarito) e a
+**fronteira Grammar x ESP**.
+
 ## Fluxo por aula
 
 ```
