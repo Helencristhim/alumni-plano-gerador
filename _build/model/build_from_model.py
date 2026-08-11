@@ -64,6 +64,7 @@ SAÍDAS:
 AULAS PASSADAS NÃO SÃO TOCADAS: o builder só escreve os arquivos da aula nova
 (e o hub apenas no modo "new", de aluno que ainda não tem hub).
 """
+import glob
 import hashlib
 import json
 import os
@@ -108,7 +109,7 @@ def tem_aba_complementares(cfg):
     silenciou os 33 defeitos deles de uma vez (o GATE 8 pegou: -17 -> -50). Anatomia nao
     declarada => comportamento do legado (a aba existe), que e o default seguro.
     """
-    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    anat = anatomia(cfg)
     abas = ANATOMIAS_DECLARADAS.get(anat, {}).get('abas')
     return 'complementary' in abas if abas else True
 
@@ -148,7 +149,7 @@ HUBS = {
 
 def hub_path(cfg, aluno=False):
     """De qual arquivo sai o HUB. None => o hub publicado da anatomia imersivo."""
-    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    anat = anatomia(cfg)
     alvo = HUBS.get(anat)
     if alvo is None:
         base = ALUNO if aluno else PROF
@@ -177,6 +178,84 @@ ANATOMIA_POR_SLUG = {
     'stephanie-vicente': 'guided-discovery',
 }
 
+# Apelidos do config: o que a pessoa escreve em `"molde"` -> a anatomia interna.
+MOLDES = {
+    'helen-mendes': 'imersivo',
+    'imersivo': 'imersivo',
+    'stephanie': 'guided-discovery',
+    'stephanie-vicente': 'guided-discovery',
+    'guided-discovery': 'guided-discovery',
+}
+
+
+def _molde_do_material_ja_publicado(slug):
+    """A anatomia que o aluno JA usa, lida da aula dele — ou None se ele nao tem aula.
+
+    Aluno com material no ar nao tem escolha a fazer: a forma dele ja esta decidida, e
+    perguntar de novo so quebraria todo rebuild do roster (e o CI junto). A deteccao e
+    por MECANISMO, nao por nome de arquivo: cada shell define uma funcao que o outro nao
+    tem, e e isso que separa os dois de verdade.
+    """
+    if not slug:
+        return None
+    for pasta in (PROF, ALUNO):
+        for nome in sorted(glob.glob(os.path.join(pasta, f'{slug}-aula*.html'))):
+            try:
+                with open(nome, encoding='utf-8') as fh:
+                    h = fh.read()
+            except OSError:
+                continue
+            if 'function icPick(' in h:
+                return 'guided-discovery'
+            if 'function icPickGist(' in h:
+                return 'imersivo'
+    return None
+
+
+def anatomia(cfg):
+    """A anatomia desta aula. RESOLVE, nao interroga.
+
+    Ordem: `molde` no config > anatomia fixa no codigo (modelo/stephanie) > a que o
+    material ja publicado do aluno usa > imersivo. Quem INTERROGA e exige_molde(), no
+    ponto do build — separar as duas coisas e o que impede uma ferramenta que so
+    pergunta "de qual shell isso sai?" (GATE 18) de morrer por falta de uma chave.
+    """
+    fixo = ANATOMIA_POR_SLUG.get(cfg.get('slug'))
+    if cfg.get('slug') == MODEL:
+        fixo = 'imersivo'
+    m = cfg.get('molde')
+    if m:
+        if m not in MOLDES:
+            raise SystemExit(f'molde "{m}" nao existe. Use: ' + ', '.join(sorted(set(MOLDES))))
+        anat = MOLDES[m]
+        if fixo and fixo != anat:
+            raise SystemExit(
+                f'o slug {cfg.get("slug")} e da anatomia "{fixo}", mas o config pediu "{m}" ({anat}). '
+                f'Trocar o molde de um aluno com aula no ar reescreve a forma dela — se e isso '
+                f'mesmo, mude o ANATOMIA_POR_SLUG junto, de proposito.')
+        return anat
+    return fixo or _molde_do_material_ja_publicado(cfg.get('slug')) or 'imersivo'
+
+
+def exige_molde(cfg):
+    """ANTES DE GERAR, o molde tem de estar decidido (ordem do Dan, 11/08/2026):
+    "precisamos de um jeito de ANTES DE TUDO decidir se vai ser modelo helen mendes ou
+    modelo stephanie".
+
+    So interroga quem tem escolha de verdade: aluno NOVO, sem anatomia fixa no codigo e
+    sem material publicado de onde inferir. Foi ai que o default silencioso mordeu — a
+    aula 2 do Samuel nasceu com 13 handlers icPick() que o shell dela nao tem.
+    """
+    if cfg.get('molde') or ANATOMIA_POR_SLUG.get(cfg.get('slug')) or cfg.get('slug') == MODEL:
+        return
+    if _molde_do_material_ja_publicado(cfg.get('slug')):
+        return
+    raise SystemExit(
+        'ESCOLHA O MOLDE ANTES DE GERAR.\n'
+        '  Falta a chave "molde" em ' + str(cfg.get('slug')) + '/config.json.\n'
+        '  "molde": "helen-mendes"  -> o de sempre (shell public/professor/helen-mendes-aula1.html)\n'
+        '  "molde": "stephanie"     -> o molde novo (shell _build/model/shells/guided-discovery.html)\n'
+        '  Os dois NAO se misturam: cada um tem as suas funcoes JS e o seu vocabulario de classes.')
 
 def shell_path(cfg):
     """De QUAL arquivo sai o shell desta aula.
@@ -189,7 +268,7 @@ def shell_path(cfg):
     divergem nas funcoes JS ou nas classes-mecanismo, e exige que toda diferenca legitima
     esteja declarada com motivo.
     """
-    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    anat = anatomia(cfg)
     pasta, arquivo = ANATOMIAS[anat]
     p = os.path.join(ROOT, pasta, arquivo)
     if not os.path.exists(p):
@@ -1642,12 +1721,69 @@ def base_swaps(s, cfg, n=None):
     return s
 
 
-def apply_ui_strings(s, cfg):
+# Rotulos do SHELL que ficam em portugues e que o ALUNO VE. A partir de A2 a tela dele
+# nao pode ter PT (REGRA 13), e isso vale para a moldura tanto quanto para o exercicio:
+# nao adianta o Pre-class estar impecavel em ingles se a aba dele se chama
+# "Complementares" e a barra diz "Progresso Geral". Fora daqui de proposito:
+# "Planejamento" e o data-teacher, que sao do PROFESSOR (a excecao do rulebook).
+UI_PT_QUE_O_ALUNO_VE = {
+    '>Velocidade:<': '>Speed:<',
+    '>Progresso Geral<': '>Overall Progress<',
+    '>Complementares<': '>Extras<',
+    '>Resetar todo o progresso<': '>Reset all progress<',
+    ">Aluno<": '>Student<',
+    ' Aulas</div>': ' Lessons</div>',
+    '<title>Aluno -- ': '<title>Student -- ',
+    'Materiais complementares dispon&#237;veis no arquivo principal':
+        'Your extra practice is in the main material',
+    'Materiais complementares disponíveis no arquivo principal':
+        'Your extra practice is in the main material',
+    'Planejamento completo dispon&#237;vel no arquivo principal':
+        'The full plan is in the main material',
+    'Pre-class completo dispon&#237;vel no arquivo principal':
+        'The full Pre-class is in the main material',
+    "confirm('Resetar todo o progresso?')": "confirm('Reset all progress?')",
+    'Resetar todo o progresso?': 'Reset all progress?',
+}
+
+
+# So no espelho do ALUNO. No material do PROFESSOR a aba continua "Planejamento": ela e
+# dele, e o PT ali e obrigatorio (REGRA 13). O aluno nao deveria nem ter esta aba — ate
+# o builder deixar de emiti-la no standalone, o minimo e ela nao falar portugues.
+UI_PT_SO_NO_ESPELHO_DO_ALUNO = {
+    '>Planejamento<': '>Plan<',
+}
+
+
+def nivel_cefr(cfg):
+    """O CEFR do aluno, lido do primeiro chip do header ('B2 (Upper-Intermediate)')."""
+    h = (cfg.get('header') or [''])[0]
+    m = re.search(r'\b([ABC][0-2])\b', re.sub(r'&[a-z]+;', '', h))
+    return m.group(1) if m else None
+
+
+def ui_strings_do_nivel(cfg):
+    """PT na moldura so ate A1. De A2 em diante, ingles — sem ninguem precisar lembrar.
+
+    O config continua podendo sobrescrever (o Helio, em espanhol, passa o dele e vence).
+    Nivel ausente => nao mexe: chutar idioma e pior que deixar como esta.
+    """
+    n = nivel_cefr(cfg)
+    if not n or n in ('A0', 'A1'):
+        return {}
+    return dict(UI_PT_QUE_O_ALUNO_VE)
+
+
+def apply_ui_strings(s, cfg, aluno=False):
     """OPT-IN i18n: troca micro-strings de UI do shell (cravadas em inglês/PT no JS e nas
     tabs compartilhadas) por traduções vindas do config. Só roda se cfg tiver 'ui_strings' —
     alunos de inglês não passam essa chave, então o caminho deles fica IDÊNTICO. Substituição
     exata de substring; aplicar SEMPRE por último (depois dos swaps aluno-específicos)."""
-    for en, tr in cfg.get('ui_strings', {}).items():
+    tabela = ui_strings_do_nivel(cfg)
+    if aluno and tabela:                       # tabela vazia = A0/A1, que fica em PT
+        tabela.update(UI_PT_SO_NO_ESPELHO_DO_ALUNO)
+    tabela.update(cfg.get('ui_strings', {}))   # o config sempre vence
+    for en, tr in tabela.items():
         s = s.replace(en, tr)
     return s
 
@@ -1696,7 +1832,35 @@ def inclass_menu(cards):
             '  <div style="display:flex;flex-direction:column;gap:1rem">\n' + '\n'.join(cards) + '\n  </div>\n</div>\n\n')
 
 
+def assert_handlers_do_molde(s, cfg, label):
+    """Todo handler inline referencia funcao que EXISTE no arquivo. Senao, aborta.
+
+    A TRAVA QUE FALTAVA (11/08/2026). Escolher o molde no config diz de qual SHELL sai o
+    JS; nada garantia que os BLOCOS emitidos falassem a lingua daquele shell. Quando o
+    render_block passou a emitir gist/tf no vocabulario do artefato -- com icPick() --, o
+    shell adulto (que tem icPickGist, nao icPick) continuou sendo usado, e a aula nasceu
+    com 13 botoes que nao fazem nada. HTML valido, console limpo em carga, nenhum gate
+    via: exatamente o perfil do incidente dos 324 botoes mortos (REGRA 7.1).
+
+    Aqui a pergunta e feita no unico lugar em que a resposta e barata: ANTES de escrever
+    o arquivo. O custo e um regex; o beneficio e que molde e bloco nunca mais saem
+    dessincronizados em silencio.
+    """
+    chamadas = set(re.findall(r'on(?:click|change)="\s*([A-Za-z_$][\w$]*)\s*\(', s))
+    definidas = set(re.findall(r'function\s+([A-Za-z_$][\w$]*)\s*\(', s))
+    # metodos nativos chamados no handler (this.classList.toggle, event.stopPropagation...)
+    nativas = {'speakText', 'this', 'event', 'window', 'document'}
+    mortas = sorted(f for f in chamadas - definidas - nativas if '.' not in f)
+    if mortas:
+        raise SystemExit(
+            f'{label}: o bloco emitido usa funcao que o molde "{cfg.get("molde")}" NAO tem: '
+            + ', '.join(f'{f}()' for f in mortas)
+            + '\n  O shell e o vocabulario dos blocos tem de ser do MESMO molde. '
+              'Ou troque o molde no config, ou emita o bloco na forma que este shell entende.')
+
+
 def final_asserts(s, cfg, label, is_hub=False):
+    assert_handlers_do_molde(s, cfg, label)
     low = s.lower()
     # A própria aluna MODELO (helen-mendes) é o único slug em que "helen" e a paleta
     # do modelo são LEGÍTIMOS no output — são o nome/paleta do aluno, não vazamento.
@@ -2208,7 +2372,7 @@ def build_standalone(cfg, content_dir, manifest):
                   f"window.location.href = '/aluno/{cfg['slug']}.html#inclass'")
     a = a.replace(f'{cfg["slug"]}-aula{n}-professor', f'{cfg["slug"]}-aula{n}-aluno')
     final_asserts(a, cfg, f'aluno aula{n}')
-    write(os.path.join(ALUNO, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(a, cfg))
+    write(os.path.join(ALUNO, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(a, cfg, aluno=True))
     # ESTADO ACUMULATIVO (docx §5): a aula escreve o que gastou. No-op para quem nao tem
     # _build/{slug}/estado.json + syllabus.json — nenhum aluno existente e afetado.
     registra_mecanicas_gastas(cfg)
@@ -2545,7 +2709,7 @@ def build_hub_new(cfg, content_dir, manifest):
     a = re.sub(r'var totalLessons\s*=\s*\d+', 'var totalLessons=1', a)
     a = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, a, count=1, flags=re.S)
     final_asserts(a, cfg, 'hub aluno', is_hub=True)
-    write(os.path.join(ALUNO, f'{cfg["slug"]}.html'), apply_ui_strings(a, cfg))
+    write(os.path.join(ALUNO, f'{cfg["slug"]}.html'), apply_ui_strings(a, cfg, aluno=True))
 
 
 def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
@@ -2616,6 +2780,7 @@ def main():
     cfg_path = os.path.abspath(sys.argv[1])
     content_dir = os.path.dirname(cfg_path)
     cfg = json.load(open(cfg_path, encoding='utf-8'))
+    exige_molde(cfg)
     # vozes da AULA = global + cfg['voices'] (eixo de sotaque por aluno). MESMA resolucao
     # do gen_audio.py e do validate_lesson.py.
     global VOICES
