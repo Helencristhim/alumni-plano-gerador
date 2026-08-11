@@ -88,6 +88,15 @@ def exercicios_presentes(corpo, banco):
     Exercício sem marcador não é detectável e nunca entra aqui: ver `verificavel`."""
     achados = set()
     for eid, e in banco.items():
+        # 1) data-kind: o carimbo que o builder poe no bloco. Preferido, porque diz o que a
+        #    peca E — a classe diz como ela se PARECE, e no vocabulario do artefato kinds
+        #    diferentes compartilham aparencia de proposito.
+        dk = e.get("data_kind")
+        if dk and re.search(r'data-kind="' + re.escape(dk) + r'"', corpo):
+            achados.add(eid)
+            continue
+        # 2) marcador de classe: continua valendo para o que vem do SHELL (origem "shell")
+        #    e para aula antiga, gerada antes do carimbo existir.
         for m in e["marcadores"]:
             if re.search(r'class="[^"]*\b' + re.escape(m) + r'\b', corpo):
                 achados.add(eid)

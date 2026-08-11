@@ -462,7 +462,7 @@ def _audio(fala, pequeno=True):
             f'onclick="speakText(this.dataset.speak,this)">&#9654;</button>')
 
 
-def render_block(b):
+def _render_block(b):
     """Emite o HTML de UM bloco, com as classes DO ARTEFATO.
 
     Fonte: _build/model/artefatos/erica-professor-view.html. Copia-se dele — mesmos nomes
@@ -802,6 +802,32 @@ def render_block(b):
         return f'{score}<div id="qfContainer" style="max-width:560px;margin:1rem auto 0">{cards}{nav}</div>'
 
     raise AssertionError(f'inclass_blocks: kind desconhecido "{k}"')
+
+
+def render_block(b):
+    """Emite o bloco e CARIMBA `data-kind` no primeiro elemento.
+
+    POR QUE O CARIMBO EXISTE. O banco de exercicios (public/data/exercicios.json) e o
+    GATE 12 identificavam cada exercicio por uma CLASSE EXCLUSIVA dele. Isso funcionava
+    enquanto cada kind tinha classe propria (.ic-tf, .ic-gist...). Ao copiar o vocabulario
+    do ARTEFATO, kinds diferentes passaram a compartilhar classe de proposito — um
+    true/false E um quiz-item la, com as mesmas .quiz-option/.rationale. Resultado: 12
+    exercicios ficaram indistinguiveis e o GATE 12 parou de conseguir cobra-los (a
+    verificabilidade caiu de 25/28 para 13/28).
+
+    Identificar componente pela APARENCIA e frágil por construcao — e a mesma familia de
+    erro que custou o dia 11/08/2026 (inventario lendo a reescrita, gate lendo comentario,
+    classe de imagem contada como player). O `data-kind` separa as duas perguntas: a CLASSE
+    diz como a peca se PARECE (e e a do artefato, sem excecao); o ATRIBUTO diz o que ela E.
+    Invisivel na tela, estavel, e nao toca o vocabulario copiado.
+    """
+    html = _render_block(b)
+    k = b['kind']
+    m = re.match(r'\s*<(\w+)([^>]*)>', html)
+    if not m or 'data-kind=' in html[:m.end()]:
+        return html
+    corte = m.start(2) if m.group(2) else m.end(1)
+    return html[:corte] + f' data-kind="{k}"' + html[corte:]
 
 
 def expand_inclass_blocks(slides, cfg):

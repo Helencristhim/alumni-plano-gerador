@@ -170,6 +170,44 @@ COMPONENTES_SHELL = [
 ]
 
 
+# ── O QUE CONTA COMO "CLASSE DE COMPONENTE" ──────────────────────────────────────────
+# Ate 11/08/2026 isto era um teste de PREFIXO: começa com ic- ou qf-. A suposicao era que
+# todo componente do builder tinha prefixo proprio — e ela morreu no dia em que o builder
+# passou a emitir as classes DO ARTEFATO (reveal-item, callout, quiz-option, blank-input...),
+# que e justamente o objetivo do molde. O gate reprovava o comportamento correto.
+#
+# A lista NAO e escrita a mao de proposito: lista a mao sai de sincronia no primeiro
+# componente novo, e essa dessincronia e a raiz dos defeitos que apareceram em 11/08 (o
+# inventario catalogando a reescrita, o gate lendo comentario como regra, uma classe de
+# imagem contada como player). A fonte e o proprio artefato — as classes que ele usa DENTRO
+# de .slide — mais os prefixos ic-/qf-, que seguem legitimos para as tres pecas paradas
+# (matching, call, quickfire) e para a anatomia imersivo.
+def _classes_do_artefato():
+    import importlib.util
+    cam = os.path.join(RAIZ, "scripts", "check_artefato_paridade.py")
+    if not os.path.exists(cam):
+        return set()
+    spec = importlib.util.spec_from_file_location("_paridade", cam)
+    mod = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(mod)
+        return {c for c in mod.classes_em_slide(mod.le(mod.ARTEFATO))
+                if not mod.IGNORAR.match(c)}
+    except Exception:
+        return set()
+
+
+_ART_CLS = None
+
+
+def classe_de_componente(c):
+    """A classe identifica um componente? (do artefato, ou com prefixo proprio)"""
+    global _ART_CLS
+    if _ART_CLS is None:
+        _ART_CLS = _classes_do_artefato()
+    return c.startswith("ic-") or c.startswith("qf-") or c in _ART_CLS
+
+
 def prova_shell():
     """Confere que cada componente do shell existe MESMO no molde. Se alguém 'limpar'
     uma classe do modelo, o banco para de oferecer o componente em vez de o editor
@@ -193,7 +231,11 @@ def kinds_do_builder():
     """Os `kind` que o render_block realmente trata, lidos do CÓDIGO-FONTE.
     Serve pra pegar o caso perigoso: builder ganhou exercício novo e o banco não sabe."""
     src = BUILDER.read_text(encoding="utf-8")
-    corpo = src[src.find("def render_block("):src.find("def expand_inclass_blocks(")]
+    # _render_block e o dispatch de verdade; render_block hoje e so o carimbo de
+    # data-kind por cima dele. Ler o wrapper daria zero kinds.
+    ini = src.find("def _render_block(")
+    assert ini >= 0, "nao achei _render_block no builder"
+    corpo = src[ini:src.find("def expand_inclass_blocks(")]
     achados = set()
     for m in re.finditer(r"if k(?:ind)?\s*==\s*'([a-z]+)'", corpo):
         achados.add(m.group(1))
@@ -220,8 +262,12 @@ def coleta():
     for eid, label, desc, grupo, interativo, amostra in AMOSTRAS:
         html = B.render_block(dict(amostra))  # PROVA: o builder emite mesmo.
         classes = sorted({c for attr in re.findall(r'class="([^"]+)"', html)
-                          for c in attr.split() if c.startswith("ic-") or c.startswith("qf-")})
-        assert classes, f'{eid}: o HTML emitido não trouxe nenhuma classe ic-/qf- ({html[:80]})'
+                          for c in attr.split() if classe_de_componente(c)})
+        assert classes, (
+            f'{eid}: o HTML emitido não trouxe nenhuma classe de componente reconhecível '
+            f'({html[:80]}). Reconhecidas: as do artefato usadas dentro de .slide, mais os '
+            f'prefixos ic-/qf-. Se o componente é novo, a classe dele precisa existir no '
+            f'artefato (_build/model/artefatos/) ou nascer com prefixo próprio.')
         exercicios.append({
             "id": eid,
             "origem": "bloco",
@@ -245,7 +291,13 @@ def coleta():
     for i, e in enumerate(exercicios):
         outras = set().union(*(c for j, c in enumerate(todas) if j != i))
         e["marcadores"] = sorted(todas[i] - outras)
-        e["verificavel"] = bool(e["marcadores"])
+        # data-kind: o carimbo que o builder poe no 1o elemento de cada bloco. E ele que
+        # torna o exercicio detectavel quando a CLASSE e compartilhada — e no vocabulario
+        # do artefato ela e, de proposito (um true/false E um quiz-item la). Sem isto, 12
+        # exercicios ficariam invisiveis para o GATE 12 so por copiarem a aparencia certa.
+        if e.get("origem") == "bloco":
+            e["data_kind"] = e["id"]
+        e["verificavel"] = bool(e["marcadores"]) or bool(e.get("data_kind"))
 
     return {
         "_fonte": "GERADO por scripts/gen_banco_exercicios.py — não editar à mão. Cada "
