@@ -1437,6 +1437,14 @@ def base_swaps(s, cfg, n=None):
     s = s.replace('Helen', cfg['first_name'])
     s = re.sub(r'window\.TOTAL_AULAS=\d+', f'window.TOTAL_AULAS={cfg["total_aulas"]}', s)
     s = re.sub(r'Business English (--|—) 30 Aulas', f'{cfg["program"]} \\1 {cfg["total_aulas"]} Aulas', s)
+    # O BADGE SE TROCA PELA ESTRUTURA, NAO PELO TEXTO DO MOLDE. A linha acima casa o
+    # texto do shell STANDALONE ("Business English -- 30 Aulas") e por isso nunca casou
+    # o do HUB, que diz outra coisa ("Travel English -- 48 Aulas"): todo hub gerado com
+    # hub:"new" saiu com o programa e o numero de aulas de OUTRA aluna no cabecalho.
+    # Ancorar na classe resolve os dois de uma vez e nao depende de qual frase o molde
+    # tem hoje. Idempotente: reescreve o conteudo do badge, seja ele qual for.
+    s = re.sub(r'(<div class="passport-badge">)[^<]*',
+               lambda m: f'{m.group(1)}{cfg["program"]} -- {cfg["total_aulas"]} Aulas', s)
     # PROVENIÊNCIA (rastreio modelo × nível — CONTRATOS-E-RASTREIO.md §3): toda aula nasce
     # declarando de qual MOLDE e NÍVEL herdou. É o que torna o retrofit ESCOPADO possível e
     # seguro num mundo com >1 modelo (um conserto no Modelo Kids nunca toca uma aula do
