@@ -330,7 +330,7 @@ origem do bug, nao o codigo.
 - **O gabarito NAO EXISTE no HTML** — nem escondido. `display:none` continua no DOM, a um
   Ctrl+U (ou um F12 da aluna) de distancia, e o professor compartilha a tela.
 - Label claro: `Before you listen` / `Before you read`. Titulo: "Listen **for this**".
-- `data-teacher` manda a professora LER AS PERGUNTAS EM VOZ ALTA COM A ALUNA antes de expor.
+- `data-teacher` manda o professor LER AS PERGUNTAS EM VOZ ALTA COM O ALUNO antes de expor.
 - ZERO portugues na tela (A2+). O `data-teacher` continua em PT (e do professor).
 
 **UMA FONTE, DOIS SLIDES.** Quem emite o slide de tarefa e o **builder**
@@ -1221,6 +1221,35 @@ Todo conteudo em ingles deve seguir American English: spelling, vocabulary, pron
 | **Teacher** | Termo GERAL para quem ensina | Escolas, cursos livres, aulas particulares, ensino fundamental/medio. Ex: "English teacher", "math teacher" |
 | **Professor** | Titulo ACADEMICO especifico | Ensino superior (universidades/faculdades), docentes com mestrado/doutorado, cargos de pesquisa. Ex: "Professor Crawford teaches constitutional law at Georgetown" |
 
+### O GENERO DO PROFESSOR NAO SE DEDUZ (REGRA BLOQUEANTE)
+
+> **PROIBIDO**: "a professora le as perguntas com a aluna" · "she will correct" · "peca para
+> ela repetir"
+> **OBRIGATORIO**: "o professor le as perguntas com o aluno" · "the teacher will correct"
+
+**A regra.** Em TODA instrucao ao professor (`data-teacher`, aba Planejamento, comentarios do
+codigo, documentacao), o professor e referido em forma **nao marcada**: `o professor`,
+`the teacher`, ou uma construcao que dispense o pronome (`quem conduz a aula`). NUNCA "a
+professora", NUNCA `she`/`her` para o teacher.
+
+**Por que.** Quem vai dar a aula nao esta decidido quando o material e gerado — a alocacao do
+professor acontece depois, e muda ao longo do contrato. Escrever "a professora" e **deduzir um
+fato que o material nao tem**, e o professor que abre o T e le sobre outra pessoa. Nao e
+detalhe de estilo: e informacao errada na instrucao de trabalho.
+
+**O ALUNO e o caso oposto — ali o genero E conhecido.** A aba PRIVATE traz o campo Sexo e a
+consultoria confirma. Entao "a aluna" no material de uma aluna mulher esta CERTO, e a voz do
+audio depende disso (REGRA 7: personagem feminino = Ellen). O que se proibe e deduzir o que
+nao se sabe, nao usar o que se sabe.
+
+**Historico.** Ate 11/08/2026 este documento MANDAVA o defeito, em quatro lugares — entre eles
+*"`data-teacher` manda a professora LER AS PERGUNTAS"*. O material obedecia. Mesmo padrao da
+REGRA 2.1: a regra era a origem do defeito, nao o codigo. Corrigido pelo Dan em 11/08/2026:
+*"algumas instrucoes estao deduzindo que o professor e mulher e nao necessariamente"*.
+
+**Legado:** 59 arquivos publicados carregam "professora". **NAO varrer** (REGRA 30) — o
+conserto vale para material NOVO e para o molde.
+
 **Regras para o material Alumni:**
 - Personagens que ENSINAM INGLES = **teacher** (Helen e a equipe Alumni sao teachers)
 - Personagens em UNIVERSIDADES = **professor** (Professor Crawford, Professor Torres)
@@ -1805,7 +1834,7 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 
 ### A. Saudacoes naturais NUNCA no slide
 - Cumprimentos como "Hi [aluno]! How are you today?" acontecem ao vivo, organicamente
-- NUNCA incluir saudacao inicial scriptada no warm-up — a professora ja vai ter feito isso
+- NUNCA incluir saudacao inicial scriptada no warm-up — o professor ja vai ter feito isso
 - O primeiro prompt do slide deve ir direto ao conteudo (ex: "In one word: what excites you most about...?")
 
 ### B. Transicoes entre temas precisam de ponte
@@ -1827,9 +1856,9 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 
 ### E. Elementos interativos DEVEM ser toggle
 - Vocab reveal cards: clicar abre, clicar de novo FECHA (classList.toggle, nao classList.add)
-- Se a professora clica sem querer, DEVE conseguir fechar imediatamente
+- Se o professor clica sem querer, DEVE conseguir fechar imediatamente
 - Aplica-se a: vocab cards, hint cards, qualquer elemento que revela resposta
-- NUNCA usar one-way reveal em elementos que a professora controla durante a aula
+- NUNCA usar one-way reveal em elementos que o professor controla durante a aula
 
 ### F. Comprehension testa o OUTRO, nao o aluno
 - Perguntas de "Did you understand?" apos dialogo devem ser sobre o INTERLOCUTOR (Sarah, receptionist, etc.)
