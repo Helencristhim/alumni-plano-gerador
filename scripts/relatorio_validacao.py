@@ -125,10 +125,12 @@ def camadas(slug):
     linhas.append(('Progressao', st, f'GATE 9: {e1} | REGRA 22: {e2}',
                    'nenhuma' if st == PASSOU else 'ver a saida do gate que falhou'))
 
-    # 4 — Ciclo (nao repeticao, estado acumulativo)
-    ok, e = roda(['scripts/check_syllabus_ciclo.py', slug])
-    linhas.append(('Ciclo', PASSOU if ok else FALHOU, f'GATE 24: {e}',
-                   'nenhuma' if ok else 'declarar no syllabus a mecanica que a aula usa'))
+    # 4 — Ciclo (nao repeticao, estado acumulativo, banco de mecanicas)
+    ok1, e1 = roda(['scripts/check_syllabus_ciclo.py', slug])
+    ok2, e2 = roda(['scripts/check_banco_mecanicas.py'] + rel) if rel else (True, '-')
+    st = PASSOU if ok1 and ok2 else FALHOU
+    linhas.append(('Ciclo', st, f'GATE 24: {e1} | GATE 27: {e2}',
+                   'nenhuma' if st == PASSOU else 'ver a saida do gate que falhou'))
 
     # 5 — Linguagem
     ok, e = (roda(['_build/model/validate_lesson.py'] + rel + [
@@ -199,7 +201,8 @@ ACEITE = [
     ('Grammar e ESP nao sistematizam extensamente o mesmo conteudo',
      'NAO VERIFICADO — nao ha gate; o campo "conteudo_excluido" da ficha declara a fronteira'),
     ('A rotacao altera a acao cognitiva, nao so o widget',
-     'GATE 24 (mecanica + funcao + operacao + controle registrados por aula)'),
+     'GATE 24 (mecanica + funcao + operacao + controle registrados por aula) + GATE 27 (a '
+     'mecanica usada existe no banco operativo)'),
     ('Tela, midia, nota, chave e acao do professor alinhadas',
      'GATE 26 na ACAO (a nota manda o que a tela permite); o CONTEUDO da resposta contra o '
      'gabarito segue humano'),

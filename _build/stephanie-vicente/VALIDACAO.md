@@ -10,9 +10,9 @@
 | Camada | Status | Evidencia | Acao |
 |---|---|---|---|
 | Entrada / perfil | **PASSOU** | PERFIL-360.md: 14 dos 14 campos estruturais em tabela | nenhuma |
-| Framework | **PASSOU** | GATE 11: ✅ OK — nenhum aluno real com framework experimental. \| GATE 16: GATE 16 OK — 364 arquivo(s) com contrato conferido, 3135 sem carimbo (legado, ignorado por regra) \| GATE 22: OK — espinha integra em 4 aula(s) guided-discovery (etapas declaradas, telas dentro delas, minutos fechando o contrato). | nenhuma |
+| Framework | **PASSOU** | GATE 11: ✅ OK — nenhum aluno real com framework experimental. \| GATE 16: GATE 16 OK — 372 arquivo(s) com contrato conferido, 3137 sem carimbo (legado, ignorado por regra) \| GATE 22: OK — espinha integra em 4 aula(s) guided-discovery (etapas declaradas, telas dentro delas, minutos fechando o contrato). | nenhuma |
 | Progressao | **PASSOU** | GATE 9: === REGRA 22 (gramática) OK === \| REGRA 22: === REGRA 22 OK === | nenhuma |
-| Ciclo | **PASSOU** | GATE 24: OK — 1 syllabus de ciclo: dez campos por aula, ficha de especificacao completa, mecanicas declaradas e batendo com o que a aula gastou. | nenhuma |
+| Ciclo | **PASSOU** | GATE 24: OK — 1 syllabus de ciclo: dez campos por aula, ficha de especificacao completa, mecanicas declaradas e batendo com o que a aula gastou. \| GATE 27: OK — 4 aula(s) guided-discovery: nenhuma usa mecanica que o artefato nao consegue montar, e nenhum syllabus promete uma. | nenhuma |
 | Linguagem | **PASSOU** | validate_lesson (inclui idioma por nivel, REGRA 13): === TODOS PASSARAM === | nenhuma |
 | Factual | **PARCIAL** | GATE 25 (fonte na tela · gabarito nao cita fonte ausente · simulado sem link de veiculo real): OK — 4 aula(s) guided-discovery: todo texto na tela tem fonte, e o gabarito so cita fonte que a aluna tem na frente. — PARCIAL porque conferir se a fonte REAL diz o que a aula afirma exige ler a fonte | leitura humana da parte que sobra: autoria, data e trecho de cada fonte |
 | Coerencia interna | **PARCIAL** | GATE 26 (a acao que a nota manda e executavel de onde o professor esta): OK — 4 aula(s) guided-discovery: toda acao que a nota manda e executavel de onde o professor esta. — PARCIAL porque o gate mede a ACAO, nao o conteudo da resposta contra o gabarito | leitura humana: a resposta esperada bate com o gabarito e com a tela? |
@@ -31,7 +31,7 @@
 | 4 | As quatro primeiras ensinam e produzem evidencias distribuidas | campo "evidencia_a_registrar" de cada aula (GATE 24 cobra a existencia, nao o merito) |
 | 5 | Cada framework preserva funcao, operacao e produto proprios | GATE 12 + GATE 22 |
 | 6 | Grammar e ESP nao sistematizam extensamente o mesmo conteudo | NAO VERIFICADO — nao ha gate; o campo "conteudo_excluido" da ficha declara a fronteira |
-| 7 | A rotacao altera a acao cognitiva, nao so o widget | GATE 24 (mecanica + funcao + operacao + controle registrados por aula) |
+| 7 | A rotacao altera a acao cognitiva, nao so o widget | GATE 24 (mecanica + funcao + operacao + controle registrados por aula) + GATE 27 (a mecanica usada existe no banco operativo) |
 | 8 | Tela, midia, nota, chave e acao do professor alinhadas | GATE 26 na ACAO (a nota manda o que a tela permite); o CONTEUDO da resposta contra o gabarito segue humano |
 | 9 | Predictions nao antecipam as respostas do input | NAO VERIFICADO — leitura humana do slide de predicao |
 | 10 | O audio principal e estavel; sintese variavel so como fallback declarado | GATE 19 + GATE 5 (MP3 real no manifest) |
