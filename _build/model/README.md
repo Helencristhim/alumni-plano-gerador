@@ -86,9 +86,24 @@ zero**; camada sem trava sai NAO VERIFICADO com o nome de quem tem de olhar. Nao
 por onde uma intencao vire PASSOU — e exatamente o GATE DE ENTREGA do 04 ("nao declare
 'validado' com base na intencao de edicao").
 
-Hoje ficam sem trava automatica, e aparecem assim em todo relatorio: **Factual** (fonte,
-data, estatuto), **Coerencia interna** (a instrucao da tela contra a nota e o gabarito) e a
-**fronteira Grammar x ESP**.
+As duas camadas que nasceram sem trava ganharam gate em 11/08/2026 e hoje saem **PARCIAL**,
+com o resto declarado como trabalho humano:
+
+- **GATE 25 (Factual)** — todo texto na tela declara fonte · o gabarito nao cita rotulo de
+  fonte que a tela nao mostra · material que o syllabus declara SIMULADO nao carrega link
+  externo de veiculo real. Nao prova que a fonte real diz o que a aula afirma.
+- **GATE 26 (Coerencia interna)** — nota com imperativo (tocar, ler o texto, preencher,
+  classificar, cronometrar) exige o mecanismo NA TELA ou uma indicacao de para onde ir.
+  Nao compara o conteudo da resposta esperada com o gabarito.
+
+Segue sem gate a **fronteira Grammar x ESP**: a ficha declara `conteudo_excluido`, mas quem
+le se as duas aulas de fato nao sistematizam a mesma coisa e uma pessoa.
+
+> **O ARTEFATO E O ORACULO DE UM GATE DE CONTEUDO.** A primeira versao das regras do GATE 26
+> disparou VINTE vezes nas 63 telas do artefato. Isso nunca prova defeito no artefato — prova
+> que a regra esta errada. As duas armadilhas foram polissemia ("leia o quadro" e o `brief`,
+> que estava na tela) e prosa que DESCREVE o percurso em vez de mandar fazer. Regra de
+> conteudo so entra depois de ficar muda no artefato inteiro.
 
 ## Fluxo por aula
 

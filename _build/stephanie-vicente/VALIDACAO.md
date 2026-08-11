@@ -10,12 +10,12 @@
 | Camada | Status | Evidencia | Acao |
 |---|---|---|---|
 | Entrada / perfil | **PASSOU** | PERFIL-360.md: 14 dos 14 campos estruturais em tabela | nenhuma |
-| Framework | **PASSOU** | GATE 11: ✅ OK — nenhum aluno real com framework experimental. \| GATE 16: GATE 16 OK — 356 arquivo(s) com contrato conferido, 3135 sem carimbo (legado, ignorado por regra) \| GATE 22: OK — espinha integra em 4 aula(s) guided-discovery (etapas declaradas, telas dentro delas, minutos fechando o contrato). | nenhuma |
+| Framework | **PASSOU** | GATE 11: ✅ OK — nenhum aluno real com framework experimental. \| GATE 16: GATE 16 OK — 364 arquivo(s) com contrato conferido, 3135 sem carimbo (legado, ignorado por regra) \| GATE 22: OK — espinha integra em 4 aula(s) guided-discovery (etapas declaradas, telas dentro delas, minutos fechando o contrato). | nenhuma |
 | Progressao | **PASSOU** | GATE 9: === REGRA 22 (gramática) OK === \| REGRA 22: === REGRA 22 OK === | nenhuma |
 | Ciclo | **PASSOU** | GATE 24: OK — 1 syllabus de ciclo: dez campos por aula, ficha de especificacao completa, mecanicas declaradas e batendo com o que a aula gastou. | nenhuma |
 | Linguagem | **PASSOU** | validate_lesson (inclui idioma por nivel, REGRA 13): === TODOS PASSARAM === | nenhuma |
-| Factual | **NAO VERIFICADO** | nao ha gate que confira autoria, data, trecho e estatuto das fontes (03 §6). check_media_links so cobre Complementares, que esta anatomia nao tem. | leitura humana: quem autora a aula confere fonte por fonte |
-| Coerencia interna | **NAO VERIFICADO** | nao ha gate que compare a instrucao da TELA com a nota do professor e o gabarito (03 §3, item 2.10 da corretiva: a nota mandava "toque o audio" numa aula de leitura). O GATE 23 cobre a EXISTENCIA e o TOM da nota, nunca o conteudo dela contra a tela. | leitura humana, slide a slide |
+| Factual | **PARCIAL** | GATE 25 (fonte na tela · gabarito nao cita fonte ausente · simulado sem link de veiculo real): OK — 4 aula(s) guided-discovery: todo texto na tela tem fonte, e o gabarito so cita fonte que a aluna tem na frente. — PARCIAL porque conferir se a fonte REAL diz o que a aula afirma exige ler a fonte | leitura humana da parte que sobra: autoria, data e trecho de cada fonte |
+| Coerencia interna | **PARCIAL** | GATE 26 (a acao que a nota manda e executavel de onde o professor esta): OK — 4 aula(s) guided-discovery: toda acao que a nota manda e executavel de onde o professor esta. — PARCIAL porque o gate mede a ACAO, nao o conteudo da resposta contra o gabarito | leitura humana: a resposta esperada bate com o gabarito e com a tela? |
 | Tempo | **PASSOU** | GATE 22 (a soma dos minutos das etapas fecha percurso_min=55): OK — espinha integra em 4 aula(s) guided-discovery (etapas declaradas, telas dentro delas, minutos fechando o contrato). | nenhuma |
 | Tecnica | **PASSOU** | integridade: gate vermelho por arquivo de OUTRO aluno (legado, REGRA 30) — nada deste material \| GATE 19: OK — nenhuma aula da anatomia nova sem audio. | nenhuma |
 | Artefato final | **PASSOU** | residuo de outro perfil/curso/versao: nenhum | nenhuma |
@@ -32,7 +32,7 @@
 | 5 | Cada framework preserva funcao, operacao e produto proprios | GATE 12 + GATE 22 |
 | 6 | Grammar e ESP nao sistematizam extensamente o mesmo conteudo | NAO VERIFICADO — nao ha gate; o campo "conteudo_excluido" da ficha declara a fronteira |
 | 7 | A rotacao altera a acao cognitiva, nao so o widget | GATE 24 (mecanica + funcao + operacao + controle registrados por aula) |
-| 8 | Tela, midia, nota, chave e acao do professor alinhadas | NAO VERIFICADO — camada Coerencia interna |
+| 8 | Tela, midia, nota, chave e acao do professor alinhadas | GATE 26 na ACAO (a nota manda o que a tela permite); o CONTEUDO da resposta contra o gabarito segue humano |
 | 9 | Predictions nao antecipam as respostas do input | NAO VERIFICADO — leitura humana do slide de predicao |
 | 10 | O audio principal e estavel; sintese variavel so como fallback declarado | GATE 19 + GATE 5 (MP3 real no manifest) |
 | 11 | Teacher notes operacionais e sem tom enfatico | GATE 23 |
@@ -41,15 +41,17 @@
 
 ## O que continua sem trava automatica
 
-Tres camadas do 03 §8 nao tem gate, e e assim que elas aparecem aqui:
+Factual e Coerencia interna ganharam gate em 11/08/2026 (25 e 26) e por isso
+aparecem como PARCIAL, nao como NAO VERIFICADO. O que cada um NAO alcanca:
 
-- **Factual** — autoria, data, trecho e estatuto das fontes.
-- **Coerencia interna** — a instrucao da tela contra a nota do professor e o
-  gabarito. Foi o defeito 2.10 da corretiva (nota mandando "toque o audio" numa
-  aula de leitura).
-- **Fronteira Grammar x ESP** — a ficha declara `conteudo_excluido`, mas quem le
-  se as duas aulas de fato nao sistematizam a mesma coisa e uma pessoa.
+- **Factual (GATE 25)** — prova que o texto na tela tem fonte, que o gabarito nao
+  cita fonte ausente e que material simulado nao carrega link de veiculo real.
+  NAO prova que a fonte real diz o que a aula afirma: isso exige ler a fonte.
+- **Coerencia interna (GATE 26)** — prova que a ACAO que a nota manda e executavel
+  de onde o professor esta (o defeito 2.10). NAO compara o conteudo da resposta
+  esperada com o gabarito.
+- **Fronteira Grammar x ESP** — sem gate. A ficha declara `conteudo_excluido`, mas
+  quem le se as duas aulas de fato nao sistematizam a mesma coisa e uma pessoa.
 
-Sao candidatos a gate, nao pendencias escondidas: enquanto nao existirem,
-aparecem como NAO VERIFICADO em todo relatorio.
+A parte que sobra e trabalho humano declarado, nao pendencia escondida.
 

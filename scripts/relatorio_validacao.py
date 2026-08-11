@@ -139,19 +139,20 @@ def camadas(slug):
                    'nenhuma' if ok else 'ver a saida do validador'))
 
     # 6 — Factual
-    linhas.append(('Factual', NV,
-                   'nao ha gate que confira autoria, data, trecho e estatuto das fontes '
-                   '(03 §6). check_media_links so cobre Complementares, que esta anatomia '
-                   'nao tem.',
-                   'leitura humana: quem autora a aula confere fonte por fonte'))
+    ok, e = roda(['scripts/check_factual.py'] + rel) if rel else (None, 'sem aula')
+    linhas.append(('Factual', PARCIAL if ok else FALHOU,
+                   f'GATE 25 (fonte na tela · gabarito nao cita fonte ausente · simulado sem '
+                   f'link de veiculo real): {e} — PARCIAL porque conferir se a fonte REAL diz '
+                   f'o que a aula afirma exige ler a fonte',
+                   'leitura humana da parte que sobra: autoria, data e trecho de cada fonte'))
 
     # 7 — Coerencia interna (tela x nota x gabarito x turno do professor)
-    linhas.append(('Coerencia interna', NV,
-                   'nao ha gate que compare a instrucao da TELA com a nota do professor e o '
-                   'gabarito (03 §3, item 2.10 da corretiva: a nota mandava "toque o audio" '
-                   'numa aula de leitura). O GATE 23 cobre a EXISTENCIA e o TOM da nota, '
-                   'nunca o conteudo dela contra a tela.',
-                   'leitura humana, slide a slide'))
+    ok, e = roda(['scripts/check_coerencia_interna.py'] + rel) if rel else (None, 'sem aula')
+    linhas.append(('Coerencia interna', PARCIAL if ok else FALHOU,
+                   f'GATE 26 (a acao que a nota manda e executavel de onde o professor esta): '
+                   f'{e} — PARCIAL porque o gate mede a ACAO, nao o conteudo da resposta '
+                   f'contra o gabarito',
+                   'leitura humana: a resposta esperada bate com o gabarito e com a tela?'))
 
     # 8 — Tempo
     ok, e = roda(['scripts/check_espinha.py'] + rel) if rel else (None, 'sem aula')
@@ -200,7 +201,8 @@ ACEITE = [
     ('A rotacao altera a acao cognitiva, nao so o widget',
      'GATE 24 (mecanica + funcao + operacao + controle registrados por aula)'),
     ('Tela, midia, nota, chave e acao do professor alinhadas',
-     'NAO VERIFICADO — camada Coerencia interna'),
+     'GATE 26 na ACAO (a nota manda o que a tela permite); o CONTEUDO da resposta contra o '
+     'gabarito segue humano'),
     ('Predictions nao antecipam as respostas do input',
      'NAO VERIFICADO — leitura humana do slide de predicao'),
     ('O audio principal e estavel; sintese variavel so como fallback declarado',
@@ -229,17 +231,19 @@ def markdown(slug, linhas):
     for i, (c, quem) in enumerate(ACEITE, 1):
         out.append(f'| {i} | {c} | {quem} |')
     out += ['', '## O que continua sem trava automatica', '',
-            'Tres camadas do 03 §8 nao tem gate, e e assim que elas aparecem aqui:',
+            'Factual e Coerencia interna ganharam gate em 11/08/2026 (25 e 26) e por isso',
+            'aparecem como PARCIAL, nao como NAO VERIFICADO. O que cada um NAO alcanca:',
             '',
-            '- **Factual** — autoria, data, trecho e estatuto das fontes.',
-            '- **Coerencia interna** — a instrucao da tela contra a nota do professor e o',
-            '  gabarito. Foi o defeito 2.10 da corretiva (nota mandando "toque o audio" numa',
-            '  aula de leitura).',
-            '- **Fronteira Grammar x ESP** — a ficha declara `conteudo_excluido`, mas quem le',
-            '  se as duas aulas de fato nao sistematizam a mesma coisa e uma pessoa.',
+            '- **Factual (GATE 25)** — prova que o texto na tela tem fonte, que o gabarito nao',
+            '  cita fonte ausente e que material simulado nao carrega link de veiculo real.',
+            '  NAO prova que a fonte real diz o que a aula afirma: isso exige ler a fonte.',
+            '- **Coerencia interna (GATE 26)** — prova que a ACAO que a nota manda e executavel',
+            '  de onde o professor esta (o defeito 2.10). NAO compara o conteudo da resposta',
+            '  esperada com o gabarito.',
+            '- **Fronteira Grammar x ESP** — sem gate. A ficha declara `conteudo_excluido`, mas',
+            '  quem le se as duas aulas de fato nao sistematizam a mesma coisa e uma pessoa.',
             '',
-            'Sao candidatos a gate, nao pendencias escondidas: enquanto nao existirem,',
-            'aparecem como NAO VERIFICADO em todo relatorio.', '']
+            'A parte que sobra e trabalho humano declarado, nao pendencia escondida.', '']
     return '\n'.join(out)
 
 
