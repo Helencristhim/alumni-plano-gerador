@@ -15,11 +15,24 @@
 | **FORMA** | que abas, que componentes e que ESTRUTURA o shell tem | `_build/model/anatomias.json` |
 | **CICLO** | blocos, checkpoints, progressao A1-C1, governanca do pacote, rotas pos-ciclo | `_build/model/ciclo.json` |
 
-O `ciclo.json` nasceu em 11/08/2026 dos dois documentos normativos de agosto, transcritos em
-`docs/NORMATIVO-planejamento-aulas-2026-08.md` (o .docx) e
-`docs/NORMATIVO-arquitetura-frameworks-2026-08.md` (a apresentacao). Consulte-o antes de
+O `ciclo.json` nasceu em 11/08/2026 dos documentos normativos de agosto. Consulte-o antes de
 gerar para um nivel novo (progressao A1-C1 por operacao cognitiva) ou para um pacote que nao
 seja de 20 aulas (governanca ciclo x pacote — 96, 48, 15 e 10 estao previstos).
+
+### Os SEIS normativos de agosto/2026 (todos versionados em `docs/`)
+
+| # | documento | onde virou codigo |
+|---|---|---|
+| 01 | `NORMATIVO-estrutura-frameworks-2026-08.md` | `public/data/frameworks.json` -> `contrato.etapas` (8 etapas + minutos por framework) |
+| 02 | `NORMATIVO-planejamento-aulas-2026-08.md` | `ciclo.json` (blocos, checkpoints, 10 campos da aula, rotas pos-ciclo) |
+| 03 | `NORMATIVO-diretrizes-producao-2026-08.md` | `ciclo.json` (microciclo, tom, camadas) + `_build/{slug}/syllabus.json` (mecanicas) |
+| 04 | `NORMATIVO-prompt-controlador-2026-08.md` | `syllabus.json` -> `spec` (ficha) + `scripts/relatorio_validacao.py` (fase 7 e gate de entrega) |
+| — | `NORMATIVO-arquitetura-frameworks-2026-08.md` (a apresentacao, 16 slides) | `ciclo.json` + ordem do bloco 1 |
+| — | `INSTRUCAO-CORRETIVA-stephanie-2026-08.md` | os 13 criterios de aceite viraram linhas da matriz do relatorio |
+
+**Regra que isto instala:** normativo que nao esta em `docs/` nao e citavel. Ate 11/08/2026
+quatro dos seis viviam em `~/Downloads` — e por isso o banco de mecanicas (03 §4) e o processo
+do controlador (04) nunca tinham virado nada.
 
 ## A ESPINHA da aula (anatomia guided-discovery)
 
