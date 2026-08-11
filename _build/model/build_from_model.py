@@ -1868,6 +1868,138 @@ def inject_kids_game(preclass, cfg):
         repl, preclass, flags=re.S)
 
 
+# ── MECANICA x KIND: o vocabulario do banco (03 §4) sobre os kinds do builder ────────────
+#
+# O documento fala em MECANICA ("Matching", "Sorting", "Role-play/simulation"); o config
+# fala em KIND ("matching", "sorting", "scenarios"). Sem esta tabela as duas linguas nao se
+# encontram, e "registrar mecanica, funcao, operacao, controle e evidencia" (03 §4.2) fica
+# sendo prosa que ninguem consegue conferir.
+#
+# So entra aqui o kind que E exercicio. Os que sao INPUT ou APOIO (o texto, o cenario, o
+# banco de frases, o gabarito, o fechamento) nao sao mecanica e nao viram divida de
+# repeticao — declarar o contrario encheria o registro de ruido e escondaria a repeticao
+# real. Ficam em KIND_APOIO, explicitos, para ninguem achar que foram esquecidos.
+MECANICA_POR_KIND = {
+    'matching': 'Matching',
+    'gist': 'Multiple choice',
+    'tf': 'True/False + correction',
+    'sorting': 'Sorting',
+    'gapfill': 'Fill in the blanks',
+    'rephrase': 'Rephrasing',
+    'quickfire': 'Replicas rapidas',
+    'call': 'Escuta por segmentos',
+    'reveal': 'Noticing por revelacao',
+    'questions': 'Perguntas abertas dirigidas',
+    'qsub': 'Perguntas abertas dirigidas',
+    'analyse': 'Perguntas abertas dirigidas',
+    'timer': 'Fala cronometrada',
+    'write': 'Quadro de feedback',
+}
+KIND_APOIO = ('scenarios', 'reading', 'evidence', 'phrases', 'lf', 'bank', 'modals',
+              'vocabnote', 'followup', 'answer', 'recap', 'selfassess', 'whiteboard',
+              'guiding')
+
+
+def kinds_da_aula(cfg):
+    """Todo `kind` que a aula de fato usa, na ordem em que aparece no config."""
+    ks = []
+
+    def walk(o):
+        if isinstance(o, dict):
+            if 'kind' in o:
+                ks.append(o['kind'])
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    walk(cfg['lesson'].get('inclass_blocks', {}))
+    return ks
+
+
+def registra_mecanicas_gastas(cfg):
+    """Escreve em _build/{slug}/estado.json o que ESTA AULA gastou de mecanica.
+
+    POR QUE: o docx §5 exige um estado pedagogico acumulativo e diz por que — "o gerador
+    nao deve depender de memoria narrativa presumida". O campo `mecanicas_gastas` existia
+    no esquema desde 07/08/2026 e ficou VAZIO enquanto as quatro aulas do bloco 1 eram
+    geradas: nada escrevia nele. Sem isso, o lote seguinte e gerado sem saber o que ja foi
+    usado, e a regra "nao repetir a mesma combinacao dentro do bloco" (03 §4.2) vira
+    memoria de quem gera.
+
+    MEDE o que a aula tem (os kinds do config) e CRUZA com o que o syllabus declarou para
+    aquela aula. O que foi medido e nao foi declarado entra com `sem_declaracao: true` —
+    visivel, e o GATE 24 cobra. O contrario (declarado e nao usado) tambem: `nao_usada`.
+
+    Idempotente: reescreve as entradas desta aula, preserva as das outras.
+    """
+    est_p = os.path.join(ROOT, '_build', cfg['slug'], 'estado.json')
+    if not os.path.exists(est_p):
+        return
+    syl_p = syllabus_json_path(cfg)
+    if not os.path.exists(syl_p):
+        return
+    n = cfg['lesson']['n']
+    with open(est_p, encoding='utf-8') as fh:
+        estado = json.load(fh)
+    with open(syl_p, encoding='utf-8') as fh:
+        syl = json.load(fh)
+    # A comparacao normaliza acento: o syllabus e material de leitura ("Replicas rapidas"
+    # aparece acentuado la) e a tabela deste arquivo e ASCII, como o resto do builder.
+    # Comparar as duas cruas produziria divergencia inventada — dois nomes da MESMA coisa.
+    def _norm(t):
+        return unicodedata.normalize('NFKD', t).encode('ascii', 'ignore').decode().lower()
+
+    decl, decl_nome = {}, {}
+    for a in syl.get('aulas', []):
+        if a.get('n') == n:
+            for m in a.get('mecanicas', []):
+                decl[_norm(m['mecanica'])] = m
+                decl_nome[_norm(m['mecanica'])] = m['mecanica']
+            break
+
+    medidas = {}
+    for k in kinds_da_aula(cfg):
+        mec = MECANICA_POR_KIND.get(k)
+        if mec:
+            medidas.setdefault(mec, []).append(k)
+
+    novas = []
+    for mec, kinds in medidas.items():
+        d = decl.get(_norm(mec))
+        e = dict(aula=n, mecanica=decl_nome.get(_norm(mec), mec), kinds=sorted(set(kinds)))
+        if d:
+            e.update(funcao=d['funcao'], operacao=d['operacao'], controle=d['controle'],
+                     evidencia=d['evidencia'])
+        else:
+            e['sem_declaracao'] = True
+        novas.append(e)
+    medidas_norm = {_norm(m) for m in medidas}
+    for chave, d in decl.items():
+        if chave in medidas_norm:
+            continue
+        # `sem_widget` = mecanica que acontece na CONDUCAO, nao num componente de tela
+        # (role-play, retask, decisao de caso). Nao ter kind e propriedade dela, nao
+        # esquecimento — e cobrar kind aqui seria pedir widget para o que e conversa.
+        novas.append(dict(aula=n, mecanica=d['mecanica'], kinds=[],
+                          nao_usada=not d.get('sem_widget'),
+                          sem_widget=bool(d.get('sem_widget')),
+                          funcao=d['funcao'], operacao=d['operacao'],
+                          controle=d['controle'], evidencia=d['evidencia']))
+
+    outras = [m for m in estado.get('mecanicas_gastas', []) if m.get('aula') != n]
+    estado['mecanicas_gastas'] = sorted(outras + novas,
+                                        key=lambda m: (m['aula'], m['mecanica']))
+    with open(est_p, 'w', encoding='utf-8') as fh:
+        json.dump(estado, fh, ensure_ascii=False, indent=2)
+        fh.write('\n')
+    sd = sum(1 for m in novas if m.get('sem_declaracao'))
+    nu = sum(1 for m in novas if m.get('nao_usada'))
+    print(f'  estado.json: aula {n} gastou {len(medidas)} mecanica(s)'
+          + (f' — {sd} sem declaracao no syllabus' if sd else '')
+          + (f', {nu} declarada(s) e nao usada(s)' if nu else ''))
+
+
 def build_standalone(cfg, content_dir, manifest):
     L = cfg['lesson']
     n = L['n']
@@ -2059,6 +2191,9 @@ def build_standalone(cfg, content_dir, manifest):
     a = a.replace(f'{cfg["slug"]}-aula{n}-professor', f'{cfg["slug"]}-aula{n}-aluno')
     final_asserts(a, cfg, f'aluno aula{n}')
     write(os.path.join(ALUNO, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(a, cfg))
+    # ESTADO ACUMULATIVO (docx §5): a aula escreve o que gastou. No-op para quem nao tem
+    # _build/{slug}/estado.json + syllabus.json — nenhum aluno existente e afetado.
+    registra_mecanicas_gastas(cfg)
     return entries
 
 
@@ -2142,6 +2277,154 @@ def normalize_complementary(html, cfg=None):
     return html
 
 
+def syllabus_json_path(cfg):
+    """_build/{slug}/syllabus.json — a fonte de dados do syllabus do ciclo (docx §3.1)."""
+    return os.path.join(ROOT, '_build', cfg['slug'], 'syllabus.json')
+
+
+# ESTILO INLINE, e nao classes novas no shell: as abas de hub (planning/evidencias) ja sao
+# escritas assim, e classe nova no shell mexeria no que o GATE 18 (drift) e o GATE 21
+# (paridade com o artefato) vigiam. O conteudo da aba nao e anatomia — e material do professor.
+_SYL_ROT = ('display:block;font-size:.72rem;font-weight:700;letter-spacing:.6px;'
+            'text-transform:uppercase;color:var(--accent);margin-bottom:.25rem')
+_SYL_VAL = 'display:block;font-size:.87rem;line-height:1.6;color:var(--text-mid)'
+_SYL_SUB = 'font-size:.8rem;color:var(--text-dim)'
+
+
+def _syl_campo(rot, val):
+    return (f'<div style="margin-bottom:.85rem">'
+            f'<span style="{_SYL_ROT}">{rot}</span>'
+            f'<span style="{_SYL_VAL}">{val}</span></div>')
+
+
+def syllabus_tab_html(cfg):
+    """A aba 'Syllabus 20 aulas' do hub, montada a partir de _build/{slug}/syllabus.json.
+
+    POR QUE O BUILDER EMITE ISTO, e nao um syllabus.html escrito a mao: o docx §3.1 exige DEZ
+    campos de CADA aula do ciclo. Escrito a mao, isso e uma tabela de 20 linhas x 10 colunas
+    que ninguem mantem — e o resultado medido em 11/08/2026 foi a aba mostrar UMA frase de
+    esqueleto ("Syllabus do ciclo.") e nenhuma aula, enquanto as 20 viviam num .md que a
+    interface nao abre. Emitido do JSON, o campo ou existe (e aparece) ou falta (e o GATE 22
+    barra). Mesma logica dos slides de tarefa: se o builder emite, o defeito nao tem por onde
+    entrar.
+
+    Retorna None quando o aluno nao tem syllabus.json — a aba entao segue o caminho antigo
+    (syllabus.html escrito a mao), e nenhum aluno existente muda de comportamento.
+    """
+    p = syllabus_json_path(cfg)
+    if not os.path.exists(p):
+        return None
+    with open(p, encoding='utf-8') as f:
+        d = json.load(f)
+    FW = {'reading-into-speaking': 'Reading', 'listening-into-interaction': 'Listening',
+          'grammar-for-communication': 'Grammar', 'esp-real-world': 'ESP'}
+    out = []
+    out.append('<div class="teacher-section">')
+    out.append('<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.35rem;'
+               'margin-bottom:.5rem">Syllabus do ciclo &mdash; %d aulas</h3>'
+               % d['aulas_do_ciclo'])
+    out.append('<p style="font-size:.87rem;line-height:1.6;color:var(--text-mid);'
+               'margin-bottom:.7rem">Ciclo %s &middot; n&iacute;vel <strong>%s</strong> &middot; '
+               '5 blocos &middot; 60 min nominais (55 de percurso + 5 de margem). '
+               '<strong>Provis&oacute;rio at&eacute; o checkpoint da aula 4</strong>: o perfil inicial &eacute; uma '
+               'hip&oacute;tese, e o que sair das aulas 1&ndash;4 confirma, ajusta ou reconfigura as '
+               'aulas 5&ndash;20.</p>' % (d['ciclo'], d['nivel']))
+    out.append('<p style="font-size:.82rem;line-height:1.6;color:var(--text-dim);'
+               'margin-bottom:.9rem;padding:.7rem;border-left:3px solid var(--accent);'
+               'background:var(--accent-dim)">O horizonte pedag&oacute;gico &eacute; sempre de 20 aulas. '
+               'O pacote contratado determina quantas podem ser produzidas &mdash; n&atilde;o redefine '
+               'a l&oacute;gica curricular. Se o pacote terminar antes da aula 20, emitir relat&oacute;rio '
+               'parcial e preservar o estado. Fonte: <code>_build/model/ciclo.json</code>.</p>')
+    out.append('<div class="tbl-wrap"><table class="data"><thead><tr>'
+               '<th>#</th><th>Bloco</th><th>Framework</th><th>Aula</th>'
+               '<th>Produto / evid&ecirc;ncia</th><th>Estado</th></tr></thead><tbody>')
+    for a in d['aulas']:
+        est = ('<strong>produzida</strong>' if a['estado'] == 'produzida'
+               else 'provis&oacute;ria')
+        out.append('<tr><td>%02d</td><td>%s</td><td>%s</td><td><strong>%s</strong></td>'
+                   '<td>%s</td><td>%s</td></tr>'
+                   % (a['n'], a['bloco'], FW.get(a['framework'], a['framework']),
+                      a['titulo'], a['produto'], est))
+    out.append('</tbody></table></div>')
+    out.append('<p style="font-size:.8rem;color:var(--text-dim);margin-top:.6rem">'
+               'Cada aula abaixo traz os <strong>dez campos</strong> que o normativo de '
+               'planejamento exige (&sect;3.1) e a <strong>ficha de especifica&ccedil;&atilde;o</strong> do '
+               'prompt controlador. Clique para abrir.</p>')
+    out.append('</div>')
+
+    for a in d['aulas']:
+        out.append('<details style="border:1px solid var(--border);border-radius:10px;padding:.7rem .9rem;margin-bottom:.6rem;background:var(--bg-card)"><summary style="cursor:pointer;font-size:.9rem;color:var(--text)"><strong>%02d</strong> &middot; %s '
+                   '&middot; <em>%s</em>%s</summary>'
+                   % (a['n'], FW.get(a['framework'], a['framework']), a['titulo'],
+                      '' if a['estado'] == 'produzida' else ' &middot; provis&oacute;ria'))
+        out.append('<div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--border)">')
+        out.append(_syl_campo('1 &middot; Posi&ccedil;&atilde;o',
+                              '%s &middot; %s &middot; %s' % (a['bloco'],
+                                                              FW.get(a['framework'], a['framework']),
+                                                              a['posicao_na_rotacao'])))
+        out.append(_syl_campo('2 &middot; Objetivo comunicativo',
+                              ('%s <br><span style="' + _SYL_SUB + '">Relacao com o perfil: '
+                               '%s</span>')
+                              % (a['objetivo_comunicativo'], a['relacao_com_o_perfil'])))
+        out.append(_syl_campo('3 &middot; Opera&ccedil;&atilde;o NOVA', a['operacao_nova']))
+        out.append(_syl_campo('4 &middot; Input e autenticidade',
+                              ('%s <br><span style="' + _SYL_SUB + '">%s</span>')
+                              % (a['input']['material'], a['input']['autenticidade'])))
+        out.append(_syl_campo('5 &middot; Functional language', a['linguagem']))
+        mic = a['microciclo']
+        out.append(_syl_campo('6 &middot; Microciclo de Guided Discovery',
+                              '<ol style="margin:.3rem 0 0 1.1rem;padding:0">' + ''.join(
+                                  '<li><strong>%s.</strong> %s</li>'
+                                  % (rot, mic[chave]) for rot, chave in (
+                                      ('Evid&ecirc;ncia inicial', 'evidencia_inicial'),
+                                      ('Opera&ccedil;&atilde;o cognitiva', 'operacao_cognitiva'),
+                                      ('Formula&ccedil;&atilde;o de hip&oacute;tese', 'formulacao_hipotese'),
+                                      ('Verifica&ccedil;&atilde;o pr&aacute;tica', 'verificacao_pratica'),
+                                      ('Clarifica&ccedil;&atilde;o did&aacute;tica', 'clarificacao_didatica'),
+                                      ('Aplica&ccedil;&atilde;o real', 'aplicacao_real'))) + '</ol>'))
+        out.append(_syl_campo('7 &middot; Produto e crit&eacute;rios de sucesso',
+                              '%s<ul style="margin:.3rem 0 0 1.1rem;padding:0">%s</ul>'
+                              % (a['produto'], ''.join('<li>%s</li>' % c
+                                                       for c in a['criterios_de_sucesso']))))
+        out.append(_syl_campo('8 &middot; Evid&ecirc;ncia a registrar',
+                              '<ul style="margin:.3rem 0 0 1.1rem;padding:0">%s</ul>'
+                              % ''.join('<li>%s</li>' % e for e in a['evidencia_a_registrar'])))
+        linhas = ''.join(
+            '<tr><td><strong>%s</strong>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>'
+            % (m['mecanica'],
+               '' if m.get('no_banco', True) else ' <span style="font-size:.72rem;color:var(--warn);font-weight:600">fora do banco</span>',
+               m['funcao'], m['operacao'], m['controle'], m['evidencia'])
+            for m in a['mecanicas'])
+        out.append(_syl_campo('9 &middot; Mec&acirc;nicas e grau de controle',
+                              '<div class="tbl-wrap"><table class="data"><thead><tr>'
+                              '<th>Mec&acirc;nica</th><th>Fun&ccedil;&atilde;o</th><th>Opera&ccedil;&atilde;o</th>'
+                              '<th>Controle</th><th>Evid&ecirc;ncia</th></tr></thead><tbody>'
+                              + linhas + '</tbody></table></div>'))
+        out.append(_syl_campo('10 &middot; Avalia&ccedil;&atilde;o e progress&atilde;o', a['avaliacao']))
+        sp = a['spec']
+        out.append('<div class="callout"><span class="callout-title">Ficha de especificacao '
+                   '(prompt controlador, fase 1)</span></div>')
+        for rot, chave in (('Necessidade', 'necessidade'),
+                           ('Por que este framework', 'framework_justificativa'),
+                           ('Origem da necessidade', 'origem'),
+                           ('Conte&uacute;do recuperado', 'conteudo_recuperado'),
+                           ('Conte&uacute;do exclu&iacute;do', 'conteudo_excluido'),
+                           ('Retask', 'retask')):
+            out.append(_syl_campo(rot, sp[chave]))
+        out.append('</div></details>')
+
+    for c in d.get('_conflitos_declarados', []):
+        out.append('<div class="teacher-section"><div class="callout warn">'
+                   '<span class="callout-title">Conflito declarado &mdash; decis&atilde;o pendente</span>'
+                   '%s</div><p style="font-size:.84rem;line-height:1.6;color:var(--text-mid);'
+                   'margin-top:.5rem"><strong>Por que nao foi resolvido:</strong> %s<br>'
+                   '<strong>Quem decide:</strong> %s<br>'
+                   '<strong>Enquanto isso:</strong> %s</p></div>'
+                   % (c['conflito'], c['por_que_nao_foi_resolvido'], c['quem_decide'],
+                      c['enquanto_isso']))
+    return '\n'.join(out)
+
+
 def hub_tab_path(cfg, content_dir, nome):
     """Onde mora o conteudo de uma ABA DE HUB (planning/evidencias/syllabus).
 
@@ -2185,9 +2468,18 @@ def build_hub_new(cfg, content_dir, manifest):
             print('  AVISO: anatomia tem aba Evidencias e nao ha evidencias.html — '
                   'a ficha pos-aula fica vazia, e sem ela as aulas 5-20 nao saem.')
     if 'id="tab-syllabus"' in hub_html_:
-        ps = hub_tab_path(cfg, content_dir, 'syllabus.html')
-        if os.path.exists(ps):
-            syllabus_tab = read(ps)
+        # FONTE UNICA: _build/{slug}/syllabus.json (os 10 campos do docx §3.1). O
+        # syllabus.html escrito a mao continua valendo como fallback — nenhum aluno
+        # existente muda de comportamento por causa disto.
+        syllabus_tab = syllabus_tab_html(cfg)
+        if syllabus_tab is None:
+            ps = hub_tab_path(cfg, content_dir, 'syllabus.html')
+            if os.path.exists(ps):
+                syllabus_tab = read(ps)
+        if syllabus_tab is None:
+            print('  AVISO: anatomia tem aba Syllabus e nao ha syllabus.json nem '
+                  'syllabus.html — a aba fica com o texto de esqueleto do shell, que '
+                  'anuncia 20 aulas e nao mostra nenhuma.')
     # Complementares so e LIDO se a anatomia do hub tiver a aba. Ler incondicionalmente
     # obrigaria a existir um arquivo que nao tem onde entrar.
     complementary = ''

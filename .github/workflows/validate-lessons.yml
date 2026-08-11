@@ -381,6 +381,42 @@ jobs:
         # na geração, não aqui.
         run: python3 scripts/gen_banco_exercicios.py --check
 
+      - name: "GATE 24 — selftest: prova que o gate de syllabus ainda morde"
+        run: python3 scripts/check_syllabus_ciclo.py --selftest
+
+      - name: "GATE 24 — o syllabus do ciclo tem os dez campos, e bate com o que a aula gastou"
+        # Duas falhas medidas em 11/08/2026: a aba "Syllabus 20 aulas" do hub tinha 135
+        # bytes (a frase de esqueleto do shell, zero aula), e estado.json -> mecanicas_gastas
+        # estava VAZIO depois de quatro aulas geradas — nada escrevia nele. O docx §5 pede o
+        # estado acumulativo e diz por quê: "o gerador não deve depender de memória narrativa
+        # presumida". Sem ele, "não repetir a mesma combinação no bloco" (03 §4.2) era só
+        # intenção. O gate cobra os 10 campos do §3.1 por aula, a ficha da fase 1 do prompt
+        # controlador, e o cruzamento declarado x medido.
+        run: python3 scripts/check_syllabus_ciclo.py
+
+      - name: "GATE 23 — selftest: prova que o gate de notas ainda morde"
+        run: python3 scripts/check_teacher_notes.py --selftest
+
+      - name: "GATE 23 — a nota do professor existe, tem tempo e não grita"
+        # Item 2.15 da instrução corretiva nomeia três expressões — "NÃO ajude", "force a
+        # resposta", "TEM de responder". As três ainda estavam no material meses depois,
+        # porque a correção era prosa num .docx e nada no repo a cobrava. As três exigências
+        # são medidas no artefato, não opinadas: 63 telas, 63 notas, 63 com orçamento de
+        # tempo. Caixa alta MARCANDO palavra continua liberada — o que barra é o comando.
+        run: python3 scripts/check_teacher_notes.py
+
+      - name: "GATE 22 — selftest: prova que o gate de espinha ainda morde"
+        run: python3 scripts/check_espinha.py --selftest
+
+      - name: "GATE 22 — a espinha da aula: etapas, telas dentro delas, minutos que fecham"
+        # A unidade que quem conduz enxerga é a ETAPA, não a tela: 7 ou 8, cada uma agrupando
+        # 1 a 6 telas, com o orçamento de minutos no rótulo. Essa camada sumiu inteira no
+        # porte (data-stage=0, stage-seg=0, stage-label=0) e ninguém viu — as 15-18 telas
+        # passaram a ler como fila linear de passos, e foi isso que o Dan abriu e estranhou.
+        # anatomias.json listou as quatro checagens como "levantado, NÃO construído"; aqui
+        # elas existem.
+        run: python3 scripts/check_espinha.py
+
       - name: "GATE 21 — selftest: prova que o gate de paridade ainda morde"
         run: python3 scripts/check_artefato_paridade.py --selftest
 
