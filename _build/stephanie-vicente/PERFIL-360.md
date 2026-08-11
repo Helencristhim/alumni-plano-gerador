@@ -36,9 +36,9 @@ Nenhuma se decide numa aula só. Cada uma diz **o que observar** e **o que a obs
 
 | # | Hipótese | Onde se decide | Se confirmar | Se refutar |
 |---|---|---|---|---|
-| **H1** | O `you have to` não é escolha de registro — é a única forma que ela tem. Falta repertório, não sensibilidade. | Aulas 1 e 3, cruzadas | G1–G3 constroem repertório de mitigação antes de trabalhar escolha | o trabalho vira escolha entre formas que ela já tem |
+| **H1** | O `you have to` não é escolha de registro — é a única forma que ela tem. Falta repertório, não sensibilidade. | Aulas 3 e 4, cruzadas | G1–G3 constroem repertório de mitigação antes de trabalhar escolha | o trabalho vira escolha entre formas que ela já tem |
 | **H2** | Escrever antes virou evitação de turno: com o roteiro na mão ela não escuta o interlocutor. | Aula 2 | gestão de turno entra como foco explícito no bloco 2 | o apoio escrito continua liberado |
-| **H3** | O passado contínuo não some por lacuna de forma, e sim sob carga — quando ela narra e avalia ao mesmo tempo. | Aulas 1 e 3 | prioridade é automatização sob pressão | G1 constrói a forma antes |
+| **H3** | O passado contínuo não some por lacuna de forma, e sim sob carga — quando ela narra e avalia ao mesmo tempo. | Aulas 3 e 4 | prioridade é automatização sob pressão | G1 constrói a forma antes |
 
 ## Forças e pontos de melhoria
 
@@ -51,9 +51,9 @@ Nenhuma se decide numa aula só. Cada uma diz **o que observar** e **o que a obs
 | # | Critério | Onde é medido |
 |---|---|---|
 | 1 | Descrever o que observou numa aula, em cena, sem trocar contínuo por simples nos pontos que importam. | Aula 3, aula 18 |
-| 2 | Recomendar de modo que o professor possa discordar — sem `you have to`. | Aula 1, aula 16 |
+| 2 | Recomendar de modo que o professor possa discordar — sem `you have to`. | Aula 4, aula 16 |
 | 3 | Sustentar a recomendação por três turnos sob questionamento, sem perder o turno. | Aula 16, aula 20 |
-| 4 | Dizer de qual documento veio cada afirmação, quando as fontes divergem. | Aula 4, aula 19 |
+| 4 | Dizer de qual documento veio cada afirmação, quando as fontes divergem. | Aula 1, aula 19 |
 
 **Vedação de progressão:** interação é o eixo deste perfil. Desempenho alto em leitura não compra progressão — se os critérios 2 e 3 não forem atingidos, a rota é novo ciclo, mesmo com as 20 aulas concluídas.
 

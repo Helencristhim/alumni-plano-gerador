@@ -7,6 +7,38 @@
 > e a correção chega aos próximos via builder. **Aulas passadas não são tocadas**
 > (retrofit é fase 2, sob demanda, com OK da Helen).
 
+## As tres fontes unicas (nao decida nada de cabeca)
+
+| eixo | pergunta que responde | arquivo |
+|---|---|---|
+| **METODO** | qual framework, quais etapas, que rodizio, que contrato | `public/data/frameworks.json` |
+| **FORMA** | que abas, que componentes e que ESTRUTURA o shell tem | `_build/model/anatomias.json` |
+| **CICLO** | blocos, checkpoints, progressao A1-C1, governanca do pacote, rotas pos-ciclo | `_build/model/ciclo.json` |
+
+O `ciclo.json` nasceu em 11/08/2026 dos dois documentos normativos de agosto, transcritos em
+`docs/NORMATIVO-planejamento-aulas-2026-08.md` (o .docx) e
+`docs/NORMATIVO-arquitetura-frameworks-2026-08.md` (a apresentacao). Consulte-o antes de
+gerar para um nivel novo (progressao A1-C1 por operacao cognitiva) ou para um pacote que nao
+seja de 20 aulas (governanca ciclo x pacote — 96, 48, 15 e 10 estao previstos).
+
+## A ESPINHA da aula (anatomia guided-discovery)
+
+A unidade que quem conduz a aula enxerga e a **ETAPA**, nao a tela: 7 ou 8 etapas, cada uma
+agrupando de 1 a 6 telas. O config declara
+
+```json
+"stages": [ {"n": "The brief", "min": 5}, {"n": "First read", "min": 5}, ... ]
+```
+
+e o builder emite a barra fixa do topo (`phase-bar` + `phase-labels`, com o **orcamento de
+minutos** em cada rotulo), o mapa `slidePhases` a partir do `data-phase` de cada tela, e a
+leitura da etapa corrente na nav-bar. O rotulo e **autoral da aula** — o normativo fixa a
+FUNCAO de cada etapa (slides 8-11), nao o nome. A soma dos minutos tem de fechar o
+`contrato.percurso_min` do framework (55): o builder cobra isso com assert.
+
+`"phases": ["...", "..."]` (so nomes, sem minutos) e a forma antiga e continua valendo — e o
+que a anatomia imersivo usa, onde a barra e de CAPITULOS da narrativa.
+
 ## Fluxo por aula
 
 ```

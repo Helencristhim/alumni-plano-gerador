@@ -9,13 +9,26 @@
 
 ## A rotação
 
-As quatro modalidades giram em cada bloco. A **ordem dentro do bloco muda por função**:
+As quatro modalidades giram em cada bloco.
 
-- **Bloco 1 ABRE com ESP.** A etapa 2 do ESP (*Initial attempt*) pede produção sem apoio
-  nenhum — é o melhor instrumento diagnóstico disponível numa abertura de ciclo, e testa
-  H1, H2 e H3 de uma vez.
-- **Blocos 2 a 5 FECHAM com ESP.** Ali ele deixa de ser sonda e vira integração: entra depois
-  que Listening, Grammar e Reading alimentaram o desempenho.
+- **Bloco 1: Reading → Listening → Grammar → ESP. Ordem FIXA.** Não é escolha nossa: a
+  apresentação normativa de agosto/2026 fixa exatamente esta sequência no slide 5 e a marca
+  **"Ação Obrigatória"** (transcrição em `docs/NORMATIVO-arquitetura-frameworks-2026-08.md`).
+  Ela também se sustenta sozinha: o **Reading entrega conteúdo e evidência antes de a aluna
+  ser cobrada em produção**, e o **ESP fecha o bloco integrando** o que as três primeiras
+  alimentaram — colado no checkpoint da aula 4, que lê as quatro juntas.
+- **Blocos 2 a 5: ordem variável.** É o que o `.docx` normativo diz (§3, *"com ordem
+  variável"*). A ordem de cada bloco se decide pelo estado pedagógico e se **declara** em
+  `rodizios[]` de `public/data/frameworks.json` antes de o bloco ser gerado. Aqui o ESP
+  fecha, porque ali ele deixa de ser sonda e vira integração.
+
+> **Revisão registrada (11/08/2026).** Até esta data o bloco 1 **abria com ESP**, pelo
+> argumento de que a etapa 2 dele (*Initial attempt*) pede produção sem apoio nenhum e é o
+> melhor instrumento diagnóstico de uma abertura de ciclo. O argumento não foi refutado — foi
+> **subordinado ao documento**: os dois normativos divergem (o `.docx` diz "ordem variável", a
+> apresentação fixa o bloco 1), e o Dan decidiu que vale a apresentação. O ESP continua sendo
+> a sonda sem apoio; ela agora acontece na aula 4, imediatamente antes do checkpoint. O
+> histórico da ordem anterior está em `rodizios[0].historico` do `frameworks.json`.
 
 | Bloco | Título de trabalho | Função | Apoio |
 |---|---|---|---|
@@ -31,35 +44,43 @@ As quatro modalidades giram em cada bloco. A **ordem dentro do bloco muda por fu
 
 | # | Modalidade | Situação | Produto / evidência |
 |---|---|---|---|
-| 1 | **ESP** · E1 | Dar a devolutiva de uma observação de aula a um professor estrangeiro | Devolutiva completa + resposta a duas objeções + segunda rodada com uma premissa nova |
+| 1 | **Reading** · R1 | O plano de aula contra o syllabus do curso | Briefing de 3 min para a coordenadora, com a divergência apontada e atribuída |
 | 2 | **Listening** · L1 | Call de três pessoas sobre a adoção de um material | Retomar a call: quem defendeu o quê, e uma pergunta de esclarecimento |
 | 3 | **Grammar** · G1 | Descrever a cena × avaliar a cena | Cinco momentos de aula relatados: o que estava acontecendo, o que aconteceu, o que se recomenda |
-| 4 | **Reading** · R1 | O plano de aula contra o syllabus do curso | Briefing de 3 min para a coordenadora, com a divergência apontada e atribuída |
+| 4 | **ESP** · E1 | Dar a devolutiva de uma observação de aula a um professor estrangeiro | Devolutiva completa + resposta a duas objeções + segunda rodada com uma premissa nova |
 
-**Aula 1 — ESP: A devolutiva** · *Objetivo:* dar retorno de observação de modo que o professor
-possa discordar. · *Funcional:* `What I noticed was…` · `One thing you might try is…` ·
-`How did that feel from where you were?` · *Foco:* mitigação como recurso, não como objeto de
-estudo. · *Diagnóstico:* gera evidência inicial para H1, H2 e H3. · **Pre-class: vazio, por
-desenho** — a etapa 2 exige produção sem apoio; pre-class que ensina destrói o diagnóstico.
+**Aula 1 — Reading: Duas fontes que deveriam concordar** · *Objetivo:* localizar três
+divergências entre o plano de aula e o syllabus, e atribuir cada afirmação à sua fonte.
+· *Funcional:* `The syllabus says X, but the plan has Y.` · `These two don't line up on…`
+· *Foco:* referência coesiva e linguagem de discrepância. · *Diagnóstico:* **abre o bloco com
+evidência de compreensão de texto denso e de atribuição de fonte** — o critério 4 do ciclo é
+medido aqui pela primeira vez. Entrega, de saída, o conteúdo e o vocabulário de trabalho que
+as três aulas seguintes reaproveitam.
 
 **Aula 2 — Listening: A call sobre o material** · *Objetivo:* acompanhar três vozes sem
 transcript e identificar quem defende o quê. · *Funcional:* `Sorry, could I just check —
 did you say…?` · `So if I understood, you'd rather…` · *Foco:* identificar posição e
-recuperar uma lista dita uma vez só. · *Diagnóstico:* H2 — com apoio escrito à mão, ela
+recuperar uma lista dita uma vez só. · *Diagnóstico:* **H2** — com apoio escrito à mão, ela
 escuta ou lê?
 
 **Aula 3 — Grammar: A cena e o veredito** · *Objetivo:* separar o que **estava acontecendo**
 do que **aconteceu**, e a descrição da recomendação. · *Funcional:* `The students were
 working in pairs when…` · `You could try…` · `It might help if…` · *Foco:* past continuous ×
-past simple por função narrativa; modais de recomendação. · *Relação com a aula 1:* a aula 1
-já produziu descrição e recomendação livres; esta **não repete** — trabalha o efeito da
-escolha sobre quem recebe o retorno.
+past simple por função narrativa; modais de recomendação. · *Diagnóstico:* a **etapa 2 é
+diagnóstica** e produz, sem apoio, a descrição de três cenas — primeira evidência de **H3**
+(o contínuo escapa sob carga?) e de **H1** (a recomendação sai como `you have to`?).
+· *Relação com a aula 4:* aqui se trabalha o **efeito** da escolha sobre quem recebe; lá a
+mesma escolha é cobrada numa devolutiva inteira, sem apoio.
 
-**Aula 4 — Reading: Duas fontes que deveriam concordar** · *Objetivo:* localizar três
-divergências entre o plano de aula e o syllabus, e atribuir cada afirmação à sua fonte.
-· *Funcional:* `The syllabus says X, but the plan has Y.` · `These two don't line up on…`
-· *Foco:* referência coesiva e linguagem de discrepância. · *Diagnóstico:* fecha o
-checkpoint com evidência sobre compreensão de texto denso.
+**Aula 4 — ESP: A devolutiva** · *Objetivo:* dar retorno de observação de modo que o professor
+possa discordar. · *Funcional:* `What I noticed was…` · `One thing you might try is…` ·
+`How did that feel from where you were?` · *Foco:* mitigação como recurso, não como objeto de
+estudo. · *Diagnóstico:* a **etapa 2 (Initial attempt) pede produção sem apoio nenhum** — é a
+sonda mais limpa do bloco, e ela cai **imediatamente antes do checkpoint**, que cruza esta
+evidência com a da aula 3. Fecha H1, H2 e H3. · **Pre-class sem conteúdo de ensino, por
+desenho** — a etapa 2 exige produção sem apoio, e um pre-class que ensine transforma a
+tentativa em repetição do material. **A ausência é propriedade do framework ESP, não da
+posição 1:** ela viajou com ele quando a ordem mudou. As aulas 1, 2 e 3 têm pre-class normal.
 
 > **Checkpoint — aula 4.** Validar nível por habilidade, decidir H1–H3, confirmar adequação
 > dos contextos e definir se as aulas 5–20 são confirmadas, ajustadas ou reconfiguradas.
@@ -110,10 +131,10 @@ Não se ensina uma vez. Reaparece em contexto e tarefa diferentes:
 
 | Linguagem | Introduzida | Reciclada em | Cobrada em |
 |---|---|---|---|
-| Mitigação de recomendação | Aula 1 · consolidada em 3 | 6, 10, 13 | 16, 20 |
+| Atribuição de fonte | Aula 1 | 7, 11, 15 | 19, 20 |
 | Cena × veredito (contínuo × simples) | Aula 3 | 5, 11, 14 | 18, 20 |
+| Mitigação de recomendação | Aula 3 · cobrada inteira em 4 | 6, 10, 13 | 16, 20 |
 | Gestão de turno e reparo | Aula 9 | 13, 16, 17 | 20 |
-| Atribuição de fonte | Aula 4 | 7, 11, 15 | 19, 20 |
 
 ## As mecânicas — o que a anatomia tem, medido no artefato
 
@@ -144,6 +165,15 @@ transferência.
 O horizonte pedagógico é sempre de 20 aulas. O pacote contratado determina quantas podem ser
 produzidas — não redefine a lógica curricular. Se o pacote terminar antes da aula 20, emitir
 relatório parcial e preservar o estado para continuidade.
+
+> Isto **não é regra deste aluno**: é do programa, e por isso deixou de morar só aqui. A
+> fonte declarada — com o que fazer quando o pacote é maior (96, 48) ou menor (15, 10) que o
+> ciclo, e com as **três rotas depois da aula 20** (novo ciclo no mesmo nível · módulo
+> intermediário · próximo nível, cada uma com seu critério) — é
+> **`_build/model/ciclo.json`**, seções `governanca_ciclo_x_pacote` e `rotas_pos_ciclo`.
+> Ali também vivem a **progressão A1–C1 por operação cognitiva**, os **10 campos obrigatórios
+> de cada aula do syllabus**, o **microciclo de Guided Discovery em 6 operações** e a
+> **cadência de lotes e checkpoints**.
 
 **Este molde produz apenas o bloco 1.** As aulas 5–20 exigem o checkpoint da aula 4, que exige
 uma aluna real observada por um professor. Molde não tem isso — e é por isso que o bloco 1 é
