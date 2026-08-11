@@ -381,6 +381,19 @@ jobs:
         # na geração, não aqui.
         run: python3 scripts/gen_banco_exercicios.py --check
 
+      - name: "GATE 27 — selftest: prova que o gate do banco de mecânicas ainda morde"
+        run: python3 scripts/check_banco_mecanicas.py --selftest
+
+      - name: "GATE 27 — a aula só usa mecânica que o artefato consegue montar"
+        # Ordem do Dan (11/08/2026): "se não tem no artefato nada parecido que o documento
+        # descreva, hora de remover". Saíram do banco do 03 §4: Matching, Ordering/reconstruction
+        # e Information gap — e o kind quickfire, que tem o mesmo problema. O critério não é
+        # etiqueta, é forma: True/False também não existe com esse nome no artefato, mas a forma
+        # (quiz-item + rationale) existe e é com ela que ele é montado.
+        # NÃO toca o imersivo: matching está em 1.015 aulas publicadas dele. O kind segue no
+        # builder e o CSS nos dois shells — a proibição vale onde a regra do artefato vale.
+        run: python3 scripts/check_banco_mecanicas.py
+
       - name: "GATE 26 — selftest: prova que o gate de coerência interna ainda morde"
         run: python3 scripts/check_coerencia_interna.py --selftest
 

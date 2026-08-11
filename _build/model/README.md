@@ -74,6 +74,31 @@ com o que o syllabus declarou. Mecanica usada e nao declarada, ou declarada e na
 reprova no GATE 24 — salvo as marcadas `sem_widget` (role-play, retask, decisao de caso
 acontecem na CONDUCAO, nao num componente).
 
+### O BANCO DE MECANICAS — o que a aula pode usar
+
+`_build/model/ciclo.json -> banco_de_mecanicas` lista as onze mecanicas do documento 03 §4
+com o que o artefato DE FATO tem para montar cada uma, e o status:
+
+    REMOVIDA  Matching · Ordering/reconstruction · Information gap
+    VALE      Multiple choice · Sorting · Fill in the blanks · True/False + correction ·
+              Rephrasing · Case/decision · Role-play/simulation · Replay/retask
+
+Ordem do Dan (11/08/2026): *"se nao tem no artefato nada parecido que o documento descreva,
+hora de remover"*. O criterio e FORMA, nao etiqueta: True/False tambem nao existe com esse
+nome la, mas a forma de "escolha uma e veja por que" existe (quiz-item + rationale) e e com
+ela que ele e montado — zero classe nova. Matching precisaria de uma UI de pares que nao
+existe em lugar nenhum do artefato.
+
+O kind `quickfire` caiu junto (nao e linha do banco, tem o mesmo problema). O `call` NAO
+caiu: tem forma la (`playCall` + `audio-btn-sm` + `data-spk`/`spk-live`), so falta renomear.
+
+**O IMERSIVO NAO E TOCADO.** Medido antes de decidir: `matching` esta em **1.015 aulas
+publicadas** e 154 configs, `quickfire` em 290 configs. O kind segue no builder e o CSS nos
+dois shells — apagar quebraria a regeracao dessas aulas (REGRA 30) e criaria a deriva de
+shell que o GATE 18 existe para impedir. A proibicao vale onde a regra do artefato vale, e
+quem cobra e o **GATE 27** (`check_banco_mecanicas.py`), dos dois lados: a aula nao usa o
+markup removido, e o syllabus nao promete a mecanica removida.
+
 ### O relatorio de validacao (saida C do prompt controlador)
 
 ```

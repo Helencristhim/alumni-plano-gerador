@@ -12,6 +12,13 @@
 >
 > **Documentos irmaos:** `docs/NORMATIVO-planejamento-aulas-2026-08.md` (o .docx de planejamento) · `docs/NORMATIVO-arquitetura-frameworks-2026-08.md` (a apresentacao de 16 slides) · `docs/NORMATIVO-estrutura-frameworks-2026-08.md` · `docs/NORMATIVO-prompt-controlador-2026-08.md` · `docs/INSTRUCAO-CORRETIVA-stephanie-2026-08.md`.
 >
+> **Três linhas da tabela do §4 não valem para este molde.** Decisão do Dan em
+> 11/08/2026, depois de medir o artefato de referência: *Matching*,
+> *Ordering/reconstruction* e *Information gap* não têm com que ser montadas — o
+> artefato não tem nada parecido. **A transcrição abaixo fica como a autora escreveu**;
+> a lista operativa, com a evidência medida de cada linha, está em
+> `_build/model/ciclo.json -> banco_de_mecanicas`, e quem a cobra é o GATE 27.
+>
 > **Onde isto virou codigo:** `_build/model/ciclo.json` (`microciclo_guided_discovery`, `tom_didatico`,
 > `validacao_tres_camadas`), `_build/{slug}/syllabus.json` (a ficha de especificacao e as mecanicas
 > por aula) e `scripts/relatorio_validacao.py` (a matriz de validacao por camada).
