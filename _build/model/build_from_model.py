@@ -872,11 +872,20 @@ def _estrutura(ch):
 
 
 def _exposicao(ch):
-    """'dialogue' | 'reading' | None — pela CLASSE, no slide sem data-teacher."""
+    """'dialogue' | 'reading' | None — pela CLASSE/IDENTIDADE, no slide sem data-teacher.
+
+    LE TAMBEM O data-kind. Ao portar a interface para o vocabulario do ARTEFATO
+    (#2027), a leitura deixou de sair como <div class="ic-reading"> e passou a sair
+    como <p data-kind="reading" class="slide-lead"> + .evi-list. Esta funcao continuou
+    procurando SO a classe antiga, entao toda aula de leitura nova passou a nascer SEM
+    o slide de tarefa -- a REGRA 2.2 desligada em silencio, e o GATE 16 acusando
+    'slide-tarefa' faltando. E o mesmo erro que o data-kind existe para evitar: a
+    CLASSE diz como a peca se parece, o ATRIBUTO diz o que ela E. Aqui a pergunta e
+    de identidade, entao quem manda e o atributo."""
     est = _estrutura(ch)
     if 'class="dialogue-line' in est:
         return 'dialogue'
-    if 'class="ic-reading"' in est:
+    if 'class="ic-reading"' in est or 'data-kind="reading"' in est:
         return 'reading'
     return None
 
@@ -884,6 +893,10 @@ def _exposicao(ch):
 def _pergunta_de_gist(ch):
     """A pergunta de GIST do slide (o prompt do bloco kind:'gist'), sem as alternativas."""
     ch = _estrutura(ch)
+    # forma do artefato (#2027): <div data-kind="gist" class="quiz-item"><p class="quiz-question">
+    m = re.search(r'data-kind="gist"[^>]*>\s*<p class="quiz-question">(.*?)</p>', ch, re.S)
+    if m:
+        return _texto(m.group(1))
     if 'class="ic-choices"' not in ch:
         return None
     m = re.search(r'<div class="ic-card-h3">(.*?)</div><div class="ic-choices">', ch, re.S)
