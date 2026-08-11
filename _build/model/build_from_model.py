@@ -1832,7 +1832,12 @@ TAPPABLE_KIDS = {'dinosaur', 'tree', 'rocket', 'star', 'moon', 'planet', 'cat', 
                  # NAO entram: parte de corpo (wings/claws/tail/scales), lugar (cave),
                  # abstracao (shift/heavy) e acao com pessoa (lift/ride/carry) — no
                  # 'toque a figura' elas viram adivinhacao. Ver assets/kids/README.md.
-                 'brick', 'wheel', 'tower', 'bridge', 'street', 'piece', 'battery', 'fix'}
+                 'brick', 'wheel', 'tower', 'bridge', 'street', 'piece', 'battery', 'fix',
+                 # acao cuja FIGURA e o proprio referente (fogo, alguem montando).
+                 # 'wings'/'claws' ficam de fora de proposito: a figura (borboleta,
+                 # caranguejo) ensina o bicho, nao a parte -- no reveal card a
+                 # definicao corrige, no jogo de tocar nao ha definicao nenhuma.
+                 'breathe fire', 'ride'}
 
 
 def inject_kids_game(preclass, cfg):
