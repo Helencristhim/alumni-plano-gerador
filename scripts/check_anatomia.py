@@ -165,9 +165,9 @@ def selftest():
     real = le(os.path.join(RAIZ, inv["anatomias"]["guided-discovery"]["shell"]))
     def ler_mutante(p):
         s = le(p)
-        return s.replace("ic-write", "xx-removida") if p.endswith("guided-discovery.html") else s
+        return s.replace("writebox", "xx-removida") if p.endswith("guided-discovery.html") else s
     erros = verifica(inv, builder, ler=ler_mutante)
-    pegou = any("ic-write" in e for e in erros)
+    pegou = any("writebox" in e for e in erros)
     print(f"  {'OK  ' if pegou else 'FALHA'}  componente removido do shell de verdade")
     falhou |= not pegou
 
@@ -193,7 +193,7 @@ def main():
             print(f"  ERRO  {e}")
         return 1
     print("OK — nenhum componente declarado sumiu do shell ou do builder.")
-    print("O artefato de referencia nao e mais consultado: a fonte e este inventario.")
+    print("As classes declaradas sao as DO ARTEFATO; quem compara com ele e o GATE 21.")
     return 0
 
 

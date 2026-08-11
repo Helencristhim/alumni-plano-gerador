@@ -132,7 +132,18 @@ def medir(art, shell, inv):
     declaradas = [m["classe"] for m in gd["componentes"].values() if m.get("classe")]
     declaradas += [m["classe"] for m in (gd.get("estrutura", {}).get("pecas") or {}).values()
                    if m.get("classe")]
-    paralelas = sorted({c for c in declaradas if c not in a_css})
+    # EQUIVALENCIA DECLARADA nao e divergencia: e renome com motivo escrito (ex.: a barra de
+    # etapas se chama phase-* aqui porque reusa a mecanica que o shell base ja tinha; a
+    # aparencia e a mesma). O que o gate persegue e o renome SILENCIOSO.
+    equivalentes = {v["aqui"] for v in gd.get("equivalencias", {}).values()
+                    if isinstance(v, dict) and v.get("aqui")}
+    # PECAS PARADAS: kinds sem forma no artefato, aguardando decisao da autora. Continuam
+    # contados nas orfas (nao viram divida invisivel), mas nao contam como declaracao
+    # paralela — a declaracao delas E a pendencia.
+    paradas = {c for it in (gd.get("_pendente_sem_forma_no_artefato", {}).get("itens") or [])
+               for c in it.get("classes", [])}
+    paralelas = sorted({c for c in declaradas
+                        if c not in a_css and c not in equivalentes and c not in paradas})
     return {"faltando": faltando, "orfas": orfas, "paralelas": paralelas}, a_slide
 
 
