@@ -80,6 +80,24 @@ DIFERENCAS_ACEITAS = {
         },
     },
     "guided-discovery.html": {
+        # ══ O CHASSI DOS DOIS MOLDES E SEPARADO, POR DECISAO (11/08/2026) ══════════════
+        # Palavras do Dan: "os dois moldes devem ser separados mesmo, em si".
+        # O chassi do guided-discovery (.slide, .slide-inner, .slide-title, .slide-heading,
+        # .chapter-label, .slide-subtitle, .slide-image::before, .audio-btn-sm,
+        # .roleplay-card, .roleplay-kw, .stage-pill) passou a sair do ARTEFATO
+        # (_build/model/artefatos/erica-professor-view.html), byte a byte. O chassi do
+        # imersivo NAO MUDOU — nenhum aluno do molde antigo foi tocado.
+        #
+        # ESTE GATE NAO PEGA ISSO, e e de proposito: ele compara PRESENCA de funcao e de
+        # classe entre os dois shells, nao o VALOR das regras. Um max-width revertido de
+        # 940 para 920 passaria por aqui sem um pio. Quem tranca o valor do chassi e o
+        # GATE 21 (scripts/check_artefato_paridade.py -> CHASSI), que compara o clone com
+        # o artefato e tem selftest para isso.
+        #
+        # Consequencia pratica: NAO tente "unificar" o chassi dos dois shells. As classes
+        # continuam com o mesmo NOME nos dois (por isso este gate segue verde); o que
+        # diverge sao os VALORES, e isso agora e desenho, nao deriva.
+
         # As abas novas nao pediram JS nenhum — switchTab() ja e generico. O que pediu foi a
         # MECANICA de sorting, que a anatomia imersivo nao tem: la o Guided Discovery
         # acontece por reveal, aqui por classificacao em colunas. Portada do artefato da
@@ -102,13 +120,27 @@ DIFERENCAS_ACEITAS = {
             "icTimerStart": "idem",
             "icTimerReset": "idem",
             "icWriteSave": "area de escrita — o quadro de feedback tem CAMPO, nao so rotulo; a anatomia imersivo nao tem",
-            "icSelfPick":  "autoavaliacao de confianca — o artefato a traz no fecho das QUATRO aulas; registra percepcao, nao aprendizagem, e por isso nao entra na barra de progresso",
+            "icPick":      "quiz-option do artefato: marca correct/wrong e revela o .rationale do item",
+            "icSave":       "recap-item do artefato: o check do fecho, persistido",
+            "icConfPick":  "conf-btn do artefato: uma escolha por .conf-scale + contador em .score-out",
+            "icReveal":    "verify-all-btn do artefato: revela o .rationale seguinte (gabarito teacher-led)",
         },
-        "funcoes_a_menos": {},
+        "funcoes_a_menos": {
+            # A migracao de 11/08/2026 trocou as classes .ic-* pelas DO ARTEFATO
+            # (_build/model/artefatos/erica-professor-view.html), e com elas os handlers:
+            # o mecanismo passou a ser o do artefato, nao uma reimplementacao.
+            "icPickGist":     "virou icPick() sobre .quiz-option/.rationale, a forma do artefato",
+            "icRevealTf":     "o true/false passou a ser quiz-item + rationale, a forma do artefato",
+            "icToggleAnswer": "o gabarito passou a ser .callout.rule-box + .rationale, revelado por icReveal()",
+            "icToggleText":   "sem uso: nenhum bloco emitia o handler depois da migracao",
+        },
         # O CSS de media-card continua nos DOIS shells: sai a ABA, nao a regra. Remover CSS
         # do clone seria deriva sem ganho — e reintroduzi-lo depois, na unificacao, e
         # trabalho a toa. Por isso nao ha classes_a_menos.
-        "classes_a_menos": {},
+        "classes_a_menos": {
+            "ic-tag": "o status na tela (Conditional/Extension) passou a usar .cond-tag/.ext-tag, "
+                      "as classes DO ARTEFATO, na migracao de 11/08/2026.",
+        },
         "classes_a_mais": {
             "syl-block": "aba Syllabus 20 aulas — nao existe na anatomia da helen",
             "evi-field": "aba Evidencias (ficha pos-aula + checkpoint) — idem",
@@ -117,7 +149,6 @@ DIFERENCAS_ACEITAS = {
             "ic-sortbox":"mecanica sorting",
             "ic-self":   "autoavaliacao de confianca no fecho",
             "ic-reveal": "cartao que vira (frente/verso) — o componente mais usado do artefato; o imersivo revela por accordion, que e outra pedagogia",
-            "ic-tag":    "status da atividade na TELA (Conditional/Extension) — exigido pelas Diretrizes, item 12",
             "ic-evi":    "evidencia com a fonte que a sustenta",
             "ic-recap":  "recapitulacao do que a aula construiu",
             "ic-write":  "area de escrita — o quadro de feedback com campo de verdade",

@@ -66,7 +66,7 @@ var audioMap = {
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-  font-family:'Inter',-apple-system,sans-serif;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI Variable Text','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
   background:linear-gradient(135deg,#e8e4dc 0%,var(--bg) 50%,#e0ddd5 100%);
   color:var(--text);
   line-height:1.7;
@@ -195,27 +195,27 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
    saia como paragrafo cru, sem pilula, sem cor, sem caixa alta. O inventario nao pegou
    porque so listava componente de EXERCICIO — a estrutura da aula ficou de fora dele.
    Agora esta declarada em anatomias.json -> estrutura. */
-.stage-pill { display:inline-flex;align-items:center;gap:.5rem;font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.32rem .8rem;border-radius:20px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-glow);margin-bottom:.8rem; }
-.slide-dark .stage-pill, .slide-image .stage-pill { background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3); }
+.stage-pill { display:inline-flex;align-items:center;gap:.5rem;font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.32rem .8rem;border-radius:20px;background:rgba(47,111,94,.14);color:var(--accent);border:1px solid rgba(15,76,117,.3);margin-bottom:.8rem }
+.slide-dark .stage-pill,.slide-image .stage-pill { background:rgba(123,239,178,.12);color:var(--mint);border-color:rgba(123,239,178,.3) }
 
 .slides-container { flex:1;overflow:hidden;position:relative; }
-.slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 2rem; }
+.slide { position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:flex-start;justify-content:center;padding:6.2rem 2rem 5.5rem;overflow-y:auto }
 .slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
 
-.slide-inner { max-width:920px;width:100%;position:relative; }
+.slide-inner { max-width:940px;width:100%;position:relative;margin:auto }
 .slide-light { background:var(--bg); }
 .slide-light .slide-inner { color:var(--text); }
 .slide-dark { background:var(--dark); }
 .slide-dark .slide-inner { color:#fff; }
 .slide-dark .vocab-card, .slide-dark .fill-item, .slide-dark .challenge-card, .slide-dark .error-card, .slide-dark .roleplay-card, .slide-dark .record-card, .slide-dark .survival-item-ic, .slide-dark .oral-item, .slide-dark .comp-q, .slide-dark .lost-bag-report { color:#2d2d3a; }
 .slide-image { background-size:cover;background-position:center; }
-.slide-image::before { content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,26,46,.4) 0%,rgba(26,26,46,.78) 100%); }
-.slide-image .slide-inner { color:#fff;position:relative;z-index:2;text-align:center; }
+.slide-image::before { content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(18,18,42,.28) 0%,rgba(18,18,42,.52) 100%) }
+.slide-image .slide-inner { color:#fff;position:relative;z-index:3;text-align:center }
 
-.chapter-label { font-size:.75rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--accent-light);margin-bottom:.5rem; }
-.slide-title { font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.15;margin-bottom:1rem; }
-.slide-subtitle { font-size:1rem;font-weight:300;opacity:.7;line-height:1.6; }
-.slide-heading { font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;line-height:1.2;margin-bottom:1.2rem; }
+.chapter-label { font-size:.7rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--accent-light);margin-bottom:.5rem }
+.slide-title { font-family:'Cormorant Garamond','EB Garamond','Iowan Old Style','Palatino Linotype',Palatino,Constantia,'Hoefler Text',Georgia,serif;font-size:clamp(2.2rem,4.6vw,3.7rem);font-weight:600;line-height:1.14;margin-bottom:1rem }
+.slide-subtitle { font-size:1rem;font-weight:300;opacity:.88;line-height:1.6 }
+.slide-heading { font-family:'Cormorant Garamond','EB Garamond','Iowan Old Style','Palatino Linotype',Palatino,Constantia,'Hoefler Text',Georgia,serif;font-size:clamp(1.6rem,3.2vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:1rem }
 .slide-image .slide-title, .slide-image .slide-subtitle, .slide-image .slide-heading, .slide-image .accent { text-shadow:0 2px 8px rgba(0,0,0,0.6); }
 .accent { color:var(--accent); }
 .accent-bold { color:var(--accent);font-weight:700; }
@@ -251,8 +251,8 @@ body.slide-mode .teacher-t { display:flex; }
 .vocab-card.revealed .card-example { opacity:1;height:auto; }
 .vocab-card .card-audio { margin-top:auto;padding-top:.4rem;opacity:0;transition:opacity .4s .3s; }
 .vocab-card.revealed .card-audio { opacity:1; }
-.audio-btn-sm { display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:.72rem;font-weight:600;font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.5px; }
-.audio-btn-sm:hover { background:#9a3412; }
+.audio-btn-sm { display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:.7rem;font-weight:600;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI Variable Text','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;transition:all .2s;letter-spacing:.5px }
+.audio-btn-sm:hover { background:var(--accent-light) }
 .audio-btn-sm svg { width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
 .vocab-counter { text-align:center;margin-top:1.2rem;font-weight:600;color:var(--accent);font-size:1rem; }
 
@@ -328,20 +328,6 @@ body.slide-mode .teacher-t { display:flex; }
 .slide-dark .lp .lp-speed-btn { border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.85); }
 .lp .lp-speed-active { background:var(--accent);border-color:var(--accent);color:#fff; }
 .slide-dark .lp .lp-speed-active { background:var(--accent);border-color:var(--accent);color:#fff; }
-/* O texto de volta na etapa de DETALHE: menor, para caber com o true/false na mesma tela.
-   Leitura de detalhe se faz COM o texto na frente — sem ele o exercicio testa memoria. */
-.ic-reading-recap { font-size:.86rem;line-height:1.5;max-height:34vh;overflow-y:auto;margin-bottom:.9rem;opacity:.95 }
-.ic-reading-recap .ic-rtitle { font-size:.9rem }
-/* Pergunta de predicao: vem ANTES da exposicao, e nao e item de compreensao (REGRA 2.2) */
-/* LOUSA da correcao diferida: caixa em branco, o professor escreve por cima (annotate) */
-.ic-whiteboard { max-width:760px;min-height:46vh;margin:1.2rem auto 0;background:#fff;border:1px solid var(--border);border-radius:12px;position:relative }
-.ic-whiteboard .ic-wb-label { position:absolute;top:.7rem;left:1rem;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim) }
-.ic-predict { max-width:560px;margin:0 auto 1rem;padding:.8rem 1.1rem;border-left:3px solid var(--accent);background:var(--accent-dim);border-radius:0 8px 8px 0;color:var(--text); }
-/* A ANCORA: uma linha do proprio input. Sem ela a predicao e adivinhacao (feedback 28/07) */
-.ic-predict .ic-predict-line { font-size:1rem;font-weight:600;line-height:1.5;margin-bottom:.5rem }
-.ic-predict .ic-predict-q { font-size:.9rem;font-style:italic;color:var(--text-mid) }
-.slide-dark .ic-predict .ic-predict-q { color:rgba(255,255,255,.8) }
-.slide-dark .ic-predict { background:rgba(255,255,255,.07);color:rgba(255,255,255,.92); }
 .play-btn { width:64px;height:64px;border-radius:50%;background:var(--accent);border:none;color:#fff;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;margin:1rem auto; }
 .play-btn:hover { transform:scale(1.08);box-shadow:0 8px 32px rgba(47,111,94,.4); }
 .play-btn svg { width:24px;height:24px;fill:#fff;stroke:none; }
@@ -376,11 +362,11 @@ body.slide-mode .teacher-t { display:flex; }
 .oral-situation { font-size:.95rem;line-height:1.5;color:var(--text);font-weight:600; }
 @media (prefers-reduced-motion:reduce) { .oral-item { transition:none; } }
 
-.roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:500px;margin:0 auto; }
+.roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:14px;padding:1.4rem 1.6rem;max-width:640px;margin:1.2rem auto 0;text-align:left;color:var(--text) }
 .roleplay-body { padding:1.5rem; }
 .roleplay-scenario { font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem; }
 .roleplay-keywords { display:flex;flex-wrap:wrap;gap:.4rem; }
-.roleplay-kw { padding:.3rem .7rem;background:var(--accent-dim);border:1px solid rgba(47,111,94,.2);border-radius:16px;font-size:.8rem;color:var(--accent);font-weight:600; }
+.roleplay-kw { display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.7rem }
 
 .record-card { background:#fff;border:2px solid #e8e4df;border-radius:16px;padding:2rem;text-align:center;max-width:500px;margin:0 auto; }
 .record-prompt { font-family:'Cormorant Garamond',serif;font-size:1.3rem;line-height:1.5;color:var(--text);margin-bottom:1.5rem; }
@@ -454,7 +440,7 @@ body.slide-mode .nav-bar { display:flex; }
 ::-webkit-scrollbar-thumb { background:rgba(47,111,94,.3);border-radius:3px; }
 
 @media(max-width:768px) {
-  .slide { padding:5rem 1.2rem 2rem; }
+  .slide { padding:5.4rem 1.1rem 5.4rem }
   .vocab-grid { grid-template-columns:1fr;gap:.8rem; }
   .vocab-card { min-height:auto; }
   .slide-title { font-size:2rem; }
@@ -565,25 +551,6 @@ body.slide-mode .nav-bar { display:flex; }
 .vocab-card-pc.listened .audio-btn{background:var(--success);border-color:var(--success)}
 .btn-your-pronunciation{display:inline-flex;align-items:center;gap:5px;padding:.55rem 1.2rem;font:600 .82rem/1.4 -apple-system,BlinkMacSystemFont,"Inter",sans-serif;color:#fff;background:#7c3aed;border:2px solid #7c3aed;border-radius:8px;cursor:pointer;transition:all 150ms ease;white-space:nowrap}
 .btn-your-pronunciation:hover{background:#6d28d9;border-color:#6d28d9}
-
-/* ===== B2 IN-CLASS BLOCKS (aditivo — portados de artefato-b2-exercicios.html) =====
-   Blocos display + 3 interativos (gist/tf/reveal-answer). Tudo escopado em .ic-* para
-   nunca colidir com componentes existentes. Cores mapeadas pra paleta do modelo:
-   navy->#003080 (cor fixa Alumni), accent (verde-substituto sage)->var(--accent),
-   ink->var(--text). Funciona em slide-light e slide-dark (overrides no bloco de contraste). */
-.ic-block { margin: 1.1rem 0; text-align: left; }
-.ic-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); padding: 1.3rem 1.5rem; margin-bottom: 1rem; }
-.ic-card-h3 { margin: 0 0 .8rem; font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.2rem; color: #003080; display: flex; align-items: center; gap: .55rem; }
-.ic-tag { font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #fff; background: var(--accent); padding: .2rem .55rem; border-radius: 6px; }
-/* question / guiding / analyse lists */
-.ic-qs { margin: 0; padding: 0; list-style: none; }
-.ic-qs li { display: flex; gap: .8rem; align-items: flex-start; padding: .8rem .25rem; border-bottom: 1px dashed var(--border); font-size: 1rem; line-height: 1.45; }
-.ic-qs li:last-child { border-bottom: none; }
-.ic-qnum { flex: 0 0 auto; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: #003080; color: #fff; font-size: .82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: .1rem; }
-.ic-qs.ic-guiding .ic-qnum { background: var(--accent); }
-/* vocabnote / followup */
-.ic-note { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem 1.2rem; font-size: .95rem; color: var(--text); font-weight: 500; margin-bottom: 1rem; line-height: 1.45; }
-.ic-followup { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.2rem; font-size: .95rem; line-height: 1.5; color: var(--text); margin-bottom: 1rem; }
 /* matching (display, 2 columns) */
 .ic-match { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .ic-match-col h4 { margin: 0 0 .65rem; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); }
@@ -608,126 +575,16 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-match-score { text-align: center; font-size: .8rem; font-weight: 700; color: var(--text-dim); margin: -.5rem 0 1rem; }
 .ic-match-score.ic-done { color: var(--success); }
 @media (prefers-reduced-motion: reduce) { .ic-match .ic-chip.ic-bad { animation: none; } }
-/* reading text + source */
-.ic-reading { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.7rem; box-shadow: 0 6px 18px -10px rgba(0,26,77,.18); position: relative; margin-bottom: 1rem; max-height: 42vh; overflow-y: auto; }
-.slide:has(.ic-reading:not(.ic-collapsed)){align-items:flex-start}
 .slide{align-items:flex-start}
 .slide>.slide-inner{margin:auto 0;max-height:calc(100vh - 11rem);overflow-y:auto;padding-bottom:1rem}
 .slide>.slide-inner::-webkit-scrollbar{width:8px}
 .slide>.slide-inner::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px}
-/* Leitura + card de atividade (gist/true-false aberto) na MESMA tela: texto + pergunta +
-   3 alternativas estouravam os 100vh e as ultimas opcoes ficavam cortadas pelo rodape.
-   Fix: o .slide-inner vira o UNICO container rolavel (uma barra so) e o .ic-reading larga
-   o scroll interno proprio — assim da pra rolar ate a ultima alternativa sem cortar nada. */
-.slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner { max-height: calc(100vh - 11rem); overflow-y: auto; padding-right: .5rem; padding-bottom: 1rem; }
-.slide:has(.ic-reading:not(.ic-collapsed)) .ic-reading { max-height: none; overflow: visible; }
-/* EXCECAO: no slide de DETALHE o texto divide a tela com o true/false, entao ele NAO pode
-   largar a altura (a regra acima existe para o slide do texto SOZINHO). Sem este cap, o
-   texto empurra o exercicio para baixo da dobra — medido: primeiro .ic-tfrow em 778px num
-   viewport de 720. Seletor tem de bater a especificidade da regra acima E vir depois. */
-.slide:has(.ic-reading-recap) .ic-reading.ic-reading-recap { max-height: 28vh; overflow-y: auto; }
-.slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar { width: 8px; }
-.slide:has(.ic-reading:not(.ic-collapsed)) .slide-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
-.ic-reading::-webkit-scrollbar { width: 8px; }
-.ic-reading::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
-.ic-textbtn { display: inline-flex; align-items: center; gap: .4rem; font: 600 .82rem/1 'Inter', sans-serif; color: #003080; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 9px; padding: .5rem .9rem; cursor: pointer; margin: 0 auto .8rem; transition: border-color .2s; }
-.ic-textbtn:hover { border-color: var(--accent); }
-.ic-reading.ic-collapsed { display: none; }
-.ic-reading.ic-collapsed.ic-open { display: block; }
-.ic-reading::before { content: ""; position: absolute; left: 0; top: 1.3rem; bottom: 1.3rem; width: 4px; border-radius: 4px; background: var(--accent); }
-.ic-reading .ic-rtitle { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.3rem; color: #003080; margin: 0 0 .8rem; }
-.ic-reading p { font-size: 1rem; line-height: 1.62; color: var(--text); margin: 0 0 .8rem; }
-.ic-reading .ic-src { font-size: .75rem; color: var(--text-dim); margin-top: .8rem; border-top: 1px solid var(--border); padding-top: .6rem; }
-.ic-reading .ic-src a { color: #003080; }
-/* gap-fill */
-.ic-gaptext { font-size: 1.05rem; line-height: 1.9; color: var(--text); }
-.ic-blank { display: inline-block; min-width: 4.5rem; border-bottom: 2px solid var(--accent); text-align: center; font-weight: 700; color: var(--accent); padding: 0 .35rem; }
-.ic-blank .ic-n { font-size: .65rem; color: var(--text-dim); font-weight: 600; vertical-align: super; }
-/* word bank */
-.ic-bank { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
-.ic-bank .ic-b { background: #003080; color: #fff; font-size: .82rem; font-weight: 600; padding: .4rem .8rem; border-radius: 999px; }
-.ic-bank.ic-soft .ic-b { background: var(--bg-card); color: #003080; border: 1.5px solid #003080; }
-/* scenarios */
-.ic-scenario { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: .8rem; }
-.ic-scenario .ic-who { font-size: .68rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
-.ic-scenario p { margin: 0; font-size: 1rem; line-height: 1.5; color: var(--text); }
-/* language-focus rows (lf) */
-.ic-lf-list { display: flex; flex-direction: column; gap: .55rem; }
-.ic-lf { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: .75rem 1rem; font-size: 1rem; color: var(--text); }
-.ic-lf .ic-lbl { flex: 0 0 auto; width: 1.7rem; height: 1.7rem; border-radius: 7px; background: var(--bg-elevated); color: #003080; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-.ic-lf .ic-mod { font-weight: 700; color: var(--accent); }
-.ic-lf .ic-mod.ic-strong { color: var(--danger); }
-/* modal meaning cards */
-.ic-modals { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
-.ic-modal-c { border-radius: 12px; padding: 1rem; border: 1px solid var(--border); background: var(--bg-card); }
-.ic-modal-c .ic-m { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-bottom: .35rem; color: var(--accent); }
-.ic-modal-c .ic-strength { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .5rem; }
-.ic-modal-c p { margin: 0; font-size: .85rem; line-height: 1.45; color: var(--text-mid); }
-/* rephrase rows */
-.ic-rephrase-cue { display: inline-block; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 7px; padding: .1rem .55rem; font-weight: 700; color: #003080; font-size: .78rem; margin-left: .3rem; }
-/* ===== gist (interativo: clicar a ideia certa) ===== */
-.ic-choices { display: flex; flex-direction: column; gap: .65rem; }
-.ic-choice { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 11px; padding: .85rem 1rem; font-size: 1rem; color: var(--text); cursor: pointer; transition: all .2s ease; }
-.ic-choice:hover { border-color: var(--accent); }
-.ic-choice .ic-opt { flex: 0 0 auto; width: 1.8rem; height: 1.8rem; border-radius: 8px; background: var(--bg-elevated); color: #003080; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-.ic-choice .ic-badge { margin-left: auto; font-size: .78rem; font-weight: 700; color: var(--success); opacity: 0; transition: opacity .2s; }
-.ic-choice.ic-picked-right { border-color: var(--success); background: var(--success-bg); }
-.ic-choice.ic-picked-right .ic-opt { background: var(--success); color: #fff; }
-.ic-choice.ic-picked-right .ic-badge { opacity: 1; }
-.ic-choice.ic-picked-wrong { border-color: var(--danger); background: var(--danger-bg); }
-/* ===== tf (interativo: revelar verdict + justificativa) ===== */
-.ic-tf { display: flex; flex-direction: column; gap: .55rem; }
-.ic-tfrow { display: flex; gap: .8rem; align-items: flex-start; background: var(--bg-card); border: 1px solid var(--border); border-radius: 11px; padding: .8rem 1rem; cursor: pointer; transition: border-color .2s ease; }
-.ic-tfrow:hover { border-color: var(--accent); }
-.ic-tfrow .ic-qnum { background: #003080; }
-.ic-tfrow .ic-stmt { flex: 1; font-size: .95rem; line-height: 1.45; color: var(--text); }
-.ic-tfrow .ic-verdict { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: .25rem .65rem; border-radius: 8px; opacity: 0; transition: opacity .2s; }
-.ic-verdict.ic-t { background: var(--success-bg); color: var(--success); }
-.ic-verdict.ic-f { background: var(--danger-bg); color: var(--danger); }
-.ic-tfrow[data-answer="true"] .ic-verdict.ic-f,
-.ic-tfrow[data-answer="false"] .ic-verdict.ic-t { display: none; }
-.ic-tfrow.ic-revealed .ic-verdict { opacity: 1; }
-.ic-tfrow .ic-just { display: block; font-size: .8rem; color: var(--text-dim); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
-.ic-tfrow.ic-revealed .ic-just { max-height: 6rem; margin-top: .4rem; }
-/* ===== reveal answer (accordion teacher-led) ===== */
-.ic-answer { border-radius: 12px; border: 1.5px dashed var(--accent); background: var(--accent-dim); overflow: hidden; margin-top: 1rem; }
-.ic-answer .ic-ans-head { display: flex; align-items: center; gap: .65rem; padding: .85rem 1.1rem; cursor: pointer; user-select: none; font-weight: 700; color: #003080; font-size: .92rem; }
-.ic-answer .ic-ans-head .ic-ico { width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex: 0 0 auto; transition: transform .2s; }
-.ic-answer.ic-open .ic-ans-head .ic-ico { transform: rotate(45deg); }
-.ic-answer .ic-ans-body { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
-.ic-answer.ic-open .ic-ans-body { max-height: 60rem; }
-.ic-answer .ic-ans-inner { padding: .1rem 1.1rem 1.1rem; font-size: .9rem; line-height: 1.55; color: var(--text); }
-.ic-answer .ic-akey { display: flex; flex-wrap: wrap; gap: .45rem; }
-.ic-answer .ic-akey .ic-a { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 8px; padding: .3rem .65rem; font-size: .82rem; font-weight: 600; color: #003080; }
-.ic-answer .ic-ans-inner ol { margin: 0; padding-left: 1.3rem; }
-.ic-answer .ic-ans-inner ol li { margin-bottom: .4rem; }
-@media (max-width: 760px) { .ic-match { grid-template-columns: 1fr; } .ic-modals { grid-template-columns: 1fr; } }
-/* slide-dark overrides: blocos legíveis em fundo escuro (cartões claros, texto escuro) */
-.slide-dark .ic-card, .slide-dark .ic-reading, .slide-dark .ic-lf, .slide-dark .ic-modal-c,
-.slide-dark .ic-chip, .slide-dark .ic-choice, .slide-dark .ic-tfrow, .slide-dark .ic-scenario,
-.slide-dark .ic-note, .slide-dark .ic-followup, .slide-dark .ic-answer { background: #fff !important; }
-.slide-dark .ic-card *, .slide-dark .ic-reading *, .slide-dark .ic-lf *, .slide-dark .ic-modal-c *,
-.slide-dark .ic-chip *, .slide-dark .ic-choice *, .slide-dark .ic-tfrow *, .slide-dark .ic-scenario *,
-.slide-dark .ic-note, .slide-dark .ic-followup *, .slide-dark .ic-answer * { color: #1a1a2e !important; }
-.slide-dark .ic-qnum, .slide-dark .ic-bank .ic-b { color: #fff !important; }
-.slide-dark .ic-tag { color: #fff !important; }
-.slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
-.slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
-
-/* ===== SORTING (ic-sort) — portado do artefato da Stephanie (classes .sortbox/.sortcol/
-   .sortitem), com tres correcoes: escopado por container (o artefato usava globais e id
-   fixo, entao so cabia UM por aula), saida em ingles (o artefato imprimia "de 6 no lugar
-   certo" — portugues na tela do aluno viola a REGRA 13 em B1) e contagem derivada em vez
-   do 6 cravado no codigo. */
-.ic-sortbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin-top:.6rem}
-.ic-sortcol{border:1px dashed var(--border-light);border-radius:8px;padding:.7rem;background:rgba(255,255,255,.4);min-height:90px}
-.ic-sortcol h5{font-size:.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem}
-.ic-sortitem{display:block;width:100%;text-align:left;padding:.5rem .7rem;margin-bottom:.4rem;background:#fff;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;cursor:pointer;line-height:1.45;transition:all .2s;color:var(--text)}
-.ic-sortitem:hover{border-color:var(--accent)}
-.ic-sortitem:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.ic-sortitem.ic-ok{background:var(--success-bg);border-color:var(--success-border)}
-.ic-sortitem.ic-no{background:var(--danger-bg);border-color:var(--danger-border)}
-.ic-sortout{margin-top:.6rem;font-size:.8rem;font-weight:600;color:var(--text-mid);min-height:1.2em}
+@media (max-width: 760px) { .ic-match { grid-template-columns: 1fr; } }
+/* slide-dark overrides: SO para os 3 kinds que seguem em .ic-* (matching, call, quickfire —
+   sem forma no artefato, aguardando decisao da autora). O resto agora e coberto pelas
+   regras .slide-dark do PROPRIO artefato, que entraram verbatim. */
+.slide-dark .ic-chip, .slide-dark .ic-call { background: #fff !important; }
+.slide-dark .ic-chip *, .slide-dark .ic-call * { color: #1a1a2e !important; }
 
 /* ===== CALL PLAYER (ic-call) — portado do artefato da Stephanie (playCall/markSpeaker/
    CAST/CALL_L1). La a call e uma lista de TURNOS com falante, tocada por SEGMENTO (a call
@@ -745,101 +602,6 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-seg:hover{background:var(--accent);color:#fff}
 .ic-seg:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .ic-seg.ic-stop{border-color:var(--border-light);color:var(--text-dim)}
-
-/* ===== AUTOAVALIACAO (ic-self) — portada do artefato (SA/saBuild/saPick/saScore), que a
-   traz no fecho das QUATRO aulas. Nao mede aprendizagem: registra PERCEPCAO. O proprio
-   normativo diz isso — "autoavaliacao de confianca registra percepcao da aluna, nao
-   comprova aprendizagem" — e o valor esta na DISTANCIA entre o que ela marca aqui e o que
-   apareceu na aula.
-   Rotulos em INGLES: em B1 a tela do aluno nao leva portugues (REGRA 13). No pre-class do
-   artefato eles estao em PT, que e outra superficie e outro nivel. */
-.ic-self{margin-top:.6rem}
-.ic-self-row{padding:.7rem 0;border-bottom:1px solid var(--border)}
-.ic-self-q{font-size:.88rem;font-weight:600;margin-bottom:.45rem;color:var(--text)}
-.ic-self-opts{display:flex;flex-wrap:wrap;gap:.4rem}
-.ic-self-b{padding:.35rem .8rem;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:999px;font-size:.78rem;cursor:pointer;transition:all .2s}
-.ic-self-b:hover{border-color:var(--accent)}
-.ic-self-b:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.ic-self-b.ic-on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
-.ic-self-out{margin-top:.6rem;font-size:.8rem;font-weight:600;color:var(--text-mid);min-height:1.2em}
-
-/* ===== CARTAO QUE VIRA (ic-reveal) — portado do artefato (.reveal-item/.r-front/.r-back),
-   onde e o componente MAIS usado dos slides: 108 ocorrencias.
-   NAO e o accordion que eu tinha (kind answer). A pedagogia e outra: o reveal esconde a
-   RESPOSTA atras de uma escolha da aluna — ela le a frente, arrisca em voz alta, e so entao
-   clica. O accordion so dobra texto que ja se sabe estar la.
-   TOGGLE, nao one-way (REGRA 27.E): quem conduz a aula clica sem querer e precisa fechar.
-
-   ===== STATUS NA TELA (ic-cond/ic-ext + .ic-tag) — vem junto, e nao por acaso: no artefato
-   e a MESMA peca. As Diretrizes exigem que Essencial/Condicional/Extensao estejam
-   "identificados na TELA e no procedimento" (item 12 do checklist de aprovacao) — eu tinha
-   declarado so nos comentarios do slides.html, onde quem conduz a aula nunca ve. */
-.ic-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.85rem 1.1rem;margin-bottom:.6rem;cursor:pointer;transition:all .25s;color:var(--text)}
-.ic-reveal:hover{border-color:var(--accent)}
-.ic-reveal:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.ic-reveal .ic-r-front{font-size:.95rem;line-height:1.55}
-.ic-reveal .ic-r-hint{display:block;font-size:.72rem;font-style:italic;letter-spacing:.5px;opacity:.55;margin-top:.25rem}
-.ic-reveal .ic-r-back{display:none;margin-top:.6rem;padding-top:.6rem;border-top:1px dashed var(--border);font-size:.86rem;color:var(--accent);line-height:1.6}
-.ic-reveal.ic-on{border-color:var(--accent);background:var(--accent-dim)}
-.ic-reveal.ic-on .ic-r-back{display:block}
-.ic-reveal.ic-on .ic-r-hint{display:none}
-.ic-reveal.ic-cond,.ic-reveal.ic-ext{border-style:dashed}
-.ic-tag{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-bottom:.4rem;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-glow)}
-
-/* ===== EVIDENCIA COM FONTE (ic-evi) — 48 usos no artefato. E o que impede o gabarito de
-   afirmar mais do que o material mostra: cada afirmacao vem com o TRECHO que a sustenta.
-   As Diretrizes cobram exatamente isso — "garantir que cada resposta-modelo seja sustentada
-   pelo material apresentado ao aluno" e "marcar fato, inferencia e simulacao". */
-.ic-evi-list{margin-top:.6rem}
-.ic-evi{border-left:3px solid var(--accent);background:var(--accent-dim);padding:.6rem .85rem;margin-bottom:.5rem;border-radius:0 6px 6px 0}
-.ic-evi-claim{font-size:.9rem;line-height:1.5;color:var(--text);font-weight:600}
-.ic-evi-src{display:block;margin-top:.35rem;font-size:.78rem;font-style:italic;color:var(--text-dim);line-height:1.5}
-
-/* ===== RECAPITULACAO (ic-recap) — 25 usos. Fecha o que a aula construiu, em uma linha por
-   item. Nao e o checklist do fecho: aquele se marca, este se LE em voz alta. */
-.ic-recap{margin-top:.6rem}
-.ic-recap-item{display:flex;gap:.6rem;align-items:flex-start;padding:.45rem 0;border-bottom:1px solid var(--border);font-size:.88rem;line-height:1.55;color:var(--text-mid)}
-.ic-recap-item::before{content:"\2192";color:var(--accent);font-weight:700;flex-shrink:0}
-
-/* ===== AREA DE ESCRITA (ic-write) — 40 usos. O `whiteboard` que eu tinha imprimia um ROTULO
-   e nada mais: quem conduz a aula abria o quadro de feedback e nao tinha onde escrever. Aqui o
-   campo existe de verdade, e persiste em localStorage — com a mesma honestidade da aba
-   Evidencias: fica preso a este navegador. */
-.ic-write{margin-top:.6rem}
-.ic-write-f{margin-bottom:.7rem}
-.ic-write-l{display:block;font-size:.78rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);margin-bottom:.3rem}
-.ic-write-t{width:100%;min-height:64px;padding:.6rem .75rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);font:400 .88rem/1.55 'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text);resize:vertical}
-.ic-write-t:focus{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
-
-/* ===== PERGUNTA COM SUBPROMPT (ic-q) — 58 usos. A pergunta e a instrucao de COMO responder
-   vivem juntas; o `questions` que eu tinha so listava a pergunta. */
-.ic-q{padding:.6rem 0;border-bottom:1px solid var(--border)}
-.ic-q-t{font-size:.92rem;font-weight:600;color:var(--text);line-height:1.5}
-.ic-q-s{display:block;margin-top:.25rem;font-size:.8rem;color:var(--text-dim);line-height:1.5}
-
-/* ===== FRASE COM FUNCAO DECLARADA (ic-phrase) — 49 usos. A frase e o TRABALHO que ela faz,
-   lado a lado. E o que separa "decore esta frase" de "use esta quando precisar disto". */
-.ic-phrase{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;padding:.5rem 0;border-bottom:1px solid var(--border)}
-.ic-phrase-en{font-size:.92rem;color:var(--text);flex:1 1 60%}
-.ic-phrase-fn{font-size:.76rem;color:var(--accent);font-weight:600;letter-spacing:.3px}
-
-/* ===== RACIONAL POR ITEM (ic-why) — portado do artefato (.rationale/revealRationales).
-   Nao e o gabarito: e POR QUE aquela e a resposta, e por que a errada e tentadora. Nasce
-   escondido e quem conduz a aula revela DEPOIS que a aluna arriscou — revelar antes transforma o
-   exercicio em leitura. */
-.ic-why{display:none;margin-top:.5rem;padding:.65rem .85rem;background:var(--accent-dim);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;font-size:.81rem;line-height:1.6;color:var(--text-mid)}
-.ic-why.ic-on{display:block}
-
-/* ===== CRONOMETRO (ic-timer) — portado do artefato. Existe onde a tarefa tem TEMPO REAL
-   (a escrita cronometrada, a resposta de 45s). O tempo e parte da tarefa, nao pressao do
-   tom: as Diretrizes pedem que "a pressao venha da situacao". */
-.ic-timer{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:.6rem}
-.ic-timer-n{font:700 1.5rem/1 'Inter',-apple-system,sans-serif;color:var(--accent);font-variant-numeric:tabular-nums;min-width:4.2rem}
-.ic-timer-n.ic-over{color:var(--danger)}
-.ic-timer-b{padding:.45rem 1rem;border-radius:6px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s}
-.ic-timer-b:hover{background:var(--accent);color:#fff}
-.ic-timer-b:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-
 
 /* ══════════════════════════════════════════════════════════════════════════════════════
    INTERFACE DO ARTEFATO — COPIADA, byte a byte.
@@ -1044,6 +806,19 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 .slide-dark .reveal-item { background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.13);color:rgba(255,255,255,.92) }
 .slide-dark .reveal-item.revealed { background:rgba(123,239,178,.09);border-color:rgba(123,239,178,.35) }
 .slide-dark .reveal-item .r-back { color:var(--mint);border-top-color:rgba(255,255,255,.15) }
+
+/* O CRONOMETRO, com a forma do artefato. Ele existe la (timer-btn, 30 usos) mas no chrome
+   do Professor View, nunca dentro de .slide — por isso nao entrou no porte por .slide. A
+   FORMA e copiavel, entao vem como esta: .timerbox + .timer-read (+ .over quando passa do
+   zero) + .timer-btn. Decisao do Dan (11/08/2026). Nao e invencao — e a mesma peca, noutro
+   lugar da tela. */
+.wc { font-size:.74rem;color:var(--text-dim);margin-top:.35rem;text-align:right }
+.timerbox { display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;padding:.8rem 1rem;background:var(--dark);color:#fff;border-radius:10px;margin:.8rem 0 }
+.timer-read { font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI Variable Text','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:1px;min-width:96px }
+.timer-read.over { color:#ff8080 }
+.timer-btn { padding:.45rem 1rem;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:.78rem;font-weight:600;cursor:pointer;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI Variable Text','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;min-height:38px }
+.timer-btn:hover { background:rgba(255,255,255,.12) }
+table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1212,7 +987,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">1 &middot; Real-world objective</div>
   <h2 class="slide-heading">The conversation you are walking into</h2>
-  <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Who</div><p>Rafael Duarte -- a teacher from Lisbon who joined the school last month. You watched his 8 a.m. class this morning. This is your first feedback session with him.</p></div><div class="ic-scenario"><div class="ic-who">Why</div><p>He asked for it. He knows the class did not go the way he planned, and he wants to hear what you saw.</p></div><div class="ic-scenario"><div class="ic-who">Outcome</div><p>Rafael leaves the room knowing one thing that worked, one thing to change, and how to change it.</p></div><div class="ic-scenario"><div class="ic-who">Pressure</div><p>He will disagree with one thing you say. He is not being difficult -- he was in the room and you were not teaching.</p></div><div class="ic-scenario"><div class="ic-who">Success</div><p>He asks a question back. If he only nods, you were not clear enough to be argued with.</p></div></div>
+  <div data-kind="scenarios" class="brief"><dl><dt>Who</dt><dd>Rafael Duarte -- a teacher from Lisbon who joined the school last month. You watched his 8 a.m. class this morning. This is your first feedback session with him.</dd><dt>Why</dt><dd>He asked for it. He knows the class did not go the way he planned, and he wants to hear what you saw.</dd><dt>Outcome</dt><dd>Rafael leaves the room knowing one thing that worked, one thing to change, and how to change it.</dd><dt>Pressure</dt><dd>He will disagree with one thing you say. He is not being difficult -- he was in the room and you were not teaching.</dd><dt>Success</dt><dd>He asks a question back. If he only nods, you were not clear enough to be argued with.</dd></dl></div>
 </div>
 </div>
 
@@ -1229,8 +1004,8 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">2 &middot; Initial attempt</div>
   <h2 class="slide-heading">Three things, out loud</h2>
-  <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Say one sentence for each. The way you would say it today.</span></div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>What did you see the students doing?</span></li><li><span class="ic-qnum">2</span><span>What worked, and how do you know it worked?</span></li><li><span class="ic-qnum">3</span><span>What would you change, and what do you want him to do differently on Thursday?</span></li></ol></div>
-<div class="ic-card"><div class="ic-card-h3">Four and a half minutes. Stop where you are when it ends.</div><div class="ic-timer"><span class="ic-timer-n" id="tmr-a1attempt">4:30</span><button class="ic-timer-b" onclick="icTimerStart(this,'tmr-a1attempt',270)">Start / Pause</button><button class="ic-timer-b" onclick="icTimerReset(this,'tmr-a1attempt',270)">Reset</button></div></div>
+  <p data-kind="questions" class="slide-lead">Say one sentence for each. The way you would say it today.</p><div class="qlist"><div class="q-item">What did you see the students doing?</div><div class="q-item">What worked, and how do you know it worked?</div><div class="q-item">What would you change, and what do you want him to do differently on Thursday?</div></div>
+<p data-kind="timer" class="slide-lead">Four and a half minutes. Stop where you are when it ends.</p><div class="timerbox"><span class="timer-read" id="tmr-a1attempt">4:30</span><button class="timer-btn" onclick="icTimerStart(this,'tmr-a1attempt',270)">Start / Pause</button><button class="timer-btn" onclick="icTimerReset(this,'tmr-a1attempt',270)">Reset</button></div>
 </div>
 </div>
 
@@ -1238,7 +1013,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">2 &middot; Initial attempt</div>
   <h2 class="slide-heading">And Rafael answers back</h2>
-  <div class="ic-card"><div class="ic-card-h3">Rafael answers back. What is he actually asking for?</div><p class="ic-sub">Read each one, say what you would answer, then click to compare.</p><div class="ic-reveal" onclick="this.classList.toggle('ic-on')"><div class="ic-r-front">“Sorry — can I stop you there? When you say it did not work, do you mean the activity, or the way I set it up?”<span class="ic-r-hint">click to reveal</span></div><div class="ic-r-back">He is asking you to name the moment, not the skill. “It did not work” is a verdict; he needs the part he can change.</div></div><div class="ic-reveal" onclick="this.classList.toggle('ic-on')"><div class="ic-r-front">“They were quiet with me too. Is that a problem, or is that just an 8 a.m. class?”<span class="ic-r-hint">click to reveal</span></div><div class="ic-r-back">He is handing you the responsibility back. Answering “both” is honest and useless — say which part is his to change.</div></div><div class="ic-reveal ic-cond" onclick="this.classList.toggle('ic-on')"><span class="ic-tag">Conditional</span><div class="ic-r-front">“Did the back table talk because I stopped there, or because they always do?”<span class="ic-r-hint">click to reveal</span></div><div class="ic-r-back">He is testing whether you actually watched. Only describe what you saw — do not guess causes.</div></div></div>
+  <p data-kind="reveal" class="slide-lead">Rafael answers back. What is he actually asking for?</p><p class="subprompt">Read each one, say what you would answer, then click to compare.</p><div class="reveal-item" onclick="this.classList.toggle('revealed')"><div class="r-front">“Sorry — can I stop you there? When you say it did not work, do you mean the activity, or the way I set it up?”</div><div class="r-back">He is asking you to name the moment, not the skill. “It did not work” is a verdict; he needs the part he can change.</div></div><div class="reveal-item" onclick="this.classList.toggle('revealed')"><div class="r-front">“They were quiet with me too. Is that a problem, or is that just an 8 a.m. class?”</div><div class="r-back">He is handing you the responsibility back. Answering “both” is honest and useless — say which part is his to change.</div></div><div class="reveal-item cond" onclick="this.classList.toggle('revealed')"><span class="cond-tag">Conditional</span><div class="r-front">“Did the back table talk because I stopped there, or because they always do?”</div><div class="r-back">He is testing whether you actually watched. Only describe what you saw — do not guess causes.</div></div>
 </div>
 </div>
 
@@ -1248,9 +1023,9 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">3 &middot; Targeted model</div>
   <h2 class="slide-heading">The same feedback, from someone who has done it a hundred times</h2>
-  <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Analyse</span>The same feedback, from someone who has done it a hundred times</div><div class="ic-lf-list"><div class="ic-lf"><span class="ic-lbl">1</span><span><span class="ic-mod">What I noticed was</span> — the students were working in pairs when you walked around.</span><button class="audio-btn" data-speak="What I noticed was the students were working in pairs when you walked around." onclick="speakText(this.dataset.speak,this)">Listen</button></div><div class="ic-lf"><span class="ic-lbl">2</span><span><span class="ic-mod">The part I would look at is</span> the instruction before it.</span><button class="audio-btn" data-speak="The part I would look at is the instruction before it." onclick="speakText(this.dataset.speak,this)">Listen</button></div><div class="ic-lf"><span class="ic-lbl">3</span><span><span class="ic-mod">One thing you might try is</span> giving the instruction first, with the pens down.</span><button class="audio-btn" data-speak="One thing you might try is giving the instruction first, with the pens down." onclick="speakText(this.dataset.speak,this)">Listen</button></div><div class="ic-lf"><span class="ic-lbl">4</span><span><span class="ic-mod ic-strong">How did that feel</span> from where you were?</span><button class="audio-btn" data-speak="How did that feel from where you were?" onclick="speakText(this.dataset.speak,this)">Listen</button></div></div></div>
-<div class="ic-card"><div class="ic-card-h3">What each move asks of him</div><div class="ic-modals"><div class="ic-modal-c"><div class="ic-m">Describe</div><div class="ic-strength">Costs nothing to accept</div><p>He pictures the moment. Nothing to argue with yet — and that is why he trusts the rest.</p></div><div class="ic-modal-c"><div class="ic-m">Name</div><div class="ic-strength">Points at the work</div><p>The problem has a place in the lesson, not a person attached to it.</p></div><div class="ic-modal-c"><div class="ic-m">Offer</div><div class="ic-strength">He can refuse</div><p>A suggestion he is free to take, leave, or improve.</p></div><div class="ic-modal-c"><div class="ic-m">Hand back</div><div class="ic-strength">He has to answer</div><p>The turn goes to him. If he only nods, you were not clear enough to be argued with.</p></div></div></div>
-<div class="ic-note">Four moves, in order: what you saw → the part to look at → what to try → hand it back to him.</div>
+  <p data-kind="lf" class="slide-lead">The same feedback, from someone who has done it a hundred times</p><div class="phrase-list"><div class="phrase-row"><span class="phrase-en">What I noticed was — the students were working in pairs when you walked around.</span><span class="phrase-fn">1</span><button class="audio-btn-sm ghost" data-speak="What I noticed was the students were working in pairs when you walked around." onclick="speakText(this.dataset.speak,this)">&#9654;</button></div><div class="phrase-row"><span class="phrase-en">The part I would look at is the instruction before it.</span><span class="phrase-fn">2</span><button class="audio-btn-sm ghost" data-speak="The part I would look at is the instruction before it." onclick="speakText(this.dataset.speak,this)">&#9654;</button></div><div class="phrase-row"><span class="phrase-en">One thing you might try is giving the instruction first, with the pens down.</span><span class="phrase-fn">3</span><button class="audio-btn-sm ghost" data-speak="One thing you might try is giving the instruction first, with the pens down." onclick="speakText(this.dataset.speak,this)">&#9654;</button></div><div class="phrase-row cond-row"><span class="phrase-en">How did that feel from where you were?</span><span class="phrase-fn">4</span><button class="audio-btn-sm ghost" data-speak="How did that feel from where you were?" onclick="speakText(this.dataset.speak,this)">&#9654;</button></div></div>
+<p data-kind="modals" class="slide-lead">What each move asks of him</p><div class="card-row"><div class="s-card"><div class="s-meta">Costs nothing to accept</div><h5>Describe</h5><span class="rc-body">He pictures the moment. Nothing to argue with yet — and that is why he trusts the rest.</span></div><div class="s-card"><div class="s-meta">Points at the work</div><h5>Name</h5><span class="rc-body">The problem has a place in the lesson, not a person attached to it.</span></div><div class="s-card"><div class="s-meta">He can refuse</div><h5>Offer</h5><span class="rc-body">A suggestion he is free to take, leave, or improve.</span></div><div class="s-card"><div class="s-meta">He has to answer</div><h5>Hand back</h5><span class="rc-body">The turn goes to him. If he only nods, you were not clear enough to be argued with.</span></div></div>
+<div data-kind="vocabnote" class="callout">Four moves, in order: what you saw → the part to look at → what to try → hand it back to him.</div>
 </div>
 </div>
 
@@ -1258,7 +1033,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">3 &middot; Targeted model</div>
   <h2 class="slide-heading">Each phrase is doing a job</h2>
-  <div class="ic-card"><div class="ic-card-h3">Each phrase is doing a job. Match the phrase to the job.</div><p class="ic-match-hint">Tap a word, then tap its meaning</p><div class="ic-match-score">0 / 5 matched</div><div class="ic-match" data-interactive="1"><div class="ic-match-col"><h4>Words &amp; expressions</h4><div class="ic-chip ic-word" role="button" tabindex="0" data-k="1" data-match="c" onclick="icPickMatch(this)"><span class="ic-k">1</span><span>What I noticed was…</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="2" data-match="a" onclick="icPickMatch(this)"><span class="ic-k">2</span><span>The part I would look at is…</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="3" data-match="e" onclick="icPickMatch(this)"><span class="ic-k">3</span><span>One thing you might try is…</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="4" data-match="b" onclick="icPickMatch(this)"><span class="ic-k">4</span><span>It might help if…</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="5" data-match="d" onclick="icPickMatch(this)"><span class="ic-k">5</span><span>How did that feel from where you were?</span><span class="ic-pair"></span></div></div><div class="ic-match-col"><h4>Definitions</h4><div class="ic-chip ic-def" role="button" tabindex="0" data-k="a" onclick="icPickMatch(this)"><span class="ic-k">a</span><span>Names the problem without naming a person</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="b" onclick="icPickMatch(this)"><span class="ic-k">b</span><span>Adds a second suggestion, smaller than the first</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="c" onclick="icPickMatch(this)"><span class="ic-k">c</span><span>Reports what happened, before any opinion</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="d" onclick="icPickMatch(this)"><span class="ic-k">d</span><span>Gives the turn back and invites disagreement</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="e" onclick="icPickMatch(this)"><span class="ic-k">e</span><span>Offers a change he can accept or refuse</span><span class="ic-pair"></span></div></div></div></div>
+  <p data-kind="matching" class="slide-lead">Each phrase is doing a job. Match the phrase to the job.</p><p class="ic-match-hint">Tap a word, then tap its meaning</p><div class="ic-match-score">0 / 5 matched</div><div class="ic-match" data-interactive="1"><div class="ic-match-col"><h4>Words &amp; expressions</h4><div class="ic-chip ic-word" role="button" tabindex="0" data-k="1" data-match="c" onclick="icPickMatch(this)"><span class="ic-k">1</span><span>What I noticed was…</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="2" data-match="a" onclick="icPickMatch(this)"><span class="ic-k">2</span><span>The part I would look at is…</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="3" data-match="e" onclick="icPickMatch(this)"><span class="ic-k">3</span><span>One thing you might try is…</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="4" data-match="b" onclick="icPickMatch(this)"><span class="ic-k">4</span><span>It might help if…</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="5" data-match="d" onclick="icPickMatch(this)"><span class="ic-k">5</span><span>How did that feel from where you were?</span><span class="ic-pair"></span></div></div><div class="ic-match-col"><h4>Definitions</h4><div class="ic-chip ic-def" role="button" tabindex="0" data-k="a" onclick="icPickMatch(this)"><span class="ic-k">a</span><span>Names the problem without naming a person</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="b" onclick="icPickMatch(this)"><span class="ic-k">b</span><span>Adds a second suggestion, smaller than the first</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="c" onclick="icPickMatch(this)"><span class="ic-k">c</span><span>Reports what happened, before any opinion</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="d" onclick="icPickMatch(this)"><span class="ic-k">d</span><span>Gives the turn back and invites disagreement</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="e" onclick="icPickMatch(this)"><span class="ic-k">e</span><span>Offers a change he can accept or refuse</span><span class="ic-pair"></span></div></div></div>
 </div>
 </div>
 
@@ -1268,7 +1043,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">4 &middot; Guided discovery</div>
   <h2 class="slide-heading">Sort each line by what it makes him do next</h2>
-  <div class="ic-sort" data-cols='["Unsorted", "He pictures the moment", "He can accept, refuse or offer something else", "He can only obey or resist"]' data-items='[{"t": "The students were working in pairs when you walked around.", "a": 1}, {"t": "You have to give the instruction before the sheet.", "a": 3}, {"t": "One thing you might try is pens down first.", "a": 2}, {"t": "Half of them heard the second sentence and not the first.", "a": 1}, {"t": "It might help if you check it with one student.", "a": 2}, {"t": "Never explain a task while they are writing.", "a": 3}]' data-state='[0, 0, 0, 0, 0, 0]'><div class="ic-h">Six lines from a feedback session. Sort each one by what it makes the teacher do next.</div><div class="ic-sortbox"></div><div class="ic-sortout"></div><div class="ic-acts"><button class="ic-btn" onclick="icSortCheck(this)">Check</button><button class="ic-btn ic-btn-ghost" onclick="icSortReset(this)">Reset</button></div></div>
+  <p data-kind="sorting" class="slide-lead">Six lines from a feedback session. Sort each one by what it makes the teacher do next.</p><div class="sort-group" data-cols='["Unsorted", "He pictures the moment", "He can accept, refuse or offer something else", "He can only obey or resist"]' data-items='[{"t": "The students were working in pairs when you walked around.", "a": 1}, {"t": "You have to give the instruction before the sheet.", "a": 3}, {"t": "One thing you might try is pens down first.", "a": 2}, {"t": "Half of them heard the second sentence and not the first.", "a": 1}, {"t": "It might help if you check it with one student.", "a": 2}, {"t": "Never explain a task while they are writing.", "a": 3}]' data-state='[0, 0, 0, 0, 0, 0]'><div class="sortbox"></div><div class="score-out"></div><div class="btn-bar"><button class="verify-all-btn" onclick="icSortCheck(this)">Check</button><button class="verify-all-btn ghost" onclick="icSortReset(this)">Reset</button></div></div>
 </div>
 </div>
 
@@ -1276,7 +1051,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">4 &middot; Guided discovery</div>
   <h2 class="slide-heading">Both tell him to change the same thing</h2>
-  <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Look at group B and group C. Both tell him to change the same thing.</span></div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>Which group leaves him a way to answer you?</span></li><li><span class="ic-qnum">2</span><span>Which group would you rather receive, on your first week in a new school?</span></li><li><span class="ic-qnum">3</span><span>What is the actual difference in the words -- not in the tone?</span></li></ol></div>
+  <p data-kind="analyse" class="slide-lead">Look at group B and group C. Both tell him to change the same thing.</p><div class="qlist"><div class="q-item">Which group leaves him a way to answer you?</div><div class="q-item">Which group would you rather receive, on your first week in a new school?</div><div class="q-item">What is the actual difference in the words -- not in the tone?</div></div>
 </div>
 </div>
 
@@ -1284,7 +1059,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">4 &middot; Guided discovery</div>
   <h2 class="slide-heading">What actually changes</h2>
-  <div class="ic-answer"><div class="ic-ans-head" onclick="icToggleAnswer(this)"><span class="ic-ico">+</span>Reveal what changes</div><div class="ic-ans-body"><div class="ic-ans-inner"><div style="font-size:.78rem;color:var(--text-dim);margin-bottom:.6rem">This is the whole lesson. Everything after this is practice.</div><ol><li>Group B carries might, could, one thing you might try -- the suggestion is on the table, and he can pick it up or not.</li><li>Group C carries have to and never -- there is nothing to answer. He obeys or he resists you.</li><li>Group A is neither: it is what you saw. It costs nothing to accept, and it is why he trusts the rest.</li><li>Same content, three different jobs. You choose the job before you choose the words.</li></ol></div></div></div>
+  <div data-kind="answer" class="btn-bar"><button class="verify-all-btn ghost" onclick="icReveal(this)">Reveal what changes</button></div><div class="rationale"><div class="callout rule-box">This is the whole lesson. Everything after this is practice.<br><br>1. Group B carries might, could, one thing you might try -- the suggestion is on the table, and he can pick it up or not.<br>2. Group C carries have to and never -- there is nothing to answer. He obeys or he resists you.<br>3. Group A is neither: it is what you saw. It costs nothing to accept, and it is why he trusts the rest.<br>4. Same content, three different jobs. You choose the job before you choose the words.</div></div>
 </div>
 </div>
 
@@ -1294,7 +1069,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">5 &middot; Micropractice</div>
   <h2 class="slide-heading">Your own three, said so he can answer</h2>
-  <div class="ic-card"><div class="ic-card-h3">Your three sentences from the beginning of class -- said again, so Rafael can answer back.</div><ol class="ic-qs"><li><span class="ic-qnum">1</span><span>The activity did not work.<span class="ic-rephrase-cue">(What I noticed was…)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">2</span><span>You have to slow down when you give instructions.<span class="ic-rephrase-cue">(One thing you might try is…)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li><li><span class="ic-qnum">3</span><span>The pair work was the good part.<span class="ic-rephrase-cue">(The students were …-ing when…)</span><span class="ic-blank" style="min-width:7rem;margin-left:.4rem">&nbsp;</span></span></li></ol></div>
+  <p data-kind="rephrase" class="slide-lead">Your three sentences from the beginning of class -- said again, so Rafael can answer back.</p><div class="fill-blank-item"><span class="fill-blank-sentence">The activity did not work. <em>(What I noticed was…)</em> <input class="blank-input" aria-label="rephrase"></span></div><div class="fill-blank-item"><span class="fill-blank-sentence">You have to slow down when you give instructions. <em>(One thing you might try is…)</em> <input class="blank-input" aria-label="rephrase"></span></div><div class="fill-blank-item"><span class="fill-blank-sentence">The pair work was the good part. <em>(The students were …-ing when…)</em> <input class="blank-input" aria-label="rephrase"></span></div>
 </div>
 </div>
 
@@ -1302,7 +1077,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">5 &middot; Micropractice</div>
   <h2 class="slide-heading">When he pushes back</h2>
-  <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Analyse</span>Three phrases that keep the conversation open when he pushes back</div><div class="ic-lf-list"><div class="ic-lf"><span class="ic-lbl">A</span><span>That is fair — <span class="ic-mod">I was not in the room</span> when you set it up.</span><button class="audio-btn" data-speak="That is fair — I was not in the room when you set it up." onclick="speakText(this.dataset.speak,this)">Listen</button></div><div class="ic-lf"><span class="ic-lbl">B</span><span>Can I check <span class="ic-mod">what you mean</span> by that?</span><button class="audio-btn" data-speak="Can I check what you mean by that?" onclick="speakText(this.dataset.speak,this)">Listen</button></div><div class="ic-lf"><span class="ic-lbl">C</span><span>I might be wrong about this, <span class="ic-mod">but</span> the second table never started.</span><button class="audio-btn" data-speak="I might be wrong about this, but the second table never started." onclick="speakText(this.dataset.speak,this)">Listen</button></div><div class="ic-lf"><span class="ic-lbl">D</span><span>Let me come back to that — <span class="ic-mod ic-strong">I want to finish</span> the first point.</span><button class="audio-btn" data-speak="Let me come back to that — I want to finish the first point." onclick="speakText(this.dataset.speak,this)">Listen</button></div></div></div>
+  <p data-kind="lf" class="slide-lead">Three phrases that keep the conversation open when he pushes back</p><div class="phrase-list"><div class="phrase-row"><span class="phrase-en">That is fair — I was not in the room when you set it up.</span><span class="phrase-fn">A</span><button class="audio-btn-sm ghost" data-speak="That is fair — I was not in the room when you set it up." onclick="speakText(this.dataset.speak,this)">&#9654;</button></div><div class="phrase-row"><span class="phrase-en">Can I check what you mean by that?</span><span class="phrase-fn">B</span><button class="audio-btn-sm ghost" data-speak="Can I check what you mean by that?" onclick="speakText(this.dataset.speak,this)">&#9654;</button></div><div class="phrase-row"><span class="phrase-en">I might be wrong about this, but the second table never started.</span><span class="phrase-fn">C</span><button class="audio-btn-sm ghost" data-speak="I might be wrong about this, but the second table never started." onclick="speakText(this.dataset.speak,this)">&#9654;</button></div><div class="phrase-row cond-row"><span class="phrase-en">Let me come back to that — I want to finish the first point.</span><span class="phrase-fn">D</span><button class="audio-btn-sm ghost" data-speak="Let me come back to that — I want to finish the first point." onclick="speakText(this.dataset.speak,this)">&#9654;</button></div></div>
 </div>
 </div>
 
@@ -1319,8 +1094,8 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">6 &middot; Full simulation</div>
   <h2 class="slide-heading">You lead it, start to finish</h2>
-  <div class="ic-block"><div class="ic-scenario"><div class="ic-who">Your side</div><p>You give the full feedback: what you saw, the part to look at, what to try, and you hand it back to him.</p></div><div class="ic-scenario"><div class="ic-who">Rafael's side</div><p>Friendly, and he was there. He will ask what you mean by one thing, and he will disagree with one thing outright.</p></div></div>
-<div class="ic-card"><div class="ic-card-h3">Keywords only. Take these in, not sentences.</div><div class="ic-bank"><span class="ic-b">what I noticed</span><span class="ic-b">the part I would look at</span><span class="ic-b">one thing you might try</span><span class="ic-b">it might help if</span><span class="ic-b">how did that feel</span><span class="ic-b">that is fair</span><span class="ic-b">can I check what you mean</span></div></div>
+  <div data-kind="scenarios" class="brief"><dl><dt>Your side</dt><dd>You give the full feedback: what you saw, the part to look at, what to try, and you hand it back to him.</dd><dt>Rafael's side</dt><dd>Friendly, and he was there. He will ask what you mean by one thing, and he will disagree with one thing outright.</dd></dl></div>
+<p data-kind="bank" class="slide-lead">Keywords only. Take these in, not sentences.</p><div class="phrase-list"><div class="phrase-row"><span class="phrase-en">what I noticed</span></div><div class="phrase-row"><span class="phrase-en">the part I would look at</span></div><div class="phrase-row"><span class="phrase-en">one thing you might try</span></div><div class="phrase-row"><span class="phrase-en">it might help if</span></div><div class="phrase-row"><span class="phrase-en">how did that feel</span></div><div class="phrase-row"><span class="phrase-en">that is fair</span></div><div class="phrase-row"><span class="phrase-en">can I check what you mean</span></div></div>
 </div>
 </div>
 
@@ -1330,7 +1105,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">7 &middot; Feedback &amp; upgrade</div>
   <h2 class="slide-heading">What just happened</h2>
-  <div class="ic-card"><div class="ic-card-h3">How it went</div><div class="ic-write"><div class="ic-write-f"><label class="ic-write-l">What worked — name the action, not the person</label><textarea class="ic-write-t" data-k="a1fb-worked" oninput="icWriteSave(this)" aria-label="What worked — name the action, not the person"></textarea></div><div class="ic-write-f"><label class="ic-write-l">One point to build on</label><textarea class="ic-write-t" data-k="a1fb-build" oninput="icWriteSave(this)" aria-label="One point to build on"></textarea></div><div class="ic-write-f"><label class="ic-write-l">The exact words she used (for the checkpoint)</label><textarea class="ic-write-t" data-k="a1fb-words" oninput="icWriteSave(this)" aria-label="The exact words she used (for the checkpoint)"></textarea></div></div></div>
+  <p data-kind="write" class="slide-lead">How it went</p><div class="fb-board"><div class="fb-field"><label for="a1fb-worked">What worked — name the action, not the person</label><textarea id="a1fb-worked" class="writebox" data-k="a1fb-worked" oninput="icWriteSave(this)" aria-label="What worked — name the action, not the person"></textarea></div><div class="fb-field"><label for="a1fb-build">One point to build on</label><textarea id="a1fb-build" class="writebox" data-k="a1fb-build" oninput="icWriteSave(this)" aria-label="One point to build on"></textarea></div><div class="fb-field"><label for="a1fb-words">The exact words she used (for the checkpoint)</label><textarea id="a1fb-words" class="writebox" data-k="a1fb-words" oninput="icWriteSave(this)" aria-label="The exact words she used (for the checkpoint)"></textarea></div></div>
 </div>
 </div>
 
@@ -1338,7 +1113,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">7 &middot; Feedback &amp; upgrade</div>
   <h2 class="slide-heading">That part again</h2>
-  <div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">Say only the part your teacher marked -- once more.</span></div><ul class="ic-qs"><li><span class="ic-qnum">1</span><span>Same content. The job of the sentence is what changes.</span></li></ul></div>
+  <p data-kind="questions" class="slide-lead">Say only the part your teacher marked -- once more.</p><div class="qlist"><div class="q-item">Same content. The job of the sentence is what changes.</div></div>
 </div>
 </div>
 
@@ -1355,12 +1130,12 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">8 &middot; Second round</div>
   <h2 class="slide-heading">He was in the room and you were not</h2>
-  <div class="ic-block"><div class="ic-scenario"><div class="ic-who">The change</div><p>This time Rafael does not accept the suggestion. He says the instruction was fine and the problem was the group.</p></div><div class="ic-scenario"><div class="ic-who">What you do</div><p>You do not drop it and you do not repeat it louder. Concede what is true, keep the point, and give him something to answer.</p></div></div>
-<p style="text-align:center;font-size:.82rem;color:var(--text-dim);margin-top:.3rem"><span id="qfScore">1 / 3</span></p><div id="qfContainer" style="max-width:560px;margin:1rem auto 0"><div class="qf-card" data-qf="1" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.8rem"><p class="qf-situation" style="font-size:.92rem;font-weight:600;margin-bottom:.6rem">“The instruction was fine. That group never works, whoever teaches them.”</p><button class="primary-btn qf-tips-btn" onclick="qfTips(this)" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer">Tips</button><div class="qf-tips" style="display:none;margin-top:.6rem"><ul style="font-size:.84rem;color:var(--text-mid);padding-left:1.1rem;margin:0"><li style="margin-bottom:.3rem">That is fair…</li><li style="margin-bottom:.3rem">keep the observation, drop the verdict</li></ul></div></div><div class="qf-card" data-qf="2" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.8rem"><p class="qf-situation" style="font-size:.92rem;font-weight:600;margin-bottom:.6rem">“So you are saying I cannot give instructions.”</p><button class="primary-btn qf-tips-btn" onclick="qfTips(this)" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer">Tips</button><div class="qf-tips" style="display:none;margin-top:.6rem"><ul style="font-size:.84rem;color:var(--text-mid);padding-left:1.1rem;margin:0"><li style="margin-bottom:.3rem">Can I check what you mean…</li><li style="margin-bottom:.3rem">name the moment, not the skill</li></ul></div></div><div class="qf-card" data-qf="3" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.8rem"><p class="qf-situation" style="font-size:.92rem;font-weight:600;margin-bottom:.6rem">“What would you have done, then?”</p><button class="primary-btn qf-tips-btn" onclick="qfTips(this)" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer">Tips</button><div class="qf-tips" style="display:none;margin-top:.6rem"><ul style="font-size:.84rem;color:var(--text-mid);padding-left:1.1rem;margin:0"><li style="margin-bottom:.3rem">One thing you might try…</li><li style="margin-bottom:.3rem">answer it -- he asked</li></ul></div></div><div class="qf-nav" style="display:flex;gap:.6rem;justify-content:center;margin-top:1rem"><button class="qf-prev" onclick="qfNav(-1)" style="background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer">&#8592; Previous</button><button class="primary-btn qf-next" onclick="qfNav(1)" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer">Next &#8594;</button></div></div>
-  <div class="ic-card"><div class="ic-card-h3">What we built today</div><div class="ic-recap"><div class="ic-recap-item">Describe before you judge — it costs him nothing to accept, and it buys the rest.</div><div class="ic-recap-item">Name the part of the lesson, never the person.</div><div class="ic-recap-item">Offer a change he can refuse. If he cannot refuse it, it is an order.</div><div class="ic-recap-item">Hand the turn back. If he only nods, you were not clear enough to be argued with.</div></div></div>
-<div class="ic-card"><div class="ic-card-h3"><span class="ic-tag">What we worked on today</span></div><ul class="ic-qs"><li><span class="ic-qnum">1</span><span>Describing what you saw, before saying anything about it</span></li><li><span class="ic-qnum">2</span><span>Naming the part to look at without naming a person</span></li><li><span class="ic-qnum">3</span><span>Offering a change he can accept, refuse or improve</span></li><li><span class="ic-qnum">4</span><span>Handing the turn back so he can answer you</span></li><li><span class="ic-qnum">5</span><span>Holding the turn when he pushes back</span></li></ul></div>
-<div class="ic-card"><div class="ic-self" data-state='[null, null, null, null]'><div class="ic-card-h3">How confident do you feel right now?</div><p class="ic-sub">Your own reading, today. There is no right answer here.</p><div class="ic-self-row" data-i="0"><div class="ic-self-q">Describing a lesson I watched, in the past, as it happened</div><div class="ic-self-opts"><button class="ic-self-b" data-v="0" onclick="icSelfPick(this)">Not yet</button><button class="ic-self-b" data-v="1" onclick="icSelfPick(this)">Getting there</button><button class="ic-self-b" data-v="2" onclick="icSelfPick(this)">Comfortable</button><button class="ic-self-b" data-v="3" onclick="icSelfPick(this)">Confident</button></div></div><div class="ic-self-row" data-i="1"><div class="ic-self-q">Suggesting a change without telling him what to do</div><div class="ic-self-opts"><button class="ic-self-b" data-v="0" onclick="icSelfPick(this)">Not yet</button><button class="ic-self-b" data-v="1" onclick="icSelfPick(this)">Getting there</button><button class="ic-self-b" data-v="2" onclick="icSelfPick(this)">Comfortable</button><button class="ic-self-b" data-v="3" onclick="icSelfPick(this)">Confident</button></div></div><div class="ic-self-row" data-i="2"><div class="ic-self-q">Keeping my point when he says the problem was the group</div><div class="ic-self-opts"><button class="ic-self-b" data-v="0" onclick="icSelfPick(this)">Not yet</button><button class="ic-self-b" data-v="1" onclick="icSelfPick(this)">Getting there</button><button class="ic-self-b" data-v="2" onclick="icSelfPick(this)">Comfortable</button><button class="ic-self-b" data-v="3" onclick="icSelfPick(this)">Confident</button></div></div><div class="ic-self-row" data-i="3"><div class="ic-self-q">Asking him a question that gives him the turn back</div><div class="ic-self-opts"><button class="ic-self-b" data-v="0" onclick="icSelfPick(this)">Not yet</button><button class="ic-self-b" data-v="1" onclick="icSelfPick(this)">Getting there</button><button class="ic-self-b" data-v="2" onclick="icSelfPick(this)">Comfortable</button><button class="ic-self-b" data-v="3" onclick="icSelfPick(this)">Confident</button></div></div><div class="ic-self-out"></div></div></div>
-<div class="ic-card"><div class="ic-card-h3">Before the next real one</div><div class="ic-bank"><span class="ic-b">Which feedback session is next, and when</span><span class="ic-b">Open with what you saw — not with what you thought</span><span class="ic-b">One rule: if you suggest, leave him a way to refuse</span></div></div>
+  <div data-kind="scenarios" class="brief"><dl><dt>The change</dt><dd>This time Rafael does not accept the suggestion. He says the instruction was fine and the problem was the group.</dd><dt>What you do</dt><dd>You do not drop it and you do not repeat it louder. Concede what is true, keep the point, and give him something to answer.</dd></dl></div>
+<p data-kind="quickfire" style="text-align:center;font-size:.82rem;color:var(--text-dim);margin-top:.3rem"><span id="qfScore">1 / 3</span></p><div id="qfContainer" style="max-width:560px;margin:1rem auto 0"><div class="qf-card" data-qf="1" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.8rem"><p class="qf-situation" style="font-size:.92rem;font-weight:600;margin-bottom:.6rem">“The instruction was fine. That group never works, whoever teaches them.”</p><button class="primary-btn qf-tips-btn" onclick="qfTips(this)" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer">Tips</button><div class="qf-tips" style="display:none;margin-top:.6rem"><ul style="font-size:.84rem;color:var(--text-mid);padding-left:1.1rem;margin:0"><li style="margin-bottom:.3rem">That is fair…</li><li style="margin-bottom:.3rem">keep the observation, drop the verdict</li></ul></div></div><div class="qf-card" data-qf="2" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.8rem"><p class="qf-situation" style="font-size:.92rem;font-weight:600;margin-bottom:.6rem">“So you are saying I cannot give instructions.”</p><button class="primary-btn qf-tips-btn" onclick="qfTips(this)" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer">Tips</button><div class="qf-tips" style="display:none;margin-top:.6rem"><ul style="font-size:.84rem;color:var(--text-mid);padding-left:1.1rem;margin:0"><li style="margin-bottom:.3rem">Can I check what you mean…</li><li style="margin-bottom:.3rem">name the moment, not the skill</li></ul></div></div><div class="qf-card" data-qf="3" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.8rem"><p class="qf-situation" style="font-size:.92rem;font-weight:600;margin-bottom:.6rem">“What would you have done, then?”</p><button class="primary-btn qf-tips-btn" onclick="qfTips(this)" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer">Tips</button><div class="qf-tips" style="display:none;margin-top:.6rem"><ul style="font-size:.84rem;color:var(--text-mid);padding-left:1.1rem;margin:0"><li style="margin-bottom:.3rem">One thing you might try…</li><li style="margin-bottom:.3rem">answer it -- he asked</li></ul></div></div><div class="qf-nav" style="display:flex;gap:.6rem;justify-content:center;margin-top:1rem"><button class="qf-prev" onclick="qfNav(-1)" style="background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer">&#8592; Previous</button><button class="primary-btn qf-next" onclick="qfNav(1)" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer">Next &#8594;</button></div></div>
+  <div data-kind="recap" class="close-block"><h5>What we built today</h5><label class="recap-item"><input type="checkbox" onchange="icSave(this)"><span>Describe before you judge — it costs him nothing to accept, and it buys the rest.</span></label><label class="recap-item"><input type="checkbox" onchange="icSave(this)"><span>Name the part of the lesson, never the person.</span></label><label class="recap-item"><input type="checkbox" onchange="icSave(this)"><span>Offer a change he can refuse. If he cannot refuse it, it is an order.</span></label><label class="recap-item"><input type="checkbox" onchange="icSave(this)"><span>Hand the turn back. If he only nods, you were not clear enough to be argued with.</span></label></div>
+<p data-kind="questions" class="slide-lead">What we worked on today</p><div class="qlist"><div class="q-item">Describing what you saw, before saying anything about it</div><div class="q-item">Naming the part to look at without naming a person</div><div class="q-item">Offering a change he can accept, refuse or improve</div><div class="q-item">Handing the turn back so he can answer you</div><div class="q-item">Holding the turn when he pushes back</div></div>
+<p data-kind="selfassess" class="slide-lead">How confident do you feel right now?</p><p class="subprompt">Your own reading, today. There is no right answer here.</p><div class="conf-item"><div class="cf-label">Describing a lesson I watched, in the past, as it happened</div><div class="conf-scale"><button class="conf-btn" data-cf="0" data-v="0" onclick="icConfPick(this)">Not yet</button><button class="conf-btn" data-cf="0" data-v="1" onclick="icConfPick(this)">Getting there</button><button class="conf-btn" data-cf="0" data-v="2" onclick="icConfPick(this)">Comfortable</button><button class="conf-btn" data-cf="0" data-v="3" onclick="icConfPick(this)">Confident</button></div></div><div class="conf-item"><div class="cf-label">Suggesting a change without telling him what to do</div><div class="conf-scale"><button class="conf-btn" data-cf="1" data-v="0" onclick="icConfPick(this)">Not yet</button><button class="conf-btn" data-cf="1" data-v="1" onclick="icConfPick(this)">Getting there</button><button class="conf-btn" data-cf="1" data-v="2" onclick="icConfPick(this)">Comfortable</button><button class="conf-btn" data-cf="1" data-v="3" onclick="icConfPick(this)">Confident</button></div></div><div class="conf-item"><div class="cf-label">Keeping my point when he says the problem was the group</div><div class="conf-scale"><button class="conf-btn" data-cf="2" data-v="0" onclick="icConfPick(this)">Not yet</button><button class="conf-btn" data-cf="2" data-v="1" onclick="icConfPick(this)">Getting there</button><button class="conf-btn" data-cf="2" data-v="2" onclick="icConfPick(this)">Comfortable</button><button class="conf-btn" data-cf="2" data-v="3" onclick="icConfPick(this)">Confident</button></div></div><div class="conf-item"><div class="cf-label">Asking him a question that gives him the turn back</div><div class="conf-scale"><button class="conf-btn" data-cf="3" data-v="0" onclick="icConfPick(this)">Not yet</button><button class="conf-btn" data-cf="3" data-v="1" onclick="icConfPick(this)">Getting there</button><button class="conf-btn" data-cf="3" data-v="2" onclick="icConfPick(this)">Comfortable</button><button class="conf-btn" data-cf="3" data-v="3" onclick="icConfPick(this)">Confident</button></div></div><div class="score-out">0 / 4 answered</div>
+<p data-kind="bank" class="slide-lead">Before the next real one</p><div class="phrase-list"><div class="phrase-row"><span class="phrase-en">Which feedback session is next, and when</span></div><div class="phrase-row"><span class="phrase-en">Open with what you saw — not with what you thought</span></div><div class="phrase-row"><span class="phrase-en">One rule: if you suggest, leave him a way to refuse</span></div></div>
 </div>
 </div>
 
@@ -1570,13 +1345,6 @@ function revealComp(q) { q.classList.toggle('revealed'); }
 // Interativos teacher-led no slide. Mesmo padrão toggle do revealVocab/revealComp
 // (REGRA 27.E: clicar abre, clicar de novo fecha). NÃO mexem em updateProgress
 // (slides IN CLASS não entram na barra do Pre-class).
-function icPickGist(choice) {
-  var right = choice.dataset.right === 'true';
-  choice.classList.toggle(right ? 'ic-picked-right' : 'ic-picked-wrong');
-}
-function icRevealTf(row) { row.classList.toggle('ic-revealed'); }
-function icToggleText(btn) { var p = btn.nextElementSibling; p.classList.toggle('ic-open'); btn.textContent = p.classList.contains('ic-open') ? 'Hide the text' : 'Read the text again'; }
-function icToggleAnswer(head) { head.closest('.ic-answer').classList.toggle('ic-open'); }
 
 // ===== IC MATCHING (palavra <-> significado, click-to-pair) =====
 // Clica a palavra, clica o significado. Certo = os dois ficam verdes e mostram a chave
@@ -1608,7 +1376,7 @@ function icUnpair(box, chip) {
   icMatchScore(box);
 }
 
-/* ===== SORTING (ic-sort) — ver comentario no CSS. Escopado por container: cada .ic-sort
+/* ===== SORTING (.sort-group) — escopado por container: cada .sort-group
    guarda o proprio estado em data-state, entao cabem quantos a aula precisar. */
 
 /* ===== CALL PLAYER (ic-call) — ver comentario no CSS.
@@ -1623,15 +1391,7 @@ function icUnpair(box, chip) {
 /* ===== AREA DE ESCRITA (ic-write) — persiste em localStorage. Mesma honestidade da aba
    Evidencias: fica presa a ESTE navegador e nao e o registro da aluna. */
 
-/* ===== RACIONAL (ic-why) — revela TODOS os do mesmo slide de uma vez, depois que a aluna
-   arriscou. Escopado ao .slide-inner: revelar o slide inteiro e o gesto de quem conduz a aula, item
-   por item seria seis cliques no meio da aula. */
-function icWhyShow(btn) {
-  var escopo = btn.closest('.slide-inner') || document;
-  var rs = escopo.querySelectorAll('.ic-why'), i;
-  for (i = 0; i < rs.length; i++) rs[i].classList.add('ic-on');
-  btn.style.display = 'none';
-}
+
 
 /* ===== CRONOMETRO (ic-timer). Conta ate 15s DEPOIS do zero antes de parar — o artefato faz
    assim, e e certo: a aluna que passou do tempo precisa ver quanto passou, nao um zero
@@ -1645,7 +1405,7 @@ function icTimerRender(id, s) {
   var el = document.getElementById(id);
   if (!el) return;
   el.textContent = icTimerFmt(s);
-  el.classList.toggle('ic-over', s <= 0);
+  el.classList.toggle('over', s <= 0);
 }
 function icTimerStart(btn, id, total) {
   if (_icT[id]) { clearInterval(_icT[id]); _icT[id] = null; icTimerRender(id, total); return; }
@@ -1667,7 +1427,7 @@ function icWriteSave(t) {
   try { localStorage.setItem(k, t.value); } catch (e) {}
 }
 document.addEventListener('DOMContentLoaded', function () {
-  var ts = document.querySelectorAll('.ic-write-t'), i;
+  var ts = document.querySelectorAll('.writebox'), i;
   for (i = 0; i < ts.length; i++) {
     try {
       var v = localStorage.getItem('w-' + (ts[i].getAttribute('data-k') || ''));
@@ -1676,23 +1436,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-function icSelfPick(btn) {
-  var box = btn.closest('.ic-self');
-  var linha = btn.closest('.ic-self-row');
-  var i = parseInt(linha.getAttribute('data-i'), 10);
-  var v = parseInt(btn.getAttribute('data-v'), 10);
-  var st = JSON.parse(box.getAttribute('data-state'));
-  st[i] = v;
-  box.setAttribute('data-state', JSON.stringify(st));
-  var irmaos = linha.querySelectorAll('.ic-self-b');
-  for (var k = 0; k < irmaos.length; k++) {
-    irmaos[k].classList.toggle('ic-on', parseInt(irmaos[k].getAttribute('data-v'), 10) === v);
-  }
-  var n = 0;
-  for (var j = 0; j < st.length; j++) { if (st[j] !== null) n++; }
-  box.querySelector('.ic-self-out').textContent =
-    n < st.length ? (n + ' of ' + st.length + ' answered') : 'All answered — no right answer here.';
-}
 
 var _icCall = null;
 function icCallStop() {
@@ -1728,56 +1471,106 @@ function icCallPlay(btn, de, ate, rate) {
   proximo();
 }
 
+/* ═══ HANDLERS DA INTERFACE DO ARTEFATO ═══════════════════════════════════════════════
+   As classes de ESTADO (.correct/.wrong/.on/.revealed/.show) sao as do CSS do artefato,
+   que entrou verbatim. Os NOMES das funcoes sao nossos: o artefato usa pick/confPick/save
+   com indice global (ele e uma pagina so, com estado num objeto), e aqui cada bloco tem de
+   ser independente porque uma aula pode ter varios. Nome de funcao nao aparece na tela; a
+   classe aparece — e e a classe que foi copiada. */
+
+/* quiz-option: marca certa/errada e revela o .rationale do quiz-item (o artefato usa
+   pick(this,0|1) + revealRationales; aqui o rationale e do proprio item). */
+function icPick(el, right) {
+  var item = el.closest('.quiz-item');
+  if (!item || item.getAttribute('data-done') === '1') return;
+  el.classList.add(right ? 'correct' : 'wrong');
+  if (right) {
+    item.setAttribute('data-done', '1');
+    var r = item.querySelector('.rationale');
+    if (r) r.classList.add('show');
+  } else {
+    setTimeout(function () { el.classList.remove('wrong'); }, 900);
+  }
+}
+
+/* recap-item: o check do fecho. Persiste como o resto (data-k derivado do texto). */
+function icSave(cb) {
+  var txt = cb.parentElement.textContent.trim().substring(0, 60);
+  try { localStorage.setItem('ic-rc-' + txt, cb.checked ? '1' : '0'); } catch (e) {}
+}
+
+/* conf-btn: uma escolha por linha (.conf-scale) e o contador em .score-out. */
+function icConfPick(btn) {
+  var linha = btn.closest('.conf-scale');
+  if (!linha) return;
+  var bs = linha.querySelectorAll('.conf-btn');
+  for (var i = 0; i < bs.length; i++) bs[i].classList.remove('on');
+  btn.classList.add('on');
+  var raiz = btn.closest('.slide-inner') || document;
+  var total = raiz.querySelectorAll('.conf-item').length;
+  var feitos = raiz.querySelectorAll('.conf-scale .conf-btn.on').length;
+  var out = raiz.querySelector('.score-out');
+  if (out) out.textContent = feitos + ' / ' + total + ' answered';
+}
+
+/* verify-all-btn -> revela o .rationale seguinte (gabarito teacher-led). Toggle, REGRA 27.E. */
+function icReveal(btn) {
+  var alvo = btn.closest('.btn-bar');
+  alvo = alvo ? alvo.nextElementSibling : null;
+  while (alvo && !alvo.classList.contains('rationale')) alvo = alvo.nextElementSibling;
+  if (alvo) alvo.classList.toggle('show');
+}
+
 function icSortPaint(box) {
   var cols = JSON.parse(box.getAttribute('data-cols'));
   var items = JSON.parse(box.getAttribute('data-items'));
   var st = JSON.parse(box.getAttribute('data-state'));
-  var host = box.querySelector('.ic-sortbox'), html = '';
+  var host = box.querySelector('.sortbox'), html = '';
   for (var c = 0; c < cols.length; c++) {
-    html += '<div class="ic-sortcol"><h5>' + cols[c] + '</h5>';
+    html += '<div class="sortcol"><h5>' + cols[c] + '</h5>';
     for (var i = 0; i < items.length; i++) {
-      if (st[i] === c) html += '<button class="ic-sortitem" data-i="' + i + '" onclick="icSortMove(this)">' + items[i].t + '</button>';
+      if (st[i] === c) html += '<button class="sortitem" data-i="' + i + '" onclick="icSortMove(this)">' + items[i].t + '</button>';
     }
     html += '</div>';
   }
   host.innerHTML = html;
 }
 function icSortMove(btn) {
-  var box = btn.closest('.ic-sort');
+  var box = btn.closest('.sort-group');
   var cols = JSON.parse(box.getAttribute('data-cols'));
   var st = JSON.parse(box.getAttribute('data-state'));
   var i = parseInt(btn.getAttribute('data-i'), 10);
   st[i] = (st[i] + 1) % cols.length;
   box.setAttribute('data-state', JSON.stringify(st));
-  box.querySelector('.ic-sortout').textContent = '';
+  box.querySelector('.score-out').textContent = '';
   icSortPaint(box);
 }
 function icSortCheck(btn) {
-  var box = btn.closest('.ic-sort');
+  var box = btn.closest('.sort-group');
   var items = JSON.parse(box.getAttribute('data-items'));
   var st = JSON.parse(box.getAttribute('data-state'));
-  var right = 0, placed = 0, els = box.querySelectorAll('.ic-sortitem');
+  var right = 0, placed = 0, els = box.querySelectorAll('.sortitem');
   for (var n = 0; n < els.length; n++) {
     var i = parseInt(els[n].getAttribute('data-i'), 10);
     var ok = (st[i] === items[i].a);
-    els[n].classList.add(ok ? 'ic-ok' : 'ic-no');
+    els[n].classList.add(ok ? 'correct' : 'wrong');
     if (ok) right++;
   }
   for (var j = 0; j < st.length; j++) { if (st[j] !== 0) placed++; }
   var left = items.length - placed;
-  box.querySelector('.ic-sortout').textContent =
+  box.querySelector('.score-out').textContent =
     right + ' of ' + items.length + ' in the right place' +
     (left > 0 ? ' (' + left + ' still unsorted)' : '');
 }
 function icSortReset(btn) {
-  var box = btn.closest('.ic-sort');
+  var box = btn.closest('.sort-group');
   var items = JSON.parse(box.getAttribute('data-items'));
   box.setAttribute('data-state', JSON.stringify(items.map(function () { return 0; })));
-  box.querySelector('.ic-sortout').textContent = '';
+  box.querySelector('.score-out').textContent = '';
   icSortPaint(box);
 }
 document.addEventListener('DOMContentLoaded', function () {
-  var boxes = document.querySelectorAll('.ic-sort');
+  var boxes = document.querySelectorAll('.sort-group');
   for (var i = 0; i < boxes.length; i++) icSortPaint(boxes[i]);
 });
 

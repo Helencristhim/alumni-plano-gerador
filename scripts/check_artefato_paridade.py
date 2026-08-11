@@ -61,6 +61,61 @@ IGNORAR = re.compile(r'^(fa|svg|icon)-|^(active|current|completed|upcoming|open|
                      r'|hidden|show|visible)$|^.$')
 
 
+# ── O CHASSI ──────────────────────────────────────────────────────────────────────────
+# Ate 11/08/2026 o chassi do guided-discovery era o do shell imersivo (helen-mendes), porque
+# o shell nasceu clonado dele. Decisao do Dan naquele dia: "os dois moldes devem ser
+# separados mesmo, em si" — o chassi do guided-discovery passa a sair do ARTEFATO, e o do
+# imersivo NAO MUDA (nenhum aluno do molde antigo pode ser afetado).
+#
+# Estes seletores tem de bater com o artefato byte a byte. O GATE 18 nao pega isto: ele
+# compara PRESENCA de funcao e de classe entre os dois shells, nao o VALOR das regras — um
+# `max-width` revertido de 940 para 920 passaria por ele sem um pio.
+CHASSI = [
+    ".slide", ".slide.active", ".slide-inner",
+    ".slide-light", ".slide-light .slide-inner",
+    ".slide-dark", ".slide-dark .slide-inner",
+    ".slide-image", ".slide-image::before", ".slide-image .slide-inner",
+    ".chapter-label", ".slide-title", ".slide-subtitle", ".slide-heading", ".slide-lead",
+    ".audio-btn-sm", ".audio-btn-sm:hover", ".roleplay-card", ".roleplay-kw", ".stage-pill",
+]
+
+# Onde o artefato fixa uma cor DA ERICA, o shell usa o equivalente parametrizado — o
+# artefato e a pagina de UMA aluna, o shell e a forma dela (REGRA 10). Toda adaptacao vive
+# AQUI, declarada: o que nao estiver nesta tabela e divergencia e reprova.
+ADAPTACOES_DE_PALETA = {
+    ".stage-pill": [("rgba(15,76,117,.14)", "rgba(190,18,60,.14)")],
+    ".audio-btn-sm:hover": [("#0a3a5c", "var(--accent-light)")],
+}
+
+
+def _corpos(txt):
+    css = "\n".join(re.findall(r"<style[^>]*>(.*?)</style>", txt, re.S))
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    d = {}
+    for m in re.finditer(r"([^{}]+)\{([^{}]*)\}", css):
+        sel = re.sub(r"\s+", " ", m.group(1)).strip()
+        d.setdefault(sel, m.group(2).strip())
+    return d
+
+
+def medir_chassi(art, shell):
+    """Seletores de chassi cujo corpo no shell NAO e o do artefato (pos-adaptacao)."""
+    ra, rs = _corpos(art), _corpos(shell)
+    fora = []
+    for sel in CHASSI:
+        a, s_ = ra.get(sel), rs.get(sel)
+        if a is None or s_ is None:
+            fora.append((sel, "ausente", "ausente" if s_ is None else "presente"))
+            continue
+        esperado = a
+        for de, para in ADAPTACOES_DE_PALETA.get(sel, []):
+            esperado = esperado.replace(de, para)
+        norm = lambda x: re.sub(r"\s+", "", x).rstrip(";")
+        if norm(esperado) != norm(s_):
+            fora.append((sel, esperado[:70], s_[:70]))
+    return fora
+
+
 def le(p):
     with open(p, encoding="utf-8", errors="replace") as fh:
         return fh.read()
@@ -132,8 +187,21 @@ def medir(art, shell, inv):
     declaradas = [m["classe"] for m in gd["componentes"].values() if m.get("classe")]
     declaradas += [m["classe"] for m in (gd.get("estrutura", {}).get("pecas") or {}).values()
                    if m.get("classe")]
-    paralelas = sorted({c for c in declaradas if c not in a_css})
-    return {"faltando": faltando, "orfas": orfas, "paralelas": paralelas}, a_slide
+    # EQUIVALENCIA DECLARADA nao e divergencia: e renome com motivo escrito (ex.: a barra de
+    # etapas se chama phase-* aqui porque reusa a mecanica que o shell base ja tinha; a
+    # aparencia e a mesma). O que o gate persegue e o renome SILENCIOSO.
+    equivalentes = {v["aqui"] for v in gd.get("equivalencias", {}).values()
+                    if isinstance(v, dict) and v.get("aqui")}
+    # PECAS PARADAS: kinds sem forma no artefato, aguardando decisao da autora. Continuam
+    # contados nas orfas (nao viram divida invisivel), mas nao contam como declaracao
+    # paralela — a declaracao delas E a pendencia.
+    paradas = {c for it in (gd.get("_pendente_sem_forma_no_artefato", {}).get("itens") or [])
+               for c in it.get("classes", [])}
+    paralelas = sorted({c for c in declaradas
+                        if c not in a_css and c not in equivalentes and c not in paradas})
+    chassi = [sel for sel, _, _ in medir_chassi(art, shell)]
+    return {"faltando": faltando, "orfas": orfas, "paralelas": paralelas,
+            "chassi": chassi}, a_slide
 
 
 def compara(atual, base):
@@ -154,6 +222,7 @@ def relatorio(atual, base, a_slide):
         "faltando": "peca do artefato AUSENTE do shell (nao portada)",
         "orfas": "classe ic-* do shell SEM par no artefato (reescrita orfa)",
         "paralelas": "classe declarada no anatomias.json que NAO existe no artefato",
+        "chassi": "regra de CHASSI que nao e mais a do artefato",
     }
     for k, rot in rotulos.items():
         n, nb = len(atual[k]), len(base.get(k, []))
@@ -192,6 +261,11 @@ def selftest():
     inv_mut = copy.deepcopy(inv)
     inv_mut["anatomias"]["guided-discovery"]["componentes"]["reveal"]["classe"] = "zz-paralela"
     casos.append(("declaracao com nome paralelo", art, shell, inv_mut, "paralelas"))
+
+    # 4. chassi revertido para o valor do shell imersivo reprova
+    shell_mut3 = shell.replace("max-width:940px;width:100%;position:relative;margin:auto",
+                               "max-width:920px;width:100%;position:relative")
+    casos.append(("chassi revertido (slide-inner 940 -> 920)", art, shell_mut3, inv, "chassi"))
 
     for rotulo, a, s, i, chave in casos:
         at, _ = medir(a, s, i)
