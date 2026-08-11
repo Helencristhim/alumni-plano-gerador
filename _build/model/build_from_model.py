@@ -108,7 +108,7 @@ def tem_aba_complementares(cfg):
     silenciou os 33 defeitos deles de uma vez (o GATE 8 pegou: -17 -> -50). Anatomia nao
     declarada => comportamento do legado (a aba existe), que e o default seguro.
     """
-    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    anat = anatomia(cfg)
     abas = ANATOMIAS_DECLARADAS.get(anat, {}).get('abas')
     return 'complementary' in abas if abas else True
 
@@ -148,7 +148,7 @@ HUBS = {
 
 def hub_path(cfg, aluno=False):
     """De qual arquivo sai o HUB. None => o hub publicado da anatomia imersivo."""
-    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    anat = anatomia(cfg)
     alvo = HUBS.get(anat)
     if alvo is None:
         base = ALUNO if aluno else PROF
@@ -177,6 +177,51 @@ ANATOMIA_POR_SLUG = {
     'stephanie-vicente': 'guided-discovery',
 }
 
+# Apelidos do config: o que a pessoa escreve em `"molde"` -> a anatomia interna.
+MOLDES = {
+    'helen-mendes': 'imersivo',
+    'imersivo': 'imersivo',
+    'stephanie': 'guided-discovery',
+    'stephanie-vicente': 'guided-discovery',
+    'guided-discovery': 'guided-discovery',
+}
+
+
+def anatomia(cfg):
+    """A anatomia desta aula. EXIGE a escolha declarada no config.
+
+    POR QUE ISTO ABORTA EM VEZ DE ESCOLHER SOZINHO (ordem do Dan, 11/08/2026):
+    "precisamos de um jeito de ANTES DE TUDO decidir se vai ser modelo helen mendes ou
+    modelo stephanie".
+
+    Antes, o default era silencioso: slug fora do ANATOMIA_POR_SLUG caia em `imersivo`
+    sem ninguem declarar nada. Enquanto os dois moldes eram iguais isso nao doia. Quando
+    o builder passou a emitir os blocos no vocabulario do molde novo (#2027) mas o shell
+    adulto ficou sem as funcoes dele, o default silencioso virou fabrica de botao morto:
+    a aula 2 do Samuel nasceu com 13 handlers icPick() que o shell dela nao tem.
+
+    Escolher e barato; descobrir depois, no meio da aula, e caro. Entao: sem `molde` no
+    config, o build NAO acontece.
+    """
+    m = cfg.get('molde')
+    if not m:
+        raise SystemExit(
+            'ESCOLHA O MOLDE ANTES DE GERAR.\n'
+            '  Falta a chave "molde" em ' + str(cfg.get('slug')) + '/config.json.\n'
+            '  "molde": "helen-mendes"  -> o de sempre (shell public/professor/helen-mendes-aula1.html)\n'
+            '  "molde": "stephanie"     -> o molde novo (shell _build/model/shells/guided-discovery.html)\n'
+            '  Os dois NAO se misturam: cada um tem as suas funcoes JS e o seu vocabulario de classes.')
+    if m not in MOLDES:
+        raise SystemExit(f'molde "{m}" nao existe. Use: ' + ', '.join(sorted(set(MOLDES))))
+    anat = MOLDES[m]
+    fixo = ANATOMIA_POR_SLUG.get(cfg.get('slug'))
+    if fixo and fixo != anat:
+        raise SystemExit(
+            f'o slug {cfg.get("slug")} e da anatomia "{fixo}", mas o config pediu "{m}" ({anat}). '
+            f'Trocar o molde de um aluno com aula no ar reescreve a forma dela — se e isso mesmo, '
+            f'mude o ANATOMIA_POR_SLUG junto, de proposito.')
+    return anat
+
 
 def shell_path(cfg):
     """De QUAL arquivo sai o shell desta aula.
@@ -189,7 +234,7 @@ def shell_path(cfg):
     divergem nas funcoes JS ou nas classes-mecanismo, e exige que toda diferenca legitima
     esteja declarada com motivo.
     """
-    anat = ANATOMIA_POR_SLUG.get(cfg.get('slug'), 'imersivo')
+    anat = anatomia(cfg)
     pasta, arquivo = ANATOMIAS[anat]
     p = os.path.join(ROOT, pasta, arquivo)
     if not os.path.exists(p):
@@ -1696,7 +1741,35 @@ def inclass_menu(cards):
             '  <div style="display:flex;flex-direction:column;gap:1rem">\n' + '\n'.join(cards) + '\n  </div>\n</div>\n\n')
 
 
+def assert_handlers_do_molde(s, cfg, label):
+    """Todo handler inline referencia funcao que EXISTE no arquivo. Senao, aborta.
+
+    A TRAVA QUE FALTAVA (11/08/2026). Escolher o molde no config diz de qual SHELL sai o
+    JS; nada garantia que os BLOCOS emitidos falassem a lingua daquele shell. Quando o
+    render_block passou a emitir gist/tf no vocabulario do artefato -- com icPick() --, o
+    shell adulto (que tem icPickGist, nao icPick) continuou sendo usado, e a aula nasceu
+    com 13 botoes que nao fazem nada. HTML valido, console limpo em carga, nenhum gate
+    via: exatamente o perfil do incidente dos 324 botoes mortos (REGRA 7.1).
+
+    Aqui a pergunta e feita no unico lugar em que a resposta e barata: ANTES de escrever
+    o arquivo. O custo e um regex; o beneficio e que molde e bloco nunca mais saem
+    dessincronizados em silencio.
+    """
+    chamadas = set(re.findall(r'on(?:click|change)="\s*([A-Za-z_$][\w$]*)\s*\(', s))
+    definidas = set(re.findall(r'function\s+([A-Za-z_$][\w$]*)\s*\(', s))
+    # metodos nativos chamados no handler (this.classList.toggle, event.stopPropagation...)
+    nativas = {'speakText', 'this', 'event', 'window', 'document'}
+    mortas = sorted(f for f in chamadas - definidas - nativas if '.' not in f)
+    if mortas:
+        raise SystemExit(
+            f'{label}: o bloco emitido usa funcao que o molde "{cfg.get("molde")}" NAO tem: '
+            + ', '.join(f'{f}()' for f in mortas)
+            + '\n  O shell e o vocabulario dos blocos tem de ser do MESMO molde. '
+              'Ou troque o molde no config, ou emita o bloco na forma que este shell entende.')
+
+
 def final_asserts(s, cfg, label, is_hub=False):
+    assert_handlers_do_molde(s, cfg, label)
     low = s.lower()
     # A própria aluna MODELO (helen-mendes) é o único slug em que "helen" e a paleta
     # do modelo são LEGÍTIMOS no output — são o nome/paleta do aluno, não vazamento.
