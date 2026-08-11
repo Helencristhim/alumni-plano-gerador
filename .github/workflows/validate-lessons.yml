@@ -381,6 +381,29 @@ jobs:
         # na geração, não aqui.
         run: python3 scripts/gen_banco_exercicios.py --check
 
+      - name: "GATE 26 — selftest: prova que o gate de coerência interna ainda morde"
+        run: python3 scripts/check_coerencia_interna.py --selftest
+
+      - name: "GATE 26 — a nota manda fazer o que a tela permite fazer"
+        # Item 2.10 da instrução corretiva: a Teacher's Note mandava "toque o áudio" numa aula
+        # de LEITURA. Era a camada "Coerência interna" do 03 §8, e saía NÃO VERIFICADO em todo
+        # relatório por não ter gate. A primeira versão das regras disparou 20x no próprio
+        # artefato — o que prova defeito na REGRA, não no artefato: polissemia ("leia o quadro"
+        # é o brief, que estava na tela) e prosa que descreve o percurso em vez de mandar. A
+        # versão que ficou é muda nas 63 telas dele, e mesmo assim pegou um defeito real.
+        run: python3 scripts/check_coerencia_interna.py
+
+      - name: "GATE 25 — selftest: prova que o gate factual ainda morde"
+        run: python3 scripts/check_factual.py --selftest
+
+      - name: "GATE 25 — a fonte está na tela, e o gabarito não cita o que ela não tem"
+        # Camada "Factual" do 03 §6/§8, na parte que dá para provar sem ler a fonte: todo texto
+        # na tela declara de onde veio (12 de 12 no artefato), o gabarito não cita rótulo de
+        # fonte que a tela não mostra, e material declarado SIMULADO no syllabus não carrega
+        # link externo de veículo real — ficção vestida de documento é o pior defeito desta
+        # camada e o único visível sem leitura humana.
+        run: python3 scripts/check_factual.py
+
       - name: "GATE 24 — selftest: prova que o gate de syllabus ainda morde"
         run: python3 scripts/check_syllabus_ciclo.py --selftest
 
