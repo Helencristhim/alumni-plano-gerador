@@ -2137,6 +2137,154 @@ def normalize_complementary(html, cfg=None):
     return html
 
 
+def syllabus_json_path(cfg):
+    """_build/{slug}/syllabus.json — a fonte de dados do syllabus do ciclo (docx §3.1)."""
+    return os.path.join(ROOT, '_build', cfg['slug'], 'syllabus.json')
+
+
+# ESTILO INLINE, e nao classes novas no shell: as abas de hub (planning/evidencias) ja sao
+# escritas assim, e classe nova no shell mexeria no que o GATE 18 (drift) e o GATE 21
+# (paridade com o artefato) vigiam. O conteudo da aba nao e anatomia — e material do professor.
+_SYL_ROT = ('display:block;font-size:.72rem;font-weight:700;letter-spacing:.6px;'
+            'text-transform:uppercase;color:var(--accent);margin-bottom:.25rem')
+_SYL_VAL = 'display:block;font-size:.87rem;line-height:1.6;color:var(--text-mid)'
+_SYL_SUB = 'font-size:.8rem;color:var(--text-dim)'
+
+
+def _syl_campo(rot, val):
+    return (f'<div style="margin-bottom:.85rem">'
+            f'<span style="{_SYL_ROT}">{rot}</span>'
+            f'<span style="{_SYL_VAL}">{val}</span></div>')
+
+
+def syllabus_tab_html(cfg):
+    """A aba 'Syllabus 20 aulas' do hub, montada a partir de _build/{slug}/syllabus.json.
+
+    POR QUE O BUILDER EMITE ISTO, e nao um syllabus.html escrito a mao: o docx §3.1 exige DEZ
+    campos de CADA aula do ciclo. Escrito a mao, isso e uma tabela de 20 linhas x 10 colunas
+    que ninguem mantem — e o resultado medido em 11/08/2026 foi a aba mostrar UMA frase de
+    esqueleto ("Syllabus do ciclo.") e nenhuma aula, enquanto as 20 viviam num .md que a
+    interface nao abre. Emitido do JSON, o campo ou existe (e aparece) ou falta (e o GATE 22
+    barra). Mesma logica dos slides de tarefa: se o builder emite, o defeito nao tem por onde
+    entrar.
+
+    Retorna None quando o aluno nao tem syllabus.json — a aba entao segue o caminho antigo
+    (syllabus.html escrito a mao), e nenhum aluno existente muda de comportamento.
+    """
+    p = syllabus_json_path(cfg)
+    if not os.path.exists(p):
+        return None
+    with open(p, encoding='utf-8') as f:
+        d = json.load(f)
+    FW = {'reading-into-speaking': 'Reading', 'listening-into-interaction': 'Listening',
+          'grammar-for-communication': 'Grammar', 'esp-real-world': 'ESP'}
+    out = []
+    out.append('<div class="teacher-section">')
+    out.append('<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.35rem;'
+               'margin-bottom:.5rem">Syllabus do ciclo &mdash; %d aulas</h3>'
+               % d['aulas_do_ciclo'])
+    out.append('<p style="font-size:.87rem;line-height:1.6;color:var(--text-mid);'
+               'margin-bottom:.7rem">Ciclo %s &middot; n&iacute;vel <strong>%s</strong> &middot; '
+               '5 blocos &middot; 60 min nominais (55 de percurso + 5 de margem). '
+               '<strong>Provis&oacute;rio at&eacute; o checkpoint da aula 4</strong>: o perfil inicial &eacute; uma '
+               'hip&oacute;tese, e o que sair das aulas 1&ndash;4 confirma, ajusta ou reconfigura as '
+               'aulas 5&ndash;20.</p>' % (d['ciclo'], d['nivel']))
+    out.append('<p style="font-size:.82rem;line-height:1.6;color:var(--text-dim);'
+               'margin-bottom:.9rem;padding:.7rem;border-left:3px solid var(--accent);'
+               'background:var(--accent-dim)">O horizonte pedag&oacute;gico &eacute; sempre de 20 aulas. '
+               'O pacote contratado determina quantas podem ser produzidas &mdash; n&atilde;o redefine '
+               'a l&oacute;gica curricular. Se o pacote terminar antes da aula 20, emitir relat&oacute;rio '
+               'parcial e preservar o estado. Fonte: <code>_build/model/ciclo.json</code>.</p>')
+    out.append('<div class="tbl-wrap"><table class="data"><thead><tr>'
+               '<th>#</th><th>Bloco</th><th>Framework</th><th>Aula</th>'
+               '<th>Produto / evid&ecirc;ncia</th><th>Estado</th></tr></thead><tbody>')
+    for a in d['aulas']:
+        est = ('<strong>produzida</strong>' if a['estado'] == 'produzida'
+               else 'provis&oacute;ria')
+        out.append('<tr><td>%02d</td><td>%s</td><td>%s</td><td><strong>%s</strong></td>'
+                   '<td>%s</td><td>%s</td></tr>'
+                   % (a['n'], a['bloco'], FW.get(a['framework'], a['framework']),
+                      a['titulo'], a['produto'], est))
+    out.append('</tbody></table></div>')
+    out.append('<p style="font-size:.8rem;color:var(--text-dim);margin-top:.6rem">'
+               'Cada aula abaixo traz os <strong>dez campos</strong> que o normativo de '
+               'planejamento exige (&sect;3.1) e a <strong>ficha de especifica&ccedil;&atilde;o</strong> do '
+               'prompt controlador. Clique para abrir.</p>')
+    out.append('</div>')
+
+    for a in d['aulas']:
+        out.append('<details style="border:1px solid var(--border);border-radius:10px;padding:.7rem .9rem;margin-bottom:.6rem;background:var(--bg-card)"><summary style="cursor:pointer;font-size:.9rem;color:var(--text)"><strong>%02d</strong> &middot; %s '
+                   '&middot; <em>%s</em>%s</summary>'
+                   % (a['n'], FW.get(a['framework'], a['framework']), a['titulo'],
+                      '' if a['estado'] == 'produzida' else ' &middot; provis&oacute;ria'))
+        out.append('<div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--border)">')
+        out.append(_syl_campo('1 &middot; Posi&ccedil;&atilde;o',
+                              '%s &middot; %s &middot; %s' % (a['bloco'],
+                                                              FW.get(a['framework'], a['framework']),
+                                                              a['posicao_na_rotacao'])))
+        out.append(_syl_campo('2 &middot; Objetivo comunicativo',
+                              ('%s <br><span style="' + _SYL_SUB + '">Relacao com o perfil: '
+                               '%s</span>')
+                              % (a['objetivo_comunicativo'], a['relacao_com_o_perfil'])))
+        out.append(_syl_campo('3 &middot; Opera&ccedil;&atilde;o NOVA', a['operacao_nova']))
+        out.append(_syl_campo('4 &middot; Input e autenticidade',
+                              ('%s <br><span style="' + _SYL_SUB + '">%s</span>')
+                              % (a['input']['material'], a['input']['autenticidade'])))
+        out.append(_syl_campo('5 &middot; Functional language', a['linguagem']))
+        mic = a['microciclo']
+        out.append(_syl_campo('6 &middot; Microciclo de Guided Discovery',
+                              '<ol style="margin:.3rem 0 0 1.1rem;padding:0">' + ''.join(
+                                  '<li><strong>%s.</strong> %s</li>'
+                                  % (rot, mic[chave]) for rot, chave in (
+                                      ('Evid&ecirc;ncia inicial', 'evidencia_inicial'),
+                                      ('Opera&ccedil;&atilde;o cognitiva', 'operacao_cognitiva'),
+                                      ('Formula&ccedil;&atilde;o de hip&oacute;tese', 'formulacao_hipotese'),
+                                      ('Verifica&ccedil;&atilde;o pr&aacute;tica', 'verificacao_pratica'),
+                                      ('Clarifica&ccedil;&atilde;o did&aacute;tica', 'clarificacao_didatica'),
+                                      ('Aplica&ccedil;&atilde;o real', 'aplicacao_real'))) + '</ol>'))
+        out.append(_syl_campo('7 &middot; Produto e crit&eacute;rios de sucesso',
+                              '%s<ul style="margin:.3rem 0 0 1.1rem;padding:0">%s</ul>'
+                              % (a['produto'], ''.join('<li>%s</li>' % c
+                                                       for c in a['criterios_de_sucesso']))))
+        out.append(_syl_campo('8 &middot; Evid&ecirc;ncia a registrar',
+                              '<ul style="margin:.3rem 0 0 1.1rem;padding:0">%s</ul>'
+                              % ''.join('<li>%s</li>' % e for e in a['evidencia_a_registrar'])))
+        linhas = ''.join(
+            '<tr><td><strong>%s</strong>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>'
+            % (m['mecanica'],
+               '' if m.get('no_banco', True) else ' <span style="font-size:.72rem;color:var(--warn);font-weight:600">fora do banco</span>',
+               m['funcao'], m['operacao'], m['controle'], m['evidencia'])
+            for m in a['mecanicas'])
+        out.append(_syl_campo('9 &middot; Mec&acirc;nicas e grau de controle',
+                              '<div class="tbl-wrap"><table class="data"><thead><tr>'
+                              '<th>Mec&acirc;nica</th><th>Fun&ccedil;&atilde;o</th><th>Opera&ccedil;&atilde;o</th>'
+                              '<th>Controle</th><th>Evid&ecirc;ncia</th></tr></thead><tbody>'
+                              + linhas + '</tbody></table></div>'))
+        out.append(_syl_campo('10 &middot; Avalia&ccedil;&atilde;o e progress&atilde;o', a['avaliacao']))
+        sp = a['spec']
+        out.append('<div class="callout"><span class="callout-title">Ficha de especificacao '
+                   '(prompt controlador, fase 1)</span></div>')
+        for rot, chave in (('Necessidade', 'necessidade'),
+                           ('Por que este framework', 'framework_justificativa'),
+                           ('Origem da necessidade', 'origem'),
+                           ('Conte&uacute;do recuperado', 'conteudo_recuperado'),
+                           ('Conte&uacute;do exclu&iacute;do', 'conteudo_excluido'),
+                           ('Retask', 'retask')):
+            out.append(_syl_campo(rot, sp[chave]))
+        out.append('</div></details>')
+
+    for c in d.get('_conflitos_declarados', []):
+        out.append('<div class="teacher-section"><div class="callout warn">'
+                   '<span class="callout-title">Conflito declarado &mdash; decis&atilde;o pendente</span>'
+                   '%s</div><p style="font-size:.84rem;line-height:1.6;color:var(--text-mid);'
+                   'margin-top:.5rem"><strong>Por que nao foi resolvido:</strong> %s<br>'
+                   '<strong>Quem decide:</strong> %s<br>'
+                   '<strong>Enquanto isso:</strong> %s</p></div>'
+                   % (c['conflito'], c['por_que_nao_foi_resolvido'], c['quem_decide'],
+                      c['enquanto_isso']))
+    return '\n'.join(out)
+
+
 def hub_tab_path(cfg, content_dir, nome):
     """Onde mora o conteudo de uma ABA DE HUB (planning/evidencias/syllabus).
 
@@ -2180,9 +2328,18 @@ def build_hub_new(cfg, content_dir, manifest):
             print('  AVISO: anatomia tem aba Evidencias e nao ha evidencias.html — '
                   'a ficha pos-aula fica vazia, e sem ela as aulas 5-20 nao saem.')
     if 'id="tab-syllabus"' in hub_html_:
-        ps = hub_tab_path(cfg, content_dir, 'syllabus.html')
-        if os.path.exists(ps):
-            syllabus_tab = read(ps)
+        # FONTE UNICA: _build/{slug}/syllabus.json (os 10 campos do docx §3.1). O
+        # syllabus.html escrito a mao continua valendo como fallback — nenhum aluno
+        # existente muda de comportamento por causa disto.
+        syllabus_tab = syllabus_tab_html(cfg)
+        if syllabus_tab is None:
+            ps = hub_tab_path(cfg, content_dir, 'syllabus.html')
+            if os.path.exists(ps):
+                syllabus_tab = read(ps)
+        if syllabus_tab is None:
+            print('  AVISO: anatomia tem aba Syllabus e nao ha syllabus.json nem '
+                  'syllabus.html — a aba fica com o texto de esqueleto do shell, que '
+                  'anuncia 20 aulas e nao mostra nenhuma.')
     # Complementares so e LIDO se a anatomia do hub tiver a aba. Ler incondicionalmente
     # obrigaria a existir um arquivo que nao tem onde entrar.
     complementary = ''
