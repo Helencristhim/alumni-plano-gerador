@@ -966,7 +966,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="qf-card" data-qf="4" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;display:none"><p style="font-size:.92rem;margin-bottom:.6rem"><strong>4.</strong> Fix the mistake: "I used to working late."</p><p class="qf-answer" style="font-size:.82rem;color:var(--accent);display:none">"I used to work late." (used to + base verb)</p><button class="primary-btn" onclick="this.previousElementSibling.style.display='block';this.style.display='none'" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1rem;font-size:.85rem;cursor:pointer">Show Answer</button></div>
       <div class="qf-card" data-qf="5" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;display:none"><p style="font-size:.92rem;margin-bottom:.6rem"><strong>5.</strong> Describe one change, using a lesson word.</p><p class="qf-answer" style="font-size:.82rem;color:var(--accent);display:none">"Gradually, the new platform replaced the old spreadsheets."</p><button class="primary-btn" onclick="this.previousElementSibling.style.display='block';this.style.display='none'" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1rem;font-size:.85rem;cursor:pointer">Show Answer</button></div>
     </div>
-    <button class="primary-btn" id="nextQFBtn" onclick="nextQF()" style="margin:1rem auto 0;display:block;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.5rem 1rem;font-size:.85rem;cursor:pointer">Next Question</button>
+    <div style="display:flex;gap:.6rem;justify-content:center;align-items:center;margin:1rem auto 0"><button class="secondary-btn" id="prevQFBtn" onclick="prevQF()" aria-label="Previous question" disabled style="opacity:0;pointer-events:none;background:transparent;color:var(--accent);border:2px solid var(--accent);border-radius:8px;padding:.6rem 1.2rem;min-height:44px;font-size:.85rem;cursor:pointer">Previous Question</button><button class="primary-btn" id="nextQFBtn" onclick="nextQF()" aria-label="Next question" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.2rem;min-height:44px;font-size:.85rem;cursor:pointer">Next Question</button></div>
   </div>
 </div>
 
@@ -1327,7 +1327,10 @@ function nextDialogueLine() {
 
 // ===== QUICK CHALLENGE =====
 var qfCurrent = 1;
-function nextQF() { var all = document.querySelectorAll('.qf-card'); var next = document.querySelector('.qf-card[data-qf="' + (qfCurrent + 1) + '"]'); if (!next) { var b = document.getElementById('nextQFBtn') || document.querySelector('[onclick*="nextQF"]'); if (b) b.style.display = 'none'; return; } qfCurrent++; all.forEach(function(c) { c.style.display = 'none'; }); next.style.display = 'block'; var s = document.getElementById('qfScore'); if (s) s.textContent = qfCurrent + ' / ' + all.length; }
+function qfShow(n) { var all = document.querySelectorAll('.qf-card'); if (!all.length || n < 1 || n > all.length) return; qfCurrent = n; all.forEach(function(c) { c.style.display = 'none'; }); var cur = document.querySelector('.qf-card[data-qf="' + n + '"]'); if (cur) cur.style.display = 'block'; var s = document.getElementById('qfScore'); if (s) s.textContent = n + ' / ' + all.length; qfToggle(document.getElementById('prevQFBtn'), n > 1); qfToggle(document.getElementById('nextQFBtn'), n < all.length); }
+function qfToggle(btn, on) { if (!btn) return; btn.disabled = !on; btn.style.opacity = on ? '1' : '0'; btn.style.pointerEvents = on ? 'auto' : 'none'; }
+function nextQF() { qfShow(qfCurrent + 1); }
+function prevQF() { qfShow(qfCurrent - 1); }
 
 // ===== LISTENING AUDIO =====
 // ===== LISTENING PLAYER (MP3 unico + controles completos) =====
