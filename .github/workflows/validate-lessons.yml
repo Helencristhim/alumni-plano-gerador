@@ -375,6 +375,21 @@ jobs:
         # na geração, não aqui.
         run: python3 scripts/gen_banco_exercicios.py --check
 
+      - name: "GATE 21 — selftest: prova que o gate de paridade ainda morde"
+        run: python3 scripts/check_artefato_paridade.py --selftest
+
+      - name: "GATE 21 — a interface gerada é a do ARTEFATO"
+        # O artefato (_build/model/artefatos/erica-professor-view.html) é a ESPECIFICAÇÃO da
+        # interface — decisão do Dan, 11/08/2026: "SE AS AULAS NÃO ESTÃO IDÊNTICAS AO
+        # ARTEFATO, NO QUESITO INTERFACE, ENTÃO ESTÁ ERRADO".
+        # O porte de 07/08 renomeou e reimplementou cada peça (reveal-item -> ic-reveal,
+        # blank-input -> ic-blank...) e deixou quatro de fora — callout, a MAIS usada do
+        # artefato, tbl-wrap, quiz-option e rule-box. Ninguém viu porque o inventário
+        # catalogou os nomes NOVOS e o GATE 20 passou a comparar a cópia consigo mesma.
+        # Este gate compara com o ORIGINAL. Trabalha como o GATE 8: a dívida de hoje está
+        # congelada em scripts/artefato-paridade-baseline.json e só pode CAIR.
+        run: python3 scripts/check_artefato_paridade.py
+
       - name: "GATE 20 — selftest: prova que o gate de anatomia ainda morde"
         run: python3 scripts/check_anatomia.py --selftest
 

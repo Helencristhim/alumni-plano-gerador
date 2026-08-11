@@ -1,20 +1,62 @@
 {
-  "_fonte_unica": "O INVENTARIO DA ANATOMIA. Quem le: scripts/check_anatomia.py (GATE 20). Componente novo = uma entrada aqui + a peca no shell; componente que some do shell sem sair daqui = FALHA.",
+  "_fonte_unica": "O INVENTARIO DA ANATOMIA. Quem le: scripts/check_anatomia.py (GATE 20) e scripts/check_artefato_paridade.py (GATE 21). Componente novo = uma entrada aqui + a peca no shell; componente que some do shell sem sair daqui = FALHA. As classes declaradas aqui sao as classes DO ARTEFATO (_build/model/artefatos/erica-professor-view.html), nunca nomes paralelos.",
   "_por_que": [
     "A anatomia guided-discovery foi construida lendo um ARTEFATO de referencia (o Professor",
-    "View da Erica, escrito pela Stephanie fora do sistema). Enquanto o porte acontecia, o",
-    "artefato era a especificacao. Terminado o porte, ele deixa de ser: o SHELL passa a ser a",
-    "anatomia, e este arquivo passa a ser a lista do que ela contem.",
+    "View da Erica, escrito pela Stephanie fora do sistema). Este arquivo lista o que essa",
+    "anatomia contem, e o GATE 20 confere o shell contra a lista.",
     "",
-    "Ordem do Dan (07/08/2026): 'o artefato nao vai ser necessario quando o shell estiver",
-    "totalmente construido e completo'. Por isso o gate confere o shell contra ESTA lista, e",
-    "NUNCA contra o artefato — que mora fora do repo, nao existe no CI, e cujo papel acabou.",
-    "O artefato vira referencia historica, citada nos comentarios de cada componente portado.",
+    "O RISCO ORIGINAL que isto cobre e o de perder peca sem ninguem ver. Foi assim que eu dei",
+    "duas aulas como prontas com um quadro de feedback que nao recebia texto: contei o que EU",
+    "tinha usado, nao o que a anatomia TEM. Lista declarada + gate transforma essa pergunta",
+    "numa consulta.",
     "",
-    "O RISCO QUE ISTO COBRE e o de perder peca sem ninguem ver. Foi assim que eu dei duas",
-    "aulas como prontas com um quadro de feedback que nao recebia texto: contei o que EU tinha",
-    "usado, nao o que a anatomia TEM. Lista declarada + gate transforma essa pergunta numa",
-    "consulta."
+    "== CORRECAO DE 11/08/2026: O ARTEFATO VOLTOU A SER A FONTE ==",
+    "",
+    "Ate 11/08 este bloco dizia, como ordem de 07/08: 'o gate confere o shell contra ESTA",
+    "lista, e NUNCA contra o artefato -- que mora fora do repo, nao existe no CI, e cujo papel",
+    "acabou'. ISSO ESTAVA ERRADO, e era a CAUSA RAIZ de uma divergencia grande.",
+    "",
+    "O erro nao foi ter uma lista. Foi a lista ter catalogado a REESCRITA em vez do original:",
+    "o porte renomeou e reimplementou cada peca (reveal-item -> ic-reveal, blank-input ->",
+    "ic-blank, conf-btn -> ic-self, writebox -> ic-write, recap-item -> ic-recap...), o",
+    "inventario registrou os nomes NOVOS, e o GATE 20 passou a comparar a copia consigo",
+    "mesma -- verde para sempre, medindo nada. Quatro pecas nunca foram portadas e ninguem viu:",
+    "callout (23,8 usos/aula no artefato, a MAIS usada), tbl-wrap (10,2), quiz-option (6,8) e",
+    "rule-box (6,0), todas com ZERO ocorrencia no molde. E as que foram portadas ficaram com",
+    "uso muito menor (blank-input 26,8/aula la contra 3,5 do ic-blank aqui).",
+    "",
+    "Decisao do Dan (11/08/2026): 'SE AS AULAS NAO ESTAO IDENTICAS AO ARTEFATO, NO QUESITO",
+    "INTERFACE, ENTAO ESTA ERRADO' / 'pq que eu colocaria esse artefato se nao fosse pra vc",
+    "imitar ele?'. O artefato e a ESPECIFICACAO DA INTERFACE, nao uma referencia",
+    "inspiracional. Ele agora mora NO REPO, com hash, em _build/model/artefatos/ -- o",
+    "argumento de 07/08 ('mora fora do repo, nao existe no CI') deixou de valer porque a causa",
+    "dele foi removida.",
+    "",
+    "REGRA EM VIGOR — A HIERARQUIA (corrigida em 11/08/2026, palavras do Dan):",
+    "",
+    "  'o artefato e o state-of-art do que vamos fazer, a documentacao e a especificacao caso",
+    "   o artefato nao seja suficiente pra vc entender o que estamos fazendo'",
+    "",
+    "1. O ARTEFATO MANDA. Interface, componentes, estrutura, comportamento, densidade: copia-se",
+    "   dele, classe por classe, com o CSS dele. As classes declaradas aqui sao as DELE.",
+    "2. A DOCUMENTACAO (docs/NORMATIVO-*.md) entra quando o artefato nao basta para entender —",
+    "   a funcao de cada etapa, a arquitetura do ciclo, o porque. Ela EXPLICA o artefato; nao",
+    "   o corrige.",
+    "",
+    "A DOUTRINA NAO E VETO AO ARTEFATO. Se algo dele parecer contrariar uma regra, a primeira",
+    "hipotese e que a regra foi lida errado. Divergencia que nao se resolva copiando: PERGUNTE",
+    "ao Dan, nao invente excecao.",
+    "",
+    "O QUE O MATERIAL DE PRODUCAO ACRESCENTA POR CIMA nao e conflito, e AUSENCIA: o artefato e",
+    "pagina estatica sem servidor. Audio do audioMap/ElevenLabs (REGRA 7) no mesmo botao e no",
+    "mesmo lugar; persistencia (REGRA 28) sem mudar um pixel; texto de fala em atributo e nao",
+    "dentro da string JS (REGRA 7.1), que e forma de escrever handler e nao aparece na tela;",
+    "idioma do conteudo (REGRA 13), e o artefato ja e todo em ingles; e a paleta por aluno",
+    "(REGRA 10) — o artefato e a pagina de UMA aluna e fixa as cores, o shell e a mesma forma",
+    "parametrizada, com --mint recebendo o accent-light do aluno para que o CSS entre VERBATIM.",
+    "Detalhe de cada uma em _build/model/artefatos/README.md.",
+    "",
+    "Quem confere e o GATE 21 (scripts/check_artefato_paridade.py)."
   ],
   "anatomias": {
     "guided-discovery": {
@@ -31,7 +73,7 @@
       "abas_aluno": [
         "exercises"
       ],
-      "origem": "Artefato 'Professor View - Erica', de Stephanie Vicente, agosto/2026. Porte concluido em 07/08/2026 — daqui em diante a fonte e o shell.",
+      "origem": "Artefato 'Professor View - Erica', de Stephanie Vicente, agosto/2026, versionado no repo em 11/08/2026. E NORMATIVO para a interface (ver o campo _por_que acima e _build/model/artefatos/README.md).",
       "componentes": {
         "reveal": {
           "classe": "ic-reveal",
@@ -182,6 +224,33 @@
         "piso de 25 slides": "e do imersivo (REGRA 11). Aqui o numero de telas DERIVA do orcamento de minutos — o racional inteiro, com os numeros medidos e o porque de nao haver piso, esta declarado em _build/model/ciclo.json -> densidade_e_numero_de_telas.",
         "5 etapas do Pre-class": "anatomia da helen-mendes. vocab-card-pc, speech-card, think-card e survival-card aparecem 0 vez no artefato.",
         "ordering / information gap": "nao existem no artefato. Foram prometidos por engano numa versao anterior do syllabus e retirados."
+      },
+      "artefato": "_build/model/artefatos/erica-professor-view.html",
+      "_divergencia_medida_11_08": {
+        "_o_que_e": "Estado da paridade no dia em que o artefato voltou a ser fonte. Serve de linha de base: o GATE 21 exige que estes numeros so CAIAM.",
+        "classes_do_artefato_ausentes_do_shell": 85,
+        "dentro_de_slide": 42,
+        "fora_de_slide_chrome_do_hub": 54,
+        "classes_ic_no_shell_sem_par_no_artefato": 125,
+        "nunca_portadas": [
+          "callout",
+          "callout-title",
+          "tbl-wrap",
+          "quiz-option",
+          "rule-box"
+        ],
+        "renomeadas_no_porte": {
+          "reveal-item": "ic-reveal",
+          "r-front": "ic-r-front",
+          "r-back": "ic-r-back",
+          "blank-input": "ic-blank",
+          "conf-btn": "ic-self",
+          "recap-item": "ic-recap",
+          "writebox": "ic-write",
+          "timer-btn": "ic-timer",
+          "phrase-row": "ic-phrase",
+          "evi-src": "ic-evi-src"
+        }
       }
     }
   }

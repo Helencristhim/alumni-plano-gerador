@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""GATE 21 — a interface gerada e a do ARTEFATO.
+
+POR QUE ISTO EXISTE (11/08/2026)
+--------------------------------
+O artefato de referencia (`_build/model/artefatos/erica-professor-view.html`, o Professor
+View da Erica escrito pela Stephanie) e a ESPECIFICACAO DA INTERFACE. Decisao do Dan, textual:
+
+    "SE AS AULAS NAO ESTAO IDENTICAS AO ARTEFATO, NO QUESITO INTERFACE, ENTAO ESTA ERRADO"
+    "pq que eu colocaria esse artefato se nao fosse pra vc imitar ele?"
+
+O porte de 07/08 nao imitou: RENOMEOU e REIMPLEMENTOU cada peca (reveal-item -> ic-reveal,
+blank-input -> ic-blank, conf-btn -> ic-self, writebox -> ic-write...) e deixou quatro pecas
+de fora — callout (23,8 usos/aula no artefato, a MAIS usada), tbl-wrap, quiz-option e
+rule-box, todas com ZERO ocorrencia no molde.
+
+E ninguem viu, porque no mesmo dia o inventario (`anatomias.json`) catalogou os nomes NOVOS e
+mandou o GATE 20 conferir o shell contra ELE, "e NUNCA contra o artefato". O gate passou a
+comparar a copia consigo mesma: verde para sempre, medindo nada.
+
+Este gate faz a pergunta que faltava: **o que o artefato tem e o gerado nao tem?**
+
+O QUE ELE MEDE
+--------------
+  A. classes usadas DENTRO de .slide no artefato e ausentes do CSS do shell   (peca nao portada)
+  B. classes ic-* do shell sem contrapartida no artefato                      (reescrita orfa)
+  C. classes declaradas em anatomias.json que nao existem no artefato         (inventario paralelo)
+
+COMO ELE NAO VIRA UM MURO
+-------------------------
+A paridade total nao cabe num PR (130 regras de CSS, 27 kinds do builder, 4 aulas a regerar).
+Entao o gate trabalha como o GATE 8: congela a divergencia de HOJE em
+`scripts/artefato-paridade-baseline.json` e exige que ela so CAIA. Divergencia nova = FALHA
+imediata; divergencia velha = tolerada ate o PR que a remove. Quando o baseline chegar a zero,
+o `--update` deixa de ser necessario e o gate vira paridade exata.
+
+ESCOPO: so a anatomia guided-discovery (o shell dela e as aulas com <meta alumni-framework>
+dos 4 frameworks dessa anatomia). O resto do repo nao e acusado — gate novo nasce escopado.
+
+USO:
+    python3 scripts/check_artefato_paridade.py
+    python3 scripts/check_artefato_paridade.py --selftest
+    python3 scripts/check_artefato_paridade.py --update    # so quando a divergencia CAIU
+"""
+import collections
+import json
+import os
+import re
+import sys
+
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ARTEFATO = os.path.join(RAIZ, "_build", "model", "artefatos", "erica-professor-view.html")
+SHELL = os.path.join(RAIZ, "_build", "model", "shells", "guided-discovery.html")
+INV = os.path.join(RAIZ, "_build", "model", "anatomias.json")
+BASELINE = os.path.join(RAIZ, "scripts", "artefato-paridade-baseline.json")
+
+# Classes que NAO sao interface de aula: utilitario generico do artefato, chrome do browser,
+# ou nome de uma letra. Comparar isto so gera ruido.
+IGNORAR = re.compile(r'^(fa|svg|icon)-|^(active|current|completed|upcoming|open|done|on|off'
+                     r'|hidden|show|visible)$|^.$')
+
+
+def le(p):
+    with open(p, encoding="utf-8", errors="replace") as fh:
+        return fh.read()
+
+
+def css_classes(s):
+    """Classes DEFINIDAS nos <style> do documento."""
+    out = set()
+    for st in re.findall(r"<style[^>]*>(.*?)</style>", s, re.S):
+        for m in re.finditer(r"\.([a-zA-Z][\w-]*)", st):
+            out.add(m.group(1))
+    return out
+
+
+def classes_em_slide(s):
+    """Classes usadas DENTRO de um <div class="slide ...">, com a contagem.
+
+    A conta e por profundidade de <div>: entra ao abrir um .slide, sai ao fechar o mesmo.
+    O chrome do Professor View (hub, menu, abas, syllabus) fica de fora de proposito — ele e
+    outro shell (hub-guided-discovery.html) e outro trabalho.
+    """
+    usos = collections.Counter()
+    pilha, dentro = [], 0
+    for m in re.finditer(r"<(/?)(\w+)([^>]*)>", s):
+        fechando, tag, attrs = m.group(1), m.group(2).lower(), m.group(3)
+        if tag != "div":
+            if not fechando and dentro:
+                c = re.search(r'class="([^"]+)"', attrs)
+                if c:
+                    usos.update(c.group(1).split())
+            continue
+        if fechando:
+            if pilha and pilha.pop():
+                dentro = max(0, dentro - 1)
+            continue
+        c = re.search(r'class="([^"]+)"', attrs)
+        eh_slide = bool(c and "slide" in c.group(1).split())
+        if eh_slide:
+            dentro += 1
+        if c and dentro:
+            usos.update(c.group(1).split())
+        pilha.append(eh_slide)
+    return usos
+
+
+def medir(art, shell, inv):
+    a_slide = classes_em_slide(art)
+    a_css = css_classes(art)
+    s_css = css_classes(shell)
+
+    faltando = sorted(
+        c for c in a_slide
+        if c not in s_css and not IGNORAR.match(c) and c in a_css
+    )
+    orfas = sorted(
+        c for c in s_css
+        if c.startswith("ic-") and c not in a_css and len(c) > 3
+    )
+    gd = inv["anatomias"]["guided-discovery"]
+    declaradas = [m["classe"] for m in gd["componentes"].values() if m.get("classe")]
+    declaradas += [m["classe"] for m in (gd.get("estrutura", {}).get("pecas") or {}).values()
+                   if m.get("classe")]
+    paralelas = sorted({c for c in declaradas if c not in a_css})
+    return {"faltando": faltando, "orfas": orfas, "paralelas": paralelas}, a_slide
+
+
+def compara(atual, base):
+    """Novidades = o que esta em `atual` e nao estava no baseline. So isso reprova."""
+    novos = {}
+    for k, v in atual.items():
+        antigo = set(base.get(k, []))
+        d = [x for x in v if x not in antigo]
+        if d:
+            novos[k] = d
+    return novos
+
+
+def relatorio(atual, base, a_slide):
+    print("=== GATE 21 — a interface gerada e a do ARTEFATO ===")
+    print(f"artefato: {os.path.relpath(ARTEFATO, RAIZ)}")
+    rotulos = {
+        "faltando": "peca do artefato AUSENTE do shell (nao portada)",
+        "orfas": "classe ic-* do shell SEM par no artefato (reescrita orfa)",
+        "paralelas": "classe declarada no anatomias.json que NAO existe no artefato",
+    }
+    for k, rot in rotulos.items():
+        n, nb = len(atual[k]), len(base.get(k, []))
+        seta = "=" if n == nb else ("v" if n < nb else "^")
+        print(f"  {rot:58} {n:4}  (baseline {nb}) {seta}")
+    top = [(a_slide[c], c) for c in atual["faltando"]]
+    if top:
+        print("\n  as 8 ausencias mais usadas no artefato (por aula, 4 aulas):")
+        for n, c in sorted(top, reverse=True)[:8]:
+            print(f"     .{c:22} {n/4:6.1f} usos/aula")
+
+
+def selftest():
+    art, shell = le(ARTEFATO), le(SHELL)
+    inv = json.loads(le(INV))
+    base = json.loads(le(BASELINE)) if os.path.exists(BASELINE) else {}
+    atual, _ = medir(art, shell, inv)
+    if compara(atual, base):
+        print("SELFTEST INCONCLUSIVO — a base ja esta com divergencia nova:")
+        print("  ", compara(atual, base))
+        return 1
+
+    falhou = False
+    casos = []
+
+    # 1. peca do artefato REMOVIDA do shell agora reprova
+    shell_mut = shell.replace(".stage-pill", ".xx-removida")
+    casos.append(("peca do artefato removida do shell", art, shell_mut, inv, "faltando"))
+
+    # 2. classe ic-* NOVA no shell reprova
+    shell_mut2 = shell.replace("</style>", ".ic-invencao-nova{color:red}</style>", 1)
+    casos.append(("classe ic-* nova sem par no artefato", art, shell_mut2, inv, "orfas"))
+
+    # 3. componente declarado com nome que nao existe no artefato reprova
+    import copy
+    inv_mut = copy.deepcopy(inv)
+    inv_mut["anatomias"]["guided-discovery"]["componentes"]["reveal"]["classe"] = "zz-paralela"
+    casos.append(("declaracao com nome paralelo", art, shell, inv_mut, "paralelas"))
+
+    for rotulo, a, s, i, chave in casos:
+        at, _ = medir(a, s, i)
+        pegou = chave in compara(at, base)
+        print(f"  {'OK   ' if pegou else 'FALHA'} {rotulo}")
+        if not pegou:
+            falhou = True
+
+    if falhou:
+        print("\nSELFTEST FALHOU — o gate parou de morder.")
+        return 1
+    print(f"\nSELFTEST OK — {len(casos)} casos.")
+    return 0
+
+
+def main():
+    if "--selftest" in sys.argv:
+        return selftest()
+    art, shell = le(ARTEFATO), le(SHELL)
+    inv = json.loads(le(INV))
+    atual, a_slide = medir(art, shell, inv)
+
+    if "--update" in sys.argv:
+        # BOOTSTRAP: sem baseline no disco, o primeiro --update CONGELA o estado de hoje.
+        # Sem esta porta, o proprio gate impediria seu primeiro congelamento (tudo "subiu de
+        # zero") e nao haveria como comecar a medir.
+        primeira = not os.path.exists(BASELINE)
+        base = {} if primeira else json.loads(le(BASELINE))
+        for k, v in atual.items():
+            if not primeira and len(v) > len(base.get(k, [])):
+                print(f"RECUSADO: '{k}' subiu de {len(base.get(k, []))} para {len(v)}. "
+                      f"O baseline so pode CAIR — conserte a divergencia nova primeiro.")
+                return 1
+        with open(BASELINE, "w", encoding="utf-8") as fh:
+            json.dump(atual, fh, ensure_ascii=False, indent=1)
+            fh.write("\n")
+        print(f"baseline {'CRIADO' if primeira else 'recongelado'}: "
+              f"{ {k: len(v) for k, v in atual.items()} }")
+        return 0
+
+    base = json.loads(le(BASELINE)) if os.path.exists(BASELINE) else {}
+    relatorio(atual, base, a_slide)
+    novos = compara(atual, base)
+    if novos:
+        print("\n  DIVERGENCIA NOVA (nao estava no baseline) — isto reprova:")
+        for k, v in novos.items():
+            for c in v:
+                print(f"     [{k}] .{c}")
+        print("\n  O artefato e a especificacao da interface. Use a classe DELE, com o CSS")
+        print("  dele (_build/model/artefatos/erica-professor-view.html). Se a diferenca for")
+        print("  exigida por doutrina (REGRA 7 / 7.1 / 13), declare em artefatos/README.md.")
+        return 1
+    print("\nOK — nenhuma divergencia NOVA. A divida congelada so pode cair.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
