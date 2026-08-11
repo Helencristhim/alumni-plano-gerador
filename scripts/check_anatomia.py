@@ -27,6 +27,8 @@ O QUE ELE REPROVA
   2. componente declarado cujo KIND sumiu do builder
   3. aba declarada que nao esta no shell (prof ou aluno)
   4. shell declarado que nao existe no disco
+  5. peca de ESTRUTURA declarada cuja classe/container/id sumiu do shell, ou que o builder
+     parou de emitir (11/08/2026 — ver o bloco `estrutura` do anatomias.json)
 
 O que ele NAO faz: exigir que uma AULA use todos os componentes. Aula escolhe; anatomia
 oferece. Perder a oferta e que e o defeito.
@@ -75,6 +77,33 @@ def verifica(inv, builder_src, ler=le):
                     f'{nome}: o componente "{comp}" declara kind "{kind}", que nao existe no '
                     f'builder. O config poderia pedi-lo e o builder abortaria.')
 
+        # ── ESTRUTURA (11/08/2026) ──────────────────────────────────────────────
+        # Ate aqui o inventario so listava componente de EXERCICIO, e a estrutura da aula
+        # (barra de etapas, rotulo com orcamento de minutos, etapa declarada em cada tela)
+        # nao tinha quem cobrasse. Foi assim que a barra ficou com 7 segmentos fixos para
+        # frameworks de 8 etapas, e que a .stage-pill ficou sem CSS nenhum no shell — as
+        # duas coisas visiveis na tela, nenhuma delas vista por um gate.
+        for peca, meta in (a.get("estrutura", {}).get("pecas") or {}).items():
+            cls = meta.get("classe")
+            if cls and not re.search(r'[.\'" ]' + re.escape(cls) + r'[\s{.,:\'"]', shell):
+                erros.append(
+                    f'{nome}: a peca de ESTRUTURA "{peca}" e declarada mas a classe .{cls} '
+                    f'SUMIU do shell. Papel: {meta["papel"]}')
+            cont = meta.get("container")
+            if cont and not re.search(r'[.\'" ]' + re.escape(cont) + r'[\s{.,:\'"]', shell):
+                erros.append(
+                    f'{nome}: a peca "{peca}" declara o container .{cont}, ausente do shell.')
+            ident = meta.get("id")
+            if ident and f'id="{ident}"' not in shell:
+                erros.append(
+                    f'{nome}: a peca "{peca}" declara o elemento id="{ident}", ausente do '
+                    f'shell. Papel: {meta["papel"]}')
+            emite = meta.get("builder_emite")
+            if emite and emite not in builder_src:
+                erros.append(
+                    f'{nome}: a peca "{peca}" e declarada, mas o builder nao emite mais '
+                    f'{emite!r}. A classe pode estar no shell e nunca chegar na aula.')
+
         for aba in a.get("abas", []):
             if f'id="tab-{aba}"' not in arquivos.get("hub", ""):
                 erros.append(f'{nome}: aba "{aba}" declarada e ausente do hub do professor.')
@@ -112,6 +141,18 @@ def selftest():
     d["anatomias"]["guided-discovery"]["abas"].append("aba-fantasma")
     casos.append(("aba declarada e ausente", d, builder, "ausente do hub do professor"))
 
+    d = copy.deepcopy(inv)
+    d["anatomias"]["guided-discovery"]["estrutura"]["pecas"]["barra_de_etapas"]["classe"] = "nao-existe-x"
+    casos.append(("classe de ESTRUTURA sumida do shell", d, builder, "SUMIU do shell"))
+
+    d = copy.deepcopy(inv)
+    d["anatomias"]["guided-discovery"]["estrutura"]["pecas"]["leitura_da_etapa"]["id"] = "idFantasma"
+    casos.append(("elemento por id ausente do shell", d, builder, 'id="idFantasma"'))
+
+    d = copy.deepcopy(inv)
+    d["anatomias"]["guided-discovery"]["estrutura"]["pecas"]["rotulos_de_etapa"]["builder_emite"] = "xx-nunca-emitido"
+    casos.append(("builder parou de emitir a peca", d, builder, "nao emite mais"))
+
     for rotulo, mut, bsrc, esperado in casos:
         erros = verifica(mut, bsrc)
         pegou = any(esperado in e for e in erros)
@@ -133,7 +174,7 @@ def selftest():
     if falhou:
         print("\nSELFTEST FALHOU — o gate parou de morder.")
         return 1
-    print("\nSELFTEST OK — os 4 casos.")
+    print(f"\nSELFTEST OK — {len(casos) + 1} casos.")
     return 0
 
 
@@ -143,8 +184,10 @@ def main():
     inv = json.loads(le(INV))
     erros = verifica(inv, le(BUILDER))
     n = sum(len(a["componentes"]) for a in inv["anatomias"].values())
+    e = sum(len((a.get("estrutura", {}).get("pecas") or {})) for a in inv["anatomias"].values())
     print("=== GATE 20 — a anatomia tem o que declara ter ===")
-    print(f"{len(inv['anatomias'])} anatomia(s), {n} componente(s) declarado(s)")
+    print(f"{len(inv['anatomias'])} anatomia(s), {n} componente(s) e {e} peca(s) de "
+          f"estrutura declarada(s)")
     if erros:
         for e in erros:
             print(f"  ERRO  {e}")

@@ -174,9 +174,22 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
 .phase-segment.upcoming { background:rgba(255,255,255,.08); }
 @keyframes phasePulse { 0%,100%{opacity:1} 50%{opacity:.6} }
 .phase-labels { position:fixed;top:54px;left:0;right:0;z-index:509;display:flex;padding:0 1.5rem; }
-.phase-label { flex:1;font-size:.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;padding:.3rem 0;transition:color .4s; }
+.phase-label { flex:1;font-size:.55rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;padding:.3rem 2px;line-height:1.3;transition:color .4s; }
 .phase-label.current { color:var(--accent-light); }
 .phase-label.completed { color:var(--accent); }
+
+/* .stage-pill — O ROTULO DA ETAPA IMPRESSO DENTRO DA TELA.
+   A barra do topo diz em que etapa a aula esta; a pilha diz de que etapa E ESTA TELA, para
+   quem chega no meio (o professor abre um slide solto, ou a aula e retomada). Sao as duas
+   pontas da mesma informacao — a barra e navegacao, a pilha e legenda.
+
+   PORTADA EM 11/08/2026, do artefato de referencia (50 usos la). Ela ja era EMITIDA pelo
+   conteudo das aulas da stephanie (17 por aula) e nao tinha regra nenhuma no shell: o texto
+   saia como paragrafo cru, sem pilula, sem cor, sem caixa alta. O inventario nao pegou
+   porque so listava componente de EXERCICIO — a estrutura da aula ficou de fora dele.
+   Agora esta declarada em anatomias.json -> estrutura. */
+.stage-pill { display:inline-flex;align-items:center;gap:.5rem;font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.32rem .8rem;border-radius:20px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-glow);margin-bottom:.8rem; }
+.slide-dark .stage-pill, .slide-image .stage-pill { background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3); }
 
 .slides-container { flex:1;overflow:hidden;position:relative; }
 .slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 2rem; }
@@ -715,7 +728,7 @@ body.slide-mode .nav-bar { display:flex; }
    Uma mudanca de fundo: o artefato usa TTS do navegador e escolhe a voz por NOME de voz
    instalada — e ele mesmo avisa na tela quando nao acha (so 1 das 3 vozes com o genero
    certo, no teste). Aqui cada turno e um MP3 ElevenLabs ja gerado com a voz do personagem
-   (REGRA 7), entao a voz nao depende do computador da professora. */
+   (REGRA 7), entao a voz nao depende do computador de quem conduz a aula. */
 .ic-call{margin-top:.7rem}
 .ic-call-cast{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.7rem}
 .ic-spk{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .7rem;border:1px solid var(--border);border-radius:999px;font-size:.78rem;color:var(--text-mid);transition:all .2s}
@@ -748,12 +761,12 @@ body.slide-mode .nav-bar { display:flex; }
    NAO e o accordion que eu tinha (kind answer). A pedagogia e outra: o reveal esconde a
    RESPOSTA atras de uma escolha da aluna — ela le a frente, arrisca em voz alta, e so entao
    clica. O accordion so dobra texto que ja se sabe estar la.
-   TOGGLE, nao one-way (REGRA 27.E): a professora clica sem querer e precisa fechar.
+   TOGGLE, nao one-way (REGRA 27.E): quem conduz a aula clica sem querer e precisa fechar.
 
    ===== STATUS NA TELA (ic-cond/ic-ext + .ic-tag) — vem junto, e nao por acaso: no artefato
    e a MESMA peca. As Diretrizes exigem que Essencial/Condicional/Extensao estejam
    "identificados na TELA e no procedimento" (item 12 do checklist de aprovacao) — eu tinha
-   declarado so nos comentarios do slides.html, onde a professora nunca ve. */
+   declarado so nos comentarios do slides.html, onde quem conduz a aula nunca ve. */
 .ic-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.85rem 1.1rem;margin-bottom:.6rem;cursor:pointer;transition:all .25s;color:var(--text)}
 .ic-reveal:hover{border-color:var(--accent)}
 .ic-reveal:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
@@ -776,13 +789,13 @@ body.slide-mode .nav-bar { display:flex; }
 .ic-evi-src{display:block;margin-top:.35rem;font-size:.78rem;font-style:italic;color:var(--text-dim);line-height:1.5}
 
 /* ===== RECAPITULACAO (ic-recap) — 25 usos. Fecha o que a aula construiu, em uma linha por
-   item. Nao e o checklist do fecho: aquele a professora marca, este ela LE em voz alta. */
+   item. Nao e o checklist do fecho: aquele se marca, este se LE em voz alta. */
 .ic-recap{margin-top:.6rem}
 .ic-recap-item{display:flex;gap:.6rem;align-items:flex-start;padding:.45rem 0;border-bottom:1px solid var(--border);font-size:.88rem;line-height:1.55;color:var(--text-mid)}
 .ic-recap-item::before{content:"\2192";color:var(--accent);font-weight:700;flex-shrink:0}
 
 /* ===== AREA DE ESCRITA (ic-write) — 40 usos. O `whiteboard` que eu tinha imprimia um ROTULO
-   e nada mais: a professora abria o quadro de feedback e nao tinha onde escrever. Aqui o
+   e nada mais: quem conduz a aula abria o quadro de feedback e nao tinha onde escrever. Aqui o
    campo existe de verdade, e persiste em localStorage — com a mesma honestidade da aba
    Evidencias: fica preso a este navegador. */
 .ic-write{margin-top:.6rem}
@@ -805,7 +818,7 @@ body.slide-mode .nav-bar { display:flex; }
 
 /* ===== RACIONAL POR ITEM (ic-why) — portado do artefato (.rationale/revealRationales).
    Nao e o gabarito: e POR QUE aquela e a resposta, e por que a errada e tentadora. Nasce
-   escondido e a professora revela DEPOIS que a aluna arriscou — revelar antes transforma o
+   escondido e quem conduz a aula revela DEPOIS que a aluna arriscou — revelar antes transforma o
    exercicio em leitura. */
 .ic-why{display:none;margin-top:.5rem;padding:.65rem .85rem;background:var(--accent-dim);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;font-size:.81rem;line-height:1.6;color:var(--text-mid)}
 .ic-why.ic-on{display:block}
@@ -935,16 +948,17 @@ body.slide-mode .nav-bar { display:flex; }
   <div class="phase-segment upcoming" data-phase="5"></div>
   <div class="phase-segment upcoming" data-phase="6"></div>
   <div class="phase-segment upcoming" data-phase="7"></div>
+  <div class="phase-segment upcoming" data-phase="8"></div>
 </div>
 <div class="phase-labels" id="phaseLabels">
-  <span class="phase-label current" data-phase="1">Context & lead-in</span>
-  <span class="phase-label" data-phase="2">Prediction</span>
-  <span class="phase-label" data-phase="3">First listening</span>
-  <span class="phase-label" data-phase="4">Second listening</span>
-  <span class="phase-label" data-phase="5">Micro-listening</span>
-  <span class="phase-label" data-phase="6">Interaction practice</span>
-  <span class="phase-label" data-phase="7">Your call</span>
-  <span class="phase-label" data-phase="8">Feedback & replay</span>
+  <span class="phase-label current" data-phase="1" data-name="Context &amp; lead-in" data-min="4">Context &amp; lead-in<br>4&#8242;</span>
+  <span class="phase-label" data-phase="2" data-name="Prediction" data-min="3">Prediction<br>3&#8242;</span>
+  <span class="phase-label" data-phase="3" data-name="First listening" data-min="4">First listening<br>4&#8242;</span>
+  <span class="phase-label" data-phase="4" data-name="Second listening" data-min="7">Second listening<br>7&#8242;</span>
+  <span class="phase-label" data-phase="5" data-name="Micro-listening" data-min="9">Micro-listening<br>9&#8242;</span>
+  <span class="phase-label" data-phase="6" data-name="Interaction practice" data-min="7">Interaction practice<br>7&#8242;</span>
+  <span class="phase-label" data-phase="7" data-name="Your call" data-min="14">Your call<br>14&#8242;</span>
+  <span class="phase-label" data-phase="8" data-name="Feedback &amp; replay" data-min="7">Feedback &amp; replay<br>7&#8242;</span>
 </div>
 
 <div class="slides-container" id="slidesContainer">
@@ -964,8 +978,9 @@ body.slide-mode .nav-bar { display:flex; }
                           ---
                            55
 
-  A DIFERENCA PARA A AULA 1: aqui a producao principal e a etapa 7 (uma vez), nao 6 e 8.
-  E a aluna so produz DEPOIS de compreender — o ESP produz antes, porque e sonda.
+  A DIFERENCA PARA O ESP (aula 4): aqui a producao principal e a etapa 7 (uma vez),
+  nao 6 e 8. E a aluna so produz DEPOIS de compreender — o ESP produz na etapa 2,
+  sem apoio, porque ali a producao e sonda.
 
   A call e uma SEQUENCIA de 9 turnos com 3 vozes distintas, com recorte por segmento.
   Nao e um arquivo unico: "Listening into Interaction" com uma voz so vira "Listening".
@@ -1121,6 +1136,7 @@ body.slide-mode .nav-bar { display:flex; }
 <div class="nav-bar" style="justify-content:space-between;">
     <button onclick="exitSlideMode()" aria-label="Exit presentation" style="background:transparent;border:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.85);border-radius:8px;padding:.55rem 1.1rem;font-size:.72rem;font-weight:700;letter-spacing:1px;cursor:pointer;flex:0 0 auto;">&#10005; EXIT</button>
     <span id="lessonLabel" style="color:rgba(255,255,255,.5);font-size:.72rem;font-weight:600;letter-spacing:1px;flex:0 0 auto;">LESSON 2</span>
+    <span id="stageReadout" style="color:rgba(255,255,255,.55);font-size:.72rem;font-weight:600;letter-spacing:.5px;flex:1 1 auto;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
     <div class="slide-dots" id="slideDots" style="display:none;"></div>
     <div style="display:flex;gap:.6rem;align-items:center;flex:0 0 auto;">
       <button id="prevBtn" onclick="changeSlide(-1)" disabled style="background:transparent;border:1.5px solid var(--accent);color:var(--accent);border-radius:8px;padding:.6rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;">&#8592; Previous</button>
@@ -1223,7 +1239,7 @@ function listenBlank(btn) {
 // ===== SLIDE NAVIGATION =====
 var currentSlide = 1;
 var totalSlides = 15;
-var slidePhases = {1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:3,10:3,11:3,12:4,13:4,14:4,15:4,16:4,17:5,18:5,19:5,20:5,21:6,22:6,23:6,24:6,25:7,26:7,27:7};
+var slidePhases = {1:1,2:1,3:2,4:3,5:4,6:4,7:5,8:5,9:5,10:6,11:6,12:7,13:7,14:8,15:8};
 
 function changeSlide(dir) {
   var next = currentSlide + dir;
@@ -1267,6 +1283,22 @@ function updatePhaseBar() {
     if (p < cp) lbl.classList.add('completed');
     else if (p === cp) lbl.classList.add('current');
   });
+  // Leitura da etapa corrente na nav-bar: "Stage 3 / 8 - First attempt - 7 min".
+  // Os rotulos da barra sao minusculos (0.55rem) e o professor precisa saber EM QUE ETAPA
+  // esta sem apertar os olhos. Nome e minutos saem do proprio rotulo (data-name/data-min),
+  // que o builder emitiu a partir do contrato do framework — nao ha segunda fonte.
+  var out = document.getElementById('stageReadout');
+  if (out) {
+    var all = document.querySelectorAll('.phase-label');
+    var cl = document.querySelector('.phase-label[data-phase="' + cp + '"]');
+    if (cl && all.length) {
+      var txt = 'Stage ' + cp + ' / ' + all.length + ' \u00b7 ' + (cl.dataset.name || '');
+      if (cl.dataset.min) txt += ' \u00b7 ' + cl.dataset.min + ' min';
+      out.textContent = txt;
+    } else {
+      out.textContent = '';
+    }
+  }
 }
 
 // Build dots
@@ -1359,7 +1391,7 @@ function icUnpair(box, chip) {
    Evidencias: fica presa a ESTE navegador e nao e o registro da aluna. */
 
 /* ===== RACIONAL (ic-why) — revela TODOS os do mesmo slide de uma vez, depois que a aluna
-   arriscou. Escopado ao .slide-inner: revelar o slide inteiro e o gesto da professora, item
+   arriscou. Escopado ao .slide-inner: revelar o slide inteiro e o gesto de quem conduz a aula, item
    por item seria seis cliques no meio da aula. */
 function icWhyShow(btn) {
   var escopo = btn.closest('.slide-inner') || document;

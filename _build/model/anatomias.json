@@ -106,6 +106,61 @@
           "papel": "o tempo como parte da TAREFA (escrita cronometrada, resposta de 45s). Diretrizes: 'a pressao vem da situacao', nao do tom. Conta 15s DEPOIS do zero — quem passou precisa ver quanto passou."
         }
       },
+      "estrutura": {
+        "_por_que": [
+          "O inventario de componentes so listava EXERCICIO (ic-reveal, ic-timer, ic-sortbox...).",
+          "A ESTRUTURA da aula — a barra de etapas, os rotulos com orcamento de minutos, a etapa",
+          "declarada em cada tela — nunca entrou nele, e por isso o GATE 20 nao tinha o que cobrar",
+          "quando ela se perdesse. E a mesma armadilha descrita no topo deste arquivo ('contei o",
+          "que EU tinha usado, nao o que a anatomia TEM'), uma camada acima: inventariou-se a",
+          "atividade, nao a aula.",
+          "",
+          "O QUE ISTO PROTEGE: a unidade que quem conduz a aula enxerga e a ETAPA, nao a tela. Sao",
+          "7 ou 8 etapas, cada uma agrupando de 1 a 6 telas, e ele percorre tudo ou so parte. Sem",
+          "a barra, as 15-18 telas viram uma fila linear de passos indistintos — que foi o que",
+          "aconteceu ate 11/08/2026."
+        ],
+        "origem": "Artefato 'Professor View - Erica' (stage-bar/stage-labels/data-stage). Orcamento de 55 min: docs/NORMATIVO-arquitetura-frameworks-2026-08.md, slide 7.",
+        "_nomes": "No artefato as pecas se chamam stage-*; aqui elas se chamam phase-*, porque e a MESMA mecanica que o shell base ja tinha (updatePhaseBar pinta completed/current/upcoming a partir do data-phase da tela, como o paint() do artefato faz com data-stage). Clonar uma segunda barra com outro nome seria manter duas coisas iguais em dois lugares — o defeito que o GATE 18 existe para impedir.",
+        "pecas": {
+          "barra_de_etapas": {
+            "classe": "phase-segment",
+            "container": "phase-bar",
+            "builder_emite": "class=\"phase-segment{\" current\" if i == 0 else \" upcoming\"}\"",
+            "papel": "um segmento por etapa, pintado completed/current/upcoming. O numero de segmentos vem das etapas DECLARADAS na aula — ate 11/08/2026 vinha fixo em 7 do shell, e como os quatro frameworks tem 8 etapas, a etapa 8 nunca acendia em nenhuma das quatro aulas da stephanie."
+          },
+          "rotulos_de_etapa": {
+            "classe": "phase-label",
+            "container": "phase-labels",
+            "builder_emite": "data-min=",
+            "papel": "o nome da etapa + o ORCAMENTO DE MINUTOS dela (\"Reading closely / 11′\"). O minuto e o que da sentido a _nao_tem[\"piso de 25 slides\"]: e dele que o numero de telas deriva. Sem ele o rotulo dizia o que fazer e nao dizia quanto vale."
+          },
+          "etapa_da_tela": {
+            "classe": "phase-segment",
+            "atributo": "data-phase",
+            "builder_emite": "slidePhases",
+            "papel": "cada tela declara a que etapa pertence. E o que permite agrupar 15-18 telas em 7-8 etapas e o que a barra le para saber onde esta."
+          },
+          "rotulo_na_tela": {
+            "classe": "stage-pill",
+            "usos_no_artefato": 50,
+            "papel": "a etapa impressa DENTRO da tela. A barra e navegacao; a pilha e legenda, para quem abre um slide solto ou retoma a aula no meio. Estava sendo EMITIDA pelo conteudo (17 por aula) e nao tinha regra nenhuma no shell ate 11/08/2026 — saia como texto cru. Achada exatamente por este inventario passar a olhar estrutura."
+          },
+          "leitura_da_etapa": {
+            "id": "stageReadout",
+            "papel": "a etapa corrente por extenso na nav-bar (\"Stage 3 / 8 · First attempt · 7 min\"), porque os rotulos da barra tem 0.55rem. Em INGLES, e nao em portugues como no artefato: a nav-bar sobrevive no espelho do ALUNO, e portugues na tela do aluno e FAIL do validador (REGRA 13)."
+          }
+        },
+        "_o_que_da_para_cobrar": [
+          "Levantado em 11/08/2026, NAO construido (o coordenador pediu a lista, nao o gate):",
+          "  (a) toda tela tem data-phase;",
+          "  (b) todo data-phase cai dentro do numero de etapas declaradas na aula;",
+          "  (c) o numero de etapas e 7 ou 8 — NAO da para exigir igualdade com o contrato: o",
+          "      artefato condensa as 8 funcoes do ESP em 7 etapas de tela, e mantem 8 no Reading;",
+          "  (d) a soma dos minutos das etapas == contrato.percurso_min (55). Esta o builder JA",
+          "      cobra, com assert, na hora de gerar."
+        ]
+      },
       "herdados_do_imersivo": {
         "_nota": "Vem do shell base e nao sao especificos desta anatomia. O GATE 18 ja garante que nao somem.",
         "lista": [
@@ -124,7 +179,7 @@
       "_nao_tem": {
         "_nota": "Registrado de proposito: sao ausencias por DESENHO, e a proxima pessoa nao deve 'consertar'.",
         "aba Complementares": "saiu por decisao do Dan (06/08/2026). media-card aparece 0 vez no artefato.",
-        "piso de 25 slides": "e do imersivo. Aqui o numero de telas DERIVA do orcamento de minutos.",
+        "piso de 25 slides": "e do imersivo (REGRA 11). Aqui o numero de telas DERIVA do orcamento de minutos — o racional inteiro, com os numeros medidos e o porque de nao haver piso, esta declarado em _build/model/ciclo.json -> densidade_e_numero_de_telas.",
         "5 etapas do Pre-class": "anatomia da helen-mendes. vocab-card-pc, speech-card, think-card e survival-card aparecem 0 vez no artefato.",
         "ordering / information gap": "nao existem no artefato. Foram prometidos por engano numa versao anterior do syllabus e retirados."
       }

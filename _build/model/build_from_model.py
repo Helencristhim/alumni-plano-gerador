@@ -38,7 +38,16 @@ CONFIG (JSON):
                                        // Emite data-grammar no slide de Grammar Discovery
                                        // (REGRA 22, lido por check_grammar_progression.py).
                                        // Sem ele, nenhum marcador é emitido (config legado ok).
-    "phases": ["...", "...", "...", "...", "...", "...", "..."],
+    "stages": [ {"n": "The brief", "min": 5}, ... ],   // AS ETAPAS DA AULA (a espinha).
+                                       // 7 ou 8, cada uma agrupando 1-6 telas; o data-phase
+                                       // de cada tela diz a qual pertence. O rotulo e AUTORAL
+                                       // da aula (o normativo fixa a funcao, nao o nome) e os
+                                       // minutos somam o percurso_min do contrato (55).
+                                       // Emite phase-bar + phase-labels; o shell pinta
+                                       // completed/current/upcoming.
+    "phases": ["...", "..."],          // FORMA ANTIGA de "stages", so nomes, sem minutos.
+                                       // Continua valendo (anatomia imersivo: a barra la e de
+                                       // CAPITULOS da narrativa e nunca teve orcamento).
     "listenings": [ {"file": "a1_listening1.mp3", "voice": "ellen", "text": "..."} ],
     "extra_audio": [ {"key": "[order-l1]", "file": "pc_order_l1.mp3", "voice": "arthur", "text": "..."} ]
   },
@@ -229,6 +238,57 @@ def contrato_versao(fw):
             if f_['id'] == fw and f_.get('contrato'):
                 return int(f_['contrato']['versao'])
     return None
+
+
+def _framework_obj(cfg):
+    """O objeto do framework desta aula em public/data/frameworks.json, ou None."""
+    try:
+        with open(os.path.join(ROOT, 'public', 'data', 'frameworks.json'), encoding='utf-8') as f:
+            d = json.load(f)
+    except Exception:
+        return None
+    fw = cfg.get('framework', FRAMEWORK_DEFAULT)
+    for cat in d.get('categorias', []):
+        for f_ in cat.get('frameworks', []):
+            if f_['id'] == fw:
+                return f_
+    return None
+
+
+def framework_contrato_etapas(cfg):
+    """As etapas do CONTRATO (a funcao de cada uma, do normativo). [] se nao declara."""
+    f_ = _framework_obj(cfg)
+    return ((f_ or {}).get('contrato') or {}).get('etapas', []) or []
+
+
+def framework_percurso_min(cfg):
+    """percurso_min do contrato (55 nos quatro frameworks da anatomia). None se nao ha."""
+    f_ = _framework_obj(cfg)
+    return ((f_ or {}).get('contrato') or {}).get('percurso_min')
+
+
+def lesson_stages(cfg):
+    """As ETAPAS desta aula: [(rotulo, minutos|None), ...].
+
+    O ROTULO E CONTEUDO AUTORAL DA AULA, nao o nome canonico do framework. Medido no
+    artefato de referencia: a aula de ESP chama as etapas de "Real-world need / Situation
+    analysis / First attempt / Toolkit / Rehearsal / Performance / Upgrade & plan", e a de
+    Reading de "The brief / First read / Reading closely / ...". O normativo (slides 8-11)
+    fixa a FUNCAO de cada etapa; o rotulo e a traducao daquela funcao para o assunto DESTA
+    aula. Gerar a barra a partir do nome canonico apagaria essa camada.
+
+    Fonte, em ordem:
+      1. lesson.stages = [{"n": "The brief", "min": 5}, ...]  <- forma completa (com minutos)
+      2. lesson.phases = ["The brief", ...]                   <- forma antiga, so nomes
+
+    A forma 2 continua valendo e sai byte-a-byte igual ao que saia antes (sem minutos). E o
+    que mantem a anatomia imersivo intocada: la a barra e de CAPITULOS da narrativa e nunca
+    teve orcamento de minutos.
+    """
+    L = cfg['lesson']
+    if L.get('stages'):
+        return [(e['n'], e.get('min')) for e in L['stages']]
+    return [(n, None) for n in L['phases']]
 
 
 def assert_framework(cfg):
@@ -1800,10 +1860,91 @@ def build_standalone(cfg, content_dir, manifest):
     s = re.sub(r'<h1>[^<]*</h1>', f'<h1>{cfg["student_name"]}</h1>', s, count=1)
     s = patch_header(s, cfg, L['subtitle'])
 
+    # ── A ESPINHA DA AULA: barra de etapas + rotulos com o orcamento de minutos ──────
+    #
+    # A unidade que o professor enxerga e a ETAPA, nao a tela: 7 ou 8 etapas, cada uma com
+    # 1 a 6 telas dentro, e ele percorre tudo ou so parte. E o que o artefato de referencia
+    # faz (stage-bar + stage-labels + data-stage por tela) e o que a anatomia
+    # guided-discovery declara em _build/model/anatomias.json -> estrutura.
+    #
+    # POR QUE AQUI A PECA SE CHAMA phase-*, e nao stage-*: e a MESMA mecanica que o shell
+    # ja tinha — updatePhaseBar() pinta completed/current/upcoming a partir do data-phase
+    # da tela, exatamente como o paint() do artefato faz com data-stage. Clonar uma segunda
+    # barra com outro nome seria manter duas coisas iguais em dois lugares, que e o defeito
+    # que o GATE 18 existe para impedir.
+    #
+    # POR QUE NAO HA STAGE_SETS AQUI: no artefato, tres aulas moram no MESMO arquivo, entao
+    # a barra precisa ser remontada em runtime (deckInit troca STAGES por aula). Aqui cada
+    # aula e um arquivo standalone proprio, entao a barra daquela aula ja sai pronta do
+    # builder. Portar o mapa seria portar maquinario morto.
+    #
+    # DOIS DEFEITOS CORRIGIDOS AQUI (11/08/2026):
+    #  1. os SEGMENTOS vinham fixos do shell (7, da narrativa do imersivo) e nunca eram
+    #     re-emitidos. As quatro aulas da stephanie tem 8 etapas => a etapa 8 nunca acendia
+    #     em nenhuma delas. Agora o numero de segmentos vem das etapas declaradas.
+    #  2. faltava o ORCAMENTO DE MINUTOS no rotulo. E o minuto por etapa que da sentido a
+    #     frase "o numero de telas deriva do orcamento de minutos" (anatomias.json): agora
+    #     ela tem de onde derivar.
+    stages = lesson_stages(cfg)
+    etapas_contrato = len(framework_contrato_etapas(cfg))
+    if etapas_contrato and len(stages) != etapas_contrato:
+        # AVISO, nao assert. Medido no artefato: a aula de ESP condensa as 8 funcoes do
+        # normativo em 7 etapas de tela, e a de Reading mantem 8. Transformar isso em erro
+        # proibiria uma aula que a propria referencia contem.
+        print(f'  aviso: a aula declara {len(stages)} etapas e o contrato do framework '
+              f'"{cfg.get("framework", FRAMEWORK_DEFAULT)}" tem {etapas_contrato}. '
+              f'E permitido (o artefato condensa funcoes em etapas de tela), mas confira '
+              f'se foi intencional.', file=sys.stderr)
+    soma = sum(m for _, m in stages if m)
+    if soma:
+        alvo = framework_percurso_min(cfg)
+        assert not alvo or soma == alvo, (
+            f'o orcamento das etapas soma {soma} min e o contrato do framework '
+            f'"{cfg.get("framework", FRAMEWORK_DEFAULT)}" declara percurso_min={alvo}. '
+            f'A barra mostraria um percurso que o contrato nao reconhece — iguale os dois.')
+
+    # ATENCAO ao fecho: o marcador de fim NAO pode ser '</div>', porque o primeiro '</div>'
+    # depois do <div class="phase-bar"> e o do PROPRIO primeiro segmento — replace_between
+    # pararia ali e deixaria os segmentos antigos do shell para tras (foi o que aconteceu na
+    # primeira versao deste bloco: 8 segmentos novos + 6 sobras). Os rotulos nao tinham o
+    # problema por serem <span>. Ancoramos no <div> seguinte, e o </div> do fecho vai junto.
+    segs = '\n' + '\n'.join(
+        f'  <div class="phase-segment{" current" if i == 0 else " upcoming"}" '
+        f'data-phase="{i+1}"></div>'
+        for i in range(len(stages))) + '\n</div>\n'
+    s = replace_between(s, '<div class="phase-bar" id="phaseBar">',
+                        '<div class="phase-labels"', segs)
+
+    def _rotulo(i, nome, m):
+        nome_attr = nome.replace('&', '&amp;').replace('"', '&quot;')
+        nome_txt = nome.replace('&', '&amp;')
+        attr = f' data-name="{nome_attr}"' + (f' data-min="{m}"' if m else '')
+        texto = f'{nome_txt}<br>{m}&#8242;' if m else nome_txt
+        cur = ' current' if i == 0 else ''
+        return f'  <span class="phase-label{cur}" data-phase="{i+1}"{attr}>{texto}</span>'
+
     labels = '\n' + '\n'.join(
-        f'  <span class="phase-label{" current" if i == 0 else ""}" data-phase="{i+1}">{name}</span>'
-        for i, name in enumerate(L['phases'])) + '\n'
+        _rotulo(i, nome, m) for i, (nome, m) in enumerate(stages)) + '\n'
     s = replace_between(s, '<div class="phase-labels" id="phaseLabels">', '</div>', labels)
+
+    # ── O MAPA TELA -> ETAPA ────────────────────────────────────────────────────────
+    # updatePhaseBar() pinta a barra a partir de slidePhases[telaAtual]. Esse mapa vinha
+    # FIXO do shell — as 27 telas / 7 capitulos da aula do MODELO — e o builder nunca o
+    # regenerava. Ou seja: numa aula de 16 telas e 8 etapas, a barra acendia a etapa que o
+    # mapa da OUTRA aula mandava, e as telas 17+ nao existiam no mapa (undefined => nenhum
+    # segmento current). O data-phase correto ja estava em cada tela desde sempre; ninguem
+    # o lia. Achado em 11/08/2026 pelo GATE 20, ao passar a cobrar a estrutura.
+    #
+    # So emite quando TODA tela declara a sua etapa: mapa com buraco e pior que mapa velho.
+    pares = re.findall(r'data-slide="(\d+)"[^>]*data-phase="(\d+)"', slides)
+    n_telas = len(re.findall(r'data-slide=', slides))
+    if len(pares) == n_telas and n_telas:
+        mapa = ','.join(f'{a}:{b}' for a, b in pares)
+        s = re.sub(r'var slidePhases = \{[^}]*\};',
+                   lambda _: 'var slidePhases = {' + mapa + '};', s, count=1)
+    else:
+        print(f'  aviso: {len(pares)}/{n_telas} telas com data-phase — slidePhases NAO '
+              f'regenerado (a barra de etapas usa o mapa do shell).', file=sys.stderr)
 
     s = replace_between(s, '<div class="tab-content active" id="tab-inclass">', FIM_DO_INCLASS,
                         inclass_menu([menu_card(cfg, 'enterSlideMode')]))
@@ -1930,13 +2071,35 @@ def normalize_complementary(html, cfg=None):
     return html
 
 
+def hub_tab_path(cfg, content_dir, nome):
+    """Onde mora o conteudo de uma ABA DE HUB (planning/evidencias/syllabus).
+
+    A aba de hub e do ALUNO, nao da aula: existe UMA por aluno, e o hub e montado uma vez
+    so (modo "new"). Ate 11/08/2026 esses arquivos moravam no diretorio da aula que criava
+    o hub — o que so nao mordia porque essa aula era sempre a de numero 1.
+
+    Quando a ordem do bloco 1 da stephanie mudou (o normativo de agosto fixou Reading na
+    aula 1 e o ESP na 4), o plano e a ficha, que descrevem o ESP, teriam de ou viajar para
+    _build/{slug}-aula4/ (onde o builder nunca os leria, e o hub perderia as duas abas) ou
+    ficar em _build/{slug}-aula1/ mentindo sobre a aula que descrevem. Nenhum dos dois e
+    verdade: eles nao pertencem a nenhuma aula, pertencem ao aluno.
+
+    Ordem de busca: _build/{slug}/{nome} (o lugar certo) e, se nao houver, o diretorio da
+    aula (o lugar antigo). O fallback mantem TODO aluno ja existente byte-a-byte igual.
+    """
+    aluno_dir = os.path.join(ROOT, '_build', cfg['slug'], nome)
+    if os.path.exists(aluno_dir):
+        return aluno_dir
+    return os.path.join(content_dir, nome)
+
+
 def build_hub_new(cfg, content_dir, manifest):
     """Hub completo (aluno NOVO, sem hub existente). Clona os hubs do modelo."""
     L = cfg['lesson']
     audio_base = f'/audio/{cfg["slug"]}/'
     preclass = read(os.path.join(content_dir, 'preclass.html'))
     preclass = inject_kids_game(preclass, cfg)  # MODELO KIDS: mini-game Dino Tap (no-op p/ adulto)
-    planning = read(os.path.join(content_dir, 'planning.html'))
+    planning = read(hub_tab_path(cfg, content_dir, 'planning.html'))
     # ABAS DA ANATOMIA guided-discovery. Sao OPCIONAIS por arquivo: se o autor nao escreveu
     # evidencias.html/syllabus.html, o painel fica com o texto de esqueleto do shell em vez
     # de estourar. Mas a aba Evidencias e onde vive a ficha pos-aula, e sem ela as aulas
@@ -1944,14 +2107,14 @@ def build_hub_new(cfg, content_dir, manifest):
     evidencias = syllabus_tab = None
     hub_html_ = read(hub_path(cfg))
     if 'id="tab-evidencias"' in hub_html_:
-        pe = os.path.join(content_dir, 'evidencias.html')
+        pe = hub_tab_path(cfg, content_dir, 'evidencias.html')
         if os.path.exists(pe):
             evidencias = read(pe)
         else:
             print('  AVISO: anatomia tem aba Evidencias e nao ha evidencias.html — '
                   'a ficha pos-aula fica vazia, e sem ela as aulas 5-20 nao saem.')
     if 'id="tab-syllabus"' in hub_html_:
-        ps = os.path.join(content_dir, 'syllabus.html')
+        ps = hub_tab_path(cfg, content_dir, 'syllabus.html')
         if os.path.exists(ps):
             syllabus_tab = read(ps)
     # Complementares so e LIDO se a anatomia do hub tiver a aba. Ler incondicionalmente

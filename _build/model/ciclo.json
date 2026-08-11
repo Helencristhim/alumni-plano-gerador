@@ -1,0 +1,468 @@
+{
+  "_fonte_unica": "FONTE UNICA do eixo CICLO — o que vale para o PROGRAMA inteiro, acima de qualquer aula. Os outros dois eixos ja tinham fonte unica e este faltava: public/data/frameworks.json e o eixo METODO (qual framework, quais etapas, que rodizio) e _build/model/anatomias.json e o eixo FORMA (que abas e componentes o shell tem). Aqui mora o eixo CURRICULO: blocos, checkpoints, progressao por nivel, governanca do pacote e as rotas depois do ciclo. Quem precisa saber 'o aluno e B2, quanto apoio eu dou?' ou 'o pacote e de 48 aulas, e o ciclo de 20 — e agora?' le AQUI.",
+  "_por_que_arquivo_irmao_de_anatomias": "Escolhido como IRMAO de anatomias.json, no mesmo diretorio, e nao como campo dentro dele. anatomias.json responde 'que abas e componentes este molde tem' e e conferido contra o SHELL pelo GATE 20 (check_anatomia.py) — tudo o que entra la tem de existir como HTML/CSS/JS no shell, ou o gate quebra. Nada deste arquivo e verificavel contra um shell: nivel, bloco, checkpoint e pacote nao tem classe CSS. Enfiar aqui dentro de anatomias.json obrigaria a afrouxar o GATE 20 ou a inventar excecoes nele — e um gate com excecao para de morder. Irmao, e nao filho.",
+  "version": 1,
+  "fontes": [
+    "docs/NORMATIVO-planejamento-aulas-2026-08.md (o .docx normativo consolidado, agosto/2026)",
+    "docs/NORMATIVO-arquitetura-frameworks-2026-08.md (a apresentacao, 16 slides, agosto/2026)"
+  ],
+  "atualizado_em": "2026-08-11",
+  "horizonte": {
+    "aulas_por_ciclo": 20,
+    "blocos": 4,
+    "_blocos": "4 aulas por bloco, 5 blocos. Ver blocos[] abaixo.",
+    "duracao_nominal_min": 60,
+    "percurso_essencial_min": 55,
+    "margem_operacional_min": 5
+  },
+  "densidade_e_numero_de_telas": {
+    "_o_que_e": "Quantas TELAS uma aula da anatomia guided-discovery tem, e por que a pergunta 'quantos slides?' nao tem resposta fixa aqui. Esta secao existe porque a decisao estava enterrada num campo VAZIO (min_slides: null nos 4 contratos) e num comentario (_nao_tem em anatomias.json) — invisivel para quem abre a aula e conta as telas.",
+    "_de_onde_veio_a_pergunta": "O Dan abriu o IN CLASS da Stephanie em 11/08/2026 e estranhou o numero de telas (18 na aula 1, 15 na 2, 16 nas aulas 3 e 4), comparando com o imersivo, que tem piso de 25. Nao e defeito: e a anatomia funcionando como declarada. Mas uma decisao que so se descobre estranhando esta mal declarada — por isso ela vem para ca.",
+    "regra": "O numero de telas DERIVA do orcamento de minutos da aula. Nao ha piso de slides na anatomia guided-discovery.",
+    "orcamento": {
+      "duracao_nominal_min": 60,
+      "percurso_essencial_min": 55,
+      "margem_operacional_min": 5,
+      "origem": "Apresentacao, slide 7: 'Toda aula percorre 55 minutos essenciais e fecha estrategicamente com um retask funcional.'",
+      "onde_o_minuto_por_etapa_e_declarado": "public/data/frameworks.json -> contrato.etapas[].min de cada um dos 4 frameworks. Os 8 valores somam percurso_min = 55 em todos eles."
+    },
+    "por_que_nao_ha_piso": [
+      "A tela do guided-discovery ROLA (overflow-y:auto no shell), enquanto o slide do imersivo e de altura fixa e conteudo magro. Contar telas entre as duas anatomias compara unidades diferentes: uma etapa de 14 min do guided-discovery cabe em 1-2 telas rolaveis que no imersivo seriam 5-6 slides.",
+      "O piso de 25 slides do imersivo vem da REGRA 11 e mede uma aula NARRATIVA de 7 capitulos. A aula guided-discovery nao e narrativa: e um percurso de 8 etapas com minutagem declarada. O que garante que ela nao encolheu nao e a contagem de telas, e a presenca das 8 etapas.",
+      "Piso de slides numa anatomia sem altura fixa premiaria fatiar conteudo em telas magras para bater numero — que e exatamente o oposto do principio do slide 14 ('a variedade vem da operacao cognitiva, nao da troca de widgets')."
+    ],
+    "o_que_de_fato_garante_a_densidade": [
+      "As 8 etapas do framework, com os minutos de cada uma (contrato.etapas em frameworks.json) — conferidas pelo GATE 12 (scripts/check_contrato_aula.py).",
+      "A producao principal protegida: cada contrato declara producao_principal, e ela e a ultima etapa a ceder quando o tempo aperta.",
+      "check_no_regression.py: a aula ja publicada nao pode encolher mais de 10%."
+    ],
+    "telas_medidas_no_molde": {
+      "_nota": "Medido nas 4 aulas da stephanie-vicente DEPOIS da reordenacao do bloco 1 (11/08/2026). Registro descritivo, NAO alvo: nao se gera aula mirando estes numeros.",
+      "aula_1_reading": 16,
+      "aula_2_listening": 15,
+      "aula_3_grammar": 16,
+      "aula_4_esp": 18,
+      "etapas_por_aula": 8,
+      "_leitura": "Cada aula tem 8 etapas e 15-18 telas: uma etapa agrupa de 1 a 3 telas aqui. No artefato de referencia a faixa e mais larga (1 a 6 telas por etapa, 14-21 telas por aula). Nao ha proporcao a impor — a distribuicao sai do orcamento de minutos DAQUELA etapa."
+    },
+    "min_slides_vazio_e_proposital": "Os 4 frameworks tem contrato.min_slides ausente de proposito. Preencher com um numero qualquer criaria um piso que ninguem mediu e que contradiz esta secao. Se um dia houver piso, ele nasce aqui com o racional, e so entao vai para o contrato — com bump de versao (REGRA DE OURO dos contratos).",
+    "onde_a_etapa_e_declarada": "config da aula, lesson.stages = [{\"n\": rotulo, \"min\": minutos}]. O builder emite a barra (phase-bar/phase-labels) e o mapa slidePhases a partir do data-phase de cada tela. Ver _build/model/anatomias.json -> estrutura e _build/model/README.md."
+  },
+  "blocos": [
+    {
+      "n": 1,
+      "id": "build",
+      "label": "Build",
+      "aulas": [
+        1,
+        4
+      ],
+      "enfase": "Perfil e baseline",
+      "funcao": "Ensinar, observar e confirmar objetivos, nivel, apoio e contextos.",
+      "apoio": "alto"
+    },
+    {
+      "n": 2,
+      "id": "explore",
+      "label": "Explore",
+      "aulas": [
+        5,
+        8
+      ],
+      "enfase": "Ampliacao do repertorio",
+      "funcao": "Adicionar funcoes, temas e estrategias com apoio calibrado.",
+      "apoio": "alto-moderado"
+    },
+    {
+      "n": 3,
+      "id": "organize",
+      "label": "Organize",
+      "aulas": [
+        9,
+        12
+      ],
+      "enfase": "Integracao e estrutura",
+      "funcao": "Organizar discurso, ampliar consistencia e reduzir dependencia.",
+      "apoio": "moderado"
+    },
+    {
+      "n": 4,
+      "id": "challenge",
+      "label": "Challenge",
+      "aulas": [
+        13,
+        16
+      ],
+      "enfase": "Imprevisibilidade",
+      "funcao": "Introduzir objecoes, multiplas fontes, velocidade ou complexidade.",
+      "apoio": "seletivo"
+    },
+    {
+      "n": 5,
+      "id": "transfer",
+      "label": "Transfer",
+      "aulas": [
+        17,
+        20
+      ],
+      "enfase": "Autonomia pratica",
+      "funcao": "Aplicar em situacao nova e consolidar evidencias de progressao.",
+      "apoio": "minimo adequado"
+    }
+  ],
+  "rotacao": {
+    "_o_que_e": "Cada bloco contem as 4 modalidades: Reading, Listening, Grammar e ESP. A ORDEM dentro do bloco e onde os dois documentos divergem — ver divergencia 1 em docs/NORMATIVO-planejamento-aulas-2026-08.md.",
+    "modalidades": [
+      "reading-into-speaking",
+      "listening-into-interaction",
+      "grammar-for-communication",
+      "esp-real-world"
+    ],
+    "bloco_1": {
+      "ordem": [
+        "reading-into-speaking",
+        "listening-into-interaction",
+        "grammar-for-communication",
+        "esp-real-world"
+      ],
+      "obrigatoria": true,
+      "origem": "Apresentacao, slide 5, marcado 'Acao Obrigatoria'. Decisao do Dan em 11/08/2026: onde a apresentacao fixa e o .docx diz 'ordem variavel', vale a apresentacao para o bloco 1.",
+      "onde_o_gate_confere": "rodizios[] em public/data/frameworks.json, conferido aula a aula pelo GATE 11 (scripts/check_framework_isolation.py)."
+    },
+    "blocos_2_a_5": {
+      "obrigatoria": false,
+      "origem": "docx §3: 'Cada bloco contem Reading, Listening, Grammar e ESP, com ordem variavel.' A ordem de cada bloco e escolhida pelo estado pedagogico e DECLARADA em rodizios[] antes de gerar o bloco."
+    },
+    "grammar_adiavel": {
+      "permitido": true,
+      "condicao": "Nao havendo gap estrutural defensavel, a Grammar pode ser adiada ou substituida.",
+      "exigencia": "A decisao precisa ser REGISTRADA (docx §3). O registro vai no estado.json do aluno, em decisoes[].",
+      "origem": "docx §3 + apresentacao slide 4 (nota de rodape, que generaliza para qualquer modalidade)"
+    }
+  },
+  "microciclo_guided_discovery": {
+    "_o_que_e": "A metodologia transversal a TODAS as aulas dos 4 frameworks — o que faz uma aula ser guided discovery e nao exposicao. Nao substitui as 8 etapas do framework (essas estao em contrato.etapas de cada framework em public/data/frameworks.json): as 8 etapas sao o PERCURSO da aula, estas 6 operacoes sao o MOVIMENTO COGNITIVO que atravessa o percurso.",
+    "origem": "Apresentacao, slide 7. Exigido pelo docx §3.1 como CAMPO DE CADA AULA do syllabus.",
+    "operacoes": [
+      {
+        "n": 1,
+        "id": "evidencia_inicial",
+        "label": "Evidencia inicial"
+      },
+      {
+        "n": 2,
+        "id": "operacao_cognitiva",
+        "label": "Operacao cognitiva"
+      },
+      {
+        "n": 3,
+        "id": "formulacao_hipotese",
+        "label": "Formulacao de hipotese"
+      },
+      {
+        "n": 4,
+        "id": "verificacao_pratica",
+        "label": "Verificacao pratica"
+      },
+      {
+        "n": 5,
+        "id": "clarificacao_didatica",
+        "label": "Clarificacao didatica"
+      },
+      {
+        "n": 6,
+        "id": "aplicacao_real",
+        "label": "Aplicacao real"
+      }
+    ],
+    "arquitetura_comum_da_aula": {
+      "_o_que_e": "As 5 macro-etapas em que o percurso de 55 min se organiza, quaisquer que sejam as 8 etapas do framework. Apresentacao, slide 7.",
+      "etapas": [
+        {
+          "n": 1,
+          "label": "Contexto e objetivo",
+          "foco": "Alinhamento inicial de expectativa"
+        },
+        {
+          "n": 2,
+          "label": "Input e descoberta",
+          "foco": "Apresentacao do material/fonte"
+        },
+        {
+          "n": 3,
+          "label": "Pratica com apoio",
+          "foco": "Consolidacao guiada"
+        },
+        {
+          "n": 4,
+          "label": "Producao principal",
+          "foco": "Execucao do produto do framework"
+        },
+        {
+          "n": 5,
+          "label": "Feedback + retask",
+          "foco": "Consolidacao final e apontamentos"
+        }
+      ]
+    }
+  },
+  "campos_obrigatorios_da_aula_no_syllabus": {
+    "_o_que_e": "Os 10 campos que o docx §3.1 exige de CADA aula do syllabus. Nao e um formulario burocratico: o campo 3 ('operacao nova em relacao as aulas anteriores') e o antidoto declarado contra a aula N parecer a aula N-1 — e o mesmo principio do slide 14 ('a variedade vem da operacao cognitiva, nao da troca de widgets').",
+    "origem": "docx §3.1",
+    "campos": [
+      {
+        "n": 1,
+        "id": "posicao",
+        "label": "Numero, bloco, framework e posicao na rotacao"
+      },
+      {
+        "n": 2,
+        "id": "objetivo_comunicativo",
+        "label": "Objetivo comunicativo e relacao com o perfil"
+      },
+      {
+        "n": 3,
+        "id": "operacao_nova",
+        "label": "Operacao NOVA em relacao as aulas anteriores",
+        "antidoto": "aula N igual a aula N-1 com outro widget"
+      },
+      {
+        "n": 4,
+        "id": "input",
+        "label": "Input/material previsto e grau de autenticidade"
+      },
+      {
+        "n": 5,
+        "id": "linguagem",
+        "label": "Functional language ou necessidade gramatical"
+      },
+      {
+        "n": 6,
+        "id": "microciclo",
+        "label": "Microciclo de Guided Discovery",
+        "ver": "microciclo_guided_discovery.operacoes"
+      },
+      {
+        "n": 7,
+        "id": "produto",
+        "label": "Produto comunicativo e criterios de sucesso"
+      },
+      {
+        "n": 8,
+        "id": "evidencia",
+        "label": "Evidencia a registrar",
+        "ver": "estado_acumulativo"
+      },
+      {
+        "n": 9,
+        "id": "mecanicas",
+        "label": "Mecanicas possiveis e grau de controle"
+      },
+      {
+        "n": 10,
+        "id": "avaliacao",
+        "label": "Relacao com avaliacao e progressao"
+      }
+    ]
+  },
+  "progressao_niveis": {
+    "_o_que_e": "A tabela que liga NIVEL CEFR a EXPECTATIVA DE PRODUCAO e a SUPORTE/ARCABOUCO. E o que o slide 13 diz em uma frase: 'a progressao altera a complexidade da OPERACAO COGNITIVA — nao apenas a extensao do vocabulario'. Consultar AQUI antes de gerar para um nivel novo.",
+    "_nao_confundir": "Esta tabela NAO substitui os parametros de densidade do docs/RULEBOOK-PEDAGOGICO.md §1 (numero de palavras novas por aula, tamanho de frase, idioma da tela). Sao eixos diferentes e ambos valem: o rulebook dosa a MATERIA; esta tabela dosa a OPERACAO e o APOIO. A REGRA 13 do CLAUDE.md continua sendo quem decide idioma (A0/A1 bilingue, A2+ zero portugues).",
+    "origem": "Apresentacao, slide 13",
+    "niveis": [
+      {
+        "nivel": "A1",
+        "expectativa_de_producao": "Respostas curtas e extremamente previsiveis",
+        "suporte_e_arcabouco": "Frames rigidos e opcoes pre-selecionadas"
+      },
+      {
+        "nivel": "A2",
+        "expectativa_de_producao": "Sequencias simples e conectadas",
+        "suporte_e_arcabouco": "Chunks linguisticos e perguntas-guia"
+      },
+      {
+        "nivel": "B1",
+        "expectativa_de_producao": "Capacidade de justificar e reformular pontos",
+        "suporte_e_arcabouco": "Estrutura previamente selecionada"
+      },
+      {
+        "nivel": "B2",
+        "expectativa_de_producao": "Negociar significados e adaptar discurso",
+        "suporte_e_arcabouco": "Apoio parcial e guias flexiveis"
+      },
+      {
+        "nivel": "C1",
+        "expectativa_de_producao": "Mediar discussoes e lidar com ambiguidade",
+        "suporte_e_arcabouco": "Apoio minimo / contexto autentico"
+      }
+    ]
+  },
+  "producao_e_checkpoints": {
+    "_o_que_e": "Quando cada lote e produzido e o que sai dele. O docx §4.",
+    "origem": "docx §4",
+    "momentos": [
+      {
+        "momento": "Antes da aula 1",
+        "acao": "Gerar perfil estruturado e syllabus provisorio.",
+        "saida": "Hipoteses explicitadas e primeiro lote."
+      },
+      {
+        "momento": "Aulas 1-4",
+        "acao": "Uma aula de cada framework; ensino + diagnostico.",
+        "saida": "Evidencias por habilidade, linguagem, interacao e apoio."
+      },
+      {
+        "momento": "Apos a aula 4",
+        "acao": "Checkpoint diagnostico.",
+        "saida": "Perfil atualizado; confirmar, ajustar ou reconfigurar as aulas 5-20."
+      },
+      {
+        "momento": "Aulas 5-16",
+        "acao": "Producao adaptativa, PREFERENCIALMENTE em lotes de quatro.",
+        "saida": "Registro acumulativo e syllabus vigente.",
+        "lote": 4,
+        "lote_obrigatorio": false,
+        "_lote": "O docx diz 'preferencialmente'. Fica declarado como preferencia, nao como regra bloqueante — declarar obrigacao que o documento nao criou seria inventar norma."
+      },
+      {
+        "momento": "Aulas 17-20",
+        "acao": "Transferencia, consolidacao e avaliacao escolhida.",
+        "saida": "Relatorio final e decisao de progressao."
+      },
+      {
+        "momento": "Antes da aula 21",
+        "acao": "Abrir novo ciclo.",
+        "saida": "Novo syllabus no mesmo nivel, modulo intermediario ou proximo nivel.",
+        "ver": "rotas_pos_ciclo"
+      }
+    ]
+  },
+  "estado_acumulativo": {
+    "_o_que_e": "O registro unico que cada aula LE e ATUALIZA. Sem ele, as aulas 5-20 seriam geradas sobre memoria presumida — que e exatamente o que o docx §5 proibe: 'O gerador nao deve depender de memoria narrativa presumida.'",
+    "origem": "docx §5",
+    "onde_vive": "_build/{slug}/estado.json",
+    "campos": [
+      "competencias demonstradas",
+      "erros de alto impacto",
+      "linguagem introduzida / consolidada / transferida / ainda apoiada",
+      "estrategias",
+      "grau de scaffolding",
+      "mecanicas recentes",
+      "engajamento",
+      "evidencias dos checkpoints",
+      "distancia dos criterios de sucesso"
+    ]
+  },
+  "rotas_pos_ciclo": {
+    "_o_que_e": "As tres decisoes possiveis depois da aula 20. Nao ha quarta. A escolha sai do checkpoint final (aulas 17-20) cruzado com os criterios de sucesso do perfil.",
+    "origem": "docx §6",
+    "rotas": [
+      {
+        "id": "novo_ciclo_mesmo_nivel",
+        "label": "Novo ciclo no mesmo nivel",
+        "criterio": "Persistem lacunas centrais, baixa transferencia ou dependencia alta.",
+        "regra_do_novo_syllabus": "Novos contextos, funcoes e produtos; NAO repetir o ciclo."
+      },
+      {
+        "id": "modulo_intermediario",
+        "label": "Modulo intermediario",
+        "criterio": "Desempenho desigual: parte dos criterios alcancada.",
+        "regra_do_novo_syllabus": "Consolidar prioridades e preparar exigencias do nivel seguinte."
+      },
+      {
+        "id": "proximo_nivel",
+        "label": "Proximo nivel",
+        "criterio": "Consistencia nas habilidades prioritarias, autonomia e transferencia.",
+        "regra_do_novo_syllabus": "Novo nivel com apoio recalibrado e objetivos ampliados."
+      }
+    ]
+  },
+  "governanca_ciclo_x_pacote": {
+    "_o_que_e": "O caso concreto: o ciclo pedagogico tem 20 aulas e o pacote contratado tem 96, 48, 15 ou 10. Quem manda em que.",
+    "origem": "docx §7",
+    "regra": "O horizonte pedagogico e SEMPRE de 20 aulas. O pacote contratado determina quantas aulas podem ser produzidas e disponibilizadas — NAO redefine a logica curricular.",
+    "consequencias": [
+      "Pacote MAIOR que 20 (ex.: 48, 96): o programa e uma sequencia de ciclos de 20. A aula 21 abre ciclo NOVO, com uma das tres rotas_pos_ciclo escolhida no checkpoint final — nunca uma continuacao linear da numeracao.",
+      "Pacote MENOR que 20 (ex.: 10, 15): produz-se ate onde o pacote alcanca, sem comprimir o ciclo. Ao terminar o pacote antes da aula 20: EMITIR RELATORIO PARCIAL e PRESERVAR O ESTADO para continuidade.",
+      "O pacote NUNCA muda a ordem dos blocos, o checkpoint da aula 4, nem a rotacao das 4 modalidades. Reduzir o pacote nao autoriza 'ciclo de 10 aulas' — autoriza um ciclo de 20 interrompido, com estado guardado."
+    ],
+    "relatorio_parcial": {
+      "quando": "O pacote termina antes da aula 20.",
+      "conteudo": "O que foi coberto, o estado pedagogico na interrupcao (estado_acumulativo inteiro), a distancia dos criterios de sucesso e o que o ciclo faria a seguir.",
+      "estado": "PRESERVADO em _build/{slug}/estado.json — a retomada continua do ponto, nao recomeca."
+    }
+  },
+  "tom_didatico": {
+    "_o_que_e": "Exigencia de TOM, valida para tela e para nota de professor. Slide 14.",
+    "origem": "Apresentacao, slide 14",
+    "exigencias": [
+      "Adulto, direto e profundamente respeitoso",
+      "Instrucoes curtas, claras e acionaveis",
+      "Apoio constante sem infantilizacao",
+      "Cenarios realistas com alta identificacao"
+    ],
+    "principio": "A variedade de aula vem da OPERACAO COGNITIVA, e nao da simples troca de widgets."
+  },
+  "etapas_de_especificacao": {
+    "_o_que_e": "O procedimento de producao, do perfil ao artefato. Slide 14.",
+    "origem": "Apresentacao, slide 14",
+    "passos": [
+      "1. Validar dados e identificar necessidade prioritaria",
+      "2. Especificar a aula e a origem da necessidade",
+      "3. Aplicar 1 framework adequado ao objetivo",
+      "4. Escolher conteudo, mecanicas e produto final",
+      "5. Desenhar arquitetura e produzir o artefato"
+    ]
+  },
+  "validacao_tres_camadas": {
+    "_o_que_e": "As tres camadas de checagem que o slide 15 exige. NAO sao gates novos: sao a leitura pedagogica das camadas, mapeada contra os gates que o repo JA tem. Onde a coluna 'gates' esta vazia, a camada existe no documento e ainda NAO tem trava automatica — a lista e o mapa do que falta, nao um TODO autorizado.",
+    "origem": "Apresentacao, slide 15",
+    "camadas": [
+      {
+        "id": "perfil_e_framework",
+        "label": "Perfil & Framework",
+        "exige": "Verificacao de dados, hipoteses, restricoes, funcao e produto final do framework.",
+        "gates_existentes": [
+          "GATE 11 — scripts/check_framework_isolation.py (framework declarado x aula, rodizio aula a aula)",
+          "GATE 12 — scripts/check_contrato_aula.py (a aula entrega o que o contrato do framework promete)"
+        ],
+        "sem_trava": [
+          "hipoteses diagnosticas do perfil x aula em que se decidem (hoje so texto em PERFIL-360.md e estado.json)",
+          "restricoes do perfil (temas proibidos) x conteudo da aula"
+        ]
+      },
+      {
+        "id": "progressao_e_linguagem",
+        "label": "Progressao & Linguagem",
+        "exige": "Checagem de nova operacao, tempo de producao, naturalidade e fontes confiaveis.",
+        "gates_existentes": [
+          "GATE 9 — _build/model/check_grammar_progression.py (ponto gramatical nao repete como novo)",
+          "REGRA 22 — _build/model/check_vocab_progression.py (vocabulario nao repete como novo)",
+          "REGRA 29 — _build/model/check_preclass_coherence.py (o Pre-class previewa a aula)",
+          "REGRA 17 — _build/model/check_media_links.py (fonte confiavel/link real nos Complementares)"
+        ],
+        "sem_trava": [
+          "OPERACAO NOVA em relacao as aulas anteriores (docx §3.1, campo 3) — o antidoto declarado contra a aula N parecer a N-1. Nada no repo mede isso hoje.",
+          "tempo de producao por etapa x orcamento de minutos do contrato (as etapas tem 'min' declarado em frameworks.json, mas nada confere o que a aula de fato aloca)"
+        ]
+      },
+      {
+        "id": "coerencia_e_tecnica",
+        "label": "Coerencia & Tecnica",
+        "exige": "Alinhamento entre tela, notas, gabarito, turnos e ausencia de residuos tecnicos.",
+        "gates_existentes": [
+          "GATE 1 — _build/model/validate_lesson.py (estrutura, vozes por personagem, turnos, persistencia)",
+          "GATE 7 — scripts/check_inline_js.mjs (handler inline que nao compila = botao morto)",
+          "GATE 10 — scripts/check_vocab_reveal.py (reveal que nasce escondido)",
+          "GATE 18 — scripts/check_shell_drift.py (os shells nao derivam no que tem de ser igual)",
+          "GATE 19 — scripts/check_audio_declarado.py (anatomia que pede audio tem audio)",
+          "GATE 20 — scripts/check_anatomia.py (a anatomia tem o que declara ter)",
+          "check_contrast.py / check_computed_contrast.py (texto ilegivel)"
+        ],
+        "sem_trava": [
+          "alinhamento tela x data-teacher x gabarito (hoje conferido por leitura humana)"
+        ]
+      }
+    ]
+  }
+}
