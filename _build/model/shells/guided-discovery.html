@@ -1027,6 +1027,32 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 @media (prefers-reduced-motion:reduce) {
   .q-item { opacity:1!important }
 }
+
+/* Seis pecas que a primeira medicao deu como PRESENTES e nao estavam: .reveal-item (o
+   cartao que vira, com .r-front/.r-back), .sortbox/.sortcol/.sortitem (a classificacao em
+   colunas) e .rationale (o porque da resposta). A unica ocorrencia delas no shell estava
+   dentro de um COMENTARIO — "portado do artefato (.reveal-item/.r-front/.r-back)" — e o
+   gate lia comentario como regra. Mesmo erro de familia que ele existe para pegar: tomar o
+   texto ESCRITO pelo efeito PRODUZIDO. Corrigido no css_classes() do GATE 21. */
+.rationale { display:none;margin-top:.5rem;padding:.65rem .85rem;background:var(--accent-dim);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;font-size:.81rem;line-height:1.6;color:var(--text-mid) }
+.rationale.show { display:block;animation:fadeIn .25s ease }
+.sortbox { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin-top:.6rem }
+.sortcol { border:1px dashed var(--border-light);border-radius:8px;padding:.7rem;background:rgba(255,255,255,.4);min-height:90px }
+.sortcol h5 { font-size:.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem }
+.sortitem { display:block;width:100%;text-align:left;padding:.5rem .7rem;margin-bottom:.4rem;background:#fff;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI Variable Text','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;cursor:pointer;line-height:1.45;transition:all .2s;color:var(--text) }
+.sortitem:hover { border-color:var(--accent) }
+.sortitem.correct { background:var(--success-bg);border-color:var(--success-border) }
+.sortitem.wrong { background:var(--danger-bg);border-color:var(--danger-border);animation:shake .3s }
+.reveal-item.ext,.reveal-item.cond { border-style:dashed }
+.reveal-item { background:#fff;border:1px solid #e6e6df;border-radius:10px;padding:.85rem 1.1rem;margin-bottom:.6rem;cursor:pointer;transition:all .25s;color:var(--text) }
+.reveal-item:hover { border-color:var(--accent) }
+.reveal-item .r-front { font-size:.95rem;line-height:1.55 }
+.reveal-item .r-back { display:none;margin-top:.6rem;padding-top:.6rem;border-top:1px dashed var(--border);font-size:.86rem;color:var(--accent);line-height:1.6 }
+.reveal-item.revealed { border-color:var(--accent);background:var(--accent-dim) }
+.reveal-item.revealed .r-back { display:block;animation:fadeIn .25s ease }
+.slide-dark .reveal-item { background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.13);color:rgba(255,255,255,.92) }
+.slide-dark .reveal-item.revealed { background:rgba(123,239,178,.09);border-color:rgba(123,239,178,.35) }
+.slide-dark .reveal-item .r-back { color:var(--mint);border-top-color:rgba(255,255,255,.15) }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>

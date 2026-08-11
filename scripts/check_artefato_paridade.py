@@ -67,9 +67,18 @@ def le(p):
 
 
 def css_classes(s):
-    """Classes DEFINIDAS nos <style> do documento."""
+    """Classes DEFINIDAS nos <style> do documento.
+
+    COMENTARIO NAO E REGRA. Sem remover /* ... */ antes, um comentario que CITA o nome da
+    peca ("portado do artefato (.reveal-item/.r-front/.r-back)") faz o gate acreditar que a
+    peca existe — e ela nao existe. Foi assim que .r-front e .r-back passaram por "presentes"
+    na primeira medicao: a unica ocorrencia delas no shell estava dentro de um comentario.
+    Mesma familia do erro que este gate existe para pegar: ler o texto ESCRITO como se fosse
+    o efeito PRODUZIDO.
+    """
     out = set()
     for st in re.findall(r"<style[^>]*>(.*?)</style>", s, re.S):
+        st = re.sub(r"/\*.*?\*/", "", st, flags=re.S)
         for m in re.finditer(r"\.([a-zA-Z][\w-]*)", st):
             out.add(m.group(1))
     return out
