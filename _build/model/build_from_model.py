@@ -1863,6 +1863,138 @@ def inject_kids_game(preclass, cfg):
         repl, preclass, flags=re.S)
 
 
+# ── MECANICA x KIND: o vocabulario do banco (03 §4) sobre os kinds do builder ────────────
+#
+# O documento fala em MECANICA ("Matching", "Sorting", "Role-play/simulation"); o config
+# fala em KIND ("matching", "sorting", "scenarios"). Sem esta tabela as duas linguas nao se
+# encontram, e "registrar mecanica, funcao, operacao, controle e evidencia" (03 §4.2) fica
+# sendo prosa que ninguem consegue conferir.
+#
+# So entra aqui o kind que E exercicio. Os que sao INPUT ou APOIO (o texto, o cenario, o
+# banco de frases, o gabarito, o fechamento) nao sao mecanica e nao viram divida de
+# repeticao — declarar o contrario encheria o registro de ruido e escondaria a repeticao
+# real. Ficam em KIND_APOIO, explicitos, para ninguem achar que foram esquecidos.
+MECANICA_POR_KIND = {
+    'matching': 'Matching',
+    'gist': 'Multiple choice',
+    'tf': 'True/False + correction',
+    'sorting': 'Sorting',
+    'gapfill': 'Fill in the blanks',
+    'rephrase': 'Rephrasing',
+    'quickfire': 'Replicas rapidas',
+    'call': 'Escuta por segmentos',
+    'reveal': 'Noticing por revelacao',
+    'questions': 'Perguntas abertas dirigidas',
+    'qsub': 'Perguntas abertas dirigidas',
+    'analyse': 'Perguntas abertas dirigidas',
+    'timer': 'Fala cronometrada',
+    'write': 'Quadro de feedback',
+}
+KIND_APOIO = ('scenarios', 'reading', 'evidence', 'phrases', 'lf', 'bank', 'modals',
+              'vocabnote', 'followup', 'answer', 'recap', 'selfassess', 'whiteboard',
+              'guiding')
+
+
+def kinds_da_aula(cfg):
+    """Todo `kind` que a aula de fato usa, na ordem em que aparece no config."""
+    ks = []
+
+    def walk(o):
+        if isinstance(o, dict):
+            if 'kind' in o:
+                ks.append(o['kind'])
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    walk(cfg['lesson'].get('inclass_blocks', {}))
+    return ks
+
+
+def registra_mecanicas_gastas(cfg):
+    """Escreve em _build/{slug}/estado.json o que ESTA AULA gastou de mecanica.
+
+    POR QUE: o docx §5 exige um estado pedagogico acumulativo e diz por que — "o gerador
+    nao deve depender de memoria narrativa presumida". O campo `mecanicas_gastas` existia
+    no esquema desde 07/08/2026 e ficou VAZIO enquanto as quatro aulas do bloco 1 eram
+    geradas: nada escrevia nele. Sem isso, o lote seguinte e gerado sem saber o que ja foi
+    usado, e a regra "nao repetir a mesma combinacao dentro do bloco" (03 §4.2) vira
+    memoria de quem gera.
+
+    MEDE o que a aula tem (os kinds do config) e CRUZA com o que o syllabus declarou para
+    aquela aula. O que foi medido e nao foi declarado entra com `sem_declaracao: true` —
+    visivel, e o GATE 24 cobra. O contrario (declarado e nao usado) tambem: `nao_usada`.
+
+    Idempotente: reescreve as entradas desta aula, preserva as das outras.
+    """
+    est_p = os.path.join(ROOT, '_build', cfg['slug'], 'estado.json')
+    if not os.path.exists(est_p):
+        return
+    syl_p = syllabus_json_path(cfg)
+    if not os.path.exists(syl_p):
+        return
+    n = cfg['lesson']['n']
+    with open(est_p, encoding='utf-8') as fh:
+        estado = json.load(fh)
+    with open(syl_p, encoding='utf-8') as fh:
+        syl = json.load(fh)
+    # A comparacao normaliza acento: o syllabus e material de leitura ("Replicas rapidas"
+    # aparece acentuado la) e a tabela deste arquivo e ASCII, como o resto do builder.
+    # Comparar as duas cruas produziria divergencia inventada — dois nomes da MESMA coisa.
+    def _norm(t):
+        return unicodedata.normalize('NFKD', t).encode('ascii', 'ignore').decode().lower()
+
+    decl, decl_nome = {}, {}
+    for a in syl.get('aulas', []):
+        if a.get('n') == n:
+            for m in a.get('mecanicas', []):
+                decl[_norm(m['mecanica'])] = m
+                decl_nome[_norm(m['mecanica'])] = m['mecanica']
+            break
+
+    medidas = {}
+    for k in kinds_da_aula(cfg):
+        mec = MECANICA_POR_KIND.get(k)
+        if mec:
+            medidas.setdefault(mec, []).append(k)
+
+    novas = []
+    for mec, kinds in medidas.items():
+        d = decl.get(_norm(mec))
+        e = dict(aula=n, mecanica=decl_nome.get(_norm(mec), mec), kinds=sorted(set(kinds)))
+        if d:
+            e.update(funcao=d['funcao'], operacao=d['operacao'], controle=d['controle'],
+                     evidencia=d['evidencia'])
+        else:
+            e['sem_declaracao'] = True
+        novas.append(e)
+    medidas_norm = {_norm(m) for m in medidas}
+    for chave, d in decl.items():
+        if chave in medidas_norm:
+            continue
+        # `sem_widget` = mecanica que acontece na CONDUCAO, nao num componente de tela
+        # (role-play, retask, decisao de caso). Nao ter kind e propriedade dela, nao
+        # esquecimento — e cobrar kind aqui seria pedir widget para o que e conversa.
+        novas.append(dict(aula=n, mecanica=d['mecanica'], kinds=[],
+                          nao_usada=not d.get('sem_widget'),
+                          sem_widget=bool(d.get('sem_widget')),
+                          funcao=d['funcao'], operacao=d['operacao'],
+                          controle=d['controle'], evidencia=d['evidencia']))
+
+    outras = [m for m in estado.get('mecanicas_gastas', []) if m.get('aula') != n]
+    estado['mecanicas_gastas'] = sorted(outras + novas,
+                                        key=lambda m: (m['aula'], m['mecanica']))
+    with open(est_p, 'w', encoding='utf-8') as fh:
+        json.dump(estado, fh, ensure_ascii=False, indent=2)
+        fh.write('\n')
+    sd = sum(1 for m in novas if m.get('sem_declaracao'))
+    nu = sum(1 for m in novas if m.get('nao_usada'))
+    print(f'  estado.json: aula {n} gastou {len(medidas)} mecanica(s)'
+          + (f' — {sd} sem declaracao no syllabus' if sd else '')
+          + (f', {nu} declarada(s) e nao usada(s)' if nu else ''))
+
+
 def build_standalone(cfg, content_dir, manifest):
     L = cfg['lesson']
     n = L['n']
@@ -2054,6 +2186,9 @@ def build_standalone(cfg, content_dir, manifest):
     a = a.replace(f'{cfg["slug"]}-aula{n}-professor', f'{cfg["slug"]}-aula{n}-aluno')
     final_asserts(a, cfg, f'aluno aula{n}')
     write(os.path.join(ALUNO, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(a, cfg))
+    # ESTADO ACUMULATIVO (docx §5): a aula escreve o que gastou. No-op para quem nao tem
+    # _build/{slug}/estado.json + syllabus.json — nenhum aluno existente e afetado.
+    registra_mecanicas_gastas(cfg)
     return entries
 
 
