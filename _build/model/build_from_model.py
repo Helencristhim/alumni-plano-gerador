@@ -680,6 +680,13 @@ def render_block(b):
         return f'{_titulo(b)}{rows}'
 
     if k == 'sorting':
+        # .sort-group e o CONTAINER DE ESTADO (data-cols/data-items/data-state). Ele nao
+        # existe no artefato — la o sorting usa id="gdsort" FIXO, o que so permite UM por
+        # aula. O container com estado proprio permite varios na mesma aula, e por isso a
+        # divergencia e MELHORIA, nao desvio. Visualmente e nulo: quem desenha e o .sortbox
+        # interno, com o grid do artefato. Declarado em anatomias.json ->
+        # _divergencia_por_limitacao_do_artefato. Nao leva prefixo ic-: nao e reescrita.
+
         cols = b['cols']
         assert len(cols) >= 3, 'sorting: precisa de cols[0] (partida) + 2 categorias no minimo'
         items = b['items']
@@ -689,7 +696,7 @@ def render_block(b):
                 f'0 e a caixa de partida e nao pode ser gabarito')
         dados = json.dumps([{'t': t, 'a': a} for t, a in items], ensure_ascii=False)
         estado = json.dumps([0] * len(items))
-        return (f'{_titulo(b)}<div class="ic-sort" '
+        return (f'{_titulo(b)}<div class="sort-group" '
                 f'data-cols=\'{json.dumps(cols, ensure_ascii=False)}\' '
                 f'data-items=\'{dados}\' data-state=\'{estado}\'>'
                 f'<div class="sortbox"></div><div class="score-out"></div>'

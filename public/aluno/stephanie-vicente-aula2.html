@@ -65,7 +65,7 @@ var audioMap = {
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-  font-family:'Inter',-apple-system,sans-serif;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI Variable Text','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
   background:linear-gradient(135deg,#e8e4dc 0%,var(--bg) 50%,#e0ddd5 100%);
   color:var(--text);
   line-height:1.7;
@@ -194,27 +194,27 @@ body.slide-mode { overflow:hidden;height:100vh;background:var(--dark); }
    saia como paragrafo cru, sem pilula, sem cor, sem caixa alta. O inventario nao pegou
    porque so listava componente de EXERCICIO — a estrutura da aula ficou de fora dele.
    Agora esta declarada em anatomias.json -> estrutura. */
-.stage-pill { display:inline-flex;align-items:center;gap:.5rem;font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.32rem .8rem;border-radius:20px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-glow);margin-bottom:.8rem; }
+.stage-pill { display:inline-flex;align-items:center;gap:.5rem;font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.32rem .8rem;border-radius:20px;background:rgba(47,111,94,.14);color:var(--accent);border:1px solid rgba(15,76,117,.3);margin-bottom:.8rem }
 .slide-dark .stage-pill,.slide-image .stage-pill { background:rgba(123,239,178,.12);color:var(--mint);border-color:rgba(123,239,178,.3) }
 
 .slides-container { flex:1;overflow:hidden;position:relative; }
-.slide { position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:center;justify-content:center;padding:5rem 2rem 2rem; }
+.slide { position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity var(--slide-transition) ease,visibility 0s var(--slide-transition);display:flex;align-items:flex-start;justify-content:center;padding:6.2rem 2rem 5.5rem;overflow-y:auto }
 .slide.active { opacity:1;visibility:visible;transition:opacity var(--slide-transition) ease,visibility 0s 0s; }
 
-.slide-inner { max-width:920px;width:100%;position:relative; }
+.slide-inner { max-width:940px;width:100%;position:relative;margin:auto }
 .slide-light { background:var(--bg); }
 .slide-light .slide-inner { color:var(--text); }
 .slide-dark { background:var(--dark); }
 .slide-dark .slide-inner { color:#fff; }
 .slide-dark .vocab-card, .slide-dark .fill-item, .slide-dark .challenge-card, .slide-dark .error-card, .slide-dark .roleplay-card, .slide-dark .record-card, .slide-dark .survival-item-ic, .slide-dark .oral-item, .slide-dark .comp-q, .slide-dark .lost-bag-report { color:#2d2d3a; }
 .slide-image { background-size:cover;background-position:center; }
-.slide-image::before { content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,26,46,.4) 0%,rgba(26,26,46,.78) 100%); }
-.slide-image .slide-inner { color:#fff;position:relative;z-index:2;text-align:center; }
+.slide-image::before { content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(18,18,42,.28) 0%,rgba(18,18,42,.52) 100%) }
+.slide-image .slide-inner { color:#fff;position:relative;z-index:3;text-align:center }
 
-.chapter-label { font-size:.75rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--accent-light);margin-bottom:.5rem; }
-.slide-title { font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.15;margin-bottom:1rem; }
-.slide-subtitle { font-size:1rem;font-weight:300;opacity:.7;line-height:1.6; }
-.slide-heading { font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:600;line-height:1.2;margin-bottom:1.2rem; }
+.chapter-label { font-size:.7rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--accent-light);margin-bottom:.5rem }
+.slide-title { font-family:'Cormorant Garamond','EB Garamond','Iowan Old Style','Palatino Linotype',Palatino,Constantia,'Hoefler Text',Georgia,serif;font-size:clamp(2.2rem,4.6vw,3.7rem);font-weight:600;line-height:1.14;margin-bottom:1rem }
+.slide-subtitle { font-size:1rem;font-weight:300;opacity:.88;line-height:1.6 }
+.slide-heading { font-family:'Cormorant Garamond','EB Garamond','Iowan Old Style','Palatino Linotype',Palatino,Constantia,'Hoefler Text',Georgia,serif;font-size:clamp(1.6rem,3.2vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:1rem }
 .slide-image .slide-title, .slide-image .slide-subtitle, .slide-image .slide-heading, .slide-image .accent { text-shadow:0 2px 8px rgba(0,0,0,0.6); }
 .accent { color:var(--accent); }
 .accent-bold { color:var(--accent);font-weight:700; }
@@ -250,8 +250,8 @@ body.slide-mode .teacher-t { display:flex; }
 .vocab-card.revealed .card-example { opacity:1;height:auto; }
 .vocab-card .card-audio { margin-top:auto;padding-top:.4rem;opacity:0;transition:opacity .4s .3s; }
 .vocab-card.revealed .card-audio { opacity:1; }
-.audio-btn-sm { display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:.72rem;font-weight:600;font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.5px; }
-.audio-btn-sm:hover { background:#9a3412; }
+.audio-btn-sm { display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:.7rem;font-weight:600;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI Variable Text','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;transition:all .2s;letter-spacing:.5px }
+.audio-btn-sm:hover { background:var(--accent-light) }
 .audio-btn-sm svg { width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
 .vocab-counter { text-align:center;margin-top:1.2rem;font-weight:600;color:var(--accent);font-size:1rem; }
 
@@ -361,11 +361,11 @@ body.slide-mode .teacher-t { display:flex; }
 .oral-situation { font-size:.95rem;line-height:1.5;color:var(--text);font-weight:600; }
 @media (prefers-reduced-motion:reduce) { .oral-item { transition:none; } }
 
-.roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:16px;overflow:hidden;max-width:500px;margin:0 auto; }
+.roleplay-card { background:#fff;border:2px solid var(--accent);border-radius:14px;padding:1.4rem 1.6rem;max-width:640px;margin:1.2rem auto 0;text-align:left;color:var(--text) }
 .roleplay-body { padding:1.5rem; }
 .roleplay-scenario { font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:1rem; }
 .roleplay-keywords { display:flex;flex-wrap:wrap;gap:.4rem; }
-.roleplay-kw { padding:.3rem .7rem;background:var(--accent-dim);border:1px solid rgba(47,111,94,.2);border-radius:16px;font-size:.8rem;color:var(--accent);font-weight:600; }
+.roleplay-kw { display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.7rem }
 
 .record-card { background:#fff;border:2px solid #e8e4df;border-radius:16px;padding:2rem;text-align:center;max-width:500px;margin:0 auto; }
 .record-prompt { font-family:'Cormorant Garamond',serif;font-size:1.3rem;line-height:1.5;color:var(--text);margin-bottom:1.5rem; }
@@ -439,7 +439,7 @@ body.slide-mode .nav-bar { display:flex; }
 ::-webkit-scrollbar-thumb { background:rgba(47,111,94,.3);border-radius:3px; }
 
 @media(max-width:768px) {
-  .slide { padding:5rem 1.2rem 2rem; }
+  .slide { padding:5.4rem 1.1rem 5.4rem }
   .vocab-grid { grid-template-columns:1fr;gap:.8rem; }
   .vocab-card { min-height:auto; }
   .slide-title { font-size:2rem; }
@@ -1046,7 +1046,7 @@ table.data td.num,.timer-read,.wc { font-variant-numeric:tabular-nums }
 <div class="slide-inner">
   <div class="stage-pill">5 &middot; Micro-listening</div>
   <h2 class="slide-heading">Sort each line by what the speaker is doing</h2>
-  <p class="slide-lead">Six lines from the call. Sort each one by what the speaker is doing.</p><div class="ic-sort" data-cols='["Unsorted", "Checking what the other person means", "Correcting how they were understood", "Conceding a point without dropping it"]' data-items='[{"t": "So, to be clear before we go on — you are saying the material works?", "a": 1}, {"t": "I am saying the material works and the clock has to be planned for.", "a": 2}, {"t": "I understand that it costs the teacher time.", "a": 3}, {"t": "Those are different things, and I would not want the second one written down as a complaint.", "a": 2}, {"t": "That is useful. What we hear most from schools is the opposite.", "a": 3}, {"t": "What we hear most from schools is that there is not enough material — is that not your experience?", "a": 1}]' data-state='[0, 0, 0, 0, 0, 0]'><div class="sortbox"></div><div class="score-out"></div><div class="btn-bar"><button class="verify-all-btn" onclick="icSortCheck(this)">Check</button><button class="verify-all-btn ghost" onclick="icSortReset(this)">Reset</button></div></div>
+  <p class="slide-lead">Six lines from the call. Sort each one by what the speaker is doing.</p><div class="sort-group" data-cols='["Unsorted", "Checking what the other person means", "Correcting how they were understood", "Conceding a point without dropping it"]' data-items='[{"t": "So, to be clear before we go on — you are saying the material works?", "a": 1}, {"t": "I am saying the material works and the clock has to be planned for.", "a": 2}, {"t": "I understand that it costs the teacher time.", "a": 3}, {"t": "Those are different things, and I would not want the second one written down as a complaint.", "a": 2}, {"t": "That is useful. What we hear most from schools is the opposite.", "a": 3}, {"t": "What we hear most from schools is that there is not enough material — is that not your experience?", "a": 1}]' data-state='[0, 0, 0, 0, 0, 0]'><div class="sortbox"></div><div class="score-out"></div><div class="btn-bar"><button class="verify-all-btn" onclick="icSortCheck(this)">Check</button><button class="verify-all-btn ghost" onclick="icSortReset(this)">Reset</button></div></div>
 </div>
 </div>
 
@@ -1354,7 +1354,7 @@ function icUnpair(box, chip) {
   icMatchScore(box);
 }
 
-/* ===== SORTING (ic-sort) — ver comentario no CSS. Escopado por container: cada .ic-sort
+/* ===== SORTING (.sort-group) — escopado por container: cada .sort-group
    guarda o proprio estado em data-state, entao cabem quantos a aula precisar. */
 
 /* ===== CALL PLAYER (ic-call) — ver comentario no CSS.
@@ -1514,7 +1514,7 @@ function icSortPaint(box) {
   host.innerHTML = html;
 }
 function icSortMove(btn) {
-  var box = btn.closest('.ic-sort');
+  var box = btn.closest('.sort-group');
   var cols = JSON.parse(box.getAttribute('data-cols'));
   var st = JSON.parse(box.getAttribute('data-state'));
   var i = parseInt(btn.getAttribute('data-i'), 10);
@@ -1524,7 +1524,7 @@ function icSortMove(btn) {
   icSortPaint(box);
 }
 function icSortCheck(btn) {
-  var box = btn.closest('.ic-sort');
+  var box = btn.closest('.sort-group');
   var items = JSON.parse(box.getAttribute('data-items'));
   var st = JSON.parse(box.getAttribute('data-state'));
   var right = 0, placed = 0, els = box.querySelectorAll('.sortitem');
@@ -1541,14 +1541,14 @@ function icSortCheck(btn) {
     (left > 0 ? ' (' + left + ' still unsorted)' : '');
 }
 function icSortReset(btn) {
-  var box = btn.closest('.ic-sort');
+  var box = btn.closest('.sort-group');
   var items = JSON.parse(box.getAttribute('data-items'));
   box.setAttribute('data-state', JSON.stringify(items.map(function () { return 0; })));
   box.querySelector('.score-out').textContent = '';
   icSortPaint(box);
 }
 document.addEventListener('DOMContentLoaded', function () {
-  var boxes = document.querySelectorAll('.ic-sort');
+  var boxes = document.querySelectorAll('.sort-group');
   for (var i = 0; i < boxes.length; i++) icSortPaint(boxes[i]);
 });
 

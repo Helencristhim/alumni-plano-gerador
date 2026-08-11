@@ -80,6 +80,24 @@ DIFERENCAS_ACEITAS = {
         },
     },
     "guided-discovery.html": {
+        # ══ O CHASSI DOS DOIS MOLDES E SEPARADO, POR DECISAO (11/08/2026) ══════════════
+        # Palavras do Dan: "os dois moldes devem ser separados mesmo, em si".
+        # O chassi do guided-discovery (.slide, .slide-inner, .slide-title, .slide-heading,
+        # .chapter-label, .slide-subtitle, .slide-image::before, .audio-btn-sm,
+        # .roleplay-card, .roleplay-kw, .stage-pill) passou a sair do ARTEFATO
+        # (_build/model/artefatos/erica-professor-view.html), byte a byte. O chassi do
+        # imersivo NAO MUDOU — nenhum aluno do molde antigo foi tocado.
+        #
+        # ESTE GATE NAO PEGA ISSO, e e de proposito: ele compara PRESENCA de funcao e de
+        # classe entre os dois shells, nao o VALOR das regras. Um max-width revertido de
+        # 940 para 920 passaria por aqui sem um pio. Quem tranca o valor do chassi e o
+        # GATE 21 (scripts/check_artefato_paridade.py -> CHASSI), que compara o clone com
+        # o artefato e tem selftest para isso.
+        #
+        # Consequencia pratica: NAO tente "unificar" o chassi dos dois shells. As classes
+        # continuam com o mesmo NOME nos dois (por isso este gate segue verde); o que
+        # diverge sao os VALORES, e isso agora e desenho, nao deriva.
+
         # As abas novas nao pediram JS nenhum — switchTab() ja e generico. O que pediu foi a
         # MECANICA de sorting, que a anatomia imersivo nao tem: la o Guided Discovery
         # acontece por reveal, aqui por classificacao em colunas. Portada do artefato da

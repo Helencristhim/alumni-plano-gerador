@@ -341,7 +341,81 @@
         "O ANTIDOTO nao e um gate a mais: e perguntar o que a medida esta contando. Classe em",
         "comentario nao e regra. Classe de imagem nao e componente. Lista propria nao e o",
         "original. Quando a resposta vier bonita demais, desconfie da pergunta."
-      ]
+      ],
+      "_divergencia_por_limitacao_do_artefato": {
+        "_o_que_e": "Peca em que o molde NAO copia o artefato — de proposito, porque o artefato tem ali uma limitacao que ele resolve. E categoria diferente da _pendente_sem_forma_no_artefato: la a forma NAO EXISTE e por isso nada foi feito; aqui a forma existe e foi copiada, e o que muda e so o mecanismo que o artefato nao conseguia generalizar.",
+        "_regra": "Entrada aqui exige (a) o que o artefato faz, (b) qual a limitacao, (c) o que o molde faz no lugar, (d) por que isso NAO muda a aparencia. Sem os quatro, e desvio disfarcado de melhoria.",
+        "itens": [
+          {
+            "peca": "container de estado do sorting",
+            "classe_no_molde": "sort-group",
+            "no_artefato": "id=\"gdsort\" fixo, com o estado num objeto global (gdBuild/gdMove/gdCheck leem esse id).",
+            "limitacao": "id fixo => SO UM sorting por aula. Uma segunda classificacao na mesma aula sobrescreveria o estado da primeira.",
+            "no_molde": "container proprio com data-cols/data-items/data-state, e cada handler resolve pelo closest(\".sort-group\"). Varios por aula.",
+            "por_que_nao_muda_a_aparencia": "O container nao tem CSS nenhum. Quem desenha e o .sortbox interno (grid), o .sortcol e o .sortitem — esses tres SAO os do artefato, verbatim.",
+            "nome": "Sem o prefixo ic-, de proposito: ic- marcava a REESCRITA de 07/08, e isto nao e reescrita de peca do artefato — e um invólucro que o artefato nao tem."
+          }
+        ]
+      },
+      "chassi": {
+        "_o_que_e": "O chassi do guided-discovery sai do ARTEFATO, byte a byte, desde 11/08/2026. Decisao do Dan: \"os dois moldes devem ser separados mesmo, em si\". O chassi do imersivo (helen-mendes) NAO mudou — nenhum aluno do molde antigo foi tocado por essa separacao.",
+        "quem_tranca": "GATE 21 (scripts/check_artefato_paridade.py -> CHASSI), que compara os 20 seletores de chassi com o artefato e tem selftest proprio. O GATE 18 NAO pega isto: ele compara presenca de funcao e de classe entre os dois shells, nao o VALOR das regras.",
+        "portado_do_artefato": [
+          ".slide",
+          ".slide.active",
+          ".slide-inner",
+          ".slide-light",
+          ".slide-dark",
+          ".slide-image",
+          ".slide-image::before",
+          ".chapter-label",
+          ".slide-title",
+          ".slide-subtitle",
+          ".slide-heading",
+          ".slide-lead",
+          ".audio-btn-sm",
+          ".audio-btn-sm:hover",
+          ".roleplay-card",
+          ".roleplay-kw",
+          ".stage-pill",
+          "stack de fonte do body",
+          "padding do .slide no @media"
+        ],
+        "divergencias_declaradas": [
+          {
+            "o_que": ".slide>.slide-inner com max-height + overflow-y:auto + padding-bottom",
+            "artefato": "rola no proprio .slide (overflow-y:auto na regra .slide, que aqui e identica). Nao tem o invólucro.",
+            "aqui": "MAIS um nivel de rolagem, no .slide-inner.",
+            "motivo": "validate_lesson.py EXIGE essa regra: sem ela, slide alto corta conteudo atras da nav-bar (incidente Patricia aula 1, fix #1074). Tirar para igualar o artefato reintroduziria um defeito com gate proprio. Efeito visivel: 16px de padding-bottom no .slide-inner."
+          },
+          {
+            "o_que": "webfont Inter carregada por <link> do Google Fonts",
+            "artefato": "nao declara webfont nenhuma — e um export de pagina unica, e usa o que o sistema tiver.",
+            "aqui": "carrega Inter, como todo o resto do produto (REGRA 25).",
+            "motivo": "A tipografia Inter e do PRODUTO, nao do artefato. Efeito medivel: .slide-lead e .subprompt tem a MESMA regra (max-width:72ch) nos dois, mas o ch depende da fonte que resolve — 608px la, 720px aqui numa medicao offline. Nao e divergencia de regra."
+          },
+          {
+            "o_que": "cores fixas da Erica no chassi",
+            "artefato": ".stage-pill background rgba(15,76,117,.14); .audio-btn-sm:hover #0a3a5c",
+            "aqui": "rgba(190,18,60,.14) (literal do accent do MODELO, que base_swaps troca por aluno) e var(--accent-light)",
+            "motivo": "O artefato e a pagina de UMA aluna; o shell e a forma dela, com uma paleta por aluno (REGRA 10). Declarado em ADAPTACOES_DE_PALETA do GATE 21 — o que nao estiver la reprova."
+          }
+        ]
+      },
+      "ritmo_claro_escuro": {
+        "_o_que_e": "De que TIPO e cada tela (slide-light / slide-dark / slide-image). E decisao AUTORAL, escrita a mao no slides.html de cada aula — nao ha nada no builder nem no kind que decida. Por isso vem declarado como CRITERIO, nao como regra automatica.",
+        "_como_foi_obtido": "Medido no artefato: para cada peca, em que tipo de tela ela aparece, nas 63 telas das 4 aulas.",
+        "criterio": {
+          "escura": "a tela que ENQUADRA — abertura de etapa (slide-title), briefing de cenario, cartoes de estado (s-card) e o FECHO (close-block, recap-item, conf-item). No artefato: 100% das telas de fecho e de s-card sao escuras; 10 das 13 telas com slide-title sao escuras (as outras 3 sao imagem).",
+          "clara": "a tela em que se TRABALHA — reveal-item, phrase-list, evi-list, writebox, blank-input, quiz-item, tbl-wrap, subprompt, sortbox. No artefato: 100% ou quase, em todas essas.",
+          "imagem": "abertura da aula e transicoes de capitulo."
+        },
+        "estado_hoje": {
+          "artefato": "aula 1: 21 telas -> 11 escuras, 3 imagem, 7 claras. Aulas 2-4: 3 a 4 escuras em 14.",
+          "stephanie": "aula 1: 15 telas -> 1 escura, 1 imagem, 13 claras. As escuras sao so as telas de transicao de etapa; o FECHO (recap + autoavaliacao) esta em tela CLARA, e no artefato ele e escuro em 4 de 4.",
+          "_nao_foi_mudado": "Trocar o tipo de uma tela e decisao de conteudo, por tela, de quem autora a aula. O criterio fica declarado aqui para a proxima geracao; as telas existentes nao foram reescritas."
+        }
+      }
     }
   }
 }
