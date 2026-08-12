@@ -519,6 +519,21 @@ body.slide-mode .nav-bar { display:flex; }
 .check-svg{opacity:.25;color:var(--text-dim,#5c5c6c);transition:opacity .2s,color .2s}
 .check-item.checked .check-svg{opacity:1;color:var(--success,#15803d)}
 .check-item.checked{background:var(--success-bg,rgba(21,128,61,.08))!important;border-color:var(--success,#15803d)!important}
+
+/* ===== Transcript accordion + tarefa de escuta (suporte ao listening) ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+.ts-task { max-width:500px;margin:1.2rem auto 0;text-align:left;border-left:3px solid var(--accent);padding:.2rem 0 .2rem .9rem; }
+.ts-task-label { font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem; }
+.ts-task ol { margin:0;padding-left:1.1rem; }
+.ts-task li { font-size:.88rem;line-height:1.6;color:rgba(255,255,255,.9);margin-bottom:.35rem; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -872,13 +887,22 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="13" data-lesson="11" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Rafael pitches his initiative to leadership. Listen carefully, no text on screen. After the audio, I will ask you three questions.' Toque o áudio. Deixe Rafael ouvir sem ajuda. Se necessário, toque novamente mais devagar. NÃO mostre o texto. Perguntas no próximo slide.">
+<div class="slide slide-dark" data-slide="13" data-lesson="11" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Rafael pitches his initiative to leadership. Read the three questions on the screen, then listen.' Leia as tres perguntas da tela EM VOZ ALTA com ele ANTES de tocar -- e o que diz o que procurar. Toque com o Transcript FECHADO; se precisar, repita em 0.75x. As respostas estao no proximo slide: so DEPOIS de corrigi-las volte aqui e abra o Transcript, para ele ver o que perdeu. O transcript e conferencia, nunca legenda.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label" style="color:rgba(255,255,255,.6)">Listening 1</div>
     <h2 class="slide-heading" style="color:#fff">The <span class="accent">Pitch</span></h2>
-    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Listen first. Questions come next.</p>
+    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Read the questions, then listen.</p>
 
-    <div class="mp-player" id="player1" data-src="/audio/rafael-pelizaro/a11_listening_rafael_pitch.mp3" data-questions="listening1Questions" style="max-width:500px;margin:1.5rem auto 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.2rem">
+    
+    <div class="ts-task" id="task-player1">
+      <p class="ts-task-label">Before you listen</p>
+      <ol>
+        <li>What is Rafael's initiative, and what problem does it solve?</li>
+        <li>What is his plan before the full rollout?</li>
+        <li>What does he need, and what does he ask for at the end?</li>
+      </ol>
+    </div>
+<div class="mp-player" id="player1" data-src="/audio/rafael-pelizaro/a11_listening_rafael_pitch.mp3" data-questions="listening1Questions" style="max-width:500px;margin:1.5rem auto 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.2rem">
       <div class="mp-bar" onclick="mpSeek(event,'player1')" style="width:100%;height:6px;background:rgba(255,255,255,.15);border-radius:3px;cursor:pointer;margin-bottom:.8rem"><div class="mp-fill" id="progress-player1" style="width:0%;height:100%;background:var(--accent);border-radius:3px;transition:width .1s"></div></div>
       <div class="mp-controls" style="display:flex;align-items:center;justify-content:center;gap:.8rem">
         <button onclick="mpSkip('player1',-5)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:.4rem .6rem;font-size:.75rem;cursor:pointer">-5s</button>
@@ -892,6 +916,11 @@ body.slide-mode .nav-bar { display:flex; }
         <button class="lp-speed-btn" onclick="mpSpeed('player1',1.25,this)" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:4px;padding:.2rem .5rem;font-size:.7rem;cursor:pointer">1.25x</button>
       </div>
     </div>
+    <div class="ts-box" id="ts-player1">
+      <button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-player1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button>
+      <div class="ts-body" id="ts-body-player1"><p>Good morning, everyone, and thank you for the time. Today, I wanna pitch a small initiative that I believe will save the team a lot of effort. Right now, our manual reports take about ten hours every week. My proposal is simple. We are going to build one automated dashboard that pulls the data for us. Let me give you the rationale. The work is repetitive, it is slow, and it creates errors. An automated tool will remove most of that risk. Here is my plan. First, we are going to run a short pilot with one team for four weeks. If the pilot works, we will roll it out to everyone. I am not going to ask for a big budget. I only need to allocate two developers for one month, so the headcount stays the same. I'm confident the numbers will speak for themselves. With your buy-in, I think we can green-light the pilot this quarter. Thank you, and I am happy to answer any questions.</p></div>
+    </div>
+
   </div>
 </div>
 
@@ -1022,11 +1051,11 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="18" data-lesson="11" data-phase="4" data-teacher="<strong>Listening 2 (5 min):</strong> Diga: 'Diana left a short voice message with her feedback after the pitch. Listen to it.' Toque o áudio. Depois revele as perguntas e peça Rafael responder. CCQ: 'What does Diana suggest adding for the board? (A simple chart with the numbers.) What will she do with the proposal? (Forward it to the board today.)'">
+<div class="slide slide-dark" data-slide="18" data-lesson="11" data-phase="4" data-teacher="<strong>Listening 2 (5 min):</strong> Diga: 'Diana left a short voice message with her feedback after the pitch. Listen to it.' As perguntas ja estao na tela: leia com ele ANTES de tocar. Toque com o Transcript FECHADO. Depois de corrigirem as respostas, abra o Transcript e toque uma ultima vez, ele acompanhando o texto. CCQ: 'What does Diana suggest adding for the board? (A simple chart with the numbers.) What will she do with the proposal? (Forward it to the board today.)'">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label" style="color:rgba(255,255,255,.6)">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">Diana's <span class="accent">Feedback</span></h2>
-    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Listen first. Questions come next.</p>
+    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Read the questions, then listen.</p>
 
     <div class="mp-player" id="player2" data-src="/audio/rafael-pelizaro/a11_listening_diana_feedback.mp3" data-questions="listening2Questions" style="max-width:500px;margin:1.5rem auto 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.2rem">
       <div class="mp-bar" onclick="mpSeek(event,'player2')" style="width:100%;height:6px;background:rgba(255,255,255,.15);border-radius:3px;cursor:pointer;margin-bottom:.8rem"><div class="mp-fill" id="progress-player2" style="width:0%;height:100%;background:var(--accent);border-radius:3px;transition:width .1s"></div></div>
@@ -1057,6 +1086,11 @@ body.slide-mode .nav-bar { display:flex; }
         <p class="fill-answer" style="display:none;font-size:.85rem;color:var(--accent);margin-top:.4rem">If the pilot succeeds, she is going to support a bigger budget; she is going to forward the proposal to the board today.</p>
       </div>
     </div>
+    <div class="ts-box" id="ts-player2">
+      <button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-player2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button>
+      <div class="ts-body" id="ts-body-player2"><p>Hi Rafael, this is Diana with some quick feedback after your pitch. First, well done. The proposal was clear and the rationale was strong. I liked that you are going to start with a small pilot instead of a full rollout. That lowers the risk and it will be easier to get buy-in from the other directors. One suggestion, when you present to the board next week, add a simple chart with the numbers. People will remember a picture more than a list. I also think you should be specific about the timeline. Tell them exactly when you are going to start and when you will share the first results. About the headcount, do not worry. If the pilot succeeds, I am going to support a bigger budget for the full initiative. So my advice is this: keep the message short, show the rationale, and ask clearly for the green light. I am going to forward your proposal to the board today. Talk soon and good luck.</p></div>
+    </div>
+
   </div>
 </div>
 
@@ -1810,6 +1844,14 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+
+// ===== Transcript accordion: abre/fecha o texto de apoio do listening =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>
