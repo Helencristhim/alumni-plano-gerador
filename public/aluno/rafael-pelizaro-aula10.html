@@ -519,6 +519,17 @@ body.slide-mode .nav-bar { display:flex; }
 .check-svg{opacity:.25;color:var(--text-dim,#5c5c6c);transition:opacity .2s,color .2s}
 .check-item.checked .check-svg{opacity:1;color:var(--success,#15803d)}
 .check-item.checked{background:var(--success-bg,rgba(21,128,61,.08))!important;border-color:var(--success,#15803d)!important}
+
+/* ===== Transcript accordion (suporte ao listening) ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -891,6 +902,11 @@ body.slide-mode .nav-bar { display:flex; }
         <button class="lp-speed-btn" onclick="mpSpeed('player1',1.25,this)" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:4px;padding:.2rem .5rem;font-size:.7rem;cursor:pointer">1.25x</button>
       </div>
     </div>
+    <div class="ts-box" id="ts-player1">
+      <button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-player1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button>
+      <div class="ts-body" id="ts-body-player1"><p>Hi everyone. Thank you for joining this call across so many time zones. I know it is early for some of you and late for others, so I will keep it short. Before we start, I want to set two simple rules for today. First, if anything is not clear, please ask me to clarify. It is always better to ask than to leave with a misunderstanding. Second, I will try to avoid jargon and acronyms because we come from different teams and different countries. If I use a word that is new for you, just stop me and I will paraphrase it in simpler words. I was wondering if we could also agree on one thing about tone. On this call, every question is a good question. We only have a two-hour overlap today, so let us use it well. Could you tell me in one sentence each what you most want to clarify before the client meeting? Thank you, and let us build a good rapport as a global team.</p></div>
+    </div>
+
   </div>
 </div>
 
@@ -1055,6 +1071,11 @@ body.slide-mode .nav-bar { display:flex; }
         <p class="fill-answer" style="display:none;font-size:.85rem;color:var(--accent);margin-top:.4rem">Five minutes for small talk, because it builds rapport and people speak more openly.</p>
       </div>
     </div>
+    <div class="ts-box" id="ts-player2">
+      <button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-player2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button>
+      <div class="ts-body" id="ts-body-player2"><p>Hi Rafael, this is Priya with quick feedback after our call. Thank you for the clear structure. I really liked that you asked us to stop you if something was not clear. That simple rule prevented a misunderstanding about the deadline, which I had read in a different, uh, way. Now, one small suggestion. When you share the agenda, could you add the local time for each region next to it? Some of us joined late because we were not sure about the overlap. I also think your idea about avoiding jargon was excellent. The new client is not technical, so a softer tone and fewer acronyms will help a lot. Finally, I was wondering if we could keep five minutes at the start for small talk. It builds rapport and people speak more openly after that. Great call today. Let us paraphrase the action items in the follow-up email so everyone is aligned. Talk soon.</p></div>
+    </div>
+
   </div>
 </div>
 
@@ -1808,6 +1829,14 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+
+// ===== Transcript accordion: abre/fecha o texto de apoio do listening =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>
