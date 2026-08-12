@@ -620,6 +620,21 @@ body.slide-mode .nav-bar { display:flex; }
 .slide>.slide-inner{margin:auto 0;max-height:calc(100vh - 11rem);overflow-y:auto;padding-bottom:1rem}
 .slide>.slide-inner::-webkit-scrollbar{width:8px}
 .slide>.slide-inner::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px}
+
+/* ===== Transcript accordion + tarefa de escuta (suporte ao listening) ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+.ts-task { max-width:500px;margin:1.2rem auto 0;text-align:left;border-left:3px solid var(--accent);padding:.2rem 0 .2rem .9rem; }
+.ts-task-label { font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem; }
+.ts-task ol { margin:0;padding-left:1.1rem; }
+.ts-task li { font-size:.88rem;line-height:1.6;color:rgba(255,255,255,.9);margin-bottom:.35rem; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1025,6 +1040,11 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. Which metric has exceeded its goal?</div><div class="q-answer">Customer satisfaction, at 82%.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What is the one setback Rafael reports?</div><div class="q-answer">A security problem; the rollout has slipped by two weeks.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen1">
+      <button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button>
+      <div class="ts-body" id="ts-body-mp-listen1"><p>Hi team, this is Rafael with a quick voice recap of the quarter before our review call, so everyone arrives on the same page. Overall, I am happy with where we are. The Banco Atlas migration has been our main objective, and the project is still on track. Let me give you the headline numbers. We set a target of forty systems in the cloud, and so far we have moved thirty-eight, so we are almost there. Two key deliverables have gone live this quarter, and the average response time has improved by nearly half. Our most important metric is customer satisfaction, and it has reached eighty-two percent. That figure has exceeded the goal we agreed on back in the summer, so that is a real achievement for the whole team. I will be honest about the setback too. A security test found a problem late in the quarter, so the final rollout has slipped by about two weeks. It is not ideal, but the team has made strong progress and the client has noticed the difference. For the review meeting, please come ready to talk about three things: how we close the gap on the last two systems, how we recover the two weeks, and how we turn this quarter into a long-term contract. Thanks, everyone.</p></div>
+    </div>
+
   </div>
 </div>
 
@@ -1055,6 +1075,11 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What should Rafael bring for the slipped rollout?</div><div class="q-answer">One clear plan to recover the two weeks.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. When does Diana want the long-term contract presented?</div><div class="q-answer">At the end of the review, while the good results are fresh.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen2">
+      <button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button>
+      <div class="ts-body" id="ts-body-mp-listen2"><p>Hi Rafael, this is Diana from the steering committee, leaving you a short voicemail after I read your quarterly summary. First of all, well done. The numbers are clear and honest, and the board likes that. Eighty-two percent on customer satisfaction is excellent, and I was glad to see you flag the security setback openly instead of hiding it. A couple of points for the review meeting. On the two systems that are still pending, I would like a firm date, not just on track. The board has heard on track before, and they want a day on the calendar. On the rollout that has slipped, please bring one clear plan to recover the two weeks, and be ready to say what you need from us to make it happen. And on the contract, this is the moment. You have exceeded the target and the client is happy, so I want you to present the long-term proposal at the end of the review, while the good results are fresh in everyone's mind. Send me the final deck the day before, and we will talk on the call. Thanks, Rafael, and again, strong quarter.</p></div>
+    </div>
+
   </div>
 </div>
 
@@ -1665,6 +1690,14 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+
+// ===== Transcript accordion: abre/fecha o texto de apoio do listening =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>

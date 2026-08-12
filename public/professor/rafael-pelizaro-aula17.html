@@ -622,6 +622,21 @@ body.slide-mode .nav-bar { display:flex; }
 .check-svg{opacity:.25;color:var(--text-dim,#5c5c6c);transition:opacity .2s,color .2s}
 .check-item.checked .check-svg{opacity:1;color:var(--success,#15803d)}
 .check-item.checked{background:var(--success-bg,rgba(21,128,61,.08))!important;border-color:var(--success,#15803d)!important}
+
+/* ===== Transcript accordion + tarefa de escuta (suporte ao listening) ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+.ts-task { max-width:500px;margin:1.2rem auto 0;text-align:left;border-left:3px solid var(--accent);padding:.2rem 0 .2rem .9rem; }
+.ts-task-label { font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem; }
+.ts-task ol { margin:0;padding-left:1.1rem; }
+.ts-task li { font-size:.88rem;line-height:1.6;color:rgba(255,255,255,.9);margin-bottom:.35rem; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -982,13 +997,22 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 14: LISTENING 1 ========== -->
-<div class="slide slide-dark" data-slide="13" data-lesson="17" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Rafael welcomes the team and explains the whole process, using the passive voice. Listen carefully, no text on screen. After the audio, I will ask you three questions.' Toque o áudio. Deixe Rafael ouvir sem ajuda. Se necessário, toque novamente mais devagar. NÃO mostre o texto. Perguntas no próximo slide.">
+<div class="slide slide-dark" data-slide="13" data-lesson="17" data-phase="4" data-teacher="<strong>Listening 1 (5 min):</strong> Diga: 'Rafael welcomes the team and explains the whole process, using the passive voice. Read the three questions on the screen, then listen.' Leia as tres perguntas da tela EM VOZ ALTA com ele ANTES de tocar -- e o que diz o que procurar. Toque com o Transcript FECHADO; se precisar, repita em 0.75x. As respostas estao no proximo slide: so DEPOIS de corrigi-las volte aqui e abra o Transcript, para ele ver o que perdeu. O transcript e conferencia, nunca legenda.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label" style="color:rgba(255,255,255,.6)">Listening 1</div>
     <h2 class="slide-heading" style="color:#fff">The Process <span class="accent">Walkthrough</span></h2>
-    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Listen first. Questions come next.</p>
+    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Read the questions, then listen.</p>
 
-    <div class="mp-player" id="player1" data-src="/audio/rafael-pelizaro/a17_listening_rafael_handover.mp3" data-questions="listening1Questions" style="max-width:500px;margin:1.5rem auto 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.2rem">
+    
+    <div class="ts-task" id="task-player1">
+      <p class="ts-task-label">Before you listen</p>
+      <ol>
+        <li>What happens before a change goes live?</li>
+        <li>How are tickets and the build handled?</li>
+        <li>What was the result of standardizing the process?</li>
+      </ol>
+    </div>
+<div class="mp-player" id="player1" data-src="/audio/rafael-pelizaro/a17_listening_rafael_handover.mp3" data-questions="listening1Questions" style="max-width:500px;margin:1.5rem auto 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.2rem">
       <div class="mp-bar" onclick="mpSeek(event,'player1')" style="width:100%;height:6px;background:rgba(255,255,255,.15);border-radius:3px;cursor:pointer;margin-bottom:.8rem"><div class="mp-fill" id="progress-player1" style="width:0%;height:100%;background:var(--accent);border-radius:3px;transition:width .1s"></div></div>
       <div class="mp-controls" style="display:flex;align-items:center;justify-content:center;gap:.8rem">
         <button onclick="mpSkip('player1',-5)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:.4rem .6rem;font-size:.75rem;cursor:pointer">-5s</button>
@@ -1002,6 +1026,11 @@ body.slide-mode .nav-bar { display:flex; }
         <button class="lp-speed-btn" onclick="mpSpeed('player1',1.25,this)" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:4px;padding:.2rem .5rem;font-size:.7rem;cursor:pointer">1.25x</button>
       </div>
     </div>
+    <div class="ts-box" id="ts-player1">
+      <button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-player1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button>
+      <div class="ts-body" id="ts-body-player1"><p>Welcome to the team. Let me walk you through how we work, so nothing depends on one person. First, every change is documented in our wiki before it goes live. The procedure is simple and it is followed by everyone. Tickets are assigned at the Monday stand-up, and progress is monitored on the board all week. The build is tested by the quality team, and it is only approved when every check passes. After release, the system is monitored for forty-eight hours. Last quarter this process was standardized across all three squads, and our incidents were cut in half. The runbook was written by the whole team, so it is maintained by everyone, not just me. If you follow the steps, you will never feel lost. Everything you need is documented, and the handover is designed so the work continues without me in the room.</p></div>
+    </div>
+
   </div>
 </div>
 
@@ -1134,11 +1163,11 @@ body.slide-mode .nav-bar { display:flex; }
 </div>
 
 <!-- ========== SLIDE 18: LISTENING 2 ========== -->
-<div class="slide slide-dark" data-slide="18" data-lesson="17" data-phase="4" data-teacher="<strong>Listening 2 (5 min):</strong> Diga: 'Sofia from the program office left a voicemail about Rafael's first month as lead. Listen to her message.' Toque o audio. Depois revele as perguntas e peca Rafael responder. CCQ: 'What did leadership think of the handover document? (It was praised; the process is clear and the runbook is well maintained.) What is Sofia asking Rafael to do? (Record a short walkthrough so it can be shared.) What is the deadline? (Friday; the file should be uploaded to the shared drive.)'">
+<div class="slide slide-dark" data-slide="18" data-lesson="17" data-phase="4" data-teacher="<strong>Listening 2 (5 min):</strong> Diga: 'Sofia from the program office left a voicemail about Rafael's first month as lead. Listen to her message.' As perguntas ja estao na tela: leia com ele ANTES de tocar. Toque com o Transcript FECHADO. Depois de corrigirem as respostas, abra o Transcript e toque uma ultima vez, ele acompanhando o texto. CCQ: 'What did leadership think of the handover document? (It was praised; the process is clear and the runbook is well maintained.) What is Sofia asking Rafael to do? (Record a short walkthrough so it can be shared.) What is the deadline? (Friday; the file should be uploaded to the shared drive.)'">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label" style="color:rgba(255,255,255,.6)">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">Sofia's <span class="accent">Voicemail</span></h2>
-    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Listen first. Questions come next.</p>
+    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:.5rem">Read the questions, then listen.</p>
 
     <div class="mp-player" id="player2" data-src="/audio/rafael-pelizaro/a17_listening_sofia_voicemail.mp3" data-questions="listening2Questions" style="max-width:500px;margin:1.5rem auto 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.2rem">
       <div class="mp-bar" onclick="mpSeek(event,'player2')" style="width:100%;height:6px;background:rgba(255,255,255,.15);border-radius:3px;cursor:pointer;margin-bottom:.8rem"><div class="mp-fill" id="progress-player2" style="width:0%;height:100%;background:var(--accent);border-radius:3px;transition:width .1s"></div></div>
@@ -1169,6 +1198,11 @@ body.slide-mode .nav-bar { display:flex; }
         <p class="fill-answer" style="display:none;font-size:.85rem;color:var(--accent);margin-top:.4rem">The deadline is Friday, and the file should be uploaded to the shared drive.</p>
       </div>
     </div>
+    <div class="ts-box" id="ts-player2">
+      <button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-player2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button>
+      <div class="ts-body" id="ts-body-player2"><p>Hi Rafael, this is Sofia from the program office. Great news about your first month as lead. The leadership team reviewed your handover document, and it was praised in this morning's meeting. They said the process is clear and the runbook is well maintained. One quick request: the new vendor onboarding will be standardized next quarter, and your template was chosen as the model. Could you record a short walkthrough so it can be shared with the other squads? It does not need to be long. The deadline is Friday, and the file should be uploaded to the shared drive. Thank you for setting such a high bar. Your work is noticed, and people are already asking to be assigned to your team. Talk soon.</p></div>
+    </div>
+
   </div>
 </div>
 
@@ -1933,6 +1967,14 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+
+// ===== Transcript accordion: abre/fecha o texto de apoio do listening =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>
