@@ -5,39 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="alumni-model" content="kids">
     <meta name="alumni-level" content="A1">
+    <meta name="alumni-framework" content="imersivo-prototipo">
+    <meta name="alumni-gen" content="2">
+    <meta name="alumni-contrato" content="imersivo-prototipo@1">
 <meta name="robots" content="noindex, nofollow">
 <title>Bento | Private Black Kids -- Alumni</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <button class="reset-btn" onclick="resetProgress()">Resetar todo o progresso</button>
 <script>
 var audioMap = {
-  "Rocket": "/audio/bento/pc2_rocket.mp3",
-  "Star": "/audio/bento/pc2_star.mp3",
-  "Moon": "/audio/bento/pc2_moon.mp3",
-  "Planet": "/audio/bento/pc2_planet.mp3",
-  "Sky": "/audio/bento/pc2_sky.mp3",
-  "Up": "/audio/bento/pc2_up.mp3",
-  "Go": "/audio/bento/pc2_go.mp3",
-  "The rocket goes up!": "/audio/bento/pc2_the_rocket_goes_up.mp3",
-  "I can see a star!": "/audio/bento/pc2_i_can_see_a_star.mp3",
-  "Three, two, one, go!": "/audio/bento/pc2_three_two_one_go.mp3",
-  "The moon is up.": "/audio/bento/pc2_the_moon_is_up.mp3",
-  "Blast off!": "/audio/bento/pc2_blast_off.mp3",
-  "Big": "/audio/bento/pc_big.mp3",
-  "Small": "/audio/bento/pc_small.mp3",
-  "Green": "/audio/bento/pc_green.mp3",
-  "Run": "/audio/bento/pc_run.mp3",
-  "Tree": "/audio/bento/pc_tree.mp3",
-  "Look": "/audio/bento/pc_look.mp3",
-  "Dinosaur": "/audio/bento/pc_dinosaur.mp3",
-  "It's a big dinosaur.": "/audio/bento/pc_it_s_a_big_dinosaur.mp3",
-  "The dinosaur is green.": "/audio/bento/pc_the_dinosaur_is_green.mp3",
-  "The dinosaur can run.": "/audio/bento/pc_the_dinosaur_can_run.mp3",
-  "Look! A dinosaur!": "/audio/bento/pc_look_a_dinosaur.mp3",
-  "It's a big dinosaur!": "/audio/bento/pc_it_s_a_big_dinosaur_6bd3ae.mp3",
-  "It's green.": "/audio/bento/pc_it_s_green.mp3",
-  "It can run.": "/audio/bento/pc_it_can_run.mp3",
-  "Look, a tree!": "/audio/bento/pc_look_a_tree.mp3",
 };
 
 function resetProgress() { if (confirm('Tem certeza que deseja resetar todo o progresso?')) { localStorage.removeItem('bento-aluno'); localStorage.removeItem('alumni-progress-bento'); location.reload(); } }
@@ -517,6 +493,212 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 @keyframes dtFall{to{transform:translateY(105vh) rotate(720deg);opacity:0}}
 @media(prefers-reduced-motion:reduce){.dino-tap-game *{animation:none!important}}
 
+
+/* ══════════════════════════════════════════════════════════════════════════
+   KIDS POST-CLASS — folha do PERCURSO (homework assíncrono do modelo kids).
+
+   PROVENIÊNCIA: copiada do artefato "Dante Blecker Gregory · Kids A2 ·
+   Professor View" (13/08/2026), que é a ESPECIFICAÇÃO desta peça. O artefato
+   escopava a folha em `#pc-root-1`/`#pc-root-2`; aqui o escopo é a classe
+   `.pv-post`, que é o container que o builder emite para TODO percurso — um
+   escopo só, sem duplicar a folha por aula. Nada de mecânica foi reescrito.
+
+   O QUE MUDOU do artefato, e por quê:
+     · as variáveis de COR saíram. O artefato fixava o verde do Dante; aqui
+       --accent/--bg/--text/--border/--success vêm do :root do hub, que é a
+       paleta do ALUNO (REGRA 10). Ficaram só as variáveis que o shell adulto
+       não tem (--navy, --hint*, --star, --radius, --font).
+
+   INJEÇÃO: só quando model==kids E a aula tem postclass.html (build_from_model,
+   inject_kids_postclass). Adulto nunca vê este arquivo.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.pv-post{
+    /* COR NAO ENTRA AQUI: --accent/--bg/--text/--success/--border vem do :root
+       do hub, que e a paleta do ALUNO (REGRA 10). Só ficam as variaveis que o
+       shell adulto nao tem e que o percurso usa. */
+    --navy:#003080;
+    --hint:#d97706;   --hint-bg:rgba(217,119,6,.10);    --hint-border:rgba(217,119,6,.35);
+    --star:#f5a524;
+    --radius:18px;
+    --font:"Trebuchet MS","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  }.pv-post, .pv-post *{box-sizing:border-box}.pv-post{margin:0;padding:0}.pv-post{
+    background:var(--bg); color:var(--text); font-family:var(--font);
+    line-height:1.5; -webkit-font-smoothing:antialiased;
+    min-height:100vh; padding:16px;
+  }.pv-post .wrap{max-width:760px;margin:0 auto}/* ---------- cabecalho e mapa de progresso ---------- */
+  .pv-post .topbar{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);
+    padding:12px 16px;margin-bottom:14px;
+  }.pv-post .topbar h1{font-size:1.05rem;margin:0;flex:1;min-width:180px;letter-spacing:.2px}.pv-post .topbar .lvl{
+    font-size:.72rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--accent);background:var(--accent-dim);border-radius:999px;padding:4px 10px;
+  }.pv-post .stars{font-size:.95rem;font-weight:700;color:var(--star);white-space:nowrap}.pv-post .map{
+    display:flex;align-items:center;gap:4px;
+    background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);
+    padding:12px 14px;margin-bottom:16px;overflow-x:auto;
+  }.pv-post .spot{
+    flex:1 0 auto;min-width:88px;text-align:center;position:relative;
+    padding:6px 2px;border-radius:12px;
+  }.pv-post .spot .dot{
+    width:38px;height:38px;margin:0 auto 4px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:1.15rem;
+    background:var(--bg-elevated);border:2px dashed var(--border);
+  }.pv-post .spot .nm{font-size:.68rem;font-weight:700;color:var(--text-dim);letter-spacing:.3px}.pv-post .spot.now .dot{border-style:solid;border-color:var(--accent);background:var(--accent-dim);transform:scale(1.12)}.pv-post .spot.now .nm{color:var(--accent)}.pv-post .spot.done .dot{border-style:solid;border-color:var(--success);background:var(--success-bg)}.pv-post .spot .walker{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:1.1rem}.pv-post .link{flex:0 0 10px;height:3px;border-radius:2px;background:var(--border)}.pv-post .link.done{background:var(--success)}/* ---------- tela ---------- */
+  .pv-post .screen{
+    background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);
+    padding:22px 20px 20px;
+  }.pv-post .screen[hidden]{display:none}.pv-post .eyebrow{
+    font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    color:var(--accent);margin-bottom:6px;
+  }.pv-post h2{font-size:1.45rem;margin:0 0 6px;letter-spacing:.2px}.pv-post .instr{font-size:1.05rem;color:var(--text-mid);margin:0 0 16px}/* ==========================================================================
+     NAO INSERIR APOIO EM PORTUGUES NO MATERIAL DO DANTE.
+     O curso e Kids A2 e a regra geral do curso permitiria L1 aqui -- mas o
+     PERFIL INDIVIDUAL determina interface integralmente em ingles, e o perfil
+     prevalece sobre a regra geral.
+     O suporte nao e retirado: muda de natureza. Imagem, audio, demonstracao, exemplo completo, reducao de alternativas, repeticao e feedback
+     progressivo fazem o papel que a traducao faria.
+     A classe .pt existia aqui como "obrigatorio em A1/A2". Ficou SEM REGRA de
+     proposito: mesmo sem produzir texto visivel, a declaracao contradiria a
+     excecao do Dante e poderia induzir o gerador a reintroduzir portugues.
+     ========================================================================== */
+  .pv-post /* ---------- recap: o contexto da aula, reapresentado ---------- */
+  /* O aluno NAO pode rever a aula (Feedback 1, decisao 3). Nenhuma pergunta
+     sobre a historia pode depender de memoria desassistida: o gatilho fica em
+     tela. Aqui a tira elimina duas opcoes do item 2 de proposito -- o aluno
+     raciocina a partir do que ve, em vez de tentar lembrar. */
+  .recap{
+    background:var(--bg-elevated);border:2px solid var(--border);border-radius:16px;
+    padding:14px 16px;margin-bottom:16px;
+  }.pv-post .recap h3{
+    font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    color:var(--text-dim);margin:0 0 10px;
+  }.pv-post .recap .who{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}.pv-post .recap .who span{
+    background:var(--bg-card);border:2px solid var(--border);border-radius:12px;
+    padding:7px 12px;font-size:1rem;font-weight:700;white-space:nowrap;
+  }.pv-post .recap .story{font-size:1rem;line-height:1.6;margin:0}.pv-post .recap .story b{color:var(--accent)}.pv-post .counter{font-size:.75rem;font-weight:700;color:var(--text-dim);margin-bottom:10px}.pv-post .q{font-size:1.2rem;font-weight:700;margin:0 0 14px}/* ---------- botoes ---------- */
+  .pv-post button{font-family:inherit}.pv-post .btn{
+    border:none;border-radius:999px;padding:13px 26px;font-size:1rem;font-weight:700;
+    cursor:pointer;background:var(--accent);color:#fff;letter-spacing:.3px;
+  }.pv-post .btn:hover{background:var(--accent-light)}.pv-post .btn:disabled{background:var(--border);color:var(--text-dim);cursor:not-allowed}.pv-post .btn-ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}.pv-post .btn-ghost:hover{background:var(--accent-dim)}.pv-post .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}.pv-post .audio-btn{
+    border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);
+    border-radius:999px;padding:11px 20px;font-size:1rem;font-weight:700;cursor:pointer;
+  }.pv-post .audio-btn:hover{background:var(--accent);color:#fff}.pv-post .audio-btn.big{font-size:1.15rem;padding:16px 30px}/* ---------- cards de escolha ---------- */
+  .pv-post .opts{display:flex;gap:12px;flex-wrap:wrap}.pv-post .opt{
+    flex:1 1 150px;min-width:140px;background:var(--bg-elevated);
+    border:3px solid var(--border);border-radius:16px;padding:16px 12px;
+    cursor:pointer;text-align:center;transition:transform .12s,border-color .12s;
+  }/* Verde e reservado a "correto". O hover usa navy, senao passar o dedo por
+     cima de uma opcao errada ja parece confirmacao de acerto. */
+  .pv-post .opt:hover{transform:translateY(-3px);border-color:var(--navy)}.pv-post .opt .pic{font-size:2.6rem;line-height:1.1;display:block;margin-bottom:6px}.pv-post .opt .lbl{font-size:1.05rem;font-weight:700}.pv-post .opt.ok{border-color:var(--success);background:var(--success-bg)}.pv-post .opt.no{border-color:var(--hint);background:var(--hint-bg);opacity:.75}.pv-post .opt.lock{pointer-events:none}.pv-post .opt.lock:hover{transform:none}.pv-post .opts.lines .opt{flex:1 1 100%;text-align:left;font-size:1.1rem;font-weight:600;padding:15px 18px}/* ==========================================================================
+     CENA -- so a transferencia usa. As duas telas dela mostram o mesmo quadro, e ele responde uma pergunta que o texto nao responde: QUEM esta ali.
+     Barras de CSS fazem o cenario (chao, portao) e os objetos ficam sobre elas.
+     O que a cena NAO mostra e habilidade -- isso nao se desenha, e por isso o
+     texto de cada tela repete o que cada um pode e nao pode.
+     Rotulo nomeia OBJETO, nunca relacao.
+     ========================================================================== */
+  .pv-post .scene{
+    position:relative;width:100%;max-width:520px;aspect-ratio:16/11;
+    margin:0 auto 14px;border:2px solid var(--border);border-radius:16px;
+    background:var(--bg-elevated);overflow:hidden;
+  }.pv-post .sc-bar{position:absolute;border-radius:6px;background:var(--border);opacity:.6}.pv-post .sc-trunk{background:#a1724a;opacity:.5}.pv-post .sc-obj{
+    position:absolute;transform:translate(-50%,-50%);
+    font-size:1.7rem;line-height:1;text-align:center;white-space:nowrap;
+  }.pv-post .sc-tag{
+    position:absolute;transform:translate(-50%,-50%);z-index:4;
+    font-size:.58rem;font-weight:700;letter-spacing:.2px;
+    color:var(--text-dim);text-transform:uppercase;white-space:nowrap;
+  }/* ---------- matching ---------- */
+  .pv-post .match{display:flex;gap:14px;flex-wrap:wrap}.pv-post .col{flex:1 1 200px;display:flex;flex-direction:column;gap:10px}.pv-post .col h3{font-size:.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);margin:0 0 2px}.pv-post .mi{
+    background:var(--bg-elevated);border:3px solid var(--border);border-radius:14px;
+    padding:14px;cursor:pointer;text-align:center;font-size:1.1rem;font-weight:700;
+  }.pv-post .mi .pic{font-size:2.4rem;display:block}.pv-post .mi:hover{border-color:var(--navy)}.pv-post .mi.sel{border-color:var(--navy);background:var(--accent-dim)}.pv-post .mi.ok{border-color:var(--success);background:var(--success-bg);pointer-events:none}.pv-post .mi.shake{animation:pc-shake .3s}
+  @keyframes pc-shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}/* ---------- gap fill ---------- */
+  .pv-post .sents{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}.pv-post .sent{
+    font-size:1.25rem;font-weight:700;padding:14px 16px;border-radius:14px;
+    background:var(--bg-elevated);border:3px solid transparent;opacity:.45;
+  }/* A frase ATIVA e navy; so a resolvida fica verde. Com as duas em verde, nao dava para saber qual estava valendo. */
+  .pv-post .sent.now{opacity:1;border-color:var(--navy)}.pv-post .sent.ok{opacity:1;border-color:var(--success);background:var(--success-bg)}.pv-post .blank{
+    display:inline-block;min-width:96px;border-bottom:4px solid var(--accent);
+    text-align:center;color:var(--accent);
+  }.pv-post .bank{display:flex;gap:10px;flex-wrap:wrap}.pv-post .bank .chip{
+    background:var(--bg-card);border:3px solid var(--border);border-radius:999px;
+    padding:11px 20px;font-size:1.05rem;font-weight:700;cursor:pointer;
+  }.pv-post .bank .chip:hover{border-color:var(--navy)}.pv-post .bank .chip.used{opacity:.35;pointer-events:none}.pv-post .banklbl{font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}/* ---------- sentence builder ---------- */
+  .pv-post .line{
+    min-height:66px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+    background:var(--bg-elevated);border:3px dashed var(--border);border-radius:14px;
+    padding:12px;margin-bottom:14px;
+  }.pv-post .line.ok{border-style:solid;border-color:var(--success);background:var(--success-bg)}.pv-post .line .ph{color:var(--text-dim);font-size:1rem;font-weight:600}.pv-post .blk{
+    background:var(--bg-card);border:3px solid var(--border);border-radius:12px;
+    padding:10px 16px;font-size:1.1rem;font-weight:700;cursor:pointer;
+  }.pv-post .blk:hover{border-color:var(--navy)}.pv-post .blk.used{opacity:.3;pointer-events:none}.pv-post .sayit{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    background:var(--accent-dim);border-radius:12px;padding:10px 14px;margin-bottom:14px;
+    font-size:1rem;font-weight:700;color:var(--accent);
+  }/* ---------- feedback ---------- */
+  .pv-post .fb{
+    margin-top:16px;padding:14px 16px;border-radius:14px;font-size:1.05rem;font-weight:600;
+    display:none;
+  }.pv-post .fb.show{display:block;animation:pc-pop .25s}
+  @keyframes pc-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}.pv-post .fb.good{background:var(--success-bg);border:2px solid var(--success-border);color:var(--success)}.pv-post .fb.tip{background:var(--hint-bg);border:2px solid var(--hint-border);color:var(--hint)}/* ---------- start / result ---------- */
+  .pv-post .avatars{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}.pv-post .av{
+    font-size:2.4rem;background:var(--bg-elevated);border:3px solid var(--border);
+    border-radius:16px;padding:12px 18px;cursor:pointer;line-height:1;
+  }.pv-post .av:hover{border-color:var(--accent)}.pv-post .av.sel{border-color:var(--accent);background:var(--accent-dim);transform:scale(1.06)}.pv-post .scorebig{font-size:3.2rem;font-weight:800;color:var(--accent);line-height:1.1}.pv-post .band{font-size:1.35rem;font-weight:800;margin:2px 0 4px}.pv-post .badge{
+    display:inline-flex;align-items:center;gap:10px;margin:14px 0;
+    background:var(--accent-dim);border:3px solid var(--accent);border-radius:999px;
+    padding:12px 24px;font-size:1.15rem;font-weight:800;color:var(--accent);
+  }.pv-post .badge .em{font-size:1.7rem}.pv-post .review{background:var(--bg-elevated);border-radius:14px;padding:14px 16px;margin:14px 0}.pv-post .review h3{margin:0 0 8px;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}.pv-post .review p{margin:0 0 8px;font-size:1rem}.pv-post .review p:last-child{margin:0}.pv-post .bonus{
+    border:3px dashed var(--border);border-radius:14px;padding:16px;margin-top:16px;
+  }.pv-post .bonus .tag{
+    font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    color:var(--text-dim);background:var(--bg-elevated);border-radius:999px;
+    padding:3px 10px;display:inline-block;margin-bottom:8px;
+  }.pv-post .imgph{display:inline-block;line-height:1}.pv-post .note{font-size:.8rem;color:var(--text-dim);margin-top:14px;text-align:center}
+
+  @media (max-width:520px){.pv-post{padding:10px}.pv-post h2{font-size:1.25rem}.pv-post .opt{flex:1 1 100%}.pv-post .spot{min-width:74px}
+  }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   O SLOT — o percurso ocupa a tela, como o deck do IN CLASS.
+   Copiado do artefato (bloco "o que a pagina do perfil acrescenta ao nucleo").
+   Os CARDS do menu não vieram: no hub eles reusam o MESMO HTML do card do IN
+   CLASS (REGRA 11.9, uniformidade), emitido pelo builder em post_card().
+   ══════════════════════════════════════════════════════════════════════════ */
+/* O hub do PROFESSOR embrulha tudo em .main-content; o do ALUNO não tem esse
+   wrapper -- é .header + .container soltos no body (medido: sem .header/.container
+   aqui, o percurso abria EMBAIXO do hub inteiro, com a home rolando por cima). */
+body.pc-mode .logo-bar,
+body.pc-mode .main-content,
+body.pc-mode .header,
+body.pc-mode .container,
+body.pc-mode .slides-wrapper { display:none !important; }
+body:not(.pc-mode) .pv-post { display:none; }
+body:not(.pc-mode) #pv-post-bar { display:none; }
+.pv-post { max-width:100vw; margin:0 auto; }
+/* Só um percurso vive no DOM de cada vez (o kids-post.js esvazia os outros), mas
+   o root vazio CONTINUA com min-height:100vh e empurrava o percurso aberto para
+   baixo da dobra: a aula 2 abria numa tela em branco, e era preciso rolar para
+   achar. Medido no navegador. */
+.pv-post:empty { display:none; }
+body.pc-mode .pv-post { padding-top:64px; }
+/* a barra vive FORA do .pv-post, então não herda as variáveis dele: cor literal */
+#pv-post-bar {
+  position:fixed; top:0; left:0; right:0; z-index:3000;
+  display:flex; align-items:center; gap:12px;
+  padding:8px 14px; background:#1a1a2e; border-bottom:2px solid #003080;
+}
+#pv-post-sair {
+  font-family:inherit; cursor:pointer; border-radius:999px; padding:6px 14px;
+  font-size:.78rem; font-weight:700; background:transparent; color:#cfd4e4; border:2px solid #3a3a5c;
+}
+#pv-post-sair:hover { border-color:var(--accent); color:#fff; }
+#pv-post-sair:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+#pv-post-nome { color:#cfd4e4; font-size:.7rem; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; }
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -533,7 +715,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 <!-- HEADER HERO -->
 <div class="header">
   <div class="header-content">
-    <div class="passport-badge">Travel English -- 48 Aulas</div>
+    <div class="passport-badge">Private Black Kids -- 20 Aulas</div>
     <h1>Bento</h1>
     <p class="subtitle">Private Black Kids</p>
     <div class="student-info">
@@ -569,380 +751,31 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 <!-- TABS -->
 <div class="tabs-wrapper">
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('exercises')">Pre-class</button>
+    
+    <button class="tab-btn active" onclick="switchTab('postclass')">Post-class</button>
     <button class="tab-btn" onclick="switchTab('complementary')">Complementares</button>
   </div>
 </div>
 
 <!-- ========== TAB 1: PRE-CLASS ========== -->
-<div class="tab-content active" id="tab-exercises">
-<div class="lesson-card" id="ex-lesson-1">
-  <div class="lesson-header" onclick="toggleLesson(this)">
-    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1519880856348-763a8b40aa79?w=600&q=80')"></div>
-    <div class="lesson-header-content">
-      <div class="lesson-number">Aula 01 -- Pre-class</div>
-      <h3>Dino Safari</h3>
-      <div class="lesson-desc">Palavras do dinossauro (big, small, green, run, tree, look, dinosaur) e a frase "It's a big dinosaur!". Toque, ouca e repita -- prepare-se pro safari!</div>
-      <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="1" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="1">0%</span></div>
-    </div>
-    <div class="expand-icon">&#9660;</div>
-  </div>
-  <div class="lesson-body">
-
-    <!-- ETAPA 1.1 -- VOCAB CARDS -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 1.1: Palavras do Dino</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Toque em Listen, ouca e repita. Faca o gesto! (Ouca cada palavra e repita.)</p>
-      <div class="vocab-cards">
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Big</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">grande</span></div><div class="vocab-card-example">"It's a big dinosaur!" (E um dinossauro grande!)</div></div><button class="audio-btn" data-speak="Big" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Small</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">pequeno</span></div><div class="vocab-card-example">"It's a small dinosaur!" (E um dinossauro pequeno!)</div></div><button class="audio-btn" data-speak="Small" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Green</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">verde</span></div><div class="vocab-card-example">"The dinosaur is green." (O dinossauro e verde.)</div></div><button class="audio-btn" data-speak="Green" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Run</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">correr</span></div><div class="vocab-card-example">"The dinosaur can run!" (O dinossauro sabe correr!)</div></div><button class="audio-btn" data-speak="Run" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Tree</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">árvore</span></div><div class="vocab-card-example">"The tree is big and green." (A árvore é grande e verde.)</div></div><button class="audio-btn" data-speak="Tree" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Look</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">olha / veja</span></div><div class="vocab-card-example">"Look! A dinosaur!" (Olha! Um dinossauro!)</div></div><button class="audio-btn" data-speak="Look" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Dinosaur</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">dinossauro</span></div><div class="vocab-card-example">"The dinosaur is my friend." (O dinossauro e meu amigo.)</div></div><button class="audio-btn" data-speak="Dinosaur" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-      </div>
-    </div>
-
-    <!-- ETAPA 1.2 -- MATCHING -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 1.2: Ligue as palavras</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ligue a palavra em ingles com o portugues.</p>
-      <div class="match-grid" id="match-l1">
-        <div class="match-row" data-answer="grande"><span class="match-word" style="flex:0 0 130px">Big</span><select style="flex:1;width:100%" onchange="checkMatch(this)"><option value="">Selecione...</option><option value="correr">correr</option><option value="grande">grande</option><option value="verde">verde</option><option value="pequeno">pequeno</option><option value="árvore">árvore</option></select></div>
-        <div class="match-row" data-answer="pequeno"><span class="match-word" style="flex:0 0 130px">Small</span><select style="flex:1;width:100%" onchange="checkMatch(this)"><option value="">Selecione...</option><option value="grande">grande</option><option value="pequeno">pequeno</option><option value="árvore">árvore</option><option value="verde">verde</option><option value="correr">correr</option></select></div>
-        <div class="match-row" data-answer="verde"><span class="match-word" style="flex:0 0 130px">Green</span><select style="flex:1;width:100%" onchange="checkMatch(this)"><option value="">Selecione...</option><option value="árvore">árvore</option><option value="pequeno">pequeno</option><option value="verde">verde</option><option value="correr">correr</option><option value="grande">grande</option></select></div>
-        <div class="match-row" data-answer="correr"><span class="match-word" style="flex:0 0 130px">Run</span><select style="flex:1;width:100%" onchange="checkMatch(this)"><option value="">Selecione...</option><option value="verde">verde</option><option value="correr">correr</option><option value="grande">grande</option><option value="árvore">árvore</option><option value="pequeno">pequeno</option></select></div>
-        <div class="match-row" data-answer="árvore"><span class="match-word" style="flex:0 0 130px">Tree</span><select style="flex:1;width:100%" onchange="checkMatch(this)"><option value="">Selecione...</option><option value="pequeno">pequeno</option><option value="verde">verde</option><option value="árvore">árvore</option><option value="grande">grande</option><option value="correr">correr</option></select></div>
-      </div>
-      <button class="verify-all-btn" onclick="verifyAllMatches('match-l1')">Check Answers</button>
-    </div>
-
-    <!-- ETAPA 1.3 -- GRAMMAR IN CONTEXT -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia a historinha do safari e responda.</p>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem;font-size:1rem;line-height:1.7;margin-bottom:1rem">
-        <b>Look!</b> It's a <b>big</b> dinosaur. It is <b>green</b>. The big green dinosaur can <b>run</b>. Run, dino, run! Look! A <b>tree</b>. The <b>tree</b> is big and green too.
-      </div>
-      <div class="quiz-item">
-        <div class="quiz-question">Is the dinosaur big or small? (O dino e grande ou pequeno?)</div>
-        <div class="quiz-options">
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> It's a big dinosaur.</div>
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> It's a small dinosaur.</div>
-        </div>
-      </div>
-      <div class="quiz-item">
-        <div class="quiz-question">What color is the dinosaur? (Que cor?)</div>
-        <div class="quiz-options">
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> It's blue.</div>
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> It's green.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ETAPA 1.4 -- GRAMMAR TIP -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 1.4: Grammar Tip</h4><span class="badge badge-vocab">Grammar</span></div>
-      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:12px;padding:1.2rem">
-        <p style="font-size:1.15rem;font-weight:700;text-align:center;margin-bottom:.6rem"><span class="accent">It's a</span> + word + dinosaur</p>
-        <p style="text-align:center;color:var(--text-dim);font-size:.92rem;margin-bottom:1rem">"It's a" = "E um". Usamos pra dizer o que uma coisa e.</p>
-        <div style="display:flex;flex-direction:column;gap:.5rem">
-          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem">It's a <b>big</b> dinosaur. <span style="color:var(--text-dim)">(E um dinossauro grande.)</span></div>
-          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem">It's a <b>small</b> dinosaur. <span style="color:var(--text-dim)">(E um dinossauro pequeno.)</span></div>
-          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem">It's a <b>green</b> dinosaur. <span style="color:var(--text-dim)">(E um dinossauro verde.)</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ETAPA 1.5 -- FILL IN THE BLANK -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 1.5: Complete a frase</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escreva a palavra que falta. Toque Listen pra ouvir.</p>
-      <div class="fill-blank-item">
-        <div class="fill-blank-sentence">"It's a <input class="blank-input" data-answer="big" data-hint="Dica: o oposto de small (grande)" data-phrase="It's a big dinosaur." placeholder="___"> dinosaur." (grande)</div>
-        <button class="check-btn" onclick="checkBlank(this)">Check</button>
-        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
-      </div>
-      <div class="fill-blank-item">
-        <div class="fill-blank-sentence">"The dinosaur is <input class="blank-input" data-answer="green" data-hint="Dica: a cor da selva (verde)" data-phrase="The dinosaur is green." placeholder="___">." (verde)</div>
-        <button class="check-btn" onclick="checkBlank(this)">Check</button>
-        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
-      </div>
-      <div class="fill-blank-item">
-        <div class="fill-blank-sentence">"The dinosaur can <input class="blank-input" data-answer="run" data-hint="Dica: mexer as pernas rapido (correr)" data-phrase="The dinosaur can run." placeholder="___">!" (correr)</div>
-        <button class="check-btn" onclick="checkBlank(this)">Check</button>
-        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
-      </div>
-    </div>
-
-    <!-- ETAPA 2 -- ORDERING -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 2: Monte a frase</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque as palavras na ordem certa para formar a frase.</p>
-      <div class="order-container" id="order-l1">
-        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">a</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l1')">&#9660;</button></span></div>
-        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">It's</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l1')">&#9660;</button></span></div>
-        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">dinosaur!</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l1')">&#9660;</button></span></div>
-        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l1')"><span class="order-num">?</span><span class="order-text">big</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l1')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l1')">&#9660;</button></span></div>
-      </div>
-      <button class="verify-all-btn" onclick="checkOrder('order-l1')">Check Order</button>
-    </div>
-
-    <!-- ETAPA 3 -- PRONUNCIATION -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 2: Fale como um explorador</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Toque Listen, depois Record e fale. Voce vai se ouvir!</p>
-      <div class="speech-card" data-phrase="It's a big dinosaur.">
-        <div class="speech-phrase">It's a big dinosaur.</div>
-        <div class="speech-translation">E um dinossauro grande.</div>
-        <div class="speech-controls">
-          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>
-          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>
-          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Stop</button>
-        </div>
-        <div class="speech-result"></div>
-      </div>
-      <div class="speech-card" data-phrase="Look! A dinosaur!">
-        <div class="speech-phrase">Look! A dinosaur!</div>
-        <div class="speech-translation">Olha! Um dinossauro!</div>
-        <div class="speech-controls">
-          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>
-          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>
-          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Stop</button>
-        </div>
-        <div class="speech-result"></div>
-      </div>
-    </div>
-
-    <!-- ETAPA 4 -- SITUATIONAL QUIZ -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 3: No safari</h4><span class="badge badge-quiz">Quiz</span></div>
-      <div class="quiz-item">
-        <div class="quiz-question">You see a dinosaur. What do you say? (Voce ve um dino. O que voce fala?)</div>
-        <div class="quiz-options">
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Look! It's a dinosaur!</div>
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Bye bye!</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ETAPA 5 -- FREE PRODUCTION -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 4: Seu dino</h4><span class="badge badge-think">Reflection</span></div>
-      <div class="think-card">
-        <div class="think-question">Make your own dinosaur! Is it big or small? What color? Record and tell me! (Faca seu dino e me conta -- grava!)</div>
-        <div class="speech-controls">
-          <button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Free Record</button>
-          <button class="btn btn-stop" onclick="stopFreeRecording(this)">&#9632; Stop</button>
-        </div>
-        <div id="think-result-1"></div>
-      </div>
-    </div>
-
-    <!-- SURVIVAL CARD -->
-    <div class="think-card dino-tap-game" data-key="bento-1" data-deck='["run", "tree", "dinosaur"]'></div>
-<div class="survival-card">
-      <h4>Survival Card -- Lesson 1</h4>
-      <div class="survival-phrase"><span class="sp-num">1</span><span class="sp-en">It's a big dinosaur!</span><span class="sp-pt">E um dinossauro grande!</span><button class="audio-btn" data-speak="It's a big dinosaur!" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-      <div class="survival-phrase"><span class="sp-num">2</span><span class="sp-en">Look! A dinosaur!</span><span class="sp-pt">Olha! Um dinossauro!</span><button class="audio-btn" data-speak="Look! A dinosaur!" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-      <div class="survival-phrase"><span class="sp-num">3</span><span class="sp-en">It's green.</span><span class="sp-pt">E verde.</span><button class="audio-btn" data-speak="It's green." onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-      <div class="survival-phrase"><span class="sp-num">4</span><span class="sp-en">It can run.</span><span class="sp-pt">Ele sabe correr.</span><button class="audio-btn" data-speak="It can run." onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-      <div class="survival-phrase"><span class="sp-num">5</span><span class="sp-en">Look, a tree!</span><span class="sp-pt">Olha, uma árvore!</span><button class="audio-btn" data-speak="Look, a tree!" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-    </div>
-
-  </div>
-</div>
-
-
-<div class="lesson-card" id="ex-lesson-2">
-  <div class="lesson-header" onclick="toggleLesson(this)">
-    <div class="lesson-header-img" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80')"></div>
-    <div class="lesson-header-content">
-      <div class="lesson-number">Aula 02 -- Pre-class</div>
-      <h3>Blast Off!</h3>
-      <div class="lesson-desc">Palavras do espaco (rocket, star, moon, planet, sky, up, go) e a contagem regressiva "Three, two, one -- go!". Toque, ouca e repita -- prepare-se pra decolar!</div>
-      <div class="lesson-progress-mini"><div class="mini-bar"><div class="mini-bar-fill" data-lesson-progress="2" style="width:0%"></div></div><span class="mini-percent" data-lesson-pct="2">0%</span></div>
-    </div>
-    <div class="expand-icon">&#9660;</div>
-  </div>
-  <div class="lesson-body">
-
-    <!-- ETAPA 1.1 -- VOCAB CARDS -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 1.1: Palavras do Espaco</h4><span class="badge badge-vocab">Vocabulary</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Toque em Listen, ouca e repita. Faca o gesto! (Ouca cada palavra e repita.)</p>
-      <div class="vocab-cards">
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Rocket</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">foguete</span></div><div class="vocab-card-example">"The rocket goes up!" (O foguete sobe!)</div></div><button class="audio-btn" data-speak="Rocket" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Star</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">estrela</span></div><div class="vocab-card-example">"I can see a star!" (Eu vejo uma estrela!)</div></div><button class="audio-btn" data-speak="Star" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Moon</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">lua</span></div><div class="vocab-card-example">"The moon is up." (A lua esta la em cima.)</div></div><button class="audio-btn" data-speak="Moon" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Planet</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">planeta</span></div><div class="vocab-card-example">"It's a red planet!" (E um planeta vermelho!)</div></div><button class="audio-btn" data-speak="Planet" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Sky</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">ceu</span></div><div class="vocab-card-example">"The sky is dark." (O ceu esta escuro.)</div></div><button class="audio-btn" data-speak="Sky" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Up</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">pra cima</span></div><div class="vocab-card-example">"Go up, up, up!" (Sobe, sobe, sobe!)</div></div><button class="audio-btn" data-speak="Up" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-        <div class="vocab-card-pc"><div class="vocab-card-content"><div class="vocab-card-header"><span class="vocab-card-word">Go</span><span class="vocab-card-dot"> -- </span><span class="vocab-card-def">vai / ir</span></div><div class="vocab-card-example">"Ready? Go!" (Pronto? Vai!)</div></div><button class="audio-btn" data-speak="Go" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-      </div>
-    </div>
-
-    <!-- ETAPA 1.2 -- MATCHING -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 1.2: Ligue as palavras</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Ligue a palavra em ingles com o portugues.</p>
-      <div class="match-grid" id="match-l2">
-        <div class="match-row" data-answer="foguete"><span class="match-word" style="flex:0 0 130px">Rocket</span><select style="flex:1;width:100%" onchange="checkMatch(this)"><option value="">Selecione...</option><option value="lua">lua</option><option value="foguete">foguete</option><option value="ceu">ceu</option><option value="estrela">estrela</option><option value="planeta">planeta</option></select></div>
-        <div class="match-row" data-answer="estrela"><span class="match-word" style="flex:0 0 130px">Star</span><select style="flex:1;width:100%" onchange="checkMatch(this)"><option value="">Selecione...</option><option value="planeta">planeta</option><option value="estrela">estrela</option><option value="foguete">foguete</option><option value="lua">lua</option><option value="ceu">ceu</option></select></div>
-        <div class="match-row" data-answer="lua"><span class="match-word" style="flex:0 0 130px">Moon</span><select style="flex:1;width:100%" onchange="checkMatch(this)"><option value="">Selecione...</option><option value="ceu">ceu</option><option value="foguete">foguete</option><option value="lua">lua</option><option value="estrela">estrela</option><option value="planeta">planeta</option></select></div>
-        <div class="match-row" data-answer="planeta"><span class="match-word" style="flex:0 0 130px">Planet</span><select style="flex:1;width:100%" onchange="checkMatch(this)"><option value="">Selecione...</option><option value="estrela">estrela</option><option value="planeta">planeta</option><option value="ceu">ceu</option><option value="foguete">foguete</option><option value="lua">lua</option></select></div>
-        <div class="match-row" data-answer="ceu"><span class="match-word" style="flex:0 0 130px">Sky</span><select style="flex:1;width:100%" onchange="checkMatch(this)"><option value="">Selecione...</option><option value="lua">lua</option><option value="ceu">ceu</option><option value="planeta">planeta</option><option value="estrela">estrela</option><option value="foguete">foguete</option></select></div>
-      </div>
-      <button class="verify-all-btn" onclick="verifyAllMatches('match-l2')">Check Answers</button>
-    </div>
-
-    <!-- ETAPA 1.3 -- GRAMMAR IN CONTEXT -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 1.3: Grammar in Context</h4><span class="badge badge-quiz">Quiz</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Leia a historinha da decolagem e responda.</p>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.1rem;font-size:1rem;line-height:1.7;margin-bottom:1rem">
-        The <b>rocket</b> is ready. Let's count! <b>Three, two, one</b>... <b>go!</b> Blast off! The rocket goes <b>up, up, up!</b> Now I can see the <b>moon</b> and one, two, three <b>stars</b> in the <b>sky!</b>
-      </div>
-      <div class="quiz-item">
-        <div class="quiz-question">What do you say before "go"? (O que voce diz antes de "go"?)</div>
-        <div class="quiz-options">
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Three, two, one!</div>
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> Big, small, green!</div>
-        </div>
-      </div>
-      <div class="quiz-item">
-        <div class="quiz-question">Where does the rocket go? (Pra onde o foguete vai?)</div>
-        <div class="quiz-options">
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">A</span> Down.</div>
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">B</span> Up!</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ETAPA 1.4 -- GRAMMAR TIP -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 1.4: Grammar Tip</h4><span class="badge badge-vocab">Grammar</span></div>
-      <div style="background:var(--accent-dim);border:1px solid var(--accent);border-radius:12px;padding:1.2rem">
-        <p style="font-size:1.15rem;font-weight:700;text-align:center;margin-bottom:.6rem"><span class="accent">Numbers 1 to 10</span></p>
-        <p style="text-align:center;color:var(--text-dim);font-size:.92rem;margin-bottom:1rem">Contamos de 10 a 1 pra decolar. Os numeros em ingles:</p>
-        <div style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center">
-          <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.88rem"><b>1</b> one</span>
-          <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.88rem"><b>2</b> two</span>
-          <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.88rem"><b>3</b> three</span>
-          <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.88rem"><b>4</b> four</span>
-          <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.88rem"><b>5</b> five</span>
-          <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.88rem"><b>6</b> six</span>
-          <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.88rem"><b>7</b> seven</span>
-          <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.88rem"><b>8</b> eight</span>
-          <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.88rem"><b>9</b> nine</span>
-          <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.88rem"><b>10</b> ten</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ETAPA 1.5 -- FILL IN THE BLANK -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 1.5: Complete a frase</h4><span class="badge badge-practice">Practice</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Escreva a palavra que falta. Toque Listen pra ouvir.</p>
-      <div class="fill-blank-item">
-        <div class="fill-blank-sentence">"The <input class="blank-input" data-answer="rocket" data-hint="Dica: a nave que sobe (foguete)" data-phrase="The rocket goes up!" placeholder="___"> goes up!" (foguete)</div>
-        <button class="check-btn" onclick="checkBlank(this)">Check</button>
-        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
-      </div>
-      <div class="fill-blank-item">
-        <div class="fill-blank-sentence">"I can see a <input class="blank-input" data-answer="star" data-hint="Dica: a luzinha no ceu (estrela)" data-phrase="I can see a star!" placeholder="___">!" (estrela)</div>
-        <button class="check-btn" onclick="checkBlank(this)">Check</button>
-        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
-      </div>
-      <div class="fill-blank-item">
-        <div class="fill-blank-sentence">"Three, two, one -- <input class="blank-input" data-answer="go" data-hint="Dica: comando de partida! (vai)" data-phrase="Three, two, one, go!" placeholder="___">!" (vai)</div>
-        <button class="check-btn" onclick="checkBlank(this)">Check</button>
-        <button class="listen-blank-btn" onclick="listenBlank(this)">Listen</button>
-      </div>
-    </div>
-
-    <!-- ETAPA 2 -- ORDERING -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 2: Monte a contagem</h4><span class="badge badge-order">Order</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Coloque em ordem pra decolar!</p>
-      <div class="order-container" id="order-l2">
-        <div class="order-item" draggable="true" data-order="3" onclick="selectOrderItem(this,'order-l2')"><span class="order-num">?</span><span class="order-text">one</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l2')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l2')">&#9660;</button></span></div>
-        <div class="order-item" draggable="true" data-order="1" onclick="selectOrderItem(this,'order-l2')"><span class="order-num">?</span><span class="order-text">three</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l2')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l2')">&#9660;</button></span></div>
-        <div class="order-item" draggable="true" data-order="4" onclick="selectOrderItem(this,'order-l2')"><span class="order-num">?</span><span class="order-text">go!</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l2')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l2')">&#9660;</button></span></div>
-        <div class="order-item" draggable="true" data-order="2" onclick="selectOrderItem(this,'order-l2')"><span class="order-num">?</span><span class="order-text">two</span><span class="order-arrows"><button class="arrow-btn" onclick="moveItem(this,-1,'order-l2')">&#9650;</button><button class="arrow-btn" onclick="moveItem(this,1,'order-l2')">&#9660;</button></span></div>
-      </div>
-      <button class="verify-all-btn" onclick="checkOrder('order-l2')">Check Order</button>
-    </div>
-
-    <!-- ETAPA 3 -- PRONUNCIATION -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 3: Fale como um piloto</h4><span class="badge badge-speak">Speaking</span></div>
-      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem;font-style:italic">Toque Listen, depois Record e fale. Voce vai se ouvir!</p>
-      <div class="speech-card" data-phrase="Three, two, one, go!">
-        <div class="speech-phrase">Three, two, one, go!</div>
-        <div class="speech-translation">Tres, dois, um, vai!</div>
-        <div class="speech-controls">
-          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>
-          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>
-          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Stop</button>
-        </div>
-        <div class="speech-result"></div>
-      </div>
-      <div class="speech-card" data-phrase="The rocket goes up!">
-        <div class="speech-phrase">The rocket goes up!</div>
-        <div class="speech-translation">O foguete sobe!</div>
-        <div class="speech-controls">
-          <button class="btn btn-listen" onclick="speakPhrase(this)">&#9654; Listen</button>
-          <button class="btn btn-record" onclick="startRecording(this)">&#9679; Record</button>
-          <button class="btn btn-stop" onclick="stopRecording(this)">&#9632; Stop</button>
-        </div>
-        <div class="speech-result"></div>
-      </div>
-    </div>
-
-    <!-- ETAPA 4 -- SITUATIONAL QUIZ -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 4: No espaco</h4><span class="badge badge-quiz">Quiz</span></div>
-      <div class="quiz-item">
-        <div class="quiz-question">You see a light in the night sky. What do you say? (Voce ve uma luz no ceu. O que fala?)</div>
-        <div class="quiz-options">
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="true"><span class="option-letter">A</span> Look! A star!</div>
-          <div class="quiz-option" onclick="selectQuiz(this)" data-correct="false"><span class="option-letter">B</span> It's a dog.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ETAPA 5 -- FREE PRODUCTION -->
-    <div class="exercise-section">
-      <div class="section-header-row"><h4>Stage 5: Sua nave</h4><span class="badge badge-think">Reflection</span></div>
-      <div class="think-card">
-        <div class="think-question">Count down and launch your rocket! Then tell me what you see in space! (Faca a contagem, decole e me conta o que ve -- grava!)</div>
-        <div class="speech-controls">
-          <button class="btn btn-record" onclick="startFreeRecording(this)">&#9679; Free Record</button>
-          <button class="btn btn-stop" onclick="stopFreeRecording(this)">&#9632; Stop</button>
-        </div>
-        <div id="think-result-1"></div>
-      </div>
-    </div>
-
-    <!-- SURVIVAL CARD -->
-    <div class="think-card dino-tap-game" data-key="bento-2" data-deck='["rocket", "star", "moon", "planet"]'></div>
-<div class="survival-card">
-      <h4>Survival Card -- Lesson 2</h4>
-      <div class="survival-phrase"><span class="sp-num">1</span><span class="sp-en">Three, two, one -- go!</span><span class="sp-pt">Tres, dois, um -- vai!</span><button class="audio-btn" data-speak="Three, two, one, go!" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-      <div class="survival-phrase"><span class="sp-num">2</span><span class="sp-en">The rocket goes up!</span><span class="sp-pt">O foguete sobe!</span><button class="audio-btn" data-speak="The rocket goes up!" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-      <div class="survival-phrase"><span class="sp-num">3</span><span class="sp-en">I can see a star!</span><span class="sp-pt">Eu vejo uma estrela!</span><button class="audio-btn" data-speak="I can see a star!" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-      <div class="survival-phrase"><span class="sp-num">4</span><span class="sp-en">The moon is up.</span><span class="sp-pt">A lua esta la em cima.</span><button class="audio-btn" data-speak="The moon is up." onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-      <div class="survival-phrase"><span class="sp-num">5</span><span class="sp-en">Blast off!</span><span class="sp-pt">Decolar!</span><button class="audio-btn" data-speak="Blast off!" onclick="speakText(this.dataset.speak,this)">Listen</button></div>
-    </div>
-
-  </div>
-</div>
-
-</div><!-- /tab-exercises -->
+<!-- Pre-class: NÃO EXISTE no modelo kids — o homework é o Post-class -->
 
 <!-- ========== TAB 2: COMPLEMENTARES ========== -->
+<div class="tab-content active" id="tab-postclass">
+<h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.4rem">POST-CLASS -- Select your Quest</h3>
+<p style="font-size:.85rem;color:var(--text-dim);margin-bottom:1.2rem">Homework you do on your own -- the quest checks your answers.</p>
+<div style="display:flex;flex-direction:column;gap:1rem">
+    <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s" onclick="enterPostMode(1)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
+      <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">01</div>
+      <div><div style="font-weight:600;font-size:.95rem">The Dino Safari Quest</div><div style="font-size:.8rem;color:var(--text-dim)">deriva da aula 1 -- 6 atividades -- 12-15 min</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s" onclick="enterPostMode(2)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(200,200,190,.5)'">
+      <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">02</div>
+      <div><div style="font-weight:600;font-size:.95rem">The Space Mission Quest</div><div style="font-size:.8rem;color:var(--text-dim)">deriva da aula 2 -- 6 atividades -- 12-15 min</div></div>
+    </div>
+</div>
+</div><!-- /tab-postclass -->
+
 <div class="tab-content" id="tab-complementary">
 <h4 style="font-size:.95rem;margin:1.5rem 0 .8rem">Lesson 1 &mdash; Dino Safari</h4>
 <div class="media-grid">
@@ -1366,7 +1199,7 @@ function lessonProgressUnits(card) {
 }
 
 function updateProgress(){
-  var totalLessons=2;
+  var totalLessons=0;
   var totalAllDone=0,totalAllEx=0;
   for(var l=1;l<=totalLessons;l++){
     var card=document.getElementById('ex-lesson-'+l);
@@ -1532,7 +1365,7 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
   // (imagens em /assets/kids/{w}.png). O builder so coloca como ALVO as palavras
   // da aula que estao aqui; os distratores saem deste pool.
   var POOL = ['dinosaur', 'tree', 'rocket', 'star', 'moon', 'planet', 'cat', 'dog', 'run', 'green'];
-  var IMG = function (w) { return '/assets/kids/' + w + '.png'; };
+  var IMG = function (w) { return '/assets/kids/' + encodeURIComponent(w) + '.png'; };
   var OPTIONS = 4;
   var PRAISE = ['Nice!', 'Great!', 'You got it!', 'Awesome!', 'Perfect!'];
   var TRY = ['Try again!', 'Almost!', 'Listen again!'];
@@ -1662,5 +1495,102 @@ document.querySelectorAll('.match-row select').forEach(function(sel) {
 })();
 
 </script>
+<!-- POST-CLASS: o percurso ocupa a tela (body.pc-mode). A barra existe
+     porque ele não tem EXIT próprio, como o deck tem. -->
+<div id="pv-post-bar">
+  <button type="button" id="pv-post-sair">&#8592; Sair</button>
+  <span id="pv-post-nome"></span>
+</div>
+<div class="pv-post" id="pc-root-1"></div>
+<script>
+window.PV_POSTS = {"1": {"titulo": "The Dino Safari Quest", "html": "<div class=\"wrap\">\n\n  <div class=\"topbar\">\n    <span class=\"lvl\">Kids &middot; A1<\/span>\n    <h1>The Dino Safari Quest<\/h1>\n    <span class=\"stars\" id=\"starCount\">&#11088; 0<\/span>\n  <\/div>\n\n  <div class=\"map\" id=\"map\"><\/div>\n\n  <!-- 1 . MISSION START ------------------------------------------------ -->\n  <section class=\"screen\" id=\"s-start\">\n    <div class=\"eyebrow\">Mission Start<\/div>\n    <h2>&#127796; Back to the jungle!<\/h2>\n    <p class=\"instr\">Follow the trail. Every stop asks: <b>what do you see?<\/b><\/p>\n    <div class=\"recap\" id=\"recapStart\"><\/div>\n    <p class=\"instr\">Choose your explorer.<\/p>\n    <div class=\"avatars\" id=\"avatars\"><\/div>\n    <div class=\"actions\">\n      <button class=\"btn\" id=\"startBtn\" disabled onclick=\"pcGo1(1)\">Start the quest &#128071;<\/button>\n    <\/div>\n  <\/section>\n\n  <!-- 2 . STORY SPOT  (Supported Recall) -------------------------------- -->\n  <section class=\"screen\" id=\"s-story\" hidden><\/section>\n\n  <!-- 3 . WORD STARS  (Power Words A) ----------------------------------- -->\n  <section class=\"screen\" id=\"s-words1\" hidden><\/section>\n\n  <!-- 4 . WORD POWER  (Power Words B) ----------------------------------- -->\n  <section class=\"screen\" id=\"s-words2\" hidden><\/section>\n\n  <!-- 5 . SAY IT      (Language Move) ----------------------------------- -->\n  <section class=\"screen\" id=\"s-sayit\" hidden><\/section>\n\n  <!-- 6 . NEW MISSION  -- cenario novo, completo, sem a Maya ------------- -->\n  <section class=\"screen\" id=\"s-mission\" hidden><\/section>\n\n  <!-- 7 . FINAL CHALLENGE ----------------------------------------------- -->\n  <section class=\"screen\" id=\"s-final\" hidden><\/section>\n\n  <!-- 8 . RESULT -------------------------------------------------------- -->\n  <section class=\"screen\" id=\"s-result\" hidden><\/section>\n\n  <p class=\"note\">Alumni &middot; Post-class homework &middot; Lesson 1 &mdash; Dino Safari<\/p>\n<\/div>\n", "js": "(function(){\n/* ==========================================================================\n   BENTO -- AULA 01 -- DINO SAFARI (Kids A1) -- PERCURSO POST-CLASS\n\n   MOTOR COPIADO byte a byte do artefato \"Dante Blecker Gregory · Kids A2 ·\n   Professor View\" (percurso \"The Helper Quest\"), que e a ESPECIFICACAO desta\n   peca. So o bloco CONTEUDO e os textos da tela final mudam -- eles sao DESTA\n   aula. Mudou tambem, e so, o que estava QUEBRADO no artefato (dois pontos,\n   marcados com CORRIGIDO abaixo).\n   ========================================================================== */\n\n/* ====================================================================\n   AUDIO\n   AUDIO_MAP: chave = a frase exata falada, valor = caminho do mp3.\n   Enquanto estiver vazio, tudo cai em TTS -- mesma degradacao da aula.\n   Gravar os arquivos e preencher aqui ativa o audio sem tocar no resto.\n   ==================================================================== */\nvar AUDIO_MAP = {\n  \"Wow! It's a big dinosaur!\": \"/audio/bento/post1_wow_it_s_a_big_dinosaur.mp3\",\n  \"Look, a big tree!\": \"/audio/bento/post1_look_a_big_tree.mp3\",\n  \"dinosaur\": \"/audio/bento/post1_dinosaur.mp3\",\n  \"tree\": \"/audio/bento/post1_tree.mp3\",\n  \"run\": \"/audio/bento/post1_run.mp3\",\n  \"It's a big dinosaur.\": \"/audio/bento/post1_it_s_a_big_dinosaur.mp3\",\n  \"The tree is green.\": \"/audio/bento/post1_the_tree_is_green.mp3\",\n  \"The dinosaur can run.\": \"/audio/bento/post1_the_dinosaur_can_run.mp3\",\n  \"It's a big green dinosaur.\": \"/audio/bento/post1_it_s_a_big_green_dinosaur.mp3\",\n  \"Look! It's a small dinosaur.\": \"/audio/bento/post1_look_it_s_a_small_dinosaur.mp3\",\n  \"Look at the jungle. There are two dinosaurs. The big dinosaur is at the tree. The small dinosaur can run, and it is far from the tree.\": \"/audio/bento/post1_look_at_the_jungle_there_are_two_dinosaurs_the_b.mp3\",\n  \"the big one\": \"/audio/bento/post1_the_big_one.mp3\",\n  \"the small one\": \"/audio/bento/post1_the_small_one.mp3\",\n  \"Maya looks at the dinosaur at the tree. It is big. It is green.\": \"/audio/bento/post1_maya_looks_at_the_dinosaur_at_the_tree_it_is_big.mp3\",\n  \"It's a small green dinosaur.\": \"/audio/bento/post1_it_s_a_small_green_dinosaur.mp3\",\n  \"It's a big green tree.\": \"/audio/bento/post1_it_s_a_big_green_tree.mp3\",\n  \"It's a small dinosaur.\": \"/audio/bento/post1_it_s_a_small_dinosaur.mp3\",\n  \"It's a green dinosaur.\": \"/audio/bento/post1_it_s_a_green_dinosaur.mp3\",\n};\n\n/* TUDO que este percurso pode FALAR. APOSTROFO RETO, sempre: o speak() faz\n   text.replace(/’/g, \"'\") ANTES de procurar no AUDIO_MAP, entao chave com\n   apostrofo curvo nunca casa e a frase cai em TTS (medido no navegador). O builder le esta lista, gera nome/voz de\n   cada MP3, alimenta o audio_manifest.json (gen_audio) e PREENCHE o AUDIO_MAP\n   acima. Frase que nao estiver aqui cai em TTS -- que a REGRA 7 so admite como\n   emergencia. Se mudar um texto falado, mude aqui junto. */\nvar AUDIO_PHRASES = [\n  \"Wow! It's a big dinosaur!\",\n  \"Look, a big tree!\",\n  \"dinosaur\",\n  \"tree\",\n  \"run\",\n  \"It's a big dinosaur.\",\n  \"The tree is green.\",\n  \"The dinosaur can run.\",\n  \"It's a big green dinosaur.\",\n  \"Look! It's a small dinosaur.\",\n  \"Look at the jungle. There are two dinosaurs. The big dinosaur is at the tree. The small dinosaur can run, and it is far from the tree.\",\n  \"the big one\",\n  \"the small one\",\n  \"Maya looks at the dinosaur at the tree. It is big. It is green.\",\n  \"It's a small green dinosaur.\",\n  \"It's a big green tree.\",\n  \"It's a small dinosaur.\",\n  \"It's a green dinosaur.\"\n];\nvar current = null;\n\n/* Parar TTS no Chrome nao e' so cancel(): um sintetizador PAUSADO ignora o\n   cancel e volta a falar quando alguem o retoma. Por isso resume() vem antes.\n   Sem isto, som de uma tela reaparecia na seguinte. */\nfunction ttsClear(){\n  if (!('speechSynthesis' in window)) return;\n  try { window.speechSynthesis.resume(); } catch(e){}\n  try { window.speechSynthesis.cancel(); } catch(e){}\n}\nfunction speak(text, btn){\n  var clean = String(text).replace(/’/g, \"'\");\n  if (current){ current.pause(); current.currentTime = 0; current = null; }\n  ttsClear();\n  var file = AUDIO_MAP[clean];\n  if (file){\n    current = new Audio(file);\n    current.play().catch(function(){ tts(clean); });\n  } else {\n    tts(clean);\n  }\n  if (btn){\n    var old = btn.innerHTML;\n    btn.innerHTML = '&#128266; Playing...';\n    setTimeout(function(){ btn.innerHTML = old; }, 1400);\n  }\n}\nfunction tts(text){\n  if (!('speechSynthesis' in window)) return;\n  var u = new SpeechSynthesisUtterance(text);\n  u.lang = 'en-US'; u.rate = .8; u.pitch = 1.05;\n  window.speechSynthesis.speak(u);\n}\nfunction imgFallback(img){\n  var s = document.createElement('span');\n  s.className = 'imgph';\n  s.innerHTML = img.getAttribute('data-emoji') || '&#10067;';\n  s.title = 'missing asset: ' + img.getAttribute('src');\n  img.replaceWith(s);\n}\n/* CORRIGIDO (3): o onerror do artefato chamava imgFallback, que e LOCAL desta\n   IIFE -- handler inline so enxerga global (REGRA 7.1). No artefato o defeito\n   ficou latente porque nenhum PAIRS usava pic(); com imagem de verdade, toda\n   figura que faltasse jogava \"imgFallback is not defined\" no console e a carta\n   ficava com um icone quebrado em vez do emoji. Expor pelo nome pcImg resolve\n   sem tocar na mecanica. */\nwindow.pcImg = imgFallback;\n/* Imagem com degradacao para emoji. A arte entra depois, sem mexer no codigo. */\nfunction pic(slug, emoji, size){\n  return '<img src=\"/assets/kids/' + slug + '.png\" alt=\"' + slug + '\" width=\"' + (size||64) +\n         '\" data-emoji=\"' + emoji + '\" onerror=\"pcImg(this)\" style=\"max-width:100%;height:auto\">';\n}\n\n/* ====================================================================\n   CONTEUDO\n   Tudo abaixo sai da versao FINAL de bento-aula1.html (Dino Safari, Kids\n   A1). Nenhum item introduz palavra, estrutura ou personagem que nao tenha\n   sido trabalhado na aula -- e nenhum repete literalmente um exercicio dela.\n   ==================================================================== */\n/* PESOS -- somam 100 exatos, e cada um dentro da sua faixa normativa.\n   Conferido por SOMA, nao por leitura: e a segunda das cinco armadilhas\n   registradas do modelo (\"peso por item != numero de itens\").\n\n     Supported Recall  20   secao 5: 15-20   |  secao 7 recall: 20-25\n     Power Words       20   secao 5: 20-30   (10 + 10, em duas atividades)\n     Language Move     30   secao 5: 30-40   -- o chunk leva o MAIOR peso\n     New Mission       15   secao 5: 10-15\n     Final Challenge   15   secao 5: 15-20\n                      ---\n                      100                                                  */\nvar STAGES = [\n  { id:'story',   name:'Story',    icon:'&#128270;', weight:20 },\n  { id:'words1',  name:'Words',    icon:'&#11088;',  weight:10 },\n  { id:'words2',  name:'Sentence', icon:'&#128172;', weight:10 },\n  { id:'sayit',   name:'Say It',   icon:'&#128483;', weight:30 },\n  { id:'mission', name:'New',      icon:'&#128506;&#65039;', weight:15 },\n  { id:'final',   name:'Jungle',   icon:'&#127937;', weight:15 }\n];\n\n/* --- RECAP: o contexto da aula, de volta na tela ---------------------\n   O aluno nao pode rever o in-class. \"Memoria apoiada\" (secao 5 do framework):\n   todo detalhe exigido na resposta tem de ser reapresentado aqui. Por isso a\n   tira diz que o dino e GRANDE e VERDE e que ele CORRE: sao exatamente os tres\n   detalhes que os itens do Story Spot e a New Mission cobram. */\nfunction recapHTML(){\n  return '<h3>&#128218; The story so far<\/h3>' +\n    '<div class=\"who\">' +\n      '<span>&#128105; Maya &mdash; she looks and says<\/span>' +\n      '<span>&#129430; the dinosaur &mdash; big &middot; green &middot; it can run<\/span>' +\n      '<span>&#127794; the tree &mdash; big and green<\/span>' +\n    '<\/div>' +\n    '<p class=\"story\">Maya and Bento are in the jungle. Maya looks: ' +\n    '<b>“Look, Bento! Look!”<\/b><br>' +\n    'It is a <b>big green dinosaur<\/b>, and it <b>can run<\/b>. Next to the dinosaur ' +\n    'there is a <b>big tree<\/b>.<\/p>';\n}\n\n/* --- 2. Story Spot: listen and choose -------------------------------\n   O audio e a fala da aula, sem o nome de quem fala. O aluno cruza o que\n   ouve com a tira acima -- nao com a memoria da aula.\n\n   AS PERGUNTAS SAO SOBRE O DINO E A ARVORE, nunca sobre o proprio Bento:\n   REGRA 27F (compreensao testa o OUTRO, nao o aluno). */\nvar STORY_ITEMS = [\n  {\n    audio: \"Wow! It's a big dinosaur!\",\n    q: 'Is the dinosaur big or small?',\n    opts: [\n      { key:'big',   em:'&#129430;', lbl:'big' },\n      { key:'small', em:'&#128007;', lbl:'small' }\n    ],\n    answer: 'big',\n    ok:  'Yes! It’s a big dinosaur.',\n    tip: 'Listen again. Look at the panel above. &#129430; (grande ou pequeno?)',\n    exp: 'The dinosaur is big. It’s a big dinosaur.'\n  },\n  {\n    audio: 'Look, a big tree!',\n    q: 'What does Maya see?',\n    opts: [\n      { key:'tree', em:'&#127794;', lbl:'a tree' },\n      { key:'cat',  em:'&#128049;', lbl:'a cat' },\n      { key:'dog',  em:'&#128021;', lbl:'a dog' }\n    ],\n    answer: 'tree',\n    ok:  'Yes! Maya sees a big tree.',\n    tip: 'Listen one more time. Big and green, in the jungle. &#127794; (o que ela ve?)',\n    exp: 'Maya sees a tree. The tree is big and green.'\n  }\n];\n\n/* --- 3. Power Words A: match palavra <-> imagem ----------------------\n   As tres palavras CONCRETAS da aula que existem na biblioteca kids\n   (public/assets/kids). Adjetivo (big/small/green) nao entra aqui: no\n   \"toque a figura\" a imagem de big e a de small sao quase iguais --\n   ver [[kids-image-library]]. Eles voltam no gap-fill e no Say It. */\nvar PAIRS = [\n  { key:'dinosaur', word:'dinosaur', em:pic('dinosaur', '&#129430;') },\n  { key:'tree',     word:'tree',     em:pic('tree', '&#127794;') },\n  { key:'run',      word:'run',      em:pic('run', '&#127939;') }\n];\n\n/* --- 4. Power Words B: gap-fill, banco COMPLETO ----------------------\n   Regra A1 (secao 6 do modelo): banco INTEIRO na tela, com mais palavras\n   que lacunas -- 5 para 3. O A2 e que reduz o banco. A rede fica.\n\n   ok  = acerto.  exp = resposta revelada apos o segundo erro.\n   Sao campos SEPARADOS de proposito: reaproveitar o texto de acerto faria\n   o quiz dizer \"Yes!\" depois de dois erros. Quarta armadilha do modelo.  */\nvar BANK = ['green', 'big', 'run', 'small', 'look'];\nvar GAPS = [\n  { before:'It’s a ', after:' dinosaur.', answer:'big', em:'&#129430;',\n    ok:'Yes! It’s a big dinosaur.',\n    exp:'The answer is: It’s a big dinosaur. &#129430;',\n    tip:'Not small. Very tall! &#128070; (grande)' },\n  { before:'The tree is ', after:'.', answer:'green', em:'&#127794;',\n    ok:'Yes! The tree is green.',\n    exp:'The answer is: The tree is green. &#127794;',\n    tip:'The color of the jungle. &#129001; (verde)' },\n  { before:'The dinosaur can ', after:'.', answer:'run', em:'&#127939;',\n    ok:'Yes! The dinosaur can run.',\n    exp:'The answer is: The dinosaur can run. &#127939;',\n    tip:'Fast, with your legs! &#128168; (correr)' }\n];\n\n/* --- 5. Language Move: sentence builder -- o chunk-alvo ---------------\n   O chunk da aula e \"It's a + palavra + dinosaur\". NENHUMA das duas frases\n   e a que a aula ja montou no Quick Game (\"It's a big green dinosaur!\" saiu\n   com apoio da professora, aqui ele monta sozinho e a segunda e nova):\n   o modelo pede \"repeticao transformada\", nao copia.\n\n   A segunda comeca por Look! -- a palavra que a Maya usa na historia -- e\n   por isso e a ponte para o Final Challenge, onde ele escolhe o que ela diz. */\nvar BUILDS = [\n  { target:['It’s a','big','green','dinosaur.'],\n    shown: ['green','dinosaur.','It’s a','big'], em:'&#129430;',\n    say:'It’s a big green dinosaur.' },\n  { target:['Look!','It’s a','small','dinosaur.'],\n    shown: ['small','Look!','dinosaur.','It’s a'], em:'&#128007;',\n    say:'Look! It’s a small dinosaur.' }\n];\n\n/* ==========================================================================\n   A CENA DA SELVA -- serve a New Mission e o Final Challenge\n   Uma funcao, dois usos: o cenario nao muda entre as duas telas, so a\n   consequencia. A crianca ve o MESMO quadro e nao reconstroi nada de cabeca.\n\n   A arvore e desenhada (tronco + copa), nao e emoji: ela precisa ser um LUGAR\n   onde um dino esta e o outro nao. Rotulo nomeia OBJETO (the tree, the big\n   dinosaur, the small dinosaur) -- nunca relacao.\n   ========================================================================== */\nfunction jungleScene(){\n  return '<div class=\"scene\">' +\n    '<div class=\"sc-bar\" style=\"left:0%;top:88%;width:100%;height:12%\"><\/div>' +\n\n    '<div class=\"sc-bar sc-trunk\" style=\"left:30%;top:40%;width:4%;height:48%\"><\/div>' +\n    '<div class=\"sc-obj\" style=\"left:32%;top:30%;font-size:2.8rem\">&#127794;<\/div>' +\n    '<div class=\"sc-tag\" style=\"left:32%;top:20%\">the tree<\/div>' +\n\n    '<div class=\"sc-obj\" style=\"left:44%;top:74%;font-size:3rem\">&#129430;<\/div>' +\n    '<div class=\"sc-tag\" style=\"left:44%;top:93%\">the big dinosaur<\/div>' +\n\n    '<div class=\"sc-obj\" style=\"left:82%;top:79%;font-size:1.6rem\">&#129430;<\/div>' +\n    '<div class=\"sc-tag\" style=\"left:82%;top:93%\">the small dinosaur<\/div>' +\n  '<\/div>';\n}\n\n/* --- 6. NEW MISSION: problema NOVO com linguagem CONHECIDA ----------------\n   O limite da exigencia de \"contexto novo\" (secao 7):\n\n     contexto novo + linguagem conhecida   <- e isto\n     contexto novo + CAMPO LEXICAL novo    <- nao e isto\n\n   A cena e nova (dois dinos, um deles perto da arvore) e nao aconteceu na\n   aula. As palavras sao TODAS da aula: big, small, green, run, tree,\n   dinosaur, look. O aluno aplica o criterio (grande x pequeno) a um quadro\n   que nunca viu, sem precisar aprender palavra nenhuma.\n\n   O CRITERIO ESTA DITO NO TEXTO E MOSTRADO NA CENA -- nada e inferido de\n   tamanho na tela: o texto diz qual esta na arvore. */\nvar MISSION = {\n  sceneHTML: jungleScene(),\n  scene: 'Look at the jungle. There are two dinosaurs. The big dinosaur is at the tree. The small dinosaur can run, and it is far from the tree.',\n  em: '&#129430;&#127794;',\n  q: 'Which dinosaur is at the tree?',\n  opts: [\n    { key:'big',   em:'&#129430;', lbl:'the big one' },\n    { key:'small', em:'&#128007;', lbl:'the small one' }\n  ],\n  answer:'big',\n  ok:  'Yes! The big dinosaur is at the tree.',\n  tip: 'Look at the picture again. Who is next to the tree? &#127794;',\n  exp: 'The big dinosaur is at the tree. The small one can run.'\n};\n\n/* --- 7. FINAL CHALLENGE: resolver a missao COM o chunk --------------------\n   MESMA cena, e a consequencia da escolha anterior. O que se avalia e o\n   chunk-alvo (It's a + palavra + dinosaur), nao linguagem lateral.\n\n   ESTA TELA E AUTOSSUFICIENTE: ela REPETE que o dino da arvore e grande e\n   verde, em vez de remeter a tela anterior. A cena mostra quem esta onde,\n   nao a cor -- e o percurso inteiro existe para nao depender de memoria\n   desassistida.                                                            */\nvar FINAL = {\n  sceneHTML: jungleScene(),\n  scene: 'Maya looks at the dinosaur at the tree. It is big. It is green.',\n  em: '&#128105;&#128172;',\n  q: 'What does Maya say?',\n  opts: [\n    { key:'a', lbl:'“It’s a big green dinosaur.”' },\n    { key:'b', lbl:'“It’s a small green dinosaur.”' },\n    { key:'c', lbl:'“It’s a big green tree.”' }\n  ],\n  answer:'a',\n  ok:  'Great! It’s a big green dinosaur. Safari complete!',\n  tip: 'Big or small? Green or not green? &#129430;',\n  exp: 'Maya says: “It’s a big green dinosaur.”'\n};\n\n/* ====================================================================\n   ESTADO\n   score  = acerto de PRIMEIRA tentativa, ponderado pelo peso do estagio.\n            Serve para a faixa de resultado e para a revisao seletiva.\n   stars  = uma estrela por item concluido. NUNCA e retirada -- o modelo\n            proibe perder ponto por erro.\n   ==================================================================== */\nvar st = {\n  screen:0, avatar:'', stars:0, score:0, missed:[], doneStage:{}\n};\nvar SCREENS = ['s-start','s-story','s-words1','s-words2','s-sayit','s-mission','s-final','s-result'];\n\nfunction award(itemWeight, firstTry, reviewText){\n  st.stars++;\n  if (firstTry) st.score += itemWeight;\n  else if (reviewText) st.missed.push(reviewText);\n  document.getElementById('starCount').innerHTML = '&#11088; ' + st.stars;\n}\n\n/* ---------- mapa de progresso ---------- */\nfunction drawMap(){\n  var h = '';\n  STAGES.forEach(function(s, i){\n    if (i) h += '<div class=\"link' + (st.doneStage[STAGES[i-1].id] ? ' done' : '') + '\"><\/div>';\n    var cls = st.doneStage[s.id] ? 'done' : (st.screen === i+1 ? 'now' : '');\n    h += '<div class=\"spot ' + cls + '\">' +\n           (st.screen === i+1 ? '<span class=\"walker\">' + st.avatar + '<\/span>' : '') +\n           '<div class=\"dot\">' + (st.doneStage[s.id] ? '&#9989;' : s.icon) + '<\/div>' +\n           '<div class=\"nm\">' + s.name + '<\/div>' +\n         '<\/div>';\n  });\n  document.getElementById('map').innerHTML = h;\n}\n\nfunction go(n){\n  st.screen = n;\n  SCREENS.forEach(function(id, i){\n    document.getElementById(id).hidden = (i !== n);\n  });\n  drawMap();\n  /* peso POR ITEM: Story Replay vale 20%, em 2 itens = 10 cada.\n     O ultimo argumento liga a tira de recap -- sem ela estes dois itens\n     dependeriam de memoria desassistida. */\n  /* peso POR ITEM: Supported Recall vale 20, em 2 itens = 10 cada.\n     O ultimo argumento liga a tira de recap -- sem ela estes dois itens\n     dependeriam de memoria desassistida, que a secao 7 proibe. */\n  if (n === 1) renderChoice('s-story', 'Story Spot', '&#128270;', 'Supported Recall',\n                            'Listen and choose the right answer.',\n                            STORY_ITEMS, 'story', 10, true);\n  if (n === 2) renderMatch();\n  if (n === 3) renderGaps();\n  if (n === 4) renderBuild();\n  if (n === 5) renderScene('s-mission', 'New Mission', '&#128506;&#65039;', 'New Mission',\n                           MISSION, 'mission', 15, 'Next stop &#10132;', 6);\n  if (n === 6) renderScene('s-final', 'Two dinosaurs!', '&#127937;', 'Final Challenge',\n                           FINAL, 'final', 15, 'See my result &#127942;', 7);\n  if (n === 7) renderResult();\n  window.scrollTo(0, 0);\n}\n\nfunction fb(el, kind, msg){\n  el.className = 'fb show ' + kind;\n  el.innerHTML = msg;\n}\n\n/* ====================================================================\n   MOTOR 1 -- escolha sequencial com audio (Story Spot e Final Move)\n   Um item por vez: \"uma acao central por tela\" (modelo, principios).\n   ==================================================================== */\nfunction renderChoice(elId, title, icon, eyebrow, instr, items, stageId, weightEach, comRecap){\n  var host = document.getElementById(elId);\n  var idx = 0, tries = 0;\n\n  function paint(){\n    var it = items[idx];\n    host.innerHTML =\n      '<div class=\"eyebrow\">' + eyebrow + '<\/div>' +\n      '<h2>' + icon + ' ' + title + '<\/h2>' +\n      '<p class=\"instr\">' + instr + '<\/p>' +\n      /* o contexto fica VISIVEL durante as perguntas, nao so antes delas */\n      (comRecap ? '<div class=\"recap\">' + recapHTML() + '<\/div>' : '') +\n      (items.length > 1 ? '<div class=\"counter\">Question ' + (idx+1) + ' of ' + items.length + '<\/div>' : '') +\n      '<div class=\"actions\" style=\"margin:0 0 16px\">' +\n        '<button class=\"audio-btn big\" id=\"ab\">&#128266; Listen<\/button>' +\n      '<\/div>' +\n      '<p class=\"q\">' + it.q + '<\/p>' +\n      '<div class=\"opts\" id=\"op\"><\/div>' +\n      '<div class=\"fb\" id=\"fbx\"><\/div>' +\n      '<div class=\"actions\"><button class=\"btn\" id=\"nx\" hidden>Next &#10132;<\/button><\/div>';\n\n    document.getElementById('ab').onclick = function(){ speak(it.audio, this); };\n    var op = document.getElementById('op');\n    it.opts.forEach(function(o){\n      var d = document.createElement('div');\n      d.className = 'opt';\n      d.innerHTML = '<span class=\"pic\">' + o.em + '<\/span><span class=\"lbl\">' + o.lbl + '<\/span>';\n      d.onclick = function(){ choose(o, d); };\n      op.appendChild(d);\n    });\n    setTimeout(function(){ speak(it.audio); }, 350);\n  }\n\n  function choose(o, node){\n    var it = items[idx];\n    var box = document.getElementById('fbx');\n    if (o.key === it.answer){\n      node.classList.add('ok');\n      lock();\n      fb(box, 'good', '&#9989; ' + it.ok);\n      award(weightEach, tries === 0, tries === 0 ? null : it.exp);\n      finishItem();\n    } else {\n      tries++;\n      node.classList.add('no');\n      if (tries === 1){\n        fb(box, 'tip', '&#128161; ' + it.tip + ' <b>Try again!<\/b>');\n        speak(it.audio);\n      } else {\n        /* segundo erro: mostrar a resposta + exemplo curto, e seguir */\n        lock();\n        var right = it.opts.filter(function(x){ return x.key === it.answer; })[0];\n        [].forEach.call(document.querySelectorAll('#op .opt'), function(el){\n          if (el.querySelector('.lbl').textContent === right.lbl) el.classList.add('ok');\n        });\n        fb(box, 'tip', '&#128172; ' + it.exp);\n        award(weightEach, false, it.exp);\n        finishItem();\n      }\n    }\n  }\n  function lock(){\n    [].forEach.call(document.querySelectorAll('#op .opt'), function(el){ el.classList.add('lock'); });\n  }\n  function finishItem(){\n    var nx = document.getElementById('nx');\n    nx.hidden = false;\n    nx.onclick = function(){\n      idx++; tries = 0;\n      if (idx < items.length){ paint(); window.scrollTo(0,0); }\n      else { st.doneStage[stageId] = true; go(st.screen + 1); }\n    };\n    if (idx === items.length - 1) nx.innerHTML = 'Next stop &#10132;';\n  }\n  paint();\n}\n\n/* ====================================================================\n   MOTOR 2 -- matching palavra <-> imagem (Word Stars)\n   ==================================================================== */\nfunction renderMatch(){\n  var host = document.getElementById('s-words1');\n  var picked = null, found = 0;\n  /* Erro por par, para que o score reflita a primeira tentativa como nos outros motores. */\n  var missed = {};\n  var shuffled = PAIRS.slice().sort(function(){ return Math.random() - .5; });\n\n  host.innerHTML =\n    '<div class=\"eyebrow\">Power Words<\/div>' +\n    '<h2>&#11088; Word Stars<\/h2>' +\n    '<p class=\"instr\">Tap a word. Then tap its picture. Say the word out loud!<\/p>' +\n    '<div class=\"match\">' +\n      '<div class=\"col\"><h3>Words<\/h3><div id=\"cw\"><\/div><\/div>' +\n      '<div class=\"col\"><h3>Pictures<\/h3><div id=\"cp\"><\/div><\/div>' +\n    '<\/div>' +\n    '<div class=\"fb\" id=\"fbm\"><\/div>' +\n    '<div class=\"actions\"><button class=\"btn\" id=\"nxm\" hidden>Next stop &#10132;<\/button><\/div>';\n\n  var cw = document.getElementById('cw'), cp = document.getElementById('cp');\n  cw.style.display = cp.style.display = 'flex';\n  cw.style.flexDirection = cp.style.flexDirection = 'column';\n  cw.style.gap = cp.style.gap = '10px';\n\n  PAIRS.forEach(function(p){\n    var d = document.createElement('div');\n    d.className = 'mi'; d.textContent = p.word; d.dataset.key = p.key;\n    d.onclick = function(){\n      if (picked) picked.classList.remove('sel');\n      picked = d; d.classList.add('sel');\n      speak(p.word);\n    };\n    cw.appendChild(d);\n  });\n  shuffled.forEach(function(p){\n    var d = document.createElement('div');\n    d.className = 'mi'; d.innerHTML = '<span class=\"pic\">' + p.em + '<\/span>'; d.dataset.key = p.key;\n    d.onclick = function(){\n      var box = document.getElementById('fbm');\n      if (!picked){ fb(box, 'tip', '&#128161; Tap a <b>word<\/b> first.'); return; }\n      if (picked.dataset.key === p.key){\n        picked.classList.remove('sel'); picked.classList.add('ok'); d.classList.add('ok');\n        picked = null; found++;\n        /* Word Stars vale 10, em 3 pares. 10/3 e nao 3 -- so assim a soma\n           fecha 100 exatos. */\n        award(10/3, !missed[p.key], missed[p.key] ? 'This is <b>' + p.word + '<\/b>. ' + p.em : null);\n        fb(box, 'good', '&#11088; ' + p.word + '! One star.');\n        speak(p.word);\n        if (found === PAIRS.length){\n          fb(box, 'good', '&#127881; All three words found!');\n          st.doneStage.words1 = true;\n          var b = document.getElementById('nxm');\n          b.hidden = false; b.onclick = function(){ go(3); };\n        }\n      } else {\n        missed[picked.dataset.key] = true;\n        d.classList.add('shake');\n        setTimeout(function(){ d.classList.remove('shake'); }, 320);\n        fb(box, 'tip', '&#128161; Not this one. Look at the picture again. Which word matches it?');\n      }\n    };\n    cp.appendChild(d);\n  });\n}\n\n/* ====================================================================\n   MOTOR 3 -- gap-fill com banco SEMPRE visivel (regra Kids A1)\n   ==================================================================== */\nfunction renderGaps(){\n  var host = document.getElementById('s-words2');\n  var idx = 0, tries = 0;\n\n  host.innerHTML =\n    '<div class=\"eyebrow\">Power Words<\/div>' +\n    '<h2>&#128172; Word Power<\/h2>' +\n    '<p class=\"instr\">Complete the sentence. Tap a word from the box.<\/p>' +\n    '<div class=\"sents\" id=\"ss\"><\/div>' +\n    '<div class=\"banklbl\">Word box<\/div>' +\n    '<div class=\"bank\" id=\"bk\"><\/div>' +\n    '<div class=\"fb\" id=\"fbg\"><\/div>' +\n    '<div class=\"actions\"><button class=\"btn\" id=\"nxg\" hidden>Next stop &#10132;<\/button><\/div>';\n\n  var ss = document.getElementById('ss');\n  GAPS.forEach(function(g, i){\n    var d = document.createElement('div');\n    d.className = 'sent' + (i === 0 ? ' now' : '');\n    d.id = 'sent' + i;\n    d.innerHTML = g.em + ' ' + g.before + '<span class=\"blank\" id=\"bl' + i + '\">?<\/span>' + g.after;\n    ss.appendChild(d);\n  });\n\n  /* O banco fica inteiro na tela o tempo todo -- nao some, nao encolhe. */\n  var bk = document.getElementById('bk');\n  BANK.forEach(function(w){\n    var c = document.createElement('div');\n    c.className = 'chip'; c.textContent = w;\n    c.onclick = function(){ pickWord(w); };\n    bk.appendChild(c);\n  });\n\n  function pickWord(w){\n    if (idx >= GAPS.length) return;\n    var g = GAPS[idx];\n    var box = document.getElementById('fbg');\n    var blank = document.getElementById('bl' + idx);\n    var sent = document.getElementById('sent' + idx);\n    if (w === g.answer){\n      blank.textContent = w;\n      sent.classList.remove('now'); sent.classList.add('ok');\n      fb(box, 'good', '&#9989; ' + g.ok);\n      /* CORRIGIDO (o artefato montava \"A fish can swim .\" -- espaco antes do\n         ponto). A chave do AUDIO_MAP e a frase EXATA: com o espaco a mais ela\n         nunca casaria com o MP3 e o percurso cairia em TTS. */\n      speak((g.before + w + g.after).replace(/\\s+/g, ' ').trim());\n      award(5, tries === 0, tries === 0 ? null : g.exp);\n      idx++; tries = 0;\n      if (idx < GAPS.length){\n        document.getElementById('sent' + idx).classList.add('now');\n      } else {\n        st.doneStage.words2 = true;\n        fb(box, 'good', '&#127881; All sentences complete!');\n        var b = document.getElementById('nxg');\n        b.hidden = false; b.onclick = function(){ go(4); };\n      }\n    } else {\n      tries++;\n      if (tries === 1){\n        fb(box, 'tip', '&#128161; ' + g.tip + ' <b>Try again!<\/b>');\n      } else {\n        blank.textContent = g.answer;\n        sent.classList.remove('now'); sent.classList.add('ok');\n        fb(box, 'tip', '&#128172; ' + g.exp);\n        award(5, false, g.exp);\n        idx++; tries = 0;\n        if (idx < GAPS.length){\n          document.getElementById('sent' + idx).classList.add('now');\n        } else {\n          st.doneStage.words2 = true;\n          var b2 = document.getElementById('nxg');\n          b2.hidden = false; b2.onclick = function(){ go(4); };\n        }\n      }\n    }\n  }\n}\n\n/* ====================================================================\n   MOTOR 4 -- sentence builder, \"say it before you check\"\n\n   O QUE ESTE MOTOR AVALIA: a ORDEM dos blocos. Nada mais.\n\n   A tela pede \"say it out loud\" e o botao Hear it oferece o modelo, mas nao\n   ha gravacao nem qualquer confirmacao de que o aluno falou. Tecnicamente\n   esta e uma atividade de RECONSTRUCAO com recomendacao oral -- nao uma\n   atividade oral registrada, e nenhuma descricao deste material deve dizer\n   que o sistema avaliou producao oral.\n\n   Gravar exigiria getUserMedia + MediaRecorder, e dentro do iframe do\n   Artifact o microfone depende de uma permissions-policy que nao esta sob\n   nosso controle: o pedido apareceria e poderia falhar em silencio, num\n   material que a crianca abre sozinha em casa. Fica registrado como decisao\n   em aberto, nao como implementacao pendente.\n   ==================================================================== */\nfunction renderBuild(){\n  var host = document.getElementById('s-sayit');\n  var idx = 0, tries = 0, chosen = [];\n\n  function paint(){\n    var b = BUILDS[idx];\n    chosen = [];\n    host.innerHTML =\n      '<div class=\"eyebrow\">Language Move<\/div>' +\n      '<h2>&#128483; Say It<\/h2>' +\n      '<p class=\"instr\">Put the words in order. Then say the sentence out loud!<\/p>' +\n      '<div class=\"counter\">Sentence ' + (idx+1) + ' of ' + BUILDS.length + '<\/div>' +\n      '<div style=\"font-size:3.4rem;text-align:center;margin-bottom:8px\">' + b.em + '<\/div>' +\n      '<div class=\"line\" id=\"ln\"><span class=\"ph\">Tap the words below...<\/span><\/div>' +\n      '<div class=\"bank\" id=\"bb\"><\/div>' +\n      '<div class=\"sayit\">&#128483; Say it out loud, then tap Check.' +\n        '<button class=\"audio-btn\" id=\"mb\" style=\"padding:7px 14px;font-size:.9rem\">&#128266; Hear it<\/button><\/div>' +\n      '<div class=\"fb\" id=\"fbb\"><\/div>' +\n      '<div class=\"actions\">' +\n        '<button class=\"btn\" id=\"ck\" disabled>Check<\/button>' +\n        '<button class=\"btn btn-ghost\" id=\"cl\">Clear<\/button>' +\n        '<button class=\"btn\" id=\"nxb\" hidden>Next &#10132;<\/button>' +\n      '<\/div>';\n\n    var bb = document.getElementById('bb');\n    b.shown.forEach(function(w, i){\n      var c = document.createElement('div');\n      c.className = 'blk'; c.textContent = w; c.dataset.i = i;\n      c.onclick = function(){\n        if (c.classList.contains('used')) return;\n        c.classList.add('used'); chosen.push({ w:w, node:c });\n        draw();\n      };\n      bb.appendChild(c);\n    });\n    document.getElementById('mb').onclick = function(){ speak(b.say, this); };\n    document.getElementById('cl').onclick = reset;\n    document.getElementById('ck').onclick = check;\n    draw();\n  }\n\n  function draw(){\n    var ln = document.getElementById('ln');\n    if (!chosen.length){ ln.innerHTML = '<span class=\"ph\">Tap the words below...<\/span>'; }\n    else {\n      ln.innerHTML = '';\n      chosen.forEach(function(c, i){\n        var d = document.createElement('div');\n        d.className = 'blk'; d.textContent = c.w;\n        d.onclick = function(){\n          c.node.classList.remove('used');\n          chosen.splice(i, 1); draw();\n        };\n        ln.appendChild(d);\n      });\n    }\n    document.getElementById('ck').disabled = (chosen.length !== BUILDS[idx].target.length);\n  }\n\n  function reset(){\n    chosen.forEach(function(c){ c.node.classList.remove('used'); });\n    chosen = []; draw();\n    document.getElementById('ln').classList.remove('ok');\n  }\n\n  function check(){\n    var b = BUILDS[idx];\n    var box = document.getElementById('fbb');\n    var got = chosen.map(function(c){ return c.w; }).join(' ');\n    var want = b.target.join(' ');\n    if (got === want){\n      document.getElementById('ln').classList.add('ok');\n      document.getElementById('ck').disabled = true;\n      fb(box, 'good', '&#9989; ' + want + ' &#127881;');\n      speak(b.say);\n      award(15, tries === 0, tries === 0 ? null : want);\n      next();\n    } else {\n      tries++;\n      if (tries === 1){\n        /* erro no chunk: destacar so a parte fixa, sem entregar a frase */\n        /* erro no chunk: destacar so a parte fixa -- o <b>but<\/b> no meio --\n           sem entregar a frase. Regra do modelo, secao 9. */\n        fb(box, 'tip', '&#128161; One thing you <b>can<\/b> do, then <b>but<\/b>, then one thing you <b>can’t<\/b>. &#128266; Listen and try again.');\n        speak(b.say);\n        reset();\n      } else {\n        fb(box, 'tip', '&#128172; The sentence is: <b>' + want + '<\/b>');\n        speak(b.say);\n        award(15, false, want);\n        document.getElementById('ck').disabled = true;\n        next();\n      }\n    }\n  }\n\n  function next(){\n    var n = document.getElementById('nxb');\n    n.hidden = false;\n    if (idx === BUILDS.length - 1) n.innerHTML = 'Next stop &#10132;';\n    n.onclick = function(){\n      idx++; tries = 0;\n      if (idx < BUILDS.length){ paint(); window.scrollTo(0,0); }\n      else { st.doneStage.sayit = true; go(5); }\n    };\n  }\n  paint();\n}\n\n/* ====================================================================\n   MOTOR 5 -- cena com uma escolha (New Mission e Final Challenge)\n   Generico porque as duas telas fazem a mesma coisa mecanicamente e coisas\n   diferentes pedagogicamente: a 5 apresenta o cenario novo e pede que o\n   aluno APLIQUE o criterio; a 6 pede que ele PRODUZA o chunk para resolver.\n   ==================================================================== */\nfunction renderScene(elId, title, icon, eyebrow, data, stageId, weight, nextLabel, nextScreen){\n  var host = document.getElementById(elId);\n  var tries = 0;\n  /* Sem id nos elementos internos, e tudo por host.querySelector: DUAS telas\n     usam este motor, e um id fixo apareceria duas vezes no documento. Quando\n     isso aconteceu, getElementById devolvia o container da PRIMEIRA tela e a\n     segunda ficava sem opcao nenhuma -- a ultima tela do quiz, muda. */\n  host.innerHTML =\n    '<div class=\"eyebrow\">' + eyebrow + '<\/div>' +\n    '<h2>' + icon + ' ' + title + '<\/h2>' +\n    '<div style=\"font-size:3.4rem;text-align:center\">' + data.em + '<\/div>' +\n    '<p class=\"instr\" style=\"text-align:center;font-size:1.1rem\">' + data.scene + '<\/p>' +\n    /* A CENA fica visivel DURANTE a pergunta e as alternativas: quem esta\n       presente precisa ser visto enquanto se decide, nao antes. */\n    (data.sceneHTML || '') +\n    '<div class=\"actions\" style=\"margin:0 0 16px\">' +\n      '<button class=\"audio-btn big js-say\">&#128266; Listen<\/button>' +\n    '<\/div>' +\n    '<p class=\"q\">' + data.q + '<\/p>' +\n    '<div class=\"opts' + (data.opts[0].em ? '' : ' lines') + '\" data-role=\"opts\"><\/div>' +\n    /* data-role, e nao classe: fb() reescreve o className inteiro do bloco de\n       feedback, e uma classe marcadora seria apagada no primeiro uso. */\n    '<div class=\"fb\" data-role=\"fb\"><\/div>' +\n    '<div class=\"actions\"><button class=\"btn\" data-role=\"next\" hidden>' + nextLabel + '<\/button><\/div>';\n\n  host.querySelector('.js-say').onclick = function(){ speak(data.scene, this); };\n\n  var fo = host.querySelector('[data-role=\"opts\"]');\n  data.opts.forEach(function(o){\n    var d = document.createElement('div');\n    d.className = 'opt';\n    d.innerHTML = (o.em ? '<span class=\"pic\">' + o.em + '<\/span>' : '') +\n                  '<span class=\"lbl\">' + o.lbl + '<\/span>';\n    d.onclick = function(){\n      var box = host.querySelector('[data-role=\"fb\"]');\n      if (o.key === data.answer){\n        d.classList.add('ok'); lockF();\n        fb(box, 'good', '&#9989; ' + data.ok);\n        speak(o.lbl.replace(/[“”\"]/g, ''));\n        award(weight, tries === 0, tries === 0 ? null : data.exp);\n        done();\n      } else {\n        tries++;\n        d.classList.add('no');\n        if (tries === 1){\n          fb(box, 'tip', '&#128161; ' + data.tip + ' <b>Try again!<\/b>');\n        } else {\n          lockF();\n          /* A certa sai do gabarito, nao de um texto escrito a mao: trocar o\n             item quebraria a revelacao em silencio. */\n          var right = data.opts.filter(function(x){ return x.key === data.answer; })[0];\n          [].forEach.call(fo.querySelectorAll('.opt'), function(el){\n            if (el.querySelector('.lbl').innerHTML === right.lbl) el.classList.add('ok');\n          });\n          fb(box, 'tip', '&#128172; ' + data.exp);\n          award(weight, false, data.exp);\n          done();\n        }\n      }\n    };\n    fo.appendChild(d);\n  });\n  function lockF(){\n    [].forEach.call(fo.querySelectorAll('.opt'), function(el){ el.classList.add('lock'); });\n  }\n  function done(){\n    st.doneStage[stageId] = true;\n    var b = host.querySelector('[data-role=\"next\"]');\n    b.hidden = false; b.onclick = function(){ go(nextScreen); };\n  }\n}\n\n/* ====================================================================\n   TELA FINAL -- score, faixa, badge, revisao seletiva, bonus\n   Chegar aqui JA conclui a missao: a pontuacao nunca bloqueia.\n   ==================================================================== */\nfunction renderResult(){\n  var host = document.getElementById('s-result');\n  var pct = Math.round(st.score);\n  var band, msg;\n  if (pct >= 90){ band = 'Mission mastered!'; msg = 'You know who can do what — and how to say it. Amazing work!'; }\n  else if (pct >= 70){ band = 'Great progress!'; msg = 'Almost perfect! Look at the sentence below one more time.'; }\n  else { band = 'Try one more round!'; msg = 'Good job finishing the quest. Play again to collect more stars!'; }\n\n  var review = '';\n  if (st.missed.length){\n    review = '<div class=\"review\"><h3>Look at this again<\/h3>' +\n             st.missed.slice(0, 2).map(function(m){ return '<p>&#128073; ' + m + '<\/p>'; }).join('') +\n             '<\/div>';\n  }\n\n  host.innerHTML =\n    '<div class=\"eyebrow\">Mission Complete<\/div>' +\n    '<div style=\"text-align:center\">' +\n      '<div style=\"font-size:3.4rem\">' + st.avatar + ' &#127794; &#129430;<\/div>' +\n      /* REGRA: esta mensagem serve QUALQUER faixa de pontuacao, e por isso fala\n         so de CONCLUSAO. Celebrar ter concluido e verdade para quem errou e\n         seguiu depois da revelacao; afirmar acerto que pode nao ter havido, nao.\n         Nenhuma variante que afirme desempenho pode existir nesta tela -- nem em\n         comentario, para nao reaparecer em busca de validacao.\n         E a UNICA mensagem de conclusao abaixo dos emojis. */\n      '<p class=\"instr\" style=\"margin:0 0 6px\">You completed the Dino Safari Quest. <b>The jungle is yours!<\/b><\/p>' +\n      '<div class=\"scorebig\">' + pct + '%<\/div>' +\n      '<div class=\"band\">' + band + '<\/div>' +\n      '<p class=\"instr\" style=\"margin-bottom:6px\">' + msg + '<\/p>' +\n      '<div style=\"font-size:1.3rem;color:var(--star);font-weight:800\">&#11088; ' + st.stars + ' stars<\/div>' +\n      '<div class=\"badge\"><span class=\"em\">&#129430;<\/span> Badge unlocked: Dino Explorer<\/div>' +\n    '<\/div>' +\n    review +\n    '<div class=\"bonus\">' +\n      '<span class=\"tag\">Bonus &middot; not scored<\/span>' +\n      '<p style=\"margin:0 0 10px;font-size:1.1rem;font-weight:700\">Your turn! Choose one and say the whole sentence:<\/p>' +\n      '<p style=\"margin:0 0 10px;font-size:1.3rem;font-weight:800;color:var(--accent)\">It’s a ______ dinosaur.<\/p>' +\n      '<div class=\"bank\" id=\"bonusBank\"><\/div>' +\n      '<div class=\"fb\" id=\"fbz\"><\/div>' +\n    '<\/div>' +\n    '<div class=\"actions\" style=\"justify-content:center\">' +\n      /* CORRIGIDO: no artefato era onclick=\"restart()\" -- e restart NAO e global\n         (o arquivo inteiro e uma IIFE), entao o botao \"Play again\" nao fazia\n         nada em nenhum dos dois percursos. Chama o que de fato esta exposto. */\n      '<button class=\"btn btn-ghost\" onclick=\"pcRestart1()\">&#128260; Play again<\/button>' +\n    '<\/div>';\n\n  /* BONUS -- fora do percurso essencial e NAO pontuado (regra do modelo).\n     O aluno escolhe uma acao e completa a frase sobre si mesmo: o chunk sai\n     da historia e vai para a vida dele, que e o ponto da transferencia.   */\n  var bz = document.getElementById('bonusBank');\n  /* As TRES palavras que cabem na moldura \"It's a ___ dinosaur.\" -- e so elas.\n     Palavra da aula que nao cabe na frase (tree, look) faria a crianca montar\n     uma frase errada e ouvir o modelo dizendo que esta certa. */\n  [['big','&#129430;'],['small','&#128007;'],['green','&#129001;']]\n    .forEach(function(p){\n      var c = document.createElement('div');\n      c.className = 'chip';\n      c.innerHTML = p[1] + ' ' + p[0];\n      c.onclick = function(){\n        speak('It’s a ' + p[0] + ' dinosaur.');\n        fb(document.getElementById('fbz'), 'good',\n           '&#128483; Now say it: <b>It’s a ' + p[0] + ' dinosaur.<\/b>');\n      };\n      bz.appendChild(c);\n    });\n}\n\nfunction restart(){\n  st = { screen:0, avatar:st.avatar, stars:0, score:0, missed:[], doneStage:{} };\n  document.getElementById('starCount').innerHTML = '&#11088; 0';\n  go(0);\n}\n\n/* ---------- boot ---------- */\n(function(){\n  document.getElementById('recapStart').innerHTML = recapHTML();\n  var avs = ['&#129490;','&#128102;','&#128103;','&#129489;'];\n  var host = document.getElementById('avatars');\n  avs.forEach(function(a){\n    var d = document.createElement('div');\n    d.className = 'av'; d.innerHTML = a;\n    d.onclick = function(){\n      [].forEach.call(host.children, function(x){ x.classList.remove('sel'); });\n      d.classList.add('sel');\n      st.avatar = a;\n      document.getElementById('startBtn').disabled = false;\n    };\n    host.appendChild(d);\n  });\n  drawMap();\n})();\n\nwindow.pcGo1 = go; window.pcRestart1 = restart;\n})();"}, "2": {"titulo": "The Space Mission Quest", "html": "<div class=\"wrap\">\n\n  <div class=\"topbar\">\n    <span class=\"lvl\">Kids &middot; A1<\/span>\n    <h1>The Space Mission Quest<\/h1>\n    <span class=\"stars\" id=\"starCount\">&#11088; 0<\/span>\n  <\/div>\n\n  <div class=\"map\" id=\"map\"><\/div>\n\n  <!-- 1 . MISSION START ------------------------------------------------ -->\n  <section class=\"screen\" id=\"s-start\">\n    <div class=\"eyebrow\">Mission Start<\/div>\n    <h2>&#128640; Ready for launch!<\/h2>\n    <p class=\"instr\">Follow the trail. Every stop asks: <b>where does the rocket go?<\/b><\/p>\n    <div class=\"recap\" id=\"recapStart\"><\/div>\n    <p class=\"instr\">Choose your pilot.<\/p>\n    <div class=\"avatars\" id=\"avatars\"><\/div>\n    <div class=\"actions\">\n      <button class=\"btn\" id=\"startBtn\" disabled onclick=\"pcGo2(1)\">Start the quest &#128071;<\/button>\n    <\/div>\n  <\/section>\n\n  <!-- 2 . STORY SPOT  (Supported Recall) -------------------------------- -->\n  <section class=\"screen\" id=\"s-story\" hidden><\/section>\n\n  <!-- 3 . WORD STARS  (Power Words A) ----------------------------------- -->\n  <section class=\"screen\" id=\"s-words1\" hidden><\/section>\n\n  <!-- 4 . WORD POWER  (Power Words B) ----------------------------------- -->\n  <section class=\"screen\" id=\"s-words2\" hidden><\/section>\n\n  <!-- 5 . SAY IT      (Language Move) ----------------------------------- -->\n  <section class=\"screen\" id=\"s-sayit\" hidden><\/section>\n\n  <!-- 6 . NEW MISSION  -- cenario novo, completo, sem a Maya ------------- -->\n  <section class=\"screen\" id=\"s-mission\" hidden><\/section>\n\n  <!-- 7 . FINAL CHALLENGE ----------------------------------------------- -->\n  <section class=\"screen\" id=\"s-final\" hidden><\/section>\n\n  <!-- 8 . RESULT -------------------------------------------------------- -->\n  <section class=\"screen\" id=\"s-result\" hidden><\/section>\n\n  <p class=\"note\">Alumni &middot; Post-class homework &middot; Lesson 2 &mdash; Blast Off!<\/p>\n<\/div>\n", "js": "(function(){\n/* ==========================================================================\n   BENTO -- AULA 02 -- BLAST OFF! (Kids A1) -- PERCURSO POST-CLASS\n\n   MOTOR COPIADO byte a byte do artefato \"Dante Blecker Gregory · Kids A2 ·\n   Professor View\" (percurso \"The Helper Quest\"), que e a ESPECIFICACAO desta\n   peca. So o bloco CONTEUDO e os textos da tela final mudam -- eles sao DESTA\n   aula. Mudou tambem, e so, o que estava QUEBRADO no artefato (dois pontos,\n   marcados com CORRIGIDO abaixo).\n   ========================================================================== */\n\n/* ====================================================================\n   AUDIO\n   AUDIO_MAP: chave = a frase exata falada, valor = caminho do mp3.\n   Enquanto estiver vazio, tudo cai em TTS -- mesma degradacao da aula.\n   Gravar os arquivos e preencher aqui ativa o audio sem tocar no resto.\n   ==================================================================== */\nvar AUDIO_MAP = {\n  \"Blast off! The rocket goes up!\": \"/audio/bento/post2_blast_off_the_rocket_goes_up.mp3\",\n  \"One, two, three stars! And the moon!\": \"/audio/bento/post2_one_two_three_stars_and_the_moon.mp3\",\n  \"rocket\": \"/audio/bento/post2_rocket.mp3\",\n  \"star\": \"/audio/bento/post2_star.mp3\",\n  \"moon\": \"/audio/bento/post2_moon.mp3\",\n  \"The rocket goes up.\": \"/audio/bento/post2_the_rocket_goes_up.mp3\",\n  \"I can see a star.\": \"/audio/bento/post2_i_can_see_a_star.mp3\",\n  \"The moon is up.\": \"/audio/bento/post2_the_moon_is_up.mp3\",\n  \"I can see the moon in the sky.\": \"/audio/bento/post2_i_can_see_the_moon_in_the_sky.mp3\",\n  \"I can see a red planet.\": \"/audio/bento/post2_i_can_see_a_red_planet.mp3\",\n  \"It is night. In the sky there are three stars and one moon. The rocket goes up, up, up — to the moon.\": \"/audio/bento/post2_it_is_night_in_the_sky_there_are_three_stars_and.mp3\",\n  \"to the moon\": \"/audio/bento/post2_to_the_moon.mp3\",\n  \"to the star\": \"/audio/bento/post2_to_the_star.mp3\",\n  \"to the sky\": \"/audio/bento/post2_to_the_sky.mp3\",\n  \"The rocket is at the moon. Bento is the pilot. He looks: the moon is big, and there are three stars.\": \"/audio/bento/post2_the_rocket_is_at_the_moon_bento_is_the_pilot_he.mp3\",\n  \"I can see the moon and three stars.\": \"/audio/bento/post2_i_can_see_the_moon_and_three_stars.mp3\",\n  \"I can see a big dinosaur.\": \"/audio/bento/post2_i_can_see_a_big_dinosaur.mp3\",\n  \"The moon can go up.\": \"/audio/bento/post2_the_moon_can_go_up.mp3\",\n  \"I can see a planet.\": \"/audio/bento/post2_i_can_see_a_planet.mp3\",\n};\n\n/* TUDO que este percurso pode FALAR. APOSTROFO RETO, sempre: o speak() faz\n   text.replace(/’/g, \"'\") ANTES de procurar no AUDIO_MAP, entao chave com\n   apostrofo curvo nunca casa e a frase cai em TTS (medido no navegador). O builder le esta lista, gera nome/voz de\n   cada MP3, alimenta o audio_manifest.json (gen_audio) e PREENCHE o AUDIO_MAP\n   acima. Frase que nao estiver aqui cai em TTS -- que a REGRA 7 so admite como\n   emergencia. Se mudar um texto falado, mude aqui junto. */\nvar AUDIO_PHRASES = [\n  \"Blast off! The rocket goes up!\",\n  \"One, two, three stars! And the moon!\",\n  \"rocket\",\n  \"star\",\n  \"moon\",\n  \"The rocket goes up.\",\n  \"I can see a star.\",\n  \"The moon is up.\",\n  \"I can see the moon in the sky.\",\n  \"I can see a red planet.\",\n  \"It is night. In the sky there are three stars and one moon. The rocket goes up, up, up \\u2014 to the moon.\",\n  \"to the moon\",\n  \"to the star\",\n  \"to the sky\",\n  \"The rocket is at the moon. Bento is the pilot. He looks: the moon is big, and there are three stars.\",\n  \"I can see the moon and three stars.\",\n  \"I can see a big dinosaur.\",\n  \"The moon can go up.\",\n  \"I can see a planet.\"\n];\nvar current = null;\n\n/* Parar TTS no Chrome nao e' so cancel(): um sintetizador PAUSADO ignora o\n   cancel e volta a falar quando alguem o retoma. Por isso resume() vem antes.\n   Sem isto, som de uma tela reaparecia na seguinte. */\nfunction ttsClear(){\n  if (!('speechSynthesis' in window)) return;\n  try { window.speechSynthesis.resume(); } catch(e){}\n  try { window.speechSynthesis.cancel(); } catch(e){}\n}\nfunction speak(text, btn){\n  var clean = String(text).replace(/’/g, \"'\");\n  if (current){ current.pause(); current.currentTime = 0; current = null; }\n  ttsClear();\n  var file = AUDIO_MAP[clean];\n  if (file){\n    current = new Audio(file);\n    current.play().catch(function(){ tts(clean); });\n  } else {\n    tts(clean);\n  }\n  if (btn){\n    var old = btn.innerHTML;\n    btn.innerHTML = '&#128266; Playing...';\n    setTimeout(function(){ btn.innerHTML = old; }, 1400);\n  }\n}\nfunction tts(text){\n  if (!('speechSynthesis' in window)) return;\n  var u = new SpeechSynthesisUtterance(text);\n  u.lang = 'en-US'; u.rate = .8; u.pitch = 1.05;\n  window.speechSynthesis.speak(u);\n}\nfunction imgFallback(img){\n  var s = document.createElement('span');\n  s.className = 'imgph';\n  s.innerHTML = img.getAttribute('data-emoji') || '&#10067;';\n  s.title = 'missing asset: ' + img.getAttribute('src');\n  img.replaceWith(s);\n}\n/* CORRIGIDO (3): o onerror do artefato chamava imgFallback, que e LOCAL desta\n   IIFE -- handler inline so enxerga global (REGRA 7.1). No artefato o defeito\n   ficou latente porque nenhum PAIRS usava pic(); com imagem de verdade, toda\n   figura que faltasse jogava \"imgFallback is not defined\" no console e a carta\n   ficava com um icone quebrado em vez do emoji. Expor pelo nome pcImg resolve\n   sem tocar na mecanica. */\nwindow.pcImg = imgFallback;\n/* Imagem com degradacao para emoji. A arte entra depois, sem mexer no codigo. */\nfunction pic(slug, emoji, size){\n  return '<img src=\"/assets/kids/' + slug + '.png\" alt=\"' + slug + '\" width=\"' + (size||64) +\n         '\" data-emoji=\"' + emoji + '\" onerror=\"pcImg(this)\" style=\"max-width:100%;height:auto\">';\n}\n\n/* ====================================================================\n   CONTEUDO\n   Tudo abaixo sai da versao FINAL de bento-aula2.html (Blast Off!, Kids\n   A1). Nenhum item introduz palavra, estrutura ou personagem que nao tenha\n   sido trabalhado na aula -- e nenhum repete literalmente um exercicio dela.\n   ==================================================================== */\n/* PESOS -- somam 100 exatos, e cada um dentro da sua faixa normativa.\n   Conferido por SOMA, nao por leitura: e a segunda das cinco armadilhas\n   registradas do modelo (\"peso por item != numero de itens\").\n\n     Supported Recall  20   |  Power Words 20 (10+10)  |  Language Move 30\n     New Mission       15   |  Final Challenge 15      |  total 100        */\nvar STAGES = [\n  { id:'story',   name:'Story',    icon:'&#128270;', weight:20 },\n  { id:'words1',  name:'Words',    icon:'&#11088;',  weight:10 },\n  { id:'words2',  name:'Sentence', icon:'&#128172;', weight:10 },\n  { id:'sayit',   name:'Say It',   icon:'&#128483;', weight:30 },\n  { id:'mission', name:'New',      icon:'&#128506;&#65039;', weight:15 },\n  { id:'final',   name:'Space',    icon:'&#127937;', weight:15 }\n];\n\n/* --- RECAP: o contexto da aula, de volta na tela ---------------------\n   \"Memoria apoiada\" (secao 5 do framework): todo detalhe exigido na resposta\n   e reapresentado aqui. Os TRES stars e a lua estao na tira porque o item 2\n   do Story Spot cobra o numero, e a New Mission cobra o destino do foguete. */\nfunction recapHTML(){\n  return '<h3>&#128218; The story so far<\/h3>' +\n    '<div class=\"who\">' +\n      '<span>&#128105; Maya &mdash; she counts down<\/span>' +\n      '<span>&#128640; the rocket &mdash; it goes up<\/span>' +\n      '<span>&#11088; three stars &middot; &#127761; one moon<\/span>' +\n    '<\/div>' +\n    '<p class=\"story\">Maya and Bento are at the launchpad. They count: ' +\n    '<b>“Three, two, one… go!”<\/b><br>' +\n    'The <b>rocket goes up<\/b>. In the sky Bento can see <b>three stars<\/b> ' +\n    'and <b>the moon<\/b>.<\/p>';\n}\n\n/* --- 2. Story Spot: listen and choose --------------------------------\n   O audio e a fala da aula. As perguntas sao sobre O FOGUETE e AS ESTRELAS,\n   nunca sobre o proprio Bento (REGRA 27F). */\nvar STORY_ITEMS = [\n  {\n    audio: 'Blast off! The rocket goes up!',\n    q: 'Where does the rocket go?',\n    opts: [\n      { key:'up',   em:'&#11014;&#65039;', lbl:'up' },\n      { key:'moon', em:'&#127761;', lbl:'the moon' },\n      { key:'sky',  em:'&#127749;', lbl:'the sky' }\n    ],\n    answer: 'up',\n    ok:  'Yes! The rocket goes up.',\n    tip: 'Listen again. Up or down? &#11014;&#65039; (pra cima)',\n    exp: 'The rocket goes up. Up, up, up!'\n  },\n  {\n    audio: 'One, two, three stars! And the moon!',\n    q: 'How many stars are in the sky?',\n    opts: [\n      { key:'one',   em:'&#11088;', lbl:'one' },\n      { key:'two',   em:'&#11088;&#11088;', lbl:'two' },\n      { key:'three', em:'&#11088;&#11088;&#11088;', lbl:'three' }\n    ],\n    answer: 'three',\n    ok:  'Yes! Three stars — and the moon.',\n    tip: 'Listen and count with your fingers. &#128075; (conte!)',\n    exp: 'There are three stars. One, two, three!'\n  }\n];\n\n/* --- 3. Power Words A: match palavra <-> imagem ----------------------\n   As tres palavras CONCRETAS da aula que existem na biblioteca kids\n   (public/assets/kids). up e go ficam de fora: acao/direcao nao tem figura\n   nao-ambigua -- ver [[kids-image-library]]. Eles voltam no gap-fill. */\nvar PAIRS = [\n  { key:'rocket', word:'rocket', em:pic('rocket', '&#128640;') },\n  { key:'star',   word:'star',   em:pic('star', '&#11088;') },\n  { key:'moon',   word:'moon',   em:pic('moon', '&#127761;') }\n];\n\n/* --- 4. Power Words B: gap-fill, banco COMPLETO ----------------------\n   Regra A1 (secao 6 do modelo): banco INTEIRO na tela, com mais palavras\n   que lacunas -- 5 para 3. A rede fica.                                */\nvar BANK = ['up', 'star', 'moon', 'sky', 'go'];\nvar GAPS = [\n  { before:'The rocket goes ', after:'.', answer:'up', em:'&#128640;',\n    ok:'Yes! The rocket goes up.',\n    exp:'The answer is: The rocket goes up. &#11014;&#65039;',\n    tip:'Not down. Over your head! &#11014;&#65039; (pra cima)' },\n  { before:'I can see a ', after:'.', answer:'star', em:'&#11088;',\n    ok:'Yes! I can see a star.',\n    exp:'The answer is: I can see a star. &#11088;',\n    tip:'A small light in the night sky. &#10024; (estrela)' },\n  { before:'The ', after:' is up.', answer:'moon', em:'&#127761;',\n    ok:'Yes! The moon is up.',\n    exp:'The answer is: The moon is up. &#127761;',\n    tip:'The big light at night. &#127765; (lua)' }\n];\n\n/* --- 5. Language Move: sentence builder -- o chunk-alvo ---------------\n   O chunk da aula e \"I can see + coisa\". NENHUMA das duas frases e a que a\n   aula ja montou (\"I can see a star!\" / \"I can see three stars!\"): o modelo\n   pede \"repeticao transformada\", nao copia. A segunda usa red, que a aula\n   apresentou em \"It's a red planet!\".                                    */\nvar BUILDS = [\n  { target:['I can see','the moon','in the sky.'],\n    shown: ['in the sky.','I can see','the moon'], em:'&#127761;',\n    say:'I can see the moon in the sky.' },\n  { target:['I can see','a red','planet.'],\n    shown: ['planet.','a red','I can see'], em:'&#128309;',\n    say:'I can see a red planet.' }\n];\n\n/* ==========================================================================\n   A CENA DO CEU -- serve a New Mission e o Final Challenge\n   Uma funcao, dois usos: o cenario nao muda entre as duas telas, so a\n   consequencia. Rotulo nomeia OBJETO (the moon, the star, the rocket).\n   ========================================================================== */\nfunction skyScene(){\n  return '<div class=\"scene\">' +\n    '<div class=\"sc-bar\" style=\"left:0%;top:90%;width:100%;height:10%\"><\/div>' +\n\n    '<div class=\"sc-obj\" style=\"left:22%;top:22%;font-size:2.6rem\">&#127761;<\/div>' +\n    '<div class=\"sc-tag\" style=\"left:22%;top:12%\">the moon<\/div>' +\n\n    '<div class=\"sc-obj\" style=\"left:74%;top:26%;font-size:1.9rem\">&#11088;<\/div>' +\n    '<div class=\"sc-tag\" style=\"left:74%;top:16%\">the star<\/div>' +\n    '<div class=\"sc-obj\" style=\"left:86%;top:40%;font-size:1.4rem\">&#11088;<\/div>' +\n    '<div class=\"sc-obj\" style=\"left:62%;top:44%;font-size:1.2rem\">&#11088;<\/div>' +\n\n    '<div class=\"sc-obj\" style=\"left:34%;top:56%;font-size:2.6rem\">&#128640;<\/div>' +\n    '<div class=\"sc-tag\" style=\"left:34%;top:72%\">the rocket<\/div>' +\n  '<\/div>';\n}\n\n/* --- 6. NEW MISSION: problema NOVO com linguagem CONHECIDA ----------------\n   Cena nova (o foguete ja no ceu, subindo na direcao da lua) que nao\n   aconteceu na aula. Palavras TODAS da aula: rocket, moon, star, sky, up, go.\n   O destino esta DITO no texto e MOSTRADO na cena -- nada e inferido. */\nvar MISSION = {\n  sceneHTML: skyScene(),\n  scene: 'It is night. In the sky there are three stars and one moon. The rocket goes up, up, up — to the moon.',\n  em: '&#128640;&#127761;',\n  q: 'Where does the rocket go?',\n  opts: [\n    { key:'moon', em:'&#127761;', lbl:'to the moon' },\n    { key:'star', em:'&#11088;', lbl:'to the star' },\n    { key:'down', em:'&#127757;', lbl:'to the sky' }\n  ],\n  answer:'moon',\n  ok:  'Yes! The rocket goes to the moon.',\n  tip: 'Look at the picture again. Big light or small light? &#127761;',\n  exp: 'The rocket goes to the moon.'\n};\n\n/* --- 7. FINAL CHALLENGE: resolver a missao COM o chunk --------------------\n   MESMA cena, e a consequencia da tela anterior. Avalia o chunk-alvo\n   (I can see + coisa). A tela e AUTOSSUFICIENTE: repete o que esta no ceu,\n   em vez de remeter a tela anterior.                                       */\nvar FINAL = {\n  sceneHTML: skyScene(),\n  scene: 'The rocket is at the moon. Bento is the pilot. He looks: the moon is big, and there are three stars.',\n  em: '&#128105;&#128172;',\n  q: 'What does Bento say?',\n  opts: [\n    { key:'a', lbl:'“I can see the moon and three stars.”' },\n    { key:'b', lbl:'“I can see a big dinosaur.”' },\n    { key:'c', lbl:'“The moon can go up.”' }\n  ],\n  answer:'a',\n  ok:  'Great! I can see the moon and three stars. Mission complete!',\n  tip: 'What is in the sky? &#127761;&#11088;',\n  exp: 'Bento says: “I can see the moon and three stars.”'\n};\n\n/* ====================================================================\n   ESTADO\n   score  = acerto de PRIMEIRA tentativa, ponderado pelo peso do estagio.\n            Serve para a faixa de resultado e para a revisao seletiva.\n   stars  = uma estrela por item concluido. NUNCA e retirada -- o modelo\n            proibe perder ponto por erro.\n   ==================================================================== */\nvar st = {\n  screen:0, avatar:'', stars:0, score:0, missed:[], doneStage:{}\n};\nvar SCREENS = ['s-start','s-story','s-words1','s-words2','s-sayit','s-mission','s-final','s-result'];\n\nfunction award(itemWeight, firstTry, reviewText){\n  st.stars++;\n  if (firstTry) st.score += itemWeight;\n  else if (reviewText) st.missed.push(reviewText);\n  document.getElementById('starCount').innerHTML = '&#11088; ' + st.stars;\n}\n\n/* ---------- mapa de progresso ---------- */\nfunction drawMap(){\n  var h = '';\n  STAGES.forEach(function(s, i){\n    if (i) h += '<div class=\"link' + (st.doneStage[STAGES[i-1].id] ? ' done' : '') + '\"><\/div>';\n    var cls = st.doneStage[s.id] ? 'done' : (st.screen === i+1 ? 'now' : '');\n    h += '<div class=\"spot ' + cls + '\">' +\n           (st.screen === i+1 ? '<span class=\"walker\">' + st.avatar + '<\/span>' : '') +\n           '<div class=\"dot\">' + (st.doneStage[s.id] ? '&#9989;' : s.icon) + '<\/div>' +\n           '<div class=\"nm\">' + s.name + '<\/div>' +\n         '<\/div>';\n  });\n  document.getElementById('map').innerHTML = h;\n}\n\nfunction go(n){\n  st.screen = n;\n  SCREENS.forEach(function(id, i){\n    document.getElementById(id).hidden = (i !== n);\n  });\n  drawMap();\n  /* peso POR ITEM: Story Replay vale 20%, em 2 itens = 10 cada.\n     O ultimo argumento liga a tira de recap -- sem ela estes dois itens\n     dependeriam de memoria desassistida. */\n  /* peso POR ITEM: Supported Recall vale 20, em 2 itens = 10 cada.\n     O ultimo argumento liga a tira de recap -- sem ela estes dois itens\n     dependeriam de memoria desassistida, que a secao 7 proibe. */\n  if (n === 1) renderChoice('s-story', 'Story Spot', '&#128270;', 'Supported Recall',\n                            'Listen and choose the right answer.',\n                            STORY_ITEMS, 'story', 10, true);\n  if (n === 2) renderMatch();\n  if (n === 3) renderGaps();\n  if (n === 4) renderBuild();\n  if (n === 5) renderScene('s-mission', 'New Mission', '&#128506;&#65039;', 'New Mission',\n                           MISSION, 'mission', 15, 'Next stop &#10132;', 6);\n  if (n === 6) renderScene('s-final', 'In space!', '&#127937;', 'Final Challenge',\n                           FINAL, 'final', 15, 'See my result &#127942;', 7);\n  if (n === 7) renderResult();\n  window.scrollTo(0, 0);\n}\n\nfunction fb(el, kind, msg){\n  el.className = 'fb show ' + kind;\n  el.innerHTML = msg;\n}\n\n/* ====================================================================\n   MOTOR 1 -- escolha sequencial com audio (Story Spot e Final Move)\n   Um item por vez: \"uma acao central por tela\" (modelo, principios).\n   ==================================================================== */\nfunction renderChoice(elId, title, icon, eyebrow, instr, items, stageId, weightEach, comRecap){\n  var host = document.getElementById(elId);\n  var idx = 0, tries = 0;\n\n  function paint(){\n    var it = items[idx];\n    host.innerHTML =\n      '<div class=\"eyebrow\">' + eyebrow + '<\/div>' +\n      '<h2>' + icon + ' ' + title + '<\/h2>' +\n      '<p class=\"instr\">' + instr + '<\/p>' +\n      /* o contexto fica VISIVEL durante as perguntas, nao so antes delas */\n      (comRecap ? '<div class=\"recap\">' + recapHTML() + '<\/div>' : '') +\n      (items.length > 1 ? '<div class=\"counter\">Question ' + (idx+1) + ' of ' + items.length + '<\/div>' : '') +\n      '<div class=\"actions\" style=\"margin:0 0 16px\">' +\n        '<button class=\"audio-btn big\" id=\"ab\">&#128266; Listen<\/button>' +\n      '<\/div>' +\n      '<p class=\"q\">' + it.q + '<\/p>' +\n      '<div class=\"opts\" id=\"op\"><\/div>' +\n      '<div class=\"fb\" id=\"fbx\"><\/div>' +\n      '<div class=\"actions\"><button class=\"btn\" id=\"nx\" hidden>Next &#10132;<\/button><\/div>';\n\n    document.getElementById('ab').onclick = function(){ speak(it.audio, this); };\n    var op = document.getElementById('op');\n    it.opts.forEach(function(o){\n      var d = document.createElement('div');\n      d.className = 'opt';\n      d.innerHTML = '<span class=\"pic\">' + o.em + '<\/span><span class=\"lbl\">' + o.lbl + '<\/span>';\n      d.onclick = function(){ choose(o, d); };\n      op.appendChild(d);\n    });\n    setTimeout(function(){ speak(it.audio); }, 350);\n  }\n\n  function choose(o, node){\n    var it = items[idx];\n    var box = document.getElementById('fbx');\n    if (o.key === it.answer){\n      node.classList.add('ok');\n      lock();\n      fb(box, 'good', '&#9989; ' + it.ok);\n      award(weightEach, tries === 0, tries === 0 ? null : it.exp);\n      finishItem();\n    } else {\n      tries++;\n      node.classList.add('no');\n      if (tries === 1){\n        fb(box, 'tip', '&#128161; ' + it.tip + ' <b>Try again!<\/b>');\n        speak(it.audio);\n      } else {\n        /* segundo erro: mostrar a resposta + exemplo curto, e seguir */\n        lock();\n        var right = it.opts.filter(function(x){ return x.key === it.answer; })[0];\n        [].forEach.call(document.querySelectorAll('#op .opt'), function(el){\n          if (el.querySelector('.lbl').textContent === right.lbl) el.classList.add('ok');\n        });\n        fb(box, 'tip', '&#128172; ' + it.exp);\n        award(weightEach, false, it.exp);\n        finishItem();\n      }\n    }\n  }\n  function lock(){\n    [].forEach.call(document.querySelectorAll('#op .opt'), function(el){ el.classList.add('lock'); });\n  }\n  function finishItem(){\n    var nx = document.getElementById('nx');\n    nx.hidden = false;\n    nx.onclick = function(){\n      idx++; tries = 0;\n      if (idx < items.length){ paint(); window.scrollTo(0,0); }\n      else { st.doneStage[stageId] = true; go(st.screen + 1); }\n    };\n    if (idx === items.length - 1) nx.innerHTML = 'Next stop &#10132;';\n  }\n  paint();\n}\n\n/* ====================================================================\n   MOTOR 2 -- matching palavra <-> imagem (Word Stars)\n   ==================================================================== */\nfunction renderMatch(){\n  var host = document.getElementById('s-words1');\n  var picked = null, found = 0;\n  /* Erro por par, para que o score reflita a primeira tentativa como nos outros motores. */\n  var missed = {};\n  var shuffled = PAIRS.slice().sort(function(){ return Math.random() - .5; });\n\n  host.innerHTML =\n    '<div class=\"eyebrow\">Power Words<\/div>' +\n    '<h2>&#11088; Word Stars<\/h2>' +\n    '<p class=\"instr\">Tap a word. Then tap its picture. Say the word out loud!<\/p>' +\n    '<div class=\"match\">' +\n      '<div class=\"col\"><h3>Words<\/h3><div id=\"cw\"><\/div><\/div>' +\n      '<div class=\"col\"><h3>Pictures<\/h3><div id=\"cp\"><\/div><\/div>' +\n    '<\/div>' +\n    '<div class=\"fb\" id=\"fbm\"><\/div>' +\n    '<div class=\"actions\"><button class=\"btn\" id=\"nxm\" hidden>Next stop &#10132;<\/button><\/div>';\n\n  var cw = document.getElementById('cw'), cp = document.getElementById('cp');\n  cw.style.display = cp.style.display = 'flex';\n  cw.style.flexDirection = cp.style.flexDirection = 'column';\n  cw.style.gap = cp.style.gap = '10px';\n\n  PAIRS.forEach(function(p){\n    var d = document.createElement('div');\n    d.className = 'mi'; d.textContent = p.word; d.dataset.key = p.key;\n    d.onclick = function(){\n      if (picked) picked.classList.remove('sel');\n      picked = d; d.classList.add('sel');\n      speak(p.word);\n    };\n    cw.appendChild(d);\n  });\n  shuffled.forEach(function(p){\n    var d = document.createElement('div');\n    d.className = 'mi'; d.innerHTML = '<span class=\"pic\">' + p.em + '<\/span>'; d.dataset.key = p.key;\n    d.onclick = function(){\n      var box = document.getElementById('fbm');\n      if (!picked){ fb(box, 'tip', '&#128161; Tap a <b>word<\/b> first.'); return; }\n      if (picked.dataset.key === p.key){\n        picked.classList.remove('sel'); picked.classList.add('ok'); d.classList.add('ok');\n        picked = null; found++;\n        /* Word Stars vale 10, em 3 pares. 10/3 e nao 3 -- so assim a soma\n           fecha 100 exatos. */\n        award(10/3, !missed[p.key], missed[p.key] ? 'This is <b>' + p.word + '<\/b>. ' + p.em : null);\n        fb(box, 'good', '&#11088; ' + p.word + '! One star.');\n        speak(p.word);\n        if (found === PAIRS.length){\n          fb(box, 'good', '&#127881; All three words found!');\n          st.doneStage.words1 = true;\n          var b = document.getElementById('nxm');\n          b.hidden = false; b.onclick = function(){ go(3); };\n        }\n      } else {\n        missed[picked.dataset.key] = true;\n        d.classList.add('shake');\n        setTimeout(function(){ d.classList.remove('shake'); }, 320);\n        fb(box, 'tip', '&#128161; Not this one. Look at the picture again. Which word matches it?');\n      }\n    };\n    cp.appendChild(d);\n  });\n}\n\n/* ====================================================================\n   MOTOR 3 -- gap-fill com banco SEMPRE visivel (regra Kids A1)\n   ==================================================================== */\nfunction renderGaps(){\n  var host = document.getElementById('s-words2');\n  var idx = 0, tries = 0;\n\n  host.innerHTML =\n    '<div class=\"eyebrow\">Power Words<\/div>' +\n    '<h2>&#128172; Word Power<\/h2>' +\n    '<p class=\"instr\">Complete the sentence. Tap a word from the box.<\/p>' +\n    '<div class=\"sents\" id=\"ss\"><\/div>' +\n    '<div class=\"banklbl\">Word box<\/div>' +\n    '<div class=\"bank\" id=\"bk\"><\/div>' +\n    '<div class=\"fb\" id=\"fbg\"><\/div>' +\n    '<div class=\"actions\"><button class=\"btn\" id=\"nxg\" hidden>Next stop &#10132;<\/button><\/div>';\n\n  var ss = document.getElementById('ss');\n  GAPS.forEach(function(g, i){\n    var d = document.createElement('div');\n    d.className = 'sent' + (i === 0 ? ' now' : '');\n    d.id = 'sent' + i;\n    d.innerHTML = g.em + ' ' + g.before + '<span class=\"blank\" id=\"bl' + i + '\">?<\/span>' + g.after;\n    ss.appendChild(d);\n  });\n\n  /* O banco fica inteiro na tela o tempo todo -- nao some, nao encolhe. */\n  var bk = document.getElementById('bk');\n  BANK.forEach(function(w){\n    var c = document.createElement('div');\n    c.className = 'chip'; c.textContent = w;\n    c.onclick = function(){ pickWord(w); };\n    bk.appendChild(c);\n  });\n\n  function pickWord(w){\n    if (idx >= GAPS.length) return;\n    var g = GAPS[idx];\n    var box = document.getElementById('fbg');\n    var blank = document.getElementById('bl' + idx);\n    var sent = document.getElementById('sent' + idx);\n    if (w === g.answer){\n      blank.textContent = w;\n      sent.classList.remove('now'); sent.classList.add('ok');\n      fb(box, 'good', '&#9989; ' + g.ok);\n      /* CORRIGIDO (o artefato montava \"A fish can swim .\" -- espaco antes do\n         ponto). A chave do AUDIO_MAP e a frase EXATA: com o espaco a mais ela\n         nunca casaria com o MP3 e o percurso cairia em TTS. */\n      speak((g.before + w + g.after).replace(/\\s+/g, ' ').trim());\n      award(5, tries === 0, tries === 0 ? null : g.exp);\n      idx++; tries = 0;\n      if (idx < GAPS.length){\n        document.getElementById('sent' + idx).classList.add('now');\n      } else {\n        st.doneStage.words2 = true;\n        fb(box, 'good', '&#127881; All sentences complete!');\n        var b = document.getElementById('nxg');\n        b.hidden = false; b.onclick = function(){ go(4); };\n      }\n    } else {\n      tries++;\n      if (tries === 1){\n        fb(box, 'tip', '&#128161; ' + g.tip + ' <b>Try again!<\/b>');\n      } else {\n        blank.textContent = g.answer;\n        sent.classList.remove('now'); sent.classList.add('ok');\n        fb(box, 'tip', '&#128172; ' + g.exp);\n        award(5, false, g.exp);\n        idx++; tries = 0;\n        if (idx < GAPS.length){\n          document.getElementById('sent' + idx).classList.add('now');\n        } else {\n          st.doneStage.words2 = true;\n          var b2 = document.getElementById('nxg');\n          b2.hidden = false; b2.onclick = function(){ go(4); };\n        }\n      }\n    }\n  }\n}\n\n/* ====================================================================\n   MOTOR 4 -- sentence builder, \"say it before you check\"\n\n   O QUE ESTE MOTOR AVALIA: a ORDEM dos blocos. Nada mais.\n\n   A tela pede \"say it out loud\" e o botao Hear it oferece o modelo, mas nao\n   ha gravacao nem qualquer confirmacao de que o aluno falou. Tecnicamente\n   esta e uma atividade de RECONSTRUCAO com recomendacao oral -- nao uma\n   atividade oral registrada, e nenhuma descricao deste material deve dizer\n   que o sistema avaliou producao oral.\n\n   Gravar exigiria getUserMedia + MediaRecorder, e dentro do iframe do\n   Artifact o microfone depende de uma permissions-policy que nao esta sob\n   nosso controle: o pedido apareceria e poderia falhar em silencio, num\n   material que a crianca abre sozinha em casa. Fica registrado como decisao\n   em aberto, nao como implementacao pendente.\n   ==================================================================== */\nfunction renderBuild(){\n  var host = document.getElementById('s-sayit');\n  var idx = 0, tries = 0, chosen = [];\n\n  function paint(){\n    var b = BUILDS[idx];\n    chosen = [];\n    host.innerHTML =\n      '<div class=\"eyebrow\">Language Move<\/div>' +\n      '<h2>&#128483; Say It<\/h2>' +\n      '<p class=\"instr\">Put the words in order. Then say the sentence out loud!<\/p>' +\n      '<div class=\"counter\">Sentence ' + (idx+1) + ' of ' + BUILDS.length + '<\/div>' +\n      '<div style=\"font-size:3.4rem;text-align:center;margin-bottom:8px\">' + b.em + '<\/div>' +\n      '<div class=\"line\" id=\"ln\"><span class=\"ph\">Tap the words below...<\/span><\/div>' +\n      '<div class=\"bank\" id=\"bb\"><\/div>' +\n      '<div class=\"sayit\">&#128483; Say it out loud, then tap Check.' +\n        '<button class=\"audio-btn\" id=\"mb\" style=\"padding:7px 14px;font-size:.9rem\">&#128266; Hear it<\/button><\/div>' +\n      '<div class=\"fb\" id=\"fbb\"><\/div>' +\n      '<div class=\"actions\">' +\n        '<button class=\"btn\" id=\"ck\" disabled>Check<\/button>' +\n        '<button class=\"btn btn-ghost\" id=\"cl\">Clear<\/button>' +\n        '<button class=\"btn\" id=\"nxb\" hidden>Next &#10132;<\/button>' +\n      '<\/div>';\n\n    var bb = document.getElementById('bb');\n    b.shown.forEach(function(w, i){\n      var c = document.createElement('div');\n      c.className = 'blk'; c.textContent = w; c.dataset.i = i;\n      c.onclick = function(){\n        if (c.classList.contains('used')) return;\n        c.classList.add('used'); chosen.push({ w:w, node:c });\n        draw();\n      };\n      bb.appendChild(c);\n    });\n    document.getElementById('mb').onclick = function(){ speak(b.say, this); };\n    document.getElementById('cl').onclick = reset;\n    document.getElementById('ck').onclick = check;\n    draw();\n  }\n\n  function draw(){\n    var ln = document.getElementById('ln');\n    if (!chosen.length){ ln.innerHTML = '<span class=\"ph\">Tap the words below...<\/span>'; }\n    else {\n      ln.innerHTML = '';\n      chosen.forEach(function(c, i){\n        var d = document.createElement('div');\n        d.className = 'blk'; d.textContent = c.w;\n        d.onclick = function(){\n          c.node.classList.remove('used');\n          chosen.splice(i, 1); draw();\n        };\n        ln.appendChild(d);\n      });\n    }\n    document.getElementById('ck').disabled = (chosen.length !== BUILDS[idx].target.length);\n  }\n\n  function reset(){\n    chosen.forEach(function(c){ c.node.classList.remove('used'); });\n    chosen = []; draw();\n    document.getElementById('ln').classList.remove('ok');\n  }\n\n  function check(){\n    var b = BUILDS[idx];\n    var box = document.getElementById('fbb');\n    var got = chosen.map(function(c){ return c.w; }).join(' ');\n    var want = b.target.join(' ');\n    if (got === want){\n      document.getElementById('ln').classList.add('ok');\n      document.getElementById('ck').disabled = true;\n      fb(box, 'good', '&#9989; ' + want + ' &#127881;');\n      speak(b.say);\n      award(15, tries === 0, tries === 0 ? null : want);\n      next();\n    } else {\n      tries++;\n      if (tries === 1){\n        /* erro no chunk: destacar so a parte fixa, sem entregar a frase */\n        /* erro no chunk: destacar so a parte fixa -- o <b>but<\/b> no meio --\n           sem entregar a frase. Regra do modelo, secao 9. */\n        fb(box, 'tip', '&#128161; One thing you <b>can<\/b> do, then <b>but<\/b>, then one thing you <b>can’t<\/b>. &#128266; Listen and try again.');\n        speak(b.say);\n        reset();\n      } else {\n        fb(box, 'tip', '&#128172; The sentence is: <b>' + want + '<\/b>');\n        speak(b.say);\n        award(15, false, want);\n        document.getElementById('ck').disabled = true;\n        next();\n      }\n    }\n  }\n\n  function next(){\n    var n = document.getElementById('nxb');\n    n.hidden = false;\n    if (idx === BUILDS.length - 1) n.innerHTML = 'Next stop &#10132;';\n    n.onclick = function(){\n      idx++; tries = 0;\n      if (idx < BUILDS.length){ paint(); window.scrollTo(0,0); }\n      else { st.doneStage.sayit = true; go(5); }\n    };\n  }\n  paint();\n}\n\n/* ====================================================================\n   MOTOR 5 -- cena com uma escolha (New Mission e Final Challenge)\n   Generico porque as duas telas fazem a mesma coisa mecanicamente e coisas\n   diferentes pedagogicamente: a 5 apresenta o cenario novo e pede que o\n   aluno APLIQUE o criterio; a 6 pede que ele PRODUZA o chunk para resolver.\n   ==================================================================== */\nfunction renderScene(elId, title, icon, eyebrow, data, stageId, weight, nextLabel, nextScreen){\n  var host = document.getElementById(elId);\n  var tries = 0;\n  /* Sem id nos elementos internos, e tudo por host.querySelector: DUAS telas\n     usam este motor, e um id fixo apareceria duas vezes no documento. Quando\n     isso aconteceu, getElementById devolvia o container da PRIMEIRA tela e a\n     segunda ficava sem opcao nenhuma -- a ultima tela do quiz, muda. */\n  host.innerHTML =\n    '<div class=\"eyebrow\">' + eyebrow + '<\/div>' +\n    '<h2>' + icon + ' ' + title + '<\/h2>' +\n    '<div style=\"font-size:3.4rem;text-align:center\">' + data.em + '<\/div>' +\n    '<p class=\"instr\" style=\"text-align:center;font-size:1.1rem\">' + data.scene + '<\/p>' +\n    /* A CENA fica visivel DURANTE a pergunta e as alternativas: quem esta\n       presente precisa ser visto enquanto se decide, nao antes. */\n    (data.sceneHTML || '') +\n    '<div class=\"actions\" style=\"margin:0 0 16px\">' +\n      '<button class=\"audio-btn big js-say\">&#128266; Listen<\/button>' +\n    '<\/div>' +\n    '<p class=\"q\">' + data.q + '<\/p>' +\n    '<div class=\"opts' + (data.opts[0].em ? '' : ' lines') + '\" data-role=\"opts\"><\/div>' +\n    /* data-role, e nao classe: fb() reescreve o className inteiro do bloco de\n       feedback, e uma classe marcadora seria apagada no primeiro uso. */\n    '<div class=\"fb\" data-role=\"fb\"><\/div>' +\n    '<div class=\"actions\"><button class=\"btn\" data-role=\"next\" hidden>' + nextLabel + '<\/button><\/div>';\n\n  host.querySelector('.js-say').onclick = function(){ speak(data.scene, this); };\n\n  var fo = host.querySelector('[data-role=\"opts\"]');\n  data.opts.forEach(function(o){\n    var d = document.createElement('div');\n    d.className = 'opt';\n    d.innerHTML = (o.em ? '<span class=\"pic\">' + o.em + '<\/span>' : '') +\n                  '<span class=\"lbl\">' + o.lbl + '<\/span>';\n    d.onclick = function(){\n      var box = host.querySelector('[data-role=\"fb\"]');\n      if (o.key === data.answer){\n        d.classList.add('ok'); lockF();\n        fb(box, 'good', '&#9989; ' + data.ok);\n        speak(o.lbl.replace(/[“”\"]/g, ''));\n        award(weight, tries === 0, tries === 0 ? null : data.exp);\n        done();\n      } else {\n        tries++;\n        d.classList.add('no');\n        if (tries === 1){\n          fb(box, 'tip', '&#128161; ' + data.tip + ' <b>Try again!<\/b>');\n        } else {\n          lockF();\n          /* A certa sai do gabarito, nao de um texto escrito a mao: trocar o\n             item quebraria a revelacao em silencio. */\n          var right = data.opts.filter(function(x){ return x.key === data.answer; })[0];\n          [].forEach.call(fo.querySelectorAll('.opt'), function(el){\n            if (el.querySelector('.lbl').innerHTML === right.lbl) el.classList.add('ok');\n          });\n          fb(box, 'tip', '&#128172; ' + data.exp);\n          award(weight, false, data.exp);\n          done();\n        }\n      }\n    };\n    fo.appendChild(d);\n  });\n  function lockF(){\n    [].forEach.call(fo.querySelectorAll('.opt'), function(el){ el.classList.add('lock'); });\n  }\n  function done(){\n    st.doneStage[stageId] = true;\n    var b = host.querySelector('[data-role=\"next\"]');\n    b.hidden = false; b.onclick = function(){ go(nextScreen); };\n  }\n}\n\n/* ====================================================================\n   TELA FINAL -- score, faixa, badge, revisao seletiva, bonus\n   Chegar aqui JA conclui a missao: a pontuacao nunca bloqueia.\n   ==================================================================== */\nfunction renderResult(){\n  var host = document.getElementById('s-result');\n  var pct = Math.round(st.score);\n  var band, msg;\n  if (pct >= 90){ band = 'Mission mastered!'; msg = 'You know who can do what — and how to say it. Amazing work!'; }\n  else if (pct >= 70){ band = 'Great progress!'; msg = 'Almost perfect! Look at the sentence below one more time.'; }\n  else { band = 'Try one more round!'; msg = 'Good job finishing the quest. Play again to collect more stars!'; }\n\n  var review = '';\n  if (st.missed.length){\n    review = '<div class=\"review\"><h3>Look at this again<\/h3>' +\n             st.missed.slice(0, 2).map(function(m){ return '<p>&#128073; ' + m + '<\/p>'; }).join('') +\n             '<\/div>';\n  }\n\n  host.innerHTML =\n    '<div class=\"eyebrow\">Mission Complete<\/div>' +\n    '<div style=\"text-align:center\">' +\n      '<div style=\"font-size:3.4rem\">' + st.avatar + ' &#128640; &#127761;<\/div>' +\n      /* REGRA: esta mensagem serve QUALQUER faixa de pontuacao, e por isso fala\n         so de CONCLUSAO. Celebrar ter concluido e verdade para quem errou e\n         seguiu depois da revelacao; afirmar acerto que pode nao ter havido, nao.\n         Nenhuma variante que afirme desempenho pode existir nesta tela -- nem em\n         comentario, para nao reaparecer em busca de validacao.\n         E a UNICA mensagem de conclusao abaixo dos emojis. */\n      '<p class=\"instr\" style=\"margin:0 0 6px\">You completed the Space Mission Quest. <b>You are in space!<\/b><\/p>' +\n      '<div class=\"scorebig\">' + pct + '%<\/div>' +\n      '<div class=\"band\">' + band + '<\/div>' +\n      '<p class=\"instr\" style=\"margin-bottom:6px\">' + msg + '<\/p>' +\n      '<div style=\"font-size:1.3rem;color:var(--star);font-weight:800\">&#11088; ' + st.stars + ' stars<\/div>' +\n      '<div class=\"badge\"><span class=\"em\">&#128640;<\/span> Badge unlocked: Space Pilot<\/div>' +\n    '<\/div>' +\n    review +\n    '<div class=\"bonus\">' +\n      '<span class=\"tag\">Bonus &middot; not scored<\/span>' +\n      '<p style=\"margin:0 0 10px;font-size:1.1rem;font-weight:700\">Your turn! Choose one and say the whole sentence:<\/p>' +\n      '<p style=\"margin:0 0 10px;font-size:1.3rem;font-weight:800;color:var(--accent)\">I can see a ______.<\/p>' +\n      '<div class=\"bank\" id=\"bonusBank\"><\/div>' +\n      '<div class=\"fb\" id=\"fbz\"><\/div>' +\n    '<\/div>' +\n    '<div class=\"actions\" style=\"justify-content:center\">' +\n      /* CORRIGIDO: no artefato era onclick=\"restart()\" -- e restart NAO e global\n         (o arquivo inteiro e uma IIFE), entao o botao \"Play again\" nao fazia\n         nada em nenhum dos dois percursos. Chama o que de fato esta exposto. */\n      '<button class=\"btn btn-ghost\" onclick=\"pcRestart2()\">&#128260; Play again<\/button>' +\n    '<\/div>';\n\n  /* BONUS -- fora do percurso essencial e NAO pontuado (regra do modelo).\n     O aluno escolhe uma acao e completa a frase sobre si mesmo: o chunk sai\n     da historia e vai para a vida dele, que e o ponto da transferencia.   */\n  var bz = document.getElementById('bonusBank');\n  /* As TRES palavras que cabem na moldura \"It's a ___ dinosaur.\" -- e so elas.\n     Palavra da aula que nao cabe na frase (tree, look) faria a crianca montar\n     uma frase errada e ouvir o modelo dizendo que esta certa. Por isso up e go\n     nao entram: \"I can see a up.\" nao existe. */\n  [['star','&#11088;'],['moon','&#127761;'],['planet','&#128309;']]\n    .forEach(function(p){\n      var c = document.createElement('div');\n      c.className = 'chip';\n      c.innerHTML = p[1] + ' ' + p[0];\n      c.onclick = function(){\n        speak('I can see a ' + p[0] + '.');\n        fb(document.getElementById('fbz'), 'good',\n           '&#128483; Now say it: <b>I can see a ' + p[0] + '.<\/b>');\n      };\n      bz.appendChild(c);\n    });\n}\n\nfunction restart(){\n  st = { screen:0, avatar:st.avatar, stars:0, score:0, missed:[], doneStage:{} };\n  document.getElementById('starCount').innerHTML = '&#11088; 0';\n  go(0);\n}\n\n/* ---------- boot ---------- */\n(function(){\n  document.getElementById('recapStart').innerHTML = recapHTML();\n  var avs = ['&#129490;','&#128102;','&#128103;','&#129489;'];\n  var host = document.getElementById('avatars');\n  avs.forEach(function(a){\n    var d = document.createElement('div');\n    d.className = 'av'; d.innerHTML = a;\n    d.onclick = function(){\n      [].forEach.call(host.children, function(x){ x.classList.remove('sel'); });\n      d.classList.add('sel');\n      st.avatar = a;\n      document.getElementById('startBtn').disabled = false;\n    };\n    host.appendChild(d);\n  });\n  drawMap();\n})();\n\nwindow.pcGo2 = go; window.pcRestart2 = restart;\n})();"}};
+</script>
+<script>
+/* ============================================================================
+   KIDS POST-CLASS — o SLOT (abrir, fechar, um percurso por vez).
+
+   PROVENIÊNCIA: copiado do artefato "Dante Blecker Gregory · Kids A2 ·
+   Professor View" (13/08/2026) — bloco "Post-class: CARGA SOB DEMANDA". O que
+   mudou: o artefato prendia os cards com addEventListener('[data-post]') e as
+   abas com data-tab; aqui o card chama enterPostMode(N) no onclick, que é a
+   convenção do shell (enterSlideMode) e sobrevive a card emitido pelo builder.
+
+   UM PERCURSO POR VEZ NO DOM. Os percursos compartilham ~24 ids (starCount,
+   s-story, bb, ck...). Abrir um esvazia o outro: assim os ids nunca se cruzam e
+   nenhuma das duas peças precisou ser reescrita. Custo declarado: trocar de
+   percurso reinicia aquele percurso.
+
+   Injetado pelo builder SÓ quando model==kids e a aula tem postclass.html.
+   Adulto nunca vê este arquivo (memória nao-tocar-adulto).
+   ============================================================================ */
+(function () {
+  'use strict';
+
+  function parar() {
+    try { if (typeof stopAllAudio === 'function') stopAllAudio(); } catch (e) {}
+    try { if ('speechSynthesis' in window) { window.speechSynthesis.resume(); window.speechSynthesis.cancel(); } } catch (e) {}
+  }
+
+  var aberto = null;
+
+  /* Abre o percurso N em tela cheia. O CSS (body.pc-mode) esconde logo-bar,
+     main-content e slides-wrapper — o percurso ocupa a tela como o deck. */
+  function enterPostMode(n) {
+    n = String(n);
+    var POSTS = window.PV_POSTS || {};
+    if (!POSTS[n]) return;
+    parar();
+    if (aberto !== n) {
+      var roots = document.querySelectorAll('.pv-post');
+      for (var i = 0; i < roots.length; i++) roots[i].innerHTML = '';
+      var alvo = document.getElementById('pc-root-' + n);
+      if (!alvo) return;
+      alvo.innerHTML = POSTS[n].html;
+      /* innerHTML não executa <script>: o JS do percurso entra por um nó novo. */
+      var s = document.createElement('script');
+      s.textContent = POSTS[n].js;
+      alvo.appendChild(s);
+      var nome = document.getElementById('pv-post-nome');
+      if (nome) nome.textContent = POSTS[n].titulo || '';
+      aberto = n;
+    }
+    document.body.classList.add('pc-mode');
+    window.scrollTo(0, 0);
+  }
+
+  function exitPostMode() {
+    parar();
+    document.body.classList.remove('pc-mode');
+    window.scrollTo(0, 0);
+  }
+
+  window.enterPostMode = enterPostMode;
+  window.exitPostMode = exitPostMode;
+
+  /* MESMA REGRA DO slide-mode (REGRA 2, aba IN CLASS): trocar de aba NUNCA pode
+     deixar o modo tela-cheia ligado. Sem isto, sair do percurso pela aba deixava
+     o hub invisível atrás de um percurso que continuava por cima. */
+  var _switchTab = window.switchTab;
+  if (typeof _switchTab === 'function') {
+    window.switchTab = function () {
+      document.body.classList.remove('pc-mode');
+      return _switchTab.apply(this, arguments);
+    };
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.body.classList.contains('pc-mode')) exitPostMode();
+  });
+
+  function wire() {
+    var sair = document.getElementById('pv-post-sair');
+    if (sair) sair.addEventListener('click', exitPostMode);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
+  else wire();
+})();
+
+</script>
+<div class="pv-post" id="pc-root-2"></div>
 </body>
 </html>

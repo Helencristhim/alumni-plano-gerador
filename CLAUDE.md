@@ -2162,3 +2162,46 @@ Depois de mergear, `git fetch origin && git rebase origin/main` antes de gerar a
 branch da proxima aula ja existir encadeada, rebaseie com `--onto`: mergeamos com **squash**,
 entao o commit da aula anterior tem SHA diferente do que foi pro `main`, o merge-base fica pra
 tras e o PR novo mostra a aula anterior inteira de novo.
+
+---
+
+## REGRA 33 — MODELO KIDS: O HOMEWORK É O POST-CLASS (REGRA BLOQUEANTE)
+
+Ordem do Dan (13/08/2026), a partir do artefato *"Dante Blecker Gregory · Kids A2 ·
+Professor View"*:
+
+> "os slots de post e preclass pro kids imersivo, E APENAS DO KIDS, precisam ser trocados
+> por estes do artefato (...) pode tirar o pre class tanto do molde e depois do dante"
+
+**No `model: "kids"` NÃO existe Pre-class.** A aba sai do hub (professor e aluno) e no lugar
+dela entra **Post-class**: um PERCURSO de 6 atividades que o aluno faz SOZINHO depois da
+aula e que **se autocorrige** — erra uma vez, recebe dica; erra duas, o percurso revela a
+resposta e segue. A pontuação nunca bloqueia, e estrela nunca é retirada.
+
+**SÓ KIDS.** Adulto e teens continuam com o accordion Pre-class das REGRAS 4 e 15, e o
+caminho deles no builder é o mesmo de sempre: o percurso só existe quando
+`cfg.model == "kids"` E a aula tem `postclass.html`.
+
+### O que a aula kids precisa ter
+
+`postclass.html` (corpo) + `postclass.js` (motor + conteúdo) no diretório da aula, e
+`lesson.post = {titulo, desc}` no config. **O motor não se reescreve por aula** — copia-se
+de uma aula pronta (`_build/bento-aula1`) e troca-se só o bloco `CONTEUDO`. Contrato
+completo em `_build/model/README.md`.
+
+### As três coisas que já nasceram quebradas no artefato (não repita)
+
+1. **Handler inline só enxerga GLOBAL.** O percurso é uma IIFE: `onclick="restart()"` é
+   botão MORTO (REGRA 7.1). Use `pcRestart{N}()` / `pcImg(this)`, que são expostos.
+2. **A chave do áudio é a frase EXATA que o motor fala**, com apóstrofo RETO — o `speak()`
+   normaliza `’`→`'` antes de procurar no AUDIO_MAP. Errou a chave: TTS (viola a REGRA 7).
+3. **Um percurso por vez no DOM.** Os percursos compartilham ~24 ids; abrir um esvazia o
+   outro. Root vazio não pode ocupar tela (`.pv-post:empty{display:none}`).
+
+**GATE (bloqueante, `validate_lesson.check_kids_postclass`)**: hub com aba Post-class não
+pode ter Pre-class; todo card tem percurso em `window.PV_POSTS` e root no DOM; handler
+inline tem de existir como global; `AUDIO_MAP` preenchido e com MP3 que EXISTE. O canário
+(`botao-morto-no-percurso.html`) prova a cada PR que o gate ainda morde.
+
+> **Hub kids ANTIGO não é acusado** (REGRA 30/31): o gate só roda em hub que já tem o
+> percurso. A migração de um aluno acontece quando o Dan pedir aquele aluno.

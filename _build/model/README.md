@@ -130,6 +130,40 @@ le se as duas aulas de fato nao sistematizam a mesma coisa e uma pessoa.
 > que estava na tela) e prosa que DESCREVE o percurso em vez de mandar fazer. Regra de
 > conteudo so entra depois de ficar muda no artefato inteiro.
 
+## MODELO KIDS: o homework é o POST-CLASS, não o Pre-class
+
+Decisão do Dan (13/08/2026), a partir do artefato *"Dante Blecker Gregory · Kids A2 ·
+Professor View"*. **No `model: "kids"` não existe aba Pre-class.** O homework acontece
+DEPOIS da aula, num **percurso** de 6 atividades que o aluno faz sozinho e que se
+autocorrige (erra uma vez → dica; erra duas → revela a resposta e segue; a pontuação
+nunca bloqueia). Adulto e teens não mudam nada.
+
+**O que a aula precisa ter** (mesmo diretório do `config.json`):
+
+| arquivo | o que é |
+|---|---|
+| `postclass.html` | o corpo: topbar + `#map` + as 8 `<section class="screen">` (start, story, words1, words2, sayit, mission, final, result). O botão de início chama `pcGo{N}(1)`. |
+| `postclass.js` | o motor + o CONTEÚDO daquela aula. Expõe `window.pcGo{N}` e `window.pcRestart{N}` no fim. |
+| `config.json` | `lesson.post = {"titulo": "...", "desc": "..."}` — o card do menu. |
+
+**O motor NÃO se reescreve por aula.** Copie o `postclass.js` de uma aula que já existe
+(`_build/bento-aula1/postclass.js` é a referência) e troque só o bloco `CONTEUDO` e os
+textos da tela final. Os pesos dos 6 estágios somam **100 exatos** — confira por SOMA.
+
+**Áudio (REGRA 7).** O percurso declara `var AUDIO_PHRASES = [...]` com TUDO que ele pode
+falar; o builder gera nome/voz, alimenta o `audio_manifest.json` e PREENCHE o
+`var AUDIO_MAP = {};`. Frase fora da lista cai em TTS. Duas armadilhas medidas:
+apóstrofo tem de ser RETO (`speak()` normaliza `’`→`'` antes do lookup) e a frase tem de
+ser **exatamente** a que o motor fala (a do gap-fill é `before + resposta + after`).
+
+**Handler inline só enxerga GLOBAL.** O arquivo é uma IIFE: `onclick="restart()"` nasce
+morto (foi assim no artefato, nos dois percursos). Use o que está exposto —
+`pcRestart{N}()`, `pcImg(this)`. O GATE do percurso (`validate_lesson.check_kids_postclass`)
+reprova isso, e o canário prova que ele ainda morde.
+
+**Onde entra no hub:** aluno NOVO → `build_from_model.py` (hub `new`); aluno que JÁ tem hub
+→ `insert_hub.py`, que tira o Pre-class e injeta o percurso. Nunca cole o JS na mão.
+
 ## Fluxo por aula
 
 ```

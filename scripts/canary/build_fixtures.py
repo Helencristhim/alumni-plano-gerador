@@ -34,6 +34,9 @@ BASE = os.path.join(ROOT, 'public', 'professor', 'danielle-moreira-aula1.html')
 # HUB (Pre-class com match-row): base do fixture de idioma. O matching do Pre-class
 # vive no hub, nao no standalone — por isso o fixture de portugues precisa dele.
 BASE_HUB = os.path.join(ROOT, 'public', 'professor', 'danielle-moreira.html')
+# BASE do MODELO KIDS: o percurso (post-class) so existe aqui, e o corpo dele vive
+# dentro de window.PV_POSTS -- nenhum fixture de adulto tem o que corromper.
+BASE_KIDS_HUB = os.path.join(ROOT, 'public', 'professor', 'bento.html')
 OUT = os.path.join(os.path.dirname(__file__), 'fixtures')
 
 # Cada defeito: (nome do arquivo, funcao que injeta UM defeito, substring que o
@@ -94,6 +97,14 @@ def defeito_audio_faltando(html):
     return re.sub(r'"/audio/[^"]+\.mp3"',
                   '"/audio/canario-nao-existe/nao_existe.mp3"', html, count=1)
 
+def defeito_botao_morto_no_percurso(html):
+    """MODELO KIDS — o percurso (post-class) e uma IIFE: handler inline so enxerga
+    GLOBAL. Este e o defeito que veio no artefato de origem: o "Play again" chamava
+    restart(), que e local, e o botao nascia morto (REGRA 7.1). O gate le o corpo do
+    percurso DENTRO de window.PV_POSTS -- onde nenhum outro check enxerga."""
+    return html.replace('pcRestart1()', 'restart()', 1)
+
+
 DEFEITOS = [
     ('pergunta-escondida.html', defeito_pergunta_escondida, 'PERGUNTA ESCONDIDA', 'standalone'),
     ('sentence-sem-css.html',   defeito_sentence_sem_css,   'SEM ESTILO-BASE',    'standalone'),
@@ -101,6 +112,8 @@ DEFEITOS = [
     ('header-portugues.html',   defeito_header_portugues,   'HEADER em português', 'standalone'),
     ('tarefa-ausente.html',     defeito_tarefa_ausente,     'TAREFA AUSENTE',     'standalone'),
     ('audio-faltando.html',     defeito_audio_faltando,     'do audioMap NÃO existem', 'standalone'),
+    ('botao-morto-no-percurso.html', defeito_botao_morto_no_percurso,
+     'está MORTO (REGRA 7.1)', 'kids-hub'),
     # NOTA: o gate de PORTUGUES no Pre-class (A2+) le o HUB (public/professor/{slug}.html),
     # nao o arquivo passado — um fixture renomeado nunca satisfaz esse lookup, entao ele
     # nao vira fixture-arquivo. O canario cobre o CORACAO desse gate (pt_na_tela +
@@ -109,12 +122,13 @@ DEFEITOS = [
 
 
 def main():
-    for rotulo, caminho in [('standalone', BASE), ('hub', BASE_HUB)]:
+    for rotulo, caminho in [('standalone', BASE), ('hub', BASE_HUB), ('kids-hub', BASE_KIDS_HUB)]:
         if not os.path.exists(caminho):
             print(f'FALHA: base {rotulo} {caminho} nao existe', file=sys.stderr)
             sys.exit(2)
     html_std = open(BASE, encoding='utf-8').read()
     html_hub = open(BASE_HUB, encoding='utf-8').read()
+    html_kids = open(BASE_KIDS_HUB, encoding='utf-8').read()
     os.makedirs(OUT, exist_ok=True)
 
     # sanidade: cada base tem que ter os alvos, senao a injecao vira no-op silencioso
@@ -122,13 +136,17 @@ def main():
         if marca not in html_std:
             print(f'FALHA: base standalone sem alvo "{marca}" — fixture invalido', file=sys.stderr)
             sys.exit(2)
+    if 'pcRestart1()' not in html_kids:
+        print('FALHA: base kids-hub sem "pcRestart1()" — fixture do percurso invalido',
+              file=sys.stderr)
+        sys.exit(2)
     if 'match-row' not in html_hub:
         print('FALHA: base hub sem "match-row" — fixture de idioma invalido', file=sys.stderr)
         sys.exit(2)
 
     manifest = []
     for arquivo, fn, esperado, base in DEFEITOS:
-        html = html_hub if base == 'hub' else html_std
+        html = {'hub': html_hub, 'kids-hub': html_kids}.get(base, html_std)
         corrompido = fn(html)
         if corrompido == html:
             print(f'FALHA: injecao de {arquivo} NAO mudou nada (regex obsoleto?)', file=sys.stderr)
