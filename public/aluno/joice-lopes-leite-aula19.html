@@ -713,6 +713,16 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
 .teacher-t{display:none !important}
+/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1063,6 +1073,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What did you not do eighteen lessons ago?</div><div class="q-answer">Say one sentence in English about your work.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What are you already doing in English?</div><div class="q-answer">Reading a report, asking about the numbers, and saying what you think.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen1"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen1"><p>Hello. This is a short message about your progress, and it is not an evaluation. Eighteen lessons ago you did not say one sentence in English about your work. Today you tell your career, you ask questions, and you answer them. You are still learning, and that is normal. You are already doing in English what you do in Portuguese every week: you read a report, you ask about the numbers, and you say what you think. In November you are presenting. That is the whole story, in three times.</p></div></div>
   </div>
 </div>
 
@@ -1100,6 +1111,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What is the next block about?</div><div class="q-answer">The event: the presentation, the questions after it, and the coffee break.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What does not change in the method?</div><div class="q-answer">We speak first, and the grammar comes after.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen2"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen2"><p>Hi, this is a message about the next block of the program. Until now we worked on your work, your team and your story. From lesson twenty-one we are going to work on the event itself: the presentation, the questions after it, and the coffee break. Nothing changes in the method: we speak first, and the grammar comes after. If you want to change something in the plan, tell your teacher this week. Thank you, and see you soon.</p></div></div>
   </div>
 </div>
 
@@ -1855,6 +1867,13 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+// ===== Transcript accordion: abre/fecha o script do listening (REGRA 27-E: toggle) =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>

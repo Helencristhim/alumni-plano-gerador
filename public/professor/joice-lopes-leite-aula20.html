@@ -710,6 +710,16 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-tag { color: #fff !important; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
+/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1070,7 +1080,7 @@ body.slide-mode .nav-bar { display:flex; }
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="20" data-phase="4" data-teacher="<strong>Listening 1 (4 min):</strong> LEIA AS DUAS PERGUNTAS COM ELA ANTES DE TOCAR. Contexto: 'The letter of the program, read out loud.' Toque 2 vezes, sem transcricao. Se ela pedir, use 0.75x sem drama. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto.">
+<div class="slide slide-dark" data-slide="20" data-phase="4" data-teacher="<strong>Listening 1 (4 min):</strong> LEIA AS DUAS PERGUNTAS COM ELA ANTES DE TOCAR. Contexto: 'The letter of the program, read out loud.' Toque 2 vezes com a caixa Transcript FECHADA. Se ela pedir, use 0.75x sem drama. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto. <strong>TRANSCRIPT:</strong> a caixa nasce FECHADA e assim fica nas duas escutas. Abra SO depois de corrigir as perguntas, para ele conferir o que perdeu &mdash; e ai vale reouvir lendo junto.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">The Letter, Read Out <span class="accent">Loud</span></h2>
@@ -1095,6 +1105,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What are they going to prepare together?</div><div class="q-answer">A new report, with the teachers inside it.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What are they NOT going to do this semester?</div><div class="q-answer">Work with the big schools.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen1"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen1"><p>Dear group, thank you for the first part of the year. Here is what we are going to do next. We are going to continue the work with public schools, and we are going to prepare a new report together. The first version is going to be ready in October. We are not going to work with the big schools this semester: we decided to give all our time to the small ones. In November we are going to Bel&amp;eacute;m, and five people from this group are presenting there. Thank you, and see you soon.</p></div></div>
   </div>
 </div>
 
@@ -1107,7 +1118,7 @@ body.slide-mode .nav-bar { display:flex; }
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="22" data-phase="4" data-teacher="<strong>Listening 2 (4 min) &mdash; NAO CORTAR:</strong> LEIA AS DUAS PERGUNTAS COM ELA ANTES DE TOCAR. Avise que este audio e SO PARA ELA. Toque uma vez, espere em silencio, e toque a segunda so se ela pedir. Depois nao explique nada: pergunte o que ela achou e ESCUTE. Este audio e o fecho emocional do bloco. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto.">
+<div class="slide slide-dark" data-slide="22" data-phase="4" data-teacher="<strong>Listening 2 (4 min) &mdash; NAO CORTAR:</strong> LEIA AS DUAS PERGUNTAS COM ELA ANTES DE TOCAR. Avise que este audio e SO PARA ELA. Toque uma vez, espere em silencio, e toque a segunda so se ela pedir. Depois nao explique nada: pergunte o que ela achou e ESCUTE. Este audio e o fecho emocional do bloco. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto. <strong>TRANSCRIPT:</strong> a caixa nasce FECHADA e assim fica nas duas escutas. Abra SO depois de corrigir as perguntas, para ele conferir o que perdeu &mdash; e ai vale reouvir lendo junto.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">A Message Only for <span class="accent">You</span></h2>
@@ -1132,6 +1143,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What did you record twenty lessons ago, and what do you record today?</div><div class="q-answer">One minute that you could not finish -- and today two minutes without stopping.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What changed, according to the message?</div><div class="q-answer">Not the intelligence and not the accent: you tried, twice a week, for twenty lessons.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen2"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen2"><p>Hi, Joice. This is a message only for you. Twenty lessons ago you recorded one minute about your work, and you could not finish it. Today you record two minutes and you do not stop. Nothing changed in your intelligence, and nothing changed in your accent. What changed is that you tried, twice a week, for twenty lessons. In November you are going to speak in Bel&amp;eacute;m. You are going to be nervous, and you are going to do it anyway. That is the whole method.</p></div></div>
   </div>
 </div>
 
@@ -1863,6 +1875,13 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+// ===== Transcript accordion: abre/fecha o script do listening (REGRA 27-E: toggle) =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>

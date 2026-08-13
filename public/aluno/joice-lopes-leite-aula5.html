@@ -712,6 +712,16 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
 .teacher-t{display:none !important}
+/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1076,6 +1086,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. Where is the registration desk?</div><div class="q-answer">On the first floor, next to the main entrance.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. Who do you look for when you are lost?</div><div class="q-answer">A person with a blue shirt.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen1"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen1"><p>Good morning, and welcome to the conference. Here is some information about the building. The registration desk is on the first floor, next to the main entrance. The big room is on the second floor. Room three and room four are on the third floor, between the elevator and the coffee area. The coffee is free all day. If you are lost, please look for a person with a blue shirt. We are here to help you. Thank you, and have a very good day.</p></div></div>
   </div>
 </div>
 
@@ -1114,6 +1125,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. Where and when is her session?</div><div class="q-answer">In room four, on the third floor, at two in the afternoon.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. Where is the water?</div><div class="q-answer">On a small table near the window.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen2"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen2"><p>Hello, this is a message about your session tomorrow. Your session is in room four, on the third floor, at two in the afternoon. Please arrive at half past one. The technical team is in the room from one o'clock. Your name is on the door. If you need water, there is a small table near the window. See you tomorrow, and thank you very much.</p></div></div>
   </div>
 </div>
 
@@ -1880,6 +1892,13 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+// ===== Transcript accordion: abre/fecha o script do listening (REGRA 27-E: toggle) =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>

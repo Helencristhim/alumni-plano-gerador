@@ -712,6 +712,16 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
 .teacher-t{display:none !important}
+/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1113,6 +1123,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. When is the group meeting?</div><div class="q-answer">On Monday, at ten in the morning.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. When do you write to him if you cannot come?</div><div class="q-answer">Before Friday.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen1"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen1"><p>Good afternoon, everyone. Here is the calendar for this month. Our group meeting is on Monday, at ten in the morning. The meeting is one hour. In November we have the big event, and the program is on the website. The technical session is on Thursday, at three in the afternoon. Please put the dates in your calendar today. If you cannot come on Monday, please write to me before Friday. Thank you very much.</p></div></div>
   </div>
 </div>
 
@@ -1151,6 +1162,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What time is the team lunch?</div><div class="q-answer">At half past twelve.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What happens on Friday?</div><div class="q-answer">There is no meeting -- the day is for the reports.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen2"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen2"><p>Hello, this is a short message about your schedule. Your first meeting is at nine in the morning, and it is thirty minutes. After that, you are free until noon. The team lunch is at half past twelve. In the afternoon there is one more meeting, at four o'clock. On Friday there is no meeting, so you have the day for your reports. Have a very good week.</p></div></div>
   </div>
 </div>
 
@@ -1893,6 +1905,13 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+// ===== Transcript accordion: abre/fecha o script do listening (REGRA 27-E: toggle) =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>

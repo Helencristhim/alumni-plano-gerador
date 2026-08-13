@@ -711,6 +711,16 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
 .teacher-t{display:none !important}
+/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1061,6 +1071,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What is the group doing on the sixth?</div><div class="q-answer">Meeting the German team for the last time.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What do you tell the organizer if you are not going?</div><div class="q-answer">You tell him you are not coming.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen1"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen1"><p>Good afternoon. Here is the plan for November, and everything is already set. We are leaving on the fourth, and we are arriving in Bel&amp;eacute;m in the afternoon. On the fifth we are visiting two public schools in the morning. Joice is presenting at three o'clock, in the small room. On the sixth we are meeting the German team for the last time, and we are coming back on the seventh. Please tell me if you are not coming. Thank you very much.</p></div></div>
   </div>
 </div>
 
@@ -1098,6 +1109,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. Why are they moving the call to the afternoon?</div><div class="q-answer">Because she is not working tomorrow morning.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. When are they meeting next week?</div><div class="q-answer">On Friday -- not on Tuesday, because she is travelling to Recife.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen2"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen2"><p>Hi, this is a short message about tomorrow. I am not working tomorrow morning, so we are moving our call to the afternoon. Is three o'clock good for you? The material is ready, and I am sending it tonight. Next week I am travelling to Recife, so we are not meeting on Tuesday. We are meeting on Friday instead. Please answer me soon, because I am closing the agenda today. Thank you.</p></div></div>
   </div>
 </div>
 
@@ -1853,6 +1865,13 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+// ===== Transcript accordion: abre/fecha o script do listening (REGRA 27-E: toggle) =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>
