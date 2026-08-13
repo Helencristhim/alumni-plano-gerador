@@ -466,11 +466,20 @@ function startTTS(text, btn, stop){
 function startFile(src, text, btn, stop){
   var el = new Audio(src);
   el.addEventListener('ended', function(){ if(cur && cur.btn === btn){ resetBtn(cur); cur = null; } });
-  el.addEventListener('error', function(){ if(cur && cur.btn === btn){ cur = null; } startTTS(text, btn, stop); });
+  /* So e falha DE VERDADE se este audio ainda for o atual e o erro nao for
+     AbortError -- que e o que o navegador dispara quando OUTRO clique interrompe
+     o play() ainda pendente. Sem esta guarda, clicar rapido derruba a frase no
+     sintetizador (voz robotica) em conexao lenta. */
+  function fallback(e){
+    if(!cur || cur.el !== el) return;
+    if(e && e.name === 'AbortError') return;
+    cur = null; startTTS(text, btn, stop);
+  }
+  el.addEventListener('error', fallback);
   cur = {btn:btn, stop:stop, text:text, el:el, paused:false};
   btn.classList.add('on'); setBtn(btn, 'pausar', ICON_PAUSE);
   if(stop) stop.hidden = false;
-  el.play().catch(function(){ if(cur && cur.btn === btn){ cur = null; } startTTS(text, btn, stop); });
+  el.play().catch(fallback);
 }
 function play(text, btn){
   var stop = btn.parentElement ? btn.parentElement.querySelector('[data-stop]') : null;
