@@ -711,6 +711,16 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-tag { color: #fff !important; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
+/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1071,7 +1081,7 @@ body.slide-mode .nav-bar { display:flex; }
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="20" data-phase="4" data-teacher="<strong>Listening 1 (4 min):</strong> LEIA AS DUAS PERGUNTAS COM ELA ANTES DE TOCAR. Contexto: 'The coordinator opens the meeting and says the rules.' Toque 2 vezes, sem transcricao. Se ela pedir, use 0.75x. A frase 'nobody can speak fast in a second language' e para ela &mdash; se ela reagir, pare. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto.">
+<div class="slide slide-dark" data-slide="20" data-phase="4" data-teacher="<strong>Listening 1 (4 min):</strong> LEIA AS DUAS PERGUNTAS COM ELA ANTES DE TOCAR. Contexto: 'The coordinator opens the meeting and says the rules.' Toque 2 vezes com a caixa Transcript FECHADA. Se ela pedir, use 0.75x. A frase 'nobody can speak fast in a second language' e para ela &mdash; se ela reagir, pare. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto. <strong>TRANSCRIPT:</strong> a caixa nasce FECHADA e assim fica nas duas escutas. Abra SO depois de corrigir as perguntas, para ele conferir o que perdeu &mdash; e ai vale reouvir lendo junto.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">Before We <span class="accent">Start</span></h2>
@@ -1096,6 +1106,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. What can you do at any moment?</div><div class="q-answer">Ask a question -- out loud or in the chat.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What can you not do in this meeting?</div><div class="q-answer">You cannot record it.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen1"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen1"><p>Good morning, everyone, and welcome. Before we start, three small things. You can ask a question at any moment. You can write in the chat, and I can read the question for you. If you cannot understand a person, please say it. Nobody here speaks perfect English, and nobody can speak fast in a second language. We can go slowly. And you cannot record this meeting, so please take notes. Thank you, and let us begin.</p></div></div>
   </div>
 </div>
 
@@ -1108,7 +1119,7 @@ body.slide-mode .nav-bar { display:flex; }
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="22" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> De novo: leia as perguntas COM ela antes de tocar. Diga: 'A message about the room before your session.' Toque 2 vezes. CORTAVEL: se cortar, avise que fica no material dela. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto.">
+<div class="slide slide-dark" data-slide="22" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> De novo: leia as perguntas COM ela antes de tocar. Diga: 'A message about the room before your session.' Toque 2 vezes. CORTAVEL: se cortar, avise que fica no material dela. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto. <strong>TRANSCRIPT:</strong> a caixa nasce FECHADA e assim fica nas duas escutas. Abra SO depois de corrigir as perguntas, para ele conferir o que perdeu &mdash; e ai vale reouvir lendo junto.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">Before the <span class="accent">Session</span></h2>
@@ -1133,6 +1144,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. How early can you arrive to see the room?</div><div class="q-answer">Fifteen minutes early.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. Why can you not use the big screen before two?</div><div class="q-answer">Because another group is in the room.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen2"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen2"><p>Hi, this is a short message before the session. You can arrive fifteen minutes early if you want to see the room. The technical team can help you with the computer. You cannot use the big screen before two o'clock, because another group is in the room. If you cannot come, please write to me today. I can send your material to the group. Thank you very much, and see you tomorrow.</p></div></div>
   </div>
 </div>
 
@@ -1864,6 +1876,13 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+// ===== Transcript accordion: abre/fecha o script do listening (REGRA 27-E: toggle) =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>

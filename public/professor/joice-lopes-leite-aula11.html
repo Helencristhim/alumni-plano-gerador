@@ -713,6 +713,16 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-tag { color: #fff !important; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
+/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -1038,7 +1048,7 @@ body.slide-mode .nav-bar { display:flex; }
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 1 (4 min):</strong> LEIA AS DUAS PERGUNTAS COM ELA ANTES DE TOCAR. Contexto: 'Another person does the same first round.' Depois da segunda escuta, pergunte QUAL das quatro linhas ele usou primeiro &mdash; e o modelo dela na boca de outra pessoa. Toque 2 vezes, sem transcricao. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto.">
+<div class="slide slide-dark" data-slide="16" data-phase="4" data-teacher="<strong>Listening 1 (4 min):</strong> LEIA AS DUAS PERGUNTAS COM ELA ANTES DE TOCAR. Contexto: 'Another person does the same first round.' Depois da segunda escuta, pergunte QUAL das quatro linhas ele usou primeiro &mdash; e o modelo dela na boca de outra pessoa. Toque 2 vezes com a caixa Transcript FECHADA. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto. <strong>TRANSCRIPT:</strong> a caixa nasce FECHADA e assim fica nas duas escutas. Abra SO depois de corrigir as perguntas, para ele conferir o que perdeu &mdash; e ai vale reouvir lendo junto.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening</div>
     <h2 class="slide-heading" style="color:#fff">Somebody Else's <span class="accent">Turn</span></h2>
@@ -1063,6 +1073,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. Where does Marcus work?</div><div class="q-answer">At a university in the United States.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. What would Marcus like to do in November?</div><div class="q-answer">He would like to visit Brazil.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen1"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen1"><p>Good morning, everybody, and welcome to the first round. My name is Marcus Reed, and I work at a university in the United States. I am a researcher, and I also teach. I work with public schools, and my project is about technology in small towns. We usually meet every two weeks, and I always prepare before the call. This year I want to learn from the other groups. I would like to visit Brazil in November. Thank you, and it is very good to be here.</p></div></div>
   </div>
 </div>
 
@@ -1075,7 +1086,7 @@ body.slide-mode .nav-bar { display:flex; }
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="18" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> De novo: leia as perguntas COM ela antes de tocar. Diga: 'A small idea before your first round.' Este audio e um conselho direto para ela &mdash; se ela reagir, PARE e deixe falar. Toque 2 vezes. CORTAVEL. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto.">
+<div class="slide slide-dark" data-slide="18" data-phase="4" data-teacher="<strong>Listening 2 (4 min):</strong> De novo: leia as perguntas COM ela antes de tocar. Diga: 'A small idea before your first round.' Este audio e um conselho direto para ela &mdash; se ela reagir, PARE e deixe falar. Toque 2 vezes. CORTAVEL. Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna ANTES de tocar de novo — agora ela ouve procurando as respostas, não mais para descobrir o assunto. <strong>TRANSCRIPT:</strong> a caixa nasce FECHADA e assim fica nas duas escutas. Abra SO depois de corrigir as perguntas, para ele conferir o que perdeu &mdash; e ai vale reouvir lendo junto.">
   <div class="slide-inner" style="text-align:center">
     <div class="chapter-label">Listening 2</div>
     <h2 class="slide-heading" style="color:#fff">Four Sentences Are <span class="accent">Enough</span></h2>
@@ -1100,6 +1111,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">1. How many sentences are enough?</div><div class="q-answer">Four sentences.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. Why do you speak slowly?</div><div class="q-answer">Because everybody understands you, and nobody looks at the clock.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen2"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen2"><p>Hi, this is a short message before your first round. Here is a small idea to help you. Do not try to say everything. Four sentences are enough: who you are, what you do, one number about your work, and one thing you want this year. Say the four sentences slowly. If you speak slowly, everybody understands you, and nobody looks at the clock. See you at the meeting, and good luck.</p></div></div>
   </div>
 </div>
 
@@ -1854,6 +1866,13 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+// ===== Transcript accordion: abre/fecha o script do listening (REGRA 27-E: toggle) =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>

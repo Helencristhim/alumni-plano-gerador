@@ -49,6 +49,13 @@ CONFIG (JSON):
                                        // Continua valendo (anatomia imersivo: a barra la e de
                                        // CAPITULOS da narrativa e nunca teve orcamento).
     "listenings": [ {"file": "a1_listening1.mp3", "voice": "ellen", "text": "..."} ],
+    "transcript": true,                // OPCIONAL. Liga o Transcript accordion nos slides de
+                                       // listening: o script do audio numa caixa que NASCE
+                                       // FECHADA e abre no clique (pedido de professora, ver
+                                       // transcripts.py). O texto sai do "text" acima, entao
+                                       // nunca diverge do MP3. Ausente = feature desligada,
+                                       // nem o CSS entra. Para aula JA GERADA, use
+                                       // _build/model/apply_transcripts.py.
     "extra_audio": [ {"key": "[order-l1]", "file": "pc_order_l1.mp3", "voice": "arthur", "text": "..."} ]
   },
   "hub": "snippets"   // "new" = gera hub prof+aluno do zero | "snippets" = só trechos p/ hub existente | "none"
@@ -77,6 +84,8 @@ from html import unescape as html_unescape
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
+sys.path.insert(0, HERE)
+import transcripts  # noqa: E402  (Transcript accordion — opt-in por config)
 PROF = os.path.join(ROOT, 'public', 'professor')
 ALUNO = os.path.join(ROOT, 'public', 'aluno')
 
@@ -2204,6 +2213,17 @@ def build_standalone(cfg, content_dir, manifest):
     # todo diálogo/leitura, a partir das perguntas do slide de checagem. Idempotente e
     # renumera os data-slide. Aula sem diálogo nem leitura = no-op.
     slides = inject_task_slides(slides)
+    # TRANSCRIPT do listening numa caixa que abre e fecha, para o aluno CONFERIR depois o
+    # que perdeu (pedido de duas professoras). Opt-in: só entra com "transcript": true no
+    # config — quem não liga a chave não recebe nem o CSS. Nasce FECHADA, então o
+    # sound-first (REGRAS 2.1/2.3) continua de pé. Ver _build/model/transcripts.py.
+    if cfg.get('transcript'):
+        slides, _ts_n = transcripts.inject(slides, L.get('listenings', []))
+        assert _ts_n or not L.get('listenings'), (
+            '"transcript": true no config mas nenhuma caixa entrou — o slide de listening '
+            'nao tem player mp-listenN, ou o data-src nao casa com lesson.listenings[].file')
+        slides = transcripts.fix_teacher_notes(slides)
+
     # REGRA 7 + 2.2: toda fala do diálogo ganha botão de áudio (senão "Listen for this"
     # leva a um diálogo mudo). Idempotente — modelo/adulto (que já têm audio-inline) passam.
     slides = inject_dialogue_audio(slides)
@@ -2358,6 +2378,11 @@ def build_standalone(cfg, content_dir, manifest):
         assert item['voice'] in VOICES, f'call com voz desconhecida: {item["voice"]}'
         manifest.append(item)
 
+    # CSS+JS da caixa de transcript. Fica AQUI, e nao no shell do modelo, de proposito:
+    # quem nao liga a chave nao recebe uma linha sequer (o espelho do aluno deriva de `s`,
+    # entao herda junto). Idempotente.
+    if cfg.get('transcript'):
+        s = transcripts.ensure_assets(s)
     final_asserts(s, cfg, f'prof aula{n}')
     write(os.path.join(PROF, f'{cfg["slug"]}-aula{n}.html'), apply_ui_strings(s, cfg))
 
