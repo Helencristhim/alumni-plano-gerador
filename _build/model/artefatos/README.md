@@ -17,6 +17,70 @@ em `~/Downloads` é a moldura do claude.ai; o documento de verdade vem no diret�
 
 ---
 
+## `dante-kids-professor-view.html`
+
+**O que é.** O *Professor View* do **Dante Blecker Gregory** (Kids · A2), escrito fora do
+sistema em agosto/2026. Duas aulas completas — *Dragon Rider* e *My Lego City* — com
+Planejamento, deck de IN CLASS e o percurso de POST-CLASS.
+
+É a especificação do molde **`joaozinho`**, o modelo-aluno kids novo, na mesma relação que o
+artefato da Erica tem com a `stephanie-vicente`:
+
+| | adulto | kids |
+|---|---|---|
+| modelo atual | `helen-mendes` (anatomia `imersivo`) | `bento` (anatomia `imersivo`, pele kids) |
+| modelo novo | `stephanie-vicente` (`guided-discovery`) | **`joaozinho`** (este artefato) |
+
+**Procedência.** É o HTML **real** da página, não o wrapper — o `.html` que o navegador salva
+em `~/Downloads` é a moldura do claude.ai, e o documento de verdade vem no diretório
+`..._files/`, aqui como `a_002_dqUE.html`. Está no repo byte a byte.
+
+- SHA-256: `dc20671678e3b7d121aa6dfd17eda88d78787b5e247746e0d19157f66c932460`
+- 437.807 bytes · 1.076 regras de CSS · 20 telas em 2 aulas · 3 abas
+- Versionado no repo em **13/08/2026**
+
+### O que ele especifica que nenhuma anatomia de hoje tem
+
+| | `imersivo` (o que o Dante tem no ar) | este artefato |
+|---|---|---|
+| abas | Planejamento · Pre-class · IN CLASS · Complementares | **Planejamento · In Class · Post-class** |
+| deck | 29 telas em 7 capítulos | **10 telas em 6 stages** |
+| espinha | The Cave · Dragon Words · Can It Fly? · Meet Storm · Dragon School · Your Turn · Wrap-Up | **Hello Time · Story Time · Say It Like This · Game Time · My Turn · Star Time** |
+| eixo | 8 palavras de vocabulário | **1 chunk produtivo** (`He can fly, but he can't swim.`) + 6 ações que cabem nele |
+| dever de casa | Complementares (mídia passiva) | **percurso auto-corrigido** (já portado — ver abaixo) |
+
+Componentes próprios, medidos no deck (por aula): `flip-tile` 6 (vocab que vira),
+`story-frame` 6 (a história em painéis), `star-card` 6 (recall do fecho), `unj-chip` 6
+(montar a frase), `tscript-line` 13,5 (transcrição falante a falante), `gist-opt` 4,5,
+`tf-b` 7,5, `conf-o` 9, `sc-obj` 10,5 (a cena clicável do jogo), `keyword-chip` 12.
+
+### O emoji dele é slot de imagem, não decisão de arte
+
+O deck tem 245 emojis e 2 imagens; o deck que está no ar tem 17 imagens da `assets/kids` e
+2 emojis. Isso **não** é conflito com a direção "figura, não emoji": o próprio CSS do
+artefato declara o que aquilo é —
+
+```css
+/* --- fallback de imagem --------------------------------------------------- */
+.imgph { display:inline-flex; ... font-size:var(--ph-size,3.2rem); }
+```
+
+`.imgph` aparece 6 vezes por aula, sempre dentro de `.ft-img` (a frente do `flip-tile`) e de
+`.st-art`. O emoji ali é **o placeholder de uma figura que não existia na página estática**.
+Copiar o artefato e preencher esses slots pela biblioteca `public/assets/kids/` é obedecê-lo,
+não divergir dele. Emoji fora de `.imgph` (o `😀 Great` do humor, o `🔊` do botão) é
+tipografia da peça e copia-se como está.
+
+### O POST-CLASS dele já está portado
+
+`_build/dante-blecker-gregory-aula{1,2}/postclass.html` é **byte a byte** o `PV_POSTS` deste
+artefato. O `.js` é o mesmo, com três correções documentadas no cabeçalho (o `imgFallback`
+que não compilava em handler inline — REGRA 7.1; o espaço antes do ponto que quebrava a
+chave do `audioMap`; o `restart()`) e mais a `AUDIO_PHRASES`, que o builder lê para gerar os
+MP3. Ou seja: desta especificação, falta portar **o deck**.
+
+---
+
 ## A HIERARQUIA: o artefato manda, a documentação explica
 
 Palavras do Dan, 11/08/2026:
