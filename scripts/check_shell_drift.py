@@ -52,6 +52,21 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Cada PAR: (shell da anatomia imersivo, clone da anatomia nova). Sao dois pares — a AULA
 # e o HUB — porque as duas coisas foram clonadas e as duas podem derivar.
+#
+# A ANATOMIA story-quest (molde kids joaozinho) NAO ENTRA AQUI, e e de proposito.
+# Este gate existe para CLONE: o guided-discovery nasceu copiando o helen-mendes, entao os
+# dois TEM de ter o mesmo conjunto de funcoes e classes-mecanismo, e toda diferenca e
+# suspeita ate ser declarada. A story-quest nao e clone de ninguem — ela e derivada, por
+# script, de um artefato escrito fora do sistema, com outro vocabulario inteiro (flip-tile,
+# story-frame, unj-chip...). Compara-la com o helen-mendes produziria centenas de
+# "divergencias" que sao simplesmente a forma dela, e a lista de excecoes viraria ruido —
+# que e o oposto do que este arquivo serve.
+#
+# O que cobra a story-quest e outro par de gates: o GATE 20 (o shell tem o que a anatomia
+# declara) e o --check do extrator (o shell continua sendo o artefato). O que este gate
+# protegeria e que ela ainda NAO tem — saveState/loadState/updateProgress/startRecording e
+# os 4 scripts de Supabase (REGRA 28) — esta declarado no anatomias.json, no campo
+# `_falta_a_camada_de_producao`, e tem de entrar antes de qualquer material de aluno.
 PARES = [
     (os.path.join(RAIZ, "public", "professor", "helen-mendes-aula1.html"),
      os.path.join(RAIZ, "_build", "model", "shells", "guided-discovery.html")),

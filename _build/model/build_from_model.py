@@ -137,6 +137,9 @@ ANATOMIAS = {
     # explicita para o refactor.
     'imersivo': ('public/professor', 'helen-mendes-aula1.html'),
     'guided-discovery': ('_build/model/shells', 'guided-discovery.html'),
+    # KIDS, molde novo (persona joaozinho). Deriva do artefato por script — ver
+    # extrai_shell_story_quest.py e o campo `derivacao` do anatomias.json.
+    'story-quest': ('_build/model/shells', 'story-quest.html'),
 }
 
 # O HUB tem anatomia propria: no imersivo as aulas sao lista corrida; no guided-discovery
@@ -153,6 +156,9 @@ HUBS = {
     'guided-discovery': ('_build/model/shells',
                          'hub-guided-discovery.html',
                          'hub-guided-discovery-aluno.html'),
+    'story-quest': ('_build/model/shells',
+                    'hub-story-quest.html',
+                    'hub-story-quest-aluno.html'),
 }
 
 
@@ -185,6 +191,7 @@ ANATOMIAS_DECLARADAS = _carrega_anatomias()
 
 ANATOMIA_POR_SLUG = {
     'stephanie-vicente': 'guided-discovery',
+    'joaozinho': 'story-quest',
 }
 
 # Apelidos do config: o que a pessoa escreve em `"molde"` -> a anatomia interna.
@@ -194,6 +201,8 @@ MOLDES = {
     'stephanie': 'guided-discovery',
     'stephanie-vicente': 'guided-discovery',
     'guided-discovery': 'guided-discovery',
+    'joaozinho': 'story-quest',
+    'story-quest': 'story-quest',
 }
 
 
@@ -214,6 +223,8 @@ def _molde_do_material_ja_publicado(slug):
                     h = fh.read()
             except OSError:
                 continue
+            if 'function flipTile(' in h:
+                return 'story-quest'
             if 'function icPick(' in h:
                 return 'guided-discovery'
             if 'function icPickGist(' in h:
@@ -263,7 +274,8 @@ def exige_molde(cfg):
         'ESCOLHA O MOLDE ANTES DE GERAR.\n'
         '  Falta a chave "molde" em ' + str(cfg.get('slug')) + '/config.json.\n'
         '  "molde": "helen-mendes"  -> o de sempre (shell public/professor/helen-mendes-aula1.html)\n'
-        '  "molde": "stephanie"     -> o molde novo (shell _build/model/shells/guided-discovery.html)\n'
+        '  "molde": "stephanie"     -> o guided-discovery (shell _build/model/shells/guided-discovery.html)\n'
+        '  "molde": "joaozinho"     -> o kids novo (shell _build/model/shells/story-quest.html)\n'
         '  Os dois NAO se misturam: cada um tem as suas funcoes JS e o seu vocabulario de classes.')
 
 def shell_path(cfg):
