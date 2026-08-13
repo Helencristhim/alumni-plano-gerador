@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where From? — Uma volta ao mundo em 30 minutos</title>
+<style>
+:root{
+  --paper:#fdfaf5; --paper-2:#f6efe4;
+  --ink:#2b2a28; --ink-soft:#5d574e; --ink-faint:#8a8177;
+  --line:#e2d8c8;
+  --sun:#e07a3f; --sun-soft:#fceee4;
+  --sea:#2f6f8f; --sea-soft:#e6f0f5;
+  --mint:#eaf3ec; --mint-line:#8fb894;
+  --radius:16px;
+  --shadow:0 2px 10px rgba(60,45,25,.07);
+  --shadow-lift:0 8px 24px rgba(60,45,25,.13);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  font-size:17px;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto;padding:0 1.15rem 5rem}
+
+/* ---------- cabeçalho ---------- */
+.hero{background:linear-gradient(160deg,var(--sun-soft) 0%,var(--paper) 62%);
+  border-bottom:1px solid var(--line);padding:3rem 1.15rem 2.4rem;margin-bottom:2.5rem}
+.hero-in{max-width:900px;margin:0 auto}
+.kicker{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sun);font-weight:700;margin:0 0 .7rem}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(1.9rem,5.4vw,2.9rem);
+   line-height:1.15;margin:0 0 .9rem;letter-spacing:-.01em}
+.hero p{margin:0 0 .7rem;color:var(--ink-soft);max-width:60ch}
+.hero .meta{margin:1.3rem 0 0;font-size:.86rem;color:var(--ink-faint)}
+
+/* ---------- momentos ---------- */
+.moment{margin:0 0 3.4rem;scroll-margin-top:1rem}
+.m-head{display:flex;align-items:baseline;gap:.75rem;margin-bottom:.3rem;flex-wrap:wrap}
+.m-num{font-family:Georgia,serif;font-size:.95rem;color:var(--sun);border:1.5px solid var(--sun);
+  border-radius:50%;width:2rem;height:2rem;min-width:2rem;display:inline-flex;align-items:center;justify-content:center}
+.m-title{font-family:Georgia,serif;font-weight:400;font-size:1.55rem;margin:0;line-height:1.25}
+.m-instr{background:var(--sea-soft);border-left:3px solid var(--sea);border-radius:0 12px 12px 0;
+  padding:.85rem 1.05rem;margin:1rem 0 1.6rem;color:var(--ink);font-size:.98rem}
+.m-instr p{margin:0}
+.m-close{margin-top:1.6rem;padding:1rem 1.15rem;background:var(--paper-2);border-radius:12px;
+  font-size:.94rem;color:var(--ink-soft)}
+.m-close b{color:var(--ink);font-weight:600}
+
+/* ---------- português sob demanda (padrão único da peça) ---------- */
+.tr{display:none}
+.show-tr .tr{display:block}
+.tr-toggle{font:inherit;font-size:.78rem;cursor:pointer;background:none;border:0;color:var(--sea);
+  text-decoration:underline;padding:.3rem 0 0;align-self:flex-start;display:inline-block}
+.tr-toggle:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+p.tr{color:var(--ink-faint);font-size:.9rem;margin:.3rem 0 0;line-height:1.5}
+
+/* ---------- momento 1 ---------- */
+.flags{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.flag-btn{font:inherit;cursor:pointer;text-align:left;width:100%;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:.85rem;display:flex;align-items:center;gap:.7rem;box-shadow:var(--shadow);
+  transition:transform .15s,box-shadow .15s,border-color .15s}
+.flag-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift);border-color:var(--sun)}
+.flag-btn:focus-visible{outline:3px solid var(--sea);outline-offset:2px}
+.flag-btn svg{width:42px;height:28px;border-radius:3px;flex:0 0 42px;box-shadow:0 0 0 1px rgba(0,0,0,.09)}
+.flag-name{font-weight:600;font-size:.95rem}
+.flag-btn[aria-expanded="true"]{border-color:var(--sun);background:var(--sun-soft)}
+.flag-panel{grid-column:1/-1;background:#fff;border:1px solid var(--sun);border-radius:14px;
+  padding:1.1rem 1.15rem;box-shadow:var(--shadow)}
+.flag-panel[hidden]{display:none}
+.fp-top{display:flex;align-items:center;gap:.8rem;margin-bottom:.55rem;flex-wrap:wrap}
+.fp-top svg{width:52px;height:35px;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.09)}
+.fp-name{font-family:Georgia,serif;font-size:1.3rem}
+.fp-text{font-size:1.05rem;line-height:1.55;margin:0}
+
+/* ---------- ouvir / pausar ---------- */
+.say{font:inherit;font-size:.83rem;font-weight:600;cursor:pointer;background:#fff;color:var(--sea);
+  border:1.5px solid var(--sea);border-radius:999px;padding:.3rem .85rem;display:inline-flex;align-items:center;
+  gap:.35rem;transition:background .15s,color .15s;vertical-align:middle}
+.say:hover{background:var(--sea);color:#fff}
+.say:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.say.on{background:var(--sea);color:#fff}
+.say svg{width:14px;height:14px;fill:currentColor;flex:0 0 14px}
+.say-stop{border-color:var(--ink-faint);color:var(--ink-faint)}
+.say-stop:hover{background:var(--ink-faint);color:#fff}
+.say[hidden]{display:none}
+.audio-row{display:inline-flex;gap:.4rem;flex-wrap:wrap;align-items:center}
+
+/* ---------- caixa de apoio (fechada por padrão) ---------- */
+.support{background:var(--mint);border:1px solid var(--mint-line);border-radius:12px;margin-top:.85rem}
+.support>summary{cursor:pointer;list-style:none;padding:.6rem .95rem;font-size:.84rem;font-weight:600;
+  color:#3f6b46;display:flex;align-items:center;gap:.45rem}
+.support>summary::-webkit-details-marker{display:none}
+.support>summary::before{content:"›";display:inline-block;transition:transform .2s;font-size:1.1rem;line-height:1}
+.support[open]>summary::before{transform:rotate(90deg)}
+.support>summary:focus-visible{outline:3px solid var(--sea);outline-offset:-2px;border-radius:12px}
+.support-body{padding:0 .95rem .8rem}
+.support ul{list-style:none;margin:0;padding:0}
+.support li{padding:.34rem 0;border-top:1px solid rgba(143,184,148,.4)}
+.support li:first-child{border-top:0}
+.support .en{font-size:1.02rem;color:var(--ink);display:inline}
+.support .tr{font-size:.86rem;color:var(--ink-soft);margin-top:.1rem}
+.support.show-tr .tr{display:block}
+
+/* ---------- momento 2: cartas (4 por linha) ---------- */
+/* altura = pior caso medido (frente com tradução aberta: 295px) + folga curta.
+   O conteúdo é centrado verticalmente para não deixar buraco quando a tradução está fechada. */
+.cards{display:grid;gap:.85rem;grid-template-columns:repeat(4,1fr)}
+.card{perspective:1100px;min-height:312px}
+.card-in{position:relative;width:100%;height:100%;min-height:312px;
+  transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.card.flipped .card-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:var(--radius);padding:.95rem;display:flex;flex-direction:column;
+  border:1px solid var(--line);box-shadow:var(--shadow);overflow-y:auto}
+.face-front{background:#fff}
+.face-back{background:var(--paper-2);transform:rotateY(180deg);border-color:var(--sun)}
+.clue-label{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.5rem}
+.clues{list-style:none;margin:0;padding:0}
+.clues li{font-size:.96rem;line-height:1.4;padding:.22rem 0 .22rem 1.15rem;position:relative}
+.clues li::before{content:"";position:absolute;left:.25rem;top:.78rem;width:5px;height:5px;border-radius:50%;background:var(--sun)}
+.clues .tr{font-size:.8rem;color:var(--ink-faint);margin-top:.05rem}
+.spacer{flex:1 1 0;min-height:0}
+.flip-btn{font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;width:100%;background:var(--sun);
+  color:#fff;border:0;border-radius:999px;padding:.5rem .8rem;margin-top:.5rem;transition:filter .15s}
+.flip-btn:hover{filter:brightness(1.07)}
+.flip-btn:focus-visible{outline:3px solid var(--sea);outline-offset:2px}
+.flip-btn.ghost{background:#fff;color:var(--sun);border:1.5px solid var(--sun)}
+.back-top{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;flex-wrap:wrap}
+.back-top svg{width:34px;height:23px;border-radius:3px;flex:0 0 34px;box-shadow:0 0 0 1px rgba(0,0,0,.09)}
+.back-name{font-family:Georgia,serif;font-size:1.1rem;line-height:1.2}
+.back-text{font-size:.93rem;line-height:1.45;margin:0}
+.face .tr{font-size:.82rem}
+
+/* ---------- reading ---------- */
+.reading{background:#fff;border:1px solid var(--line);border-left:3px solid var(--sun);
+  border-radius:0 var(--radius) var(--radius) 0;padding:1.4rem 1.5rem;box-shadow:var(--shadow)}
+.r-title{font-family:Georgia,serif;font-weight:400;font-size:1.25rem;margin:0 0 1rem;line-height:1.3}
+.r-par{padding:.9rem 0;border-top:1px solid var(--line)}
+.r-par:first-of-type{border-top:0;padding-top:0}
+.reading p.en-text{font-size:1.08rem;line-height:1.7;margin:0 0 .5rem}
+.reading .tr{font-size:.92rem;margin:0 0 .5rem}
+.r-foot{margin-top:.4rem;padding-top:.7rem;border-top:1px solid var(--line)}
+
+/* ---------- vídeo ---------- */
+.video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow-lift)}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-fallback{font-size:.87rem;color:var(--ink-faint);margin:.6rem 0 1.5rem}
+.video-fallback a{color:var(--sea);font-weight:600}
+.video-offline{background:var(--sun-soft);border:1px dashed var(--sun);border-radius:var(--radius);
+  padding:1.6rem 1.2rem;text-align:center;margin-bottom:1.5rem}
+.video-offline h4{margin:.2rem 0 .5rem;font-size:1.05rem}
+.video-offline p{margin:0 0 1rem;color:var(--ink-soft);font-size:.92rem}
+.big-link{display:inline-block;background:var(--sun);color:#fff;text-decoration:none;font-weight:700;
+  border-radius:999px;padding:.7rem 1.5rem;font-size:.95rem}
+.big-link:hover{filter:brightness(1.07)}
+
+/* ---------- convites ---------- */
+.invites{display:grid;gap:.9rem}
+.invite{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;box-shadow:var(--shadow)}
+.invite h4{margin:0 0 .35rem;font-size:1rem;font-weight:700}
+.invite .en-instr{margin:0;color:var(--ink-soft);font-size:.96rem}
+
+/* ---------- gravador ---------- */
+.rec{margin-top:.85rem;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem}
+.rec-btn{font:inherit;font-size:.86rem;font-weight:600;cursor:pointer;background:var(--sun);color:#fff;border:0;
+  border-radius:999px;padding:.45rem 1.05rem;display:inline-flex;align-items:center;gap:.45rem;transition:filter .15s}
+.rec-btn:hover{filter:brightness(1.07)}
+.rec-btn:focus-visible{outline:3px solid var(--sea);outline-offset:2px}
+.rec-btn.recording{background:#c0392b}
+.rec-dot{width:9px;height:9px;border-radius:50%;background:#fff;display:inline-block}
+.rec-btn.recording .rec-dot{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.rec audio{height:36px;max-width:100%;flex:1 1 210px}
+.rec-note{font-size:.83rem;color:var(--ink-faint);flex-basis:100%}
+
+/* ---------- momento final ---------- */
+.pick{background:var(--sun-soft);border:1px dashed var(--sun);border-radius:var(--radius);
+  padding:1.2rem;margin-bottom:1.4rem;text-align:center}
+.pick p{margin:0;font-size:1.05rem}
+textarea{font:inherit;width:100%;min-height:92px;margin-top:.7rem;padding:.75rem .85rem;border:1px solid var(--line);
+  border-radius:12px;background:#fff;color:var(--ink);resize:vertical}
+textarea:focus-visible{outline:3px solid var(--sea);outline-offset:1px}
+.end{margin-top:3rem;padding:2rem 1.4rem;text-align:center;
+  background:linear-gradient(160deg,var(--sea-soft),var(--paper-2));border-radius:var(--radius)}
+.end p{margin:0;font-family:Georgia,serif;font-size:1.2rem;line-height:1.45;color:var(--ink)}
+.globe{font-size:2rem;display:block;margin-bottom:.5rem}
+footer{margin-top:2.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center}
+
+@media (max-width:860px){ .cards{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:660px){ .cards{grid-template-columns:repeat(2,1fr)} .card,.card-in{min-height:340px} }
+@media (max-width:520px){
+  body{font-size:16px}
+    .cards{grid-template-columns:1fr}
+  .card,.card-in{min-height:300px}
+}
+</style>
+</head>
+<body>
+<a href="./" style="display:inline-block;margin:1rem 0 0 1.15rem;font-size:.85rem;color:#2f6f8f;text-decoration:none">&#8592; Todos os materiais</a>
+
+<!-- bandeiras em SVG: o emoji de bandeira nao renderiza no Windows -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="f-au" viewBox="0 0 60 40">
+    <rect width="60" height="40" fill="#00247d"/><rect width="30" height="20" fill="#00247d"/>
+    <path d="M0 0l30 20M30 0L0 20" stroke="#fff" stroke-width="4"/>
+    <path d="M0 0l30 20M30 0L0 20" stroke="#e4002b" stroke-width="2"/>
+    <path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6"/>
+    <path d="M15 0v20M0 10h30" stroke="#e4002b" stroke-width="3"/>
+    <g fill="#fff"><circle cx="15" cy="31" r="3.4"/><circle cx="45" cy="9" r="2.1"/><circle cx="50" cy="20" r="2.1"/><circle cx="44" cy="30" r="2.1"/><circle cx="53" cy="33" r="1.5"/></g>
+  </symbol>
+  <symbol id="f-br" viewBox="0 0 60 40">
+    <rect width="60" height="40" fill="#009b3a"/><path d="M30 4l25 16-25 16L5 20z" fill="#fedf00"/>
+    <circle cx="30" cy="20" r="9" fill="#002776"/>
+    <path d="M21.6 16.4a22 22 0 0116.9 5.2" stroke="#fff" stroke-width="2.4" fill="none"/>
+  </symbol>
+  <symbol id="f-ca" viewBox="0 0 60 40">
+    <rect width="60" height="40" fill="#fff"/><rect width="15" height="40" fill="#ff0000"/><rect x="45" width="15" height="40" fill="#ff0000"/>
+    <path d="M30 8l2.4 5.2 4.6-2-1.6 5 4.6.6-3.6 3.2 1.2 2.2-5.2-1 .4 6h-2.8l.4-6-5.2 1 1.2-2.2L22.4 17l4.6-.6-1.6-5 4.6 2z" fill="#ff0000"/>
+  </symbol>
+  <symbol id="f-cn" viewBox="0 0 60 40">
+    <rect width="60" height="40" fill="#de2910"/>
+    <g fill="#ffde00"><polygon points="12,5 13.9,10.7 20,10.7 15,14.3 16.9,20 12,16.5 7.1,20 9,14.3 4,10.7 10.1,10.7"/>
+    <circle cx="24" cy="4.5" r="1.7"/><circle cx="29" cy="9" r="1.7"/><circle cx="29" cy="15" r="1.7"/><circle cx="24" cy="19.5" r="1.7"/></g>
+  </symbol>
+  <symbol id="f-fr" viewBox="0 0 60 40"><rect width="20" height="40" fill="#002395"/><rect x="20" width="20" height="40" fill="#fff"/><rect x="40" width="20" height="40" fill="#ed2939"/></symbol>
+  <symbol id="f-it" viewBox="0 0 60 40"><rect width="20" height="40" fill="#009246"/><rect x="20" width="20" height="40" fill="#fff"/><rect x="40" width="20" height="40" fill="#ce2b37"/></symbol>
+  <symbol id="f-jp" viewBox="0 0 60 40"><rect width="60" height="40" fill="#fff"/><circle cx="30" cy="20" r="11" fill="#bc002d"/></symbol>
+  <symbol id="f-mx" viewBox="0 0 60 40">
+    <rect width="20" height="40" fill="#006847"/><rect x="20" width="20" height="40" fill="#fff"/><rect x="40" width="20" height="40" fill="#ce1126"/>
+    <circle cx="30" cy="20" r="5" fill="none" stroke="#8b5a2b" stroke-width="2"/>
+  </symbol>
+  <symbol id="f-gb" viewBox="0 0 60 40">
+    <rect width="60" height="40" fill="#012169"/>
+    <path d="M0 0l60 40M60 0L0 40" stroke="#fff" stroke-width="8"/>
+    <path d="M0 0l60 40M60 0L0 40" stroke="#c8102e" stroke-width="4"/>
+    <path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="13"/>
+    <path d="M30 0v40M0 20h60" stroke="#c8102e" stroke-width="7"/>
+  </symbol>
+  <symbol id="f-us" viewBox="0 0 60 40">
+    <rect width="60" height="40" fill="#fff"/>
+    <g fill="#b22234"><rect width="60" height="3.1"/><rect y="6.2" width="60" height="3.1"/><rect y="12.4" width="60" height="3.1"/><rect y="18.6" width="60" height="3.1"/><rect y="24.8" width="60" height="3.1"/><rect y="31" width="60" height="3.1"/><rect y="37.2" width="60" height="2.8"/></g>
+    <rect width="26" height="21.7" fill="#3c3b6e"/>
+    <g fill="#fff"><circle cx="5" cy="5" r="1.5"/><circle cx="13" cy="5" r="1.5"/><circle cx="21" cy="5" r="1.5"/><circle cx="9" cy="11" r="1.5"/><circle cx="17" cy="11" r="1.5"/><circle cx="5" cy="17" r="1.5"/><circle cx="13" cy="17" r="1.5"/><circle cx="21" cy="17" r="1.5"/></g>
+  </symbol>
+  <symbol id="f-ar" viewBox="0 0 60 40">
+    <rect width="60" height="40" fill="#fff"/><rect width="60" height="13.3" fill="#74acdf"/><rect y="26.7" width="60" height="13.3" fill="#74acdf"/>
+    <circle cx="30" cy="20" r="4.6" fill="#f6b40e"/>
+  </symbol>
+</defs></svg>
+
+<header class="hero">
+  <div class="hero-in">
+    <p class="kicker">Material complementar · Community</p>
+    <h1>Where From?<br>Uma volta ao mundo em 30 minutos</h1>
+    <p>Oi, Fernanda! Este é o material complementar que você pediu: um extra para praticar entre as aulas, no seu tempo. Ele não faz parte do pre-class nem do post-class do seu curso — é livre, e você usa quando tiver vontade.</p>
+    <p>Vá no seu ritmo. Ouça quantas vezes quiser, repita em voz alta e pare quando precisar. Os títulos e as instruções estão em inglês; sempre que quiser ler em português, clique em <b>ver em português</b>. Em cada atividade há exemplos prontos para usar — é só copiar e trocar as palavras.</p>
+    <p class="meta">6 momentos · cerca de 30 minutos · fone de ouvido ajuda</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section class="moment" id="m1">
+  <div class="m-head"><span class="m-num">1</span><h2 class="m-title">Arrival</h2></div>
+  <div class="m-instr" id="instr1"></div>
+  <div class="flags" id="flags"></div>
+  <div class="m-close">Todas as frases dos países usam <b>is</b>: <em>Japan <b>is</b> in Asia.</em> Em inglês, <b>is</b> aparece quando falamos de <b>uma</b> coisa.</div>
+</section>
+
+<section class="moment" id="m2">
+  <div class="m-head"><span class="m-num">2</span><h2 class="m-title">Where is it from?</h2></div>
+  <div class="m-instr" id="instr2"></div>
+  <div class="cards" id="cards"></div>
+  <div class="invites" id="inv2" style="margin-top:1.2rem"></div>
+  <div class="m-close">Compare as duas frases: <em>It <b>is</b> from Japan.</em> e <em>They <b>are</b> from Mexico.</em> Para <b>uma</b> coisa usamos <b>is</b>; para <b>várias</b>, <b>are</b>.</div>
+</section>
+
+<section class="moment" id="m3">
+  <div class="m-head"><span class="m-num">3</span><h2 class="m-title">Reading</h2></div>
+  <div class="m-instr" id="instr3"></div>
+  <div class="reading" id="reading"></div>
+  <div class="invites" id="inv3" style="margin-top:1.2rem"></div>
+</section>
+
+<section class="moment" id="m4">
+  <div class="m-head"><span class="m-num">4</span><h2 class="m-title">Pizza around the world</h2></div>
+  <div class="m-instr" id="instr4"></div>
+  <div id="video-1"></div>
+  <div class="invites" id="inv4"></div>
+</section>
+
+<section class="moment" id="m5">
+  <div class="m-head"><span class="m-num">5</span><h2 class="m-title">Breakfast around the world</h2></div>
+  <div class="m-instr" id="instr5"></div>
+  <div id="video-2"></div>
+  <div class="invites" id="inv5"></div>
+  <div class="m-close">A pergunta que você usou aqui é a mesma da sua aula: <b>Where is it from?</b> Ela serve para perguntar a origem de qualquer coisa — uma comida, um objeto ou uma pessoa.</div>
+</section>
+
+<section class="moment" id="m6">
+  <div class="m-head"><span class="m-num">6</span><h2 class="m-title">Your turn</h2></div>
+  <div class="pick" id="pick"></div>
+  <div class="invites" id="inv6"></div>
+  <div class="invite" style="margin-top:.9rem">
+    <h4>One new thing</h4>
+    <p class="en-instr">Write one sentence about something you learned today. In English or in Portuguese. Take it to your next class.</p>
+    <p class="tr">Escreva uma frase sobre algo que você descobriu hoje. Pode ser em inglês ou em português. Depois leve essa frase para a próxima aula.</p>
+    <button class="tr-toggle" type="button">ver em português</button>
+    <div id="sup-curio"></div>
+    <textarea id="curio" placeholder="Today I learned that..." aria-label="One new thing"></textarea>
+  </div>
+  <div class="end">
+    <span class="globe" aria-hidden="true">🌍</span>
+    <p>Hoje você praticou dizer de onde as coisas são e perguntar a origem delas.<br>Quando alguém perguntar <em>"Where are you from?"</em>, você já sabe responder — e fazer a mesma pergunta de volta.</p>
+  </div>
+</section>
+
+<p style="text-align:center;margin:0 0 2rem"><a href="./" style="font-size:.9rem;color:#2f6f8f">&#8592; Voltar para todos os materiais</a></p>
+<footer>Where From? · Essential 1 / 02.05 · material complementar de prática livre</footer>
+</div>
+
+<script>
+/* ================= dados ================= */
+var COUNTRIES = [
+  {id:'f-au',name:'Australia',text:'Australia is in Oceania. It is famous for kangaroos and beaches.',pt:'A Austrália fica na Oceania. É famosa pelos cangurus e pelas praias.'},
+  {id:'f-br',name:'Brazil',text:'Brazil is in Latin America. It is famous for Carnival and football.',pt:'O Brasil fica na América Latina. É famoso pelo Carnaval e pelo futebol.'},
+  {id:'f-ca',name:'Canada',text:'Canada is in North America. It is famous for cold winters and maple syrup.',pt:'O Canadá fica na América do Norte. É famoso pelos invernos frios e pelo xarope de bordo.'},
+  {id:'f-cn',name:'China',text:'China is in Asia. It is famous for the Great Wall.',pt:'A China fica na Ásia. É famosa pela Muralha da China.'},
+  {id:'f-fr',name:'France',text:'France is in Europe. It is famous for art and fashion.',pt:'A França fica na Europa. É famosa pela arte e pela moda.'},
+  {id:'f-it',name:'Italy',text:'Italy is in Europe. It is famous for pizza and gelato.',pt:'A Itália fica na Europa. É famosa pela pizza e pelo gelato.'},
+  {id:'f-jp',name:'Japan',text:'Japan is in Asia. It is famous for sushi and cherry blossoms.',pt:'O Japão fica na Ásia. É famoso pelo sushi e pelas cerejeiras.'},
+  {id:'f-mx',name:'Mexico',text:'Mexico is in Latin America. It is famous for spicy food and tequila.',pt:'O México fica na América Latina. É famoso pela comida apimentada e pela tequila.'},
+  {id:'f-gb',name:'The UK',text:'The UK is in Europe. It is famous for the royal family and castles.',pt:'O Reino Unido fica na Europa. É famoso pela família real e pelos castelos.'},
+  {id:'f-us',name:'The USA',text:'The USA is in North America. It is famous for Hollywood movies.',pt:'Os Estados Unidos ficam na América do Norte. São famosos pelos filmes de Hollywood.'}
+];
+
+var CARDS = [
+  {clues:[['It is a drink.','É uma bebida.'],['It is green.','É verde.'],['It is hot.','É quente.']],
+   flag:'f-jp',name:'Matcha',text:'It is from Japan. People drink it in a special ceremony.',pt:'É do Japão. As pessoas bebem numa cerimônia especial.'},
+  {clues:[['It is round.','É redonda.'],['It is hot.','É quente.'],['It has cheese and tomato.','Tem queijo e tomate.']],
+   flag:'f-it',name:'Pizza',text:'It is from Italy. Now it is famous all over the world.',pt:'É da Itália. Hoje é famosa no mundo inteiro.'},
+  {clues:[['It is an animal.','É um animal.'],['It is big.','É grande.'],['It jumps.','Ele pula.']],
+   flag:'f-au',name:'The kangaroo',text:'It is from Australia. Baby kangaroos are very small.',pt:'É da Austrália. Os filhotes de canguru são bem pequenos.'},
+  {clues:[['It is very long.','É muito comprida.'],['It is very old.','É muito antiga.'],['You can walk on it.','Dá para andar em cima dela.']],
+   flag:'f-cn',name:'The Great Wall',text:'It is in China. It is more than 2,000 years old.',pt:'Fica na China. Tem mais de 2.000 anos.'},
+  {clues:[['It is tall.','É alta.'],['It is made of metal.','É feita de metal.'],['It is in a famous city.','Fica numa cidade famosa.']],
+   flag:'f-fr',name:'The Eiffel Tower',text:'It is in Paris, in France. It is 330 metres tall.',pt:'Fica em Paris, na França. Tem 330 metros de altura.'},
+  {clues:[['It is sweet.','É doce.'],['It comes from a tree.','Vem de uma árvore.'],['People put it on pancakes.','As pessoas põem em panquecas.']],
+   flag:'f-ca',name:'Maple syrup',text:'It is from Canada. The maple leaf is on the flag.',pt:'É do Canadá. A folha de bordo está na bandeira.'},
+  {clues:[['It is a dance.','É uma dança.'],['Two people dance together.','Duas pessoas dançam juntas.'],['The music is slow.','A música é lenta.']],
+   flag:'f-ar',name:'Tango',text:'It is from Argentina. It started in Buenos Aires.',pt:'É da Argentina. Começou em Buenos Aires.'},
+  {clues:[['It is food.','É comida.'],['It is spicy.','É apimentada.'],['You eat it with your hands.','Você come com as mãos.']],
+   flag:'f-mx',name:'Tacos',text:'They are from Mexico. People eat them at any time of day.',pt:'São do México. As pessoas comem a qualquer hora do dia.'}
+];
+
+var READING = {
+  title:'Where is pizza from?',
+  pars:[
+    ['Pizza is from Naples, a city in Italy. It is more than 200 years old. The classic pizza is very simple: bread, tomato and cheese. It is cheap food for families.',
+     'A pizza é de Nápoles, uma cidade na Itália. Ela tem mais de 200 anos. A pizza clássica é bem simples: pão, tomate e queijo. É uma comida barata, para as famílias.'],
+    ['Today pizza is famous in every country. Italian families travel to other places, and pizza travels with them. Now it is popular in the USA, in Brazil, in Japan and in many other countries.',
+     'Hoje a pizza é famosa em todos os países. As famílias italianas viajam para outros lugares, e a pizza viaja junto. Agora ela é popular nos Estados Unidos, no Brasil, no Japão e em muitos outros países.'],
+    ['But pizza is not the same everywhere. In Italy it is thin and small. In the USA it is big. In Brazil it has many different ingredients. In Japan some pizzas have fish on top. So, where is pizza from? It is from Italy — but today it is from everywhere.',
+     'Mas a pizza não é igual em todo lugar. Na Itália ela é fina e pequena. Nos Estados Unidos ela é grande. No Brasil ela tem muitos ingredientes diferentes. No Japão algumas pizzas têm peixe por cima. Então, de onde é a pizza? Ela é da Itália — mas hoje ela é de todo lugar.']
+  ]
+};
+
+var INSTR = {
+  instr1:['These are the countries from your class. Click on a country to see its name and one fact. Try to say the name out loud in English, then use the listen button to check.',
+          'Estes são os países da sua aula. Clique em um país para ver o nome e uma curiosidade. Tente dizer o nome em inglês em voz alta e depois use o botão ouvir para conferir.'],
+  instr2:['Read the clues and think: where is it from? Then turn the card. You can turn it any time.',
+          'Leia as pistas e pense: de onde será que é? Depois vire a carta. Pode virar quando quiser.'],
+  instr3:['Read the text below. It has three short paragraphs. Use the listen button in each paragraph to hear it.',
+          'Leia o texto abaixo. São três parágrafos curtos. Use o botão ouvir em cada parágrafo para escutá-lo.'],
+  instr4:['In this video you will see pizza in seven places. Watch it once and just look at the images. Then watch it again and listen for the country names.',
+          'Neste vídeo você vai ver pizza em sete lugares do mundo. Assista uma primeira vez só olhando as imagens. Depois assista de novo prestando atenção nos nomes dos países.'],
+  instr5:['In this video, seven people from seven countries show their breakfast. Compare it with your breakfast.',
+          'Neste vídeo, sete pessoas de sete países mostram o café da manhã delas. Enquanto assiste, vá comparando com o que você come de manhã.'],
+  pick:['Choose one country from today. The two activities below are about it.',
+        'Escolha um dos países que você viu hoje. As duas atividades abaixo são sobre ele.']
+};
+
+var VIDEOS = {
+  1:{id:'9uzhgYuDnxM',title:'7 Ways to Eat Pizza | Around the World — Great Big Story'},
+  2:{id:'KorC-8NddDk',title:'What Breakfast Is Like Around the World — Great Big Story'}
+};
+
+var INVITES = {
+  inv2:[
+    {h:'Now you',
+     en:'Choose one card. Is there something like this in Brazil? Say it out loud and record it, if you want.',
+     pt:'Escolha uma das cartas: existe algo parecido no Brasil? Diga em voz alta e grave, se quiser.',
+     models:[['Yes! In Brazil we have açaí.','Sim! No Brasil a gente tem açaí.'],
+             ['No. This is not from Brazil.','Não. Isso não é do Brasil.'],
+             ['In Brazil we have pão de queijo.','No Brasil a gente tem pão de queijo.']],
+     rec:'Now you'}
+  ],
+  inv3:[
+    {h:'Now you',
+     en:'The text says pizza is different in each country. How is pizza in Brazil? Say one or two sentences.',
+     pt:'O texto diz que a pizza é diferente em cada país. Como é a pizza no Brasil? Diga uma ou duas frases.',
+     models:[['Pizza in Brazil is big.','A pizza no Brasil é grande.'],
+             ['It has many different ingredients.','Ela tem muitos ingredientes diferentes.'],
+             ['My favourite pizza is cheese pizza.','Minha pizza favorita é a de queijo.']],
+     rec:'Pizza in Brazil'}
+  ],
+  inv4:[
+    {h:'Choose one',
+     en:'Which pizza do you want to eat today? Say it out loud.',
+     pt:'Qual dessas pizzas você comeria hoje? Diga em voz alta.',
+     models:[['I want the pizza from Italy.','Eu quero a pizza da Itália.'],
+             ['I want the pizza from Japan.','Eu quero a pizza do Japão.'],
+             ['This pizza is good!','Essa pizza é boa!']],
+     rec:'Choose one pizza'},
+    {h:'Ask a question',
+     en:'Imagine you can talk to one person in the video. What do you ask?',
+     pt:'Imagine que você pode falar com uma das pessoas do vídeo. O que você pergunta?',
+     models:[['Where is this pizza from?','De onde é essa pizza?'],
+             ['Is it good?','É boa?'],
+             ['Are you from Italy?','Você é da Itália?']],
+     rec:'Ask a question'},
+    {h:'Compare',
+     en:'Now talk about pizza in Brazil. How is it? Use one or two sentences.',
+     pt:'Agora fale da pizza no Brasil: como ela é? Use uma ou duas frases.',
+     models:[['Pizza in Brazil is big.','A pizza no Brasil é grande.'],
+             ['It is not spicy.','Ela não é apimentada.'],
+             ['My favourite pizza is cheese pizza.','Minha pizza favorita é a de queijo.']],
+     rec:'Compare'}
+  ],
+  inv5:[
+    {h:'Your breakfast',
+     en:'Describe your breakfast today.',
+     pt:'Descreva o seu café da manhã de hoje.',
+     models:[['My breakfast is coffee and bread.','Meu café da manhã é café e pão.'],
+             ['It is simple.','É simples.'],
+             ['It is not big.','Não é grande.']],
+     rec:'Your breakfast'},
+    {h:'The most different one',
+     en:'Which breakfast in the video is the most different from yours? Which country is it from?',
+     pt:'Qual café da manhã do vídeo foi o mais diferente do seu? De que país ele era?',
+     models:[['The breakfast from Vietnam is very different.','O café da manhã do Vietnã é muito diferente.'],
+             ['It is soup!','É sopa!'],
+             ['It is not sweet.','Não é doce.']],
+     rec:'The most different one'},
+    {h:'Your question',
+     en:'Make a question for one of these people.',
+     pt:'Formule uma pergunta que você faria para uma dessas pessoas.',
+     models:[['Is it sweet?','É doce?'],
+             ['Are you from Vietnam?','Você é do Vietnã?'],
+             ['Where is this food from?','De onde é essa comida?']],
+     rec:'Your question'}
+  ],
+  inv6:[
+    {h:'Three questions',
+     en:'Imagine you meet a person from this country. Record three questions.',
+     pt:'Imagine que você vai conhecer uma pessoa desse país. Grave três perguntas que você faria.',
+     models:[['Where are you from?','De onde você é?'],
+             ['Is it hot in your country?','Faz calor no seu país?'],
+             ['Are you from a big city?','Você é de uma cidade grande?']],
+     rec:'Three questions'}
+  ]
+};
+
+/* ================= util ================= */
+var ICON_PLAY  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>';
+var ICON_PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
+var ICON_STOP  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v14H5z"/></svg>';
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function flagSvg(id){return '<svg viewBox="0 0 60 40" role="img" aria-hidden="true"><use href="#'+id+'"></use></svg>';}
+function audioCtrls(txt){
+  return '<span class="audio-row">'
+    + '<button class="say" data-say="'+esc(txt)+'" aria-label="Ouvir em ingles: '+esc(txt)+'">'+ICON_PLAY+'<span class="say-lbl">ouvir</span></button>'
+    + '<button class="say say-stop" data-stop="1" aria-label="Parar o audio" hidden>'+ICON_STOP+'parar</button>'
+    + '</span>';
+}
+function trToggle(){return '<button class="tr-toggle" type="button">ver em português</button>';}
+function supportBox(models){
+  if(!models || !models.length) return '';
+  var li = models.map(function(m){
+    return '<li><span class="en">'+esc(m[0])+'</span> '+audioCtrls(m[0])+'<span class="tr">'+esc(m[1])+'</span></li>';
+  }).join('');
+  return '<details class="support"><summary>Precisa de ajuda? Ver exemplos</summary>'
+       + '<div class="support-body"><ul>'+li+'</ul>'+trToggle()+'</div></details>';
+}
+/* instrução em inglês + português sob demanda */
+function instrBlock(en, pt){
+  return '<p class="en-instr">'+esc(en)+'</p><p class="tr">'+esc(pt)+'</p>'+trToggle();
+}
+
+/* ================= fala (TTS) com pausa =================
+   O estado de speechSynthesis (.paused/.speaking) nao e confiavel entre
+   navegadores; o Chrome frequentemente ignora resume(). Guardamos estado
+   proprio e usamos um watchdog: se o audio nao voltar logo apos o resume,
+   refazemos a fala em vez de deixar tudo mudo. */
+var cur = null;
+function setBtn(btn, label, icon){
+  var l = btn.querySelector('.say-lbl'); if(l) l.textContent = label;
+  var s = btn.querySelector('svg'); if(s) s.outerHTML = icon;
+}
+function resetBtn(o){
+  if(!o || !o.btn) return;
+  o.btn.classList.remove('on');
+  setBtn(o.btn, 'ouvir', ICON_PLAY);
+  if(o.stop) o.stop.hidden = true;
+}
+function stopAll(){
+  try{ window.speechSynthesis.cancel(); }catch(e){}
+  resetBtn(cur); cur = null;
+}
+function startSpeech(text, btn){
+  var synth = window.speechSynthesis;
+  var stop = btn.parentElement ? btn.parentElement.querySelector('[data-stop]') : null;
+  try{ synth.cancel(); }catch(e){}
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = 0.8; u.pitch = 1;
+  u.onend = u.onerror = function(){ if(cur && cur.btn === btn){ resetBtn(cur); cur = null; } };
+  cur = {btn:btn, stop:stop, text:text, paused:false};
+  btn.classList.add('on');
+  setBtn(btn, 'pausar', ICON_PAUSE);
+  if(stop) stop.hidden = false;
+  synth.speak(u);
+}
+function speak(text, btn){
+  if(!('speechSynthesis' in window)) return;
+  var synth = window.speechSynthesis;
+  if(cur && cur.btn === btn){
+    if(!cur.paused){
+      try{ synth.pause(); }catch(e){}
+      cur.paused = true;
+      setBtn(btn, 'continuar', ICON_PLAY);
+    } else {
+      cur.paused = false;
+      setBtn(btn, 'pausar', ICON_PAUSE);
+      try{ synth.resume(); }catch(e){}
+      var ref = cur, txt = text;
+      setTimeout(function(){
+        if(cur === ref && !cur.paused && !synth.speaking){ startSpeech(txt, btn); }
+      }, 350);
+    }
+    return;
+  }
+  resetBtn(cur);
+  startSpeech(text, btn);
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest) return;
+  var s = e.target.closest('[data-stop]');
+  if(s){ e.preventDefault(); stopAll(); return; }
+  var b = e.target.closest('.say');
+  if(b){ e.preventDefault(); speak(b.getAttribute('data-say'), b); }
+});
+
+/* ====== padrão único: "ver em português" ====== */
+document.addEventListener('click', function(e){
+  if(!e.target.closest) return;
+  var t = e.target.closest('.tr-toggle');
+  if(!t) return;
+  e.preventDefault();
+  var scope = t.closest('.support, .face, .flag-panel, .m-instr, .invite, .pick, .reading') || t.parentElement;
+  var on = scope.classList.toggle('show-tr');
+  t.textContent = on ? 'ocultar português' : 'ver em português';
+});
+
+/* ================= instruções ================= */
+(function(){
+  Object.keys(INSTR).forEach(function(k){
+    var host = document.getElementById(k);
+    if(host) host.innerHTML = instrBlock(INSTR[k][0], INSTR[k][1]);
+  });
+})();
+
+/* ================= momento 1 ================= */
+(function(){
+  var host = document.getElementById('flags'), html = '';
+  COUNTRIES.forEach(function(c,i){
+    html += '<button class="flag-btn" type="button" aria-expanded="false" aria-controls="fp'+i+'">'
+          + flagSvg(c.id) + '<span class="flag-name">'+esc(c.name)+'</span></button>'
+          + '<div class="flag-panel" id="fp'+i+'" hidden>'
+          +   '<div class="fp-top">'+flagSvg(c.id)+'<span class="fp-name">'+esc(c.name)+'</span>'+audioCtrls(c.name)+'</div>'
+          +   '<p class="fp-text">'+esc(c.text)+'</p>'
+          +   '<p class="tr">'+esc(c.pt)+'</p>'
+          +   '<div>'+audioCtrls(c.text)+' '+trToggle()+'</div>'
+          + '</div>';
+  });
+  host.innerHTML = html;
+  host.addEventListener('click', function(e){
+    var btn = e.target.closest('.flag-btn'); if(!btn) return;
+    var panel = document.getElementById(btn.getAttribute('aria-controls'));
+    var open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    panel.hidden = open;
+  });
+})();
+
+/* ================= momento 2 ================= */
+(function(){
+  var host = document.getElementById('cards'), html = '';
+  CARDS.forEach(function(c,i){
+    var clues = c.clues.map(function(p){
+      return '<li>'+esc(p[0])+'<span class="tr">'+esc(p[1])+'</span></li>';
+    }).join('');
+    html += '<div class="card" id="card'+i+'"><div class="card-in">'
+          +  '<div class="face face-front">'
+          +    '<div class="clue-label">Clues</div>'
+          +    '<div class="spacer"></div>'
+          +    '<ul class="clues">'+clues+'</ul>'
+          +    trToggle()
+          +    '<div class="spacer"></div>'
+          +    '<button class="flip-btn" type="button" data-flip="'+i+'">turn the card</button>'
+          +  '</div>'
+          +  '<div class="face face-back">'
+          +    '<div class="back-top">'+flagSvg(c.flag)+'<span class="back-name">'+esc(c.name)+'</span></div>'
+          +    '<div class="spacer"></div>'
+          +    '<p class="back-text">'+esc(c.text)+'</p>'
+          +    '<p class="tr">'+esc(c.pt)+'</p>'
+          +    '<div>'+audioCtrls(c.name+'. '+c.text)+' '+trToggle()+'</div>'
+          +    '<div class="spacer"></div>'
+          +    '<button class="flip-btn ghost" type="button" data-flip="'+i+'">back</button>'
+          +  '</div>'
+          + '</div></div>';
+  });
+  host.innerHTML = html;
+  host.addEventListener('click', function(e){
+    var b = e.target.closest('[data-flip]');
+    if(b) document.getElementById('card'+b.getAttribute('data-flip')).classList.toggle('flipped');
+  });
+})();
+
+/* ================= momento 3: reading ================= */
+(function(){
+  var host = document.getElementById('reading');
+  var html = '<h3 class="r-title">'+esc(READING.title)+'</h3>';
+  READING.pars.forEach(function(p){
+    html += '<div class="r-par">'
+          +   '<p class="en-text">'+esc(p[0])+'</p>'
+          +   '<p class="tr">'+esc(p[1])+'</p>'
+          +   audioCtrls(p[0])
+          + '</div>';
+  });
+  html += '<div class="r-foot">'+trToggle()+'</div>';
+  host.innerHTML = html;
+})();
+
+/* ================= vídeos ================= */
+(function(){
+  var offline = location.protocol === 'file:';
+  Object.keys(VIDEOS).forEach(function(k){
+    var v = VIDEOS[k], host = document.getElementById('video-'+k);
+    var watch = 'https://www.youtube.com/watch?v=' + v.id;
+    if(offline){
+      host.innerHTML =
+        '<div class="video-offline">'
+        + '<h4>O vídeo abre em uma nova aba</h4>'
+        + '<p>Este arquivo está aberto direto do seu computador, e o YouTube não permite mostrar o vídeo aqui dentro nesse modo. É só clicar no botão — o vídeo abre em outra aba e você volta para cá depois.</p>'
+        + '<a class="big-link" href="'+watch+'" target="_blank" rel="noopener">Assistir ao vídeo ↗</a>'
+        + '</div>';
+    } else {
+      host.innerHTML =
+        '<div class="video-wrap"><iframe src="https://www.youtube-nocookie.com/embed/'+v.id+'" title="'+esc(v.title)+'" '
+        + 'loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>'
+        + '<p class="video-fallback">O vídeo não abriu? <a href="'+watch+'" target="_blank" rel="noopener">Assista no YouTube ↗</a></p>';
+    }
+  });
+})();
+
+/* ================= convites ================= */
+(function(){
+  var sc = document.getElementById('sup-curio');
+  if(sc) sc.innerHTML = supportBox([
+    ['Today I learned that tango is from Argentina.','Hoje eu aprendi que o tango é da Argentina.'],
+    ['Matcha is from Japan. It is green.','O matcha é do Japão. Ele é verde.'],
+    ['The Great Wall is in China. It is very old.','A Muralha fica na China. Ela é muito antiga.']
+  ]);
+
+  Object.keys(INVITES).forEach(function(key){
+    var host = document.getElementById(key); if(!host) return;
+    host.innerHTML = INVITES[key].map(function(it){
+      return '<div class="invite"><h4>'+esc(it.h)+'</h4>'
+           + '<p class="en-instr">'+esc(it.en)+'</p>'
+           + '<p class="tr">'+esc(it.pt)+'</p>'
+           + trToggle()
+           + supportBox(it.models)
+           + '<div class="rec" data-rec="'+esc(it.rec)+'"></div></div>';
+    }).join('');
+  });
+})();
+
+/* ================= gravador ================= */
+(function(){
+  var supported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  document.querySelectorAll('.rec').forEach(function(host){
+    var label = host.getAttribute('data-rec') || 'Gravacao';
+    if(!supported){
+      host.innerHTML = '<span class="rec-note">Seu navegador não grava áudio aqui — sem problema: diga em voz alta mesmo assim.</span>';
+      return;
+    }
+    host.innerHTML = '<button class="rec-btn" type="button"><span class="rec-dot"></span><span class="rec-label">Gravar</span></button>';
+    var btn = host.querySelector('.rec-btn'), lab = host.querySelector('.rec-label');
+    var rec = null, chunks = [], stream = null;
+    btn.addEventListener('click', function(){
+      if(rec && rec.state === 'recording'){ rec.stop(); return; }
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){
+        stream = s; chunks = [];
+        rec = new MediaRecorder(s);
+        rec.ondataavailable = function(ev){ if(ev.data && ev.data.size) chunks.push(ev.data); };
+        rec.onstop = function(){
+          var blob = new Blob(chunks, {type: rec.mimeType || 'audio/webm'});
+          var url = URL.createObjectURL(blob);
+          var old = host.querySelector('audio');
+          if(old){ URL.revokeObjectURL(old.src); old.remove(); }
+          var a = document.createElement('audio');
+          a.controls = true; a.src = url; a.setAttribute('aria-label', label);
+          host.appendChild(a);
+          btn.classList.remove('recording'); lab.textContent = 'Gravar de novo';
+          if(stream){ stream.getTracks().forEach(function(t){t.stop();}); stream = null; }
+        };
+        rec.start();
+        btn.classList.add('recording'); lab.textContent = 'Parar';
+      }).catch(function(){
+        if(!host.querySelector('.rec-note')){
+          var n = document.createElement('span'); n.className = 'rec-note';
+          n.textContent = 'O microfone não foi liberado — sem problema: diga em voz alta mesmo assim.';
+          host.appendChild(n);
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
