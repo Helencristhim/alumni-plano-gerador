@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Same Week, Different Days — A semana não é igual em todo lugar</title>
+<style>
+:root{
+  --paper:#fdfaf5; --paper-2:#f6efe4;
+  --ink:#2b2a28; --ink-soft:#5d574e; --ink-faint:#8a8177;
+  --line:#e2d8c8;
+  --sun:#e07a3f; --sun-soft:#fceee4;
+  --sea:#2f6f8f; --sea-soft:#e6f0f5;
+  --mint:#eaf3ec; --mint-line:#8fb894;
+  --radius:16px;
+  --shadow:0 2px 10px rgba(60,45,25,.07);
+  --shadow-lift:0 8px 24px rgba(60,45,25,.13);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  font-size:17px;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto;padding:0 1.15rem 5rem}
+
+/* ---------- cabeçalho ---------- */
+.hero{background:linear-gradient(160deg,var(--sun-soft) 0%,var(--paper) 62%);
+  border-bottom:1px solid var(--line);padding:3rem 1.15rem 2.4rem;margin-bottom:2.5rem}
+.hero-in{max-width:900px;margin:0 auto}
+.kicker{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sun);font-weight:700;margin:0 0 .7rem}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(1.9rem,5.4vw,2.9rem);
+   line-height:1.15;margin:0 0 .9rem;letter-spacing:-.01em}
+.hero p{margin:0 0 .7rem;color:var(--ink-soft);max-width:60ch}
+.hero .meta{margin:1.3rem 0 0;font-size:.86rem;color:var(--ink-faint)}
+.back{display:inline-block;margin:1rem 0 0 1.15rem;font-size:.85rem;color:var(--sea);text-decoration:none}
+.back:hover{text-decoration:underline}
+
+/* ---------- momentos ---------- */
+.moment{margin:0 0 3.4rem;scroll-margin-top:1rem}
+.m-head{display:flex;align-items:baseline;gap:.75rem;margin-bottom:.3rem;flex-wrap:wrap}
+.m-num{font-family:Georgia,serif;font-size:.95rem;color:var(--sun);border:1.5px solid var(--sun);
+  border-radius:50%;width:2rem;height:2rem;min-width:2rem;display:inline-flex;align-items:center;justify-content:center}
+.m-title{font-family:Georgia,serif;font-weight:400;font-size:1.55rem;margin:0;line-height:1.25}
+.m-instr{background:var(--sea-soft);border-left:3px solid var(--sea);border-radius:0 12px 12px 0;
+  padding:.85rem 1.05rem;margin:1rem 0 1.6rem;color:var(--ink);font-size:.98rem}
+.m-instr p{margin:0}
+.m-instr .en-instr{font-weight:500}
+.m-close{margin-top:1.6rem;padding:1rem 1.15rem;background:var(--paper-2);border-radius:12px;
+  font-size:.94rem;color:var(--ink-soft)}
+.m-close b{color:var(--ink);font-weight:600}
+
+/* ---------- português sob demanda ---------- */
+.tr{display:none}
+.show-tr .tr{display:block}
+.tr-toggle{font:inherit;font-size:.78rem;cursor:pointer;background:none;border:0;color:var(--sea);
+  text-decoration:underline;padding:.3rem 0 0;align-self:flex-start;display:inline-block}
+.tr-toggle:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+p.tr,span.tr,li .tr{color:var(--ink-faint);font-size:.9rem;margin:.3rem 0 0;line-height:1.5}
+
+/* ---------- áudio ---------- */
+.audio-row{display:inline-flex;gap:.4rem;align-items:center;flex-wrap:wrap}
+.say{font:inherit;font-size:.82rem;cursor:pointer;background:#fff;border:1px solid var(--line);
+  border-radius:999px;padding:.28rem .8rem;color:var(--sea);display:inline-flex;align-items:center;gap:.35rem;
+  transition:background .15s ease,border-color .15s ease}
+.say:hover{background:var(--sea-soft);border-color:var(--sea)}
+.say:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.say.on{background:var(--sea);color:#fff;border-color:var(--sea)}
+.say[hidden]{display:none}
+.say svg{width:14px;height:14px;flex:none}
+
+/* ---------- momento 1: cenas ---------- */
+.scenes{display:grid;gap:1.1rem;grid-template-columns:1fr}
+@media(min-width:560px){.scenes{grid-template-columns:1fr 1fr}}
+@media(min-width:860px){.scenes{grid-template-columns:1fr 1fr 1fr}}
+.scene{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:1rem;display:flex;flex-direction:column;gap:.7rem}
+.scene svg.art{width:100%;height:auto;display:block;border-radius:12px}
+.scene .reveal-btn{font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;background:var(--sea);color:#fff;
+  border:0;border-radius:10px;padding:.55rem 1rem;align-self:flex-start;transition:background .15s ease}
+.scene .reveal-btn:hover{background:#255a75}
+.scene .reveal-btn:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.scene .panel{display:none}
+.scene.open .panel{display:block}
+.scene .name{font-family:Georgia,serif;font-size:1.15rem;margin:.2rem 0 .1rem}
+.scene .where{font-size:.82rem;color:var(--sun);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0 0 .5rem}
+.scene .en{display:block;margin:0 0 .45rem}
+
+/* ---------- vídeo ---------- */
+.video{margin:1.2rem 0 .6rem}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:var(--paper-2);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-note{padding:1.2rem;text-align:center;color:var(--ink-soft);font-size:.94rem}
+.video-link{display:inline-block;margin-top:.6rem;font-size:.86rem;color:var(--sea)}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 0;padding:0;list-style:none}
+.chips li{background:#fff;border:1px solid var(--line);border-radius:999px;padding:.3rem .85rem;font-size:.9rem}
+
+/* ---------- cartas de resposta (momento 3) ---------- */
+.answers{display:grid;gap:.85rem;grid-template-columns:1fr;margin-top:.4rem}
+@media(min-width:560px){.answers{grid-template-columns:1fr 1fr}}
+.ans{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+  padding:.95rem 1.05rem;display:flex;flex-direction:column;gap:.4rem}
+.ans .q{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin:0}
+.ans .en{font-size:1.02rem;margin:0}
+
+/* ---------- apoio ---------- */
+details.support{margin:1.1rem 0 0;background:var(--mint);border:1px solid var(--mint-line);border-radius:12px;padding:.2rem .2rem}
+details.support summary{cursor:pointer;padding:.65rem .9rem;font-size:.92rem;font-weight:600;color:#2f5d3a;list-style:none}
+details.support summary::-webkit-details-marker{display:none}
+details.support summary::before{content:"+ ";font-weight:700}
+details.support[open] summary::before{content:"– "}
+.support-body{padding:0 .9rem .9rem}
+.support-body ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.75rem}
+.support-body li{display:flex;flex-direction:column;gap:.3rem}
+.support-body .en{font-size:1rem}
+
+/* ---------- gravação ---------- */
+.rec-row{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:1rem}
+.rec{font:inherit;font-size:.86rem;cursor:pointer;background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:.4rem 1rem;color:var(--ink-soft);display:inline-flex;align-items:center;gap:.4rem}
+.rec:hover{border-color:var(--sun);color:var(--sun)}
+.rec:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+.rec.recording{background:var(--sun);border-color:var(--sun);color:#fff}
+.rec-note{font-size:.84rem;color:var(--ink-faint)}
+.rec-row audio{max-width:100%}
+
+/* ---------- textarea ---------- */
+textarea{width:100%;min-height:5.5rem;font:inherit;font-size:.97rem;padding:.8rem .9rem;border:1px solid var(--line);
+  border-radius:12px;background:#fff;color:var(--ink);resize:vertical}
+textarea:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
+
+/* ---------- fechamento ---------- */
+.end{margin-top:2.4rem;padding:1.4rem 1.3rem;background:var(--sun-soft);border-radius:var(--radius);text-align:center}
+.end p{margin:0;color:var(--ink-soft)}
+.end .mark{display:block;font-family:Georgia,serif;font-size:1.6rem;color:var(--sun);margin-bottom:.5rem}
+footer{margin-top:2.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center}
+
+/* ---------- escolha (paises / dias) ---------- */
+.picker{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1rem}
+.pick-btn{font:inherit;font-size:.9rem;cursor:pointer;background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:.45rem 1.05rem;color:var(--ink-soft);transition:all .15s ease}
+.pick-btn:hover{border-color:var(--sea);color:var(--sea)}
+.pick-btn:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.pick-btn.is-on{background:var(--sea);border-color:var(--sea);color:#fff;font-weight:600}
+
+/* ---------- faixa da semana ---------- */
+.weekstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:.35rem;margin:0 0 1.1rem}
+.weekstrip .day{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.7rem .2rem;text-align:center;
+  font-size:.82rem;color:var(--ink-soft);transition:background .2s ease,color .2s ease,border-color .2s ease}
+.weekstrip .day.off{background:var(--sun-soft);border-color:var(--sun);color:var(--sun);font-weight:700}
+.place-panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:1rem 1.1rem;
+  display:flex;flex-direction:column;gap:.4rem}
+.place-panel[hidden]{display:none}
+.place-panel .en{font-size:1.02rem}
+
+/* ---------- planner ---------- */
+.planner{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.1rem}
+.planner-days{margin-bottom:.6rem}
+.planner-days .pick-btn{padding:.45rem .75rem;min-width:3rem}
+.planner-hint{margin:0 0 .8rem;font-family:Georgia,serif;font-size:1.15rem;color:var(--sun)}
+.acts{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1rem}
+.act{font:inherit;font-size:.88rem;cursor:pointer;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;
+  padding:.4rem .9rem;color:var(--ink-soft);transition:all .15s ease}
+.act:hover{border-color:var(--mint-line)}
+.act:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.act.is-on{background:var(--mint);border-color:var(--mint-line);color:#2f5d3a;font-weight:600}
+.week-out{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.35rem}
+.week-out li{font-size:.98rem;padding:.5rem .75rem;background:var(--paper-2);border-radius:10px}
+.week-out li b{color:var(--sun)}
+.week-out:empty::after{content:"Sua semana aparece aqui.";display:block;font-size:.9rem;color:var(--ink-faint)}
+
+/* ---------- perguntas so em audio ---------- */
+.qlist{list-style:decimal;padding-left:1.4rem;margin:0 0 .5rem;display:flex;flex-direction:column;gap:.7rem}
+.qlist li{padding-left:.2rem}
+.qlist-note{font-size:.88rem;color:var(--ink-faint);margin:.2rem 0 0}
+
+/* ---------- habitos ---------- */
+.habits{display:grid;gap:1.1rem;grid-template-columns:1fr}
+@media(min-width:560px){.habits{grid-template-columns:1fr 1fr}}
+@media(min-width:860px){.habits{grid-template-columns:1fr 1fr 1fr}}
+.habit{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.1rem;
+  display:flex;flex-direction:column;gap:.4rem}
+.habit .h-art{width:60px;height:60px}
+.habit .h-place{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sun);font-weight:700;margin:.2rem 0 .1rem}
+.habit .en{font-size:1rem}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<a class="back" href="./">&#8592; Todos os materiais</a>
+
+<header class="hero">
+  <div class="hero-in">
+    <p class="kicker">Material complementar &middot; Community</p>
+    <h1>Same Week, Different Days<br>A semana não é igual em todo lugar</h1>
+    <p>Oi, Fernanda! Na sua aula você montou a semana da Susan e do Bruce e perguntou <b>What do you do on Mondays?</b> Aqui a semana é de outras pessoas — em outros países — e no fim é a sua.</p>
+    <p>Vá no seu ritmo. Ouça quantas vezes quiser, fale em voz alta e pare quando precisar. Os títulos e as instruções estão em inglês; sempre que quiser ler em português, clique em <b>ver em português</b>. Em cada atividade há exemplos prontos — é só copiar e trocar as palavras.</p>
+    <p class="meta">5 momentos &middot; cerca de 30 minutos &middot; fone de ouvido ajuda</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ MOMENTO 1 ============ -->
+<section class="moment" id="m1">
+  <div class="m-head"><span class="m-num">1</span><h2 class="m-title">Find the weekend</h2></div>
+  <div class="m-instr">
+    <p class="en-instr">Choose a country. Look at the two days in color: that is the weekend there. Then say the days of your weekend.</p>
+    <p class="tr">Escolha um país. Olhe os dois dias coloridos: é o fim de semana lá. Depois diga quais são os dias do seu fim de semana.</p>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="picker" role="group" aria-label="Escolha o pais">
+    <button class="pick-btn is-on" type="button" data-place="br">Brazil</button>
+    <button class="pick-btn" type="button" data-place="eg">Egypt</button>
+  </div>
+
+  <div class="weekstrip" id="strip" aria-live="polite">
+    <div class="day" data-d="mon"><span class="d-ab">Mon</span></div>
+    <div class="day" data-d="tue"><span class="d-ab">Tue</span></div>
+    <div class="day" data-d="wed"><span class="d-ab">Wed</span></div>
+    <div class="day" data-d="thu"><span class="d-ab">Thu</span></div>
+    <div class="day" data-d="fri"><span class="d-ab">Fri</span></div>
+    <div class="day" data-d="sat"><span class="d-ab">Sat</span></div>
+    <div class="day" data-d="sun"><span class="d-ab">Sun</span></div>
+  </div>
+
+  <div class="place-panel" id="placeBR">
+    <span class="en">In Brazil, the weekend is Saturday and Sunday.</span>
+    <span class="audio-row" data-say="In Brazil, the weekend is Saturday and Sunday."></span>
+    <span class="tr">No Brasil, o fim de semana é sábado e domingo.</span>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="place-panel" id="placeEG" hidden>
+    <span class="en">In Egypt, the weekend is Friday and Saturday.</span>
+    <span class="audio-row" data-say="In Egypt, the weekend is Friday and Saturday."></span>
+    <span class="en">People work from Sunday to Thursday.</span>
+    <span class="audio-row" data-say="People work from Sunday to Thursday."></span>
+    <span class="tr">No Egito, o fim de semana é sexta e sábado. As pessoas trabalham de domingo a quinta.</span>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="m-close">A pergunta <b>What do you do on Fridays?</b> tem respostas bem diferentes dependendo do lugar: para muita gente no Egito, sexta é dia de descanso.</div>
+</section>
+
+<!-- ============ MOMENTO 2 ============ -->
+<section class="moment" id="m2">
+  <div class="m-head"><span class="m-num">2</span><h2 class="m-title">Fika in Sweden</h2></div>
+  <div class="m-instr">
+    <p class="en-instr">Watch the video. It is short. Then tell the story in two or three sentences: what do people do?</p>
+    <p class="tr">Assista ao vídeo. Ele é curto. Depois conte em duas ou três frases: o que as pessoas fazem?</p>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="video" data-video="lcvk8g38-vY" data-title="Fika Time! Sweden&rsquo;s Coffee &amp; Pastry Break | Big &amp; Small Travel">
+    <div class="video-frame"></div>
+    <a class="video-link" href="https://www.youtube.com/shorts/lcvk8g38-vY" target="_blank" rel="noopener">Assista no YouTube &#8599;</a>
+  </div>
+
+  <details class="support">
+    <summary>Precisa de ajuda? Ver exemplos</summary>
+    <div class="support-body">
+      <ul>
+        <li><span class="en">People drink coffee.</span><span class="audio-row" data-say="People drink coffee."></span><span class="tr">As pessoas tomam café.</span></li>
+        <li><span class="en">They eat something sweet.</span><span class="audio-row" data-say="They eat something sweet."></span><span class="tr">Elas comem algo doce.</span></li>
+        <li><span class="en">They talk with friends.</span><span class="audio-row" data-say="They talk with friends."></span><span class="tr">Elas conversam com amigos.</span></li>
+      </ul>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+  </details>
+
+  <div class="m-close">
+    <span class="en">Fika is every day.</span> <span class="audio-row" data-say="Fika is every day."></span><br>
+    Na Suécia essa pausa tem nome: <b>fika</b>. Acontece todo dia — às vezes duas vezes por dia.
+  </div>
+</section>
+
+<!-- ============ MOMENTO 3 ============ -->
+<section class="moment" id="m3">
+  <div class="m-head"><span class="m-num">3</span><h2 class="m-title">Build your week</h2></div>
+  <div class="m-instr">
+    <p class="en-instr">Choose a day. Then choose your activities for that day. Change them when you want. At the end, say your week out loud.</p>
+    <p class="tr">Escolha um dia. Depois escolha as atividades desse dia. Troque quando quiser. No fim, diga a sua semana em voz alta.</p>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="planner">
+    <div class="picker planner-days" role="group" aria-label="Dias da semana">
+      <button class="pick-btn is-on" type="button" data-day="Mondays">Mon</button>
+      <button class="pick-btn" type="button" data-day="Tuesdays">Tue</button>
+      <button class="pick-btn" type="button" data-day="Wednesdays">Wed</button>
+      <button class="pick-btn" type="button" data-day="Thursdays">Thu</button>
+      <button class="pick-btn" type="button" data-day="Fridays">Fri</button>
+      <button class="pick-btn" type="button" data-day="Saturdays">Sat</button>
+      <button class="pick-btn" type="button" data-day="Sundays">Sun</button>
+    </div>
+
+    <p class="planner-hint" id="plannerHint">Mondays</p>
+
+    <div class="acts" id="acts">
+      <button class="act" type="button">go to the gym</button>
+      <button class="act" type="button">go to the supermarket</button>
+      <button class="act" type="button">do the laundry</button>
+      <button class="act" type="button">study English</button>
+      <button class="act" type="button">watch series</button>
+      <button class="act" type="button">visit my family</button>
+      <button class="act" type="button">clean the house</button>
+      <button class="act" type="button">read a book</button>
+      <button class="act" type="button">go to the park</button>
+      <button class="act" type="button">rest</button>
+    </div>
+
+    <ul class="week-out" id="weekOut"></ul>
+  </div>
+
+  <details class="support">
+    <summary>Precisa de ajuda? Ver exemplos</summary>
+    <div class="support-body">
+      <ul>
+        <li><span class="en">On Mondays, I go to the gym.</span><span class="audio-row" data-say="On Mondays, I go to the gym."></span><span class="tr">Às segundas, eu vou à academia.</span></li>
+        <li><span class="en">On Sundays, I visit my family.</span><span class="audio-row" data-say="On Sundays, I visit my family."></span><span class="tr">Aos domingos, eu visito minha família.</span></li>
+        <li><span class="en">I study English twice a week.</span><span class="audio-row" data-say="I study English twice a week."></span><span class="tr">Eu estudo inglês duas vezes por semana.</span></li>
+      </ul>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+  </details>
+
+  <div class="m-close">A sua semana fica só aqui na tela, do seu jeito. Troque quantas vezes quiser.</div>
+</section>
+
+<!-- ============ MOMENTO 4 ============ -->
+<section class="moment" id="m4">
+  <div class="m-head"><span class="m-num">4</span><h2 class="m-title">Someone asks you</h2></div>
+  <div class="m-instr">
+    <p class="en-instr">Listen to one question. Stop the audio and answer out loud. Then listen to the next one.</p>
+    <p class="tr">Ouça uma pergunta. Pare o áudio e responda em voz alta. Depois ouça a próxima.</p>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <ol class="qlist">
+    <li><span class="audio-row" data-say="What do you do on Mondays?"></span></li>
+    <li><span class="audio-row" data-say="When do you study English?"></span></li>
+    <li><span class="audio-row" data-say="How often do you go to the supermarket?"></span></li>
+    <li><span class="audio-row" data-say="What do you do on Sundays?"></span></li>
+    <li><span class="audio-row" data-say="Do you like your routine?"></span></li>
+  </ol>
+  <p class="qlist-note">As perguntas ficam só no áudio, de propósito: é o ouvido que trabalha aqui. Se quiser ver escrito, o exemplo abaixo tem as mesmas estruturas.</p>
+
+  <details class="support">
+    <summary>Precisa de ajuda? Ver exemplos</summary>
+    <div class="support-body">
+      <ul>
+        <li><span class="en">On Mondays, I work and I study English.</span><span class="audio-row" data-say="On Mondays, I work and I study English."></span><span class="tr">Às segundas, eu trabalho e estudo inglês.</span></li>
+        <li><span class="en">I go to the supermarket once a week.</span><span class="audio-row" data-say="I go to the supermarket once a week."></span><span class="tr">Eu vou ao supermercado uma vez por semana.</span></li>
+        <li><span class="en">Yes, I do. I like my routine.</span><span class="audio-row" data-say="Yes, I do. I like my routine."></span><span class="tr">Sim, gosto. Eu gosto da minha rotina.</span></li>
+      </ul>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+  </details>
+
+  <div class="rec-row" data-rec="week">
+    <button class="rec" type="button"><span class="rec-lbl">Gravar suas respostas</span></button>
+    <span class="rec-note" hidden></span>
+  </div>
+</section>
+
+<!-- ============ MOMENTO 5 ============ -->
+<section class="moment" id="m5">
+  <div class="m-head"><span class="m-num">5</span><h2 class="m-title">Borrow a day</h2></div>
+  <div class="m-instr">
+    <p class="en-instr">Read the three habits. Choose one for your week and say the day: <em>I want tacos on Fridays.</em></p>
+    <p class="tr">Leia os três hábitos. Escolha um para a sua semana e diga o dia: <em>I want tacos on Fridays.</em></p>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="habits">
+    <div class="habit">
+      <svg viewBox="0 0 60 60" class="h-art" role="img" aria-label="Xicara de cafe e um doce">
+        <rect width="60" height="60" rx="12" fill="#f1e4d3"/>
+        <path d="M16 26h20v10a10 10 0 0 1-20 0z" fill="#fff"/>
+        <path d="M36 28h5a5 5 0 0 1 0 10h-5" fill="none" stroke="#fff" stroke-width="3"/>
+        <rect x="12" y="46" width="28" height="3" rx="1.5" fill="#c9a37a"/>
+        <path d="M22 22c0-3 3-3 3-6M28 22c0-3 3-3 3-6" stroke="#c9a37a" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="48" cy="42" r="7" fill="#e08a5c"/><circle cx="48" cy="36" r="2" fill="#c0392b"/>
+      </svg>
+      <p class="h-place">Sweden</p>
+      <span class="en">In Sweden, people stop for coffee and cake. This break is called fika.</span>
+      <span class="audio-row" data-say="In Sweden, people stop for coffee and cake. This break is called fika."></span>
+      <span class="tr">Na Suécia, as pessoas param para um café com bolo. Essa pausa se chama fika.</span>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+
+    <div class="habit">
+      <svg viewBox="0 0 60 60" class="h-art" role="img" aria-label="Taco">
+        <rect width="60" height="60" rx="12" fill="#fdf0d5"/>
+        <path d="M12 40a18 18 0 0 1 36 0z" fill="#f3c04a"/>
+        <path d="M14 40a16 16 0 0 1 32 0z" fill="#a5c65a"/>
+        <path d="M16 40a14 14 0 0 1 28 0z" fill="#e07a3f"/>
+        <circle cx="24" cy="34" r="2.4" fill="#c0392b"/><circle cx="32" cy="31" r="2.4" fill="#c0392b"/><circle cx="38" cy="35" r="2.4" fill="#c0392b"/>
+        <rect x="12" y="40" width="36" height="4" rx="2" fill="#e2b23c"/>
+      </svg>
+      <p class="h-place">Norway</p>
+      <span class="en">In Norway, many families eat tacos on Fridays.</span>
+      <span class="audio-row" data-say="In Norway, many families eat tacos on Fridays."></span>
+      <span class="tr">Na Noruega, muitas famílias comem tacos às sextas.</span>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+
+    <div class="habit">
+      <svg viewBox="0 0 60 60" class="h-art" role="img" aria-label="Prato de almoco">
+        <rect width="60" height="60" rx="12" fill="#e9eef1"/>
+        <circle cx="30" cy="32" r="17" fill="#fff"/><circle cx="30" cy="32" r="12" fill="#f6efe4"/>
+        <path d="M25 27a7 7 0 0 1 12 3c0 4-4 6-8 6-3 0-5-2-5-5z" fill="#c98b52"/>
+        <circle cx="24" cy="36" r="2.6" fill="#8fb894"/><circle cx="34" cy="38" r="2.2" fill="#8fb894"/>
+        <path d="M9 22v20M13 22v20" stroke="#9aa7ad" stroke-width="2" stroke-linecap="round"/>
+        <path d="M49 22c3 0 3 8 0 8v12" stroke="#9aa7ad" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <p class="h-place">The UK</p>
+      <span class="en">In the UK, many families eat a big lunch on Sundays.</span>
+      <span class="audio-row" data-say="In the UK, many families eat a big lunch on Sundays."></span>
+      <span class="tr">No Reino Unido, muitas famílias fazem um almoço caprichado aos domingos.</span>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+  </div>
+
+  <details class="support">
+    <summary>Precisa de ajuda? Ver exemplos</summary>
+    <div class="support-body">
+      <ul>
+        <li><span class="en">I want fika on Wednesdays.</span><span class="audio-row" data-say="I want fika on Wednesdays."></span><span class="tr">Eu quero fika às quartas.</span></li>
+        <li><span class="en">I want a big lunch on Sundays. I want to cook with my family.</span><span class="audio-row" data-say="I want a big lunch on Sundays. I want to cook with my family."></span><span class="tr">Eu quero um almoço caprichado aos domingos. Quero cozinhar com a minha família.</span></li>
+      </ul>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+  </details>
+
+  <div class="rec-row" data-rec="borrow">
+    <button class="rec" type="button"><span class="rec-lbl">Gravar sua escolha</span></button>
+    <span class="rec-note" hidden></span>
+  </div>
+
+  <p style="margin:1.4rem 0 .5rem;font-size:.95rem;color:var(--ink-soft)">Se quiser, escreva aqui o hábito que você quer levar para a sua semana:</p>
+  <textarea id="wish" placeholder="I want... on..." aria-label="O habito que voce quer para a sua semana"></textarea>
+
+  <div class="m-close">
+    Para falar de rotina, o verbo fica na forma simples e o dia vai no plural:<br>
+    <em>On <b>Mondays</b>, I go to the gym.</em> — toda segunda, não só na próxima.<br>
+    E para dizer quantas vezes: <em>once a week</em>, <em>twice a week</em>, <em>three times a week</em>.
+  </div>
+
+  <div class="end">
+    <span class="mark" aria-hidden="true">&#9992;</span>
+    <p>Hoje você viu que a semana muda de país para país — e montou a sua.<br>Com <em>What do you do on Mondays?</em> você já consegue perguntar a semana de qualquer pessoa, em qualquer lugar.</p>
+  </div>
+</section>
+
+<p style="text-align:center;margin:0 0 2rem"><a href="./" style="font-size:.9rem;color:var(--sea)">&#8592; Voltar para todos os materiais</a></p>
+<footer>Same Week, Different Days &middot; Essential 1 / 03 A busy week &middot; material complementar de prática livre</footer>
+</div>
+
+<script>window.AUDIO_MAP={"In Brazil, the weekend is Saturday and Sunday.": "in_brazil_the_weekend_is_saturday_and_sunday.mp3", "In Egypt, the weekend is Friday and Saturday.": "in_egypt_the_weekend_is_friday_and_saturday.mp3", "People work from Sunday to Thursday.": "people_work_from_sunday_to_thursday.mp3", "People drink coffee.": "people_drink_coffee.mp3", "They eat something sweet.": "they_eat_something_sweet.mp3", "They talk with friends.": "they_talk_with_friends.mp3", "Fika is every day.": "fika_is_every_day.mp3", "On Mondays, I go to the gym.": "on_mondays_i_go_to_the_gym.mp3", "On Sundays, I visit my family.": "on_sundays_i_visit_my_family.mp3", "I study English twice a week.": "i_study_english_twice_a_week.mp3", "What do you do on Mondays?": "what_do_you_do_on_mondays.mp3", "When do you study English?": "when_do_you_study_english.mp3", "How often do you go to the supermarket?": "how_often_do_you_go_to_the_supermarket.mp3", "What do you do on Sundays?": "what_do_you_do_on_sundays.mp3", "Do you like your routine?": "do_you_like_your_routine.mp3", "On Mondays, I work and I study English.": "on_mondays_i_work_and_i_study_english.mp3", "I go to the supermarket once a week.": "i_go_to_the_supermarket_once_a_week.mp3", "Yes, I do. I like my routine.": "yes_i_do_i_like_my_routine.mp3", "In Sweden, people stop for coffee and cake. This break is called fika.": "in_sweden_people_stop_for_coffee_and_cake_this_break_is_call.mp3", "In Norway, many families eat tacos on Fridays.": "in_norway_many_families_eat_tacos_on_fridays.mp3", "In the UK, many families eat a big lunch on Sundays.": "in_the_uk_many_families_eat_a_big_lunch_on_sundays.mp3", "I want fika on Wednesdays.": "i_want_fika_on_wednesdays.mp3", "I want a big lunch on Sundays. I want to cook with my family.": "i_want_a_big_lunch_on_sundays_i_want_to_cook_with_my_family.mp3"};</script>
+<script>
+(function(){
+'use strict';
+
+/* ============ ícones ============ */
+var ICON_PLAY  = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+var ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+var ICON_STOP  = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h12v12H6z"/></svg>';
+
+/* ============ áudio: MP3 pré-gerado, TTS como reserva ============ */
+var AUDIO_DIR = 'audio/';
+var AUDIO_MAP = window.AUDIO_MAP || {};
+var cur = null;           /* {btn, stop, text, el, paused} */
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* monta os botões de cada .audio-row a partir do data-say */
+document.querySelectorAll('.audio-row[data-say]').forEach(function(row){
+  var txt = row.getAttribute('data-say');
+  row.innerHTML = '<button class="say" data-say="'+esc(txt)+'" aria-label="Ouvir em ingles: '+esc(txt)+'">'+ICON_PLAY+'<span class="say-lbl">ouvir</span></button>'
+                + '<button class="say say-stop" data-stop="1" aria-label="Parar o audio" hidden>'+ICON_STOP+'<span class="say-lbl">parar</span></button>';
+});
+
+function setBtn(btn, label, icon){
+  var l = btn.querySelector('.say-lbl'); if(l) l.textContent = label;
+  var s = btn.querySelector('svg'); if(s) s.outerHTML = icon;
+}
+function resetBtn(o){
+  if(!o || !o.btn) return;
+  o.btn.classList.remove('on');
+  setBtn(o.btn, 'ouvir', ICON_PLAY);
+  if(o.stop) o.stop.hidden = true;
+}
+function stopAll(){
+  if(cur && cur.el){ try{ cur.el.pause(); cur.el.currentTime = 0; }catch(e){} }
+  try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){}
+  resetBtn(cur); cur = null;
+}
+function startTTS(text, btn, stop){
+  if(!('speechSynthesis' in window)) return;
+  var synth = window.speechSynthesis;
+  try{ synth.cancel(); }catch(e){}
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = 0.8; u.pitch = 1;
+  u.onend = u.onerror = function(){ if(cur && cur.btn === btn){ resetBtn(cur); cur = null; } };
+  cur = {btn:btn, stop:stop, text:text, el:null, paused:false};
+  btn.classList.add('on'); setBtn(btn, 'pausar', ICON_PAUSE);
+  if(stop) stop.hidden = false;
+  synth.speak(u);
+}
+function startFile(src, text, btn, stop){
+  var el = new Audio(src);
+  el.addEventListener('ended', function(){ if(cur && cur.btn === btn){ resetBtn(cur); cur = null; } });
+  el.addEventListener('error', function(){ if(cur && cur.btn === btn){ cur = null; } startTTS(text, btn, stop); });
+  cur = {btn:btn, stop:stop, text:text, el:el, paused:false};
+  btn.classList.add('on'); setBtn(btn, 'pausar', ICON_PAUSE);
+  if(stop) stop.hidden = false;
+  el.play().catch(function(){ if(cur && cur.btn === btn){ cur = null; } startTTS(text, btn, stop); });
+}
+function play(text, btn){
+  var stop = btn.parentElement ? btn.parentElement.querySelector('[data-stop]') : null;
+  /* mesmo botão: pausa / continua */
+  if(cur && cur.btn === btn){
+    if(!cur.paused){
+      cur.paused = true;
+      if(cur.el){ try{ cur.el.pause(); }catch(e){} }
+      else { try{ window.speechSynthesis.pause(); }catch(e){} }
+      setBtn(btn, 'continuar', ICON_PLAY);
+    } else {
+      cur.paused = false;
+      setBtn(btn, 'pausar', ICON_PAUSE);
+      if(cur.el){ cur.el.play().catch(function(){}); }
+      else {
+        try{ window.speechSynthesis.resume(); }catch(e){}
+        /* watchdog: o Chrome ignora resume() com frequência */
+        var ref = cur, txt = text;
+        setTimeout(function(){
+          if(cur === ref && !cur.paused && !window.speechSynthesis.speaking){ startTTS(txt, btn, stop); }
+        }, 350);
+      }
+    }
+    return;
+  }
+  stopAll();
+  var file = AUDIO_MAP[text];
+  if(file){ startFile(AUDIO_DIR + file, text, btn, stop); }
+  else { startTTS(text, btn, stop); }
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest) return;
+  var s = e.target.closest('[data-stop]');
+  if(s){ e.preventDefault(); stopAll(); return; }
+  var b = e.target.closest('.say');
+  if(b){ e.preventDefault(); play(b.getAttribute('data-say'), b); }
+});
+
+/* ============ português sob demanda ============ */
+document.addEventListener('click', function(e){
+  if(!e.target.closest) return;
+  var t = e.target.closest('.tr-toggle');
+  if(!t) return;
+  e.preventDefault();
+  var scope = t.closest('.panel, .support-body, .m-instr') || t.parentElement;
+  var on = scope.classList.toggle('show-tr');
+  t.textContent = on ? 'ocultar português' : 'ver em português';
+});
+
+/* ============ cartas do momento 1 (abrem e fecham) ============ */
+document.addEventListener('click', function(e){
+  if(!e.target.closest) return;
+  var b = e.target.closest('[data-reveal]');
+  if(!b) return;
+  e.preventDefault();
+  var card = document.getElementById(b.getAttribute('data-reveal'));
+  var open = card.classList.toggle('open');
+  b.textContent = open ? 'Hide' : 'Show the party';
+});
+
+/* ============ vídeo (com aviso amigável em file://) ============ */
+document.querySelectorAll('.video[data-video]').forEach(function(box){
+  var id = box.getAttribute('data-video');
+  var frame = box.querySelector('.video-frame');
+  if(location.protocol === 'file:'){
+    frame.style.paddingTop = '0';
+    frame.innerHTML = '<div class="video-note">O vídeo abre quando esta página está na internet.'
+      + '<br><a class="video-link" href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener">Abrir o vídeo no YouTube &#8599;</a></div>';
+    return;
+  }
+  var f = document.createElement('iframe');
+  f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?rel=0';
+  f.title = box.getAttribute('data-title') || 'video';
+  f.allow = 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+  f.setAttribute('allowfullscreen','');
+  f.setAttribute('loading','lazy');
+  frame.appendChild(f);
+});
+
+/* ============ gravação (opcional) ============ */
+document.querySelectorAll('.rec-row[data-rec]').forEach(function(host){
+  var btn  = host.querySelector('.rec');
+  var lab  = host.querySelector('.rec-lbl');
+  var note = host.querySelector('.rec-note');
+  var base = lab.textContent;
+  var rec = null, chunks = [];
+  btn.addEventListener('click', function(){
+    if(rec && rec.state === 'recording'){ rec.stop(); return; }
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      note.hidden = false;
+      note.textContent = 'Este navegador não grava — sem problema: diga em voz alta mesmo assim.';
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      var mime = (window.MediaRecorder && MediaRecorder.isTypeSupported('audio/mp4')) ? 'audio/mp4'
+               : (window.MediaRecorder && MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) ? 'audio/webm;codecs=opus' : '';
+      rec = mime ? new MediaRecorder(stream, {mimeType:mime}) : new MediaRecorder(stream);
+      chunks = [];
+      rec.ondataavailable = function(ev){ if(ev.data && ev.data.size) chunks.push(ev.data); };
+      rec.onstop = function(){
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        btn.classList.remove('recording'); lab.textContent = base;
+        if(!chunks.length) return;
+        var url = URL.createObjectURL(new Blob(chunks, {type: rec.mimeType}));
+        var old = host.querySelector('audio'); if(old) old.remove();
+        var a = document.createElement('audio'); a.controls = true; a.src = url;
+        host.appendChild(a);
+      };
+      rec.start();
+      btn.classList.add('recording'); lab.textContent = 'Parar';
+      note.hidden = true;
+    }).catch(function(){
+      note.hidden = false;
+      note.textContent = 'O microfone não foi liberado — sem problema: diga em voz alta mesmo assim.';
+    });
+  });
+});
+
+
+/* ============ momento 1: pais -> fim de semana na faixa ============ */
+(function(){
+  var WEEKEND = {br:['sat','sun'], eg:['fri','sat']};
+  var strip = document.getElementById('strip');
+  if(!strip) return;
+  function paint(place){
+    var off = WEEKEND[place] || [];
+    strip.querySelectorAll('.day').forEach(function(d){
+      d.classList.toggle('off', off.indexOf(d.getAttribute('data-d')) > -1);
+    });
+    document.getElementById('placeBR').hidden = (place !== 'br');
+    document.getElementById('placeEG').hidden = (place !== 'eg');
+  }
+  document.querySelectorAll('[data-place]').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('[data-place]').forEach(function(x){ x.classList.remove('is-on'); });
+      b.classList.add('is-on');
+      paint(b.getAttribute('data-place'));
+    });
+  });
+  paint('br');
+})();
+
+/* ============ momento 3: planner da semana ============ */
+(function(){
+  var days = document.querySelectorAll('[data-day]');
+  var acts = document.getElementById('acts');
+  var out  = document.getElementById('weekOut');
+  var hint = document.getElementById('plannerHint');
+  if(!days.length || !acts || !out) return;
+  var ORDER = ['Mondays','Tuesdays','Wednesdays','Thursdays','Fridays','Saturdays','Sundays'];
+  var week = {}, current = 'Mondays';
+
+  function renderChips(){
+    var chosen = week[current] || [];
+    acts.querySelectorAll('.act').forEach(function(a){
+      var on = chosen.indexOf(a.textContent) > -1;
+      a.classList.toggle('is-on', on);
+      a.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+  function renderWeek(){
+    out.innerHTML = '';
+    ORDER.forEach(function(d){
+      var list = week[d];
+      if(!list || !list.length) return;
+      var li = document.createElement('li');
+      li.innerHTML = 'On <b>' + d + '</b>, I ' + list.join(' and I ') + '.';
+      out.appendChild(li);
+    });
+  }
+  days.forEach(function(b){
+    b.addEventListener('click', function(){
+      days.forEach(function(x){ x.classList.remove('is-on'); });
+      b.classList.add('is-on');
+      current = b.getAttribute('data-day');
+      hint.textContent = current;
+      renderChips();
+    });
+  });
+  acts.querySelectorAll('.act').forEach(function(a){
+    a.setAttribute('aria-pressed','false');
+    a.addEventListener('click', function(){
+      var list = week[current] || (week[current] = []);
+      var i = list.indexOf(a.textContent);
+      if(i > -1) list.splice(i,1); else list.push(a.textContent);
+      renderChips(); renderWeek();
+    });
+  });
+  renderChips(); renderWeek();
+})();
+
+})();
+</script>
+</body>
+</html>
