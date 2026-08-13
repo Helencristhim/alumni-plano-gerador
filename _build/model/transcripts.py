@@ -35,6 +35,11 @@ E impossivel o transcript divergir do audio: se divergisse, o audio e que estari
 """
 import html as _html
 import re
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import htmlpatch  # noqa: E402
 
 CSS = """/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
 .ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
@@ -97,9 +102,9 @@ def ensure_assets(s):
     if '.ts-box {' not in s:
         s = s.replace('</style>', CSS + '\n</style>', 1)
     if 'function tsToggle' not in s:
-        i = s.rfind('</script>')
-        if i > 0:
-            s = s[:i] + JS + '\n' + s[i:]
+        # NUNCA "antes do ultimo </script>": o arquivo pode terminar com <script src=...>,
+        # e conteudo inline de script com src o navegador IGNORA (ver htmlpatch.py).
+        s = htmlpatch.append_to_inline_script(s, JS)
     return s
 
 
