@@ -11,12 +11,12 @@ GATE 20 passou a comparar a copia consigo mesma). Um script torna a derivacao
 AUDITAVEL: qualquer pessoa roda de novo e ve que o shell e o artefato menos o
 que esta declarado aqui embaixo — nada foi reescrito no caminho.
 
-O QUE SAI DAQUI: TRES arquivos, todos do MESMO tronco — o artefato com a aula 2
-fora (o molde carrega UMA aula de exemplo, como o da guided-discovery) e com os
+O QUE SAI DAQUI: TRES arquivos, todos do MESMO tronco — o artefato INTEIRO (as
+duas aulas; ver o comentario em deriva() sobre por que nenhuma sai) com os
 literais do MODELO no lugar dos do Dante (e o base_swaps do builder que troca
 por aluno).
 
-    shells/story-quest.html            standalone: Planejamento + In Class + o deck
+    shells/story-quest.html            standalone: Planejamento + In Class + os decks
     shells/hub-story-quest.html        hub prof:   Planejamento + In Class + Post-class
     shells/hub-story-quest-aluno.html  hub aluno:  so Post-class
 
@@ -97,46 +97,29 @@ def deriva():
         s = fh.read()
     rel = {}
 
-    # 1. FORA A AULA 2 — o molde carrega UMA aula de exemplo.
-    for nome, rx, tag in [
-        ('slides',        r'<div class="slide[^"]*"[^>]*data-lesson="2"[^>]*>', 'div'),
-        ('phase-bar',     r'<div class="phase-bar"[^>]*data-lesson="2"[^>]*>', 'div'),
-        ('phase-labels',  r'<div class="phase-labels"[^>]*data-lesson="2"[^>]*>', 'div'),
-        ('plano',         r'<div class="pv-plan"[^>]*data-plan-body="2"[^>]*>', 'div'),
-        ('percurso',      r'<div class="pv-post"[^>]*data-post-body="2"[^>]*>', 'div'),
-        ('pill',          r'<button class="pv-pill"[^>]*data-plan="2"[^>]*>', 'button'),
-        ('card-inclass',  r'<button class="pv-card"[^>]*data-aula="2"[^>]*>', 'button'),
-        ('card-postclass', r'<button class="pv-card"[^>]*data-post="2"[^>]*>', 'button'),
-    ]:
-        s, n = remove(s, rx, tag)
-        rel[f'aula2/{nome}'] = n
-
-    # O DADO da aula 2 tambem sai. O deck e data-driven: LESSONS['N'] = {hubLabel,
-    # story, frame, build, imageQuiz, reset} alimenta as 10 telas. Deixar o objeto
-    # da aula 2 num shell sem os slides dela e carregar conteudo do Dante para
-    # dentro do molde — e o base_swaps nao tem como saber que aquilo e conteudo.
-    m = re.search(r"LESSONS\['2'\]\s*=\s*\{", s)
-    if m:
-        depth, j = 0, m.end() - 1
-        for t in re.finditer(r'\{|\}', s[j:]):
-            depth += 1 if t.group(0) == '{' else -1
-            if depth == 0:
-                fim = j + t.end()
-                break
-        while fim < len(s) and s[fim] in ';\n\r\t ':
-            fim += 1
-        s = s[:m.start()] + s[fim:]
-        rel['aula2/LESSONS'] = 1
-
-    # O payload do percurso 2 sai do PV_POSTS pela CHAVE, nao por corte de texto.
-    i = s.index('var PV_POSTS = ')
-    import json
-    obj, fim = json.JSONDecoder().raw_decode(s[i + len('var PV_POSTS = '):])
-    obj.pop('2', None)
-    s = (s[:i] + 'var PV_POSTS = ' + json.dumps(obj, ensure_ascii=False)
-         + s[i + len('var PV_POSTS = ') + fim:])
-    rel['aula2/payload'] = 1
-
+    # AS DUAS AULAS FICAM. Nao e descuido: e o conserto de um erro que este repo
+    # ja pagou uma vez.
+    #
+    # Eu tinha tirado a aula 2 "porque o molde carrega UMA aula de exemplo, como o
+    # da guided-discovery". Medindo depois, a aula 2 levava embora MECANICA que a
+    # aula 1 nao tem:
+    #
+    #     sc-*   (a cena clicavel do "Where is it?")   7 classes,  69 usos
+    #     gap-*  (o gap-fill com banco de fichas)      6 classes,  24 usos
+    #     mc-*   (as colunas do memory)                4 classes,  16 usos
+    #     + askRoom, cityScene, classScene, renderMemory, virar
+    #
+    # Nada disso QUEBRAVA (a aula 1 nunca chama essas funcoes, e o CSS das pecas
+    # veio inteiro de qualquer jeito) — o shell so passava a OFERECER menos que o
+    # artefato. E "oferecer menos, sem ninguem ver" e exatamente como o
+    # guided-discovery perdeu callout (23,8 usos/aula), tbl-wrap, quiz-option e
+    # rule-box: quatro pecas que nunca foram portadas e que so apareceram meses
+    # depois, quando o artefato voltou a ser fonte (anatomias.json, 11/08/2026).
+    #
+    # Anatomia e o que a forma OFERECE; a aula escolhe. Entao o shell carrega as
+    # duas aulas do artefato, e o inventario pode declarar TODA peca sabendo que
+    # ela esta la. O builder troca o conteudo do slides-container inteiro, entao
+    # duas aulas de exemplo nao custam nada na geracao.
     # 2. LITERAIS DO MODELO no lugar dos do Dante.
     for velho, novo in PALETA + NOMES:
         antes = s.count(velho)
@@ -299,7 +282,7 @@ def main():
         if ruim:
             return 1
         print('OK — os 3 shells no disco sao exatamente o artefato repartido, '
-              'com os literais do modelo.')
+              'inteiro, com os literais do modelo.')
         return 0
     os.makedirs(SHELLS, exist_ok=True)
     for caminho, conteudo in saidas:
