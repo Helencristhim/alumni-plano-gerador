@@ -1,0 +1,102 @@
+{
+  "_o_que_e": "PALETA de vozes juvenis para o modelo kids (molde joaozinho / anatomia story-quest). NAO e carregada por ninguem em tempo de build: e a lista de onde o config de cada aula COPIA o seu elenco, para que o mesmo personagem soe igual em todas as aulas do aluno.",
+  "_por_que_nao_esta_no_voices_json": "Porque o voices.json global e deliberadamente so arthur/ellen. A decisao esta escrita no validate_lesson.py (voices_for): 'voz de sotaque e decisao POR ALUNO e nao pode vazar para o roster inteiro'. O mecanismo certo ja existe -- cfg['voices'] no config da aula, que o gen_audio funde com o global (VOICES = {**VOICES, **cfg.get('voices', {})}) e que o validador resolve do mesmo jeito. Este arquivo e so a paleta de onde copiar, para o elenco nao ser reinventado a cada aula.",
+  "_ordem_do_dan": "13/08/2026: 'se precisar de 5 vozes voce vai pegar as vozes kids ok? vozes juvenis' -- e, logo depois, 'de acordo com o contexto do dialogo' / 'ou necessidade'. Entao: o BANCO e juvenil, mas a escolha por personagem segue quem o personagem E. Um dragao grande e velho nao vira crianca por causa da regra; a regra diz de que banco tirar, o contexto diz qual tirar.",
+  "_verificado": "13/08/2026 -- as 7 sintetizam de fato (POST /v1/text-to-speech, HTTP 200 e MP3 com bytes). Id que nao existe so falha na hora de gerar o audio, que e tarde demais. O que NAO foi verificado por mim e o TIMBRE: escolhi pelos rotulos da ElevenLabs (idade/genero/sotaque/descricao), nao pelo ouvido.",
+  "_sotaque": "Todas american, por causa da REGRA 21 (American English). E o unico criterio que descartou candidatas boas -- 'Dorothy - British Children's Storyteller' seria a narradora obvia, e e britanica.",
+  "paleta": {
+    "lila": {
+      "id": "NoOVOzCQFLOvtsMoNcdT",
+      "quem": "narradora de historia infantil, adulta, calorosa",
+      "rotulo": "Lila - Upbeat Kids Learning (middle_aged/female/american)"
+    },
+    "cherry": {
+      "id": "XJ2fW4ybq7HouelYYGcL",
+      "quem": "menina, ~8-10 anos",
+      "rotulo": "Cherry Twinkle - Bubbly and Sweet (young/female/american)"
+    },
+    "candy": {
+      "id": "Nggzl2QAXh3OijoXD116",
+      "quem": "menina, ~8-10 anos (a 2a, quando duas meninas falam no mesmo dialogo)",
+      "rotulo": "Candy - Girly and Sweet (young/female/american)"
+    },
+    "austin": {
+      "id": "Xb3zeLrTi6F4ziIcXdwk",
+      "quem": "menino, ~8-10 anos",
+      "rotulo": "Austin - Timid and Casual (young/male/american)"
+    },
+    "mini": {
+      "id": "nUX4UWK0Tf1qh5zvFZWR",
+      "quem": "bichinho pequeno / filhote -- vozinha muito aguda",
+      "rotulo": "Mini - Lively Cute Little Girl (young/female)"
+    },
+    "sparkles": {
+      "id": "tapn1QwocNXk3viVSowa",
+      "quem": "brinquedo / criatura pequena -- a 2a vozinha aguda",
+      "rotulo": "Sparkles for Kids (young/female/american)"
+    },
+    "brian": {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "quem": "criatura GRANDE, adulto grave -- dragao, gigante, robo pesado",
+      "rotulo": "Brian - Deep, Resonant (middle_aged/male/american)"
+    },
+    "chloe": {
+      "id": "Ha9f2JUQ4LL1bw2ZcNjS",
+      "quem": "mulher adulta da historia (professora, mae, atendente) -- a voz NAO juvenil da paleta",
+      "rotulo": "Chloe - Warm, Soft and Approachable (middle_aged/female/american)"
+    }
+  },
+  "elenco_do_artefato": {
+    "_nota": "Como a paleta cobre o elenco das duas aulas do artefato, e o porque de cada escolha. O pitch/rate ao lado e o que o artefato usava para dramatizar com o TTS do navegador -- aqui a diferenca vem da VOZ, nao do pitch.",
+    "aula1": {
+      "Narrator": {
+        "voz": "lila",
+        "artefato": "f pitch 1.00 rate 0.92",
+        "por_que": "conta a historia; adulta e calma"
+      },
+      "Nina": {
+        "voz": "cherry",
+        "artefato": "f pitch 1.28 rate 1.00",
+        "por_que": "a menina da Dragon School"
+      },
+      "Mara": {
+        "voz": "chloe",
+        "artefato": "f pitch 0.98 rate 0.90",
+        "por_que": "a adulta da escola. NAO e juvenil, e e de proposito: a ordem diz de que BANCO tirar, o contexto diz qual. Nao usar 'ellen' aqui -- ver a nota do override kids abaixo"
+      },
+      "Storm": {
+        "voz": "brian",
+        "artefato": "m pitch 0.70 rate 0.82",
+        "por_que": "dragao GRANDE. O pitch 0.70 do artefato existia justamente para isso; com voz propria nao precisa de truque"
+      },
+      "Pip": {
+        "voz": "mini",
+        "artefato": "f pitch 1.60 rate 1.12",
+        "por_que": "dragoa filhote, a menorzinha da historia"
+      }
+    },
+    "aula2": {
+      "Narrator": {
+        "voz": "lila",
+        "artefato": "f pitch 1.00 rate 0.92",
+        "por_que": "a mesma narradora da aula 1 -- personagem constante soa constante"
+      },
+      "Max": {
+        "voz": "austin",
+        "artefato": "m pitch 1.20 rate 1.00",
+        "por_que": "menino"
+      },
+      "Bia": {
+        "voz": "candy",
+        "artefato": "f pitch 1.40 rate 1.05",
+        "por_que": "menina"
+      },
+      "Nino": {
+        "voz": "sparkles",
+        "artefato": "f pitch 1.80 rate 0.85",
+        "por_que": "o pitch 1.80 e o mais agudo do artefato: bichinho/boneco"
+      }
+    }
+  },
+  "_atencao_ao_override_kids": "gen_audio.py troca arthur->Leo e ellen->Candy QUANDO cfg['model'] == 'kids'. Entao 'ellen' num config kids NAO e a Ellen calma: e a Candy, que nesta paleta e uma MENINA. Foi por isso que a Mara (a adulta da aula 1) saiu de 'ellen' e ganhou voz propria (chloe): reusar o nome global teria dado a uma professora a voz de uma crianca, e ninguem veria isso sem ouvir o MP3. Personagem desta anatomia declara voz EXPLICITA, sempre."
+}
