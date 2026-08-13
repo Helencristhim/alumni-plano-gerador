@@ -242,7 +242,11 @@ def remove_lesson_blocks(s, n, slug, is_aluno):
         if not found:
             break
     if not is_aluno:                                           # card do menu (só prof)
-        s, _ = _strip_enclosing(s, f'{slug}-aula{n}.html', open_tag='<a', close_tag='</a>')
+        while True:            # TODOS: hub que ja nasceu com o card dobrado se cura aqui
+            s, found = _strip_enclosing(s, f'{slug}-aula{n}.html',
+                                        open_tag='<a', close_tag='</a>')
+            if not found:
+                break
     s, _ = _strip_enclosing(s, f'id="stamp{n}"')              # stamp do header
     assert f'id="ex-lesson-{n}"' not in s and f'data-media="l{n}-' not in s, \
         f'remoção incompleta da aula {n}'
@@ -364,11 +368,10 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     #    A âncora é a CLASSE/ID da aba (id="tab-inclass"), NUNCA o TEXTO do título:
     #    o título é PROSA e mudou ("Selecione a Aula" -> "Select your Lesson", REGRA 13),
     #    o que fazia esta busca falhar EM SILÊNCIO e o card do menu sumir do hub.
-    # O MARCADOR DE FIM E GENERICO. Era a string literal "TAB 4", o que amarrava o insert a
-    # UMA ordem de abas: na anatomia guided-discovery o IN CLASS e a aba 4 e quem vem depois
-    # e a 5, entao a ancora nunca casava e o card do menu nao entrava — a aula nascia ORFA.
-    # O que importa e "o proximo comentario de aba", nao o numero dele.
-    FIM_ABA = '<!-- ========== TAB '
+    # O MARCADOR DE FIM DA LISTA E GENERICO. Era a string literal "TAB 4", o que amarrava o
+    # insert a UMA ordem de abas: na anatomia guided-discovery o IN CLASS e a aba 4 e quem
+    # vem depois e a 5, entao a ancora nunca casava e o card nao entrava — a aula nascia
+    # ORFA. O que importa e "o proximo comentario de aba", nao o numero dele.
     #
     #    AULA MONOLITICA NAO GANHA CARD. O card aponta para o standalone
     #    ({slug}-aula{N}.html). Em hub monolitico os slides moram DENTRO do hub e o menu
@@ -379,9 +382,27 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     tem_standalone = os.path.exists(
         os.path.join(ROOT, 'public', 'aluno' if is_aluno else 'professor',
                      f'{slug}-aula{n}.html'))
+    #
+    #    A IDEMPOTENCIA SE MEDE DENTRO DA ABA, NUNCA POR SPLIT NO MARCADOR GENERICO.
+    #    A guarda era `... not in s.split(FIM_ABA)[0]`, herdada de quando FIM_ABA era a
+    #    string literal '<!-- ========== TAB 4' — ali o pedaco [0] ia do inicio do arquivo
+    #    ATE a aba Complementares, e portanto CONTINHA o menu IN CLASS. Ao generalizar o
+    #    marcador para '<!-- ========== TAB ' (acima), o split passou a cortar no TAB 1
+    #    (PLANEJAMENTO): [0] virou so o <head> + CSS, onde nenhum card jamais esta. A
+    #    guarda passou a dar SEMPRE "nao inserido" e cada nova passada do insert_hub
+    #    plantou MAIS UM card identico. Medido em 13/08/2026: dante-blecker-gregory (3
+    #    aulas) e eduarda-gabriel-new (5 aulas) com o menu IN CLASS dobrado — os dois
+    #    hubs que foram reconstruidos depois da mudanca do marcador.
+    #    A regiao certa e a propria aba: id="tab-inclass" ate o </div> que a fecha.
+    ja_tem_card = tem_standalone and not is_aluno and 'id="tab-inclass"' in s and (
+        f'{slug}-aula{n}.html' in s[
+            re.search(r'<div[^>]*id="tab-inclass"[^>]*>', s).end():
+            fim_da_aba(s, 'tab-inclass', 'IN CLASS')])
     if not tem_standalone:
         pulados.append('card-menu(aula monolitica: abre por enterSlideMode)')
-    elif f'{slug}-aula{n}.html' not in s.split(FIM_ABA)[0]:
+    elif ja_tem_card:
+        pulados.append('card-menu')
+    else:
         mlist = re.search(r'(id="tab-inclass".*?)(\n\s*</div>\s*</div>\s*\n\s*<!-- ========== TAB )',
                           s, flags=re.S)
         if not mlist and not is_aluno and 'id="tab-inclass"' in s:
