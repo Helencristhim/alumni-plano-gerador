@@ -230,6 +230,19 @@ jobs:
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: python3 scripts/check_order_audio_len.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
+      - name: "GATE 5c — áudio FORA DE SINCRONIA com o texto (procedência)"
+        # O 5b pega áudio TRUNCADO; este pega áudio ÍNTEGRO que fala OUTRA COISA.
+        # O nome do MP3 é posicional (a7_order_sequence.mp3) e o gerador pula existentes:
+        # reescrever o exercício depois de gerar o áudio deixava para sempre o áudio do
+        # rascunho anterior — MP3 válido, tamanho certo, manifesto certo, e só ouvindo dava
+        # para perceber. Foi assim que a Fabiana ficou com as aulas 6-10 narrando outra
+        # história no "Put the story in order". O gen_audio agora grava em
+        # public/audio/{slug}/_src.json o sha1 de (voz|texto) que produziu cada MP3, e este
+        # gate cobra: áudio novo no PR tem de ter procedência, e manifesto no PR tem de
+        # bater com a procedência gravada. Legado (sem entrada no _src.json) é ignorado.
+        if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
+        run: python3 scripts/check_audio_src.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
+
       - name: "GATE 6 — reintrodução de padrão já consertado (novos E modificados)"
         # BLOQUEANTE também em arquivo MODIFICADO, ao contrário do validador abaixo.
         # É esse o buraco que ele tapa: uma branch ramificada ANTES de um conserto

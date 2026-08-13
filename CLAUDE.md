@@ -718,6 +718,34 @@ Vale para TODO handler inline, nao so audio:
 
 **GATE 7 (bloqueante, no CI)**: `node scripts/check_inline_js.mjs --base origin/main <arquivos>` compila cada handler no **V8 — o motor do Chrome**. Nao simula o navegador: usa o navegador. A base esta em **0 botoes mortos**, entao qualquer botao morto novo BARRA o PR.
 
+### 7.2 — O MP3 TEM DE SABER DE QUE TEXTO NASCEU (REGRA BLOQUEANTE)
+
+**A regra.** Todo MP3 gerado carrega a PROCEDENCIA: o `gen_audio.py` grava em
+`public/audio/{slug}/_src.json` o sha1 de `voz|texto` que produziu cada arquivo. Ele so
+PULA um arquivo existente se esse hash bater com o texto atual; se o texto mudou,
+REGENERA. Arquivo sem entrada no ledger e legado e nao se toca (REGRA 30).
+
+**Por que.** O nome do MP3 de exercicio e POSICIONAL, nao derivado do texto:
+`a7_order_sequence.mp3` continua se chamando assim depois de a historia inteira ser
+reescrita. Como o gerador pulava existentes, a sequencia era:
+
+    1. rascunho A -> gera o MP3 (fala A)   2. reescreve o exercicio -> a tela mostra B
+    3. roda o gen_audio -> "ja existe", PULA   4. commita: HTML=B, manifesto=B, MP3=A
+
+**Nenhum gate via, e nao por descuido**: o MP3 e valido (GATE 5), tem o tamanho certo
+para o texto (GATE 5b), e o manifesto — que e o DESEJADO, nao o PRODUZIDO — bate com a
+tela (`check_order_audio.py`). **So ouvindo.** A aluna dava play no "Put the story in
+order" e ouvia uma historia com outros personagens, sem relacao nenhuma com as frases
+que tinha de ordenar. Fabiana, aulas 6 a 10, achado em 13/08/2026.
+
+> **Manifesto nao e prova de audio.** Ele diz o que se QUERIA falar. A unica coisa que
+> amarra o arquivo ao texto e o hash de quem o gerou — ou uma transcricao.
+
+**GATE 5c (bloqueante, no CI)**: `scripts/check_audio_src.py` — MP3 que o PR traz sem
+entrada no `_src.json` = FAIL; manifesto do PR cujo texto nao bate com a procedencia
+gravada = FAIL. Quem escreve MP3 fora do `gen_audio.py` grava o ledger tambem
+(`record_src()` em `scripts/repair_order_audio.py`).
+
 ---
 
 ## REGRA 8 — PRONUNCIA (startRecording)

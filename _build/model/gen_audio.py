@@ -6,6 +6,7 @@ Lê o audio_manifest.json ao lado do config.json. Pula existentes. Vozes em voic
 
 USO: ELEVENLABS_API_KEY=... python3 _build/model/gen_audio.py _build/{slug}-aula{N}/config.json
 """
+import hashlib
 import json
 import os
 import sys
@@ -75,12 +76,53 @@ def tts(text, voice):
         return r.read()
 
 
-gen = skip = err = 0
+# ===== LEDGER DE PROCEDENCIA (o MP3 sabe de que TEXTO nasceu) =====
+# O nome do arquivo de audio e POSICIONAL (a7_order_sequence.mp3), nao derivado do texto.
+# Reescrever o exercicio NAO muda o nome -> o "pula existentes" acima mantinha para sempre
+# o audio do RASCUNHO ANTERIOR, e nada downstream conseguia perceber: o MP3 e valido, tem
+# o tamanho certo pro texto, e o manifesto (que e o DESEJADO) bate com a tela. Só ouvindo.
+# Aconteceu na Fabiana, aulas 6 a 10: o audio do "Put the story in order" narra uma historia
+# com outros personagens e outros eventos (PR deste conserto).
+# O ledger grava, ao lado dos MP3s, o sha1 de (voz|texto) que PRODUZIU cada arquivo:
+#   - hash bate      -> pula (nada mudou)
+#   - hash diverge   -> REGENERA (o texto foi reescrito depois de gerar o audio)
+#   - sem entrada    -> pula (legado: nao sabemos de que texto nasceu; REGRA 30)
+# O gate scripts/check_audio_src.py exige o hash nos arquivos DO PR.
+LEDGER = os.path.join(OUT, '_src.json')
+
+
+def _src_hash(text, voice):
+    return hashlib.sha1((voice + '|' + text).encode('utf-8')).hexdigest()
+
+
+try:
+    with open(LEDGER, encoding='utf-8') as _lf:
+        ledger = json.load(_lf)
+except (IOError, ValueError):
+    ledger = {}
+
+
+def _save_ledger():
+    with open(LEDGER, 'w', encoding='utf-8') as _lf:
+        json.dump(ledger, _lf, indent=1, sort_keys=True, ensure_ascii=False)
+        _lf.write('\n')
+
+
+gen = skip = err = stale = 0
 for p in manifest:
     fp = os.path.join(OUT, p['file'])
+    want = _src_hash(p['text'], p['voice'])
     if os.path.exists(fp) and not FORCE:
-        skip += 1
-        continue
+        have = ledger.get(p['file'])
+        if have is None:
+            skip += 1          # legado sem procedencia: nao se toca
+            continue
+        if have == want:
+            skip += 1
+            continue
+        stale += 1
+        print('  ~ %s DESSINCRONIZADO (texto mudou depois de gerar) — regenerando'
+              % p['file'])
     floor = len(p['text']) * MIN_BYTES_PER_CHAR  # tamanho mínimo compatível com o texto
     data = None
     try:
@@ -102,8 +144,12 @@ for p in manifest:
               % (p['file'], MAX_TRIES))
         continue
     open(fp, 'wb').write(data)
+    ledger[p['file']] = want
+    _save_ledger()
     gen += 1
     print('  + %s (%s, %d b)' % (p['file'], p['voice'], len(data)))
     time.sleep(0.3)
-print('Done: %d gen, %d skip, %d err (total %d)' % (gen, skip, err, len(manifest)))
+_save_ledger()
+print('Done: %d gen (%d por texto reescrito), %d skip, %d err (total %d)'
+      % (gen, stale, skip, err, len(manifest)))
 sys.exit(1 if err else 0)

@@ -12,7 +12,7 @@ USO:
   aplicar:  set -a && source .env.local && set +a
             python3 scripts/repair_order_audio.py --apply <slug> [...]
 """
-import re,os,sys,glob,html as _html,json,urllib.request,time
+import re,os,sys,glob,hashlib,html as _html,json,urllib.request,time
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FLOOR=40000
 BYTES_PER_CHAR=400  # < isso por char = truncado (text-aware)
@@ -76,7 +76,23 @@ def gen(text,voice,fp,key):
         raise RuntimeError(f'regen ainda curto ({len(data)}b) para {key}')
     os.makedirs(os.path.dirname(fp),exist_ok=True)
     open(fp,'wb').write(data)
+    record_src(fp,text,voice)
     return len(data)
+
+
+def record_src(fp,text,voice):
+    """Grava a PROCEDENCIA do MP3 (sha1 de voz|texto) em public/audio/{slug}/_src.json.
+
+    Sem isto o arquivo reparado volta a ser anonimo: nada mais consegue dizer de que
+    texto ele nasceu, e o GATE scripts/check_audio_src.py barra o PR (com razao)."""
+    led_path=os.path.join(os.path.dirname(fp),'_src.json')
+    try:
+        led=json.load(open(led_path,encoding='utf-8'))
+    except (IOError,ValueError):
+        led={}
+    led[os.path.basename(fp)]=hashlib.sha1((voice+'|'+text).encode('utf-8')).hexdigest()
+    with open(led_path,'w',encoding='utf-8') as f:
+        json.dump(led,f,indent=1,sort_keys=True,ensure_ascii=False); f.write('\n')
 
 def main():
     apply='--apply' in sys.argv
