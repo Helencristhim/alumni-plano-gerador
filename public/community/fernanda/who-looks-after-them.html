@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Looks After Them? — Como o mundo cuida dos pequenos</title>
+<style>
+:root{
+  --paper:#fdfaf5; --paper-2:#f6efe4;
+  --ink:#2b2a28; --ink-soft:#5d574e; --ink-faint:#8a8177;
+  --line:#e2d8c8;
+  --sun:#e07a3f; --sun-soft:#fceee4;
+  --sea:#2f6f8f; --sea-soft:#e6f0f5;
+  --mint:#eaf3ec; --mint-line:#8fb894;
+  --radius:16px;
+  --shadow:0 2px 10px rgba(60,45,25,.07);
+  --shadow-lift:0 8px 24px rgba(60,45,25,.13);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  font-size:17px;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto;padding:0 1.15rem 5rem}
+
+/* ---------- cabeçalho ---------- */
+.hero{background:linear-gradient(160deg,var(--sun-soft) 0%,var(--paper) 62%);
+  border-bottom:1px solid var(--line);padding:3rem 1.15rem 2.4rem;margin-bottom:2.5rem}
+.hero-in{max-width:900px;margin:0 auto}
+.kicker{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sun);font-weight:700;margin:0 0 .7rem}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(1.9rem,5.4vw,2.9rem);
+   line-height:1.15;margin:0 0 .9rem;letter-spacing:-.01em}
+.hero p{margin:0 0 .7rem;color:var(--ink-soft);max-width:60ch}
+.hero .meta{margin:1.3rem 0 0;font-size:.86rem;color:var(--ink-faint)}
+.back{display:inline-block;margin:1rem 0 0 1.15rem;font-size:.85rem;color:var(--sea);text-decoration:none}
+.back:hover{text-decoration:underline}
+
+/* ---------- momentos ---------- */
+.moment{margin:0 0 3.4rem;scroll-margin-top:1rem}
+.m-head{display:flex;align-items:baseline;gap:.75rem;margin-bottom:.3rem;flex-wrap:wrap}
+.m-num{font-family:Georgia,serif;font-size:.95rem;color:var(--sun);border:1.5px solid var(--sun);
+  border-radius:50%;width:2rem;height:2rem;min-width:2rem;display:inline-flex;align-items:center;justify-content:center}
+.m-title{font-family:Georgia,serif;font-weight:400;font-size:1.55rem;margin:0;line-height:1.25}
+.m-instr{background:var(--sea-soft);border-left:3px solid var(--sea);border-radius:0 12px 12px 0;
+  padding:.85rem 1.05rem;margin:1rem 0 1.6rem;color:var(--ink);font-size:.98rem}
+.m-instr p{margin:0}
+.m-instr .en-instr{font-weight:500}
+.m-close{margin-top:1.6rem;padding:1rem 1.15rem;background:var(--paper-2);border-radius:12px;
+  font-size:.94rem;color:var(--ink-soft)}
+.m-close b{color:var(--ink);font-weight:600}
+
+/* ---------- português sob demanda ---------- */
+.tr{display:none}
+.show-tr .tr{display:block}
+.tr-toggle{font:inherit;font-size:.78rem;cursor:pointer;background:none;border:0;color:var(--sea);
+  text-decoration:underline;padding:.3rem 0 0;align-self:flex-start;display:inline-block}
+.tr-toggle:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+p.tr,span.tr,li .tr{color:var(--ink-faint);font-size:.9rem;margin:.3rem 0 0;line-height:1.5}
+
+/* ---------- áudio ---------- */
+.audio-row{display:inline-flex;gap:.4rem;align-items:center;flex-wrap:wrap}
+.say{font:inherit;font-size:.82rem;cursor:pointer;background:#fff;border:1px solid var(--line);
+  border-radius:999px;padding:.28rem .8rem;color:var(--sea);display:inline-flex;align-items:center;gap:.35rem;
+  transition:background .15s ease,border-color .15s ease}
+.say:hover{background:var(--sea-soft);border-color:var(--sea)}
+.say:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.say.on{background:var(--sea);color:#fff;border-color:var(--sea)}
+.say[hidden]{display:none}
+.say svg{width:14px;height:14px;flex:none}
+
+/* ---------- momento 1: cenas ---------- */
+.scenes{display:grid;gap:1.1rem;grid-template-columns:1fr}
+@media(min-width:560px){.scenes{grid-template-columns:1fr 1fr}}
+@media(min-width:860px){.scenes{grid-template-columns:1fr 1fr 1fr}}
+.scene{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:1rem;display:flex;flex-direction:column;gap:.7rem}
+.scene svg.art{width:100%;height:auto;display:block;border-radius:12px}
+.scene .reveal-btn{font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;background:var(--sea);color:#fff;
+  border:0;border-radius:10px;padding:.55rem 1rem;align-self:flex-start;transition:background .15s ease}
+.scene .reveal-btn:hover{background:#255a75}
+.scene .reveal-btn:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.scene .panel{display:none}
+.scene.open .panel{display:block}
+.scene .name{font-family:Georgia,serif;font-size:1.15rem;margin:.2rem 0 .1rem}
+.scene .where{font-size:.82rem;color:var(--sun);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0 0 .5rem}
+.scene .en{display:block;margin:0 0 .45rem}
+
+/* ---------- vídeo ---------- */
+.video{margin:1.2rem 0 .6rem}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:var(--paper-2);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-note{padding:1.2rem;text-align:center;color:var(--ink-soft);font-size:.94rem}
+.video-link{display:inline-block;margin-top:.6rem;font-size:.86rem;color:var(--sea)}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 0;padding:0;list-style:none}
+.chips li{background:#fff;border:1px solid var(--line);border-radius:999px;padding:.3rem .85rem;font-size:.9rem}
+
+/* ---------- cartas de resposta (momento 3) ---------- */
+.answers{display:grid;gap:.85rem;grid-template-columns:1fr;margin-top:.4rem}
+@media(min-width:560px){.answers{grid-template-columns:1fr 1fr}}
+.ans{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+  padding:.95rem 1.05rem;display:flex;flex-direction:column;gap:.4rem}
+.ans .q{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin:0}
+.ans .en{font-size:1.02rem;margin:0}
+
+/* ---------- apoio ---------- */
+details.support{margin:1.1rem 0 0;background:var(--mint);border:1px solid var(--mint-line);border-radius:12px;padding:.2rem .2rem}
+details.support summary{cursor:pointer;padding:.65rem .9rem;font-size:.92rem;font-weight:600;color:#2f5d3a;list-style:none}
+details.support summary::-webkit-details-marker{display:none}
+details.support summary::before{content:"+ ";font-weight:700}
+details.support[open] summary::before{content:"– "}
+.support-body{padding:0 .9rem .9rem}
+.support-body ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.75rem}
+.support-body li{display:flex;flex-direction:column;gap:.3rem}
+.support-body .en{font-size:1rem}
+
+/* ---------- gravação ---------- */
+.rec-row{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:1rem}
+.rec{font:inherit;font-size:.86rem;cursor:pointer;background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:.4rem 1rem;color:var(--ink-soft);display:inline-flex;align-items:center;gap:.4rem}
+.rec:hover{border-color:var(--sun);color:var(--sun)}
+.rec:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+.rec.recording{background:var(--sun);border-color:var(--sun);color:#fff}
+.rec-note{font-size:.84rem;color:var(--ink-faint)}
+.rec-row audio{max-width:100%}
+
+/* ---------- textarea ---------- */
+textarea{width:100%;min-height:5.5rem;font:inherit;font-size:.97rem;padding:.8rem .9rem;border:1px solid var(--line);
+  border-radius:12px;background:#fff;color:var(--ink);resize:vertical}
+textarea:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
+
+/* ---------- fechamento ---------- */
+.end{margin-top:2.4rem;padding:1.4rem 1.3rem;background:var(--sun-soft);border-radius:var(--radius);text-align:center}
+.end p{margin:0;color:var(--ink-soft)}
+.end .mark{display:block;font-family:Georgia,serif;font-size:1.6rem;color:var(--sun);margin-bottom:.5rem}
+footer{margin-top:2.5rem;font-size:.8rem;color:var(--ink-faint);text-align:center}
+
+/* ---------- habito / cartao cultural ---------- */
+.habit{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.1rem;
+  display:flex;flex-direction:column;gap:.4rem}
+.habit .h-art{width:60px;height:60px}
+.habit .h-place{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sun);font-weight:700;margin:.2rem 0 .1rem}
+.habit .en{font-size:1rem}
+
+/* ---------- frases com pronome clicavel ---------- */
+.lines{display:flex;flex-direction:column;gap:1rem;margin-top:1.2rem}
+.line{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:1rem 1.1rem;
+  display:flex;flex-direction:column;gap:.35rem}
+.line .en{font-size:1.05rem;margin:0;line-height:1.55}
+.pron{font:inherit;font-size:inherit;font-weight:700;cursor:pointer;color:var(--sun);background:var(--sun-soft);
+  border:1px solid var(--sun);border-radius:6px;padding:0 .3rem;line-height:1.3}
+.pron:hover{background:var(--sun);color:#fff}
+.pron:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.pron.open{background:var(--sun);color:#fff}
+.ref{display:inline-block;margin-left:.35rem;font-size:.92rem;color:var(--ink-soft);background:var(--paper-2);
+  border-radius:6px;padding:0 .4rem}
+
+/* ---------- bilhete ---------- */
+.note{position:relative;background:#fffdf5;border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow-lift);
+  padding:1.6rem 1.3rem 1.2rem;max-width:520px;margin:1.2rem auto}
+.note-pin{position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;
+  background:var(--sun);box-shadow:0 2px 5px rgba(60,45,25,.25)}
+.note-title{font-family:Georgia,serif;font-size:1.2rem;margin:0 0 .8rem;color:var(--ink)}
+.note-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.65rem}
+.note-list li{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;font-size:1rem}
+.note-list li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--sun);flex:none}
+.note-sign{margin:1rem 0 0;text-align:right;font-style:italic;color:var(--ink-faint);font-size:.92rem}
+
+/* ---------- pergunta grande ---------- */
+.bigq{background:var(--sea-soft);border-radius:var(--radius);padding:1.5rem 1.3rem;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:.6rem}
+.bigq .en{font-family:Georgia,serif;font-size:1.5rem;margin:0;line-height:1.3}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<a class="back" href="./">&#8592; Todos os materiais</a>
+
+<header class="hero">
+  <div class="hero-in">
+    <p class="kicker">Material complementar &middot; Community</p>
+    <h1>Who Looks After Them?<br>Como o mundo cuida dos pequenos</h1>
+    <p>Oi, Fernanda! Na sua aula a babá cuidou da Emily, e apareceram as palavrinhas <b>him</b>, <b>her</b> e <b>them</b>. Aqui você vê como se cuida de um bebê em outros países — e conta de quem você cuida.</p>
+    <p>Vá no seu ritmo. Ouça quantas vezes quiser, fale em voz alta e pare quando precisar. Os títulos e as instruções estão em inglês; sempre que quiser ler em português, clique em <b>ver em português</b>. Em cada atividade há exemplos prontos — é só copiar e trocar as palavras.</p>
+    <p class="meta">5 momentos &middot; cerca de 30 minutos &middot; fone de ouvido ajuda</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ MOMENTO 1 ============ -->
+<section class="moment" id="m1">
+  <div class="m-head"><span class="m-num">1</span><h2 class="m-title">A box for a baby</h2></div>
+  <div class="m-instr">
+    <p class="en-instr">Watch the video. It is short. Then say one sentence: what do you think about this box?</p>
+    <p class="tr">Assista ao vídeo. Ele é curto. Depois diga uma frase: o que você acha dessa caixa?</p>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="video" data-video="aAQcwN25CIE" data-title="Why newborn babies in Finland sleep in boxes | In The Know">
+    <div class="video-frame"></div>
+    <a class="video-link" href="https://www.youtube.com/watch?v=aAQcwN25CIE" target="_blank" rel="noopener">Assista no YouTube &#8599;</a>
+  </div>
+
+  <details class="support">
+    <summary>Precisa de ajuda? Ver exemplos</summary>
+    <div class="support-body">
+      <ul>
+        <li><span class="en">I like it.</span><span class="audio-row" data-say="I like it."></span><span class="tr">Eu gosto disso.</span></li>
+        <li><span class="en">It is a good idea.</span><span class="audio-row" data-say="It is a good idea."></span><span class="tr">É uma boa ideia.</span></li>
+        <li><span class="en">It is new for me.</span><span class="audio-row" data-say="It is new for me."></span><span class="tr">É novidade para mim.</span></li>
+      </ul>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+  </details>
+
+  <div class="m-close">
+    <span class="en">In Finland, every family gets a box for the new baby.</span>
+    <span class="audio-row" data-say="In Finland, every family gets a box for the new baby."></span><br>
+    A caixa vem do governo, com roupas e coisas do bebê — e vira a primeira cama dele. Existe desde 1938.
+  </div>
+</section>
+
+<!-- ============ MOMENTO 2 ============ -->
+<section class="moment" id="m2">
+  <div class="m-head"><span class="m-num">2</span><h2 class="m-title">Who is “them”?</h2></div>
+  <div class="m-instr">
+    <p class="en-instr">Watch the video. Then read the three sentences and tap the orange words. Each one points to somebody.</p>
+    <p class="tr">Assista ao vídeo. Depois leia as três frases e toque nas palavras laranja. Cada uma aponta para alguém.</p>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="video" data-video="I_4kyrFGH9Q" data-title="Why newborn babies in Sweden sleep outside in the cold | In The Know">
+    <div class="video-frame"></div>
+    <a class="video-link" href="https://www.youtube.com/watch?v=I_4kyrFGH9Q" target="_blank" rel="noopener">Assista no YouTube &#8599;</a>
+  </div>
+
+  <div class="lines">
+    <div class="line">
+      <p class="en">In Sweden, parents put <button class="pron" type="button" data-ref="the babies">them</button> outside for a nap.</p>
+      <span class="audio-row" data-say="In Sweden, parents put them outside for a nap."></span>
+      <span class="tr">Na Suécia, os pais colocam os bebês do lado de fora para a soneca.</span>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+    <div class="line">
+      <p class="en">The baby is warm in the stroller. His mother watches <button class="pron" type="button" data-ref="the baby">him</button> from the window.</p>
+      <span class="audio-row" data-say="The baby is warm in the stroller. His mother watches him from the window."></span>
+      <span class="tr">O bebê fica quentinho no carrinho. A mãe dele olha o bebê pela janela.</span>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+    <div class="line">
+      <p class="en">It is cold outside, but the babies like <button class="pron" type="button" data-ref="the cold air">it</button>.</p>
+      <span class="audio-row" data-say="It is cold outside, but the babies like it."></span>
+      <span class="tr">Faz frio lá fora, mas os bebês gostam do ar frio.</span>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+  </div>
+
+  <div class="m-close">Essas palavrinhas entram depois do verbo e apontam para quem <b>recebe</b> a ação: <em>watches <b>him</b></em>, <em>put <b>them</b></em>, <em>like <b>it</b></em>.</div>
+</section>
+
+<!-- ============ MOMENTO 3 ============ -->
+<section class="moment" id="m3">
+  <div class="m-head"><span class="m-num">3</span><h2 class="m-title">In your family</h2></div>
+  <div class="m-instr">
+    <p class="en-instr">Read the card. Then say two sentences about your family: who looks after who?</p>
+    <p class="tr">Leia o cartão. Depois diga duas frases sobre a sua família: quem cuida de quem?</p>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="habit" style="max-width:520px">
+    <svg viewBox="0 0 60 60" class="h-art" role="img" aria-label="Duas pessoas de maos dadas">
+      <rect width="60" height="60" rx="12" fill="#eef1e9"/>
+      <circle cx="21" cy="20" r="7" fill="#c98b52"/>
+      <path d="M11 44c0-6 4.5-10 10-10s10 4 10 10z" fill="#8fb894"/>
+      <circle cx="41" cy="27" r="5" fill="#e0a06a"/>
+      <path d="M33 44c0-4.5 3.5-8 8-8s8 3.5 8 8z" fill="#6f9c76"/>
+      <path d="M27 38c2-2 5-2 7 0" stroke="#5d574e" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>
+    <p class="h-place">Italy</p>
+    <span class="en">In Italy, many grandparents look after the children after school.</span>
+    <span class="audio-row" data-say="In Italy, many grandparents look after the children after school."></span>
+    <span class="tr">Na Itália, muitos avós cuidam das crianças depois da escola.</span>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <details class="support">
+    <summary>Precisa de ajuda? Ver exemplos</summary>
+    <div class="support-body">
+      <ul>
+        <li><span class="en">My mother looks after him on Mondays.</span><span class="audio-row" data-say="My mother looks after him on Mondays."></span><span class="tr">Minha mãe cuida dele às segundas.</span></li>
+        <li><span class="en">I look after them on the weekend.</span><span class="audio-row" data-say="I look after them on the weekend."></span><span class="tr">Eu cuido deles no fim de semana.</span></li>
+        <li><span class="en">I look after my dog. I feed her every morning.</span><span class="audio-row" data-say="I look after my dog. I feed her every morning."></span><span class="tr">Eu cuido da minha cachorra. Eu dou comida para ela toda manhã.</span></li>
+      </ul>
+      <p class="tr" style="display:block">Pode ser uma criança, um animal ou uma planta — cuidar é cuidar.</p>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+  </details>
+</section>
+
+<!-- ============ MOMENTO 4 ============ -->
+<section class="moment" id="m4">
+  <div class="m-head"><span class="m-num">4</span><h2 class="m-title">The note on the fridge</h2></div>
+  <div class="m-instr">
+    <p class="en-instr">Read the note out loud. Then write your own note for somebody who looks after your child, your pet or your plants.</p>
+    <p class="tr">Leia o bilhete em voz alta. Depois escreva o seu próprio bilhete para alguém que vai cuidar do seu filho, do seu bicho ou das suas plantas.</p>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="note">
+    <div class="note-pin" aria-hidden="true"></div>
+    <p class="note-title">Emily &mdash; today</p>
+    <ul class="note-list">
+      <li><span class="en">Give her the milk at twelve.</span><span class="audio-row" data-say="Give her the milk at twelve."></span></li>
+      <li><span class="en">Put her in the crib after lunch.</span><span class="audio-row" data-say="Put her in the crib after lunch."></span></li>
+      <li><span class="en">Take her to the park in the stroller.</span><span class="audio-row" data-say="Take her to the park in the stroller."></span></li>
+      <li><span class="en">Read her a story before bedtime.</span><span class="audio-row" data-say="Read her a story before bedtime."></span></li>
+    </ul>
+    <p class="note-sign">Thank you! &mdash; Mrs. Smith</p>
+  </div>
+
+  <details class="support">
+    <summary>Precisa de ajuda? Ver exemplos</summary>
+    <div class="support-body">
+      <ul>
+        <li><span class="en">Please feed him at seven.</span><span class="audio-row" data-say="Please feed him at seven."></span><span class="tr">Por favor, dê comida para ele às sete.</span></li>
+        <li><span class="en">Take them to the park in the afternoon.</span><span class="audio-row" data-say="Take them to the park in the afternoon."></span><span class="tr">Leve eles ao parque à tarde.</span></li>
+        <li><span class="en">Give them water on Monday and Friday.</span><span class="audio-row" data-say="Give them water on Monday and Friday."></span><span class="tr">Regue elas na segunda e na sexta.</span></li>
+      </ul>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+  </details>
+
+  <textarea id="mynote" placeholder="Please..." aria-label="Seu bilhete"></textarea>
+
+  <div class="rec-row" data-rec="note">
+    <button class="rec" type="button"><span class="rec-lbl">Gravar seu bilhete</span></button>
+    <span class="rec-note" hidden></span>
+  </div>
+</section>
+
+<!-- ============ MOMENTO 5 ============ -->
+<section class="moment" id="m5">
+  <div class="m-head"><span class="m-num">5</span><h2 class="m-title">And you?</h2></div>
+  <div class="m-instr">
+    <p class="en-instr">Listen to the question. Answer out loud — one sentence is enough.</p>
+    <p class="tr">Ouça a pergunta. Responda em voz alta — uma frase basta.</p>
+    <button class="tr-toggle" type="button">ver em português</button>
+  </div>
+
+  <div class="bigq">
+    <p class="en">Who looks after you?</p>
+    <span class="audio-row" data-say="Who looks after you?"></span>
+  </div>
+
+  <details class="support">
+    <summary>Precisa de ajuda? Ver exemplos</summary>
+    <div class="support-body">
+      <ul>
+        <li><span class="en">My family looks after me.</span><span class="audio-row" data-say="My family looks after me."></span><span class="tr">Minha família cuida de mim.</span></li>
+        <li><span class="en">My friends look after me. I look after them too.</span><span class="audio-row" data-say="My friends look after me. I look after them too."></span><span class="tr">Meus amigos cuidam de mim. Eu cuido deles também.</span></li>
+      </ul>
+      <button class="tr-toggle" type="button">ver em português</button>
+    </div>
+  </details>
+
+  <div class="m-close">
+    Quem <b>faz</b> a ação vem antes do verbo; quem <b>recebe</b> vem depois — e muda de forma:<br>
+    <em>I &rarr; me &nbsp;·&nbsp; he &rarr; him &nbsp;·&nbsp; she &rarr; her &nbsp;·&nbsp; we &rarr; us &nbsp;·&nbsp; they &rarr; them</em><br>
+    <em><b>She</b> looks after <b>him</b>.</em> — a mesma pessoa pode ser uma coisa numa frase e outra na seguinte.
+  </div>
+
+  <div class="end">
+    <span class="mark" aria-hidden="true">&#9825;</span>
+    <p>Hoje você viu uma caixa que vira cama, bebês dormindo no frio e avós na saída da escola.<br>Cuidar tem mil formatos — e em inglês quase sempre passa por <em>him</em>, <em>her</em> ou <em>them</em>.</p>
+  </div>
+</section>
+
+<p style="text-align:center;margin:0 0 2rem"><a href="./" style="font-size:.9rem;color:var(--sea)">&#8592; Voltar para todos os materiais</a></p>
+<footer>Who Looks After Them? &middot; Essential 1 / 04 I&rsquo;ll look after them &middot; material complementar de prática livre</footer>
+</div>
+
+<script>window.AUDIO_MAP={"I like it.": "i_like_it.mp3", "It is a good idea.": "it_is_a_good_idea.mp3", "It is new for me.": "it_is_new_for_me.mp3", "In Finland, every family gets a box for the new baby.": "in_finland_every_family_gets_a_box_for_the_new_baby.mp3", "In Sweden, parents put them outside for a nap.": "in_sweden_parents_put_them_outside_for_a_nap.mp3", "The baby is warm in the stroller. His mother watches him from the window.": "the_baby_is_warm_in_the_stroller_his_mother_watches_him_from.mp3", "It is cold outside, but the babies like it.": "it_is_cold_outside_but_the_babies_like_it.mp3", "In Italy, many grandparents look after the children after school.": "in_italy_many_grandparents_look_after_the_children_after_sch.mp3", "My mother looks after him on Mondays.": "my_mother_looks_after_him_on_mondays.mp3", "I look after them on the weekend.": "i_look_after_them_on_the_weekend.mp3", "I look after my dog. I feed her every morning.": "i_look_after_my_dog_i_feed_her_every_morning.mp3", "Give her the milk at twelve.": "give_her_the_milk_at_twelve.mp3", "Put her in the crib after lunch.": "put_her_in_the_crib_after_lunch.mp3", "Take her to the park in the stroller.": "take_her_to_the_park_in_the_stroller.mp3", "Read her a story before bedtime.": "read_her_a_story_before_bedtime.mp3", "Please feed him at seven.": "please_feed_him_at_seven.mp3", "Take them to the park in the afternoon.": "take_them_to_the_park_in_the_afternoon.mp3", "Give them water on Monday and Friday.": "give_them_water_on_monday_and_friday.mp3", "Who looks after you?": "who_looks_after_you.mp3", "My family looks after me.": "my_family_looks_after_me.mp3", "My friends look after me. I look after them too.": "my_friends_look_after_me_i_look_after_them_too.mp3"};</script>
+<script>
+(function(){
+'use strict';
+
+/* ============ ícones ============ */
+var ICON_PLAY  = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+var ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+var ICON_STOP  = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h12v12H6z"/></svg>';
+
+/* ============ áudio: MP3 pré-gerado, TTS como reserva ============ */
+var AUDIO_DIR = 'audio/';
+var AUDIO_MAP = window.AUDIO_MAP || {};
+var cur = null;           /* {btn, stop, text, el, paused} */
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* monta os botões de cada .audio-row a partir do data-say */
+document.querySelectorAll('.audio-row[data-say]').forEach(function(row){
+  var txt = row.getAttribute('data-say');
+  row.innerHTML = '<button class="say" data-say="'+esc(txt)+'" aria-label="Ouvir em ingles: '+esc(txt)+'">'+ICON_PLAY+'<span class="say-lbl">ouvir</span></button>'
+                + '<button class="say say-stop" data-stop="1" aria-label="Parar o audio" hidden>'+ICON_STOP+'<span class="say-lbl">parar</span></button>';
+});
+
+function setBtn(btn, label, icon){
+  var l = btn.querySelector('.say-lbl'); if(l) l.textContent = label;
+  var s = btn.querySelector('svg'); if(s) s.outerHTML = icon;
+}
+function resetBtn(o){
+  if(!o || !o.btn) return;
+  o.btn.classList.remove('on');
+  setBtn(o.btn, 'ouvir', ICON_PLAY);
+  if(o.stop) o.stop.hidden = true;
+}
+function stopAll(){
+  if(cur && cur.el){ try{ cur.el.pause(); cur.el.currentTime = 0; }catch(e){} }
+  try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){}
+  resetBtn(cur); cur = null;
+}
+function startTTS(text, btn, stop){
+  if(!('speechSynthesis' in window)) return;
+  var synth = window.speechSynthesis;
+  try{ synth.cancel(); }catch(e){}
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = 0.8; u.pitch = 1;
+  u.onend = u.onerror = function(){ if(cur && cur.btn === btn){ resetBtn(cur); cur = null; } };
+  cur = {btn:btn, stop:stop, text:text, el:null, paused:false};
+  btn.classList.add('on'); setBtn(btn, 'pausar', ICON_PAUSE);
+  if(stop) stop.hidden = false;
+  synth.speak(u);
+}
+function startFile(src, text, btn, stop){
+  var el = new Audio(src);
+  el.addEventListener('ended', function(){ if(cur && cur.btn === btn){ resetBtn(cur); cur = null; } });
+  el.addEventListener('error', function(){ if(cur && cur.btn === btn){ cur = null; } startTTS(text, btn, stop); });
+  cur = {btn:btn, stop:stop, text:text, el:el, paused:false};
+  btn.classList.add('on'); setBtn(btn, 'pausar', ICON_PAUSE);
+  if(stop) stop.hidden = false;
+  el.play().catch(function(){ if(cur && cur.btn === btn){ cur = null; } startTTS(text, btn, stop); });
+}
+function play(text, btn){
+  var stop = btn.parentElement ? btn.parentElement.querySelector('[data-stop]') : null;
+  /* mesmo botão: pausa / continua */
+  if(cur && cur.btn === btn){
+    if(!cur.paused){
+      cur.paused = true;
+      if(cur.el){ try{ cur.el.pause(); }catch(e){} }
+      else { try{ window.speechSynthesis.pause(); }catch(e){} }
+      setBtn(btn, 'continuar', ICON_PLAY);
+    } else {
+      cur.paused = false;
+      setBtn(btn, 'pausar', ICON_PAUSE);
+      if(cur.el){ cur.el.play().catch(function(){}); }
+      else {
+        try{ window.speechSynthesis.resume(); }catch(e){}
+        /* watchdog: o Chrome ignora resume() com frequência */
+        var ref = cur, txt = text;
+        setTimeout(function(){
+          if(cur === ref && !cur.paused && !window.speechSynthesis.speaking){ startTTS(txt, btn, stop); }
+        }, 350);
+      }
+    }
+    return;
+  }
+  stopAll();
+  var file = AUDIO_MAP[text];
+  if(file){ startFile(AUDIO_DIR + file, text, btn, stop); }
+  else { startTTS(text, btn, stop); }
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest) return;
+  var s = e.target.closest('[data-stop]');
+  if(s){ e.preventDefault(); stopAll(); return; }
+  var b = e.target.closest('.say');
+  if(b){ e.preventDefault(); play(b.getAttribute('data-say'), b); }
+});
+
+/* ============ português sob demanda ============ */
+document.addEventListener('click', function(e){
+  if(!e.target.closest) return;
+  var t = e.target.closest('.tr-toggle');
+  if(!t) return;
+  e.preventDefault();
+  var scope = t.closest('.panel, .support-body, .m-instr') || t.parentElement;
+  var on = scope.classList.toggle('show-tr');
+  t.textContent = on ? 'ocultar português' : 'ver em português';
+});
+
+/* ============ cartas do momento 1 (abrem e fecham) ============ */
+document.addEventListener('click', function(e){
+  if(!e.target.closest) return;
+  var b = e.target.closest('[data-reveal]');
+  if(!b) return;
+  e.preventDefault();
+  var card = document.getElementById(b.getAttribute('data-reveal'));
+  var open = card.classList.toggle('open');
+  b.textContent = open ? 'Hide' : 'Show the party';
+});
+
+/* ============ vídeo (com aviso amigável em file://) ============ */
+document.querySelectorAll('.video[data-video]').forEach(function(box){
+  var id = box.getAttribute('data-video');
+  var frame = box.querySelector('.video-frame');
+  if(location.protocol === 'file:'){
+    frame.style.paddingTop = '0';
+    frame.innerHTML = '<div class="video-note">O vídeo abre quando esta página está na internet.'
+      + '<br><a class="video-link" href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener">Abrir o vídeo no YouTube &#8599;</a></div>';
+    return;
+  }
+  var f = document.createElement('iframe');
+  f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?rel=0';
+  f.title = box.getAttribute('data-title') || 'video';
+  f.allow = 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+  f.setAttribute('allowfullscreen','');
+  f.setAttribute('loading','lazy');
+  frame.appendChild(f);
+});
+
+/* ============ gravação (opcional) ============ */
+document.querySelectorAll('.rec-row[data-rec]').forEach(function(host){
+  var btn  = host.querySelector('.rec');
+  var lab  = host.querySelector('.rec-lbl');
+  var note = host.querySelector('.rec-note');
+  var base = lab.textContent;
+  var rec = null, chunks = [];
+  btn.addEventListener('click', function(){
+    if(rec && rec.state === 'recording'){ rec.stop(); return; }
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      note.hidden = false;
+      note.textContent = 'Este navegador não grava — sem problema: diga em voz alta mesmo assim.';
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      var mime = (window.MediaRecorder && MediaRecorder.isTypeSupported('audio/mp4')) ? 'audio/mp4'
+               : (window.MediaRecorder && MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) ? 'audio/webm;codecs=opus' : '';
+      rec = mime ? new MediaRecorder(stream, {mimeType:mime}) : new MediaRecorder(stream);
+      chunks = [];
+      rec.ondataavailable = function(ev){ if(ev.data && ev.data.size) chunks.push(ev.data); };
+      rec.onstop = function(){
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        btn.classList.remove('recording'); lab.textContent = base;
+        if(!chunks.length) return;
+        var url = URL.createObjectURL(new Blob(chunks, {type: rec.mimeType}));
+        var old = host.querySelector('audio'); if(old) old.remove();
+        var a = document.createElement('audio'); a.controls = true; a.src = url;
+        host.appendChild(a);
+      };
+      rec.start();
+      btn.classList.add('recording'); lab.textContent = 'Parar';
+      note.hidden = true;
+    }).catch(function(){
+      note.hidden = false;
+      note.textContent = 'O microfone não foi liberado — sem problema: diga em voz alta mesmo assim.';
+    });
+  });
+});
+
+
+/* ============ momento 2: pronome -> a quem ele aponta (abre e fecha) ============ */
+document.addEventListener('click', function(e){
+  if(!e.target.closest) return;
+  var b = e.target.closest('.pron');
+  if(!b) return;
+  e.preventDefault();
+  var next = b.nextElementSibling;
+  if(next && next.classList.contains('ref')){ next.remove(); b.classList.remove('open'); return; }
+  var s = document.createElement('span');
+  s.className = 'ref';
+  s.textContent = '= ' + b.getAttribute('data-ref');
+  b.parentNode.insertBefore(s, b.nextSibling);
+  b.classList.add('open');
+});
+
+})();
+</script>
+</body>
+</html>
