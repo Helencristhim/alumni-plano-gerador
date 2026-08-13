@@ -1,0 +1,204 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   KIDS POST-CLASS — folha do PERCURSO (homework assíncrono do modelo kids).
+
+   PROVENIÊNCIA: copiada do artefato "Dante Blecker Gregory · Kids A2 ·
+   Professor View" (13/08/2026), que é a ESPECIFICAÇÃO desta peça. O artefato
+   escopava a folha em `#pc-root-1`/`#pc-root-2`; aqui o escopo é a classe
+   `.pv-post`, que é o container que o builder emite para TODO percurso — um
+   escopo só, sem duplicar a folha por aula. Nada de mecânica foi reescrito.
+
+   O QUE MUDOU do artefato, e por quê:
+     · as variáveis de COR saíram. O artefato fixava o verde do Dante; aqui
+       --accent/--bg/--text/--border/--success vêm do :root do hub, que é a
+       paleta do ALUNO (REGRA 10). Ficaram só as variáveis que o shell adulto
+       não tem (--navy, --hint*, --star, --radius, --font).
+
+   INJEÇÃO: só quando model==kids E a aula tem postclass.html (build_from_model,
+   inject_kids_postclass). Adulto nunca vê este arquivo.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.pv-post{
+    /* COR NAO ENTRA AQUI: --accent/--bg/--text/--success/--border vem do :root
+       do hub, que e a paleta do ALUNO (REGRA 10). Só ficam as variaveis que o
+       shell adulto nao tem e que o percurso usa. */
+    --navy:#003080;
+    --hint:#d97706;   --hint-bg:rgba(217,119,6,.10);    --hint-border:rgba(217,119,6,.35);
+    --star:#f5a524;
+    --radius:18px;
+    --font:"Trebuchet MS","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  }.pv-post, .pv-post *{box-sizing:border-box}.pv-post{margin:0;padding:0}.pv-post{
+    background:var(--bg); color:var(--text); font-family:var(--font);
+    line-height:1.5; -webkit-font-smoothing:antialiased;
+    min-height:100vh; padding:16px;
+  }.pv-post .wrap{max-width:760px;margin:0 auto}/* ---------- cabecalho e mapa de progresso ---------- */
+  .pv-post .topbar{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);
+    padding:12px 16px;margin-bottom:14px;
+  }.pv-post .topbar h1{font-size:1.05rem;margin:0;flex:1;min-width:180px;letter-spacing:.2px}.pv-post .topbar .lvl{
+    font-size:.72rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--accent);background:var(--accent-dim);border-radius:999px;padding:4px 10px;
+  }.pv-post .stars{font-size:.95rem;font-weight:700;color:var(--star);white-space:nowrap}.pv-post .map{
+    display:flex;align-items:center;gap:4px;
+    background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);
+    padding:12px 14px;margin-bottom:16px;overflow-x:auto;
+  }.pv-post .spot{
+    flex:1 0 auto;min-width:88px;text-align:center;position:relative;
+    padding:6px 2px;border-radius:12px;
+  }.pv-post .spot .dot{
+    width:38px;height:38px;margin:0 auto 4px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:1.15rem;
+    background:var(--bg-elevated);border:2px dashed var(--border);
+  }.pv-post .spot .nm{font-size:.68rem;font-weight:700;color:var(--text-dim);letter-spacing:.3px}.pv-post .spot.now .dot{border-style:solid;border-color:var(--accent);background:var(--accent-dim);transform:scale(1.12)}.pv-post .spot.now .nm{color:var(--accent)}.pv-post .spot.done .dot{border-style:solid;border-color:var(--success);background:var(--success-bg)}.pv-post .spot .walker{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:1.1rem}.pv-post .link{flex:0 0 10px;height:3px;border-radius:2px;background:var(--border)}.pv-post .link.done{background:var(--success)}/* ---------- tela ---------- */
+  .pv-post .screen{
+    background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);
+    padding:22px 20px 20px;
+  }.pv-post .screen[hidden]{display:none}.pv-post .eyebrow{
+    font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    color:var(--accent);margin-bottom:6px;
+  }.pv-post h2{font-size:1.45rem;margin:0 0 6px;letter-spacing:.2px}.pv-post .instr{font-size:1.05rem;color:var(--text-mid);margin:0 0 16px}/* ==========================================================================
+     NAO INSERIR APOIO EM PORTUGUES NO MATERIAL DO DANTE.
+     O curso e Kids A2 e a regra geral do curso permitiria L1 aqui -- mas o
+     PERFIL INDIVIDUAL determina interface integralmente em ingles, e o perfil
+     prevalece sobre a regra geral.
+     O suporte nao e retirado: muda de natureza. Imagem, audio, demonstracao, exemplo completo, reducao de alternativas, repeticao e feedback
+     progressivo fazem o papel que a traducao faria.
+     A classe .pt existia aqui como "obrigatorio em A1/A2". Ficou SEM REGRA de
+     proposito: mesmo sem produzir texto visivel, a declaracao contradiria a
+     excecao do Dante e poderia induzir o gerador a reintroduzir portugues.
+     ========================================================================== */
+  .pv-post /* ---------- recap: o contexto da aula, reapresentado ---------- */
+  /* O aluno NAO pode rever a aula (Feedback 1, decisao 3). Nenhuma pergunta
+     sobre a historia pode depender de memoria desassistida: o gatilho fica em
+     tela. Aqui a tira elimina duas opcoes do item 2 de proposito -- o aluno
+     raciocina a partir do que ve, em vez de tentar lembrar. */
+  .recap{
+    background:var(--bg-elevated);border:2px solid var(--border);border-radius:16px;
+    padding:14px 16px;margin-bottom:16px;
+  }.pv-post .recap h3{
+    font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    color:var(--text-dim);margin:0 0 10px;
+  }.pv-post .recap .who{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}.pv-post .recap .who span{
+    background:var(--bg-card);border:2px solid var(--border);border-radius:12px;
+    padding:7px 12px;font-size:1rem;font-weight:700;white-space:nowrap;
+  }.pv-post .recap .story{font-size:1rem;line-height:1.6;margin:0}.pv-post .recap .story b{color:var(--accent)}.pv-post .counter{font-size:.75rem;font-weight:700;color:var(--text-dim);margin-bottom:10px}.pv-post .q{font-size:1.2rem;font-weight:700;margin:0 0 14px}/* ---------- botoes ---------- */
+  .pv-post button{font-family:inherit}.pv-post .btn{
+    border:none;border-radius:999px;padding:13px 26px;font-size:1rem;font-weight:700;
+    cursor:pointer;background:var(--accent);color:#fff;letter-spacing:.3px;
+  }.pv-post .btn:hover{background:var(--accent-light)}.pv-post .btn:disabled{background:var(--border);color:var(--text-dim);cursor:not-allowed}.pv-post .btn-ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}.pv-post .btn-ghost:hover{background:var(--accent-dim)}.pv-post .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}.pv-post .audio-btn{
+    border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);
+    border-radius:999px;padding:11px 20px;font-size:1rem;font-weight:700;cursor:pointer;
+  }.pv-post .audio-btn:hover{background:var(--accent);color:#fff}.pv-post .audio-btn.big{font-size:1.15rem;padding:16px 30px}/* ---------- cards de escolha ---------- */
+  .pv-post .opts{display:flex;gap:12px;flex-wrap:wrap}.pv-post .opt{
+    flex:1 1 150px;min-width:140px;background:var(--bg-elevated);
+    border:3px solid var(--border);border-radius:16px;padding:16px 12px;
+    cursor:pointer;text-align:center;transition:transform .12s,border-color .12s;
+  }/* Verde e reservado a "correto". O hover usa navy, senao passar o dedo por
+     cima de uma opcao errada ja parece confirmacao de acerto. */
+  .pv-post .opt:hover{transform:translateY(-3px);border-color:var(--navy)}.pv-post .opt .pic{font-size:2.6rem;line-height:1.1;display:block;margin-bottom:6px}.pv-post .opt .lbl{font-size:1.05rem;font-weight:700}.pv-post .opt.ok{border-color:var(--success);background:var(--success-bg)}.pv-post .opt.no{border-color:var(--hint);background:var(--hint-bg);opacity:.75}.pv-post .opt.lock{pointer-events:none}.pv-post .opt.lock:hover{transform:none}.pv-post .opts.lines .opt{flex:1 1 100%;text-align:left;font-size:1.1rem;font-weight:600;padding:15px 18px}/* ==========================================================================
+     CENA -- so a transferencia usa. As duas telas dela mostram o mesmo quadro, e ele responde uma pergunta que o texto nao responde: QUEM esta ali.
+     Barras de CSS fazem o cenario (chao, portao) e os objetos ficam sobre elas.
+     O que a cena NAO mostra e habilidade -- isso nao se desenha, e por isso o
+     texto de cada tela repete o que cada um pode e nao pode.
+     Rotulo nomeia OBJETO, nunca relacao.
+     ========================================================================== */
+  .pv-post .scene{
+    position:relative;width:100%;max-width:520px;aspect-ratio:16/11;
+    margin:0 auto 14px;border:2px solid var(--border);border-radius:16px;
+    background:var(--bg-elevated);overflow:hidden;
+  }.pv-post .sc-bar{position:absolute;border-radius:6px;background:var(--border);opacity:.6}.pv-post .sc-trunk{background:#a1724a;opacity:.5}.pv-post .sc-obj{
+    position:absolute;transform:translate(-50%,-50%);
+    font-size:1.7rem;line-height:1;text-align:center;white-space:nowrap;
+  }.pv-post .sc-tag{
+    position:absolute;transform:translate(-50%,-50%);z-index:4;
+    font-size:.58rem;font-weight:700;letter-spacing:.2px;
+    color:var(--text-dim);text-transform:uppercase;white-space:nowrap;
+  }/* ---------- matching ---------- */
+  .pv-post .match{display:flex;gap:14px;flex-wrap:wrap}.pv-post .col{flex:1 1 200px;display:flex;flex-direction:column;gap:10px}.pv-post .col h3{font-size:.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);margin:0 0 2px}.pv-post .mi{
+    background:var(--bg-elevated);border:3px solid var(--border);border-radius:14px;
+    padding:14px;cursor:pointer;text-align:center;font-size:1.1rem;font-weight:700;
+  }.pv-post .mi .pic{font-size:2.4rem;display:block}.pv-post .mi:hover{border-color:var(--navy)}.pv-post .mi.sel{border-color:var(--navy);background:var(--accent-dim)}.pv-post .mi.ok{border-color:var(--success);background:var(--success-bg);pointer-events:none}.pv-post .mi.shake{animation:pc-shake .3s}
+  @keyframes pc-shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}/* ---------- gap fill ---------- */
+  .pv-post .sents{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}.pv-post .sent{
+    font-size:1.25rem;font-weight:700;padding:14px 16px;border-radius:14px;
+    background:var(--bg-elevated);border:3px solid transparent;opacity:.45;
+  }/* A frase ATIVA e navy; so a resolvida fica verde. Com as duas em verde, nao dava para saber qual estava valendo. */
+  .pv-post .sent.now{opacity:1;border-color:var(--navy)}.pv-post .sent.ok{opacity:1;border-color:var(--success);background:var(--success-bg)}.pv-post .blank{
+    display:inline-block;min-width:96px;border-bottom:4px solid var(--accent);
+    text-align:center;color:var(--accent);
+  }.pv-post .bank{display:flex;gap:10px;flex-wrap:wrap}.pv-post .bank .chip{
+    background:var(--bg-card);border:3px solid var(--border);border-radius:999px;
+    padding:11px 20px;font-size:1.05rem;font-weight:700;cursor:pointer;
+  }.pv-post .bank .chip:hover{border-color:var(--navy)}.pv-post .bank .chip.used{opacity:.35;pointer-events:none}.pv-post .banklbl{font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}/* ---------- sentence builder ---------- */
+  .pv-post .line{
+    min-height:66px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+    background:var(--bg-elevated);border:3px dashed var(--border);border-radius:14px;
+    padding:12px;margin-bottom:14px;
+  }.pv-post .line.ok{border-style:solid;border-color:var(--success);background:var(--success-bg)}.pv-post .line .ph{color:var(--text-dim);font-size:1rem;font-weight:600}.pv-post .blk{
+    background:var(--bg-card);border:3px solid var(--border);border-radius:12px;
+    padding:10px 16px;font-size:1.1rem;font-weight:700;cursor:pointer;
+  }.pv-post .blk:hover{border-color:var(--navy)}.pv-post .blk.used{opacity:.3;pointer-events:none}.pv-post .sayit{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    background:var(--accent-dim);border-radius:12px;padding:10px 14px;margin-bottom:14px;
+    font-size:1rem;font-weight:700;color:var(--accent);
+  }/* ---------- feedback ---------- */
+  .pv-post .fb{
+    margin-top:16px;padding:14px 16px;border-radius:14px;font-size:1.05rem;font-weight:600;
+    display:none;
+  }.pv-post .fb.show{display:block;animation:pc-pop .25s}
+  @keyframes pc-pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}.pv-post .fb.good{background:var(--success-bg);border:2px solid var(--success-border);color:var(--success)}.pv-post .fb.tip{background:var(--hint-bg);border:2px solid var(--hint-border);color:var(--hint)}/* ---------- start / result ---------- */
+  .pv-post .avatars{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}.pv-post .av{
+    font-size:2.4rem;background:var(--bg-elevated);border:3px solid var(--border);
+    border-radius:16px;padding:12px 18px;cursor:pointer;line-height:1;
+  }.pv-post .av:hover{border-color:var(--accent)}.pv-post .av.sel{border-color:var(--accent);background:var(--accent-dim);transform:scale(1.06)}.pv-post .scorebig{font-size:3.2rem;font-weight:800;color:var(--accent);line-height:1.1}.pv-post .band{font-size:1.35rem;font-weight:800;margin:2px 0 4px}.pv-post .badge{
+    display:inline-flex;align-items:center;gap:10px;margin:14px 0;
+    background:var(--accent-dim);border:3px solid var(--accent);border-radius:999px;
+    padding:12px 24px;font-size:1.15rem;font-weight:800;color:var(--accent);
+  }.pv-post .badge .em{font-size:1.7rem}.pv-post .review{background:var(--bg-elevated);border-radius:14px;padding:14px 16px;margin:14px 0}.pv-post .review h3{margin:0 0 8px;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}.pv-post .review p{margin:0 0 8px;font-size:1rem}.pv-post .review p:last-child{margin:0}.pv-post .bonus{
+    border:3px dashed var(--border);border-radius:14px;padding:16px;margin-top:16px;
+  }.pv-post .bonus .tag{
+    font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    color:var(--text-dim);background:var(--bg-elevated);border-radius:999px;
+    padding:3px 10px;display:inline-block;margin-bottom:8px;
+  }.pv-post .imgph{display:inline-block;line-height:1}.pv-post .note{font-size:.8rem;color:var(--text-dim);margin-top:14px;text-align:center}
+
+  @media (max-width:520px){.pv-post{padding:10px}.pv-post h2{font-size:1.25rem}.pv-post .opt{flex:1 1 100%}.pv-post .spot{min-width:74px}
+  }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   O SLOT — o percurso ocupa a tela, como o deck do IN CLASS.
+   Copiado do artefato (bloco "o que a pagina do perfil acrescenta ao nucleo").
+   Os CARDS do menu não vieram: no hub eles reusam o MESMO HTML do card do IN
+   CLASS (REGRA 11.9, uniformidade), emitido pelo builder em post_card().
+   ══════════════════════════════════════════════════════════════════════════ */
+/* O hub do PROFESSOR embrulha tudo em .main-content; o do ALUNO não tem esse
+   wrapper -- é .header + .container soltos no body (medido: sem .header/.container
+   aqui, o percurso abria EMBAIXO do hub inteiro, com a home rolando por cima). */
+body.pc-mode .logo-bar,
+body.pc-mode .main-content,
+body.pc-mode .header,
+body.pc-mode .container,
+body.pc-mode .slides-wrapper { display:none !important; }
+body:not(.pc-mode) .pv-post { display:none; }
+body:not(.pc-mode) #pv-post-bar { display:none; }
+.pv-post { max-width:100vw; margin:0 auto; }
+/* Só um percurso vive no DOM de cada vez (o kids-post.js esvazia os outros), mas
+   o root vazio CONTINUA com min-height:100vh e empurrava o percurso aberto para
+   baixo da dobra: a aula 2 abria numa tela em branco, e era preciso rolar para
+   achar. Medido no navegador. */
+.pv-post:empty { display:none; }
+body.pc-mode .pv-post { padding-top:64px; }
+/* a barra vive FORA do .pv-post, então não herda as variáveis dele: cor literal */
+#pv-post-bar {
+  position:fixed; top:0; left:0; right:0; z-index:3000;
+  display:flex; align-items:center; gap:12px;
+  padding:8px 14px; background:#1a1a2e; border-bottom:2px solid #003080;
+}
+#pv-post-sair {
+  font-family:inherit; cursor:pointer; border-radius:999px; padding:6px 14px;
+  font-size:.78rem; font-weight:700; background:transparent; color:#cfd4e4; border:2px solid #3a3a5c;
+}
+#pv-post-sair:hover { border-color:var(--accent); color:#fff; }
+#pv-post-sair:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+#pv-post-nome { color:#cfd4e4; font-size:.7rem; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; }

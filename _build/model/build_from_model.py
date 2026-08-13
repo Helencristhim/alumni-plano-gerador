@@ -2182,6 +2182,184 @@ def registra_mecanicas_gastas(cfg):
           + (f', {nu} declarada(s) e nao usada(s)' if nu else ''))
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# MODELO KIDS — POST-CLASS (o percurso assíncrono que OCUPA O SLOT do Pre-class)
+#
+# Decisão do Dan (13/08/2026), a partir do artefato "Dante Blecker Gregory · Kids
+# A2 · Professor View": no kids não há mais Pre-class. O homework é DEPOIS da aula,
+# num percurso que se autocorrige — o aluno faz sozinho e o material dá o retorno.
+#
+# A peça é copiada do artefato, que é a ESPECIFICAÇÃO (memória
+# [[artefato-e-especificacao-copiar-nao-inspirar]]): o conteúdo do percurso vive
+# em postclass.html + postclass.js da aula, exatamente como o artefato os
+# emitia em PV_POSTS. O builder não reescreve mecânica nenhuma — ele só:
+#   1. preenche o AUDIO_MAP do percurso (REGRA 7: MP3 ElevenLabs, não TTS);
+#   2. emite o slot (aba, cards, barra de saída, roots) no hub;
+#   3. TIRA o Pre-class, que deixou de existir no kids.
+#
+# SÓ model==kids. Adulto e teens não têm postclass.html => nada acontece.
+# ══════════════════════════════════════════════════════════════════════════════
+
+def kids_post_payload(cfg, content_dir, manifest):
+    """Lê o percurso da aula e devolve {'n','titulo','desc','html','js'} — ou None
+    quando não é kids / a aula não tem percurso.
+
+    O ÁUDIO É DECLARADO, NÃO ADIVINHADO. O percurso fala frases que nascem dentro
+    de estruturas de dados JS (items, cenas, feedback), então não há como raspá-las
+    do HTML como se faz no Pre-class e nos slides. Por isso o contrato: o arquivo
+    declara `var AUDIO_PHRASES = [...]` com TUDO que pode ser falado, e o builder
+    gera nomes/vozes/manifest e preenche o `var AUDIO_MAP = {};`. Sem isso o
+    percurso cairia em TTS — que a REGRA 7 admite só como emergência."""
+    if cfg.get('model') != 'kids':
+        return None
+    ph = os.path.join(content_dir, 'postclass.html')
+    pj = os.path.join(content_dir, 'postclass.js')
+    if not os.path.exists(ph):
+        return None
+    assert os.path.exists(pj), (
+        f'postclass.html sem postclass.js em {os.path.relpath(content_dir, ROOT)} — '
+        f'o percurso é as duas peças (corpo + motor), como no artefato')
+    L = cfg['lesson']
+    n = L['n']
+    post_meta = L.get('post') or {}
+    assert post_meta.get('titulo'), (
+        f'aula {n} tem postclass.html mas o config não traz lesson.post.titulo — '
+        f'é o nome do percurso no card do menu e na barra de saída')
+    html = read(ph)
+    js = read(pj)
+
+    m = re.search(r'var AUDIO_PHRASES\s*=\s*(\[.*?\]);', js, re.S)
+    assert m, (f'postclass.js da aula {n} sem `var AUDIO_PHRASES = [...]` — o percurso '
+               f'PRECISA declarar as frases faladas (REGRA 7); sem isso nasce mudo/TTS')
+    try:
+        raw = json.loads(m.group(1))
+    except ValueError as e:
+        raise AssertionError(
+            f'AUDIO_PHRASES da aula {n} não é JSON válido ({e}) — use aspas DUPLAS; '
+            f'item é "frase" ou {{"t": "frase", "voice": "ellen"}}')
+    # APOSTROFO RETO na chave: o speak() do percurso normaliza ’ -> ' antes de
+    # procurar no AUDIO_MAP. Chave com apostrofo curvo NUNCA casa — a frase cai em
+    # TTS e o MP3 gerado fica órfão. Normalizar aqui também melhora o que a
+    # ElevenLabs recebe.
+    raw = [(x['t'], x.get('voice')) if isinstance(x, dict) else (x, None) for x in raw]
+    frases = [(t.replace('\u2019', "'"), v) for t, v in raw]
+    entries = assign_voices(frases, prefix=f'post{n}_', cfg=cfg)
+    for text, meta in entries.items():
+        manifest.append(dict(text=text, voice=meta['voice'], file=meta['file']))
+    audio_base = f'/audio/{cfg["slug"]}/'
+    linhas = ['var AUDIO_MAP = {']
+    for text, meta in entries.items():
+        linhas.append(f'  {json.dumps(text, ensure_ascii=False)}: '
+                      f'{json.dumps(audio_base + meta["file"])},')
+    linhas.append('};')
+    js, k = re.subn(r'var AUDIO_MAP\s*=\s*\{\s*\};', '\n'.join(linhas), js, count=1)
+    assert k == 1, (f'postclass.js da aula {n} sem `var AUDIO_MAP = {{}};` para preencher — '
+                    f'mantenha a linha do artefato, é ela que recebe os MP3')
+    return dict(n=n, titulo=post_meta['titulo'],
+                desc=post_meta.get('desc', ''), html=html, js=js)
+
+
+def post_card(post):
+    """Card do menu Post-class. MESMO HTML do card do IN CLASS (REGRA 11.9,
+    uniformidade): só muda o que ele abre — enterPostMode em vez do href do deck."""
+    return (
+        f'    <div style="display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(255,255,255,.5);backdrop-filter:blur(8px);border:1px solid rgba(200,200,190,.5);border-radius:10px;cursor:pointer;transition:all .3s" '
+        f'onclick="enterPostMode({post["n"]})" onmouseover="this.style.borderColor=\'var(--accent)\'" onmouseout="this.style.borderColor=\'rgba(200,200,190,.5)\'">\n'
+        f'      <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">{post["n"]:02d}</div>\n'
+        f'      <div><div style="font-weight:600;font-size:.95rem">{post["titulo"]}</div>'
+        f'<div style="font-size:.8rem;color:var(--text-dim)">{post["desc"]}</div></div>\n'
+        f'    </div>')
+
+
+def strip_preclass(s, cfg):
+    """MODELO KIDS — tira o Pre-class: a aba, o botão e o accordion.
+
+    No kids o homework passou a ser DEPOIS da aula (post-class). Deixar a aba vazia
+    seria pior que tirá-la: o aluno abre e não há nada. Idempotente; só kids."""
+    ativo = 'class="tab-content active" id="tab-exercises"' in s
+    if cfg.get('model') != 'kids' or 'id="tab-exercises"' not in s:
+        return s, False
+    s = re.sub(r'\s*<button class="tab-btn[^"]*" onclick="switchTab\(\'exercises\'\)">[^<]*</button>', '', s)
+    s = re.sub(r'<div class="tab-content(?: active)?" id="tab-exercises">.*?</div><!-- /tab-exercises -->',
+               '<!-- Pre-class: NÃO EXISTE no modelo kids — o homework é o Post-class -->',
+               s, flags=re.S)
+    s = re.sub(r'\bvar totalLessons\s*=\s*\d+', 'var totalLessons=0', s)
+    return s, ativo
+
+
+def inject_kids_postclass(s, cfg, posts, ativar=False):
+    """MODELO KIDS — emite o SLOT do post-class no hub: aba + cards + barra de saída
+    + roots + PV_POSTS + folha e motor do slot.
+
+    `ativar` liga a aba de cara — é o caso do hub do ALUNO, onde a aba ativa era a do
+    Pre-class que acabou de sair. Idempotente."""
+    if not posts:
+        return s
+    if 'id="tab-postclass"' not in s:
+        btn = (f'\n    <button class="tab-btn{" active" if ativar else ""}" '
+               f'onclick="switchTab(\'postclass\')">Post-class</button>')
+        # o botão entra depois do último tab-btn que já existe, para a ordem na tela
+        # ficar Planejamento · IN CLASS · Post-class · Complementares
+        s = re.sub(r'(<button class="tab-btn[^>]*onclick="switchTab\(\'complementary\'\)">[^<]*</button>)',
+                   lambda m: btn + '\n    ' + m.group(1), s, count=1)
+        corpo = ('\n<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.3rem;margin-bottom:.4rem">POST-CLASS -- Select your Quest</h3>\n'
+                 '<p style="font-size:.85rem;color:var(--text-dim);margin-bottom:1.2rem">Homework you do on your own -- the quest checks your answers.</p>\n'
+                 '<div style="display:flex;flex-direction:column;gap:1rem">\n'
+                 + '\n'.join(post_card(p) for p in posts) + '\n</div>\n')
+        aba = (f'<div class="tab-content{" active" if ativar else ""}" id="tab-postclass">'
+               f'{corpo}</div><!-- /tab-postclass -->\n\n')
+        s = s.replace('<div class="tab-content" id="tab-complementary">',
+                      aba + '<div class="tab-content" id="tab-complementary">', 1)
+    else:
+        # hub que já tem a aba (aula nova entrando): só acrescenta os cards que faltam
+        for p in posts:
+            if f'enterPostMode({p["n"]})' not in s:
+                s = re.sub(r'(\n</div>\n</div><!-- /tab-postclass -->)',
+                           lambda m: '\n' + post_card(p) + m.group(1), s, count=1)
+    for p in posts:
+        if f'id="pc-root-{p["n"]}"' not in s:
+            root = f'<div class="pv-post" id="pc-root-{p["n"]}"></div>\n'
+            s = s.replace('</body>', root + '</body>', 1)
+    if 'id="pv-post-bar"' not in s:
+        barra = ('<!-- POST-CLASS: o percurso ocupa a tela (body.pc-mode). A barra existe\n'
+                 '     porque ele não tem EXIT próprio, como o deck tem. -->\n'
+                 '<div id="pv-post-bar">\n'
+                 '  <button type="button" id="pv-post-sair">&#8592; Sair</button>\n'
+                 '  <span id="pv-post-nome"></span>\n'
+                 '</div>\n')
+        s = s.replace('<div class="pv-post"', barra + '<div class="pv-post"', 1)
+    css = read(os.path.join(os.path.dirname(__file__), 'kids-post.css'))
+    if 'KIDS POST-CLASS' not in s:
+        s = s.replace('</style>', f'\n{css}\n</style>', 1)
+    # ADITIVO (REGRA 20, hub só cresce): o percurso das aulas anteriores JÁ está no
+    # hub. Reemitir só o desta aula apagaria os outros — o mesmo erro que o
+    # insert_hub evita no accordion e no audioMap.
+    dados = {}
+    velho = re.search(r'window\.PV_POSTS = (\{.*?\});\n', s, re.S)
+    if velho:
+        try:
+            dados = json.loads(velho.group(1).replace('<\\/', '</'))
+        except ValueError:
+            raise AssertionError('window.PV_POSTS do hub não é JSON legível — '
+                                 'não sobrescrevo às cegas o percurso que já está lá')
+    dados.update({str(p['n']): dict(titulo=p['titulo'], html=p['html'], js=p['js']) for p in posts})
+    dados = {k: dados[k] for k in sorted(dados, key=int)}
+    # `</script>` dentro do JSON fecharia o <script> que o carrega — daí o escape de `</`.
+    blob = json.dumps(dados, ensure_ascii=False).replace('</', '<\\/')
+    js = read(os.path.join(os.path.dirname(__file__), 'kids-post.js'))
+    if 'window.PV_POSTS' not in s:
+        s = s.replace('</body>', f'<script>\nwindow.PV_POSTS = {blob};\n</script>\n'
+                                 f'<script>\n{js}\n</script>\n</body>', 1)
+    else:
+        # LAMBDA, nunca string crua: no re.sub o replacement é TEMPLATE — `\n` e `\"`
+        # do JSON viram newline e aspa de verdade, e o PV_POSTS deixa de ser JSON.
+        # Medido: o hub do bento quebrou ao inserir a 2ª aula. Mesmo cuidado que o
+        # audioMap já tomava logo acima.
+        s = re.sub(r'window\.PV_POSTS = \{.*?\};\n',
+                   lambda _: f'window.PV_POSTS = {blob};\n', s, count=1, flags=re.S)
+    return s
+
+
 def build_standalone(cfg, content_dir, manifest):
     L = cfg['lesson']
     n = L['n']
@@ -2633,7 +2811,12 @@ def build_hub_new(cfg, content_dir, manifest):
     """Hub completo (aluno NOVO, sem hub existente). Clona os hubs do modelo."""
     L = cfg['lesson']
     audio_base = f'/audio/{cfg["slug"]}/'
-    preclass = read(os.path.join(content_dir, 'preclass.html'))
+    # MODELO KIDS: não há Pre-class — o homework é o POST-CLASS (percurso). Nos outros
+    # modelos nada muda: o accordion continua sendo a aba 2.
+    kids = cfg.get('model') == 'kids'
+    post = kids_post_payload(cfg, content_dir, manifest)
+    posts = [post] if post else []
+    preclass = '' if kids else read(os.path.join(content_dir, 'preclass.html'))
     preclass = inject_kids_game(preclass, cfg)  # MODELO KIDS: mini-game Dino Tap (no-op p/ adulto)
     planning = read(hub_tab_path(cfg, content_dir, 'planning.html'))
     # ABAS DA ANATOMIA guided-discovery. Sao OPCIONAIS por arquivo: se o autor nao escreveu
@@ -2683,7 +2866,8 @@ def build_hub_new(cfg, content_dir, manifest):
     s = re.sub(r'<h1>[^<]*</h1>', f'<h1>{cfg["student_name"]}</h1>', s, count=1)
     s = patch_header(s, cfg, cfg.get('hub_subtitle', cfg['program']))
     s = replace_between(s, '<div class="tab-content active" id="tab-planning">', '</div><!-- /tab-planning -->', '\n' + planning + '\n')
-    s = replace_between(s, '<div class="tab-content" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
+    if not kids:
+        s = replace_between(s, '<div class="tab-content" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
     s = replace_between(s, '<div class="tab-content" id="tab-inclass">', FIM_DO_INCLASS, inclass_menu([card]))
     if not sem_aba_complementares(s):
         s = replace_between(s, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
@@ -2695,6 +2879,8 @@ def build_hub_new(cfg, content_dir, manifest):
                             '</div><!-- /tab-syllabus -->', '\n' + syllabus_tab + '\n')
     s = re.sub(r'var totalLessons\s*=\s*\d+', 'var totalLessons=1', s)
     s = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, s, count=1, flags=re.S)
+    s, _ = strip_preclass(s, cfg)              # kids: o Pre-class sai (no-op nos outros)
+    s = inject_kids_postclass(s, cfg, posts)   # kids: entra o slot do percurso
     final_asserts(s, cfg, 'hub prof', is_hub=True)
     write(os.path.join(PROF, f'{cfg["slug"]}.html'), apply_ui_strings(s, cfg))
 
@@ -2703,16 +2889,21 @@ def build_hub_new(cfg, content_dir, manifest):
     a = re.sub(r'<title>[^<]*</title>', f'<title>{cfg["student_name"]} | {cfg["program"]} -- Alumni</title>', a, count=1)
     a = re.sub(r'<h1>[^<]*</h1>', f'<h1>{cfg["student_name"]}</h1>', a, count=1)
     a = patch_header(a, cfg, cfg.get('hub_subtitle', cfg['program']))
-    a = replace_between(a, '<div class="tab-content active" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
+    if not kids:
+        a = replace_between(a, '<div class="tab-content active" id="tab-exercises">', '</div><!-- /tab-exercises -->', '\n' + preclass + '\n')
     if not sem_aba_complementares(a):
         a = replace_between(a, '<div class="tab-content" id="tab-complementary">', '</div><!-- /tab-complementary -->', '\n' + complementary + '\n')
     a = re.sub(r'var totalLessons\s*=\s*\d+', 'var totalLessons=1', a)
     a = re.sub(r'var audioMap = \{.*?\};', lambda _: amap, a, count=1, flags=re.S)
+    # No hub do ALUNO a aba ativa ERA a do Pre-class: o percurso herda o lugar dela,
+    # senão o aluno abre o material e não vê aba nenhuma marcada.
+    a, era_ativa = strip_preclass(a, cfg)
+    a = inject_kids_postclass(a, cfg, posts, ativar=era_ativa)
     final_asserts(a, cfg, 'hub aluno', is_hub=True)
     write(os.path.join(ALUNO, f'{cfg["slug"]}.html'), apply_ui_strings(a, cfg, aluno=True))
 
 
-def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
+def build_hub_snippets(cfg, content_dir, out_dir, slide_entries, manifest=None):
     """Aluno EXISTENTE: NÃO toca o hub dele. Gera trechos prontos pra inserir
     (card IN CLASS, stamp, accordion Pre-class, entradas de audioMap)."""
     L = cfg['lesson']
@@ -2724,9 +2915,23 @@ def build_hub_snippets(cfg, content_dir, out_dir, slide_entries):
     if st:
         parts.append('<!-- 2. STAMP (inserir na stamps-row do header) -->\n')
         parts.append(f'<div class="stamp" id="stamp{st["id"]}" data-label="{st["label"]}" style="background-image:url(\'{st["img"]}\')"></div>\n\n')
+    # MODELO KIDS: o slot 3 do hub deixou de ser o accordion Pre-class e passou a ser
+    # o PERCURSO (post-class). O payload sai num arquivo próprio porque ele não é um
+    # trecho de HTML para colar: é html + js + título, do jeito que o hub carrega em
+    # window.PV_POSTS (ver insert_hub.py, que faz a inserção de verdade).
+    post = kids_post_payload(cfg, content_dir, manifest if manifest is not None else [])
+    if post:
+        write(os.path.join(out_dir, 'postclass_payload.json'),
+              json.dumps({str(post['n']): dict(titulo=post['titulo'], desc=post['desc'],
+                                               html=post['html'], js=post['js'])},
+                         ensure_ascii=False, indent=1))
+        parts.append('<!-- 3. POST-CLASS: card do menu (inserir na tab-postclass, prof E aluno).\n'
+                     '     O corpo do percurso vai em postclass_payload.json -> window.PV_POSTS.\n'
+                     '     Use o insert_hub.py; NAO cole o JS na mao. -->\n')
+        parts.append(post_card(post) + '\n\n')
     pc_path = os.path.join(content_dir, 'preclass.html')
     pc_entries = {}
-    if os.path.exists(pc_path):
+    if os.path.exists(pc_path) and cfg.get('model') != 'kids':
         pc = read(pc_path)
         pc_entries = assign_voices(extract_phrases(pc), prefix=f'pc{L["n"]}_', cfg=cfg)
         parts.append('<!-- 3. ACCORDION Pre-class (inserir após o ex-lesson anterior, prof E aluno) -->\n')
@@ -2806,7 +3011,7 @@ def main():
         build_hub_new(cfg, content_dir, manifest)
     elif hub_mode == 'snippets':
         print('== hub (snippets p/ hub existente — hub NÃO é tocado) ==')
-        pc_entries = build_hub_snippets(cfg, content_dir, content_dir, entries)
+        pc_entries = build_hub_snippets(cfg, content_dir, content_dir, entries, manifest)
         for text, meta in pc_entries.items():
             manifest.append(dict(text=text, voice=meta['voice'], file=meta['file']))
 

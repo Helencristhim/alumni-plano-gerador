@@ -121,8 +121,12 @@ def hub_audiomap_lines(cfg, content_dir):
     """pcN_ (frases do preclass, via builder) + extra_audio ([order-lN]) keyed."""
     audio_base = f'/audio/{cfg["slug"]}/'
     n = cfg['lesson']['n']
-    pc = read(os.path.join(content_dir, 'preclass.html'))
-    entries = B.assign_voices(B.extract_phrases(pc), prefix=f'pc{n}_', cfg=cfg)
+    # MODELO KIDS: não há Pre-class. As frases do percurso vivem no AUDIO_MAP dele
+    # (dentro do postclass.js, preenchido pelo builder), não no audioMap do hub.
+    entries = {}
+    if cfg.get('model') != 'kids':
+        pc = read(os.path.join(content_dir, 'preclass.html'))
+        entries = B.assign_voices(B.extract_phrases(pc), prefix=f'pc{n}_', cfg=cfg)
     lines = {}
     for text, meta in entries.items():
         lines[text] = audio_base + meta['file']
@@ -275,7 +279,10 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     # Cada bloco também só LÊ seu arquivo quando vai inserir: assim um conserto que
     # precisa só dos Complementares não exige um preclass.html que talvez nem exista
     # (é o caso das 9 aulas acima, cujo _build sumiu).
-    tem_preclass = f'id="ex-lesson-{n}"' in s
+    # MODELO KIDS: o slot do Pre-class virou o PERCURSO (post-class) — decisão do Dan
+    # (13/08/2026). "Já inserido" passa a ser o card do percurso, não o accordion.
+    kids = cfg.get('model') == 'kids'
+    tem_preclass = f'enterPostMode({n})' in s if kids else f'id="ex-lesson-{n}"' in s
     tem_comp = f'data-media="l{n}-' in s
     feitos, pulados = [], []
     folder = 'aluno' if is_aluno else 'professor'
@@ -314,7 +321,17 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
             s = s[:m.end()] + '\n' + stamp_html + s[m.end():]
 
     # 2. accordion ex-lesson-N (só quando falta — ver idempotência por bloco acima)
-    if tem_preclass:
+    if kids:
+        # KIDS: strip_preclass é idempotente (no 2º insert a aba já não existe) e
+        # inject_kids_postclass é ADITIVO — lê o PV_POSTS que já está no hub e só
+        # acrescenta este percurso.
+        post = B.kids_post_payload(cfg, content_dir, [])
+        assert post, (f'aula {n} de {slug} é kids mas não tem postclass.html — no modelo '
+                      f'kids o homework É o percurso')
+        s, era_ativa = B.strip_preclass(s, cfg)
+        s = B.inject_kids_postclass(s, cfg, [post], ativar=era_ativa)
+        (pulados if tem_preclass else feitos).append('post-class')
+    elif tem_preclass:
         pulados.append('pre-class')
     else:
         preclass = B.inject_kids_game(read(os.path.join(content_dir, 'preclass.html')).strip(), cfg)
@@ -460,19 +477,29 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     #    Depende do preclass.html (é dele que saem as frases). Num conserto que só
     #    repõe Complementares num hub antigo, esse arquivo não existe mais — e o
     #    audioMap do Pre-class daquela aula já está no hub desde a geração original.
-    if os.path.exists(os.path.join(content_dir, 'preclass.html')):
+    if os.path.exists(os.path.join(content_dir, 'preclass.html')) and not kids:
         s = merge_audiomap(s, cfg, content_dir)
 
     # 6. totalLessons -> MAIOR aula presente no hub (a barra só enche até totalLessons —
     #    REGRA 18). NUNCA baixar: em --replace de uma aula do meio (ex: 13 num hub que já
     #    vai até 20), usar n=13 quebraria a barra. Pega o max de todas as ex-lesson-K.
-    all_n = [int(x) for x in re.findall(r'id="ex-lesson-(\d+)"', s)] + [n]
-    s = re.sub(r'var totalLessons\s*=\s*\d+', f'var totalLessons={max(all_n)}', s)
+    if kids:
+        # sem Pre-class não há exercício para o updateProgress contar. A barra do
+        # pacote (aulas concluídas) continua vindo do lesson-progress.js.
+        s = re.sub(r'var totalLessons\s*=\s*\d+', 'var totalLessons=0', s)
+    else:
+        all_n = [int(x) for x in re.findall(r'id="ex-lesson-(\d+)"', s)] + [n]
+        s = re.sub(r'var totalLessons\s*=\s*\d+', f'var totalLessons={max(all_n)}', s)
 
     # A conferencia final exige TUDO que a anatomia daquele hub tem — nem mais, nem menos.
     # O data-media so entra na conta quando a anatomia TEM a aba: senao esta linha
     # reprovava o insert que ela mesma acabou de fazer corretamente.
-    assert f'id="ex-lesson-{n}"' in s, f'accordion do Pre-class ausente no hub (aula {n})'
+    if kids:
+        assert f'enterPostMode({n})' in s and f'id="pc-root-{n}"' in s, \
+            f'percurso (post-class) ausente no hub (aula {n})'
+        assert 'id="tab-exercises"' not in s, 'Pre-class ainda no hub kids'
+    else:
+        assert f'id="ex-lesson-{n}"' in s, f'accordion do Pre-class ausente no hub (aula {n})'
     assert f'id="stamp{n}"' in s, f'stamp ausente no hub (aula {n})'
     if B.tem_aba_complementares(cfg):
         assert f'data-media="l{n}-' in s, f'complementares ausentes no hub (aula {n})'

@@ -1403,6 +1403,71 @@ def check_wrapup_checklist(c, fails):
             f'garanta uma regra .check-item.checked .<seu-checkmark>{{…}} que mude o check.')
 
 
+
+
+def _sem_comentario(txt):
+    """Tira comentário de bloco/linha JS e comentário HTML — o que sobra é o que EXECUTA."""
+    txt = re.sub(r'<!--.*?-->', ' ', txt, flags=re.S)
+    txt = re.sub(r'/\*.*?\*/', ' ', txt, flags=re.S)
+    return re.sub(r'(?m)^\s*//.*$', ' ', txt)
+
+
+def check_kids_postclass(c, root, fails):
+    """MODELO KIDS — o PERCURSO (post-class) que ocupa o slot do Pre-class.
+
+    ESCOPO: só roda em hub que TEM percurso (id="tab-postclass"). Hub kids antigo,
+    que ainda vive de Pre-class, passa intocado — REGRA 30/31: gate novo não acusa
+    o que nasceu antes dele.
+
+    O que ele mede (tudo já custou caro no artefato de origem):
+      · Pre-class não pode conviver com o percurso — o kids tem UM homework, não dois;
+      · todo card do menu tem percurso em window.PV_POSTS e root no DOM;
+      · o botão que abre e o que reinicia chamam função EXPOSTA (window.pcGoN /
+        window.pcRestartN). O percurso é uma IIFE: handler inline só enxerga global,
+        e no artefato o "Play again" era onclick="restart()" — botão morto (REGRA 7.1);
+      · AUDIO_MAP preenchido e com MP3 que EXISTE (REGRA 7 — TTS é emergência).
+    """
+    if 'id="tab-postclass"' not in c:
+        return
+    if 'id="tab-exercises"' in c:
+        fails.append('MODELO KIDS: hub tem Post-class E Pre-class — no kids o homework é '
+                     'o percurso, o accordion não existe mais')
+    m = re.search(r'window\.PV_POSTS = (\{.*?\});\n', c, re.S)
+    if not m:
+        fails.append('aba Post-class sem window.PV_POSTS — o menu abre e não há percurso')
+        return
+    try:
+        posts = json.loads(m.group(1).replace('<\\/', '</'))
+    except ValueError as e:
+        fails.append(f'window.PV_POSTS não é JSON legível ({e}) — o percurso não carrega')
+        return
+    for n in sorted(set(re.findall(r'enterPostMode\((\d+)\)', c))):
+        if n not in posts:
+            fails.append(f'card do Post-class abre a aula {n}, mas PV_POSTS não tem esse percurso')
+        if f'id="pc-root-{n}"' not in c:
+            fails.append(f'percurso {n} sem o container pc-root-{n} — não tem onde renderizar')
+    for n, post in sorted(posts.items()):
+        # SEM COMENTÁRIO: o percurso DOCUMENTA os defeitos que corrigiu ("no artefato era
+        # onclick=\"restart()\""), e ler por substring vê defeito onde só há prosa —
+        # a armadilha da memória [[medir-por-substring-nao-e-ler]]. Aqui o gate perderia
+        # a confiança de quem o lê no vermelho.
+        corpo = _sem_comentario((post.get('html') or '') + (post.get('js') or ''))
+        expostas = set(re.findall(r'window\.([A-Za-z_$][\w$]*)\s*=', corpo)) | BUILTIN_OK
+        for fn in sorted(set(re.findall(r'on(?:click|error|change)="\s*([A-Za-z_$][\w$]*)\s*\(', corpo))):
+            if fn not in expostas:
+                fails.append(f'percurso {n}: handler inline chama "{fn}()", que NÃO é global — '
+                             f'o percurso é uma IIFE, então esse botão está MORTO (REGRA 7.1)')
+        js = post.get('js') or ''
+        if 'var AUDIO_PHRASES' not in js:
+            fails.append(f'percurso {n} sem AUDIO_PHRASES — é dela que sai o MP3 de cada fala')
+        mp3s = re.findall(r'"(/audio/[^"]+\.mp3)"', js)
+        if not mp3s:
+            fails.append(f'percurso {n} com AUDIO_MAP vazio — toda fala cairia em TTS (REGRA 7)')
+        for ref in sorted(set(mp3s)):
+            if not audio_existe(root, ref):
+                fails.append(f'percurso {n}: MP3 do AUDIO_MAP não existe — {ref}')
+
+
 def validate(path):
     fails, warns = [], []
     if not os.path.exists(path):
@@ -1464,6 +1529,8 @@ def validate(path):
         fails.append(f'HEADER em português: <title> "{ttl_m.group(1)[:60]}" traz "Aula N" — '
                      f'usar "Lesson N" em inglês (REGRA 13)')
 
+    check_kids_postclass(c, root, fails)
+
     if not is_aluno:
         # AS ABAS VEM DA ANATOMIA, nao de uma lista cravada. Ordem do Dan (07/08/2026):
         # "a lista de abas vem da anatomia; quantas abas o artefato tem? faca igual".
@@ -1472,17 +1539,24 @@ def validate(path):
         # A mensagem do imersivo fica IDENTICA byte a byte: o GATE 8 usa o texto do erro
         # como chave do baseline, e mudar a redacao ja fez 31 arquivos que ninguem tocou
         # aparecerem como defeito novo.
+        #   imersivo-kids    -> 4, com POST-CLASS no lugar do Pre-class: no modelo kids o
+        #                        homework é DEPOIS da aula (decisão do Dan, 13/08/2026).
         ABAS = {
             'imersivo': {'planning', 'exercises', 'inclass', 'complementary'},
+            'imersivo-kids': {'planning', 'inclass', 'postclass', 'complementary'},
             'guided-discovery': {'planning', 'syllabus', 'exercises', 'inclass', 'evidencias'},
         }
-        anat = 'guided-discovery' if 'id="tab-evidencias"' in c else 'imersivo'
+        anat = ('imersivo-kids' if 'id="tab-postclass"' in c else
+                'guided-discovery' if 'id="tab-evidencias"' in c else 'imersivo')
         esperadas = ABAS[anat]
         tabs = set(re.findall(r"switchTab\('([a-z]+)'\)", c))
         miss = esperadas - tabs
         if miss:
             if anat == 'imersivo':
                 fails.append(f'abas faltando: {", ".join(sorted(miss))} (professor tem 4)')
+            elif anat == 'imersivo-kids':
+                fails.append(f'abas faltando: {", ".join(sorted(miss))} (professor kids tem 4: '
+                             f'Planejamento, IN CLASS, Post-class, Complementares)')
             else:
                 fails.append(f'abas faltando: {", ".join(sorted(miss))} '
                              f'(anatomia {anat} tem {len(esperadas)})')
