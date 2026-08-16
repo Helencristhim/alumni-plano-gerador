@@ -79,12 +79,16 @@ def main():
     # níveis do Supabase
     niveis = {}
     try:
-        req = urllib.request.Request(f"{SB_URL}/rest/v1/perfis?select=id,data",
-                                     headers={'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY})
+        # NUNCA `select=id,data`: a coluna `data` carrega curriculo + blocosGeracoes e o roster
+        # inteiro pesa ~28 MB -- so pra ler a sigla do nivel de cada aluno. Esse script roda a
+        # CADA merge de aula (20x num dia de geracao), e em 14/08/2026 a instancia acumulou
+        # `57014 canceling statement due to statement timeout` antes de parar de responder por
+        # ~44h. Projetando so a chave usada, a mesma resposta cabe em ~9 KB (3.200x menor).
+        req = urllib.request.Request(
+            f"{SB_URL}/rest/v1/perfis?select=id,nivel_valor:data->perfil->dadosExtraidos->nivel->>valor",
+            headers={'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY})
         for r in json.load(urllib.request.urlopen(req, timeout=30)):
-            d = (r.get('data') or {}).get('perfil', {}) or {}
-            nv = (d.get('dadosExtraidos', {}) or {}).get('nivel', {}) or {}
-            val = nv.get('valor') or ''
+            val = r.get('nivel_valor') or ''
             # forma curta: primeiro token tipo A2 / B1+ / C1
             mm = re.match(r'\s*([ABC][0-2]\+?)', val or '')
             niveis[r['id']] = mm.group(1) if mm else (val[:6] if val else '?')
