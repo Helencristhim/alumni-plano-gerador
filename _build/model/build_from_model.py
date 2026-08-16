@@ -745,6 +745,18 @@ def _render_block(b, anat='guided-discovery'):
 
     if k == 'reading':
         ps = ''.join(f'<p>{_esc(p)}</p>' for p in b['paras'])
+        # DUAS ANATOMIAS, DOIS VOCABULARIOS (mesma regra do gist/tf): o shell imersivo
+        # tem .ic-reading/.ic-rtitle/.ic-src no CSS e NAO tem .evi-*. Alem do estilo,
+        # inject_input_recap() acha a leitura por .ic-reading -- emitir .evi-list aqui
+        # faz o texto NAO voltar no slide de detalhe, que e o defeito da REGRA 2.2.
+        if anat == 'imersivo':
+            src_i = ''
+            if b.get('source'):
+                link_i = (f' <a href="{_esc(b["link"])}" target="_blank" rel="noopener">'
+                          f'{_esc(b["link"])}</a>') if b.get('link') else ''
+                src_i = f'<div class="ic-src">{_esc(b["source"])}{link_i}</div>'
+            rtitle = f'<div class="ic-rtitle">{_esc(b["rtitle"])}</div>' if b.get('rtitle') else ''
+            return f'<div class="ic-reading">{rtitle}{ps}{src_i}</div>'
         src = ''
         if b.get('source'):
             link = (f' <a href="{_esc(b["link"])}" target="_blank" rel="noopener">'
@@ -774,6 +786,12 @@ def _render_block(b, anat='guided-discovery'):
         return f'{head}<div class="phrase-list">{linhas}</div>'
 
     if k == 'bank':
+        # .phrase-list/.phrase-row sao do artefato; o shell imersivo tem .ic-bank.
+        if anat == 'imersivo':
+            items_i = ''.join(f'<span class="ic-b">{_esc(w)}</span>' for w in b['items'])
+            head_i = (f'<div class="ic-card-h3">{_esc(b["label"])}</div>'
+                      if b.get('label') else '')
+            return f'<div class="ic-card">{head_i}<div class="ic-bank">{items_i}</div></div>'
         itens = ''.join(
             f'<div class="phrase-row"><span class="phrase-en">{_esc(w)}</span></div>'
             for w in b['items'])
@@ -796,12 +814,24 @@ def _render_block(b, anat='guided-discovery'):
         html = ''
         for p in b['parts']:
             if isinstance(p, list):
-                html += f'<input class="blank-input" data-n="{_esc(p[0])}" aria-label="gap {_esc(p[0])}">'
+                # A LACUNA TAMBEM TEM DIALETO. No imersivo ela e teacher-led e numerada
+                # (.ic-blank/.ic-n, que existem no shell); no artefato e um campo que se
+                # digita. Emitir o <input> no slide adulto poe um campo editavel onde o
+                # exercicio e de FALA, e sem CSS nenhum.
+                html += ((f'<span class="ic-blank"><span class="ic-n">{_esc(p[0])}</span>'
+                          f'&nbsp;&nbsp;&nbsp;</span>') if anat == 'imersivo' else
+                         (f'<input class="blank-input" data-n="{_esc(p[0])}" '
+                          f'aria-label="gap {_esc(p[0])}">'))
             else:
                 html += _esc(p)
         ordem = b['bank'][1::2] + b['bank'][0::2]
         assert len(b['bank']) < 2 or ordem != list(b['bank']), (
             f'gapfill: o banco {b["bank"]!r} ficou na ordem original depois do embaralho')
+        # .ic-gaptext + .ic-bank no imersivo; .fill-blank-item + .phrase-list no artefato.
+        if anat == 'imersivo':
+            bank_i = ''.join(f'<span class="ic-b">{_esc(w)}</span>' for w in ordem)
+            return (f'<div class="ic-card"><div class="ic-gaptext">{html}</div>'
+                    f'<div class="ic-bank ic-soft">{bank_i}</div></div>')
         banco = ''.join(f'<span class="phrase-en">{_esc(w)}</span>' for w in ordem)
         return (f'<div class="fill-blank-item"><span class="fill-blank-sentence">{html}</span></div>'
                 f'<div class="phrase-list"><div class="phrase-row">{banco}</div></div>')
@@ -899,11 +929,18 @@ def _render_block(b, anat='guided-discovery'):
             f'<span class="ic-pair"></span></div>'
             for d in b['defs'])
         hint = _esc(b.get('hint') or 'Tap a word, then tap its meaning')
-        return (f'{_titulo(b)}<p class="ic-match-hint">{hint}</p>'
+        # .slide-lead nao existe no shell imersivo: la o cabecalho do bloco e o
+        # .ic-card-h3, e o bloco inteiro vive dentro de um .ic-card.
+        if anat == 'imersivo':
+            head = f'<div class="ic-card-h3">{_esc(b["title"])}</div>' if b.get('title') else ''
+            abre, fecha = '<div class="ic-card">', '</div>'
+        else:
+            head, abre, fecha = _titulo(b), '', ''
+        return (f'{abre}{head}<p class="ic-match-hint">{hint}</p>'
                 f'<div class="ic-match-score">0 / {len(b["words"])} matched</div>'
                 f'<div class="ic-match" data-interactive="1">'
                 f'<div class="ic-match-col"><h4>Words &amp; expressions</h4>{words}</div>'
-                f'<div class="ic-match-col"><h4>Definitions</h4>{defs}</div></div>')
+                f'<div class="ic-match-col"><h4>Definitions</h4>{defs}</div></div>{fecha}')
 
     if k == 'quickfire':
         items = b['items']
@@ -1018,12 +1055,32 @@ def _exposicao(ch):
     'slide-tarefa' faltando. E o mesmo erro que o data-kind existe para evitar: a
     CLASSE diz como a peca se parece, o ATRIBUTO diz o que ela E. Aqui a pergunta e
     de identidade, entao quem manda e o atributo."""
-    est = _estrutura(ch)
+    est = _sem_recap(_estrutura(ch))
     if 'class="dialogue-line' in est:
         return 'dialogue'
     if 'class="ic-reading"' in est or 'data-kind="reading"' in est:
         return 'reading'
     return None
+
+
+def _sem_recap(est):
+    """O slide SEM as copias de input trazidas de volta por inject_input_recap().
+
+    A recap e o MESMO texto, marcado com .ic-reading-recap, e carrega o data-kind do
+    original. Quem pergunta "este slide EXPOE alguma coisa?" tem de responder nao: o
+    aluno ja viu aquele texto, ele esta ali para consulta, nao para primeira leitura.
+    Sem isto, inject_task_slides() caminha do texto ate a checagem, encontra o slide de
+    detalhe (que agora "expoe" de novo), para -- e o slide de tarefa da REGRA 2.2 nao
+    nasce, em silencio.
+    """
+    while True:
+        m = re.search(r'<div[^>]*\bclass="ic-reading ic-reading-recap"[^>]*>', est)
+        if not m:
+            return est
+        fim = _match_div_end(est, m.start())
+        if fim <= 0:
+            return est
+        est = est[:m.start()] + est[fim:]
 
 
 def _pergunta_de_gist(ch):
@@ -1337,7 +1394,8 @@ def inject_input_recap(slides):
     out = []
     for ch in partes:
         est = _estrutura(ch)
-        i = est.find('<div class="ic-reading">')
+        mread = re.search(r'<div[^>]*\bclass="ic-reading"[^>]*>', est)
+        i = mread.start() if mread else -1
         if i >= 0:
             fim = _match_div_end(est, i)          # o bloco tem divs aninhados (rtitle/src):
             if fim > 0:                            # regex .*? cortaria no primeiro </div>
@@ -1348,15 +1406,16 @@ def inject_input_recap(slides):
         if 'ic-tfrow' in est and 'ic-reading-recap' not in est and 'id="mp-r' not in est:
             recap = None
             if ultimo_texto:
-                recap = ultimo_texto.replace('<div class="ic-reading">',
-                                             '<div class="ic-reading ic-reading-recap">', 1)
+                recap = re.sub(r'(<div[^>]*\bclass=")ic-reading"',
+                               r'\1ic-reading ic-reading-recap"',
+                               ultimo_texto, count=1)
             elif ultimo_audio:
                 n[0] += 1
                 recap = _LP_TPL.format(id=f'mp-r{n[0]}', src=ultimo_audio, qs='',
                                        style=' style="max-width:460px;margin:0 auto 1rem"')
             if recap:
-                ch = ch.replace('<div class="ic-card"><div class="ic-tf">',
-                                recap + '<div class="ic-card"><div class="ic-tf">', 1)
+                ch = re.sub(r'<div[^>]*\bclass="ic-card"[^>]*><div class="ic-tf">',
+                            lambda mm: recap + mm.group(0), ch, count=1)
         out.append(ch)
     return ''.join(out)
 
@@ -1464,7 +1523,8 @@ def inject_task_slides(slides):
                 # adivinhacao — ver _predict_html().
                 exp = _estrutura(ch)
                 if kind == 'reading':
-                    mtxt = re.search(r'<div class="ic-reading">.*?<p>(.*?)</p>', exp, re.S)
+                    mtxt = re.search(r'<div[^>]*\bclass="ic-reading"[^>]*>.*?<p>(.*?)</p>',
+                                     exp, re.S)
                 else:
                     # A fala do diálogo vive num <div class="dialogue-bubble">, NUNCA num
                     # <p> — é assim no shell do modelo (helen-mendes) e em tudo que o
