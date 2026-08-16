@@ -562,7 +562,7 @@ def _audio(fala, pequeno=True):
             f'onclick="speakText(this.dataset.speak,this)">&#9654;</button>')
 
 
-def _render_block(b):
+def _render_block(b, anat='guided-discovery'):
     """Emite o HTML de UM bloco, com as classes DO ARTEFATO.
 
     Fonte: _build/model/artefatos/erica-professor-view.html. Copia-se dele — mesmos nomes
@@ -617,6 +617,25 @@ def _render_block(b):
         return f'{_titulo(b)}{_lead(b)}{itens}'
 
     if k == 'gist':
+        # DUAS ANATOMIAS, DOIS VOCABULARIOS. O guided-discovery copia o ARTEFATO
+        # (quiz-item + icPick). O imersivo (shell helen-mendes) NAO TEM icPick: ele tem
+        # icPickGist, e o CSS dele e .ic-choice/.ic-badge. Emitir o markup do artefato
+        # aqui produz botao MORTO no shell adulto — e exatamente o incidente que o
+        # assert_handlers_do_molde() passou a barrar (aula 2 do Samuel, 13 handlers).
+        # A escolha NAO e de estilo: e de qual funcao existe no arquivo que vai rodar.
+        if anat == 'imersivo':
+            ch = ''
+            for c in b['choices']:
+                right = 'true' if c[2] else 'false'
+                ch += (f'<div class="ic-choice" data-right="{right}" onclick="icPickGist(this)">'
+                       f'<span class="ic-opt">{_esc(c[0])}</span><span>{_esc(c[1])}</span>'
+                       f'<span class="ic-badge">&#10003; Main idea</span></div>')
+            why = ''
+            if b.get('why'):
+                why = (f'<div class="ic-why">{_esc(b["why"])}</div>'
+                       f'<button class="ic-btn ic-btn-ghost" onclick="icWhyShow(this)">Why?</button>')
+            return (f'<div class="ic-card"><div class="ic-card-h3">{_esc(b["prompt"])}</div>'
+                    f'<div class="ic-choices">{ch}</div>{why}</div>')
         # quiz-item / quiz-question / quiz-options / quiz-option / option-letter / rationale
         LETRAS = 'ABCDEFGH'
         ch = ''
@@ -629,6 +648,22 @@ def _render_block(b):
                 f'<div class="quiz-options">{ch}</div>{why}</div>')
 
     if k == 'tf':
+        # Mesma regra do gist: o imersivo tem icRevealTf + .ic-tfrow no shell, e NAO tem
+        # icPick. Um true/false emitido na forma do artefato nasce morto la.
+        if anat == 'imersivo':
+            rows = ''
+            for i, it in enumerate(b['items']):
+                just = (f'<span class="ic-just">&#8594; {_esc(it[2])}</span>'
+                        if len(it) > 2 and it[2] else '')
+                ans = str(it[1]).strip().lower()
+                assert ans in ('t', 'f', 'true', 'false'), f'tf item[1] deve ser t/f: {it!r}'
+                answer = 'true' if ans in ('t', 'true') else 'false'
+                rows += (f'<div class="ic-tfrow" data-answer="{answer}" onclick="icRevealTf(this)">'
+                         f'<span class="ic-qnum">{i + 1}</span>'
+                         f'<span class="ic-stmt">{_esc(it[0])}{just}</span>'
+                         f'<span class="ic-verdict ic-t">TRUE</span>'
+                         f'<span class="ic-verdict ic-f">FALSE</span></div>')
+            return f'<div class="ic-card"><div class="ic-tf">{rows}</div></div>'
         # No artefato nao ha true/false proprio: a forma dele para "escolha uma e veja por
         # que" e o quiz-item com opcoes + rationale. E o que se usa aqui — copia de FORMA,
         # nao invencao: zero classe nova.
@@ -904,7 +939,7 @@ def _render_block(b):
     raise AssertionError(f'inclass_blocks: kind desconhecido "{k}"')
 
 
-def render_block(b):
+def render_block(b, anat='guided-discovery'):
     """Emite o bloco e CARIMBA `data-kind` no primeiro elemento.
 
     POR QUE O CARIMBO EXISTE. O banco de exercicios (public/data/exercicios.json) e o
@@ -921,7 +956,7 @@ def render_block(b):
     diz como a peca se PARECE (e e a do artefato, sem excecao); o ATRIBUTO diz o que ela E.
     Invisivel na tela, estavel, e nao toca o vocabulario copiado.
     """
-    html = _render_block(b)
+    html = _render_block(b, anat)
     k = b['kind']
     m = re.match(r'\s*<(\w+)([^>]*)>', html)
     if not m or 'data-kind=' in html[:m.end()]:
@@ -935,13 +970,14 @@ def expand_inclass_blocks(slides, cfg):
     blocos declarados em config.lesson.inclass_blocks[chave]. Sem placeholders =
     no-op (aula antiga fica byte-a-byte idêntica)."""
     blocks_cfg = cfg.get('lesson', {}).get('inclass_blocks', {})
+    anat = anatomia(cfg)
     used = set()
 
     def sub(m):
         key = m.group(1).strip()
         assert key in blocks_cfg, f'placeholder IC-BLOCKS:{key} sem entrada em lesson.inclass_blocks'
         used.add(key)
-        return '\n'.join(render_block(b) for b in blocks_cfg[key])
+        return '\n'.join(render_block(b, anat) for b in blocks_cfg[key])
 
     out = re.sub(r'<!--\s*IC-BLOCKS:([^>]+?)\s*-->', sub, slides)
     unused = set(blocks_cfg) - used
