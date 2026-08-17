@@ -814,6 +814,73 @@ def check_um_slide_ativo(c, fails):
             f'So o primeiro slide da aula leva `active`.')
 
 
+def check_dialogo_completo(c, fails, warns):
+    """O DIALOGO NAO PODE PARAR ANTES DA ULTIMA FALA (bloqueante).
+
+    `nextDialogueLine()` desligava o botao num numero CRAVADO A FERRO:
+
+        if (dialogueLine >= 10) { ...textContent = 'Dialogue Complete'; disabled = true }
+
+    O 10 e o total de falas DO MODELO (helen-mendes-aula1). Numa aula com 13 falas o botao
+    morre na 10 dizendo "Dialogue Complete", e as falas 11-13 NAO EXISTEM para a aluna —
+    nascem com `opacity:0` e nunca ganham `.visible`.
+
+    O que faz disso um defeito grave e o slide SEGUINTE: a Comprehension cobra justamente
+    o fim do dialogo (e onde o interlocutor entrega gate, horario, direcao). O resultado e
+    uma pergunta sobre uma fala que a tela nunca mostrou. Foi o que o Dan viu em
+    patricia-yamaguti-shimada aula 2, slide 19: 13 falas, 3 mortas, e as 3 perguntas do
+    slide 20 eram sobre exatamente essas 3.
+
+    NADA denuncia: o HTML tem as 13 falas, o audioMap cobre as 13, os MP3 existem, o botao
+    ate parece ter terminado de propria vontade ("Dialogue Complete" e mensagem de sucesso).
+    Um grep por `dialogue-line` conta 13 e da tudo certo. So se ve clicando ate o fim.
+
+    A cura e nao ter numero: o limite sai de `box.querySelectorAll('.dialogue-line').length`
+    (o total real da caixa DESTE slide), entao o defeito nao tem por onde entrar. Este gate
+    trava a volta do numero cravado.
+
+    ESCOPO: geracao nova (<meta name="alumni-gen">). Legado com o mesmo defeito nao se
+    conserta nem se reporta sem ordem do Dan (REGRA 30/31).
+    """
+    if _gen(c) < GEN_PLAYER_E_PREDICAO:
+        return
+    if 'nextDialogueLine' not in c:
+        return
+    # Hub legado numera uma funcao por aula (nextDialogueLine2..7), cada uma com o seu
+    # proprio range de falas: comparar o limite da PRIMEIRA com o maior data-line do
+    # documento inteiro acusa perda que nao existe. Outro mecanismo, fora deste gate.
+    if re.search(r'function nextDialogueLine\d', c):
+        return
+    # Le o CODIGO, nao o comentario: um `// ... dialogueLine >= 10 ...` explicando o
+    # defeito antigo casaria o regex e reprovaria o arquivo consertado. Ja foi assim que
+    # um fix voltou atras (gate contando a string em vez do mecanismo).
+    codigo = re.sub(r'//[^\n]*', '', c)
+    m = re.search(r'dialogueLine\s*>=\s*(\d+)', codigo)
+    if not m:
+        return
+    limite = int(m.group(1))
+    falas = [int(x) for x in re.findall(
+        r'class="dialogue-line[^"]*"[^>]*data-line="(\d+)"', c)]
+    total = max(falas) if falas else 0
+    if total > limite:
+        perdidas = ', '.join(str(n) for n in range(limite + 1, total + 1))
+        fails.append(
+            f'DIALOGO TRUNCADO: `nextDialogueLine()` desliga o botao em `dialogueLine >= '
+            f'{limite}` mas o dialogo tem {total} falas — as falas {perdidas} nunca aparecem '
+            f'(o botao diz "Dialogue Complete" e trava). E o slide de Comprehension logo '
+            f'depois cobra justamente o fim do dialogo. O limite NAO se corrige trocando o '
+            f'numero: ele sai de `box.querySelectorAll(".dialogue-line").length` — ver '
+            f'nextDialogueLine() no modelo helen-mendes-aula1.html.')
+    elif limite:
+        # AVISO, nao FAIL: aqui o numero cravado ainda cobre todas as falas, entao NAO ha
+        # fala perdida — nao ha dano a consertar, e legado nao se mexe sem dano medido
+        # (REGRA 30). Como FAIL isto acusaria 750 arquivos de geracao nova de uma vez.
+        warns.append(
+            f'limite de dialogo cravado (`>= {limite}`) — e o total de falas DO MODELO, nao '
+            f'desta aula. Hoje cobre as {total} falas por coincidencia; uma fala a mais e o '
+            f'fim do dialogo desaparece. Geracao nova ja sai com o limite contando o DOM.')
+
+
 def check_spot_the_error_nao_entrega(c, fails):
     """O SPOT THE ERROR NAO PODE ENTREGAR O ERRO ANTES DO CLIQUE (bloqueante).
 
@@ -1850,6 +1917,7 @@ def validate(path):
     check_player_vivo(c, fails)
     check_um_slide_ativo(c, fails)
     check_spot_the_error_nao_entrega(c, fails)
+    check_dialogo_completo(c, fails, warns)
     check_predicao(c, fails)
     check_gapfill_vocab(c, fails)
     check_preclass_blanks(c, fails)
