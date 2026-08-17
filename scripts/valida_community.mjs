@@ -110,21 +110,35 @@ for (const p of PAGES.filter(p => p !== 'index.html')) {
   if (typeof toca === 'string' && toca.includes('audio/')) ok(`play usa MP3: ${toca.split('/').pop()}`);
   else falhar(`play NAO criou Audio() com MP3: ${toca}`);
 
-  // 6) videos: iframe montado + link alternativo
-  const vids = await page.$$eval('.video[data-video]', els => els.map(e => ({
-    id: e.getAttribute('data-video'),
-    iframe: !!e.querySelector('iframe'),
-    link: e.querySelector('a.video-link')?.getAttribute('href') || null,
-    instr: (e.closest('.moment')?.querySelector('.en-instr')?.textContent || '').trim(),
-  })));
+  // 6) videos: iframe + link alternativo + as TRES partes do 2.2.
+  // Medir foco e producao como itens SOLTOS deixa passar tarefa que tem um e nao o
+  // outro — foi assim que o video dos bebes na Suecia passou tendo foco e apoio mas
+  // NENHUMA producao (a aluna lia e tocava nas palavras, sem dizer nada). O trio se
+  // mede junto.
+  const vids = await page.$$eval('.video[data-video]', els => els.map(e => {
+    const m = e.closest('.moment');
+    return {
+      id: e.getAttribute('data-video'),
+      iframe: !!e.querySelector('iframe'),
+      link: e.querySelector('a.video-link')?.getAttribute('href') || null,
+      instr: (m?.querySelector('.en-instr')?.textContent || '').trim(),
+      // apoio linguistico = as palavras que ela precisa pra falar, em qualquer forma
+      apoio: (m?.querySelectorAll('details.support .en').length || 0)
+           + (m?.querySelectorAll('.chips li').length || 0)
+           + (m?.querySelectorAll('.lines .en, .habit .en').length || 0),
+    };
+  }));
   for (const v of vids) {
     const temFoco = /look for|look at/i.test(v.instr);
+    const temProducao = /\b(say|tell|answer|compare|describe|ask|choose)\b/i.test(v.instr);
     const soNomear = /^watch.*(what do you see\?)$/i.test(v.instr);
     if (!v.iframe) falhar(`video ${v.id} sem iframe`);
     else if (!v.link) falhar(`video ${v.id} sem link alternativo`);
-    else if (!temFoco) falhar(`video ${v.id} sem FOCO DE OBSERVACAO na instrucao: "${v.instr}"`);
+    else if (!temFoco) falhar(`video ${v.id} sem FOCO DE OBSERVACAO: "${v.instr}"`);
+    else if (!v.apoio) falhar(`video ${v.id} sem APOIO LINGUISTICO no momento (2.2)`);
+    else if (!temProducao) falhar(`video ${v.id} sem PRODUCAO da aluna (2.2): "${v.instr}"`);
     else if (soNomear) falhar(`video ${v.id} termina na nomeacao: "${v.instr}"`);
-    else ok(`video ${v.id}: iframe + link + foco de observacao`);
+    else ok(`video ${v.id}: iframe + link + foco + apoio(${v.apoio}) + producao`);
   }
 
   // 7) interativos: cartas, seletores, planejador, escrita, gerador de nome
