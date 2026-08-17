@@ -2259,8 +2259,8 @@ function revealVocab(card) {
   var grid = card.closest('.vocab-grid');
   var count = grid.querySelectorAll('.vocab-card.revealed').length;
   var total = grid.querySelectorAll('.vocab-card').length;
-  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
-  document.getElementById(counterId).textContent = count + ' / ' + total + ' words revealed';
+  var counterId = grid.id.replace('vocabGrid', 'vocabCount');
+  var _ctr1 = document.getElementById(counterId); if (_ctr1) _ctr1.textContent = count + ' / ' + total + ' words revealed';
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
@@ -2271,7 +2271,7 @@ var errorCount = 0;
 function revealError(card) {
   card.classList.toggle('revealed');
   errorCount++;
-  document.getElementById('errorScore').textContent = errorCount + ' / 5 errors found';
+  var _ctr1 = document.getElementById('errorScore'); if (_ctr1) _ctr1.textContent = errorCount + ' / 5 errors found';
 }
 
 // ===== DIALOGUE LINE-BY-LINE =====

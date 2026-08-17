@@ -814,6 +814,74 @@ def check_um_slide_ativo(c, fails):
             f'So o primeiro slide da aula leva `active`.')
 
 
+def check_contador_reveal(c, fails):
+    """O CONTADOR NAO PODE MATAR O REVEAL (bloqueante).
+
+    `revealVocab` e `revealError` atualizam um contador (`#vocabCountN`, `#errorScore`).
+    Duas coisas davam errado, e nenhum gate via:
+
+    1. **Sem guarda.** `document.getElementById('x').textContent = ...` com o `<span>`
+       ausente no HTML lanca `TypeError: Cannot set properties of null` NO PRIMEIRO
+       CLIQUE — e o card para de abrir. O exercicio morre inteiro por causa de um
+       enfeite que faltava.
+    2. **Ternario de dois ramos.** `grid.id === 'vocabGrid1' ? 'vocabCount1' :
+       'vocabCount2'`: com TRES grids o terceiro cai no else e escreve no contador do
+       SEGUNDO, que passa a mostrar o total do grid errado enquanto o terceiro fica
+       parado em 0.
+
+    Por que nenhum gate pegava: a classe esta certa, o handler existe, o HTML e valido,
+    o audio esta no lugar. Nao ha nada de errado no que os gates olhavam. Medido no
+    navegador em 17/08/2026: 44+ arquivos QUEBRAM no clique e 255+ mostram numero errado.
+
+    CUIDADO QUE ESTE GATE TEM (e a primeira versao dele nao tinha): so acusa se o card
+    REALMENTE CHAMA o handler. Ha `.error-card` legado que revela por `onclick` proprio
+    no `<p>` e nunca chama `revealError` — ali o `#errorScore` ausente e codigo morto,
+    nao defeito. Medir sem essa checagem deu 474 falsos positivos.
+
+    ESCOPO: geracao nova (<meta name="alumni-gen">). Legado com o mesmo defeito nao se
+    conserta nem se reporta sem ordem do Dan (REGRA 30/31).
+    """
+    if _gen(c) < GEN_PLAYER_E_PREDICAO:
+        return
+    codigo = re.sub(r'//[^\n]*', '', c)
+    ids = set(re.findall(r'id="([^"]+)"', c))
+
+    for fn, cls in (('revealVocab', 'vocab-card'), ('revealError', 'error-card')):
+        # so vale se ALGUM card chama o handler de verdade
+        if not re.search(r'class="[^"]*\b%s\b[^"]*"[^>]*onclick="[^"]*%s\(' % (cls, fn), c):
+            continue
+        m = re.search(r'function\s+%s\s*\([^)]*\)\s*\{' % fn, codigo)
+        if not m:
+            continue
+        i, nivel = m.end(), 1
+        while i < len(codigo) and nivel:
+            nivel += (codigo[i] == '{') - (codigo[i] == '}')
+            i += 1
+        corpo = codigo[m.end():i - 1]
+
+        # 1) escrita sem guarda
+        for esc in re.finditer(r"document\.getElementById\(\s*'([^']+)'\s*\)\.textContent\s*=", corpo):
+            alvo = esc.group(1)
+            if alvo not in ids:
+                fails.append(
+                    f'CONTADOR MATA O REVEAL: {fn}() escreve em #{alvo}, que NAO existe no HTML. '
+                    f'O primeiro clique num .{cls} lanca TypeError e o card para de abrir. '
+                    f'Ou inclua o <span id="{alvo}">, ou ponha a guarda: '
+                    f'`var el = document.getElementById(...); if (el) el.textContent = ...` '
+                    f'(ver revealVocab/revealError no modelo helen-mendes-aula1.html).')
+
+        # 2) ternario de dois ramos com 3+ grids
+        if fn == 'revealVocab' and re.search(r"grid\.id\s*===\s*'vocabGrid1'\s*\?", corpo):
+            grids = re.findall(r'class="vocab-grid" id="(vocabGrid\d+)"', c)
+            if len(grids) > 2:
+                fails.append(
+                    f'CONTADOR DO GRID ERRADO: ha {len(grids)} vocab-grid ({", ".join(grids)}) '
+                    f'mas revealVocab() escolhe o contador com um ternario de DOIS ramos — o '
+                    f'terceiro grid cai no else e escreve no contador do segundo, que passa a '
+                    f'mostrar o total do grid errado. Use '
+                    f"`grid.id.replace('vocabGrid', 'vocabCount')`.")
+
+
 def check_dialogo_completo(c, fails, warns):
     """O DIALOGO NAO PODE PARAR ANTES DA ULTIMA FALA (bloqueante).
 
@@ -1918,6 +1986,7 @@ def validate(path):
     check_um_slide_ativo(c, fails)
     check_spot_the_error_nao_entrega(c, fails)
     check_dialogo_completo(c, fails, warns)
+    check_contador_reveal(c, fails)
     check_predicao(c, fails)
     check_gapfill_vocab(c, fails)
     check_preclass_blanks(c, fails)
