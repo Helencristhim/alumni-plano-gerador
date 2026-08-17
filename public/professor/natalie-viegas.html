@@ -10420,7 +10420,7 @@ function revealVocab(card) {
   if (!grid) return;
   var count = grid.querySelectorAll('.vocab-card.revealed').length;
   var total = grid.querySelectorAll('.vocab-card').length;
-  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
+  var counterId = grid.id.replace('vocabGrid', 'vocabCount');
   var el = document.getElementById(counterId);
   if (el) el.textContent = count + ' / ' + total + ' words revealed';
 }
@@ -10440,7 +10440,7 @@ function revealError(card) {
   if (card.classList.contains('revealed')) return;
   card.classList.add('revealed');
   errorCount++;
-  document.getElementById('errorScore').textContent = errorCount + ' / 4 errors found';
+  var _ctr1 = document.getElementById('errorScore'); if (_ctr1) _ctr1.textContent = errorCount + ' / 4 errors found';
 }
 
 // ===== DIALOGUE LINE-BY-LINE =====

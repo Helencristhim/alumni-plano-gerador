@@ -1409,10 +1409,16 @@ document.addEventListener('keydown', function(e) {
 function revealVocab(card) {
   card.classList.toggle('revealed');
   var grid = card.closest('.vocab-grid');
+  if (!grid) return;
   var count = grid.querySelectorAll('.vocab-card.revealed').length;
   var total = grid.querySelectorAll('.vocab-card').length;
-  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
-  document.getElementById(counterId).textContent = count + ' / ' + total + ' words revealed';
+  // O contador SAI DO ID DO GRID. O ternario antigo tinha dois ramos: um terceiro grid
+  // caia no else e escrevia no contador do SEGUNDO — mostrando o total do grid errado e
+  // deixando o terceiro parado em 0 para sempre (798 arquivos, 37 alunos).
+  var el = document.getElementById(grid.id.replace('vocabGrid', 'vocabCount'));
+  // E a GUARDA: sem o <span> no HTML, isto lancava TypeError e o card parava de abrir.
+  // O contador e enfeite; o reveal e a aula. Enfeite ausente nao derruba a aula.
+  if (el) el.textContent = count + ' / ' + total + ' words revealed';
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
@@ -1501,7 +1507,9 @@ function revealError(card) {
   var scope = card.closest('.error-grid') || document;
   var n = scope.querySelectorAll('.error-card.revealed').length;
   var total = scope.querySelectorAll('.error-card').length;
-  document.getElementById('errorScore').textContent = n + ' / ' + total + ' errors found';
+  // Mesma guarda do revealVocab: o placar e enfeite, o reveal e a aula.
+  var el = document.getElementById('errorScore');
+  if (el) el.textContent = n + ' / ' + total + ' errors found';
 }
 
 // ===== DIALOGUE LINE-BY-LINE =====
