@@ -323,6 +323,38 @@ jobs:
         # tuca-dias e luiz-bressane-backup-a2, que a checagem grosseira acusava por engano.
         run: python3 scripts/check_vocab_reveal.py
 
+      # ╔══════════════════════════════════════════════════════════════════════╗
+      # ║ GATE 17 — O REVEAL TEM DE REVELAR (o único gate que CLICA).          ║
+      # ╚══════════════════════════════════════════════════════════════════════╝
+      # O irmão do GATE 10, para o que o GATE 10 não alcança. Ele identifica o alvo
+      # por CLASSE, com três famílias fixas (.vocab-back, .q-answer, .error-fix); a
+      # tabela do "Reveal the Rule" é um <div id="ruleN"> SEM CLASSE, então ficou de
+      # fora — e 130 slides de 4 alunos passaram meses com o botão trocando de texto
+      # e a regra nunca aparecendo (daniela-feitoza, victor-malvezi-paschotto,
+      # milton-sayegh, sandra-hayasaki).
+      #
+      # E não dava para consertar isso alargando a lista. Decidir NO TEXTO se um
+      # reveal revela exige casar seletor CSS, resolver cascata/especificidade e
+      # saber que inline vence stylesheet — menos quando há !important. Isso é
+      # reescrever um navegador. A estática erra nos DOIS sentidos: uma varredura por
+      # regex acusou rafael-pelizaro.html, que está CERTO (a regra dele é
+      # `.grammar-box.show{display:block!important}`).
+      #
+      # Então este gate CLICA: abre no Chromium, aperta o botão, e compara o computed
+      # style de todos os elementos antes e depois. Nada mudou = não revela = FAIL.
+      # Só arquivo do PR que tenha botão "Reveal " é aberto (o resto nem custa).
+      - name: "GATE 17 — Chromium (só este gate precisa de navegador)"
+        run: |
+          pip install --quiet playwright
+          python3 -m playwright install --with-deps chromium
+
+      - name: "GATE 17 — selftest: prova que o gate do reveal ainda morde"
+        run: python3 scripts/check_reveal_clica.py --selftest
+
+      - name: "GATE 17 — todo botão Reveal revela alguma coisa (arquivos do PR)"
+        if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
+        run: python3 scripts/check_reveal_clica.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
+
       - name: "GATE 12 — selftest: prova que o gate do PPP ainda morde"
         run: python3 scripts/check_ppp_lesson.py --selftest
 
