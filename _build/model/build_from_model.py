@@ -1760,8 +1760,14 @@ def base_swaps(s, cfg, n=None):
         s = s.replace(f'{MODEL}-aula1', f'{cfg["slug"]}-aula{n}')
         s = s.replace(f'{MODEL}-aula2', f'{cfg["slug"]}-aula{n}')
     s = s.replace(MODEL, cfg['slug'])
-    s = s.replace('Helen Mendes', cfg['student_name'])
-    s = s.replace('Helen', cfg['first_name'])
+    # DUAS SUBSTITUICOES EM CASCATA CORROMPEM NOME QUE COMECA POR "Helen".
+    # 'Helen Mendes' -> 'Helena Andrade' e, na linha seguinte, 'Helen' -> 'Helena' morde
+    # o texto que a primeira acabou de escrever: sai 'Helenaa Andrade'. A sentinela faz
+    # as duas numa passada so e e byte-a-byte identica para todo nome que NAO comeca por
+    # "Helen" (o \x00 nao existe no shell). Descoberto ao gerar a Helena Andrade.
+    s = s.replace('Helen Mendes', '\x00ALUNO\x00').replace('Helen', '\x00PRIMEIRO\x00')
+    s = (s.replace('\x00ALUNO\x00', cfg['student_name'])
+          .replace('\x00PRIMEIRO\x00', cfg['first_name']))
     s = re.sub(r'window\.TOTAL_AULAS=\d+', f'window.TOTAL_AULAS={cfg["total_aulas"]}', s)
     s = re.sub(r'Business English (--|—) 30 Aulas', f'{cfg["program"]} \\1 {cfg["total_aulas"]} Aulas', s)
     # O BADGE SE TROCA PELA ESTRUTURA, NAO PELO TEXTO DO MOLDE. A linha acima casa o
@@ -1986,7 +1992,11 @@ def final_asserts(s, cfg, label, is_hub=False):
     # fazem sentido para OUTROS alunos, então pulamos quando o slug é o do modelo.
     is_model = cfg['slug'] == MODEL
     if not is_model:
-        assert 'helen' not in low, f'{label}: sobrou referência ao modelo (helen)'
+        # SUBSTRING PURA ACUSA O NOME DO ALUNO. "helena-andrade" e "Helena" contem
+        # "helen" e o assert reprovava material CERTO. O que nao pode sobrar e a
+        # referencia ao MODELO, entao a busca pula o que e seguido de "a".
+        assert not re.search(r'helen(?!a)', low), \
+            f'{label}: sobrou referência ao modelo (helen)'
     assert '/lib/contrast-guard.js' in s, f'{label}: contrast-guard NÃO plugado'
     # "Plugado" tem de significar QUE RODA, não que a string aparece. Este assert já
     # passava com a tag <script src="/lib/contrast-guard.js"> carregando 7.812 bytes de
