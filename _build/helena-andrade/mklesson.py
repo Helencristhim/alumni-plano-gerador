@@ -350,6 +350,22 @@ def build_slides(s):
         f'    {heading("One Question at <span class=\'accent\'>a Time</span>")}\n'
         f'    <!--IC-BLOCKS:quickfire-->'))
 
+    # SEGUNDO TEXTO, NAO-MARITIMO (aulas de simulado, 5 e 10). A prova de 2025 abriu com
+    # um texto de Inteligencia Artificial da Britannica: o dominio do exame e expositivo
+    # tecnico, e o naval e so a primeira metade dele. As duas telas entram aqui com chave
+    # de professor propria (s22a/s22b) para nao deslocar a numeracao das outras.
+    if s.get('reading2'):
+        out.append(slide(0, 5, 'slide-light', T['s22a'],
+            f'    <div class="chapter-label">Second Text</div>\n'
+            f'    {heading(s["reading2_title_html"])}\n'
+            f'    <!--IC-BLOCKS:reading2-->'))
+        out.append(slide(0, 5, 'slide-light', T['s22b'],
+            f'    <div class="chapter-label">Detail</div>\n'
+            f'    {heading("True or <span class=\'accent\'>False?</span>")}\n'
+            f'    <p style="text-align:center;font-size:.8rem;color:var(--text-dim);margin-top:.3rem">'
+            f'Same mechanics, no ships at all.</p>\n'
+            f'    <!--IC-BLOCKS:tf2-->'))
+
     # ── FASE 6 — escuta + producao ──────────────────────────────────────────
     out.append(slide_c(23, 6, 'slide-image', T['s23'],
         f'    <div class="chapter-label">Chapter 6: {ch[5]}</div>\n'
@@ -427,7 +443,14 @@ def build_slides(s):
         f'      <p style="color:var(--accent-light);font-size:.9rem;margin-top:.5rem">Next lesson: '
         f'{s["next_preview"]}</p>\n    </div>'))
 
-    return '\n'.join(out)
+    slides = '\n'.join(out)
+    cont = [0]
+
+    def _n(m):
+        cont[0] += 1
+        return f'data-slide="{cont[0]}"'
+
+    return re.sub(r'data-slide="\d+"', _n, slides)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -696,6 +719,13 @@ def build_config(s):
         'gap': [{'kind': 'gapfill', 'parts': s['gap']['parts'], 'bank': s['gap']['bank']}],
         'quickfire': [{'kind': 'quickfire', 'items': s['quickfire']}],
     }
+    if s.get('reading2'):
+        blocks['reading2'] = [
+            {'kind': 'reading', 'rtitle': s['reading2']['rtitle'],
+             'paras': s['reading2']['paras'], 'source': s['reading2']['source']},
+            {'kind': 'gist', 'prompt': s['gist2']['prompt'], 'choices': s['gist2']['choices']},
+        ]
+        blocks['tf2'] = [{'kind': 'tf', 'items': s['tf2']}]
     # o matching embaralha as definicoes na coluna da direita (REGRA 24)
     for key in ('vocab', 'equiv'):
         d = blocks[key][0]['defs']
@@ -762,7 +792,8 @@ def main():
     for b in spec['pc_blanks']:
         assert b[1] in f'{b[0]}{b[1]}{b[2]}'
     assert len(spec['vocab']) == 10, 'a aula tem 10 palavras novas'
-    assert len(re.findall(r'data-slide=', sl)) == 32, 'esperados 32 slides autorais'
+    esperado = 34 if spec.get('reading2') else 32
+    assert len(re.findall(r'data-slide=', sl)) == esperado, f'esperados {esperado} slides autorais'
     print(f'  ok  _build/{SLUG}-aula{n}/  ({len(sl)//1024} KB de slides)')
 
 
