@@ -2036,6 +2036,22 @@ que **nenhum arquivo ganhe um defeito que nao tinha**. Ele **nunca** exige que o
 consertado. Se um conserto legitimo (pedido pelo Dan) reduzir a divida, rode `--update` para
 recongelar a base — ela so pode CAIR.
 
+### Arquivo EM OBRAS (a valvula, quando alguem esta editando agora)
+
+Porque o GATE 8 varre o repo INTEIRO, um arquivo que alguem esta mexendo AGORA trava o merge
+de TODO MUNDO — inclusive de PR que nao tem nada a ver com ele. Aconteceu em 18/08/2026: 4
+defeitos na aula 9 da Izabel, em edicao pela Helen, deixaram todos os PRs vermelhos.
+
+`scripts/gate8-em-obras.json` lista esses arquivos com **quem** esta mexendo e **desde
+quando**. Enquanto estiver la, o gate nao compara aquele arquivo — e o `--update` **nao
+congela** o estado dele (defeito temporario NAO vira alvara permanente pelas costas). O gate
+imprime a lista e a idade de cada obra em toda execucao.
+
+- ✅ entra com o OK do Dan, por arquivo, com nome e data.
+- ❌ NAO e jeitinho pra passar no CI: defeito que o SEU PR criou e seu (REGRA 31).
+- Terminou a obra: **tire da lista no mesmo PR que fecha o trabalho** — o gate volta a
+  cobrar o arquivo na hora.
+
 ---
 
 ## REGRA 31 — GERAR AULA E GERAR AULA. NAO E AUDITAR. (REGRA BLOQUEANTE)
