@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """gen_audio.py — gera os MP3s ElevenLabs de uma aula buildada pelo build_from_model.py.
 Lê o audio_manifest.json ao lado do config.json. Pula existentes. Vozes em voices.json
-(REGRA 35: arthur/ellen — Ash/Kristen NÃO existem na conta). Modelo: eleven_multilingual_v2.
+(REGRA 35: arthur/ellen — Ash/Kristen NÃO existem na conta). Modelo: eleven_multilingual_v2
+(frases) e eleven_turbo_v2_5 + language_code='en' em texto de até 2 palavras — ver _model_for().
 
 USO: ELEVENLABS_API_KEY=... python3 _build/model/gen_audio.py _build/{slug}-aula{N}/config.json
 """
@@ -53,6 +54,19 @@ assert LANG == 'en' or cfg.get('voices'), (
 
 FORCE = '--force' in sys.argv or os.environ.get('GEN_AUDIO_FORCE') == '1'
 
+# --only=a.mp3,b.mp3 — regera SÓ esses arquivos (conserto pontual de um áudio que saiu
+# errado, sem torrar API nem mexer nos outros MP3 da aula, que estão bons). Implica --force
+# nos escolhidos: é justamente o arquivo existente que se quer trocar.
+ONLY = set()
+for _a in sys.argv[2:]:
+    if _a.startswith('--only='):
+        ONLY |= {x.strip() for x in _a[len('--only='):].split(',') if x.strip()}
+if ONLY:
+    FORCE = True
+    _known = {p['file'] for p in manifest}
+    assert ONLY <= _known, '--only com arquivo fora do manifest: %s' % sorted(ONLY - _known)
+    manifest = [p for p in manifest if p['file'] in ONLY]
+
 # GUARD DE TRUNCAMENTO (nasce certo, não depende só do GATE 5b).
 # A ElevenLabs às vezes devolve um clipe curto/parcial (foi o que truncou o Stage 2 da
 # Anna). gen_audio gravava cego + pulava existentes => o arquivo ruim fossilizava e só o
@@ -65,10 +79,33 @@ MIN_BYTES_PER_CHAR = 400
 MAX_TRIES = 3
 
 
+# PALAVRA SOLTA PRECISA DO IDIOMA TRAVADO (incidente Graziele, aula 7).
+# O eleven_multilingual_v2 DEDUZ o idioma do texto. Numa frase ele acerta pelo contexto;
+# num vocab card de UMA palavra não há contexto, e cognato latino sai com pronúncia de
+# outra língua: "Arrive" saiu "arriva" (o ASR da própria ElevenLabs transcreveu 'Arriva'
+# e 'אריווה'). Regerar no mesmo modelo REPETE o defeito — é determinístico, não sorteio —
+# e o multilingual_v2 IGNORA language_code (o áudio volta byte a byte igual).
+# Quem respeita language_code é o turbo/flash v2.5. Então: texto de até 2 palavras em
+# material de inglês vai no eleven_turbo_v2_5 com language_code='en' (mesma voz, idioma
+# travado); 3+ palavras seguem no multilingual_v2, onde o contexto já resolve.
+SHORT_WORDS = 2
+
+
+def _model_for(text):
+    """(model_id, language_code) — trava o idioma onde falta contexto p/ o modelo deduzir."""
+    if LANG == 'en' and len(text.split()) <= SHORT_WORDS:
+        return 'eleven_turbo_v2_5', 'en'
+    return 'eleven_multilingual_v2', None
+
+
 def tts(text, voice):
-    body = json.dumps({'text': text, 'model_id': 'eleven_multilingual_v2',
-                       'voice_settings': {'stability': 0.5, 'similarity_boost': 0.75,
-                                          'style': 0.0, 'use_speaker_boost': True}}).encode('utf-8')
+    model, lang = _model_for(text)
+    payload = {'text': text, 'model_id': model,
+               'voice_settings': {'stability': 0.5, 'similarity_boost': 0.75,
+                                  'style': 0.0, 'use_speaker_boost': True}}
+    if lang:
+        payload['language_code'] = lang
+    body = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request('https://api.elevenlabs.io/v1/text-to-speech/' + VOICES[voice],
                                  data=body, headers={'xi-api-key': KEY, 'Content-Type': 'application/json',
                                                      'Accept': 'audio/mpeg'})
