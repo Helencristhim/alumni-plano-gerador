@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GATE 17 — O REVEAL TEM DE REVELAR. MEDIDO CLICANDO, NUM NAVEGADOR DE VERDADE.
+GATE 28 — O REVEAL TEM DE REVELAR. MEDIDO CLICANDO, NUM NAVEGADOR DE VERDADE.
 
 O DEFEITO
 ---------
@@ -89,7 +89,7 @@ def medir(paths):
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print('GATE 17 NAO PODE RODAR: playwright ausente. '
+        print('GATE 28 NAO PODE RODAR: playwright ausente. '
               'Instale com `pip install playwright && python3 -m playwright install chromium`.',
               file=sys.stderr)
         sys.exit(2)   # 2 = gate impedido de rodar. NUNCA verde por omissao.
@@ -99,7 +99,7 @@ def medir(paths):
         try:
             navegador = p.chromium.launch()
         except Exception as e:
-            print('GATE 17 NAO PODE RODAR: chromium nao abre (%s)' % str(e)[:120], file=sys.stderr)
+            print('GATE 28 NAO PODE RODAR: chromium nao abre (%s)' % str(e)[:120], file=sys.stderr)
             sys.exit(2)
         pagina = navegador.new_page()
         pagina.on('dialog', lambda d: d.dismiss())
@@ -196,15 +196,15 @@ def main(argv):
     paths = [p for p in paths
              if tem_reveal.search(open(p, encoding='utf-8', errors='ignore').read())]
     if not paths:
-        print('GATE 17: nenhum arquivo com botao de reveal a medir.')
+        print('GATE 28: nenhum arquivo com botao de reveal a medir.')
         return 0
     problemas = falhas(paths)
     if problemas:
-        print('GATE 17 — REVEAL QUE NAO REVELA (%d):' % len(problemas), file=sys.stderr)
+        print('GATE 28 — REVEAL QUE NAO REVELA (%d):' % len(problemas), file=sys.stderr)
         for p in problemas:
             print('  ' + p, file=sys.stderr)
         return 1
-    print('GATE 17 OK — %d arquivo(s) medido(s) no Chromium, todo reveal revela.' % len(paths))
+    print('GATE 28 OK — %d arquivo(s) medido(s) no Chromium, todo reveal revela.' % len(paths))
     return 0
 
 
