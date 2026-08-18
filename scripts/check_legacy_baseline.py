@@ -22,7 +22,22 @@ e o gate reprova, mesmo que o PR nem tenha tocado nele.
     python3 scripts/check_legacy_baseline.py            # CI: falha se piorou
     python3 scripts/check_legacy_baseline.py --update    # congela o estado atual
     python3 scripts/check_legacy_baseline.py --report     # o inventário da dívida
+
+ARQUIVO EM OBRAS
+----------------
+Como este gate varre o repo INTEIRO, um arquivo que alguém está editando agora
+trava o merge de TODO MUNDO — inclusive de PRs que não têm nada a ver com ele.
+Foi o que aconteceu em 18/08/2026: 4 defeitos na aula 9 da Izabel, em edição pela
+Helen, deixaram todos os PRs vermelhos.
+
+scripts/gate8-em-obras.json lista esses arquivos, com quem está mexendo e desde
+quando. Enquanto estiver na lista, o arquivo NÃO é comparado — e, o que importa
+tanto quanto, o --update NÃO congela o estado dele no baseline: o defeito
+temporário não vira alvará permanente pelas costas. Ao terminar a obra, tire da
+lista e o gate volta a cobrar o arquivo na hora.
 """
+import datetime
+import fnmatch
 import json
 import os
 import re
@@ -31,6 +46,34 @@ import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = os.path.join(RAIZ, 'scripts', 'legacy-baseline.json')
+OBRAS = os.path.join(RAIZ, 'scripts', 'gate8-em-obras.json')
+
+
+def em_obras():
+    """[(glob, quem, desde, porque)] — arquivos que alguém está editando AGORA."""
+    try:
+        with open(OBRAS, encoding='utf-8') as f:
+            obras = json.load(f).get('obras', [])
+    except (IOError, ValueError):
+        return []
+    for o in obras:
+        # fnmatch trata '*' como "qualquer coisa, barra inclusive": um padrão largo
+        # ('public/*') cegaria o gate no repo inteiro em silêncio. Obra é ARQUIVO.
+        assert o.get('arquivo', '').endswith('.html'), (
+            'gate8-em-obras.json: "arquivo" tem de ser um HTML (um arquivo em obras), '
+            'nao um padrao largo: %r' % o.get('arquivo'))
+        assert o.get('quem') and o.get('desde') and o.get('porque'), (
+            'gate8-em-obras.json: cada obra precisa de quem/desde/porque — sem isso '
+            'ninguem sabe de quem e a obra nem quando tirar da lista: %r' % o)
+    return obras
+
+
+def _obra_de(caminho, obras):
+    """A obra que cobre este caminho, ou None."""
+    for o in obras:
+        if fnmatch.fnmatch(caminho, o['arquivo']):
+            return o
+    return None
 
 AVISO = [
     '*** ISTO NAO E UMA LISTA DE TAREFAS. E UM ALVARA. (CLAUDE.md, REGRA 30) ***',
@@ -111,9 +154,30 @@ def varrer(fs):
     return achados
 
 
+def _aviso_obras(obras):
+    """Imprime SEMPRE quem está em obras e há quantos dias — obra esquecida é
+    defeito silenciado para sempre, que é justamente o que este gate impede."""
+    if not obras:
+        return
+    print('EM OBRAS (o GATE 8 não compara estes arquivos — scripts/gate8-em-obras.json):')
+    hoje = datetime.date.today()
+    for o in obras:
+        try:
+            dias = (hoje - datetime.date(*map(int, o['desde'].split('-')))).days
+        except (KeyError, TypeError, ValueError):
+            dias = None
+        idade = f'há {dias} dia(s)' if dias is not None else 'sem data'
+        print(f"  ~ {o['arquivo']}  —  {o.get('quem', '?')}, {idade}")
+        if dias is not None and dias > 14:
+            print(f'    ATENÇÃO: {dias} dias em obras. Acabou? Tire da lista — '
+                  'o gate está cego neste arquivo enquanto isso.')
+    print()
+
+
 def main():
     fs = arquivos()
     atual = varrer(fs)
+    obras = em_obras()
 
     if '--update' in sys.argv:
         # O aviso mora DENTRO do arquivo. Sem ele, uma lista de 3.243 defeitos com
@@ -121,6 +185,22 @@ def main():
         # abrir isso vai querer "limpar". É um ALVARÁ, não uma lista de tarefas.
         saida = {'_LEIA-ME': {k: 0 for k in AVISO}}
         saida.update(atual)
+        # Arquivo EM OBRAS não se congela: o estado dele agora é rascunho de outra
+        # pessoa. Congelar aqui transformaria um defeito temporário em alvará
+        # permanente — o oposto do que a lista de obras existe para fazer.
+        try:
+            antigo = {k: v for k, v in json.load(open(BASE, encoding='utf-8')).items()
+                      if not k.startswith('_')}
+        except (IOError, ValueError):
+            antigo = {}
+        for caminho in list(saida):
+            if caminho.startswith('_') or not _obra_de(caminho, obras):
+                continue
+            if caminho in antigo:
+                saida[caminho] = antigo[caminho]
+            else:
+                del saida[caminho]
+        _aviso_obras(obras)
         json.dump(saida, open(BASE, 'w', encoding='utf-8'),
                   ensure_ascii=False, indent=1, sort_keys=True)
         n = sum(sum(c.values()) for c in atual.values())
@@ -148,15 +228,19 @@ def main():
 
     # A PERGUNTA: algum arquivo ganhou defeito que não tinha?
     # (Arquivo NOVO tem baseline vazio -> tolerância zero, de graça.)
+    _aviso_obras(obras)
     piorou = []
     for caminho, cats in sorted(atual.items()):
+        if _obra_de(caminho, obras):
+            continue  # alguém está editando agora — não trava o merge dos outros
         antes = base.get(caminho, {})
         for cat, n in sorted(cats.items()):
             if n > antes.get(cat, 0):
                 piorou.append((caminho, cat, antes.get(cat, 0), n))
 
+    # arquivo em obras não conta como "melhorou": ele só saiu da conta, ninguém consertou
     melhorou = sum(max(0, base.get(f, {}).get(c, 0) - atual.get(f, {}).get(c, 0))
-                   for f in base for c in base[f])
+                   for f in base if not _obra_de(f, obras) for c in base[f])
 
     if piorou:
         print('=' * 70)
