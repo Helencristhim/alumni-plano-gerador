@@ -1278,7 +1278,18 @@ window.__alumniRecPath = function (slug, name) {
 
   // ===== RESET BUTTON (per lesson, injected at bottom of each lesson-body) =====
   function injectResetButtons() {
-    if (viewType !== 'aluno') return;
+    // O ALUNO nao reseta o proprio progresso. Ordem do Dan (19/08/2026): "o aluno nem
+    // precisa ter acesso a isso". O botao so existia na visao dele — o unico lugar onde
+    // nao devia estar. Quem precisa zerar uma aula usa o reset REMOTO (state._resetAt,
+    // ver aplicarResetRemoto): grava-se o estado limpo com o carimbo e o navegador do
+    // aluno obedece sozinho na proxima abertura, sem clique.
+    //
+    // NAO basta trocar esta guarda para 'professor': o resetLesson monta o estado limpo
+    // a partir do DOM LOCAL (collectState) e grava na linha do ALUNO. Rodando na pagina
+    // do professor ele salvaria o progresso DO PROFESSOR por cima do progresso do aluno,
+    // destruindo as outras aulas. Botao no professor exige reescrever o resetLesson para
+    // operar sobre o estado remoto — trabalho separado, nao um flip de condicao.
+    return;
 
     var style = document.createElement('style');
     style.textContent =
