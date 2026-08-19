@@ -623,6 +623,15 @@ jobs:
         # lib global, não depende de quais arquivos o PR tocou.
         run: python3 scripts/check_recording_paths.py
 
+      - name: "GATE 30 — o score não marca errado quem falou certo"
+        # O reconhecedor do navegador escreve diferente do exercício ("ten" -> "10",
+        # "greenlight" -> "green light") e a comparação é palavra a palavra, então a aluna
+        # levava vermelho numa palavra que acertou (rafael-pelizaro, pre-class 11, 19/08/2026).
+        # O gate carrega a lib e o analyzeWords REAIS e prova as duas metades: os dois casos
+        # consertados, e o veredito inalterado em ~6.7 mil comparações antes-vs-depois.
+        # Roda sempre: é lib global, não depende dos arquivos do PR.
+        run: node scripts/check_score_align.mjs
+
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''
         continue-on-error: true

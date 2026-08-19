@@ -21,6 +21,63 @@
  */
 
 /**
+ * Alinha a TRANSCRICAO do navegador com a frase-alvo ANTES de pontuar.
+ *
+ * O reconhecedor ouve certo mas ESCREVE diferente do exercicio, e a comparacao e
+ * palavra a palavra — entao o aluno leva vermelho numa palavra que falou certo:
+ *   alvo "ten hours"      -> Chrome escreve "10 hours"        (numero vira algarismo)
+ *   alvo "greenlight"     -> Chrome escreve "green light"     (composta vira duas)
+ * Medido em 19/08/2026, rafael-pelizaro pre-class 11: "ten" e "greenlight" marcadas
+ * como faltantes com a pronuncia correta. O hifen ja era tratado (o filtro
+ * [^a-z0-9' ] transforma "buy-in" em "buyin" nos DOIS lados, e por isso "buyin"
+ * casava); o espaco e o algarismo, nao.
+ *
+ * INVARIANTE DE SEGURANCA — a razao de isto nao poder quebrar nada:
+ * so troca um pedaco da transcricao quando o resultado da troca e uma palavra que o
+ * ALVO REALMENTE TEM. Palavra que ja casa nunca e tocada. Quando nada se aplica, a
+ * funcao devolve a string INTACTA, e o analyzeWords recebe exatamente o que receberia
+ * antes — score identico. Nao afrouxa tolerancia fonetica: erro de verdade segue erro.
+ */
+(function () {
+  var NUM = { '0':'zero','1':'one','2':'two','3':'three','4':'four','5':'five','6':'six',
+              '7':'seven','8':'eight','9':'nine','10':'ten','11':'eleven','12':'twelve',
+              '13':'thirteen','14':'fourteen','15':'fifteen','16':'sixteen','17':'seventeen',
+              '18':'eighteen','19':'nineteen','20':'twenty','30':'thirty','40':'forty',
+              '50':'fifty','60':'sixty','70':'seventy','80':'eighty','90':'ninety',
+              '100':'hundred','1000':'thousand' };
+  var WORD = {};
+  for (var d in NUM) if (Object.prototype.hasOwnProperty.call(NUM, d)) WORD[NUM[d]] = d;
+
+  window.__alumniAlignSpoken = function (target, spoken) {
+    if (!target || !spoken) return spoken;
+    var tw = String(target).split(/ +/).filter(Boolean);
+    var sw = String(spoken).split(/ +/).filter(Boolean);
+    if (!tw.length || !sw.length) return spoken;
+
+    var inTarget = {};
+    for (var i = 0; i < tw.length; i++) inTarget[tw[i]] = true;
+
+    var out = [];
+    for (var j = 0; j < sw.length; j++) {
+      var w = sw[j];
+      // 1) duas faladas que, GRUDADAS, formam uma palavra do alvo: "green light" -> "greenlight".
+      //    Exige que a primeira sozinha NAO seja palavra do alvo, para nunca desmanchar
+      //    um par que ja casava ("the green light is on" fica como esta).
+      if (j + 1 < sw.length && !inTarget[w] && inTarget[w + sw[j + 1]]) {
+        out.push(w + sw[j + 1]); j++; continue;
+      }
+      // 2) numero em algarismo onde o alvo tem por extenso ("10" -> "ten"), e o inverso.
+      if (!inTarget[w]) {
+        var alt = NUM[w] || WORD[w];
+        if (alt && inTarget[alt]) { out.push(alt); continue; }
+      }
+      out.push(w);
+    }
+    return out.join(' ');
+  };
+})();
+
+/**
  * Path das gravacoes no bucket `recordings`, separado por VIEW.
  *
  * O bucket NAO versiona e o upload e upsert:true. Enquanto o path era so
@@ -1707,6 +1764,7 @@ window.__alumniRecPath = function (slug, name) {
           if (typeof analyzeWords !== 'function' || !resultDiv) return;
           gotResult = true;
           var best = event.results[event.results.length - 1][0].transcript.toLowerCase().replace(/[^a-z0-9' ]/g, '');
+          if (typeof window.__alumniAlignSpoken === 'function') best = window.__alumniAlignSpoken(target, best);
           var analysis = analyzeWords(target, best);
           var totalWords = analysis.expected.length;
           var correctWords = analysis.expected.filter(function (w) { return w.status === 'correct'; }).length;
