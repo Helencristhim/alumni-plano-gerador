@@ -34,7 +34,6 @@ ALUNOS = Path("public/aluno")
 NAO_SAO_ALUNO = {
     "helen-mendes", "helen-mendes-teste", "helen-mendes-v4",   # a aluna modelo
     "stephanie-vicente", "theo", "bento",                       # moldes adulto/teens/kids
-    "luiz-bressane-backup-a2",                                  # backup de material
 }
 
 
@@ -54,8 +53,8 @@ def eh_redirecionamento(f: Path) -> bool:
             or "Redirecting" in t)
 
 
-def slugs() -> list[str]:
-    """Um material por aluno: o hub (sem sufixo -aulaN), fora moldes e redirects."""
+def materiais() -> list[str]:
+    """Todo hub publicado (sem sufixo -aulaN), fora moldes e testes."""
     out = set()
     for f in ALUNOS.glob("*.html"):
         nome = f.stem
@@ -63,16 +62,39 @@ def slugs() -> list[str]:
             continue
         if nome in NAO_SAO_ALUNO:
             continue
-        if eh_redirecionamento(f):
-            continue
         out.add(nome)
-
-    # Aluno com dois conjuntos de material (X e X-v2, os dois reais): fica so o V2.
-    # Ordem do Dan (19/08/2026): "tira os antigos, deixa so os V2".
-    for nome in list(out):
-        if nome + "-v2" in out:
-            out.discard(nome)
     return sorted(out)
+
+
+def raiz_do_aluno(slug: str, todos: set[str]) -> str:
+    """O ALUNO dono deste material.
+
+    O codigo e do ALUNO, nao do arquivo: quem tem varios materiais (v2, palestra,
+    speech-training, backup) usa UM codigo so, o dele, em todos. A raiz e o maior
+    prefixo que tambem e material publicado -- assim `nilo-...-palestra` cai em
+    `nilo-...`, e `daniela-feitoza-v2` cai em `daniela-feitoza`. Sem heuristica de
+    nome: so agrupa quando o prefixo existe de fato como material.
+    """
+    # sufixo de versao colado, sem hifen: "daniela-feitozaV2" -> "daniela-feitoza"
+    colado = re.sub(r"[Vv]\d+$", "", slug)
+    if colado != slug and colado in todos:
+        return raiz_do_aluno(colado, todos)
+
+    partes = slug.split("-")
+    for corte in range(len(partes) - 1, 0, -1):
+        pref = "-".join(partes[:corte])
+        if pref in todos:
+            return raiz_do_aluno(pref, todos)
+    return slug
+
+
+def alunos() -> dict[str, list[str]]:
+    """{aluno: [materiais dele]} — a unidade que recebe codigo e o ALUNO."""
+    todos = set(materiais())
+    grupos: dict[str, list[str]] = {}
+    for m in sorted(todos):
+        grupos.setdefault(raiz_do_aluno(m, todos), []).append(m)
+    return grupos
 
 
 def carrega() -> dict:
@@ -100,13 +122,14 @@ def main() -> int:
     usados = {int(v) for v in atual.values() if str(v).isdigit()}
     proximo = (max(usados) + 1) if usados else 1
 
-    validos = set(slugs())
+    grupos = alunos()
+    validos = set(grupos)
     removidos = [s for s in atual if s not in validos]
     for s in removidos:
         del atual[s]
 
     novos = 0
-    for s in slugs():
+    for s in sorted(grupos):
         if s not in atual:
             while proximo in usados:
                 proximo += 1
@@ -121,7 +144,10 @@ def main() -> int:
             w.writerow([s, atual[s]])
     os.chmod(CSV, 0o600)
 
-    ENVFILE.write_text(json.dumps(atual, separators=(",", ":")), encoding="utf-8")
+    # A env tem uma entrada por MATERIAL, mas materiais do mesmo aluno recebem o
+    # MESMO codigo — o dele. Assim o servidor nao precisa adivinhar nada em runtime.
+    por_material = {m: atual[a] for a, ms in grupos.items() for m in ms if a in atual}
+    ENVFILE.write_text(json.dumps(por_material, separators=(",", ":")), encoding="utf-8")
     os.chmod(ENVFILE, 0o600)
 
     # Lista para a equipe distribuir: nome e link, nao slug. O nome sai do <h1> do
