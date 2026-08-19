@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gera a senha de acesso de cada aluno.
+"""Gera a senha de acesso de cada aluno (sequencial: 0001, 0002, ...).
 
 O REPO E PUBLICO. Por isso este script NUNCA escreve senha (nem hash de senha) dentro
 do repositorio: a lista em claro vai para um arquivo FORA do git, e o que o servidor
@@ -19,7 +19,6 @@ import csv
 import json
 import os
 import re
-import secrets
 import sys
 from pathlib import Path
 
@@ -55,12 +54,23 @@ def main() -> int:
         rotacionar = sys.argv[sys.argv.index("--rotacionar") + 1]
         atual.pop(rotacionar, None)
 
+    # SEQUENCIAL, por decisao do Dan (19/08/2026), ciente de que 0001/0002 se descobre
+    # testando: o que isto barra e o acesso casual, nao alguem determinado.
+    #
+    # A numeracao NAO e recalculada por ordem alfabetica a cada execucao. Se fosse, um
+    # aluno novo comecando com "A" empurraria o numero de todos os outros e invalidaria
+    # senhas ja distribuidas. Quem ja tem senha mantem a sua; aluno novo recebe o proximo
+    # numero livre.
+    usados = {int(v) for v in atual.values() if str(v).isdigit()}
+    proximo = (max(usados) + 1) if usados else 1
+
     novos = 0
     for s in slugs():
         if s not in atual:
-            # 4 digitos aleatorios. Sequencial (0001, 0002...) se adivinha testando,
-            # e custa exatamente o mesmo para o aluno digitar.
-            atual[s] = f"{secrets.randbelow(10000):04d}"
+            while proximo in usados:
+                proximo += 1
+            atual[s] = f"{proximo:04d}"
+            usados.add(proximo)
             novos += 1
 
     with CSV.open("w", encoding="utf-8", newline="") as fh:
