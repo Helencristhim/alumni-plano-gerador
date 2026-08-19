@@ -61,9 +61,13 @@
     for (var j = 0; j < sw.length; j++) {
       var w = sw[j];
       // 1) duas faladas que, GRUDADAS, formam uma palavra do alvo: "green light" -> "greenlight".
-      //    Exige que a primeira sozinha NAO seja palavra do alvo, para nunca desmanchar
-      //    um par que ja casava ("the green light is on" fica como esta).
-      if (j + 1 < sw.length && !inTarget[w] && inTarget[w + sw[j + 1]]) {
+      //    Exige que NENHUMA das duas sozinha seja palavra do alvo:
+      //    - a primeira, para nunca desmanchar um par que ja casava ("the green light is on");
+      //    - a SEGUNDA, porque grudar a consome, e se o alvo precisa dela em pe o aluno
+      //      leva vermelho numa palavra que falou. Foi o que aconteceu com o artigo solto:
+      //      alvo "flavia ferreira a consultant", falado "flavi ferreir a consultan" -> o "a"
+      //      era engolido por "ferreir"+"a" e o "a" do alvo ficava sem par (GATE 30, 19/08/2026).
+      if (j + 1 < sw.length && !inTarget[w] && !inTarget[sw[j + 1]] && inTarget[w + sw[j + 1]]) {
         out.push(w + sw[j + 1]); j++; continue;
       }
       // 2) numero em algarismo onde o alvo tem por extenso ("10" -> "ten"), e o inverso.
