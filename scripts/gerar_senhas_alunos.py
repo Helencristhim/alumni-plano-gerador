@@ -30,14 +30,48 @@ ENVFILE = DEST / "ACESSO_ALUNOS.txt"
 ALUNOS = Path("public/aluno")
 
 
+# Moldes, testes e paginas auxiliares: nao sao aluno, nao recebem codigo.
+NAO_SAO_ALUNO = {
+    "helen-mendes", "helen-mendes-teste", "helen-mendes-v4",   # a aluna modelo
+    "stephanie-vicente", "theo", "bento",                       # moldes adulto/teens/kids
+    "luiz-bressane-backup-a2",                                  # backup de material
+}
+
+
+def eh_redirecionamento(f: Path) -> bool:
+    """Pagina que so manda para outra (ex: daniela-feitoza -> daniela-feitoza-v2).
+
+    Nunca pode pedir codigo: o aluno digitaria uma vez aqui e outra no destino.
+    Sem codigo, o redirect passa direto e a senha e pedida so no material real.
+    """
+    try:
+        t = f.read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        return False
+    if len(t) > 60_000:          # material de verdade; redirect e sempre pequeno
+        return False
+    return ("location.replace" in t or "http-equiv=\"refresh\"" in t
+            or "Redirecting" in t)
+
+
 def slugs() -> list[str]:
-    """Um material por aluno: o hub (sem sufixo -aulaN)."""
+    """Um material por aluno: o hub (sem sufixo -aulaN), fora moldes e redirects."""
     out = set()
     for f in ALUNOS.glob("*.html"):
         nome = f.stem
         if re.search(r"-aula\d+$", nome):
             continue
+        if nome in NAO_SAO_ALUNO:
+            continue
+        if eh_redirecionamento(f):
+            continue
         out.add(nome)
+
+    # Aluno com dois conjuntos de material (X e X-v2, os dois reais): fica so o V2.
+    # Ordem do Dan (19/08/2026): "tira os antigos, deixa so os V2".
+    for nome in list(out):
+        if nome + "-v2" in out:
+            out.discard(nome)
     return sorted(out)
 
 
@@ -65,6 +99,11 @@ def main() -> int:
     # numero livre.
     usados = {int(v) for v in atual.values() if str(v).isdigit()}
     proximo = (max(usados) + 1) if usados else 1
+
+    validos = set(slugs())
+    removidos = [s for s in atual if s not in validos]
+    for s in removidos:
+        del atual[s]
 
     novos = 0
     for s in slugs():
@@ -107,7 +146,9 @@ def main() -> int:
         w.writerows(linhas)
     os.chmod(EQUIPE, 0o600)
 
-    print(f"alunos: {len(atual)}   senhas novas geradas: {novos}")
+    print(f"alunos: {len(atual)}   senhas novas geradas: {novos}   codigos revogados: {len(removidos)}")
+    for s in removidos:
+        print(f"    revogado: {s}")
     print(f"lista p/ equipe: {EQUIPE}")
     if rotacionar:
         print(f"senha rotacionada: {rotacionar} -> {atual.get(rotacionar)}")
