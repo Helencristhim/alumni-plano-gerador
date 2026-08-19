@@ -1,0 +1,1253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rita Rodrigues &middot; Intensive</title>
+<style>
+:root{
+  --dark:#12161c; --dark-2:#1a2029; --light:#f6f4ef; --light-2:#ffffff;
+  --ink:#12161c; --ink-2:#3d4653; --ink-3:#6b7480;
+  --d-ink:#f3f1ec; --d-ink-2:#c3c9d2; --d-ink-3:#98a1ad;
+  --accent:#0f5a6e; --accent-2:#0b4658; --d-accent:#7fd4e8;
+  --line:#d9d5cc; --d-line:#2c333d;
+  --st-cond:#8a6d1f; --st-ext:#3f6a34; --st-opt:#5a4a7a;
+  --mod-esp:#0f5a6e;
+  --radius:12px; --wrap:1180px;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);background:var(--light);color:var(--ink);
+     font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body.tg-guia .no-guia{display:none!important}
+
+/* ---------- topo ---------- */
+.topbar{position:sticky;top:0;z-index:40;background:var(--dark);color:var(--d-ink);
+        border-bottom:1px solid var(--d-line)}
+.topbar-in{max-width:var(--wrap);margin:0 auto;padding:.7rem 1.1rem;
+           display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-size:1.05rem;letter-spacing:.01em}
+.brand span{color:var(--d-accent)}
+.topbar .spacer{flex:1}
+.view-switch{display:flex;gap:.3rem;background:var(--dark-2);padding:.25rem;border-radius:999px;
+             border:1px solid var(--d-line)}
+.view-switch button{font:600 .78rem/1 var(--sans);letter-spacing:.02em;color:var(--d-ink-2);
+     background:transparent;border:0;padding:.5rem .9rem;border-radius:999px;cursor:pointer}
+.view-switch button[aria-pressed="true"]{background:var(--d-accent);color:var(--dark)}
+.view-switch button:focus-visible{outline:3px solid var(--d-accent);outline-offset:2px}
+
+/* ---------- abas ---------- */
+.tabs{max-width:var(--wrap);margin:0 auto;padding:0 1.1rem;display:flex;gap:.2rem;
+      border-bottom:1px solid var(--line);flex-wrap:wrap;background:var(--light)}
+.tabs button{font:600 .86rem/1 var(--sans);color:var(--ink-2);background:transparent;border:0;
+     border-bottom:3px solid transparent;padding:.95rem .95rem;cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tabs button:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.panel{max-width:var(--wrap);margin:0 auto;padding:1.6rem 1.1rem 4rem}
+.panel[hidden]{display:none}
+
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.5rem,3vw,2rem);margin:.2rem 0 .5rem}
+h2.sec{font-family:var(--serif);font-weight:600;font-size:1.22rem;margin:2rem 0 .6rem}
+h3.sub{font-size:.94rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);
+       margin:1.4rem 0 .5rem}
+.lead{color:var(--ink-2);max-width:64ch}
+.card{background:var(--light-2);border:1px solid var(--line);border-radius:var(--radius);
+      padding:1.1rem 1.2rem;margin:.7rem 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.8rem}
+.kv{display:grid;grid-template-columns:minmax(140px,auto) 1fr;gap:.35rem .9rem;font-size:.93rem}
+.kv dt{color:var(--ink-3)} .kv dd{margin:0}
+.pill{display:inline-block;font:600 .72rem/1 var(--sans);letter-spacing:.05em;text-transform:uppercase;
+      padding:.34rem .6rem;border-radius:999px;border:1px solid var(--line);color:var(--ink-2)}
+.pill.mod{color:#fff;background:var(--mod-esp);border-color:var(--mod-esp)}
+.pill.cond{color:#fff;background:var(--st-cond);border-color:var(--st-cond)}
+.pill.ext{color:#fff;background:var(--st-ext);border-color:var(--st-ext)}
+.pill.opt{color:#fff;background:var(--st-opt);border-color:var(--st-opt)}
+
+/* ---------- cartao de aula ---------- */
+.lesson-card{background:var(--light-2);border:1px solid var(--line);border-radius:var(--radius);
+             padding:1.1rem 1.2rem;display:grid;gap:.55rem}
+.lesson-card .top{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.lesson-card h3{font-family:var(--serif);font-weight:600;font-size:1.1rem;margin:0}
+.btn{display:inline-flex;align-items:center;gap:.45rem;font:600 .85rem/1 var(--sans);
+     padding:.7rem 1.1rem;border-radius:9px;cursor:pointer;border:2px solid var(--accent);
+     background:var(--accent);color:#fff}
+.btn:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:rgba(15,90,110,.08)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* ---------- pre-class ---------- */
+.act{background:var(--light-2);border:1px solid var(--line);border-radius:var(--radius);
+     padding:1.1rem 1.2rem;margin:.85rem 0}
+.act-h{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;margin-bottom:.35rem}
+.act-n{font:700 .78rem/1 var(--sans);letter-spacing:.06em;color:var(--accent)}
+.act h3{font-family:var(--serif);font-weight:600;font-size:1.05rem;margin:0}
+.quiz-question{font-size:.92rem;font-weight:600;margin:.7rem 0 .45rem}
+.opts{display:grid;gap:.4rem}
+.quiz-option,.pair-opt{border:1px solid var(--line);border-radius:9px;padding:.6rem .8rem;
+     background:var(--light);cursor:pointer;font-size:.92rem}
+.quiz-option:hover,.pair-opt:hover{border-color:var(--accent)}
+.quiz-option.sel,.pair-opt.sel{border-color:var(--accent);background:rgba(15,90,110,.07)}
+.quiz-option.correct{border-color:#2f6b3a;background:rgba(47,107,58,.10)}
+.quiz-option.wrong{border-color:#8d3030;background:rgba(141,48,48,.09)}
+.quiz-option:focus-visible,.pair-opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.field{width:100%;font:400 .95rem/1.4 var(--sans);padding:.65rem .75rem;border:1px solid var(--line);
+       border-radius:9px;background:var(--light);color:var(--ink)}
+.field:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.ak{margin-top:.7rem;border-top:1px dashed var(--line);padding-top:.7rem;font-size:.9rem;
+    background:rgba(15,90,110,.045);border-radius:0 0 9px 9px}
+.ak[hidden]{display:none}
+.ak h4{margin:.2rem 0 .35rem;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+.ak-btn{font:600 .78rem/1 var(--sans);background:transparent;border:1px solid var(--line);
+        color:var(--ink-2);padding:.45rem .75rem;border-radius:999px;cursor:pointer;margin-top:.6rem}
+.ak-btn:hover{border-color:var(--accent);color:var(--accent)}
+.acoes{margin-top:1.6rem;padding-top:1.1rem;border-top:1px solid var(--line);display:flex;gap:.6rem;flex-wrap:wrap}
+
+/* ---------- deck ---------- */
+.deck{position:fixed;inset:0;z-index:60;background:var(--dark);display:none}
+body.deck-on .deck{display:block}
+body.deck-on{overflow:hidden}
+.stage-bar{position:absolute;top:0;left:0;right:0;display:flex;gap:2px;padding:.55rem .8rem;
+           background:var(--dark);border-bottom:1px solid var(--d-line);z-index:3;flex-wrap:wrap}
+.stage-bar button{flex:1 1 60px;min-width:52px;font:600 .62rem/1.25 var(--sans);letter-spacing:.03em;
+     color:var(--d-ink-3);background:transparent;border:0;border-top:3px solid var(--d-line);
+     padding:.5rem .2rem .35rem;cursor:pointer;text-align:left}
+.stage-bar button.visitado{color:var(--d-ink-2);border-top-color:#4a5560}
+.stage-bar button.atual{color:var(--d-accent);border-top-color:var(--d-accent)}
+.stage-bar button:focus-visible{outline:3px solid var(--d-accent);outline-offset:-2px}
+.slides{position:absolute;top:64px;bottom:62px;left:0;right:0;overflow:hidden}
+.slide{position:absolute;inset:0;overflow-y:auto;padding:2rem 1.4rem;opacity:0;visibility:hidden;
+       transition:opacity .32s ease}
+.slide.on{opacity:1;visibility:visible}
+.slide-inner{max-width:900px;margin:0 auto}
+.slide-dark{background:var(--dark);color:var(--d-ink)}
+.slide-light{background:var(--light);color:var(--ink)}
+.chapter-label{font:700 .72rem/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;
+               color:var(--d-accent);margin:0 0 .8rem}
+.slide-light .chapter-label{color:var(--accent)}
+.slide-heading{font-family:var(--serif);font-weight:600;font-size:clamp(1.5rem,3.4vw,2.2rem);
+               margin:0 0 .9rem;line-height:1.18}
+.slide-lead{font-size:clamp(.95rem,1.25vw,1.05rem);color:var(--d-ink-2);max-width:60ch;margin:0 0 1rem}
+.slide-light .slide-lead{color:var(--ink-2)}
+.slide-question{font-size:clamp(1.05rem,1.5vw,1.25rem);margin:1rem 0 .9rem}
+.chunks{display:grid;gap:.55rem;margin:1rem 0}
+.chunk{background:rgba(255,255,255,.055);border:1px solid var(--d-line);border-left:3px solid var(--d-accent);
+       border-radius:8px;padding:.75rem .95rem}
+.slide-light .chunk{background:rgba(15,90,110,.05);border-color:var(--line);border-left-color:var(--accent)}
+.chunk b{font-weight:600}
+.chunk .gloss{display:block;font-size:.85rem;color:var(--d-ink-3);margin-top:.25rem}
+.slide-light .chunk .gloss{color:var(--ink-3)}
+.map{display:grid;gap:.5rem;margin:1rem 0;counter-reset:mapi}
+.map .step{display:flex;gap:.7rem;align-items:flex-start;background:rgba(255,255,255,.04);
+           border:1px solid var(--d-line);border-radius:8px;padding:.7rem .9rem}
+.slide-light .map .step{background:var(--light-2);border-color:var(--line)}
+.map .step::before{counter-increment:mapi;content:counter(mapi);flex:0 0 auto;width:1.5rem;height:1.5rem;
+   border-radius:50%;background:var(--d-accent);color:var(--dark);font:700 .78rem/1.5rem var(--sans);text-align:center}
+.slide-light .map .step::before{background:var(--accent);color:#fff}
+.qlist{list-style:none;padding:0;margin:1rem 0;display:grid;gap:.5rem}
+.q-item{font-family:var(--serif);font-style:italic;font-size:1.05rem;padding-left:.9rem;
+        border-left:2px solid var(--d-accent)}
+.slide-light .q-item{border-left-color:var(--accent)}
+.bloco{margin:1rem 0;border:1px solid var(--d-line);border-radius:9px;overflow:hidden}
+.slide-light .bloco{border-color:var(--line)}
+.bloco-h{display:flex;align-items:center;gap:.55rem;padding:.6rem .8rem;background:rgba(255,255,255,.045)}
+.slide-light .bloco-h{background:rgba(0,0,0,.03)}
+.bloco-b{padding:.85rem .9rem;font-size:.93rem}
+.bloco-b[hidden]{display:none}
+.bloco-t{font:600 .8rem/1 var(--sans);background:transparent;border:1px solid var(--d-line);
+         color:var(--d-ink-2);padding:.45rem .75rem;border-radius:999px;cursor:pointer}
+.slide-light .bloco-t{border-color:var(--line);color:var(--ink-2)}
+
+.navbar{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;gap:.6rem;
+        padding:.65rem .9rem;background:var(--dark);border-top:1px solid var(--d-line);z-index:3}
+.navbar .spacer{flex:1}
+.nbtn{font:600 .82rem/1 var(--sans);padding:.6rem 1rem;border-radius:8px;cursor:pointer;
+      background:var(--d-accent);color:var(--dark);border:2px solid var(--d-accent)}
+.nbtn.ghost{background:transparent;color:var(--d-ink-2);border-color:var(--d-line)}
+.nbtn:focus-visible{outline:3px solid var(--d-accent);outline-offset:2px}
+.nbtn[disabled]{opacity:.45;cursor:not-allowed}
+.counter{font:600 .8rem/1 var(--sans);color:var(--d-ink-3);min-width:74px;text-align:center}
+
+.teacher-t-panel{position:absolute;right:0;top:64px;bottom:62px;width:min(400px,88vw);
+   background:var(--dark-2);border-left:1px solid var(--d-line);z-index:4;display:none;
+   overflow-y:auto;padding:1rem 1.05rem}
+body.tg-open .teacher-t-panel{display:block}
+.tg-acoes{border-bottom:1px solid var(--d-line);padding-bottom:.8rem;margin-bottom:.8rem}
+.tg-win-dica{font-size:.78rem;color:var(--d-ink-3);margin:.5rem 0 0}
+.tg-win-aviso{font-size:.78rem;color:#f0b7b7;margin:.5rem 0 0}
+.tg-win-aviso[hidden]{display:none}
+#teacherNote{font-size:.88rem;color:var(--d-ink-2)}
+#teacherNote strong{color:var(--d-ink)}
+.val-note{font:600 .68rem/1.3 var(--sans);letter-spacing:.04em;text-transform:uppercase;
+          color:#e6c07a;border:1px dashed #6b5a2f;border-radius:6px;padding:.4rem .6rem;margin:.7rem 0}
+@media (max-width:640px){ .slides{top:96px} .teacher-t-panel{top:96px} }
+</style>
+</head>
+<body>
+<!-- ============================================================
+     ARTEFATO DE VALIDACAO — nao liberavel a aluna.
+     Limitacoes tecnicas declaradas em Teacher View > QA.
+     Fonte unica dos dados: Diretriz_Artefato_Validacao_..._V2 (secao 3).
+     ============================================================ -->
+
+<header class="topbar no-guia">
+  <div class="topbar-in">
+    <div class="brand">Alumni <span>by Better</span> &middot; <span id="brandAluna">Rita Rodrigues</span></div>
+    <div class="spacer"></div>
+    <div class="view-switch" role="group" aria-label="View">
+      <button id="vwAluna" aria-pressed="true" onclick="setView('aluna')">Student View</button>
+      <button id="vwProf" aria-pressed="false" onclick="setView('professor')">Teacher View</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs no-guia" role="tablist" aria-label="Sections">
+  <button role="tab" id="tabPlanning" aria-selected="true"  aria-controls="pnPlanning" onclick="setTab('Planning')">Planning</button>
+  <button role="tab" id="tabPre"      aria-selected="false" aria-controls="pnPre"      onclick="setTab('Pre')">Pre-class</button>
+  <button role="tab" id="tabIn"       aria-selected="false" aria-controls="pnIn"       onclick="setTab('In')">In-class</button>
+  <button role="tab" id="tabPost"     aria-selected="false" aria-controls="pnPost"     onclick="setTab('Post')">Post-class</button>
+  <button role="tab" id="tabProfile"  aria-selected="false" aria-controls="pnProfile"  onclick="setTab('Profile')" data-view="professor">Profile</button>
+  <button role="tab" id="tabQA"       aria-selected="false" aria-controls="pnQA"       onclick="setTab('QA')" data-view="professor">QA</button>
+</nav>
+
+<!-- ================= PLANNING ================= -->
+<section class="panel" id="pnPlanning" role="tabpanel" aria-labelledby="tabPlanning">
+  <h1>Your intensive</h1>
+  <p class="lead">Six lessons before the meeting on 31 August. Each lesson gives you one thing you can
+     say in the room, with your slides and your speaking map next to you.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 class="sub">The meeting</h3>
+      <dl class="kv">
+        <dt>Who</dt><dd>The president of Carestream, visiting from the United States.</dd>
+        <dt>Where</dt><dd>Your head office in S&atilde;o Paulo.</dd>
+        <dt>When</dt><dd>31 August 2026.</dd>
+        <dt>Your part</dt><dd>Open the presentation, present the company or support the CEO,
+            answer expected questions, and keep the conversation going around the meeting.</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <h3 class="sub">How each lesson works</h3>
+      <dl class="kv">
+        <dt>Pre-class</dt><dd>15&ndash;20 minutes on your own. No recording.</dd>
+        <dt>In-class</dt><dd>60 minutes with your teacher. You speak; the screen is the teacher&rsquo;s.</dd>
+        <dt>Post-class</dt><dd>15&ndash;20 minutes to keep what you built.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2 class="sec">The six lessons</h2>
+  <div id="cicloMapa" class="grid2"></div>
+</section>
+
+<!-- ================= PRE-CLASS ================= -->
+<section class="panel" id="pnPre" role="tabpanel" aria-labelledby="tabPre" hidden>
+  <h1>Pre-class &middot; Lesson 1</h1>
+  <p class="lead">About 15&ndash;20 minutes. Six short activities. You do not need to finish them
+     before the lesson &mdash; the lesson works either way.</p>
+
+  <!-- 1 CONTEXTUALIZAR -->
+  <div class="act" data-act="1">
+    <div class="act-h"><span class="act-n">ACTIVITY 1</span><h3>Who is coming</h3></div>
+    <p>On 31 August, the president of Carestream visits your office in S&atilde;o Paulo.
+       You open the presentation.</p>
+    <p class="quiz-question">What does he most need in your first minute?</p>
+    <div class="opts" data-k="pre_a1" data-correct="b">
+      <div class="quiz-option" tabindex="0" role="button" data-v="a">The full history of the company, year by year.</div>
+      <div class="quiz-option" tabindex="0" role="button" data-v="b">Who you are, what the company does, and why he is in the right place.</div>
+      <div class="quiz-option" tabindex="0" role="button" data-v="c">The financial results for 2025.</div>
+    </div>
+    <div class="ak" hidden>
+      <h4>Answer key</h4>
+      <p><b>Answer:</b> b.</p>
+      <p><b>Why:</b> The first minute places the visitor. History and numbers come later, in lessons 2 and 5.</p>
+      <p><b>Also acceptable:</b> a student who chooses b and adds &ldquo;and what my area does&rdquo; is right &mdash;
+         that is exactly the lesson goal.</p>
+      <p><b>Link to in-class:</b> this is Stage 1 (Real-world need and outcome).</p>
+    </div>
+  </div>
+
+  <!-- 2 PREPARAR LEXICO -->
+  <div class="act" data-act="2">
+    <div class="act-h"><span class="act-n">ACTIVITY 2</span><h3>Six words you will use</h3></div>
+    <p>Read each word in its sentence. You will say these words in the lesson.</p>
+    <div class="chunks">
+      <div class="chunk"><b>distribute</b> &mdash; <i>We distribute medical technology in Brazil.</i>
+        <span class="gloss">to bring a product from the maker to hospitals and clinics</span></div>
+      <div class="chunk"><b>medical technology</b> &mdash; <i>We distribute medical technology.</i>
+        <span class="gloss">the equipment hospitals use to diagnose and treat</span></div>
+      <div class="chunk"><b>hospitals and clinics</b> &mdash; <i>Our customers are hospitals and clinics.</i>
+        <span class="gloss">where your products are used</span></div>
+      <div class="chunk"><b>nationwide</b> &mdash; <i>We work nationwide.</i>
+        <span class="gloss">in the whole country</span></div>
+      <div class="chunk"><b>corporate management</b> &mdash; <i>I am the Corporate Management Director.</i>
+        <span class="gloss">your area</span></div>
+      <div class="chunk"><b>business processes</b> &mdash; <i>My area covers business processes.</i>
+        <span class="gloss">how the company organises its work</span></div>
+    </div>
+    <div class="ak" hidden>
+      <h4>Answer key</h4>
+      <p>No answer to check. These six are the productive core of Lesson 1
+         (<i>distribute, medical technology, hospitals and clinics, nationwide, corporate management,
+         business processes</i>).</p>
+      <p><b>Recognition only, do not require production:</b> regulatory support, preventive maintenance,
+         representation.</p>
+    </div>
+  </div>
+
+  <!-- 3 REUTILIZAR LEXICO -->
+  <div class="act" data-act="3">
+    <div class="act-h"><span class="act-n">ACTIVITY 3</span><h3>Put each word in the right place</h3></div>
+    <p class="quiz-question">1. We ________ medical technology to hospitals and clinics.</p>
+    <div class="opts" data-k="pre_a3_1" data-correct="a">
+      <div class="quiz-option" tabindex="0" role="button" data-v="a">distribute</div>
+      <div class="quiz-option" tabindex="0" role="button" data-v="b">produce</div>
+    </div>
+    <p class="quiz-question">2. We have teams in several states. We work ________.</p>
+    <div class="opts" data-k="pre_a3_2" data-correct="b">
+      <div class="quiz-option" tabindex="0" role="button" data-v="a">in one city</div>
+      <div class="quiz-option" tabindex="0" role="button" data-v="b">nationwide</div>
+    </div>
+    <p class="quiz-question">3. IT, HR and quality are part of ________.</p>
+    <div class="opts" data-k="pre_a3_3" data-correct="b">
+      <div class="quiz-option" tabindex="0" role="button" data-v="a">the service team</div>
+      <div class="quiz-option" tabindex="0" role="button" data-v="b">corporate management</div>
+    </div>
+    <div class="ak" hidden>
+      <h4>Answer key</h4>
+      <p><b>1.</b> distribute &mdash; the company brings products from the maker to the customer; it does not produce them.</p>
+      <p><b>2.</b> nationwide.</p>
+      <p><b>3.</b> corporate management &mdash; her own area. The service team is a different area, led by someone else.</p>
+    </div>
+  </div>
+
+  <!-- 4 PROCESSAR INPUT -->
+  <div class="act" data-act="4">
+    <div class="act-h"><span class="act-n">ACTIVITY 4</span><h3>Read and find the answer</h3></div>
+    <p class="card" style="font-size:.95rem">Imagem Healthcare Solutions has worked in the healthcare market
+       for 38 years. The company started in 1988. Today it distributes medical technology to hospitals,
+       clinics and specialised centres in Brazil, represents international brands, and provides installation,
+       training and maintenance. The company has 146 employees.</p>
+    <p class="quiz-question">Which sentence is true?</p>
+    <div class="opts" data-k="pre_a4" data-correct="c">
+      <div class="quiz-option" tabindex="0" role="button" data-v="a">The company produces medical equipment in Brazil.</div>
+      <div class="quiz-option" tabindex="0" role="button" data-v="b">The company started in 1996.</div>
+      <div class="quiz-option" tabindex="0" role="button" data-v="c">The company distributes medical technology and also provides services.</div>
+    </div>
+    <div class="ak" hidden>
+      <h4>Answer key</h4>
+      <p><b>Answer:</b> c.</p>
+      <p><b>Why:</b> a is wrong &mdash; the company distributes and represents, it does not produce.
+         b is wrong &mdash; 1988. Both distractors are facts she will need to say correctly in the room.</p>
+      <p><b>Transcript:</b> not applicable &mdash; this is a reading input, not a listening.</p>
+    </div>
+  </div>
+
+  <!-- 5 NOTAR/ORGANIZAR -->
+  <div class="act" data-act="5">
+    <div class="act-h"><span class="act-n">ACTIVITY 5</span><h3>Put the opening in order</h3></div>
+    <p>Number these four moves from 1 to 4. This is the map you will use in the lesson.</p>
+    <div class="opts" data-k="pre_a5" data-correct="ordem">
+      <div class="pair-opt" tabindex="0" role="button" data-v="1">Say what your area covers.</div>
+      <div class="pair-opt" tabindex="0" role="button" data-v="2">Welcome him to the company.</div>
+      <div class="pair-opt" tabindex="0" role="button" data-v="3">Say what the company does.</div>
+      <div class="pair-opt" tabindex="0" role="button" data-v="4">Say your name and your role.</div>
+    </div>
+    <p style="font-size:.88rem;color:var(--ink-3)">Write the order here:</p>
+    <input class="field" data-k="pre_a5_txt" placeholder="for example: 2, 4, 3, 1">
+    <div class="ak" hidden>
+      <h4>Answer key</h4>
+      <p><b>Answer:</b> 2 &rarr; 4 &rarr; 3 &rarr; 1. Welcome, name and role, what the company does, what your area covers.</p>
+      <p><b>Why:</b> the visitor needs the place before the person, and the person before the detail.</p>
+      <p><b>This is the speaking map of Stage 5 and 6.</b> If she arrives with another order that works, keep hers.</p>
+    </div>
+  </div>
+
+  <!-- 6 APLICAR -->
+  <div class="act" data-act="6">
+    <div class="act-h"><span class="act-n">ACTIVITY 6</span><h3>Write your first two lines</h3></div>
+    <p>Complete with your own words. You will say these lines out loud in the lesson.</p>
+    <p class="quiz-question">Welcome to Imagem Healthcare Solutions. I&rsquo;m ________________.</p>
+    <input class="field" data-k="pre_a6_1" placeholder="your name and your role">
+    <p class="quiz-question">We ________________ to hospitals and clinics ________________.</p>
+    <input class="field" data-k="pre_a6_2" placeholder="what the company does, and where">
+    <div class="ak" hidden>
+      <h4>Answer key</h4>
+      <p><b>Expected:</b> &ldquo;I&rsquo;m Rita Rodrigues, Corporate Management Director.&rdquo; /
+         &ldquo;We distribute medical technology to hospitals and clinics nationwide.&rdquo;</p>
+      <p><b>Acceptable alternatives:</b> &ldquo;I&rsquo;m Rita, and I lead Corporate Management.&rdquo; ·
+         &ldquo;We distribute medical technology across Brazil.&rdquo;</p>
+      <p><b>Do not correct in the pre-class.</b> The lesson diagnoses this out loud in Stage 3.</p>
+    </div>
+  </div>
+
+  <div class="acoes">
+    <button class="btn ghost" data-view="aluna" onclick="resetAluna()">Reset my answers</button>
+    <button class="btn ghost" data-view="professor" onclick="fecharTodasKeys()">Close all answer keys</button>
+  </div>
+</section>
+
+<!-- ================= POST-CLASS ================= -->
+<section class="panel" id="pnPost" role="tabpanel" aria-labelledby="tabPost" hidden>
+  <h1>Post-class &middot; Lesson 1</h1>
+  <p class="lead">About 15&ndash;20 minutes, after the lesson. Keep what you built today.</p>
+
+  <h3 class="sub">Your five lines</h3>
+  <div class="chunks">
+    <div class="chunk"><b>Welcome to Imagem Healthcare Solutions.</b></div>
+    <div class="chunk"><b>I&rsquo;m Rita Rodrigues, Corporate Management Director.</b></div>
+    <div class="chunk"><b>We distribute medical technology to hospitals and clinics nationwide.</b></div>
+    <div class="chunk"><b>My area covers IT, HR, quality, corporate controlling and business processes.</b></div>
+    <div class="chunk"><b>I would need to confirm that detail.</b>
+      <span class="gloss">use this when you do not have the answer &mdash; it keeps the conversation going</span></div>
+  </div>
+
+  <h3 class="sub">Three questions to answer out loud</h3>
+  <ul class="qlist">
+    <li class="q-item">How long has the company been in the market?</li>
+    <li class="q-item">What does your company do?</li>
+    <li class="q-item">Who should I talk to about the service team?</li>
+  </ul>
+
+  <div class="act">
+    <div class="act-h"><span class="act-n">BEFORE LESSON 2</span><h3>One line to bring</h3></div>
+    <p>Lesson 2 is about the company&rsquo;s history and how it is organised today.
+       Write one date or one fact from the company&rsquo;s history that you would like to be able to say.</p>
+    <input class="field" data-k="post_l1_next" placeholder="one date or one fact">
+  </div>
+</section>
+
+<!-- ================= IN-CLASS ================= -->
+<section class="panel" id="pnIn" role="tabpanel" aria-labelledby="tabIn" hidden>
+  <h1>In-class</h1>
+  <p class="lead">Sixty minutes: fifty-five of lesson and five of margin. The screen is the teacher&rsquo;s.</p>
+  <div id="cardsIn"></div>
+</section>
+
+<div class="deck" id="deck" role="dialog" aria-modal="true" aria-label="Lesson deck">
+  <div class="stage-bar" id="stageBar"></div>
+  <div class="slides" id="slidesWrap">
+<div class="slide slide-dark" data-lesson="1" data-slide="1" data-grupo="Opening" data-teacher="<strong>Goal:</strong> To open the lesson and name the day&rsquo;s outcome.<br><br><strong>Run it:</strong> Say the meeting date out loud and move on. Do not warm up with small talk about English.<br><br><strong>Check:</strong> She knows which moment of 31 August this lesson prepares.<br><br><strong>If needed:</strong> Point at the date on the screen and name the visitor.<br><br><strong>Move on when:</strong> She has named the visitor or the date.">
+<div class="slide-inner">
+
+<p class="chapter-label">Lesson 1 &middot; 20 August</p>
+<h2 class="slide-heading">Company overview &amp; your role</h2>
+<p class="slide-lead">The president of Carestream is in the room. You open.</p>
+<p class="val-note">Validation build — contextual image pending (placeholder, not an approved asset)</p>
+
+</div>
+</div>
+<div class="slide slide-dark" data-lesson="1" data-slide="2" data-stage="1" data-teacher="<strong>Goal:</strong> To obtain her own statement of the outcome, in her words.<br><br><strong>Run it:</strong> Ask the question and wait. Take her exact words; you will reuse them in Stage 7.<br><br><strong>Check:</strong> She names a person and a company, not a feeling.<br><br><strong>If needed:</strong> Offer two options: who you are, or what the company sells.<br><br><strong>Move on when:</strong> She has said what he should know.">
+<div class="slide-inner">
+
+<p class="chapter-label">1 &middot; What this lesson is for</p>
+<h2 class="slide-heading">The first minute of the meeting</h2>
+<p class="slide-lead">31 August. Head office, S&atilde;o Paulo. The president of Carestream arrives from the
+   United States. You open the presentation, with your slides and your speaking map in front of you.</p>
+<p class="slide-question">By the end of today, what should he know about you and about the company?</p>
+
+</div>
+</div>
+<div class="slide slide-dark" data-lesson="1" data-slide="3" data-stage="2" data-teacher="<strong>Goal:</strong> To name the risk she will train against, in her own priority.<br><br><strong>Run it:</strong> Read the three. Ask which one worries her most. Do not add a fourth.<br><br><strong>Check:</strong> She chooses one and says why in one sentence.<br><br><strong>If needed:</strong> Ask which one already happened to her in a real meeting.<br><br><strong>Move on when:</strong> She has chosen one.">
+<div class="slide-inner">
+
+<p class="chapter-label">2 &middot; What can go wrong</p>
+<h2 class="slide-heading">Where the first minute breaks</h2>
+<div class="map">
+  <div class="step">He speaks fast, and you lose one word.</div>
+  <div class="step">He asks something outside your area.</div>
+  <div class="step">You know the answer in Portuguese and it does not come in English.</div>
+</div>
+<p class="slide-question">Which one worries you most?</p>
+
+</div>
+</div>
+<div class="slide slide-dark" data-lesson="1" data-slide="4" data-stage="3" data-teacher="<strong>Goal:</strong> To obtain evidence of what she already produces, before any model.<br><br><strong>Run it:</strong> Ask her to open the meeting now. Do not correct, do not help, do not finish her sentences. Note the exact words.<br><br><strong>Check:</strong> You have a real sample: what came out, what stopped, which word blocked her.<br><br><strong>If needed:</strong> If she freezes, say Welcome to and wait. Nothing more.<br><br><strong>Move on when:</strong> She has produced something, however short.">
+<div class="slide-inner">
+
+<p class="chapter-label">3 &middot; Your first version</p>
+<h2 class="slide-heading">Open the meeting now</h2>
+<p class="slide-lead">No preparation, no model. Thirty seconds is enough.</p>
+<p class="slide-question">He just walked in. What do you say?</p>
+
+</div>
+</div>
+<div class="slide slide-light" data-lesson="1" data-slide="5" data-stage="3" data-teacher="<strong>Goal:</strong> To compare her version with a model she can reuse.<br><br><strong>Run it:</strong> Read the four moves out loud, one at a time. Then ask the question. Her answer names the gap.<br><br><strong>Check:</strong> She names one difference, not five.<br><br><strong>If needed:</strong> Ask which of the four moves was missing from hers.<br><br><strong>Move on when:</strong> She has named one difference.">
+<div class="slide-inner">
+
+<p class="chapter-label">3 &middot; One way to do it</p>
+<h2 class="slide-heading">A model, after your version</h2>
+<div class="map">
+  <div class="step">Welcome to Imagem Healthcare Solutions.</div>
+  <div class="step">I&rsquo;m Rita Rodrigues, Corporate Management Director.</div>
+  <div class="step">We distribute medical technology to hospitals and clinics nationwide.</div>
+  <div class="step">My area covers IT, HR, quality, corporate controlling and business processes.</div>
+</div>
+<p class="slide-question">What does the model do that your version did not?</p>
+
+</div>
+</div>
+<div class="slide slide-light" data-lesson="1" data-slide="6" data-stage="4" data-teacher="<strong>Goal:</strong> To fix the five lines she will use in the performance.<br><br><strong>Run it:</strong> Drill line by line. Change one element each time: the visitor, the area, the order. Never the same repetition twice.<br><br><strong>Check:</strong> She says each line without reading it, once.<br><br><strong>If needed:</strong> Cut to the first three lines. Four and five can be consulted.<br><br><strong>Move on when:</strong> She has said all five at least once without reading.">
+<div class="slide-inner">
+
+<p class="chapter-label">4 &middot; What you take with you</p>
+<h2 class="slide-heading">Five lines that carry the opening</h2>
+<div class="chunks">
+  <div class="chunk"><b>Welcome to Imagem Healthcare Solutions.</b></div>
+  <div class="chunk"><b>I&rsquo;m Rita Rodrigues, Corporate Management Director.</b></div>
+  <div class="chunk"><b>We distribute medical technology to hospitals and clinics nationwide.</b></div>
+  <div class="chunk"><b>My area covers IT, HR, quality, corporate controlling and business processes.</b></div>
+  <div class="chunk"><b>I would need to confirm that detail.</b>
+     <span class="gloss">for anything you do not have</span></div>
+</div>
+
+</div>
+</div>
+<div class="slide slide-dark" data-lesson="1" data-slide="7" data-stage="4" data-teacher="<strong>Goal:</strong> To give her a way out that is not silence.<br><br><strong>Run it:</strong> Say a fast question she cannot answer and let her choose a repair line. Do it three times, changing the question.<br><br><strong>Check:</strong> She uses a repair line instead of stopping.<br><br><strong>If needed:</strong> Give her the third line only &mdash; passing the question on is the easiest to produce.<br><br><strong>Move on when:</strong> She has used a repair line at least twice without help.<br><br><strong>Optional:</strong> Ask which one she would use with the CEO in the room.">
+<div class="slide-inner">
+
+<p class="chapter-label">4 &middot; When a word does not come</p>
+<h2 class="slide-heading">Three ways to keep going</h2>
+<div class="map">
+  <div class="step">Sorry, could you say that again?</div>
+  <div class="step">Let me check that for you.</div>
+  <div class="step">Thomaz can give you more detail on that.</div>
+</div>
+<p class="slide-question">Which one do you use when the question is not about your area?</p>
+<div class="bloco">
+  <div class="bloco-h"><span class="pill ext">Extension</span>
+    <button class="bloco-t" onclick="abrirBloco(this)">Show</button></div>
+  <div class="bloco-b" hidden>
+    <p>Two more, if there is time: <b>I don&rsquo;t have that number with me.</b> ·
+       <b>Could you repeat the last part?</b></p>
+  </div>
+</div>
+
+</div>
+</div>
+<div class="slide slide-light" data-lesson="1" data-slide="8" data-stage="5" data-teacher="<strong>Goal:</strong> To make the opening portable, not memorised for one person.<br><br><strong>Run it:</strong> Three rounds, one per visitor. She keeps the four moves and changes only what the visitor needs.<br><br><strong>Check:</strong> The four moves survive all three rounds.<br><br><strong>If needed:</strong> Drop to two visitors and keep the third for the performance.<br><br><strong>Move on when:</strong> She has opened for at least two visitors without losing a move.">
+<div class="slide-inner">
+
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">Same opening, different visitor</h2>
+<div class="map">
+  <div class="step">A supplier from Germany, visiting for the first time.</div>
+  <div class="step">A hospital director, here for one hour.</div>
+  <div class="step">The president of Carestream, on 31 August.</div>
+</div>
+<p class="slide-question">Say your opening for each one. What changes, and what stays?</p>
+
+</div>
+</div>
+<div class="slide slide-light" data-lesson="1" data-slide="9" data-stage="5" data-teacher="<strong>Goal:</strong> To run the full opening once, with support, before the performance.<br><br><strong>Run it:</strong> One full run. Interrupt only if she stops for more than five seconds, and then only with the next move.<br><br><strong>Check:</strong> She goes from Welcome to her area without stopping.<br><br><strong>If needed:</strong> Let her read the map. Consulting is not failure in this case.<br><br><strong>Move on when:</strong> She has completed one full run.">
+<div class="slide-inner">
+
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">Now the whole thing, with your map</h2>
+<div class="map">
+  <div class="step">Welcome</div>
+  <div class="step">Name and role</div>
+  <div class="step">What the company does</div>
+  <div class="step">What your area covers</div>
+</div>
+<p class="slide-lead">Your slides and this map stay in front of you &mdash; in the meeting too.</p>
+
+</div>
+</div>
+<div class="slide slide-dark" data-lesson="1" data-slide="10" data-stage="6" data-teacher="<strong>Goal:</strong> To obtain the main production of the lesson, uninterrupted.<br><br><strong>Run it:</strong> Say Begin and stay quiet until she finishes. Write down what worked and one point to improve. Do not correct now.<br><br><strong>Check:</strong> She produced the opening from Welcome to her area.<br><br><strong>If needed:</strong> Nothing during. Everything goes to Stage 7.<br><br><strong>Move on when:</strong> She has finished and stopped speaking.">
+<div class="slide-inner">
+
+<p class="chapter-label">6 &middot; The real thing</p>
+<h2 class="slide-heading">Open the meeting, from the top</h2>
+<p class="slide-lead">Your slides and your map are with you. About one minute. No interruption.</p>
+<p class="slide-question">He has just sat down. Begin.</p>
+
+</div>
+</div>
+<div class="slide slide-light" data-lesson="1" data-slide="11" data-stage="7" data-stage-tambem="8" data-teacher="<strong>Goal:</strong> To give one point of feedback from what she actually said, and retask only that part.<br><br><strong>Run it:</strong> Name what worked, using her words. Then one point. Write first version and clearer version. Ask for the corrected part only, 20 to 40 seconds.<br><br><strong>Check:</strong> The retask is shorter than the performance and contains the correction.<br><br><strong>If needed:</strong> Shorten the retask to a single sentence.<br><br><strong>Move on when:</strong> She has said the corrected part once, cleanly.<br><br><strong>Optional:</strong> Ask where in the 31 August meeting this exact part appears.">
+<div class="slide-inner">
+
+<p class="chapter-label">7 &middot; What you just did</p>
+<h2 class="slide-heading">One thing that worked, one thing to sharpen</h2>
+<div class="map">
+  <div class="step"><b>What worked well:</b> <span class="gloss">from her real production</span></div>
+  <div class="step"><b>One point to improve:</b> <span class="gloss">one only, the one with most impact</span></div>
+  <div class="step"><b>First version</b> &rarr; <b>Clearer version</b></div>
+</div>
+<p class="slide-question">Say only that part again &mdash; twenty seconds.</p>
+
+</div>
+</div>
+<div class="slide slide-dark" data-lesson="1" data-slide="12" data-closing="true" data-grupo="Closing" data-teacher="<strong>Goal:</strong> To close on what she built and point at the next lesson by what she will do in it.<br><br><strong>Run it:</strong> Read the three lines. Do not say tomorrow &mdash; the next lesson is on 24 August.<br><br><strong>Check:</strong> She can say what she leaves with.<br><br><strong>If needed:</strong> Ask her to say the opening once more, from memory, as the closing act.<br><br><strong>Move on when:</strong> She has named one thing she can now do.">
+<div class="slide-inner">
+
+<p class="chapter-label">Lesson close</p>
+<h2 class="slide-heading">Review what you worked on today</h2>
+<div class="map">
+  <div class="step">You opened the meeting with four moves and your own words.</div>
+  <div class="step">You have a line for when a word does not come.</div>
+  <div class="step">In the next lesson you tell the company&rsquo;s history in four dates, and say how it is organised today.</div>
+</div>
+
+</div>
+</div>
+<div class="slide slide-dark" data-lesson="2" data-slide="1" data-grupo="Opening" data-teacher="<strong>Goal:</strong> To connect to lesson 1 and name today&rsquo;s outcome.<br><br><strong>Run it:</strong> Ask her to say her opening once, from lesson 1. Do not correct it &mdash; it is the warm start, not the task.<br><br><strong>Check:</strong> She produced the opening without the map.<br><br><strong>If needed:</strong> Give her the first two words and let her continue.<br><br><strong>Move on when:</strong> She has said the opening once.">
+<div class="slide-inner">
+<p class="chapter-label">Lesson 2 &middot; 24 August</p>
+<h2 class="slide-heading">Where the company comes from</h2>
+<p class="slide-lead">Last lesson you opened the meeting. Today you say where the company has been
+   and how it is organised now.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="2" data-slide="2" data-stage="1" data-teacher="<strong>Goal:</strong> To obtain her own selection before she sees the deck list.<br><br><strong>Run it:</strong> Ask the question and wait. Write down the four she picks; you will compare with the four of Stage 4.<br><br><strong>Check:</strong> She named four, not thirteen.<br><br><strong>If needed:</strong> Ask which one she would say first if she had only one.<br><br><strong>Move on when:</strong> She has named at least two moments.">
+<div class="slide-inner">
+<p class="chapter-label">1 &middot; What this lesson is for</p>
+<h2 class="slide-heading">&ldquo;So, how did the company start?&rdquo;</h2>
+<p class="slide-lead">He will ask. Not for thirteen dates &mdash; for a story he can follow in
+   thirty seconds, and for where you sit in the company today.</p>
+<p class="slide-question">If you had to choose four moments from 38 years, which ones matter to him?</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="2" data-slide="3" data-stage="2" data-teacher="<strong>Goal:</strong> To name the risk of this specific content: length and scope.<br><br><strong>Run it:</strong> Read the three. Ask which one is most likely with this visitor.<br><br><strong>Check:</strong> She sees that the risk here is saying too much, not too little.<br><br><strong>If needed:</strong> Say the first one out loud as a bad example, in ten seconds of dates.<br><br><strong>Move on when:</strong> She has chosen one.">
+<div class="slide-inner">
+<p class="chapter-label">2 &middot; What can go wrong</p>
+<h2 class="slide-heading">The trap in a company history</h2><div class="map"><div class="step">You start in 1988 and try to reach 2026 date by date.</div><div class="step">He asks about a partner you do not handle.</div><div class="step">He asks how many people work in an area that is not yours.</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="2" data-slide="4" data-stage="3" data-teacher="<strong>Goal:</strong> To obtain evidence before the model: what she selects and how she links.<br><br><strong>Run it:</strong> Ask and stay quiet. Note which dates came, and whether she linked them or listed them.<br><br><strong>Check:</strong> You have a real sample of her selection and her linking.<br><br><strong>If needed:</strong> If she freezes, say In 1988 and wait.<br><br><strong>Move on when:</strong> She has produced something, however short.">
+<div class="slide-inner">
+<p class="chapter-label">3 &middot; Your first version</p>
+<h2 class="slide-heading">Tell him the history now</h2>
+<p class="slide-lead">No list, no notes. Thirty seconds.</p>
+<p class="slide-question">&ldquo;How did Imagem Healthcare start?&rdquo;</p></div>
+</div>
+<div class="slide slide-light" data-lesson="2" data-slide="5" data-stage="3" data-teacher="<strong>Goal:</strong> To show a selection that has a logic: film, representation, portfolio, expansion.<br><br><strong>Run it:</strong> Read the four. Then ask the question. The answer you want is that each one is a step up, not just a date.<br><br><strong>Check:</strong> She names the logic, not the dates.<br><br><strong>If needed:</strong> Ask what changed between 1988 and 2026 in one word.<br><br><strong>Move on when:</strong> She has named what links them.">
+<div class="slide-inner">
+<p class="chapter-label">3 &middot; Four moments, not thirteen</p>
+<h2 class="slide-heading">One way to tell it</h2><div class="map"><div class="step">We started in 1988, distributing Kodak film.</div><div class="step">In 1996 we became a sales representative for GE Diagnostic Imaging.</div><div class="step">From 2016 we added Medtronic, and then Siemens, Guerbet and Dr&auml;ger.</div><div class="step">In 2026 we expanded with Danaher and Leica, and started Carestream XR operations.</div></div>
+<p class="slide-question">What do these four have in common?</p></div>
+</div>
+<div class="slide slide-light" data-lesson="2" data-slide="6" data-stage="4" data-teacher="<strong>Goal:</strong> To fix five lines she can say without reading.<br><br><strong>Run it:</strong> Drill each line changing one element: the year, the partner, the verb. Never the same repetition twice.<br><br><strong>Check:</strong> She says each line once without reading.<br><br><strong>If needed:</strong> Cut to three lines: 1988, 1996 and 2026.<br><br><strong>Move on when:</strong> She has said all five at least once.">
+<div class="slide-inner">
+<p class="chapter-label">4 &middot; What you take with you</p>
+<h2 class="slide-heading">Lines for the history</h2><div class="chunks"><div class="chunk"><b>We started in 1988.</b></div><div class="chunk"><b>We became a sales representative for GE Diagnostic Imaging in 1996.</b><span class="gloss">representative = we sell for them, we do not make it</span></div><div class="chunk"><b>From 2016 we added Medtronic, Siemens, Guerbet and Dr&auml;ger.</b></div><div class="chunk"><b>In 2025 we strengthened our governance, with external audit and a board.</b><span class="gloss">her own area &mdash; she can say this one with authority</span></div><div class="chunk"><b>This year we expanded with Danaher and Leica.</b></div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="2" data-slide="7" data-stage="4" data-teacher="<strong>Goal:</strong> To separate what she owns from what she forwards.<br><br><strong>Run it:</strong> Ask the question. The right answer is the third line, not a number she is not sure of.<br><br><strong>Check:</strong> She forwards instead of guessing a number.<br><br><strong>If needed:</strong> Say the third line for her and ask her to repeat it.<br><br><strong>Move on when:</strong> She has forwarded once, cleanly.<br><br><strong>Optional:</strong> The deck says 146 employees in total &mdash; she may use it if it comes naturally.">
+<div class="slide-inner">
+<p class="chapter-label">4 &middot; Where you sit</p>
+<h2 class="slide-heading">Your area, in one sentence</h2><div class="chunks"><div class="chunk"><b>I lead Corporate Management: IT, HR, quality, corporate controlling and business processes.</b></div><div class="chunk"><b>We are a team of nine.</b><span class="gloss">her area &mdash; a number she owns</span></div><div class="chunk"><b>Service is a different area, with its own director.</b><span class="gloss">the encaminhamento line for this lesson</span></div></div>
+<p class="slide-question">He asks how many people work in service. What do you say?</p></div>
+</div>
+<div class="slide slide-light" data-lesson="2" data-slide="8" data-stage="5" data-teacher="<strong>Goal:</strong> To make the history compressible &mdash; the real risk is length.<br><br><strong>Run it:</strong> Three rounds, shorter each time. The one-sentence version is the one she will actually use.<br><br><strong>Check:</strong> The one-sentence version still has a beginning and a today.<br><br><strong>If needed:</strong> Skip the one-minute round and start at thirty seconds.<br><br><strong>Move on when:</strong> She has produced the one-sentence version.">
+<div class="slide-inner">
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">Same history, less time</h2><div class="map"><div class="step">You have one minute.</div><div class="step">You have thirty seconds.</div><div class="step">You have one sentence.</div></div></div>
+</div>
+<div class="slide slide-light" data-lesson="2" data-slide="9" data-stage="5" data-teacher="<strong>Goal:</strong> To join the two halves of the lesson in one run, with support.<br><br><strong>Run it:</strong> One full run. Interrupt only if she stops for more than five seconds.<br><br><strong>Check:</strong> She moves from history to her area without a gap.<br><br><strong>If needed:</strong> Let her read the map. Consulting is not failure here.<br><br><strong>Move on when:</strong> She has completed one run.">
+<div class="slide-inner">
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">History, then your area, with the map</h2><div class="map"><div class="step">Four moments</div><div class="step">Where you sit</div><div class="step">What you forward</div></div>
+<p class="slide-lead">Your slides and this map stay with you.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="2" data-slide="10" data-stage="6" data-teacher="<strong>Goal:</strong> To obtain the main production: history plus her role, in one turn.<br><br><strong>Run it:</strong> Ask the question as the visitor would and stay quiet until she finishes. Note one point to improve.<br><br><strong>Check:</strong> She covered history and her area without stopping.<br><br><strong>If needed:</strong> Nothing during. Everything goes to Stage 7.<br><br><strong>Move on when:</strong> She has finished and stopped speaking.">
+<div class="slide-inner">
+<p class="chapter-label">6 &middot; The real thing</p>
+<h2 class="slide-heading">He asks about the company. Answer.</h2>
+<p class="slide-lead">About one minute. Slides and map with you. No interruption.</p>
+<p class="slide-question">&ldquo;I&rsquo;d like to understand the company a little better. Where did it start,
+   and what do you do here?&rdquo;</p></div>
+</div>
+<div class="slide slide-light" data-lesson="2" data-slide="11" data-stage="7" data-stage-tambem="8" data-teacher="<strong>Goal:</strong> To give one point from what she said, and retask only that part.<br><br><strong>Run it:</strong> Name what worked in her words. One point. Write first and clearer version. Retask 20 to 40 seconds.<br><br><strong>Check:</strong> The retask is shorter than the performance and contains the correction.<br><br><strong>If needed:</strong> Shorten to a single sentence.<br><br><strong>Move on when:</strong> She has said the corrected part once.<br><br><strong>Optional:</strong> Ask where in the 31 August meeting this part appears.">
+<div class="slide-inner">
+<p class="chapter-label">7 &middot; What you just did</p>
+<h2 class="slide-heading">One thing that worked, one to sharpen</h2><div class="map"><div class="step"><b>What worked well:</b> <span class='gloss'>from her real production</span></div><div class="step"><b>One point to improve:</b> <span class='gloss'>one only</span></div><div class="step"><b>First version</b> &rarr; <b>Clearer version</b></div></div>
+<p class="slide-question">Say only that part again &mdash; twenty seconds.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="2" data-slide="12" data-closing="true" data-grupo="Closing" data-teacher="<strong>Goal:</strong> To close on what she built and point at lesson 3 by what she will do.<br><br><strong>Run it:</strong> Read the three lines. The next lesson is on 25 August &mdash; do not say tomorrow unless it is.<br><br><strong>Check:</strong> She can say what she leaves with.<br><br><strong>If needed:</strong> Ask for the one-sentence history once more, as the closing act.<br><br><strong>Move on when:</strong> She has named one thing she can now do.">
+<div class="slide-inner">
+<p class="chapter-label">Lesson close</p>
+<h2 class="slide-heading">Review what you worked on today</h2><div class="map"><div class="step">You told 38 years in four moments.</div><div class="step">You said where you sit, and what you forward.</div><div class="step">In the next lesson you present the portfolio: what the company sells, and for which partners.</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="3" data-slide="1" data-grupo="Opening" data-teacher="<strong>Goal:</strong> To connect to lesson 2 and set today&rsquo;s limit: one example per category.<br><br><strong>Run it:</strong> Ask for the one-sentence history from lesson 2. Then say today is four categories, one example each.<br><br><strong>Check:</strong> She produced the one-sentence history.<br><br><strong>If needed:</strong> Give her the first three words.<br><br><strong>Move on when:</strong> She has said the history once.">
+<div class="slide-inner">
+<p class="chapter-label">Lesson 3 &middot; 25 August</p>
+<h2 class="slide-heading">What the company sells</h2>
+<p class="slide-lead">The company is placed. Now the portfolio &mdash; four categories, and one example
+   each. Not a catalogue.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="3" data-slide="2" data-stage="1" data-teacher="<strong>Goal:</strong> To obtain her reading of the visitor&rsquo;s interest.<br><br><strong>Run it:</strong> Ask and wait. Diagnostic imaging is the expected answer &mdash; Carestream is imaging.<br><br><strong>Check:</strong> She connects the visitor to a category.<br><br><strong>If needed:</strong> Ask what Carestream sells.<br><br><strong>Move on when:</strong> She has named a category.">
+<div class="slide-inner">
+<p class="chapter-label">1 &middot; What this lesson is for</p>
+<h2 class="slide-heading">&ldquo;So what exactly do you distribute?&rdquo;</h2>
+<p class="slide-lead">He is from Carestream. He knows imaging. He wants to know where his products
+   sit in what you carry.</p>
+<p class="slide-question">Which category is the one he cares about most?</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="3" data-slide="3" data-stage="2" data-teacher="<strong>Goal:</strong> To name the risk: the catalogue, and the number she must not improvise.<br><br><strong>Run it:</strong> Read the three. The third is the one to mark: partner share is lesson 5 content, not today&rsquo;s.<br><br><strong>Check:</strong> She knows to forward the share question today.<br><br><strong>If needed:</strong> Say the third risk again and give her the forwarding line.<br><br><strong>Move on when:</strong> She has chosen one.">
+<div class="slide-inner">
+<p class="chapter-label">2 &middot; What can go wrong</p>
+<h2 class="slide-heading">The trap in a portfolio</h2><div class="map"><div class="step">You list every product and he loses the shape.</div><div class="step">He asks about a product you do not know in English.</div><div class="step">He asks which partner is biggest &mdash; and that is a number for another day.</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="3" data-slide="4" data-stage="3" data-teacher="<strong>Goal:</strong> To obtain evidence of how she groups products.<br><br><strong>Run it:</strong> Ask and stay quiet. Note whether she grouped or listed.<br><br><strong>Check:</strong> You have a sample of her grouping.<br><br><strong>If needed:</strong> If she freezes, say We work with four areas and wait.<br><br><strong>Move on when:</strong> She has produced something.">
+<div class="slide-inner">
+<p class="chapter-label">3 &middot; Your first version</p>
+<h2 class="slide-heading">Tell him what you sell</h2>
+<p class="slide-lead">No list. Thirty seconds.</p>
+<p class="slide-question">&ldquo;What does your portfolio look like?&rdquo;</p></div>
+</div>
+<div class="slide slide-light" data-lesson="3" data-slide="5" data-stage="3" data-teacher="<strong>Goal:</strong> To model the shape: category, then one example, then stop.<br><br><strong>Run it:</strong> Read the four. Ask the question. The answer you want: one example is enough to place it.<br><br><strong>Check:</strong> She sees that the example serves the category, not the other way round.<br><br><strong>If needed:</strong> Ask which example she would use for imaging with this visitor.<br><br><strong>Move on when:</strong> She has answered the question.">
+<div class="slide-inner">
+<p class="chapter-label">3 &middot; Four categories, one example each</p>
+<h2 class="slide-heading">One way to say it</h2><div class="map"><div class="step">Diagnostic imaging &mdash; for example, X-ray and ultrasound.</div><div class="step">Advanced surgical technology &mdash; for example, surgical staplers.</div><div class="step">Hospital care &mdash; for example, monitoring and anaesthesia.</div><div class="step">Cardiology and cardiac rhythm &mdash; for example, pacemakers.</div></div>
+<p class="slide-question">Why is one example better than five?</p></div>
+</div>
+<div class="slide slide-light" data-lesson="3" data-slide="6" data-stage="4" data-teacher="<strong>Goal:</strong> To fix five lines, including the one that protects her from a number.<br><br><strong>Run it:</strong> Drill changing the category each time. Then ask a share question and require the fifth line.<br><br><strong>Check:</strong> She uses the fifth line instead of guessing.<br><br><strong>If needed:</strong> Cut to three lines and keep the fifth.<br><br><strong>Move on when:</strong> She has said all five at least once.">
+<div class="slide-inner">
+<p class="chapter-label">4 &middot; What you take with you</p>
+<h2 class="slide-heading">Lines for the portfolio</h2><div class="chunks"><div class="chunk"><b>We work with four main areas.</b></div><div class="chunk"><b>Our largest area is diagnostic imaging.</b><span class="gloss">true by category, not a share number</span></div><div class="chunk"><b>For example, X-ray, ultrasound and bone densitometry.</b></div><div class="chunk"><b>We also represent international brands.</b></div><div class="chunk"><b>I would need to confirm that detail.</b><span class="gloss">for any number you do not have today</span></div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="3" data-slide="7" data-stage="4" data-teacher="<strong>Goal:</strong> To let her name partners without entering share numbers.<br><br><strong>Run it:</strong> Ask the question. Then ask a share question and require the forwarding line.<br><br><strong>Check:</strong> She names partners and forwards the share.<br><br><strong>If needed:</strong> Give her the second line and let her build from it.<br><br><strong>Move on when:</strong> She has said the Carestream line once, correctly.">
+<div class="slide-inner">
+<p class="chapter-label">4 &middot; The partners</p>
+<h2 class="slide-heading">Naming who you work with</h2><div class="chunks"><div class="chunk"><b>We represent Medtronic, Carestream, GE, Guerbet and others.</b></div><div class="chunk"><b>This year we started Carestream XR operations.</b><span class="gloss">the visitor&rsquo;s own company &mdash; say it right</span></div><div class="chunk"><b>We also expanded with Danaher and Leica.</b><span class="gloss">2026, from the deck</span></div></div>
+<p class="slide-question">He is from Carestream. Which line do you say first?</p><div class="bloco"><div class="bloco-h"><span class="pill cond">Conditional</span><button class="bloco-t" onclick="abrirBloco(this)">Show</button></div><div class="bloco-b" hidden><p>If he asks how big each partner is, that is a share number. Today the answer is: <b>I would need to confirm that detail.</b> The numbers come in lesson 5.</p></div></div></div>
+</div>
+<div class="slide slide-light" data-lesson="3" data-slide="8" data-stage="5" data-teacher="<strong>Goal:</strong> To make the portfolio portable across listeners.<br><br><strong>Run it:</strong> Three rounds. The category shape survives; only the example changes.<br><br><strong>Check:</strong> The four categories survive all three rounds.<br><br><strong>If needed:</strong> Drop to two listeners.<br><br><strong>Move on when:</strong> She has presented for at least two listeners.">
+<div class="slide-inner">
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">Same portfolio, three listeners</h2><div class="map"><div class="step">A hospital buyer who knows the products.</div><div class="step">A visitor who has never seen your catalogue.</div><div class="step">The president of Carestream, on 31 August.</div></div></div>
+</div>
+<div class="slide slide-light" data-lesson="3" data-slide="9" data-stage="5" data-teacher="<strong>Goal:</strong> To run the whole lesson content once, with support.<br><br><strong>Run it:</strong> One full run. Interrupt only after five seconds of silence.<br><br><strong>Check:</strong> She goes from categories to partners without a gap.<br><br><strong>If needed:</strong> Let her read the map.<br><br><strong>Move on when:</strong> She has completed one run.">
+<div class="slide-inner">
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">Portfolio and partners, with the map</h2><div class="map"><div class="step">Four categories</div><div class="step">One example each</div><div class="step">Partners</div><div class="step">What you forward</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="3" data-slide="10" data-stage="6" data-teacher="<strong>Goal:</strong> To obtain the main production: four categories with one example each, plus partners.<br><br><strong>Run it:</strong> Ask and stay quiet until she finishes. Note one point.<br><br><strong>Check:</strong> She covered the categories without turning it into a catalogue.<br><br><strong>If needed:</strong> Nothing during.<br><br><strong>Move on when:</strong> She has finished.">
+<div class="slide-inner">
+<p class="chapter-label">6 &middot; The real thing</p>
+<h2 class="slide-heading">Present the portfolio</h2>
+<p class="slide-lead">About one minute. Slides and map with you. No interruption.</p>
+<p class="slide-question">&ldquo;Walk me through what you carry.&rdquo;</p></div>
+</div>
+<div class="slide slide-light" data-lesson="3" data-slide="11" data-stage="7" data-stage-tambem="8" data-teacher="<strong>Goal:</strong> To give one point and retask only that part.<br><br><strong>Run it:</strong> Name what worked. One point. First and clearer version. Retask 20 to 40 seconds.<br><br><strong>Check:</strong> The retask contains the correction.<br><br><strong>If needed:</strong> Shorten to one sentence.<br><br><strong>Move on when:</strong> She has said the corrected part once.">
+<div class="slide-inner">
+<p class="chapter-label">7 &middot; What you just did</p>
+<h2 class="slide-heading">One thing that worked, one to sharpen</h2><div class="map"><div class="step"><b>What worked well:</b></div><div class="step"><b>One point to improve:</b></div><div class="step"><b>First version</b> &rarr; <b>Clearer version</b></div></div>
+<p class="slide-question">Say only that part again &mdash; twenty seconds.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="3" data-slide="12" data-closing="true" data-grupo="Closing" data-teacher="<strong>Goal:</strong> To close and point at lesson 4 by what she will do.<br><br><strong>Run it:</strong> Read the three lines. The next lesson is 26 August.<br><br><strong>Check:</strong> She can say what she leaves with.<br><br><strong>If needed:</strong> Ask for the four categories once more.<br><br><strong>Move on when:</strong> She has named one thing she can now do.">
+<div class="slide-inner">
+<p class="chapter-label">Lesson close</p>
+<h2 class="slide-heading">Review what you worked on today</h2><div class="map"><div class="step">You said what the company sells in four categories, with one example each.</div><div class="step">You named the partners, including his.</div><div class="step">In the next lesson you say where the company operates, and what the service team can do.</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="4" data-slide="1" data-grupo="Opening" data-teacher="<strong>Goal:</strong> To connect to lesson 3 and frame the two halves as ONE answer.<br><br><strong>Run it:</strong> Ask for the four categories from lesson 3. Then say today is where and who keeps it working.<br><br><strong>Check:</strong> She produced the categories.<br><br><strong>If needed:</strong> Give her the first category.<br><br><strong>Move on when:</strong> She has said the categories once.">
+<div class="slide-inner">
+<p class="chapter-label">Lesson 4 &middot; 26 August</p>
+<h2 class="slide-heading">Where you are, and what you can do there</h2>
+<p class="slide-lead">Coverage and service answer the same question: if he buys, who is near him,
+   and who keeps it running.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="4" data-slide="2" data-stage="1" data-teacher="<strong>Goal:</strong> To reframe coverage as a promise of support, not geography.<br><br><strong>Run it:</strong> Ask the question from the buyer&rsquo;s side. The answer you want names people, not cities.<br><br><strong>Check:</strong> She answers with capability, not with a list of states.<br><br><strong>If needed:</strong> Ask what she would want if she bought equipment for her own hospital.<br><br><strong>Move on when:</strong> She has answered from the buyer&rsquo;s side.">
+<div class="slide-inner">
+<p class="chapter-label">1 &middot; What this lesson is for</p>
+<h2 class="slide-heading">&ldquo;And if something breaks?&rdquo;</h2>
+<p class="slide-lead">This is the question behind coverage. He is not asking for a map &mdash;
+   he is asking whether you can support what you sell.</p>
+<p class="slide-question">What would you want to hear, if you were buying?</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="4" data-slide="3" data-stage="2" data-teacher="<strong>Goal:</strong> To name the specific risk: two blocks glued together instead of one answer.<br><br><strong>Run it:</strong> Read the three. The first is the one that matters today.<br><br><strong>Check:</strong> She sees that coverage plus service is one answer.<br><br><strong>If needed:</strong> Say the bad version out loud in ten seconds: a list, then a list.<br><br><strong>Move on when:</strong> She has chosen one.">
+<div class="slide-inner">
+<p class="chapter-label">2 &middot; What can go wrong</p>
+<h2 class="slide-heading">Two halves that do not connect</h2><div class="map"><div class="step">You list the states, then list the service team, and he does not see the link.</div><div class="step">He asks about response time &mdash; a number you do not have today.</div><div class="step">He asks about a state you do not cover.</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="4" data-slide="4" data-stage="3" data-teacher="<strong>Goal:</strong> To obtain evidence of whether she links the two halves on her own.<br><br><strong>Run it:</strong> Ask the double question and stay quiet. Note if she answered both parts.<br><br><strong>Check:</strong> You know whether she connects coverage to support.<br><br><strong>If needed:</strong> If she freezes, say Our head office is in S&atilde;o Paulo and wait.<br><br><strong>Move on when:</strong> She has produced something.">
+<div class="slide-inner">
+<p class="chapter-label">3 &middot; Your first version</p>
+<h2 class="slide-heading">Tell him where you operate</h2>
+<p class="slide-lead">Thirty seconds. No map.</p>
+<p class="slide-question">&ldquo;Where do you operate, and who supports the equipment?&rdquo;</p></div>
+</div>
+<div class="slide slide-light" data-lesson="4" data-slide="5" data-stage="3" data-teacher="<strong>Goal:</strong> To show that the last line is what makes the first three matter.<br><br><strong>Run it:</strong> Read the four. Ask the question. The answer is the fourth.<br><br><strong>Check:</strong> She identifies the service line as the point.<br><br><strong>If needed:</strong> Read the first three alone and ask what is missing.<br><br><strong>Move on when:</strong> She has identified the fourth.">
+<div class="slide-inner">
+<p class="chapter-label">3 &middot; One answer, two halves</p>
+<h2 class="slide-heading">One way to say it</h2><div class="map"><div class="step">Our head office and distribution centre are in S&atilde;o Paulo.</div><div class="step">We also have a branch in Mato Grosso do Sul, and teams in Rio, Esp&iacute;rito Santo and Mato Grosso.</div><div class="step">We have a logistics branch in Santa Catarina for imports.</div><div class="step">And we have our own service team &mdash; technicians, coordinators and applications specialists.</div></div>
+<p class="slide-question">Which sentence turns the list into an answer?</p></div>
+</div>
+<div class="slide slide-light" data-lesson="4" data-slide="6" data-stage="4" data-teacher="<strong>Goal:</strong> To fix five lines that answer where and who together.<br><br><strong>Run it:</strong> Drill changing the region each time. Require the third line in every round.<br><br><strong>Check:</strong> The service line appears in every version she produces.<br><br><strong>If needed:</strong> Cut to three lines, keeping the third.<br><br><strong>Move on when:</strong> She has said all five at least once.">
+<div class="slide-inner">
+<p class="chapter-label">4 &middot; What you take with you</p>
+<h2 class="slide-heading">Lines for coverage and service</h2><div class="chunks"><div class="chunk"><b>Our head office and distribution centre are in S&atilde;o Paulo.</b></div><div class="chunk"><b>We have teams in several states, and a logistics branch in Santa Catarina.</b></div><div class="chunk"><b>We have our own service team.</b><span class="gloss">own = not outsourced. This is the operational benefit</span></div><div class="chunk"><b>The team includes technicians, coordinators and applications specialists.</b></div><div class="chunk"><b>We provide installation, training and preventive maintenance.</b><span class="gloss">the three services from the site</span></div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="4" data-slide="7" data-stage="4" data-teacher="<strong>Goal:</strong> To give one owned number and one clean refusal.<br><br><strong>Run it:</strong> Ask the response-time question. Require the third line. The deck has no SLA and she must not invent one.<br><br><strong>Check:</strong> She gives the number she has and forwards the one she does not.<br><br><strong>If needed:</strong> Give her the third line and ask her to repeat it.<br><br><strong>Move on when:</strong> She has forwarded the response time once.">
+<div class="slide-inner">
+<p class="chapter-label">4 &middot; The number you can say</p>
+<h2 class="slide-heading">One operational benefit</h2><div class="chunks"><div class="chunk"><b>Our service team has thirty technicians.</b><span class="gloss">from the deck &mdash; a number she owns</span></div><div class="chunk"><b>We also have remote care and applications support.</b><span class="gloss">capability, not a promise</span></div><div class="chunk"><b>I would need to confirm our response time.</b><span class="gloss">for anything the deck does not say</span></div></div>
+<p class="slide-question">He asks how fast you respond. What do you say?</p><div class="bloco"><div class="bloco-h"><span class="pill ext">Extension</span><button class="bloco-t" onclick="abrirBloco(this)">Show</button></div><div class="bloco-b" hidden><p>If there is time: <b>We cover installation, training and both preventive and corrective maintenance.</b></p></div></div></div>
+</div>
+<div class="slide slide-light" data-lesson="4" data-slide="8" data-stage="5" data-teacher="<strong>Goal:</strong> To show that the same content answers three different questions.<br><br><strong>Run it:</strong> Three rounds, one question each. The service line must appear in all three.<br><br><strong>Check:</strong> The service line survives all three.<br><br><strong>If needed:</strong> Two rounds is enough.<br><br><strong>Move on when:</strong> She has answered at least two.">
+<div class="slide-inner">
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">Same answer, three questions</h2><div class="map"><div class="step">&ldquo;Where are you located?&rdquo;</div><div class="step">&ldquo;Do you cover the whole country?&rdquo;</div><div class="step">&ldquo;What happens after we buy?&rdquo;</div></div></div>
+</div>
+<div class="slide slide-light" data-lesson="4" data-slide="9" data-stage="5" data-teacher="<strong>Goal:</strong> To run the full answer once, with support.<br><br><strong>Run it:</strong> One run. Interrupt only after five seconds of silence.<br><br><strong>Check:</strong> She connects the two halves without a gap.<br><br><strong>If needed:</strong> Let her read the map.<br><br><strong>Move on when:</strong> She has completed one run.">
+<div class="slide-inner">
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">Coverage and service, with the map</h2><div class="map"><div class="step">Where the company is</div><div class="step">Which teams</div><div class="step">Our own service</div><div class="step">What you forward</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="4" data-slide="10" data-stage="6" data-teacher="<strong>Goal:</strong> To obtain the main production against a real buying question.<br><br><strong>Run it:</strong> Ask as the visitor and stay quiet. Note one point.<br><br><strong>Check:</strong> She answered with coverage and service as one thing.<br><br><strong>If needed:</strong> Nothing during.<br><br><strong>Move on when:</strong> She has finished.">
+<div class="slide-inner">
+<p class="chapter-label">6 &middot; The real thing</p>
+<h2 class="slide-heading">He is deciding. Answer him.</h2>
+<p class="slide-lead">About one minute. Slides and map with you. No interruption.</p>
+<p class="slide-question">&ldquo;If we expand XR operations with you, who installs it and who keeps it running?&rdquo;</p></div>
+</div>
+<div class="slide slide-light" data-lesson="4" data-slide="11" data-stage="7" data-stage-tambem="8" data-teacher="<strong>Goal:</strong> To give one point and retask only that part.<br><br><strong>Run it:</strong> Name what worked. One point. First and clearer. Retask 20 to 40 seconds.<br><br><strong>Check:</strong> The retask contains the correction.<br><br><strong>If needed:</strong> Shorten to one sentence.<br><br><strong>Move on when:</strong> She has said the corrected part once.">
+<div class="slide-inner">
+<p class="chapter-label">7 &middot; What you just did</p>
+<h2 class="slide-heading">One thing that worked, one to sharpen</h2><div class="map"><div class="step"><b>What worked well:</b></div><div class="step"><b>One point to improve:</b></div><div class="step"><b>First version</b> &rarr; <b>Clearer version</b></div></div>
+<p class="slide-question">Say only that part again &mdash; twenty seconds.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="4" data-slide="12" data-closing="true" data-grupo="Closing" data-teacher="<strong>Goal:</strong> To close and point at lesson 5 by what she will do.<br><br><strong>Run it:</strong> Read the three lines. The next lesson is 27 August.<br><br><strong>Check:</strong> She can say what she leaves with.<br><br><strong>If needed:</strong> Ask for the service line once more.<br><br><strong>Move on when:</strong> She has named one thing she can now do.">
+<div class="slide-inner">
+<p class="chapter-label">Lesson close</p>
+<h2 class="slide-heading">Review what you worked on today</h2><div class="map"><div class="step">You said where the company operates and who keeps the equipment running.</div><div class="step">You gave the number you have, and forwarded the one you do not.</div><div class="step">In the next lesson you take the charts: what each one says, in one sentence.</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="5" data-slide="1" data-grupo="Opening" data-teacher="<strong>Goal:</strong> To connect to lesson 4 and set the rule of the day: one sentence per chart.<br><br><strong>Run it:</strong> Ask for the service line from lesson 4. Then state the rule: each chart gets one sentence, not a reading.<br><br><strong>Check:</strong> She produced the service line.<br><br><strong>If needed:</strong> Give her the first three words.<br><br><strong>Move on when:</strong> She has said it once.">
+<div class="slide-inner">
+<p class="chapter-label">Lesson 5 &middot; 27 August</p>
+<h2 class="slide-heading">The charts, in one sentence each</h2>
+<p class="slide-lead">Today the numbers enter. Not to be read aloud &mdash; to be summarised.</p>
+<p class="val-note">Confidentiality: revenue, net income and partner share are authorised for this
+   meeting only. Confirm before the lesson.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="5" data-slide="2" data-stage="1" data-teacher="<strong>Goal:</strong> To separate reading a chart from summarising it.<br><br><strong>Run it:</strong> Ask the question. The answer you want: it names the direction, not the digits.<br><br><strong>Check:</strong> She distinguishes reading from meaning.<br><br><strong>If needed:</strong> Read a row of numbers out loud and ask if that helped.<br><br><strong>Move on when:</strong> She has answered the question.">
+<div class="slide-inner">
+<p class="chapter-label">1 &middot; What this lesson is for</p>
+<h2 class="slide-heading">He will look at the chart before you speak</h2>
+<p class="slide-lead">Your job is not to read the numbers &mdash; he can see them.
+   Your job is to say what they mean.</p>
+<p class="slide-question">If he sees one chart and you say one sentence, what should that sentence do?</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="5" data-slide="3" data-stage="2" data-teacher="<strong>Goal:</strong> To name the risk that is specific to numbers: the figure she does not have.<br><br><strong>Run it:</strong> Read the three. The third is real: the deck has no recurring-revenue percentage. She must not create one.<br><br><strong>Check:</strong> She knows that inventing a number is the worst outcome here.<br><br><strong>If needed:</strong> Ask what she would say if she did not have the number.<br><br><strong>Move on when:</strong> She has chosen one.">
+<div class="slide-inner">
+<p class="chapter-label">2 &middot; What can go wrong</p>
+<h2 class="slide-heading">Where numbers break a conversation</h2><div class="map"><div class="step">You read every number and he stops listening.</div><div class="step">He asks for a figure that is not on the slide.</div><div class="step">He asks about recurring revenue &mdash; and that percentage was never given to you.</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="5" data-slide="4" data-stage="3" data-teacher="<strong>Goal:</strong> To obtain evidence of how she handles a number under a real question.<br><br><strong>Run it:</strong> Ask and stay quiet. Note whether she read digits or gave a direction.<br><br><strong>Check:</strong> You have a sample of her number-handling.<br><br><strong>If needed:</strong> If she freezes, say Last year was and wait.<br><br><strong>Move on when:</strong> She has produced something.">
+<div class="slide-inner">
+<p class="chapter-label">3 &middot; Your first version</p>
+<h2 class="slide-heading">Summarise the growth</h2>
+<p class="slide-lead">Thirty seconds. One chart: net income, 2024 to 2025.</p>
+<p class="slide-question">&ldquo;How did last year go?&rdquo;</p></div>
+</div>
+<div class="slide slide-light" data-lesson="5" data-slide="5" data-stage="3" data-teacher="<strong>Goal:</strong> To model summarising: direction and comparison, digits available if asked.<br><br><strong>Run it:</strong> Read the three. Ask the question. The answer: the exact figures, which stay on the slide.<br><br><strong>Check:</strong> She sees that the digits live on the slide, not in her mouth.<br><br><strong>If needed:</strong> Point at the slide and say the number is here.<br><br><strong>Move on when:</strong> She has answered the question.">
+<div class="slide-inner">
+<p class="chapter-label">3 &middot; One sentence per chart</p>
+<h2 class="slide-heading">One way to say it</h2><div class="map"><div class="step">Net income grew about twenty per cent from 2024 to 2025.</div><div class="step">The first two months of 2026 are ahead of the same period last year.</div><div class="step">Carestream is now a much larger share of our business than in 2024.</div></div>
+<p class="slide-question">What did each sentence leave out, on purpose?</p></div>
+</div>
+<div class="slide slide-light" data-lesson="5" data-slide="6" data-stage="4" data-teacher="<strong>Goal:</strong> To fix five lines: three summaries, one redirection, one refusal.<br><br><strong>Run it:</strong> Drill each. Then ask for recurring revenue and require the fifth line. Do this twice.<br><br><strong>Check:</strong> She refuses cleanly instead of inventing.<br><br><strong>If needed:</strong> Cut to two summaries and keep lines four and five.<br><br><strong>Move on when:</strong> She has used the fifth line at least once without help.">
+<div class="slide-inner">
+<p class="chapter-label">4 &middot; What you take with you</p>
+<h2 class="slide-heading">Lines for numbers</h2><div class="chunks"><div class="chunk"><b>Net income grew about twenty per cent last year.</b><span class="gloss">2024: 87.74 · 2025: 105.63, R$ million, from the deck</span></div><div class="chunk"><b>The first two months of this year are ahead of last year.</b><span class="gloss">12.52 → 17.85, same period</span></div><div class="chunk"><b>Carestream has grown from eighteen to thirty-eight per cent of our partner mix.</b><span class="gloss">2024 → 2026 YTD</span></div><div class="chunk"><b>The exact figure is on the slide.</b><span class="gloss">sends him to the data instead of reciting it</span></div><div class="chunk"><b>I don&rsquo;t have that number with me &mdash; I would need to confirm it.</b><span class="gloss">for recurring revenue and anything else absent</span></div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="5" data-slide="7" data-stage="4" data-teacher="<strong>Goal:</strong> To let her talk about the future without promising anything.<br><br><strong>Run it:</strong> Ask the question. Then ask if the company will close the Midea deal, and require the third line.<br><br><strong>Check:</strong> She marks the difference between plan and promise.<br><br><strong>If needed:</strong> Say the third line for her and ask her to repeat it.<br><br><strong>Move on when:</strong> She has used the third line once.">
+<div class="slide-inner">
+<p class="chapter-label">4 &middot; Where it is going</p>
+<h2 class="slide-heading">Two opportunities, said as possibilities</h2><div class="chunks"><div class="chunk"><b>We see potential for the Midea portfolio in Brazil.</b><span class="gloss">possibility, never a commitment</span></div><div class="chunk"><b>We are expanding with Danaher and Leica in the interior of S&atilde;o Paulo.</b><span class="gloss">already happening, 2026</span></div><div class="chunk"><b>That is a possibility, not a commitment.</b><span class="gloss">the line that protects every opportunity</span></div></div>
+<p class="slide-question">Why does the third line matter more than the first two?</p></div>
+</div>
+<div class="slide slide-light" data-lesson="5" data-slide="8" data-stage="5" data-teacher="<strong>Goal:</strong> To rehearse the sequence that ends in a question she cannot answer.<br><br><strong>Run it:</strong> Ask the three in order, without pausing between them. The third must produce the refusal line.<br><br><strong>Check:</strong> She answers two and refuses the third without losing composure.<br><br><strong>If needed:</strong> Ask only the first and third.<br><br><strong>Move on when:</strong> She has refused the third cleanly.">
+<div class="slide-inner">
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">Three questions, increasing pressure</h2><div class="map"><div class="step">&ldquo;How was last year?&rdquo;</div><div class="step">&ldquo;And how much of that is Carestream?&rdquo;</div><div class="step">&ldquo;What percentage is recurring revenue?&rdquo;</div></div></div>
+</div>
+<div class="slide slide-light" data-lesson="5" data-slide="9" data-stage="5" data-teacher="<strong>Goal:</strong> To run the whole numbers block once, with support.<br><br><strong>Run it:</strong> One run. Interrupt only after five seconds of silence.<br><br><strong>Check:</strong> She moves through the charts without reading digits.<br><br><strong>If needed:</strong> Let her read the map.<br><br><strong>Move on when:</strong> She has completed one run.">
+<div class="slide-inner">
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">The charts, with the map</h2><div class="map"><div class="step">Growth</div><div class="step">Comparison</div><div class="step">Partner mix</div><div class="step">Two possibilities</div><div class="step">What you forward</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="5" data-slide="10" data-stage="6" data-teacher="<strong>Goal:</strong> To obtain the main production with the integrated Q&amp;A of this lesson.<br><br><strong>Run it:</strong> Ask, stay quiet, then ask two follow-ups &mdash; one answerable, one not. Note one point.<br><br><strong>Check:</strong> She summarised, then handled both follow-ups.<br><br><strong>If needed:</strong> Nothing during.<br><br><strong>Move on when:</strong> She has finished both follow-ups.">
+<div class="slide-inner">
+<p class="chapter-label">6 &middot; The real thing</p>
+<h2 class="slide-heading">Present the results</h2>
+<p class="slide-lead">About one minute, then he asks two questions. Slides and map with you.</p>
+<p class="slide-question">&ldquo;Give me the headline on last year, and where you see this going.&rdquo;</p></div>
+</div>
+<div class="slide slide-light" data-lesson="5" data-slide="11" data-stage="7" data-stage-tambem="8" data-teacher="<strong>Goal:</strong> To give one point and retask only that part.<br><br><strong>Run it:</strong> Name what worked. One point. First and clearer. Retask 20 to 40 seconds.<br><br><strong>Check:</strong> The retask contains the correction.<br><br><strong>If needed:</strong> Shorten to one sentence.<br><br><strong>Move on when:</strong> She has said the corrected part once.">
+<div class="slide-inner">
+<p class="chapter-label">7 &middot; What you just did</p>
+<h2 class="slide-heading">One thing that worked, one to sharpen</h2><div class="map"><div class="step"><b>What worked well:</b></div><div class="step"><b>One point to improve:</b></div><div class="step"><b>First version</b> &rarr; <b>Clearer version</b></div></div>
+<p class="slide-question">Say only that part again &mdash; twenty seconds.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="5" data-slide="12" data-closing="true" data-grupo="Closing" data-teacher="<strong>Goal:</strong> To close and hand over to the simulation of lesson 6.<br><br><strong>Run it:</strong> Read the three lines. The third is the handover &mdash; say that the next lesson is the full run.<br><br><strong>Check:</strong> She knows the next lesson is the simulation.<br><br><strong>If needed:</strong> Ask which part of the meeting she wants to run first on 28 August.<br><br><strong>Move on when:</strong> She has named one thing she can now do.">
+<div class="slide-inner">
+<p class="chapter-label">Lesson close</p>
+<h2 class="slide-heading">Review what you worked on today</h2><div class="map"><div class="step">You gave each chart one sentence instead of reading it.</div><div class="step">You said what you have, and refused what you do not &mdash; without losing the room.</div><div class="step">The next lesson is the whole meeting, from the welcome to the questions: you present with your slides, he asks, and you close.</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="6" data-slide="1" data-grupo="Opening" data-teacher="<strong>Goal:</strong> To set the frame: integration, not new content.<br><br><strong>Run it:</strong> Say it plainly: today nothing new is taught. Ask which part she wants to run first.<br><br><strong>Check:</strong> She knows this is a run, not a lesson of new language.<br><br><strong>If needed:</strong> Name the five blocks she already has.<br><br><strong>Move on when:</strong> She has named where she wants to start.">
+<div class="slide-inner">
+<p class="chapter-label">Lesson 6 &middot; 28 August</p>
+<h2 class="slide-heading">The whole meeting, once</h2>
+<p class="slide-lead">Nothing new today. You run what you built, with your slides and your map &mdash;
+   the same ones you will have on 31 August.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="6" data-slide="2" data-stage="1" data-teacher="<strong>Goal:</strong> To obtain her own priority for the run.<br><br><strong>Run it:</strong> Ask and wait. Whatever she names gets the extra rehearsal in Stage 5.<br><br><strong>Check:</strong> She named one part, not all of them.<br><br><strong>If needed:</strong> Offer the five blocks and ask her to choose one.<br><br><strong>Move on when:</strong> She has named one part.">
+<div class="slide-inner">
+<p class="chapter-label">1 &middot; What this lesson is for</p>
+<h2 class="slide-heading">Monday is the meeting</h2>
+<p class="slide-lead">On 31 August the president of Carestream is in the room. Today is the last
+   time you run it before that.</p>
+<p class="slide-question">Which part of the meeting still worries you?</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="6" data-slide="3" data-stage="2" data-teacher="<strong>Goal:</strong> To name the three failure modes she has language for.<br><br><strong>Run it:</strong> Read the three. For each, ask which line she already has. She has all three.<br><br><strong>Check:</strong> She maps each risk to a line she owns.<br><br><strong>If needed:</strong> Point at the repair lines from lesson 1.<br><br><strong>Move on when:</strong> She has matched at least two.">
+<div class="slide-inner">
+<p class="chapter-label">2 &middot; What can go wrong</p>
+<h2 class="slide-heading">In a real meeting, three things</h2><div class="map"><div class="step">He interrupts in the middle of your opening.</div><div class="step">He asks something from an area that is not yours.</div><div class="step">A word does not come and the sentence stops.</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="6" data-slide="4" data-stage="3" data-teacher="<strong>Goal:</strong> To obtain a first full-run sample before any adjustment.<br><br><strong>Run it:</strong> Let her run for about two minutes without interrupting. Note where she slowed, not what was wrong.<br><br><strong>Check:</strong> You have a sample of the whole arc.<br><br><strong>If needed:</strong> If she stops, give the next block name only.<br><br><strong>Move on when:</strong> She has run at least three blocks.">
+<div class="slide-inner">
+<p class="chapter-label">3 &middot; First run</p>
+<h2 class="slide-heading">Open, and keep going until I stop you</h2>
+<p class="slide-lead">Slides and map with you.</p>
+<p class="slide-question">He has just sat down. Begin.</p></div>
+</div>
+<div class="slide slide-light" data-lesson="6" data-slide="5" data-stage="3" data-teacher="<strong>Goal:</strong> To make the order conscious, so she can recover it if interrupted.<br><br><strong>Run it:</strong> Read the five. Ask the question &mdash; blocks three and four are the movable pair.<br><br><strong>Check:</strong> She sees the order is a tool, not a script to memorise.<br><br><strong>If needed:</strong> Ask which block must come first.<br><br><strong>Move on when:</strong> She has answered the question.">
+<div class="slide-inner">
+<p class="chapter-label">3 &middot; The shape of the meeting</p>
+<h2 class="slide-heading">Five blocks, in order</h2><div class="map"><div class="step">Welcome, who you are, what the company does.</div><div class="step">Where it came from, and how it is organised.</div><div class="step">What it sells, and for which partners.</div><div class="step">Where it operates, and who keeps it running.</div><div class="step">How last year went, and where it is going.</div></div>
+<p class="slide-question">Which two could change places without breaking anything?</p></div>
+</div>
+<div class="slide slide-light" data-lesson="6" data-slide="6" data-stage="4" data-teacher="<strong>Goal:</strong> To consolidate one line per lesson &mdash; nothing new.<br><br><strong>Run it:</strong> Drill the five in sequence, then in reverse order. Reverse order proves they are not a memorised block.<br><br><strong>Check:</strong> She produces all five in both orders.<br><br><strong>If needed:</strong> Forward order only.<br><br><strong>Move on when:</strong> She has said all five at least once.">
+<div class="slide-inner">
+<p class="chapter-label">4 &middot; What you take with you</p>
+<h2 class="slide-heading">The five lines that hold the room</h2><div class="chunks"><div class="chunk"><b>Welcome to Imagem Healthcare Solutions. I&rsquo;m Rita Rodrigues, Corporate Management Director.</b><span class="gloss">lesson 1</span></div><div class="chunk"><b>We started in 1988 and today we distribute medical technology nationwide.</b><span class="gloss">lessons 2 and 1</span></div><div class="chunk"><b>We work with four main areas, and we represent international brands.</b><span class="gloss">lesson 3</span></div><div class="chunk"><b>We have our own service team.</b><span class="gloss">lesson 4</span></div><div class="chunk"><b>The exact figure is on the slide &mdash; and I would need to confirm anything that is not.</b><span class="gloss">lesson 5</span></div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="6" data-slide="7" data-stage="4" data-teacher="<strong>Goal:</strong> To rehearse re-entry, which is the difference between a run and a meeting.<br><br><strong>Run it:</strong> Interrupt her three times with different questions. Each time she answers or forwards, then returns.<br><br><strong>Check:</strong> She returns to the block she left.<br><br><strong>If needed:</strong> Interrupt once, and name the block she should return to.<br><br><strong>Move on when:</strong> She has returned to her block at least twice.">
+<div class="slide-inner">
+<p class="chapter-label">4 &middot; When he interrupts</p>
+<h2 class="slide-heading">Three ways back in</h2><div class="chunks"><div class="chunk"><b>Of course &mdash; let me come back to that.</b></div><div class="chunk"><b>Thomaz can give you more detail on that.</b></div><div class="chunk"><b>I would need to confirm that detail.</b></div></div>
+<p class="slide-question">He interrupts your portfolio block with a service question. What do you do?</p></div>
+</div>
+<div class="slide slide-light" data-lesson="6" data-slide="8" data-stage="5" data-teacher="<strong>Goal:</strong> To spend the extra rehearsal on her own priority, not yours.<br><br><strong>Run it:</strong> Two rounds of the block she named in Stage 1. The second one shorter.<br><br><strong>Check:</strong> The shorter version keeps the point.<br><br><strong>If needed:</strong> One round is enough.<br><br><strong>Move on when:</strong> She has run her chosen block twice.">
+<div class="slide-inner">
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">The part you chose</h2>
+<p class="slide-lead">The block you named at the start. Twice: once as it is, once shorter.</p></div>
+</div>
+<div class="slide slide-light" data-lesson="6" data-slide="9" data-stage="5" data-teacher="<strong>Goal:</strong> To rehearse rapid-fire with a mix she can and cannot answer.<br><br><strong>Run it:</strong> Ask the four without pausing. Two are answerable, two are forwards.<br><br><strong>Check:</strong> She answers two and forwards two, without stopping.<br><br><strong>If needed:</strong> Ask three.<br><br><strong>Move on when:</strong> She has handled at least three.">
+<div class="slide-inner">
+<p class="chapter-label">5 &middot; Rehearsal</p>
+<h2 class="slide-heading">Questions, one after another</h2><div class="map"><div class="step">&ldquo;How long have you been in the market?&rdquo;</div><div class="step">&ldquo;Who handles installation?&rdquo;</div><div class="step">&ldquo;What is your recurring revenue?&rdquo;</div><div class="step">&ldquo;Who decides on new partnerships?&rdquo;</div></div></div>
+</div>
+<div class="slide slide-dark" data-lesson="6" data-slide="10" data-stage="6" data-teacher="<strong>Goal:</strong> To obtain the full simulation: the five blocks with two interruptions.<br><br><strong>Run it:</strong> Let her run. Interrupt exactly twice, at natural points. Do not correct. Note one point.<br><br><strong>Check:</strong> She ran the five blocks and recovered from both interruptions.<br><br><strong>If needed:</strong> Interrupt once instead of twice.<br><br><strong>Move on when:</strong> She has closed the meeting.">
+<div class="slide-inner">
+<p class="chapter-label">6 &middot; The real thing</p>
+<h2 class="slide-heading">The full meeting</h2>
+<p class="slide-lead">Slides and map with you, exactly as on Monday. He will interrupt twice.</p>
+<p class="slide-question">He has just sat down. Begin.</p></div>
+</div>
+<div class="slide slide-light" data-lesson="6" data-slide="11" data-stage="7" data-stage-tambem="8" data-teacher="<strong>Goal:</strong> To leave her with one correction she can still absorb before 31 August.<br><br><strong>Run it:</strong> Name what worked. Choose the point with most impact in the room, not the most frequent error. Retask 20 to 40 seconds.<br><br><strong>Check:</strong> The retask is clean and she knows where it belongs on Monday.<br><br><strong>If needed:</strong> Shorten to one sentence.<br><br><strong>Move on when:</strong> She has said the corrected part once.">
+<div class="slide-inner">
+<p class="chapter-label">7 &middot; What you just did</p>
+<h2 class="slide-heading">One thing that worked, one to take to Monday</h2><div class="map"><div class="step"><b>What worked well:</b> <span class='gloss'>from the simulation</span></div><div class="step"><b>One point to improve:</b> <span class='gloss'>one only &mdash; there is no lesson 7</span></div><div class="step"><b>First version</b> &rarr; <b>Clearer version</b></div></div>
+<p class="slide-question">Say only that part again &mdash; twenty seconds.</p></div>
+</div>
+<div class="slide slide-dark" data-lesson="6" data-slide="12" data-closing="true" data-grupo="Closing" data-teacher="<strong>Goal:</strong> To close the cycle on what she can do, not on what is missing.<br><br><strong>Run it:</strong> Read the three lines. Do not add new advice here &mdash; the last correction was Stage 7.<br><br><strong>Check:</strong> She leaves naming something she can do.<br><br><strong>If needed:</strong> Ask her to say the opening one last time.<br><br><strong>Move on when:</strong> She has named one thing she can now do.">
+<div class="slide-inner">
+<p class="chapter-label">Lesson close</p>
+<h2 class="slide-heading">Review what you worked on today</h2><div class="map"><div class="step">You ran the whole meeting, with interruptions, and came back each time.</div><div class="step">You have five blocks, and a line for anything you do not have.</div><div class="step">On 31 August you will have the same slides and the same map in front of you.</div></div></div>
+</div>
+  </div>
+  <aside class="teacher-t-panel" id="teacherPanel" role="region" aria-label="Teacher&rsquo;s Guide" data-view="professor">
+    <div class="tg-acoes">
+      <button class="nbtn ghost" id="tgWinBtn" onclick="tgWinOpen()">Open in separate window</button>
+      <p class="tg-win-dica">Share only the lesson window with the student.</p>
+      <p class="tg-win-aviso" id="tgWinAviso" hidden>The browser blocked the window. Use the panel here.</p>
+    </div>
+    <div id="teacherNote"></div>
+  </aside>
+  <div class="navbar">
+    <button class="nbtn ghost" onclick="deckClose()">Exit</button>
+    <span class="counter" id="deckAula" style="min-width:84px">Lesson 1</span>
+    <button class="nbtn ghost" id="btnTg" data-view="professor" onclick="tgToggle()">Teacher&rsquo;s Guide</button>
+    <div class="spacer"></div>
+    <button class="nbtn ghost" id="btnPrev" onclick="go(-1)">Previous</button>
+    <span class="counter" id="counter">1 / 12</span>
+    <button class="nbtn" id="btnNext" onclick="go(1)">Next</button>
+    <div class="spacer"></div>
+    <button class="nbtn ghost" data-view="professor" onclick="resetLesson()">Reset lesson</button>
+    <button class="nbtn" data-view="professor" onclick="finishLesson()">Finish lesson</button>
+  </div>
+</div>
+
+<!-- ================= PROFILE (professor) ================= -->
+<section class="panel" id="pnProfile" role="tabpanel" aria-labelledby="tabProfile" hidden data-view="professor">
+  <h1>Perfil &mdash; uso interno</h1>
+  <p class="lead">Português aqui é deliberado: esta aba é do professor e não é projetada. Acentuação obrigatória.</p>
+  <div class="grid2">
+    <div class="card"><h3 class="sub">Aluna</h3>
+      <dl class="kv">
+        <dt>Nome</dt><dd>Rita Rodrigues</dd>
+        <dt>Cargo</dt><dd>Diretora de Corporate Management na Imagem Healthcare Solutions</dd>
+        <dt>Escopo</dt><dd>TI, RH, qualidade, controladoria corporativa e processos de negócio &mdash; 9 pessoas</dd>
+        <dt>Reporta a</dt><dd>Thomaz Rodrigues (CEO); integra o conselho</dd>
+        <dt>Nível</dt><dd>A2+ assimétrico &mdash; receptivo acima da produção</dd>
+        <dt>Idade</dt><dd>Não registrar. Bloqueio de liberação nesta conta.</dd>
+      </dl></div>
+    <div class="card"><h3 class="sub">O que dimensiona a aula</h3>
+      <dl class="kv">
+        <dt>Risco central</dt><dd>Colapso quando uma palavra bloqueia a sequência &mdash; por isso a estratégia de reparo entra já na aula 1</dd>
+        <dt>Apoio</dt><dd>Slide e mapa de fala ficam com ela <b>na reunião</b>. Não são andaime a retirar</dd>
+        <dt>Sucesso</dt><dd>Eficácia, continuidade, inteligibilidade, precisão do dado e reparo &mdash; não ausência de erro</dd>
+        <dt>Encaminhar</dt><dd>Conta como sucesso, não como fuga</dd>
+      </dl></div>
+  </div>
+  <h2 class="sec">Camadas desta aula</h2>
+  <div class="card"><dl class="kv">
+    <dt>Essential</dt><dd>Welcome · nome e cargo · o que a empresa faz · o que a área dela cobre</dd>
+    <dt>With support</dt><dd>Marcos da história, números por área &mdash; ela consulta</dd>
+    <dt>Recognize</dt><dd>Detalhe financeiro, decisão comercial, escopo de outras diretorias &mdash; ela encaminha</dd>
+  </dl></div>
+  <h2 class="sec">Registro pós-aula</h2>
+  <div class="card">
+    <p style="font-size:.88rem;color:var(--ink-3)">O que a aluna efetivamente fez ou disse durante a aula.</p>
+    <textarea class="field" rows="2" data-k="af_l1_evidencia"></textarea>
+    <p style="font-size:.88rem;color:var(--ink-3);margin-top:.8rem">Dificuldade, impacto na comunicação e a linguagem retomada, introduzida ou apoiada.</p>
+    <textarea class="field" rows="2" data-k="af_l1_dificuldade"></textarea>
+    <p style="font-size:.88rem;color:var(--ink-3);margin-top:.8rem">Ajuste, apoio ou retask indicado para a aula seguinte.</p>
+    <textarea class="field" rows="2" data-k="af_l1_acao"></textarea>
+  </div>
+</section>
+
+<!-- ================= QA (professor) ================= -->
+<section class="panel" id="pnQA" role="tabpanel" aria-labelledby="tabQA" hidden data-view="professor">
+  <h1>QA &mdash; artefato de validação</h1>
+  <p class="lead">Este arquivo <b>não é liberável à aluna</b>. As concessões abaixo são limitações
+     deliberadas da versão de validação e não migram para a produção final.</p>
+  <h2 class="sec">Limitações técnicas intencionais</h2>
+  <div class="card"><dl class="kv">
+    <dt>Distribuição</dt><dd>Um HTML único com alternância de visão. O isolamento é <b>lógico</b>, não de segurança: a aluna não chega pelo fluxo normal, mas o conteúdo está no arquivo.</dd>
+    <dt>Persistência</dt><dd><code>localStorage</code> no mesmo navegador. Não é perfil, sincronização, envio nem histórico institucional.</dd>
+    <dt>Áudio</dt><dd>Não usado nesta aula. Se entrar, será <i>temporary browser voice — validation only</i>.</dd>
+    <dt>Gravação</dt><dd>Ausente. O pre-class não tem botão, ícone nem menção &mdash; é bloqueio de liberação.</dd>
+    <dt>Envio/login</dt><dd>Não implementado nem simulado. Nenhum botão cenográfico.</dd>
+    <dt>Imagem</dt><dd>Capa com placeholder <b>rotulado</b>. Falta ativo com origem, licença e alt text.</dd>
+  </dl></div>
+  <h2 class="sec">Matriz de QA</h2>
+  <div class="card"><dl class="kv">
+    <dt>Perfil/syllabus</dt><dd>PASSOU &mdash; aula 1 = <i>Company overview &amp; Rita&rsquo;s role</i>, produto = abertura funcional com apoio.</dd>
+    <dt>Pre-class</dt><dd>PASSOU &mdash; 6 atividades, sem gravação, autônomo; léxico volta no in-class.</dd>
+    <dt>In-class</dt><dd>PASSOU &mdash; 8 estágios, 55+5; produção única, feedback e retask presentes.</dd>
+    <dt>Post-class</dt><dd>PASSOU &mdash; consolida o ocorrido, sem função técnica falsa.</dd>
+    <dt>Language</dt><dd>PASSOU &mdash; inglês em tudo o que a aluna vê; português só em Perfil e QA.</dd>
+    <dt>Factual</dt><dd>PASSOU &mdash; 1988, 38 anos, 146 employees, CEO Thomaz Rodrigues, 9 pessoas na área. Nada recalculado.</dd>
+    <dt>Confidencialidade</dt><dd>PASSOU &mdash; receita, net income, participação por parceiro e comissões <b>fora</b> desta aula (só a partir da 5). Idade ausente.</dd>
+    <dt>Teacher</dt><dd>PASSOU &mdash; nota por tela, em inglês, no formato Goal/Run it/Check/If needed/Move on when.</dd>
+    <dt>Technical</dt><dd>PARCIAL &mdash; navegação, estado, Finish e Reset funcionam; falta teste em navegador real com teclado.</dd>
+    <dt>Visual/a11y</dt><dd>NÃO VERIFICADO &mdash; contraste medido sobre superfície composta ainda não rodado.</dd>
+  </dl></div>
+  <h2 class="sec">Para virar produção final</h2>
+  <div class="card"><ul style="font-size:.93rem;margin:0;padding-left:1.1rem">
+    <li>Separar aluna e professor em entrega distinta &mdash; não por alternância no mesmo arquivo.</li>
+    <li>Substituir o placeholder da capa por ativo com origem, licença e alt text.</li>
+    <li>Medir contraste sobre a superfície composta em todas as telas.</li>
+    <li>Testar teclado, foco e responsividade em navegador real, servindo por HTTP.</li>
+    <li>Decidir a confidencialidade de receita e comissões <b>antes</b> de produzir a aula 5.</li>
+  </ul></div>
+</section>
+
+<script>
+/* ============ registro unico ============ */
+var ALUNA={nome:'Rita',sobrenome:'Rodrigues'};
+function alunaNome(){return [ALUNA.nome,ALUNA.sobrenome].filter(Boolean).join(' ');}
+var LESSONS={
+ 1:{n:1,mod:'ESP',cod:'E1',fwNome:'Personalized Real-World English',
+    tema:'Company overview &amp; '+ALUNA.nome+'&rsquo;s role',data:'20 August',stages:[{n:'Real-world need and outcome',min:5},{n:'Situation analysis',min:5},{n:'Initial attempt and model',min:8},{n:'Language and strategy toolkit',min:9},{n:'Supported rehearsal',min:10},{n:'Real-world performance',min:9},{n:'Feedback and upgrade',min:4},{n:'Focused retask and transfer',min:5}]},
+ 2:{n:2,mod:'ESP',cod:'E2',fwNome:'Personalized Real-World English',
+    tema:'History, expertise &amp; organization',data:'24 August',stages:[{n:'Real-world need and outcome',min:5},{n:'Situation analysis',min:5},{n:'Initial attempt and model',min:8},{n:'Language and strategy toolkit',min:9},{n:'Supported rehearsal',min:10},{n:'Real-world performance',min:9},{n:'Feedback and upgrade',min:4},{n:'Focused retask and transfer',min:5}]},
+ 3:{n:3,mod:'ESP',cod:'E3',fwNome:'Personalized Real-World English',
+    tema:'Commercial portfolio &amp; partners',data:'25 August',stages:[{n:'Real-world need and outcome',min:5},{n:'Situation analysis',min:5},{n:'Initial attempt and model',min:8},{n:'Language and strategy toolkit',min:9},{n:'Supported rehearsal',min:10},{n:'Real-world performance',min:9},{n:'Feedback and upgrade',min:4},{n:'Focused retask and transfer',min:5}]},
+ 4:{n:4,mod:'ESP',cod:'E4',fwNome:'Personalized Real-World English',
+    tema:'Commercial and service coverage',data:'26 August',stages:[{n:'Real-world need and outcome',min:5},{n:'Situation analysis',min:5},{n:'Initial attempt and model',min:8},{n:'Language and strategy toolkit',min:9},{n:'Supported rehearsal',min:10},{n:'Real-world performance',min:9},{n:'Feedback and upgrade',min:4},{n:'Focused retask and transfer',min:5}]},
+ 5:{n:5,mod:'ESP',cod:'E5',fwNome:'Personalized Real-World English',
+    tema:'Results, growth &amp; integrated Q&amp;A',data:'27 August',stages:[{n:'Real-world need and outcome',min:5},{n:'Situation analysis',min:5},{n:'Initial attempt and model',min:8},{n:'Language and strategy toolkit',min:9},{n:'Supported rehearsal',min:10},{n:'Real-world performance',min:9},{n:'Feedback and upgrade',min:4},{n:'Focused retask and transfer',min:5}]},
+ 6:{n:6,mod:'ESP',cod:'E6',fwNome:'Personalized Real-World English',
+    tema:'Full meeting simulation',data:'28 August',stages:[{n:'Real-world need and outcome',min:5},{n:'Situation analysis',min:5},{n:'Initial attempt and model',min:8},{n:'Language and strategy toolkit',min:9},{n:'Supported rehearsal',min:10},{n:'Real-world performance',min:9},{n:'Feedback and upgrade',min:4},{n:'Focused retask and transfer',min:5}]}};
+var CICLO={rotulo:'Lessons in this cycle',aulas:6,nivel:'A2+',nome:'Intensive'};
+
+/* ============ estado ============ */
+var BUCKET='rita_pv_v1', view='aluna', slide=1, aulaAtual=1, visitados={1:1};
+function db(){try{return JSON.parse(localStorage.getItem(BUCKET))||{aluna:{},prof:{},shared:{}}}
+             catch(e){return {aluna:{},prof:{},shared:{}}}}
+function save(o){try{localStorage.setItem(BUCKET,JSON.stringify(o))}catch(e){}}
+function espaco(k){ if(k.indexOf('af_')===0||k.indexOf('sfb_')===0) return 'shared';
+                    if(k.indexOf('pre_')===0||k.indexOf('exe_')===0||k.indexOf('post_')===0) return 'aluna';
+                    return 'prof'; }
+function put(k,v){ var o=db(); o[espaco(k)][k]=v; save(o); }
+function get(k){ var o=db(); return o[espaco(k)][k]; }
+
+/* ============ visao ============ */
+function setView(v){
+  view=v;
+  document.getElementById('vwAluna').setAttribute('aria-pressed',v==='aluna');
+  document.getElementById('vwProf').setAttribute('aria-pressed',v==='professor');
+  document.querySelectorAll('[data-view]').forEach(function(el){
+    el.hidden = (el.getAttribute('data-view')!==v);
+  });
+  if(v==='aluna'){ document.body.classList.remove('tg-open');
+    var t=document.querySelector('.tabs button[aria-selected="true"]');
+    if(t&&(t.id==='tabProfile'||t.id==='tabQA')) setTab('Planning'); }
+  hidratar();
+}
+
+/* ============ abas ============ */
+function setTab(id){
+  ['Planning','Pre','In','Post','Profile','QA'].forEach(function(t){
+    var b=document.getElementById('tab'+t), p=document.getElementById('pn'+t);
+    if(!b||!p)return; var on=(t===id);
+    b.setAttribute('aria-selected',on); p.hidden=!on;
+  });
+}
+
+/* ============ deck ============ */
+function montarStageBar(){
+  var bar=document.getElementById('stageBar'); bar.innerHTML='';
+  (LESSONS[aulaAtual].stages||[]).forEach(function(s,i){
+    var b=document.createElement('button'); b.type='button'; b.setAttribute('data-k',String(i+1));
+    b.innerHTML=(i+1)+' &middot; '+s.n; b.onclick=function(){goStage(i+1);};
+    bar.appendChild(b);
+  });
+}
+function slides(){return Array.prototype.slice.call(document.querySelectorAll('#slidesWrap .slide[data-lesson="'+aulaAtual+'"]'));}
+function deckOpen(n){ aulaAtual=n||1; document.body.classList.add('deck-on'); slide=1;
+  montarStageBar(); document.getElementById('deckAula').textContent='Lesson '+aulaAtual;
+  document.querySelectorAll('#slidesWrap .slide').forEach(function(s){s.classList.remove('on');});
+  paint(); }
+function deckClose(){ document.body.classList.remove('deck-on','tg-open'); }
+function go(d){ var t=slide+d, tot=slides().length; if(t<1||t>tot)return; slide=t; visitados[t]=1; paint(); }
+function goStage(k){ var s=slides();
+  for(var i=0;i<s.length;i++){ if(s[i].getAttribute('data-stage')==String(k)){ slide=i+1; visitados[slide]=1; paint(); return; } } }
+function paint(){
+  var s=slides();
+  s.forEach(function(el,i){ el.classList.toggle('on', i+1===slide); });
+  document.getElementById('counter').textContent = slide+' / '+s.length;
+  document.getElementById('btnPrev').disabled = slide===1;
+  document.getElementById('btnNext').disabled = slide===s.length;
+  var cur=s[slide-1];
+  document.getElementById('teacherNote').innerHTML = cur.getAttribute('data-teacher')||'';
+  var st=cur.getAttribute('data-stage'), st2=cur.getAttribute('data-stage-tambem');
+  document.querySelectorAll('#stageBar button').forEach(function(b){
+    var k=b.getAttribute('data-k');
+    b.classList.toggle('atual', k===st||k===st2);
+    b.classList.toggle('visitado', !!b.dataset.visitado);
+    if(k===st||k===st2) b.dataset.visitado='1';
+  });
+}
+function tgToggle(){ document.body.classList.toggle('tg-open'); }
+function tgURL(n){ var u=new URL(window.location.href);
+  u.searchParams.set('mode','teacher-guide'); u.searchParams.set('lesson',String(n));
+  u.hash=''; return u.toString(); }
+function tgWinOpen(){ var w=window.open(tgURL(1),'_blank','width=560,height=760');
+  document.getElementById('tgWinAviso').hidden=!!w; }
+function abrirBloco(b){ var c=b.parentElement.nextElementSibling;
+  c.hidden=!c.hidden; b.textContent=c.hidden?'Show':'Hide'; }
+
+/* ============ pre-class ============ */
+function akInit(){
+  document.querySelectorAll('.act').forEach(function(a){
+    var ak=a.querySelector('.ak'); if(!ak||a.querySelector('.ak-btn'))return;
+    var b=document.createElement('button'); b.className='ak-btn'; b.type='button';
+    b.textContent='Show answer key';
+    b.setAttribute('data-view','professor');
+    b.onclick=function(){ ak.hidden=!ak.hidden; b.textContent=ak.hidden?'Show answer key':'Hide answer key'; };
+    ak.parentNode.insertBefore(b, ak);
+  });
+}
+function fecharTodasKeys(){
+  document.querySelectorAll('.act .ak').forEach(function(k){k.hidden=true;});
+  document.querySelectorAll('.ak-btn').forEach(function(b){b.textContent='Show answer key';});
+}
+function resetAluna(){
+  if(!confirm('This will erase your answers in the pre-class and post-class of this lesson. Continue?'))return;
+  var o=db(); o.aluna={}; save(o);
+  document.querySelectorAll('.opts .quiz-option,.opts .pair-opt').forEach(function(e){e.classList.remove('sel','correct','wrong');});
+  document.querySelectorAll('.field').forEach(function(f){ if(espaco(f.dataset.k||'')==='aluna') f.value=''; });
+}
+document.addEventListener('click', function(ev){
+  var op=ev.target.closest('.quiz-option,.pair-opt'); if(!op)return;
+  var box=op.closest('.opts'); if(!box)return;
+  if(op.classList.contains('quiz-option')) box.querySelectorAll('.quiz-option').forEach(function(e){e.classList.remove('sel');});
+  op.classList.add('sel');
+  put(box.dataset.k, op.dataset.v);
+});
+document.addEventListener('input', function(ev){
+  var f=ev.target.closest('.field'); if(!f||!f.dataset.k)return;
+  if(view==='aluna' && espaco(f.dataset.k)==='prof') return;   /* guarda na porta de escrita */
+  put(f.dataset.k, f.value);
+});
+function hidratar(){
+  var o=db();
+  document.querySelectorAll('.opts').forEach(function(b){
+    var v=(o.aluna[b.dataset.k]); if(!v)return;
+    b.querySelectorAll('[data-v]').forEach(function(e){ e.classList.toggle('sel', e.dataset.v===v); });
+  });
+  document.querySelectorAll('.field').forEach(function(f){
+    var k=f.dataset.k; if(!k)return;
+    var e=espaco(k); if(e==='prof'&&view!=='professor')return;
+    var v=(o[e]||{})[k]; if(v!=null) f.value=v;
+  });
+}
+
+/* ============ finish / reset ============ */
+function finishLesson(){
+  if(!confirm('Finish lesson 1? This records it as done on this device only.'))return;
+  put('af_l1_status','done'); alert('Lesson 1 marked as done.');
+}
+function resetLesson(){
+  if(!confirm('This will erase the lesson status and the post-lesson record on this device. The student answers are not touched. Continue?'))return;
+  var o=db(); o.shared={}; o.prof={}; save(o);
+  document.querySelectorAll('.field').forEach(function(f){ var k=f.dataset.k||'';
+    if(espaco(k)!=='aluna') f.value=''; });
+}
+
+/* ============ boot ============ */
+(function(){
+  montarStageBar();
+  var mapa=document.getElementById('cicloMapa'); var cards=document.getElementById('cardsIn');
+  Object.keys(LESSONS).forEach(function(k){
+    var l=LESSONS[k], pronta=true;
+    var d=document.createElement('div'); d.className='card';
+    d.innerHTML='<div class="top"><span class="pill">Lesson '+l.n+'</span> <span class="pill">'+l.data+'</span></div>'+
+                '<h3 style="font-family:var(--serif);margin:.45rem 0 0">'+l.tema+'</h3>'+
+                (pronta?'':'<p style="font-size:.86rem;color:var(--ink-3);margin:.4rem 0 0">Not produced yet.</p>');
+    mapa.appendChild(d);
+    var c=document.createElement('div'); c.className='lesson-card'; c.style.marginBottom='.7rem';
+    c.innerHTML='<div class="top"><span class="pill mod">'+(l.mod||'ESP')+'</span>'+
+                '<span class="pill">Lesson '+l.n+'</span><span class="pill">'+l.data+'</span></div>'+
+                '<h3>'+l.tema+'</h3>';
+    var act=document.createElement('div'); act.style.display='flex'; act.style.gap='.5rem'; act.style.flexWrap='wrap';
+    if(pronta){
+      var b1=document.createElement('button'); b1.className='btn'; b1.textContent='Open lesson';
+      b1.onclick=function(){deckOpen(l.n);}; act.appendChild(b1);
+      var b2=document.createElement('button'); b2.className='btn ghost'; b2.textContent="Open Teacher's Guide";
+      b2.setAttribute('data-view','professor');
+      b2.onclick=function(){ var w=window.open(tgURL(l.n),'_blank','width=560,height=760');
+                             document.getElementById('tgWinAviso').hidden=!!w; };
+      act.appendChild(b2);
+    } else { var b3=document.createElement('button'); b3.className='btn'; b3.disabled=true;
+             b3.textContent='Not produced yet'; act.appendChild(b3); }
+    c.appendChild(act); cards.appendChild(c);
+  });
+  akInit(); setView('aluna'); hidratar();
+  document.addEventListener('keydown', function(e){
+    if(!document.body.classList.contains('deck-on'))return;
+    if(e.key==='ArrowRight') go(1);
+    if(e.key==='ArrowLeft') go(-1);
+    if(e.key==='Escape') deckClose();
+  });
+})();
+</script>
+</body>
+</html>
