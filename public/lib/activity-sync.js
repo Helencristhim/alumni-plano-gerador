@@ -20,6 +20,22 @@
  *   <script src="/lib/activity-sync.js"></script>
  */
 
+/**
+ * Path das gravacoes no bucket `recordings`, separado por VIEW.
+ *
+ * O bucket NAO versiona e o upload e upsert:true. Enquanto o path era so
+ * `{slug}/{frase}.{ext}`, uma gravacao feita no link do PROFESSOR caia exatamente em
+ * cima da gravacao do ALUNO na mesma frase — e como a URL publica nao muda (so o
+ * conteudo do arquivo), o botao "Your Pronunciation" do aluno passava a tocar a voz do
+ * professor sem nenhum sinal de que algo tinha acontecido.
+ * Incidente de 19/08/2026: rafael-pelizaro, pre-class aula 9.
+ * O aluno continua no path base — nada do que ja existe se move.
+ */
+window.__alumniRecPath = function (slug, name) {
+  var isAluno = window.location.pathname.indexOf('/aluno/') !== -1;
+  return slug + (isAluno ? '/' : '/_prof/') + name;
+};
+
 (function() {
   var slug = window.STUDENT_SLUG;
   if (!slug) { console.warn('activity-sync.js: STUDENT_SLUG not defined'); return; }
@@ -922,7 +938,7 @@
     uploadingRecordings[phraseId] = true;
 
     // Path: {slug}/{phraseId}.webm — upsert sobreescreve a anterior
-    var filePath = slug + '/' + phraseId + '.webm';
+    var filePath = window.__alumniRecPath(slug, phraseId + '.webm');
 
     sb.storage.from(STORAGE_BUCKET).upload(filePath, blob, {
       contentType: blob.type || 'audio/webm',
@@ -1150,7 +1166,7 @@
           var st = window.STUDENT_SLUG || 'unknown';
           var thinkId = (resultDiv && resultDiv.id) || ('think-' + pslug((thinkCard && thinkCard.querySelector('.think-question') ? thinkCard.querySelector('.think-question').textContent : 'free')));
           var ext = blob.type.indexOf('wav') !== -1 ? 'wav' : blob.type.indexOf('mp4') !== -1 ? 'mp4' : 'webm';
-          var filePath = st + '/' + thinkId + '.' + ext;
+          var filePath = window.__alumniRecPath(st, thinkId + '.' + ext);
           if (typeof sb !== 'undefined') {
             sb.storage.from('recordings').upload(filePath, blob, { contentType: blob.type, upsert: true }).then(function(res) {
               if (!res.error && thinkCard) {
@@ -1309,7 +1325,7 @@
           phrasesInLesson.forEach(function(phrase) {
             delete state.recordings[phrase];
             // Deletar audio do Storage
-            var filePath = slug + '/' + phrase + '.webm';
+            var filePath = window.__alumniRecPath(slug, phrase + '.webm');
             sb.storage.from(STORAGE_BUCKET).remove([filePath]);
           });
         }
@@ -1662,7 +1678,7 @@
         }
         var slug = window.STUDENT_SLUG || 'unknown';
         var ext = blob.type.indexOf('wav') !== -1 ? 'wav' : blob.type.indexOf('mp4') !== -1 ? 'mp4' : 'webm';
-        var filePath = slug + '/' + pslug(card.dataset.phrase) + '.' + ext;
+        var filePath = window.__alumniRecPath(slug, pslug(card.dataset.phrase) + '.' + ext);
         if (typeof sb !== 'undefined') {
           sb.storage.from('recordings').upload(filePath, blob, { contentType: blob.type, upsert: true }).then(function (res) {
             if (!res.error) {
