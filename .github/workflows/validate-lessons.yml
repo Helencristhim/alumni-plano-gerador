@@ -349,14 +349,20 @@ jobs:
         # esperando uma confirmação que nunca chega. As variáveis abaixo tornam tudo
         # não-interativo; o timeout é a rede de segurança — falhar em 10 min é reparável,
         # pendurar seis horas trava todos os PRs do repo.
-        timeout-minutes: 10
+        timeout-minutes: 12
         env:
           DEBIAN_FRONTEND: noninteractive
           NEEDRESTART_MODE: a
           NEEDRESTART_SUSPEND: 1
         run: |
           pip install --quiet playwright
-          python3 -m playwright install --with-deps chromium
+          # `--with-deps` faz apt-get. Em 19/08/2026 o mirror azure.archive.ubuntu.com
+          # ficou inacessível (Ign: em loop) e o passo pendurou runs por 15-40 min,
+          # travando os PRs do repo inteiro. As libs de sistema JÁ vêm na imagem do
+          # runner, então o apt é conveniência, não requisito: se ele não responder em
+          # 5 min, baixamos só o navegador (~10 s) e seguimos.
+          timeout 300 python3 -m playwright install --with-deps chromium \
+            || python3 -m playwright install chromium
 
       - name: "GATE 28 — selftest: prova que o gate do reveal ainda morde"
         run: python3 scripts/check_reveal_clica.py --selftest
