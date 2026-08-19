@@ -632,6 +632,15 @@ jobs:
         # Roda sempre: é lib global, não depende dos arquivos do PR.
         run: node scripts/check_score_align.mjs
 
+      - name: "GATE 31 — selftest: prova que o gate do Reset ainda morde"
+        run: python3 scripts/check_reset_completo.py --selftest
+
+      - name: "GATE 31 — o botão Reset zera tudo que conta progresso"
+        # O Reset esquecia vocab card e think card; o collectState recolhia as classes que
+        # sobravam e a aula voltava a marcar 20-30% em vez de 0% (rafael-pelizaro 19/08/2026).
+        # Cobra a REGRA 18.1 nos dois sentidos. Roda sempre: é lib global.
+        run: python3 scripts/check_reset_completo.py
+
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''
         continue-on-error: true

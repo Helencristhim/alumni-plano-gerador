@@ -1343,6 +1343,21 @@ window.__alumniRecPath = function (slug, name) {
     lessonCard.querySelectorAll('.speech-result').forEach(function(el) {
       el.classList.remove('show', 'good', 'try-again', 'bad'); el.innerHTML = '';
     });
+    // Vocab cards e think cards: os DOIS tipos que o updateProgress conta e que o Reset
+    // esquecia. Sem isto o Reset "nao resetava": limpava matching/fill-in/quiz/speech, mas
+    // os vocab cards seguiam .listened, o collectState os recolhia do DOM logo em seguida e
+    // a aula voltava a marcar 20-30% em vez de 0%. Medido em 19/08/2026 no rafael-pelizaro
+    // (aulas 12-20 travadas entre 21% e 33% depois de varios Resets). GATE 31 cobre a regra
+    // inteira: todo tipo contado pelo progresso tem de ser limpo aqui.
+    lessonCard.querySelectorAll('.vocab-card-pc').forEach(function(el) {
+      el.classList.remove('listened');
+    });
+    lessonCard.querySelectorAll('.think-card').forEach(function(el) {
+      el.classList.remove('recorded');
+      delete el.dataset.recordingUrl;
+      var rd = el.querySelector('[id^="think-result"]');
+      if (rd) rd.innerHTML = '';
+    });
     lessonCard.querySelectorAll('.media-card-wrapper').forEach(function(el) {
       el.classList.remove('done');
       var cb = el.querySelector('input[type="checkbox"]');
