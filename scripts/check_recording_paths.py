@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""GATE 16b — a gravacao do PROFESSOR nunca cai no path do ALUNO.
+"""GATE 29 — a gravacao do PROFESSOR nunca cai no path do ALUNO.
 
 O bucket `recordings` do Supabase NAO versiona e todo upload e `upsert:true`. Enquanto o
 path era montado como `{slug}/{frase}.{ext}`, o link do professor e o do aluno escreviam
@@ -100,11 +100,11 @@ def main() -> int:
 
     errs = check(TARGET.read_text(encoding="utf-8"), str(TARGET))
     if errs:
-        print("GATE 16b FALHOU — gravacao do professor pode sobrescrever a do aluno:\n", file=sys.stderr)
+        print("GATE 29 FALHOU — gravacao do professor pode sobrescrever a do aluno:\n", file=sys.stderr)
         for e in errs:
             print("  " + e, file=sys.stderr)
         return 1
-    print(f"GATE 16b OK — todo path do bucket `recordings` passa por {HELPER}()")
+    print(f"GATE 29 OK — todo path do bucket `recordings` passa por {HELPER}()")
     return 0
 
 
