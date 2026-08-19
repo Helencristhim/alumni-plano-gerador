@@ -105,6 +105,7 @@ window.__alumniRecPath = function (slug, name) {
   // Chave localStorage (mesmo padrao dos materiais existentes)
   var localKey = slug + '-' + viewType;
   var timestampKey = localKey + '-ts';
+  var resetKey = localKey + '-resetAt';
 
   // Captura o createObjectURL NATIVO antes do interceptRecordings envolve-lo, para o
   // playback (fetch->blob) nao ser confundido com uma nova gravacao.
@@ -1319,28 +1320,30 @@ window.__alumniRecPath = function (slug, name) {
     });
   }
 
-  function resetLesson(lessonCard, lessonNum) {
-    // Captura o estado ANTES de limpar o DOM, para saber o que sera removido (tombstones).
-    var beforeReset = mergeState(knownState, collectState());
-
-    // 1. Reset visual state de todos os exercicios DENTRO desta aula
-    lessonCard.querySelectorAll('.blank-input').forEach(function(el) {
+  /**
+   * Apaga do DOM todos os marcadores de progresso dentro de `escopo`.
+   * Extraida do resetLesson para ser usada tambem pelo reset REMOTO (ver _resetAt no
+   * loadFromSupabase): os dois precisam limpar exatamente as mesmas coisas, e uma copia
+   * so do bloco garante que nao divergem. GATE 31 le esta funcao.
+   */
+  function limparMarcadores(escopo) {
+    escopo.querySelectorAll('.blank-input').forEach(function(el) {
       el.value = ''; el.classList.remove('correct', 'wrong'); el.readOnly = false;
     });
-    lessonCard.querySelectorAll('.quiz-option').forEach(function(el) {
+    escopo.querySelectorAll('.quiz-option').forEach(function(el) {
       el.classList.remove('correct', 'wrong'); el.style.pointerEvents = '';
     });
-    lessonCard.querySelectorAll('.match-row').forEach(function(el) {
+    escopo.querySelectorAll('.match-row').forEach(function(el) {
       el.classList.remove('correct', 'wrong');
       var sel = el.querySelector('select');
       if (sel) { sel.value = ''; sel.disabled = false; }
     });
-    lessonCard.querySelectorAll('.order-item').forEach(function(el) {
+    escopo.querySelectorAll('.order-item').forEach(function(el) {
       el.classList.remove('correct-order', 'wrong');
       var num = el.querySelector('.order-num');
       if (num) num.textContent = '?';
     });
-    lessonCard.querySelectorAll('.speech-result').forEach(function(el) {
+    escopo.querySelectorAll('.speech-result').forEach(function(el) {
       el.classList.remove('show', 'good', 'try-again', 'bad'); el.innerHTML = '';
     });
     // Vocab cards e think cards: os DOIS tipos que o updateProgress conta e que o Reset
@@ -1349,29 +1352,37 @@ window.__alumniRecPath = function (slug, name) {
     // a aula voltava a marcar 20-30% em vez de 0%. Medido em 19/08/2026 no rafael-pelizaro
     // (aulas 12-20 travadas entre 21% e 33% depois de varios Resets). GATE 31 cobre a regra
     // inteira: todo tipo contado pelo progresso tem de ser limpo aqui.
-    lessonCard.querySelectorAll('.vocab-card-pc').forEach(function(el) {
+    escopo.querySelectorAll('.vocab-card-pc').forEach(function(el) {
       el.classList.remove('listened');
     });
-    lessonCard.querySelectorAll('.think-card').forEach(function(el) {
+    escopo.querySelectorAll('.think-card').forEach(function(el) {
       el.classList.remove('recorded');
       delete el.dataset.recordingUrl;
       var rd = el.querySelector('[id^="think-result"]');
       if (rd) rd.innerHTML = '';
     });
-    lessonCard.querySelectorAll('.media-card-wrapper').forEach(function(el) {
+    escopo.querySelectorAll('.media-card-wrapper').forEach(function(el) {
       el.classList.remove('done');
       var cb = el.querySelector('input[type="checkbox"]');
       if (cb) cb.checked = false;
     });
-    lessonCard.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb) {
+    escopo.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb) {
       cb.checked = false;
       var li = cb.closest('li');
       if (li) li.classList.remove('checked');
     });
     // Remove My Recording buttons desta aula
-    lessonCard.querySelectorAll('.btn-my-rec').forEach(function(el) { el.remove(); });
+    escopo.querySelectorAll('.btn-my-rec').forEach(function(el) { el.remove(); });
     // Remove tracker badges
-    lessonCard.querySelectorAll('.tracker-badge').forEach(function(el) { el.remove(); });
+    escopo.querySelectorAll('.tracker-badge').forEach(function(el) { el.remove(); });
+  }
+
+  function resetLesson(lessonCard, lessonNum) {
+    // Captura o estado ANTES de limpar o DOM, para saber o que sera removido (tombstones).
+    var beforeReset = mergeState(knownState, collectState());
+
+    // 1. Reset visual state de todos os exercicios DENTRO desta aula
+    limparMarcadores(lessonCard);
 
     // 2. Atualizar progress bar e stamp
     if (typeof updateProgress === 'function') updateProgress();
@@ -1526,6 +1537,38 @@ window.__alumniRecPath = function (slug, name) {
   });
 
   // ===== LOAD FROM SUPABASE (on page load) =====
+
+  /**
+   * RESET REMOTO — o servidor manda, o navegador obedece UMA vez.
+   *
+   * Por que existe. O merge de estado e uniao (so cresce), e o DOM ja vem preenchido pelo
+   * loadState() do material a partir do localStorage ANTES desta lib carregar. Resultado:
+   * limpar o progresso no servidor NAO adiantava — o navegador via os exercicios "presentes"
+   * na tela, tratava como refeitos, desfazia os tombstones e empurrava tudo de volta. Um
+   * reset feito de fora durava segundos. Medido em 19/08/2026 no rafael-pelizaro: o estado
+   * limpo as 15:20 voltou preenchido as 15:05 (relogio do cliente), com os tombstones
+   * consumidos.
+   *
+   * Como funciona. Quem reseta grava `state._resetAt` (ISO). Ao carregar, se esse carimbo
+   * for diferente do ultimo que ESTE navegador obedeceu, o cliente joga fora o que tem,
+   * limpa a tela com a MESMA limpeza do botao Reset e adota o estado do servidor. Depois
+   * guarda o carimbo, entao isso acontece uma vez por reset — nao a cada abertura.
+   *
+   * Seguranca: sem `_resetAt` no servidor nada muda, e o caminho normal (merge que so
+   * cresce) continua identico. So um reset deliberado dispara isto.
+   */
+  function aplicarResetRemoto(remoteState) {
+    limparMarcadores(document);
+    knownState = mergeState(emptyState(), remoteState);
+    applyState(knownState);
+    lastSavedJSON = JSON.stringify(knownState);
+    try {
+      localStorage.setItem(localKey, lastSavedJSON);
+      localStorage.setItem(resetKey, String(remoteState._resetAt));
+    } catch (e) {}
+    if (typeof updateProgress === 'function') updateProgress();
+  }
+
   function loadFromSupabase() {
     sb.from('student_activity')
       .select('state, updated_at')
@@ -1536,6 +1579,15 @@ window.__alumniRecPath = function (slug, name) {
         if (res.error || !res.data) return;
 
         var remoteState = res.data.state;
+
+        // Reset emitido pelo servidor: obedece e para por aqui (nao faz o merge-uniao,
+        // que e justamente o que ressuscitava o progresso apagado).
+        var carimbo = remoteState && remoteState._resetAt;
+        if (carimbo) {
+          var jaObedecido = null;
+          try { jaObedecido = localStorage.getItem(resetKey); } catch (e) {}
+          if (String(carimbo) !== jaObedecido) { aplicarResetRemoto(remoteState); return; }
+        }
 
         // MERGE bidirecional: une o remoto (outro computador) com o que ja existe
         // localmente/nesta sessao. Cross-device deixa de PERDER progresso porque

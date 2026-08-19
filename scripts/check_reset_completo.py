@@ -50,9 +50,18 @@ def bloco(src: str, nome: str) -> str:
 
 def check(src: str) -> list[str]:
     errs = []
-    reset = bloco(src, "resetLesson")
+    reset = bloco(src, "limparMarcadores")
     if not reset:
-        return ["resetLesson() nao encontrado — o gate cegou, revise o padrao"]
+        return ["limparMarcadores() nao encontrado — o gate cegou, revise o padrao"]
+
+    # os dois caminhos de reset (o botao e o remoto via _resetAt) tem de usar a MESMA
+    # limpeza; se um deles parar de chamar, volta a divergir e o defeito renasce.
+    for fn in ("resetLesson", "aplicarResetRemoto"):
+        b = bloco(src, fn)
+        if not b:
+            errs.append(f"{fn}() nao encontrado")
+        elif "limparMarcadores(" not in b:
+            errs.append(f"{fn}() nao chama limparMarcadores() — os dois resets divergem")
 
     # 1) todo tipo que conta progresso e limpo pelo Reset
     for cont, cls in TIPOS:
@@ -60,9 +69,28 @@ def check(src: str) -> list[str]:
         toca = re.search(r"querySelectorAll\('\." + re.escape(sel) + r"[^']*'\)", reset)
         limpa = re.search(r"classList\.remove\([^)]*['\"]" + re.escape(cls) + r"['\"]", reset)
         if not toca:
-            errs.append(f"resetLesson() nao toca em {cont} — a aula nao zera (REGRA 18.1)")
+            errs.append(f"limparMarcadores() nao toca em {cont} — a aula nao zera (REGRA 18.1)")
         elif not limpa:
-            errs.append(f"resetLesson() toca em {cont} mas nao remove a classe '{cls}'")
+            errs.append(f"limparMarcadores() toca em {cont} mas nao remove a classe '{cls}'")
+
+    # 1b) o reset remoto tem de ser honrado ANTES do merge-uniao. Se o merge rodar
+    # primeiro, o estado local ressuscita o que o servidor apagou — que e o defeito
+    # original. A ordem dentro do loadFromSupabase e o que garante isso.
+    load = bloco(src, "loadFromSupabase")
+    if not load:
+        errs.append("loadFromSupabase() nao encontrado")
+    else:
+        pos_reset = load.find("aplicarResetRemoto(")
+        pos_merge = load.find("mergeState(")
+        if pos_reset == -1:
+            errs.append("loadFromSupabase() nao chama aplicarResetRemoto() — reset feito no "
+                        "servidor sera desfeito pelo navegador")
+        elif pos_merge != -1 and pos_reset > pos_merge:
+            errs.append("loadFromSupabase() faz o merge ANTES de honrar o reset remoto — "
+                        "o progresso apagado ressuscita")
+        if "resetKey" not in load:
+            errs.append("loadFromSupabase() nao consulta resetKey — o reset repetiria a cada "
+                        "abertura, ou nunca aconteceria")
 
     # 2) tipo novo no progresso que ninguem declarou aqui
     prog = bloco(src, "updateProgress") or src
@@ -85,7 +113,7 @@ def selftest() -> int:
         return 1
     # o defeito real de 19/08: tirar a limpeza dos vocab cards
     mut = re.sub(
-        r"lessonCard\.querySelectorAll\('\.vocab-card-pc'\)[\s\S]*?\}\);\n", "", src, count=1
+        r"escopo\.querySelectorAll\('\.vocab-card-pc'\)[\s\S]*?\}\);\n", "", src, count=1
     )
     if mut == src:
         print("SELFTEST FALHOU: mutacao nao alterou nada", file=sys.stderr)
