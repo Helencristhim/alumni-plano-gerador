@@ -168,6 +168,9 @@ def carrega() -> dict:
 
 
 def main() -> int:
+    if not ALUNOS.is_dir():
+        print(f"ABORTADO: {ALUNOS} nao existe — arvore errada?", file=sys.stderr)
+        return 1
     DEST.mkdir(mode=0o700, exist_ok=True)
     atual = carrega()
     rotacionar = None
@@ -188,6 +191,25 @@ def main() -> int:
     grupos = alunos()
     validos = set(grupos)
     removidos = [s for s in atual if s not in validos]
+
+    # TRAVA. Revogar codigo e o pior estrago possivel aqui: o aluno perde o numero que
+    # ja recebeu e na proxima rodada ganha outro — as senhas na mao da equipe viram lixo
+    # em silencio. E a causa quase sempre nao e "aluno saiu": e o comando rodando na
+    # arvore errada (o dir principal fica centenas de commits atras e tem MENOS alunos).
+    # Por isso revogar e SEMPRE deliberado: mais de 2 de uma vez exige confirmacao.
+    limite = max(2, len(atual) // 20) if atual else 0
+    if removidos and len(removidos) > limite and "--forcar-revogacao" not in sys.argv:
+        print(
+            f"ABORTADO: {len(removidos)} de {len(atual)} codigos seriam revogados.\n"
+            f"  Isso costuma ser arvore errada (materiais faltando), nao alunos que sairam.\n"
+            f"  Confira que {ALUNOS} tem TODOS os alunos.\n"
+            f"  Se for intencional mesmo: --forcar-revogacao",
+            file=sys.stderr,
+        )
+        for s in sorted(removidos)[:10]:
+            print(f"    seria revogado: {s}", file=sys.stderr)
+        return 1
+
     for s in removidos:
         del atual[s]
 
