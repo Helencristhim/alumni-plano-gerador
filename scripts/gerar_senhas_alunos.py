@@ -24,6 +24,8 @@ from pathlib import Path
 
 DEST = Path.home() / "alumni-senhas"
 CSV = DEST / "senhas-alunos.csv"
+EQUIPE = DEST / "senhas-para-equipe.csv"
+BASE_URL = "https://alumni-plano-gerador.vercel.app/aluno/"
 ENVFILE = DEST / "ACESSO_ALUNOS.txt"
 ALUNOS = Path("public/aluno")
 
@@ -83,7 +85,30 @@ def main() -> int:
     ENVFILE.write_text(json.dumps(atual, separators=(",", ":")), encoding="utf-8")
     os.chmod(ENVFILE, 0o600)
 
+    # Lista para a equipe distribuir: nome e link, nao slug. O nome sai do <h1> do
+    # proprio material, entao acompanha qualquer correcao feita la.
+    import html as _html
+    linhas = []
+    for slug in sorted(atual):
+        f = ALUNOS / f"{slug}.html"
+        nome = slug.replace("-", " ").title()
+        if f.exists():
+            m = re.search(r"<h1[^>]*>(.*?)</h1>", f.read_text(encoding="utf-8", errors="ignore"), re.S)
+            if m:
+                bruto = re.sub(r"<[^>]+>", "", m.group(1))
+                bruto = _html.unescape(bruto).strip()
+                if bruto:
+                    nome = bruto
+        linhas.append([nome, BASE_URL + slug + ".html", atual[slug]])
+
+    with EQUIPE.open("w", encoding="utf-8", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(["Aluno", "Link do material", "Codigo de acesso"])
+        w.writerows(linhas)
+    os.chmod(EQUIPE, 0o600)
+
     print(f"alunos: {len(atual)}   senhas novas geradas: {novos}")
+    print(f"lista p/ equipe: {EQUIPE}")
     if rotacionar:
         print(f"senha rotacionada: {rotacionar} -> {atual.get(rotacionar)}")
     print(f"\nlista em claro : {CSV}")
