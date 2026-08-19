@@ -24,7 +24,7 @@ from pathlib import Path
 
 DEST = Path.home() / "alumni-senhas"
 CSV = DEST / "senhas-alunos.csv"
-EQUIPE = DEST / "senhas-para-equipe.csv"
+EQUIPE = DEST / "CODIGOS-ALUNOS.xlsx"
 BASE_URL = "https://alumni-plano-gerador.vercel.app/aluno/"
 ENVFILE = DEST / "ACESSO_ALUNOS.txt"
 ALUNOS = Path("public/aluno")
@@ -51,6 +51,69 @@ def eh_redirecionamento(f: Path) -> bool:
         return False
     return ("location.replace" in t or "http-equiv=\"refresh\"" in t
             or "Redirecting" in t)
+
+
+
+def escreve_xlsx(destino: Path, linhas: list[list[str]]) -> None:
+    """Planilha com TODAS as celulas como texto.
+
+    Em CSV o Excel le "0001" como o numero 1 e come os zeros — e o codigo chega errado
+    para o aluno. Aqui cada celula e inlineStr, entao "0001" continua "0001". Um .xlsx e
+    so um zip de XMLs; nao vale uma dependencia nova (openpyxl nao instala nesta maquina,
+    PEP 668).
+    """
+    import zipfile
+    from xml.sax.saxutils import escape
+
+    def col(i: int) -> str:
+        s = ""
+        while i >= 0:
+            s = chr(65 + i % 26) + s
+            i = i // 26 - 1
+        return s
+
+    rows = "".join(
+        '<row r="%d">%s</row>' % (
+            ri,
+            "".join(
+                '<c r="%s%d" t="inlineStr"><is><t xml:space="preserve">%s</t></is></c>'
+                % (col(ci), ri, escape(str(v)))
+                for ci, v in enumerate(row)
+            ),
+        )
+        for ri, row in enumerate(linhas, 1)
+    )
+    sheet = (
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+        '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+        '<cols><col min="1" max="1" width="38" customWidth="1"/>'
+        '<col min="2" max="2" width="62" customWidth="1"/>'
+        '<col min="3" max="3" width="14" customWidth="1"/></cols>'
+        "<sheetData>%s</sheetData></worksheet>" % rows
+    )
+    ct = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+          '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+          '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+          '<Default Extension="xml" ContentType="application/xml"/>'
+          '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+          '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+          "</Types>")
+    rels = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>')
+    wb = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+          '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
+          'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+          '<sheets><sheet name="Codigos" sheetId="1" r:id="rId1"/></sheets></workbook>')
+    wbr = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+           '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+           '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>')
+    with zipfile.ZipFile(destino, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml", ct)
+        z.writestr("_rels/.rels", rels)
+        z.writestr("xl/workbook.xml", wb)
+        z.writestr("xl/_rels/workbook.xml.rels", wbr)
+        z.writestr("xl/worksheets/sheet1.xml", sheet)
 
 
 def materiais() -> list[str]:
@@ -166,16 +229,13 @@ def main() -> int:
                     nome = bruto
         linhas.append([nome, BASE_URL + slug + ".html", atual[slug]])
 
-    with EQUIPE.open("w", encoding="utf-8", newline="") as fh:
-        w = csv.writer(fh)
-        w.writerow(["Aluno", "Link do material", "Codigo de acesso"])
-        w.writerows(linhas)
+    escreve_xlsx(EQUIPE, [["Aluno", "Link do material", "Codigo de acesso"]] + linhas)
     os.chmod(EQUIPE, 0o600)
 
     print(f"alunos: {len(atual)}   senhas novas geradas: {novos}   codigos revogados: {len(removidos)}")
     for s in removidos:
         print(f"    revogado: {s}")
-    print(f"lista p/ equipe: {EQUIPE}")
+    print(f"planilha p/ equipe: {EQUIPE}")
     if rotacionar:
         print(f"senha rotacionada: {rotacionar} -> {atual.get(rotacionar)}")
     print(f"\nlista em claro : {CSV}")
