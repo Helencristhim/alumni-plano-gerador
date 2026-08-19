@@ -344,6 +344,16 @@ jobs:
       # style de todos os elementos antes e depois. Nada mudou = não revela = FAIL.
       # Só arquivo do PR que tenha botão "Reveal " é aberto (o resto nem custa).
       - name: "GATE 28 — Chromium (só este gate precisa de navegador)"
+        # `--with-deps` roda um apt-get completo. Em 19/08/2026 esse passo pendurou runs
+        # inteiros por 15-40 min (teto do GitHub é 6 h), sempre aqui: o apt/needrestart fica
+        # esperando uma confirmação que nunca chega. As variáveis abaixo tornam tudo
+        # não-interativo; o timeout é a rede de segurança — falhar em 10 min é reparável,
+        # pendurar seis horas trava todos os PRs do repo.
+        timeout-minutes: 10
+        env:
+          DEBIAN_FRONTEND: noninteractive
+          NEEDRESTART_MODE: a
+          NEEDRESTART_SUSPEND: 1
         run: |
           pip install --quiet playwright
           python3 -m playwright install --with-deps chromium
@@ -631,6 +641,15 @@ jobs:
         # consertados, e o veredito inalterado em ~6.7 mil comparações antes-vs-depois.
         # Roda sempre: é lib global, não depende dos arquivos do PR.
         run: node scripts/check_score_align.mjs
+
+      - name: "GATE 31 — selftest: prova que o gate do Reset ainda morde"
+        run: python3 scripts/check_reset_completo.py --selftest
+
+      - name: "GATE 31 — o botão Reset zera tudo que conta progresso"
+        # O Reset esquecia vocab card e think card; o collectState recolhia as classes que
+        # sobravam e a aula voltava a marcar 20-30% em vez de 0% (rafael-pelizaro 19/08/2026).
+        # Cobra a REGRA 18.1 nos dois sentidos. Roda sempre: é lib global.
+        run: python3 scripts/check_reset_completo.py
 
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''
