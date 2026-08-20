@@ -29,6 +29,13 @@ on:
       # gate nenhum. O job so classifica arquivos de professor/aluno, entao aqui rodam
       # o canario, o YAML valido e o GATE 8.
       - 'vercel.json'
+      # As serverless functions de api/ nao acionavam gate NENHUM -- o mesmo buraco do
+      # dashboard e do vercel.json acima. E elas nao servem UMA aula: o perfil-360 e o
+      # gerar-temas produzem o Perfil 360 e o CURRICULO de todo aluno novo, entao um erro
+      # ali nasce replicado no pacote inteiro antes de alguem abrir uma aula. Sem esta
+      # linha o check `gates` nem existe no PR, e o merge_aula.py -- com razao -- se
+      # recusa a mergear. Aqui rodam o canario, o YAML valido e o GATE 8 (repo inteiro).
+      - 'api/**'
       # O estrago que mais dói NÃO chega por um arquivo de aula: chega pelo BUILDER e
       # pelo MODELO, que reescrevem centenas de aulas de uma vez. Sem estes paths, um PR
       # que mexe só no _build/ ou no scripts/ não acionava gate NENHUM — foi assim que o
