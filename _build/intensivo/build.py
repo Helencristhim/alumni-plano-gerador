@@ -408,6 +408,9 @@ def postclass():
           '      <p class="eyebrow" style="margin-top:var(--space-5h)">Optional practice</p>\n'
           '      <div class="exercise-section"><div class="section-header-row"><h4>Speak More</h4>'
           '<span class="badge badge-open">Optional</span></div>\n'
+          '        <div class="extra-ctrl"><button class="btn-ghost" aria-expanded="false" '
+          'onclick="toggleEl(\'sp%d\',this,\'Open Speak More\',\'Hide\')">Open Speak More</button></div>\n'
+          '        <div id="sp%d" style="display:none;margin-top:var(--space-3)">\n'
           '        <p class="task-instr">%s You can listen to your recording and record again if you wish.</p>\n'
           '        <div class="rec-bar">'
           '<button class="audio-btn-sm" id="rec%d-start" onclick="rcStart(\'rec%d\')">Record</button>'
@@ -418,15 +421,24 @@ def postclass():
           '<button class="audio-btn-sm ghost" onclick="rcBaixar(\'rec%d\')">Download</button>'
           '<button class="audio-btn-sm ghost" onclick="rcApaga(\'rec%d\')">Delete recording</button></div>\n'
           '        <div class="callout warn" id="rec%d-msg" style="display:none"></div>\n'
-          '        <p class="subprompt"><strong>Local only.</strong> The recording stays on this computer. '
-          'It is not sent to your teacher and it is not saved anywhere else.</p>\n'
+          '        <p class="subprompt" data-view="aluno" lang="en"><strong>Local only.</strong> The recording '
+          'stays on this computer. It is not sent to your teacher and it is not saved anywhere else. '
+          'Use <strong>Download</strong> if you want to keep it.</p>\n'
+          '        <p class="subprompt" data-view="professor">A grava&ccedil;&atilde;o fica no computador dela: '
+          'n&atilde;o sobe para lugar nenhum e <strong>n&atilde;o chega at&eacute; voc&ecirc;</strong>. Se quiser ouvir, '
+          'pe&ccedil;a que ela use o <strong>Download</strong> e mande o arquivo.</p>\n'
+          '        </div>\n'
           '      </div>\n'
           '      <div class="exercise-section"><div class="section-header-row"><h4>Write More</h4>'
           '<span class="badge badge-open">Optional</span></div>\n'
+          '        <div class="extra-ctrl"><button class="btn-ghost" aria-expanded="false" '
+          'onclick="toggleEl(\'wr%d\',this,\'Open Write More\',\'Hide\')">Open Write More</button></div>\n'
+          '        <div id="wr%d" style="display:none;margin-top:var(--space-3)">\n'
           '        <p class="task-instr">%s</p>\n'
           '        <textarea class="writebox" id="pw%d" data-k="post_l%d_write" placeholder="%s" '
           'oninput="preSave(this);autoCresce(this);pwCount(\'pw%d\',\'pw%d-out\',\'post_l%d_write\')"></textarea>\n'
           '        <div class="score-out" id="pw%d-out"></div>\n'
+          '        </div>\n'
           '      </div>\n'
           '      <p class="eyebrow" style="margin-top:var(--space-5h)">%s</p>\n'
           '      <div class="exercise-section"><div class="section-header-row"><h4>One line to bring</h4></div>\n'
@@ -435,8 +447,8 @@ def postclass():
           'oninput="preSave(this);autoCresce(this)"></textarea>\n'
           '      </div>\n    </div>\n  </div>\n'
           % (n, '' if n == 1 else ' style="display:none"', po['rotulo'], po['intro_pt'], recap,
-             po['titulo'], faladas, n, lac, n, n, perg, po['fala'], n, n, n, n, n, n, n, n, n, n,
-             po['escrita'][0], n, n, po['escrita'][1], n, n, n, n,
+             po['titulo'], faladas, n, lac, n, n, perg, n, n, po['fala'], n, n, n, n, n, n, n, n, n, n,
+             n, n, po['escrita'][0], n, n, po['escrita'][1], n, n, n, n,
              ('Before the meeting' if n == 6 else 'Before lesson %d' % (n + 1)), po['linha'], n, n))
     return ('<div class="tab-content" id="tab-postclass">\n'
             '  <p class="eyebrow" data-view="professor">Depois da aula</p>\n'
