@@ -118,8 +118,9 @@ def deck_da_aula(a):
                        '    <div class="close-flow">%s' % blocos,
                        '      <div class="close-block"><h5>What we worked on today</h5><div id="recapList%d"></div></div>' % n,
                        '      <div class="close-block"><h5>How confident do you feel right now?</h5><div id="confList%d"></div></div>' % n,
-                       '    </div>',
-                       R.subprompt(a['proxima'])])
+                       '      <div class="close-block"><h5>%s</h5><p class="cb-sub">%s</p></div>'
+                       % ('Next' if n < max(AULAS) else 'On 31 August', a['proxima']),
+                       '    </div>'])
     add(R.tela(n, 12, 8, 'slide-dark', corpo, nota(12)))
     return ''.join(t)
 
@@ -412,7 +413,7 @@ def postclass():
           'onclick="toggleEl(\'sp%d\',this,\'Open Speak More\',\'Hide\')">Open Speak More</button></div>\n'
           '        <div id="sp%d" style="display:none;margin-top:var(--space-3)">\n'
           '        <p class="task-instr">%s You can listen to your recording and record again if you wish.</p>\n'
-          '        <div class="rec-bar">'
+          '        <div class="rec-aud">'
           '<button class="audio-btn-sm" id="rec%d-start" onclick="rcStart(\'rec%d\')">Record</button>'
           '<button class="audio-btn-sm" id="rec%d-stop" style="display:none;background:var(--danger);border-color:var(--danger)" onclick="rcStop(\'rec%d\')">Stop</button>'
           '<span class="rec-time" id="rec%d-time">00:00</span></div>\n'
@@ -421,10 +422,10 @@ def postclass():
           '<button class="audio-btn-sm ghost" onclick="rcBaixar(\'rec%d\')">Download</button>'
           '<button class="audio-btn-sm ghost" onclick="rcApaga(\'rec%d\')">Delete recording</button></div>\n'
           '        <div class="callout warn" id="rec%d-msg" style="display:none"></div>\n'
-          '        <p class="subprompt" data-view="aluno" lang="en"><strong>Local only.</strong> The recording '
+          '        <p class="rec-nota" data-view="aluno" lang="en"><strong>Local only.</strong> The recording '
           'stays on this computer. It is not sent to your teacher and it is not saved anywhere else. '
           'Use <strong>Download</strong> if you want to keep it.</p>\n'
-          '        <p class="subprompt" data-view="professor">A grava&ccedil;&atilde;o fica no computador dela: '
+          '        <p class="rec-nota" data-view="professor">A grava&ccedil;&atilde;o fica no computador dela: '
           'n&atilde;o sobe para lugar nenhum e <strong>n&atilde;o chega at&eacute; voc&ecirc;</strong>. Se quiser ouvir, '
           'pe&ccedil;a que ela use o <strong>Download</strong> e mande o arquivo.</p>\n'
           '        </div>\n'
@@ -554,6 +555,22 @@ def patches(s):
     velho = "if(k.indexOf('pre_')===0)return 'aluno';"
     assert velho in s, 'papelDe mudou de forma'
     s = s.replace(velho, velho + "\n  if(k.indexOf('post_')===0)return 'aluno';")
+    # ===== O GRAVADOR EM SUPERFICIE CLARA, E A NOTA COMO NOTA =====
+    # Dois defeitos na mesma tela, um em cima do outro (literalmente):
+    #  1. .subprompt tem margin-top:-14px no molde -- serve para colar a linha na pergunta
+    #     acima dela. Debaixo da barra do gravador, os -14px puxavam o texto PARA DENTRO da
+    #     barra escura, e a primeira linha do aviso sumia.
+    #  2. .rec-bar e superficie ESCURA com botao de superficie clara em cima. A regua ja
+    #     tinha abandonado a .rec-bar por isso: o Stop existe e nao se le.
+    ancora = ".rec-time{"
+    assert ancora in s, 'o CSS do gravador mudou de forma'
+    s = s.replace(ancora, """.rec-aud{display:flex;align-items:center;gap:var(--space-2h);flex-wrap:wrap;
+  padding:var(--space-3);background:var(--bg-input);border:1px solid var(--border);
+  border-radius:10px;margin-top:var(--space-3)}
+.rec-aud .rec-time{margin-left:auto;color:var(--text)}
+.rec-nota{margin-top:var(--space-3);font-size:.82rem;line-height:1.6;color:var(--text-mid)}
+.rec-nota strong{color:var(--text)}
+""" + ancora)
     # ===== A FALA VEM DA ELEVENLABS, NAO DO NAVEGADOR (REGRA 7) =====
     # O molde falava por speechSynthesis: serve a um artefato de laboratorio, nao ao
     # material de uma aluna. A voz muda em cada maquina, some no Safari e nao e a voz do
