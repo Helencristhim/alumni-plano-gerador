@@ -180,6 +180,18 @@ body.tg-open .teacher-t-panel{display:block}
 .tg-win-aviso{font-size:.78rem;color:#f0b7b7;margin:.5rem 0 0}
 .tg-win-aviso[hidden]{display:none}
 #teacherNote{font-size:.88rem;color:var(--d-ink-2)}
+body.tg-doc-mode{background:var(--light);color:var(--ink);padding:1.1rem .9rem 3rem}
+.tg-doc{max-width:640px;margin:0 auto}
+.tg-doc h1{font-family:var(--serif);font-size:1.5rem;margin:0 0 .2rem}
+.tg-doc .tg-sub{color:var(--ink-2);margin:0 0 1.2rem;font-size:.92rem}
+.tg-slide{background:var(--light-2);border:1px solid var(--line);border-radius:var(--radius);
+  padding:.85rem 1rem;margin:0 0 .8rem}
+.tg-slide h2{font-family:var(--serif);font-size:1.08rem;margin:.35rem 0 .5rem}
+.tg-slide .tg-lab{font:600 .7rem/1.3 var(--sans);letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink-3);margin:.35rem 0 0}
+.tg-slide .tg-note{font-size:.9rem;color:var(--ink-2);line-height:1.55}
+.tg-slide .tg-note strong{color:var(--ink)}
+@media print{ .tg-slide{break-inside:avoid} }
 #teacherNote strong{color:var(--d-ink)}
 .val-note{font:600 .68rem/1.3 var(--sans);letter-spacing:.04em;text-transform:uppercase;
           color:#e6c07a;border:1px dashed #6b5a2f;border-radius:6px;padding:.4rem .6rem;margin:.7rem 0}
@@ -198,8 +210,8 @@ body.tg-open .teacher-t-panel{display:block}
     <div class="brand">Alumni <span>by Better</span> &middot; <span id="brandAluna">Rita Rodrigues</span></div>
     <div class="spacer"></div>
     <div class="view-switch" role="group" aria-label="View">
-      <button id="vwAluna" aria-pressed="true" onclick="setView('aluna')">Student View</button>
-      <button id="vwProf" aria-pressed="false" onclick="setView('professor')">Teacher View</button>
+      <button id="vwAluna" aria-pressed="false" onclick="setView('aluna')">Student View</button>
+      <button id="vwProf" aria-pressed="true" onclick="setView('professor')">Teacher View</button>
     </div>
   </div>
 </header>
@@ -210,7 +222,6 @@ body.tg-open .teacher-t-panel{display:block}
   <button role="tab" id="tabIn"       aria-selected="false" aria-controls="pnIn"       onclick="setTab('In')">In-class</button>
   <button role="tab" id="tabPost"     aria-selected="false" aria-controls="pnPost"     onclick="setTab('Post')">Post-class</button>
   <button role="tab" id="tabProfile"  aria-selected="false" aria-controls="pnProfile"  onclick="setTab('Profile')" data-view="professor">Profile</button>
-  <button role="tab" id="tabQA"       aria-selected="false" aria-controls="pnQA"       onclick="setTab('QA')" data-view="professor">QA</button>
 </nav>
 
 <!-- ================= PLANNING ================= -->
@@ -985,7 +996,6 @@ body.tg-open .teacher-t-panel{display:block}
 <!-- ================= PROFILE (professor) ================= -->
 <section class="panel" id="pnProfile" role="tabpanel" aria-labelledby="tabProfile" hidden data-view="professor">
   <h1>Perfil &mdash; uso interno</h1>
-  <p class="lead">Português aqui é deliberado: esta aba é do professor e não é projetada. Acentuação obrigatória.</p>
   <div class="grid2">
     <div class="card"><h3 class="sub">Aluna</h3>
       <dl class="kv">
@@ -994,7 +1004,6 @@ body.tg-open .teacher-t-panel{display:block}
         <dt>Escopo</dt><dd>TI, RH, qualidade, controladoria corporativa e processos de negócio &mdash; 9 pessoas</dd>
         <dt>Reporta a</dt><dd>Thomaz Rodrigues (CEO); integra o conselho</dd>
         <dt>Nível</dt><dd>A2+ assimétrico &mdash; receptivo acima da produção</dd>
-        <dt>Idade</dt><dd>Não registrar. Bloqueio de liberação nesta conta.</dd>
       </dl></div>
     <div class="card"><h3 class="sub">O que dimensiona a aula</h3>
       <dl class="kv">
@@ -1021,43 +1030,6 @@ body.tg-open .teacher-t-panel{display:block}
   </div>
 </section>
 
-<!-- ================= QA (professor) ================= -->
-<section class="panel" id="pnQA" role="tabpanel" aria-labelledby="tabQA" hidden data-view="professor">
-  <h1>QA &mdash; artefato de validação</h1>
-  <p class="lead">Este arquivo <b>não é liberável à aluna</b>. As concessões abaixo são limitações
-     deliberadas da versão de validação e não migram para a produção final.</p>
-  <h2 class="sec">Limitações técnicas intencionais</h2>
-  <div class="card"><dl class="kv">
-    <dt>Distribuição</dt><dd>Um HTML único com alternância de visão. O isolamento é <b>lógico</b>, não de segurança: a aluna não chega pelo fluxo normal, mas o conteúdo está no arquivo.</dd>
-    <dt>Persistência</dt><dd><code>localStorage</code> no mesmo navegador. Não é perfil, sincronização, envio nem histórico institucional.</dd>
-    <dt>Áudio</dt><dd>Não usado nesta aula. Se entrar, será <i>temporary browser voice — validation only</i>.</dd>
-    <dt>Gravação</dt><dd>Ausente. O pre-class não tem botão, ícone nem menção &mdash; é bloqueio de liberação.</dd>
-    <dt>Envio/login</dt><dd>Não implementado nem simulado. Nenhum botão cenográfico.</dd>
-    <dt>Imagem</dt><dd>Capa com placeholder <b>rotulado</b>. Falta ativo com origem, licença e alt text.</dd>
-  </dl></div>
-  <h2 class="sec">Matriz de QA</h2>
-  <div class="card"><dl class="kv">
-    <dt>Perfil/syllabus</dt><dd>PASSOU &mdash; aula 1 = <i>Company overview &amp; Rita&rsquo;s role</i>, produto = abertura funcional com apoio.</dd>
-    <dt>Pre-class</dt><dd>PASSOU &mdash; 6 atividades, sem gravação, autônomo; léxico volta no in-class.</dd>
-    <dt>In-class</dt><dd>PASSOU &mdash; 8 estágios, 55+5; produção única, feedback e retask presentes.</dd>
-    <dt>Post-class</dt><dd>PASSOU &mdash; consolida o ocorrido, sem função técnica falsa.</dd>
-    <dt>Language</dt><dd>PASSOU &mdash; inglês em tudo o que a aluna vê; português só em Perfil e QA.</dd>
-    <dt>Factual</dt><dd>PASSOU &mdash; 1988, 38 anos, 146 employees, CEO Thomaz Rodrigues, 9 pessoas na área. Nada recalculado.</dd>
-    <dt>Confidencialidade</dt><dd>PASSOU &mdash; receita, net income, participação por parceiro e comissões <b>fora</b> desta aula (só a partir da 5). Idade ausente.</dd>
-    <dt>Teacher</dt><dd>PASSOU &mdash; nota por tela, em inglês, no formato Goal/Run it/Check/If needed/Move on when.</dd>
-    <dt>Technical</dt><dd>PARCIAL &mdash; navegação, estado, Finish e Reset funcionam; falta teste em navegador real com teclado.</dd>
-    <dt>Visual/a11y</dt><dd>NÃO VERIFICADO &mdash; contraste medido sobre superfície composta ainda não rodado.</dd>
-  </dl></div>
-  <h2 class="sec">Para virar produção final</h2>
-  <div class="card"><ul style="font-size:.93rem;margin:0;padding-left:1.1rem">
-    <li>Separar aluna e professor em entrega distinta &mdash; não por alternância no mesmo arquivo.</li>
-    <li>Substituir o placeholder da capa por ativo com origem, licença e alt text.</li>
-    <li>Medir contraste sobre a superfície composta em todas as telas.</li>
-    <li>Testar teclado, foco e responsividade em navegador real, servindo por HTTP.</li>
-    <li>Decidir a confidencialidade de receita e comissões <b>antes</b> de produzir a aula 5.</li>
-  </ul></div>
-</section>
-
 <script>
 /* ============ registro unico ============ */
 var ALUNA={nome:'Rita',sobrenome:'Rodrigues'};
@@ -1078,7 +1050,7 @@ var LESSONS={
 var CICLO={rotulo:'Lessons in this cycle',aulas:6,nivel:'A2+',nome:'Intensive'};
 
 /* ============ estado ============ */
-var BUCKET='rita_pv_v1', view='aluna', slide=1, aulaAtual=1, visitados={1:1};
+var BUCKET='rita_pv_v1', view='professor', slide=1, aulaAtual=1, visitados={1:1};
 function db(){try{return JSON.parse(localStorage.getItem(BUCKET))||{aluna:{},prof:{},shared:{}}}
              catch(e){return {aluna:{},prof:{},shared:{}}}}
 function save(o){try{localStorage.setItem(BUCKET,JSON.stringify(o))}catch(e){}}
@@ -1098,13 +1070,13 @@ function setView(v){
   });
   if(v==='aluna'){ document.body.classList.remove('tg-open');
     var t=document.querySelector('.tabs button[aria-selected="true"]');
-    if(t&&(t.id==='tabProfile'||t.id==='tabQA')) setTab('Planning'); }
+    if(t&&t.id==='tabProfile') setTab('Planning'); }
   hidratar();
 }
 
 /* ============ abas ============ */
 function setTab(id){
-  ['Planning','Pre','In','Post','Profile','QA'].forEach(function(t){
+  ['Planning','Pre','In','Post','Profile'].forEach(function(t){
     var b=document.getElementById('tab'+t), p=document.getElementById('pn'+t);
     if(!b||!p)return; var on=(t===id);
     b.setAttribute('aria-selected',on); p.hidden=!on;
@@ -1146,10 +1118,32 @@ function paint(){
   });
 }
 function tgToggle(){ document.body.classList.toggle('tg-open'); }
+function tgDocRender(){
+  var q=new URLSearchParams(window.location.search);
+  if(q.get('mode')!=='teacher-guide') return false;
+  var n=parseInt(q.get('lesson')||'1',10)||1;
+  var L=LESSONS[n]||LESSONS[1];
+  var sl=Array.prototype.slice.call(document.querySelectorAll('#slidesWrap .slide[data-lesson="'+n+'"]'));
+  var h='<div class="tg-doc"><h1>Teacher&rsquo;s Guide &middot; Lesson '+n+'</h1>'+
+        '<p class="tg-sub">'+L.tema+' &middot; '+L.data+' &middot; '+alunaNome()+'</p>';
+  sl.forEach(function(el,i){
+    var head=el.querySelector('.slide-heading'), lab=el.querySelector('.chapter-label');
+    var st=el.getAttribute('data-stage'), stn=(st&&L.stages&&L.stages[st-1])?L.stages[st-1].n:'';
+    h+='<section class="tg-slide"><div><span class="pill">Screen '+(i+1)+' / '+sl.length+'</span>'+
+       (st?' <span class="pill">Stage '+st+(stn?' &middot; '+stn:'')+'</span>':'')+'</div>'+
+       (lab?'<p class="tg-lab">'+lab.innerHTML+'</p>':'')+
+       '<h2>'+(head?head.innerHTML:'&mdash;')+'</h2>'+
+       '<div class="tg-note">'+(el.getAttribute('data-teacher')||'<i>No note on this screen.</i>')+'</div></section>';
+  });
+  document.body.innerHTML=h+'</div>';
+  document.body.className='tg-doc-mode';
+  document.title='Teacher\u2019s Guide \u00b7 Lesson '+n+' \u00b7 '+alunaNome();
+  return true;
+}
 function tgURL(n){ var u=new URL(window.location.href);
   u.searchParams.set('mode','teacher-guide'); u.searchParams.set('lesson',String(n));
   u.hash=''; return u.toString(); }
-function tgWinOpen(){ var w=window.open(tgURL(1),'_blank','width=560,height=760');
+function tgWinOpen(){ var w=window.open(tgURL(aulaAtual),'_blank','width=560,height=760');
   document.getElementById('tgWinAviso').hidden=!!w; }
 function abrirBloco(b){ var c=b.parentElement.nextElementSibling;
   c.hidden=!c.hidden; b.textContent=c.hidden?'Show':'Hide'; }
@@ -1214,6 +1208,7 @@ function resetLesson(){
 
 /* ============ boot ============ */
 (function(){
+  if(tgDocRender()) return;
   montarStageBar();
   var mapa=document.getElementById('cicloMapa'); var cards=document.getElementById('cardsIn');
   Object.keys(LESSONS).forEach(function(k){
@@ -1240,7 +1235,7 @@ function resetLesson(){
              b3.textContent='Not produced yet'; act.appendChild(b3); }
     c.appendChild(act); cards.appendChild(c);
   });
-  akInit(); setView('aluna'); hidratar();
+  akInit(); setView('professor'); hidratar();
   document.addEventListener('keydown', function(e){
     if(!document.body.classList.contains('deck-on'))return;
     if(e.key==='ArrowRight') go(1);
