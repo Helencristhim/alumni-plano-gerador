@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="alumni-model" content="teens">
+    <meta name="alumni-model" content="adulto">
     <meta name="alumni-level" content="A2">
     <meta name="alumni-framework" content="imersivo-prototipo">
     <meta name="alumni-gen" content="2">
@@ -36,14 +36,6 @@ var audioMap = {
   "I spend a lot of time on music.": "/audio/catarina-mascaro/a2_i_spend_a_lot_of_time_on_music.mp3",
   "I am really into it right now.": "/audio/catarina-mascaro/a2_i_am_really_into_it_right_now.mp3",
   "I get bored when there is nothing to do.": "/audio/catarina-mascaro/a2_i_get_bored_when_there_is_nothing_to_do.mp3",
-  "wake up": "/audio/catarina-mascaro/wa2_wake_up.mp3",
-  "hang out": "/audio/catarina-mascaro/wa2_hang_out.mp3",
-  "get bored": "/audio/catarina-mascaro/wa2_get_bored.mp3",
-  "scroll": "/audio/catarina-mascaro/wa2_scroll.mp3",
-  "spend time": "/audio/catarina-mascaro/wa2_spend_time.mp3",
-  "chat": "/audio/catarina-mascaro/wa2_chat.mp3",
-  "be into": "/audio/catarina-mascaro/wa2_be_into.mp3",
-  "hooked on": "/audio/catarina-mascaro/wa2_hooked_on.mp3",
 };
 </script>
 <style>
@@ -717,125 +709,6 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-tag { color: #fff !important; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
-
-/* PELE TEENS (injetada pelo builder — model=teens) */
-/* ══════════════════════════════════════════════════════════════════════════
-   PELE TEENS — reskin sobre o shell adulto do Modelo.
-   Só FORMA / FONTE / RITMO / TOM. A COR vem da paleta do aluno (config.palette),
-   igual ao adulto e ao kids — não fixamos cor aqui.
-   O builder injeta este bloco no fim do CSS do shell quando existe
-   `_build/model/teens-theme.css` e config.model == "teens".
-   Ossos e classes-mecanismo = os do adulto → os 12 Contratos Universais passam.
-   Ver _build/model/CONTRATOS-E-RASTREIO.md.
-
-   PRINCÍPIO: teen NÃO é criança grande. Onde o kids arredonda tudo (18px) e
-   engorda a fonte, o teen faz o oposto — canto médio (12px), densidade maior,
-   contraste alto, HUD de game. O que o kids ganha em fofura, o teen ganha em
-   "isto parece um app que eu uso", que é o que segura um gamer de 15 anos.
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* Tipografia: corpo neutro e legível; títulos pesados e apertados (estilo esports) */
-body, .slide, .slide-inner { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif; }
-.slide-heading, .slide h1, .slide h2, .chapter-label, .lesson-number {
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif !important;
-  letter-spacing: -.02em;
-}
-.slide-heading { font-weight: 800 !important; }
-/* Rótulo de capítulo vira tag de HUD: caixa alta, tracking largo, pequeno */
-.chapter-label {
-  text-transform: uppercase; letter-spacing: .14em; font-size: .72rem !important;
-  font-weight: 700 !important;
-}
-
-/* Cantos MÉDIOS — nem quadrado corporativo, nem bolha infantil */
-.slide-inner, .vocab-card, .comp-q, .comp-questions, .check-item, .roleplay-card,
-.mistake-card, .fill-item, .error-card, .email-card, .lesson-card, .exercise-section,
-.think-card, .speech-card, .survival-card, .media-card, .match-row, .quiz-option,
-.ic-reading, .ic-choice, .ic-tfrow { border-radius: 12px !important; }
-.btn, button:not(.tab-btn):not(.arrow-btn), .audio-btn, .listen, .verify-all-btn,
-.check-btn, .nav-btn { border-radius: 10px !important; }
-/* Chips/keywords continuam pílula — é a forma que o teen reconhece de tag/badge */
-.keyword-chip, .chip, .kw span { border-radius: 999px !important; font-weight: 600 !important; }
-
-/* Vocab reveal: palavra em destaque, dica em caixa alta pequena (parece card de item) */
-.vocab-card .vocab-word, .vocab-card-word { font-size: 1.2rem !important; font-weight: 800 !important; letter-spacing: -.01em; }
-.vocab-card .card-hint { text-transform: uppercase; letter-spacing: .08em; font-size: .68rem; }
-
-/* Slide de conclusão (Contrato #1) — check em quadrado de checkbox de app, não bolha */
-.check-item { padding: .8rem 1rem !important; gap: .9rem !important; }
-.check-item .check-box { border-radius: 7px !important; border-width: 2px !important; }
-
-/* Barras de progresso finas e retas (HUD), não gordinhas */
-.progress-bar, .mini-bar, .track { border-radius: 4px !important; }
-
-/* Foco visível (REGRA 25) — mantido forte, no accent do aluno */
-.check-item:focus-visible, .vocab-card:focus-visible, .btn:focus-visible,
-button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-
-/* A2+ = ZERO português na tela (REGRA 13). O CSS de .sp-pt/.speech-translation CONTINUA
-   vivo no shell (é o que permite A0/A1 existir) — aqui o conteúdo simplesmente não emite
-   a classe. NÃO escondemos por CSS: quem não deve traduzir é o AUTOR, não a folha de
-   estilo. Se um dia um teen A1 aparecer, a tradução aparece sem tocar nesta pele. */
-
-/* ===== WORD ARENA — arcade de vocabulário embutido (engine em teens-theme.js) =====
-   Motor reaproveitado do jogo /games/word-arena (que veio do app interno better-learn).
-   Diferenças obrigatórias da versão standalone: ZERO emoji (SVG inline) e áudio pelo
-   speakText do shell (MP3 ElevenLabs — REGRA 7), nunca speechSynthesis como principal. */
-.word-arena {
-  background: linear-gradient(150deg, rgba(15,14,30,.97), rgba(30,26,60,.97));
-  border: 1px solid var(--accent); border-radius: 14px; padding: 1.2rem;
-  max-width: 620px; margin: 1.2rem auto 0; color: #fff;
-}
-.word-arena .wa-hud { display: flex; align-items: center; justify-content: space-between; gap: .6rem; flex-wrap: wrap; }
-.word-arena .wa-tag {
-  text-transform: uppercase; letter-spacing: .14em; font-size: .68rem; font-weight: 700;
-  color: var(--accent-light);
-}
-.word-arena .wa-stats { display: flex; gap: .4rem; }
-.word-arena .wa-chip {
-  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
-  border-radius: 999px; padding: .22rem .7rem; font-size: .78rem; font-weight: 700; color: #fff;
-  display: inline-flex; align-items: center; gap: .3rem;
-}
-.word-arena .wa-chip svg { width: 13px; height: 13px; }
-.word-arena .wa-bar { height: 4px; background: rgba(255,255,255,.14); border-radius: 4px; overflow: hidden; margin: .9rem 0 1.1rem; }
-.word-arena .wa-bar > i { display: block; height: 100%; width: 0; background: var(--accent-light); transition: width .3s }
-.word-arena .wa-word { text-align: center; font-size: 2rem; font-weight: 800; letter-spacing: -.02em; color: #fff; }
-.word-arena .wa-say {
-  display: flex; justify-content: center; margin: .6rem 0 1.1rem;
-}
-.word-arena .wa-say-btn {
-  display: inline-flex; align-items: center; gap: .45rem; cursor: pointer;
-  background: var(--accent); color: #fff; border: none; font-family: inherit;
-  font-weight: 700; font-size: .85rem; padding: .5rem 1.2rem; border-radius: 999px;
-}
-.word-arena .wa-say-btn.playing { animation: waPulse .6s ease infinite }
-@keyframes waPulse { 50% { transform: scale(1.05) } }
-.word-arena .wa-opts { display: grid; gap: .6rem }
-.word-arena .wa-opt {
-  background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.16);
-  border-radius: 10px; padding: .85rem 1rem; text-align: left; cursor: pointer;
-  font-family: inherit; font-size: .95rem; color: #fff; min-height: 44px;
-  transition: border-color .2s, background .2s, transform .1s;
-}
-.word-arena .wa-opt:hover:not(.disabled) { border-color: var(--accent-light); background: rgba(255,255,255,.1) }
-.word-arena .wa-opt:active { transform: scale(.99) }
-.word-arena .wa-opt.correct { border-color: #22c55e; background: rgba(34,197,94,.18) }
-.word-arena .wa-opt.wrong { border-color: #ef4444; background: rgba(239,68,68,.18) }
-.word-arena .wa-opt.disabled { cursor: default }
-.word-arena .wa-end { text-align: center; padding: .6rem 0 }
-.word-arena .wa-end h4 { font-size: 1.4rem; font-weight: 800; margin: .2rem 0 .3rem; color: #fff }
-.word-arena .wa-end p { color: rgba(255,255,255,.72); font-size: .9rem; margin: 0 }
-.word-arena .wa-stars { font-size: 1.5rem; letter-spacing: .2rem; color: var(--accent-light); margin-bottom: .3rem }
-.word-arena .wa-again {
-  margin-top: 1rem; background: var(--accent); color: #fff; border: none; border-radius: 10px;
-  padding: .6rem 1.4rem; font-weight: 700; font-family: inherit; cursor: pointer; min-height: 44px;
-}
-.word-arena .wa-say-btn:focus-visible, .word-arena .wa-opt:focus-visible,
-.word-arena .wa-again:focus-visible { outline: 3px solid var(--accent-light); outline-offset: 2px }
-@media (prefers-reduced-motion: reduce) { .word-arena * { animation: none !important; transition: none !important } }
-@media (max-width: 520px) { .word-arena .wa-word { font-size: 1.6rem } }
-
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/lib/supabase-config.js"></script>
@@ -939,7 +812,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
   <span class="phase-label" data-phase="2" data-name="Word Pack">Word Pack</span>
   <span class="phase-label" data-phase="3" data-name="The Code">The Code</span>
   <span class="phase-label" data-phase="4" data-name="Real Talk">Real Talk</span>
-  <span class="phase-label" data-phase="5" data-name="Arena">Arena</span>
+  <span class="phase-label" data-phase="5" data-name="Speed Round">Speed Round</span>
   <span class="phase-label" data-phase="6" data-name="Your Move">Your Move</span>
   <span class="phase-label" data-phase="7" data-name="Wrap">Wrap</span>
 </div>
@@ -984,7 +857,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;max-width:680px;margin:1.5rem auto 0">
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem"><p style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);font-weight:700">01</p><p style="font-weight:700;font-size:.92rem;margin-top:.3rem">8 daily-life words</p></div>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem"><p style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);font-weight:700">02</p><p style="font-weight:700;font-size:.92rem;margin-top:.3rem">The missing S</p></div>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem"><p style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);font-weight:700">03</p><p style="font-weight:700;font-size:.92rem;margin-top:.3rem">Word Arena</p></div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem"><p style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);font-weight:700">03</p><p style="font-weight:700;font-size:.92rem;margin-top:.3rem">Speed round</p></div>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem"><p style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);font-weight:700">04</p><p style="font-weight:700;font-size:.92rem;margin-top:.3rem">Your whole week</p></div>
     </div>
   </div>
@@ -1263,12 +1136,12 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 <!-- ============================================================ -->
 
 <!-- ========== SLIDE 15: WORD ARENA ========== -->
-<div class="slide slide-light" data-slide="18" data-lesson="2" data-phase="5" data-teacher="<strong>Word Arena (4 min):</strong> Compartilhe o AUDIO da aba do navegador, senao ela nao ouve a palavra. Oito rodadas, cerca de dois minutos. Conte a streak em voz alta. Se ela bater o tempo da aula 1, diga o numero -- placar entre aulas e o que faz teen voltar. Nao corrija durante: comente no fim.">
+<div class="slide slide-light" data-slide="18" data-lesson="2" data-phase="5" data-teacher="<strong>Matching (4 min):</strong> Seis pares, contra o relogio. Cronometre em voz alta e compare com o tempo da aula 1 -- placar entre aulas e o que faz teen voltar. Se errar um par, diga so quantos faltam. No fim, peca uma frase com a palavra que demorou mais.">
   <div class="slide-inner">
-    <div class="chapter-label">Arena</div>
-    <h2 class="slide-heading">Word <span class="accent">Arena</span></h2>
-    <p style="color:var(--text-dim);font-size:.92rem;margin-top:.4rem;text-align:center">Hear the word. Pick what it means. Keep the streak alive.</p>
-    <div class="word-arena" data-key="catarina-a2" data-deck='[{"w":"wake up","def":"to stop sleeping and open your eyes"},{"w":"hang out","def":"to spend free time with friends, with no plan"},{"w":"get bored","def":"to stop being interested because nothing happens"},{"w":"scroll","def":"to move your finger up and down on a phone screen"},{"w":"spend time","def":"to use your free hours doing something"},{"w":"chat","def":"to talk in a friendly way, online or in person"},{"w":"be into","def":"to like something a lot"},{"w":"hooked on","def":"to like something so much that you cannot stop"}]'></div>
+    <div class="chapter-label">Speed Round</div>
+    <h2 class="slide-heading">Six <span class="accent">pairs</span></h2>
+    <p style="color:var(--text-dim);font-size:.92rem;margin-top:.4rem;text-align:center">Tap a word, then tap its meaning. Six pairs, against the clock.</p>
+    <div data-kind="matching" class="ic-card"><div class="ic-card-h3">Match the word to its meaning</div><p class="ic-match-hint">Tap a word, then tap its meaning</p><div class="ic-match-score">0 / 6 matched</div><div class="ic-match" data-interactive="1"><div class="ic-match-col"><h4>Words &amp; expressions</h4><div class="ic-chip ic-word" role="button" tabindex="0" data-k="A" data-match="1" onclick="icPickMatch(this)"><span class="ic-k">A</span><span>wake up</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="B" data-match="2" onclick="icPickMatch(this)"><span class="ic-k">B</span><span>hang out</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="C" data-match="3" onclick="icPickMatch(this)"><span class="ic-k">C</span><span>get bored</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="D" data-match="4" onclick="icPickMatch(this)"><span class="ic-k">D</span><span>scroll</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="E" data-match="5" onclick="icPickMatch(this)"><span class="ic-k">E</span><span>be into</span><span class="ic-pair"></span></div><div class="ic-chip ic-word" role="button" tabindex="0" data-k="F" data-match="6" onclick="icPickMatch(this)"><span class="ic-k">F</span><span>hooked on</span><span class="ic-pair"></span></div></div><div class="ic-match-col"><h4>Definitions</h4><div class="ic-chip ic-def" role="button" tabindex="0" data-k="1" onclick="icPickMatch(this)"><span class="ic-k">1</span><span>stop sleeping</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="2" onclick="icPickMatch(this)"><span class="ic-k">2</span><span>spend free time with friends</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="3" onclick="icPickMatch(this)"><span class="ic-k">3</span><span>stop being interested</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="4" onclick="icPickMatch(this)"><span class="ic-k">4</span><span>move your finger on a screen</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="5" onclick="icPickMatch(this)"><span class="ic-k">5</span><span>like something a lot</span><span class="ic-pair"></span></div><div class="ic-chip ic-def" role="button" tabindex="0" data-k="6" onclick="icPickMatch(this)"><span class="ic-k">6</span><span>cannot stop doing it</span><span class="ic-pair"></span></div></div></div></div>
   </div>
 </div>
 
@@ -2038,211 +1911,6 @@ function stopFreeRecording(stopBtn) {
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
 }
-</script>
-<script>
-/* teens-theme.js (injetada pelo builder — model=teens) */
-/* ============================================================================
-   TEENS-THEME.JS — injetado pelo builder SOMENTE quando existe teens-theme.js e
-   model==teens (analogo ao kids-theme.js). NUNCA entra no material adulto nem no
-   kids => caminho do adulto intocado (memoria nao-tocar-adulto).
-
-   WORD ARENA — arcade de vocabulario embutido na aula. O motor veio do jogo
-   standalone /games/word-arena (que por sua vez veio do "Tabuada do Dino", do app
-   interno better-learn). Duas mudancas OBRIGATORIAS em relacao ao standalone:
-
-     1. ZERO EMOJI. Todo icone e SVG inline (REGRA: visual do material).
-     2. AUDIO = speakText do shell (MP3 ElevenLabs, REGRA 7). O standalone usa
-        speechSynthesis; aqui isso seria TTS robotico como metodo principal, que a
-        REGRA 7 proibe. As palavras do deck entram no audioMap via
-        lesson.extra_audio do config.
-
-   USO no slides.html / preclass.html:
-     <div class="word-arena" data-key="theo-a1"
-          data-deck='[{"w":"match","def":"a game between two teams"}, ...]'></div>
-
-   PROGRESSO (REGRA 18): igual ao dino-tap — se o container TAMBEM tiver a classe
-   `think-card`, ele conta na barra do Pre-class (o updateProgress do shell ja conta
-   think-card, done quando `.recorded`). No slide do IN CLASS ele NAO tem think-card:
-   e atividade conduzida pela professora, e teacher-led nunca entra na barra do aluno.
-   ============================================================================ */
-(function () {
-  'use strict';
-
-  var OPTIONS = 4;
-  var SVG_SOUND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>';
-  var SVG_FLAME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 4 4 5 4 9a4 4 0 0 1-8 0c0-2 1-3 1-5-2 1-4 3-4 6a7 7 0 0 0 14 0c0-5-4-7-7-10Z"/></svg>';
-  var SVG_TARGET = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>';
-
-  function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
-
-  /* SFX curtos (Web Audio) — o "game feel". Silencioso se o navegador barrar. */
-  function sfx(ok) {
-    try {
-      var C = window.__teensActx || (window.__teensActx = new (window.AudioContext || window.webkitAudioContext)());
-      var seq = ok ? [[523.25, 0], [659.25, 0.09], [783.99, 0.18]] : [[220, 0], [165, 0.11]];
-      seq.forEach(function (s) {
-        var o = C.createOscillator(), g = C.createGain();
-        o.type = ok ? 'triangle' : 'sawtooth'; o.frequency.value = s[0];
-        o.connect(g); g.connect(C.destination);
-        var t = C.currentTime + s[1];
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(0.18, t + 0.02);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
-        o.start(t); o.stop(t + 0.22);
-      });
-    } catch (e) { }
-  }
-
-  /* Audio da palavra = pipeline do shell (audioMap -> MP3 ElevenLabs). */
-  function say(word) {
-    if (typeof window.speakText === 'function') window.speakText(word, null);
-  }
-
-  function persistKey(el) { return 'wordarena-' + (el.getAttribute('data-key') || 'x'); }
-
-  function build(el) {
-    var deck;
-    try { deck = JSON.parse(el.getAttribute('data-deck') || '[]'); } catch (e) { deck = []; }
-    deck = deck.filter(function (x) { return x && x.w && x.def; });
-    if (deck.length < 2) { el.style.display = 'none'; return; }
-
-    var rounds = deck.length;
-    var order = shuffle(deck.slice());
-    var qi = 0, streak = 0, best = 0, hits = 0, busy = false;
-
-    el.innerHTML =
-      '<div class="wa-hud"><span class="wa-tag">Word Arena</span>' +
-      '<span class="wa-stats">' +
-      '<span class="wa-chip">' + SVG_FLAME + '<b class="wa-streak">0</b></span>' +
-      '<span class="wa-chip">' + SVG_TARGET + '<b class="wa-qn">1</b>/' + rounds + '</span>' +
-      '</span></div>' +
-      '<div class="wa-bar"><i></i></div>' +
-      '<div class="wa-word"></div>' +
-      '<div class="wa-say"><button type="button" class="wa-say-btn" aria-label="Hear the word">' +
-      SVG_SOUND + ' Hear it</button></div>' +
-      '<div class="wa-opts"></div>';
-
-    var wordEl = el.querySelector('.wa-word'),
-      optsEl = el.querySelector('.wa-opts'),
-      sayBtn = el.querySelector('.wa-say-btn'),
-      streakEl = el.querySelector('.wa-streak'),
-      qnEl = el.querySelector('.wa-qn'),
-      bar = el.querySelector('.wa-bar > i');
-
-    function playCur() {
-      if (!order[qi]) return;
-      sayBtn.classList.add('playing');
-      say(order[qi].w);
-      setTimeout(function () { sayBtn.classList.remove('playing'); }, 1200);
-    }
-    sayBtn.addEventListener('click', playCur);
-
-    function options(correct) {
-      var pool = shuffle(deck.filter(function (x) { return x.def !== correct.def; }))
-        .slice(0, OPTIONS - 1).map(function (x) { return x.def; });
-      return shuffle([correct.def].concat(pool));
-    }
-
-    function render() {
-      busy = false;
-      var q = order[qi];
-      wordEl.textContent = q.w;
-      qnEl.textContent = qi + 1;
-      bar.style.width = (qi / rounds * 100) + '%';
-      optsEl.innerHTML = '';
-      options(q).forEach(function (def) {
-        var b = document.createElement('button');
-        b.type = 'button'; b.className = 'wa-opt'; b.textContent = def;
-        b.addEventListener('click', function () { choose(b, def, q.def); });
-        optsEl.appendChild(b);
-      });
-      setTimeout(playCur, 250);
-    }
-
-    function choose(btn, def, answer) {
-      if (busy) return;
-      busy = true;
-      var all = optsEl.querySelectorAll('.wa-opt');
-      for (var i = 0; i < all.length; i++) all[i].classList.add('disabled');
-      if (def === answer) {
-        btn.classList.add('correct'); sfx(true);
-        streak++; hits++; if (streak > best) best = streak;
-      } else {
-        btn.classList.add('wrong'); sfx(false); streak = 0;
-        for (var j = 0; j < all.length; j++) {
-          if (all[j].textContent === answer) all[j].classList.add('correct');
-        }
-      }
-      streakEl.textContent = streak;
-      setTimeout(function () {
-        qi++;
-        if (qi >= rounds) finish(); else render();
-      }, def === answer ? 800 : 1500);
-    }
-
-    function finish() {
-      bar.style.width = '100%';
-      var stars = hits >= rounds - 1 ? 3 : hits >= Math.ceil(rounds * 0.6) ? 2 : hits >= Math.ceil(rounds * 0.3) ? 1 : 0;
-      var title = stars === 3 ? 'Flawless.' : stars === 2 ? 'Solid run.' : 'Run it back.';
-      el.innerHTML =
-        '<div class="wa-end"><div class="wa-stars">' +
-        new Array(stars + 1).join('★') + new Array(4 - stars).join('☆') +
-        '</div><h4>' + title + '</h4>' +
-        '<p>' + hits + ' of ' + rounds + ' correct &middot; best streak ' + best + '</p>' +
-        '<button type="button" class="wa-again">Play again</button></div>';
-      el.querySelector('.wa-again').addEventListener('click', function () { replay(el); });
-      markDone(el);
-    }
-
-    render();
-  }
-
-  function replay(el) {
-    el.classList.remove('recorded', 'completed');
-    try { localStorage.removeItem(persistKey(el)); } catch (e) { }
-    build(el);
-  }
-
-  function markDone(el) {
-    // So conta progresso se o container tambem for think-card (Pre-class). No slide do
-    // IN CLASS a atividade e conduzida pela professora — teacher-led nao entra na barra.
-    if (!el.classList.contains('think-card')) return;
-    el.classList.add('recorded', 'completed');
-    try { localStorage.setItem(persistKey(el), '1'); } catch (e) { }
-    if (typeof window.updateProgress === 'function') window.updateProgress();
-  }
-
-  function done(el) {
-    // Volta de outra sessao ja concluido: tela calma, sem som, com opcao de jogar de novo.
-    el.innerHTML =
-      '<div class="wa-end"><div class="wa-stars">★★★</div>' +
-      '<h4>Completed</h4><p>Play it again to beat your streak.</p>' +
-      '<button type="button" class="wa-again">Play again</button></div>';
-    el.classList.add('recorded', 'completed');
-    el.querySelector('.wa-again').addEventListener('click', function () { replay(el); });
-    if (typeof window.updateProgress === 'function') window.updateProgress();
-  }
-
-  function initAll() {
-    var games = document.querySelectorAll('.word-arena');
-    for (var i = 0; i < games.length; i++) {
-      var el = games[i], was = false;
-      if (el.classList.contains('think-card')) {
-        try { was = localStorage.getItem(persistKey(el)) === '1'; } catch (e) { }
-      }
-      if (was) done(el); else build(el);
-    }
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll);
-  else initAll();
-})();
-
 </script>
 </body>
 </html>
