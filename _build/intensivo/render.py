@@ -77,18 +77,30 @@ def cards(itens, revelaveis=True):
                        % (meta, _rich(frente)))
     return '    <div class="card-row">%s</div>' % ''.join(out)
 
-def frases(itens):
+def frases(itens, fala=None):
     """Linhas que a aluna leva. Estrutura identica a do molde: os tres filhos DIRETOS da
-    .phrase-row (frase, funcao, acionador) -- o flex e do container, e um invólucro a mais
-    cola a frase na glosa. O texto vai lido do DOM, nunca dentro da string do handler."""
+    .phrase-row (frase, funcao, acionador).
+
+    O texto do audio sai do DOM, nunca de dentro da string do handler (REGRA 7.1). Quando o
+    que se DIZ difere do que esta escrito -- o [name] do encaminhamento e uma lacuna que o
+    professor preenche, e lida em voz alta viraria "colchete name colchete" -- a diferenca
+    fica no data-say, visivel no HTML, e nao escondida no gerador.
+    """
+    fala = fala or {}
     out = []
-    for en, fn in itens:
-        out.append('<div class="phrase-row"><span class="phrase-en">%s</span>%s'
-                   '<button class="audio-btn-sm ghost" onclick="say('
-                   'this.closest(\'.phrase-row\').querySelector(\'.phrase-en\').textContent,0.92,this)">'
+    for item in itens:
+        en, fn = item[0], item[1]
+        chave = _texto_puro(en)
+        ds = (' data-say="%s"' % esc(fala[chave])) if chave in fala else ''
+        out.append('<div class="phrase-row"><span class="phrase-en"%s>%s</span>%s'
+                   '<button class="audio-btn-sm ghost" onclick="say(sayText(this),0.92,this)">'
                    '&#9654;</button></div>'
-                   % (en, ('<span class="phrase-fn">%s</span>' % _rich(fn)) if fn else ''))
+                   % (ds, en, ('<span class="phrase-fn">%s</span>' % _rich(fn)) if fn else ''))
     return '    <div class="phrase-list">%s</div>' % ''.join(out)
+
+def _texto_puro(h):
+    import html as _h, re as _re
+    return ' '.join(_h.unescape(_re.sub(r'<[^>]+>', '', h)).split())
 
 def reveals(itens):
     return ''.join('    <div class="reveal-item" onclick="this.classList.toggle(\'revealed\')">'

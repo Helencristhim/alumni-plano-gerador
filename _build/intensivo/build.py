@@ -17,6 +17,7 @@ import json, os, re, sys, io
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI)
 import render as R
+import audio as AUDIO_SRC
 from content_aulas import AULAS, ESTAGIOS
 
 RAIZ = os.path.abspath(os.path.join(AQUI, '..', '..'))
@@ -67,13 +68,13 @@ def deck_da_aula(a):
     corpo = '\n'.join([R.pill('4 &middot; Five lines you can reuse'),
                        R.heading(a['linhas_t']),
                        R.subprompt('Lesson %02d &middot; speech map &mdash; it stays with you, today and on the day.' % n),
-                       R.frases(a['linhas'])])
+                       R.frases(a['linhas'], AUDIO_SRC.FALA)])
     add(R.tela(n, 6, 4, 'slide-light', corpo, nota(6)))
 
     # 7 - quando algo da errado
     corpo = '\n'.join([R.pill('4 &middot; When something goes wrong'),
                        R.heading(a['apoio_t']),
-                       R.frases(a['apoio'])])
+                       R.frases(a['apoio'], AUDIO_SRC.FALA)])
     add(R.tela(n, 7, 4, 'slide-light', corpo, nota(7)))
 
     # 8 - mude uma coisa
@@ -96,7 +97,7 @@ def deck_da_aula(a):
                        R.roleplay(blocos, kw),
                        R.botao_bloco('l%dmapa' % n, 'Your speech map'),
                        R.split('Your <span class="accent">speech map</span>',
-                               R.frases([(x[0], '') for x in a['linhas']]), 'l%dmapa' % n)])
+                               R.frases([(x[0], '') for x in a['linhas']], AUDIO_SRC.FALA), 'l%dmapa' % n)])
     add(R.tela(n, 10, 6, 'slide-dark', corpo, nota(10)))
 
     # 11 - feedback e retask focado, na mesma tela
@@ -371,8 +372,11 @@ def postclass():
         vocab = ' &middot; '.join('<em>%s</em>' % v for v in po['vocab'])
         recap = ''.join('<tr><td style="width:170px"><strong>%s</strong></td><td>%s</td></tr>' % (k, v)
                         for k, v in [('Situation', po['situacao']), ('What you are doing', po['fazendo']),
-                                     (po['titulo'], linhas), ('Keeping it going', apoio),
                                      ('Key vocabulary', vocab)])
+        # as linhas vem com audio: e o mesmo MP3 da aula, e e com ele que ela pratica em casa
+        faladas = (R.frases(a['linhas'], AUDIO_SRC.FALA) + '\n' +
+                   '      <p class="eyebrow" style="margin-top:var(--space-4)">Keeping it going</p>\n' +
+                   R.frases(a['apoio'], AUDIO_SRC.FALA))
         lac = ''.join('<div class="fill-blank-item"><span class="fill-blank-sentence">%d. %s'
                       '<input class="blank-input" data-ok="%s" placeholder="..." data-k="post_l%d_g%d">%s</span></div>'
                       % (i + 1, x, r, n, i, y) for i, (x, r, y) in enumerate(po['lacunas']))
@@ -390,6 +394,7 @@ def postclass():
           '      <div class="exercise-section"><div class="section-header-row"><h4>Lesson recap</h4></div>\n'
           '        <p class="task-instr">A quick reference to the situation and the language from the lesson.</p>\n'
           '        <div class="tbl-wrap"><table class="data" style="min-width:520px"><tbody>%s</tbody></table></div>\n'
+          '        <p class="eyebrow" style="margin-top:var(--space-4)">%s</p>\n%s\n'
           '      </div>\n'
           '      <div class="exercise-section"><div class="section-header-row"><h4>Complete the five lines</h4></div>\n'
           '        <p class="task-instr">Use your speech map if you need it.</p>\n'
@@ -430,7 +435,7 @@ def postclass():
           'oninput="preSave(this);autoCresce(this)"></textarea>\n'
           '      </div>\n    </div>\n  </div>\n'
           % (n, '' if n == 1 else ' style="display:none"', po['rotulo'], po['intro_pt'], recap,
-             n, lac, n, n, perg, po['fala'], n, n, n, n, n, n, n, n, n, n,
+             po['titulo'], faladas, n, lac, n, n, perg, po['fala'], n, n, n, n, n, n, n, n, n, n,
              po['escrita'][0], n, n, po['escrita'][1], n, n, n, n,
              ('Before the meeting' if n == 6 else 'Before lesson %d' % (n + 1)), po['linha'], n, n))
     return ('<div class="tab-content" id="tab-postclass">\n'
@@ -497,11 +502,16 @@ def dados():
             if e.get('nota'):
                 notas['%d-%d' % (n, k + 1)] = e['nota']
     fecho = {n: {'recap': a['recap'], 'conf': a['conf']} for n, a in sorted(AULAS.items())}
+    faltando = [t for t, u in AUDIO_SRC.MAPA.items()
+                if not os.path.exists(os.path.join(RAIZ, 'public', u.lstrip('/')))]
+    assert not faltando, ('MP3 ausente para %d frase(s) -- rode '
+                          'python3 _build/model/gen_audio.py _build/intensivo/rita/config.json:\n  %s'
+                          % (len(faltando), '\n  '.join(faltando[:5])))
     return ('var STORE=%s;\nvar NAULAS=%d;\nvar ALUNO=%s;\nvar CICLO=%s;\nvar ARTEFATO=%s;\n'
             'var NUM_EXT={8:\'Oito\'};\nvar CONF_LB=[\'Not yet\',\'Getting there\',\'Comfortable\',\'Confident\'];\n'
-            'var LESSONS=%s;\nvar PC_NOTAS=%s;\nvar FECHO=%s;\n'
+            'var LESSONS=%s;\nvar PC_NOTAS=%s;\nvar FECHO=%s;\nvar AUDIO=%s;\n'
             % (js('rita_intensivo_v1'), len(AULAS), js(ALUNO), js(CICLO), js(ARTEFATO),
-               js(lessons), js(notas), js(fecho)))
+               js(lessons), js(notas), js(fecho), js(AUDIO_SRC.MAPA)))
 
 # ------------------------------------------------------------------ montagem
 def patches(s):
@@ -532,6 +542,74 @@ def patches(s):
     velho = "if(k.indexOf('pre_')===0)return 'aluno';"
     assert velho in s, 'papelDe mudou de forma'
     s = s.replace(velho, velho + "\n  if(k.indexOf('post_')===0)return 'aluno';")
+    # ===== A FALA VEM DA ELEVENLABS, NAO DO NAVEGADOR (REGRA 7) =====
+    # O molde falava por speechSynthesis: serve a um artefato de laboratorio, nao ao
+    # material de uma aluna. A voz muda em cada maquina, some no Safari e nao e a voz do
+    # curso. O TRANSPORTE (Play/Pause/Stop/estado) fica igual -- muda quem produz o som.
+    # O speechSynthesis continua no arquivo, como ultimo recurso para uma frase que ainda
+    # nao tenha MP3; o gate do build garante que hoje nao ha nenhuma.
+    ancora = "function audGrupoDe(el){"
+    assert ancora in s, 'audGrupoDe mudou de forma'
+    s = s.replace(ancora, """function sayText(btn){
+  var row=(btn&&btn.closest)?btn.closest('.phrase-row'):null;
+  var el=row?row.querySelector('.phrase-en'):null;
+  if(!el)return '';
+  return el.getAttribute('data-say')||el.textContent;
+}
+function audArquivo(t){
+  if(typeof AUDIO==='undefined')return null;
+  return AUDIO[String(t||'').replace(/\\s+/g,' ').trim()]||null;
+}
+var AUD_EL=null;
+function audToca(g,arq,rate){
+  if(AUD_EL){ try{AUD_EL.pause();}catch(e){} AUD_EL=null; }
+  if(audSuportado())speechSynthesis.cancel();
+  AUD.dono=g; AUD.refazer=function(){ audToca(g,arq,rate); };
+  var a=new Audio(arq);
+  a.playbackRate=(rate&&rate<0.9)?0.75:1;
+  a.onended=function(){ if(AUD.dono===g)audEstado('fim'); AUD_EL=null; };
+  a.onerror=function(){ audAviso(g); AUD_EL=null; };
+  AUD_EL=a;
+  a.play();
+  audEstado('tocando');
+}
+""" + ancora)
+    # say() tenta o MP3 antes de qualquer coisa
+    velho = """function say(text,rate,botao){
+  var alvo=botao||window.event&&window.event.target;
+  if(audIntercepta(alvo))return;
+  var g=audGrupoDe(alvo);
+  if(!audSuportado()){"""
+    assert velho in s, 'say() mudou de forma'
+    s = s.replace(velho, """function say(text,rate,botao){
+  var alvo=botao||window.event&&window.event.target;
+  if(audIntercepta(alvo))return;
+  var g=audGrupoDe(alvo);
+  var arq=audArquivo(text);
+  if(arq){ audToca(g,arq,rate); return; }
+  if(!audSuportado()){""")
+    # pausa/retoma e stop passam a conhecer o MP3
+    velho = """function audAlterna(g){
+  if(!g||AUD.dono!==g||!audSuportado())return false;"""
+    assert velho in s, 'audAlterna mudou de forma'
+    s = s.replace(velho, """function audAlterna(g){
+  if(g&&AUD.dono===g&&AUD_EL){
+    if(AUD.estado==='tocando'){ AUD_EL.pause(); audEstado('pausado'); return true; }
+    if(AUD.estado==='pausado'){ AUD_EL.play(); audEstado('tocando'); return true; }
+    return false;
+  }
+  if(!g||AUD.dono!==g||!audSuportado())return false;""")
+    velho = """  if(g&&AUD.dono&&AUD.dono!==g)return;
+  if(audSuportado())speechSynthesis.cancel();"""
+    assert velho in s, 'audStop mudou de forma'
+    s = s.replace(velho, """  if(g&&AUD.dono&&AUD.dono!==g)return;
+  if(AUD_EL){ try{ AUD_EL.pause(); AUD_EL.currentTime=0; }catch(e){} AUD_EL=null; }
+  if(audSuportado())speechSynthesis.cancel();""")
+    # o transporte existe mesmo sem speechSynthesis: o som agora e arquivo
+    velho = "function audSuportado(){ return 'speechSynthesis' in window; }"
+    assert velho in s, 'audSuportado mudou de forma'
+    s = s.replace(velho, "function audSuportado(){ return 'speechSynthesis' in window; }\n"
+                         "/* o aviso de 'sem audio' so vale quando NAO ha arquivo: com MP3 todo navegador toca */")
     # ESPELHO do feedback: a mesma chave sfb_l{n}_* existe na tela 7 da aula E no cartao.
     # O professor escreve onde estiver e o outro lugar acompanha -- e a aba da aluna repinta
     # no mesmo instante. Sem isto, haveria dois campos com o mesmo nome e valores diferentes.
@@ -712,6 +790,26 @@ def tira_bloco(s, abertura):
             return s[:i] + s[p + t.end():]
     raise SystemExit('bloco sem fechamento: ' + abertura)
 
+def confere_audio(doc, papel):
+    """Toda frase com botao de audio no documento EMITIDO resolve para um MP3.
+
+    O assert de dados garante que o arquivo existe; este garante que a CHAVE bate -- foi
+    exatamente aqui que quebrou na primeira versao: o mapa estava indexado pelo texto da
+    TELA e o say() recebe o texto FALADO (o data-say do encaminhamento). Oito botoes caiam
+    no fallback do navegador sem que nada acusasse.
+    """
+    import html as _h
+    falta = []
+    for m in re.finditer(r'<span class="phrase-en"([^>]*)>(.*?)</span>', doc, re.S):
+        attrs, corpo = m.group(1), m.group(2)
+        ds = re.search(r'data-say="([^"]*)"', attrs)
+        texto = _h.unescape(ds.group(1)) if ds else ' '.join(_h.unescape(re.sub(r'<[^>]+>', '', corpo)).split())
+        if texto not in AUDIO_SRC.MAPA:
+            falta.append(texto)
+    assert not falta, ('%s: %d frase(s) com botao de audio e sem MP3 no mapa:\n  %s'
+                       % (papel, len(falta), '\n  '.join(sorted(set(falta))[:5])))
+    return sum(1 for _ in re.finditer(r'<span class="phrase-en"', doc))
+
 def escreve(caminho, s):
     with io.open(caminho, 'w', encoding='utf-8') as f:
         f.write(s)
@@ -724,5 +822,7 @@ if __name__ == '__main__':
     # o seletor de visao nao faz sentido quando cada ARQUIVO ja e uma visao
     prof = tira_bloco(prof, '<div class="view-switch"').replace('__PAPEL__', 'professor')
     alu = tira_bloco(alu, '<div class="view-switch"').replace('__PAPEL__', 'aluno')
+    print('frases faladas: professor %d, aluna %d, todas com MP3'
+          % (confere_audio(prof, 'professor'), confere_audio(alu, 'aluna')))
     escreve(SAIDA_PROF, prof)
     escreve(SAIDA_ALUNA, alu)
