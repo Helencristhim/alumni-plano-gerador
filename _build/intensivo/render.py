@@ -116,12 +116,28 @@ def botao_bloco(ident, rotulo, condicional=False):
             '<button class="verify-all-btn" onclick="abrirBloco(\'%s\',this)">%s%s</button></div>' % (ident, tag, rotulo))
 
 def quadro_feedback(n):
-    campos = [('worked', 'What worked well'), ('point', 'One point to improve'),
-              ('first', 'First version'), ('clear', 'Clearer version')]
-    h = ''.join('<div class="fb-field"><label for="fb%d%s">%s</label>'
-                '<textarea id="fb%d%s" class="writebox" data-k="fb_l%d_%s" oninput="persSave(this)" lang="en"></textarea></div>'
-                % (n, k, r, n, k, n, k) for k, r in campos)
-    return '    <div class="fb-board">%s</div>' % h
+    """O quadro da tela 7. Os DOIS primeiros campos sao os que chegam a aluna: a mesma chave
+    sfb_l{n}_* que existe no cartao da aula, espelhada pelo fbEspelha(). O professor escreve
+    onde estiver e o outro lugar acompanha -- e nada mais desta tela vai para ela."""
+    def campo(cid, chave, rotulo, extra=''):
+        return ('<div class="fb-field"><label for="%s">%s</label>'
+                '<textarea id="%s" class="writebox" data-k="%s" '
+                'oninput="persSave(this);autoCresce(this);fbEspelha(this)" lang="en"></textarea></div>%s'
+                % (cid, rotulo, cid, chave, extra))
+    board = (campo('sfb%d-w-in' % n, 'sfb_l%d_worked' % n, 'What worked') +
+             campo('sfb%d-d-in' % n, 'sfb_l%d_develop' % n, 'Keep developing') +
+             ('<div class="fb-field"><label for="fb%dclear">Clearer version</label>'
+              '<textarea id="fb%dclear" class="writebox" data-k="fb_l%d_clear" '
+              'oninput="persSave(this);autoCresce(this)" lang="en"></textarea></div>' % (n, n, n)))
+    primeira = ('<div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">'
+                '<button class="btn-ghost" onclick="toggleEl(\'fb%dfirst\',this,\'Her first version\',\'Hide it\')">'
+                'Her first version</button></div>'
+                '<div id="fb%dfirst" style="display:none"><div class="fb-field">'
+                '<label for="fb%dfv">Her first version</label>'
+                '<textarea id="fb%dfv" class="writebox" data-k="fb_l%d_first" '
+                'oninput="persSave(this);autoCresce(this)" lang="en"></textarea></div></div>'
+                % (n, n, n, n, n))
+    return '    <div class="fb-board">%s</div>\n%s' % (board, primeira)
 
 def comparacao(pares):
     linhas = ''.join('<div class="two-col"><div class="fb-cmp">%s</div><div class="fb-cmp">%s</div></div>'
