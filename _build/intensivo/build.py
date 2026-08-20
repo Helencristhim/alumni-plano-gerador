@@ -23,105 +23,103 @@ RAIZ = os.path.abspath(os.path.join(AQUI, '..', '..'))
 SAIDA_PROF = os.path.join(RAIZ, 'public', 'intensivo', 'rita-rodrigues.html')
 SAIDA_ALUNA = os.path.join(RAIZ, 'public', 'intensivo', 'rita-rodrigues-aluna.html')
 
-NOTAS = {}
-for _x in json.load(open(os.path.join(AQUI, 'notas_professor.json'), encoding='utf-8')):
-    NOTAS[(_x['l'], _x['s'])] = _x['teacher']
+import notas as N
 
-def nota(n, tela_antiga):
-    return NOTAS.get((n, tela_antiga), '')
-
-NOTA_RETASK = (
-    '<strong>Goal:</strong> To run the corrected part again, in context, so it lands where it '
-    'will land on 31 August.<br><br>'
-    '<strong>Run it:</strong> She starts with the part you just corrected &mdash; twenty to forty '
-    'seconds &mdash; and then keeps going from there. Interrupt once, as the visitor would.<br><br>'
-    '<strong>Check:</strong> The correction survives the interruption.<br><br>'
-    '<strong>If needed:</strong> Cut the retask to the single sentence you corrected.<br><br>'
-    '<strong>Move on when:</strong> She has said the corrected part once, cleanly, inside the flow.')
-
-# ------------------------------------------------------------------ o deck
 def deck_da_aula(a):
     n = a['n']
     t = []
     add = t.append
+    nota = lambda i: N.monta(a, i)
 
     # 1 - abertura
     add(R.tela(n, 1, 1, 'slide-open',
-        R.abertura('Lesson %02d &middot; %s' % (n, a['data']), a['titulo'], a['sub']), nota(n, 1)))
-    # 2 - o que a aula pede
-    corpo = '\n'.join([R.pill('1 &middot; What this lesson is for'),
-                       R.heading(a['tema'].replace('&amp;', '&amp;')),
+        R.abertura('Lesson %02d &middot; %s' % (n, a['data']), a['titulo'], a['sub']), nota(1)))
+
+    # 2 - o que este bloco tem de fazer
+    corpo = '\n'.join([R.pill('1 &middot; What this lesson has to do'),
+                       R.heading(a['nav'][1]),
                        R.brief(a['brief']),
                        R.split('Before your <span class="accent">first version</span>',
-                               R.subprompt('Answer out loud. These answers are the draft of what you will say.') + '\n' +
-                               R.qlist(a['perguntas']))])
-    add(R.tela(n, 2, 1, 'slide-dark', corpo, nota(n, 2)))
-    # 3 - onde quebra
-    corpo = '\n'.join([R.pill('2 &middot; What can go wrong'),
-                       R.heading('Where it <span class="accent">breaks</span>'),
-                       R.lead('Three things that happen in a real meeting. Click each one to see what you do.'),
-                       R.reveals(a['riscos'])])
-    add(R.tela(n, 3, 2, 'slide-dark', corpo, nota(n, 3)))
+                               R.subprompt('Answer out loud. Nothing is corrected yet.') + '\n' + R.qlist(a['perguntas']))])
+    add(R.tela(n, 2, 1, 'slide-dark', corpo, nota(2)))
+
+    # 3 - o que torna isto dificil (tabela: o que acontece x o que faz com voce)
+    cab, linhas = a['riscos_tab']
+    corpo = '\n'.join([R.pill('2 &middot; What makes this hard'),
+                       R.heading('Four things that can <span class="accent">interrupt you</span>'),
+                       R.tabela(cab, linhas, largura=560),
+                       R.pergunta('Which one worries you most?')])
+    add(R.tela(n, 3, 2, 'slide-light', corpo, nota(3)))
+
     # 4 - primeira versao
     tit, sub, prompt = a['tentativa']
-    corpo = '\n'.join([R.pill('3 &middot; Your first version'),
-                       R.heading(tit), R.lead(sub), R.pergunta(prompt)])
-    add(R.tela(n, 4, 3, 'slide-dark', corpo, nota(n, 4)))
-    # 5 - o modelo
-    corpo = '\n'.join([R.pill('3 &middot; One way to do it'),
-                       R.heading('A model, <span class="accent">after your version</span>'),
-                       R.subprompt('Read each one. Click to see what it does.'),
-                       R.cards(a['modelo']),
+    corpo = '\n'.join([R.pill('3 &middot; Your first version'), R.heading(tit), R.lead(sub), R.pergunta(prompt)])
+    add(R.tela(n, 4, 3, 'slide-dark', corpo, nota(4)))
+
+    # 5 - uma forma de dizer
+    corpo = '\n'.join([R.pill('3 &middot; One way it can sound'),
+                       R.heading(a['modelo_t']),
+                       '    <div class="brief">%s</div>' % ''.join('<p class="rp-line">%s</p>' % x for x in a['modelo_txt']),
                        R.pergunta(a['modelo_q'])])
-    add(R.tela(n, 5, 3, 'slide-light', corpo, nota(n, 5)))
-    # 6 - as linhas
-    corpo = '\n'.join([R.pill('4 &middot; What you take with you'),
-                       R.heading('The lines that <span class="accent">carry it</span>'),
-                       R.lead('Say each one once. Change one element each time &mdash; never the same repetition twice.'),
+    add(R.tela(n, 5, 3, 'slide-light', corpo, nota(5)))
+
+    # 6 - as cinco linhas: o mapa de fala
+    corpo = '\n'.join([R.pill('4 &middot; Five lines you can reuse'),
+                       R.heading(a['linhas_t']),
+                       R.subprompt('Lesson %02d &middot; speech map &mdash; it stays with you, today and on the day.' % n),
                        R.frases(a['linhas'])])
-    add(R.tela(n, 6, 4, 'slide-light', corpo, nota(n, 6)))
-    # 7 - apoio / encaminhamento
-    cab, linhas = a['apoio_tab']
-    corpo = '\n'.join([R.pill('4 &middot; When you do not have it'),
+    add(R.tela(n, 6, 4, 'slide-light', corpo, nota(6)))
+
+    # 7 - quando algo da errado
+    corpo = '\n'.join([R.pill('4 &middot; When something goes wrong'),
                        R.heading(a['apoio_t']),
-                       R.frases(a['apoio']),
-                       R.botao_bloco('l%ds7tab' % n, 'What he hears'),
-                       R.split('What he <span class="accent">hears</span>', R.tabela(cab, linhas), 'l%ds7tab' % n)])
-    add(R.tela(n, 7, 4, 'slide-dark', corpo, nota(n, 7)))
-    # 8 - ensaio, tres ouvintes
-    corpo = '\n'.join([R.pill('5 &middot; Rehearsal'),
-                       R.heading('Same thing, <span class="accent">different listener</span>'),
-                       R.lead('Three rounds. What you keep is the shape; what changes is what the listener needs.'),
+                       R.frases(a['apoio'])])
+    add(R.tela(n, 7, 4, 'slide-light', corpo, nota(7)))
+
+    # 8 - mude uma coisa
+    corpo = '\n'.join([R.pill('5 &middot; Change one thing'),
+                       R.heading(a['ensaio_t']),
+                       R.lead('You name the change, she says the line. Never the same repetition twice.'),
                        R.reveals(a['ensaio'])])
-    add(R.tela(n, 8, 5, 'slide-light', corpo, nota(n, 8)))
-    # 9 - ensaio com o mapa
-    corpo = '\n'.join([R.pill('5 &middot; Rehearsal'),
-                       R.heading('Now the whole thing, <span class="accent">with your map</span>'),
-                       R.lead('One full run, with the map in front of you. Consulting it is not failure &mdash; you will have it on 31 August.'),
+    add(R.tela(n, 8, 5, 'slide-light', corpo, nota(8)))
+
+    # 9 - mensagem essencial, depois os detalhes
+    corpo = '\n'.join([R.pill('5 &middot; Building it'),
+                       R.heading(a['mapa_t']),
+                       R.lead(a['mapa_lead']),
                        R.mapa(a['mapa'])])
-    add(R.tela(n, 9, 5, 'slide-light', corpo, nota(n, 9)))
+    add(R.tela(n, 9, 5, 'slide-dark', corpo, nota(9)))
+
     # 10 - a coisa real
     tit, cond, blocos, kw = a['perf']
     corpo = '\n'.join([R.pill('6 &middot; The real thing'), R.heading(tit), R.lead(cond),
-                       R.roleplay(blocos, kw)])
-    add(R.tela(n, 10, 6, 'slide-dark', corpo, nota(n, 10)))
-    # 11 - feedback
-    corpo = '\n'.join([R.pill('7 &middot; Feedback'),
-                       R.heading('How it <span class="accent">went</span>'),
+                       R.roleplay(blocos, kw),
+                       R.botao_bloco('l%dmapa' % n, 'Your speech map'),
+                       R.split('Your <span class="accent">speech map</span>',
+                               R.frases([(x[0], '') for x in a['linhas']]), 'l%dmapa' % n)])
+    add(R.tela(n, 10, 6, 'slide-dark', corpo, nota(10)))
+
+    # 11 - feedback e retask focado, na mesma tela
+    corpo = '\n'.join([R.pill('7 &middot; Feedback and focused retask'),
+                       R.heading('One thing that worked, <span class="accent">one thing to change</span>'),
                        R.quadro_feedback(n),
-                       R.botao_bloco('l%dfbcheck' % n, 'Check the difference', condicional=True),
-                       R.split('Same fact, <span class="accent">two ways</span>',
-                               R.pergunta('Which one tells him more &mdash; and what does he do differently after each?') + '\n' +
-                               R.comparacao(a['cmp']), 'l%dfbcheck' % n)])
-    add(R.tela(n, 11, 7, 'slide-light', corpo, NOTAS.get((n, 11), '')))
-    # 12 - retask
-    tit, sub, blocos, kw = a['retask']
-    corpo = '\n'.join([R.pill('8 &middot; Retask'), R.heading(tit), R.pergunta(sub),
-                       R.roleplay(blocos, kw)])
-    add(R.tela(n, 12, 8, 'slide-dark', corpo, NOTA_RETASK))
-    # 13 - fecho
-    corpo = R.fecho(n, a['fecho_t']) + '\n' + R.subprompt(a['proxima'])
-    add(R.tela(n, 13, 8, 'slide-dark', corpo, nota(n, 12)))
+                       R.botao_bloco('l%dcmp' % n, 'Same fact, two ways', condicional=True),
+                       R.split('Same fact, <span class="accent">two ways</span>', R.comparacao(a['cmp']), 'l%dcmp' % n),
+                       '    <div class="close-block" style="margin-top:var(--space-4h)">'
+                       '<h5>8 &middot; Focused retask</h5><p class="cb-sub">%s</p></div>' % a['retask']])
+    add(R.tela(n, 11, 7, 'slide-light', corpo, nota(11)))
+
+    # 12 - fecho
+    blocos = ''.join('<div class="close-block"><h5>%s</h5><p class="cb-sub">%s</p></div>' % (t_, d)
+                     for t_, d in a['fecho'])
+    corpo = '\n'.join(['    <p class="chapter-label" style="text-align:center">8 &middot; Close</p>',
+                       '    <h2 class="slide-title" style="text-align:center">%s</h2>' % R.titulo(a['fecho_t']),
+                       '    <div class="close-flow">%s' % blocos,
+                       '      <div class="close-block"><h5>What we worked on today</h5><div id="recapList%d"></div></div>' % n,
+                       '      <div class="close-block"><h5>How confident do you feel right now?</h5><div id="confList%d"></div></div>' % n,
+                       '    </div>',
+                       R.subprompt(a['proxima'])])
+    add(R.tela(n, 12, 8, 'slide-dark', corpo, nota(12)))
     return ''.join(t)
 
 def decks():
@@ -132,43 +130,52 @@ def decks():
 # ------------------------------------------------------------------ pre-class
 from content_pre import PRE
 from content_post import POST
-from content_perfil import ALUNO, CICLO, ARTEFATO, CABECALHO, PERFIL_PROF, PLANNING_ALUNO, SYLLABUS, PREP
+from content_perfil import (ALUNO, CICLO, ARTEFATO, CABECALHO, PERFIL_PROF, PLANNING_ALUNO,
+                            SYLLABUS, PREP, _MARGEM as MARGEM)
 
-def _sec(titulo, instr, corpo, badge=''):
+def _sec(rotulo_pt, n, instr, corpo):
+    """Uma atividade do pre-class, no formato da regua: o rotulo da FUNCAO em portugues
+    (do professor) e 'Activity N' em ingles (dela) -- cada um sai no arquivo do seu papel."""
     return ('  <div class="exercise-section">\n'
-            '    <div class="section-header-row"><h4>%s</h4>%s</div>\n'
-            '    <p class="task-instr">%s</p>\n%s\n  </div>\n' % (titulo, badge, instr, corpo))
+            '    <p class="eyebrow" data-view="professor">%d &middot; %s</p>\n'
+            '    <p class="eyebrow" data-view="aluno" lang="en">Activity %d</p>\n'
+            '    <div lang="en">\n      <p class="task-instr">%s</p>\n%s    </div>\n'
+            '  </div>\n' % (n, rotulo_pt, n, instr, corpo))
 
 def _doc(doc):
     if not doc:
         return ''
     t, linhas = doc
-    return ('    <div class="callout rule-box doc-block"><span class="callout-title">%s</span>%s</div>\n'
+    return ('      <div class="callout rule-box doc-block"><span class="callout-title">%s</span>%s</div>\n'
             % (t, '<br>'.join(linhas)))
 
 def ex_html(n, k, e):
-    """Um exercicio do pre-class. O id de cada mecanica carrega a aula: pc3 e da aula 3."""
+    """Um exercicio do pre-class. O id carrega a aula: l3q2 e a atividade 2 da aula 3."""
     ident = 'l%dq%d' % (n, k)
-    t = e['t']; instr = e['instr']
+    instr = e['instr']
+    def fecha(corpo):
+        return _sec(e['t'], k, instr, corpo)
+
     if e['k'] == 'multi':
         ops = ''.join('<div class="quiz-option" data-ok="%d" onclick="tog(this)"><span>%s</span></div>' % (ok, txt)
                       for txt, ok in e['ops'])
-        corpo = (_doc(e.get('doc')) +
-                 '    <div class="quiz-item"><div class="quiz-options" id="%s">%s</div>'
+        return fecha(_doc(e.get('doc')) +
+                 '      <div class="quiz-item"><div class="quiz-options" id="%s">%s</div>'
                  '<div class="rationale">%s</div></div>\n'
-                 '    <button class="verify-all-btn ghost" onclick="selCheck(this,\'%s\')">Check</button>\n'
-                 '    <div class="score-out" id="%s-out"></div>\n' % (ident, ops, e['rat'], ident, ident))
-        return _sec('%d &middot; %s' % (k, t), instr, corpo)
+                 '      <button class="verify-all-btn ghost" onclick="selCheck(this,\'%s\')">Check</button>\n'
+                 '      <div class="score-out" id="%s-out"></div>\n' % (ident, ops, e['rat'], ident, ident))
+
     if e['k'] in ('quiz', 'leitura'):
         letras = 'ABCDEF'
-        ops = ''.join('<div class="quiz-option" onclick="pick(this,%d)"><span class="option-letter">%s</span><span>%s</span></div>'
-                      % (ok, letras[i], txt) for i, (txt, ok) in enumerate(e['ops']))
-        texto = ('    <div class="callout rule-box"><span class="callout-title">Read</span>%s</div>\n' % e['texto']) if e['k'] == 'leitura' else ''
-        corpo = (_doc(e.get('doc')) + texto +
-                 '    <div class="quiz-item"><p class="quiz-question">%s</p>'
-                 '<div class="quiz-options">%s</div><div class="rationale">%s</div></div>\n'
-                 % (e['q'], ops, e['rat']))
-        return _sec('%d &middot; %s' % (k, t), instr, corpo)
+        def um(q, ops, rat, i=0):
+            o = ''.join('<div class="quiz-option" onclick="pick(this,%d)"><span class="option-letter">%s</span>'
+                        '<span>%s</span></div>' % (ok, letras[j], txt) for j, (txt, ok) in enumerate(ops))
+            return ('      <div class="quiz-item"><p class="quiz-question">%s</p>'
+                    '<div class="quiz-options">%s</div><div class="rationale">%s</div></div>\n' % (q, o, rat))
+        texto = ('      <div class="callout rule-box"><span class="callout-title">Read</span>%s</div>\n' % e['texto']) if e['k'] == 'leitura' else ''
+        perguntas = e['perguntas'] if 'perguntas' in e else [(e['q'], e['ops'], e['rat'])]
+        return fecha(_doc(e.get('doc')) + texto + ''.join(um(*x) for x in perguntas))
+
     if e['k'] == 'match':
         defs = [d for _, d in e['pares']]
         ordem = [defs[i] for i in _embaralha(len(defs))]
@@ -178,27 +185,58 @@ def ex_html(n, k, e):
             linhas += ('<div class="match-row"><span class="match-word">%d &middot; %s</span>'
                        '<select data-ok="%d" data-k="pre_%s_%d"><option value="" selected>&mdash;</option>%s</select></div>'
                        % (i + 1, palavra, defs.index(correta), ident, i, ops))
-        corpo = ('    <div class="match-grid" id="%s">%s</div>\n'
-                 '    <button class="verify-all-btn ghost" onclick="mCheck(this,\'%s\')">Check</button>\n'
-                 '    <div class="score-out" id="%s-out"></div>\n' % (ident, linhas, ident, ident))
-        return _sec('%d &middot; %s' % (k, t), instr, corpo)
+        return fecha('      <div class="match-grid" id="%s">%s</div>\n'
+                     '      <button class="verify-all-btn ghost" onclick="mCheck(this,\'%s\')">Check</button>\n'
+                     '      <div class="score-out" id="%s-out"></div>\n' % (ident, linhas, ident, ident))
+
     if e['k'] == 'gap':
-        itens = ''.join('<div class="fill-blank-item"><span class="fill-blank-sentence">%s'
+        banco = ('      <p class="task-instr"><strong>%s</strong></p>\n'
+                 % ' &middot; '.join(e['banco'])) if e.get('banco') else ''
+        itens = ''.join('<div class="fill-blank-item"><span class="fill-blank-sentence">%d. %s'
                         '<input class="blank-input" data-ok="%s" placeholder="..." data-k="pre_%s_%d">%s</span></div>'
-                        % (a, resp, ident, i, b) for i, (a, resp, b) in enumerate(e['itens']))
-        corpo = ('    <div id="%s">%s</div>\n'
-                 '    <button class="verify-all-btn ghost" onclick="czCheck(this,\'%s\')">Check</button>\n'
-                 '    <div class="score-out" id="%s-out"></div>\n' % (ident, itens, ident, ident))
-        return _sec('%d &middot; %s' % (k, t), instr, corpo)
+                        % (i + 1, a, resp, ident, i, b) for i, (a, resp, b) in enumerate(e['itens']))
+        return fecha(banco +
+                     '      <div id="%s">%s</div>\n'
+                     '      <button class="verify-all-btn ghost" onclick="czCheck(this,\'%s\')">Check</button>\n'
+                     '      <div class="score-out" id="%s-out"></div>\n' % (ident, itens, ident, ident))
+
     if e['k'] == 'pair':
         linhas = ''.join('<div class="pair-row" data-ok="%s"><span class="pair-word">%s</span>'
                          '<button class="pair-opt" data-v="a" onclick="ppPick(this)">%s</button>'
                          '<button class="pair-opt" data-v="b" onclick="ppPick(this)">%s</button></div>'
                          % (ok, frase, a, b) for frase, ok, a, b in e['linhas'])
-        corpo = ('    <div class="pair-grid" id="%s">%s</div>\n'
-                 '    <button class="verify-all-btn ghost" onclick="ppCheck(this,\'%s\')">Check</button>\n'
-                 '    <div class="score-out" id="%s-out"></div>\n' % (ident, linhas, ident, ident))
-        return _sec('%d &middot; %s' % (k, t), instr, corpo)
+        return fecha('      <div class="pair-grid" id="%s">%s</div>\n'
+                     '      <button class="verify-all-btn ghost" onclick="ppCheck(this,\'%s\')">Check</button>\n'
+                     '      <div class="score-out" id="%s-out"></div>\n' % (ident, linhas, ident, ident))
+
+    if e['k'] == 'ord':
+        total = len(e['linhas'])
+        opts = ''.join('<option>%d</option>' % (i + 1) for i in range(total))
+        emb = _embaralha(total)
+        linhas = ''.join(
+            '<div class="match-row"><select class="ord-sel" data-k="pre_%s_%d" aria-label="position">'
+            '<option value="" selected>&ndash;</option>%s</select>'
+            '<span class="ord-frase" data-a="%d">%s</span></div>'
+            % (ident, i, opts, e['linhas'][emb[i]][1], e['linhas'][emb[i]][0]) for i in range(total))
+        return fecha('      <div class="match-grid" id="%s">%s</div>\n'
+                     '      <button class="verify-all-btn ghost" onclick="ordCheck(this,\'%s\')">Check</button>\n'
+                     '      <div class="score-out" id="%s-out"></div>\n' % (ident, linhas, ident, ident))
+
+    if e['k'] == 'escrita':
+        campos = ''.join('<div class="fb-field"><label for="%s-%d">%d. %s</label>'
+                         '<textarea id="%s-%d" class="writebox" data-k="pre_%s_%d" '
+                         'oninput="preSave(this);autoCresce(this)" lang="en"></textarea></div>'
+                         % (ident, i, i + 1, q, ident, i, ident, i) for i, q in enumerate(e['perguntas']))
+        modelo = ''.join('<p class="rp-line">%s</p>' % m for m in e['modelo'])
+        return fecha('      <p class="subprompt">%s</p>\n'
+                     '      <div class="fb-board">%s</div>\n'
+                     '      <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">'
+                     '<button class="btn-ghost" onclick="toggleEl(\'%s-mod\',this,\'See two possible answers\',\'Hide the answers\')">'
+                     'See two possible answers</button></div>\n'
+                     '      <div id="%s-mod" style="display:none" class="callout ok">%s</div>\n'
+                     % (e.get('aviso', 'Do not record anything &mdash; you will say these out loud in the lesson.'),
+                        campos, ident, ident, modelo))
+
     raise SystemExit('tipo de exercicio desconhecido: ' + e['k'])
 
 def _embaralha(n):
@@ -260,9 +298,11 @@ def cartao(n):
             '          <h5 class="prep-h">A &middot; Objetivo e produto</h5>\n'
             '          <p class="prep-p"><strong>Objetivo comunicativo:</strong> %s</p>\n'
             '          <p class="prep-p"><strong>Produto principal:</strong> %s</p>\n'
+            '          <p class="prep-p"><strong>Crit&eacute;rio:</strong> %s</p>\n'
             '          <h5 class="prep-h">B &middot; Percurso da aula</h5>\n'
             '          <p class="prep-p" data-lf="percurso"></p>\n'
             '          <p class="prep-p" data-lf="etapas"></p>\n'
+            '          <p class="prep-p">%s</p>\n'
             '          <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>\n          <ul class="prep-list">%s</ul>\n'
             '          <h5 class="prep-h">D &middot; O que observar</h5>\n          <ul class="prep-list">%s</ul>\n'
             '        </div>\n'
@@ -285,14 +325,15 @@ def cartao(n):
             '<textarea id="af%d-acao" class="writebox" data-k="af_l%d_acao" oninput="persSave(this);autoCresce(this)"></textarea></div>\n'
             '          <h5 class="prep-h">Feedback para a aluna &mdash; em ingl&ecirc;s, ela l&ecirc; na aba Feedback</h5>\n'
             '          <div class="fb-item"><label for="sfb%d-w">What worked</label>'
-            '<textarea id="sfb%d-w" class="writebox" data-k="sfb_l%d_worked" oninput="persSave(this);autoCresce(this)" lang="en"></textarea></div>\n'
+            '<textarea id="sfb%d-w" class="writebox" data-k="sfb_l%d_worked" oninput="persSave(this);autoCresce(this);fbEspelha(this)" lang="en"></textarea></div>\n'
             '          <div class="fb-item"><label for="sfb%d-d">Keep developing</label>'
-            '<textarea id="sfb%d-d" class="writebox" data-k="sfb_l%d_develop" oninput="persSave(this);autoCresce(this)" lang="en"></textarea></div>\n'
+            '<textarea id="sfb%d-d" class="writebox" data-k="sfb_l%d_develop" oninput="persSave(this);autoCresce(this);fbEspelha(this)" lang="en"></textarea></div>\n'
             '          <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">'
             '<button class="btn-ghost" onclick="avalResetAsk(%d)">Limpar registro</button>'
             '<button class="btn-primary" onclick="avalSave(%d)">Confirmar registro</button></div>\n'
             '        </div>\n      </div>\n'
-            % (n, n, n, a['desc'], n, n, n, n, n, n, n, n, p['objetivo'], p['produto'], antes, obs,
+            % (n, n, n, a['desc'], n, n, n, n, n, n, n, n, p['objetivo'], p['produto'],
+               p['criterio'], MARGEM, antes, obs,
                n, n, n, n, n, n, n, aval, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n))
 
 def inclass():
@@ -324,51 +365,73 @@ def postclass():
                   % ('btn-primary' if n == 1 else 'btn-ghost', n, n) for n in sorted(AULAS))
     blocos = ''
     for n in sorted(AULAS):
-        po = POST[n]
-        recap = ''.join('<tr><td style="width:180px"><strong>%s</strong></td><td>%s</td></tr>' % (k, v) for k, v in po['recap'])
-        ex = '<br>'.join(po['exemplos'])
-        sit, top = po['fala']
-        topicos = ''.join('<li>%s</li>' % x for x in top)
-        prompt, placeholder = po['escrita']
+        a, po = AULAS[n], POST[n]
+        linhas = ' &middot; '.join('<em>%s</em>' % x[0] for x in a['linhas'])
+        apoio = ' &middot; '.join('<em>%s</em>' % x[0] for x in a['apoio'])
+        vocab = ' &middot; '.join('<em>%s</em>' % v for v in po['vocab'])
+        recap = ''.join('<tr><td style="width:170px"><strong>%s</strong></td><td>%s</td></tr>' % (k, v)
+                        for k, v in [('Situation', po['situacao']), ('What you are doing', po['fazendo']),
+                                     (po['titulo'], linhas), ('Keeping it going', apoio),
+                                     ('Key vocabulary', vocab)])
+        lac = ''.join('<div class="fill-blank-item"><span class="fill-blank-sentence">%d. %s'
+                      '<input class="blank-input" data-ok="%s" placeholder="..." data-k="post_l%d_g%d">%s</span></div>'
+                      % (i + 1, x, r, n, i, y) for i, (x, r, y) in enumerate(po['lacunas']))
+        perg = ''.join('<div class="reveal-item" onclick="this.classList.toggle(\'revealed\')">'
+                       '<div class="r-front">%d. %s</div><div class="r-back">%s</div></div>'
+                       % (i + 1, q, r) for i, (q, r) in enumerate(po['perguntas']))
         blocos += (
           '  <div id="ps%d"%s>\n    <h3 class="sub"></h3>\n'
-          '    <div class="callout ok"><span class="callout-title">Optional</span>'
-          'Everything here is optional. Choose what is useful and come back whenever you like.</div>\n'
-          '    <p class="eyebrow" style="margin-top:var(--space-5)">Review the lesson</p>\n'
-          '    <div class="exercise-section"><div class="section-header-row"><h4>Lesson recap</h4></div>\n'
-          '      <p class="task-instr">A quick reference to the situation and the language from the lesson.</p>\n'
-          '      <div class="tbl-wrap"><table class="data" style="min-width:520px"><tbody>%s</tbody></table></div>\n'
-          '      <div class="callout rule-box"><span class="callout-title">Three short examples</span>%s</div>\n'
-          '    </div>\n'
-          '    <p class="eyebrow" style="margin-top:var(--space-5h)">Optional practice</p>\n'
-          '    <div class="exercise-section"><div class="section-header-row"><h4>Speak More</h4>'
-          '<span class="badge badge-open">About 90 seconds</span></div>\n'
-          '      <p class="task-instr">Record it once. You can listen back and try again.</p>\n'
-          '      <div class="callout rule-box"><span class="callout-title">The situation</span>%s</div>\n'
-          '      <p class="task-instr">You could cover:</p>\n'
-          '      <ul style="font-size:.88rem;line-height:1.75;padding-left:var(--space-4h);color:var(--text-mid)">%s</ul>\n'
-          '      <div class="rec-bar">'
-          '<button class="audio-btn-sm" id="rec%d-start" onclick="rcStart(\'rec%d\')">&#9679; Start recording</button>'
-          '<button class="audio-btn-sm" id="rec%d-stop" style="display:none;background:var(--danger);border-color:var(--danger)" onclick="rcStop(\'rec%d\')">&#9632; Stop</button>'
+          '    <p class="eyebrow" data-view="professor">%s</p>\n'
+          '    <p class="prep-p" data-view="professor">%s</p>\n'
+          '    <p class="task-instr" data-view="aluno" lang="en">The first part is the lesson, once more, on your own. '
+          'Everything after it is optional &mdash; open what interests you, and come back whenever you like.</p>\n'
+          '    <div lang="en">\n'
+          '      <p class="eyebrow" style="margin-top:var(--space-5)">Review the lesson</p>\n'
+          '      <div class="exercise-section"><div class="section-header-row"><h4>Lesson recap</h4></div>\n'
+          '        <p class="task-instr">A quick reference to the situation and the language from the lesson.</p>\n'
+          '        <div class="tbl-wrap"><table class="data" style="min-width:520px"><tbody>%s</tbody></table></div>\n'
+          '      </div>\n'
+          '      <div class="exercise-section"><div class="section-header-row"><h4>Complete the five lines</h4></div>\n'
+          '        <p class="task-instr">Use your speech map if you need it.</p>\n'
+          '        <div id="pl%d">%s</div>\n'
+          '        <button class="verify-all-btn ghost" onclick="czCheck(this,\'pl%d\')">Check</button>\n'
+          '        <div class="score-out" id="pl%d-out"></div>\n'
+          '      </div>\n'
+          '      <div class="exercise-section"><div class="section-header-row"><h4>Three questions to answer out loud</h4></div>\n'
+          '        <p class="task-instr">Answer out loud, then open the answer to compare.</p>\n%s\n'
+          '      </div>\n'
+          '      <p class="eyebrow" style="margin-top:var(--space-5h)">Optional practice</p>\n'
+          '      <div class="exercise-section"><div class="section-header-row"><h4>Speak More</h4>'
+          '<span class="badge badge-open">Optional</span></div>\n'
+          '        <p class="task-instr">%s You can listen to your recording and record again if you wish.</p>\n'
+          '        <div class="rec-bar">'
+          '<button class="audio-btn-sm" id="rec%d-start" onclick="rcStart(\'rec%d\')">Record</button>'
+          '<button class="audio-btn-sm" id="rec%d-stop" style="display:none;background:var(--danger);border-color:var(--danger)" onclick="rcStop(\'rec%d\')">Stop</button>'
           '<span class="rec-time" id="rec%d-time">00:00</span></div>\n'
-          '      <audio id="rec%d-player" controls style="display:none;width:100%%;margin-top:var(--space-3)"></audio>\n'
-          '      <div id="rec%d-done" style="display:none;gap:var(--space-2h);margin-top:var(--space-2h);flex-wrap:wrap">'
+          '        <audio id="rec%d-player" controls style="display:none;width:100%%;margin-top:var(--space-3)"></audio>\n'
+          '        <div id="rec%d-done" style="display:none;gap:var(--space-2h);margin-top:var(--space-2h);flex-wrap:wrap">'
+          '<button class="audio-btn-sm ghost" onclick="rcBaixar(\'rec%d\')">Download</button>'
           '<button class="audio-btn-sm ghost" onclick="rcApaga(\'rec%d\')">Delete recording</button></div>\n'
-          '      <div class="callout warn" id="rec%d-msg" style="display:none"></div>\n'
-          '    </div>\n'
-          '    <div class="exercise-section"><div class="section-header-row"><h4>Write More</h4></div>\n'
-          '      <p class="task-instr">%s</p>\n'
-          '      <textarea class="writebox" id="pw%d" data-k="post_l%d_write" placeholder="%s" '
-          'oninput="persSave(this);autoCresce(this);pwCount(\'pw%d\',\'pw%d-out\',\'post_l%d_write\')"></textarea>\n'
-          '      <div class="score-out" id="pw%d-out"></div>\n'
-          '    </div>\n'
-          '    <p class="eyebrow" style="margin-top:var(--space-5h)">%s</p>\n'
-          '    <div class="exercise-section"><div class="section-header-row"><h4>One line to bring</h4></div>\n'
-          '      <p class="task-instr">%s</p>\n'
-          '      <textarea class="writebox" id="br%d" data-k="post_l%d_bring" oninput="persSave(this);autoCresce(this)"></textarea>\n'
-          '    </div>\n  </div>\n'
-          % (n, '' if n == 1 else ' style="display:none"', recap, ex, sit, topicos,
-             n, n, n, n, n, n, n, n, n, prompt, n, n, placeholder, n, n, n, n,
+          '        <div class="callout warn" id="rec%d-msg" style="display:none"></div>\n'
+          '        <p class="subprompt"><strong>Local only.</strong> The recording stays on this computer. '
+          'It is not sent to your teacher and it is not saved anywhere else.</p>\n'
+          '      </div>\n'
+          '      <div class="exercise-section"><div class="section-header-row"><h4>Write More</h4>'
+          '<span class="badge badge-open">Optional</span></div>\n'
+          '        <p class="task-instr">%s</p>\n'
+          '        <textarea class="writebox" id="pw%d" data-k="post_l%d_write" placeholder="%s" '
+          'oninput="preSave(this);autoCresce(this);pwCount(\'pw%d\',\'pw%d-out\',\'post_l%d_write\')"></textarea>\n'
+          '        <div class="score-out" id="pw%d-out"></div>\n'
+          '      </div>\n'
+          '      <p class="eyebrow" style="margin-top:var(--space-5h)">%s</p>\n'
+          '      <div class="exercise-section"><div class="section-header-row"><h4>One line to bring</h4></div>\n'
+          '        <p class="task-instr">%s</p>\n'
+          '        <textarea class="writebox" id="br%d" data-k="post_l%d_bring" '
+          'oninput="preSave(this);autoCresce(this)"></textarea>\n'
+          '      </div>\n    </div>\n  </div>\n'
+          % (n, '' if n == 1 else ' style="display:none"', po['rotulo'], po['intro_pt'], recap,
+             n, lac, n, n, perg, po['fala'], n, n, n, n, n, n, n, n, n, n,
+             po['escrita'][0], n, n, po['escrita'][1], n, n, n, n,
              ('Before the meeting' if n == 6 else 'Before lesson %d' % (n + 1)), po['linha'], n, n))
     return ('<div class="tab-content" id="tab-postclass">\n'
             '  <p class="eyebrow" data-view="professor">Depois da aula</p>\n'
@@ -469,6 +532,76 @@ def patches(s):
     velho = "if(k.indexOf('pre_')===0)return 'aluno';"
     assert velho in s, 'papelDe mudou de forma'
     s = s.replace(velho, velho + "\n  if(k.indexOf('post_')===0)return 'aluno';")
+    # ESPELHO do feedback: a mesma chave sfb_l{n}_* existe na tela 7 da aula E no cartao.
+    # O professor escreve onde estiver e o outro lugar acompanha -- e a aba da aluna repinta
+    # no mesmo instante. Sem isto, haveria dois campos com o mesmo nome e valores diferentes.
+    ancora = "function autoCresce(el){"
+    assert ancora in s, 'autoCresce mudou de forma'
+    s = s.replace(ancora, """function fbEspelha(origem){
+  var k=origem.getAttribute('data-k'); if(!k)return;
+  var els=document.querySelectorAll('[data-k="'+k+'"]'),i;
+  for(i=0;i<els.length;i++){
+    if(els[i]===origem)continue;
+    els[i].value=origem.value;
+    autoCresce(els[i]);
+  }
+  if(typeof sfBuild==='function')sfBuild();
+}
+""" + ancora)
+    # BAIXAR a gravacao: a regua deixa a aluna levar o arquivo. Sem isto a gravacao morre
+    # ao fechar a aba, e a promessa "you can listen back" vale so enquanto a pagina existe.
+    ancora = "function rcApaga(id) {"
+    assert ancora in s, 'rcApaga mudou de forma'
+    s = s.replace(ancora, """function rcBaixar(id) {
+  var r = _rc[id]; if (!r || !r.url) return;
+  var a = document.createElement('a');
+  a.href = r.url; a.download = id + '.webm';
+  document.body.appendChild(a); a.click(); a.parentNode.removeChild(a);
+}
+""" + ancora)
+    # o gabarito ganha duas linhas que a regua tem e o molde nao: a FONTE do fato (o deck
+    # de marco de 2026, o site publico) e o que e SO RECONHECIMENTO -- aparece no texto e
+    # nao se cobra em producao. Sem elas, o professor nao sabe o que pode exigir.
+    velho = "      if(nota.duvida)h+=akLinha('Pode gerar d\\u00favida',nota.duvida);"
+    assert velho in s, 'akBuild mudou de forma'
+    s = s.replace(velho, velho + """
+      if(nota.recon)h+=akLinha('S\\u00f3 reconhecimento',nota.recon);
+      if(nota.fonte)h+=akLinha('Fonte do fato',nota.fonte);""")
+    # ORDENAR: mecanica que o molde da Erica nao tem e a regua da Rita pede -- as cinco
+    # linhas da abertura na ordem em que ela vai dize-las. A checagem e a mesma ideia do
+    # matching (compara o escolhido com o esperado), e o gabarito le do mesmo lugar.
+    ancora = "function czCheck(btn,id){"
+    assert ancora in s, 'czCheck mudou de forma'
+    s = s.replace(ancora, """function ordCheck(btn,id){
+  if(preConsulta(btn))return;
+  var host=document.getElementById(id); if(!host)return;
+  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,esp;
+  for(i=0;i<rows.length;i++){
+    sel=rows[i].querySelector('select'); esp=rows[i].querySelector('.ord-frase').getAttribute('data-a');
+    rows[i].classList.remove('correct','wrong');
+    if(!sel.value)continue;
+    if(sel.value===esp){rows[i].classList.add('correct');n++;}
+    else rows[i].classList.add('wrong');
+  }
+  var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
+  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';
+}
+""" + ancora)
+    # o gabarito tambem le a ordem
+    ancora = "  /* lacunas: o data-ok de cada campo, na ordem */"
+    assert ancora in s, 'akExpected mudou de forma'
+    s = s.replace(ancora, """  /* ordenar: a frase na posicao que o data-a declara */
+  var od=sec.querySelectorAll('.ord-frase[data-a]');
+  if(od.length){
+    var o=[],pos=[];
+    for(i=0;i<od.length;i++)pos.push([od[i].getAttribute('data-a'),od[i].textContent.trim()]);
+    pos.sort(function(a,b){return parseInt(a[0],10)-parseInt(b[0],10);});
+    for(i=0;i<pos.length;i++)o.push(pos[i][0]+'. '+pos[i][1]);
+    r.push({t:'Ordem',v:o});
+  }
+""" + ancora)
+    # o CSS da linha de ordenar: o select cabe a esquerda, a frase ocupa o resto
+    s = s.replace('.phrase-list{', '.ord-sel{flex:0 0 auto;min-width:64px}\n.ord-frase{flex:1;font-size:.89rem;color:var(--text)}\n.phrase-list{')
     # a tarja do cabecalho sai do registro (intensivo nao e "Ciclo 1")
     s = s.replace("if(el)el.innerHTML='Ciclo '+CICLO.numero+' &middot; '+CICLO.aulas+' aulas &middot; '+CICLO.nivel;",
                   "if(el)el.innerHTML=CICLO.badge||('Ciclo '+CICLO.numero+' &middot; '+CICLO.aulas+' aulas &middot; '+CICLO.nivel);")
