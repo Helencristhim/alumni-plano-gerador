@@ -10,7 +10,9 @@ module.exports = async (req, res) => {
             // Novos parâmetros para geração em blocos (Regra 121)
             bloco, aulaInicio, aulaFim, temasAnteriores,
             // Programa detalhado extraído da consultoria (novo)
-            programaDetalhado } = req.body;
+            programaDetalhado,
+            // Idioma-alvo. Ausente => ingles: o prompt sai identico ao de sempre.
+            idioma } = req.body;
 
     if (!foco || !numAulas) {
       return res.status(400).json({ error: 'Foco e número de aulas são obrigatórios.' });
@@ -193,7 +195,29 @@ ${blocoNum > 1 && blocoNum < totalBlocos ? 'Este é um bloco intermediário — 
       contextoProgramaDetalhado = pdText;
     }
 
-    const prompt = `Você é um designer instrucional sênior especializado em ensino de inglês personalizado, com formação em Cambridge CELTA/DELTA e experiência com o modelo PPP (Presentation-Practice-Production).
+    // -- IDIOMA-ALVO (ver api/perfil-360.js, mesmo mecanismo) -------------------
+    // O prompt abaixo e todo de ingles, ate a REGRA 143 (American English). Curso de
+    // outro idioma => override no topo; curso de ingles => string vazia, prompt intacto.
+    const IDIOMAS_TEMAS = {
+      espanhol: { nome: 'ESPANHOL', padrao: 'espanhol latino-americano neutro' },
+      frances:  { nome: 'FRANCÊS',  padrao: 'francês metropolitano' },
+      italiano: { nome: 'ITALIANO', padrao: 'italiano padrão' },
+    };
+    const alvoTemas = IDIOMAS_TEMAS[String(idioma || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')];
+    const idiomaBlockTemas = !alvoTemas ? '' : `
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  ATENÇÃO — O IDIOMA DESTE CURSO NÃO É INGLÊS: É ${alvoTemas.nome}.
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+Onde este documento disser "inglês", leia "${alvoTemas.nome.toLowerCase()}". Os temas,
+o vocabulário e o foco linguístico de TODAS as aulas são de ${alvoTemas.nome.toLowerCase()}.
+A REGRA 143 (American English) NÃO se aplica: o padrão é ${alvoTemas.padrao}.
+A gramática a progredir é a DO ${alvoTemas.nome} (para o espanhol: gênero e concordância,
+ser/estar, pretérito indefinido vs. perfecto, subjuntivo, por/para) — nunca a do inglês.
+
+`;
+
+    const prompt = `${idiomaBlockTemas}Você é um designer instrucional sênior especializado em ensino de inglês personalizado, com formação em Cambridge CELTA/DELTA e experiência com o modelo PPP (Presentation-Practice-Production).
 
 ${levelSection ? 'REGRAS CEFR PARA O NÍVEL DO ALUNO:\n' + levelSection + '\n\n' : ''}
 ${contextoProgramaDetalhado ? contextoProgramaDetalhado + '\n' : ''}

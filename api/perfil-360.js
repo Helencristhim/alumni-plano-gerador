@@ -34,7 +34,10 @@ module.exports = async (req, res) => {
       temAudio, audioUrl,
       resumoZoom,
       transcricao,
-      observacoesProfessor
+      observacoesProfessor,
+      // Idioma-alvo do curso. Ausente => ingles (o padrao historico): o prompt sai
+      // byte a byte igual ao de sempre e nenhum aluno existente muda de comportamento.
+      idioma
     } = req.body;
 
     // Gerar slug
@@ -48,7 +51,45 @@ Considere que há informação prosódica complementar disponível.
 Marque inferências de personalidade com confiança REDUZIDA (máx 70% sem áudio).
 `;
 
-    const prompt = `Você é um editor pedagógico sênior com 40 anos de experiência na tradição Cambridge Assessment English (Jeremy Harmer, Scott Thornbury, Penny Ur). Sua especialidade é analisar consultorias de alunos de inglês e gerar perfis 360° que transformam dados brutos em jornadas de aprendizado personalizadas.
+    // -- IDIOMA-ALVO -----------------------------------------------------------
+    // Este prompt foi escrito inteiro para INGLES: diz "alunos de ingles", manda
+    // American English (REGRA 143) e pede "contextos de uso do ingles" no resumo que
+    // alimenta o gerador de curriculo. Rodar uma consultoria de ESPANHOL nele produz um
+    // Perfil 360 que fala do idioma errado -- e o curriculo sai desse resumo, entao o
+    // erro nao para no texto: contamina as aulas.
+    //
+    // O conserto NAO reescreve as 21 mencoes: injeta um override no topo. Curso de
+    // ingles => string vazia => o prompt continua identico ao que sempre foi.
+    const IDIOMAS = {
+      espanhol: { nome: 'ESPANHOL', padrao: 'espanhol latino-americano neutro' },
+      frances:  { nome: 'FRANCÊS',  padrao: 'francês metropolitano' },
+      italiano: { nome: 'ITALIANO', padrao: 'italiano padrão' },
+    };
+    const alvo = IDIOMAS[String(idioma || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')];
+    const idiomaBlock = !alvo ? '' : `
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  ATENÇÃO — O IDIOMA-ALVO DESTE ALUNO NÃO É INGLÊS: É ${alvo.nome}.
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+Este documento foi escrito para alunos de inglês. Onde ele disser "inglês", leia
+"${alvo.nome.toLowerCase()}" — em TODO o texto abaixo, inclusive nos nomes de campo do
+JSON de saída e no "historicoIngles".
+
+Três consequências que mudam a sua análise:
+
+1. A REGRA 143 (American English) NÃO se aplica. O padrão deste aluno é
+   ${alvo.padrao}.
+2. Se a transcrição da consultoria estiver EM ${alvo.nome}, ela é produção REAL do
+   aluno no idioma-alvo — a evidência mais forte que existe para o nível. Analise os
+   erros dele NAQUELE idioma (interferência do português, tempos verbais, gênero,
+   léxico). NUNCA escreva que "não há produção registrada" quando a consultoria
+   inteira É a produção.
+3. O "resumoParaCurriculo" alimenta o gerador de temas. Ele tem de falar de contextos
+   de uso do ${alvo.nome.toLowerCase()}, nunca do inglês.
+
+`;
+
+    const prompt = `${idiomaBlock}Você é um editor pedagógico sênior com 40 anos de experiência na tradição Cambridge Assessment English (Jeremy Harmer, Scott Thornbury, Penny Ur). Sua especialidade é analisar consultorias de alunos de inglês e gerar perfis 360° que transformam dados brutos em jornadas de aprendizado personalizadas.
 
 Analise os dados abaixo e gere um Perfil 360 estruturado deste aluno.
 
@@ -496,6 +537,9 @@ REGRAS ABSOLUTAS 138-142:
         stake, vitoria,
         // Bloco 5
         historicoIngles, nivel, tempoForaAula,
+        // Idioma-alvo: persistido para que o gerador de curriculo (api/gerar-temas)
+        // saiba em que lingua e o curso sem precisar perguntar de novo.
+        idioma,
         // Bloco 6
         estiloAprendizagem, estruturaPreferida, lidaComErros, energiaPreferida,
         // Bloco 7
