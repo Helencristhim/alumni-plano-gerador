@@ -1273,6 +1273,23 @@ def check_input_no_detalhe(c, fails):
             f'sozinho: build_from_model.inject_input_recap()')
 
 
+def _lang(c):
+    """<meta name="alumni-lang"> — o idioma-ALVO da aula. Ausente => 'en'."""
+    m = re.search(r'<meta name="alumni-lang" content="([a-z-]+)"', c)
+    return m.group(1) if m else 'en'
+
+
+# Em material NAO-ingles o acento e ortografia legitima do idioma que se ensina, nao
+# vazamento de PT. Marca-se so o que e IMPOSSIVEL naquela ortografia + PT inequivoco --
+# a MESMA regra que o bloco DOSAGEM ja aplicava lendo o config.
+NAO_ESPANHOL_RE = re.compile(r'\b[\wÀ-ÿ]*[ãõç][\wÀ-ÿ]*\b', re.I)
+# So entra palavra que NAO EXISTE em espanhol. "porque" estava aqui e e identico nos dois
+# idiomas -- acusava a resposta correta "Porque la profesión sola no lleva artículo".
+PT_INEQUIVOCO_RE = re.compile(
+    r'\b(?:não|nao|você|voce|também|tambem|então|entao|obrigado|trabalho|rotina|'
+    r'muito|isso|aqui|agora|quando)\b', re.I)
+
+
 def check_pt_na_tela_inclass(c, fails, nivel):
     """ZERO PORTUGUES NA TELA DO IN CLASS (REGRA 13, bloqueante, A2+).
 
@@ -1298,16 +1315,22 @@ def check_pt_na_tela_inclass(c, fails, nivel):
     i, j = c.find('<div class="slides-container"'), c.find('</div><!-- /slides-container -->')
     if i < 0 or j < 0:
         return
+    lang = _lang(c)
     achados = []
     for ch in re.split(r'(?=<div class="slide )', c[i:j]):
         if 'data-slide=' not in ch:
             continue
         txt = _txt(_sem_teacher(ch))
-        for w in set(ACENTO_RE.findall(txt)):
-            if w.islower() and w.lower() not in SUFIXO_EN_OK:
-                achados.append((re.search(r'data-slide="(\d+)"', ch).group(1), w))
-        for w in set(PT_RE.findall(txt)):
-            achados.append((re.search(r'data-slide="(\d+)"', ch).group(1), w))
+        n = re.search(r'data-slide="(\d+)"', ch).group(1)
+        if lang == 'en':
+            for w in set(ACENTO_RE.findall(txt)):
+                if w.islower() and w.lower() not in SUFIXO_EN_OK:
+                    achados.append((n, w))
+            for w in set(PT_RE.findall(txt)):
+                achados.append((n, w))
+        else:
+            for w in set(NAO_ESPANHOL_RE.findall(txt)) | set(PT_INEQUIVOCO_RE.findall(txt)):
+                achados.append((n, w))
     if achados:
         amostra = ', '.join(f'slide {n}: "{w}"' for n, w in achados[:5])
         fails.append(

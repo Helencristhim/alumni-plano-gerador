@@ -1790,6 +1790,15 @@ def base_swaps(s, cfg, n=None):
         prov = f'<meta name="alumni-model" content="{prov_model}">'
         if prov_level:
             prov += f'\n    <meta name="alumni-level" content="{prov_level}">'
+        # IDIOMA-ALVO da aula. Sem esta etiqueta o gate de idioma do IN CLASS
+        # (check_pt_na_tela_inclass) so tem a heuristica de INGLES, onde QUALQUER acento
+        # na tela e vazamento de portugues -- e numa aula de espanhol isso acusa "día",
+        # "aplicación" e "región", 96 falsos positivos numa aula so. O bloco DOSAGEM do
+        # mesmo validador ja sabia distinguir, porque le o config; esta etiqueta leva a
+        # mesma informacao para dentro do HTML, onde todo gate alcanca. Ausente => 'en',
+        # que e o que toda aula ja publicada e.
+        if cfg.get('lang', 'en') != 'en':
+            prov += f'\n    <meta name="alumni-lang" content="{cfg["lang"]}">'
         # FRAMEWORK (o MÉTODO, dentro da categoria). É esta etiqueta que o GATE 11
         # (scripts/check_framework_isolation.py) lê pra garantir que aluno real nunca
         # receba framework em validação. Aula sem a etiqueta = legado, e o gate ignora.
