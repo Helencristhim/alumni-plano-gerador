@@ -1839,6 +1839,29 @@ def validate(path):
                                      f'(layout 2+1, REGRA 17)')
             # ESTRUTURA mínima do Pre-class (ex-lesson-N do hub)
             bi = hc.find(f'id="ex-lesson-{N}"')
+            # PRE-CLASS AUSENTE NO HUB = FAIL, nao "pula em silencio".
+            # Ate 20/08/2026 este `if bi >= 0` fazia o gate INTEIRO desaparecer quando o
+            # bloco nao existia -- e "nao existe" e um defeito PIOR que "existe incompleto":
+            # o aluno abre o material e a aba Pre-class esta VAZIA. Aconteceu na aula 1 do
+            # diogo-leal-espanhol: o preclass.html foi escrito sem o wrapper
+            # <div class="lesson-card" id="ex-lesson-N"> da REGRA 15, o hub saiu com as 4
+            # abas e ZERO exercicio, e TODOS os gates passaram. Sem o id, nada mais funciona:
+            # nem o progresso por aula (mini-bar-fill[data-lesson-progress]), nem os stamps,
+            # nem o insert_hub da aula seguinte -- que foi quem finalmente reclamou.
+            # ESCOPO: geracao nova. Hub legado sem o bloco nao se conserta (REGRA 30).
+            # KIDS nao tem Pre-class: o percurso dele e o POST-class (o artefato depois
+            # da aula). Cobrar ex-lesson-N ali e cobrar uma peca que o modelo nao tem --
+            # foi o que este gate fez na primeira versao, acusando 8 arquivos do bento e do
+            # dante que estao CORRETOS. O gate vale para quem tem Pre-class por contrato.
+            modelo = re.search(r'<meta name="alumni-model" content="([a-z]+)"', c)
+            tem_preclass = not modelo or modelo.group(1) not in ('kids',)
+            if bi < 0 and tem_preclass and _gen(c) >= GEN_PLAYER_E_PREDICAO:
+                fails.append(
+                    f'Pre-class da aula {N} AUSENTE no hub: nao ha id="ex-lesson-{N}" em '
+                    f'{slug}.html. A aba Pre-class do aluno fica VAZIA. O preclass.html '
+                    f'precisa vir dentro de <div class="lesson-card" id="ex-lesson-{N}"> '
+                    f'com o lesson-header e o lesson-body (REGRA 15) — sem esse id nao ha '
+                    f'progresso por aula, nem stamp, e o insert_hub da proxima aula falha.')
             if bi >= 0:
                 bj = hc.find('id="ex-lesson-', bi + 15)
                 if bj < 0:
