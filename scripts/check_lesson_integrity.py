@@ -25,6 +25,9 @@ import glob
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUBLIC = os.path.join(ROOT, "public")
+# Uma ponte declara-se: refresh + location.replace para a versao canonica.
+REDIRECT = re.compile(r'http-equiv="refresh"[^>]*url=/(professor|aluno)/', re.I)
+
 SKIP = re.compile(r"backup|teste|test|-new-", re.I)
 REF = re.compile(r"/audio/[A-Za-z0-9_./-]+\.mp3")
 
@@ -84,6 +87,13 @@ def check(files):
         checked += 1
         size = len(content)
         lines = content.count("\n")
+        # Ponte de redirecionamento e PEQUENA DE PROPOSITO: 400 bytes que mandam o aluno
+        # para a versao canonica (daniela-feitoza -> daniela-feitoza-v2). Sem esta excecao,
+        # as quatro pontes do repo acusavam "VAZIO/CORROMPIDO" e imprimiam "DEPLOY
+        # BLOQUEADO" em TODO deploy desde 2026 -- alarme que toca sempre e alarme que
+        # ninguem ouve mais, e era ele que teria de avisar de um arquivo de verdade vazio.
+        if REDIRECT.search(content):
+            continue
         if size < 500 or lines < 10:
             errors.append(f"{base}: VAZIO/CORROMPIDO ({lines} linhas / {size} bytes)")
             continue
