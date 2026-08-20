@@ -8,7 +8,9 @@ reunião com o presidente da Carestream em 31 de agosto.
 
 ```
 python3 _build/intensivo/make_shell.py    # molde -> shell.html   (só quando o molde muda)
-python3 _build/intensivo/build.py         # shell + conteúdo -> os DOIS arquivos publicados
+python3 _build/intensivo/audio.py         # conteúdo -> audio_manifest.json  (quando uma frase muda)
+python3 _build/model/gen_audio.py _build/intensivo/rita/config.json   # manifesto -> MP3 na ElevenLabs
+python3 _build/intensivo/build.py         # shell + conteúdo + áudio -> os DOIS arquivos publicados
 ```
 
 `build.py` escreve:
@@ -32,6 +34,25 @@ E não só o markup: os rótulos que o **motor** monta em string (`'<span data-v
 Aula '+n+'</span>'`) também são reescritos por papel, e no arquivo da aluna o construtor do
 gabarito (`akBuild`) sai inteiro — ele DERIVA a resposta do próprio exercício, então esvaziar
 `PC_NOTAS` não bastaria.
+
+## A fala vem da ElevenLabs, não do navegador
+
+O molde falava por `speechSynthesis` — serve a um artefato de laboratório, não ao material
+de uma aluna: a voz muda em cada máquina, some no Safari e não é a voz do curso (REGRA 7).
+Aqui cada frase com botão de áudio é um **MP3 gravado na ElevenLabs**, na voz **ellen** (as
+linhas são da Rita). O transporte (Play/Pause/Stop/estado) é o mesmo do molde — muda só quem
+produz o som; o `speechSynthesis` fica como último recurso para uma frase sem MP3.
+
+O nome do arquivo sai do **texto**, não da posição: reescrever uma linha gera arquivo novo em
+vez de reaproveitar em silêncio o áudio do rascunho anterior.
+
+Quando a tela e o áudio divergem — *"That is with our technical team — [name] can give you
+more detail"*, em que `[name]` é lacuna para o professor preencher e lida em voz alta viraria
+"colchete name colchete" — a diferença fica no `data-say`, visível no HTML.
+
+O `build.py` não passa se faltar MP3: `confere_audio()` percorre o documento emitido e exige
+que **toda** `.phrase-en` resolva para um arquivo que existe em disco. Hoje: 138 frases no
+arquivo do professor, 54 no da aluna, 35 MP3s.
 
 ## O feedback atravessa por Supabase
 
