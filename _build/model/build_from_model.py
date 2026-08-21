@@ -2096,6 +2096,18 @@ def inject_grammar_marker(slides, grammar_point):
         if idx != -1:
             break
     if idx == -1:
+        # ROTULO E APARENCIA; revealGrammar() E IDENTIDADE. Procurar so pelo texto do
+        # chapter-label faz o marcador depender de como a AULA se intitula na tela, e o
+        # rotulo e autoral de proposito (uma aula pode chamar o capitulo de "The Pattern"
+        # e continuar sendo descoberta gramatical). Quando isso acontecia, o no-op era
+        # SILENCIOSO: a aula saia sem data-grammar e o check_grammar_progression a
+        # ignorava — gate verde porque nao viu nada, nao porque conferiu. Foi assim que
+        # SEIS aulas de um mesmo aluno passaram sem nunca ser comparadas entre si.
+        # O botao `revealGrammar()` e o que FAZ de um slide uma descoberta gramatical:
+        # existe em todos eles por construcao e nao depende de como o capitulo se chama.
+        # Mesma licao do _exposicao(), que passou a ler data-kind em vez da classe.
+        idx = slides.find('revealGrammar()')
+    if idx == -1:
         return slides  # aula sem slide de descoberta — no-op silencioso
     start = slides.rfind('<div class="slide', 0, idx)
     if start == -1:
