@@ -81,6 +81,80 @@ MP3. Ou seja: desta especificação, falta portar **o deck**.
 
 ---
 
+## `marcos-private-black.html`
+
+**O que é.** O material do **Marcos Mansour** (*Business English Program* · B1 · ciclo 2),
+escrito fora do sistema em agosto/2026, já sob o pacote normativo novo — os documentos
+**00–06**, a **Série P** (P1/P2/P3), os **Adendos 01 e 02** e o **Anexo P-A**
+(`docs/private-black/`). Duas aulas completas do bloco 1 — 19 *Listening into Interaction*
+e 20 *Reading into Speaking* —, cada uma com 10 telas e 8 etapas.
+
+É a especificação da anatomia **`private-black`** — a forma que o molde
+**`stephanie-vicente`** passa a ter. O artefato não é o destino do trabalho: ele é de onde a
+forma vem, e quem reproduz para qualquer aluno é o molde (ordem do Dan, 24/08/2026: *"o
+artefato do Marcos Mansur precisa ser levado pro molde stephanie pra só então o molde ser
+capaz de reproduzir com qualquer aluno"*).
+
+Ele **substitui o artefato da Erica** como fonte de interface desse molde: o da Erica veio do
+doc set anterior e não conhece `data-view`, aba Feedback, Post-class, Back to top,
+transcript, Stop no player nem a janela do Teacher's Guide.
+
+**Procedência.** É o HTML **real** da página, não o wrapper. O `.html` salvo em
+`~/Downloads` é a moldura do claude.ai; o documento vem no diretório `..._files/`, como
+`a_002_jqsA.html`. Está aqui byte a byte.
+
+- SHA-256: `b3957620ccf8e2b051c1b2324b92abb79d8a5c8ace6f055a6947204e277d8d0f`
+- 620.031 bytes · ~658 regras de CSS · 20 telas em 2 aulas · 6 abas · 187 funções JS
+- 105 KB de CSS · 172 KB de JS (**32% em comentário**, que carrega a regra e o incidente)
+- Versionado no repo em **24/08/2026**
+
+### O que ele especifica que a anatomia de hoje não tem
+
+| | `guided-discovery` (stephanie, hoje) | este artefato (`private-black`) |
+|---|---|---|
+| abas | Planejamento · Syllabus · Pre-class · In Class · Evidências | **Perfil/Planning · Planejamento · Pre-class · In-class · Feedback · Post-class** |
+| visões | dois arquivos (professor / aluno) | `data-view` no mesmo arquivo — **e é aqui que divergimos de propósito, ver abaixo** |
+| registro | paleta + header trocados pelo builder | **`ARTEFATO` · `ALUNO` · `CICLO` · `LESSONS` · `GUIDE`**, e a tela repintada por `data-lf` |
+| etapas | `data-phase`, 7–8 fixas no gate | `stages[{n,min}]` **no registro**, quantidade livre, minutos fechando 55 |
+| Teacher's Guide | só a nota local (`data-teacher`) | nota local **+ guia de 14 campos**, em janela própria (`?mode=teacher-guide&lesson=N`) |
+| pre-class | as 5 etapas legadas do imersivo | **6 atividades reais**, cada uma com answer key próprio de 4 campos |
+| post-class | não existe (Complementares saiu) | **5 componentes funcionais**, sem exercício e sem obrigatoriedade |
+| player | play/pause + ±5s | **Play/Pause + Stop separado**, mesmo componente em todo áudio, com estado em texto |
+| transcript | opt-in por config | **em todo áudio do in-class**, nascendo fechado (Adendo 01 §4) |
+| ciclo | aulas 1..N | **`CICLO.primeira`** — o Marcos é ciclo 2, e as aulas se chamam 19 a 38 |
+
+### Onde ele é protótipo, e por quê
+
+O artefato roda no claude.ai: não tem servidor. Por isso o áudio é síntese do navegador,
+**declarada uma vez** como provisória (P1 §0), e a persistência é `localStorage`. Isso não
+é defeito nem conflito — é ausência, e a produção acrescenta as camadas por cima sem mudar
+a forma: ElevenLabs pelo pipeline com manifesto (`transcript_hash`, `checksum`,
+`qa_status`), Supabase no lugar do `localStorage`, e a janela do guia provada na URL real
+(o sandbox do claude.ai não tem `allow-popups`, e isso é limitação do host, não da solução).
+
+### A ÚNICA divergência deliberada: o arquivo do aluno
+
+O P1 §1 pede **um** artefato com alternador *Visão professor · Visão aluno*, e é o que este
+faz. Nós vamos emitir **dois arquivos**. Ordem do Dan, 24/08/2026:
+
+> *"o aluno não ve o que não é dele"*
+
+No arquivo único, o conteúdo do professor continua no DOM: um clique no alternador — sem
+precisar de código-fonte — e o aluno lê os gabaritos das 6 atividades antes de fazê-las
+(matando o diagnóstico que a aula existe para produzir) e as hipóteses escritas sobre as
+dificuldades dele, que o doc 04 §7.1 proíbe que cheguem ao aluno. O P3 §3 já diz que
+`display:none` não é separação — ela é de armazenamento e de árvore acessível. E o link do
+aluno é público: arquivo estático na Vercel, com os códigos de acesso desligados.
+
+Então o builder emite o espelho do aluno **sem** `data-teacher`, **sem** os painéis `ak`,
+**sem** `var GUIDE` e **sem** o estado do ciclo. Removidos, não escondidos. O `data-view`
+continua existindo — no arquivo do professor, como pré-visualização dele.
+
+A divergência está **declarada** (P1 §21 manda declarar, nunca resolver em silêncio) e é
+para ser levada à Stephanie, não decidida por nós de novo.
+
+---
+
 ## A HIERARQUIA: o artefato manda, a documentação explica
 
 Palavras do Dan, 11/08/2026:

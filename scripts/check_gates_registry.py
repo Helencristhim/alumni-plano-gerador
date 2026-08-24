@@ -68,7 +68,11 @@ def carrega():
 
 def gates_no_disco():
     achados = {}
-    for pasta in ("scripts", os.path.join("_build", "model")):
+    # scripts/black e a pasta do molde private-black. Ela entra AQUI, e nao so no
+    # gates.json, porque a checagem 1 (gate no disco sem entrada no registro) so alcanca o
+    # que esta nesta lista: uma pasta nova fora dela abriria exatamente o buraco que este
+    # meta-gate existe para fechar -- gate que roda no CI e que ninguem declarou.
+    for pasta in ("scripts", os.path.join("scripts", "black"), os.path.join("_build", "model")):
         d = os.path.join(RAIZ, pasta)
         if not os.path.isdir(d):
             continue
