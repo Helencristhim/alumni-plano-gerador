@@ -79,6 +79,91 @@ def troca_var(js, nome, valor):
 
 
 
+
+CRITERIOS_AVAL = [
+    ("fala", "Fala e interacao",
+     "Capacidade de manter e desenvolver a interacao oral com autonomia crescente."),
+    ("escuta", "Compreensao auditiva",
+     "Capacidade de compreender informacao oral e reagir de forma pertinente."),
+    ("precisao", "Precisao estrutural",
+     "Estabilidade de forma quando a atencao esta na mensagem."),
+]
+
+# O cartao da aula na aba In-class. Ele vinha do artefato com o conteudo do MARCOS --
+# titulo, objetivo, produto e a preparacao das aulas dele. hubPaint/lessonsPaint repintam o
+# percurso e as etapas, mas nao o resto: o material da Stephanie abria a aba In-class
+# descrevendo uma recepcao de congresso de valuation. Residuo de outro perfil (Doc 04 §12.1),
+# e quem o encontrou primeiro foi o CATALOGO DE MODELOS, que le o cabecalho para descrever a
+# persona e descreveu a Stephanie com o perfil do Marcos.
+CARTAO = """<div class="lesson-card" id="lc{n}">
+        <div class="lc-head">
+          <span class="lc-badge">Aula {nn}</span>
+          <span class="lc-fw">Bloco {bloco} &middot; {mod} / {cod}</span>
+          <span class="lc-status" id="lcst{n}">N&atilde;o iniciada</span>
+        </div>
+        <h3 class="lc-title">{tema}</h3>
+        <p class="lc-desc">{objetivo}</p>
+        <p class="lc-meta">{telas} telas &middot; {minutos} min de percurso essencial</p>
+        <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
+          <button class="btn-ghost" data-painel="lcprep{n}" aria-expanded="false" onclick="cartaoPainel('lcprep{n}',this)">Estrutura e prepara&ccedil;&atilde;o</button>
+          <button class="btn-primary" onclick="openLesson({n})">Abrir a aula</button>
+          <button class="btn-ghost" data-view="professor" onclick="tgAbrir({n},this)"><span>Abrir o <span lang="en">Teacher&rsquo;s Guide</span></span></button>
+          <button class="btn-ghost" data-painel="lcfb{n}" aria-expanded="false" onclick="cartaoPainel('lcfb{n}',this)">Registro p&oacute;s-aula</button>
+        </div>
+        <p class="tg-aviso-cartao" id="tgAviso{n}" data-view="professor" hidden="">O navegador n&atilde;o abriu a janela. O Teacher&rsquo;s Guide continua dispon&iacute;vel dentro da aula.</p>
+        <div id="lcprep{n}" style="display:none;margin-top:var(--space-4)">
+          <h5 class="prep-h">A &middot; Objetivo e produto</h5>
+          <p class="prep-p"><strong>Objetivo comunicativo:</strong> {objetivo}</p>
+          <p class="prep-p"><strong>Produto principal:</strong> {produto}</p>
+          <h5 class="prep-h">B &middot; Percurso da aula</h5>
+          <p class="prep-p" data-lf="percurso"></p>
+          <p class="prep-p" data-lf="etapas"></p>
+          <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
+          <ul class="prep-list">{preparar}</ul>
+        </div>
+        <div id="lcfb{n}" style="display:none;margin-top:var(--space-4)">
+          <div class="fb-grid">
+            <div class="fb-item"><label for="af{n}-data">Data de realiza&ccedil;&atilde;o</label><input type="date" id="af{n}-data" class="blank-input" data-k="af_l{n}_data" oninput="persSave(this)"></div>
+            <div class="fb-item"><label for="af{n}-status">Status</label><select id="af{n}-status" data-k="af_l{n}_status" onchange="persSave(this)"><option value="" selected="selected">N&atilde;o iniciada</option><option value="Em andamento">Em andamento</option><option value="Realizada">Realizada</option></select></div>
+          </div>
+          <h5 class="prep-h">Desempenho &mdash; mesma escala nas aulas do bloco</h5>
+          <div class="aval-grid">{aval}</div>
+          <h5 class="prep-h">Engajamento</h5>
+          <div class="aval-item"><p class="aval-crit">Engajamento</p><p class="aval-desc">Participa&ccedil;&atilde;o e envolvimento. Fica FORA da m&eacute;dia de desempenho lingu&iacute;stico.</p><div class="aval-escala" data-esc="engaj" data-aval="af_l{n}_engaj" role="radiogroup" aria-label="Engajamento"></div></div>
+          <div class="fb-grid">
+            <div class="fb-item"><label for="af{n}-evidencia">Evid&ecirc;ncia observ&aacute;vel</label><textarea id="af{n}-evidencia" class="writebox" data-k="af_l{n}_evidencia" oninput="persSave(this)"></textarea></div>
+            <div class="fb-item"><label for="af{n}-dificuldade">Ponto priorit&aacute;rio de desenvolvimento</label><textarea id="af{n}-dificuldade" class="writebox" data-k="af_l{n}_dificuldade" oninput="persSave(this)"></textarea></div>
+            <div class="fb-item"><label for="af{n}-acao">Pr&oacute;xima a&ccedil;&atilde;o</label><textarea id="af{n}-acao" class="writebox" data-k="af_l{n}_acao" oninput="persSave(this)"></textarea></div>
+          </div>
+          <h5 class="prep-h">O que chega ao aluno</h5>
+          <div class="fb-grid">
+            <div class="fb-item"><label for="sf{n}-worked-in">What worked</label><textarea id="sf{n}-worked-in" class="writebox" data-k="sfb_l{n}_worked" oninput="persSave(this)"></textarea></div>
+            <div class="fb-item"><label for="sf{n}-develop-in">Keep developing</label><textarea id="sf{n}-develop-in" class="writebox" data-k="sfb_l{n}_develop" oninput="persSave(this)"></textarea></div>
+          </div>
+          <p class="aval-desc" id="avalSalvo{n}"></p>
+        </div>
+      </div>"""
+
+
+def cartao_de_aula(n, reg, dados, telas, minutos):
+    def campo(nome, padrao=""):
+        m = re.search(nome + r":'([^']*)'", reg)
+        return m.group(1) if m else padrao
+    aval = "".join(
+        '<div class="aval-item"><p class="aval-crit">%s</p><p class="aval-desc">%s</p>'
+        '<div class="aval-escala" data-aval="af_l%d_%s" role="radiogroup" aria-label="%s">'
+        '</div></div>' % (rot, desc, n, k, rot)
+        for k, rot, desc in CRITERIOS_AVAL)
+    return CARTAO.format(
+        n=n, nn="%02d" % n,
+        bloco=(re.search(r"bloco:(\d+)", reg) or [None, "1"])[1],
+        mod=campo("mod"), cod=campo("cod"), tema=campo("tema"),
+        objetivo=dados.get("objetivo", ""), produto=dados.get("produto", ""),
+        telas=telas, minutos=minutos,
+        preparar="".join("<li>%s</li>" % x for x in dados.get("preparar", [])),
+        aval=aval)
+
+
 def troca_blocos_de_aula(html, tab_id, prefixo, seletor, aulas, rotulos, conteudos):
     """Refaz, dentro de uma aba, a barra de selecao de aula e os blocos por aula.
 
@@ -255,6 +340,34 @@ def monta(cfg, base_frag):
         rotulos[n] = (f"Aula {n:02d} &middot; {mod}", f"Lesson {n:02d}")
         pre.append(open(os.path.join(pasta, "preclass.html"), encoding="utf-8").read().strip())
         post.append(open(os.path.join(pasta, "postclass.html"), encoding="utf-8").read().strip())
+    # os cartoes da aba In-class, gerados do registro + cartao.json
+    cartoes = []
+    for n in aulas:
+        pasta = os.path.join(base_frag, f"aula{n}")
+        reg = open(os.path.join(pasta, "registro.js"), encoding="utf-8").read()
+        cj = os.path.join(pasta, "cartao.json")
+        if not os.path.exists(cj):
+            erros.append(f"aula {n}: falta cartao.json (objetivo, produto e preparacao do "
+                         f"cartao da aba In-class). Sem ele o cartao fica com o conteudo do "
+                         f"artefato -- residuo de outro perfil.")
+            continue
+        dados = json.load(open(cj, encoding="utf-8"))
+        etapas = re.findall(r"\{n:'[^']+',min:(\d+)\}", reg)
+        telas = len(re.findall(r'data-slide="',
+                               open(os.path.join(pasta, "slides.html"),
+                                    encoding="utf-8").read()))
+        cartoes.append(cartao_de_aula(n, reg, dados, telas, sum(int(x) for x in etapas)))
+    if cartoes:
+        hm2 = mascara(html)
+        m2 = re.search(r'<div class="lesson-card"[^>]*id="lc\d+"[^>]*>', hm2)
+        if not m2:
+            raise SystemExit("o shell nao tem cartao de aula na aba In-class")
+        ini2 = m2.start()
+        fim2 = ini2
+        for mm in re.finditer(r'<div class="lesson-card"[^>]*id="lc\d+"[^>]*>', hm2):
+            fim2 = fecha(hm2, mm.start())
+        html = html[:ini2] + "\n      ".join(cartoes) + html[fim2:]
+
     html = troca_blocos_de_aula(html, "tab-preclass", "pc", "preSel", aulas, rotulos, pre)
     html = troca_blocos_de_aula(html, "tab-postclass", "ps", "postSel", aulas, rotulos, post)
     html, n_telas = troca_slides(html, slides)
@@ -283,6 +396,77 @@ def monta(cfg, base_frag):
             entradas.append("  {h:'recapList%d', also:['confList%d'],"
                             "f:function(){closeBuild(%d,RECAP%d,CONF%d);}}" % (n, n, n, n, n))
     html = html[:ib] + "var BUILDERS=[\n" + ",\n".join(entradas) + "\n];" + html[ie:]
+
+    # ---- os dados de conteudo do ARTEFATO que este material nao usa
+    #
+    # TALK_19 (o dialogo), BRIEF_20 (o documento), GD_* (o sorting), MSG_20 e SCRIPT_PRE19
+    # sao conteudo das aulas DELE. Ficam no shell porque o shell e o artefato menos o
+    # declarado; num material de outro aluno sao texto de outra pessoa entregue junto.
+    ini2 = html.rfind("<script>")
+    cab2, js2 = html[:ini2], html[ini2:]
+    for velho in sorted(set(re.findall(
+            r"\bvar (TALK_\d+|BRIEF_\d+|MSG_\d+|SCRIPT_PRE\d+|GD_ITEMS|GD_COLS|GD_V)\s*=",
+            js2))):
+        js2 = extrai_shell.remove_var(js2, velho, {})
+    html = cab2 + js2
+
+    # ---- o CABECALHO, que hubPaint() nao repinta
+    #
+    # O nome e o ciclo saem do registro e sao repintados no boot. O subtitulo, a linha de
+    # contexto e o mapa do ciclo, nao: eles ficam como o artefato os salvou. Sem trocar aqui,
+    # o material da Stephanie abria dizendo "Engenheiro de avaliacao e perito avaliador" --
+    # a profissao do Marcos, no cabecalho dela. Isto e o "residuo de outro perfil" que o
+    # Doc 04 §12.1 proibe, e quem o encontrou foi o catalogo de modelos, que le o cabecalho
+    # para descrever a persona: ele descreveu a Stephanie com o perfil do Marcos.
+    cab = cfg.get("header") or {}
+    if cab.get("subtitulo"):
+        html = re.sub(r'<p class="subtitle">.*?</p>',
+                      '<p class="subtitle">%s</p>' % cab["subtitulo"], html, count=1, flags=re.S)
+    if cab.get("info"):
+        html = re.sub(r'<div class="student-info">.*?</div>',
+                      '<div class="student-info">\n      %s\n    </div>'
+                      % "\n      ".join(f"<span>{x}</span>" for x in cab["info"]),
+                      html, count=1, flags=re.S)
+    # O mapa do ciclo vem PINTADO com as aulas do artefato (19..38). mapaPaint() o refaz no
+    # boot a partir de CICLO, mas o que se ENTREGA e o do artefato -- e por um instante e o
+    # que a tela mostra.
+    html = re.sub(r'(<div class="ciclo-mapa" id="cicloMapa"[^>]*>).*?(</div>)', r"\1\2",
+                  html, count=1, flags=re.S)
+
+    art = open(ARTEFATO, encoding="utf-8").read()
+    m_alu = re.search(r"var ALUNO=\{nome:'([^']*)'", art)
+    mesmo_aluno = bool(m_alu) and m_alu.group(1) == cfg["aluno"]["nome"]
+
+    # ---- os comentarios que descrevem o material DO ARTEFATO
+    #
+    # O shell carrega os comentarios do artefato -- e eles sao memoria util, no shell. No
+    # material de OUTRO aluno eles descrevem uma aula que nao esta ali ("Recepcao de abertura
+    # de um congresso internacional de valuation") e nomeiam a pessoa do artefato. Comentario
+    # e byte entregue: sai do material, e continua no shell, que e onde a memoria serve.
+    if not mesmo_aluno:
+        nome_art = m_alu.group(1) if m_alu else None
+        if nome_art:
+            html, n_com = re.subn(r"/\*(?:(?!\*/)[\s\S])*?\b" + re.escape(nome_art) +
+                                  r"\b(?:(?!\*/)[\s\S])*?\*/", "", html,
+                                  flags=re.IGNORECASE)
+        else:
+            n_com = 0
+
+    # ---- residuo: nenhuma linha de identidade do artefato pode sobreviver
+    # No round-trip o material E o do artefato: as linhas dele sobreviverem ali e o esperado,
+    # e cobrar residuo seria cobrar que ele nao seja ele mesmo.
+    m_sub = re.search(r'<p class="subtitle">(.*?)</p>', art, re.S)
+    digitais = [re.sub(r"\s+", " ", m_sub.group(1)).strip()] if m_sub else []
+    m_inf = re.search(r'<div class="student-info">(.*?)</div>', art, re.S)
+    if m_inf:
+        digitais += [re.sub(r"\s+", " ", x).strip()
+                     for x in re.findall(r"<span>(.*?)</span>", m_inf.group(1), re.S)]
+    plano = re.sub(r"\s+", " ", html)
+    for d in digitais:
+        if d and not mesmo_aluno and d in plano \
+                and d not in json.dumps(cfg, ensure_ascii=False):
+            erros.append(f"residuo do artefato no material: {d[:70]!r} sobreviveu. "
+                         f"Doc 04 §12.1 — nenhum fragmento de outro perfil.")
 
     nome_inteiro = f"{cfg['aluno']['nome']} {cfg['aluno']['sobrenome']}".strip()
     html = re.sub(r"<title>.*?</title>",
@@ -352,6 +536,32 @@ def round_trip():
         igual = a.strip() == g.strip()
         dif += 0 if igual else 1
         print(f"  {'igual' if igual else 'DIFERE'}  {ident:14s} artefato={len(a):7d}B  gerado={len(g):7d}B")
+    # O CARTAO da aba In-class entra no circulo pelos CAMPOS, nao pelos bytes: o builder o
+    # gera de um molde proprio, entao o espacamento difere de proposito. O que tem de voltar
+    # igual e o que e autoral -- titulo, objetivo, produto e a contagem de itens da
+    # preparacao. Sem isto, uma extracao que perdesse a preparacao passaria despercebida: o
+    # cartao continuaria existindo, so que vazio.
+    def campos_cartao(t, n):
+        i = t.find(f'id="lc{n}"')
+        if i < 0:
+            return None
+        j = t.find('id="lcfb', i)
+        seg = t[i:j if j > i else i + 12000]
+        tit = re.search(r'<h3 class="lc-title">(.*?)</h3>', seg, re.S)
+        obj = re.search(r"<strong>Objetivo comunicativo:</strong>\s*(.*?)</p>", seg, re.S)
+        prod = re.search(r"<strong>Produto principal:</strong>\s*(.*?)</p>", seg, re.S)
+        norm = lambda x: re.sub(r"\s+", " ", x).strip() if x else ""
+        return (norm(tit.group(1) if tit else ""), norm(obj.group(1) if obj else ""),
+                norm(prod.group(1) if prod else ""),
+                len(re.findall(r"<li>", seg)))
+    for n in (19, 20):
+        ca, cg = campos_cartao(art, n), campos_cartao(gerado, n)
+        igual = ca == cg
+        print(f"  {'igual' if igual else 'DIFERE'}  cartao lc{n}     "
+              f"{'titulo/objetivo/produto/itens' if igual else str(ca) + ' != ' + str(cg)}")
+        if not igual:
+            dif += 1
+
     # O JS por aula tambem entra no circulo: a tabela BUILDERS diz quem reconstroi cada host,
     # e uma entrada perdida so aparece no dia em que alguem usa o Reset. Comparar CONJUNTO,
     # nao ordem -- a ordem de montagem e do builder, e nao muda o que a tabela promete.

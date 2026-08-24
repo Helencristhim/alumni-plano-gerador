@@ -132,6 +132,16 @@ def verifica(slugs=None):
             m = re.search(r'-aula(\d+)\.html$', f)
             if m:
                 no_disco.add(int(m.group(1)))
+        # A anatomia private-black nao tem um arquivo por aula: entrega DUAS URLs, e as aulas
+        # do ciclo vivem DENTRO do arquivo do professor, marcadas por data-lesson. Procurar
+        # `{slug}-aulaN.html` devolve zero e o gate acusaria "produzida sem arquivo" para
+        # material que existe -- o gate certo medindo a forma errada.
+        unico = os.path.join(RAIZ, 'public', 'professor', f'{slug}.html')
+        if os.path.exists(unico):
+            with open(unico, encoding='utf-8', errors='replace') as fh:
+                conteudo = fh.read()
+            if 'content="private-black"' in conteudo[:4000]:
+                no_disco |= {int(x) for x in re.findall(r'data-lesson="(\d+)"', conteudo)}
         if decl - no_disco:
             fails.append(f'{rel}: aula(s) {sorted(decl - no_disco)} listada(s) como produzida(s) '
                          f'e sem arquivo em public/professor/.')

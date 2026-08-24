@@ -188,6 +188,30 @@ def selftest():
     return 0
 
 
+def _sem_objeto(n_medidos):
+    """Verde SEM OBJETO e o defeito que o P2 §13 nomeia: "checagem que nao falha, so nao faz
+    nada". Quando este gate mede ZERO aula e existe material da anatomia private-black no
+    repo, ele diz isso -- em vez de imprimir OK e parecer cobertura.
+
+    Nao reprova: ficar sem aula na forma antiga e estado legitimo e transitorio (o molde
+    trocou de anatomia em 24/08/2026 e as aulas voltam uma por PR). O que nao pode e ficar
+    invisivel."""
+    import glob as _glob
+    if n_medidos:
+        return
+    for _f in _glob.glob(os.path.join(RAIZ, "public", "professor", "*.html")):
+        try:
+            with open(_f, encoding="utf-8", errors="replace") as _fh:
+                if 'content="private-black"' in _fh.read(4000):
+                    print("  AVISO — SEM OBJETO: este gate mede a forma guided-discovery e nao"
+                          " ha nenhuma aula dela no repo. O material da anatomia nova"
+                          " (private-black) NAO e coberto por ele. Reaponte-o para o"
+                          " requisito, ou aposente-o com o motivo escrito (P2 §13/§23).")
+                    return
+        except OSError:
+            pass
+
+
 def main():
     if '--selftest' in sys.argv:
         return selftest()
@@ -201,6 +225,7 @@ def main():
         return 1
     print(f'OK — {checados} aula(s) guided-discovery: toda acao que a nota manda e '
           f'executavel de onde o professor esta.')
+    _sem_objeto(checados)
     return 0
 
 

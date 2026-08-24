@@ -195,11 +195,33 @@ def coleta():
             f for f in arquivos
             if re.fullmatch(re.escape(slug) + r"-aula\d+\.html", f.name)
         ]
-        if not arquivos:
+        # ── A anatomia private-black nao tem um arquivo por aula ──────────────────
+        # Ela entrega DUAS URLs e as aulas do ciclo vivem DENTRO do arquivo do professor,
+        # separadas por data-lesson. Procurar `{slug}-aulaN.html` devolve nada, e o molde
+        # sumia do catalogo em silencio -- com um "pulando" que parecia aviso de rotina.
+        pb = None
+        hub_pb = RAIZ / "public" / "professor" / f"{slug}.html"
+        if not arquivos and hub_pb.exists():
+            conteudo = hub_pb.read_text(encoding="utf-8", errors="replace")
+            if 'content="private-black"' in conteudo[:4000]:
+                pb = []
+                for n in sorted({int(x) for x in re.findall(r'data-lesson="(\d+)"', conteudo)}):
+                    bloco = re.search(r"\n\s*%d:\{.*?\n\s*\}" % n, conteudo, re.S)
+                    tema = re.search(r"tema:'([^']*)'", bloco.group(0)) if bloco else None
+                    mod = re.search(r"mod:'([^']*)'", bloco.group(0)) if bloco else None
+                    pb.append({
+                        "n": n,
+                        "titulo": tema.group(1) if tema else f"aula {n}",
+                        "modalidade": mod.group(1) if mod else "",
+                        "professor": f"/professor/{slug}.html",
+                        "aluno": f"/aluno/{slug}.html",
+                        "telas": len(re.findall(r'data-lesson="%d"' % n, conteudo)),
+                    })
+        if pb is None and not arquivos:
             print(f"  aviso: {slug} nao tem aula em public/professor — pulando")
             continue
 
-        aulas, assinaturas = [], {}
+        aulas, assinaturas = (list(pb) if pb else []), {}
         for f in arquivos:
             n = int(re.search(r"-aula(\d+)\.html$", f.name).group(1))
             dados = le_aula(f)

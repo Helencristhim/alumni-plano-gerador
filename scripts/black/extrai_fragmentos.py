@@ -24,6 +24,7 @@ e shell, e nao entra aqui:
     aulaN/guide.json      os 14 campos do Teacher's Guide daquela aula
     aulaN/registro.js     a linha da aula no registro: tema, nav, stages, cod, framework
     aulaN/close.json      o fecho: o recap e a escala de confianca daquela aula
+    aulaN/cartao.json     o cartao da aba In-class: objetivo, produto e a preparacao
 
 USO:
     python3 scripts/black/extrai_fragmentos.py [--destino _build/black/_do-artefato]
@@ -138,6 +139,25 @@ def notas_pc(h):
     return out
 
 
+def cartao_da_aula(h, hm, n):
+    """Objetivo, produto e preparacao do cartao `lc{n}` da aba In-class.
+
+    O resto do cartao -- badge, framework, contagem de telas, botoes, painel de registro --
+    e DERIVAVEL do registro, e por isso o builder o gera em vez de guarda-lo. So estes tres
+    campos sao autorais."""
+    bloco = bloco_por_id(h, hm, f"lcprep{n}")
+    if not bloco:
+        return {}
+    def campo(rotulo):
+        m = re.search(r"<strong>" + rotulo + r":</strong>\s*(.*?)</p>", bloco, re.S)
+        return re.sub(r"\s+", " ", m.group(1)).strip() if m else ""
+    itens = [re.sub(r"\s+", " ", x).strip()
+             for x in re.findall(r"<li>(.*?)</li>", bloco, re.S)]
+    return {"objetivo": campo("Objetivo comunicativo"),
+            "produto": campo("Produto principal"),
+            "preparar": itens}
+
+
 def lista_js(h, nome):
     """O conteudo de `var NOME=[ ... ]` como lista de strings."""
     m = re.search(r"\bvar " + re.escape(nome) + r"\s*=\s*\[", h)
@@ -190,6 +210,7 @@ def main():
             "notas.json": json.dumps(
                 {k: v for k, v in notas_pc(h).items() if k.startswith(f"{n}-")},
                 ensure_ascii=False, indent=1),
+            "cartao.json": json.dumps(cartao_da_aula(h, hm, n), ensure_ascii=False, indent=1),
             "close.json": json.dumps(
                 {"recap": lista_js(h, f"RECAP{n}"), "conf": lista_js(h, f"CONF{n}")},
                 ensure_ascii=False, indent=1),
