@@ -89,10 +89,15 @@ escrito fora do sistema em agosto/2026, já sob o pacote normativo novo — os d
 (`docs/private-black/`). Duas aulas completas do bloco 1 — 19 *Listening into Interaction*
 e 20 *Reading into Speaking* —, cada uma com 10 telas e 8 etapas.
 
-É a especificação da anatomia **`private-black`**, e **substitui o artefato da Erica** como
-fonte de interface do molde adulto novo: o da Erica veio do doc set anterior e não conhece
-`data-view`, aba Feedback, Post-class, Back to top, transcript, Stop no player nem a janela
-do Teacher's Guide.
+É a especificação da anatomia **`private-black`** — a forma que o molde
+**`stephanie-vicente`** passa a ter. O artefato não é o destino do trabalho: ele é de onde a
+forma vem, e quem reproduz para qualquer aluno é o molde (ordem do Dan, 24/08/2026: *"o
+artefato do Marcos Mansur precisa ser levado pro molde stephanie pra só então o molde ser
+capaz de reproduzir com qualquer aluno"*).
+
+Ele **substitui o artefato da Erica** como fonte de interface desse molde: o da Erica veio do
+doc set anterior e não conhece `data-view`, aba Feedback, Post-class, Back to top,
+transcript, Stop no player nem a janela do Teacher's Guide.
 
 **Procedência.** É o HTML **real** da página, não o wrapper. O `.html` salvo em
 `~/Downloads` é a moldura do claude.ai; o documento vem no diretório `..._files/`, como

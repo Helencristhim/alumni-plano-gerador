@@ -1,7 +1,19 @@
 # A fronteira do `private-black`
 
-> **O que este arquivo é.** A declaração do que o molde adulto NOVO herda do sistema atual e
-> do que ele não herda. Ele existe porque a pergunta do Dan (24/08/2026) foi exatamente essa:
+> **O molde é o `stephanie-vicente`.** O artefato do Marcos Mansour é a **especificação de
+> interface** que se leva para dentro dele — não é o destino do trabalho, é de onde a forma
+> vem. Quem reproduz para qualquer aluno é o molde. A mesma relação que já existe no
+> sistema: molde `helen-mendes` ↔ anatomia `imersivo`; molde `stephanie-vicente` ↔ anatomia
+> `private-black`, portada do artefato do Marcos.
+>
+> Correção do Dan, 24/08/2026:
+>
+> > *"o artefato do Marcos Mansur precisa ser levado pro molde stephanie pra só então o
+> > molde ser capaz de reproduzir com qualquer aluno"*
+
+> **O que este arquivo é.** A declaração do que o molde `stephanie-vicente`, na anatomia
+> nova, herda do sistema atual e do que ele não herda. Ele existe porque a pergunta do Dan
+> (24/08/2026) foi exatamente essa:
 >
 > > *"não quero o novo molde carregando erros e defeitos e problemas do molde helen-mendes,
 > > apenas carregando as coisas acertadas (porém no padrão novo)"*
@@ -76,6 +88,7 @@ ElevenLabs com a credencial fora do repo.
 | shell | `_build/model/shells/black.html` *(Fase 1)* |
 | builder e gates próprios | `scripts/black/` |
 | config das aulas | `_build/black/{slug}/` *(Fase 3)* |
+| o molde | `public/professor/stephanie-vicente*.html` — a aluna-modelo, re-emitida na anatomia nova na Fase 4 |
 | material publicado | `public/professor/{slug}.html` · `public/aluno/{slug}.html` — **a convenção não muda**, porque mudá-la quebraria dashboard, senhas e links por zero ganho. O escopo se lê no carimbo |
 
 ## O que o aluno recebe
@@ -98,7 +111,7 @@ próprias dificuldades.
 | 1 | `shells/black.html`, extraído do artefato | boot no Chromium: console limpo e componentes construídos (P3 §1.1) |
 | 2 | `anatomias.json` com as classes **do artefato do Marcos**; GATE 20/21 reapontados | uma classe `ic-*` nova reprova |
 | 3 | `scripts/black/build_black.py` + schema do config | asserts de build: minutos fecham, 6 atividades, 14 campos do guia |
-| 4 | stephanie re-emitida no shell novo | a estrutura gerada bate com a do artefato |
+| 4 | **o molde `stephanie-vicente` re-emitido na anatomia nova** — é aqui que o artefato chega ao molde | a estrutura gerada bate com a do artefato |
 | 5 | a suíte P3 (navegador + mutação + canário) | cada gate reprova a própria mutação |
 | 6 | produção: ElevenLabs, Supabase, guia na URL real | só quando for testar em aluno |
 
