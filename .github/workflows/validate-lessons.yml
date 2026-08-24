@@ -389,6 +389,15 @@ jobs:
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: python3 scripts/check_reveal_clica.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
+      - name: "GATE 35 — selftest: prova que o gate da carga limpa ainda morde"
+        run: python3 scripts/black/check_carga_limpa.py --selftest
+
+      - name: "GATE 35 — o shell do private-black abre sem erro e constrói o que promete"
+        run: python3 scripts/black/check_carga_limpa.py
+
+      - name: "private-black — o shell continua sendo o artefato (nada reescrito no caminho)"
+        run: python3 scripts/black/extrai_shell.py --check
+
       - name: "GATE 12 — selftest: prova que o gate do PPP ainda morde"
         run: python3 scripts/check_ppp_lesson.py --selftest
 
