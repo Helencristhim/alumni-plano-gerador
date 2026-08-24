@@ -22,7 +22,8 @@ e shell, e nao entra aqui:
     aulaN/preclass.html   o bloco #pcN, com as seis atividades
     aulaN/postclass.html  o bloco #psN, com os cinco componentes
     aulaN/guide.json      os 14 campos do Teacher's Guide daquela aula
-    aulaN/registro.json   a linha da aula no registro: tema, nav, stages, cod, framework
+    aulaN/registro.js     a linha da aula no registro: tema, nav, stages, cod, framework
+    aulaN/close.json      o fecho: o recap e a escala de confianca daquela aula
 
 USO:
     python3 scripts/black/extrai_fragmentos.py [--destino _build/black/_do-artefato]
@@ -110,6 +111,52 @@ def guide_da_aula(h, n):
     return None
 
 
+def notas_pc(h):
+    """`var PC_NOTAS={...}` como dicionario. Avaliado como JS-literal via json apos
+    normalizar as aspas simples de chave -- o objeto e escrito a mao no artefato."""
+    m = re.search(r"\bvar PC_NOTAS\s*=\s*\{", h)
+    if not m:
+        return {}
+    i = h.index("{", m.start())
+    prof, k = 0, i
+    while k < len(h):
+        if h[k] == "{":
+            prof += 1
+        elif h[k] == "}":
+            prof -= 1
+            if prof == 0:
+                break
+        k += 1
+    bruto = h[i:k + 1]
+    out, chave = {}, None
+    for mm in re.finditer(r"'([^']+)':\{|(\w+):'((?:[^'\\]|\\.)*)'", bruto):
+        if mm.group(1):
+            chave = mm.group(1)
+            out[chave] = {}
+        elif chave:
+            out[chave][mm.group(2)] = mm.group(3).replace("\\'", "'")
+    return out
+
+
+def lista_js(h, nome):
+    """O conteudo de `var NOME=[ ... ]` como lista de strings."""
+    m = re.search(r"\bvar " + re.escape(nome) + r"\s*=\s*\[", h)
+    if not m:
+        return []
+    i = h.index("[", m.start())
+    prof, k = 0, i
+    while k < len(h):
+        if h[k] == "[":
+            prof += 1
+        elif h[k] == "]":
+            prof -= 1
+            if prof == 0:
+                break
+        k += 1
+    return [x for x in re.findall(r"'((?:[^'\\]|\\.)*)'|\"((?:[^\"\\]|\\.)*)\"",
+                                  h[i + 1:k]) for x in x if x]
+
+
 def main():
     destino = DESTINO
     if "--destino" in sys.argv:
@@ -136,6 +183,16 @@ def main():
             "postclass.html": bloco_por_id(h, hm, f"ps{n}"),
             "registro.js": registro_da_aula(h, n),
             "guide.js": guide_da_aula(h, n),
+            # O fecho vive em `var RECAP{n}` e `var CONF{n}` -- por aula, e por isso e
+            # fragmento, nao shell. Sem ele o builder nao teria o que passar ao closeBuild e
+            # a ultima tela nasceria vazia, sem erro nenhum no console.
+            # A camada do professor no pre-class, so das atividades DESTA aula.
+            "notas.json": json.dumps(
+                {k: v for k, v in notas_pc(h).items() if k.startswith(f"{n}-")},
+                ensure_ascii=False, indent=1),
+            "close.json": json.dumps(
+                {"recap": lista_js(h, f"RECAP{n}"), "conf": lista_js(h, f"CONF{n}")},
+                ensure_ascii=False, indent=1),
         }
         faltando = [k for k, v in pecas.items() if not v]
         if faltando:
