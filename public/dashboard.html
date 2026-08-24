@@ -157,6 +157,23 @@
         .s-btn--primary:hover { background: var(--alumni-navy-light); }
         .s-btn:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
 
+        /* ── Material extra ──
+           O que NAO segue a convencao /professor/{slug}.html + /aluno/{slug}.html: o
+           intensivo, o complementar de community. Vem de /materiais-extra.json e ocupa
+           uma segunda linha, deliberadamente discreta — nao compete com os tres botoes
+           de cima, que continuam sendo o material do curso. */
+        .s-extras { position: relative; z-index: 1; margin-top: var(--space-sm); display: flex; flex-direction: column; gap: 4px; }
+        .s-extras[hidden] { display: none; }
+        .s-extra { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font: 400 0.76rem/1.5 var(--font-body); color: var(--text-muted); }
+        .s-extra-nome { font-weight: 500; color: var(--text-muted); }
+        .s-extra-link {
+            background: none; border: 1px solid transparent; padding: 2px 7px; border-radius: 6px;
+            font: 500 0.76rem/1.5 var(--font-body); color: var(--alumni-navy);
+            text-decoration: none; cursor: pointer; transition: all var(--transition-base);
+        }
+        .s-extra-link:hover { background: var(--bg-hover); border-color: var(--border); }
+        .s-extra-link:focus-visible { outline: 3px solid var(--alumni-navy); outline-offset: 2px; }
+
         /* ── 3-dot menu ── */
         .menu-wrap { position: relative; flex-shrink: 0; margin-left: auto; }
         .menu-trigger {
@@ -529,6 +546,7 @@
         } catch(e){ console.error('Supabase load failed:',e); showToast('Erro ao carregar dados do servidor','error'); }
 
         var reg=[]; try { var r=await fetch('/planos/registry.json'); if(r.ok) reg=await r.json(); } catch(e){}
+        try { var rx=await fetch('/materiais-extra.json'); if(rx.ok) MATERIAIS_EXTRA=await rx.json(); } catch(e){}
 
         var merged={};
         reg.forEach(function(p) {
@@ -789,6 +807,51 @@
         'tech':       'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=60',
         'general':    'https://images.unsplash.com/photo-1543269865-cbf427effbad?w=800&q=60',
     };
+    // ══════════════════════════════════════
+    // MATERIAL EXTRA (fora da convencao de caminho)
+    // ══════════════════════════════════════
+    // O card deriva o link do material do PROPRIO id: /professor/{id}.html e /aluno/{id}.html.
+    // O intensivo da Rita mora em /intensivo/, o complementar da Fernanda em /community/ —
+    // nao ha de onde derivar, entao vem declarado em /materiais-extra.json (chave = id).
+    //
+    // Por que uma linha propria e nao os botoes de cima: os tres botoes falam do material do
+    // CURSO. Reaproveita-los faria o extra ou substituir o curso (a Fernanda tem os dois) ou
+    // dividir um botao com ele — foi assim que em 03/08 o "Link do Aluno" passou a copiar a URL
+    // do professor. Aqui cada coisa tem o seu lugar e o seu link.
+    var MATERIAIS_EXTRA = {};
+
+    // Igual ao resto do card: so promete o que a varredura confirmou. Sem confirmacao (conf
+    // null) os links nascem no DOM mas o bloco vem `hidden` — e checkMaterialExists revela o
+    // que existe e apaga o que nao existe. Com o cache da sessao, ja sai pronto.
+    function extrasHtml(a, rec) {
+        var lista = MATERIAIS_EXTRA[a.id];
+        if (!lista || !lista.length) return '';
+        var conf = rec ? rec.x : null;
+        var linhas = lista.map(function(m, i) {
+            var links = '';
+            if (m.professor && (!conf || conf[i + 'p'])) {
+                links += '<a class="s-extra-link" href="' + escAttr(m.professor) + '" target="_blank" rel="noopener"'
+                    + ' data-check="' + escAttr(m.professor) + '" data-i="' + i + '" data-papel="p"'
+                    + ' onclick="event.stopPropagation()">professor</a>';
+            }
+            if (m.aluno && (!conf || conf[i + 'a'])) {
+                links += '<button class="s-extra-link" data-check="' + escAttr(m.aluno) + '" data-i="' + i + '" data-papel="a"'
+                    + ' data-url="' + escAttr(m.aluno) + '" onclick="event.stopPropagation();copiarExtra(this)">link do aluno</button>';
+            }
+            if (!links) return '';
+            return '<div class="s-extra"><span class="s-extra-nome">' + esc(m.rotulo || 'Material extra') + '</span>' + links + '</div>';
+        }).join('');
+        if (!linhas) return '';
+        return '<div class="s-extras"' + (conf ? '' : ' hidden') + '>' + linhas + '</div>';
+    }
+
+    function copiarExtra(btn) {
+        navigator.clipboard.writeText(location.origin + btn.dataset.url);
+        var antes = btn.textContent;
+        btn.textContent = 'copiado!';
+        setTimeout(function() { btn.textContent = antes; }, 1500);
+    }
+
     function getThemeImage(foco) {
         if (!foco) return THEME_IMAGES.general;
         var f = foco.toLowerCase();
@@ -939,6 +1002,7 @@
                     '<div class="menu-wrap"><button class="menu-trigger" onclick="toggleMenu(\''+escAttr(a.id)+'\',event)" title="Opções"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button><div class="menu-dropdown" id="menu-'+escAttr(a.id)+'">'+mi+'</div></div>' +
                 '</div>' +
                 '<div class="s-actions">'+btn1+btn2+btn3+'</div>' +
+                extrasHtml(a, rec) +
             '</div>';
         }).join('');
 
@@ -975,6 +1039,31 @@
             if (total < 0) total = head.length;
             return total > 5000 && head.indexOf('viewport') !== -1;
         } catch(e) { return false; }
+    }
+
+    // Cada link extra e conferido do mesmo jeito que o material do curso: por HTTP, um a um.
+    // O que nao responde e REMOVIDO — um caminho digitado errado no materiais-extra.json vira
+    // silencio, nunca um botao que leva a 404. Devolve o mapa do que sobrou ({"0p":1,"0a":1}),
+    // que vai para o cache da sessao.
+    async function confereExtras(card) {
+        var links = card.querySelectorAll('.s-extra-link[data-check]');
+        if (!links.length) return null;
+        var conf = {};
+        for (var k = 0; k < links.length; k++) {
+            var el = links[k];
+            if (await isRealPage(el.getAttribute('data-check'))) conf[el.dataset.i + el.dataset.papel] = 1;
+            else el.parentNode.removeChild(el);
+        }
+        // Linha sem nenhum link nao promete nada; bloco sem nenhuma linha, idem.
+        card.querySelectorAll('.s-extra').forEach(function(linha) {
+            if (!linha.querySelector('.s-extra-link')) linha.parentNode.removeChild(linha);
+        });
+        var bloco = card.querySelector('.s-extras');
+        if (bloco) {
+            if (bloco.querySelector('.s-extra')) bloco.hidden = false;
+            else bloco.parentNode.removeChild(bloco);
+        }
+        return conf;
     }
 
     var checkingMaterials = false;
@@ -1047,11 +1136,16 @@
                         }
                     }
 
+                    var extraConf = await confereExtras(card);
+
                     var anyMaterial = profExists || alunoExists || hasLegacy;
+                    var anyExtra = extraConf && Object.keys(extraConf).length > 0;
                     // Guarda O QUE existe, nao so QUE existe — e isso que o renderAlunos usa
                     // para desenhar o botao certo quando o card for redesenhado (busca, filtro).
-                    if (anyMaterial) rememberMaterial(id, { p: profExists ? 1 : 0, a: alunoExists ? 1 : 0, l: hasLegacy ? legacyTarget : '' });
-                    if (anyMaterial && foco && !card.querySelector('.s-card-bg')) {
+                    // O extra entra no MESMO registro porque a varredura pula quem ja esta no
+                    // cache: fora dele, um material extra confirmado sumiria no primeiro filtro.
+                    if (anyMaterial || anyExtra) rememberMaterial(id, { p: profExists ? 1 : 0, a: alunoExists ? 1 : 0, l: hasLegacy ? legacyTarget : '', x: extraConf || {} });
+                    if ((anyMaterial || anyExtra) && foco && !card.querySelector('.s-card-bg')) {
                         var img = getThemeImage(foco);
                         var bgDiv = document.createElement('div');
                         bgDiv.className = 's-card-bg';
