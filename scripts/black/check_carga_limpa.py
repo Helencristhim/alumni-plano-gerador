@@ -78,6 +78,7 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 ALVOS = [
     ("artefato (controle positivo)", "_build/model/artefatos/marcos-private-black.html", True),
     ("shell professor", "_build/model/shells/black.html", False),
+    ("shell aluno", "_build/model/shells/black-aluno.html", False),
 ]
 
 # Cada componente: como CONTAR o construido e como DERIVAR o esperado, os dois do proprio
@@ -105,10 +106,13 @@ COMPONENTES = [
     ("checklist do checkpoint",
      "(document.getElementById('cp-checklist')||{}).childElementCount||0",
      "(typeof CP==='undefined')?0:CP.length"),
+    # O esperado sai de LESSONS.nav SO quando ha deck: o build do aluno nao tem deck, e
+    # LESSONS continua la (o mapa do ciclo precisa dele). Sem esta condicao, o gate cobraria
+    # 20 telas de um arquivo que legitimamente nao tem nenhuma.
     ("telas do deck",
      "document.querySelectorAll('.slide').length",
-     "(typeof LESSONS==='undefined')?0:Object.keys(LESSONS).reduce("
-     "function(a,k){return a+((LESSONS[k].nav||[]).length);},0)"),
+     "(!document.querySelector('.slides-wrapper')||typeof LESSONS==='undefined')?0:"
+     "Object.keys(LESSONS).reduce(function(a,k){return a+((LESSONS[k].nav||[]).length);},0)"),
 ]
 
 # Apaga o que os construtores deveriam produzir. Roda no DOMContentLoaded registrado ANTES
