@@ -395,6 +395,14 @@ jobs:
       - name: "GATE 35 — o shell do private-black abre sem erro e constrói o que promete"
         run: python3 scripts/black/check_carga_limpa.py
 
+      - name: "private-black — selftest: prova que os asserts do builder ainda mordem"
+        run: |
+          python3 scripts/black/extrai_fragmentos.py
+          python3 scripts/black/build_black.py --selftest
+
+      - name: "private-black — round-trip: o builder devolve o artefato a partir dos fragmentos dele"
+        run: python3 scripts/black/build_black.py --round-trip
+
       - name: "private-black — o inventário continua sendo o que o artefato mede"
         run: python3 scripts/black/gen_inventario.py --check
 
