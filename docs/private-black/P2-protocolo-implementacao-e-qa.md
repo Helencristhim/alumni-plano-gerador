@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `P2_Protocolo_de_Implementacao_e_QA.docx`
-> Drive ID: `1zKuAMsZNkHaYaNkR5OiYsYa98RE0sjbi`
-> Modificado no Drive: 2026-08-21
+> Drive ID: `1WHBj3B9l4z-WI3HDzo0fvHsFpm1obH4b`
+> Modificado no Drive: 2026-08-24
 > Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/P2-protocolo-implementacao-e-qa.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -22,6 +22,12 @@
 2.  **Nunca regravar HTML lido com leitura que assume a codificação do sistema.** Ler UTF-8 sem BOM como ANSI e regravar grava o mojibake **como texto** e corrompe o arquivo inteiro em silêncio. Leia sempre declarando UTF-8. *É reversível — reencodar e decodificar desfaz o passo —, e a prova é o diff contra o backup.*
 
 3.  **Recompor o arquivo UMA vez só**, conferindo a estrutura antes de gravar. Duas recomposições cortam em índices da versão antiga e destroem o arquivo.
+
+3.1 Produção final em dois builds. Gerar o build do professor e o build do aluno a partir da mesma versão pedagógica, com empacotamento separado. O professor recebe a visão docente e a prévia discente; o aluno recebe somente componentes, dados, estado e recursos discentes.
+
+3.2 Isolamento verificável. Inspecionar o HTML, JavaScript, payload, armazenamento, comentários, source maps e requisições do build do aluno. A ocorrência de Teacher’s Guide, gabarito reservado, hipótese pedagógica, registro interno, controle administrativo ou rota de elevação de papel reprova a publicação.
+
+3.3 Publicação. Validar duas URLs oficiais distintas. Parâmetro de query, hash, localStorage, alteração de atributo ou chamada direta não pode transformar a URL do aluno em visão docente.
 
 **2. Ao mudar qualquer coisa**
 
@@ -53,7 +59,7 @@
 
 16.  **Varredura que devolve zero precisa de canário.** Plante um elemento deliberadamente errado e exija que ele seja pego. **E canário que vaza reprova o inocente:** marque-o e exclua-o da consulta de alvos.
 
-17.  **Checagem que confere N itens deriva o N dos blocos existentes**, nunca de número escrito nela.
+17. Checagens distinguem constantes pedagógicas de quantidades de interface. Para etapas, N = 8 por regra do Documento 03; para slides, telas e componentes, N deriva dos blocos existentes. Nunca converter oito etapas em oito slides.
 
 18.  **Comparação com** **<=** **não prova soma.** Declarar menos que o orçamento passa em silêncio: imprima o **vão** entre declarado e previsto, ou o que sumiu não deixa rastro.
 

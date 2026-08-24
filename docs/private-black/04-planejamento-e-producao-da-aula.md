@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `04_Planejamento_e_Producao_da_Aula.docx`
-> Drive ID: `1IJOoR5sI3DDd79NJ-pl5O4HBmZzHEBPk`
-> Modificado no Drive: 2026-08-21
+> Drive ID: `1Uwgl1mvwHBtA9MxpvDR91LTt_u2ixib2`
+> Modificado no Drive: 2026-08-24
 > Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/04-planejamento-e-producao-da-aula.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -39,7 +39,7 @@ Este é o contrato de dado do sistema, e a única garantia real contra divergên
 | Produto comunicativo | A performance observável que encerra a aula |
 | Critérios de sucesso | Dois a quatro comportamentos observáveis |
 | Modelo de avaliação e instrumento | Avaliação formal com teste ou Acompanhamento docente; no segundo caso, eventual instrumento de consolidação e sua relação com a aula. Na ausência de escolha explícita no perfil ou syllabus, aplicar Acompanhamento docente. |
-| Etapas e distribuição de tempo | As etapas previstas pelo framework e pela rota aplicável, com tempos de referência |
+| Etapas e distribuição de tempo | As oito etapas normativas do framework, na ordem definida, com tempos de referência e distribuição planejada em slides |
 | Conteúdo do pre-class | O que a camada prepara |
 | Conteúdo reservado ao in-class | O núcleo protegido |
 | Conteúdo do post-class | O que a camada oferece |
@@ -580,7 +580,7 @@ Uma varredura de tom que não distingue camadas corta orientação legítima do 
 | Camada | Checagens mínimas |
 |---|---|
 | Entrada e perfil | Campos completos; hipóteses marcadas; restrições respeitadas |
-| Framework | Todas as funções essenciais declaradas estão representadas; a organização das etapas é coerente; produto e fronteira preservados |
+| Framework | As oito etapas normativas estão presentes na ordem definida; funções, produto e fronteira preservados; distribuição em slides coerente |
 | Avaliação | Um dos dois modelos está registrado; teste formal ou eventual instrumento está corretamente subordinado ao acompanhamento e à validação final do professor |
 | Progressão | Operações não duplicadas; controle reduzido; tempo suficiente para a produção |
 | Ciclo | Conteúdo anterior recuperado sem reensino; operação nova; mecânicas registradas |
@@ -604,7 +604,7 @@ Uma varredura de tom que não distingue camadas corta orientação legítima do 
 
 Não entregar se alguma resposta for “não”.
 
-☐ A superfície do aluno está livre do in-class e de qualquer conteúdo reservado ao professor? ☐ O pre-class tem exatamente seis atividades reais, somando 15–20 minutos? ☐ O pre-class preserva o núcleo protegido, e o in-class roda sem ele? ☐ Nenhuma minutagem por atividade aparece na superfície do aluno? ☐ A metalinguagem de produção foi removida de todas as superfícies? ☐ A aula tem **Teacher’s Guide completo**, em inglês, com os catorze campos de §8.1? ☐ O procedimento cobre todas as **etapas previstas**, cada uma com os dez campos de §8.2? ☐ Cada etapa declara apoio condicional **e** desafio — e não só o apoio? ☐ As notas locais acompanham as atividades sem substituir o guia? ☐ A superfície do aluno está livre de frase que explique o desenho da atividade ou tranquilize antes da dificuldade? ☐ Todas as funções essenciais declaradas para a aula estão representadas, sem validação por contagem fixa de etapas? ☐ Um dos dois modelos de avaliação está registrado, sem tratar teste, instrumento de consolidação ou autoavaliação como decisão isolada? ☐ O percurso essencial soma 55 minutos, com 5 de margem? ☐ Atividades condicionais, de extensão e opcionais começam recolhidas, sem unidade própria? ☐ Concluir a aula independe de checklist, de percurso completo e de respostas preenchidas? ☐ O que limpa o progresso de uma aula preserva feedback permanente e estado do ciclo? ☐ O feedback permanente está junto do acesso de cada aula, e não dentro do material da aula? ☐ O estado pedagógico do ciclo está em área exclusiva do professor? ☐ O post-class disponibiliza os cinco componentes funcionais, sem metadado novo e sem qualquer obrigatoriedade? ☐ Todo recurso externo foi aberto e verificado na fonte original? ☐ Pre-class, in-class, post-class e syllabus continuam alinhados pelo registro único? ☐ A correção apresentada ao aluno, o answer key e as orientações do Teacher’s Guide são coerentes entre si e pertencem à mesma versão da atividade? ☐ Nenhum campo foi preenchido com conteúdo inventado? ☐ Cada afirmação de “aplicado” tem evidência localizável no material final?
+☐ A entrega final inclui uma URL do professor e uma URL do aluno? ☐ A URL do professor contém a visão docente e a prévia da visão do aluno? ☐ A URL do aluno contém exclusivamente conteúdo discente, sem conteúdo docente no HTML, payload, estado ou recursos? ☐ O pre-class tem exatamente seis atividades reais, somando 15–20 minutos? ☐ O pre-class preserva o núcleo protegido, e o in-class roda sem ele? ☐ Nenhuma minutagem por atividade aparece na superfície do aluno? ☐ A metalinguagem de produção foi removida de todas as superfícies? ☐ A aula tem Teacher’s Guide completo, em inglês, com os catorze campos de §8.1? ☐ O procedimento cobre as oito etapas normativas, cada uma com os dez campos de §8.2? ☐ Cada etapa declara apoio condicional e desafio — e não só o apoio? ☐ As notas locais acompanham as atividades sem substituir o guia? ☐ A superfície do aluno está livre de frase que explique o desenho da atividade ou tranquilize antes da dificuldade? ☐ As oito etapas e suas funções estão presentes na ordem definida, sem confundir etapa com slide? ☐ Um dos dois modelos de avaliação está registrado, sem tratar teste, instrumento de consolidação ou autoavaliação como decisão isolada? ☐ O percurso essencial soma 55 minutos, com 5 de margem? ☐ Atividades condicionais, de extensão e opcionais começam recolhidas, sem unidade própria? ☐ Concluir a aula independe de checklist, de percurso completo e de respostas preenchidas? ☐ O que limpa o progresso de uma aula preserva feedback permanente e estado do ciclo? ☐ O feedback permanente está junto do acesso de cada aula, e não dentro do material da aula? ☐ O estado pedagógico do ciclo está em área exclusiva do professor? ☐ O post-class disponibiliza os cinco componentes funcionais, sem metadado novo e sem qualquer obrigatoriedade? ☐ Todo recurso externo foi aberto e verificado na fonte original? ☐ Pre-class, in-class, post-class e syllabus continuam alinhados pelo registro único? ☐ A correção apresentada ao aluno, o answer key e as orientações do Teacher’s Guide são coerentes entre si e pertencem à mesma versão da atividade? ☐ Nenhum campo foi preenchido com conteúdo inventado? ☐ Cada afirmação de “aplicado” tem evidência localizável no material final?
 
 ### Documentos relacionados
 

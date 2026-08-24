@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `P1_Camada_Funcional_HTML.docx`
-> Drive ID: `1iArAKkRPNJkZ-bt3K12ZiRXl3pyrrxek`
-> Modificado no Drive: 2026-08-21
+> Drive ID: `1CgtgTwqgBGuy-_B5yQKbMDFyK0AMEZuK`
+> Modificado no Drive: 2026-08-24
 > Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/P1-camada-funcional-html.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -38,7 +38,7 @@ O build recebe arquivos definitivos vinculados ao transcript aprovado. Qualquer 
 
 **1. O artefato**
 
-Arquivo **HTML único**, autossuficiente quanto ao seu funcionamento, contendo as camadas da aula e as duas visões:
+A produção final entrega duas URLs e dois builds separados por papel. O build do professor contém a visão docente e uma prévia fiel da visão do aluno. O build do aluno contém exclusivamente a visão do aluno. Protótipo interno pode usar um único arquivo com alternância somente quando o modo protótipo estiver explicitamente declarado.
 
 | **Camada / aba** | **Visão** | **Função** |
 |---|---|---|
@@ -51,7 +51,9 @@ Arquivo **HTML único**, autossuficiente quanto ao seu funcionamento, contendo a
 
 A aba **Feedback** é camada funcional obrigatória na visão do aluno: é onde chegam **What worked** e **Keep developing** — e **só** esses dois.
 
-**Duas visões no mesmo arquivo.** Rótulos visíveis: **Visão professor** e **Visão aluno**. Os **identificadores internos** (professor, aluno) governam data-view, chaves de armazenamento e roteamento por papel e **nunca mudam** quando o rótulo muda.
+**Na URL do professor, os rótulos Visão professor e Visão aluno alternam entre a área docente e a prévia discente. Na URL do aluno não existe alternador, rota de professor nem conteúdo docente incorporado. Os identificadores internos professor e aluno governam roteamento e armazenamento, sem permitir promoção de papel por parâmetro editável.**
+
+**Separação de entrega. Conteúdo docente não pode estar apenas oculto por CSS, atributo, template, comentário ou condição JavaScript. Teacher’s Guide, answer keys reservados, hipóteses pedagógicas, registros internos, evidências restritas e controles administrativos não integram o HTML, o payload, o estado persistido ou os recursos enviados ao navegador do aluno.**
 
 **2. Dependência externa — a distinção que decide**
 
@@ -96,9 +98,9 @@ stages:[{n:'…',min:…}, …], nav:[…] } };
 
 **4. Etapas e telas**
 
-**A quantidade e a sequência de etapas são determinadas pela saída pedagógica aplicável ao framework, ao nível e à rota. A camada HTML não estabelece uma contagem própria e apenas representa o que foi declarado pedagogicamente.**
+**Cada framework possui oito etapas pedagógicas normativas, definidas pelo Documento 03. A camada HTML representa as oito na mesma ordem, sem estabelecer quantidade fixa de slides.**
 
-O registro recebe stages:[…] com o que a aula declarar. O HTML não acrescenta, não elimina e não fixa etapas — e nenhuma checagem desta camada pode exigir um número.
+O registro recebe exatamente as oito etapas do framework. O HTML não acrescenta, elimina, duplica ou reordena etapas. A checagem exige oito etapas, mas deriva livremente a quantidade de slides da distribuição declarada.
 
 Sobre telas:
 
@@ -376,7 +378,7 @@ Rótulos consolidados, a usar sem variação:
 
 | **Rótulo** | **Onde** |
 |---|---|
-| Visão professor · Visão aluno | alternador de visão |
+| Visão professor · Visão aluno | alternador exclusivo da URL do professor |
 | Pre-class · In-class · Post-class | abas — **as três com a mesma forma hifenizada** |
 | Planning | aba do Planejamento **na visão do aluno** |
 | Objetivo comunicativo: · Produto principal: | preparação da aula — **com dois-pontos** |
@@ -464,8 +466,8 @@ Antes de entregar, o gerador roda e **reporta** com evidência, no vocabulário 
 | **Camada** | **O que se prova** |
 |---|---|
 | Registro | metadados repetidos saem do registro; markup concorda com ele; conteúdo da aula intacto |
-| Etapas | as etapas do registro batem com a saída pedagógica; nenhuma etapa fictícia |
-| Papel | a visão do aluno não lê o espaço do professor — no armazenamento |
+| Etapas | oito etapas do framework no registro, na mesma ordem; nenhuma etapa fictícia; quantidade de slides variável |
+| Papel | a URL do aluno não recebe conteúdo, payload, estado ou recursos do professor |
 | Pre-class | gabarito fechado no início; ação do professor não altera resposta do aluno; os dois controles no fim |
 | Controles da aula | Reset e Finish presentes, com confirmação; conclusão só por Finish; reset restrito à aula |
 | Registro pós-aula | escala com número; engajamento fora da média; três campos; só dois compartilhados |

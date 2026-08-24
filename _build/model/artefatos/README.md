@@ -132,26 +132,34 @@ a forma: ElevenLabs pelo pipeline com manifesto (`transcript_hash`, `checksum`,
 `qa_status`), Supabase no lugar do `localStorage`, e a janela do guia provada na URL real
 (o sandbox do claude.ai não tem `allow-popups`, e isso é limitação do host, não da solução).
 
-### A ÚNICA divergência deliberada: o arquivo do aluno
+### O arquivo do aluno: era divergência, virou regra
 
-O P1 §1 pede **um** artefato com alternador *Visão professor · Visão aluno*, e é o que este
-faz. Nós vamos emitir **dois arquivos**. Ordem do Dan, 24/08/2026:
+Quando este artefato entrou no repo (24/08/2026, de manhã), o P1 §1 pedia **um** artefato com
+alternador *Visão professor · Visão aluno* — e é o que ele faz. Nós decidimos emitir **dois
+arquivos**, por ordem do Dan:
 
 > *"o aluno não ve o que não é dele"*
 
-No arquivo único, o conteúdo do professor continua no DOM: um clique no alternador — sem
-precisar de código-fonte — e o aluno lê os gabaritos das 6 atividades antes de fazê-las
+Motivo: no arquivo único o conteúdo do professor continua no DOM, e um clique no alternador —
+sem precisar de código-fonte — dá ao aluno os gabaritos das 6 atividades antes de fazê-las
 (matando o diagnóstico que a aula existe para produzir) e as hipóteses escritas sobre as
-dificuldades dele, que o doc 04 §7.1 proíbe que cheguem ao aluno. O P3 §3 já diz que
-`display:none` não é separação — ela é de armazenamento e de árvore acessível. E o link do
-aluno é público: arquivo estático na Vercel, com os códigos de acesso desligados.
+dificuldades dele, que o doc 04 §7.1 proíbe que cheguem ao aluno. E o link do aluno é público.
 
-Então o builder emite o espelho do aluno **sem** `data-teacher`, **sem** os painéis `ak`,
-**sem** `var GUIDE` e **sem** o estado do ciclo. Removidos, não escondidos. O `data-view`
-continua existindo — no arquivo do professor, como pré-visualização dele.
+**No mesmo dia, a Stephanie normatizou isso** — e mais forte do que a nossa formulação:
 
-A divergência está **declarada** (P1 §21 manda declarar, nunca resolver em silêncio) e é
-para ser levada à Stephanie, não decidida por nós de novo.
+> *"A produção final deve gerar duas URLs distintas. (…) Gabaritos, Teacher's Guide, registros
+> internos, hipóteses pedagógicas, evidências reservadas e controles docentes não podem estar
+> apenas ocultos no HTML do aluno: não devem integrar o arquivo, payload ou estado entregue
+> por essa URL."*
+
+O P1 foi reescrito: **dois builds**, empacotamento separado, e a URL do aluno sem alternador
+nem rota de elevação de papel. O artefato continua sendo a especificação de INTERFACE — a
+alternância dele é o que a URL do professor mantém, como prévia. O que ele não pode ser é o
+modelo de ENTREGA.
+
+Ou seja: a divergência que este arquivo declarou de manhã **não existe mais**; o que existe é
+uma regra, e o artefato é protótipo em relação a ela (P1 §0 — protótipo pode ter arquivo
+único com alternância, desde que o modo esteja declarado).
 
 ---
 

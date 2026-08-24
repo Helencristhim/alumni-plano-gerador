@@ -23,6 +23,17 @@ roda sempre. Ela cobre dois defeitos que ja aconteceram neste projeto, um de cad
      abrindo, e perdeu a regra. Nada acusaria. Por isso cada documento tem FRASES-CANARIO:
      trechos normativos que a conversao TEM de preservar.
 
+ISTO JA ACONTECEU, e por isso o gate nao e teorico. Em 24/08/2026 a Stephanie atualizou
+sete dos treze documentos. O 00 trocava exatamente a regra de etapas: saiu "Nao existe uma
+quantidade universal de oito etapas" e entrou "Cada um dos quatro frameworks possui oito
+etapas pedagogicas normativas" -- o OPOSTO. A ancora caiu, o gate reprovou, e foi assim que
+soubemos que a regra que o molde ia implementar tinha mudado de sinal. Sem ele, a
+reimportacao teria passado em silencio e o gate da espinha nasceria cobrando o contrario do
+que a escola manda.
+
+Ancora que cai NAO se conserta procurando uma frase parecida: le-se o que a regra passou a
+dizer e a ancora nova e a frase NOVA.
+
 As frases nao sao um resumo do documento nem uma segunda copia da regra -- sao ancoras.
 Cada uma foi escolhida por ser (a) normativa e (b) de uma forma diferente: prosa, celula
 de tabela, item de lista, identificador tecnico. Se a conversao perder qualquer uma dessas
@@ -41,7 +52,11 @@ DIR = os.path.join(RAIZ, "docs", "private-black")
 # nome do arquivo -> ancoras que a conversao tem de preservar
 PACOTE = {
     "00-guia-de-uso-e-precedencia": [
-        "Não existe uma quantidade universal de oito etapas",
+        # 24/08/2026: a regra das etapas MUDOU de conteudo, e a ancora antiga caiu -- foi
+        # este gate que avisou. A nova diz o oposto da anterior, e por isso a ancora nova
+        # nao e "a frase parecida": e a frase que a regra passou a usar.
+        "Cada um dos quatro frameworks possui oito etapas pedagógicas normativas",
+        "não integra o arquivo, o HTML, o payload, o estado",
         "Acompanhamento docente",
         "requisito de plataforma",
     ],
@@ -59,11 +74,14 @@ PACOTE = {
         "55 minutos",
         "Personalized Real-World English",
         "EVIDÊNCIA → OPERAÇÃO COGNITIVA",
+        "As oito etapas devem estar presentes e permanecer na ordem declarada",
+        "É proibido converter a regra de oito etapas em exigência de oito slides",
     ],
     "04-planejamento-e-producao-da-aula": [
         "exatamente seis atividades reais",
         "núcleo protegido",
         "Teacher’s Guide",
+        "A URL do aluno contém exclusivamente conteúdo discente",
     ],
     "05-ciclo-de-evolucao": [
         "Entry-ready",
@@ -73,22 +91,29 @@ PACOTE = {
         "ACOMPANHAMENTO_DOCENTE",
         "VOCÊ É O CONTROLADOR PEDAGÓGICO",
         "NÃO VERIFICADO",
+        "PROFESSOR_URL",
+        "ALUNO_URL",
     ],
     "P1-camada-funcional-html": [
         "Visão professor",
         "Reset lesson",
         "mode=teacher-guide",
         "speechSynthesis",
+        "duas URLs e dois builds separados por papel",
+        "Separação de entrega",
     ],
     "P2-protocolo-implementacao-e-qa": [
         "ABRA A PÁGINA e leia o console",
         "canário",
         "backup",
+        "N = 8 por regra do Documento 03",
     ],
     "P3-matriz-de-conformidade": [
         "Carga limpa",
         "Mutações obrigatórias",
         "allow-popups",
+        "fixar oito slides",
+        "display:none não é separação",
     ],
     "A01-continuidade-transcript-navegacao": [
         "Show transcript",

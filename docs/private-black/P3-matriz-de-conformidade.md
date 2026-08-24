@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `P3_Matriz_de_Conformidade_e_Especificacao_da_Suite.docx`
-> Drive ID: `1UOTsOLa10QiC-80Fwko4YFHuo4eaGlWN`
-> Modificado no Drive: 2026-08-21
+> Drive ID: `10Cv9RpQW2c-_zWktQiXdOZsAqVlCUp0q`
+> Modificado no Drive: 2026-08-24
 > Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/P3-matriz-de-conformidade.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -66,33 +66,33 @@ Verificar: existência das visões e seções obrigatórias · associação corr
 
 **Mutações que a suíte tem de pegar:** alterar um identificador · remover uma seção obrigatória · fazer dois botões apontarem para o mesmo conteúdo.
 
-**2.1 Etapas — nenhuma contagem própria**
+**2.1 Oito etapas normativas e slides variáveis**
 
-Origem: P1 §4. A regra diz que a quantidade e a sequência vêm da **saída pedagógica**, que o HTML não fixa contagem, que as etapas do registro correspondem à saída e que **não há etapa fictícia**. Sem teste, essa regra é uma declaração de intenção — e a intenção não impede o oito de voltar.
+Origem: Documento 03 e P1 §4. Cada framework possui oito etapas normativas em ordem definida. O HTML deve representar as oito, mas não pode converter essa constante pedagógica em oito slides, uma etapa por slide ou quantidade fixa de unidades de apresentação.
 
-**O teste precisa de mais de uma aula, com contagens DIFERENTES.** Suíte que roda sobre um único percurso aprova qualquer número fixo, porque nunca vê o segundo.
+**O teste precisa de aulas com distribuições DIFERENTES das mesmas oito etapas: quantidade distinta de slides, etapa distribuída em mais de um slide e slide que reúne etapas. A constante testada é oito etapas; a variável testada é a representação em unidades.**
 
 | **Verificação** | **Resultado obrigatório** |
 |---|---|
-| Variedade | o conjunto testado inclui aulas com **quantidades diferentes** de etapas |
-| Correspondência | etapas da **saída pedagógica** = etapas do **registro** = etapas **navegáveis**, item a item e na mesma ordem |
+| Variedade | o conjunto inclui oito etapas distribuídas em quantidades diferentes de slides |
+| Correspondência | oito etapas do framework = oito etapas do registro = etapas navegáveis, item a item e na mesma ordem |
 | Combinação | duas etapas que compartilham uma tela aparecem **uma vez cada**, sem duplicata artificial para "fechar a conta" |
-| Omissão | etapa justificadamente ausente **não é recriada** pelo HTML para completar a interface |
-| Ausência de contagem | **nenhum número de etapas escrito** no HTML, no CSS ou na checagem — o N sai sempre do registro |
+| Omissão | nenhuma das oito etapas pode ser omitida; slide pode ser omitido ou combinado sem alterar a arquitetura |
+| Ausência de contagem | **nenhuma quantidade fixa de slides; oito é exigido somente para etapas pedagógicas** |
 
 **Mutações obrigatórias:**
 
-•  **fixar o número oito** — na checagem, num laço, numa barra de progresso ou num rótulo — e confirmar que a suíte reprova;
+• remover uma das oito etapas ou acrescentar uma nona e confirmar que a suíte reprova;
 
-•  **acrescentar uma etapa fictícia** só para completar a interface, e confirmar que a comparação com a saída pedagógica a acusa;
+• fixar oito slides, ou forçar uma etapa por slide, e confirmar que a suíte reprova;
 
-•  **duplicar** a etapa que compartilha tela com outra, para provar que a contagem não é inflada;
+• reunir duas etapas em um slide e confirmar que ambas permanecem identificadas sem duplicata artificial;
 
-•  **remover uma etapa do registro** mantendo a tela, e o inverso, para provar que a correspondência é verificada **nos dois sentidos**.
+• distribuir uma etapa em mais de um slide e confirmar que ela continua sendo uma única etapa; • reordenar duas etapas e confirmar reprovação pela ordem incorreta.
 
-**A que mais engana é a contagem escrita na própria checagem.** Uma checagem que "confere se há oito etapas" passa em todas as aulas de oito e reprova as legítimas de sete — e parece rigor. O N deriva dos blocos existentes, nunca de número escrito na checagem (P2 §3).
+**A checagem deve exigir literalmente oito etapas porque essa é a arquitetura normativa. Ela não pode exigir oito slides. Etapas são comparadas por nome, função e ordem; slides são derivados da distribuição declarada.**
 
-**Quando o material só tem aulas de uma contagem**, o arquivo sozinho não prova nada: a contagem dele passaria igual numa implementação que a fixasse. A prova então se faz **fora do navegador**, como a de migração (§3.0): extraem-se as funções de derivação e alimentam-se **registros fabricados** com contagens diferentes — abaixo, dentro e **acima** da faixa que o material conhece. E o registro editorial que acompanha a contagem (numeral por extenso, plural, rótulos derivados) entra na mesma prova: **um mapa com uma entrada só é vestígio da contagem antiga**, e faz uma aula fora dela ler diferente das demais.
+**A prova usa registros de oito etapas com diferentes distribuições em slides. Deve reprovar sete ou nove etapas, ordem alterada, etapa fictícia, etapa ausente e oito slides codificados como obrigação. Rótulos e barras de progresso podem exibir oito etapas quando se referirem à arquitetura pedagógica, mas não podem chamar slides de etapas nem pressupor igualdade entre as duas contagens.**
 
 **2.2 Modo de entrega declarado na interface**
 
@@ -124,13 +124,13 @@ Mutações obrigatórias: inserir SpeechSynthesisUtterance; adicionar fallback p
 
 Classificação: síntese no cliente, credencial exposta, mídia ausente ou divergência transcript–arquivo são falhas bloqueantes na produção final. No protótipo, a síntese provisória é permitida somente com o aviso único previsto no P1.
 
-**3. Separação entre Visão professor e Visão aluno**
+**3. Duas URLs e isolamento da entrega do aluno**
 
-Os testes **executam as duas visões** — não inspecionam o markup de uma só.
+Na produção final, os testes executam duas URLs oficiais e inspecionam separadamente seus builds. A URL do professor contém a visão docente e a prévia discente; a URL do aluno contém exclusivamente a visão discente.
 
-•  conteúdo exclusivo do professor **não aparece** na visão do aluno;
+• conteúdo exclusivo do professor não existe no HTML, JavaScript, payload, estado, comentários, source maps ou recursos carregados pela URL do aluno;
 
-•  Teacher's Guide, gabaritos prévios, registro pós-aula e controles administrativos ficam **restritos ao professor**;
+• Teacher’s Guide, gabaritos reservados, hipóteses pedagógicas, registro pós-aula e controles administrativos existem somente no build do professor;
 
 •  **ação do professor não aparece como ação concluída pelo aluno**;
 
@@ -138,11 +138,11 @@ Os testes **executam as duas visões** — não inspecionam o markup de uma só.
 
 •  controle do aluno **não se confunde** com controle administrativo;
 
-•  **trocar de visão não apaga resposta** nem altera indevidamente o estado da aula;
+• alternar professor ↔ prévia do aluno na URL docente não apaga respostas nem altera indevidamente o estado da aula;
 
-•  elemento oculto **não permanece alcançável** por teclado nem por tecnologia assistiva.
+• a URL do aluno não possui alternador, rota de professor ou elevação de papel por query, hash, armazenamento, atributo ou chamada direta.
 
-**display:none** **não é evidência suficiente.** Se o conteúdo reaparece por outra interação, ou é anunciado ao leitor de tela, a separação não existe — ela é de **armazenamento e de árvore acessível**, não de folha de estilo (P1 §5).
+**display:none não é separação. Remover o alternador também não basta. A suíte deve procurar conteúdo e caminhos docentes nos bytes e nas requisições do build do aluno; qualquer ocorrência funcional reprova a publicação.**
 
 **3.0 Migração de espaços de estado**
 
@@ -169,7 +169,7 @@ Origem: P1 §8. **What worked** **e** **Keep developing** **são os únicos camp
 | Presença | os dois campos aparecem na aba Feedback da visão do aluno |
 | **Exclusividade** | **nenhum outro campo** do registro pós-aula aparece ali — a contagem de campos na aba é **exatamente dois** |
 | Restrição | escala, engajamento, evidência observável, ponto prioritário e próxima ação permanecem **restritos ao professor**, no armazenamento e na árvore acessível |
-| Troca de visão | alternar professor → aluno → professor **não expõe** registro interno, nem deixa resíduo pintado na tela |
+| Troca de visão | na URL docente, alternar professor → prévia do aluno → professor não expõe registro interno na prévia; na URL do aluno não existe troca de visão |
 
 **Mutações obrigatórias:**
 

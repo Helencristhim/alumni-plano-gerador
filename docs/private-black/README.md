@@ -8,25 +8,31 @@
 Origem: pasta **"Documentos normativos — Private Class Alumni Black"** no Drive da
 Stephanie Vicente (`1wm4SHeDi56QF3CRS06lLQpW8wXshj17J`), entregue pelo Dan em 24/08/2026.
 
+> **Revisão de 24/08/2026 (em negrito na tabela).** Sete documentos foram substituídos no
+> mesmo dia, para fixar duas regras: as **oito etapas** de cada framework são normativas
+> (e nunca viram oito slides), e a produção final entrega **duas URLs**, com a do aluno sem
+> conteúdo docente no arquivo, no payload, no estado ou nos recursos. Os outros seis — 01,
+> 02, 05, A01, A02 e o Anexo P-A — voltaram byte a byte idênticos na reimportação.
+
 ## Núcleo pedagógico (00–06)
 
 | # | Documento | O que fixa | Drive ID | Modificado |
 |---|---|---|---|---|
-| 00 | [Guia de Uso e Precedência](00-guia-de-uso-e-precedencia.md) | o pacote, a ordem de leitura, os 9 degraus de precedência, e a fronteira com a plataforma | `1abVwOazTpJSBXO4ngX7zqTu1N2RXRSKW` | 21/08/2026 |
+| 00 | [Guia de Uso e Precedência](00-guia-de-uso-e-precedencia.md) | o pacote, a ordem de leitura, os 9 degraus de precedência, e a fronteira com a plataforma | `1NTbdDL6LoYrtYgPp93gHvY6z7ajhrl9q` | **24/08/2026** |
 | 01 | [Perfil do Aluno](01-perfil-do-aluno.md) | os 14 campos, o status de cada informação, a governança da avaliação | `1qyBOxuz1vnqhVg-YhrnfiE4kUNZHXUHf` | 21/08/2026 |
 | 02 | [Syllabus do Ciclo](02-syllabus-do-ciclo.md) | 5 blocos × 4 aulas; 1–4 cobrem os quatro frameworks; **um bloco por vez** | `1Suwu2KJKCkNS2-mRvT6vDyL-ai0Jvg5M` | 21/08/2026 |
-| 03 | [Estrutura dos Frameworks](03-estrutura-dos-frameworks.md) | identidade, fronteira, etapas, tempo e mecânicas dos quatro | `1Kvycg1PTTajTkEcpWxzq97R8Kao1x60c` | 20/08/2026 |
-| 04 | [Planejamento e Produção da Aula](04-planejamento-e-producao-da-aula.md) | as 3 camadas, o registro único, pre-class de 6, as duas superfícies, o Teacher's Guide | `1IJOoR5sI3DDd79NJ-pl5O4HBmZzHEBPk` | 21/08/2026 |
+| 03 | [Estrutura dos Frameworks](03-estrutura-dos-frameworks.md) | identidade, fronteira, etapas, tempo e mecânicas dos quatro | `1pV-HSzKsjQmBV9vO3QEmooTZ0_tgPd6g` | **24/08/2026** |
+| 04 | [Planejamento e Produção da Aula](04-planejamento-e-producao-da-aula.md) | as 3 camadas, o registro único, pre-class de 6, as duas superfícies, o Teacher's Guide | `1Uwgl1mvwHBtA9MxpvDR91LTt_u2ixib2` | **24/08/2026** |
 | 05 | [Ciclo de Evolução](05-ciclo-de-evolucao.md) | estado pedagógico, checkpoints, prontidão, as 3 rotas | `1kVVhJMMQ5N6i9UkEycXpvzAbPBmMUQa5` | 21/08/2026 |
-| 06 | [Prompt Controlador Pedagógico Único](06-prompt-controlador.md) | consolida e opera: parâmetros CEFR, fases 0–4, saídas A–J | `1zi1iZ2fKUhweU8AX_Bah8c-Z_v9X0PKM` | 21/08/2026 |
+| 06 | [Prompt Controlador Pedagógico Único](06-prompt-controlador.md) | consolida e opera: parâmetros CEFR, fases 0–4, saídas A–J | `1QfE6AB_BUKtQh9Sv0qrJrVyY9n8w0G9R` | **24/08/2026** |
 
 ## Série P — plataforma (fora do núcleo pedagógico, por decisão do 00 §6)
 
 | # | Documento | O que fixa | Drive ID | Modificado |
 |---|---|---|---|---|
-| P1 | [Camada Funcional (HTML)](P1-camada-funcional-html.md) | o contrato do artefato: abas, visões, registro, player, teclado, Teacher's Guide | `1iArAKkRPNJkZ-bt3K12ZiRXl3pyrrxek` | 21/08/2026 |
-| P2 | [Protocolo de Implementação e QA](P2-protocolo-implementacao-e-qa.md) | como mexer sem destruir e como provar que a checagem checa (41 regras, cada uma com o incidente) | `1zKuAMsZNkHaYaNkR5OiYsYa98RE0sjbi` | 21/08/2026 |
-| P3 | [Matriz de Conformidade e Especificação da Suíte](P3-matriz-de-conformidade.md) | cada requisito com evidência positiva **e mutação obrigatória** | `1UOTsOLa10QiC-80Fwko4YFHuo4eaGlWN` | 21/08/2026 |
+| P1 | [Camada Funcional (HTML)](P1-camada-funcional-html.md) | o contrato do artefato: abas, visões, registro, player, teclado, Teacher's Guide | `1CgtgTwqgBGuy-_B5yQKbMDFyK0AMEZuK` | **24/08/2026** |
+| P2 | [Protocolo de Implementação e QA](P2-protocolo-implementacao-e-qa.md) | como mexer sem destruir e como provar que a checagem checa (41 regras, cada uma com o incidente) | `1WHBj3B9l4z-WI3HDzo0fvHsFpm1obH4b` | **24/08/2026** |
+| P3 | [Matriz de Conformidade e Especificação da Suíte](P3-matriz-de-conformidade.md) | cada requisito com evidência positiva **e mutação obrigatória** | `10Cv9RpQW2c-_zWktQiXdOZsAqVlCUp0q` | **24/08/2026** |
 
 ## Adendos normativos (21/08/2026) e anexo técnico
 

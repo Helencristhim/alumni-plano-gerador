@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `00_Guia_de_Uso_e_Precedencia_6_Documentos.docx`
-> Drive ID: `1abVwOazTpJSBXO4ngX7zqTu1N2RXRSKW`
-> Modificado no Drive: 2026-08-21
+> Drive ID: `1NTbdDL6LoYrtYgPp93gHvY6z7ajhrl9q`
+> Modificado no Drive: 2026-08-24
 > Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/00-guia-de-uso-e-precedencia.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -58,7 +58,7 @@ Por ora, os seis documentos 01–06 constituem integralmente o conjunto validado
 
 - A parametrização CEFR necessária à geração está consolidada no Documento 06.
 - As escalas transversais e regras estruturais permanecem nos Documentos 03 e 04.
-- A quantidade e a sequência de etapas são determinadas pelo framework, pelo nível, pela rota aplicável e pela saída pedagógica validada. Não existe uma quantidade universal de oito etapas nem um único percurso obrigatório para todas as aulas.
+- Cada um dos quatro frameworks possui oito etapas pedagógicas normativas, com nomes, funções e ordem definidos no Documento 03. O nível, a rota aplicável e a saída pedagógica parametrizam conteúdo, apoio, complexidade, mecânicas e produto, mas não eliminam, acrescentam ou reordenam essas etapas. A quantidade de slides, telas, páginas ou cartões é variável e não se confunde com a quantidade de etapas.
 - A governança da avaliação adota exatamente um de dois modelos: **avaliação formal com teste** ou **acompanhamento docente**, com eventual instrumento de consolidação. Em ambos, a decisão final cabe ao professor e a autoavaliação é apenas complementar.
 
 Fallback normativo. Quando não houver escolha explícita registrada, aplicar Acompanhamento docente. A ausência de valor não autoriza deixar o modelo indefinido, presumir avaliação formal ou criar teste. Somente decisão explícita posterior autoriza a mudança para Avaliação formal com teste.
@@ -66,6 +66,8 @@ Fallback normativo. Quando não houver escolha explícita registrada, aplicar Ac
 Rotas e variações somente se aplicam quando estiverem previstas no framework, na parametrização por nível ou na saída pedagógica vigente; não podem ser introduzidas por documento externo ou banco provisório não validado.
 
 Nenhum documento externo a essa composição integra o núcleo ou deve ser tratado como fonte normativa.
+
+Regra de entrega final. A produção publicada gera duas URLs distintas: a URL do professor contém a visão docente e a prévia da visão do aluno; a URL do aluno contém exclusivamente a visão do aluno. Conteúdo docente não pode estar apenas oculto: não integra o arquivo, o HTML, o payload, o estado ou os recursos entregues pela URL do aluno.
 
 ### 6. Regra de fronteira com a plataforma
 
@@ -84,7 +86,7 @@ Além do guia e dos seis documentos validados, fornecer:
 - nível receptivo e produtivo;
 - modalidade e duração;
 - restrições, materiais obrigatórios e conteúdos proibidos;
-- especificação separada do meio de entrega, quando existir.
+- especificação separada do meio de entrega, incluindo o modo — protótipo ou produção final — e, na produção final, as duas saídas distintas de professor e aluno.
 
 Informação ausente não pode ser inventada. Dado materialmente necessário deve ser solicitado; ausência não bloqueante deve ser registrada como hipótese.
 
