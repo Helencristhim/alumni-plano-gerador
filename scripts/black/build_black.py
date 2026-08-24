@@ -78,6 +78,56 @@ def troca_var(js, nome, valor):
     return js[:m.start()] + f"var {nome}={valor}" + js[fim:]
 
 
+
+def troca_blocos_de_aula(html, tab_id, prefixo, seletor, aulas, rotulos, conteudos):
+    """Refaz, dentro de uma aba, a barra de selecao de aula e os blocos por aula.
+
+    O shell traz os blocos do MODELO (`pc19`, `pc20`) e os botoes que alternam entre eles.
+    Um material de outras aulas nao tem onde encaixar: procurar `pc1` no shell devolve nada,
+    e foi assim que a primeira geracao parou. Aqui a regiao inteira e reconstruida a partir
+    do config -- quantas aulas ele declarar, tantos botoes e tantos blocos.
+    """
+    hm = mascara(html)
+    m = re.search(r'<div[^>]*id="' + tab_id + r'"[^>]*>', hm)
+    if not m:
+        raise SystemExit(f"o shell nao tem a aba id={tab_id!r}")
+    ini_aba, fim_aba = m.start(), fecha(hm, m.start())
+
+    # 1. a barra de selecao: e a que chama o seletor desta aba
+    barras = [mm for mm in re.finditer(r'<div class="btn-bar"[^>]*>', hm[ini_aba:fim_aba])]
+    alvo = None
+    for mm in barras:
+        a = ini_aba + mm.start()
+        b = fecha(hm, a)
+        if f"{seletor}(" in html[a:b]:
+            alvo = (a, b)
+            break
+    if alvo is None:
+        raise SystemExit(f"{tab_id}: nao achei a barra que chama {seletor}()")
+    botoes = []
+    for i, n in enumerate(aulas):
+        cls = "btn-primary" if i == 0 else "btn-ghost"
+        pt, en = rotulos[n]
+        botoes.append(f'<button class="{cls}" id="{prefixo}b{n}" onclick="{seletor}({n})">'
+                      f'<span data-view="professor">{pt}</span>'
+                      f'<span data-view="aluno">{en}</span></button>')
+    nova_barra = ('<div class="btn-bar" style="justify-content:flex-start;'
+                  'margin-bottom:var(--space-4)">\n    ' + "\n    ".join(botoes) + "\n  </div>")
+    html = html[:alvo[0]] + nova_barra + html[alvo[1]:]
+
+    # 2. os blocos por aula: do primeiro ao fim do ultimo
+    hm = mascara(html)
+    m = re.search(r'<div[^>]*id="' + tab_id + r'"[^>]*>', hm)
+    ini_aba, fim_aba = m.start(), fecha(hm, m.start())
+    blocos = [mm for mm in re.finditer(r'<div[^>]*id="' + prefixo + r'\d+"[^>]*>',
+                                       hm[ini_aba:fim_aba])]
+    if not blocos:
+        raise SystemExit(f"{tab_id}: nao achei os blocos {prefixo}N do modelo")
+    a = ini_aba + blocos[0].start()
+    b = fecha(hm, ini_aba + blocos[-1].start())
+    return html[:a] + "\n".join(conteudos) + html[b:]
+
+
 def troca_slides(html, por_aula):
     """Substitui TODAS as telas do deck pelas das aulas pedidas, na ordem, e renumera
     data-slide -- o numero e posicao no deck, nao identidade da tela."""
@@ -135,6 +185,60 @@ def monta(cfg, base_frag):
     js = js.replace("localStorage.getItem('pv_private-black-modelo_v1')",
                     "localStorage.getItem('pv_%s_v1')"
                     % re.sub(r"[^A-Za-z0-9_-]", "-", cfg["artefato_id"]))
+    # ---- o que o artefato deixou CRAVADO em numero de aula
+    #
+    # O boot do artefato chama `closeBuild(19,RECAP19,CONF19); closeBuild(20,...)`, a tabela
+    # BUILDERS aponta para os hosts `recapList19`/`recapList20`, e o post-class restaura por
+    # ids `pw19-*`. Sao os numeros das DUAS aulas dele. Copiados como estao, a aula 1 de
+    # qualquer aluno nasceria muda: o fecho nao se constroi e o texto do post-class nao volta
+    # -- sem erro no console, porque `if(!host)return` engole tudo.
+    #
+    # Numero que descreve o MODELO e nao o MATERIAL trunca em silencio. Aqui tudo isso sai do
+    # registro: quantas aulas o config declarar, tantas chamadas e tantos hosts.
+    for velho in sorted(set(re.findall(r"\bvar (RECAP\d+|CONF\d+)\s*=", js))):
+        js = extrai_shell.remove_var(js, velho, {})
+
+    # PC_NOTAS: a camada do professor no pre-class. Guarda SO o que nao existe em lugar
+    # nenhum do material -- alternativas que a correcao nao aceita mas o professor deve, o
+    # porque, o que costuma travar, a ligacao com a aula. O gabarito em si NAO entra aqui: ele
+    # e derivado do `data-ok` da propria atividade, para nao existir uma segunda versao da
+    # mesma informacao, livre para divergir da primeira.
+    notas = {}
+    for n in aulas:
+        nj = os.path.join(base_frag, f"aula{n}", "notas.json")
+        if os.path.exists(nj):
+            notas.update(json.load(open(nj, encoding="utf-8")))
+    if notas:
+        js = troca_var(js, "PC_NOTAS", json.dumps(notas, ensure_ascii=False, indent=1))
+    chamadas, restaura = [], []
+    for n in aulas:
+        cj = os.path.join(base_frag, f"aula{n}", "close.json")
+        if not os.path.exists(cj):
+            erros.append(f"aula {n}: falta close.json (o recap e a escala de confianca do "
+                         f"fecho). Sem ele a ultima tela nasce vazia, e sem erro no console.")
+        else:
+            fecho = json.load(open(cj, encoding="utf-8"))
+            js = js.replace("\n/* ---------------- boot",
+                            "\nvar RECAP%d=%s;\nvar CONF%d=%s;\n/* ---------------- boot"
+                            % (n, json.dumps(fecho["recap"], ensure_ascii=False),
+                               n, json.dumps(fecho["conf"], ensure_ascii=False)), 1)
+            chamadas.append(f"closeBuild({n},RECAP{n},CONF{n});")
+        restaura.append("['pw%d-subject',null,'post_l%d_subject'],"
+                        "['pw%d-body','pw%d-count','post_l%d_writing']" % (n, n, n, n, n))
+
+    # DENTRO DO BOOT, e so ali. A primeira versao usou re.sub com count=1 sobre o arquivo
+    # inteiro e acertou a tabela BUILDERS, que vem antes: o boot ficou com as chamadas
+    # antigas e a tabela ficou corrompida. Anteceder o alvo pelo bloco que o contem e a
+    # diferenca entre trocar a chamada e trocar a primeira coisa parecida com ela.
+    ib = js.index("/* ---------------- boot ---------------- */")
+    fb = js.index("\n});", ib) + len("\n});")
+    boot = js[ib:fb]
+    boot = re.sub(r"closeBuild\(\d+,RECAP\d+,CONF\d+\);(\s*closeBuild\(\d+,RECAP\d+,CONF\d+\);)*",
+                  " ".join(chamadas) if chamadas else "", boot, count=1)
+    boot = re.sub(r"pwRestore\(\[.*?\]\);", "pwRestore([" + ",".join(restaura) + "]);",
+                  boot, count=1, flags=re.S)
+    js = js[:ib] + boot + js[fb:]
+
     html = cabeca + js
 
     # ---- regioes de conteudo
@@ -143,15 +247,42 @@ def monta(cfg, base_frag):
         if os.path.exists(caminho):
             html = troca_bloco_por_id(html, ident,
                                       open(caminho, encoding="utf-8").read().strip())
+    rotulos, pre, post = {}, [], []
     for n in aulas:
         pasta = os.path.join(base_frag, f"aula{n}")
-        html = troca_bloco_por_id(html, f"pc{n}",
-                                  open(os.path.join(pasta, "preclass.html"),
-                                       encoding="utf-8").read().strip())
-        html = troca_bloco_por_id(html, f"ps{n}",
-                                  open(os.path.join(pasta, "postclass.html"),
-                                       encoding="utf-8").read().strip())
+        reg = open(os.path.join(pasta, "registro.js"), encoding="utf-8").read()
+        mod = (re.search(r"mod:'([^']+)'", reg) or [None, "—"])[1]
+        rotulos[n] = (f"Aula {n:02d} &middot; {mod}", f"Lesson {n:02d}")
+        pre.append(open(os.path.join(pasta, "preclass.html"), encoding="utf-8").read().strip())
+        post.append(open(os.path.join(pasta, "postclass.html"), encoding="utf-8").read().strip())
+    html = troca_blocos_de_aula(html, "tab-preclass", "pc", "preSel", aulas, rotulos, pre)
+    html = troca_blocos_de_aula(html, "tab-postclass", "ps", "postSel", aulas, rotulos, post)
     html, n_telas = troca_slides(html, slides)
+
+    # A tabela BUILDERS diz quem preenche qual host, e e o que faz o Reset de aula
+    # reconstruir a tela em vez de deixa-la vazia. Ela vinha com os hosts do MODELO. Aqui e
+    # regenerada a partir do que o material tem de fato: host que nao existe sai, e cada aula
+    # declarada ganha o seu. Entrada apontando para host inexistente nao quebra nada -- e por
+    # isso mesmo passaria despercebida.
+    ib = html.index("var BUILDERS=[")
+    ie = html.index("\n];", ib) + len("\n];")
+    originais = re.findall(r"\{h:'([^']+)',\s*also:\[([^\]]*)\],\s*f:function\(\)\{([^}]*)\}\}",
+                           html[ib:ie])
+    entradas = []
+    # 1. o que o MODELO trazia so continua se o host existir no material gerado. Entrada
+    #    apontando para host inexistente nao quebra nada -- e por isso mesmo passaria
+    #    despercebida, ate o dia em que um Reset deixasse a tela vazia.
+    for host, also, corpo in originais:
+        if "closeBuild(" in corpo:
+            continue          # o fecho e por aula: entra na volta seguinte
+        if f'id="{host}"' in html:
+            entradas.append("  {h:'%s', also:[%s],f:function(){%s}}" % (host, also, corpo))
+    # 2. o fecho de cada aula declarada
+    for n in aulas:
+        if f'id="recapList{n}"' in html:
+            entradas.append("  {h:'recapList%d', also:['confList%d'],"
+                            "f:function(){closeBuild(%d,RECAP%d,CONF%d);}}" % (n, n, n, n, n))
+    html = html[:ib] + "var BUILDERS=[\n" + ",\n".join(entradas) + "\n];" + html[ie:]
 
     nome_inteiro = f"{cfg['aluno']['nome']} {cfg['aluno']['sobrenome']}".strip()
     html = re.sub(r"<title>.*?</title>",
@@ -221,6 +352,17 @@ def round_trip():
         igual = a.strip() == g.strip()
         dif += 0 if igual else 1
         print(f"  {'igual' if igual else 'DIFERE'}  {ident:14s} artefato={len(a):7d}B  gerado={len(g):7d}B")
+    # O JS por aula tambem entra no circulo: a tabela BUILDERS diz quem reconstroi cada host,
+    # e uma entrada perdida so aparece no dia em que alguem usa o Reset. Comparar CONJUNTO,
+    # nao ordem -- a ordem de montagem e do builder, e nao muda o que a tabela promete.
+    def hosts(t):
+        i = t.index("var BUILDERS=[")
+        return sorted(re.findall(r"\{h:'([^']+)'", t[i:t.index("\n];", i)]))
+    ha, hg = hosts(art), hosts(gerado)
+    print(f"  {'igual' if ha == hg else 'DIFERE'}  BUILDERS       artefato={ha}")
+    if ha != hg:
+        print(f"                        gerado  ={hg}")
+        dif += 1
     telas_a = len(re.findall(r'data-lesson="\d+"', hm_a))
     print(f"  {'igual' if telas_a == n_telas else 'DIFERE'}  telas          artefato={telas_a}  gerado={n_telas}")
     dif += 0 if telas_a == n_telas else 1

@@ -140,6 +140,26 @@ SONDA = """() => {
 }"""
 
 
+
+def descobre(padrao, rotulo):
+    """Todo material da anatomia, achado pelo CARIMBO -- nunca por lista escrita aqui.
+
+    Lista no gate envelhece: o material seguinte nasce fora dela e o gate passa dizendo que
+    esta tudo bem. O carimbo <meta name="alumni-anatomia" content="private-black"> esta no
+    shell, e por isso em tudo que sai dele."""
+    import glob
+    achados = []
+    for caminho in sorted(glob.glob(os.path.join(RAIZ, padrao))):
+        try:
+            with open(caminho, encoding="utf-8", errors="replace") as fh:
+                if 'content="private-black"' not in fh.read(4000):
+                    continue
+        except OSError:
+            continue
+        achados.append((rotulo % os.path.basename(caminho),
+                        os.path.relpath(caminho, RAIZ), False))
+    return achados
+
 def _servidor(diretorio):
     class Silencioso(http.server.SimpleHTTPRequestHandler):
         def log_message(self, *a, **k):
@@ -273,6 +293,8 @@ def main():
         return _selftest()
     print("=== GATE 35 — carga limpa (chromium) ===")
     alvos = [(r, c, ctrl) for r, c, ctrl in ALVOS if os.path.exists(os.path.join(RAIZ, c))]
+    alvos += descobre("public/professor/*.html", "material professor · %s")
+    alvos += descobre("public/aluno/*.html", "material aluno · %s")
     res = mede([c for _, c, _ in alvos])
     if res is None:
         return 1
