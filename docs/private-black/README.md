@@ -1,0 +1,68 @@
+# Private Black — o pacote normativo vigente
+
+> **A composição é normativa, não informativa.** O Adendo 02 §13.3 diz: *"a simples
+> existência do arquivo fora do pacote não constitui carregamento nem conformidade. A
+> ausência de A01 ou A02 no lote deve bloquear a declaração de conformidade integral."*
+> Quem gera uma aula desta anatomia declara nominalmente quais destes documentos carregou.
+
+Origem: pasta **"Documentos normativos — Private Class Alumni Black"** no Drive da
+Stephanie Vicente (`1wm4SHeDi56QF3CRS06lLQpW8wXshj17J`), entregue pelo Dan em 24/08/2026.
+
+## Núcleo pedagógico (00–06)
+
+| # | Documento | O que fixa | Drive ID | Modificado |
+|---|---|---|---|---|
+| 00 | Guia de Uso e Precedência | o pacote, a ordem de leitura, os 9 degraus de precedência, e a fronteira com a plataforma | `1abVwOazTpJSBXO4ngX7zqTu1N2RXRSKW` | 21/08/2026 |
+| 01 | Perfil do Aluno | os 14 campos, o status de cada informação, a governança da avaliação | `1qyBOxuz1vnqhVg-YhrnfiE4kUNZHXUHf` | 21/08/2026 |
+| 02 | Syllabus do Ciclo | 5 blocos × 4 aulas; 1–4 cobrem os quatro frameworks; **um bloco por vez** | `1Suwu2KJKCkNS2-mRvT6vDyL-ai0Jvg5M` | 21/08/2026 |
+| 03 | Estrutura dos Frameworks | identidade, fronteira, etapas, tempo e mecânicas dos quatro | `1Kvycg1PTTajTkEcpWxzq97R8Kao1x60c` | 20/08/2026 |
+| 04 | Planejamento e Produção da Aula | as 3 camadas, o registro único, pre-class de 6, as duas superfícies, o Teacher's Guide | `1IJOoR5sI3DDd79NJ-pl5O4HBmZzHEBPk` | 21/08/2026 |
+| 05 | Ciclo de Evolução | estado pedagógico, checkpoints, prontidão, as 3 rotas | `1kVVhJMMQ5N6i9UkEycXpvzAbPBmMUQa5` | 21/08/2026 |
+| 06 | Prompt Controlador Pedagógico Único | consolida e opera: parâmetros CEFR, fases 0–4, saídas A–J | `1zi1iZ2fKUhweU8AX_Bah8c-Z_v9X0PKM` | 21/08/2026 |
+
+## Série P — plataforma (fora do núcleo pedagógico, por decisão do 00 §6)
+
+| # | Documento | O que fixa | Drive ID | Modificado |
+|---|---|---|---|---|
+| P1 | Camada Funcional (HTML) | o contrato do artefato: abas, visões, registro, player, teclado, Teacher's Guide | `1iArAKkRPNJkZ-bt3K12ZiRXl3pyrrxek` | 21/08/2026 |
+| P2 | Protocolo de Implementação e QA | como mexer sem destruir e como provar que a checagem checa (41 regras, cada uma com o incidente) | `1zKuAMsZNkHaYaNkR5OiYsYa98RE0sjbi` | 21/08/2026 |
+| P3 | Matriz de Conformidade e Especificação da Suíte | cada requisito com evidência positiva **e mutação obrigatória** | `1UOTsOLa10QiC-80Fwko4YFHuo4eaGlWN` | 21/08/2026 |
+
+## Adendos normativos (21/08/2026) e anexo técnico
+
+| # | Documento | O que fixa | Drive ID | Modificado |
+|---|---|---|---|---|
+| A01 | Continuidade pedagógica, transcript e navegação | seção de continuidade no planejamento · transcript opcional em todo áudio do in-class · Back to top | `1LBW6fVvf5T7PGc6wBaGk196O9imTjstV` | 21/08/2026 |
+| A02 | Safeguards de instrução, atividades e áudio | tempo só no guia · subprompt com função real · embaralhamento · referência posicional · player separado | `1jY0HC2k_QNrTGdPDkJsIQLtqX-2TPdqU` | 21/08/2026 |
+| P-A | Padrão de Produção de Áudios com ElevenLabs | `eleven_v3`, categorias, manifesto de mídia, QA auditivo, segurança da credencial | `19WfmAGOzP1nD62dtXs88yozAZdVh6lRd` | 20/08/2026 |
+
+## Precedência (00 §4) — quando duas instruções colidirem
+
+1. decisão explícita do operador para o caso
+2. perfil e restrições do aluno
+3. evidência real e estado pedagógico vigente
+4. syllabus vigente
+5. estrutura dos frameworks
+6. parametrização CEFR normativa
+7. planejamento e diretrizes de produção
+8. Prompt Controlador
+9. **especificação técnica ou visual da plataforma**
+
+> *"Uma decisão técnica nunca modifica silenciosamente uma regra pedagógica."*
+> E conflito sem precedência clara **se declara**, nunca se resolve em silêncio.
+
+## Estes documentos NÃO valem para o molde antigo
+
+O pacote governa a anatomia **`private-black`** — o molde adulto novo, cuja especificação de
+interface é `_build/model/artefatos/marcos-private-black.html`. O molde `imersivo`
+(helen-mendes e os ~1.400 arquivos publicados) continua governado pelo `CLAUDE.md`. Ver
+`docs/private-black/FRONTEIRA.md`.
+
+## Importação
+
+Os `.md` deste diretório são **conversões mecânicas** dos `.docx` do Drive, feitas por
+`scripts/black/docx_to_md.py`. A fonte é o `.docx`: divergência se resolve **reimportando**,
+nunca editando o `.md` — texto reescrito à mão é a segunda cópia, e ela diverge na primeira
+edição do original (P2 §11).
+
+    python3 scripts/black/docx_to_md.py ~/Downloads/00_Guia....docx docs/private-black/00-guia-de-uso-e-precedencia.md
