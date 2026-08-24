@@ -56,7 +56,12 @@ def verifica(inv, builder_src, ler=le):
     erros = []
     for nome, a in inv["anatomias"].items():
         arquivos = {}
-        for chave in ("shell", "hub", "hub_aluno"):
+        # `hub`/`hub_aluno` sao da anatomia que separa hub de standalone. A private-black nao
+        # separa: ela entrega DOIS BUILDS (professor e aluno), e as abas vivem dentro de cada
+        # um. Por isso as chaves sao opcionais, e o que existe e conferido.
+        for chave in ("shell", "hub", "hub_aluno", "shell_aluno"):
+            if chave not in a:
+                continue
             p = os.path.join(RAIZ, a[chave])
             if not os.path.exists(p):
                 erros.append(f'{nome}: {chave} declarado nao existe no disco: {a[chave]}')
@@ -64,6 +69,25 @@ def verifica(inv, builder_src, ler=le):
             arquivos[chave] = ler(p)
 
         shell = arquivos.get("shell", "")
+
+        # ── INVENTARIO MEDIDO (private-black) ───────────────────────────────────
+        # Duas formas de inventario, e a diferenca nao e de gosto:
+        #   - DECLARADO: {componente: {classe, kind, usos_no_artefato, papel}} -- escrito a
+        #     mao, com o papel de cada peca em prosa. Serve a uma dezena de componentes.
+        #   - MEDIDO: {classe: contagem}, gerado do artefato por script. Serve as 177 classes
+        #     da anatomia nova, que ninguem digitaria sem errar -- e, por ser gerado, nao
+        #     pode catalogar uma reescrita, que foi o defeito de 07/08/2026.
+        # A cobranca e a mesma nos dois casos: a peca declarada tem de existir no shell.
+        if a.get("componentes") and all(isinstance(v, int) for v in a["componentes"].values()):
+            for cls, usos in a["componentes"].items():
+                if not re.search(r"[.'\" ]" + re.escape(cls) + r"[\s{.,:'\"]", shell):
+                    erros.append(
+                        f'{nome}: a classe .{cls} ({usos} usos no artefato) SUMIU do shell.')
+            for aba in a.get("abas_aluno", []):
+                if f'id="tab-{aba.lower()}"' not in arquivos.get("shell_aluno", ""):
+                    erros.append(f'{nome}: aba "{aba}" declarada e ausente do build do aluno.')
+            continue
+
         for comp, meta in a["componentes"].items():
             cls = meta["classe"]
             if not re.search(r'[.\'" ]' + re.escape(cls) + r'[\s{.,:\'"]', shell):
