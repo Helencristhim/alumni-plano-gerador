@@ -2776,13 +2776,36 @@ function markSpeaker(s){
    externa com retomada (5), duas mudancas de topico com marcadores diferentes - ligada
    em 4, solta em 7 -, a PORTA em 6, e o encerramento em 9 e 10, o segundo deles deixando
    a conversa aberta. E o objeto da descoberta da etapa 5. */
+/* Dialogos por aula. O builder troca este objeto pelo do material; a chave e o
+   numero da aula, e quem escolhe e o proprio botao, pelo data-lesson da tela. */
+function talkDe(alvo){
+  var s=alvo&&alvo.closest?alvo.closest('.slide'):null;
+  var n=s?s.getAttribute('data-lesson'):null;
+  if(n&&TALKS[n])return TALKS[n];
+  for(var k in TALKS)return TALKS[k];   /* material de uma aula so */
+  return [];
+}
+var TALKS={19:[
+ {s:0,t:"So I sat through the whole session, and I still could not tell you what they actually measure. Forty minutes on the model, two slides on the data."},
+ {s:1,t:"Right, and the data is the whole argument. I asked about it afterwards, and the answer was, roughly, we are working on it."},
+ {s:0,t:"Which means no. Are you here for the whole week, or just the two days?"},
+ {s:1,t:"The whole week, unfortunately. My flight back is Saturday. You?"},
+ {s:0,t:"Thursday. Speaking of the data, did you see the piece the institute put out last month, on automated valuation? Everyone in that room had read it, and nobody mentioned it."},
+ {s:1,t:"I read it twice. It is the first honest thing I have seen on the error ranges. Sorry, one second. I will find you later, Priya. Sorry. Go on."},
+ {s:0,t:"No, that was it. I just thought it was strange. Anyone doing appraisal work would have opinions on that piece."},
+ {s:1,t:"You would think so. By the way, are you presenting anything this week?"},
+ {s:0,t:"Friday morning. Small room, early slot."},
+ {s:1,t:"I will try to make it. Look, I should go and say hello to the people from the Toronto office before they disappear. Good to see you, Nadia."},
+ {s:0,t:"You too. Find me tomorrow if you want to talk about the error ranges."}
+]};
 function playTalk(rate,show,from,to,botao){
   var alvo=botao||window.event&&window.event.target;
   if(audIntercepta(alvo))return;
   var grp=audGrupoDe(alvo);
   if(!audSuportado()){ audAviso(grp); return; }
   audFala(grp,function(){
-  var vs=pickCast(),fb=enVoices()[0]||null,a=(from==null?0:from),b=(to==null?TALK_19.length-1:to),i;
+  var TK=talkDe(alvo);
+  var vs=pickCast(),fb=enVoices()[0]||null,a=(from==null?0:from),b=(to==null?TK.length-1:to),i;
   var pit={f:1.14,m:0.82};
   for(i=a;i<=b;i++){
     (function(turn){
@@ -2792,7 +2815,7 @@ function playTalk(rate,show,from,to,botao){
       else if(fb){u.voice=fb;u.pitch=pit[CAST[turn.s].g];}
       u.onstart=function(){if(show)markSpeaker(turn.s);};
       speechSynthesis.speak(u);
-    })(TALK_19[i]);
+    })(TK[i]);
   }
   });
 }
@@ -4373,10 +4396,16 @@ document.addEventListener('DOMContentLoaded',function(){
    que se le - que e o pior lugar possivel para ela. O nome do falante sai de CAST, pelo
    indice do turno, pela mesma razao. */
 function tsBuild(){
-  var host=document.getElementById('ts19'); if(!host)return;
+  /* todas as caixas de transcript do documento, uma por aula */
+  var caixas=document.querySelectorAll('.transcript-box[id^="ts"]'),ci;
+  for(ci=0;ci<caixas.length;ci++)tsUma(caixas[ci]);
+}
+function tsUma(host){
+  if(!host)return;
   var h='',i,t,nome;
-  for(i=0;i<TALK_19.length;i++){
-    t=TALK_19[i];
+  var TK=talkDe(host);
+  for(i=0;i<TK.length;i++){
+    t=TK[i];
     nome=(CAST[t.s]&&CAST[t.s].n)?CAST[t.s].n:('Speaker '+(t.s+1));
     h+='<p class="ts-linha"><b>'+nome+'</b><span>'+t.t+'</span></p>';
   }
