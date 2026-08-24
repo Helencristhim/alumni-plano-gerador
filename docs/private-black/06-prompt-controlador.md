@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `06_Prompt_Controlador_Pedagogico_Unico.docx`
-> Drive ID: `1zi1iZ2fKUhweU8AX_Bah8c-Z_v9X0PKM`
-> Modificado no Drive: 2026-08-21
+> Drive ID: `1QfE6AB_BUKtQh9Sv0qrJrVyY9n8w0G9R`
+> Modificado no Drive: 2026-08-24
 > Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/06-prompt-controlador.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -96,15 +96,13 @@ C1: ação de alto risco/complexidade; poder, subtexto, precisão e risco pragm�
 
 Para todos os frameworks, retire apoio por evidência de autonomia. Exceções ao nível exigem necessidade real, scaffolding e registro explícito.
 
-**ARQUITETURA PEDAGÓGICA**
-Cada framework define funções e movimentos pedagógicos de referência. A quantidade, a divisão e a sequência operacional das etapas são determinadas pelo framework, pelo nível, pela rota aplicável e pela saída pedagógica validada. Todas as funções essenciais declaradas para a aula devem estar representadas, mas não há obrigação universal de oito etapas nem de uma atividade isolada para cada etapa. A variação também ocorre no input, no processamento, no grau de apoio, na operação cognitiva, nas mecânicas e no produto comunicativo, sempre de acordo com o nível, o perfil e as evidências.
+**Cada framework possui oito etapas pedagógicas normativas, com nomes, funções e ordem definidos no Documento 03. Nível, rota e saída pedagógica parametrizam input, processamento, apoio, operação cognitiva, mecânicas e produto comunicativo, mas não eliminam, acrescentam ou reordenam etapas. A quantidade de slides, telas, páginas ou cartões é variável: uma etapa pode ocupar mais de uma unidade, e uma unidade pode reunir etapas quando suas funções e transições permanecem identificáveis. É proibido transformar oito etapas em oito slides ou exigir uma atividade isolada por etapa.**
 
 **PRE-CLASS**
 15–20 minutos; exatamente 6 atividades. Antecipar léxico essencial sem tornar a conclusão obrigatória. A1/A2 podem ter apoio complementar em português; B1–C1 em inglês, salvo necessidade registrada. Listening permite até duas escutas; outros frameworks, zero ou uma. Priorizar tarefas curtas; evitar escrita longa em A1/A2. Todo contexto necessário deve estar disponível no próprio pre-class.
 Em Grammar, o pre-class pode preparar a observação, oferecer noticing preliminar e uma síntese curta e provisória. Não pode formular a regra definitivamente, clarificar o sistema por completo, substituir a descoberta nem praticar a ponto de apagar o gap da primeira tentativa diagnóstica.
 
-**IN-CLASS**
-Cumprir todas as funções essenciais declaradas para a aula. Funções e etapas podem ser combinadas, subdivididas ou redistribuídas quando a progressão permanecer verificável; não existe número universal de etapas, telas ou slides. Progressão: compreender/identificar → escolher → usar/reformular com apoio → produzir → retask. Uma produção principal. Teacher’s Notes em inglês, operacionais, com ação, respostas/possibilidades, apoio condicional e evidência. Feedback seletivo e retask focalizado.
+**Aplicar as oito etapas normativas do framework, preservando nomes, funções e ordem. Distribuí-las em quantas unidades de apresentação o conteúdo exigir; permitir uma etapa em mais de um slide ou etapas reunidas em um slide quando a passagem permanecer identificável. Não omitir, acrescentar, duplicar ou reordenar etapas. Progressão: compreender/identificar → escolher → usar/reformular com apoio → produzir → retask. Uma produção principal. Teacher’s Notes em inglês, operacionais, com ação, respostas/possibilidades, apoio condicional e evidência. Feedback seletivo e retask focalizado.**
 
 **FEEDBACK COMPARTILHADO**
 O registro interno pode conter todas as evidências e decisões necessárias. Somente dois campos são compartilhados com o aluno: **What worked** e **Keep developing**. Linguagem a retomar e próximo foco permanecem no registro interno ou são sintetizados nesses dois campos.
@@ -153,11 +151,14 @@ Selecione conteúdo e mecânicas pela função. Guided Discovery exige evidênci
 **FASE 3 — FONTES E FATUALIDADE**
 Verifique autoria, data, trecho e estatuto. Gabaritos não extrapolam evidência. Marque inferência e simulação. Diferencie proposta, confirmação, vigência e resultado. Use áudio estável para listening principal.
 
-FASE 4 — VALIDAÇÃO
-Verifique separadamente: perfil/restrições; framework; progressão; funções essenciais declaradas representadas, sem bloqueio por contagem fixa de etapas; continuidade; governança da avaliação — somente FORMAL_COM_TESTE ou ACOMPANHAMENTO_DOCENTE; ausência de escolha resolvida como ACOMPANHAMENTO_DOCENTE; nenhum teste criado por inferência; sem decisão isolada por teste, instrumento ou autoavaliação —; linguagem e consistência de American English; tom didático; Teacher’s Guide completo com 14 campos e 10 campos por etapa; factualidade; coerência entre instrução, correção apresentada ao aluno, answer key, Teacher’s Guide, resposta e critérios, todos pertencentes à mesma versão da atividade; tempo; acessibilidade/carga cognitiva; conformidade da versão final. Status: PASSOU, PARCIAL, FALHOU ou NÃO VERIFICADO, sempre com evidência.
+Verifique separadamente: perfil/restrições; framework; presença e ordem das oito etapas normativas; correspondência entre etapas, planejamento, Teacher’s Guide e unidades apresentadas; ausência de etapa omitida, fictícia, duplicada ou reordenada; ausência de exigência de oito slides; progressão; continuidade; governança da avaliação — somente FORMAL_COM_TESTE ou ACOMPANHAMENTO_DOCENTE; ausência de escolha resolvida como ACOMPANHAMENTO_DOCENTE; nenhum teste criado por inferência; sem decisão isolada por teste, instrumento ou autoavaliação —; linguagem e consistência de American English; tom didático; Teacher’s Guide completo com 14 campos e 10 campos por etapa; factualidade; coerência entre instrução, correção apresentada ao aluno, answer key, Teacher’s Guide, resposta e critérios, todos pertencentes à mesma versão da atividade; tempo; acessibilidade/carga cognitiva; conformidade da versão final. Status: PASSOU, PARCIAL, FALHOU ou NÃO VERIFICADO, sempre com evidência.
 
 **SAÍDA**
 A. Especificação pedagógica. B. Pre-class. C. Student Material do in-class. D. Teacher’s Notes locais. E. Teacher’s Guide completo em inglês. F. Answer key e possible answers. G. Post-class. H. Relatório de validação. I. Atualização proposta do estado do ciclo, separando observação real de hipótese e registrando evidências pertinentes ao modelo de avaliação. J. Conteúdo sem pressupor uma plataforma específica.
+
+**MODO DE SAÍDA. Em protótipo interno, uma entrega única com alternância pode ser usada quando explicitamente autorizada. Em produção final, gerar duas saídas publicáveis: PROFESSOR_URL, com visão docente e prévia da visão do aluno; e ALUNO_URL, exclusivamente discente. PROFESSOR_URL e ALUNO_URL não são apenas estados visuais do mesmo arquivo público.**
+
+**ISOLAMENTO. A saída do aluno não contém Teacher’s Guide, gabaritos reservados, hipóteses, registros internos, controles administrativos nem qualquer conteúdo docente no HTML, JavaScript, payload, armazenamento, comentários ou recursos carregados. Ocultar por CSS, remover o alternador ou depender de parâmetro editável não cumpre a regra.**
 
 **PARE QUANDO**
 O framework for incompatível e a troca não estiver autorizada; faltar dado material; fonte obrigatória não sustentar a tarefa; houver conflito normativo sem precedência; ou não for possível validar a versão final.

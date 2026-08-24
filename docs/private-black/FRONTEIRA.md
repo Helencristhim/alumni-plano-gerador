@@ -59,7 +59,7 @@ legado compartilha. O `scripts/gates.json` aceita escopo por `marcador`, e é es
 | GATE 18 (shell drift) | ele existe para CLONE. O `private-black` não é clone de ninguém — como a `story-quest` também não é, e por isso também está fora |
 | o builder do imersivo | builder próprio (`scripts/black/`), não um `if model==` dentro do `build_from_model.py` |
 | as regras de anatomia do `CLAUDE.md` | as 5 etapas do pre-class (REGRA 4), o piso de 25 slides, o survival card, os Complementares, o matching PT: **nada disso atravessa**. A anatomia é a dos documentos 00–06 |
-| a contagem de etapas | o 00 §5 diz que não existe quantidade universal de oito; o P3 §2.1 manda a suíte **reprovar** número de etapas escrito no código. O N sai do registro da aula |
+| a contagem de **slides** | o piso de 25 telas do imersivo não existe aqui. As **oito etapas** do framework, sim, são normativas — ver abaixo |
 
 ## O que o novo HERDA — e seria burrice reaprender
 
@@ -115,10 +115,57 @@ próprias dificuldades.
 | 5 | a suíte P3 (navegador + mutação + canário) | cada gate reprova a própria mutação |
 | 6 | produção: ElevenLabs, Supabase, guia na URL real | só quando for testar em aluno |
 
-## Duas perguntas abertas para a Stephanie
+## As duas perguntas, respondidas pela Stephanie em 24/08/2026
 
-1. **Oito etapas, ou sem número?** O 03 §5 descreve os quatro frameworks com oito etapas; o
-   00 §5 diz que não existe quantidade universal. Pela precedência do 00, o gate **não** cobra
-   número — cobra que as etapas do registro sejam as da tela, na ordem, e que os minutos
-   fechem os 55. Precisa de confirmação antes da Fase 5.
-2. **O arquivo do aluno**, acima — a divergência declarada em relação ao P1 §1.
+Elas estavam abertas quando esta fase começou. Foram respondidas, os sete documentos
+afetados foram atualizados no Drive e reimportados, e o que segue **é regra**, não
+interpretação nossa.
+
+### 1. Oito etapas — e nunca oito slides
+
+> *"Os quatro frameworks adotam as oito etapas pedagógicas definidas no Documento 03. Essas
+> etapas, suas funções e sua ordem constituem a arquitetura normativa de cada framework. A
+> quantidade de slides não é fixa: uma etapa pode ser distribuída em mais de um slide, e duas
+> ou mais etapas podem compartilhar um slide quando suas funções permanecem identificáveis e
+> pedagogicamente preservadas."*
+
+O conflito aparente entre o 03 ("oito etapas cada") e o 00 ("não existe quantidade universal
+de oito etapas") **não era entre os documentos — era de leitura nossa**: o 00 falava de
+UNIDADES DE APRESENTAÇÃO, não de etapas. O 00 foi reescrito para não permitir mais essa
+leitura, e o P2 §17 agora diz a regra em uma linha: *"Para etapas, N = 8 por regra do
+Documento 03; para slides, telas e componentes, N deriva dos blocos existentes."*
+
+O que o gate da espinha cobra:
+
+| Cobra | Nunca cobra |
+|---|---|
+| presença e **ordem** das oito etapas do framework | número de slides, telas ou cartões |
+| nenhuma etapa omitida, fictícia, duplicada ou reordenada | uma etapa por slide |
+| correspondência planejamento ↔ registro ↔ interface | — |
+| soma dos minutos fechando os 55 do percurso essencial | — |
+
+E ele precisa **aceitar** as duas formas que o 03 §6.1 nomeia: uma etapa ocupando mais de um
+slide, e duas etapas dividindo um slide (o artefato do Marcos já faz a segunda — o slide 10
+declara `data-stage="8"` junto com o 9, e a barra continua marcando uma etapa só). O P3 §2.1
+manda a suíte reprovar cinco mutações: sete etapas, nove etapas, ordem trocada, etapa
+fictícia, e **oito slides codificados como obrigação**.
+
+### 2. Duas URLs, e o isolamento é de entrega, não de CSS
+
+> *"A produção final deve gerar duas URLs distintas. A URL do professor contém a visão
+> docente e permite alternar para uma prévia da visão do aluno. A URL do aluno contém
+> exclusivamente o conteúdo destinado ao aluno. Gabaritos, Teacher's Guide, registros
+> internos, hipóteses pedagógicas, evidências reservadas e controles docentes não podem estar
+> apenas ocultos no HTML do aluno: não devem integrar o arquivo, payload ou estado entregue
+> por essa URL."*
+
+A decisão do Dan (*"o aluno não vê o que não é dele"*) voltou como norma e **mais forte** do
+que a nossa formulação: não basta o builder remover markup. O P1 passou a exigir **dois
+builds**; o P2 §3.2 manda inspecionar HTML, JavaScript, payload, armazenamento, comentários,
+source maps e requisições do build do aluno; e o P3 §3 acrescenta que a URL do aluno não pode
+ter alternador nem elevação de papel por query, hash, armazenamento, atributo ou chamada
+direta.
+
+Com isso **a divergência que declaramos deixa de existir**: o P1 §1 não pede mais arquivo
+único. Protótipo interno pode usar um arquivo com alternância, desde que o modo protótipo
+esteja declarado.

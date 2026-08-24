@@ -1,11 +1,9 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `03_Estrutura_dos_Frameworks.docx`
-> Drive ID: `1Kvycg1PTTajTkEcpWxzq97R8Kao1x60c`
-> Modificado no Drive: 2026-08-20
+> Drive ID: `1pV-HSzKsjQmBV9vO3QEmooTZ0_tgPd6g`
+> Modificado no Drive: 2026-08-24
 > Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/03-estrutura-dos-frameworks.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
-
-Alumni by Better
 
 ## 03 · ESTRUTURA DOS FRAMEWORKS
 
@@ -103,11 +101,20 @@ Ler a etapa como se ela contivesse o microciclo completo produz o defeito cláss
 
 #### 4.4 Exceção justificada
 
-Se uma aula não precisar de descoberta — por exemplo, quando prioriza exclusivamente a transferência de repertório já consolidado — a ausência é **registrada com justificativa** no plano interno. Ela nunca pode resultar de apresentação expositiva por conveniência.
+A etapa de descoberta permanece presente nos frameworks que a nomeiam mesmo quando o repertório já está consolidado. Nesse caso, sua operação se adapta: pode confirmar, discriminar, analisar efeito, recuperar evidência ou tornar explícita uma escolha já usada pelo aluno. A etapa não é omitida e não se reduz a apresentação expositiva por conveniência.
 
 ### 5. Os quatro frameworks
 
-**Oito etapas cada. Cinquenta e cinco minutos de percurso essencial em todas.**
+As tabelas desta seção definem as oito etapas pedagógicas normativas de cada framework, com nomes, funções, ordem e tempos de referência que totalizam cinquenta e cinco minutos. As oito etapas devem estar presentes e permanecer na ordem declarada. Nível, rota e saída pedagógica variam conteúdo, apoio, complexidade, mecânicas e produto, sem eliminar, acrescentar ou reordenar etapas. A segmentação em slides ou outras unidades de apresentação é variável.
+
+#### 5.0 Funções essenciais por framework
+
+| Framework | Funções essenciais que a aula deve representar |
+|---|---|
+| Reading into Speaking | Situar o uso da leitura; processar o texto para sentido geral e evidência relevante; transformar o que foi lido em produção oral; oferecer feedback e retask. Predição, descoberta e prática apoiada entram quando necessárias ao nível e à saída. |
+| Listening into Interaction | Situar a interação; processar o áudio com propósitos distintos ou combinados; preparar recursos de interação; realizar nova interação; oferecer feedback e replay/retask. Predição e microanálise entram quando funcionais. |
+| Grammar for Communication | Obter evidência do gap; oferecer contexto linguístico; construir e clarificar o recurso necessário; avançar de prática mais controlada para uso comunicativo; oferecer feedback e retask. A forma da descoberta depende da evidência disponível. |
+| Personalized Real-World English (ESP) | Definir objetivo, papel, interlocutor e resultado; observar ou estimar a performance inicial; oferecer input e apoio focalizados; praticar pontos críticos; realizar performance realista; oferecer feedback e upgrade. |
 
 #### 5.1 Reading into Speaking
 
@@ -221,16 +228,17 @@ A aula parte de uma situação real, iminente ou altamente provável da vida do 
 
 ### 6. Regras estruturais transversais
 
-#### 6.1 Representação das etapas
+#### 6.1 Oito etapas normativas e representação em unidades
 
-- **As oito etapas do framework estão pedagogicamente representadas na aula.** Nenhuma fica sem representação.
-- **Cada etapa tem ao menos uma atividade essencial.**
-- Uma etapa pode conter uma atividade curta, duas fases relacionadas, uma tarefa com fases ou uma interação sem material próprio.
-- Uma mesma unidade de apresentação **pode reunir atividades de mais de uma etapa**, ou a transição entre elas, desde que a **distinção pedagógica permaneça clara** — cada atividade com sua função identificável e a ordem declarada no material do professor.
+- **As oito etapas do framework, suas funções pedagógicas e sua ordem estão integralmente representadas.**
+- As oito etapas são obrigatórias. Não existe, porém, obrigação de oito slides nem de uma atividade isolada para cada etapa.
+- As arquiteturas de oito etapas da seção 5 são contagens pedagógicas bloqueantes; a quantidade de unidades de apresentação não é bloqueada por esse número.
+- Uma etapa pode conter uma atividade curta, duas fases relacionadas, uma tarefa com fases ou uma interação sem material próprio; também pode ocupar mais de uma unidade de apresentação.
+- Uma mesma unidade de apresentação pode reunir duas ou mais etapas quando a contribuição pedagógica e a transição de cada uma permanecem identificáveis no material do professor.
 - Quando uma unidade atravessa a fronteira de duas etapas, ela **declara as duas**, e a progressão registrada acompanha a passagem — senão o percurso mente sobre onde a aula está.
 - **Nunca criar unidade vazia**, nem unidade que apenas anuncie o que vem a seguir.
 
-**Não existe quantidade universal de unidades de apresentação — slides, telas, páginas ou** **cartões.** A unidade normativa é a **etapa pedagógica**. Fixar um número mínimo de unidades é transformar uma decisão de representação em regra pedagógica, e faz o meio de entrega governar a aula.
+**Não existe quantidade universal de unidades de apresentação — slides, telas, páginas ou cartões. A unidade pedagógica normativa é a etapa do framework; a unidade de apresentação é uma decisão de representação. É proibido converter a regra de oito etapas em exigência de oito slides ou de uma etapa por slide.**
 
 #### 6.2 Hierarquia de atividades — é arquitetura, não rótulo
 
@@ -265,7 +273,7 @@ A sequência reduz o controle ao longo da aula, quando apropriado:
 
 O nível **não altera o framework nem a função do bloco**. Ele controla complexidade do input, processamento exigido, apoio, extensão da produção, imprevisibilidade e foco do feedback.
 
-**Esta seção é a escala transversal.** Os parâmetros **de cada framework em cada nível** — extensão do input, functional language, produto oral, evidência e o que evitar — estão no documento **06 · Variação por Nível e Rotas Metodológicas**, junto das rotas metodológicas que esta arquitetura admite.
+**Esta seção é a escala transversal. Os parâmetros operacionais de cada framework em cada nível — extensão do input, processamento, produto comunicativo, apoio e limites — estão consolidados no documento 06 · Prompt Controlador Pedagógico Único. Não há banco de rotas autorizado. As oito etapas, suas funções e sua ordem são normativas; apenas sua distribuição em unidades de apresentação e sua realização operacional variam, preservando o percurso e o produto comunicativo.**
 
 #### 7.1 Escala consolidada
 
@@ -348,7 +356,7 @@ Estas oito proibições existem porque cada uma delas já produziu um curso inte
 
 ### 10. Validação do framework
 
-☐ As oito etapas do framework selecionado estão presentes e representadas? ☐ Cada etapa tem ao menos uma atividade essencial? ☐ O percurso essencial soma **55 minutos**, e as decomposições fecham matematicamente? ☐ A identidade do framework foi preservada — a aula não assumiu a função de outro? ☐ A produção principal é única, e as atividades anteriores a alimentam? ☐ Há evidência, operação do aluno, hipótese, verificação, clarificação e aplicação — distribuídas pelas etapas conforme §4.2? ☐ A descoberta é adequada ao nível, e a conclusão é inferível do material apresentado? ☐ A clarificação vem **depois** da operação do aluno? ☐ O controle diminui ao longo da aula? ☐ Atividades essenciais, condicionais e de extensão estão identificadas, e as não essenciais começam recolhidas? ☐ As explicações linguísticas são corretas, proporcionais e não absolutas sem base? ☐ O histórico de mecânicas foi consultado, sem impor variedade artificial? ☐ Nenhum tempo aparece no que o aluno vê durante a aula?
+☐ As oito etapas normativas do framework estão presentes, na ordem definida? ☐ Cada etapa cumpre sua função e está identificável no planejamento, no Teacher’s Guide e na apresentação? ☐ A distribuição em slides ou outras unidades está coerente, sem exigir uma etapa por slide? ☐ Nenhuma etapa foi omitida, acrescentada, duplicada ou reordenada? ☐ O percurso essencial soma 55 minutos, e as decomposições fecham matematicamente? ☐ A identidade do framework foi preservada — a aula não assumiu a função de outro? ☐ A produção principal é única, e as atividades anteriores a alimentam? ☐ Quando a descoberta é necessária, há evidência, operação do aluno, hipótese, verificação, clarificação e aplicação distribuídas pelo percurso conforme §4.2? ☐ Quando presente, a descoberta é adequada ao nível e a conclusão é inferível do material? ☐ A clarificação vem depois da operação do aluno, quando aplicável? ☐ O controle diminui ao longo da aula? ☐ Atividades essenciais, condicionais e de extensão estão identificadas, e as não essenciais começam recolhidas? ☐ As explicações linguísticas são corretas, proporcionais e não absolutas sem base? ☐ O histórico de mecânicas foi consultado, sem impor variedade artificial? ☐ Nenhum tempo aparece no que o aluno vê durante a aula?
 
 ### 11. Bloqueios do framework
 
@@ -356,8 +364,10 @@ A aula **não é liberada** quando:
 
 - o percurso essencial ultrapassa 55 minutos, ou a soma interna é incompatível com o tempo declarado;
 - produção principal, feedback ou retask são tratados como dispensáveis;
-- alguma das oito etapas não tem atividade essencial;
+- alguma função essencial declarada para a aula não está representada;
+- a organização das etapas rompe a progressão ou não possui justificativa pedagógica verificável;
 - a descoberta está reduzida a exposição seguida de pergunta de memória;
+- a etapa de descoberta foi omitida ou substituída por exposição, em vez de cumprir uma operação compatível com o repertório do aluno;
 - uma extensão é necessária para cumprir o objetivo, ou não tem gatilho declarado;
 - a explicação linguística é falsa, excessivamente absoluta ou inadequada ao nível;
 - a pressão comunicativa é hostil, dramatizada ou desvinculada da situação;
