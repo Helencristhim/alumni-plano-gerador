@@ -71,10 +71,31 @@ def troca_bloco_por_id(html, ident, novo, tag="div"):
 
 
 def troca_var(js, nome, valor):
+    """Troca `var NOME = <objeto ou array>` inteiro.
+
+    O delimitador importa: `fim_do_bloco` conta CHAVES, e num array de objetos a primeira
+    chave e a do PRIMEIRO ELEMENTO. Usado sem distinguir, ele trocou apenas
+    `{n:'Nadia',g:'f'}` e deixou `,{n:'Tom',g:'m'}];` pendurado -- JS invalido, e a pagina
+    inteira morreu com "Invalid destructuring assignment target". Quem pegou foi o GATE 35,
+    no navegador; nenhuma checagem de texto veria isso."""
     m = re.search(r"^var " + re.escape(nome) + r"\s*=", js, re.M)
     if not m:
         raise SystemExit(f"o shell nao declara var {nome}")
-    fim = extrai_shell.fim_do_bloco(js, m.end())
+    resto = js[m.end():].lstrip()
+    if resto[:1] == "[":
+        i = js.index("[", m.end())
+        prof, k = 0, i
+        while k < len(js):
+            if js[k] == "[":
+                prof += 1
+            elif js[k] == "]":
+                prof -= 1
+                if prof == 0:
+                    break
+            k += 1
+        fim = k + 1
+    else:
+        fim = extrai_shell.fim_do_bloco(js, m.end())
     return js[:m.start()] + f"var {nome}={valor}" + js[fim:]
 
 
@@ -295,6 +316,33 @@ def monta(cfg, base_frag):
             notas.update(json.load(open(nj, encoding="utf-8")))
     if notas:
         js = troca_var(js, "PC_NOTAS", json.dumps(notas, ensure_ascii=False, indent=1))
+
+    # TALKS: o dialogo de cada aula que tem um. O shell traz o do artefato; um material de
+    # outro aluno com o dialogo do Marcos e o mesmo defeito do cabecalho, so que audivel.
+    talks = {}
+    for n in aulas:
+        tj = os.path.join(base_frag, f"aula{n}", "talk.json")
+        if os.path.exists(tj):
+            falas = json.load(open(tj, encoding="utf-8"))
+            if falas:
+                talks[str(n)] = falas
+    # O ELENCO e do MATERIAL, nao do artefato. `CAST` casa o indice do falante com um nome e
+    # um genero, e e o que o transcript imprime e o que escolhe a voz. Ficando o do artefato,
+    # a call de tres vozes da Stephanie sairia com dois nomes do congresso do Marcos -- e o
+    # terceiro falante nao teria nome nenhum. Os indices das falas apontam para esta lista.
+    if cfg.get("cast"):
+        js = troca_var(js, "CAST", "[" + ",".join(
+            "{n:%s,g:%s}" % (json.dumps(c["n"], ensure_ascii=False),
+                             json.dumps(c["g"], ensure_ascii=False))
+            for c in cfg["cast"]) + "]")
+
+    if talks:
+        js = troca_var(js, "TALKS", "{" + ",".join(
+            "%s:[%s]" % (k, ",".join('{s:%d,t:%s}' % (f["s"], json.dumps(f["t"], ensure_ascii=False))
+                                      for f in v))
+            for k, v in talks.items()) + "}")
+    else:
+        js = troca_var(js, "TALKS", "{}")
     chamadas, restaura = [], []
     for n in aulas:
         cj = os.path.join(base_frag, f"aula{n}", "close.json")
@@ -357,14 +405,50 @@ def monta(cfg, base_frag):
                                open(os.path.join(pasta, "slides.html"),
                                     encoding="utf-8").read()))
         cartoes.append(cartao_de_aula(n, reg, dados, telas, sum(int(x) for x in etapas)))
+    # Os cartoes PENDENTES: as aulas do bloco vigente que ainda nao foram produzidas.
+    # O artefato traz os dele (21 e 22, com titulo e objetivo do Marcos) e eles sobreviviam
+    # ao lado dos da Stephanie -- com numeros que nem existem no ciclo dela. Aqui saem do
+    # SYLLABUS: titulo, objetivo e produto da linha daquela aula.
+    syl = cfg.get("syllabus")
+    if syl:
+        caminho_syl = os.path.join(RAIZ, syl)
+        if os.path.exists(caminho_syl):
+            linhas = {x["n"]: x for x in json.load(
+                open(caminho_syl, encoding="utf-8")).get("aulas", [])}
+            c = cfg["ciclo"]
+            bloco_ini = c["primeira"]
+            while bloco_ini + c["porBloco"] <= max(aulas):
+                bloco_ini += c["porBloco"]
+            for n in range(bloco_ini, bloco_ini + c["porBloco"]):
+                if n in aulas or n not in linhas:
+                    continue
+                x = linhas[n]
+                mod = {"reading-into-speaking": ("Reading", "R"),
+                       "listening-into-interaction": ("Listening", "L"),
+                       "grammar-for-communication": ("Grammar", "G"),
+                       "esp-real-world": ("ESP", "E")}.get(x.get("framework"), ("—", "?"))
+                cartoes.append(
+                    '<div class="lesson-card lc-pendente" id="lc%d">\n'
+                    '          <div class="lc-head">\n'
+                    '            <span class="lc-badge">Aula %02d</span>\n'
+                    '            <span class="lc-fw">%s &middot; %s</span>\n'
+                    '            <span class="lc-status">Ainda n&atilde;o produzida</span>\n'
+                    '          </div>\n'
+                    '          <h3 class="lc-title">%s</h3>\n'
+                    '          <p class="lc-desc"><strong>Objetivo comunicativo:</strong> %s'
+                    '<br><strong>Produto principal:</strong> %s</p>\n'
+                    '        </div>' % (n, n, x.get("bloco", ""), mod[0],
+                                        x.get("titulo", ""), x.get("objetivo_comunicativo", ""),
+                                        x.get("produto", "")))
+
     if cartoes:
         hm2 = mascara(html)
-        m2 = re.search(r'<div class="lesson-card"[^>]*id="lc\d+"[^>]*>', hm2)
+        m2 = re.search(r'<div class="lesson-card[^"]*"[^>]*id="lc\d+"[^>]*>', hm2)
         if not m2:
             raise SystemExit("o shell nao tem cartao de aula na aba In-class")
         ini2 = m2.start()
         fim2 = ini2
-        for mm in re.finditer(r'<div class="lesson-card"[^>]*id="lc\d+"[^>]*>', hm2):
+        for mm in re.finditer(r'<div class="lesson-card[^"]*"[^>]*id="lc\d+"[^>]*>', hm2):
             fim2 = fecha(hm2, mm.start())
         html = html[:ini2] + "\n      ".join(cartoes) + html[fim2:]
 
@@ -386,11 +470,16 @@ def monta(cfg, base_frag):
     #    apontando para host inexistente nao quebra nada -- e por isso mesmo passaria
     #    despercebida, ate o dia em que um Reset deixasse a tela vazia.
     for host, also, corpo in originais:
-        if "closeBuild(" in corpo:
-            continue          # o fecho e por aula: entra na volta seguinte
+        if "closeBuild(" in corpo or "tsBuild(" in corpo:
+            continue          # fecho e transcript sao por aula: entram na volta seguinte
         if f'id="{host}"' in html:
             entradas.append("  {h:'%s', also:[%s],f:function(){%s}}" % (host, also, corpo))
-    # 2. o fecho de cada aula declarada
+    # 2. o transcript de cada aula que tem um. `tsBuild` percorre todas as caixas, mas o
+    #    BUILDERS precisa da entrada por HOST para que o Reset daquela aula a reconstrua.
+    for n in aulas:
+        if f'id="ts{n}"' in html:
+            entradas.append("  {h:'ts%d', also:[],f:function(){tsBuild();}}" % n)
+    # 3. o fecho de cada aula declarada
     for n in aulas:
         if f'id="recapList{n}"' in html:
             entradas.append("  {h:'recapList%d', also:['confList%d'],"

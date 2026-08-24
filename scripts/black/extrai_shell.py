@@ -287,6 +287,62 @@ def deriva_professor():
     for velho, novo in NOMES:
         rel[f"swap/{velho}"] = corpo.count(velho)
         corpo = corpo.replace(velho, novo)
+
+    # ---- O DIALOGO DEIXA DE SER O DA AULA 19
+    #
+    # `playTalk` e `tsBuild` leem `TALK_19` direto -- o dialogo da unica aula de Listening do
+    # artefato. Copiado assim, QUALQUER aula de Listening de qualquer aluno tocaria a
+    # conversa do congresso do Marcos. E o mesmo tipo de defeito do `closeBuild(19,...)`:
+    # numero que descreve o MODELO cravado no codigo do MOLDE.
+    #
+    # A divergencia e por LIMITACAO DO ARTEFATO -- ele tem UMA aula com dialogo, e uma pagina
+    # com uma aula nunca precisou perguntar "de qual aula?". O molde tem N.
+    #
+    # A aula sai do proprio botao: ele vive dentro de uma `.slide[data-lesson]`. Nada de
+    # variavel global de estado -- o mesmo botao responde certo em qualquer aula.
+    corpo = corpo.replace(
+        "var TALK_19=[",
+        "/* Dialogos por aula. O builder troca este objeto pelo do material; a chave e o\n"
+        "   numero da aula, e quem escolhe e o proprio botao, pelo data-lesson da tela. */\n"
+        "function talkDe(alvo){\n"
+        "  var s=alvo&&alvo.closest?alvo.closest('.slide'):null;\n"
+        "  var n=s?s.getAttribute('data-lesson'):null;\n"
+        "  if(n&&TALKS[n])return TALKS[n];\n"
+        "  for(var k in TALKS)return TALKS[k];   /* material de uma aula so */\n"
+        "  return [];\n"
+        "}\n"
+        "var TALKS={19:[", 1)
+    # fecha o objeto: o array do artefato termina em `];`
+    i = corpo.index("var TALKS={19:[")
+    j = corpo.index("\n];", i)
+    corpo = corpo[:j] + "\n]};" + corpo[j + len("\n];"):]
+    # os tres usos passam a ler o dialogo da aula do botao
+    corpo = corpo.replace(
+        "var vs=pickCast(),fb=enVoices()[0]||null,a=(from==null?0:from),"
+        "b=(to==null?TALK_19.length-1:to),i;",
+        "var TK=talkDe(alvo);\n"
+        "  var vs=pickCast(),fb=enVoices()[0]||null,a=(from==null?0:from),"
+        "b=(to==null?TK.length-1:to),i;", 1)
+    corpo = corpo.replace("})(TALK_19[i]);", "})(TK[i]);", 1)
+    corpo = corpo.replace(
+        "  for(i=0;i<TALK_19.length;i++){\n    t=TALK_19[i];",
+        "  var TK=talkDe(host);\n  for(i=0;i<TK.length;i++){\n    t=TK[i];", 1)
+    rel["js/dialogo-por-aula"] = 1
+
+    # ---- O TRANSCRIPT DEIXA DE SER O DA AULA 19
+    # `tsBuild` escreve em `#ts19` -- a caixa da unica aula de Listening do artefato. Num
+    # material com outra numeracao ela nao existe, o `if(!host)return` engole, e a aula
+    # entrega um botao "Show transcript" que nao mostra nada. Mesma familia do closeBuild.
+    corpo = corpo.replace(
+        "function tsBuild(){\n  var host=document.getElementById('ts19'); if(!host)return;",
+        "function tsBuild(){\n"
+        "  /* todas as caixas de transcript do documento, uma por aula */\n"
+        "  var caixas=document.querySelectorAll('.transcript-box[id^=\"ts\"]'),ci;\n"
+        "  for(ci=0;ci<caixas.length;ci++)tsUma(caixas[ci]);\n"
+        "}\n"
+        "function tsUma(host){\n  if(!host)return;", 1)
+    rel["js/transcript-por-aula"] = 1
+
     # a chave de estado deixa de carregar nome de pessoa (P1 §3)
     antes = corpo
     corpo = re.sub(r"var STORE='MODELO_STORE';", STORE_DERIVADO, corpo)

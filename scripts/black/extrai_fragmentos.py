@@ -139,6 +139,26 @@ def notas_pc(h):
     return out
 
 
+def talk_da_aula(h, n):
+    """As falas de `var TALK_{n}` / `TALKS[{n}]` como [{s, t}]."""
+    m = (re.search(r"\bvar TALK_" + str(n) + r"\s*=\s*\[", h)
+         or re.search(r"\bvar TALKS\s*=\s*\{\s*" + str(n) + r"\s*:\s*\[", h))
+    if not m:
+        return []
+    i = h.index("[", m.start())
+    prof, k = 0, i
+    while k < len(h):
+        if h[k] == "[":
+            prof += 1
+        elif h[k] == "]":
+            prof -= 1
+            if prof == 0:
+                break
+        k += 1
+    return [{"s": int(a), "t": b.replace("\\\"", '"')}
+            for a, b in re.findall(r'\{s:(\d+),t:"((?:[^"\\]|\\.)*)"\}', h[i:k + 1])]
+
+
 def cartao_da_aula(h, hm, n):
     """Objetivo, produto e preparacao do cartao `lc{n}` da aba In-class.
 
@@ -210,6 +230,9 @@ def main():
             "notas.json": json.dumps(
                 {k: v for k, v in notas_pc(h).items() if k.startswith(f"{n}-")},
                 ensure_ascii=False, indent=1),
+            # O dialogo da aula, quando ela tem um. Sai de TALKS[n] no shell (TALK_19 no
+            # artefato). Aula sem dialogo devolve [] e o builder nao emite nada.
+            "talk.json": json.dumps(talk_da_aula(h, n), ensure_ascii=False, indent=1),
             "cartao.json": json.dumps(cartao_da_aula(h, hm, n), ensure_ascii=False, indent=1),
             "close.json": json.dumps(
                 {"recap": lista_js(h, f"RECAP{n}"), "conf": lista_js(h, f"CONF{n}")},
