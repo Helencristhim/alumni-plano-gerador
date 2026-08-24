@@ -683,6 +683,12 @@ jobs:
       - name: "GATE 33 — código de aluno não muda quando entra gente nova"
         run: python3 scripts/test_senhas_estaveis.py
 
+      - name: "GATE 34 — selftest: prova que o gate do pacote normativo ainda morde"
+        run: python3 scripts/black/check_docs_pacote.py --selftest
+
+      - name: "GATE 34 — o pacote normativo do private-black está inteiro"
+        run: python3 scripts/black/check_docs_pacote.py
+
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''
         continue-on-error: true

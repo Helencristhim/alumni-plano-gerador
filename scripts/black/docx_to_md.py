@@ -25,6 +25,12 @@ O QUE ELE NAO FAZ: imagens, cor, caixa de texto, comentario de revisao. Nenhum d
 documentos normativos depende deles -- se um dia depender, o conversor cresce; a regra
 nunca deve depender de algo que o conversor perde em silencio.
 
+LIMITACAO CONHECIDA, declarada em vez de descoberta depois: lista NUMERADA sai como lista
+de tracos. A ORDEM -- que e o que a regra usa -- e preservada; o numero impresso, nao. Onde
+um documento se refere a uma posicao ("ocupa o nono e ultimo degrau"), a contagem continua
+correta, so nao vem escrita. Se algum dia uma regra depender do numeral, o conversor le o
+numbering.xml; hoje nenhuma depende.
+
 USO:
     python3 scripts/black/docx_to_md.py ENTRADA.docx SAIDA.md --titulo "00 - Guia de Uso"
     python3 scripts/black/docx_to_md.py --selftest

@@ -12,29 +12,29 @@ Stephanie Vicente (`1wm4SHeDi56QF3CRS06lLQpW8wXshj17J`), entregue pelo Dan em 24
 
 | # | Documento | O que fixa | Drive ID | Modificado |
 |---|---|---|---|---|
-| 00 | Guia de Uso e Precedência | o pacote, a ordem de leitura, os 9 degraus de precedência, e a fronteira com a plataforma | `1abVwOazTpJSBXO4ngX7zqTu1N2RXRSKW` | 21/08/2026 |
-| 01 | Perfil do Aluno | os 14 campos, o status de cada informação, a governança da avaliação | `1qyBOxuz1vnqhVg-YhrnfiE4kUNZHXUHf` | 21/08/2026 |
-| 02 | Syllabus do Ciclo | 5 blocos × 4 aulas; 1–4 cobrem os quatro frameworks; **um bloco por vez** | `1Suwu2KJKCkNS2-mRvT6vDyL-ai0Jvg5M` | 21/08/2026 |
-| 03 | Estrutura dos Frameworks | identidade, fronteira, etapas, tempo e mecânicas dos quatro | `1Kvycg1PTTajTkEcpWxzq97R8Kao1x60c` | 20/08/2026 |
-| 04 | Planejamento e Produção da Aula | as 3 camadas, o registro único, pre-class de 6, as duas superfícies, o Teacher's Guide | `1IJOoR5sI3DDd79NJ-pl5O4HBmZzHEBPk` | 21/08/2026 |
-| 05 | Ciclo de Evolução | estado pedagógico, checkpoints, prontidão, as 3 rotas | `1kVVhJMMQ5N6i9UkEycXpvzAbPBmMUQa5` | 21/08/2026 |
-| 06 | Prompt Controlador Pedagógico Único | consolida e opera: parâmetros CEFR, fases 0–4, saídas A–J | `1zi1iZ2fKUhweU8AX_Bah8c-Z_v9X0PKM` | 21/08/2026 |
+| 00 | [Guia de Uso e Precedência](00-guia-de-uso-e-precedencia.md) | o pacote, a ordem de leitura, os 9 degraus de precedência, e a fronteira com a plataforma | `1abVwOazTpJSBXO4ngX7zqTu1N2RXRSKW` | 21/08/2026 |
+| 01 | [Perfil do Aluno](01-perfil-do-aluno.md) | os 14 campos, o status de cada informação, a governança da avaliação | `1qyBOxuz1vnqhVg-YhrnfiE4kUNZHXUHf` | 21/08/2026 |
+| 02 | [Syllabus do Ciclo](02-syllabus-do-ciclo.md) | 5 blocos × 4 aulas; 1–4 cobrem os quatro frameworks; **um bloco por vez** | `1Suwu2KJKCkNS2-mRvT6vDyL-ai0Jvg5M` | 21/08/2026 |
+| 03 | [Estrutura dos Frameworks](03-estrutura-dos-frameworks.md) | identidade, fronteira, etapas, tempo e mecânicas dos quatro | `1Kvycg1PTTajTkEcpWxzq97R8Kao1x60c` | 20/08/2026 |
+| 04 | [Planejamento e Produção da Aula](04-planejamento-e-producao-da-aula.md) | as 3 camadas, o registro único, pre-class de 6, as duas superfícies, o Teacher's Guide | `1IJOoR5sI3DDd79NJ-pl5O4HBmZzHEBPk` | 21/08/2026 |
+| 05 | [Ciclo de Evolução](05-ciclo-de-evolucao.md) | estado pedagógico, checkpoints, prontidão, as 3 rotas | `1kVVhJMMQ5N6i9UkEycXpvzAbPBmMUQa5` | 21/08/2026 |
+| 06 | [Prompt Controlador Pedagógico Único](06-prompt-controlador.md) | consolida e opera: parâmetros CEFR, fases 0–4, saídas A–J | `1zi1iZ2fKUhweU8AX_Bah8c-Z_v9X0PKM` | 21/08/2026 |
 
 ## Série P — plataforma (fora do núcleo pedagógico, por decisão do 00 §6)
 
 | # | Documento | O que fixa | Drive ID | Modificado |
 |---|---|---|---|---|
-| P1 | Camada Funcional (HTML) | o contrato do artefato: abas, visões, registro, player, teclado, Teacher's Guide | `1iArAKkRPNJkZ-bt3K12ZiRXl3pyrrxek` | 21/08/2026 |
-| P2 | Protocolo de Implementação e QA | como mexer sem destruir e como provar que a checagem checa (41 regras, cada uma com o incidente) | `1zKuAMsZNkHaYaNkR5OiYsYa98RE0sjbi` | 21/08/2026 |
-| P3 | Matriz de Conformidade e Especificação da Suíte | cada requisito com evidência positiva **e mutação obrigatória** | `1UOTsOLa10QiC-80Fwko4YFHuo4eaGlWN` | 21/08/2026 |
+| P1 | [Camada Funcional (HTML)](P1-camada-funcional-html.md) | o contrato do artefato: abas, visões, registro, player, teclado, Teacher's Guide | `1iArAKkRPNJkZ-bt3K12ZiRXl3pyrrxek` | 21/08/2026 |
+| P2 | [Protocolo de Implementação e QA](P2-protocolo-implementacao-e-qa.md) | como mexer sem destruir e como provar que a checagem checa (41 regras, cada uma com o incidente) | `1zKuAMsZNkHaYaNkR5OiYsYa98RE0sjbi` | 21/08/2026 |
+| P3 | [Matriz de Conformidade e Especificação da Suíte](P3-matriz-de-conformidade.md) | cada requisito com evidência positiva **e mutação obrigatória** | `1UOTsOLa10QiC-80Fwko4YFHuo4eaGlWN` | 21/08/2026 |
 
 ## Adendos normativos (21/08/2026) e anexo técnico
 
 | # | Documento | O que fixa | Drive ID | Modificado |
 |---|---|---|---|---|
-| A01 | Continuidade pedagógica, transcript e navegação | seção de continuidade no planejamento · transcript opcional em todo áudio do in-class · Back to top | `1LBW6fVvf5T7PGc6wBaGk196O9imTjstV` | 21/08/2026 |
-| A02 | Safeguards de instrução, atividades e áudio | tempo só no guia · subprompt com função real · embaralhamento · referência posicional · player separado | `1jY0HC2k_QNrTGdPDkJsIQLtqX-2TPdqU` | 21/08/2026 |
-| P-A | Padrão de Produção de Áudios com ElevenLabs | `eleven_v3`, categorias, manifesto de mídia, QA auditivo, segurança da credencial | `19WfmAGOzP1nD62dtXs88yozAZdVh6lRd` | 20/08/2026 |
+| A01 | [Continuidade pedagógica, transcript e navegação](A01-continuidade-transcript-navegacao.md) | seção de continuidade no planejamento · transcript opcional em todo áudio do in-class · Back to top | `1LBW6fVvf5T7PGc6wBaGk196O9imTjstV` | 21/08/2026 |
+| A02 | [Safeguards de instrução, atividades e áudio](A02-safeguards-instrucao-atividades-audio.md) | tempo só no guia · subprompt com função real · embaralhamento · referência posicional · player separado | `1jY0HC2k_QNrTGdPDkJsIQLtqX-2TPdqU` | 21/08/2026 |
+| P-A | [Padrão de Produção de Áudios com ElevenLabs](ANEXO-P-A-audios-elevenlabs.md) | `eleven_v3`, categorias, manifesto de mídia, QA auditivo, segurança da credencial | `19WfmAGOzP1nD62dtXs88yozAZdVh6lRd` | 20/08/2026 |
 
 ## Precedência (00 §4) — quando duas instruções colidirem
 
@@ -65,4 +65,11 @@ Os `.md` deste diretório são **conversões mecânicas** dos `.docx` do Drive, 
 nunca editando o `.md` — texto reescrito à mão é a segunda cópia, e ela diverge na primeira
 edição do original (P2 §11).
 
-    python3 scripts/black/docx_to_md.py ~/Downloads/00_Guia....docx docs/private-black/00-guia-de-uso-e-precedencia.md
+    python3 scripts/black/docx_to_md.py ~/Downloads/00_Guia....docx docs/private-black/00-guia-de-uso-e-precedencia.md \
+        --drive-id 1abVwOaz... --modificado 2026-08-21
+
+**O pacote só vale inteiro**, e quem cobra isso é o **GATE 34**
+(`scripts/black/check_docs_pacote.py`): documento ausente reprova, e documento que
+continua existindo mas perdeu texto na conversão também — cada um tem frases-âncora
+normativas, escolhidas em formas diferentes (prosa, célula de tabela, item de lista,
+identificador técnico), para que a perda de qualquer forma derrube uma delas.
