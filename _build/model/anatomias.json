@@ -1,550 +1,1045 @@
 {
- "_fonte_unica": "O INVENTARIO DA ANATOMIA. Quem le: scripts/check_anatomia.py (GATE 20) e scripts/check_artefato_paridade.py (GATE 21). Componente novo = uma entrada aqui + a peca no shell; componente que some do shell sem sair daqui = FALHA. As classes declaradas aqui sao as classes DO ARTEFATO (_build/model/artefatos/erica-professor-view.html), nunca nomes paralelos.",
- "_por_que": [
-  "A anatomia guided-discovery foi construida lendo um ARTEFATO de referencia (o Professor",
-  "View da Erica, escrito pela Stephanie fora do sistema). Este arquivo lista o que essa",
-  "anatomia contem, e o GATE 20 confere o shell contra a lista.",
-  "",
-  "O RISCO ORIGINAL que isto cobre e o de perder peca sem ninguem ver. Foi assim que eu dei",
-  "duas aulas como prontas com um quadro de feedback que nao recebia texto: contei o que EU",
-  "tinha usado, nao o que a anatomia TEM. Lista declarada + gate transforma essa pergunta",
-  "numa consulta.",
-  "",
-  "== CORRECAO DE 11/08/2026: O ARTEFATO VOLTOU A SER A FONTE ==",
-  "",
-  "Ate 11/08 este bloco dizia, como ordem de 07/08: 'o gate confere o shell contra ESTA",
-  "lista, e NUNCA contra o artefato -- que mora fora do repo, nao existe no CI, e cujo papel",
-  "acabou'. ISSO ESTAVA ERRADO, e era a CAUSA RAIZ de uma divergencia grande.",
-  "",
-  "O erro nao foi ter uma lista. Foi a lista ter catalogado a REESCRITA em vez do original:",
-  "o porte renomeou e reimplementou cada peca (reveal-item -> ic-reveal, blank-input ->",
-  "ic-blank, conf-btn -> ic-self, writebox -> ic-write, recap-item -> ic-recap...), o",
-  "inventario registrou os nomes NOVOS, e o GATE 20 passou a comparar a copia consigo",
-  "mesma -- verde para sempre, medindo nada. Quatro pecas nunca foram portadas e ninguem viu:",
-  "callout (23,8 usos/aula no artefato, a MAIS usada), tbl-wrap (10,2), quiz-option (6,8) e",
-  "rule-box (6,0), todas com ZERO ocorrencia no molde. E as que foram portadas ficaram com",
-  "uso muito menor (blank-input 26,8/aula la contra 3,5 do ic-blank aqui).",
-  "",
-  "Decisao do Dan (11/08/2026): 'SE AS AULAS NAO ESTAO IDENTICAS AO ARTEFATO, NO QUESITO",
-  "INTERFACE, ENTAO ESTA ERRADO' / 'pq que eu colocaria esse artefato se nao fosse pra vc",
-  "imitar ele?'. O artefato e a ESPECIFICACAO DA INTERFACE, nao uma referencia",
-  "inspiracional. Ele agora mora NO REPO, com hash, em _build/model/artefatos/ -- o",
-  "argumento de 07/08 ('mora fora do repo, nao existe no CI') deixou de valer porque a causa",
-  "dele foi removida.",
-  "",
-  "REGRA EM VIGOR — A HIERARQUIA (corrigida em 11/08/2026, palavras do Dan):",
-  "",
-  "  'o artefato e o state-of-art do que vamos fazer, a documentacao e a especificacao caso",
-  "   o artefato nao seja suficiente pra vc entender o que estamos fazendo'",
-  "",
-  "1. O ARTEFATO MANDA. Interface, componentes, estrutura, comportamento, densidade: copia-se",
-  "   dele, classe por classe, com o CSS dele. As classes declaradas aqui sao as DELE.",
-  "2. A DOCUMENTACAO (docs/NORMATIVO-*.md) entra quando o artefato nao basta para entender —",
-  "   a funcao de cada etapa, a arquitetura do ciclo, o porque. Ela EXPLICA o artefato; nao",
-  "   o corrige.",
-  "",
-  "A DOUTRINA NAO E VETO AO ARTEFATO. Se algo dele parecer contrariar uma regra, a primeira",
-  "hipotese e que a regra foi lida errado. Divergencia que nao se resolva copiando: PERGUNTE",
-  "ao Dan, nao invente excecao.",
-  "",
-  "O QUE O MATERIAL DE PRODUCAO ACRESCENTA POR CIMA nao e conflito, e AUSENCIA: o artefato e",
-  "pagina estatica sem servidor. Audio do audioMap/ElevenLabs (REGRA 7) no mesmo botao e no",
-  "mesmo lugar; persistencia (REGRA 28) sem mudar um pixel; texto de fala em atributo e nao",
-  "dentro da string JS (REGRA 7.1), que e forma de escrever handler e nao aparece na tela;",
-  "idioma do conteudo (REGRA 13), e o artefato ja e todo em ingles; e a paleta por aluno",
-  "(REGRA 10) — o artefato e a pagina de UMA aluna e fixa as cores, o shell e a mesma forma",
-  "parametrizada, com --mint recebendo o accent-light do aluno para que o CSS entre VERBATIM.",
-  "Detalhe de cada uma em _build/model/artefatos/README.md.",
-  "",
-  "Quem confere e o GATE 21 (scripts/check_artefato_paridade.py)."
- ],
- "anatomias": {
-  "guided-discovery": {
-   "shell": "_build/model/shells/guided-discovery.html",
-   "hub": "_build/model/shells/hub-guided-discovery.html",
-   "hub_aluno": "_build/model/shells/hub-guided-discovery-aluno.html",
-   "abas": [
-    "planning",
-    "syllabus",
-    "exercises",
-    "inclass",
-    "evidencias"
-   ],
-   "abas_aluno": [
-    "exercises"
-   ],
-   "origem": "Artefato 'Professor View - Erica', de Stephanie Vicente, agosto/2026, versionado no repo em 11/08/2026. E NORMATIVO para a interface (ver o campo _por_que acima e _build/model/artefatos/README.md).",
-   "componentes": {
-    "reveal": {
-     "classe": "reveal-item",
-     "kind": "reveal",
-     "usos_no_artefato": 108,
-     "papel": "cartao que vira: a aluna le a frente, arrisca em voz alta, e so entao clica. NAO e accordion — o accordion dobra texto que ja se sabe estar la."
-    },
-    "status_tela": {
-     "classe": "ext-tag",
-     "kind": "reveal",
-     "usos_no_artefato": 5,
-     "papel": "Essencial/Condicional/Extensao na TELA. Diretrizes, item 12 do checklist: 'identificados na tela E no procedimento'."
-    },
-    "autoavaliacao": {
-     "classe": "conf-btn",
-     "kind": "selfassess",
-     "usos_no_artefato": 106,
-     "papel": "escala de confianca no fecho. Registra PERCEPCAO, nao aprendizagem — nao entra na barra de progresso."
-    },
-    "sorting": {
-     "classe": "sortbox",
-     "kind": "sorting",
-     "usos_no_artefato": 12,
-     "papel": "classificacao em colunas. Coluna 0 e a caixa de partida e nunca e gabarito."
-    },
-    "call": {
-     "classe": "ic-call",
-     "kind": "call",
-     "usos_no_artefato": 0,
-     "papel": "sequencia de turnos com voz por personagem e recorte por segmento. Um arquivo so viraria monologo.",
-     "_pendente": "SEM FORMA NO ARTEFATO — ver _pendente_sem_forma_no_artefato abaixo.",
-     "_correcao_da_medicao": "Este componente foi declarado com '1 uso no artefato'. O uso era .plate-call — uma classe de IMAGEM DE FUNDO de slide, nada a ver com player de turnos. Contou-se uma classe de imagem como se fosse a peca. Ver _licao_medir_por_substring."
-    },
-    "evidencia": {
-     "classe": "evi",
-     "kind": "evidence",
-     "usos_no_artefato": 48,
-     "papel": "cada afirmacao com o TRECHO que a sustenta. Diretrizes: 'nenhum gabarito pode afirmar mais do que a evidencia apresentada'."
-    },
-    "escrita": {
-     "classe": "writebox",
-     "kind": "write",
-     "usos_no_artefato": 40,
-     "papel": "campo de verdade, nao rotulo. O quadro de feedback tem de RECEBER texto."
-    },
-    "recap": {
-     "classe": "recap-item",
-     "kind": "recap",
-     "usos_no_artefato": 25,
-     "papel": "o que a aula construiu, uma linha por item. A professora LE; nao e o checklist que ela marca."
-    },
-    "pergunta_sub": {
-     "classe": "q-item",
-     "kind": "qsub",
-     "usos_no_artefato": 58,
-     "papel": "a pergunta e a instrucao de COMO responder, juntas."
-    },
-    "frase_funcao": {
-     "classe": "phrase-row",
-     "kind": "phrases",
-     "usos_no_artefato": 49,
-     "papel": "a frase e o trabalho que ela cumpre, lado a lado. Separa 'decore isto' de 'use quando precisar disto'."
-    },
-    "racional": {
-     "classe": "rationale",
-     "kind": "gist",
-     "usos_no_artefato": 6,
-     "papel": "por que aquela e a resposta, e por que a errada e tentadora. Nasce ESCONDIDO: revelar antes de a aluna arriscar transforma o exercicio em leitura."
-    },
-    "cronometro": {
-     "classe": "timer-btn",
-     "kind": "timer",
-     "usos_no_artefato": 27,
-     "papel": "o tempo como parte da TAREFA (escrita cronometrada, resposta de 45s). Diretrizes: 'a pressao vem da situacao', nao do tom. Conta 15s DEPOIS do zero — quem passou precisa ver quanto passou."
-    }
-   },
-   "estrutura": {
-    "_por_que": [
-     "O inventario de componentes so listava EXERCICIO (ic-reveal, ic-timer, ic-sortbox...).",
-     "A ESTRUTURA da aula — a barra de etapas, os rotulos com orcamento de minutos, a etapa",
-     "declarada em cada tela — nunca entrou nele, e por isso o GATE 20 nao tinha o que cobrar",
-     "quando ela se perdesse. E a mesma armadilha descrita no topo deste arquivo ('contei o",
-     "que EU tinha usado, nao o que a anatomia TEM'), uma camada acima: inventariou-se a",
-     "atividade, nao a aula.",
-     "",
-     "O QUE ISTO PROTEGE: a unidade que quem conduz a aula enxerga e a ETAPA, nao a tela. Sao",
-     "7 ou 8 etapas, cada uma agrupando de 1 a 6 telas, e ele percorre tudo ou so parte. Sem",
-     "a barra, as 15-18 telas viram uma fila linear de passos indistintos — que foi o que",
-     "aconteceu ate 11/08/2026."
-    ],
-    "origem": "Artefato 'Professor View - Erica' (stage-bar/stage-labels/data-stage). Orcamento de 55 min: docs/NORMATIVO-arquitetura-frameworks-2026-08.md, slide 7.",
-    "_nomes": "No artefato as pecas se chamam stage-*; aqui elas se chamam phase-*, porque e a MESMA mecanica que o shell base ja tinha (updatePhaseBar pinta completed/current/upcoming a partir do data-phase da tela, como o paint() do artefato faz com data-stage). Clonar uma segunda barra com outro nome seria manter duas coisas iguais em dois lugares — o defeito que o GATE 18 existe para impedir.",
-    "pecas": {
-     "barra_de_etapas": {
-      "classe": "phase-segment",
-      "container": "phase-bar",
-      "builder_emite": "class=\"phase-segment{\" current\" if i == 0 else \" upcoming\"}\"",
-      "papel": "um segmento por etapa, pintado completed/current/upcoming. O numero de segmentos vem das etapas DECLARADAS na aula — ate 11/08/2026 vinha fixo em 7 do shell, e como os quatro frameworks tem 8 etapas, a etapa 8 nunca acendia em nenhuma das quatro aulas da stephanie."
-     },
-     "rotulos_de_etapa": {
-      "classe": "phase-label",
-      "container": "phase-labels",
-      "builder_emite": "data-min=",
-      "papel": "o nome da etapa + o ORCAMENTO DE MINUTOS dela (\"Reading closely / 11′\"). O minuto e o que da sentido a _nao_tem[\"piso de 25 slides\"]: e dele que o numero de telas deriva. Sem ele o rotulo dizia o que fazer e nao dizia quanto vale."
-     },
-     "etapa_da_tela": {
-      "classe": "phase-segment",
-      "atributo": "data-phase",
-      "builder_emite": "slidePhases",
-      "papel": "cada tela declara a que etapa pertence. E o que permite agrupar 15-18 telas em 7-8 etapas e o que a barra le para saber onde esta."
-     },
-     "rotulo_na_tela": {
-      "classe": "stage-pill",
-      "usos_no_artefato": 50,
-      "papel": "a etapa impressa DENTRO da tela. A barra e navegacao; a pilha e legenda, para quem abre um slide solto ou retoma a aula no meio. Estava sendo EMITIDA pelo conteudo (17 por aula) e nao tinha regra nenhuma no shell ate 11/08/2026 — saia como texto cru. Achada exatamente por este inventario passar a olhar estrutura."
-     },
-     "leitura_da_etapa": {
-      "id": "stageReadout",
-      "papel": "a etapa corrente por extenso na nav-bar (\"Stage 3 / 8 · First attempt · 7 min\"), porque os rotulos da barra tem 0.55rem. Em INGLES, e nao em portugues como no artefato: a nav-bar sobrevive no espelho do ALUNO, e portugues na tela do aluno e FAIL do validador (REGRA 13)."
-     }
-    },
-    "_o_que_da_para_cobrar": [
-     "CONSTRUIDO em 11/08/2026 — scripts/check_espinha.py (GATE 22). Ate esta data a lista",
-     "abaixo existia aqui como levantamento e nada a cobrava.",
-     "  (a) toda tela tem data-phase;                          -> GATE 22",
-     "  (b) todo data-phase cai dentro das etapas declaradas;   -> GATE 22",
-     "  (c) o numero de etapas e 7 ou 8 — NAO da para exigir igualdade com o contrato: o",
-     "      artefato condensa as 8 funcoes do ESP em 7 etapas de tela, e mantem 8 no",
-     "      Reading;                                            -> GATE 22",
-     "  (d) a soma dos minutos das etapas == contrato.percurso_min (55). O builder ja cobra",
-     "      com assert na geracao; o GATE 22 cobra no ARQUIVO, que sobrevive ao processo",
-     "      (aula editada a mao depois do build tambem passa por la)."
-    ],
-    "_a_nota_do_professor": "A nota (data-teacher) e cobrada pelo GATE 23, medida no artefato: 63 telas, 63 notas, 63 com orcamento de tempo. Tela sem nota e tela conduzida de cabeca — a nota e a UNICA forma de o professor receber instrucao durante a aula. O gate tambem barra comando gritado ('NAO ajude', 'force a resposta', 'TEM de responder' — as tres expressoes que a instrucao corretiva nomeia e que sobreviveram meses no material)."
-   },
-   "herdados_do_imersivo": {
-    "_nota": "Vem do shell base e nao sao especificos desta anatomia. O GATE 18 ja garante que nao somem.",
-    "lista": [
-     "blank-input",
-     "quiz-item",
-     "quiz-option",
-     "speech-card",
-     "match-row",
-     "dialogue-line",
-     "lp-seekbar",
-     "audio-btn",
-     "slides-wrapper",
-     "nav-bar"
-    ]
-   },
-   "_nao_tem": {
-    "_nota": "Registrado de proposito: sao ausencias por DESENHO, e a proxima pessoa nao deve 'consertar'.",
-    "aba Complementares": "saiu por decisao do Dan (06/08/2026). media-card aparece 0 vez no artefato.",
-    "piso de 25 slides": "e do imersivo (REGRA 11). Aqui o numero de telas DERIVA do orcamento de minutos — o racional inteiro, com os numeros medidos e o porque de nao haver piso, esta declarado em _build/model/ciclo.json -> densidade_e_numero_de_telas.",
-    "5 etapas do Pre-class": "anatomia da helen-mendes. vocab-card-pc, speech-card, think-card e survival-card aparecem 0 vez no artefato.",
-    "ordering / information gap": "nao existem no artefato. Foram prometidos por engano numa versao anterior do syllabus e retirados."
-   },
-   "artefato": "_build/model/artefatos/erica-professor-view.html",
-   "_divergencia_medida_11_08": {
-    "_o_que_e": "Estado da paridade no dia em que o artefato voltou a ser fonte. Serve de linha de base: o GATE 21 exige que estes numeros so CAIAM.",
-    "classes_do_artefato_ausentes_do_shell": 85,
-    "dentro_de_slide": 42,
-    "fora_de_slide_chrome_do_hub": 54,
-    "classes_ic_no_shell_sem_par_no_artefato": 125,
-    "nunca_portadas": [
-     "callout",
-     "callout-title",
-     "tbl-wrap",
-     "quiz-option",
-     "rule-box"
-    ],
-    "renomeadas_no_porte": {
-     "reveal-item": "ic-reveal",
-     "r-front": "ic-r-front",
-     "r-back": "ic-r-back",
-     "blank-input": "ic-blank",
-     "conf-btn": "ic-self",
-     "recap-item": "ic-recap",
-     "writebox": "ic-write",
-     "timer-btn": "ic-timer",
-     "phrase-row": "ic-phrase",
-     "evi-src": "ic-evi-src"
-    }
-   },
-   "equivalencias": {
-    "_o_que_e": "Peca do artefato que aqui tem OUTRO NOME, com o motivo. Declarar e o que separa um renome pensado de uma reescrita — o GATE 21 le esta tabela e nao conta o que esta aqui como divergencia. Lista curta de proposito: cada linha e uma coisa que quem abrir os dois lado a lado vai ter de reconciliar de cabeca.",
-    "stage-bar": {
-     "aqui": "phase-bar",
-     "motivo": "Mesma mecanica que o shell base ja tinha (updatePhaseBar pinta completed/current/upcoming a partir do data-phase, como o paint() do artefato faz com data-stage). Clonar uma segunda barra com outro nome seria manter duas coisas iguais em dois lugares — o defeito que o GATE 18 existe para impedir. A APARENCIA e identica; muda o nome do seletor."
-    },
-    "stage-seg": {
-     "aqui": "phase-segment",
-     "motivo": "idem"
-    },
-    "stage-labels": {
-     "aqui": "phase-labels",
-     "motivo": "idem"
-    },
-    "stage-label": {
-     "aqui": "phase-label",
-     "motivo": "idem"
-    },
-    "data-stage": {
-     "aqui": "data-phase",
-     "motivo": "idem"
-    }
-   },
-   "_pendente_sem_forma_no_artefato": {
-    "_o_que_e": "Kind cujo markup nao tem par no artefato. Segue contado na divida do GATE 21 — de proposito, para nao virar divida invisivel — mas nao conta como declaracao paralela: a declaracao dele E a pendencia.",
-    "_estado": "11/08/2026: dois dos tres sairam por ordem do Dan ('se nao tem no artefato nada parecido que o documento descreva, hora de remover'). Sobrou o call, que NAO e caso de remocao — tem forma la, com outro nome.",
-    "_resolvidos": {
-     "matching": "REMOVIDO da anatomia guided-discovery. As duas telas que o usavam foram convertidas: aula 2 -> sorting (mesma operacao, forma do artefato), aula 4 -> cinco quiz-item. O kind e o CSS SEGUEM no builder e nos dois shells porque o imersivo usa: 1.015 aulas publicadas e 154 configs (REGRA 30). Quem impede o uso aqui e o GATE 27.",
-     "quickfire": "REMOVIDO da anatomia guided-discovery, mesma ordem. A tela do round 2 da aula 4 virou reveal-item — que a propria aula ja usava na etapa 2. Segue disponivel para o imersivo (290 configs)."
-    },
-    "itens": [
-     {
-      "kind": "call",
-      "classes": [
-       "ic-call",
-       "ic-call-cast",
-       "ic-call-segs",
-       "ic-spk",
-       "ic-seg",
-       "ic-stop",
-       "ic-live",
-       "ic-done"
+  "_fonte_unica": "O INVENTARIO DA ANATOMIA. Quem le: scripts/check_anatomia.py (GATE 20) e scripts/check_artefato_paridade.py (GATE 21). Componente novo = uma entrada aqui + a peca no shell; componente que some do shell sem sair daqui = FALHA. As classes declaradas aqui sao as classes DO ARTEFATO (_build/model/artefatos/erica-professor-view.html), nunca nomes paralelos.  DESDE 24/08/2026 ha DUAS formas de inventario, e a diferenca nao e de gosto: DECLARADO ({componente: {classe, kind, usos_no_artefato, papel}}), escrito a mao, com o papel de cada peca em prosa -- serve a uma dezena de componentes; e MEDIDO ({classe: contagem}), gerado do artefato por scripts/black/gen_inventario.py -- serve as 177 classes da anatomia private-black, que ninguem digitaria sem errar, e que por ser gerado NAO PODE catalogar uma reescrita. A cobranca do GATE 20 e a mesma nos dois: a peca declarada tem de existir no shell.",
+  "_por_que": [
+    "A anatomia guided-discovery foi construida lendo um ARTEFATO de referencia (o Professor",
+    "View da Erica, escrito pela Stephanie fora do sistema). Este arquivo lista o que essa",
+    "anatomia contem, e o GATE 20 confere o shell contra a lista.",
+    "",
+    "O RISCO ORIGINAL que isto cobre e o de perder peca sem ninguem ver. Foi assim que eu dei",
+    "duas aulas como prontas com um quadro de feedback que nao recebia texto: contei o que EU",
+    "tinha usado, nao o que a anatomia TEM. Lista declarada + gate transforma essa pergunta",
+    "numa consulta.",
+    "",
+    "== CORRECAO DE 11/08/2026: O ARTEFATO VOLTOU A SER A FONTE ==",
+    "",
+    "Ate 11/08 este bloco dizia, como ordem de 07/08: 'o gate confere o shell contra ESTA",
+    "lista, e NUNCA contra o artefato -- que mora fora do repo, nao existe no CI, e cujo papel",
+    "acabou'. ISSO ESTAVA ERRADO, e era a CAUSA RAIZ de uma divergencia grande.",
+    "",
+    "O erro nao foi ter uma lista. Foi a lista ter catalogado a REESCRITA em vez do original:",
+    "o porte renomeou e reimplementou cada peca (reveal-item -> ic-reveal, blank-input ->",
+    "ic-blank, conf-btn -> ic-self, writebox -> ic-write, recap-item -> ic-recap...), o",
+    "inventario registrou os nomes NOVOS, e o GATE 20 passou a comparar a copia consigo",
+    "mesma -- verde para sempre, medindo nada. Quatro pecas nunca foram portadas e ninguem viu:",
+    "callout (23,8 usos/aula no artefato, a MAIS usada), tbl-wrap (10,2), quiz-option (6,8) e",
+    "rule-box (6,0), todas com ZERO ocorrencia no molde. E as que foram portadas ficaram com",
+    "uso muito menor (blank-input 26,8/aula la contra 3,5 do ic-blank aqui).",
+    "",
+    "Decisao do Dan (11/08/2026): 'SE AS AULAS NAO ESTAO IDENTICAS AO ARTEFATO, NO QUESITO",
+    "INTERFACE, ENTAO ESTA ERRADO' / 'pq que eu colocaria esse artefato se nao fosse pra vc",
+    "imitar ele?'. O artefato e a ESPECIFICACAO DA INTERFACE, nao uma referencia",
+    "inspiracional. Ele agora mora NO REPO, com hash, em _build/model/artefatos/ -- o",
+    "argumento de 07/08 ('mora fora do repo, nao existe no CI') deixou de valer porque a causa",
+    "dele foi removida.",
+    "",
+    "REGRA EM VIGOR — A HIERARQUIA (corrigida em 11/08/2026, palavras do Dan):",
+    "",
+    "  'o artefato e o state-of-art do que vamos fazer, a documentacao e a especificacao caso",
+    "   o artefato nao seja suficiente pra vc entender o que estamos fazendo'",
+    "",
+    "1. O ARTEFATO MANDA. Interface, componentes, estrutura, comportamento, densidade: copia-se",
+    "   dele, classe por classe, com o CSS dele. As classes declaradas aqui sao as DELE.",
+    "2. A DOCUMENTACAO (docs/NORMATIVO-*.md) entra quando o artefato nao basta para entender —",
+    "   a funcao de cada etapa, a arquitetura do ciclo, o porque. Ela EXPLICA o artefato; nao",
+    "   o corrige.",
+    "",
+    "A DOUTRINA NAO E VETO AO ARTEFATO. Se algo dele parecer contrariar uma regra, a primeira",
+    "hipotese e que a regra foi lida errado. Divergencia que nao se resolva copiando: PERGUNTE",
+    "ao Dan, nao invente excecao.",
+    "",
+    "O QUE O MATERIAL DE PRODUCAO ACRESCENTA POR CIMA nao e conflito, e AUSENCIA: o artefato e",
+    "pagina estatica sem servidor. Audio do audioMap/ElevenLabs (REGRA 7) no mesmo botao e no",
+    "mesmo lugar; persistencia (REGRA 28) sem mudar um pixel; texto de fala em atributo e nao",
+    "dentro da string JS (REGRA 7.1), que e forma de escrever handler e nao aparece na tela;",
+    "idioma do conteudo (REGRA 13), e o artefato ja e todo em ingles; e a paleta por aluno",
+    "(REGRA 10) — o artefato e a pagina de UMA aluna e fixa as cores, o shell e a mesma forma",
+    "parametrizada, com --mint recebendo o accent-light do aluno para que o CSS entre VERBATIM.",
+    "Detalhe de cada uma em _build/model/artefatos/README.md.",
+    "",
+    "Quem confere e o GATE 21 (scripts/check_artefato_paridade.py)."
+  ],
+  "anatomias": {
+    "guided-discovery": {
+      "shell": "_build/model/shells/guided-discovery.html",
+      "hub": "_build/model/shells/hub-guided-discovery.html",
+      "hub_aluno": "_build/model/shells/hub-guided-discovery-aluno.html",
+      "abas": [
+        "planning",
+        "syllabus",
+        "exercises",
+        "inclass",
+        "evidencias"
       ],
-      "onde_aparece_hoje": "stephanie-vicente aula 2 (11 ocorrencias dentro dos slides)",
-      "decisao": "NAO e caso de remover: TEM forma no artefato. playCall(rate,show,from,to) toca por trecho, os sete botoes de segmento sao audio-btn-sm, e quem fala e destacado por data-spk/spk-live. PENDENTE: renomear para as classes de la. Enquanto nao acontecer, as oito seguem contadas na divida do GATE 21."
-     }
-    ]
-   },
-   "_licao_medir_por_substring": [
-    "TRES VEZES O MESMO ERRO, no mesmo dia (11/08/2026). Vale mais que os numeros:",
-    "",
-    "  1. GATE 20 comparava a COPIA consigo mesma. O inventario catalogou as classes ic-*",
-    "     (a reescrita) e mandou o gate conferir o shell contra ele — nunca contra o",
-    "     original. Verde para sempre, medindo nada.",
-    "  2. GATE 21 lia COMENTARIO como regra. Um comentario que citava '.reveal-item/.r-front/",
-    "     .r-back' fazia o gate dar as pecas como presentes. Escondia 6 ausencias reais.",
-    "  3. O componente 'call' foi declarado com '1 uso no artefato'. O uso era .plate-call —",
-    "     uma classe de IMAGEM DE FUNDO de slide. Contou-se uma imagem como se fosse o player.",
-    "",
-    "A raiz e uma so: MEDIR POR SUBSTRING E TRATAR O RESULTADO COMO LEITURA. O nome bate, e",
-    "conclui-se que a coisa esta la. E a mesma familia da REGRA 7.1 (o HTML escrito nao e o",
-    "JS executado) e do 'grep mente dos dois lados' — e da para errar assim ate dentro do",
-    "gate que existe para impedir o erro.",
-    "",
-    "O ANTIDOTO nao e um gate a mais: e perguntar o que a medida esta contando. Classe em",
-    "comentario nao e regra. Classe de imagem nao e componente. Lista propria nao e o",
-    "original. Quando a resposta vier bonita demais, desconfie da pergunta."
-   ],
-   "_divergencia_por_limitacao_do_artefato": {
-    "_o_que_e": "Peca em que o molde NAO copia o artefato — de proposito, porque o artefato tem ali uma limitacao que ele resolve. E categoria diferente da _pendente_sem_forma_no_artefato: la a forma NAO EXISTE e por isso nada foi feito; aqui a forma existe e foi copiada, e o que muda e so o mecanismo que o artefato nao conseguia generalizar.",
-    "_regra": "Entrada aqui exige (a) o que o artefato faz, (b) qual a limitacao, (c) o que o molde faz no lugar, (d) por que isso NAO muda a aparencia. Sem os quatro, e desvio disfarcado de melhoria.",
-    "itens": [
-     {
-      "peca": "container de estado do sorting",
-      "classe_no_molde": "sort-group",
-      "no_artefato": "id=\"gdsort\" fixo, com o estado num objeto global (gdBuild/gdMove/gdCheck leem esse id).",
-      "limitacao": "id fixo => SO UM sorting por aula. Uma segunda classificacao na mesma aula sobrescreveria o estado da primeira.",
-      "no_molde": "container proprio com data-cols/data-items/data-state, e cada handler resolve pelo closest(\".sort-group\"). Varios por aula.",
-      "por_que_nao_muda_a_aparencia": "O container nao tem CSS nenhum. Quem desenha e o .sortbox interno (grid), o .sortcol e o .sortitem — esses tres SAO os do artefato, verbatim.",
-      "nome": "Sem o prefixo ic-, de proposito: ic- marcava a REESCRITA de 07/08, e isto nao e reescrita de peca do artefato — e um invólucro que o artefato nao tem."
-     }
-    ]
-   },
-   "chassi": {
-    "_o_que_e": "O chassi do guided-discovery sai do ARTEFATO, byte a byte, desde 11/08/2026. Decisao do Dan: \"os dois moldes devem ser separados mesmo, em si\". O chassi do imersivo (helen-mendes) NAO mudou — nenhum aluno do molde antigo foi tocado por essa separacao.",
-    "quem_tranca": "GATE 21 (scripts/check_artefato_paridade.py -> CHASSI), que compara os 20 seletores de chassi com o artefato e tem selftest proprio. O GATE 18 NAO pega isto: ele compara presenca de funcao e de classe entre os dois shells, nao o VALOR das regras.",
-    "portado_do_artefato": [
-     ".slide",
-     ".slide.active",
-     ".slide-inner",
-     ".slide-light",
-     ".slide-dark",
-     ".slide-image",
-     ".slide-image::before",
-     ".chapter-label",
-     ".slide-title",
-     ".slide-subtitle",
-     ".slide-heading",
-     ".slide-lead",
-     ".audio-btn-sm",
-     ".audio-btn-sm:hover",
-     ".roleplay-card",
-     ".roleplay-kw",
-     ".stage-pill",
-     "stack de fonte do body",
-     "padding do .slide no @media"
-    ],
-    "divergencias_declaradas": [
-     {
-      "o_que": ".slide>.slide-inner com max-height + overflow-y:auto + padding-bottom",
-      "artefato": "rola no proprio .slide (overflow-y:auto na regra .slide, que aqui e identica). Nao tem o invólucro.",
-      "aqui": "MAIS um nivel de rolagem, no .slide-inner.",
-      "motivo": "validate_lesson.py EXIGE essa regra: sem ela, slide alto corta conteudo atras da nav-bar (incidente Patricia aula 1, fix #1074). Tirar para igualar o artefato reintroduziria um defeito com gate proprio. Efeito visivel: 16px de padding-bottom no .slide-inner."
-     },
-     {
-      "o_que": "webfont Inter carregada por <link> do Google Fonts",
-      "artefato": "nao declara webfont nenhuma — e um export de pagina unica, e usa o que o sistema tiver.",
-      "aqui": "carrega Inter, como todo o resto do produto (REGRA 25).",
-      "motivo": "A tipografia Inter e do PRODUTO, nao do artefato. Efeito medivel: .slide-lead e .subprompt tem a MESMA regra (max-width:72ch) nos dois, mas o ch depende da fonte que resolve — 608px la, 720px aqui numa medicao offline. Nao e divergencia de regra."
-     },
-     {
-      "o_que": "cores fixas da Erica no chassi",
-      "artefato": ".stage-pill background rgba(15,76,117,.14); .audio-btn-sm:hover #0a3a5c",
-      "aqui": "rgba(190,18,60,.14) (literal do accent do MODELO, que base_swaps troca por aluno) e var(--accent-light)",
-      "motivo": "O artefato e a pagina de UMA aluna; o shell e a forma dela, com uma paleta por aluno (REGRA 10). Declarado em ADAPTACOES_DE_PALETA do GATE 21 — o que nao estiver la reprova."
-     }
-    ]
-   },
-   "ritmo_claro_escuro": {
-    "_o_que_e": "De que TIPO e cada tela (slide-light / slide-dark / slide-image). E decisao AUTORAL, escrita a mao no slides.html de cada aula — nao ha nada no builder nem no kind que decida. Por isso vem declarado como CRITERIO, nao como regra automatica.",
-    "_como_foi_obtido": "Medido no artefato: para cada peca, em que tipo de tela ela aparece, nas 63 telas das 4 aulas.",
-    "criterio": {
-     "escura": "a tela que ENQUADRA — abertura de etapa (slide-title), briefing de cenario, cartoes de estado (s-card) e o FECHO (close-block, recap-item, conf-item). No artefato: 100% das telas de fecho e de s-card sao escuras; 10 das 13 telas com slide-title sao escuras (as outras 3 sao imagem).",
-     "clara": "a tela em que se TRABALHA — reveal-item, phrase-list, evi-list, writebox, blank-input, quiz-item, tbl-wrap, subprompt, sortbox. No artefato: 100% ou quase, em todas essas.",
-     "imagem": "abertura da aula e transicoes de capitulo."
+      "abas_aluno": [
+        "exercises"
+      ],
+      "origem": "Artefato 'Professor View - Erica', de Stephanie Vicente, agosto/2026, versionado no repo em 11/08/2026. E NORMATIVO para a interface (ver o campo _por_que acima e _build/model/artefatos/README.md).",
+      "componentes": {
+        "reveal": {
+          "classe": "reveal-item",
+          "kind": "reveal",
+          "usos_no_artefato": 108,
+          "papel": "cartao que vira: a aluna le a frente, arrisca em voz alta, e so entao clica. NAO e accordion — o accordion dobra texto que ja se sabe estar la."
+        },
+        "status_tela": {
+          "classe": "ext-tag",
+          "kind": "reveal",
+          "usos_no_artefato": 5,
+          "papel": "Essencial/Condicional/Extensao na TELA. Diretrizes, item 12 do checklist: 'identificados na tela E no procedimento'."
+        },
+        "autoavaliacao": {
+          "classe": "conf-btn",
+          "kind": "selfassess",
+          "usos_no_artefato": 106,
+          "papel": "escala de confianca no fecho. Registra PERCEPCAO, nao aprendizagem — nao entra na barra de progresso."
+        },
+        "sorting": {
+          "classe": "sortbox",
+          "kind": "sorting",
+          "usos_no_artefato": 12,
+          "papel": "classificacao em colunas. Coluna 0 e a caixa de partida e nunca e gabarito."
+        },
+        "call": {
+          "classe": "ic-call",
+          "kind": "call",
+          "usos_no_artefato": 0,
+          "papel": "sequencia de turnos com voz por personagem e recorte por segmento. Um arquivo so viraria monologo.",
+          "_pendente": "SEM FORMA NO ARTEFATO — ver _pendente_sem_forma_no_artefato abaixo.",
+          "_correcao_da_medicao": "Este componente foi declarado com '1 uso no artefato'. O uso era .plate-call — uma classe de IMAGEM DE FUNDO de slide, nada a ver com player de turnos. Contou-se uma classe de imagem como se fosse a peca. Ver _licao_medir_por_substring."
+        },
+        "evidencia": {
+          "classe": "evi",
+          "kind": "evidence",
+          "usos_no_artefato": 48,
+          "papel": "cada afirmacao com o TRECHO que a sustenta. Diretrizes: 'nenhum gabarito pode afirmar mais do que a evidencia apresentada'."
+        },
+        "escrita": {
+          "classe": "writebox",
+          "kind": "write",
+          "usos_no_artefato": 40,
+          "papel": "campo de verdade, nao rotulo. O quadro de feedback tem de RECEBER texto."
+        },
+        "recap": {
+          "classe": "recap-item",
+          "kind": "recap",
+          "usos_no_artefato": 25,
+          "papel": "o que a aula construiu, uma linha por item. A professora LE; nao e o checklist que ela marca."
+        },
+        "pergunta_sub": {
+          "classe": "q-item",
+          "kind": "qsub",
+          "usos_no_artefato": 58,
+          "papel": "a pergunta e a instrucao de COMO responder, juntas."
+        },
+        "frase_funcao": {
+          "classe": "phrase-row",
+          "kind": "phrases",
+          "usos_no_artefato": 49,
+          "papel": "a frase e o trabalho que ela cumpre, lado a lado. Separa 'decore isto' de 'use quando precisar disto'."
+        },
+        "racional": {
+          "classe": "rationale",
+          "kind": "gist",
+          "usos_no_artefato": 6,
+          "papel": "por que aquela e a resposta, e por que a errada e tentadora. Nasce ESCONDIDO: revelar antes de a aluna arriscar transforma o exercicio em leitura."
+        },
+        "cronometro": {
+          "classe": "timer-btn",
+          "kind": "timer",
+          "usos_no_artefato": 27,
+          "papel": "o tempo como parte da TAREFA (escrita cronometrada, resposta de 45s). Diretrizes: 'a pressao vem da situacao', nao do tom. Conta 15s DEPOIS do zero — quem passou precisa ver quanto passou."
+        }
+      },
+      "estrutura": {
+        "_por_que": [
+          "O inventario de componentes so listava EXERCICIO (ic-reveal, ic-timer, ic-sortbox...).",
+          "A ESTRUTURA da aula — a barra de etapas, os rotulos com orcamento de minutos, a etapa",
+          "declarada em cada tela — nunca entrou nele, e por isso o GATE 20 nao tinha o que cobrar",
+          "quando ela se perdesse. E a mesma armadilha descrita no topo deste arquivo ('contei o",
+          "que EU tinha usado, nao o que a anatomia TEM'), uma camada acima: inventariou-se a",
+          "atividade, nao a aula.",
+          "",
+          "O QUE ISTO PROTEGE: a unidade que quem conduz a aula enxerga e a ETAPA, nao a tela. Sao",
+          "7 ou 8 etapas, cada uma agrupando de 1 a 6 telas, e ele percorre tudo ou so parte. Sem",
+          "a barra, as 15-18 telas viram uma fila linear de passos indistintos — que foi o que",
+          "aconteceu ate 11/08/2026."
+        ],
+        "origem": "Artefato 'Professor View - Erica' (stage-bar/stage-labels/data-stage). Orcamento de 55 min: docs/NORMATIVO-arquitetura-frameworks-2026-08.md, slide 7.",
+        "_nomes": "No artefato as pecas se chamam stage-*; aqui elas se chamam phase-*, porque e a MESMA mecanica que o shell base ja tinha (updatePhaseBar pinta completed/current/upcoming a partir do data-phase da tela, como o paint() do artefato faz com data-stage). Clonar uma segunda barra com outro nome seria manter duas coisas iguais em dois lugares — o defeito que o GATE 18 existe para impedir.",
+        "pecas": {
+          "barra_de_etapas": {
+            "classe": "phase-segment",
+            "container": "phase-bar",
+            "builder_emite": "class=\"phase-segment{\" current\" if i == 0 else \" upcoming\"}\"",
+            "papel": "um segmento por etapa, pintado completed/current/upcoming. O numero de segmentos vem das etapas DECLARADAS na aula — ate 11/08/2026 vinha fixo em 7 do shell, e como os quatro frameworks tem 8 etapas, a etapa 8 nunca acendia em nenhuma das quatro aulas da stephanie."
+          },
+          "rotulos_de_etapa": {
+            "classe": "phase-label",
+            "container": "phase-labels",
+            "builder_emite": "data-min=",
+            "papel": "o nome da etapa + o ORCAMENTO DE MINUTOS dela (\"Reading closely / 11′\"). O minuto e o que da sentido a _nao_tem[\"piso de 25 slides\"]: e dele que o numero de telas deriva. Sem ele o rotulo dizia o que fazer e nao dizia quanto vale."
+          },
+          "etapa_da_tela": {
+            "classe": "phase-segment",
+            "atributo": "data-phase",
+            "builder_emite": "slidePhases",
+            "papel": "cada tela declara a que etapa pertence. E o que permite agrupar 15-18 telas em 7-8 etapas e o que a barra le para saber onde esta."
+          },
+          "rotulo_na_tela": {
+            "classe": "stage-pill",
+            "usos_no_artefato": 50,
+            "papel": "a etapa impressa DENTRO da tela. A barra e navegacao; a pilha e legenda, para quem abre um slide solto ou retoma a aula no meio. Estava sendo EMITIDA pelo conteudo (17 por aula) e nao tinha regra nenhuma no shell ate 11/08/2026 — saia como texto cru. Achada exatamente por este inventario passar a olhar estrutura."
+          },
+          "leitura_da_etapa": {
+            "id": "stageReadout",
+            "papel": "a etapa corrente por extenso na nav-bar (\"Stage 3 / 8 · First attempt · 7 min\"), porque os rotulos da barra tem 0.55rem. Em INGLES, e nao em portugues como no artefato: a nav-bar sobrevive no espelho do ALUNO, e portugues na tela do aluno e FAIL do validador (REGRA 13)."
+          }
+        },
+        "_o_que_da_para_cobrar": [
+          "CONSTRUIDO em 11/08/2026 — scripts/check_espinha.py (GATE 22). Ate esta data a lista",
+          "abaixo existia aqui como levantamento e nada a cobrava.",
+          "  (a) toda tela tem data-phase;                          -> GATE 22",
+          "  (b) todo data-phase cai dentro das etapas declaradas;   -> GATE 22",
+          "  (c) o numero de etapas e 7 ou 8 — NAO da para exigir igualdade com o contrato: o",
+          "      artefato condensa as 8 funcoes do ESP em 7 etapas de tela, e mantem 8 no",
+          "      Reading;                                            -> GATE 22",
+          "  (d) a soma dos minutos das etapas == contrato.percurso_min (55). O builder ja cobra",
+          "      com assert na geracao; o GATE 22 cobra no ARQUIVO, que sobrevive ao processo",
+          "      (aula editada a mao depois do build tambem passa por la)."
+        ],
+        "_a_nota_do_professor": "A nota (data-teacher) e cobrada pelo GATE 23, medida no artefato: 63 telas, 63 notas, 63 com orcamento de tempo. Tela sem nota e tela conduzida de cabeca — a nota e a UNICA forma de o professor receber instrucao durante a aula. O gate tambem barra comando gritado ('NAO ajude', 'force a resposta', 'TEM de responder' — as tres expressoes que a instrucao corretiva nomeia e que sobreviveram meses no material)."
+      },
+      "herdados_do_imersivo": {
+        "_nota": "Vem do shell base e nao sao especificos desta anatomia. O GATE 18 ja garante que nao somem.",
+        "lista": [
+          "blank-input",
+          "quiz-item",
+          "quiz-option",
+          "speech-card",
+          "match-row",
+          "dialogue-line",
+          "lp-seekbar",
+          "audio-btn",
+          "slides-wrapper",
+          "nav-bar"
+        ]
+      },
+      "_nao_tem": {
+        "_nota": "Registrado de proposito: sao ausencias por DESENHO, e a proxima pessoa nao deve 'consertar'.",
+        "aba Complementares": "saiu por decisao do Dan (06/08/2026). media-card aparece 0 vez no artefato.",
+        "piso de 25 slides": "e do imersivo (REGRA 11). Aqui o numero de telas DERIVA do orcamento de minutos — o racional inteiro, com os numeros medidos e o porque de nao haver piso, esta declarado em _build/model/ciclo.json -> densidade_e_numero_de_telas.",
+        "5 etapas do Pre-class": "anatomia da helen-mendes. vocab-card-pc, speech-card, think-card e survival-card aparecem 0 vez no artefato.",
+        "ordering / information gap": "nao existem no artefato. Foram prometidos por engano numa versao anterior do syllabus e retirados."
+      },
+      "artefato": "_build/model/artefatos/erica-professor-view.html",
+      "_divergencia_medida_11_08": {
+        "_o_que_e": "Estado da paridade no dia em que o artefato voltou a ser fonte. Serve de linha de base: o GATE 21 exige que estes numeros so CAIAM.",
+        "classes_do_artefato_ausentes_do_shell": 85,
+        "dentro_de_slide": 42,
+        "fora_de_slide_chrome_do_hub": 54,
+        "classes_ic_no_shell_sem_par_no_artefato": 125,
+        "nunca_portadas": [
+          "callout",
+          "callout-title",
+          "tbl-wrap",
+          "quiz-option",
+          "rule-box"
+        ],
+        "renomeadas_no_porte": {
+          "reveal-item": "ic-reveal",
+          "r-front": "ic-r-front",
+          "r-back": "ic-r-back",
+          "blank-input": "ic-blank",
+          "conf-btn": "ic-self",
+          "recap-item": "ic-recap",
+          "writebox": "ic-write",
+          "timer-btn": "ic-timer",
+          "phrase-row": "ic-phrase",
+          "evi-src": "ic-evi-src"
+        }
+      },
+      "equivalencias": {
+        "_o_que_e": "Peca do artefato que aqui tem OUTRO NOME, com o motivo. Declarar e o que separa um renome pensado de uma reescrita — o GATE 21 le esta tabela e nao conta o que esta aqui como divergencia. Lista curta de proposito: cada linha e uma coisa que quem abrir os dois lado a lado vai ter de reconciliar de cabeca.",
+        "stage-bar": {
+          "aqui": "phase-bar",
+          "motivo": "Mesma mecanica que o shell base ja tinha (updatePhaseBar pinta completed/current/upcoming a partir do data-phase, como o paint() do artefato faz com data-stage). Clonar uma segunda barra com outro nome seria manter duas coisas iguais em dois lugares — o defeito que o GATE 18 existe para impedir. A APARENCIA e identica; muda o nome do seletor."
+        },
+        "stage-seg": {
+          "aqui": "phase-segment",
+          "motivo": "idem"
+        },
+        "stage-labels": {
+          "aqui": "phase-labels",
+          "motivo": "idem"
+        },
+        "stage-label": {
+          "aqui": "phase-label",
+          "motivo": "idem"
+        },
+        "data-stage": {
+          "aqui": "data-phase",
+          "motivo": "idem"
+        }
+      },
+      "_pendente_sem_forma_no_artefato": {
+        "_o_que_e": "Kind cujo markup nao tem par no artefato. Segue contado na divida do GATE 21 — de proposito, para nao virar divida invisivel — mas nao conta como declaracao paralela: a declaracao dele E a pendencia.",
+        "_estado": "11/08/2026: dois dos tres sairam por ordem do Dan ('se nao tem no artefato nada parecido que o documento descreva, hora de remover'). Sobrou o call, que NAO e caso de remocao — tem forma la, com outro nome.",
+        "_resolvidos": {
+          "matching": "REMOVIDO da anatomia guided-discovery. As duas telas que o usavam foram convertidas: aula 2 -> sorting (mesma operacao, forma do artefato), aula 4 -> cinco quiz-item. O kind e o CSS SEGUEM no builder e nos dois shells porque o imersivo usa: 1.015 aulas publicadas e 154 configs (REGRA 30). Quem impede o uso aqui e o GATE 27.",
+          "quickfire": "REMOVIDO da anatomia guided-discovery, mesma ordem. A tela do round 2 da aula 4 virou reveal-item — que a propria aula ja usava na etapa 2. Segue disponivel para o imersivo (290 configs)."
+        },
+        "itens": [
+          {
+            "kind": "call",
+            "classes": [
+              "ic-call",
+              "ic-call-cast",
+              "ic-call-segs",
+              "ic-spk",
+              "ic-seg",
+              "ic-stop",
+              "ic-live",
+              "ic-done"
+            ],
+            "onde_aparece_hoje": "stephanie-vicente aula 2 (11 ocorrencias dentro dos slides)",
+            "decisao": "NAO e caso de remover: TEM forma no artefato. playCall(rate,show,from,to) toca por trecho, os sete botoes de segmento sao audio-btn-sm, e quem fala e destacado por data-spk/spk-live. PENDENTE: renomear para as classes de la. Enquanto nao acontecer, as oito seguem contadas na divida do GATE 21."
+          }
+        ]
+      },
+      "_licao_medir_por_substring": [
+        "TRES VEZES O MESMO ERRO, no mesmo dia (11/08/2026). Vale mais que os numeros:",
+        "",
+        "  1. GATE 20 comparava a COPIA consigo mesma. O inventario catalogou as classes ic-*",
+        "     (a reescrita) e mandou o gate conferir o shell contra ele — nunca contra o",
+        "     original. Verde para sempre, medindo nada.",
+        "  2. GATE 21 lia COMENTARIO como regra. Um comentario que citava '.reveal-item/.r-front/",
+        "     .r-back' fazia o gate dar as pecas como presentes. Escondia 6 ausencias reais.",
+        "  3. O componente 'call' foi declarado com '1 uso no artefato'. O uso era .plate-call —",
+        "     uma classe de IMAGEM DE FUNDO de slide. Contou-se uma imagem como se fosse o player.",
+        "",
+        "A raiz e uma so: MEDIR POR SUBSTRING E TRATAR O RESULTADO COMO LEITURA. O nome bate, e",
+        "conclui-se que a coisa esta la. E a mesma familia da REGRA 7.1 (o HTML escrito nao e o",
+        "JS executado) e do 'grep mente dos dois lados' — e da para errar assim ate dentro do",
+        "gate que existe para impedir o erro.",
+        "",
+        "O ANTIDOTO nao e um gate a mais: e perguntar o que a medida esta contando. Classe em",
+        "comentario nao e regra. Classe de imagem nao e componente. Lista propria nao e o",
+        "original. Quando a resposta vier bonita demais, desconfie da pergunta."
+      ],
+      "_divergencia_por_limitacao_do_artefato": {
+        "_o_que_e": "Peca em que o molde NAO copia o artefato — de proposito, porque o artefato tem ali uma limitacao que ele resolve. E categoria diferente da _pendente_sem_forma_no_artefato: la a forma NAO EXISTE e por isso nada foi feito; aqui a forma existe e foi copiada, e o que muda e so o mecanismo que o artefato nao conseguia generalizar.",
+        "_regra": "Entrada aqui exige (a) o que o artefato faz, (b) qual a limitacao, (c) o que o molde faz no lugar, (d) por que isso NAO muda a aparencia. Sem os quatro, e desvio disfarcado de melhoria.",
+        "itens": [
+          {
+            "peca": "container de estado do sorting",
+            "classe_no_molde": "sort-group",
+            "no_artefato": "id=\"gdsort\" fixo, com o estado num objeto global (gdBuild/gdMove/gdCheck leem esse id).",
+            "limitacao": "id fixo => SO UM sorting por aula. Uma segunda classificacao na mesma aula sobrescreveria o estado da primeira.",
+            "no_molde": "container proprio com data-cols/data-items/data-state, e cada handler resolve pelo closest(\".sort-group\"). Varios por aula.",
+            "por_que_nao_muda_a_aparencia": "O container nao tem CSS nenhum. Quem desenha e o .sortbox interno (grid), o .sortcol e o .sortitem — esses tres SAO os do artefato, verbatim.",
+            "nome": "Sem o prefixo ic-, de proposito: ic- marcava a REESCRITA de 07/08, e isto nao e reescrita de peca do artefato — e um invólucro que o artefato nao tem."
+          }
+        ]
+      },
+      "chassi": {
+        "_o_que_e": "O chassi do guided-discovery sai do ARTEFATO, byte a byte, desde 11/08/2026. Decisao do Dan: \"os dois moldes devem ser separados mesmo, em si\". O chassi do imersivo (helen-mendes) NAO mudou — nenhum aluno do molde antigo foi tocado por essa separacao.",
+        "quem_tranca": "GATE 21 (scripts/check_artefato_paridade.py -> CHASSI), que compara os 20 seletores de chassi com o artefato e tem selftest proprio. O GATE 18 NAO pega isto: ele compara presenca de funcao e de classe entre os dois shells, nao o VALOR das regras.",
+        "portado_do_artefato": [
+          ".slide",
+          ".slide.active",
+          ".slide-inner",
+          ".slide-light",
+          ".slide-dark",
+          ".slide-image",
+          ".slide-image::before",
+          ".chapter-label",
+          ".slide-title",
+          ".slide-subtitle",
+          ".slide-heading",
+          ".slide-lead",
+          ".audio-btn-sm",
+          ".audio-btn-sm:hover",
+          ".roleplay-card",
+          ".roleplay-kw",
+          ".stage-pill",
+          "stack de fonte do body",
+          "padding do .slide no @media"
+        ],
+        "divergencias_declaradas": [
+          {
+            "o_que": ".slide>.slide-inner com max-height + overflow-y:auto + padding-bottom",
+            "artefato": "rola no proprio .slide (overflow-y:auto na regra .slide, que aqui e identica). Nao tem o invólucro.",
+            "aqui": "MAIS um nivel de rolagem, no .slide-inner.",
+            "motivo": "validate_lesson.py EXIGE essa regra: sem ela, slide alto corta conteudo atras da nav-bar (incidente Patricia aula 1, fix #1074). Tirar para igualar o artefato reintroduziria um defeito com gate proprio. Efeito visivel: 16px de padding-bottom no .slide-inner."
+          },
+          {
+            "o_que": "webfont Inter carregada por <link> do Google Fonts",
+            "artefato": "nao declara webfont nenhuma — e um export de pagina unica, e usa o que o sistema tiver.",
+            "aqui": "carrega Inter, como todo o resto do produto (REGRA 25).",
+            "motivo": "A tipografia Inter e do PRODUTO, nao do artefato. Efeito medivel: .slide-lead e .subprompt tem a MESMA regra (max-width:72ch) nos dois, mas o ch depende da fonte que resolve — 608px la, 720px aqui numa medicao offline. Nao e divergencia de regra."
+          },
+          {
+            "o_que": "cores fixas da Erica no chassi",
+            "artefato": ".stage-pill background rgba(15,76,117,.14); .audio-btn-sm:hover #0a3a5c",
+            "aqui": "rgba(190,18,60,.14) (literal do accent do MODELO, que base_swaps troca por aluno) e var(--accent-light)",
+            "motivo": "O artefato e a pagina de UMA aluna; o shell e a forma dela, com uma paleta por aluno (REGRA 10). Declarado em ADAPTACOES_DE_PALETA do GATE 21 — o que nao estiver la reprova."
+          }
+        ]
+      },
+      "ritmo_claro_escuro": {
+        "_o_que_e": "De que TIPO e cada tela (slide-light / slide-dark / slide-image). E decisao AUTORAL, escrita a mao no slides.html de cada aula — nao ha nada no builder nem no kind que decida. Por isso vem declarado como CRITERIO, nao como regra automatica.",
+        "_como_foi_obtido": "Medido no artefato: para cada peca, em que tipo de tela ela aparece, nas 63 telas das 4 aulas.",
+        "criterio": {
+          "escura": "a tela que ENQUADRA — abertura de etapa (slide-title), briefing de cenario, cartoes de estado (s-card) e o FECHO (close-block, recap-item, conf-item). No artefato: 100% das telas de fecho e de s-card sao escuras; 10 das 13 telas com slide-title sao escuras (as outras 3 sao imagem).",
+          "clara": "a tela em que se TRABALHA — reveal-item, phrase-list, evi-list, writebox, blank-input, quiz-item, tbl-wrap, subprompt, sortbox. No artefato: 100% ou quase, em todas essas.",
+          "imagem": "abertura da aula e transicoes de capitulo."
+        },
+        "estado_hoje": {
+          "artefato": "aula 1: 21 telas -> 11 escuras, 3 imagem, 7 claras. Aulas 2-4: 3 a 4 escuras em 14.",
+          "stephanie": "aula 1: 15 telas -> 1 escura, 1 imagem, 13 claras. As escuras sao so as telas de transicao de etapa; o FECHO (recap + autoavaliacao) esta em tela CLARA, e no artefato ele e escuro em 4 de 4.",
+          "_nao_foi_mudado": "Trocar o tipo de uma tela e decisao de conteudo, por tela, de quem autora a aula. O criterio fica declarado aqui para a proxima geracao; as telas existentes nao foram reescritas."
+        }
+      }
     },
-    "estado_hoje": {
-     "artefato": "aula 1: 21 telas -> 11 escuras, 3 imagem, 7 claras. Aulas 2-4: 3 a 4 escuras em 14.",
-     "stephanie": "aula 1: 15 telas -> 1 escura, 1 imagem, 13 claras. As escuras sao so as telas de transicao de etapa; o FECHO (recap + autoavaliacao) esta em tela CLARA, e no artefato ele e escuro em 4 de 4.",
-     "_nao_foi_mudado": "Trocar o tipo de uma tela e decisao de conteudo, por tela, de quem autora a aula. O criterio fica declarado aqui para a proxima geracao; as telas existentes nao foram reescritas."
+    "story-quest": {
+      "shell": "_build/model/shells/story-quest.html",
+      "hub": "_build/model/shells/hub-story-quest.html",
+      "hub_aluno": "_build/model/shells/hub-story-quest-aluno.html",
+      "abas": [
+        "planning",
+        "inclass",
+        "postclass"
+      ],
+      "abas_aluno": [
+        "postclass"
+      ],
+      "origem": "Artefato 'Professor View -- Dante Blecker Gregory (Kids A2)', agosto/2026, versionado no repo em 13/08/2026. E NORMATIVO para a interface, na mesma relacao que o artefato da Erica tem com a guided-discovery. Persona do molde: joaozinho -- helen-mendes esta para stephanie-vicente como bento esta para joaozinho.",
+      "artefato": "_build/model/artefatos/dante-kids-professor-view.html",
+      "derivacao": "O shell e os dois hubs saem do artefato POR SCRIPT (_build/model/extrai_shell_story_quest.py, com --check no CI). Nao ha porte a mao: a lista de tudo que o script tira e troca esta no topo dele. Foi o porte a mao que fez a guided-discovery perder callout, tbl-wrap, quiz-option e rule-box sem ninguem ver.",
+      "componentes": {
+        "vocab_vira": {
+          "classe": "flip-tile",
+          "usos_no_artefato": 6.0,
+          "papel": "ficha que vira: a frente e a FIGURA e um \"?\", nunca a palavra. A crianca arrisca em voz alta e so entao toca. Atras: palavra, frase de exemplo e o Listen."
+        },
+        "slot_de_imagem": {
+          "classe": "imgph",
+          "usos_no_artefato": 6.0,
+          "papel": "o lugar da figura. No artefato ele carrega um emoji porque uma pagina estatica nao tinha imagem para pôr -- o proprio CSS dele chama a classe de \"fallback de imagem\". Aqui e preenchido pela biblioteca public/assets/kids/."
+        },
+        "historia_em_quadros": {
+          "classe": "story-frame",
+          "usos_no_artefato": 6.0,
+          "papel": "a historia em paineis numerados, um por vez. O campo `frame` de cada turno do roteiro liga a fala ao quadro, e e o que permite tocar um trecho so."
+        },
+        "transcricao": {
+          "classe": "tscript-line",
+          "usos_no_artefato": 13.5,
+          "papel": "a transcricao falante a falante, com o nome de quem fala em ts-who. O nome NUNCA vai no audio -- vive aqui e no roteiro."
+        },
+        "gist": {
+          "classe": "gist-opt",
+          "usos_no_artefato": 4.5,
+          "papel": "a checagem de gist depois da historia: tres frases, uma certa. Vem ANTES do detalhe, nunca depois."
+        },
+        "verdadeiro_falso": {
+          "classe": "tf-b",
+          "usos_no_artefato": 7.5,
+          "papel": "o detalhe, so depois do gist."
+        },
+        "montar_frase": {
+          "classe": "unj-chip",
+          "usos_no_artefato": 6.0,
+          "papel": "as partes da frase-alvo embaralhadas, para a crianca montar tocando. E o chunk da aula, nao uma frase qualquer."
+        },
+        "pode_voce": {
+          "classe": "conf-o",
+          "usos_no_artefato": 9.0,
+          "papel": "\"Can you...?\" -- a crianca responde por si, com Yes, I can / No, I can't. E producao pessoal, nao exercicio de certo/errado."
+        },
+        "cena_clicavel": {
+          "classe": "sc-obj",
+          "usos_no_artefato": 10.5,
+          "papel": "a cena com pontos quentes: tocar o objeto diz a frase inteira. E onde a linguagem de lugar acontece sem lista de palavras."
+        },
+        "memory": {
+          "classe": "mc-item",
+          "usos_no_artefato": 3.0,
+          "papel": "as colunas do memory, para parear figura e palavra."
+        },
+        "lacuna_com_banco": {
+          "classe": "gap-item",
+          "usos_no_artefato": 2.0,
+          "papel": "a lacuna com banco de fichas ao lado -- zero digitacao obrigatoria. O writing de uma crianca de 8 anos nao pode ser o gargalo da tarefa."
+        },
+        "escolha_de_cartao": {
+          "classe": "mb-o",
+          "usos_no_artefato": 7.0,
+          "papel": "as opcoes do cartao de producao (nome, cor, poder): a crianca escolhe e o cartao se monta com a fala dela."
+        },
+        "chip_de_apoio": {
+          "classe": "keyword-chip",
+          "usos_no_artefato": 12.0,
+          "papel": "o andaime na tela durante a producao: o chunk pronto, para consultar sem pedir."
+        },
+        "recall_do_fecho": {
+          "classe": "star-card",
+          "usos_no_artefato": 6.0,
+          "papel": "o fecho: nomear de novo cada acao da aula, agora sem apoio."
+        },
+        "enquete": {
+          "classe": "pick-opt",
+          "usos_no_artefato": 4.0,
+          "papel": "a linha de humor/enquete do inicio e do fim -- entrada e saida afetiva, uma tela cada."
+        },
+        "player_da_historia": {
+          "classe": "lp-skip",
+          "usos_no_artefato": 5.0,
+          "papel": "o player da historia: seekbar, +-5s e velocidade local. A escuta nao depende do controle global."
+        }
+      },
+      "estrutura": {
+        "_por_que": "A espinha da aula e de 6 stages com orcamento de minutos declarado no Planejamento (5-7 min o Hello Time, 15-18 o Story Time...). Sem estas pecas a aula vira lista de exercicio: e a barra que diz a crianca onde ela esta e quanto falta.",
+        "pecas": {
+          "barra_de_stages": {
+            "classe": "phase-segment",
+            "container": "phase-bar",
+            "papel": "a barra de 6 stages no topo do deck, um segmento por stage. Filtrada por data-lesson: cada aula tem a sua."
+          },
+          "rotulo_de_stage": {
+            "classe": "phase-label",
+            "papel": "o nome do stage (\"Hello Time\", \"Story Time\"...) embaixo da barra."
+          },
+          "stage_na_tela": {
+            "classe": "chapter-label",
+            "papel": "em que stage esta ESTA tela (\"Stage 2 - The Story\"). Cada slide declara o seu."
+          },
+          "titulo_da_tela": {
+            "classe": "slide-heading",
+            "papel": "o titulo grande da tela."
+          },
+          "contador": {
+            "id": "slideCounter",
+            "papel": "\"01 / 10\" na barra de cima."
+          },
+          "menu_de_aula": {
+            "classe": "pv-card",
+            "container": "pv-cards",
+            "papel": "o card do menu (IN CLASS e Post-class). No hub e um <a> para {slug}-aula{N}.html; a classe e a mesma do artefato."
+          },
+          "troca_de_plano": {
+            "classe": "pv-pill",
+            "container": "pv-pills",
+            "papel": "as pilulas que trocam qual aula o Planejamento mostra."
+          }
+        }
+      },
+      "_sem_kind_ainda": "Nenhum componente declara `kind` porque o builder ainda nao emite esta anatomia: o deck e data-driven (LESSONS['N'] = {hubLabel, story, frame, build, imageQuiz, reset}) e os emissores sao o proximo passo. O GATE 20 so cobra kind quando ele e declarado -- entao o inventario ja cobra a presenca da peca NO SHELL, que e a metade que ja existe.",
+      "_falta_a_camada_de_producao": "O artefato e uma pagina estatica do claude.ai: nao tem saveState/loadState, updateProgress, startRecording, nem os 4 scripts de Supabase (REGRA 28), nem STUDENT_SLUG/TOTAL_AULAS. Medido em 13/08/2026 contra o shell imersivo. Isso NAO e divergencia de interface -- e a camada que o artefatos/README descreve como 'entra por cima, sem mudar um pixel'. Tem de entrar no shell ANTES de qualquer material de aluno sair daqui.",
+      "_nao_tem": {
+        "_nota": "Ausencias por DESENHO. A proxima pessoa nao deve \"consertar\".",
+        "aba Pre-class": "O dever de casa desta anatomia e o PERCURSO (post-class), que se autocorrige. Decisao do Dan, 13/08/2026.",
+        "aba Complementares": "Idem: o percurso ocupa o lugar dela."
+      },
+      "_divergencia_por_limitacao_do_artefato": {
+        "_o_que_e": "Onde o molde NAO copia o artefato, de proposito, porque o artefato tem ali uma limitacao que ele resolve. Categoria diferente de divida.",
+        "boot sem deck": "O boot do artefato abre com document.getElementById('slidesContainer').innerHTML, porque no artefato SEMPRE ha deck (as duas aulas num documento so). Nos hubs nao ha -- o deck foi para o standalone --, o getElementById devolve null e o boot inteiro morria na primeira linha (medido no chromium: 'Uncaught TypeError: Cannot read properties of null'). O shell guarda a parte do deck num if. Uma pagina do claude.ai nunca precisou existir sem deck."
+      }
+    },
+    "private-black": {
+      "_o_que_e": "A anatomia do molde adulto NOVO. O molde e stephanie-vicente; este inventario descreve a FORMA que ele passa a ter. As classes sao MEDIDAS no artefato por scripts/black/gen_inventario.py -- nunca digitadas, porque inventario escrito a mao a partir da copia valida qualquer copia.",
+      "artefato": "_build/model/artefatos/marcos-private-black.html",
+      "shell": "_build/model/shells/black.html",
+      "shell_aluno": "_build/model/shells/black-aluno.html",
+      "origem": "Material do Marcos Mansour, escrito fora do sistema em agosto/2026 ja sob o pacote normativo novo (docs/private-black/). Duas aulas do bloco 1: 19 Listening into Interaction e 20 Reading into Speaking.",
+      "abas": [
+        "feedback",
+        "inclass",
+        "planning",
+        "postclass",
+        "preclass",
+        "syllabus"
+      ],
+      "abas_aluno": [
+        "feedback",
+        "planning",
+        "postclass",
+        "preclass"
+      ],
+      "entrega": "DUAS URLs. A do professor tem a visao docente e a previa da visao do aluno; a do aluno nao tem alternador, rota de professor nem conteudo docente no arquivo, payload ou estado (P1 §3.1/§3.2, P3 §3). Quem cobra e o GATE 36.",
+      "etapas": "OITO por framework, com nomes, funcoes e ordem do Documento 03, e NUNCA oito slides: uma etapa pode ocupar varias telas e duas etapas podem dividir uma. O numero de telas deriva do conteudo (P2 §17).",
+      "telas_no_artefato": 20,
+      "componentes_por_regiao": {
+        "planning": {
+          "sec": 7,
+          "prep-list": 6,
+          "mod-tag": 5,
+          "info-item": 4,
+          "rule": 3,
+          "tbl-wrap": 3,
+          "callout": 2,
+          "callout-title": 2,
+          "eyebrow": 2,
+          "mod-lis": 2,
+          "sw-box": 2,
+          "ao-topo": 1,
+          "btn-bar": 1,
+          "btn-ghost": 1,
+          "info-grid": 1,
+          "lead-after-list": 1,
+          "mod-esp": 1,
+          "mod-gra": 1,
+          "mod-rea": 1,
+          "rule-box": 1,
+          "strengths": 1,
+          "sw-grid": 1,
+          "tab-content": 1,
+          "weaknesses": 1
+        },
+        "syllabus": {
+          "mod-tag": 20,
+          "lp": 9,
+          "lp-h": 9,
+          "tbl-wrap": 9,
+          "mod-esp": 8,
+          "mod-lis": 7,
+          "callout": 6,
+          "callout-title": 6,
+          "block-card": 5,
+          "block-fn": 5,
+          "block-head": 5,
+          "block-name": 5,
+          "block-num": 5,
+          "block-range": 5,
+          "chk": 4,
+          "rule-box": 4,
+          "sec": 4,
+          "mod-rea": 3,
+          "rule": 3,
+          "danger": 2,
+          "mod-gra": 2,
+          "ao-topo": 1,
+          "btn-bar": 1,
+          "btn-ghost": 1,
+          "eyebrow": 1,
+          "nota-sigla": 1,
+          "prep-list": 1,
+          "tab-content": 1
+        },
+        "preclass": {
+          "ak-linha": 49,
+          "quiz-option": 30,
+          "pair-opt": 24,
+          "match-row": 18,
+          "match-word": 18,
+          "option-letter": 18,
+          "btn-ghost": 15,
+          "task-instr": 14,
+          "ak": 12,
+          "ak-bar": 12,
+          "ak-cab": 12,
+          "ak-lista": 12,
+          "exercise-section": 12,
+          "pair-row": 12,
+          "pair-word": 12,
+          "section-header-row": 12,
+          "callout": 9,
+          "verify-all-btn": 9,
+          "quiz-item": 8,
+          "quiz-options": 8,
+          "rationale": 8,
+          "score-out": 8,
+          "audio-btn-sm": 6,
+          "ok": 6,
+          "quiz-question": 6,
+          "match-grid": 4,
+          "btn-bar": 3,
+          "rule-box": 3,
+          "aud-estado": 2,
+          "aud-op": 2,
+          "aud-stop": 2,
+          "doc-block": 2,
+          "eyebrow": 2,
+          "pair-grid": 2,
+          "rule": 2,
+          "ao-topo": 1,
+          "aud-etiq": 1,
+          "aud-main": 1,
+          "btn-primary": 1,
+          "callout-title": 1,
+          "nota-sigla": 1,
+          "pre-acoes": 1,
+          "sec": 1,
+          "tab-content": 1,
+          "timer-note": 1
+        },
+        "inclass": {
+          "aval-op": 38,
+          "writebox": 28,
+          "fb-item": 21,
+          "ep-item": 12,
+          "btn-ghost": 10,
+          "prep-h": 10,
+          "prep-p": 10,
+          "aval-crit": 8,
+          "aval-desc": 8,
+          "aval-escala": 8,
+          "aval-item": 8,
+          "fb-grid": 8,
+          "task-instr": 8,
+          "ep-auto": 7,
+          "ep-linha": 7,
+          "vazio": 7,
+          "btn-bar": 6,
+          "callout": 5,
+          "callout-title": 5,
+          "btn-primary": 4,
+          "lc-badge": 4,
+          "lc-desc": 4,
+          "lc-fw": 4,
+          "lc-head": 4,
+          "lc-status": 4,
+          "lc-title": 4,
+          "lesson-card": 4,
+          "prep-list": 4,
+          "ok": 3,
+          "rule": 3,
+          "tbl-wrap": 3,
+          "aval-grid": 2,
+          "aval-salvo": 2,
+          "blank-input": 2,
+          "fb-reg": 2,
+          "lc-meta": 2,
+          "lc-pendente": 2,
+          "tg-aviso-cartao": 2,
+          "ao-topo": 1,
+          "badge": 1,
+          "badge-semi": 1,
+          "danger": 1,
+          "ep-grid": 1,
+          "exercise-section": 1,
+          "eyebrow": 1,
+          "lesson-grid": 1,
+          "rule-box": 1,
+          "score-out": 1,
+          "sec": 1,
+          "section-header-row": 1,
+          "tab-content": 1
+        },
+        "feedback": {
+          "brief": 2,
+          "btn-bar": 2,
+          "btn-ghost": 2,
+          "subprompt": 2,
+          "ao-topo": 1,
+          "btn-primary": 1,
+          "eyebrow": 1,
+          "sec": 1,
+          "tab-content": 1
+        },
+        "postclass": {
+          "callout": 14,
+          "task-instr": 14,
+          "callout-title": 12,
+          "exercise-section": 12,
+          "section-header-row": 12,
+          "eyebrow": 10,
+          "rule-box": 10,
+          "res-card": 7,
+          "res-link": 7,
+          "res-src": 7,
+          "audio-btn-sm": 6,
+          "tbl-wrap": 6,
+          "badge": 4,
+          "badge-open": 4,
+          "mail-label": 4,
+          "btn-bar": 2,
+          "btn-ghost": 2,
+          "mail-subject": 2,
+          "ok": 2,
+          "rec-bar": 2,
+          "rec-time": 2,
+          "verify-all-btn": 2,
+          "wc": 2,
+          "writebox": 2,
+          "ao-topo": 1,
+          "btn-primary": 1,
+          "sec": 1,
+          "tab-content": 1
+        },
+        "deck": {
+          "audio-btn-sm": 74,
+          "conf-btn": 32,
+          "aud-estado": 29,
+          "aud-stop": 29,
+          "doc-para": 20,
+          "slide": 20,
+          "slide-inner": 20,
+          "slide-lead": 20,
+          "blank-input": 18,
+          "q-item": 18,
+          "aud-op": 16,
+          "slide-heading": 16,
+          "stage-pill": 16,
+          "r-back": 14,
+          "r-front": 14,
+          "r-texto": 14,
+          "reveal-item": 14,
+          "subprompt": 14,
+          "phrase-en": 13,
+          "phrase-row": 13,
+          "recap-item": 13,
+          "match-row": 12,
+          "match-word": 12,
+          "option-letter": 12,
+          "quiz-option": 12,
+          "r-aud": 12,
+          "ts-linha": 11,
+          "verify-all-btn": 11,
+          "brief": 10,
+          "slide-light": 10,
+          "sm-item": 10,
+          "sm-num": 10,
+          "slide-question": 9,
+          "btn-bar": 8,
+          "cf-label": 8,
+          "conf-item": 8,
+          "conf-scale": 8,
+          "fb-field": 8,
+          "slide-dark": 8,
+          "sm-stage": 8,
+          "writebox": 8,
+          "aud-etiq": 6,
+          "aud-main": 6,
+          "close-block": 6,
+          "nav-btn": 6,
+          "slide-split": 6,
+          "sortitem": 6,
+          "qlist": 5,
+          "chapter-label": 4,
+          "doc-brief": 4,
+          "doc-fonte": 4,
+          "doc-tit": 4,
+          "phrase-fn": 4,
+          "phrase-list": 4,
+          "quiz-item": 4,
+          "quiz-options": 4,
+          "quiz-question": 4,
+          "rationale": 4,
+          "slide-title": 4,
+          "sortcol": 4,
+          "score-out": 3,
+          "cb-sub": 2,
+          "chunk-line": 2,
+          "close-flow": 2,
+          "fb-board": 2,
+          "match-grid": 2,
+          "open-field": 2,
+          "roleplay-card": 2,
+          "slide-open": 2,
+          "slide-subtitle": 2,
+          "two-col": 2,
+          "callout": 1,
+          "exit": 1,
+          "finish": 1,
+          "menu": 1,
+          "nav-mid": 1,
+          "ok": 1,
+          "open-1": 1,
+          "open-2": 1,
+          "reset": 1,
+          "slide-menu": 1,
+          "slide-nav": 1,
+          "slides-container": 1,
+          "slides-wrapper": 1,
+          "sm-head": 1,
+          "sm-list": 1,
+          "sm-x": 1,
+          "sortbox": 1,
+          "tbl-wrap": 1,
+          "transcript-box": 1
+        }
+      },
+      "componentes": {
+        "audio-btn-sm": 86,
+        "ak-linha": 49,
+        "quiz-option": 42,
+        "aval-op": 38,
+        "writebox": 38,
+        "callout": 37,
+        "task-instr": 36,
+        "conf-btn": 32,
+        "aud-estado": 31,
+        "aud-stop": 31,
+        "btn-ghost": 31,
+        "match-row": 30,
+        "match-word": 30,
+        "option-letter": 30,
+        "callout-title": 26,
+        "exercise-section": 25,
+        "mod-tag": 25,
+        "section-header-row": 25,
+        "pair-opt": 24,
+        "btn-bar": 23,
+        "tbl-wrap": 22,
+        "verify-all-btn": 22,
+        "fb-item": 21,
+        "blank-input": 20,
+        "doc-para": 20,
+        "slide": 20,
+        "slide-inner": 20,
+        "slide-lead": 20,
+        "rule-box": 19,
+        "aud-op": 18,
+        "q-item": 18,
+        "eyebrow": 17,
+        "slide-heading": 16,
+        "stage-pill": 16,
+        "subprompt": 16,
+        "sec": 15,
+        "r-back": 14,
+        "r-front": 14,
+        "r-texto": 14,
+        "reveal-item": 14,
+        "phrase-en": 13,
+        "phrase-row": 13,
+        "recap-item": 13,
+        "ak": 12,
+        "ak-bar": 12,
+        "ak-cab": 12,
+        "ak-lista": 12,
+        "brief": 12,
+        "ep-item": 12,
+        "ok": 12,
+        "pair-row": 12,
+        "pair-word": 12,
+        "quiz-item": 12,
+        "quiz-options": 12,
+        "r-aud": 12,
+        "rationale": 12,
+        "score-out": 12,
+        "prep-list": 11,
+        "rule": 11,
+        "ts-linha": 11,
+        "prep-h": 10,
+        "prep-p": 10,
+        "quiz-question": 10,
+        "slide-light": 10,
+        "sm-item": 10,
+        "sm-num": 10,
+        "lp": 9,
+        "lp-h": 9,
+        "mod-esp": 9,
+        "mod-lis": 9,
+        "slide-question": 9,
+        "aval-crit": 8,
+        "aval-desc": 8,
+        "aval-escala": 8,
+        "aval-item": 8,
+        "cf-label": 8,
+        "conf-item": 8,
+        "conf-scale": 8,
+        "fb-field": 8,
+        "fb-grid": 8,
+        "slide-dark": 8,
+        "sm-stage": 8,
+        "aud-etiq": 7,
+        "aud-main": 7,
+        "btn-primary": 7,
+        "ep-auto": 7,
+        "ep-linha": 7,
+        "res-card": 7,
+        "res-link": 7,
+        "res-src": 7,
+        "vazio": 7,
+        "ao-topo": 6,
+        "close-block": 6,
+        "match-grid": 6,
+        "nav-btn": 6,
+        "slide-split": 6,
+        "sortitem": 6,
+        "tab-content": 6,
+        "badge": 5,
+        "block-card": 5,
+        "block-fn": 5,
+        "block-head": 5,
+        "block-name": 5,
+        "block-num": 5,
+        "block-range": 5,
+        "qlist": 5,
+        "badge-open": 4,
+        "chapter-label": 4,
+        "chk": 4,
+        "doc-brief": 4,
+        "doc-fonte": 4,
+        "doc-tit": 4,
+        "info-item": 4,
+        "lc-badge": 4,
+        "lc-desc": 4,
+        "lc-fw": 4,
+        "lc-head": 4,
+        "lc-status": 4,
+        "lc-title": 4,
+        "lesson-card": 4,
+        "mail-label": 4,
+        "mod-rea": 4,
+        "phrase-fn": 4,
+        "phrase-list": 4,
+        "slide-title": 4,
+        "sortcol": 4,
+        "danger": 3,
+        "mod-gra": 3,
+        "aval-grid": 2,
+        "aval-salvo": 2,
+        "cb-sub": 2,
+        "chunk-line": 2,
+        "close-flow": 2,
+        "doc-block": 2,
+        "fb-board": 2,
+        "fb-reg": 2,
+        "lc-meta": 2,
+        "lc-pendente": 2,
+        "mail-subject": 2,
+        "nota-sigla": 2,
+        "open-field": 2,
+        "pair-grid": 2,
+        "rec-bar": 2,
+        "rec-time": 2,
+        "roleplay-card": 2,
+        "slide-open": 2,
+        "slide-subtitle": 2,
+        "sw-box": 2,
+        "tg-aviso-cartao": 2,
+        "two-col": 2,
+        "wc": 2,
+        "badge-semi": 1,
+        "ep-grid": 1,
+        "exit": 1,
+        "finish": 1,
+        "info-grid": 1,
+        "lead-after-list": 1,
+        "lesson-grid": 1,
+        "menu": 1,
+        "nav-mid": 1,
+        "open-1": 1,
+        "open-2": 1,
+        "pre-acoes": 1,
+        "reset": 1,
+        "slide-menu": 1,
+        "slide-nav": 1,
+        "slides-container": 1,
+        "slides-wrapper": 1,
+        "sm-head": 1,
+        "sm-list": 1,
+        "sm-x": 1,
+        "sortbox": 1,
+        "strengths": 1,
+        "sw-grid": 1,
+        "timer-note": 1,
+        "transcript-box": 1,
+        "weaknesses": 1
+      },
+      "_como_ler": "componentes = classe -> quantas vezes aparece no artefato inteiro. Peca que sumir do shell reprova no GATE 20; classe nova sem par no artefato (uma reescrita) reprova no GATE 21."
     }
-   }
-  },
-  "story-quest": {
-   "shell": "_build/model/shells/story-quest.html",
-   "hub": "_build/model/shells/hub-story-quest.html",
-   "hub_aluno": "_build/model/shells/hub-story-quest-aluno.html",
-   "abas": [
-    "planning",
-    "inclass",
-    "postclass"
-   ],
-   "abas_aluno": [
-    "postclass"
-   ],
-   "origem": "Artefato 'Professor View -- Dante Blecker Gregory (Kids A2)', agosto/2026, versionado no repo em 13/08/2026. E NORMATIVO para a interface, na mesma relacao que o artefato da Erica tem com a guided-discovery. Persona do molde: joaozinho -- helen-mendes esta para stephanie-vicente como bento esta para joaozinho.",
-   "artefato": "_build/model/artefatos/dante-kids-professor-view.html",
-   "derivacao": "O shell e os dois hubs saem do artefato POR SCRIPT (_build/model/extrai_shell_story_quest.py, com --check no CI). Nao ha porte a mao: a lista de tudo que o script tira e troca esta no topo dele. Foi o porte a mao que fez a guided-discovery perder callout, tbl-wrap, quiz-option e rule-box sem ninguem ver.",
-   "componentes": {
-    "vocab_vira": {
-     "classe": "flip-tile",
-     "usos_no_artefato": 6.0,
-     "papel": "ficha que vira: a frente e a FIGURA e um \"?\", nunca a palavra. A crianca arrisca em voz alta e so entao toca. Atras: palavra, frase de exemplo e o Listen."
-    },
-    "slot_de_imagem": {
-     "classe": "imgph",
-     "usos_no_artefato": 6.0,
-     "papel": "o lugar da figura. No artefato ele carrega um emoji porque uma pagina estatica nao tinha imagem para pôr -- o proprio CSS dele chama a classe de \"fallback de imagem\". Aqui e preenchido pela biblioteca public/assets/kids/."
-    },
-    "historia_em_quadros": {
-     "classe": "story-frame",
-     "usos_no_artefato": 6.0,
-     "papel": "a historia em paineis numerados, um por vez. O campo `frame` de cada turno do roteiro liga a fala ao quadro, e e o que permite tocar um trecho so."
-    },
-    "transcricao": {
-     "classe": "tscript-line",
-     "usos_no_artefato": 13.5,
-     "papel": "a transcricao falante a falante, com o nome de quem fala em ts-who. O nome NUNCA vai no audio -- vive aqui e no roteiro."
-    },
-    "gist": {
-     "classe": "gist-opt",
-     "usos_no_artefato": 4.5,
-     "papel": "a checagem de gist depois da historia: tres frases, uma certa. Vem ANTES do detalhe, nunca depois."
-    },
-    "verdadeiro_falso": {
-     "classe": "tf-b",
-     "usos_no_artefato": 7.5,
-     "papel": "o detalhe, so depois do gist."
-    },
-    "montar_frase": {
-     "classe": "unj-chip",
-     "usos_no_artefato": 6.0,
-     "papel": "as partes da frase-alvo embaralhadas, para a crianca montar tocando. E o chunk da aula, nao uma frase qualquer."
-    },
-    "pode_voce": {
-     "classe": "conf-o",
-     "usos_no_artefato": 9.0,
-     "papel": "\"Can you...?\" -- a crianca responde por si, com Yes, I can / No, I can't. E producao pessoal, nao exercicio de certo/errado."
-    },
-    "cena_clicavel": {
-     "classe": "sc-obj",
-     "usos_no_artefato": 10.5,
-     "papel": "a cena com pontos quentes: tocar o objeto diz a frase inteira. E onde a linguagem de lugar acontece sem lista de palavras."
-    },
-    "memory": {
-     "classe": "mc-item",
-     "usos_no_artefato": 3.0,
-     "papel": "as colunas do memory, para parear figura e palavra."
-    },
-    "lacuna_com_banco": {
-     "classe": "gap-item",
-     "usos_no_artefato": 2.0,
-     "papel": "a lacuna com banco de fichas ao lado -- zero digitacao obrigatoria. O writing de uma crianca de 8 anos nao pode ser o gargalo da tarefa."
-    },
-    "escolha_de_cartao": {
-     "classe": "mb-o",
-     "usos_no_artefato": 7.0,
-     "papel": "as opcoes do cartao de producao (nome, cor, poder): a crianca escolhe e o cartao se monta com a fala dela."
-    },
-    "chip_de_apoio": {
-     "classe": "keyword-chip",
-     "usos_no_artefato": 12.0,
-     "papel": "o andaime na tela durante a producao: o chunk pronto, para consultar sem pedir."
-    },
-    "recall_do_fecho": {
-     "classe": "star-card",
-     "usos_no_artefato": 6.0,
-     "papel": "o fecho: nomear de novo cada acao da aula, agora sem apoio."
-    },
-    "enquete": {
-     "classe": "pick-opt",
-     "usos_no_artefato": 4.0,
-     "papel": "a linha de humor/enquete do inicio e do fim -- entrada e saida afetiva, uma tela cada."
-    },
-    "player_da_historia": {
-     "classe": "lp-skip",
-     "usos_no_artefato": 5.0,
-     "papel": "o player da historia: seekbar, +-5s e velocidade local. A escuta nao depende do controle global."
-    }
-   },
-   "estrutura": {
-    "_por_que": "A espinha da aula e de 6 stages com orcamento de minutos declarado no Planejamento (5-7 min o Hello Time, 15-18 o Story Time...). Sem estas pecas a aula vira lista de exercicio: e a barra que diz a crianca onde ela esta e quanto falta.",
-    "pecas": {
-     "barra_de_stages": {
-      "classe": "phase-segment",
-      "container": "phase-bar",
-      "papel": "a barra de 6 stages no topo do deck, um segmento por stage. Filtrada por data-lesson: cada aula tem a sua."
-     },
-     "rotulo_de_stage": {
-      "classe": "phase-label",
-      "papel": "o nome do stage (\"Hello Time\", \"Story Time\"...) embaixo da barra."
-     },
-     "stage_na_tela": {
-      "classe": "chapter-label",
-      "papel": "em que stage esta ESTA tela (\"Stage 2 - The Story\"). Cada slide declara o seu."
-     },
-     "titulo_da_tela": {
-      "classe": "slide-heading",
-      "papel": "o titulo grande da tela."
-     },
-     "contador": {
-      "id": "slideCounter",
-      "papel": "\"01 / 10\" na barra de cima."
-     },
-     "menu_de_aula": {
-      "classe": "pv-card",
-      "container": "pv-cards",
-      "papel": "o card do menu (IN CLASS e Post-class). No hub e um <a> para {slug}-aula{N}.html; a classe e a mesma do artefato."
-     },
-     "troca_de_plano": {
-      "classe": "pv-pill",
-      "container": "pv-pills",
-      "papel": "as pilulas que trocam qual aula o Planejamento mostra."
-     }
-    }
-   },
-   "_sem_kind_ainda": "Nenhum componente declara `kind` porque o builder ainda nao emite esta anatomia: o deck e data-driven (LESSONS['N'] = {hubLabel, story, frame, build, imageQuiz, reset}) e os emissores sao o proximo passo. O GATE 20 so cobra kind quando ele e declarado -- entao o inventario ja cobra a presenca da peca NO SHELL, que e a metade que ja existe.",
-   "_falta_a_camada_de_producao": "O artefato e uma pagina estatica do claude.ai: nao tem saveState/loadState, updateProgress, startRecording, nem os 4 scripts de Supabase (REGRA 28), nem STUDENT_SLUG/TOTAL_AULAS. Medido em 13/08/2026 contra o shell imersivo. Isso NAO e divergencia de interface -- e a camada que o artefatos/README descreve como 'entra por cima, sem mudar um pixel'. Tem de entrar no shell ANTES de qualquer material de aluno sair daqui.",
-   "_nao_tem": {
-    "_nota": "Ausencias por DESENHO. A proxima pessoa nao deve \"consertar\".",
-    "aba Pre-class": "O dever de casa desta anatomia e o PERCURSO (post-class), que se autocorrige. Decisao do Dan, 13/08/2026.",
-    "aba Complementares": "Idem: o percurso ocupa o lugar dela."
-   },
-   "_divergencia_por_limitacao_do_artefato": {
-    "_o_que_e": "Onde o molde NAO copia o artefato, de proposito, porque o artefato tem ali uma limitacao que ele resolve. Categoria diferente de divida.",
-    "boot sem deck": "O boot do artefato abre com document.getElementById('slidesContainer').innerHTML, porque no artefato SEMPRE ha deck (as duas aulas num documento so). Nos hubs nao ha -- o deck foi para o standalone --, o getElementById devolve null e o boot inteiro morria na primeira linha (medido no chromium: 'Uncaught TypeError: Cannot read properties of null'). O shell guarda a parte do deck num if. Uma pagina do claude.ai nunca precisou existir sem deck."
-   }
   }
- }
 }
