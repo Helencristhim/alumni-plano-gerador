@@ -64,6 +64,67 @@ def carimbo(c):
     return m.group(1) if m else None
 
 
+# As abas onde citar OUTRA aula e o trabalho, nao o defeito.
+#
+# O `tab-planning` guarda o HISTORICO PEDAGOGICO -- "Aula 2 dominado, sustentou explicacoes
+# complexas" -- e o INT-010 EXIGE que ele diga a origem de cada item. O `tab-syllabus`
+# guarda o mapa das vinte aulas do ciclo ("o mapa inteiro esta aqui; so o bloco vigente e
+# produzido", 02 §1).
+#
+# Medido no artefato do Marcos, que a auditora usou: com estas duas abas dentro, a regra
+# acusou SEIS citacoes legitimas do historico. O INT-002 fala em referencia "sem
+# identificacao explicita" -- e uma tabela de historico e identificacao explicita.
+#
+# O defeito real que originou este gate vivia no `tab-feedback`, que e do ALUNO -- e ali a
+# regra e OUTRA, mais apertada: a aba do aluno mostra as aulas que ele TEM, nao o mapa do
+# ciclo. `Lesson 19` num material de ciclo 1 estava DENTRO do ciclo (1-20) e mesmo assim era
+# defeito, porque as aulas construidas eram 1 a 4.
+#
+#     mapa e historico  -> abas do professor -> pode citar o ciclo inteiro
+#     o que o aluno tem -> abas do aluno     -> so as aulas construidas
+#
+# Foi testando contra os artefatos da auditora que as duas regras se separaram. Com uma
+# regra so, ou ela perdia o defeito real (comparando com o ciclo) ou acusava seis citacoes
+# legitimas do historico (comparando com as construidas).
+ABAS_DE_TRABALHO = ("tab-planning", "tab-syllabus")
+# E os CARTOES da aba In-class, que sao o painel do professor sobre o bloco: eles mostram as
+# quatro aulas do bloco, com as ainda nao produzidas marcadas como tal. Medido no artefato do
+# Marcos: "Aula 21 · Bloco 1 · Grammar / G1 · Ainda nao produzida" -- o professor vendo o
+# plano, que e o que o ANA-006 exige (produzir um bloco por vez). O DECK, que e o que a aula
+# ve, continua dentro da regra.
+# `block-card` entra junto: e o painel do BLOCO (as quatro aulas, com as ainda nao
+# produzidas marcadas como tal). Existe nos dois -- 6 ocorrencias no shell e 6 no molde --
+# e e onde o artefato do Marcos escreve "Aula 21 · Ainda nao produzida".
+CARTOES = r'<div[^>]*class="[^"]*\b(?:lesson-card|block-card)\b[^"]*"[^>]*>' 
+
+
+def sem_abas_de_trabalho(c):
+    """Remove as regioes onde a referencia a outra aula e legitima."""
+    while True:
+        m = re.search(CARTOES, c)
+        if not m:
+            break
+        prof = 0
+        for t in re.finditer(r"<div\b[^>]*>|</div>", c[m.start():]):
+            prof += 1 if t.group(0).startswith("<div") else -1
+            if prof == 0:
+                c = c[:m.start()] + " " + c[m.start() + t.end():]
+                break
+        else:
+            break
+    for ident in ABAS_DE_TRABALHO:
+        m = re.search(r'<div[^>]*id="' + ident + r'"[^>]*>', c)
+        if not m:
+            continue
+        prof = 0
+        for t in re.finditer(r"<div\b[^>]*>|</div>", c[m.start():]):
+            prof += 1 if t.group(0).startswith("<div") else -1
+            if prof == 0:
+                c = c[:m.start()] + " " + c[m.start() + t.end():]
+                break
+    return c
+
+
 def na_tela(c):
     """O texto que chega ao olho: sem comentario, sem script, sem style, sem data-teacher.
 
@@ -72,12 +133,40 @@ def na_tela(c):
     c = re.sub(r"<!--.*?-->", " ", c, flags=re.S)
     c = re.sub(r"<script\b.*?</script>|<style\b.*?</style>", " ", c, flags=re.S | re.I)
     c = re.sub(r'\sdata-teacher="[^"]*"', " ", c)
+    c = sem_abas_de_trabalho(c)
     return " ".join(re.sub(r"<[^>]+>", " ", c).split())
 
 
-def ciclo_do_arquivo(c):
-    """Os numeros de aula que este material de fato tem, lidos do proprio arquivo."""
+def construidas(c):
+    """Os numeros de aula que este material de fato CONSTRUIU."""
     return sorted({int(n) for n in re.findall(r"\b(\d+)\s*:\s*\{\s*n\s*:\s*\1\b", c)})
+
+
+def faixa_do_ciclo(c):
+    """A faixa do CICLO declarado. Mantida porque descreve o contrato, e usada pelo GATE 41.
+
+    NAO e o criterio desta regra -- ver o comentario de ABAS_DE_TRABALHO. A faixa LEGITIMA
+
+    NAO e a lista das aulas construidas -- e o CICLO inteiro. O syllabus existe justamente
+    para mostrar o mapa das vinte aulas ("o mapa inteiro esta aqui; so o bloco vigente e
+    produzido", 02 §1), entao um material do bloco 1 citar a aula 12 na aba de planejamento
+    e o comportamento CERTO.
+
+    A primeira versao desta regra comparava com as construidas, e so nao acusou o molde por
+    sorte: o syllabus dele escreve "aulas 5-20" (intervalo, minusculo) em vez de "Aula 5".
+    Testando contra o artefato do Marcos -- ciclo 2, primeira aula 19 -- ela acusou NOVE
+    citacoes legitimas de uma vez. Material da auditora, defeito do gate.
+
+    Sem `var CICLO` nao ha faixa declarada, e o fallback e o bloco construido. A ausencia em
+    si e outro defeito, e quem cobra e o GATE 41 (ANA-003)."""
+    m = re.search(r"var CICLO=\{([^}]*)\}", c)
+    if m:
+        pri = re.search(r"primeira:(\d+)", m.group(1))
+        tot = re.search(r"aulas:(\d+)", m.group(1))
+        if pri and tot:
+            p0 = int(pri.group(1))
+            return list(range(p0, p0 + int(tot.group(1))))
+    return construidas(c)
 
 
 def confere(caminho):
@@ -86,7 +175,8 @@ def confere(caminho):
         return False, []
 
     erros = []
-    aulas = ciclo_do_arquivo(c)
+    aulas = construidas(c)
+    feitas = aulas
     if not aulas:
         return True, ["SEM var LESSONS: nao da para saber de que aulas este material e."]
 
@@ -99,8 +189,8 @@ def confere(caminho):
 
     for n in sorted(fora):
         erros.append(
-            f'CONTAMINACAO DE CICLO (INT-002): a tela fala em "Lesson {n}", e este material '
-            f'tem as aulas {aulas}. Contexto: "...{fora[n]}..."')
+            f'CONTAMINACAO DE CICLO (INT-002): uma tela do ALUNO fala em "Lesson {n}", e '
+            f'este material tem as aulas {feitas}. Contexto: "...{fora[n]}..."')
     return True, erros
 
 
