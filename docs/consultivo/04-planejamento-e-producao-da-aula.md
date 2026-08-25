@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `04_Planejamento_e_Producao_da_Aula.docx`
 > Drive ID: `1Uwgl1mvwHBtA9MxpvDR91LTt_u2ixib2`
-> Modificado no Drive: 2026-08-24
+> Modificado no Drive: 2026-08-25
 > Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/04-planejamento-e-producao-da-aula.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -16,7 +16,7 @@
 | Camada | Função | Duração | Estatuto |
 |---|---|---|---|
 | **Pre-class** | Reduzir barreiras de entrada e preparar operações da aula | 15–20 min | Preparatório; o in-class não depende dele |
-| **In-class** | A aula: etapas previstas pelo framework e pela rota aplicável, produção, feedback e retask | 55 min + 5 de margem | Obrigatório |
+| **In-class** | A aula: etapas previstas pelo framework e pela rota aplicável, produção, feedback e decisão de continuidade | 55 min + 5 de margem | Obrigatório |
 | **Post-class** | Ampliar contato com a língua depois da aula | Livre | **Opcional e não avaliativo** |
 
 A relação entre as três é assimétrica de propósito. O pre-class **prepara sem resolver**; o in-class **é autônomo**; o post-class **não é continuação obrigatória de nada**.
@@ -75,7 +75,7 @@ Nenhuma aula é produzida sem esta ficha. Ela é interna e nunca aparece em supe
 | Critérios de sucesso | Que comportamentos serão registrados? |
 | Relação com a avaliação | Qual dos dois modelos está registrado e como a evidência da aula, o teste formal ou o eventual instrumento de consolidação se relacionam com ele? Se não houver escolha explícita, registrar Acompanhamento docente; a aula não pode criar, preparar ou pressupor teste formal por inferência. |
 | Mecânicas | Mecânica + função + operação cognitiva + grau de controle + evidência |
-| Retask | Que trecho poderá ser repetido, por quê, e com que mudança esperada? |
+| Next-step options | Qual continuidade poderá ser escolhida pela evidência: retask, task repetition, extensão ou new task/transfer; o que será comparado? |
 | Relação com o ciclo | O que recupera de trás e o que prepara adiante |
 
 **Gate.** A aula não é gerada se a especificação repetir substancialmente outra aula do mesmo bloco. O momento de descobrir isso é aqui, não depois de o material existir.
@@ -186,6 +186,8 @@ Faixas do pre-class. O quadro completo — todos os parâmetros de cada framewor
 | B2 | 220–380 palavras · 4–7 itens | 60–120 s · ritmo natural, mitigação, implícito |
 | C1 | 280–500 palavras · 3–6 itens não inferíveis | 75–150 s · nuance de tom, reformulação, fala conectada |
 
+Parâmetros para faixas “+”. Os parâmetros do nível seguinte não são aplicados automaticamente. Um parâmetro pode aproximar-se ou, quando sustentado pelo perfil, coincidir isoladamente com o nível seguinte, desde que os demais eixos permaneçam controlados. Considerar duração, densidade lexical, velocidade, previsibilidade, novidade, número de falantes, segmentação, quantidade de escutas, apoio visual e disponibilidade posterior de transcript. Não aumentar simultaneamente duração, densidade, novidade e imprevisibilidade. Quando um parâmetro coincidir com o teto do nível seguinte, registrar justificativa baseada no perfil e na configuração da tarefa, não na simples existência daquele teto.
+
 **Princípio de progressão.** A complexidade cresce pela profundidade do processamento, menor previsibilidade, menos apoio e mais autonomia — **nunca** pelo aumento do número de atividades, do tamanho das instruções ou das listas lexicais.
 
 #### 4.9 Bloqueios do pre-class
@@ -225,10 +227,40 @@ A arquitetura está no documento **03**. Aqui ficam as regras de produção que 
 #### 5.1 Regras da produção principal
 
 - **Uma** produção principal por aula. As atividades anteriores a alimentam.
-- Objeções e mudanças de condição são **escalas da mesma tarefa**, não tarefas novas.
+- Objeções e mudanças de condição permanecem escalas da mesma task somente quando não alteram materialmente a decisão, o interlocutor, a consequência ou a organização do cenário; caso contrário, constituem new task/transfer.
 - O feedback é **emergente**: um ponto forte e um ou dois pontos de maior impacto, tirados da formulação real do aluno.
-- O **retask repete somente o trecho** que se beneficia do feedback, e é escolhido **depois** do feedback, com o aluno, por critério observável.
+- Quando necessário, o retask retoma somente a operação ou o trecho que se beneficia de um ajuste observado e é escolhido depois do feedback por critério verificável. Se não houver necessidade, selecionar outra continuidade sem criar falha artificial.
 - O fechamento é obrigatório e distingue quatro coisas: o que foi realizado, a percepção de confiança, a evidência de aprendizagem e o plano de transferência.
+
+#### 5.1.1 Targeted Model/Input com operação do aluno
+
+O modelo ou input direcionado deve responder a uma operação observável do aluno, e não funcionar como exposição passiva. Planejar hipótese ou brainstorming, seleção, comparação, localização de componentes ou avaliação de efeito antes ou durante o contato com o modelo. Quando houver repertório prévio, preferir: hipótese breve → modelo → identificação de componentes → language bank → aplicação curta.
+
+#### 5.1.2 Feedback sem falha presumida
+
+O feedback começa pelas evidências da task. Registrar o que funcionou, o que se manteve sob pressão, o que mudou e, conforme necessário, um foco de desenvolvimento ou uma força a preservar. Não pré-preencher campos como “The transition that failed” nem criar erro para justificar a etapa seguinte.
+
+O retask é condicional e exige necessidade observada. Se os critérios já foram atendidos, usar a continuidade prevista para extensão, challenge ou nova task. O Teacher’s Guide deve distinguir retask, task repetition e new task e declarar o que será comparado.
+
+#### 5.1.3 Estímulos em prática menos controlada
+
+Quando a atividade depender de situações, mudanças ou complicações específicas, cada estímulo deve permanecer estável e identificável na tela compartilhada, salvo quando a ausência fizer parte funcional de uma tarefa auditiva ou de imprevisibilidade validada. Cada estímulo explicita o que mudou, quem está envolvido, a condição ou consequência e a decisão ou produção solicitada. O professor pode apresentá-los um por vez, mas não deve inventá-los durante a aula quando comparação, consistência ou registro de evidência dependerem deles.
+
+#### 5.1.4 Nova variável e preservação do cenário-base
+
+A segunda task deve declarar estado original, mudança, razão, consequência, diferença entre aceitar e recusar e elementos que permanecem válidos. Ancorar relações como “earlier”, “later” e “change the order” em itens, horários ou posições concretas. Quando houver decisão do aluno, manter o artefato original visível e apresentar a solicitação em card separado, sem antecipar a versão revisada.
+
+#### 5.1.5 Possible Answers em prática menos controlada
+
+Atividades menos controladas não exigem gabarito único, mas o Teacher’s Guide oferece Possible Answers quando o professor puder precisar de apoio para modelar, esclarecer ou destravar a produção. As respostas correspondem individualmente a cada estímulo, preservam a função comunicativa, são identificadas como apoio e admitem outras respostas coerentes; nunca são apresentadas como script obrigatório.
+
+#### 5.1.6 Escolha e rotação da produção comunicativa
+
+O planejamento justifica a mecânica da produção principal por sua relação com o framework, a operação comunicativa, o interlocutor funcional, o produto, a evidência e a posição no bloco. A prioridade de Speaking ou Interaction aumenta a frequência da oralidade e da interação; não transforma role-play, simulação ou professor–aluno em formato padrão.
+
+Antes de aprovar a aula, comparar sua produção principal com as demais aulas do bloco. Verificar conversa, briefing, information gap, mediação, apresentação, reconstrução, tomada de decisão, Q&A, gravação, relato, comparação, negociação, simulação ou outra mecânica funcional. Não é obrigatório usar quatro formatos diferentes: é obrigatório evitar escolha automática e homogeneização sem justificativa.
+
+Role-play ou simulação exige papéis, interlocutores, objetivos e consequências constitutivos da tarefa. Repetir a mecânica somente quando operação, condição, produto ou evidência mudarem materialmente. Mudar tema ou vocabulário, mantendo a mesma dinâmica e o mesmo produto, não é variação suficiente.
 
 #### 5.2 O quadro de feedback
 
@@ -240,7 +272,7 @@ A arquitetura está no documento **03**. Aqui ficam as regras de produção que 
 | Clearer version | Reformulação coconstruída, preservando a intenção original |
 | Effect check | Pergunta curta sobre o que ficou mais claro ou mais eficaz |
 
-**O quadro de condução começa vazio e é preenchido durante a aula.** Nunca vem pré-preenchido com um erro que o aluno ainda não cometeu, e nunca exibe uma produção inteiramente marcada como incorreta. *First version*, *Clearer version* e *Effect check* apoiam a condução e o retask; não se tornam campos adicionais da devolutiva persistente ao aluno.
+O quadro de condução começa vazio e é preenchido durante a aula. Nunca vem pré-preenchido com um erro que o aluno ainda não cometeu, e nunca exibe uma produção inteiramente marcada como incorreta. First version, Clearer version e Effect check apoiam a condução e, quando necessário, o retask; não se tornam campos adicionais da devolutiva persistente ao aluno.
 
 Se a dificuldade impedir a tarefa: pausar brevemente, apoiar e retomar do ponto necessário. Reiniciar tudo só quando for realmente útil.
 
@@ -296,9 +328,13 @@ O post-class é um **banco de sugestões**, não uma sequência fixa. O que é n
 
 **Independência.** As duas propostas podem citar o acervo como inspiração, mas **nunca podem** **exigir** que o aluno leia, assista ou ouça algo para conseguir realizá-las.
 
-**Reading e listening / watching** — material **externo, real e originalmente publicado em** **inglês**. O sistema **não fabrica** texto, áudio ou vídeo e os apresenta como autênticos. E o acervo **não leva atividade**: nada de perguntas, lacunas, verdadeiro ou falso, busca de vocabulário, resumo, anotação ou qualquer evidência de consumo.
+Reading e listening / watching — material externo, real e originalmente publicado em inglês. Reading oferece uma experiência de leitura por meio de texto discursivamente desenvolvido, ampliando contexto, perspectiva ou repertório comunicativo, profissional ou temático. Pode abordar estratégias comunicativas, escolhas linguísticas e exemplos de uso sem deixar de ser Reading. Listening / watching oferece exposição auditiva ou audiovisual. O sistema não fabrica texto, áudio ou vídeo e os apresenta como autênticos. O acervo não leva atividade: nada de perguntas, lacunas, verdadeiro ou falso, busca de vocabulário, resumo, anotação ou qualquer evidência de consumo.
 
-**Language Reference** — síntese interna curta, fiel ao foco trabalhado, mais uma ou mais referências externas confiáveis que levem à **página específica**, nunca à página inicial. Não vira aula gramatical extensa nem contém exercício obrigatório.
+Language Reference — síntese interna curta e recurso organizado de consulta, fiel ao foco trabalhado, mais uma ou mais referências externas confiáveis que levem à página específica, nunca à página inicial. Sua função principal é explicar, sistematizar, exemplificar ou apoiar o uso de formas, funções, padrões, estruturas ou vocabulário. A presença de parágrafos ou texto corrido não transforma o recurso em Reading quando a leitura está subordinada à consulta ou à prática linguística. Não vira aula gramatical extensa nem contém exercício obrigatório.
+
+Classificação funcional. Reading e Language Reference podem abordar o mesmo tema, objetivo comunicativo ou repertório linguístico. Essa sobreposição temática não constitui redundância. Classificar pela função predominante, pela organização principal da fonte e pela operação oferecida ao aluno: ler para ampliar compreensão, perspectiva, contexto ou repertório corresponde a Reading; consultar, compreender ou praticar uma sistematização linguística corresponde a Language Reference. O mesmo recurso não ocupa simultaneamente as duas categorias apenas para preencher componentes.
+
+Redundância funcional. Há redundância somente quando os componentes reproduzem substancialmente o mesmo conteúdo, no mesmo enquadramento e para a mesma operação, sem acrescentar desenvolvimento discursivo, nova fonte, nova modalidade, organização de consulta ou possibilidade de uso. Um artigo comunicativo ou profissional pode ser Reading mesmo quando ensina estratégias e linguagem; uma referência organizada em torno de regras, padrões e exercícios pertence a Language Reference.
 
 #### 6.5 Extensão por nível
 
@@ -372,7 +408,7 @@ O registro interno é a terceira camada: alimenta as outras duas e **não é exi
 
 #### 7.2 O feedback que chega ao aluno
 
-O registro pós-aula do professor tem doze campos: data de realização · status · desempenho observado · realização concreta · ponto prioritário de desenvolvimento · linguagem introduzida ou retomada · linguagem ainda apoiada · dificuldade ou necessidade emergente · apoio utilizado · resultado do retask · implicação para a aula seguinte · **observação compartilhável**.
+O registro pós-aula do professor tem doze campos: data de realização · status · desempenho observado · realização concreta · ponto prioritário de desenvolvimento · linguagem introduzida ou retomada · linguagem ainda apoiada · dificuldade ou necessidade emergente · apoio utilizado · resultado do retask, quando realizado · implicação para a aula seguinte · observação compartilhável.
 
 O registro interno pode conter todas as evidências e decisões pedagógicas necessárias ao acompanhamento. **Somente dois campos são compartilhados com o aluno: What worked e Keep** **developing.** Linguagem a retomar e próximo foco permanecem incorporados ao registro interno ou são sintetizados dentro desses dois campos, sem gerar campos adicionais na superfície do aluno. Nunca chegam ao aluno: evidência diagnóstica interna, hipótese sobre causa de dificuldade ou decisão sobre reconfiguração do syllabus.
 
@@ -385,7 +421,7 @@ O registro interno pode conter todas as evidências e decisões pedagógicas nec
 - Metalinguagem que anuncie o que será encontrado ou desenvolvido depois.
 - Rubrica oculta, código interno, timer sem função.
 
-**Comentário interno documenta o estado vigente, nunca o histórico da revisão.** Sem “a versão anterior fazia X”, sem “o feedback N pediu”. O teste: se a frase deixa de fazer sentido quando o histórico é esquecido, ela é histórico — e histórico desorienta quem for alterar o material depois.
+Comentários internos, de código ou de registro técnico descrevem somente o estado vigente, a razão funcional necessária para sua manutenção e, quando indispensável, a fonte normativa atual. Não narram versões anteriores, tentativas, feedbacks, bugs já corrigidos nem a sequência histórica que levou à solução. É permitido registrar, por exemplo, que a ordem mistura categorias para não revelar o gabarito; é proibido narrar como a ordem aparecia antes ou qual feedback motivou a correção.
 
 ### 8. O material de condução do professor
 
@@ -414,21 +450,21 @@ O guia é escrito **em inglês** e é **independente do meio de entrega**. Como 
 | **Language focus** | Functional language, vocabulário e, quando houver, o foco estrutural |
 | **Anticipated difficulties** | O que provavelmente será difícil, e por quê |
 | **Scaffolding and challenge** | O apoio disponível se a dificuldade aparecer; a extensão se não aparecer |
-| **Feedback and retask** | Como o feedback será construído e que trecho é candidato a retask |
+| Feedback and next-step decision | Como o feedback será construído e como a evidência determinará retask, repetition, extensão ou new task |
 | **Evidence to record** | O que esta aula precisa produzir para o acompanhamento do ciclo e, quando aplicável, para o teste formal ou instrumento de consolidação |
 | **Pre/post-class connection** | O que o pre-class preparou e o que o post-class oferece |
 | **Answer key / possible answers** | Gabarito e respostas aceitáveis, quando a atividade os tiver |
 
 #### 8.2 O procedimento, estágio a estágio
 
-Cada etapa prevista recebe:
+Para cada etapa prevista, incluir somente os campos aplicáveis à condução e à evidência daquela etapa. Campos condicionais não aparecem vazios, com “N/A” nem preenchidos por repetição do conteúdo projetado:
 
 | Campo | Conteúdo |
 |---|---|
 | **Goal** | A finalidade da etapa, começando por infinitivo |
 | **Interaction** | Quem fala com quem, e em que arranjo |
 | **Steps** | A sequência de condução |
-| **Exact prompt** | A formulação literal, quando a precisão da instrução importar |
+| **Exact prompt** | Formulação literal somente quando o professor precisa dizer algo que não está integralmente projetado ou quando alterações na formulação mudariam a tarefa, a evidência esperada ou o papel do professor. Se o prompt operacional completo já estiver na tela, não o repetir no guia. |
 | **Expected / possible answers** | A resposta esperada e as alternativas aceitáveis |
 | **Conditional support** | O apoio a oferecer **se** a dificuldade prevista ocorrer |
 | **Challenge** | O que propor se o aluno resolver antes do previsto |

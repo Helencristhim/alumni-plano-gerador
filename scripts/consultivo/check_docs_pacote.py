@@ -115,6 +115,16 @@ PACOTE = {
         "fixar oito slides",
         "display:none não é separação",
     ],
+    # O A03 chegou ao repo em 25/08/2026, com o pacote atualizado. Ate entao ele era citado
+    # por ~20 itens do catalogo do auditor (A03 §§18-35) e simplesmente NAO ESTAVA AQUI --
+    # e este gate, que promete que "o pacote so vale inteiro", passava verde, porque a lista
+    # dele nao sabia que o documento existia. Gate so cobra o que alguem escreveu que ele
+    # cobrasse: a lista E o contrato, e documento fora dela e documento invisivel.
+    "A03-apoio-funcional-integridade-qa": [
+        "apoio funcional em português",
+        "Answer Key",
+        "Guided Discovery",
+    ],
     "A01-continuidade-transcript-navegacao": [
         "Show transcript",
         "Back to top",

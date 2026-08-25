@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `P1_Camada_Funcional_HTML.docx`
 > Drive ID: `1CgtgTwqgBGuy-_B5yQKbMDFyK0AMEZuK`
-> Modificado no Drive: 2026-08-24
+> Modificado no Drive: 2026-08-25
 > Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/P1-camada-funcional-html.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -24,7 +24,7 @@ Toda regra abaixo vale nos dois modos, salvo onde indicado.
 | **Protótipo / validação** | antes da aprovação do conteúdo | síntese do navegador **identificada como provisória** | o material declara que o áudio **não é final** |
 | **Produção final** | material aprovado, para uso em aula | áudios definitivos gerados pela API da ElevenLabs no pipeline seguro de produção, vinculados à versão aprovada do transcript e entregues como arquivos de mídia | sem aviso de provisoriedade e sem síntese executada no navegador |
 
-**O modo é entrada obrigatória.** Não se infere. Em produção final, síntese do navegador é defeito; em protótipo, é o esperado — e a interface diz isso uma vez, sem explicar tecnologia.
+O modo é entrada obrigatória do pipeline e não pode ser deixado indefinido. A validação não confia somente nessa declaração: infere o modo efetivamente entregue pelos recursos e mecanismos presentes no build e verifica sua correspondência. Em produção final, síntese do navegador é defeito; em protótipo, é o mecanismo provisório esperado.
 
 **0.1 Fonte obrigatória do áudio na produção final**
 
@@ -108,7 +108,7 @@ Sobre telas:
 
 •  **uma tela pode reunir atividades** relacionadas;
 
-•  **duas etapas só compartilham uma tela quando houver dependência pedagógica real** — por exemplo feedback e retask, quando o retask depende diretamente do que acabou de ser construído;
+•  duas etapas só compartilham uma tela quando houver dependência pedagógica real — por exemplo feedback e retask condicional, quando a retomada depende diretamente do que acabou de ser construído;
 
 •  quando isso ocorrer, **declare no registro**, por atributo próprio, **sem criar etapa fictícia** e sem sequenciamento paralelo;
 
@@ -146,7 +146,7 @@ A distinção é entre **etiqueta visual** e **rótulo funcional**: etiqueta de 
 
 •  O **professor abre e fecha o gabarito de cada atividade**.
 
-•  As **respostas do aluno aparecem para o professor**.
+• As respostas registradas do aluno aparecem para o professor em representação estática equivalente. Na visão docente, mecanismos de resposta não permanecem como controles interativos nem desabilitados: alternativas, selects, checkboxes, radios, campos e cards arrastáveis tornam-se texto, linha, etiqueta, cartão ou tabela sem semântica de controle. A representação distingue resposta registrada, ausência de resposta e, quando aplicável, estado de correção, sem permitir alteração.
 
 •  **Ações do professor não alteram as respostas do aluno** — nem por acidente, nem por repintura.
 
@@ -292,7 +292,7 @@ A distinção é entre **etiqueta visual** e **rótulo funcional**: etiqueta de 
 
 •  **Toda distância estrutural sai de uma escala declarada** — zero literal estrutural. Ficam fora, declarados: borda, ícone, largura mínima e posicionamento absoluto.
 
-• Duas famílias tipográficas disponíveis no próprio artefato, por token, com papel fixo. Não depender de webfont ou chamada externa. No protótipo, remover Google Fonts e validar a hierarquia com as famílias de sistema/fallback efetivamente disponíveis no publicado. Fonte licenciada só pode ser incorporada localmente quando houver autorização e empacotamento aprovados.
+• Duas famílias tipográficas disponíveis no próprio artefato, por token, com papel fixo. Não depender de webfont ou chamada externa. No protótipo, remover Google Fonts e validar a hierarquia com as famílias de sistema/fallback efetivamente disponíveis no publicado. Fonte licenciada só pode ser incorporada localmente quando houver autorização e empacotamento aprovados. A validação confirma a família computada e o ativo efetivamente disponível; document.fonts.check() isoladamente não comprova que a fonte pretendida foi carregada.
 
 •  **Piso de tamanho é piso.** Falta de espaço não se resolve encolhendo abaixo do legível.
 
@@ -300,7 +300,7 @@ A distinção é entre **etiqueta visual** e **rótulo funcional**: etiqueta de 
 
 **14. Hierarquia da pergunta projetada**
 
-Perguntas projetadas possuem identidade visual própria e utilizam uma das famílias já pertencentes ao sistema do material. A pergunta principal usa a família display, em itálico moderado e peso médio, com tamanho superior ao texto corrente e inferior ao título. Não utilizar uma terceira família tipográfica.
+Perguntas projetadas possuem identidade visual própria e utilizam uma das famílias já pertencentes ao sistema do material. A pergunta principal usa a família display, em itálico moderado e peso médio, com tamanho superior ao texto corrente e inferior ao título. Não utilizar uma terceira família tipográfica. “Peso médio” descreve a função visual esperada, não a obrigação de diferença métrica entre valores CSS. Se a família não possuir peso intermediário real, preservar a hierarquia por família, tamanho, itálico moderado, cor e espaçamento; não introduzir peso sintético, terceira fonte ou efeito decorativo apenas para produzir diferença numérica.
 
 • A diferenciação não depende apenas do tamanho: combina família, estilo, espaçamento, largura controlada e cor institucional com contraste validado sobre o fundo composto. Perguntas longas permanecem em caixa normal e alinhadas à esquerda. Centralização é admitida somente quando a pergunta é curta, constitui o único foco da tela e mantém leitura confortável.
 
@@ -391,7 +391,7 @@ Mais: **nenhum tempo aparece na tela projetada**; **tempo não é critério de e
 
 **17. O que nunca aparece na interface**
 
-**Limitações técnicas não aparecem na interface, salvo quando afetam diretamente a decisão ou a expectativa de quem usa** — como a indicação única de áudio provisório no modo protótipo, ou a informação de que uma gravação permanece no dispositivo.
+Limitações técnicas não aparecem na interface, salvo quando afetam diretamente a decisão ou a expectativa de quem usa. No modo protótipo, o estado provisório do áudio é informado uma única vez no artefato, na primeira área autônoma da visão do aluno que contenha áudio, sem explicar tecnologia. O aviso não é repetido no Teacher’s Guide, nos cartões de preparação nem nas notas de slide. Ao professor pode ser apresentada somente a ação operacional de verificar se o áudio funciona, sem nova declaração de provisoriedade. Informações como a permanência de uma gravação no dispositivo seguem a mesma regra de consequência, não de implementação.
 
 •  O lugar da limitação técnica é o **relatório de validação**.
 
@@ -497,3 +497,11 @@ O **protocolo de execução dessa validação** — como provar cada checagem, c
 •  não for possível validar a versão final;
 
 •  a única forma de cumprir um requisito for **prometer o que a plataforma não sustenta**.
+
+## 20. Estado operacional, alternativas auditivas e transcript
+
+O texto da interface e do Teacher’s Guide deve refletir o estado real do componente. Open, reveal, select, compare, listen, read, write e submit somente aparecem quando a ação está disponível naquele momento. Componentes já visíveis são apresentados ou percorridos; conteúdo fechado não pode ser tratado como já legível.
+
+Em listening contrast, cada Version A/Version B reúne no mesmo card rótulo, player e seleção. O transcript não aparece antes da tentativa. Após a escolha, a explicação revela os transcripts completos, com os mesmos rótulos dos players. A associação entre mídia, transcript, alternativa, resposta e rationale é estável e verificável.
+
+A interface calcula e apresenta quantidades a partir do mesmo registro dos itens. Título, instrução, estado de conclusão e conteúdo visível não podem divergir quanto à contagem ou à nomenclatura.

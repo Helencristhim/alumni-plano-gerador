@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `03_Estrutura_dos_Frameworks.docx`
 > Drive ID: `1pV-HSzKsjQmBV9vO3QEmooTZ0_tgPd6g`
-> Modificado no Drive: 2026-08-24
+> Modificado no Drive: 2026-08-25
 > Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/03-estrutura-dos-frameworks.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -18,7 +18,7 @@
 - A descoberta guiada é transversal — ver §4.
 - Speaking aparece nos quatro frameworks, com funções diferentes em cada um.
 - A aula nominal tem **60 minutos: 55 de percurso essencial e 5 de margem operacional**.
-- Cada aula tem **uma** produção principal, feedback seletivo e retask focalizado.
+- Cada aula tem uma produção principal, feedback seletivo e decisão de continuidade sustentada pela evidência.
 - O apoio é calibrado por nível, assimetria e evidência real — nunca vira roteiro para leitura.
 - Retomar conteúdo anterior exige uma **operação comunicativa nova**, não a reapresentação.
 
@@ -49,12 +49,12 @@ Cortar é inevitável; cortar na ordem errada destrói a aula. A ordem é:
 
 - **Produção principal** — nunca sai
 - **Feedback**
-- **Retask**
+- Decisão de continuidade
 - Input indispensável
 - Descoberta linguística
 - Prática preparatória
 
-**Retira-se primeiro:** extensões, atividades adicionais, repetições extras e itens redundantes de compreensão ou verificação. Nunca se recupera tempo encurtando a produção, o feedback ou o retask.
+Retira-se primeiro: extensões, atividades adicionais, repetições extras e itens redundantes de compreensão ou verificação. Nunca se recupera tempo encurtando a produção, o feedback ou a decisão de continuidade.
 
 #### 3.2 O tempo não é conteúdo do aluno
 
@@ -111,10 +111,10 @@ As tabelas desta seção definem as oito etapas pedagógicas normativas de cada 
 
 | Framework | Funções essenciais que a aula deve representar |
 |---|---|
-| Reading into Speaking | Situar o uso da leitura; processar o texto para sentido geral e evidência relevante; transformar o que foi lido em produção oral; oferecer feedback e retask. Predição, descoberta e prática apoiada entram quando necessárias ao nível e à saída. |
-| Listening into Interaction | Situar a interação; processar o áudio com propósitos distintos ou combinados; preparar recursos de interação; realizar nova interação; oferecer feedback e replay/retask. Predição e microanálise entram quando funcionais. |
-| Grammar for Communication | Obter evidência do gap; oferecer contexto linguístico; construir e clarificar o recurso necessário; avançar de prática mais controlada para uso comunicativo; oferecer feedback e retask. A forma da descoberta depende da evidência disponível. |
-| Personalized Real-World English (ESP) | Definir objetivo, papel, interlocutor e resultado; observar ou estimar a performance inicial; oferecer input e apoio focalizados; praticar pontos críticos; realizar performance realista; oferecer feedback e upgrade. |
+| Reading into Speaking | Situar o uso da leitura; processar o texto para sentido geral e evidência relevante; transformar o que foi lido em produção oral; oferecer feedback e decisão de continuidade. Predição, descoberta e prática apoiada entram quando necessárias ao nível e à saída. |
+| Listening into Interaction | Situar a interação; processar o áudio com propósitos distintos ou combinados; preparar recursos de interação; realizar nova interação; oferecer feedback e decisão de continuidade. Predição e microanálise entram quando funcionais. |
+| Grammar for Communication | Obter evidência do gap; oferecer contexto linguístico; construir e clarificar o recurso necessário; avançar de prática mais controlada para uso comunicativo; oferecer feedback e decisão de continuidade. A forma da descoberta depende da evidência disponível. |
+| Personalized Real-World English (ESP) | Definir objetivo, papel, interlocutor e resultado; observar ou estimar a performance inicial; oferecer input e apoio focalizados; praticar pontos críticos; realizar performance realista; oferecer feedback e decidir a continuidade. |
 
 #### 5.1 Reading into Speaking
 
@@ -129,7 +129,7 @@ O texto fornece conteúdo, evidência e organização discursiva para uma produ�
 | 5 | **Guided discovery** | 8 | Observar functional language, organização, atribuição ou posicionamento. |
 | 6 | Supported oral practice | 7 | Usar a linguagem em unidades menores. |
 | 7 | Personalized speaking task | 14 | Transformar leitura em briefing, recomendação ou posicionamento. |
-| 8 | Feedback + retask | 6 | Aprimorar o trecho de maior impacto. |
+| 8 | Feedback + decisão de continuidade | 6 | Consolidar a evidência e decidir o trecho de maior impacto. |
 
 **Regras específicas.** Fontes e gabaritos não podem afirmar mais do que a evidência disponível · proposta, confirmação e efetivação são distinguidas · o texto permanece consultável quando a tarefa exige atribuição ou precisão · a produção exige **transformação** da informação, nunca recitação · evitar perguntas de compreensão em série sem função distinta.
 
@@ -144,7 +144,7 @@ O texto fornece conteúdo, evidência e organização discursiva para uma produ�
 | 5 Guided discovery | Expressão↔função, sorting, melhor formulação, rephrasing | Derivar a linguagem **a partir do texto** |
 | 6 Supported oral | Frames, palavras-chave, notas, ordenação de pontos, ensaio | Preparar a fala sem produzir um texto para ler |
 | 7 Speaking task | Decisão, recomendação, caso, apresentação, debate | A produção depende do conteúdo lido |
-| 8 Feedback + retask | Reformulação, escolha entre versões, segunda tentativa | Aplicar a melhoria a um trecho |
+| 8 Feedback + decisão de continuidade | Reformulação, escolha entre versões, segunda tentativa | Aplicar um ajuste observado ou consolidar uma força em um trecho |
 
 #### 5.2 Listening into Interaction
 
@@ -159,7 +159,7 @@ O áudio ou vídeo oferece mensagem, movimentos interacionais e modelos de lingu
 | 5 | **Micro-listening + discovery** | 9 | Analisar escolhas, entonação, turn-taking, reparo ou diplomacia. |
 | 6 | Interaction practice | 7 | Ensaiar chunks e respostas, sem decorar roteiro. |
 | 7 | Personalized role-play | 14 | Administrar uma interação semelhante. |
-| 8 | Feedback + replay | 7 | Repetir o trecho decidido com base em evidência. |
+| 8 | Feedback + decisão de continuidade | 7 | Retomar, repetir ou ampliar conforme a evidência o trecho decidido com base em evidência. |
 
 **Regras específicas.** O áudio principal precisa ser estável e igual em qualquer condição de reprodução · **a transcrição nunca antecede a primeira escuta** · cada escuta tem um propósito diferente da anterior · listening não se reduz a compreensão factual: inclui processamento sonoro quando relevante · o replay recupera a melhoria dentro da interação.
 
@@ -174,7 +174,7 @@ O áudio ou vídeo oferece mensagem, movimentos interacionais e modelos de lingu
 | 5 Micro-listening + discovery | Comparar áudio e trecho escrito, marcar fronteira, identificar redução, fala↔intenção, entonação | Tornar perceptível o que dificultou o processamento |
 | 6 Interaction practice | Movimentos conversacionais, estratégias, ensaio | Preparar reação, não memorizar diálogo |
 | 7 Role-play | Information gap, mal-entendido, cenário variável | Exigir reação e alguma imprevisibilidade |
-| 8 Feedback + replay | Correção seletiva, troca de papel, nova condição | Repetir com demanda ou melhoria identificável |
+| 8 Feedback + decisão de continuidade | Correção seletiva, troca de papel, nova condição | Retomar, repetir ou avançar com demanda ou melhoria identificável |
 
 #### 5.3 Grammar for Communication
 
@@ -189,7 +189,7 @@ A estrutura é trabalhada porque **resolve uma limitação** que impede, restrin
 | 5 | Controlled oral practice | 7 | Estabilizar escolhas e forma. |
 | 6 | Personalized practice | 8 | Aplicar a contextos próximos do aluno. |
 | 7 | Communicative task | 9 | Cumprir um objetivo que exige a estrutura. |
-| 8 | Feedback + retask | 4 | Corrigir uma prioridade e reaplicá-la. |
+| 8 | Feedback + decisão de continuidade | 4 | Aplicar ajuste observado ou consolidar uma prioridade e reaplicá-la. |
 
 **Regras específicas.** O diagnóstico aceita formas alternativas válidas · a clarificação cobre significado, forma e pronúncia de modo proporcional, sem apresentar todo o sistema quando a aula precisa de parte dele · explicações evitam absolutos: usar formulação condicional quando o uso depende de foco, registro ou intenção · **o produto final não é completar frases**, é comunicar algo que a estrutura torna possível.
 
@@ -213,18 +213,46 @@ A aula parte de uma situação real, iminente ou altamente provável da vida do 
 | 4 | **Guided discovery** | 7 | Descobrir organização, estratégias e linguagem de alto impacto. |
 | 5 | Micropractice | 7 | Praticar os pontos que emergiram ou são críticos. |
 | 6 | Full simulation — round 1 | 10 | Realizar a tarefa completa. |
-| 7 | Feedback + upgrade | 6 | Selecionar as melhorias relevantes. |
-| 8 | Full simulation — round 2 | 8 | Repetir, ampliar ou enfrentar uma variável nova. |
+| 7 | Feedback + upgrade | 6 | Consolidar as evidências e decidir a continuidade adequada. |
+| 8 | Full simulation — round 2 | 8 | Executar retask, task repetition, extensão ou new task conforme a evidência. |
 
 **Regras específicas.**
 
 - Todo cenário declara papel do aluno, interlocutor, contexto, objetivo, dificuldade plausível e resultado esperado. Uma necessidade e um resultado observável definem a aula; **um tema isolado** **não é suficiente**.
 - A **primeira produção vem antes do apoio** quando há repertório suficiente. Apoio pontual é permitido se a dificuldade impedir a mensagem.
 - A pressão vem da situação — pergunta, interrupção, objeção, mudança de condição, registro, formato, tempo — e **nunca de linguagem dramatizada ou hostil**.
-- A etapa 8 não precisa ser uma segunda simulação integral: pode ser a retomada do trecho do retask seguida da tarefa inteira, com **uma única variável nova**.
+- A etapa 8 executa a continuidade definida pela evidência: retask focalizado, task repetition, extensão ou new task/transfer. Variável nova somente é introduzida quando produzir mudança funcional e a operação tiver sido classificada como new task/transfer.
 - Reading, Listening e Grammar podem aparecer como recursos, jamais como objetivo central.
 - **ESP nunca exige dado real ou confidencial do aluno.** Material real é anonimizado; casos fictícios ou compostos são alternativas plenamente válidas, e o caráter fictício é declarado.
 - Elementos inventados são marcados como cenário ou hipótese, nunca como fatos biográficos.
+
+### 5.5 Operação ativa no Targeted Model/Input
+
+Um estágio de Targeted Model/Input não pode se limitar à exposição de linguagem para leitura, escuta ou reprodução. Antes ou durante o contato com o modelo, o aluno realiza uma operação observável: antecipar o que precisa comunicar, identificar a função necessária, selecionar informações essenciais, comparar o modelo com uma hipótese, localizar componentes funcionais ou avaliar o efeito sobre o interlocutor.
+
+Quando houver repertório prévio, a sequência preferencial é: hipótese ou brainstorming breve → contato com o modelo → identificação dos componentes → confirmação ou ampliação pelo language bank → aplicação curta. “Say it in your own words” somente é suficiente quando conteúdo, função, interlocutor e produto esperado estiverem explícitos.
+
+### 5.6 Feedback e decisão de continuidade
+
+O feedback começa pelas evidências produzidas na task e não pode presumir falha. Campos que nomeiam uma transição, forma ou estratégia como malsucedida somente podem ser usados depois que essa ocorrência tiver sido observada.
+
+O feedback registra o que funcionou, o que se manteve sob pressão, o que mudou durante a task e, conforme a evidência, um foco de desenvolvimento ou uma força a preservar e ampliar. O retask é condicional: somente ocorre quando existe necessidade específica sustentada pela primeira produção. Se os critérios foram atendidos, o percurso avança para extensão, challenge ou nova task sem fabricar erro.
+
+### 5.7 Retask, task repetition e new task
+
+Uma variável nova não transforma automaticamente a atividade em retask. O Teacher’s Guide nomeia corretamente a operação escolhida, registra sua justificativa pedagógica e define o que será comparado entre as produções.
+
+Retask: retomada da mesma operação ou de um trecho específico para aplicar um ajuste identificado no feedback. Depende de necessidade observada.
+
+Task repetition: nova realização da mesma task, preservando objetivo, cenário e condições centrais, para comparar autonomia, fluência, precisão ou redução de apoio.
+
+New task/transfer: nova realização em que uma variável altera materialmente a decisão, o interlocutor, a pressão, a consequência ou a organização do cenário. Não constitui correção obrigatória da primeira produção.
+
+### 5.8 Nova variável funcionalmente distinta no ESP
+
+Toda variável de uma segunda task deve produzir mudança verificável em relação ao cenário-base. Validar estado original, mudança solicitada, razão da mudança, consequência sobre a decisão, diferença entre aceitar e recusar e elementos do artefato que permanecem válidos.
+
+A variável não pode apenas reformular algo já presente. Expressões como “earlier”, “in the middle”, “later” e “change the order” devem ser ancoradas em itens, horários ou posições concretas. Quando o aluno puder aceitar ou recusar, manter o artefato original como referência e apresentar a solicitação separadamente; não mostrar uma versão revisada como fato consumado antes da decisão.
 
 ### 6. Regras estruturais transversais
 
@@ -259,7 +287,7 @@ Conteúdo condicional, de extensão e opcional **nunca ganha unidade própria** 
 
 A sequência reduz o controle ao longo da aula, quando apropriado:
 
-**identificar → escolher → reformular ou usar com apoio → produzir → retask**
+identificar → escolher → reformular ou usar com apoio → produzir → feedback → decisão de continuidade
 
 | Grau | Definição | Exemplos |
 |---|---|---|
@@ -328,6 +356,12 @@ A função vem primeiro, a mecânica depois. A mesma mecânica pode aparecer em 
 
 O histórico registra, no mínimo: mecânica · função · operação cognitiva · grau de controle · tipo de evidência.
 
+Prioridade de modalidade não determina mecânica única. Um perfil com prioridade de Speaking e Interaction justifica alta frequência de saídas orais e interativas, mas não autoriza role-play, simulação ou professor como interlocutor por padrão. A produção varia conforme framework, operação comunicativa, interlocutor funcional, produto, evidência e estágio do bloco.
+
+Role-play e simulação são adequados quando papéis, interlocutores, objetivos e consequências constituem a tarefa. Conversa orientada, briefing, information gap, mediação, apresentação, reconstrução, tomada de decisão, Q&A, gravação, relato, comparação e negociação são outras possibilidades. A lista não é cota nem banco obrigatório.
+
+A repetição da mesma mecânica é legítima quando houver justificativa verificável e mudança material de operação, decisão, interlocutor, pressão, consequência, produto ou evidência. Alterar somente tema, cenário superficial ou vocabulário caracteriza homogeneização, não variação funcional.
+
 #### 9.2 O que nunca vira regra fixa
 
 Estas oito proibições existem porque cada uma delas já produziu um curso inteiro de aulas idênticas:
@@ -363,7 +397,7 @@ Estas oito proibições existem porque cada uma delas já produziu um curso inte
 A aula **não é liberada** quando:
 
 - o percurso essencial ultrapassa 55 minutos, ou a soma interna é incompatível com o tempo declarado;
-- produção principal, feedback ou retask são tratados como dispensáveis;
+- produção principal, feedback ou decisão de continuidade são tratados como dispensáveis;
 - alguma função essencial declarada para a aula não está representada;
 - a organização das etapas rompe a progressão ou não possui justificativa pedagógica verificável;
 - a descoberta está reduzida a exposição seguida de pergunta de memória;

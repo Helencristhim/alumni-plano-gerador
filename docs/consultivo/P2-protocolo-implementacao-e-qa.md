@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `P2_Protocolo_de_Implementacao_e_QA.docx`
 > Drive ID: `1WHBj3B9l4z-WI3HDzo0fvHsFpm1obH4b`
-> Modificado no Drive: 2026-08-24
+> Modificado no Drive: 2026-08-25
 > Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/P2-protocolo-implementacao-e-qa.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -25,7 +25,7 @@
 
 3.1 Produção final em dois builds. Gerar o build do professor e o build do aluno a partir da mesma versão pedagógica, com empacotamento separado. O professor recebe a visão docente e a prévia discente; o aluno recebe somente componentes, dados, estado e recursos discentes.
 
-3.2 Isolamento verificável. Inspecionar o HTML, JavaScript, payload, armazenamento, comentários, source maps e requisições do build do aluno. A ocorrência de Teacher’s Guide, gabarito reservado, hipótese pedagógica, registro interno, controle administrativo ou rota de elevação de papel reprova a publicação.
+3.2 Isolamento verificável. Inspecionar o HTML, JavaScript, payload, armazenamento, comentários, source maps e requisições do build do aluno. A ocorrência de Teacher’s Guide, gabarito reservado, hipótese pedagógica, registro interno, controle administrativo ou rota de elevação de papel reprova a publicação. Na visão docente, renderizar respostas registradas em componentes estáticos equivalentes, sem manter botões, campos, selects, checkboxes, radios ou cards arrastáveis como controles desabilitados. Preservar visualmente resposta marcada, ausência de resposta e estado de correção pertinente, sem permitir alteração.
 
 3.3 Publicação. Validar duas URLs oficiais distintas. Parâmetro de query, hash, localStorage, alteração de atributo ou chamada direta não pode transformar a URL do aluno em visão docente.
 
@@ -43,7 +43,7 @@
 
 9.  **<strong>** **que ABRE um parágrafo é rótulo; no meio, é ênfase.** Não os trate igual.
 
-10.  **Comentário de código com dado é segunda fonte.** É o que o próximo editor lê antes de mexer no bloco, e é onde um valor antigo sobrevive. Confira contra o registro.
+10. Comentário de código com dado é segunda fonte. Deve descrever somente o estado vigente, a razão funcional necessária para sua manutenção e, quando indispensável, a fonte normativa atual. Não narrar versões anteriores, tentativas, feedbacks, bugs corrigidos ou a sequência histórica da solução. Conferir todo comentário funcional contra o registro e o comportamento vigente.
 
 11.  **Texto de apoio que CITA um rótulo é segunda cópia do rótulo.** Renomeie o controle e a orientação passa a mandar procurar um botão que não existe com aquele nome — e nada acusa, porque as duas frases continuam gramaticais. **A checagem confere a citação contra o rótulo VISÍVEL**, nunca contra um texto escrito nela própria: escrito nela, ela vira a terceira cópia.
 
@@ -87,7 +87,7 @@
 
 **3.2 Produção e validação dos áudios oficiais**
 
-O pipeline recebe o modo de entrega antes de gerar o build. Em protótipo, pode usar síntese do navegador, declarada uma vez como provisória. Em produção final, gera os arquivos pela API da ElevenLabs conforme o Anexo P-A e remove integralmente qualquer caminho de síntese no cliente.
+O pipeline recebe o modo de entrega como entrada obrigatória antes de gerar o build. A validação deriva o modo efetivamente entregue pelos recursos e mecanismos presentes e o compara com a entrada declarada. Em protótipo, pode usar síntese do navegador, declarada uma única vez na primeira área autônoma da visão do aluno que contenha áudio; não repetir o aviso no Teacher’s Guide, nos cartões de preparação ou nas notas de slide. Em produção final, gerar os arquivos pela API da ElevenLabs conforme o Anexo P-A e remover integralmente qualquer caminho de síntese no cliente.
 
 Sequência obrigatória: congelar o transcript aprovado; selecionar categoria e voz no manifesto validado; pré-processar sem alterar o conteúdo pedagógico; chamar a API no ambiente seguro; armazenar o arquivo; registrar transcript, versão, modelo, Voice ID, parâmetros, duração e checksum; ouvir e aprovar; associar o arquivo ao player; gerar o build; validar a fonte e o build.
 
@@ -101,7 +101,7 @@ Uma alteração de transcript, modelo, Voice ID, parâmetro ou arquivo invalida 
 
 Validar no navegador e por regressão visual, usando as fontes efetivamente disponíveis no build: pergunta principal curta e longa; lista de perguntas; quiz projetado; fundos claro, escuro e de abertura; larguras desktop e responsivas.
 
-A conferência compara estilo computado e resultado visual: família pertencente ao sistema; pergunta principal em família display, itálico moderado e peso médio; corpo maior que o texto corrente e menor que o título; largura controlada; quebra sem corte ou overflow; contraste sobre o fundo composto; caixa normal em perguntas longas; alinhamento à esquerda como padrão; centralização somente em pergunta curta e tela dedicada.
+A conferência compara estilo computado e resultado visual: família pertencente ao sistema e ativo efetivamente disponível no build; pergunta principal em família display, itálico moderado e peso visual intermediário; corpo maior que o texto corrente e menor que o título; largura controlada; quebra sem corte ou overflow; contraste sobre o fundo composto; caixa normal em perguntas longas; alinhamento à esquerda como padrão; centralização somente em pergunta curta e tela dedicada. Peso médio é função perceptiva, não obrigação de valor CSS específico; document.fonts.check() isoladamente não comprova o carregamento da fonte pretendida.
 
 Casos negativos obrigatórios: carregar uma terceira família; depender de Google Fonts; remover a família display da pergunta principal; diferenciar apenas por tamanho; aplicar caixa alta a pergunta longa; centralizar pergunta longa ou acompanhada de outros focos; igualar .slide-question, .q-item e .slide .quiz-question; produzir contraste insuficiente em fundo claro ou escuro; causar linha órfã, corte ou overflow.
 
@@ -183,3 +183,19 @@ Válido apenas para quem escreve as checagens neste ambiente.
 40.  **Depois de publicar, conferir marcadores no que está no ar** — não no que se acabou de gerar.
 
 41.  **A abertura separada do Teacher's Guide é requisito BLOQUEANTE para a publicação definitiva no ambiente oficial.** No protótipo ou artefato de revisão sujeito a sandbox, admite-se **aprovação condicional** quando a implementação, o endereçamento e o *fallback* estiverem corretos e a limitação externa estiver documentada. **Aprovação baseada só no artefato restrito não conta como publicação aprovada.**
+
+## 4. QA adicional de estado, composição e contagem
+
+Executar a atividade nos estados inicial, antes da tentativa, após seleção, após correção e após reset. Em cada estado, comparar os verbos da instrução com os controles realmente disponíveis.
+
+Em contrastes auditivos, conferir visualmente que rótulo semântico, player e seleção pertencem ao mesmo card; que o transcript não antecipa a escolha; e que a revelação posterior usa os mesmos rótulos e conteúdo da mídia.
+
+Comparar quantidades e termos declarados no título, prompt, Teacher’s Guide, Answer Key, dados da atividade e critério de conclusão. A conferência deve usar a composição renderizada em todas as larguras suportadas, não apenas a presença no DOM.
+
+Reprovar reveal quando todos os itens já estiverem visíveis ou read quando o conteúdo ainda estiver fechado.
+
+Reprovar player distante da alternativa, seleção ambígua ou referência posicional redundante.
+
+Reprovar transcript disponível antes da tentativa em listening contrast.
+
+Reprovar qualquer contagem ou nomenclatura divergente entre as camadas.
