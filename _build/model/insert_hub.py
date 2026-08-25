@@ -248,6 +248,19 @@ def remove_lesson_blocks(s, n, slug, is_aluno):
             if not found:
                 break
     s, _ = _strip_enclosing(s, f'id="stamp{n}"')              # stamp do header
+    # audioMap: some com as entradas pcN_/[order-lN] da versão ANTIGA. O merge_audiomap
+    # recoloca, logo em seguida, exatamente as da versão nova — então tirar aqui é
+    # idempotente. Antes de 25/08/2026 estas chaves ficavam para trás como "órfãs
+    # inofensivas", e só eram inofensivas enquanto o MP3 continuasse no disco: reescrever
+    # uma frase muda o NOME do arquivo, o MP3 velho vira lixo, e quando ele é removido o
+    # hub fica apontando para um /audio/... que não existe mais — defeito que o GATE 8
+    # acusa (jose-eduardo-alves, aula 5). Só roda em --replace; geração normal não passa
+    # por aqui.
+    def _drop_old(m):
+        keep = [ln for ln in m.group(1).split('\n')
+                if f'/pc{n}_' not in ln and f'"[order-l{n}]"' not in ln]
+        return 'var audioMap = {\n' + '\n'.join(keep) + '\n};'
+    s = re.sub(r'var audioMap = \{\n(.*?)\n\s*\};', _drop_old, s, count=1, flags=re.S)
     assert f'id="ex-lesson-{n}"' not in s and f'data-media="l{n}-' not in s, \
         f'remoção incompleta da aula {n}'
     return s
