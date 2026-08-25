@@ -46,6 +46,7 @@ import html as _html
 import json
 import os
 import re
+import subprocess
 import sys
 import tempfile
 
@@ -57,6 +58,37 @@ PROIBIDO = ["speechSynthesis", "SpeechSynthesisUtterance", "webkitSpeechRecognit
 # nomes comerciais de voz do sistema (Anexo P-A §4)
 NOMES_COMERCIAIS = ["Microsoft Aria", "Microsoft Jenny", "Microsoft Zira", "Microsoft Guy",
                     "Microsoft David", "Google US English", "Samantha", "Alex", "Daniel"]
+
+
+_NO_GIT = None
+
+
+def audio_versionado():
+    """Os MP3s que o REPOSITORIO tem — nao os que o disco tem.
+
+    O CI exclui `public/audio` da arvore de proposito: sao ~5 GiB, 86% do repo, e o
+    `actions/checkout` chegou a pendurar 50 minutos por causa deles (29/07/2026). Entao no
+    runner NAO HA mp3 nenhum, e um gate que pergunte ao disco reprova tudo -- foi
+    exatamente o que este aqui fez na sua primeira versao.
+
+    A regra da casa, ja escrita em tres outros gates: PERGUNTE AO GIT. `git ls-files` sabe
+    o que esta versionado mesmo com a arvore rala e com `--filter=blob:none`, porque o que
+    falta e o CONTEUDO do blob, nunca a entrada no indice."""
+    global _NO_GIT
+    if _NO_GIT is None:
+        try:
+            r = subprocess.run(["git", "-C", RAIZ, "ls-files", "public/audio"],
+                               capture_output=True, text=True, timeout=120)
+            _NO_GIT = set(r.stdout.split()) if r.returncode == 0 else set()
+        except (OSError, subprocess.SubprocessError):
+            _NO_GIT = set()
+    return _NO_GIT
+
+
+def audio_existe(src):
+    """Disco OU git. A ordem importa so por velocidade; o veredito e o mesmo."""
+    rel = "public/" + src.lstrip("/")
+    return os.path.exists(os.path.join(RAIZ, rel)) or rel in audio_versionado()
 
 
 def carimbo(c):
@@ -138,7 +170,7 @@ def confere(caminho):
             if not src:
                 faltando.append(chave)
                 continue
-            if not os.path.exists(os.path.join(RAIZ, "public", src.lstrip("/"))):
+            if not audio_existe(src):
                 faltando.append(src)
         if faltando:
             erros.append(f"{len(faltando)} arquivo(s) do AUD_MAP nao existem no disco. "
