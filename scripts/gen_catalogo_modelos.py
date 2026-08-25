@@ -195,7 +195,7 @@ def coleta():
             f for f in arquivos
             if re.fullmatch(re.escape(slug) + r"-aula\d+\.html", f.name)
         ]
-        # ── A anatomia private-black nao tem um arquivo por aula ──────────────────
+        # ── A anatomia consultivo nao tem um arquivo por aula ──────────────────
         # Ela entrega DUAS URLs e as aulas do ciclo vivem DENTRO do arquivo do professor,
         # separadas por data-lesson. Procurar `{slug}-aulaN.html` devolve nada, e o molde
         # sumia do catalogo em silencio -- com um "pulando" que parecia aviso de rotina.
@@ -203,7 +203,7 @@ def coleta():
         hub_pb = RAIZ / "public" / "professor" / f"{slug}.html"
         if not arquivos and hub_pb.exists():
             conteudo = hub_pb.read_text(encoding="utf-8", errors="replace")
-            if 'content="private-black"' in conteudo[:4000]:
+            if 'content="consultivo"' in conteudo[:4000]:
                 pb = []
                 for n in sorted({int(x) for x in re.findall(r'data-lesson="(\d+)"', conteudo)}):
                     bloco = re.search(r"\n\s*%d:\{.*?\n\s*\}" % n, conteudo, re.S)

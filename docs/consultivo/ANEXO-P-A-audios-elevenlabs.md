@@ -2,7 +2,7 @@
 > Origem: `Anexo_P-A_Padrao_de_Producao_de_Audios_ElevenLabs.docx`
 > Drive ID: `19WfmAGOzP1nD62dtXs88yozAZdVh6lRd`
 > Modificado no Drive: 2026-08-20
-> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/ANEXO-P-A-audios-elevenlabs.md`
+> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/ANEXO-P-A-audios-elevenlabs.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
 **ANEXO P-A**

@@ -61,8 +61,8 @@ Ele roda junto, toda vez. Se o artefato falhar, o defeito e do AFERIDOR (playwri
 do chromium, servidor local), nao do shell -- e o gate diz isso em vez de acusar o inocente.
 
 USO:
-    python3 scripts/black/check_carga_limpa.py
-    python3 scripts/black/check_carga_limpa.py --selftest
+    python3 scripts/consultivo/check_carga_limpa.py
+    python3 scripts/consultivo/check_carga_limpa.py --selftest
 """
 import functools
 import http.server
@@ -76,9 +76,9 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 
 # (rotulo, caminho relativo, e_controle_positivo)
 ALVOS = [
-    ("artefato (controle positivo)", "_build/model/artefatos/marcos-private-black.html", True),
-    ("shell professor", "_build/model/shells/black.html", False),
-    ("shell aluno", "_build/model/shells/black-aluno.html", False),
+    ("artefato (controle positivo)", "_build/model/artefatos/marcos-consultivo.html", True),
+    ("shell professor", "_build/model/shells/consultivo.html", False),
+    ("shell aluno", "_build/model/shells/consultivo-aluno.html", False),
 ]
 
 # Cada componente: como CONTAR o construido e como DERIVAR o esperado, os dois do proprio
@@ -145,14 +145,14 @@ def descobre(padrao, rotulo):
     """Todo material da anatomia, achado pelo CARIMBO -- nunca por lista escrita aqui.
 
     Lista no gate envelhece: o material seguinte nasce fora dela e o gate passa dizendo que
-    esta tudo bem. O carimbo <meta name="alumni-anatomia" content="private-black"> esta no
+    esta tudo bem. O carimbo <meta name="alumni-anatomia" content="consultivo"> esta no
     shell, e por isso em tudo que sai dele."""
     import glob
     achados = []
     for caminho in sorted(glob.glob(os.path.join(RAIZ, padrao))):
         try:
             with open(caminho, encoding="utf-8", errors="replace") as fh:
-                if 'content="private-black"' not in fh.read(4000):
+                if 'content="consultivo"' not in fh.read(4000):
                     continue
         except OSError:
             continue
@@ -239,9 +239,9 @@ def _selftest():
     """Duas mutacoes, porque as duas evidencias sao distintas (P3 §1.1)."""
     import shutil
     import tempfile
-    origem = os.path.join(RAIZ, "_build", "model", "shells", "black.html")
+    origem = os.path.join(RAIZ, "_build", "model", "shells", "consultivo.html")
     if not os.path.exists(origem):
-        print("FALHA: shell ausente; rode scripts/black/extrai_shell.py")
+        print("FALHA: shell ausente; rode scripts/consultivo/extrai_shell.py")
         return 1
     tmp = tempfile.mkdtemp(prefix="carga_", dir=RAIZ)
     rel_dir = os.path.basename(tmp)

@@ -56,7 +56,7 @@ def verifica(inv, builder_src, ler=le):
     erros = []
     for nome, a in inv["anatomias"].items():
         arquivos = {}
-        # `hub`/`hub_aluno` sao da anatomia que separa hub de standalone. A private-black nao
+        # `hub`/`hub_aluno` sao da anatomia que separa hub de standalone. A consultivo nao
         # separa: ela entrega DOIS BUILDS (professor e aluno), e as abas vivem dentro de cada
         # um. Por isso as chaves sao opcionais, e o que existe e conferido.
         for chave in ("shell", "hub", "hub_aluno", "shell_aluno"):
@@ -70,7 +70,7 @@ def verifica(inv, builder_src, ler=le):
 
         shell = arquivos.get("shell", "")
 
-        # ── INVENTARIO MEDIDO (private-black) ───────────────────────────────────
+        # ── INVENTARIO MEDIDO (consultivo) ───────────────────────────────────
         # Duas formas de inventario, e a diferenca nao e de gosto:
         #   - DECLARADO: {componente: {classe, kind, usos_no_artefato, papel}} -- escrito a
         #     mao, com o papel de cada peca em prosa. Serve a uma dezena de componentes.

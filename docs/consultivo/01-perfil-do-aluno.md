@@ -2,7 +2,7 @@
 > Origem: `01_Perfil_do_Aluno.docx`
 > Drive ID: `1qyBOxuz1vnqhVg-YhrnfiE4kUNZHXUHf`
 > Modificado no Drive: 2026-08-21
-> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/01-perfil-do-aluno.md`
+> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/01-perfil-do-aluno.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
 ## 01 · PERFIL DO ALUNO

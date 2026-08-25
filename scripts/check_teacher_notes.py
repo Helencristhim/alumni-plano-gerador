@@ -159,7 +159,7 @@ def selftest():
 
 def _sem_objeto(n_medidos):
     """Verde SEM OBJETO e o defeito que o P2 §13 nomeia: "checagem que nao falha, so nao faz
-    nada". Quando este gate mede ZERO aula e existe material da anatomia private-black no
+    nada". Quando este gate mede ZERO aula e existe material da anatomia consultivo no
     repo, ele diz isso -- em vez de imprimir OK e parecer cobertura.
 
     Nao reprova: ficar sem aula na forma antiga e estado legitimo e transitorio (o molde
@@ -171,10 +171,10 @@ def _sem_objeto(n_medidos):
     for _f in _glob.glob(os.path.join(RAIZ, "public", "professor", "*.html")):
         try:
             with open(_f, encoding="utf-8", errors="replace") as _fh:
-                if 'content="private-black"' in _fh.read(4000):
+                if 'content="consultivo"' in _fh.read(4000):
                     print("  AVISO — SEM OBJETO: este gate mede a forma guided-discovery e nao"
                           " ha nenhuma aula dela no repo. O material da anatomia nova"
-                          " (private-black) NAO e coberto por ele. Reaponte-o para o"
+                          " (consultivo) NAO e coberto por ele. Reaponte-o para o"
                           " requisito, ou aposente-o com o motivo escrito (P2 §13/§23).")
                     return
         except OSError:

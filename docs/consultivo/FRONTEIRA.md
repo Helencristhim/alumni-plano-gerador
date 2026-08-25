@@ -1,10 +1,10 @@
-# A fronteira do `private-black`
+# A fronteira do `consultivo`
 
 > **O molde é o `stephanie-vicente`.** O artefato do Marcos Mansour é a **especificação de
 > interface** que se leva para dentro dele — não é o destino do trabalho, é de onde a forma
 > vem. Quem reproduz para qualquer aluno é o molde. A mesma relação que já existe no
 > sistema: molde `helen-mendes` ↔ anatomia `imersivo`; molde `stephanie-vicente` ↔ anatomia
-> `private-black`, portada do artefato do Marcos.
+> `consultivo`, portada do artefato do Marcos.
 >
 > Correção do Dan, 24/08/2026:
 >
@@ -41,23 +41,23 @@ primeiro dia, na camada onde divergir dói mais.
 Toda aula desta anatomia nasce com, no `<head>`:
 
 ```html
-<meta name="alumni-anatomia" content="private-black">
+<meta name="alumni-anatomia" content="consultivo">
 ```
 
 É por ele que gate se escopa — nunca pelo caminho do arquivo, nunca por um sintoma que o
 legado compartilha. O `scripts/gates.json` aceita escopo por `marcador`, e é essa a forma:
 
 ```json
-"escopo": {"marcador": "alumni-anatomia=private-black"}
+"escopo": {"marcador": "alumni-anatomia=consultivo"}
 ```
 
 ## O que o novo NÃO herda
 
 | | Por quê |
 |---|---|
-| o shell (CSS/JS) da helen | o shell do `private-black` é **extraído do artefato do Marcos**, por remoção do conteúdo dele. Zero linha vinda do imersivo |
-| GATE 18 (shell drift) | ele existe para CLONE. O `private-black` não é clone de ninguém — como a `story-quest` também não é, e por isso também está fora |
-| o builder do imersivo | builder próprio (`scripts/black/`), não um `if model==` dentro do `build_from_model.py` |
+| o shell (CSS/JS) da helen | o shell do `consultivo` é **extraído do artefato do Marcos**, por remoção do conteúdo dele. Zero linha vinda do imersivo |
+| GATE 18 (shell drift) | ele existe para CLONE. O `consultivo` não é clone de ninguém — como a `story-quest` também não é, e por isso também está fora |
+| o builder do imersivo | builder próprio (`scripts/consultivo/`), não um `if model==` dentro do `build_from_model.py` |
 | as regras de anatomia do `CLAUDE.md` | as 5 etapas do pre-class (REGRA 4), o piso de 25 slides, o survival card, os Complementares, o matching PT: **nada disso atravessa**. A anatomia é a dos documentos 00–06 |
 | a contagem de **slides** | o piso de 25 telas do imersivo não existe aqui. As **oito etapas** do framework, sim, são normativas — ver abaixo |
 
@@ -83,11 +83,11 @@ ElevenLabs com a credencial fora do repo.
 
 | | Caminho |
 |---|---|
-| documentos normativos | `docs/private-black/` |
-| especificação de interface | `_build/model/artefatos/marcos-private-black.html` |
-| shell | `_build/model/shells/black.html` *(Fase 1)* |
-| builder e gates próprios | `scripts/black/` |
-| config das aulas | `_build/black/{slug}/` *(Fase 3)* |
+| documentos normativos | `docs/consultivo/` |
+| especificação de interface | `_build/model/artefatos/marcos-consultivo.html` |
+| shell | `_build/model/shells/consultivo.html` *(Fase 1)* |
+| builder e gates próprios | `scripts/consultivo/` |
+| config das aulas | `_build/consultivo/{slug}/` *(Fase 3)* |
 | o molde | `public/professor/stephanie-vicente*.html` — a aluna-modelo, re-emitida na anatomia nova na Fase 4 |
 | material publicado | `public/professor/{slug}.html` · `public/aluno/{slug}.html` — **a convenção não muda**, porque mudá-la quebraria dashboard, senhas e links por zero ganho. O escopo se lê no carimbo |
 
@@ -108,9 +108,9 @@ próprias dificuldades.
 | | Entrega | Prova |
 |---|---|---|
 | **0** *(esta)* | documentos no repo · artefato congelado · fronteira declarada · GATE 18 fora | GATE 17 aceita a anatomia; nenhum gate do imersivo casa com o carimbo |
-| 1 | `shells/black.html`, extraído do artefato | boot no Chromium: console limpo e componentes construídos (P3 §1.1) |
+| 1 | `shells/consultivo.html`, extraído do artefato | boot no Chromium: console limpo e componentes construídos (P3 §1.1) |
 | 2 | `anatomias.json` com as classes **do artefato do Marcos**; GATE 20/21 reapontados | uma classe `ic-*` nova reprova |
-| 3 | `scripts/black/build_black.py` + schema do config | asserts de build: minutos fecham, 6 atividades, 14 campos do guia |
+| 3 | `scripts/consultivo/build_consultivo.py` + schema do config | asserts de build: minutos fecham, 6 atividades, 14 campos do guia |
 | 4 | **o molde `stephanie-vicente` re-emitido na anatomia nova** — é aqui que o artefato chega ao molde | a estrutura gerada bate com a do artefato |
 | 5 | a suíte P3 (navegador + mutação + canário) | cada gate reprova a própria mutação |
 | 6 | produção: ElevenLabs, Supabase, guia na URL real | só quando for testar em aluno |

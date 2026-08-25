@@ -59,23 +59,23 @@ Stephanie Vicente (`1wm4SHeDi56QF3CRS06lLQpW8wXshj17J`), entregue pelo Dan em 24
 
 ## Estes documentos NÃO valem para o molde antigo
 
-O pacote governa a anatomia **`private-black`** — o molde adulto novo, cuja especificação de
-interface é `_build/model/artefatos/marcos-private-black.html`. O molde `imersivo`
+O pacote governa a anatomia **`consultivo`** — o molde adulto novo, cuja especificação de
+interface é `_build/model/artefatos/marcos-consultivo.html`. O molde `imersivo`
 (helen-mendes e os ~1.400 arquivos publicados) continua governado pelo `CLAUDE.md`. Ver
-`docs/private-black/FRONTEIRA.md`.
+`docs/consultivo/FRONTEIRA.md`.
 
 ## Importação
 
 Os `.md` deste diretório são **conversões mecânicas** dos `.docx` do Drive, feitas por
-`scripts/black/docx_to_md.py`. A fonte é o `.docx`: divergência se resolve **reimportando**,
+`scripts/consultivo/docx_to_md.py`. A fonte é o `.docx`: divergência se resolve **reimportando**,
 nunca editando o `.md` — texto reescrito à mão é a segunda cópia, e ela diverge na primeira
 edição do original (P2 §11).
 
-    python3 scripts/black/docx_to_md.py ~/Downloads/00_Guia....docx docs/private-black/00-guia-de-uso-e-precedencia.md \
+    python3 scripts/consultivo/docx_to_md.py ~/Downloads/00_Guia....docx docs/consultivo/00-guia-de-uso-e-precedencia.md \
         --drive-id 1abVwOaz... --modificado 2026-08-21
 
 **O pacote só vale inteiro**, e quem cobra isso é o **GATE 34**
-(`scripts/black/check_docs_pacote.py`): documento ausente reprova, e documento que
+(`scripts/consultivo/check_docs_pacote.py`): documento ausente reprova, e documento que
 continua existindo mas perdeu texto na conversão também — cada um tem frases-âncora
 normativas, escolhidas em formas diferentes (prosa, célula de tabela, item de lista,
 identificador técnico), para que a perda de qualquer forma derrube uma delas.

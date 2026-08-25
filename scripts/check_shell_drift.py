@@ -67,18 +67,18 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # protegeria e que ela ainda NAO tem — saveState/loadState/updateProgress/startRecording e
 # os 4 scripts de Supabase (REGRA 28) — esta declarado no anatomias.json, no campo
 # `_falta_a_camada_de_producao`, e tem de entrar antes de qualquer material de aluno.
-# A ANATOMIA private-black (molde adulto novo, artefato do Marcos) TAMBEM NAO ENTRA, e
+# A ANATOMIA consultivo (molde adulto novo, artefato do Marcos) TAMBEM NAO ENTRA, e
 # pela MESMA razao da story-quest, dita de outro jeito: ela nao e clone. O shell dela e
-# extraido de `_build/model/artefatos/marcos-private-black.html` -- outro vocabulario inteiro
+# extraido de `_build/model/artefatos/marcos-consultivo.html` -- outro vocabulario inteiro
 # (callout, quiz-option, reveal-item, pair-opt, aud-stop, ak-*, mini-*), outro registro
 # (ARTEFATO/ALUNO/CICLO/LESSONS/GUIDE) e outra anatomia de abas.
 #
 # E aqui a exclusao nao e so economia de ruido: enquanto este gate alcançasse o shell novo,
 # ele OBRIGARIA o molde novo a ter as funcoes do imersivo -- isto e, seria o cano por onde os
-# defeitos da helen entrariam, que e exatamente o que a fronteira do private-black existe para
-# impedir. Ver docs/private-black/FRONTEIRA.md.
+# defeitos da helen entrariam, que e exatamente o que a fronteira do consultivo existe para
+# impedir. Ver docs/consultivo/FRONTEIRA.md.
 #
-# O que cobra o private-black e outro conjunto: GATE 20 (o shell tem o que a anatomia
+# O que cobra o consultivo e outro conjunto: GATE 20 (o shell tem o que a anatomia
 # declara), GATE 21 (a interface e a do artefato) e a suite P3 (navegador + mutacao).
 PARES = [
     (os.path.join(RAIZ, "public", "professor", "helen-mendes-aula1.html"),

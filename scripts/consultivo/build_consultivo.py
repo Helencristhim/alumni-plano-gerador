@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Monta o material da anatomia `private-black` a partir do shell e dos fragmentos da aula.
+"""Monta o material da anatomia `consultivo` a partir do shell e dos fragmentos da aula.
 
 O QUE O BUILDER FAZ, E O QUE ELE NAO FAZ
 ----------------------------------------
@@ -30,8 +30,8 @@ ASSERTS DE BUILD (recusam a geracao, nao o PR)
   - o Teacher's Guide com os CATORZE campos (Doc 04 §8.1)
 
 USO:
-    python3 scripts/black/build_black.py _build/black/{slug}/config.json
-    python3 scripts/black/build_black.py --round-trip
+    python3 scripts/consultivo/build_consultivo.py _build/consultivo/{slug}/config.json
+    python3 scripts/consultivo/build_consultivo.py --round-trip
 """
 import importlib.util
 import json
@@ -40,8 +40,8 @@ import re
 import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SHELL = os.path.join(RAIZ, "_build", "model", "shells", "black.html")
-ARTEFATO = os.path.join(RAIZ, "_build", "model", "artefatos", "marcos-private-black.html")
+SHELL = os.path.join(RAIZ, "_build", "model", "shells", "consultivo.html")
+ARTEFATO = os.path.join(RAIZ, "_build", "model", "artefatos", "marcos-consultivo.html")
 
 _spec = importlib.util.spec_from_file_location(
     "extrai_shell", os.path.join(os.path.dirname(os.path.abspath(__file__)), "extrai_shell.py"))
@@ -286,9 +286,9 @@ def monta(cfg, base_frag):
                    % (c["numero"], c["aulas"], c["primeira"], c["porBloco"], c["nivel"]))
     js = troca_var(js, "LESSONS", "{\n" + ",\n".join(lessons) + "\n}")
     js = troca_var(js, "GUIDE", "{\n" + ",\n".join(guides) + "\n}")
-    js = js.replace("var STORE='pv_private-black-modelo_v1';",
+    js = js.replace("var STORE='pv_consultivo-modelo_v1';",
                     "var STORE='pv_%s_v1';" % re.sub(r"[^A-Za-z0-9_-]", "-", cfg["artefato_id"]))
-    js = js.replace("localStorage.getItem('pv_private-black-modelo_v1')",
+    js = js.replace("localStorage.getItem('pv_consultivo-modelo_v1')",
                     "localStorage.getItem('pv_%s_v1')"
                     % re.sub(r"[^A-Za-z0-9_-]", "-", cfg["artefato_id"]))
     # ---- o que o artefato deixou CRAVADO em numero de aula
@@ -599,13 +599,13 @@ def confere_aula(n, registro_js, guide_js, pasta):
 
 def round_trip():
     """Monta com os fragmentos do proprio artefato e compara regiao por regiao."""
-    base = os.path.join(RAIZ, "_build", "black", "_do-artefato")
+    base = os.path.join(RAIZ, "_build", "consultivo", "_do-artefato")
     if not os.path.isdir(base):
-        print("rode antes: python3 scripts/black/extrai_fragmentos.py", file=sys.stderr)
+        print("rode antes: python3 scripts/consultivo/extrai_fragmentos.py", file=sys.stderr)
         return 1
     cfg = {
         "slug": "_round-trip",
-        "artefato_id": "private-black-c02-19-38",
+        "artefato_id": "consultivo-c02-19-38",
         "aluno": {"nome": "Marcos", "sobrenome": "Mansour"},
         "ciclo": {"numero": 2, "aulas": 20, "primeira": 19, "porBloco": 4, "nivel": "B1"},
         "aulas": [19, 20],
@@ -680,9 +680,9 @@ def _selftest():
     do guia ausente, etapa fora de ordem."""
     import shutil
     import tempfile
-    base = os.path.join(RAIZ, "_build", "black", "_do-artefato")
+    base = os.path.join(RAIZ, "_build", "consultivo", "_do-artefato")
     if not os.path.isdir(base):
-        print("rode antes: python3 scripts/black/extrai_fragmentos.py")
+        print("rode antes: python3 scripts/consultivo/extrai_fragmentos.py")
         return 1
     tmp = tempfile.mkdtemp(prefix="bb_")
     try:

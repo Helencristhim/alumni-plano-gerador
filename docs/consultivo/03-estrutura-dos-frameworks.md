@@ -2,7 +2,7 @@
 > Origem: `03_Estrutura_dos_Frameworks.docx`
 > Drive ID: `1pV-HSzKsjQmBV9vO3QEmooTZ0_tgPd6g`
 > Modificado no Drive: 2026-08-24
-> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/03-estrutura-dos-frameworks.md`
+> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/03-estrutura-dos-frameworks.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
 ## 03 · ESTRUTURA DOS FRAMEWORKS

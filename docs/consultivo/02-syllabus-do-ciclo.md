@@ -2,7 +2,7 @@
 > Origem: `02_Syllabus_do_Ciclo.docx`
 > Drive ID: `1Suwu2KJKCkNS2-mRvT6vDyL-ai0Jvg5M`
 > Modificado no Drive: 2026-08-21
-> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/02-syllabus-do-ciclo.md`
+> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/02-syllabus-do-ciclo.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
 ## 02 · SYLLABUS DO CICLO

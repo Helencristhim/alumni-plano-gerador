@@ -390,30 +390,30 @@ jobs:
         run: python3 scripts/check_reveal_clica.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
       - name: "GATE 35 — selftest: prova que o gate da carga limpa ainda morde"
-        run: python3 scripts/black/check_carga_limpa.py --selftest
+        run: python3 scripts/consultivo/check_carga_limpa.py --selftest
 
-      - name: "GATE 35 — o shell do private-black abre sem erro e constrói o que promete"
-        run: python3 scripts/black/check_carga_limpa.py
+      - name: "GATE 35 — o shell do consultivo abre sem erro e constrói o que promete"
+        run: python3 scripts/consultivo/check_carga_limpa.py
 
-      - name: "private-black — selftest: prova que os asserts do builder ainda mordem"
+      - name: "consultivo — selftest: prova que os asserts do builder ainda mordem"
         run: |
-          python3 scripts/black/extrai_fragmentos.py
-          python3 scripts/black/build_black.py --selftest
+          python3 scripts/consultivo/extrai_fragmentos.py
+          python3 scripts/consultivo/build_consultivo.py --selftest
 
-      - name: "private-black — round-trip: o builder devolve o artefato a partir dos fragmentos dele"
-        run: python3 scripts/black/build_black.py --round-trip
+      - name: "consultivo — round-trip: o builder devolve o artefato a partir dos fragmentos dele"
+        run: python3 scripts/consultivo/build_consultivo.py --round-trip
 
-      - name: "private-black — o inventário continua sendo o que o artefato mede"
-        run: python3 scripts/black/gen_inventario.py --check
+      - name: "consultivo — o inventário continua sendo o que o artefato mede"
+        run: python3 scripts/consultivo/gen_inventario.py --check
 
       - name: "GATE 36 — selftest: prova que o gate do isolamento ainda morde"
-        run: python3 scripts/black/check_isolamento_aluno.py --selftest
+        run: python3 scripts/consultivo/check_isolamento_aluno.py --selftest
 
       - name: "GATE 36 — a URL do aluno não entrega o que não é dele"
-        run: python3 scripts/black/check_isolamento_aluno.py
+        run: python3 scripts/consultivo/check_isolamento_aluno.py
 
-      - name: "private-black — o shell continua sendo o artefato (nada reescrito no caminho)"
-        run: python3 scripts/black/extrai_shell.py --check
+      - name: "consultivo — o shell continua sendo o artefato (nada reescrito no caminho)"
+        run: python3 scripts/consultivo/extrai_shell.py --check
 
       - name: "GATE 12 — selftest: prova que o gate do PPP ainda morde"
         run: python3 scripts/check_ppp_lesson.py --selftest
@@ -710,10 +710,10 @@ jobs:
         run: python3 scripts/test_senhas_estaveis.py
 
       - name: "GATE 34 — selftest: prova que o gate do pacote normativo ainda morde"
-        run: python3 scripts/black/check_docs_pacote.py --selftest
+        run: python3 scripts/consultivo/check_docs_pacote.py --selftest
 
-      - name: "GATE 34 — o pacote normativo do private-black está inteiro"
-        run: python3 scripts/black/check_docs_pacote.py
+      - name: "GATE 34 — o pacote normativo do consultivo está inteiro"
+        run: python3 scripts/consultivo/check_docs_pacote.py
 
       - name: "Validador em modo AVISO (arquivos modificados — não bloqueia legado)"
         if: steps.files.outputs.modified != ''

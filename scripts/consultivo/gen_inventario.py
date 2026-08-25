@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Gera a entrada `private-black` do inventario (_build/model/anatomias.json) MEDINDO o artefato.
+"""Gera a entrada `consultivo` do inventario (_build/model/anatomias.json) MEDINDO o artefato.
 
 POR QUE GERADO, E NAO ESCRITO A MAO
 -----------------------------------
@@ -17,8 +17,8 @@ entao ninguem pode digita-la errado -- e o `--check` no CI reprova se o arquivo 
 deixar de ser o que sairia da medicao de hoje.
 
 USO:
-    python3 scripts/black/gen_inventario.py            # escreve
-    python3 scripts/black/gen_inventario.py --check    # so confere
+    python3 scripts/consultivo/gen_inventario.py            # escreve
+    python3 scripts/consultivo/gen_inventario.py --check    # so confere
 """
 import collections
 import json
@@ -27,7 +27,7 @@ import re
 import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-ARTEFATO = os.path.join(RAIZ, "_build", "model", "artefatos", "marcos-private-black.html")
+ARTEFATO = os.path.join(RAIZ, "_build", "model", "artefatos", "marcos-consultivo.html")
 INV = os.path.join(RAIZ, "_build", "model", "anatomias.json")
 
 # Regiao -> como acha-la. A regiao importa: a mesma classe pode servir a dois lugares, e o
@@ -84,8 +84,8 @@ def mede():
     return por_regiao, todas
 
 
-SHELL_PROF = os.path.join(RAIZ, "_build", "model", "shells", "black.html")
-SHELL_ALU = os.path.join(RAIZ, "_build", "model", "shells", "black-aluno.html")
+SHELL_PROF = os.path.join(RAIZ, "_build", "model", "shells", "consultivo.html")
+SHELL_ALU = os.path.join(RAIZ, "_build", "model", "shells", "consultivo-aluno.html")
 
 
 def abas_de(caminho):
@@ -101,14 +101,14 @@ def monta():
     return {
         "_o_que_e": ("A anatomia do molde adulto NOVO. O molde e stephanie-vicente; este "
                      "inventario descreve a FORMA que ele passa a ter. As classes sao "
-                     "MEDIDAS no artefato por scripts/black/gen_inventario.py -- nunca "
+                     "MEDIDAS no artefato por scripts/consultivo/gen_inventario.py -- nunca "
                      "digitadas, porque inventario escrito a mao a partir da copia valida "
                      "qualquer copia."),
-        "artefato": "_build/model/artefatos/marcos-private-black.html",
-        "shell": "_build/model/shells/black.html",
-        "shell_aluno": "_build/model/shells/black-aluno.html",
+        "artefato": "_build/model/artefatos/marcos-consultivo.html",
+        "shell": "_build/model/shells/consultivo.html",
+        "shell_aluno": "_build/model/shells/consultivo-aluno.html",
         "origem": ("Material do Marcos Mansour, escrito fora do sistema em agosto/2026 ja sob "
-                   "o pacote normativo novo (docs/private-black/). Duas aulas do bloco 1: "
+                   "o pacote normativo novo (docs/consultivo/). Duas aulas do bloco 1: "
                    "19 Listening into Interaction e 20 Reading into Speaking."),
         # As abas sao MEDIDAS nos dois builds, nao digitadas: o rotulo visivel ("Perfil",
         # "Planning") muda com a visao, e o que o gate consegue conferir e o identificador.
@@ -136,12 +136,12 @@ def main():
     novo = monta()
     with open(INV, encoding="utf-8") as fh:
         inv = json.load(fh)
-    atual = inv["anatomias"].get("private-black")
+    atual = inv["anatomias"].get("consultivo")
     if check:
         if atual != novo:
             print("FALHOU — o inventario no disco nao e o que sairia do artefato hoje.")
             if atual is None:
-                print("  (a entrada 'private-black' nao existe)")
+                print("  (a entrada 'consultivo' nao existe)")
             else:
                 a, b = set(atual.get("componentes", {})), set(novo["componentes"])
                 if a - b:
@@ -149,10 +149,10 @@ def main():
                 if b - a:
                     print("  falta no inventario:", sorted(b - a)[:12])
             return 1
-        print(f"OK — inventario private-black bate com o artefato "
+        print(f"OK — inventario consultivo bate com o artefato "
               f"({len(novo['componentes'])} componentes).")
         return 0
-    inv["anatomias"]["private-black"] = novo
+    inv["anatomias"]["consultivo"] = novo
     with open(INV, "w", encoding="utf-8") as fh:
         json.dump(inv, fh, ensure_ascii=False, indent=2)
         fh.write("\n")

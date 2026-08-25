@@ -27,7 +27,7 @@ e shell, e nao entra aqui:
     aulaN/cartao.json     o cartao da aba In-class: objetivo, produto e a preparacao
 
 USO:
-    python3 scripts/black/extrai_fragmentos.py [--destino _build/black/_do-artefato]
+    python3 scripts/consultivo/extrai_fragmentos.py [--destino _build/consultivo/_do-artefato]
 """
 import json
 import os
@@ -35,8 +35,8 @@ import re
 import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-ARTEFATO = os.path.join(RAIZ, "_build", "model", "artefatos", "marcos-private-black.html")
-DESTINO = os.path.join(RAIZ, "_build", "black", "_do-artefato")
+ARTEFATO = os.path.join(RAIZ, "_build", "model", "artefatos", "marcos-consultivo.html")
+DESTINO = os.path.join(RAIZ, "_build", "consultivo", "_do-artefato")
 
 
 def mascara_script_style(s):
