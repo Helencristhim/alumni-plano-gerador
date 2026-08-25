@@ -166,6 +166,21 @@ CARTAO = """<div class="lesson-card" id="lc{n}">
       </div>"""
 
 
+# O bloco de feedback de UMA aula, na aba do aluno. Byte-a-byte igual ao do artefato --
+# travessao LITERAL, nao `&mdash;`: a diferenca de 18 bytes por bloco foi o que o
+# `--round-trip` acusou na primeira versao, e e exatamente para isso que ele existe.
+FEEDBACK_BLOCO = """<div id="sf{n}"{oculto}>
+    <h3 class="sub">Lesson {n:02d} — <em>{tema}</em></h3>
+    <div class="brief" id="sf{n}-box" style="display:none">
+      <dl>
+        <dt>What worked</dt><dd id="sf{n}-worked">—</dd>
+        <dt>Keep developing</dt><dd id="sf{n}-develop">—</dd>
+      </dl>
+    </div>
+    <p class="subprompt" id="sf{n}-empty" style="display: block;">Feedback will be available after the lesson.</p>
+  </div>"""
+
+
 def cartao_de_aula(n, reg, dados, telas, minutos):
     def campo(nome, padrao=""):
         m = re.search(nome + r":'([^']*)'", reg)
@@ -380,14 +395,17 @@ def monta(cfg, base_frag):
         if os.path.exists(caminho):
             html = troca_bloco_por_id(html, ident,
                                       open(caminho, encoding="utf-8").read().strip())
-    rotulos, pre, post = {}, [], []
-    for n in aulas:
+    rotulos, pre, post, fb = {}, [], [], []
+    for i, n in enumerate(aulas):
         pasta = os.path.join(base_frag, f"aula{n}")
         reg = open(os.path.join(pasta, "registro.js"), encoding="utf-8").read()
         mod = (re.search(r"mod:'([^']+)'", reg) or [None, "—"])[1]
+        tema = (re.search(r"tema:'([^']*)'", reg) or [None, ""])[1]
         rotulos[n] = (f"Aula {n:02d} &middot; {mod}", f"Lesson {n:02d}")
         pre.append(open(os.path.join(pasta, "preclass.html"), encoding="utf-8").read().strip())
         post.append(open(os.path.join(pasta, "postclass.html"), encoding="utf-8").read().strip())
+        fb.append(FEEDBACK_BLOCO.format(
+            n=n, tema=tema, oculto="" if i == 0 else ' style="display:none"'))
     # os cartoes da aba In-class, gerados do registro + cartao.json
     cartoes = []
     for n in aulas:
@@ -454,7 +472,44 @@ def monta(cfg, base_frag):
 
     html = troca_blocos_de_aula(html, "tab-preclass", "pc", "preSel", aulas, rotulos, pre)
     html = troca_blocos_de_aula(html, "tab-postclass", "ps", "postSel", aulas, rotulos, post)
+    # A ABA FEEDBACK TAMBEM E POR AULA, e ficou de fora ate 25/08/2026.
+    #
+    # Ela tem a MESMA forma das outras duas (barra com fbSel(N) + blocos sfN), e mesmo assim
+    # nunca foi reconstruida: o material publicado saiu com `Lesson 19` e `Lesson 20`, os
+    # titulos do artefato do Marcos ("Reading the room", "From evidence to a briefing"), num
+    # ciclo que tem as aulas 1 a 4. Nos DOIS arquivos -- e a aba e `data-view="aluno"`, entao
+    # quem via as duas aulas inexistentes era o ALUNO.
+    #
+    # E o catalogo do auditor chama isso de INT-002 (contaminacao de ciclo, BLOCKER):
+    # "aparecem numeros de aula, bloco, checkpoint ou decisoes de outro ciclo".
+    #
+    # Nenhum gate viu porque todos olhavam para o que o builder EMITE. Este defeito e do que
+    # ele NAO emite: a regiao ficou intacta, valida, bonita e de outro aluno. Quem cobra
+    # agora e o GATE 39 (check_ciclo_limpo.py), que le o intervalo do ciclo e reprova
+    # referencia a aula fora dele.
+    html = troca_blocos_de_aula(html, "tab-feedback", "sf", "fbSel", aulas, rotulos, fb)
     html, n_telas = troca_slides(html, slides)
+
+    # O TITULO DO MENU DE SLIDES NASCE COM O NUMERO DA AULA DO ARTEFATO.
+    #
+    # `smPaint()` reescreve `#smTitle` com a aula corrente, entao na pratica a tela quase
+    # sempre mostra o numero certo. Mas o texto CRAVADO no arquivo continua sendo o do
+    # artefato ("Lesson 19 · 10 slides"), e estado inicial e o que sobra quando a pintura
+    # nao roda -- e neste shell isso ja aconteceu: uma excecao no boot leva junto todos os
+    # construtores seguintes (P2 §25). O aluno abriria o menu e leria uma aula que nao
+    # existe no ciclo dele.
+    #
+    # Estado inicial e conteudo, nao detalhe: quem nasce contaminado passa em todo gate
+    # estatico e so aparece quando o JS falha, que e exatamente quando ninguem esta olhando.
+    if aulas:
+        # A contagem sai das TELAS da primeira aula, nunca do tamanho do HTML dela: a
+        # primeira versao disto escreveu "27946 slides" -- len() de uma string.
+        n_prim = len(re.findall(r'<div class="slide[^"]*"[^>]*data-slide=',
+                                slides[0] if slides else ""))
+        html = re.sub(r'(<span id="smTitle">)[^<]*(</span>)',
+                      lambda m: f"{m.group(1)}Lesson {aulas[0]:02d} &middot; "
+                                f"{n_prim} slides{m.group(2)}",
+                      html, count=1)
 
     # A tabela BUILDERS diz quem preenche qual host, e e o que faz o Reset de aula
     # reconstruir a tela em vez de deixa-la vazia. Ela vinha com os hosts do MODELO. Aqui e
@@ -620,7 +675,8 @@ def round_trip():
 
     print("=== round-trip: artefato -> fragmentos -> builder -> material")
     dif = 0
-    for ident in ("tab-planning", "tab-syllabus", "pc19", "pc20", "ps19", "ps20"):
+    for ident in ("tab-planning", "tab-syllabus", "pc19", "pc20", "ps19", "ps20",
+                  "sf19", "sf20"):
         a, g = regiao(art, hm_a, ident), regiao(gerado, hm_g, ident)
         igual = a.strip() == g.strip()
         dif += 0 if igual else 1

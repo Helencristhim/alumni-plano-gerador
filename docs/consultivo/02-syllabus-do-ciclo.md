@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `02_Syllabus_do_Ciclo.docx`
 > Drive ID: `1Suwu2KJKCkNS2-mRvT6vDyL-ai0Jvg5M`
-> Modificado no Drive: 2026-08-21
+> Modificado no Drive: 2026-08-25
 > Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/02-syllabus-do-ciclo.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -76,6 +76,14 @@ O ciclo tem vinte aulas organizadas em cinco blocos de quatro. As aulas 1–4 co
 - **Após o checkpoint da aula 4, necessidade urgente ou dominante de ESP** pode justificar várias aulas de ESP no mesmo bloco, sem obrigação de compensar a ausência de outra modalidade. A decisão deve ser registrada e vinculada a uma situação real, interlocutor e resultado esperado.
 - **Grammar só é selecionada** quando houver lacuna estrutural defensável ou hipótese diagnóstica explícita. Pode ser adiada ou não integrar o ciclo quando não houver essa necessidade: Grammar existe para resolver uma limitação comunicativa, não para cumprir uma cota curricular.
 - **Após o checkpoint da aula 4, prioridade de habilidade** pode justificar a repetição de Reading ou Listening dentro do mesmo bloco. Cada aula precisa avançar a operação comunicativa, o grau de apoio ou a transferência, em vez de apenas repetir tema ou mecânica.
+
+### 2.3 Prioridade de modalidade e rotação da produção comunicativa
+
+A prioridade de Speaking, Interaction ou outra modalidade determina a frequência e o peso das evidências correspondentes, mas não fixa uma única mecânica de produção. Alta prioridade de produção oral e interativa não autoriza a adoção automática de role-play, simulação ou professor como interlocutor em todas as aulas.
+
+A produção principal de cada aula deve ser escolhida conforme o framework, a operação comunicativa, o interlocutor funcional, o produto esperado, o tipo de evidência e a posição da aula no bloco. Dentro de cada bloco, verificar rotação funcional entre possibilidades como conversa orientada, briefing, information gap, mediação, apresentação, reconstrução, tomada de decisão, Q&A, gravação, relato, comparação, negociação e simulação. A lista é exemplificativa e não cria cota de mecânicas.
+
+Role-play ou simulação somente é escolhido quando papéis, interlocutores, objetivos e consequências forem constitutivos da operação comunicativa. A repetição de uma mecânica dentro do bloco é permitida quando houver justificativa pedagógica verificável e quando a nova atividade modificar materialmente a operação, a condição de realização, o produto ou a evidência observada. Mudar apenas tema ou vocabulário não constitui variação suficiente.
 
 ### 3. As quatro modalidades
 

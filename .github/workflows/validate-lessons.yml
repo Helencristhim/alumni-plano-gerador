@@ -426,6 +426,15 @@ jobs:
       - name: "GATE 37 — a aula da anatomia consultivo é o que ela promete ser"
         run: python3 scripts/consultivo/validate_consultivo.py
 
+      - name: "GATE 39 — selftest: prova que o gate da contaminação de ciclo ainda morde"
+        run: python3 scripts/consultivo/check_ciclo_limpo.py --selftest
+
+      # Também sem `if:`: o gate se escopa pelo carimbo e a varredura é barata. E este em
+      # especial precisa ver o repo inteiro — o defeito que ele impede (aba Feedback com as
+      # aulas 19 e 20 do artefato) estava num arquivo que ninguém tinha acabado de tocar.
+      - name: "GATE 39 — o material fala só das aulas do próprio ciclo"
+        run: python3 scripts/consultivo/check_ciclo_limpo.py
+
       - name: "GATE 12 — selftest: prova que o gate do PPP ainda morde"
         run: python3 scripts/check_ppp_lesson.py --selftest
 

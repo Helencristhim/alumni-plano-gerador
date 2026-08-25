@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `05_Ciclo_de_Evolucao.docx`
 > Drive ID: `1kVVhJMMQ5N6i9UkEycXpvzAbPBmMUQa5`
-> Modificado no Drive: 2026-08-21
+> Modificado no Drive: 2026-08-25
 > Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/05-ciclo-de-evolucao.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -46,7 +46,7 @@ O syllabus projeta; o estado descreve; o histórico impede repetição. Uma deci
 | Grau de apoio | Quanto e que tipo de andaime é necessário |
 | Evidências por habilidade | Separadas, nunca somadas |
 | Evolução da interação | Turno, reação, gestão da conversa |
-| Resultado dos retasks | Se a melhoria se aplicou |
+| Resultado de retasks, quando realizados | Se o ajuste observado se aplicou; ausência de retask não constitui falha |
 | Distância dos critérios de sucesso | Quanto falta, em comportamento observável |
 | Decisões de checkpoint | O que foi decidido, com base em quê |
 
@@ -198,7 +198,9 @@ A autoavaliação **registra percepção de confiança**. Ela não comprova apre
 
 #### 8.1 Os módulos “+”
 
-**A1+, A2+, B1+, B2+ e C1+ são módulos internos de transição, não níveis oficiais do CEFR.** O “+” indica consolidação do nível atual com introdução controlada das demandas do seguinte.
+A1+, A2+, B1+, B2+ e C1+ são módulos internos de transição, não níveis oficiais do CEFR. O “+” indica consolidação do nível atual com introdução controlada das demandas do seguinte; não autoriza aplicar integral ou automaticamente os parâmetros do nível seguinte.
+
+Em uma faixa “+”, um parâmetro pode aproximar-se ou, quando sustentado pelo perfil, coincidir isoladamente com o nível seguinte, desde que os demais eixos permaneçam controlados. A decisão considera duração, densidade lexical, velocidade, previsibilidade, novidade, número de falantes, segmentação, quantidade de escutas, apoio visual e disponibilidade posterior de transcript. Não aumentar simultaneamente duração, densidade, novidade e imprevisibilidade. Qualquer coincidência com o teto do nível seguinte deve ser justificada pelo perfil e pela configuração da tarefa, e não pela simples existência daquele teto.
 
 Sequência de referência: **A1 → A2 → B1 → B2 → C1 → módulo avançado.**
 
@@ -215,6 +217,12 @@ Enquanto não houver um percurso avançado formalmente elaborado, o aluno C1 pod
 #### 8.3 As rotas não são um ranking
 
 As três rotas se apresentam como **possibilidades**, com o contexto em que cada uma se considera — nunca numeradas por preferência, nunca com uma delas marcada como “a mais provável”. Uma rota apresentada como provável antes da evidência é uma decisão disfarçada de projeção.
+
+### 8.4 Evidência, feedback e continuidade
+
+O registro do ciclo não presume que toda task produza falha nem exige retask em todas as aulas. O feedback registra forças demonstradas, desempenho mantido sob pressão, mudanças observadas e focos de desenvolvimento sustentados pela evidência.
+
+Registrar resultado de retask somente quando ele tiver sido realizado. Se os critérios forem atendidos na primeira produção, documentar a força a preservar ou ampliar e a continuidade escolhida — extensão, challenge, task repetition para comparação ou new task/transfer. A ausência de retask não reduz a avaliação nem constitui evidência negativa.
 
 ### 9. Continuidade entre ciclos
 

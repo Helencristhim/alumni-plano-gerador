@@ -1,7 +1,7 @@
 > **Documento normativo importado do Drive — nao editar aqui.**
 > Origem: `P3_Matriz_de_Conformidade_e_Especificacao_da_Suite.docx`
 > Drive ID: `10Cv9RpQW2c-_zWktQiXdOZsAqVlCUp0q`
-> Modificado no Drive: 2026-08-24
+> Modificado no Drive: 2026-08-25
 > Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/P3-matriz-de-conformidade.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
@@ -96,7 +96,7 @@ Origem: Documento 03 e P1 §4. Cada framework possui oito etapas normativas em o
 
 **2.2 Modo de entrega declarado na interface**
 
-Origem: P1 §0 e §17. No modo protótipo o material **declara uma vez** que o áudio não é final.
+Origem: P1 §0 e §17. O modo é entrada obrigatória do pipeline; a suíte deriva o modo efetivamente entregue pelos recursos e mecanismos do build e verifica se corresponde à entrada declarada. No modo protótipo, o material declara uma única vez, na primeira área autônoma da visão do aluno que contenha áudio, que o áudio não é final. O aviso não aparece no Teacher’s Guide, nos cartões de preparação nem nas notas de slide.
 
 | **Verificação** | **Resultado obrigatório** |
 |---|---|
@@ -106,9 +106,9 @@ Origem: P1 §0 e §17. No modo protótipo o material **declara uma vez** que o �
 | Língua | o trecho declara a própria língua, para o leitor de tela |
 | Lugar | onde a pessoa **encontra** o áudio, não no conteúdo projetado durante a aula |
 
-**O modo se DERIVA, não se pergunta.** Síntese do navegador é, pela definição do P1 §0, modo protótipo. Uma checagem que dependesse de alguém declarar o modo falharia exatamente no caso em que ninguém declarou — e no dia em que o áudio virar definitivo, a exigência do aviso desaparece sozinha, junto com a síntese.
+Para fins de QA, o modo efetivo se deriva e não se aceita apenas por declaração. Síntese do navegador caracteriza protótipo; áudio definitivo sem caminho de síntese caracteriza produção final. A checagem deve detectar declaração incompatível com o build, aviso ausente, aviso duplicado ou aviso colocado em superfície docente proibida.
 
-**Mutações obrigatórias:** remover o aviso · duplicá-lo · trocar a consequência por tecnologia (*"as vozes do navegador"*) · retirar a marca de língua.
+Mutações obrigatórias: remover o aviso · duplicá-lo · colocá-lo somente ou também no Teacher’s Guide · movê-lo para área docente · trocar a consequência por tecnologia (“as vozes do navegador”) · retirar a marca de língua · declarar produção final mantendo síntese do navegador.
 
 **2.3 Origem, segurança e correspondência dos áudios**
 
@@ -134,7 +134,9 @@ Na produção final, os testes executam duas URLs oficiais e inspecionam separad
 
 •  **ação do professor não aparece como ação concluída pelo aluno**;
 
-•  resposta e atividade do aluno **podem** aparecer para o professor, onde essa visualização estiver prevista;
+• a resposta registrada do aluno aparece ao professor em representação estática equivalente, sem permanecer como botão, campo, select, checkbox, radio, área arrastável ou outro controle interativo/desabilitado;
+
+• a representação estática distingue resposta registrada, ausência de resposta e, quando aplicável, estado de correção, sem permitir alteração; mutações que removam a resposta junto com o controle ou mantenham controle desabilitado devem reprovar;
 
 •  controle do aluno **não se confunde** com controle administrativo;
 
@@ -233,6 +235,8 @@ Origem: P1 §18. A coerência se verifica **por tipo de tarefa**, não por regra
 
 **In-class:** resposta esperada, critério de aceite, alternativa possível e orientação de condução ficam **no Teacher's Guide** · a tela compartilhada **não revela antes da tentativa** · atividade fechada pode usar Check · referência ou comparação usa See ou Compare, **nunca** **Check** · guided discovery pode revelar One possible answer depois da tentativa · discussão, simulação, role-play e produção aberta **não recebem resposta única artificial**.
 
+Exact prompt no Teacher’s Guide: o campo é condicional. Deve aparecer somente quando o professor precisa dizer formulação não integralmente projetada ou quando sua alteração mudaria tarefa, evidência ou papel docente. Reprovar repetição do prompt completo da tela, campo vazio, “N/A”, ausência quando a formulação específica é necessária e “Exact prompt” residual após mudança da mecânica.
+
 **Post-class:** atividade fechada ou autocorrigida segue a mesma coerência; atividade aberta **não se converte** em exercício de resposta única para facilitar a automação.
 
 **A fonte única de respostas é a implementação preferencial. O requisito BLOQUEANTE é a ausência de divergência perceptível entre correção, gabarito e feedback.** O teste compara **o que cada visão apresenta**, não a forma como o dado foi guardado.
@@ -272,15 +276,15 @@ Classificação: **condicional** no protótipo, quando implementação e *fallba
 
 **10. Conteúdo editorial e linguagem de interface**
 
-Procurar: linguagem de decisão de produção · explicação sobre implementação, armazenamento ou cálculo interno · justificativa dirigida ao gerador · nota sobre limitação que não diz respeito a quem usa · instrução de QA deixada em tela · mistura indevida de português e inglês · grafia britânica em material definido em American English · erro de digitação e rótulo inconsistente · **Markdown literal ou quebrado** · título truncado ou quebrado por erro de layout.
+Procurar: linguagem de decisão de produção · explicação sobre implementação, armazenamento ou cálculo interno · justificativa dirigida ao gerador · nota sobre limitação que não diz respeito a quem usa · instrução de QA deixada em tela · histórico de revisão em comentário de código · mistura indevida de português e inglês · grafia britânica em material definido em American English · erro de digitação e rótulo inconsistente · Markdown literal ou quebrado · título truncado ou quebrado por erro de layout. Comentários técnicos são permitidos somente quando descrevem o estado vigente, a razão funcional necessária ou, quando indispensável, a fonte normativa atual; narrativa de versões anteriores, tentativas, feedbacks ou bugs já corrigidos reprova.
 
 **Lista expansível de expressões proibidas + lista controlada de exceções.** E **a palavra isolada não autoriza correção automática sem análise de contexto** — citação literal de fonte autêntica preserva a grafia original (P1 §16), e corrigi-la é destruir o objeto da aula.
 
 **11. Sistema visual, tipografia e espaçamento**
 
-Por análise do DOM, estilo computado e regressão visual: tokens aprovados da identidade Alumni by Better · preservação da identidade premium/black · ausência de ativo tipográfico externo · famílias efetivamente disponíveis no build · pergunta principal na família display do sistema, em itálico moderado e peso médio · tamanho maior que o corpo e menor que o título · listas e quiz projetado na mesma família de referência, preservando componentes distintos · contraste mínimo aplicável sobre fundos claros, escuros e compostos · largura controlada · quebra de linha sem corte, overflow ou linha órfã crítica · caixa normal em perguntas longas · alinhamento à esquerda como padrão · centralização restrita a pergunta curta que seja o único foco da tela · espaçamento entre pergunta, texto, cards e controles · responsividade nas larguras previstas.
+Por análise do DOM, estilo computado e regressão visual: tokens aprovados da identidade Alumni by Better · preservação da identidade premium/black · ausência de ativo tipográfico externo · família computada e ativo efetivamente disponível no build · pergunta principal na família display do sistema, em itálico moderado e peso visual intermediário · tamanho maior que o corpo e menor que o título · listas e quiz projetado na mesma família de referência, preservando componentes distintos · contraste mínimo aplicável sobre fundos claros, escuros e compostos · largura controlada · quebra de linha sem corte, overflow ou linha órfã crítica · caixa normal em perguntas longas · alinhamento à esquerda como padrão · centralização restrita a pergunta curta que seja o único foco da tela · espaçamento entre pergunta, texto, cards e controles · responsividade nas larguras previstas. Peso médio é função perceptiva e não exige um valor CSS específico; document.fonts.check() isoladamente não aprova a fonte.
 
-Mutações obrigatórias: restaurar Google Fonts como dependência estrutural; trocar a pergunta principal para a fonte de interface; introduzir terceira família; remover itálico ou peso médio; igualar os três componentes; aplicar caixa alta a pergunta longa; centralizar pergunta longa; remover max-width; reduzir contraste em um dos fundos; forçar quebra ou overflow. A suíte precisa reprovar cada mutação pela propriedade correspondente.
+Mutações obrigatórias: restaurar Google Fonts como dependência estrutural; declarar família indisponível; fazer document.fonts.check() passar sem o ativo pretendido; trocar a pergunta principal para a fonte de interface; introduzir terceira família; remover itálico ou a hierarquia perceptiva de peso; exigir diferença numérica de peso inexistente na família; igualar os três componentes; aplicar caixa alta a pergunta longa; centralizar pergunta longa; remover max-width; reduzir contraste em um dos fundos; forçar quebra ou overflow. A suíte precisa reprovar cada mutação pela propriedade correspondente.
 
 **Contraste se mede sobre o fundo efetivamente composto, transparências incluídas — e a rotina traz canário conhecido**, para provar que consegue detectar uma falha real. Varredura que devolve zero sem canário não provou nada (P2 §3).
 
@@ -349,3 +353,17 @@ Vocabulário do resultado, do 06 §4: **PASSOU · PARCIAL · FALHOU · NÃO VERI
 | **Reprovado** | falha funcional · exposição entre perfis · inconsistência pedagógica · falha silenciosa · perda de dados · inacessibilidade crítica · requisito bloqueante não atendido no ambiente oficial |
 
 **No caso do Teacher's Guide:** o protótipo recebe **aprovação condicional** se o host impedir pop-up. A publicação definitiva só se aprova depois que a abertura do guia correspondente for testada com sucesso **na URL oficial do material**.
+
+## 5.8 Estado operacional, listening contrast e contagem
+
+A suíte deve provar a correspondência entre instrução e estado interativo, a associação visual de cada alternativa auditiva e a revelação posterior do transcript. Deve também comparar programaticamente as quantidades e nomenclaturas entre registro, tela, Teacher’s Guide, Answer Key e condição de conclusão.
+
+Caso positivo: controles e verbos compatíveis em todos os estados da atividade.
+
+Mutação negativa: trocar present por reveal quando todos os cards já estão abertos; a suíte reprova.
+
+Mutação negativa: afastar o player de Version B ou associá-lo à seleção de Version A; a suíte reprova.
+
+Mutação negativa: tornar o transcript visível antes da tentativa; a suíte reprova.
+
+Mutação negativa: declarar quatro funções quando o registro contém cinco, ou alterar o nome de uma versão em somente uma camada; a suíte reprova.
