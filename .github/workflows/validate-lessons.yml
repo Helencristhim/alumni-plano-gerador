@@ -415,6 +415,17 @@ jobs:
       - name: "consultivo — o shell continua sendo o artefato (nada reescrito no caminho)"
         run: python3 scripts/consultivo/extrai_shell.py --check
 
+      - name: "GATE 37 — selftest: prova que o gate da aula consultivo ainda morde"
+        run: python3 scripts/consultivo/validate_consultivo.py --selftest
+
+      # SEM `if:` e SEM lista de arquivos, de proposito. O gate se escopa sozinho pelo
+      # carimbo `alumni-anatomia=consultivo` (le 4 KB de cada HTML de public/ e ignora quem
+      # nao for desta anatomia), entao a varredura completa custa quase nada e pega tambem
+      # a edicao a mao num arquivo que o PR nao tocou. Passar a lista do PR aqui abriria o
+      # caso "classificacao vazia = gate pulado" que o anti-skip acima existe para impedir.
+      - name: "GATE 37 — a aula da anatomia consultivo é o que ela promete ser"
+        run: python3 scripts/consultivo/validate_consultivo.py
+
       - name: "GATE 12 — selftest: prova que o gate do PPP ainda morde"
         run: python3 scripts/check_ppp_lesson.py --selftest
 
