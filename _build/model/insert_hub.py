@@ -314,8 +314,14 @@ def insert(hub_path, cfg, content_dir, is_aluno, replace=False):
     st = next((x for x in cfg['stamps'] if x['id'] == n), None)
     if not st:
         base = cfg['stamps'][(n - 1) % len(cfg['stamps'])] if cfg.get('stamps') else {}
-        label = (cfg['lesson'].get('menu_title', '').split(' -- ')[0]
-                 .split(' — ')[0].strip()) or f'Lesson {n}'
+        # O menu_title vem com MARCACAO (<span class="accent">...</span>) — e o titulo do
+        # card do menu, nao um texto puro. Jogado cru dentro de data-label="..." ele fecha
+        # o atributo na primeira aspa do class="accent" e o resto do titulo vaza como TEXTO
+        # visivel na stamps-row do header. Nenhum gate ve (o HTML segue "valido"), mas o
+        # aluno abre o hub e le lixo ao lado dos selos. Tira-se a marcacao aqui, no builder,
+        # nao no arquivo gerado (REGRA 20).
+        label = (re.sub(r'<[^>]+>', '', cfg['lesson'].get('menu_title', ''))
+                 .split(' -- ')[0].split(' — ')[0].strip()) or f'Lesson {n}'
         st = {'id': n, 'label': label, 'img': base.get('img', '')}
     if f'id="stamp{n}"' in s:
         pulados.append('stamp')
