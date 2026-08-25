@@ -48,6 +48,9 @@ _spec = importlib.util.spec_from_file_location(
 extrai_shell = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(extrai_shell)
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import audio_surface  # noqa: E402  a MESMA lista que o gerador usa
+
 CAMPOS_GUIA = ["identity", "goals", "product", "criteria", "prep", "language", "transcript",
                "difficulties", "scaffolding", "feedback", "evidence", "prepost", "key"]
 ETAPAS = 8
@@ -511,6 +514,41 @@ def monta(cfg, base_frag):
                                 f"{n_prim} slides{m.group(2)}",
                       html, count=1)
 
+    # ---- O AUD_MAP: de que ARQUIVO sai cada som (AUT-004 / Anexo P-A)
+    #
+    # O shell derivado nao sintetiza mais nada: ele PROCURA. `say`/`sayAs` procuram pelo
+    # proprio texto; `playTalk` procura pela chave do trecho (#talkN:de:ate). Quem responde
+    # e este mapa.
+    #
+    # A lista sai de `audio_surface`, o MESMO modulo que o gerador usa para saber o que
+    # produzir. Duas descobertas independentes divergiriam, e a divergencia aqui se
+    # manifesta como audio que nao toca -- sem erro em lugar nenhum.
+    #
+    # Os TURNOS (o instante em que cada falante comeca) so existem depois de gerar, entao
+    # vem do manifesto quando ele ja existe. Sem manifesto o mapa ainda sai, com os nomes de
+    # arquivo -- que sao deterministicos pelo hash do transcript. E por isso que build e
+    # geracao podem rodar em qualquer ordem.
+    mapa = {}
+    manifesto_path = os.path.join(base_frag, "audio_manifest.json")
+    gerado_antes = {}
+    if os.path.exists(manifesto_path):
+        gerado_antes = {x["asset_id"]: x
+                        for x in json.load(open(manifesto_path, encoding="utf-8"))}
+    for item in audio_surface.manifesto(cfg, base_frag):
+        entrada = {"src": f"/audio/{cfg['slug']}/{item['file']}"}
+        turnos = (gerado_antes.get(item["asset_id"]) or {}).get("turnos")
+        if turnos:
+            entrada["turnos"] = turnos
+        mapa[item["chave"]] = entrada
+    if mapa:
+        blob = json.dumps(mapa, ensure_ascii=False).replace("</", "<\\/")
+        # LAMBDA, nunca string crua: no re.sub o replacement e TEMPLATE, e `\n`/`\"` do
+        # JSON virariam newline e aspa de verdade. Mesmo cuidado do PV_POSTS e do audioMap.
+        html = re.sub(r"var AUD_MAP=\(typeof AUD_MAP!=='undefined'\)\?AUD_MAP:\{\};",
+                      lambda _: f"var AUD_MAP={blob};", html, count=1)
+    erros_audio = [k for k in mapa if f'"{k}"' not in html and k not in html]
+
+
     # A tabela BUILDERS diz quem preenche qual host, e e o que faz o Reset de aula
     # reconstruir a tela em vez de deixa-la vazia. Ela vinha com os hosts do MODELO. Aqui e
     # regenerada a partir do que o material tem de fato: host que nao existe sai, e cada aula
@@ -664,6 +702,13 @@ def round_trip():
         "aluno": {"nome": "Marcos", "sobrenome": "Mansour"},
         "ciclo": {"numero": 2, "aulas": 20, "primeira": 19, "porBloco": 4, "nivel": "B1"},
         "aulas": [19, 20],
+        # O elenco e as vozes do PROPRIO artefato. Sem eles o round-trip nao exercitaria o
+        # caminho do audio, e o AUD_MAP -- que e o que faz o som existir depois da troca do
+        # motor (AUT-004) -- ficaria fora do circulo que prova que o builder reproduz.
+        "cast": [{"n": "Nadia", "g": "f"}, {"n": "Tom", "g": "m"}],
+        "voices": {"Nadia": "BIvP0GN1cAtSRTxNHnWS", "Tom": "sfJopaWaOtauCD3HKX6Q",
+                   "_neutra": "sfJopaWaOtauCD3HKX6Q", "_f": "BIvP0GN1cAtSRTxNHnWS",
+                   "_m": "sfJopaWaOtauCD3HKX6Q"},
     }
     gerado, n_telas, erros = monta(cfg, base)
     art = open(ARTEFATO, encoding="utf-8").read()

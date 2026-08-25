@@ -70,11 +70,14 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ARTEFATO = os.path.join(RAIZ, "_build", "model", "artefatos", "marcos-consultivo.html")
 SHELLS = os.path.join(RAIZ, "_build", "model", "shells")
 SHELL_PROF = os.path.join(SHELLS, "consultivo.html")
 SHELL_ALUNO = os.path.join(SHELLS, "consultivo-aluno.html")
+
+import _motor_audio  # a troca do motor de audio (AUT-004), declarada em modulo proprio
 
 CARIMBO = '<meta name="alumni-anatomia" content="consultivo">'
 
@@ -353,6 +356,31 @@ def deriva_professor():
     corpo, n = (re.subn(r"var ARTEFATO=\{id:'[^']*'\}",
                         "var ARTEFATO={id:'" + MODELO_ID + "'}", corpo))
     rel["artefato-id/modelo"] = n
+
+    # ---- O AUDIO DEIXA DE SER SINTESE DO NAVEGADOR (AUT-004)
+    # Ver o cabecalho de scripts/consultivo/_motor_audio.py: a troca mora la porque e
+    # grande, e o que fica aqui e a APLICACAO dela -- cada substituicao tem de casar
+    # exatamente uma vez, senao a derivacao para.
+    for rotulo, velho, novo in _motor_audio.TROCAS:
+        if corpo.count(velho) != 1:
+            raise SystemExit(
+                f"troca do motor de audio ({rotulo}): o trecho casou "
+                f"{corpo.count(velho)} vez(es), e tem de casar exatamente 1. O artefato "
+                f"mudou -- atualize scripts/consultivo/_motor_audio.py em vez de afrouxar "
+                f"a busca.")
+        corpo = corpo.replace(velho, novo, 1)
+        rel["audio/" + rotulo] = 1
+    for nome in _motor_audio.FORA:
+        corpo = remove_funcao(corpo, nome, rel)
+    # A guarda olha CODIGO, nunca prosa: os comentarios que explicam a troca CITAM a
+    # tecnologia proibida, e um `in corpo` cru reprovaria a propria explicacao. E o mesmo
+    # criterio do GATE 36 -- "a mencao nao e a expressao" (P2 §15).
+    codigo = re.sub(r"/\*.*?\*/|//[^\n]*", " ", corpo, flags=re.S)
+    sobrou = [t for t in ("speechSynthesis", "SpeechSynthesisUtterance") if t in codigo]
+    if sobrou:
+        raise SystemExit(f"o motor de audio ainda usa {sobrou} depois da troca. O Anexo P-A "
+                         f"proibe no build oficial -- a troca esta incompleta.")
+
     return monta_documento(corpo), rel
 
 
