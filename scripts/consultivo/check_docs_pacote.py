@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""GATE 34 — o pacote normativo do private-black esta INTEIRO e nao perdeu texto.
+"""GATE 34 — o pacote normativo do consultivo esta INTEIRO e nao perdeu texto.
 
 POR QUE ISTO EXISTE
 -------------------
@@ -18,7 +18,7 @@ roda sempre. Ela cobre dois defeitos que ja aconteceram neste projeto, um de cad
      fora do repo nao e citavel nem verificavel. Aqui, faltar um arquivo REPROVA.
 
   2. DOCUMENTO QUE ESTA MAS ESVAZIOU. Os .md sao conversao mecanica dos .docx do Drive
-     (scripts/black/docx_to_md.py). Uma reimportacao de um .docx corrompido, ou um
+     (scripts/consultivo/docx_to_md.py). Uma reimportacao de um .docx corrompido, ou um
      conversor que perca tabela, produz um arquivo que CONTINUA EXISTINDO, continua
      abrindo, e perdeu a regra. Nada acusaria. Por isso cada documento tem FRASES-CANARIO:
      trechos normativos que a conversao TEM de preservar.
@@ -40,14 +40,14 @@ de tabela, item de lista, identificador tecnico. Se a conversao perder qualquer 
 formas, uma ancora cai.
 
 USO:
-    python3 scripts/black/check_docs_pacote.py
-    python3 scripts/black/check_docs_pacote.py --selftest
+    python3 scripts/consultivo/check_docs_pacote.py
+    python3 scripts/consultivo/check_docs_pacote.py --selftest
 """
 import os
 import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DIR = os.path.join(RAIZ, "docs", "private-black")
+DIR = os.path.join(RAIZ, "docs", "consultivo")
 
 # nome do arquivo -> ancoras que a conversao tem de preservar
 PACOTE = {
@@ -222,7 +222,7 @@ def _selftest():
 def main():
     if "--selftest" in sys.argv:
         return _selftest()
-    print("=== GATE 34 — pacote normativo private-black ===")
+    print("=== GATE 34 — pacote normativo consultivo ===")
     erros = verifica(DIR)
     if erros:
         for e in erros:

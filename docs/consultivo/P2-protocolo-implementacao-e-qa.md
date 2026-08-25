@@ -2,7 +2,7 @@
 > Origem: `P2_Protocolo_de_Implementacao_e_QA.docx`
 > Drive ID: `1WHBj3B9l4z-WI3HDzo0fvHsFpm1obH4b`
 > Modificado no Drive: 2026-08-24
-> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/P2-protocolo-implementacao-e-qa.md`
+> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/P2-protocolo-implementacao-e-qa.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
 **P2 · PROTOCOLO DE IMPLEMENTAÇÃO E QA**

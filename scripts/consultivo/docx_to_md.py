@@ -32,8 +32,8 @@ correta, so nao vem escrita. Se algum dia uma regra depender do numeral, o conve
 numbering.xml; hoje nenhuma depende.
 
 USO:
-    python3 scripts/black/docx_to_md.py ENTRADA.docx SAIDA.md --titulo "00 - Guia de Uso"
-    python3 scripts/black/docx_to_md.py --selftest
+    python3 scripts/consultivo/docx_to_md.py ENTRADA.docx SAIDA.md --titulo "00 - Guia de Uso"
+    python3 scripts/consultivo/docx_to_md.py --selftest
 """
 import argparse
 import os
@@ -173,8 +173,8 @@ def cabecalho(titulo, origem, drive_id, modificado):
         f"> Origem: `{origem}`\n"
         f"> Drive ID: `{drive_id}`\n"
         f"> Modificado no Drive: {modificado}\n"
-        f"> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> "
-        f"docs/private-black/{titulo}.md`\n"
+        f"> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> "
+        f"docs/consultivo/{titulo}.md`\n"
         f"> A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve "
         f"reimportando, nunca editando o .md.\n\n"
     )

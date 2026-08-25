@@ -2,7 +2,7 @@
 > Origem: `A02_Safeguards_de_Instrucao_Atividades_e_Audio.docx`
 > Drive ID: `1jY0HC2k_QNrTGdPDkJsIQLtqX-2TPdqU`
 > Modificado no Drive: 2026-08-21
-> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/A02-safeguards-instrucao-atividades-audio.md`
+> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/A02-safeguards-instrucao-atividades-audio.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
 ## ADENDO NORMATIVO 02

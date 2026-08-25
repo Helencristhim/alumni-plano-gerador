@@ -68,14 +68,22 @@ def carrega():
 
 def gates_no_disco():
     achados = {}
-    # scripts/black e a pasta do molde private-black. Ela entra AQUI, e nao so no
+    # scripts/consultivo e a pasta do molde consultivo. Ela entra AQUI, e nao so no
     # gates.json, porque a checagem 1 (gate no disco sem entrada no registro) so alcanca o
     # que esta nesta lista: uma pasta nova fora dela abriria exatamente o buraco que este
     # meta-gate existe para fechar -- gate que roda no CI e que ninguem declarou.
-    for pasta in ("scripts", os.path.join("scripts", "black"), os.path.join("_build", "model")):
+    for pasta in ("scripts", os.path.join("scripts", "consultivo"), os.path.join("_build", "model")):
         d = os.path.join(RAIZ, pasta)
+        # NUNCA `continue` em silencio. Renomear a pasta de um molde (private-black ->
+        # consultivo, 25/08/2026) fazia este laco pular ela caladinho, e a checagem 1
+        # (gate no disco sem entrada no registro) deixava de alcancar os gates que moram
+        # la -- verde, medindo menos. E o buraco que o proprio meta-gate existe para
+        # fechar. Pasta declarada que sumiu e erro, nao ausencia.
         if not os.path.isdir(d):
-            continue
+            raise SystemExit(
+                f"check_gates_registry: a pasta declarada {pasta!r} nao existe. Se ela foi "
+                f"renomeada, atualize a lista em gates_no_disco() -- senao os gates que "
+                f"moram nela deixam de ser conferidos, em silencio.")
         for nome in sorted(os.listdir(d)):
             if not nome.startswith("check_"):
                 continue

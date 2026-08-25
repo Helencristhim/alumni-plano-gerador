@@ -2,7 +2,7 @@
 > Origem: `00_Guia_de_Uso_e_Precedencia_6_Documentos.docx`
 > Drive ID: `1NTbdDL6LoYrtYgPp93gHvY6z7ajhrl9q`
 > Modificado no Drive: 2026-08-24
-> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/00-guia-de-uso-e-precedencia.md`
+> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/00-guia-de-uso-e-precedencia.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
 ## 00 · GUIA DE USO E PRECEDÊNCIA

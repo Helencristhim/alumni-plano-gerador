@@ -2,7 +2,7 @@
 > Origem: `P1_Camada_Funcional_HTML.docx`
 > Drive ID: `1CgtgTwqgBGuy-_B5yQKbMDFyK0AMEZuK`
 > Modificado no Drive: 2026-08-24
-> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/P1-camada-funcional-html.md`
+> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/P1-camada-funcional-html.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
 **P1 · CAMADA FUNCIONAL (HTML)**

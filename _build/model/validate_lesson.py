@@ -1653,11 +1653,11 @@ def validate(path):
     framework = (m_fw.group(1).strip() if m_fw else 'imersivo-prototipo')
     eh_imersivo = (framework == 'imersivo-prototipo')
 
-    # ── A ANATOMIA private-black NAO PASSA POR AQUI (24/08/2026) ────────────────────────
+    # ── A ANATOMIA consultivo NAO PASSA POR AQUI (24/08/2026) ────────────────────────
     # Este validador e o gate do IMERSIVO: 25 slides, as 5 etapas do pre-class, survival
-    # card, capitulos da narrativa. A anatomia private-black (molde stephanie-vicente novo)
-    # tem outra arquitetura, declarada em docs/private-black/ e cobrada por gates proprios
-    # (20 inventario, 35 carga limpa, 36 isolamento, e os asserts do build_black).
+    # card, capitulos da narrativa. A anatomia consultivo (molde stephanie-vicente novo)
+    # tem outra arquitetura, declarada em docs/consultivo/ e cobrada por gates proprios
+    # (20 inventario, 35 carga limpa, 36 isolamento, e os asserts do build_consultivo).
     #
     # Sem esta saida ele reprova por regras que a outra anatomia nunca prometeu cumprir --
     # mediu "so 10 slides" numa aula cujo normativo diz, com todas as letras, que "e proibido
@@ -1666,7 +1666,7 @@ def validate(path):
     # que ensina a ignorar gate.
     #
     # Aula SEM carimbo continua sendo imersivo por definicao, e nada muda para as 1.221.
-    if 'content="private-black"' in c[:4000]:
+    if 'content="consultivo"' in c[:4000]:
         return [], []
 
     # ===== regras herdadas do validar_aula.py =====

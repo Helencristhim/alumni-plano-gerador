@@ -81,15 +81,15 @@ MP3. Ou seja: desta especificação, falta portar **o deck**.
 
 ---
 
-## `marcos-private-black.html`
+## `marcos-consultivo.html`
 
 **O que é.** O material do **Marcos Mansour** (*Business English Program* · B1 · ciclo 2),
 escrito fora do sistema em agosto/2026, já sob o pacote normativo novo — os documentos
 **00–06**, a **Série P** (P1/P2/P3), os **Adendos 01 e 02** e o **Anexo P-A**
-(`docs/private-black/`). Duas aulas completas do bloco 1 — 19 *Listening into Interaction*
+(`docs/consultivo/`). Duas aulas completas do bloco 1 — 19 *Listening into Interaction*
 e 20 *Reading into Speaking* —, cada uma com 10 telas e 8 etapas.
 
-É a especificação da anatomia **`private-black`** — a forma que o molde
+É a especificação da anatomia **`consultivo`** — a forma que o molde
 **`stephanie-vicente`** passa a ter. O artefato não é o destino do trabalho: ele é de onde a
 forma vem, e quem reproduz para qualquer aluno é o molde (ordem do Dan, 24/08/2026: *"o
 artefato do Marcos Mansur precisa ser levado pro molde stephanie pra só então o molde ser
@@ -110,7 +110,7 @@ transcript, Stop no player nem a janela do Teacher's Guide.
 
 ### O que ele especifica que a anatomia de hoje não tem
 
-| | `guided-discovery` (stephanie, hoje) | este artefato (`private-black`) |
+| | `guided-discovery` (stephanie, hoje) | este artefato (`consultivo`) |
 |---|---|---|
 | abas | Planejamento · Syllabus · Pre-class · In Class · Evidências | **Perfil/Planning · Planejamento · Pre-class · In-class · Feedback · Post-class** |
 | visões | dois arquivos (professor / aluno) | `data-view` no mesmo arquivo — **e é aqui que divergimos de propósito, ver abaixo** |

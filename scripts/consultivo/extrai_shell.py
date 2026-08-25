@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Deriva os DOIS shells da anatomia `private-black` DO ARTEFATO, por script.
+"""Deriva os DOIS shells da anatomia `consultivo` DO ARTEFATO, por script.
 
 POR QUE POR SCRIPT, E NAO A MAO
 -------------------------------
-O artefato (`_build/model/artefatos/marcos-private-black.html`) e a ESPECIFICACAO da
+O artefato (`_build/model/artefatos/marcos-consultivo.html`) e a ESPECIFICACAO da
 interface: dele se COPIA, classe por classe. O porte a mao ja foi feito uma vez neste
 projeto, em 11/08/2026, e renomeou cada peca (`reveal-item` virou `ic-reveal`,
 `blank-input` virou `ic-blank`...); o inventario catalogou a REESCRITA, e o gate passou a
@@ -31,7 +31,7 @@ pagina do claude.ai nao tem duas URLs. Para producao, o alternador continua exis
 URL do professor (como previa) e NAO existe na do aluno, porque nao ha o outro lado dentro
 dela.
 
-    shells/black.html        professor: as 6 abas, o deck, o guia, a previa do aluno
+    shells/consultivo.html        professor: as 6 abas, o deck, o guia, a previa do aluno
 
 O BUILD DO ALUNO E O PROXIMO PASSO, E NAO ESTA AQUI DE PROPOSITO
 ----------------------------------------------------------------
@@ -63,20 +63,20 @@ Reading, e elas nao usam as mesmas pecas. Anatomia e o que a forma OFERECE; a au
 O builder troca o conteudo inteiro, entao duas aulas de exemplo nao custam nada na geracao.
 
 USO:
-    python3 scripts/black/extrai_shell.py            # escreve os dois shells
-    python3 scripts/black/extrai_shell.py --check    # nao escreve: confere o disco
+    python3 scripts/consultivo/extrai_shell.py            # escreve os dois shells
+    python3 scripts/consultivo/extrai_shell.py --check    # nao escreve: confere o disco
 """
 import os
 import re
 import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-ARTEFATO = os.path.join(RAIZ, "_build", "model", "artefatos", "marcos-private-black.html")
+ARTEFATO = os.path.join(RAIZ, "_build", "model", "artefatos", "marcos-consultivo.html")
 SHELLS = os.path.join(RAIZ, "_build", "model", "shells")
-SHELL_PROF = os.path.join(SHELLS, "black.html")
-SHELL_ALUNO = os.path.join(SHELLS, "black-aluno.html")
+SHELL_PROF = os.path.join(SHELLS, "consultivo.html")
+SHELL_ALUNO = os.path.join(SHELLS, "consultivo-aluno.html")
 
-CARIMBO = '<meta name="alumni-anatomia" content="private-black">'
+CARIMBO = '<meta name="alumni-anatomia" content="consultivo">'
 
 # O shell fala os literais do MODELO (stephanie-vicente, a aluna-modelo do molde adulto).
 # O builder troca por aluno. Trocar aqui e o mesmo que o base_swaps faz no imersivo.
@@ -99,7 +99,7 @@ NOMES = [
 # continuava valido, todo gate estatico continuava verde, e o boot morria na primeira linha
 # levando junto TUDO o que vinha depois (P2 §25: a excecao no boot nao fica onde nasceu).
 # Quem pegou foi o GATE 35, no navegador, comparando com o artefato -- que boota limpo.
-MODELO_ID = "private-black-modelo"
+MODELO_ID = "consultivo-modelo"
 STORE_DERIVADO = "var STORE='pv_" + MODELO_ID + "_v1';"
 
 

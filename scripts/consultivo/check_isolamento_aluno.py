@@ -30,8 +30,8 @@ assim no artefato, e continuou assim na minha primeira derivacao), basta um valo
 localStorage para a pagina se declarar docente. Nenhuma busca por texto acha isso.
 
 USO:
-    python3 scripts/black/check_isolamento_aluno.py
-    python3 scripts/black/check_isolamento_aluno.py --selftest
+    python3 scripts/consultivo/check_isolamento_aluno.py
+    python3 scripts/consultivo/check_isolamento_aluno.py --selftest
 """
 import functools
 import http.server
@@ -43,7 +43,7 @@ import sys
 import threading
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-ALVOS = ["_build/model/shells/black-aluno.html"]
+ALVOS = ["_build/model/shells/consultivo-aluno.html"]
 
 # (rotulo, regex sobre os BYTES, de quem e aquilo)
 FORMAS_DOCENTES = [
@@ -93,14 +93,14 @@ def descobre(padrao, rotulo):
     """Todo material da anatomia, achado pelo CARIMBO -- nunca por lista escrita aqui.
 
     Lista no gate envelhece: o material seguinte nasce fora dela e o gate passa dizendo que
-    esta tudo bem. O carimbo <meta name="alumni-anatomia" content="private-black"> esta no
+    esta tudo bem. O carimbo <meta name="alumni-anatomia" content="consultivo"> esta no
     shell, e por isso em tudo que sai dele."""
     import glob
     achados = []
     for caminho in sorted(glob.glob(os.path.join(RAIZ, padrao))):
         try:
             with open(caminho, encoding="utf-8", errors="replace") as fh:
-                if 'content="private-black"' not in fh.read(4000):
+                if 'content="consultivo"' not in fh.read(4000):
                     continue
         except OSError:
             continue
@@ -176,7 +176,7 @@ def tenta_elevar(rel):
             pg = nav.new_page()
             pg.add_init_script(
                 "try{var k=Object.keys(localStorage);}catch(e){}"
-                "localStorage.setItem('pv_private-black-modelo_v1',"
+                "localStorage.setItem('pv_consultivo-modelo_v1',"
                 "JSON.stringify({view:'professor'}));")
             pg.goto(url, wait_until="load")
             pg.wait_for_timeout(400)
@@ -225,7 +225,7 @@ def _selftest():
     import tempfile
     origem = os.path.join(RAIZ, ALVOS[0])
     if not os.path.exists(origem):
-        print("FALHA: build do aluno ausente; rode scripts/black/extrai_shell.py")
+        print("FALHA: build do aluno ausente; rode scripts/consultivo/extrai_shell.py")
         return 1
     s = open(origem, encoding="utf-8").read()
     tmp = tempfile.mkdtemp(prefix="isol_", dir=RAIZ)
@@ -269,7 +269,7 @@ def _selftest():
         # Caso negativo que nao produz o defeito nao prova nada (P2 §22).
         conteudo = s.replace(
             "document.body.setAttribute('data-view','aluno');",
-            "try{var d=JSON.parse(localStorage.getItem('pv_private-black-modelo_v1')||'{}');"
+            "try{var d=JSON.parse(localStorage.getItem('pv_consultivo-modelo_v1')||'{}');"
             "document.body.setAttribute('data-view',d.view==='professor'?'professor':'aluno');}"
             "catch(e){document.body.setAttribute('data-view','aluno');}", 1)
         conteudo = conteudo.replace(

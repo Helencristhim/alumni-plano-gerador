@@ -2,7 +2,7 @@
 > Origem: `04_Planejamento_e_Producao_da_Aula.docx`
 > Drive ID: `1Uwgl1mvwHBtA9MxpvDR91LTt_u2ixib2`
 > Modificado no Drive: 2026-08-24
-> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/04-planejamento-e-producao-da-aula.md`
+> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/04-planejamento-e-producao-da-aula.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
 ## 04 · PLANEJAMENTO E PRODUÇÃO DA AULA

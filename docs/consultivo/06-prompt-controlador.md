@@ -2,7 +2,7 @@
 > Origem: `06_Prompt_Controlador_Pedagogico_Unico.docx`
 > Drive ID: `1QfE6AB_BUKtQh9Sv0qrJrVyY9n8w0G9R`
 > Modificado no Drive: 2026-08-24
-> Reimportar: `python3 scripts/black/docx_to_md.py <arquivo.docx> docs/private-black/06-prompt-controlador.md`
+> Reimportar: `python3 scripts/consultivo/docx_to_md.py <arquivo.docx> docs/consultivo/06-prompt-controlador.md`
 > A fonte e o .docx. Divergencia entre este arquivo e o Drive se resolve reimportando, nunca editando o .md.
 
 ## 06 · PROMPT CONTROLADOR PEDAGÓGICO ÚNICO
