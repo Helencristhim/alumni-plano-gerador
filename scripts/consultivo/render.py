@@ -103,6 +103,33 @@ def r_classificar(b, ident):
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
+def r_completar(b, ident):
+    """Cada enunciado tem os SEUS finais -- nao ha lista comum.
+
+    Parece `classificar` na tela (mesmo `match-grid`, mesmo `mCheck`) e e outro exercicio.
+    Em `classificar` a lista de opcoes e a MESMA em todas as linhas: e isso que faz ser
+    classificacao, e e o que permite ao autor escrever a lista uma vez. Aqui cada frase
+    cobra um final proprio, e reaproveitar a lista da primeira linha -- que era o que a
+    leitura fazia -- trocava as respostas das outras em silencio: o `data-ok` continuava
+    uma letra valida, so apontando para outro texto."""
+    linhas = []
+    for it in b["itens"]:
+        alts = it["alts"]
+        if it["ok"] not in alts:
+            raise SystemExit(f'{ident}: a resposta {it["ok"]!r} nao esta entre os finais de '
+                             f'{it["t"]!r}. O autor escreve o TEXTO do final certo.')
+        ops = ''.join(f'<option value="{LETRAS[i]}">{esc(o)}</option>'
+                      for i, o in enumerate(alts))
+        linhas.append(
+            f'      <div class="match-row"><span class="match-word">{esc(it["t"])}</span>'
+            f'<select data-ok="{LETRAS[alts.index(it["ok"])]}">'
+            f'<option value="" selected="selected">&mdash;</option>{ops}</select></div>')
+    return (f'    <div class="match-grid" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
+            f'    <button class="verify-all-btn ghost" onclick="mCheck(this,\'{ident}\')">'
+            f'Check</button>\n'
+            f'    <div class="score-out" id="{ident}-out"></div>')
+
+
 def r_escolha(b, ident):
     """Marque as que sao verdadeiras. `ok: true` no item; o resto e 0."""
     linhas = [f'        <div class="quiz-option" data-ok="{1 if it.get("ok") else 0}" '
@@ -113,7 +140,12 @@ def r_escolha(b, ident):
     # (`.rationale{display:none}`), e por isso nao carrega style aqui.
     rat = (f'\n      <div class="rationale">{esc(b["rationale"])}</div>'
            if b.get("rationale") else "")
-    return (f'    <div class="quiz-item">\n      <div class="quiz-options" id="{ident}">\n'
+    # O PROMPT pode viver DENTRO do quiz-item, colado nas opcoes, em vez de na abertura.
+    # E outra coisa: a instrucao da seccao ("Mark the two that...") descreve a TAREFA; esta
+    # e a pergunta do item ("What is the speaker doing?"), e vem depois do audio que ela
+    # cobra. Emitir na abertura mudaria a ordem na tela.
+    pr = (f'      <p class="task-instr">{esc(b["prompt"])}</p>\n' if b.get("prompt") else "")
+    return (f'    <div class="quiz-item">\n' + pr + f'      <div class="quiz-options" id="{ident}">\n'
             + "\n".join(linhas) + f"\n      </div>{rat}\n    </div>\n"
             f'    <button class="verify-all-btn ghost" onclick="selCheck(this,\'{ident}\')">'
             f'Check</button>\n'
@@ -181,13 +213,20 @@ def r_lacuna(b, ident):
         # A RESPOSTA, ao contrario, vai CRUA no `data-ok`: e com ela que o que a aluna
         # digitou vai ser comparado. Uma entidade ali faria a resposta certa contar como
         # errada, e ninguem veria o porque.
+        # A LARGURA E POR LACUNA, nao por exercicio: no molde a mesma atividade tem campos
+        # de 140, 170, 180 e 190 px, dimensionados para a resposta que cabe em cada um.
+        # Declarar uma largura para o exercicio inteiro parecia mais limpo e estava errado
+        # -- duas atividades nao voltaram byte a byte por causa disso.
+        # Sintaxe: `{resposta}` usa o padrao; `{resposta|180px}` manda a largura junto.
         respostas = re.findall(r"\{([^}]+)\}", frase)
         marcado = re.sub(r"\{[^}]+\}", "\x00", frase)
         montado = esc(marcado)
         for r in respostas:
+            resp, _, larg = r.partition("|")
             montado = montado.replace(
-                "\x00", f'<input class="blank-input" data-ok="{r}" '
-                         f'style="min-width:170px" placeholder="...">', 1)
+                "\x00", f'<input class="blank-input" data-ok="{resp}" '
+                         f'style="min-width:{larg or b.get("largura", "170px")}" '
+                         f'placeholder="...">', 1)
         linhas.append(f'      <p class="chunk-line">{montado}</p>')
     banco = " &middot; ".join(f"<em>{esc(x)}</em>" for x in b["banco"])
     return (f'    <div class="fill-list">\n' + "\n".join(linhas) + "\n    </div>\n"
@@ -226,10 +265,14 @@ def r_nota(b, ident):
     unica forma de garantir que ele nao nasca aberto e nao existir o caminho."""
     return (f'    <div class="callout" id="{ident}-key" style="display:none">\n'
             f'      <div class="callout-title">{esc(b["titulo"])}</div>\n'
-            f'      {esc(b["texto"])}\n    </div>')
+            # CRU, como no `callout` e no `doc`. Escapando aqui, um texto que ja traz
+            # `&mdash;` vira `&amp;mdash;` e a entidade aparece literal na tela. A nota e
+            # prosa longa com marcacao propria -- o mesmo tratamento dos outros dois.
+            f'      {b["texto"]}\n    </div>')
 
 
-RENDER = {"classificar": r_classificar, "escolha": r_escolha, "par": r_par,
+RENDER = {"classificar": r_classificar, "completar": r_completar,
+          "escolha": r_escolha, "par": r_par,
           "frases": r_frases, "lacuna": r_lacuna, "recursos": r_recursos}
 
 
@@ -277,9 +320,12 @@ def seccao(b, i):
         if isinstance(item, str):
             partes.append(f'    <p class="task-instr">{esc(item)}</p>')
         elif "doc" in item:
+            # O titulo e OPCIONAL: ha documento que e so o texto (a cena que a aluna le,
+            # sem cabecalho). Exigir `<strong>` deixava duas atividades sem converter.
             d0 = item["doc"]
-            partes.append(f'    <div class="callout rule-box doc-block">\n'
-                          f'      <strong>{esc(d0["titulo"])}</strong><br>\n'
+            cab0 = (f'      <strong>{esc(d0["titulo"])}</strong><br>\n'
+                    if d0.get("titulo") else "")
+            partes.append(f'    <div class="callout rule-box doc-block">\n' + cab0 +
                           f'      {d0["texto"]}\n    </div>')
         elif "callout" in item:
             c0 = item["callout"]
@@ -338,6 +384,44 @@ def seccao(b, i):
                 f'Delete recording</button>\n'
                 f'    </div>\n'
                 f'    <div class="callout warn" id="{g}-msg" style="display:none"></div>')
+        elif "audio" in item:
+            # A BARRA DE AUDIO de um exercicio: o acionador, o Stop e o estado. O texto vai
+            # no `sayAs`, e o AUD_MAP resolve o arquivo -- ver check_audio_oficial (GATE 40).
+            # O `data-rot` guarda o rotulo original porque o botao vira "Pause" enquanto
+            # toca e precisa saber para o que voltar.
+            au = item["audio"]
+            linhas = [f'    <div style="display:flex;gap:var(--space-2h);flex-wrap:wrap;'
+                      f'align-items:center;margin:var(--space-3h) 0" data-audgrupo="'
+                      f'{au.get("grupo", "1")}">']
+            # `velocidades` transforma a barra: entra o seletor Normal/Slower e o Play deixa
+            # de tocar direto -- passa a chamar `audMain`, que toca a velocidade ESCOLHIDA.
+            # Sem isso, um Play fixo em 0.95 ignoraria em silencio o que a aluna marcou.
+            vel = au.get("velocidades")
+            if vel:
+                linhas.append('      <span class="aud-etiq">Speed</span>')
+                for i, (rot, taxa) in enumerate(vel):
+                    linhas.append(
+                        f'      <button class="audio-btn-sm ghost aud-op" '
+                        f'onclick="sayAs(\'{au["texto"]}\',{taxa},\'{au["voz"]}\')" '
+                        f'data-aud-op="{i}" aria-pressed="{"true" if i == 0 else "false"}">'
+                        f'{esc(rot)}</button>')
+                linhas.append(
+                    '      <button type="button" class="audio-btn-sm aud-main" '
+                    'onclick="audMain(this)" data-aud-uni="1" data-rot="&#9654; Play">'
+                    '&#9654; Play</button>'
+                    '<button class="audio-btn-sm aud-stop" onclick="audStop(this)">'
+                    '&#9632; Stop</button>')
+            else:
+                linhas.append(
+                    f'      <button class="audio-btn-sm" onclick="sayAs(\'{au["texto"]}\','
+                    f'{au.get("rate", "0.95")},\'{au["voz"]}\')" data-aud-uni="1" '
+                    f'data-rot="&#9654; Play">&#9654; Play</button>')
+                linhas.append('      <button type="button" class="audio-btn-sm aud-stop" '
+                              'onclick="audStop(this)">&#9632; Stop</button>')
+            linhas.append('      <span class="aud-estado" role="status" aria-live="polite">'
+                          '</span>')
+            linhas.append('    </div>')
+            partes.append("\n".join(linhas))
         elif "recurso" in item:
             # UM cartao de acervo dentro da sequencia. O `kind: recursos` continua existindo
             # para a seccao que SO tem cartoes; este e para a que mistura -- tabela de
