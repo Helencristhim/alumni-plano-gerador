@@ -90,7 +90,9 @@ def main():
         print("\nO conversor so converte o que ele consegue re-emitir byte a byte; o que")
         print("sobrar pendente e forma que o render ainda nao sabe fazer — acrescente lá.")
         return 1
-    print(f"✓ GATE 45 — {len(alvos)} fragmento(s): toda atividade vem do emissor.")
+    print(f"✓ GATE 45 — {len(alvos)} fragmento(s) de pre/post-class: toda atividade vem "
+          f"do emissor. (O DECK ainda nao e declarado — o slides.html continua com HTML "
+          f"de exercicio escrito a mao, e este gate nao o cobre.)")
     return 0
 
 
