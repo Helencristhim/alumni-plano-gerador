@@ -38,6 +38,7 @@ USO:
     python3 scripts/consultivo/check_catalogo_auditor.py --selftest
 """
 import glob
+import html
 import os
 import re
 import sys
@@ -267,7 +268,200 @@ def r_recurso_duplicado(c, ctx):
              f"({rep[0][:70]}). Duas categorias, o mesmo link, a mesma operacao."] if rep else [])
 
 
-REGRAS = [r_transcript_fechado, r_player_fora_do_listening, r_postclass_sem_exercicio,
+def _grupos(seq):
+    """Maior sequencia de valores iguais em fila."""
+    maior = atual = 1
+    for a, b in zip(seq, seq[1:]):
+        atual = atual + 1 if a == b else 1
+        maior = max(maior, atual)
+    return maior if seq else 0
+
+
+def r_resposta_previsivel(c, ctx):
+    """PRO-009 — a resposta se acerta pela POSICAO, sem ler o item.
+
+    Tres formas da mesma falha, e as tres estavam no molde em 26/08/2026:
+
+    - `classificar`/`completar` cuja chave e a permutacao identidade: item 1 -> opcao A,
+      item 2 -> opcao B... Quem percebe preenche em fila sem ler nada. Era o caso de `mo2`
+      (seis itens, A B C D E F) e `nt4` (tres, A B C). E a mesma exigencia que a REGRA 24
+      ja faz no imersivo.
+    - `par` com a resposta sempre do mesmo lado, ou alternando perfeitamente. Os SEIS pares
+      do molde alternavam (a b a b a b / b a b a b a): depois de dois, a aluna sabe o resto.
+    - `escolha` de multipla marcacao com as certas todas coladas.
+
+    Tambem barra sequencia de tres do mesmo lado no `par`: e o "agrupado por categoria" que
+    o catalogo descreve, e foi o que uma primeira correcao minha produziu sem querer ao
+    trocar "uma linha" de cada grade (`b a b` virou `b b b`)."""
+    fora = []
+    t = ctx["tela"]
+    for m in re.finditer(r'<div class="match-grid" id="([^"]+)">(.*?)</div>\s*<button', t, re.S):
+        ok = re.findall(r'<select data-ok="([A-J])"', m.group(2))
+        if len(ok) > 2 and ok == sorted(ok) and len(set(ok)) == len(ok):
+            fora.append(f"PRO-009: em '{m.group(1)}' a chave e {' '.join(ok)} — a opcao "
+                        f"certa de cada item e a que esta na mesma posicao dele. Reordene "
+                        f"as `opcoes` no blocos.json.")
+    for m in re.finditer(r'<div class="pair-grid" id="([^"]+)">(.*?)</div>\s*<button', t, re.S):
+        ok = re.findall(r'<div class="pair-row" data-ok="([ab])"', m.group(2))
+        if len(ok) < 3:
+            continue
+        if len(set(ok)) == 1:
+            fora.append(f"PRO-009: em '{m.group(1)}' a resposta esta SEMPRE do mesmo lado "
+                        f"({' '.join(ok)}).")
+        elif all(a != b for a, b in zip(ok, ok[1:])):
+            fora.append(f"PRO-009: em '{m.group(1)}' os lados alternam perfeitamente "
+                        f"({' '.join(ok)}) — depois de dois itens o resto se adivinha.")
+        elif _grupos(ok) > 2:
+            fora.append(f"PRO-009: em '{m.group(1)}' ha tres respostas seguidas do mesmo "
+                        f"lado ({' '.join(ok)}).")
+    for m in re.finditer(r'<div class="quiz-options" id="([^"]+)">(.*?)</div>', t, re.S):
+        ok = re.findall(r'data-ok="([01])"', m.group(2))
+        pos = [i for i, x in enumerate(ok) if x == "1"]
+        if len(pos) > 1 and len(pos) < len(ok) and all(b - a == 1 for a, b in zip(pos, pos[1:])):
+            fora.append(f"PRO-009: em '{m.group(1)}' as respostas certas estao todas "
+                        f"coladas ({''.join(ok)}).")
+    return fora
+
+
+# A voz do MATERIAL (instrucao, gabarito, nota) contra a voz de um ARTEFATO (o syllabus, a
+# ficha de observacao, o e-mail). O syllabus pode dizer "in the last session" porque e o
+# texto dele; a instrucao nao pode dizer "the third" porque a ordem e nossa e muda.
+VOZ_DO_MATERIAL = (r'<p class="task-instr">(.*?)</p>'
+                   r'|<div class="rationale">(.*?)</div>'
+                   r'|<div class="callout"(?![^>]*doc-block)[^>]*>(.*?)</div>')
+POSICIONAL = (r'\bthe (first|second|third|fourth|fifth|last) '
+              r'(line|one|option|item|card|column|row|answer|example|sentence)\b'
+              r'|\bis the (first|second|third|fourth|fifth|last)\b'
+              r'|\bon the (left|right)\b'
+              r'|\bthe (one|option) (above|below)\b')
+
+
+def r_referencia_posicional(c, ctx):
+    """PRO-008 — a instrucao ou o gabarito aponta por POSICAO onde ha rotulo estavel.
+
+    Achado no molde: o gabarito de `mo2` dizia *"The one that decides the lesson is the
+    THIRD: restating what someone else said"* — e ja dava o rotulo logo depois dos dois
+    pontos. A posicao nao acrescentava nada e quebrava se as opcoes fossem reordenadas,
+    que e exatamente o que a PRO-009 exige que se faca.
+
+    Pior: o gabarito de `bk4` dizia *"Everything in the FIRST COLUMN is about the reason"*
+    — e as respostas certas eram esquerda, direita, esquerda. A frase que orienta a aluna
+    era FALSA, e nenhum gate via, porque cada metade estava bem formada.
+
+    So varre a voz do MATERIAL. Dentro de um artefato ("the unit assessment is in the last
+    session", no syllabus) a referencia posicional e o texto do documento, e fica."""
+    fora = []
+    for m in re.finditer(VOZ_DO_MATERIAL, ctx["tela"], re.S):
+        t = html.unescape(re.sub(r"<[^>]+>", " ", m.group(0)))
+        k = re.search(POSICIONAL, t, re.I)
+        if k:
+            fora.append(f"PRO-008: referencia posicional na voz do material — "
+                        f"{k.group(0)!r} em {re.sub(chr(92)+'s+', ' ', t).strip()[:80]!r}. "
+                        f"Aponte pelo rotulo: a ordem muda, o rotulo nao.")
+    return fora
+
+
+def r_regra_antes_da_tentativa(c, ctx):
+    """SEQ-002 — a regra aparece antes de a aluna tentar.
+
+    Guided discovery so e discovery se a tentativa vier primeiro. Mostrar a caixa de regra
+    (`rule-box`) antes de qualquer tarefa da aula transforma descoberta em exposicao, e o
+    resto da aula vira confirmacao do que ja foi dito."""
+    fora = []
+    telas = re.findall(r'<div class="slide[^"]*" data-slide="(\d+)" data-stage="\d+" '
+                       r'data-lesson="(\d+)"(.*?)(?=<div class="slide[^"]*" data-slide=|$)',
+                       ctx["tela"], re.S)
+    por_aula = {}
+    for n, aula, corpo in telas:
+        por_aula.setdefault(aula, []).append((int(n), corpo))
+    for aula, lista in por_aula.items():
+        tentou = False
+        for n, corpo in sorted(lista):
+            if "rule-box" in corpo and not tentou:
+                fora.append(f"SEQ-002: a aula {aula} mostra a caixa de regra na tela {n} "
+                            f"sem nenhuma tentativa antes. A regra vem DEPOIS da tentativa.")
+            if re.search(r"quiz-options|match-grid|pair-grid|blank-input|data-audgrupo", corpo):
+                tentou = True
+    return fora
+
+
+def r_texto_corrompido(c, ctx):
+    """REG-003 — fragmento de HTML vazou para o texto visivel.
+
+    Sintoma de patch mecanico: entidade escapada duas vezes (`&amp;mdash;` aparece na tela
+    como "&mdash;") ou marcacao literal no meio da frase. `&amp;` sozinho NAO conta: e o
+    "e" comercial legitimo de "Listen & Watch", e acusa-lo daria doze falsos positivos no
+    molde (medido)."""
+    fora = []
+    for m in re.finditer(r">([^<>]{2,})<", ctx["tela"]):
+        t = m.group(1)
+        if re.search(r"&amp;(amp|lt|gt|quot|nbsp|mdash|ndash|middot|rsquo|ldquo|rdquo|#\d+);"
+                     r"|&lt;/?\w+&gt;", t):
+            fora.append(f"REG-003: marcacao no texto visivel — {t.strip()[:70]!r}")
+    return fora
+
+
+def r_persistencia_ficticia(c, ctx):
+    """REG-008 — a interface promete guardar e nao guarda.
+
+    Botao que diz Save/Submit/Sync tem de chegar a alguma escrita real (`persSave`, o
+    STORE, localStorage). Prometer historico e nao ter e pior que nao prometer: a aluna
+    conta com o registro e ele nao existe."""
+    fora = []
+    for m in re.finditer(r"<button[^>]*>(.*?)</button>", ctx["tela"], re.S):
+        rot = html.unescape(re.sub(r"<[^>]+>", " ", m.group(1))).strip()
+        if not re.search(r"\b(save|submit|sync|upload|send)\b", rot, re.I):
+            continue
+        if not re.search(r"persSave|STORE|localStorage|storeSet|salva", m.group(0)):
+            fora.append(f"REG-008: o botao {rot[:40]!r} promete guardar e nao chama "
+                        f"nenhuma escrita.")
+    return fora
+
+
+def r_player_longe_da_resposta(c, ctx):
+    """PRO-007 — o player e o controle de resposta em cartoes diferentes.
+
+    A aluna ouve num lugar e responde noutro: perde o audio de vista, ou a pergunta. O
+    player e a resposta da mesma tarefa vivem na MESMA seccao."""
+    fora = []
+    cortes = list(re.finditer(r'<div class="section-header-row"><h4>(.*?)</h4>',
+                              ctx["tela"], re.S))
+    for i, m in enumerate(cortes):
+        fim = cortes[i + 1].start() if i + 1 < len(cortes) else len(ctx["tela"])
+        tr = ctx["tela"][m.end():fim]
+        if "data-audgrupo" not in tr:
+            continue
+        if not re.search(r"quiz-options|match-grid|pair-grid|blank-input|writebox|res-card", tr):
+            tit = html.unescape(re.sub(r"<[^>]+>", " ", m.group(1))).strip()
+            fora.append(f"PRO-007: a seccao {tit[:50]!r} tem player e nenhum controle de "
+                        f"resposta — a tarefa da escuta esta noutro cartao.")
+    return fora
+
+
+def r_checkpoint_no_fim_do_bloco(c, ctx):
+    """SEQ-006 — a ultima aula do bloco nao aponta para o checkpoint.
+
+    O card da aula que fecha o bloco tem de dizer ao professor que o registro dela alimenta
+    o checkpoint, e que o checkpoint le as aulas do bloco juntas. Sem isso o instrumento
+    existe e ninguem o consulta na hora certa."""
+    if not ctx["professor"]:
+        return []
+    ciclo = re.search(r"var CICLO=\{[^}]*primeira:(\d+)[^}]*porBloco:(\d+)", c)
+    if not ciclo:
+        return ["SEQ-006: nao consegui ler CICLO.primeira/porBloco para saber qual e a "
+                "ultima aula do bloco."]
+    ultima = int(ciclo.group(1)) + int(ciclo.group(2)) - 1
+    card = re.search(r'data-lesson="%d"[^>]*data-teacher="([^"]*)"' % ultima, c)
+    alvo = c[max(0, c.find('LESSONS')):]
+    if not re.search(r"checkpoint", (card.group(1) if card else "") + alvo[:20000], re.I):
+        return [f"SEQ-006: a aula {ultima} fecha o bloco e nao fala do checkpoint."]
+    return []
+
+
+REGRAS = [
+    r_resposta_previsivel, r_referencia_posicional, r_regra_antes_da_tentativa,
+    r_texto_corrompido, r_persistencia_ficticia, r_player_longe_da_resposta,
+    r_checkpoint_no_fim_do_bloco,r_transcript_fechado, r_player_fora_do_listening, r_postclass_sem_exercicio,
           r_postclass_componentes, r_bloco1_diagnostico, r_ciclo_declarado,
           r_metadado_interno, r_elenco_consistente, r_avaliacao_declarada,
           r_recurso_duplicado]
@@ -351,7 +545,41 @@ def _selftest():
         ("ANA-015 mesmo link duas vezes no post-class", limpo_p,
          lambda s: re.sub(r'(<div[^>]*id="tab-postclass"[^>]*>)',
                           r'\1<a href="https://exemplo.com/x">a</a><a href="https://exemplo.com/x">b</a>',
-                          s, count=1), "ANA-015"),
+                          s, count=1), "ANA-015"),        ("PRO-009 chave na ordem das opcoes", limpo_p,
+         # devolve `nt4` a permutacao identidade: item 1 -> A, item 2 -> B, item 3 -> C
+         lambda s: re.sub(r'(<div class="match-grid" id="nt4">.*?)</div>\s*<button',
+                          lambda g: re.sub(r'data-ok="[A-J]"',
+                                           lambda h, c=[0]: (c.__setitem__(0, c[0] + 1) or
+                                                             'data-ok="%s"' % "ABC"[c[0] - 1]),
+                                           g.group(1)) + '</div>\n    <button',
+                          s, count=1, flags=re.S), "PRO-009"),
+        ("PRO-009 par sempre do mesmo lado", limpo_p,
+         lambda s: re.sub(r'(<div class="pair-grid" id="pp1">.*?)</div>\s*<button',
+                          lambda g: g.group(1).replace('data-ok="b"', 'data-ok="a"')
+                          + '</div>\n    <button', s, count=1, flags=re.S), "PRO-009"),
+        ("PRO-008 gabarito aponta por posicao", limpo_p,
+         lambda s: s.replace('<div class="rationale">',
+                             '<div class="rationale">The one that matters is the third. ', 1),
+         "PRO-008"),
+        ("SEQ-002 regra antes de qualquer tentativa", limpo_p,
+         lambda s: re.sub(r'(<div class="slide[^"]*" data-slide="2" data-stage="\d+" '
+                          r'data-lesson="1"[^>]*>)',
+                          r'\1<div class="callout rule-box">Rule first</div>', s, count=1),
+         "SEQ-002"),
+        ("REG-003 entidade escapada duas vezes", limpo_a,
+         lambda s: s.replace("</body>", "<p>uma coisa &amp;mdash; outra</p></body>", 1),
+         "REG-003"),
+        ("REG-008 botao promete guardar e nao guarda", limpo_a,
+         lambda s: s.replace("</body>", '<button onclick="nada()">Save</button></body>', 1),
+         "REG-008"),
+        ("PRO-007 player sem controle de resposta na seccao", limpo_a,
+         lambda s: s.replace("</body>",
+                             '<div class="section-header-row"><h4>9 &middot; Solto</h4></div>'
+                             '<div data-audgrupo="9"><button>Play</button></div></body>', 1),
+         "PRO-007"),
+        ("SEQ-006 ultima aula do bloco sem checkpoint", limpo_p,
+         lambda s: s.replace("checkpoint", "revisao"), "SEQ-006"),
+
     ]
     falhou = False
     for nome, base, muta, esperado in casos:
