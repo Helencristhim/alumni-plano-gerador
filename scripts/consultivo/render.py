@@ -60,6 +60,10 @@ def esc(t):
     t = _html.escape(t, quote=False)
     t = re.sub(r'"([^"]*)"', lambda m: "&ldquo;" + m.group(1) + "&rdquo;", t)
     t = t.replace("--", "&mdash;").replace("...", "&hellip;")
+    # O apostrofo do ingles vira `&rsquo;`, como no molde. Nao e capricho tipografico: e o
+    # que faz a declaracao voltar byte a byte, e byte a byte e o que prova que migrar nao
+    # reescreve.
+    t = t.replace("'", "&rsquo;").replace("\u2019", "&rsquo;")
     # `**assim**` e `*assim*` viram <strong>/<em>. O autor nao escreve tag: escrever tag num
     # campo de texto e o caminho mais curto para um `<` solto quebrar a tela.
     t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
@@ -103,8 +107,13 @@ def r_escolha(b, ident):
     linhas = [f'        <div class="quiz-option" data-ok="{1 if it.get("ok") else 0}" '
               f'onclick="tog(this)"><span>{esc(it["t"])}</span></div>'
               for it in b["itens"]]
+    # O `rationale` vive DENTRO do quiz-item, depois das opcoes. E a explicacao da
+    # atividade -- diferente da `nota`, que fecha a seccao. Nasce escondido pelo CSS
+    # (`.rationale{display:none}`), e por isso nao carrega style aqui.
+    rat = (f'\n      <div class="rationale">{esc(b["rationale"])}</div>'
+           if b.get("rationale") else "")
     return (f'    <div class="quiz-item">\n      <div class="quiz-options" id="{ident}">\n'
-            + "\n".join(linhas) + "\n      </div>\n    </div>\n"
+            + "\n".join(linhas) + f"\n      </div>{rat}\n    </div>\n"
             f'    <button class="verify-all-btn ghost" onclick="selCheck(this,\'{ident}\')">'
             f'Check</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
@@ -214,8 +223,24 @@ def seccao(b, i):
     if b.get("titulo"):
         partes.append(f'    <div class="section-header-row"><h4>{b.get("n", i)} &middot; '
                       f'{esc(b["titulo"])}</h4></div>')
-    for p in b.get("instr", []):
-        partes.append(f'    <p class="task-instr">{esc(p)}</p>')
+    # A ABERTURA E UMA SEQUENCIA, nao dois campos.
+    #
+    # No molde o documento que a aluna le fica ENTRE as duas instrucoes ("Read the lesson
+    # plan..." / [o plano] / "Mark the two things..."). Com `instr` e `documento` como
+    # campos separados, a ordem sai fixa e o material deixa de ser byte-a-byte igual --
+    # foi o ultimo ponto em que o conversor recusou converter, e estava certo.
+    #
+    # Cada item da abertura e um paragrafo (string) ou o documento (objeto). Quem escreve a
+    # aula decide a ordem escrevendo a ordem.
+    for item in b.get("abertura", b.get("instr", [])):
+        if isinstance(item, str):
+            partes.append(f'    <p class="task-instr">{esc(item)}</p>')
+        elif "titulo" in item:
+            partes.append(f'    <div class="callout rule-box doc-block">\n'
+                          f'      <strong>{esc(item["titulo"])}</strong><br>\n'
+                          f'      {item["texto"]}\n    </div>')
+        else:
+            raise SystemExit(f"{ident}: item de abertura sem 'titulo' e que nao e texto.")
     partes.append(RENDER[kind](b, ident))
     if b.get("nota"):
         partes.append(r_nota(b["nota"], ident))
