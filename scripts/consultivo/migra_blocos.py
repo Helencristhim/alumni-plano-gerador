@@ -42,7 +42,7 @@ def des(t):
     t = re.sub(r"<em>(.*?)</em>", r"*\1*", t, flags=re.S)
     t = t.replace("&ldquo;", '"').replace("&rdquo;", '"')
     t = t.replace("&mdash;", "--").replace("&hellip;", "...")
-    t = t.replace("&rsquo;", "'")
+    t = t.replace("&rsquo;", "'").replace("&middot;", "\u00b7").replace("&ndash;", "\u2013")
     return _html.unescape(re.sub(r"<[^>]+>", "", t)).strip()
 
 
@@ -66,9 +66,10 @@ def cabecalho(s):
     molde o documento fica no meio das instrucoes. Aqui a abertura e varrida uma vez, na
     ordem do arquivo."""
     d = {}
-    h = re.search(r'<div class="section-header-row"><h4>(\d+)\s*&middot;\s*(.*?)</h4></div>', s)
+    h = re.search(r'<div class="section-header-row"><h4>(?:(\d+)\s*&middot;\s*)?(.*?)</h4>', s)
     if h:
-        d["n"] = int(h.group(1))
+        if h.group(1):
+            d["n"] = int(h.group(1))
         d["titulo"] = des(h.group(2))
     abertura = []
     for m in re.finditer(r'<p class="task-instr">(.*?)</p>'
@@ -157,7 +158,23 @@ def le_lacuna(s):
     return d
 
 
-LEITORES = [le_classificar, le_escolha, le_par, le_lacuna]
+def le_recursos(s):
+    cards = re.findall(r'<div class="res-card">\s*<h5>(.*?)</h5>\s*'
+                       r'<span class="res-src">(.*?)</span>\s*<p>(.*?)</p>\s*'
+                       r'<a class="res-link" href="([^"]+)"[^>]*>(.*?)\s*&rarr;</a>\s*</div>',
+                       s, re.S)
+    if not cards:
+        return None
+    # o card e a UNICA coisa da seccao? senao a forma e outra
+    resto = re.sub(r'<div class="res-card">.*?</div>', "", s, flags=re.S)
+    if re.search(r'<(table|input|textarea|button|ul)\b', resto):
+        return None
+    itens = [{"titulo": des(t), "fonte": des(f), "texto": x.strip(),
+              "url": u, "cta": des(c)} for t, f, x, u, c in cards]
+    return {"kind": "recursos", "id": "res", "itens": itens}
+
+
+LEITORES = [le_classificar, le_escolha, le_par, le_lacuna, le_recursos]
 
 
 def converte(s):
@@ -198,7 +215,17 @@ def main():
         if volta.strip() != original.strip():
             pendentes.append((rot, "o render nao devolve os mesmos bytes"))
             continue
-        chave = f"sec{d.get('n', len(decl) + 1)}"
+        # A CHAVE TEM DE SER UNICA, e `sec{n}` so serve onde ha `n`.
+        #
+        # O post-class nao numera as seccoes, e a primeira versao caiu em
+        # `sec{len(decl)+1}` -- que COLIDE com uma chave ja existente e a sobrescreve em
+        # silencio. Rodando o conversor duas vezes no mesmo arquivo, ele comia o que ja
+        # tinha migrado: o material encolheu 2 KB e so o `cmp` viu.
+        base = f"sec{d['n']}" if d.get("n") else re.sub(
+            r"[^a-z0-9]+", "", des(rot).lower())[:12] or "sec"
+        chave, k = base, 2
+        while chave in decl:
+            chave, k = f"{base}{k}", k + 1
         decl[chave] = [d]
         convertidas.append((chave, rot))
         novo = novo[:ini] + f"<!--BLOCOS:{chave}-->" + novo[fim:]
