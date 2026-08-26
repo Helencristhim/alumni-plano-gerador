@@ -75,11 +75,16 @@ def cabecalho(s):
     if bd:
         d["badge"] = des(bd.group(1))
     abertura = []
+    # O `task-instr` de DENTRO do quiz-item e o prompt do item, nao instrucao da seccao --
+    # quem o emite e o `escolha`. Varrer sem tirar isto o poria na abertura, e a pergunta
+    # apareceria ANTES do audio que ela cobra.
+    s = re.sub(r'(<div class="quiz-item">)\s*<p class="task-instr">.*?</p>', r"\1", s,
+               flags=re.S)
     # Uma varredura so, na ORDEM do arquivo, com o tipo explicito em cada item. Ler cada
     # peca como lista separada perderia a ordem entre elas -- e no molde a tabela vem antes
     # do callout, e o documento fica no meio das instrucoes.
     padrao = (r'<p class="task-instr">(.*?)</p>'
-              r'|<div class="callout rule-box doc-block">\s*<strong>(.*?)</strong><br>\s*'
+              r'|<div class="callout rule-box doc-block">\s*(?:<strong>(.*?)</strong><br>\s*)?'
               r'(.*?)\s*</div>'
               r'|<div class="callout rule-box">\s*<span class="callout-title">(.*?)</span>\s*'
               r'(.*?)\s*</div>'
@@ -92,14 +97,18 @@ def cabecalho(s):
               r'<input class="mail-subject"[^>]*oninput="save\(\'([^\']+)_subject\'[^>]*>\s*'
               r'<label class="mail-label"[^>]*>(.*?)</label>\s*'
               r'<textarea class="writebox"[^>]*style="min-height:([^"]+)"'
+              r'|<div style="display:flex;gap:var\(--space-2h\);flex-wrap:wrap;'
+              r'align-items:center;margin:var\(--space-3h\) 0" data-audgrupo="([^"]*)">(.*?)</div>'
               r'|<div class="res-card">\s*<h5>(.*?)</h5>\s*<span class="res-src">(.*?)</span>'
               r'\s*<p>(.*?)</p>\s*<a class="res-link" href="([^"]+)"[^>]*>(.*?)\s*&rarr;</a>')
     for m in re.finditer(padrao, s, re.S):
         if m.group(1) is not None:
             abertura.append(des(m.group(1)))
-        elif m.group(2) is not None:
-            abertura.append({"doc": {"titulo": des(m.group(2)),
-                                     "texto": m.group(3).strip()}})
+        elif m.group(3) is not None:
+            d0 = {"texto": m.group(3).strip()}
+            if m.group(2) is not None:
+                d0["titulo"] = des(m.group(2))
+            abertura.append({"doc": d0})
         elif m.group(4) is not None:
             abertura.append({"callout": {"titulo": des(m.group(4)),
                                          "texto": m.group(5).strip()}})
@@ -116,10 +125,29 @@ def cabecalho(s):
                                          "rotulo_corpo": des(m.group(16)),
                                          "altura": m.group(17)}})
         elif m.group(18) is not None:
-            abertura.append({"recurso": {"titulo": des(m.group(18)),
-                                         "fonte": des(m.group(19)),
-                                         "texto": m.group(20).strip(),
-                                         "url": m.group(21), "cta": des(m.group(22))}})
+            # A barra de audio tem DUAS formas na mesma aula: a simples (um Play) e a de
+            # velocidade (Normal/Slower, e o Play passa a chamar `audMain`). Por isso o
+            # padrao captura o CORPO da barra e a leitura acontece aqui -- tentar cobrir as
+            # duas na alternacao dava dois ramos quase iguais, e o segundo nunca casava.
+            corpo = m.group(19)
+            ops = re.findall(r'class="audio-btn-sm ghost aud-op" onclick="sayAs\(\'(.*?)\','
+                             r'([\d.]+),\'([fm])\'\)"[^>]*>(.*?)</button>', corpo, re.S)
+            if ops:
+                au = {"grupo": m.group(18), "texto": ops[0][0], "voz": ops[0][2],
+                      "velocidades": [[des(r), v] for t, v, _, r in ops]}
+            else:
+                u = re.search(r'class="audio-btn-sm" onclick="sayAs\(\'(.*?)\','
+                              r'([\d.]+),\'([fm])\'\)"', corpo, re.S)
+                if not u:
+                    return {}
+                au = {"grupo": m.group(18), "texto": u.group(1),
+                      "rate": u.group(2), "voz": u.group(3)}
+            abertura.append({"audio": au})
+        elif m.group(20) is not None:
+            abertura.append({"recurso": {"titulo": des(m.group(20)),
+                                         "fonte": des(m.group(21)),
+                                         "texto": m.group(22).strip(),
+                                         "url": m.group(23), "cta": des(m.group(24))}})
         else:
             linhas, larg, cab = [], None, None
             if m.group(7):
@@ -180,6 +208,9 @@ def le_escolha(s):
     if not itens:
         return None
     d = {"kind": "escolha", "id": g.group(1), "itens": itens}
+    pr = re.search(r'<div class="quiz-item">\s*<p class="task-instr">(.*?)</p>', s, re.S)
+    if pr:
+        d["prompt"] = des(pr.group(1))
     r = re.search(r'<div class="rationale">(.*?)</div>', s, re.S)
     if r:
         d["rationale"] = des(r.group(1))
@@ -209,8 +240,11 @@ def le_lacuna(s):
     out = re.search(r'<div class="score-out" id="([^"]+)-out">', s)
     itens = []
     for linha in re.findall(r'<p class="chunk-line">(.*?)</p>', s, re.S):
-        marcado = re.sub(r'<input class="blank-input" data-ok="([^"]*)"[^>]*>',
-                         lambda m: "\x00" + m.group(1) + "\x01", linha)
+        def _campo(m):
+            w = re.search(r"min-width:([^\";]+)", m.group(0))
+            larg = w.group(1) if w else "170px"
+            return "\x00" + m.group(1) + ("" if larg == "170px" else "|" + larg) + "\x01"
+        marcado = re.sub(r'<input class="blank-input" data-ok="([^"]*)"[^>]*>', _campo, linha)
         itens.append(des(marcado).replace("\x00", "{").replace("\x01", "}"))
     sub = re.search(r'<p class="subprompt">(.*?)\s*((?:<em>.*?</em>\s*(?:&middot;)?\s*)+)</p>',
                     s, re.S)

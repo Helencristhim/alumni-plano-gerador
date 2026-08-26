@@ -41,6 +41,10 @@ import html
 import json
 import os
 import re
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import render  # noqa: E402  o mesmo emissor que o builder usa
 
 MODELO = "eleven_v3"          # Anexo P-A §4: modelo de referencia vigente
 EP_FALA = "text-to-speech"
@@ -106,11 +110,27 @@ def entradas_da_aula(n, frag_dir, vozes, voz_padrao):
     pasta = os.path.join(frag_dir, f"aula{n}")
     if not os.path.isdir(pasta):
         return []
+    # O FRAGMENTO EXPANDIDO, nunca o cru.
+    #
+    # Desde que a atividade passou a ser DECLARADA, o `sayAs` de um exercicio migrado nao
+    # esta mais no HTML do fragmento: esta no `blocos.json`. Varrendo o cru, a superficie
+    # de audio fica CEGA para ele -- o MP3 nao e gerado, a chave nao entra no AUD_MAP, e o
+    # botao toca silencio. Nada disso da erro.
+    #
+    # Medido: a primeira migracao de um exercicio com audio mudou o AUD_MAP do material, e
+    # so a comparacao de bytes viu.
+    decl = {}
+    bj = os.path.join(pasta, "blocos.json")
+    if os.path.exists(bj):
+        decl = json.load(open(bj, encoding="utf-8"))
     corpo = ""
     for arq in ("slides.html", "preclass.html", "postclass.html"):
         p = os.path.join(pasta, arq)
         if os.path.exists(p):
-            corpo += open(p, encoding="utf-8").read()
+            bruto = open(p, encoding="utf-8").read()
+            corpo += re.sub(r"[ \t]*<!--\s*BLOCOS:([^>]+?)\s*-->",
+                            lambda m: render.blocos(decl.get(m.group(1).strip(), [])),
+                            bruto)
 
     tj = os.path.join(pasta, "talk.json")
     turnos = json.load(open(tj, encoding="utf-8")) if os.path.exists(tj) else []
