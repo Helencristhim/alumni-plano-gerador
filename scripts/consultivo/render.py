@@ -250,7 +250,9 @@ def seccao(b, i):
         # ("3 · What the sentence is doing"). Quem decide e a presenca do `n`.
         rot = (f'{b["n"]} &middot; {esc(b["titulo"])}' if b.get("n")
                else esc(b["titulo"]))
-        partes.append(f'    <div class="section-header-row"><h4>{rot}</h4></div>')
+        bdg = (f'<span class="badge badge-open">{esc(b["badge"])}</span>'
+               if b.get("badge") else "")
+        partes.append(f'    <div class="section-header-row"><h4>{rot}</h4>{bdg}</div>')
     # A ABERTURA E UMA SEQUENCIA, nao dois campos.
     #
     # No molde o documento que a aluna le fica ENTRE as duas instrucoes ("Read the lesson
@@ -300,6 +302,30 @@ def seccao(b, i):
         elif "lista" in item:
             itens = "".join(f'\n      <li>{x}</li>' for x in item["lista"])
             partes.append(f'    <ul style="{item.get("estilo", "")}">{itens}\n    </ul>')
+        elif "gravador" in item:
+            # O ID APARECE OITO VEZES em seis elementos: o botao de gravar, o de parar, o
+            # cronometro, o player, o painel de apagar e a mensagem de erro. E a cadeia mais
+            # longa do molde, e cada elo que divergir quebra outra coisa: o Stop nao para, o
+            # tempo nao anda, o audio nao aparece, o Delete nao acha o que apagar. Nada
+            # disso da erro -- so nao funciona.
+            g = item["gravador"]
+            partes.append(
+                f'    <div class="rec-bar">\n'
+                f'      <button class="audio-btn-sm" id="{g}-start" '
+                f'onclick="rcStart(\'{g}\')">&#9679; {esc(item.get("rotulo_gravar", "Start recording"))}</button>\n'
+                f'      <button class="audio-btn-sm" id="{g}-stop" style="display:none;'
+                f'background:var(--danger);border-color:var(--danger)" '
+                f'onclick="rcStop(\'{g}\')">&#9632; Stop</button>\n'
+                f'      <span class="rec-time" id="{g}-time">00:00</span>\n'
+                f'    </div>\n'
+                f'    <audio id="{g}-player" controls="controls" style="display:none;'
+                f'width:100%;margin-top:var(--space-3)"></audio>\n'
+                f'    <div id="{g}-done" style="display:none;gap:var(--space-2h);'
+                f'margin-top:var(--space-2h);flex-wrap:wrap">\n'
+                f'      <button class="audio-btn-sm ghost" onclick="rcApaga(\'{g}\')">'
+                f'Delete recording</button>\n'
+                f'    </div>\n'
+                f'    <div class="callout warn" id="{g}-msg" style="display:none"></div>')
         elif "titulo" in item and "texto" in item:
             # FORMA ANTIGA, de antes de a abertura ganhar chave de tipo: `{titulo, texto}`
             # sem etiqueta era sempre o documento. Continua lida porque ja ha declaracao
