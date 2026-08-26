@@ -72,13 +72,40 @@ def cabecalho(s):
             d["n"] = int(h.group(1))
         d["titulo"] = des(h.group(2))
     abertura = []
-    for m in re.finditer(r'<p class="task-instr">(.*?)</p>'
-                         r'|<div class="callout rule-box doc-block">\s*<strong>(.*?)</strong>'
-                         r'<br>\s*(.*?)\s*</div>', s, re.S):
+    # Uma varredura so, na ORDEM do arquivo, com o tipo explicito em cada item. Ler cada
+    # peca como lista separada perderia a ordem entre elas -- e no molde a tabela vem antes
+    # do callout, e o documento fica no meio das instrucoes.
+    padrao = (r'<p class="task-instr">(.*?)</p>'
+              r'|<div class="callout rule-box doc-block">\s*<strong>(.*?)</strong><br>\s*'
+              r'(.*?)\s*</div>'
+              r'|<div class="callout rule-box">\s*<span class="callout-title">(.*?)</span>\s*'
+              r'(.*?)\s*</div>'
+              r'|<div class="tbl-wrap">\s*<table class="data" style="min-width:([^"]+)">\s*'
+              r'<tbody>\s*(.*?)\s*</tbody>')
+    for m in re.finditer(padrao, s, re.S):
         if m.group(1) is not None:
             abertura.append(des(m.group(1)))
+        elif m.group(2) is not None:
+            abertura.append({"doc": {"titulo": des(m.group(2)),
+                                     "texto": m.group(3).strip()}})
+        elif m.group(4) is not None:
+            abertura.append({"callout": {"titulo": des(m.group(4)),
+                                         "texto": m.group(5).strip()}})
         else:
-            abertura.append({"titulo": des(m.group(2)), "texto": m.group(3).strip()})
+            linhas, larg = [], None
+            for tr in re.findall(r"<tr>(.*?)</tr>", m.group(7), re.S):
+                tds = re.findall(r"<td([^>]*)>(.*?)</td>", tr, re.S)
+                if len(tds) != 2:
+                    return {}          # forma que este leitor nao modela
+                if not linhas:
+                    w = re.search(r'width:([^";]+)', tds[0][0])
+                    larg = w.group(1) if w else None
+                rot = re.sub(r"</?strong>", "", tds[0][1]).strip()
+                linhas.append([des(rot), tds[1][1].strip()])
+            t = {"tabela": linhas, "min_width": m.group(6)}
+            if larg:
+                t["largura_rotulo"] = larg
+            abertura.append(t)
     if abertura:
         d["abertura"] = abertura
     return d
@@ -187,6 +214,12 @@ def converte(s):
             if n:
                 d["nota"] = n
             return d
+    # SECCAO SO DE CONTEUDO. O "Lesson recap" do post-class nao tem exercicio -- e tabela
+    # mais sintese --, e o acervo nao vira exercicio de proposito (ANA-013). Sem este caso o
+    # conversor a chamava de "forma nao reconhecida" e a deixava em HTML para sempre.
+    cab = cabecalho(s)
+    if cab.get("abertura") and not re.search(r'<(input|select|textarea|button)\b', s):
+        return {"id": "conteudo", **cab}
     return None
 
 

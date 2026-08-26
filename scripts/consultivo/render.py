@@ -237,9 +237,11 @@ def seccao(b, i):
     """Uma atividade completa: cabecalho, instrucoes, exercicio, checagem e nota."""
     ident = _ident(b, i)
     kind = b.get("kind")
-    if kind not in RENDER:
+    # Seccao SEM exercicio e legitima: o "Lesson recap" do post-class e conteudo puro, e o
+    # acervo nao vira exercicio (ANA-013).
+    if kind is not None and kind not in RENDER:
         raise SystemExit(f"kind {kind!r} nao existe. Disponiveis: {sorted(RENDER)}")
-    if kind != "frases" and not b.get("itens"):
+    if kind not in (None, "frases", "recursos") and not b.get("itens"):
         raise SystemExit(f"{ident}: exercicio sem itens.")
 
     partes = ['  <div class="exercise-section">']
@@ -258,16 +260,59 @@ def seccao(b, i):
     #
     # Cada item da abertura e um paragrafo (string) ou o documento (objeto). Quem escreve a
     # aula decide a ordem escrevendo a ordem.
+    # A ABERTURA E UMA SEQUENCIA, e cada item diz o que E.
+    #
+    # No molde o documento que a aluna le fica ENTRE as duas instrucoes; a tabela de recap
+    # vem antes do callout que a fecha. Com campos separados a ordem sai fixa, e o material
+    # deixa de ser byte-a-byte igual -- foi o ponto em que o conversor recusou converter, e
+    # estava certo.
+    #
+    # A chave EXPLICITA importa porque ha TRES `callout` diferentes no molde: o `doc-block`
+    # (o artefato que a aluna le), o `rule-box` visivel (a sintese) e o `id="X-key"`
+    # escondido (a nota, que so abre depois). Distinguir por formato do dicionario seria
+    # adivinhacao.
     for item in b.get("abertura", b.get("instr", [])):
         if isinstance(item, str):
             partes.append(f'    <p class="task-instr">{esc(item)}</p>')
-        elif "titulo" in item:
+        elif "doc" in item:
+            d0 = item["doc"]
+            partes.append(f'    <div class="callout rule-box doc-block">\n'
+                          f'      <strong>{esc(d0["titulo"])}</strong><br>\n'
+                          f'      {d0["texto"]}\n    </div>')
+        elif "callout" in item:
+            c0 = item["callout"]
+            partes.append(f'    <div class="callout rule-box">\n'
+                          f'      <span class="callout-title">{esc(c0["titulo"])}</span>\n'
+                          f'      {c0["texto"]}\n    </div>')
+        elif "tabela" in item:
+            t0 = item["tabela"]
+            larg = item.get("largura_rotulo")
+            linhas = []
+            for j, (rot, val) in enumerate(t0):
+                st = f' style="width:{larg}"' if (j == 0 and larg) else ""
+                linhas.append(f'          <tr><td{st}><strong>{esc(rot)}</strong></td>'
+                              f'<td>{val}</td></tr>')
+            partes.append('    <div class="tbl-wrap">\n'
+                          f'      <table class="data" style="min-width:'
+                          f'{item.get("min_width", "520px")}">\n        <tbody>\n'
+                          + "\n".join(linhas) + "\n        </tbody>\n      </table>\n"
+                          "    </div>")
+        elif "lista" in item:
+            itens = "".join(f'\n      <li>{x}</li>' for x in item["lista"])
+            partes.append(f'    <ul style="{item.get("estilo", "")}">{itens}\n    </ul>')
+        elif "titulo" in item and "texto" in item:
+            # FORMA ANTIGA, de antes de a abertura ganhar chave de tipo: `{titulo, texto}`
+            # sem etiqueta era sempre o documento. Continua lida porque ja ha declaracao
+            # assim no repo -- quebrar o que ja foi migrado seria pedir para a migracao
+            # parar no meio.
             partes.append(f'    <div class="callout rule-box doc-block">\n'
                           f'      <strong>{esc(item["titulo"])}</strong><br>\n'
                           f'      {item["texto"]}\n    </div>')
         else:
-            raise SystemExit(f"{ident}: item de abertura sem 'titulo' e que nao e texto.")
-    partes.append(RENDER[kind](b, ident))
+            raise SystemExit(f"{ident}: item de abertura sem tipo conhecido: "
+                             f"{sorted(item)}")
+    if kind is not None:
+        partes.append(RENDER[kind](b, ident))
     if b.get("nota"):
         partes.append(r_nota(b["nota"], ident))
     partes.append("  </div>")
