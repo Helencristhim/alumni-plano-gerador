@@ -84,10 +84,16 @@ def cabecalho(s):
               r'|<div class="callout rule-box">\s*<span class="callout-title">(.*?)</span>\s*'
               r'(.*?)\s*</div>'
               r'|<div class="tbl-wrap">\s*<table class="data" style="min-width:([^"]+)">\s*'
-              r'<tbody>\s*(.*?)\s*</tbody>'
+              r'(?:<thead>(.*?)</thead>\s*)?<tbody>\s*(.*?)\s*</tbody>'
               r'|<ul style="([^"]*)">\s*(.*?)\s*</ul>'
               r'|<div class="rec-bar">\s*<button class="audio-btn-sm" id="([^"]+)-start" '
-              r'onclick="rcStart\(\'[^\']+\'\)">&#9679; (.*?)</button>')
+              r'onclick="rcStart\(\'[^\']+\'\)">&#9679; (.*?)</button>'
+              r'|<label class="mail-label" for="([^"]+)-subject">(.*?)</label>\s*'
+              r'<input class="mail-subject"[^>]*oninput="save\(\'([^\']+)_subject\'[^>]*>\s*'
+              r'<label class="mail-label"[^>]*>(.*?)</label>\s*'
+              r'<textarea class="writebox"[^>]*style="min-height:([^"]+)"'
+              r'|<div class="res-card">\s*<h5>(.*?)</h5>\s*<span class="res-src">(.*?)</span>'
+              r'\s*<p>(.*?)</p>\s*<a class="res-link" href="([^"]+)"[^>]*>(.*?)\s*&rarr;</a>')
     for m in re.finditer(padrao, s, re.S):
         if m.group(1) is not None:
             abertura.append(des(m.group(1)))
@@ -97,25 +103,42 @@ def cabecalho(s):
         elif m.group(4) is not None:
             abertura.append({"callout": {"titulo": des(m.group(4)),
                                          "texto": m.group(5).strip()}})
-        elif m.group(8) is not None:
+        elif m.group(9) is not None:
             abertura.append({"lista": [x.strip() for x in
-                                       re.findall(r"<li>(.*?)</li>", m.group(9), re.S)],
-                             "estilo": m.group(8)})
-        elif m.group(10) is not None:
-            abertura.append({"gravador": m.group(10),
-                             "rotulo_gravar": des(m.group(11))})
+                                       re.findall(r"<li>(.*?)</li>", m.group(10), re.S)],
+                             "estilo": m.group(9)})
+        elif m.group(11) is not None:
+            abertura.append({"gravador": m.group(11),
+                             "rotulo_gravar": des(m.group(12))})
+        elif m.group(13) is not None:
+            abertura.append({"escrita": {"id": m.group(13), "chave": m.group(15),
+                                         "rotulo_assunto": des(m.group(14)),
+                                         "rotulo_corpo": des(m.group(16)),
+                                         "altura": m.group(17)}})
+        elif m.group(18) is not None:
+            abertura.append({"recurso": {"titulo": des(m.group(18)),
+                                         "fonte": des(m.group(19)),
+                                         "texto": m.group(20).strip(),
+                                         "url": m.group(21), "cta": des(m.group(22))}})
         else:
-            linhas, larg = [], None
-            for tr in re.findall(r"<tr>(.*?)</tr>", m.group(7), re.S):
+            linhas, larg, cab = [], None, None
+            if m.group(7):
+                ths = re.findall(r"<th([^>]*)>(.*?)</th>", m.group(7), re.S)
+                cab = [des(t) for _, t in ths]
+                w = re.search(r'width:([^";]+)', ths[0][0]) if ths else None
+                larg = w.group(1) if w else None
+            for tr in re.findall(r"<tr>(.*?)</tr>", m.group(8), re.S):
                 tds = re.findall(r"<td([^>]*)>(.*?)</td>", tr, re.S)
-                if len(tds) != 2:
-                    return {}          # forma que este leitor nao modela
-                if not linhas:
+                if len(tds) < 2:
+                    return {}
+                if not linhas and not cab:
                     w = re.search(r'width:([^";]+)', tds[0][0])
                     larg = w.group(1) if w else None
                 rot = re.sub(r"</?strong>", "", tds[0][1]).strip()
-                linhas.append([des(rot), tds[1][1].strip()])
+                linhas.append([des(rot)] + [c[1].strip() for c in tds[1:]])
             t = {"tabela": linhas, "min_width": m.group(6)}
+            if cab:
+                t["cabecalho"] = cab
             if larg:
                 t["largura_rotulo"] = larg
             abertura.append(t)
@@ -234,10 +257,11 @@ def converte(s):
     # Campo de resposta descarta o caso "so conteudo". BOTAO, nao: o gravador tem tres
     # (gravar, parar, apagar) e ja e uma peca reconhecida da sequencia. O que importa e
     # sobrar botao que NINGUEM emite -- esse sim seria markup perdido na conversao.
-    sem_pecas = re.sub(r"<button[^>]*onclick=\"rc(?:Start|Stop|Apaga)\([^\"]*\"[^>]*>.*?"
-                       r"</button>", "", s, flags=re.S)
+    sem_pecas = re.sub(r"<button[^>]*onclick=\"(?:rc(?:Start|Stop|Apaga)|pwClear)\([^\"]*\""
+                       r"[^>]*>.*?</button>", "", s, flags=re.S)
     if (cab.get("abertura")
-            and not re.search(r"<(input|select|textarea)\b", s)
+            and not re.search(r"<(input|select)\b(?![^>]*class=\"mail-subject\")", s)
+            and not re.search(r"<textarea\b(?![^>]*class=\"writebox\")", s)
             and not re.search(r"<button\b", sem_pecas)):
         return {"id": "conteudo", **cab}
     return None

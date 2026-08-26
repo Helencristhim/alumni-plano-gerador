@@ -287,18 +287,30 @@ def seccao(b, i):
                           f'      <span class="callout-title">{esc(c0["titulo"])}</span>\n'
                           f'      {c0["texto"]}\n    </div>')
         elif "tabela" in item:
+            # N COLUNAS, com ou sem cabecalho. A primeira celula de cada linha e o rotulo e
+            # vai em negrito -- e assim no recap de duas colunas e na referencia de tres.
+            # A largura declarada pousa no <th> quando ha cabecalho, e na primeira <td>
+            # quando nao ha: e onde o molde a escreve nos dois casos.
             t0 = item["tabela"]
             larg = item.get("largura_rotulo")
+            cab = item.get("cabecalho")
+            head = ""
+            if cab:
+                ths = "".join(
+                    f'<th{f" style=\"width:{larg}\"" if (j == 0 and larg) else ""}>'
+                    f'{esc(c)}</th>' for j, c in enumerate(cab))
+                head = f"        <thead><tr>{ths}</tr></thead>\n"
             linhas = []
-            for j, (rot, val) in enumerate(t0):
-                st = f' style="width:{larg}"' if (j == 0 and larg) else ""
-                linhas.append(f'          <tr><td{st}><strong>{esc(rot)}</strong></td>'
-                              f'<td>{val}</td></tr>')
+            for j, celulas in enumerate(t0):
+                st = f' style="width:{larg}"' if (j == 0 and larg and not cab) else ""
+                resto = "".join(f"<td>{c}</td>" for c in celulas[1:])
+                linhas.append(f'          <tr><td{st}><strong>{esc(celulas[0])}</strong>'
+                              f'</td>{resto}</tr>')
             partes.append('    <div class="tbl-wrap">\n'
                           f'      <table class="data" style="min-width:'
-                          f'{item.get("min_width", "520px")}">\n        <tbody>\n'
-                          + "\n".join(linhas) + "\n        </tbody>\n      </table>\n"
-                          "    </div>")
+                          f'{item.get("min_width", "520px")}">\n' + head +
+                          "        <tbody>\n" + "\n".join(linhas) +
+                          "\n        </tbody>\n      </table>\n    </div>")
         elif "lista" in item:
             itens = "".join(f'\n      <li>{x}</li>' for x in item["lista"])
             partes.append(f'    <ul style="{item.get("estilo", "")}">{itens}\n    </ul>')
@@ -326,6 +338,43 @@ def seccao(b, i):
                 f'Delete recording</button>\n'
                 f'    </div>\n'
                 f'    <div class="callout warn" id="{g}-msg" style="display:none"></div>')
+        elif "recurso" in item:
+            # UM cartao de acervo dentro da sequencia. O `kind: recursos` continua existindo
+            # para a seccao que SO tem cartoes; este e para a que mistura -- tabela de
+            # referencia mais o link onde ela e explicada. Sem ele, a conversao dessa seccao
+            # DESCARTAVA o cartao em silencio, e so a comparacao de bytes viu.
+            r0 = item["recurso"]
+            if not r0.get("url", "").startswith("http"):
+                raise SystemExit(f"{ident}: recurso sem link.")
+            partes.append(
+                f'    <div class="res-card">\n      <h5>{esc(r0["titulo"])}</h5>\n'
+                f'      <span class="res-src">{esc(r0["fonte"])}</span>\n'
+                f'      <p>{r0["texto"]}</p>\n'
+                f'      <a class="res-link" href="{r0["url"]}" target="_blank" '
+                f'rel="noopener">{esc(r0["cta"])} &rarr;</a>\n    </div>')
+        elif "escrita" in item:
+            # CINCO IDENTIFICADORES EM TREZE LUGARES, e cruzados: o `pwCount` recebe o id do
+            # corpo, o do contador E a chave de armazenamento; o `pwClear` recebe os pares
+            # (id, chave) dos dois campos mais o contador. Errar um deles nao da erro --
+            # so faz o contador parar, ou o Clear limpar a tela sem limpar o que foi salvo,
+            # e a aluna perder o que escreveu ao recarregar.
+            e = item["escrita"]
+            i0, k0 = e["id"], e["chave"]
+            partes.append(
+                f'    <label class="mail-label" for="{i0}-subject">'
+                f'{esc(e.get("rotulo_assunto", "Subject"))}</label>\n'
+                f'    <input class="mail-subject" id="{i0}-subject" placeholder="" '
+                f'oninput="save(\'{k0}_subject\',this.value)">\n'
+                f'    <label class="mail-label" for="{i0}-body" '
+                f'style="margin-top:var(--space-3)">{esc(e.get("rotulo_corpo", "Note"))}</label>\n'
+                f'    <textarea class="writebox" id="{i0}-body" style="min-height:'
+                f'{e.get("altura", "170px")}" placeholder="" '
+                f'oninput="pwCount(\'{i0}-body\',\'{i0}-count\',\'{k0}_writing\')"></textarea>\n'
+                f'    <div class="wc"><span id="{i0}-count">0 words</span></div>\n'
+                f'    <button class="verify-all-btn ghost" onclick="pwClear(['
+                f'[\'{i0}-subject\',\'{k0}_subject\'],[\'{i0}-body\',\'{k0}_writing\']],'
+                f'\'{i0}-count\')">{esc(e.get("rotulo_limpar", "Clear and start again"))}'
+                f'</button>')
         elif "titulo" in item and "texto" in item:
             # FORMA ANTIGA, de antes de a abertura ganhar chave de tipo: `{titulo, texto}`
             # sem etiqueta era sempre o documento. Continua lida porque ja ha declaracao
