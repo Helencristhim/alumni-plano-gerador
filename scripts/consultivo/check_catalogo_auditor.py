@@ -268,6 +268,35 @@ def r_recurso_duplicado(c, ctx):
              f"({rep[0][:70]}). Duas categorias, o mesmo link, a mesma operacao."] if rep else [])
 
 
+LETRAS = "ABCDEFGHIJ"
+
+
+def _grades(t, classe):
+    """Toda grade de `classe`: (id, corpo, fechou).
+
+    Conta o aninhamento em vez de supor o que vem depois. A versao anterior casava
+    `</div>\\s*<button` -- o rabo que a grade tem no PRE-CLASS. No deck o botao esta noutro
+    lugar, entao a regra via 10 das 14 grades e passava, calada, pelas outras 4. Uma delas
+    era a `an4`, que alternava perfeitamente.
+
+    E o mesmo defeito de sempre: a medida parecia bem-sucedida porque olhava o lugar errado.
+
+    Devolve `fechou` porque a primeira tentativa de guarda que escrevi era VAZIA: eu
+    comparava "quantas grades li" com "quantas existem", e as duas contagens saiam da MESMA
+    regex de abertura -- nunca podiam diferir. Um guarda que nao pode disparar da a mesma
+    sensacao de seguranca que um que funciona, e custa o mesmo em leitura. O que se mede de
+    verdade e se o corpo FECHOU: sem isso o corpo e o resto do documento, e a chave lida
+    dali nao e a da grade."""
+    for m in re.finditer(r'<div class="%s" id="([^"]+)">' % classe, t):
+        i, nivel, fechou = m.end(), 1, False
+        for d in re.finditer(r"<div\b|</div>", t[m.end():]):
+            nivel += 1 if d.group(0) == "<div" else -1
+            if nivel == 0:
+                i, fechou = m.end() + d.start(), True
+                break
+        yield m.group(1), t[m.end():i], fechou
+
+
 def _grupos(seq):
     """Maior sequencia de valores iguais em fila."""
     maior = atual = 1
@@ -295,25 +324,49 @@ def r_resposta_previsivel(c, ctx):
     trocar "uma linha" de cada grade (`b a b` virou `b b b`)."""
     fora = []
     t = ctx["tela"]
-    for m in re.finditer(r'<div class="match-grid" id="([^"]+)">(.*?)</div>\s*<button', t, re.S):
-        ok = re.findall(r'<select data-ok="([A-J])"', m.group(2))
-        if len(ok) > 2 and ok == sorted(ok) and len(set(ok)) == len(ok):
-            fora.append(f"PRO-009: em '{m.group(1)}' a chave e {' '.join(ok)} — a opcao "
-                        f"certa de cada item e a que esta na mesma posicao dele. Reordene "
-                        f"as `opcoes` no blocos.json.")
-    for m in re.finditer(r'<div class="pair-grid" id="([^"]+)">(.*?)</div>\s*<button', t, re.S):
-        ok = re.findall(r'<div class="pair-row" data-ok="([ab])"', m.group(2))
+    for ident, corpo, fechou in _grades(t, "match-grid"):
+        if not fechou:
+            fora.append(f"PRO-009: a grade '{ident}' nao fecha — a chave lida dali nao e a "
+                        f"dela, e qualquer veredito sobre esta grade e falso.")
+            continue
+        ok = re.findall(r'<select data-ok="([A-J])"', corpo)
+        if len(ok) < 3:
+            continue
+        if ok == sorted(ok) and len(set(ok)) == len(ok):
+            fora.append(f"PRO-009: em '{ident}' a chave e {' '.join(ok)} — a opcao certa de "
+                        f"cada item e a que esta na mesma posicao dele.")
+        elif len(set(ok)) <= 2 and all(a != b for a, b in zip(ok, ok[1:])):
+            # Duas categorias alternando e a MESMA falha do `par`, e a primeira versao
+            # desta regra so a media no `par`. `se3`, `ce3` e `an4` passavam.
+            fora.append(f"PRO-009: em '{ident}' as duas categorias alternam perfeitamente "
+                        f"({' '.join(ok)}) — depois de dois itens o resto se adivinha.")
+        elif len(set(ok)) <= 2 and _grupos(ok) > 2:
+            fora.append(f"PRO-009: em '{ident}' ha tres respostas seguidas da mesma "
+                        f"categoria ({' '.join(ok)}).")
+        else:
+            fixos = sum(1 for i, o in enumerate(ok) if i < len(LETRAS) and o == LETRAS[i])
+            if fixos >= 3 and fixos >= 2 * (len(ok) / max(len(set(ok)), 1)):
+                fora.append(f"PRO-009: em '{ident}' {fixos} de {len(ok)} itens tem a resposta "
+                            f"na propria posicao ({' '.join(ok)}) — quem preenche em fila "
+                            f"acerta a maioria sem ler.")
+
+    for ident, corpo, fechou in _grades(t, "pair-grid"):
+        if not fechou:
+            fora.append(f"PRO-009: o par '{ident}' nao fecha.")
+            continue
+        ok = re.findall(r'<div class="pair-row" data-ok="([ab])"', corpo)
         if len(ok) < 3:
             continue
         if len(set(ok)) == 1:
-            fora.append(f"PRO-009: em '{m.group(1)}' a resposta esta SEMPRE do mesmo lado "
+            fora.append(f"PRO-009: em '{ident}' a resposta esta SEMPRE do mesmo lado "
                         f"({' '.join(ok)}).")
         elif all(a != b for a, b in zip(ok, ok[1:])):
-            fora.append(f"PRO-009: em '{m.group(1)}' os lados alternam perfeitamente "
+            fora.append(f"PRO-009: em '{ident}' os lados alternam perfeitamente "
                         f"({' '.join(ok)}) — depois de dois itens o resto se adivinha.")
         elif _grupos(ok) > 2:
-            fora.append(f"PRO-009: em '{m.group(1)}' ha tres respostas seguidas do mesmo "
+            fora.append(f"PRO-009: em '{ident}' ha tres respostas seguidas do mesmo "
                         f"lado ({' '.join(ok)}).")
+
     for m in re.finditer(r'<div class="quiz-options" id="([^"]+)">(.*?)</div>', t, re.S):
         ok = re.findall(r'data-ok="([01])"', m.group(2))
         pos = [i for i, x in enumerate(ok) if x == "1"]
@@ -545,7 +598,25 @@ def _selftest():
         ("ANA-015 mesmo link duas vezes no post-class", limpo_p,
          lambda s: re.sub(r'(<div[^>]*id="tab-postclass"[^>]*>)',
                           r'\1<a href="https://exemplo.com/x">a</a><a href="https://exemplo.com/x">b</a>',
-                          s, count=1), "ANA-015"),        ("PRO-009 chave na ordem das opcoes", limpo_p,
+                          s, count=1), "ANA-015"),        ("PRO-009 matching binario alternando", limpo_p,
+         # `se3` e binario; devolve a alternancia perfeita que o molde tinha
+         lambda s: re.sub(r'(<div class="match-grid" id="se3">.*?)(?=<button)',
+                          lambda g: re.sub(r'data-ok="[AB]"',
+                                           lambda h, c=[0]: (c.__setitem__(0, c[0] + 1) or
+                                                             'data-ok="%s"' % "AB"[(c[0] - 1) % 2]),
+                                           g.group(1)), s, count=1, flags=re.S), "PRO-009"),
+        ("PRO-009 grade que nao fecha", limpo_p,
+         # quebra o fechamento de UMA grade: a leitura por aninhamento passa a nao fechar,
+         # e o guarda de cobertura tem de acusar em vez de dar OK com menos grades
+         # uma grade cujo `</div>` nao existe: o corpo vira o resto do documento, e
+         # qualquer chave lida dali e de outra coisa. Antes desta regra isso passava calado.
+         lambda s: s.replace("</body>",
+                             '<div class="match-grid" id="zz"><div class="match-row">'
+                             '<span class="match-word">x</span>'
+                             '<select data-ok="A"><option value="A">a</option></select>'
+                             '</div></body>', 1),
+         "nao fecha"),
+        ("PRO-009 chave na ordem das opcoes", limpo_p,
          # devolve `nt4` a permutacao identidade: item 1 -> A, item 2 -> B, item 3 -> C
          lambda s: re.sub(r'(<div class="match-grid" id="nt4">.*?)</div>\s*<button',
                           lambda g: re.sub(r'data-ok="[A-J]"',
