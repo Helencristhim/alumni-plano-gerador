@@ -758,8 +758,14 @@
         // A aba consultivo mostra SO quem ja tem o material. Se o indice nao carregou, ela
         // mostra vazio com aviso -- nunca a lista inteira, que faria parecer que todo mundo
         // migrou.
+        // NINGUEM SAI DO IMERSIVO. O aluno que ganha material do framework novo passa a
+        // aparecer TAMBEM na aba consultivo -- nao muda de aba. Ordem do Dan, 26/08/2026.
+        //
+        // A primeira versao disto excluia: imersivo mostrava `!ehConsultivo`. Faria o aluno
+        // SUMIR da aba onde ele tem aula no dia em que o material novo nascesse, e a
+        // professora o procuraria onde ele sempre esteve. As duas listas nao sao uma
+        // particao: a imersiva e o roster, e a consultiva e um recorte dele.
         if(anatVista==='consultivo') f=f.filter(function(a){return ehConsultivo(a.id);});
-        else f=f.filter(function(a){return !ehConsultivo(a.id);});
         if(!verArquivados) f=f.filter(function(a){return !isDeactivated(a.id);});
         if(currentFilter==='ativo') f=f.filter(function(a){return a._ativo===true;});
         else if(currentFilter!=='todos') f=f.filter(function(a){return a.perfilStatus===currentFilter;});
