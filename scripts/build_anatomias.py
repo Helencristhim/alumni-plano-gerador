@@ -29,6 +29,7 @@ import sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SAIDA = os.path.join(RAIZ, "public", "data", "anatomias.json")
 MARCA = 'name="alumni-anatomia" content="consultivo"'
+MOLDE = 'name="alumni-molde"'
 
 
 def slug_de(caminho):
@@ -52,8 +53,14 @@ def levanta():
             if re.search(r"-aula\d|-c\d+$|-anterior$", slug):
                 continue
             with open(p, encoding="utf-8", errors="ignore") as fh:
-                if MARCA not in fh.read(6000):
-                    continue
+                cabeca = fh.read(6000)
+            if MARCA not in cabeca:
+                continue
+            # O MOLDE nao e aluno. `stephanie-vicente` e ficcao -- sem contrato, fora de
+            # `perfis` -- e ate 26/08/2026 este indice a contava: dizia "1 aluno no
+            # consultivo" quando o numero certo era zero.
+            if MOLDE in cabeca:
+                continue
             achado.setdefault(slug, {"professor": False, "aluno": False})[papel] = True
     return achado
 

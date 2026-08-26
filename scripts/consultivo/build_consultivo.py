@@ -933,6 +933,19 @@ def main():
             print("  RECUSADO:", e)
         print(f"\n{len(erros)} problema(s). O material NAO foi escrito.")
         return 1
+    # ---- o molde nao e aluno, e o arquivo tem de dizer isso
+    #
+    # `stephanie-vicente` e ficcao: nao tem contrato, nao esta em perfis. O config sempre
+    # disse isso -- em PROSA, num campo `_o_que_e` que nenhuma maquina le. Resultado: o
+    # indice que alimenta a aba "Alunos Consultivo" contava 1 aluno, e o aluno era ela.
+    # Agora e declaracao, e viaja DENTRO do arquivo: quem le o disco nao precisa saber de
+    # cor quais slugs sao molde.
+    if cfg.get("molde"):
+        marca = '<meta name="alumni-molde" content="1">'
+        if marca not in prof:
+            prof = prof.replace('<meta name="alumni-anatomia" content="consultivo">',
+                                '<meta name="alumni-anatomia" content="consultivo">\n'
+                                + marca, 1)
     aluno, _ = extrai_shell.deriva_aluno(prof)
     # ---- ONDE ESCREVER: a URL do aluno nao se toca enquanto ele tem aula no material velho
     #
