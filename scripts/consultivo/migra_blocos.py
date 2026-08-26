@@ -71,6 +71,9 @@ def cabecalho(s):
         if h.group(1):
             d["n"] = int(h.group(1))
         d["titulo"] = des(h.group(2))
+    bd = re.search(r'<span class="badge badge-open">(.*?)</span>', s)
+    if bd:
+        d["badge"] = des(bd.group(1))
     abertura = []
     # Uma varredura so, na ORDEM do arquivo, com o tipo explicito em cada item. Ler cada
     # peca como lista separada perderia a ordem entre elas -- e no molde a tabela vem antes
@@ -81,7 +84,10 @@ def cabecalho(s):
               r'|<div class="callout rule-box">\s*<span class="callout-title">(.*?)</span>\s*'
               r'(.*?)\s*</div>'
               r'|<div class="tbl-wrap">\s*<table class="data" style="min-width:([^"]+)">\s*'
-              r'<tbody>\s*(.*?)\s*</tbody>')
+              r'<tbody>\s*(.*?)\s*</tbody>'
+              r'|<ul style="([^"]*)">\s*(.*?)\s*</ul>'
+              r'|<div class="rec-bar">\s*<button class="audio-btn-sm" id="([^"]+)-start" '
+              r'onclick="rcStart\(\'[^\']+\'\)">&#9679; (.*?)</button>')
     for m in re.finditer(padrao, s, re.S):
         if m.group(1) is not None:
             abertura.append(des(m.group(1)))
@@ -91,6 +97,13 @@ def cabecalho(s):
         elif m.group(4) is not None:
             abertura.append({"callout": {"titulo": des(m.group(4)),
                                          "texto": m.group(5).strip()}})
+        elif m.group(8) is not None:
+            abertura.append({"lista": [x.strip() for x in
+                                       re.findall(r"<li>(.*?)</li>", m.group(9), re.S)],
+                             "estilo": m.group(8)})
+        elif m.group(10) is not None:
+            abertura.append({"gravador": m.group(10),
+                             "rotulo_gravar": des(m.group(11))})
         else:
             linhas, larg = [], None
             for tr in re.findall(r"<tr>(.*?)</tr>", m.group(7), re.S):
@@ -218,7 +231,14 @@ def converte(s):
     # mais sintese --, e o acervo nao vira exercicio de proposito (ANA-013). Sem este caso o
     # conversor a chamava de "forma nao reconhecida" e a deixava em HTML para sempre.
     cab = cabecalho(s)
-    if cab.get("abertura") and not re.search(r'<(input|select|textarea|button)\b', s):
+    # Campo de resposta descarta o caso "so conteudo". BOTAO, nao: o gravador tem tres
+    # (gravar, parar, apagar) e ja e uma peca reconhecida da sequencia. O que importa e
+    # sobrar botao que NINGUEM emite -- esse sim seria markup perdido na conversao.
+    sem_pecas = re.sub(r"<button[^>]*onclick=\"rc(?:Start|Stop|Apaga)\([^\"]*\"[^>]*>.*?"
+                       r"</button>", "", s, flags=re.S)
+    if (cab.get("abertura")
+            and not re.search(r"<(input|select|textarea)\b", s)
+            and not re.search(r"<button\b", sem_pecas)):
         return {"id": "conteudo", **cab}
     return None
 
