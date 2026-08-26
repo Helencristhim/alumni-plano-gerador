@@ -400,6 +400,12 @@ jobs:
           python3 scripts/consultivo/extrai_fragmentos.py
           python3 scripts/consultivo/build_consultivo.py --selftest
 
+      - name: "GATE 47 — trocar o molde de um aluno exige [cutover] no commit"
+        run: python3 scripts/consultivo/check_cutover_explicito.py --base "origin/${{ github.base_ref }}"
+
+      - name: "GATE 48 — o arquivo do aluno não aponta para o do professor"
+        run: python3 scripts/consultivo/check_link_namespace.py
+
       - name: "GATE 46 — o áudio tem as falas que a tela promete"
         run: python3 scripts/consultivo/check_contagem_declarada.py
 

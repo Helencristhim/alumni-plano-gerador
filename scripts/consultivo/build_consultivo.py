@@ -345,11 +345,21 @@ def monta(cfg, base_frag):
                    % (c["numero"], c["aulas"], c["primeira"], c["porBloco"], c["nivel"]))
     js = troca_var(js, "LESSONS", "{\n" + ",\n".join(lessons) + "\n}")
     js = troca_var(js, "GUIDE", "{\n" + ",\n".join(guides) + "\n}")
-    js = js.replace("var STORE='pv_consultivo-modelo_v1';",
-                    "var STORE='pv_%s_v1';" % re.sub(r"[^A-Za-z0-9_-]", "-", cfg["artefato_id"]))
+    # ---- a chave de progresso tem de ter O ALUNO dentro
+    #
+    # Vinha do `artefato_id` ('pv_consultivo-c01-01-20_v1'): o CICLO e o intervalo de aulas,
+    # sem nada que distinga uma pessoa da outra. Como localStorage e por ORIGEM, dois alunos
+    # de mesmo ciclo abertos no mesmo navegador -- o da professora, no dia a dia -- gravavam
+    # um por cima do outro. Nada avisa: o segundo material simplesmente abre com o progresso
+    # do primeiro, coerente e errado.
+    #
+    # Agora e `pv_{slug}-c{N}_v1`. O ciclo continua na chave porque o material E por ciclo:
+    # quando o aluno passar ao ciclo 2, o progresso do 1 fica onde esta, em vez de ser
+    # sobrescrito pelo material novo.
+    chave = "pv_%s-c%02d_v1" % (re.sub(r"[^A-Za-z0-9_-]", "-", cfg["slug"]), c["numero"])
+    js = js.replace("var STORE='pv_consultivo-modelo_v1';", "var STORE='%s';" % chave)
     js = js.replace("localStorage.getItem('pv_consultivo-modelo_v1')",
-                    "localStorage.getItem('pv_%s_v1')"
-                    % re.sub(r"[^A-Za-z0-9_-]", "-", cfg["artefato_id"]))
+                    "localStorage.getItem('%s')" % chave)
     # ---- o que o artefato deixou CRAVADO em numero de aula
     #
     # O boot do artefato chama `closeBuild(19,RECAP19,CONF19); closeBuild(20,...)`, a tabela
@@ -924,9 +934,28 @@ def main():
         print(f"\n{len(erros)} problema(s). O material NAO foi escrito.")
         return 1
     aluno, _ = extrai_shell.deriva_aluno(prof)
+    # ---- ONDE ESCREVER: a URL do aluno nao se toca enquanto ele tem aula no material velho
+    #
+    # `fase: "piloto"` escreve em `{slug}-c{N}.html`, ao lado do material atual, sem
+    # encostar nele. E a fase de transicao: o aluno continua tendo aula no antigo pelo link
+    # de sempre, e o novo existe em paralelo para ser testado. Quem mostra os dois no painel
+    # e o `materiais-extra.json`, que confere cada caminho por HTTP antes de virar botao.
+    #
+    # Sem `fase` (ou `fase: "canonica"`) escreve em `{slug}.html` -- o cutover, que so
+    # acontece por decisao explicita, aluno a aluno, e exige `[cutover]` no commit (GATE 47).
+    #
+    # O sufixo fica sempre no que e PROVISORIO (`-c1`, durante o piloto) ou no que ja
+    # CONGELOU (`-anterior`, depois do cutover). Nunca na URL viva: foi o que se fez com
+    # `-v2` em daniela-feitoza e percival-jr, e aqueles dois carregam o sufixo ate hoje,
+    # mais dois redirects cada no vercel.json.
     slug = cfg["slug"]
-    p1 = os.path.join(RAIZ, "public", "professor", f"{slug}.html")
-    p2 = os.path.join(RAIZ, "public", "aluno", f"{slug}.html")
+    fase = cfg.get("fase", "canonica")
+    if fase not in ("canonica", "piloto"):
+        print(f"  RECUSADO: fase {fase!r} nao existe. Use 'piloto' ou 'canonica'.")
+        return 1
+    nome = f"{slug}-c{cfg['ciclo']['numero']}" if fase == "piloto" else slug
+    p1 = os.path.join(RAIZ, "public", "professor", f"{nome}.html")
+    p2 = os.path.join(RAIZ, "public", "aluno", f"{nome}.html")
     for caminho, conteudo in ((p1, prof), (p2, aluno)):
         with open(caminho, "w", encoding="utf-8") as fh:
             fh.write(conteudo)
