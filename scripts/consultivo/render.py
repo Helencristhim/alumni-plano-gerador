@@ -60,6 +60,10 @@ def esc(t):
     t = _html.escape(t, quote=False)
     t = re.sub(r'"([^"]*)"', lambda m: "&ldquo;" + m.group(1) + "&rdquo;", t)
     t = t.replace("--", "&mdash;").replace("...", "&hellip;")
+    # `**assim**` e `*assim*` viram <strong>/<em>. O autor nao escreve tag: escrever tag num
+    # campo de texto e o caminho mais curto para um `<` solto quebrar a tela.
+    t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+    t = re.sub(r"(?<!\*)\*([^*]+?)\*(?!\*)", r"<em>\1</em>", t)
     return t
 
 
@@ -136,6 +140,53 @@ def r_frases(b, ident):
                      f'</div>' for f in b["itens"])
 
 
+def r_lacuna(b, ident):
+    """Completar a frase. A lacuna vai ENTRE CHAVES, no meio do texto:
+
+        "{The syllabus says} twenty hours, and the plan has eighteen."
+
+    O autor escreve a frase inteira e marca o pedaco que sai. O `<input>`, o `data-ok`, o
+    `style` e o `placeholder` sao do render -- sao quatro atributos identicos em cinquenta
+    lacunas do molde, digitados um a um.
+
+    O BANCO e obrigatorio (REGRA 2.4 do imersivo, aprendida ali com uma aula que cobrava
+    cinco palavras que ninguem tinha ensinado): sem as candidatas na tela, "complete a
+    frase" nao e recuperacao lexical -- ou a palavra exata vem a cabeca, ou a aluna trava
+    sem saida."""
+    if not b.get("banco"):
+        raise SystemExit(f"{ident}: gap-fill sem banco de palavras. Sem as candidatas na "
+                         f"tela a aluna nao tem como recuperar -- so adivinhar.")
+    linhas = []
+    for frase in b["itens"]:
+        if "{" not in frase:
+            raise SystemExit(f"{ident}: a frase {frase[:40]!r} nao tem lacuna. Marque o "
+                             f"trecho que sai entre chaves.")
+        # A FRASE E ESCAPADA INTEIRA, e so entao a lacuna entra.
+        #
+        # Escapar pedaco a pedaco (partindo antes) deixa a aspa de abertura num pedaco e a
+        # de fechamento noutro: nenhuma das duas acha o seu par, e a frase sai com `"` cru
+        # onde o molde tem `&ldquo;`/`&rdquo;`. Foi o unico ponto em que a primeira versao
+        # deixou de ser byte-a-byte igual.
+        #
+        # A RESPOSTA, ao contrario, vai CRUA no `data-ok`: e com ela que o que a aluna
+        # digitou vai ser comparado. Uma entidade ali faria a resposta certa contar como
+        # errada, e ninguem veria o porque.
+        respostas = re.findall(r"\{([^}]+)\}", frase)
+        marcado = re.sub(r"\{[^}]+\}", "\x00", frase)
+        montado = esc(marcado)
+        for r in respostas:
+            montado = montado.replace(
+                "\x00", f'<input class="blank-input" data-ok="{r}" '
+                         f'style="min-width:170px" placeholder="...">', 1)
+        linhas.append(f'      <p class="chunk-line">{montado}</p>')
+    banco = " &middot; ".join(f"<em>{esc(x)}</em>" for x in b["banco"])
+    return (f'    <div class="fill-list">\n' + "\n".join(linhas) + "\n    </div>\n"
+            f'    <p class="subprompt">{esc(b.get("rotulo_banco", "Openings you can use:"))} '
+            f'{banco}</p>\n'
+            f'    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>\n'
+            f'    <div class="score-out" id="{ident}-out"></div>')
+
+
 def r_nota(b, ident):
     """A nota que explica a atividade. Nasce FECHADA, sempre.
 
@@ -147,7 +198,7 @@ def r_nota(b, ident):
 
 
 RENDER = {"classificar": r_classificar, "escolha": r_escolha, "par": r_par,
-          "frases": r_frases}
+          "frases": r_frases, "lacuna": r_lacuna}
 
 
 def seccao(b, i):
