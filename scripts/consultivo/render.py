@@ -64,6 +64,7 @@ def esc(t):
     # que faz a declaracao voltar byte a byte, e byte a byte e o que prova que migrar nao
     # reescreve.
     t = t.replace("'", "&rsquo;").replace("\u2019", "&rsquo;")
+    t = t.replace("\u00b7", "&middot;").replace("\u2013", "&ndash;")
     # `**assim**` e `*assim*` viram <strong>/<em>. O autor nao escreve tag: escrever tag num
     # campo de texto e o caminho mais curto para um `<` solto quebrar a tela.
     t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
@@ -196,6 +197,28 @@ def r_lacuna(b, ident):
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
+def r_recursos(b, ident):
+    """O acervo do post-class: leitura, escuta, referencia. NAO e exercicio.
+
+    O `link` e obrigatorio e vai ao recurso EXATO -- nao a uma busca, nao a uma home. E a
+    licao que o imersivo pagou com um gate proprio: recomendacao sem link e recomendacao que
+    ninguem abre, e link de busca faz a aluna procurar o que a aula ja tinha achado."""
+    cartoes = []
+    for r in b["itens"]:
+        if not r.get("url", "").startswith("http"):
+            raise SystemExit(f"{ident}: o recurso {r.get('titulo', '?')!r} nao tem link. "
+                             f"Acervo sem link e acervo que ninguem abre.")
+        cartoes.append(
+            f'    <div class="res-card">\n'
+            f'      <h5>{esc(r["titulo"])}</h5>\n'
+            f'      <span class="res-src">{esc(r["fonte"])}</span>\n'
+            f'      <p>{r["texto"]}</p>\n'
+            f'      <a class="res-link" href="{r["url"]}" target="_blank" rel="noopener">'
+            f'{esc(r["cta"])} &rarr;</a>\n'
+            f'    </div>')
+    return "\n".join(cartoes)
+
+
 def r_nota(b, ident):
     """A nota que explica a atividade. Nasce FECHADA, sempre.
 
@@ -207,7 +230,7 @@ def r_nota(b, ident):
 
 
 RENDER = {"classificar": r_classificar, "escolha": r_escolha, "par": r_par,
-          "frases": r_frases, "lacuna": r_lacuna}
+          "frases": r_frases, "lacuna": r_lacuna, "recursos": r_recursos}
 
 
 def seccao(b, i):
@@ -221,8 +244,11 @@ def seccao(b, i):
 
     partes = ['  <div class="exercise-section">']
     if b.get("titulo"):
-        partes.append(f'    <div class="section-header-row"><h4>{b.get("n", i)} &middot; '
-                      f'{esc(b["titulo"])}</h4></div>')
+        # O post-class NAO numera as seccoes ("Reading", "Listen & Watch"); o pre-class sim
+        # ("3 · What the sentence is doing"). Quem decide e a presenca do `n`.
+        rot = (f'{b["n"]} &middot; {esc(b["titulo"])}' if b.get("n")
+               else esc(b["titulo"]))
+        partes.append(f'    <div class="section-header-row"><h4>{rot}</h4></div>')
     # A ABERTURA E UMA SEQUENCIA, nao dois campos.
     #
     # No molde o documento que a aluna le fica ENTRE as duas instrucoes ("Read the lesson
