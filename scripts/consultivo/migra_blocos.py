@@ -193,9 +193,19 @@ def le_classificar(s):
                         r'<select data-ok="([A-J])">(.*?)</select></div>', s, re.S)
     if not linhas:
         return None
-    ops = [des(o) for o in re.findall(r'<option value="[A-J]">(.*?)</option>', linhas[0][2])]
-    itens = [{"t": des(t), "ok": ops[render.LETRAS.index(ok)]} for t, ok, _ in linhas]
-    return {"kind": "classificar", "id": ident, "opcoes": ops, "itens": itens}
+    alts = [[des(o) for o in re.findall(r'<option value="[A-J]">(.*?)</option>', c)]
+            for _, _, c in linhas]
+    itens = [{"t": des(t), "ok": alts[i][render.LETRAS.index(ok)]}
+             for i, (t, ok, _) in enumerate(linhas)]
+    # MESMA lista em todas as linhas = classificacao (o autor escreve a lista uma vez).
+    # Listas DIFERENTES = cada frase cobra o final dela, e a lista tem de morar no item.
+    # Ler so a primeira linha, como se fazia, dava as opcoes da linha 1 a todas -- e as
+    # respostas das outras passavam a apontar para o texto errado sem nada acusar.
+    if all(a == alts[0] for a in alts):
+        return {"kind": "classificar", "id": ident, "opcoes": alts[0], "itens": itens}
+    for it, a in zip(itens, alts):
+        it["alts"] = a
+    return {"kind": "completar", "id": ident, "itens": itens}
 
 
 def le_escolha(s):

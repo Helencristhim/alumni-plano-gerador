@@ -103,6 +103,33 @@ def r_classificar(b, ident):
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
+def r_completar(b, ident):
+    """Cada enunciado tem os SEUS finais -- nao ha lista comum.
+
+    Parece `classificar` na tela (mesmo `match-grid`, mesmo `mCheck`) e e outro exercicio.
+    Em `classificar` a lista de opcoes e a MESMA em todas as linhas: e isso que faz ser
+    classificacao, e e o que permite ao autor escrever a lista uma vez. Aqui cada frase
+    cobra um final proprio, e reaproveitar a lista da primeira linha -- que era o que a
+    leitura fazia -- trocava as respostas das outras em silencio: o `data-ok` continuava
+    uma letra valida, so apontando para outro texto."""
+    linhas = []
+    for it in b["itens"]:
+        alts = it["alts"]
+        if it["ok"] not in alts:
+            raise SystemExit(f'{ident}: a resposta {it["ok"]!r} nao esta entre os finais de '
+                             f'{it["t"]!r}. O autor escreve o TEXTO do final certo.')
+        ops = ''.join(f'<option value="{LETRAS[i]}">{esc(o)}</option>'
+                      for i, o in enumerate(alts))
+        linhas.append(
+            f'      <div class="match-row"><span class="match-word">{esc(it["t"])}</span>'
+            f'<select data-ok="{LETRAS[alts.index(it["ok"])]}">'
+            f'<option value="" selected="selected">&mdash;</option>{ops}</select></div>')
+    return (f'    <div class="match-grid" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
+            f'    <button class="verify-all-btn ghost" onclick="mCheck(this,\'{ident}\')">'
+            f'Check</button>\n'
+            f'    <div class="score-out" id="{ident}-out"></div>')
+
+
 def r_escolha(b, ident):
     """Marque as que sao verdadeiras. `ok: true` no item; o resto e 0."""
     linhas = [f'        <div class="quiz-option" data-ok="{1 if it.get("ok") else 0}" '
@@ -244,7 +271,8 @@ def r_nota(b, ident):
             f'      {b["texto"]}\n    </div>')
 
 
-RENDER = {"classificar": r_classificar, "escolha": r_escolha, "par": r_par,
+RENDER = {"classificar": r_classificar, "completar": r_completar,
+          "escolha": r_escolha, "par": r_par,
           "frases": r_frases, "lacuna": r_lacuna, "recursos": r_recursos}
 
 
