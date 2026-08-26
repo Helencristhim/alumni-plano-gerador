@@ -50,6 +50,7 @@ _spec.loader.exec_module(extrai_shell)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import audio_surface  # noqa: E402  a MESMA lista que o gerador usa
+import render  # noqa: E402  o builder EMITE o exercicio -- ver o cabecalho de render.py
 
 CAMPOS_GUIA = ["identity", "goals", "product", "criteria", "prep", "language", "transcript",
                "difficulties", "scaffolding", "feedback", "evidence", "prepost", "key"]
@@ -252,6 +253,39 @@ def troca_blocos_de_aula(html, tab_id, prefixo, seletor, aulas, rotulos, conteud
     return html[:a] + "\n".join(conteudos) + html[b:]
 
 
+def expande_blocos(fragmento, decl, usadas, rotulo):
+    """Troca `<!--BLOCOS:chave-->` pelo HTML das atividades declaradas em `blocos.json`.
+
+    Sem placeholder = no-op: a aula que ainda escreve HTML a mao fica byte-a-byte igual, e a
+    migracao pode ser feita um exercicio por vez. Isso importa mais do que parece -- migrar
+    tudo de uma vez seria reescrever, e reescrever no porte foi o que produziu o inventario
+    falso que o GATE 20 teve de consertar depois.
+
+    O `usadas` e COMPARTILHADO pelos tres fragmentos da aula de proposito: o `blocos.json` e
+    por AULA, e uma chave declarada pode ser consumida pelo pre-class, pelo post-class ou
+    pelos slides. Conferir "declarado e nao usado" fragmento a fragmento acusa a primeira
+    chave em todo build -- foi o que a primeira versao fez, e o proprio assert pegou.
+    """
+    def sub(m):
+        chave = m.group(1).strip()
+        if chave not in decl:
+            raise SystemExit(f"{rotulo}: placeholder BLOCOS:{chave} sem entrada no "
+                             f"blocos.json da aula")
+        usadas.add(chave)
+        return render.blocos(decl[chave])
+
+    # Consome o recuo que vem ANTES do placeholder: quem manda na indentacao do bloco e o
+    # render, e nao o lugar onde o comentario foi escrito. Sem isto o bloco sai com o recuo
+    # do placeholder MAIS o proprio, e o material deixa de ser byte-a-byte igual -- que e
+    # exatamente a prova que este caminho precisa dar.
+    return re.sub(r"[ \t]*<!--\s*BLOCOS:([^>]+?)\s*-->", sub, fragmento)
+
+
+def blocos_da_aula(pasta):
+    caminho = os.path.join(pasta, "blocos.json")
+    return json.load(open(caminho, encoding="utf-8")) if os.path.exists(caminho) else {}
+
+
 def troca_slides(html, por_aula):
     """Substitui TODAS as telas do deck pelas das aulas pedidas, na ordem, e renumera
     data-slide -- o numero e posicao no deck, nao identidade da tela."""
@@ -283,14 +317,21 @@ def monta(cfg, base_frag):
 
     # ---- registro
     lessons, guides, slides, erros = [], [], [], []
+    # O blocos.json e por AULA e e consumido por TRES fragmentos, que o builder monta em
+    # lacos diferentes. Por isso a declaracao e o conjunto de chaves usadas vivem aqui
+    # fora, e a conferencia de "declarado e nao usado" acontece no fim, quando os tres ja
+    # passaram. Confendo dentro do laco, o primeiro fragmento acusava sempre.
+    declarado = {n: blocos_da_aula(os.path.join(base_frag, f"aula{n}")) for n in aulas}
+    usado = {n: set() for n in aulas}
     for n in aulas:
         pasta = os.path.join(base_frag, f"aula{n}")
         reg = open(os.path.join(pasta, "registro.js"), encoding="utf-8").read().strip()
         gui = open(os.path.join(pasta, "guide.js"), encoding="utf-8").read().strip()
         lessons.append(f" {n}:{reg}")
         guides.append(f" {n}:{gui}")
-        slides.append(open(os.path.join(pasta, "slides.html"), encoding="utf-8").read().strip())
-        erros += confere_aula(n, reg, gui, pasta)
+        slides.append(expande_blocos(
+            open(os.path.join(pasta, "slides.html"), encoding="utf-8").read().strip(),
+            declarado[n], usado[n], f"aula {n} slides"))
 
     ini = html.rfind("<script>")
     cabeca, js = html[:ini], html[ini:]
@@ -405,10 +446,22 @@ def monta(cfg, base_frag):
         mod = (re.search(r"mod:'([^']+)'", reg) or [None, "—"])[1]
         tema = (re.search(r"tema:'([^']*)'", reg) or [None, ""])[1]
         rotulos[n] = (f"Aula {n:02d} &middot; {mod}", f"Lesson {n:02d}")
-        pre.append(open(os.path.join(pasta, "preclass.html"), encoding="utf-8").read().strip())
-        post.append(open(os.path.join(pasta, "postclass.html"), encoding="utf-8").read().strip())
+        pre.append(expande_blocos(
+            open(os.path.join(pasta, "preclass.html"), encoding="utf-8").read().strip(),
+            declarado[n], usado[n], f"aula {n} pre-class"))
+        post.append(expande_blocos(
+            open(os.path.join(pasta, "postclass.html"), encoding="utf-8").read().strip(),
+            declarado[n], usado[n], f"aula {n} post-class"))
         fb.append(FEEDBACK_BLOCO.format(
             n=n, tema=tema, oculto="" if i == 0 else ' style="display:none"'))
+        erros += confere_aula(n, open(os.path.join(pasta, "registro.js"), encoding="utf-8").read().strip(),
+                              open(os.path.join(pasta, "guide.js"), encoding="utf-8").read().strip(),
+                              pasta, slides[aulas.index(n)], pre[-1])
+        sobrando = set(declarado[n]) - usado[n]
+        if sobrando:
+            raise SystemExit(f"aula {n}: blocos declarados e sem placeholder em nenhum "
+                             f"fragmento: {sorted(sobrando)}. Trabalho escrito que nao "
+                             f"chega a tela.")
     # os cartoes da aba In-class, gerados do registro + cartao.json
     cartoes = []
     for n in aulas:
@@ -657,8 +710,13 @@ def monta(cfg, base_frag):
     return html, n_telas, erros
 
 
-def confere_aula(n, registro_js, guide_js, pasta):
-    """Os asserts que a norma permite provar por construcao."""
+def confere_aula(n, registro_js, guide_js, pasta, slides_txt=None, pre_txt=None):
+    """Os asserts que a norma permite provar por construcao.
+
+    `slides_txt` e `pre_txt` sao os fragmentos JA EXPANDIDOS. Medir o arquivo cru contaria o
+    placeholder `<!--BLOCOS:...-->` como zero atividade -- e foi o que aconteceu no primeiro
+    exercicio migrado: o assert das SEIS atividades acusou cinco, corretamente, porque a
+    sexta ainda nao tinha sido emitida. O contrato se confere no que vai para a tela."""
     erros = []
     etapas = re.findall(r"\{n:'([^']+)',min:(\d+)\}", registro_js)
     if len(etapas) != ETAPAS:
@@ -669,7 +727,8 @@ def confere_aula(n, registro_js, guide_js, pasta):
     if etapas and soma != PERCURSO_MIN:
         erros.append(f"aula {n}: os minutos das etapas somam {soma}, e o percurso essencial "
                      f"e {PERCURSO_MIN} (+5 de margem).")
-    slides = open(os.path.join(pasta, "slides.html"), encoding="utf-8").read()
+    slides = (slides_txt if slides_txt is not None
+              else open(os.path.join(pasta, "slides.html"), encoding="utf-8").read())
     fases = [int(x) for x in re.findall(r'data-stage="(\d+)"', slides)]
     if fases:
         if sorted(set(fases)) != list(range(1, len(etapas) + 1)) and etapas:
@@ -679,7 +738,8 @@ def confere_aula(n, registro_js, guide_js, pasta):
         if fases != sorted(fases):
             erros.append(f"aula {n}: as etapas aparecem fora de ordem nas telas: {fases}. "
                          f"A ordem e normativa.")
-    pre = open(os.path.join(pasta, "preclass.html"), encoding="utf-8").read()
+    pre = (pre_txt if pre_txt is not None
+           else open(os.path.join(pasta, "preclass.html"), encoding="utf-8").read())
     n_ativ = len(re.findall(r'class="exercise-section"', pre))
     if n_ativ != 6:
         erros.append(f"aula {n}: o pre-class tem {n_ativ} atividades, e sao exatamente SEIS "
