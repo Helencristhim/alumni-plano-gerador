@@ -321,6 +321,26 @@ def monta(cfg, base_frag):
     # lacos diferentes. Por isso a declaracao e o conjunto de chaves usadas vivem aqui
     # fora, e a conferencia de "declarado e nao usado" acontece no fim, quando os tres ja
     # passaram. Confendo dentro do laco, o primeiro fragmento acusava sempre.
+    # ---- os fragmentos existem ANTES de qualquer leitura
+    #
+    # Sem isto, aula sem fragmento estourava um FileNotFoundError cru no meio do `monta` --
+    # e essa e a condicao MAIS COMUM de todas: a primeira geracao de um aluno novo, em que
+    # o config ja existe e o conteudo ainda nao. A pilha de excecao nao diz o que falta nem
+    # onde, e faz parecer defeito do builder o que e trabalho por fazer.
+    OBRIGATORIOS = ("registro.js", "guide.js", "slides.html", "preclass.html",
+                    "postclass.html")
+    faltando = []
+    for n in aulas:
+        pasta = os.path.join(base_frag, f"aula{n}")
+        if not os.path.isdir(pasta):
+            faltando.append(f"    aula {n}: a pasta {os.path.relpath(pasta, RAIZ)} nao existe")
+            continue
+        for arq in OBRIGATORIOS:
+            if not os.path.exists(os.path.join(pasta, arq)):
+                faltando.append(f"    aula {n}: falta {arq}")
+    if faltando:
+        return "", 0, ["fragmento(s) ausente(s) — nada foi escrito:\n" + "\n".join(faltando)]
+
     declarado = {n: blocos_da_aula(os.path.join(base_frag, f"aula{n}")) for n in aulas}
     usado = {n: set() for n in aulas}
     for n in aulas:
