@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni — Alunos</title>
+    <title>Alumni — Painel de Alunos</title>
     <link rel="icon" href="/assets/favicon.ico">
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
     <link rel="stylesheet" href="/styles/design-system.css">
@@ -310,25 +310,17 @@
     <span class="alumni-header__badge">VISÃO GESTOR</span>
 </header>
 
-<!-- Duas entradas, UMA pagina. "Alunos Consultivo" e o mesmo dashboard.html com
-     ?anatomia=consultivo: duplicar 1300 linhas para mudar um filtro criaria dois paineis
-     que divergem na primeira correcao feita so num deles. Nenhuma URL mudou -- quem tem
-     dashboard.html no favorito continua caindo no mesmo lugar, com o mesmo conteudo. -->
 <nav class="alumni-nav">
     <a href="index.html">Novo Aluno</a>
-    <a href="dashboard.html" id="navImersivo">Alunos Imersivo</a>
-    <a href="dashboard.html?anatomia=consultivo" id="navConsultivo">Alunos Consultivo</a>
+    <a href="dashboard.html" class="active">Painel de Alunos</a>
     <a href="catalogo.html">Catálogo de Modelos</a>
     <a href="controle-aulas.html">Controle de Aulas</a>
+    <a href="governanca.html">Governança</a>
 </nav>
 
 <div class="container container--wide">
 
     <!-- Stats -->
-    <div id="avisoAnat" style="display:none;padding:1rem 1.2rem;margin-bottom:var(--space-md);
-     background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;font-size:.86rem;
-     line-height:1.5;color:#5c4708"></div>
-
     <div class="stats">
         <div class="stat stat--navy"><div class="stat-number" id="statTotal">0</div><div class="stat-label">Total Alunos</div></div>
         <div class="stat stat--warning"><div class="stat-number" id="statCriacao">0</div><div class="stat-label">Em Criação</div></div>
@@ -546,9 +538,6 @@
     // DATA LOADING
     // ══════════════════════════════════════
     async function loadAlunos() {
-        // O indice de anatomia primeiro: sem ele o filtro nao sabe separar as duas abas, e
-        // a consultivo mostraria todo mundo — o oposto do que ela existe para dizer.
-        await carregaAnatomias();
         var supaRows=[];
         try {
             // NUNCA selecionar a coluna `data` inteira: ela carrega blocosGeracoes + curriculo
@@ -556,23 +545,8 @@
             // (57014) — o dashboard ficava vazio/lento de forma intermitente. Projetamos so as
             // chaves realmente lidas; os contadores vem depois, em lotes (loadAulasGeradas).
             var resp=await sb.from('perfis').select('id,status,nome,nivel,num_aulas,foco,ativo,deactivated,professor,horarios,alocacao,created_at,updated_at,dForm:data->dadosFormulario,dProfessor:data->>professor,dHorarios:data->>horarios,dAlocacao:data->alocacao,dZoom:data->>zoomLink').order('created_at',{ascending:false});
-            if(resp.error) throw resp.error;      // erro RETORNADO tambem e falha
-            if(resp.data) supaRows=resp.data;
-        } catch(e){
-            // O CADASTRO NAO CARREGOU, E ISSO TEM DE APARECER.
-            //
-            // Antes: `if(!resp.error && resp.data)` deixava `supaRows` vazio quando a query
-            // devolvia erro em vez de lancar, e o `catch` nem rodava. O painel entao
-            // montava a lista so com o `registry.json` -- OITO alunos antigos -- e desenhava
-            // isso como se fosse o roster. Aconteceu em 27/08/2026 na maquina da Stephanie:
-            // ela atualizou a pagina e passou a ver 8 alunos, sem nada dizendo por que.
-            //
-            // "Nao consegui ler" e diferente de "so tem estes". A lista antiga continua na
-            // tela, porque e melhor que tela vazia -- mas com o aviso em cima, e ele nao
-            // some sozinho como um toast.
-            FALHOU_CADASTRO = (e && (e.message || e.hint)) || 'sem detalhe';
-            console.error('Supabase load failed:', e);
-        }
+            if(!resp.error&&resp.data) supaRows=resp.data;
+        } catch(e){ console.error('Supabase load failed:',e); showToast('Erro ao carregar dados do servidor','error'); }
 
         var reg=[]; try { var r=await fetch('/planos/registry.json'); if(r.ok) reg=await r.json(); } catch(e){}
         try { var rx=await fetch('/materiais-extra.json'); if(rx.ok) MATERIAIS_EXTRA=await rx.json(); } catch(e){}
@@ -739,89 +713,14 @@
         btn.classList.toggle('active', verArquivados);
     }
 
-    // ══════════════════════════════════════
-    // ANATOMIA — quem ja tem material do framework novo
-    //
-    // A lista NAO vem de um campo que alguem liga: vem de public/data/anatomias.json,
-    // gerado por scripts/build_anatomias.py lendo o carimbo <meta name="alumni-anatomia">
-    // do <head> de cada hub. O aluno entra na aba CONSULTIVO no instante em que o material
-    // dele existe, e nao entra antes. Marcacao manual erra nos dois sentidos: marcado sem
-    // material (o painel oferece um link que nao abre) e material gerado sem marcar (o
-    // aluno some da vista de quem vai dar a aula).
-    var FALHOU_CADASTRO = null;   // motivo, quando o Supabase nao respondeu
-    var ANAT = null;
-    var MATERIAIS = null;   // {professor:[slug], aluno:[slug]} — quem TEM material publicado
-    var anatVista = new URLSearchParams(location.search).get('anatomia') === 'consultivo'
-                    ? 'consultivo' : 'imersivo';
-
-    async function carregaAnatomias() {
-        try {
-            // Sem `no-store`: o arquivo e GERADO no build e muda quando o material muda.
-            // Revalidar normalmente basta, e `no-store` obrigava a rede em toda visita.
-            var r = await fetch('/data/anatomias.json');
-            if (r.ok) {
-                var j = await r.json();
-                ANAT = j.consultivo || {};
-                if (j.materiais && j.materiais.professor) {
-                    MATERIAIS = {professor: new Set(j.materiais.professor),
-                                 aluno: new Set(j.materiais.aluno || [])};
-                }
-            } else { ANAT = null; }
-        } catch(e) { ANAT = null; }
-    }
-
-    function ehConsultivo(id) { return !!(ANAT && ANAT[id]); }
-
-    function pintaNav() {
-        var n1=document.getElementById('navImersivo'), n2=document.getElementById('navConsultivo');
-        if(n1) n1.classList.toggle('active', anatVista==='imersivo');
-        if(n2) n2.classList.toggle('active', anatVista==='consultivo');
-    }
-
     function filterAlunos() {
         var s=document.getElementById('searchInput').value.toLowerCase();
         var f=allAlunos.slice(); if(s) f=f.filter(function(a){return a.nome.toLowerCase().includes(s);});
-        // A aba consultivo mostra SO quem ja tem o material. Se o indice nao carregou, ela
-        // mostra vazio com aviso -- nunca a lista inteira, que faria parecer que todo mundo
-        // migrou.
-        // NINGUEM SAI DO IMERSIVO. O aluno que ganha material do framework novo passa a
-        // aparecer TAMBEM na aba consultivo -- nao muda de aba. Ordem do Dan, 26/08/2026.
-        //
-        // A primeira versao disto excluia: imersivo mostrava `!ehConsultivo`. Faria o aluno
-        // SUMIR da aba onde ele tem aula no dia em que o material novo nascesse, e a
-        // professora o procuraria onde ele sempre esteve. As duas listas nao sao uma
-        // particao: a imersiva e o roster, e a consultiva e um recorte dele.
-        if(anatVista==='consultivo') f=f.filter(function(a){return ehConsultivo(a.id);});
         if(!verArquivados) f=f.filter(function(a){return !isDeactivated(a.id);});
         if(currentFilter==='ativo') f=f.filter(function(a){return a._ativo===true;});
         else if(currentFilter!=='todos') f=f.filter(function(a){return a.perfilStatus===currentFilter;});
         aplicaBotaoArquivados();
-        sortAlunos(f); renderAlunos(f); pintaNav(); avisoAnatomia(f.length);
-    }
-
-    function avisoCadastro() {
-        var host=document.getElementById('avisoAnat'); if(!host || !FALHOU_CADASTRO) return false;
-        host.style.display='block';
-        host.style.background='#fef2f2'; host.style.borderColor='#fca5a5'; host.style.color='#7f1d1d';
-        host.innerHTML = '<strong>Não consegui carregar o cadastro.</strong> A lista abaixo é um ' +
-            'retrato antigo (<code>registry.json</code>) e <strong>não é o roster</strong> — faltam ' +
-            'alunos. Recarregue a página; se continuar, o Supabase está fora.' +
-            '<br><span style="font-size:.8rem;opacity:.8">Detalhe: ' +
-            String(FALHOU_CADASTRO).replace(/</g,'&lt;').slice(0,160) + '</span>';
-        return true;
-    }
-
-    function avisoAnatomia(n) {
-        var host=document.getElementById('avisoAnat'); if(!host) return;
-        if(avisoCadastro()) return;   // falha de cadastro passa na frente de tudo
-        if(anatVista!=='consultivo' || n>0) { host.style.display='none'; return; }
-        host.style.display='block';
-        host.innerHTML = ANAT===null
-            ? '<strong>Não consegui ler <code>/data/anatomias.json</code>.</strong> ' +
-              'A lista está vazia porque não sei quem tem material novo — não porque ninguém tem. ' +
-              'O arquivo é gerado por <code>scripts/build_anatomias.py</code>.'
-            : '<strong>Ninguém ainda.</strong> Esta aba mostra os alunos cujo material já ' +
-              'foi gerado no framework novo. O nome aparece aqui sozinho quando o material dele existir.';
+        sortAlunos(f); renderAlunos(f);
     }
 
     function setFilter(filter,btn) { currentFilter=filter; document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); filterAlunos(); }
@@ -1027,8 +926,6 @@
         var container=document.getElementById('alunosList'), countEl=document.getElementById('count');
         if(alunos.length===0&&allAlunos.length===0) { container.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>Nenhum aluno cadastrado</h3><p>Comece criando o primeiro perfil de aluno.</p><a href="index.html" class="btn-novo" style="display:inline-flex">Criar Primeiro Aluno</a></div>'; countEl.textContent=''; return; }
         if(alunos.length===0) { container.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><h3>Nenhum resultado</h3><p>Nenhum aluno corresponde aos filtros selecionados.</p></div>'; countEl.textContent=''; return; }
-        // (a aba consultivo vazia e explicada pelo #avisoAnat, que diz se e "ninguem ainda"
-        //  ou "nao consegui ler o indice" — sao coisas diferentes e nao podem parecer iguais)
         countEl.textContent=alunos.length+' aluno'+(alunos.length!==1?'s':'');
 
         container.innerHTML=alunos.map(function(a) {
@@ -1154,32 +1051,7 @@
     // 155 materiais reais, ausente nos 4 stubs de redirect) substitui o `includes('alumni')`,
     // que em alguns hubs so aparece la pelo byte 162.000 e portanto nao cabe num prefixo.
     // Verificado nos 98 alunos do roster: MESMO veredito, arquivo por arquivo.
-    // O INDICE ANTES DA REDE.
-    //
-    // Esta funcao era uma requisicao por arquivo, por aluno, a CADA visita -- e com
-    // `cache: 'no-store'`, portanto nao-cacheavel por construcao. Medido em 27/08/2026,
-    // local e em producao: 273 requisicoes, primeiro cartao aos 3,7s, rede parada aos 12,7s.
-    // O #1860 ja tinha derrubado o CUSTO de cada uma (Range em vez do arquivo inteiro); o
-    // NUMERO delas continuou igual, e ele cresce junto com o roster.
-    //
-    // `public/data/anatomias.json` responde a mesma pergunta, pelo MESMO criterio (>5000
-    // bytes e `viewport` no primeiro KB), medido no disco durante o build.
-    //
-    // O indice nao e a unica verdade: caminho que ele nao conhece -- material fora da
-    // convencao, link extra, ou publicado sem passar pelo build -- cai no caminho antigo,
-    // intacto. Ele acelera o caso comum e nao decide sozinho o veredito de nada.
-    function noIndice(url) {
-        if (!MATERIAIS) return null;
-        var m = String(url).match(/^\/?(professor|aluno)\/([^/?#]+)\.html$/);
-        if (!m) return null;
-        var conj = MATERIAIS[m[1]];
-        if (!conj) return null;
-        return conj.has(m[2]);
-    }
-
     async function isRealPage(url) {
-        var doIndice = noIndice(url);
-        if (doIndice !== null) return doIndice;
         try {
             var r = await fetch(url, { cache: 'no-store', headers: { 'Range': 'bytes=0-1023' } });
             if (!r.ok && r.status !== 206) return false;   // 404 = sem material
