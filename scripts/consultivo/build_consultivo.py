@@ -266,13 +266,23 @@ def expande_blocos(fragmento, decl, usadas, rotulo):
     pelos slides. Conferir "declarado e nao usado" fragmento a fragmento acusa a primeira
     chave em todo build -- foi o que a primeira versao fez, e o proprio assert pegou.
     """
+    # O vocabulario que a AULA ensina, nao o da seccao.
+    #
+    # Cada `<!--BLOCOS:chave-->` e uma chamada isolada de `render.blocos`, entao uma seccao
+    # nunca ve as irmas -- e o gap-fill do pre-class ficava sem saber que o `par` da seccao
+    # 2 tinha ensinado justamente aquelas palavras. Resultado: um gap-fill de vocabulario
+    # era classificado como de gramatica, e o builder recusava o banco que a REGRA 2.4 exige.
+    vocab_da_aula = set()
+    for blocos_da_chave in decl.values():
+        vocab_da_aula |= render.vocab_da_regiao(blocos_da_chave)
+
     def sub(m):
         chave = m.group(1).strip()
         if chave not in decl:
             raise SystemExit(f"{rotulo}: placeholder BLOCOS:{chave} sem entrada no "
                              f"blocos.json da aula")
         usadas.add(chave)
-        return render.blocos(decl[chave])
+        return render.blocos(decl[chave], vocab_da_aula)
 
     # Consome o recuo que vem ANTES do placeholder: quem manda na indentacao do bloco e o
     # render, e nao o lugar onde o comentario foi escrito. Sem isto o bloco sai com o recuo
@@ -321,6 +331,26 @@ def monta(cfg, base_frag):
     # lacos diferentes. Por isso a declaracao e o conjunto de chaves usadas vivem aqui
     # fora, e a conferencia de "declarado e nao usado" acontece no fim, quando os tres ja
     # passaram. Confendo dentro do laco, o primeiro fragmento acusava sempre.
+    # ---- os fragmentos existem ANTES de qualquer leitura
+    #
+    # Sem isto, aula sem fragmento estourava um FileNotFoundError cru no meio do `monta` --
+    # e essa e a condicao MAIS COMUM de todas: a primeira geracao de um aluno novo, em que
+    # o config ja existe e o conteudo ainda nao. A pilha de excecao nao diz o que falta nem
+    # onde, e faz parecer defeito do builder o que e trabalho por fazer.
+    OBRIGATORIOS = ("registro.js", "guide.js", "slides.html", "preclass.html",
+                    "postclass.html")
+    faltando = []
+    for n in aulas:
+        pasta = os.path.join(base_frag, f"aula{n}")
+        if not os.path.isdir(pasta):
+            faltando.append(f"    aula {n}: a pasta {os.path.relpath(pasta, RAIZ)} nao existe")
+            continue
+        for arq in OBRIGATORIOS:
+            if not os.path.exists(os.path.join(pasta, arq)):
+                faltando.append(f"    aula {n}: falta {arq}")
+    if faltando:
+        return "", 0, ["fragmento(s) ausente(s) — nada foi escrito:\n" + "\n".join(faltando)]
+
     declarado = {n: blocos_da_aula(os.path.join(base_frag, f"aula{n}")) for n in aulas}
     usado = {n: set() for n in aulas}
     for n in aulas:
@@ -714,9 +744,23 @@ def monta(cfg, base_frag):
                          f"Doc 04 §12.1 — nenhum fragmento de outro perfil.")
 
     nome_inteiro = f"{cfg['aluno']['nome']} {cfg['aluno']['sobrenome']}".strip()
+    prog = cfg.get("titulo", "Business English Program")
     html = re.sub(r"<title>.*?</title>",
-                  f"<title>{nome_inteiro} — {cfg.get('titulo','Business English Program')} "
-                  f"| Alumni by Better</title>", html, count=1, flags=re.S)
+                  f"<title>{nome_inteiro} — {prog} | Alumni by Better</title>",
+                  html, count=1, flags=re.S)
+    # ---- e o titulo que o SCRIPT escreve, que e o que a aba do navegador mostra
+    #
+    # O shell traz `document.title = alunoNome() + ' — Business English Program | ...'` com o
+    # nome do programa CRAVADO, e essa linha roda depois do parser: a substituicao da tag
+    # acima e desfeita em runtime, em todo material. O gate estatico le a tag e ve o titulo
+    # certo; o navegador mostra outro. So medindo com o navegador aberto isso aparece.
+    alvo = re.search(r"document\.title\s*=\s*alunoNome\(\)\s*\+\s*'([^']*)'", html)
+    if not alvo:
+        raise SystemExit("o shell nao tem mais o `document.title = alunoNome() + ...` que "
+                         "este passo corrige. Se a linha mudou de forma, ajuste aqui; se "
+                         "sumiu, apague este passo. Passar adiante devolveria o defeito.")
+    html = html.replace(alvo.group(0),
+                        f"document.title=alunoNome()+' — {prog} | Alumni by Better'", 1)
     return html, n_telas, erros
 
 

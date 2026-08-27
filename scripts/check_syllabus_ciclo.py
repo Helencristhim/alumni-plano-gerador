@@ -78,8 +78,15 @@ def verifica(slugs=None):
         if alvo and len(aulas) != alvo:
             fails.append(f'{rel}: declara aulas_do_ciclo={alvo} e traz {len(aulas)} aula(s).')
         ns = [a.get('n') for a in aulas]
-        if ns != list(range(1, len(aulas) + 1)):
-            fails.append(f'{rel}: numeracao das aulas fora de 1..{len(aulas)}: {ns}')
+        # A numeracao do ciclo NAO comeca sempre em 1. Aluno que vem de outro material
+        # continua a contagem dele: o ciclo 1 do consultivo do Luiz vai da aula 9 a 28,
+        # porque ele fez oito no molde anterior e a Instrucao Operacional §3.2 e explicita
+        # -- novo ciclo nao transforma aluno vigente em aluno novo. O gate exigia 1..N e
+        # transformava essa decisao em erro.
+        inicio = int(d.get('primeira', 1))
+        if ns != list(range(inicio, inicio + len(aulas))):
+            fails.append(f'{rel}: numeracao das aulas fora de '
+                         f'{inicio}..{inicio + len(aulas) - 1}: {ns}')
 
         for a in aulas:
             n = a.get('n')
@@ -127,21 +134,36 @@ def verifica(slugs=None):
 
         # (e) produzidas x arquivos no disco
         decl = set(d.get('produzidas', []))
-        no_disco = set()
-        for f in glob.glob(os.path.join(RAIZ, 'public', 'professor', f'{slug}-aula*.html')):
-            m = re.search(r'-aula(\d+)\.html$', f)
-            if m:
-                no_disco.add(int(m.group(1)))
         # A anatomia consultivo nao tem um arquivo por aula: entrega DUAS URLs, e as aulas
-        # do ciclo vivem DENTRO do arquivo do professor, marcadas por data-lesson. Procurar
-        # `{slug}-aulaN.html` devolve zero e o gate acusaria "produzida sem arquivo" para
-        # material que existe -- o gate certo medindo a forma errada.
-        unico = os.path.join(RAIZ, 'public', 'professor', f'{slug}.html')
-        if os.path.exists(unico):
-            with open(unico, encoding='utf-8', errors='replace') as fh:
+        # do ciclo vivem DENTRO do arquivo do professor, marcadas por data-lesson. E ela nao
+        # mora so em `{slug}.html`: enquanto o aluno continua tendo aula no material antigo,
+        # o ciclo novo nasce ao lado, em `{slug}-c{N}.html` (a `fase: "piloto"` do builder).
+        #
+        # QUANDO EXISTE MATERIAL CONSULTIVO, os `{slug}-aulaN.html` NAO contam. Eles sao da
+        # outra anatomia -- o material antigo do aluno, que continua no ar e nunca estara no
+        # syllabus deste ciclo. Contando os dois juntos, o gate acusava o syllabus do Luiz de
+        # ter doze aulas "geradas fora do plano", e as doze eram as aulas antigas dele.
+        consultivo = []
+        for cand in ([os.path.join(RAIZ, 'public', 'professor', f'{slug}.html')]
+                     + sorted(glob.glob(os.path.join(RAIZ, 'public', 'professor',
+                                                     f'{slug}-c*.html')))):
+            if not os.path.exists(cand):
+                continue
+            with open(cand, encoding='utf-8', errors='replace') as fh:
                 conteudo = fh.read()
             if 'content="consultivo"' in conteudo[:4000]:
+                consultivo.append(conteudo)
+
+        no_disco = set()
+        if consultivo:
+            for conteudo in consultivo:
                 no_disco |= {int(x) for x in re.findall(r'data-lesson="(\d+)"', conteudo)}
+        else:
+            for f in glob.glob(os.path.join(RAIZ, 'public', 'professor',
+                                            f'{slug}-aula*.html')):
+                m = re.search(r'-aula(\d+)\.html$', f)
+                if m:
+                    no_disco.add(int(m.group(1)))
         if decl - no_disco:
             fails.append(f'{rel}: aula(s) {sorted(decl - no_disco)} listada(s) como produzida(s) '
                          f'e sem arquivo em public/professor/.')

@@ -76,10 +76,44 @@ def arruma(b):
                 it["alts"] = list(reversed(it["alts"]))
         return True
 
-    if b.get("kind") not in ("classificar", "completar"):
-        return False
     if b.get("kind") == "completar":
-        return False        # cada item tem os seus finais: nao ha lista comum a reordenar
+        # Cada item tem os SEUS finais, entao nao ha lista comum a reordenar -- e por isso a
+        # primeira versao desta ferramenta simplesmente desistia aqui. Errado: a chave de um
+        # `completar` e a POSICAO do final certo dentro do proprio item, e ela pode ser
+        # perfeitamente previsivel do mesmo jeito. Medido ao escrever a aula 9 do Luiz: as
+        # quatro respostas certas eram a PRIMEIRA opcao, quatro vezes seguidas. O gate pegava
+        # e a ferramenta mandava consertar a mao -- que e como nasceu o `b b b` que eu mesmo
+        # produzi corrigindo pares no olho.
+        seq = [it["alts"].index(it["ok"]) for it in b["itens"]]
+        if not previsivel(seq):
+            return False
+        larguras = {len(it["alts"]) for it in b["itens"]}
+        if larguras != {2} and larguras != {3}:
+            return False
+        n = larguras.pop()
+        # Ordem alvo: a posicao do certo VARIA item a item, sem cair em ciclo obvio.
+        #
+        # A semente sozinha NAO basta, e isso deu defeito: `fq10` saiu `C B B B` -- tres
+        # seguidas da mesma posicao, que e exatamente o que a regra proibe. Gerar por hash e
+        # aceitar o resultado e confiar na sorte. Agora a ordem gerada passa pelo MESMO
+        # teste que o gate aplica, e se reprovar tenta a proxima semente.
+        alvo = None
+        for salto in range(64):
+            cand = [(zlib.crc32((b["id"] + str(i) + str(salto)).encode()) % n)
+                    for i in range(len(b["itens"]))]
+            if not previsivel(cand):
+                alvo = cand
+                break
+        if alvo is None:
+            return False
+        for it, q in zip(b["itens"], alvo):
+            certo = it["ok"]
+            resto = [x for x in it["alts"] if x != certo]
+            it["alts"] = resto[:q] + [certo] + resto[q:]
+        return True
+
+    if b.get("kind") != "classificar":
+        return False
     ops = b["opcoes"]
     seq = [ops.index(it["ok"]) for it in b["itens"]]
     if not previsivel(seq):
