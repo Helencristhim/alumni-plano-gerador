@@ -111,7 +111,14 @@ SONDA = r"""(fase) => {
   });
 
   // 3 · o pre-class responde? (a resposta CERTA depende de qual URL e)
-  if (fase === 3) document.querySelectorAll('[onclick^="tog(this)"]').forEach((el) => {
+  //
+  // SO o pre-class. A sonda varria o documento INTEIRO e chamava o resultado de "controles
+  // do pre-class" -- e no deck responder e o certo: ali a aula esta acontecendo e quem
+  // clica e o professor, na tela compartilhada. O molde passava por acidente, porque o deck
+  // dele nao tem exercicio de marcar; a primeira aula que teve (Luiz, aula 10) reprovou com
+  // 12 de 52, e os 12 eram todos do deck. Gate que nomeia uma regiao e mede outra acusa o
+  // inocente e, pior, ensina a contornar a regra certa.
+  if (fase === 3) document.querySelectorAll('#tab-preclass [onclick^="tog(this)"]').forEach((el) => {
     const antes = el.className;
     el.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true}));
     out.tog.n += 1;
