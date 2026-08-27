@@ -834,6 +834,22 @@
 
     function ehConsultivo(id) { return !!(ANAT && ANAT[id]); }
 
+    // O ARQUIVO que serve este aluno NESTA aba.
+    //
+    // O painel derivava o link por convencao -- `/professor/{id}.html` -- e para quem esta
+    // em transicao esse caminho e o material ANTIGO: o ciclo novo vive em `{id}-c1.html`,
+    // porque o link que o aluno ja tem nao se toca enquanto ele tem aula no antigo.
+    // Resultado: na aba Alunos Consultivo o botao levava ao arquivo errado, e o certo
+    // existia do lado.
+    //
+    // Na aba imersivo continua sendo `{id}` -- que e onde a aula acontece hoje.
+    function arquivoDoAluno(id, papel) {
+        if (anatVista === 'consultivo' && ANAT && ANAT[id] && ANAT[id][papel]) {
+            return ANAT[id][papel];
+        }
+        return id;
+    }
+
     function pintaNav() {
         var n1=document.getElementById('navImersivo'), n2=document.getElementById('navConsultivo');
         if(n1) n1.classList.toggle('active', anatVista==='imersivo');
@@ -1136,7 +1152,8 @@
                 : '';
             fieldsH += updH;
 
-            var profUrl='/professor/'+escAttr(a.id)+'.html', alunoUrl=location.origin+'/aluno/'+escAttr(a.id)+'.html';
+            var profUrl='/professor/'+escAttr(arquivoDoAluno(a.id,'professor'))+'.html',
+                alunoUrl=location.origin+'/aluno/'+escAttr(arquivoDoAluno(a.id,'aluno'))+'.html';
             // undefined = ainda nao checado. O card so promete o que a varredura confirmou.
             var rec = confirmedMaterials.get(a.id);
             var alreadyConfirmed = !!rec;
@@ -1300,8 +1317,8 @@
                 var profBtn = card.querySelector('.mat-btn');
                 var alunoBtn = card.querySelector('.aluno-btn');
 
-                var profUrl = '/professor/' + id + '.html';
-                var alunoPath = '/aluno/' + id + '.html';
+                var profUrl = '/professor/' + arquivoDoAluno(id, 'professor') + '.html';
+                var alunoPath = '/aluno/' + arquivoDoAluno(id, 'aluno') + '.html';
                 var alunoFullUrl = location.origin + alunoPath;
 
                 var materialCheck = function() { return (async function() {

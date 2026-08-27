@@ -55,11 +55,11 @@ def levanta():
     achado = {}
     for papel in ("professor", "aluno"):
         for p in sorted(glob.glob(os.path.join(RAIZ, "public", papel, "*.html"))):
-            slug = slug_de(p)
-            if re.search(r"-aula\d|-anterior$", slug):
+            arquivo = slug_de(p)
+            if re.search(r"-aula\d|-anterior$", arquivo):
                 continue
             # `{slug}-c1` conta PARA `{slug}`: e o mesmo aluno, no ciclo dele.
-            slug = re.sub(r"-c\d+$", "", slug)
+            slug = re.sub(r"-c\d+$", "", arquivo)
             with open(p, encoding="utf-8", errors="ignore") as fh:
                 cabeca = fh.read(6000)
             if MARCA not in cabeca:
@@ -69,7 +69,12 @@ def levanta():
             # consultivo" quando o numero certo era zero.
             if MOLDE in cabeca:
                 continue
-            achado.setdefault(slug, {"professor": False, "aluno": False})[papel] = True
+            # Guarda o NOME DO ARQUIVO, nao um booleano. O painel deriva o link por
+            # convencao (`/professor/{id}.html`), e para quem esta em transicao esse caminho
+            # e o material ANTIGO: o ciclo novo vive em `{id}-c1.html`. Sem o nome aqui, a
+            # aba Alunos Consultivo levava ao arquivo errado -- o link existia e o botao
+            # apontava para outro lugar.
+            achado.setdefault(slug, {})[papel] = arquivo
     return achado
 
 
