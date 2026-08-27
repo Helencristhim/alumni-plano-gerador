@@ -123,13 +123,22 @@ def entradas_da_aula(n, frag_dir, vozes, voz_padrao):
     bj = os.path.join(pasta, "blocos.json")
     if os.path.exists(bj):
         decl = json.load(open(bj, encoding="utf-8"))
+    # O MESMO vocabulario da aula que o builder usa. Sem ele, a expansao daqui classifica
+    # o gap-fill de vocabulario como de gramatica e recusa o banco -- o build inteiro morre
+    # num ponto que nao tem nada a ver com audio. Duas expansoes da mesma coisa tem de
+    # receber o mesmo contexto, senao discordam.
+    vocab_da_aula = set()
+    for blocos_da_chave in decl.values():
+        vocab_da_aula |= render.vocab_da_regiao(blocos_da_chave)
+
     corpo = ""
     for arq in ("slides.html", "preclass.html", "postclass.html"):
         p = os.path.join(pasta, arq)
         if os.path.exists(p):
             bruto = open(p, encoding="utf-8").read()
             corpo += re.sub(r"[ \t]*<!--\s*BLOCOS:([^>]+?)\s*-->",
-                            lambda m: render.blocos(decl.get(m.group(1).strip(), [])),
+                            lambda m: render.blocos(decl.get(m.group(1).strip(), []),
+                                                    vocab_da_aula),
                             bruto)
 
     tj = os.path.join(pasta, "talk.json")

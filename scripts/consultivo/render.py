@@ -182,7 +182,7 @@ def r_frases(b, ident):
                      f'</div>' for f in b["itens"])
 
 
-def r_lacuna(b, ident):
+def r_lacuna(b, ident, vocab=None):
     """Completar a frase. A lacuna vai ENTRE CHAVES, no meio do texto:
 
         "{The syllabus says} twenty hours, and the plan has eighteen."
@@ -191,13 +191,59 @@ def r_lacuna(b, ident):
     `style` e o `placeholder` sao do render -- sao quatro atributos identicos em cinquenta
     lacunas do molde, digitados um a um.
 
-    O BANCO e obrigatorio (REGRA 2.4 do imersivo, aprendida ali com uma aula que cobrava
-    cinco palavras que ninguem tinha ensinado): sem as candidatas na tela, "complete a
-    frase" nao e recuperacao lexical -- ou a palavra exata vem a cabeca, ou a aluna trava
-    sem saida."""
-    if not b.get("banco"):
-        raise SystemExit(f"{ident}: gap-fill sem banco de palavras. Sem as candidatas na "
-                         f"tela a aluna nao tem como recuperar -- so adivinhar.")
+    O BANCO e obrigatorio no gap-fill de VOCABULARIO (REGRA 2.4 do imersivo, aprendida ali
+    com uma aula que cobrava cinco palavras que ninguem tinha ensinado): sem as candidatas
+    na tela, "complete a frase" nao e recuperacao lexical -- ou a palavra exata vem a
+    cabeca, ou a aluna trava sem saida.
+
+    E PROIBIDO no de GRAMATICA, pela mesma regra e pela razao oposta: ali a lacuna cobra a
+    FORMA do verbo ("If it ___ taken that night"), e o banco entregaria a resposta.
+
+    O criterio nao e um flag que alguem marca -- seria a mesma coisa que confiar na memoria.
+    E derivado: se TODA resposta esta no vocabulario que a propria regiao ensina, o
+    exercicio e de vocabulario e o banco e cobrado. `vocab` chega de `blocos()`, que ve as
+    seccoes irmas.
+
+    A trava chegou aqui do imersivo SEM essa distincao e recusava os dois casos igualmente:
+    o gap-fill de gramatica da aula 11 do Luiz -- que existe justamente para medir precisao
+    longe da pressao de conversa -- nao podia ser construido."""
+    # A comparacao tolera FLEXAO: o vocabulario e apresentado na forma de citacao ("to
+    # claim", "to leave something out") e a lacuna cobra a forma usada ("claims", "leave
+    # out"). Comparar literal diria que sao palavras diferentes e classificaria um
+    # gap-fill de vocabulario como de gramatica.
+    def base(t):
+        # `to be assigned to` e `assigned to` sao a mesma entrada: a forma de citacao
+        # carrega o auxiliar e a lacuna nao. Sem tirar o `be`, o gap-fill de vocabulario
+        # passava por gramatica e o banco obrigatorio era recusado.
+        t = re.sub(r"^(to\s+be|to|an?|the)\s+", "", t.strip().lower())
+        t = re.sub(r"\b(something|someone)\b", " ", t)
+        return re.sub(r"\s+", " ", t).strip()
+
+    def mesma(a, c):
+        """Mesma expressao a menos de flexao do primeiro termo.
+
+        Nao trunca sufixo -- truncar dizia que `states` e `stat` e que `as far as` e
+        `a far as`, o que faz a comparacao mentir dos dois lados. Aqui o resto da
+        expressao tem de bater exato, e so o primeiro termo aceita uma terminacao a mais."""
+        pa, pc = base(a).split(), base(c).split()
+        if pa == pc:
+            return True
+        if not pa or not pc or pa[1:] != pc[1:]:
+            return False
+        x, y = sorted((pa[0], pc[0]), key=len)
+        return y in (x + "s", x + "es", x + "d", x + "ed", x + "ing", x[:-1] + "ies")
+
+    respostas = [r.partition("|")[0].strip().lower()
+                 for frase in b["itens"] for r in re.findall(r"\{([^}]+)\}", frase)]
+    de_vocab = bool(vocab) and all(
+        any(mesma(r, v) for v in vocab) for r in respostas)
+    if de_vocab and not b.get("banco"):
+        raise SystemExit(f"{ident}: gap-fill de VOCABULARIO sem banco de palavras. Todas as "
+                         f"respostas sao palavras que esta aula ensinou; sem as candidatas "
+                         f"na tela a aluna nao tem como recuperar -- so adivinhar.")
+    if not de_vocab and b.get("banco"):
+        raise SystemExit(f"{ident}: gap-fill de GRAMATICA com banco de palavras. A lacuna "
+                         f"cobra a FORMA, e o banco entrega a resposta. Tire o `banco`.")
     linhas = []
     for frase in b["itens"]:
         if "{" not in frase:
@@ -228,11 +274,16 @@ def r_lacuna(b, ident):
                          f'style="min-width:{larg or b.get("largura", "170px")}" '
                          f'placeholder="...">', 1)
         linhas.append(f'      <p class="chunk-line">{montado}</p>')
-    banco = " &middot; ".join(f"<em>{esc(x)}</em>" for x in b["banco"])
+    # O de GRAMATICA sai sem a linha do banco -- e nao com um banco vazio, que ocuparia
+    # espaco anunciando ajuda que nao existe.
+    linha_banco = ""
+    if b.get("banco"):
+        banco = " &middot; ".join(f"<em>{esc(x)}</em>" for x in b["banco"])
+        linha_banco = (f'    <p class="subprompt">'
+                       f'{esc(b.get("rotulo_banco", "Openings you can use:"))} {banco}</p>\n')
     return (f'    <div class="fill-list">\n' + "\n".join(linhas) + "\n    </div>\n"
-            f'    <p class="subprompt">{esc(b.get("rotulo_banco", "Openings you can use:"))} '
-            f'{banco}</p>\n'
-            f'    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>\n'
+            + linha_banco
+            + f'    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
@@ -276,7 +327,7 @@ RENDER = {"classificar": r_classificar, "completar": r_completar,
           "frases": r_frases, "lacuna": r_lacuna, "recursos": r_recursos}
 
 
-def seccao(b, i):
+def seccao(b, i, vocab=None):
     """Uma atividade completa: cabecalho, instrucoes, exercicio, checagem e nota."""
     ident = _ident(b, i)
     kind = b.get("kind")
@@ -498,7 +549,10 @@ def seccao(b, i):
             raise SystemExit(f"{ident}: item de abertura sem tipo conhecido: "
                              f"{sorted(item)}")
     if kind is not None:
-        partes.append(RENDER[kind](b, ident))
+        if kind == "lacuna":
+            partes.append(RENDER[kind](b, ident, vocab))
+        else:
+            partes.append(RENDER[kind](b, ident))
     if b.get("nota"):
         partes.append(r_nota(b["nota"], ident))
     if not nu:
@@ -506,6 +560,23 @@ def seccao(b, i):
     return "\n".join(partes)
 
 
-def blocos(lista):
-    """As atividades de uma regiao, na ordem declarada."""
-    return "\n".join(seccao(b, i + 1) for i, b in enumerate(lista))
+def vocab_da_regiao(lista):
+    """As palavras que a regiao ENSINA -- o que um `par` de vocabulario apresenta.
+
+    E daqui que sai a decisao entre gap-fill de vocabulario e de gramatica, em vez de um
+    flag: se toda resposta da lacuna esta nesta lista, a lacuna cobra vocabulario."""
+    fora = set()
+    for b in lista:
+        if b.get("kind") == "par":
+            for it in b.get("itens", []):
+                fora.add(str(it.get("t", "")).strip().lower())
+    return fora
+
+
+def blocos(lista, vocab=None):
+    """As atividades de uma regiao, na ordem declarada.
+
+    `vocab` e o vocabulario da AULA INTEIRA e vem do builder, que ve todas as chaves do
+    `blocos.json`. Cai para o da propria regiao quando chamado sozinho (round-trip, testes)."""
+    vocab = vocab if vocab is not None else vocab_da_regiao(lista)
+    return "\n".join(seccao(b, i + 1, vocab) for i, b in enumerate(lista))

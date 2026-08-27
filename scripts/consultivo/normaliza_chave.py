@@ -92,9 +92,20 @@ def arruma(b):
             return False
         n = larguras.pop()
         # Ordem alvo: a posicao do certo VARIA item a item, sem cair em ciclo obvio.
-        alvo = [(zlib.crc32((b["id"] + str(i)).encode()) % n) for i in range(len(b["itens"]))]
-        if len(set(alvo)) == 1:                      # semente infeliz: desloca um
-            alvo[0] = (alvo[0] + 1) % n
+        #
+        # A semente sozinha NAO basta, e isso deu defeito: `fq10` saiu `C B B B` -- tres
+        # seguidas da mesma posicao, que e exatamente o que a regra proibe. Gerar por hash e
+        # aceitar o resultado e confiar na sorte. Agora a ordem gerada passa pelo MESMO
+        # teste que o gate aplica, e se reprovar tenta a proxima semente.
+        alvo = None
+        for salto in range(64):
+            cand = [(zlib.crc32((b["id"] + str(i) + str(salto)).encode()) % n)
+                    for i in range(len(b["itens"]))]
+            if not previsivel(cand):
+                alvo = cand
+                break
+        if alvo is None:
+            return False
         for it, q in zip(b["itens"], alvo):
             certo = it["ok"]
             resto = [x for x in it["alts"] if x != certo]

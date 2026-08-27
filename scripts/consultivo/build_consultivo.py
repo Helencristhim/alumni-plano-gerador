@@ -266,13 +266,23 @@ def expande_blocos(fragmento, decl, usadas, rotulo):
     pelos slides. Conferir "declarado e nao usado" fragmento a fragmento acusa a primeira
     chave em todo build -- foi o que a primeira versao fez, e o proprio assert pegou.
     """
+    # O vocabulario que a AULA ensina, nao o da seccao.
+    #
+    # Cada `<!--BLOCOS:chave-->` e uma chamada isolada de `render.blocos`, entao uma seccao
+    # nunca ve as irmas -- e o gap-fill do pre-class ficava sem saber que o `par` da seccao
+    # 2 tinha ensinado justamente aquelas palavras. Resultado: um gap-fill de vocabulario
+    # era classificado como de gramatica, e o builder recusava o banco que a REGRA 2.4 exige.
+    vocab_da_aula = set()
+    for blocos_da_chave in decl.values():
+        vocab_da_aula |= render.vocab_da_regiao(blocos_da_chave)
+
     def sub(m):
         chave = m.group(1).strip()
         if chave not in decl:
             raise SystemExit(f"{rotulo}: placeholder BLOCOS:{chave} sem entrada no "
                              f"blocos.json da aula")
         usadas.add(chave)
-        return render.blocos(decl[chave])
+        return render.blocos(decl[chave], vocab_da_aula)
 
     # Consome o recuo que vem ANTES do placeholder: quem manda na indentacao do bloco e o
     # render, e nao o lugar onde o comentario foi escrito. Sem isto o bloco sai com o recuo
