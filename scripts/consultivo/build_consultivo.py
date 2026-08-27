@@ -734,9 +734,23 @@ def monta(cfg, base_frag):
                          f"Doc 04 §12.1 — nenhum fragmento de outro perfil.")
 
     nome_inteiro = f"{cfg['aluno']['nome']} {cfg['aluno']['sobrenome']}".strip()
+    prog = cfg.get("titulo", "Business English Program")
     html = re.sub(r"<title>.*?</title>",
-                  f"<title>{nome_inteiro} — {cfg.get('titulo','Business English Program')} "
-                  f"| Alumni by Better</title>", html, count=1, flags=re.S)
+                  f"<title>{nome_inteiro} — {prog} | Alumni by Better</title>",
+                  html, count=1, flags=re.S)
+    # ---- e o titulo que o SCRIPT escreve, que e o que a aba do navegador mostra
+    #
+    # O shell traz `document.title = alunoNome() + ' — Business English Program | ...'` com o
+    # nome do programa CRAVADO, e essa linha roda depois do parser: a substituicao da tag
+    # acima e desfeita em runtime, em todo material. O gate estatico le a tag e ve o titulo
+    # certo; o navegador mostra outro. So medindo com o navegador aberto isso aparece.
+    alvo = re.search(r"document\.title\s*=\s*alunoNome\(\)\s*\+\s*'([^']*)'", html)
+    if not alvo:
+        raise SystemExit("o shell nao tem mais o `document.title = alunoNome() + ...` que "
+                         "este passo corrige. Se a linha mudou de forma, ajuste aqui; se "
+                         "sumiu, apague este passo. Passar adiante devolveria o defeito.")
+    html = html.replace(alvo.group(0),
+                        f"document.title=alunoNome()+' — {prog} | Alumni by Better'", 1)
     return html, n_telas, erros
 
 

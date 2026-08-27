@@ -287,7 +287,34 @@ def seccao(b, i):
     if kind not in (None, "frases", "recursos") and not b.get("itens"):
         raise SystemExit(f"{ident}: exercicio sem itens.")
 
-    partes = ['  <div class="exercise-section">']
+    # `nu: true` -- o bloco sai SEM a moldura `exercise-section`.
+    #
+    # A moldura e do PRE-CLASS, onde cada exercicio E uma seccao da pagina. No DECK o
+    # exercicio vive dentro do `slide-inner`, que ja e a moldura da tela: embrulhar de novo
+    # acrescenta um <div> que a folha de estilo do slide nao espera. Sem o flag, nada muda
+    # -- o pre-class continua saindo byte a byte igual.
+    #
+    # E o que permite DECLARAR o exercicio do deck em vez de escrever `data-ok` a mao, que e
+    # onde nasceram os dois defeitos de PRO-009 que escaparam ao gate (`an4`, `ev1`).
+    # ---- campo que o emissor nao conhece NAO passa em silencio
+    #
+    # Escrevendo a aula 9 do Luiz eu declarei `chave: {titulo, texto}` num bloco, por analogia
+    # com um campo que existe no blocos.json do molde -- e que o emissor tambem ignora. O
+    # texto simplesmente nao saiu: sem erro, sem aviso, com o material parecendo pronto. Um
+    # gabarito que o autor escreveu e que nunca chega a tela e pior que um que falta, porque
+    # ninguem vai procurar.
+    CONHECIDOS = {"kind", "id", "n", "nu", "titulo", "badge", "abertura", "instr", "itens",
+                  "opcoes", "nota", "rationale", "prompt", "largura", "rotulo_banco",
+                  "banco", "barra"}
+    desconhecidos = set(b) - CONHECIDOS - {k for k in b if k.startswith("_")}
+    if desconhecidos:
+        raise SystemExit(f"{ident}: campo(s) que o emissor nao conhece e nao emitiria: "
+                         f"{sorted(desconhecidos)}. Prefixe com _ se for comentario; se for "
+                         f"conteudo, ele precisa de um campo que exista (a explicacao que "
+                         f"abre no fim da atividade e `nota`).")
+
+    nu = b.get("nu")
+    partes = [] if nu else ['  <div class="exercise-section">']
     if b.get("titulo"):
         # O post-class NAO numera as seccoes ("Reading", "Listen & Watch"); o pre-class sim
         # ("3 · What the sentence is doing"). Quem decide e a presenca do `n`.
@@ -474,7 +501,8 @@ def seccao(b, i):
         partes.append(RENDER[kind](b, ident))
     if b.get("nota"):
         partes.append(r_nota(b["nota"], ident))
-    partes.append("  </div>")
+    if not nu:
+        partes.append("  </div>")
     return "\n".join(partes)
 
 
