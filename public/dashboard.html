@@ -555,7 +555,25 @@
             // (~26MB somados no roster) e a query estourava o statement timeout do Postgres
             // (57014) — o dashboard ficava vazio/lento de forma intermitente. Projetamos so as
             // chaves realmente lidas; os contadores vem depois, em lotes (loadAulasGeradas).
-            var resp=await sb.from('perfis').select('id,status,nome,nivel,num_aulas,foco,ativo,deactivated,professor,horarios,alocacao,created_at,updated_at,dForm:data->dadosFormulario,dProfessor:data->>professor,dHorarios:data->>horarios,dAlocacao:data->alocacao,dZoom:data->>zoomLink').order('created_at',{ascending:false});
+            // SEM NENHUM `data->` AQUI. Isto nao e economia de bytes: e o que decide se a
+            // pagina carrega.
+            //
+            // `data` e uma coluna TOASTed enorme (blocosGeracoes ~166KB + curriculo ~158KB
+            // por aluno). Extrair QUALQUER campo dela obriga o Postgres a ler a coluna
+            // inteira, e no roster de 136 isso passou do statement timeout. Medido em
+            // 27/08/2026, na mesma conexao, segundos depois um do outro:
+            //
+            //     sem data->:  0,68s   68 KB   — sempre responde
+            //     com data->:  3,88s   100 B   — 57014, canceling statement due to timeout
+            //
+            // E intermitente: as vezes passa em ~3s, as vezes estoura. Quando estoura,
+            // `supaRows` fica vazio e a lista sai so com os oito do registry.json. Foi o que
+            // a Stephanie viu ao recarregar a pagina.
+            //
+            // Os `data->` eram apenas FALLBACK, para quando a coluna de verdade esta vazia --
+            // e sao necessarios em 21 dos 136 perfis. Passam a ser buscados so para esses,
+            // depois, em `completaFallback()`, sem segurar o primeiro desenho.
+            var resp=await sb.from('perfis').select('id,status,nome,nivel,num_aulas,foco,ativo,deactivated,professor,horarios,alocacao,created_at,updated_at').order('created_at',{ascending:false});
             if(resp.error) throw resp.error;      // erro RETORNADO tambem e falha
             if(resp.data) supaRows=resp.data;
         } catch(e){
@@ -618,6 +636,7 @@
         // Em background: a tela ja esta na frente do usuario. Passamos os ids que a query
         // principal ja trouxe — o contador so existe pra quem tem linha no Supabase.
         loadAulasGeradas(supaRows.map(function(r){ return r.id; }));
+        completaFallback(supaRows);
     }
 
     // Contador "N/M aulas" do card. Os arrays que o alimentam (blocosGeracoes/curriculo)
@@ -635,6 +654,49 @@
     // (medido no roster de 98). E os lotes vao em paralelo (pool 3) em vez de um apos o outro.
     // Paginamos por `.in(id)` e nao por `.range()`: created_at tem empates, e ordenacao
     // instavel entre requisicoes paralelas faria uma linha vir duas vezes e outra nenhuma.
+    // Os campos que so existem dentro de `data`, buscados SO para quem precisa deles.
+    //
+    // A query principal nao toca em `data` (ver acima). Quem tem a coluna de verdade
+    // preenchida -- 115 dos 136 -- nunca precisou desse caminho. Para os outros, uma query
+    // por lote pequeno, depois do primeiro desenho, e o cartao se corrige sozinho.
+    async function completaFallback(rows) {
+        var faltam = rows.filter(function(r){
+            var al = r.alocacao || {};
+            return !r.nome || !r.nivel || !r.num_aulas || !r.foco
+                || !(r.professor || al.professor)
+                || !(r.horarios || al.diasHorarios)
+                || !al.zoomLink;
+        }).map(function(r){ return r.id; });
+        if (!faltam.length) return;
+        var CH = 10, chunks = [], i;
+        for (i = 0; i < faltam.length; i += CH) chunks.push(faltam.slice(i, i + CH));
+        await runPool(chunks.map(function(ch){ return async function(){
+            var r;
+            try {
+                r = await sb.from('perfis')
+                    .select('id,dForm:data->dadosFormulario,dProfessor:data->>professor,' +
+                            'dHorarios:data->>horarios,dAlocacao:data->alocacao,dZoom:data->>zoomLink')
+                    .in('id', ch);
+            } catch(e) { console.error('fallback data->:', e); return; }
+            if (!r || r.error || !r.data) return;
+            r.data.forEach(function(row){
+                var a = allAlunos.find(function(x){ return x.id === row.id; });
+                if (!a) return;
+                var d = row.dForm || {};
+                if (!a.nome || a.nome === a.id) a.nome = d.nome || a.nome;
+                if (!a.nivel) a.nivel = d.nivel || '';
+                if (!a.numAulas) a.numAulas = d.numAulas || 0;
+                if (!a.foco) a.foco = d.foco || '';
+                if (!a.modalidade) a.modalidade = d.modalidadeAula || '';
+                if (!a._professor) a._professor = row.dProfessor || '';
+                if (!a._horarios) a._horarios = row.dHorarios || '';
+                if (!a._alocacao || !Object.keys(a._alocacao).length) a._alocacao = row.dAlocacao || {};
+                if (!a._zoom) a._zoom = row.dZoom || (row.dAlocacao && row.dAlocacao.zoomLink) || '';
+            });
+        }; }), 3);
+        filterAlunos();
+    }
+
     async function loadAulasGeradas(ids) {
         if (!ids || !ids.length) return;
         var CH = 20, chunks = [], i;
