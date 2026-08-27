@@ -148,18 +148,37 @@ def url_coberta_por_redirect(caminho):
     return False
 
 
+# Moldes nao sao alunos. Nao tem contrato, nao estao em `perfis`, nao aparecem na dashboard
+# -- e o material deles carrega `<meta name="alumni-molde">` desde 27/08/2026. Um PR que
+# gera aula de aluno e reconstroi o molde no caminho (porque o builder mudou) nao esta
+# "tocando dois alunos": esta tocando um aluno e a ferramenta.
+MOLDES = {"helen-mendes", "stephanie-vicente"}
+
+
 def slugs_do_pr(arquivos):
-    """Slugs de aluno tocados pelo PR — o merge tem de ser de UM aluno so."""
+    """Slugs de ALUNO tocados pelo PR — o merge tem de ser de um aluno so.
+
+    Duas coisas que nao contam como "outro aluno", e as duas apareceram no primeiro PR de
+    aluno real no consultivo (Luiz, 27/08/2026), que este guarda bloqueou por engano:
+
+    - `{slug}-c{N}` e o MESMO aluno. Enquanto ele tem aula no material antigo, o ciclo novo
+      nasce ao lado em `{slug}-c1.html`; contar os dois como pessoas diferentes fazia o
+      guarda ver dois alunos onde ha um.
+    - o MOLDE nao e aluno.
+
+    O que o guarda protege continua protegido: PR de um aluno que mexe no material de OUTRO
+    segue bloqueado, que e o acidente que ele existe para impedir."""
     achados = set()
     for p in arquivos:
-        for rx in (r"^public/(?:professor|aluno)/([a-z0-9-]+?)(?:-aula\d+)?\.html$",
+        for rx in (r"^public/(?:professor|aluno)/([a-z0-9-]+?)(?:-aula\d+|-c\d+)?\.html$",
                    r"^public/audio/([a-z0-9-]+)/",
-                   r"^_build/([a-z0-9-]+)-aula\d+/"):
+                   r"^_build/([a-z0-9-]+)-aula\d+/",
+                   r"^_build/consultivo/([a-z0-9-]+)/"):
             m = re.match(rx, p)
             if m:
                 achados.add(m.group(1))
                 break
-    return achados
+    return achados - MOLDES
 
 
 def _supabase():
