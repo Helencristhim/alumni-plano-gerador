@@ -73,6 +73,46 @@ def levanta():
     return achado
 
 
+MARCADOR_REAL = "viewport"
+MINIMO_REAL = 5000
+
+
+def materiais():
+    """Quem TEM material publicado, medido no disco em vez de por HTTP.
+
+    O painel perguntava isso com uma requisicao por arquivo, por aluno, a CADA visita --
+    252 requisicoes com `cache: 'no-store'`, que e por construcao nao-cacheavel. Medido em
+    producao em 27/08/2026: primeiro cartao em 3,7s e rede so parada aos 15,8s.
+
+    O criterio e o MESMO que o `isRealPage()` aplica, letra por letra: mais de 5000 bytes e
+    a palavra `viewport` no primeiro KB (o marcador que separa material real dos stubs de
+    redirect). Aqui ele custa uma leitura de disco no build em vez de uma ida a rede por
+    aluno.
+
+    O painel continua sabendo perguntar por HTTP: material que nao esteja neste indice --
+    fora da convencao, ou publicado sem passar pelo build -- cai no caminho antigo. O
+    indice ACELERA o caso comum; nao vira a unica verdade."""
+    fora = {"professor": [], "aluno": []}
+    for papel in ("professor", "aluno"):
+        for p in sorted(glob.glob(os.path.join(RAIZ, "public", papel, "*.html"))):
+            slug = slug_de(p)
+            # So os HUBS. O painel pergunta por `{id}.html`, um por perfil -- nunca pelos
+            # standalones por aula. Inclui-los inchava o indice de 5 KB para 172 KB com
+            # 1.867 entradas que ninguem consulta, e um indice que ninguem le e so peso.
+            if re.search(r"-aula\d", slug):
+                continue
+            try:
+                if os.path.getsize(p) <= MINIMO_REAL:
+                    continue
+                with open(p, encoding="utf-8", errors="ignore") as fh:
+                    if MARCADOR_REAL not in fh.read(1024).lower():
+                        continue
+            except OSError:
+                continue
+            fora[papel].append(slug)
+    return fora
+
+
 def monta():
     achado = levanta()
     return {
@@ -84,6 +124,12 @@ def monta():
                   "arquivos existe: material com um so dos lados e material pela metade, "
                   "e o painel avisa em vez de oferecer um link que nao abre."),
         "consultivo": achado,
+        "_materiais": ("Quem tem material publicado, pelo MESMO criterio do isRealPage() do "
+                       "painel: mais de 5000 bytes e `viewport` no primeiro KB. Existe para o "
+                       "painel nao precisar de uma requisicao por arquivo a cada visita. Nao e "
+                       "a unica verdade: o que nao estiver aqui o painel continua perguntando "
+                       "por HTTP."),
+        "materiais": materiais(),
     }
 
 
@@ -95,6 +141,15 @@ def main():
                   f"`python3 scripts/build_anatomias.py`.")
             return 1
         atual = json.load(open(SAIDA, encoding="utf-8"))
+        if atual.get("materiais") != novo["materiais"]:
+            print("FALHA — a lista de materiais do anatomias.json nao bate com o disco.\n")
+            a, b = set(atual.get("materiais", {})), set(novo["materiais"])
+            for s2 in sorted(b - a)[:10]:
+                print(f"  falta: {s2}")
+            for s2 in sorted(a - b)[:10]:
+                print(f"  declarado e sem material no disco: {s2}")
+            print("\n  python3 scripts/build_anatomias.py")
+            return 1
         if atual.get("consultivo") != novo["consultivo"]:
             print("FALHA — o anatomias.json commitado nao bate com o disco.\n")
             a, b = set(atual.get("consultivo", {})), set(novo["consultivo"])
@@ -108,14 +163,16 @@ def main():
                           f"{atual['consultivo'][s]} -> {novo['consultivo'][s]}")
             print("\n  python3 scripts/build_anatomias.py")
             return 1
-        print(f"✓ anatomias.json em dia — {len(novo['consultivo'])} aluno(s) no consultivo.")
+        print(f"✓ anatomias.json em dia — {len(novo['consultivo'])} aluno(s) no "
+              f"consultivo, {len(novo['materiais'])} com material publicado.")
         return 0
     os.makedirs(os.path.dirname(SAIDA), exist_ok=True)
     with open(SAIDA, "w", encoding="utf-8") as fh:
         json.dump(novo, fh, ensure_ascii=False, indent=2)
         fh.write("\n")
-    print(f"✓ {os.path.relpath(SAIDA, RAIZ)} — {len(novo['consultivo'])} aluno(s) "
-          f"no consultivo: {', '.join(sorted(novo['consultivo'])) or '(nenhum)'}")
+    print(f"✓ {os.path.relpath(SAIDA, RAIZ)} — {len(novo['consultivo'])} no consultivo "
+          f"({', '.join(sorted(novo['consultivo'])) or 'nenhum'}); "
+          f"{len(novo['materiais'])} com material publicado")
     return 0
 
 
