@@ -39,19 +39,27 @@ def slug_de(caminho):
 def levanta():
     """{slug: {"professor": bool, "aluno": bool}} para quem tem carimbo consultivo.
 
-    Ignora o que nao E o hub do aluno:
-      `{slug}-aulaN`   -- standalone de aula; sem isso um aluno com 20 aulas viraria 20 linhas
-      `{slug}-cN`      -- build de piloto, feito para OLHAR sem tocar no material vigente
-      `{slug}-anterior`-- o hub congelado no dia em que o aluno passou ao framework novo
+    `{slug}-cN` E o aluno -- e a chave e o `{slug}`.
 
-    Os tres carregam o carimbo e nenhum representa um aluno: contados, a aba mostraria a
-    mesma pessoa duas ou tres vezes, com nomes que ninguem reconhece."""
+    Enquanto o aluno tem aula no material antigo, o link dele (`{slug}.html`) NAO se toca:
+    o material do framework novo nasce ao lado, em `{slug}-c1.html`. Se o indice ignorasse
+    esse sufixo, o aluno geraria o bloco novo e NAO apareceria na aba Alunos Consultivo --
+    que e a unica coisa que a aba existe para dizer. Por isso o ciclo e ATRIBUIDO ao aluno,
+    nao descartado.
+
+    Continuam de fora, porque nao representam um aluno:
+      `{slug}-aulaN`    -- standalone de aula; um aluno com 20 aulas viraria 20 linhas
+      `{slug}-anterior` -- o hub congelado, se um dia o material novo tomar a URL canonica
+
+    E o MOLDE, que e ficcao (ver abaixo)."""
     achado = {}
     for papel in ("professor", "aluno"):
         for p in sorted(glob.glob(os.path.join(RAIZ, "public", papel, "*.html"))):
             slug = slug_de(p)
-            if re.search(r"-aula\d|-c\d+$|-anterior$", slug):
+            if re.search(r"-aula\d|-anterior$", slug):
                 continue
+            # `{slug}-c1` conta PARA `{slug}`: e o mesmo aluno, no ciclo dele.
+            slug = re.sub(r"-c\d+$", "", slug)
             with open(p, encoding="utf-8", errors="ignore") as fh:
                 cabeca = fh.read(6000)
             if MARCA not in cabeca:
