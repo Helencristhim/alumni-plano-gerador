@@ -75,14 +75,21 @@ JS = r"""(pares) => {
     const antes = slides.map(s => s.className);
     slides.forEach(s => s.classList.remove('active'));
     slide.classList.add('active');
+    // O `.slides-wrapper` so aparece com o body em slide-mode, e nem todo arquivo
+    // tem `enterSlideMode` que responda a chamada (hub do aluno, por exemplo).
+    // Sem isto, o ancestral escondido e a PAGINA, nao o markup -- e o gate acusaria
+    // 271 itens de 9 alunos que estao certos (medido no repo em 28/08/2026).
+    document.body.classList.add('slide-mode');
+    for (let el = slide; el && el !== document.body; el = el.parentElement) {
+      if (getComputedStyle(el).display === 'none') el.style.display = 'block';
+    }
     for (const [g, asel] of gatilhos) {
       const alvo = g.querySelector(asel);
       const rotulo = (g.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
-      if (!alvo) {
-        out.push({slide: slide.dataset.slide || '?', rotulo,
-                  motivo: 'o gatilho nao tem o elemento de resposta dentro'});
-        continue;
-      }
+      // Sem elemento de resposta dentro nao ha reveal a medir: a classe esta
+      // sendo reusada como card de texto (zilaudio aula 1, slide 4: quatro
+      // .fill-item que sao enunciados de tarefa). Isto NAO e defeito.
+      if (!alvo) continue;
       try { g.click(); } catch (e) {
         out.push({slide: slide.dataset.slide || '?', rotulo,
                   motivo: 'clicar estourou: ' + String(e).slice(0, 60)});
