@@ -91,6 +91,20 @@ def _ident(bloco, i):
 
 
 # ---------------------------------------------------------------------------
+def porque(it):
+    """A explicacao DAQUELE item, revelada quando a aluna confere.
+
+    Marca vermelha diz que errou; a resposta certa ao lado diz o que era; nenhuma das duas
+    diz POR QUE. A nota da atividade explica o exercicio inteiro e nao cabe item a item --
+    e foi essa a queixa da revisao da aula 9: `nao ha explicacao das respostas, apenas se
+    sao certas e erradas`.
+
+    Opcional por item: item sem `porque` nao emite nada, e a atividade continua valendo."""
+    if not it.get("porque"):
+        return ""
+    return f'<div class="item-why">{crua(it["porque"])}</div>'
+
+
 def r_classificar(b, ident):
     """Cada item recebe UMA classificacao, de uma lista fixa de opcoes.
 
@@ -109,7 +123,8 @@ def r_classificar(b, ident):
         linhas.append(
             f'      <div class="match-row"><span class="match-word">{esc(it["t"])}</span>'
             f'<select data-ok="{idx[it["ok"]]}">'
-            f'<option value="" selected="selected">&mdash;</option>{alts}</select></div>')
+            f'<option value="" selected="selected">&mdash;</option>{alts}</select>'
+            + porque(it) + '</div>')
     return (f'    <div class="match-grid" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
             f'    <button class="verify-all-btn ghost" onclick="mCheck(this,\'{ident}\')">'
             f'Check</button>\n'
@@ -136,7 +151,8 @@ def r_completar(b, ident):
         linhas.append(
             f'      <div class="match-row"><span class="match-word">{esc(it["t"])}</span>'
             f'<select data-ok="{LETRAS[alts.index(it["ok"])]}">'
-            f'<option value="" selected="selected">&mdash;</option>{ops}</select></div>')
+            f'<option value="" selected="selected">&mdash;</option>{ops}</select>'
+            + porque(it) + '</div>')
     return (f'    <div class="match-grid" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
             f'    <button class="verify-all-btn ghost" onclick="mCheck(this,\'{ident}\')">'
             f'Check</button>\n'
@@ -146,7 +162,7 @@ def r_completar(b, ident):
 def r_escolha(b, ident):
     """Marque as que sao verdadeiras. `ok: true` no item; o resto e 0."""
     linhas = [f'        <div class="quiz-option" data-ok="{1 if it.get("ok") else 0}" '
-              f'onclick="tog(this)"><span>{esc(it["t"])}</span></div>'
+              f'onclick="tog(this)"><span>{esc(it["t"])}</span></div>' + porque(it)
               for it in b["itens"]]
     # O `rationale` vive DENTRO do quiz-item, depois das opcoes. E a explicacao da
     # atividade -- diferente da `nota`, que fecha a seccao. Nasce escondido pelo CSS

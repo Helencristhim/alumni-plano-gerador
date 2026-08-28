@@ -801,6 +801,17 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
    o que era. Fica discreto de proposito: e correcao, nao veredito. */
 .row-fix{margin-left:var(--space-2h);font-size:.8rem;font-weight:var(--peso-medio);color:var(--accent);white-space:nowrap}
 .slide-dark .row-fix,.slide-open .row-fix{color:var(--d-accent)}
+
+/* E o PORQUE daquele item, que e outra coisa: a cor diz que errou, o `row-fix` diz o que
+   era, e so isto diz por que. Nasce fechado e abre ao conferir -- nunca antes, que seria
+   gabarito aberto. `flex-basis:100%` porque a linha e flex: assim ele cai embaixo, com a
+   largura toda, em vez de disputar espaco com a resposta. */
+.item-why{display:none;flex-basis:100%;margin-top:var(--space-2);padding-top:var(--space-2);border-top:1px solid rgba(201,211,228,.55);font-size:.8rem;line-height:var(--lh-corpo);color:var(--text-mid)}
+.item-why.show{display:block;animation:fadeIn .25s ease}
+.item-why em,.item-why strong{color:var(--accent)}
+.quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
+.slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
+.slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
 .word-bank em{font-style:normal;font-weight:var(--peso-medio);color:var(--accent)}
 .slide-dark .word-bank,.slide-open .word-bank{background:rgba(255,255,255,.06);border-color:var(--d-border)}
 .slide-dark .word-bank em,.slide-open .word-bank em{color:var(--d-accent)}
@@ -5112,6 +5123,13 @@ function fixRotulo(alvo,texto){
   el.textContent=texto?('→ '+texto):'';
   el.style.display=texto?'':'none';
 }
+/* A explicacao DAQUELE item. Abre ao conferir, para acerto e para erro: quem acertou
+   confirma o porque, quem errou descobre. Sem ela, conferir devolve so uma cor. */
+function porqueAbre(host){
+  if(!host)return;
+  var w=host.querySelectorAll('.item-why'),i;
+  for(i=0;i<w.length;i++)w[i].classList.add('show');
+}
 function mCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
@@ -5127,6 +5145,7 @@ function mCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 /* cloze com gabarito por campo */
 function czCheck(btn,id){
@@ -5147,6 +5166,7 @@ function czCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 /* selecao multipla: marcar e conferir contra data-ok */
 /* escolha entre duas formulacoes, uma linha por item. Existe para variar a mecanica
@@ -5174,6 +5194,7 @@ function ppCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 
 /* ---------------- guarda de papel no pre-class ----------------
@@ -5205,6 +5226,7 @@ function selCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
   var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
+  porqueAbre(host.parentNode);
 }
 function pick(el,ok){
   if(preConsulta(el))return;

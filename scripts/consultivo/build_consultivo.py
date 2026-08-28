@@ -537,7 +537,12 @@ def monta(cfg, base_frag):
         # O cartao tem TRES listas, e nenhuma delas e decorativa: preparacao (o que fazer
         # antes), conducao (o que fazer durante) e observacao (o que procurar na producao).
         # Faltando a ultima, o professor abre a aula sem saber o que esta medindo.
-        for campo in ("preparar", "conduzir", "observar"):
+        #
+        # A exigencia e sobre material AUTORAL. O `--round-trip` monta o artefato do Marcos a
+        # partir dos fragmentos extraidos dele, e o cartao de la tem so a preparacao: exigir
+        # as tres ali seria cobrar do artefato uma coisa que ele nao tem, e o circulo que
+        # prova que o builder reproduz pararia de fechar por um motivo que nao e reproducao.
+        for campo in ([] if cfg.get("_artefato") else ("preparar", "conduzir", "observar")):
             if not dados.get(campo):
                 erros.append(f"aula {n}: cartao.json sem `{campo}`. O cartao da aba In-class "
                              f"imprime as tres listas, e a de `observar` e o que diz ao "
@@ -840,6 +845,9 @@ def round_trip():
         return 1
     cfg = {
         "slug": "_round-trip",
+        # Este build NAO e material de aluno: e o artefato voltando por dentro do builder.
+        # Os asserts que cobram o que o AUTOR tem de escrever ficam de fora aqui.
+        "_artefato": True,
         "artefato_id": "consultivo-c02-19-38",
         "aluno": {"nome": "Marcos", "sobrenome": "Mansour"},
         "ciclo": {"numero": 2, "aulas": 20, "primeira": 19, "porBloco": 4, "nivel": "B1"},

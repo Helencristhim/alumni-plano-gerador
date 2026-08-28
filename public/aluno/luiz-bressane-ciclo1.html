@@ -801,6 +801,17 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
    o que era. Fica discreto de proposito: e correcao, nao veredito. */
 .row-fix{margin-left:var(--space-2h);font-size:.8rem;font-weight:var(--peso-medio);color:var(--accent);white-space:nowrap}
 .slide-dark .row-fix,.slide-open .row-fix{color:var(--d-accent)}
+
+/* E o PORQUE daquele item, que e outra coisa: a cor diz que errou, o `row-fix` diz o que
+   era, e so isto diz por que. Nasce fechado e abre ao conferir -- nunca antes, que seria
+   gabarito aberto. `flex-basis:100%` porque a linha e flex: assim ele cai embaixo, com a
+   largura toda, em vez de disputar espaco com a resposta. */
+.item-why{display:none;flex-basis:100%;margin-top:var(--space-2);padding-top:var(--space-2);border-top:1px solid rgba(201,211,228,.55);font-size:.8rem;line-height:var(--lh-corpo);color:var(--text-mid)}
+.item-why.show{display:block;animation:fadeIn .25s ease}
+.item-why em,.item-why strong{color:var(--accent)}
+.quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
+.slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
+.slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
 .word-bank em{font-style:normal;font-weight:var(--peso-medio);color:var(--accent)}
 .slide-dark .word-bank,.slide-open .word-bank{background:rgba(255,255,255,.06);border-color:var(--d-border)}
 .slide-dark .word-bank em,.slide-open .word-bank em{color:var(--d-accent)}
@@ -1319,11 +1330,11 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Mark the two statements that are true of a <strong>witness account</strong> and not of an incident report.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="kd9">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It is written by someone who saw what happened.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is written to a fixed form, with headings and times.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It can say what the person felt or thought at the moment.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is signed by the officer on duty.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is the same on every night of the year.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It is written by someone who saw what happened.</span></div><div class="item-why">Yes &mdash; that is what makes it an account. It is one person&rsquo;s version, and it is the only one of the two written from inside the event.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is written to a fixed form, with headings and times.</span></div><div class="item-why">That is the report. The form is what makes it complete and also what makes it leave things out.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It can say what the person felt or thought at the moment.</span></div><div class="item-why">Yes. Only the witness can say this &mdash; and it is also why an account can be honest and still not match a record.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is signed by the officer on duty.</span></div><div class="item-why">The report. The signature says who wrote it down, not what was seen.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is the same on every night of the year.</span></div><div class="item-why">Neither, and it is not what makes them different: the report&rsquo;s <em>form</em> repeats, its content does not.</div>
       </div>
       <div class="rationale">An account is one person&rsquo;s version. A report is a record made to a form &mdash; it can be complete and still leave out what only the witness could know.</div>
     </div>
@@ -1386,12 +1397,12 @@ document.body.setAttribute('data-view','aluno');
       <strong>Ferraz:</strong> I got home a little before eleven. There were four of them on the corner, and one of them called out to me first -- I did not speak until he did. I did not see anyone leave.<br><br><strong>Report:</strong> Attendance recorded at 23:40. Three individuals present at the location. The complainant states that she addressed the group. No mention of any individual leaving the scene.
     </div>
     <div class="match-grid" id="src9">
-      <div class="match-row"><span class="match-word">Someone in the group spoke before she did.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select></div>
-      <div class="match-row"><span class="match-word">There were three people on the corner.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select></div>
-      <div class="match-row"><span class="match-word">Nobody is recorded as leaving the scene.</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select></div>
-      <div class="match-row"><span class="match-word">She was frightened by the group.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select></div>
-      <div class="match-row"><span class="match-word">The time is close to eleven at night.</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select></div>
-      <div class="match-row"><span class="match-word">She spoke to the group first.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select></div>
+      <div class="match-row"><span class="match-word">Someone in the group spoke before she did.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select><div class="item-why">Her account says one of them called out to her first.</div></div>
+      <div class="match-row"><span class="match-word">There were three people on the corner.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select><div class="item-why">Three is the report&rsquo;s number. The account says four.</div></div>
+      <div class="match-row"><span class="match-word">Nobody is recorded as leaving the scene.</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select><div class="item-why">Both say it &mdash; and where two texts agree, you can say so without attributing it to one of them.</div></div>
+      <div class="match-row"><span class="match-word">She was frightened by the group.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select><div class="item-why">Neither text says this. It fits the scene, which is why it is easy to say by accident.</div></div>
+      <div class="match-row"><span class="match-word">The time is close to eleven at night.</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select><div class="item-why">Both. <em>A little before eleven</em> and <em>23:40</em> are the same part of the night.</div></div>
+      <div class="match-row"><span class="match-word">She spoke to the group first.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select><div class="item-why">The report says she addressed the group. The account says the opposite &mdash; this is a real divergence.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'src9')">Check</button>
     <div class="score-out" id="src9-out"></div>
@@ -1406,11 +1417,11 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Mark the two things you cannot get from either text.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="gap9">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Why the group was on that corner.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many people the report recorded.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>What was said after the first words.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>What time the officer recorded.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Whether the witness spoke first.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Why the group was on that corner.</span></div><div class="item-why">Neither text says it. That is the kind of gap you ask for &mdash; and closing a briefing on it is stronger than closing on a divergence.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many people the report recorded.</span></div><div class="item-why">The report says three. It is on the page, so it is not a gap.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>What was said after the first words.</span></div><div class="item-why">Both texts stop there: she went in, and the report registers no further exchange. A genuine gap.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>What time the officer recorded.</span></div><div class="item-why">23:40, written down. Not a gap.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Whether the witness spoke first.</span></div><div class="item-why">Both texts answer this &mdash; and they answer it in opposite ways. That is a divergence, which is not the same thing as a gap.</div>
       </div>
       <div class="rationale">Two texts that disagree are still two texts. What both of them leave out is not a divergence &mdash; it is a hole, and it is the thing worth asking for.</div>
     </div>
@@ -1469,11 +1480,11 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Mark the two things that make a question, asked out loud, land well in a room like that.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="rm10">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It points at something the speaker actually said.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It shows the room how much you know about the subject.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It names the part you are not sure about, and asks about that.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is long enough that everyone can follow your reasoning.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It waits until the speaker has finished the whole talk.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It points at something the speaker actually said.</span></div><div class="item-why">Yes. Quoting her fixes what you are asking about, and she can answer without guessing.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It shows the room how much you know about the subject.</span></div><div class="item-why">No. That is a speech with a question mark at the end, and it spends the time you have.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It names the part you are not sure about, and asks about that.</span></div><div class="item-why">Yes. A question with one target gets one answer.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is long enough that everyone can follow your reasoning.</span></div><div class="item-why">No. Length is what makes a question unanswerable: by the end she is answering the beginning.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It waits until the speaker has finished the whole talk.</span></div><div class="item-why">Not the point &mdash; waiting is a habit of the room, not a property of the question.</div>
       </div>
       <div class="rationale">A question that quotes the speaker back to herself is doing two things at once: it proves you followed, and it gives her something exact to answer.</div>
     </div>
@@ -1532,12 +1543,12 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>3 &middot; What a question is doing</h4></div>
     <p class="task-instr">Six questions someone might ask after a talk. Say what each one is actually doing.</p>
     <div class="match-grid" id="cq10">
-      <div class="match-row"><span class="match-word">&ldquo;Does that hold for the second year as well?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Sorry &mdash; was that sixty or sixteen?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Do you have the same data for civil cases?&rdquo;</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;You mentioned the cases were pre-selected &mdash; selected by whom?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Are you sure you are not choosing the numbers that suit you?&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Could you go back to the slide before this one?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select></div>
+      <div class="match-row"><span class="match-word">&ldquo;Does that hold for the second year as well?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select><div class="item-why">It uses her claim and asks for its limit &mdash; the most portable question there is.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Sorry &mdash; was that sixty or sixteen?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select><div class="item-why">A repair, not an argument. Perfectly fine, and it does not touch the claim.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Do you have the same data for civil cases?&rdquo;</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select><div class="item-why">It asks for material the talk did not cover: a request, not a challenge.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;You mentioned the cases were pre-selected &mdash; selected by whom?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select><div class="item-why">Her own word, given back with a question attached. That is what makes it answerable.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Are you sure you are not choosing the numbers that suit you?&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select><div class="item-why">The doubt is legitimate; the target is her. Aimed at the claim, the same doubt gets an answer instead of a defence.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Could you go back to the slide before this one?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">asking where a claim stops being true</option><option value="B">asking the speaker to repeat something</option><option value="C">challenging the speaker&rsquo;s honesty</option><option value="D">asking for something the talk did not cover</option></select><div class="item-why">A request to repeat. It buys you the detail you missed, and costs nothing.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'cq10')">Check</button>
     <div class="score-out" id="cq10-out"></div>
@@ -1567,11 +1578,11 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Mark the two statements that match what she is arguing.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="gs10">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The pilot programme failed.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The figure is real, but it answers a question nobody asked.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The cases in the pilot were not typical of all cases.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Ninety per cent is too high to be true.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The second year produced a worse programme.</span></div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The pilot programme failed.</span></div><div class="item-why">Not said. She is arguing about what a number proves, not about whether the work was any good.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The figure is real, but it answers a question nobody asked.</span></div><div class="item-why">Her thesis, in one line.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The cases in the pilot were not typical of all cases.</span></div><div class="item-why">Her evidence for the thesis: the sample is what makes the figure look like that.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Ninety per cent is too high to be true.</span></div><div class="item-why">She does not dispute the number anywhere. Disputing it for her leaves you defending arithmetic.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The second year produced a worse programme.</span></div><div class="item-why">The second year changes the <em>figure</em>, which is not the same as changing the programme.</div>
       </div>
       <div class="rationale">She separates two things that sound like one: the figure is right, and it is evidence of something narrower than people take it for. She says so twice, in different words &mdash; that repetition is the clue.</div>
     </div>
@@ -1637,11 +1648,11 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Mark the two things a hypothetical argument has to do to be worth making.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="hy11">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It has to change something that is still open.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to prove the other side acted in bad faith.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It has to name the one fact that would have been different.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to be about the most serious point in the case.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to be impossible to disagree with.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It has to change something that is still open.</span></div><div class="item-why">Yes. A hypothetical that changes nothing is a curiosity; the test is what it does to the decision in front of you.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to prove the other side acted in bad faith.</span></div><div class="item-why">No &mdash; and reaching for bad faith turns an argument about facts into an argument about people.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It has to name the one fact that would have been different.</span></div><div class="item-why">Yes. One fact, named. Two or three at once and nobody can follow which one you are arguing from.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to be about the most serious point in the case.</span></div><div class="item-why">No. It has to be about the point that is still open, which is often not the most serious one.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It has to be impossible to disagree with.</span></div><div class="item-why">No. If it were impossible to disagree with, there would be nothing to argue &mdash; the skill is holding it when someone does.</div>
       </div>
       <div class="rationale">A hypothetical that changes nothing still open is an observation, not an argument &mdash; and the person listening will say so.</div>
     </div>
@@ -1704,12 +1715,12 @@ document.body.setAttribute('data-view','aluno');
       The statement was not recorded on the night of the incident. It was taken eleven days later, after the witness had spoken to two other people present. The defence argues that the delay explains the inconsistencies; the prosecution argues that the inconsistencies are the point.
     </div>
     <div class="match-grid" id="wf11">
-      <div class="match-row"><span class="match-word">&ldquo;The statement was taken eleven days later.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;If it had been taken that night, the inconsistencies would not be there.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Even if the delay explains some of it, it does not explain all of it.&rdquo;</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;And what would that change now?&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;She had spoken to two other people first.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Had she been asked that night, we would have one version, not three.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select></div>
+      <div class="match-row"><span class="match-word">&ldquo;The statement was taken eleven days later.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select><div class="item-why">A fact from the summary: quotable, and where the argument anchors.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;If it had been taken that night, the inconsistencies would not be there.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select><div class="item-why">The hypothetical &mdash; what the missing condition would have produced.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Even if the delay explains some of it, it does not explain all of it.&rdquo;</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select><div class="item-why">A concession, with the turn kept: grant part, hold the rest.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;And what would that change now?&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select><div class="item-why">The question that follows a hypothetical, and the one you should expect. Answer it before it is asked.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;She had spoken to two other people first.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select><div class="item-why">Fact. It is what makes the third version explainable without accusing anyone.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Had she been asked that night, we would have one version, not three.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">arguing what would have been different</option><option value="B">stating a fact from the summary</option><option value="C">asking what it changes</option><option value="D">conceding something</option></select><div class="item-why">The same hypothetical in the inverted form &mdash; more formal, and one syllable shorter to say.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'wf11')">Check</button>
     <div class="score-out" id="wf11-out"></div>
@@ -1724,11 +1735,11 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Mark the two that concede something and still hold the argument.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="cn11">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Even if that were true, it would not change the timeline.&rdquo;</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;You may be right about that. Let us leave it there.&rdquo;</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;That is a fair point &mdash; the difference is that the witness had already spoken to two people.&rdquo;</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I disagree with everything you have said.&rdquo;</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Fine, if you insist.&rdquo;</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;Even if that were true, it would not change the timeline.&rdquo;</span></div><div class="item-why">Concede the premise, keep the conclusion. Nothing is given away.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;You may be right about that. Let us leave it there.&rdquo;</span></div><div class="item-why">The concession alone. It sounds gracious and ends the argument against you.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;That is a fair point &mdash; the difference is that the witness had already spoken to two people.&rdquo;</span></div><div class="item-why">Concession, then the fact that changes what it means. This is the pair to practise.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I disagree with everything you have said.&rdquo;</span></div><div class="item-why">No concession at all. It costs you the goodwill and it does not answer anything.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Fine, if you insist.&rdquo;</span></div><div class="item-why">Surrender with irritation attached &mdash; the worst of both.</div>
       </div>
       <div class="rationale">A concession that ends the sentence gives the point away. A concession followed by the difference is or it would not change keeps it.</div>
     </div>
@@ -1784,11 +1795,11 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Mark the two things she needs before your argument can land.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="au12">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Who decides, and what exactly they decide.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The full history of the institution.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>That the defence is a public body, not a firm the family hired.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many cases you handle in a year.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The name of the court where it happened.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Who decides, and what exactly they decide.</span></div><div class="item-why">Yes. Without it she maps your case onto her own system and hears a different argument from the one you are making.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The full history of the institution.</span></div><div class="item-why">No. It is the kind of context that feels responsible and costs you the whole three minutes.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>That the defence is a public body, not a firm the family hired.</span></div><div class="item-why">Yes. It changes what she assumes about choice, strategy and resources.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many cases you handle in a year.</span></div><div class="item-why">No &mdash; it is about you, not about what she has to understand to follow the case.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The name of the court where it happened.</span></div><div class="item-why">No. A name she cannot place adds nothing she can use.</div>
       </div>
       <div class="rationale">She needs whatever changes the meaning of what you are about to say. Everything else is background, and background spends the three minutes you have.</div>
     </div>
@@ -1847,12 +1858,12 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>3 &middot; In or out of three minutes</h4></div>
     <p class="task-instr">Six things you could say to her. Decide what each one is for.</p>
     <div class="match-grid" id="ex12">
-      <div class="match-row"><span class="match-word">&ldquo;In our system the jury decides guilt, not the sentence.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;The court was built in 1942.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;We are assigned to the case &mdash; the family does not choose us.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;I have been doing jury work for eleven years.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;The statement was taken eleven days after the night.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Our caseload is roughly two hundred a year.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select></div>
+      <div class="match-row"><span class="match-word">&ldquo;In our system the jury decides guilt, not the sentence.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select><div class="item-why">She needs it: in her jurisdiction the two may travel together, and without this she hears a different argument.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;The court was built in 1942.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select><div class="item-why">Interesting, and it spends time you do not have.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;We are assigned to the case &mdash; the family does not choose us.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select><div class="item-why">She needs it, or she will assume a retained lawyer and a choice of strategy that did not exist.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;I have been doing jury work for eleven years.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select><div class="item-why">Later, if she asks. It is credentials, not the case.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;The statement was taken eleven days after the night.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select><div class="item-why">She needs it &mdash; the objection she is about to raise depends on it.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Our caseload is roughly two hundred a year.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">she needs it or the argument changes meaning</option><option value="B">interesting, and it costs you time</option><option value="C">it belongs later, if she asks</option></select><div class="item-why">Later. It describes the office, not the argument.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'ex12')">Check</button>
     <div class="score-out" id="ex12-out"></div>
@@ -1868,11 +1879,11 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Mark the two responses that answer it without starting again.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="ob12">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;That is fair &mdash; it does cut both ways. The difference is who had to prove something that night.&rdquo;</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Let me go back to the beginning so the sequence is clear.&rdquo;</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;It does, and that is exactly why the burden matters here.&rdquo;</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I disagree &mdash; the delay only affects one side.&rdquo;</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;That is a different question from the one I was answering.&rdquo;</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;That is fair &mdash; it does cut both ways. The difference is who had to prove something that night.&rdquo;</span></div><div class="item-why">Concede in four words, then give her the piece she is missing.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;Let me go back to the beginning so the sequence is clear.&rdquo;</span></div><div class="item-why">A restart dressed as clarity. She asked one question; this answers a different, longer one.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>&ldquo;It does, and that is exactly why the burden matters here.&rdquo;</span></div><div class="item-why">The objection is granted and turned into your own point &mdash; the strongest answer available.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;I disagree &mdash; the delay only affects one side.&rdquo;</span></div><div class="item-why">It is not true, and she knows it is not. Denying a correct objection costs more than the objection did.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>&ldquo;That is a different question from the one I was answering.&rdquo;</span></div><div class="item-why">It may be accurate, and it sounds like a dodge. Say what you grant first, then draw the distinction.</div>
       </div>
       <div class="rationale">The objection is correct, and denying it costs more than granting it. What answers it is the asymmetry she does not know about yet &mdash; who carries the burden.</div>
     </div>
@@ -3600,6 +3611,13 @@ function fixRotulo(alvo,texto){
   el.textContent=texto?('→ '+texto):'';
   el.style.display=texto?'':'none';
 }
+/* A explicacao DAQUELE item. Abre ao conferir, para acerto e para erro: quem acertou
+   confirma o porque, quem errou descobre. Sem ela, conferir devolve so uma cor. */
+function porqueAbre(host){
+  if(!host)return;
+  var w=host.querySelectorAll('.item-why'),i;
+  for(i=0;i<w.length;i++)w[i].classList.add('show');
+}
 function mCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
@@ -3615,6 +3633,7 @@ function mCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 /* cloze com gabarito por campo */
 function czCheck(btn,id){
@@ -3635,6 +3654,7 @@ function czCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 /* selecao multipla: marcar e conferir contra data-ok */
 /* escolha entre duas formulacoes, uma linha por item. Existe para variar a mecanica
@@ -3662,6 +3682,7 @@ function ppCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 
 /* ---------------- guarda de papel no pre-class ----------------
@@ -3693,6 +3714,7 @@ function selCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
   var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
+  porqueAbre(host.parentNode);
 }
 function pick(el,ok){
   if(preConsulta(el))return;
