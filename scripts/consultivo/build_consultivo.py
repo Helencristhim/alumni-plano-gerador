@@ -794,6 +794,23 @@ def monta(cfg, base_frag):
                          "sumiu, apague este passo. Passar adiante devolveria o defeito.")
     html = html.replace(alvo.group(0),
                         f"document.title=alunoNome()+' — {prog} | Alumni by Better'", 1)
+
+    # ---- o molde nao e aluno, e o arquivo tem de dizer isso
+    #
+    # `stephanie-vicente` e ficcao: nao tem contrato, nao esta em `perfis`. O config sempre
+    # disse isso -- em PROSA, num campo que nenhuma maquina le. O indice da aba "Alunos
+    # Consultivo" contava 1 aluno, e o aluno era ela.
+    #
+    # O carimbo mora AQUI, e nao na hora de escrever o arquivo, porque ele e parte do que o
+    # material E. Feito depois, `monta()` devolvia um documento e o disco recebia outro --
+    # e o GATE 49, que compara os dois, acusava 39 bytes de diferenca sem que houvesse
+    # defeito nenhum. Passo que muda o conteudo pertence a montagem.
+    if cfg.get("molde"):
+        marca = '<meta name="alumni-molde" content="1">'
+        if marca not in html:
+            html = html.replace('<meta name="alumni-anatomia" content="consultivo">',
+                                '<meta name="alumni-anatomia" content="consultivo">\n'
+                                + marca, 1)
     return html, n_telas, erros
 
 
@@ -1013,19 +1030,7 @@ def main():
             print("  RECUSADO:", e)
         print(f"\n{len(erros)} problema(s). O material NAO foi escrito.")
         return 1
-    # ---- o molde nao e aluno, e o arquivo tem de dizer isso
-    #
-    # `stephanie-vicente` e ficcao: nao tem contrato, nao esta em perfis. O config sempre
-    # disse isso -- em PROSA, num campo `_o_que_e` que nenhuma maquina le. Resultado: o
-    # indice que alimenta a aba "Alunos Consultivo" contava 1 aluno, e o aluno era ela.
-    # Agora e declaracao, e viaja DENTRO do arquivo: quem le o disco nao precisa saber de
-    # cor quais slugs sao molde.
-    if cfg.get("molde"):
-        marca = '<meta name="alumni-molde" content="1">'
-        if marca not in prof:
-            prof = prof.replace('<meta name="alumni-anatomia" content="consultivo">',
-                                '<meta name="alumni-anatomia" content="consultivo">\n'
-                                + marca, 1)
+    # (o carimbo `alumni-molde` e posto por `monta()`, junto do resto do documento)
     aluno, _ = extrai_shell.deriva_aluno(prof)
     # ---- ONDE ESCREVER: a URL do aluno nao se toca enquanto ele tem aula no material velho
     #

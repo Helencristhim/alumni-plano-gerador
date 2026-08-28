@@ -91,6 +91,33 @@ def _ident(bloco, i):
 
 
 # ---------------------------------------------------------------------------
+AUXILIARES = {
+    "am", "is", "are", "was", "were", "be", "been", "being",
+    "have", "has", "had", "having", "do", "does", "did",
+    "will", "would", "shall", "should", "can", "could", "may", "might", "must",
+    "not", "never", "to",
+}
+
+
+def forma_verbal(resposta):
+    """A lacuna cobra a FORMA de um verbo?
+
+    O que se mede e o que a razao da regra descreve: um grupo verbal. Ou a resposta e feita
+    SO de auxiliares e modais (`had been`, `would not be`, `would have`), ou e uma palavra
+    unica flexionada (`explains`, `taken`, `arriving`).
+
+    O que isto deliberadamente NAO captura e a expressao que a aula ensina como bloco
+    lexical -- `the syllabus says`, `can I check`, `what I noticed was`. Ela tem verbo
+    dentro, e nao e forma verbal o que se cobra: e a expressao inteira, e ali o banco ajuda
+    em vez de entregar."""
+    palavras = [p for p in re.split(r"[^A-Za-z']+", resposta.lower()) if p]
+    if not palavras:
+        return False
+    if all(p in AUXILIARES for p in palavras):
+        return True
+    return len(palavras) == 1 and re.search(r"(s|ed|ing|en)$", palavras[0]) is not None
+
+
 def porque(it):
     """A explicacao DAQUELE item, revelada quando a aluna confere.
 
@@ -229,9 +256,21 @@ def r_lacuna(b, ident, vocab=None):
     FORMA do verbo ("If it ___ taken that night"), e o banco entregaria a resposta.
 
     O criterio nao e um flag que alguem marca -- seria a mesma coisa que confiar na memoria.
-    E derivado: se TODA resposta esta no vocabulario que a propria regiao ensina, o
-    exercicio e de vocabulario e o banco e cobrado. `vocab` chega de `blocos()`, que ve as
-    seccoes irmas.
+    E derivado, e sao TRES estados, nao dois:
+
+      VOCABULARIO  toda resposta esta no vocabulario que a aula ensina  -> banco OBRIGATORIO
+      FORMA        toda resposta e forma verbal (auxiliar, modal, flexao) -> banco PROIBIDO
+      EXPRESSAO    o resto                                             -> banco OPCIONAL
+
+    Ler "nao e vocabulario" como "e gramatica" foi o que travou o MOLDE: as quatro aulas da
+    Stephanie cobram ABERTURAS na lacuna ("The syllabus says&hellip;", "Can I check&hellip;",
+    "What I noticed was&hellip;"), que a aula ensina em lista de frases-modelo -- nao em card
+    de vocabulario. O emissor as classificava como gramatica e recusava o banco declarado, e
+    o molde parou de reconstruir a partir dos proprios fragmentos. Um molde que nao
+    reconstroi nao recebe correcao nenhuma: e o pior lugar do sistema para uma trava errar.
+
+    A proibicao continua exatamente onde a razao dela vale -- a lacuna que cobra a FORMA de
+    um verbo, onde o banco entrega a resposta.
 
     A trava chegou aqui do imersivo SEM essa distincao e recusava os dois casos igualmente:
     o gap-fill de gramatica da aula 11 do Luiz -- que existe justamente para medir precisao
@@ -266,13 +305,15 @@ def r_lacuna(b, ident, vocab=None):
                  for frase in b["itens"] for r in re.findall(r"\{([^}]+)\}", frase)]
     de_vocab = bool(vocab) and all(
         any(mesma(r, v) for v in vocab) for r in respostas)
+    de_forma = bool(respostas) and all(forma_verbal(r) for r in respostas)
     if de_vocab and not b.get("banco"):
         raise SystemExit(f"{ident}: gap-fill de VOCABULARIO sem banco de palavras. Todas as "
                          f"respostas sao palavras que esta aula ensinou; sem as candidatas "
                          f"na tela a aluna nao tem como recuperar -- so adivinhar.")
-    if not de_vocab and b.get("banco"):
-        raise SystemExit(f"{ident}: gap-fill de GRAMATICA com banco de palavras. A lacuna "
-                         f"cobra a FORMA, e o banco entrega a resposta. Tire o `banco`.")
+    if de_forma and b.get("banco"):
+        raise SystemExit(f"{ident}: gap-fill de FORMA VERBAL com banco de palavras. Aqui a "
+                         f"lacuna cobra a forma ({', '.join(respostas[:3])}...), e o banco "
+                         f"entrega a resposta. Tire o `banco`.")
     linhas = []
     for frase in b["itens"]:
         if "{" not in frase:
