@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""GATE 49 — o MOLDE reconstroi dos proprios fragmentos, e o publicado e o que sai dali.
+"""GATE 50 — o MOLDE reconstroi dos proprios fragmentos, e o publicado e o que sai dali.
 
 POR QUE ISTO EXISTE
 -------------------
@@ -135,15 +135,15 @@ def selftest():
 def main():
     if "--selftest" in sys.argv:
         return selftest()
-    print("=== GATE 49 — o molde reconstroi dos proprios fragmentos ===")
+    print("=== GATE 50 — o molde reconstroi dos proprios fragmentos ===")
     ok, msgs = confere()
     for m in msgs:
         print(("  " + VERDE + "ok" + ZERO + "    ") if ok else ("  " + VERMELHO + "FAIL" +
                                                                 ZERO + "  "), m)
     if ok:
-        print("\nGATE 49 OK — o molde reconstroi, e o publicado e o que o builder devolve.")
+        print("\nGATE 50 OK — o molde reconstroi, e o publicado e o que o builder devolve.")
         return 0
-    print(f"\n{VERMELHO}GATE 49 — o molde nao reproduz.{ZERO} Enquanto isto durar, correcao "
+    print(f"\n{VERMELHO}GATE 50 — o molde nao reproduz.{ZERO} Enquanto isto durar, correcao "
           f"de plataforma NAO chega ao molde, e a proxima aula nasce com o defeito que ja "
           f"foi consertado no aluno.")
     return 1
