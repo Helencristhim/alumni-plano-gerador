@@ -208,14 +208,25 @@ def confere(caminho):
             mapa = json.loads(m.group(1))
         except ValueError:
             mapa = {}
+    # O MANIFESTO E O DO ALUNO DESTE ARQUIVO, e isto nao e detalhe.
+    #
+    # Antes: `glob(_build/consultivo/*/audio_manifest.json)` e `break` no primeiro. O
+    # primeiro e o que a ordem do diretorio devolver -- outro aluno, na maioria das vezes. A
+    # regra PRO-005 pergunta "qual e a CATEGORIA deste audio?" e ia procurar a chave num
+    # manifesto de outra pessoa: nao acha, `cat.get()` devolve None, None nao esta nas
+    # categorias de modelo, e toda fala longa que aparece na tela vira "legenda falada".
+    #
+    # Ele reprovava ou passava conforme a ORDEM DO SISTEMA DE ARQUIVOS: verde no runner do
+    # CI, vermelho na maquina onde o diretorio do outro aluno vem antes. Falso positivo que
+    # muda de lado sozinho e pior do que gate ausente -- ninguem sabe de que lado olhar.
     manifesto = None
-    for p in glob.glob(os.path.join(RAIZ, "_build", "consultivo", "*",
-                                    "audio_manifest.json")):
+    slug = re.sub(r"-(?:c|ciclo)\d+$", "", os.path.basename(caminho)[:-len(".html")])
+    p = os.path.join(RAIZ, "_build", "consultivo", slug, "audio_manifest.json")
+    if os.path.exists(p):
         try:
             manifesto = json.load(open(p, encoding="utf-8"))
-            break
         except (OSError, ValueError):
-            pass
+            manifesto = None
     ctx = {"tela": sem_codigo(c), "telas": telas(c), "professor": eh_professor(c),
            "mapa": mapa, "manifesto": manifesto}
     erros = []
