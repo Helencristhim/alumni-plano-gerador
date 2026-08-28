@@ -389,6 +389,21 @@ jobs:
         if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
         run: python3 scripts/check_reveal_clica.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
 
+      # GATE 49 — o clique tem de MOSTRAR a resposta, não só mudar alguma coisa.
+      # O 28 pergunta "mudou o estilo de alguém?". Isso passa reto no defeito da
+      # patricia-yamaguti-shimada (aulas 5-20): o .fill-answer nasceu DENTRO do
+      # .fill-blank, então clicar esconde o "___" (mudou!) e a resposta, sendo
+      # filha dele, some junto. Seis exercícios mortos por aula, em aula ao vivo.
+      # Estaticamente o arquivo está certo — o que quebra é a ÁRVORE, que não está
+      # em classe nenhuma. Este gate mede a CAIXA do alvo depois do clique: largura
+      # ou altura zero = o aluno não vê = FAIL, seja qual for o mecanismo.
+      - name: "GATE 49 — selftest: prova que o gate do fill reveal ainda morde"
+        run: python3 scripts/check_fill_reveal.py --selftest
+
+      - name: "GATE 49 — clicar no fill-in mostra a palavra (arquivos do PR)"
+        if: steps.files.outputs.added != '' || steps.files.outputs.modified != ''
+        run: python3 scripts/check_fill_reveal.py ${{ steps.files.outputs.added }} ${{ steps.files.outputs.modified }}
+
       - name: "GATE 35 — selftest: prova que o gate da carga limpa ainda morde"
         run: python3 scripts/consultivo/check_carga_limpa.py --selftest
 
