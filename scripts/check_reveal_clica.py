@@ -60,7 +60,16 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # display, visibility, opacity e max-height cobrem as quatro formas de esconder
 # que o repo usa. O proprio botao (e o que esta dentro dele) sai da conta, senao
 # trocar o texto de "Reveal" para "Hide" ja contaria como revelacao.
-JS = r"""() => {
+# O `await espera(900)` depois do clique NAO e folga: e o defeito que este gate
+# teve por um mes. O alvo do "Reveal the Rule" do molde antigo abre por
+# `max-height` com `transition: max-height .6s`. Medir o computed style no
+# instante seguinte ao clique le max-height ainda em 0px -- a classe ja entrou,
+# o CSS ja casa, e o valor so chega em ~600 ms. O gate concluia "nao mudou nada"
+# e REPROVAVA botao que funciona (5 aulas do nilo-mesquita-patucci, professor e
+# aluno, em 28/08/2026). Esperar nao afrouxa nada: reveal morto continua sem
+# mudar coisa alguma depois de 900 ms.
+JS = r"""async () => {
+  const espera = ms => new Promise(r => setTimeout(r, ms));
   const assinatura = () => [...document.querySelectorAll('*')].map(e => {
     const s = getComputedStyle(e);
     return s.display + '|' + s.visibility + '|' + s.opacity + '|' + s.maxHeight;
@@ -72,6 +81,7 @@ JS = r"""() => {
     const rotulo = btn.textContent.replace(/\s+/g, ' ').trim().slice(0, 40);
     const antes = assinatura();
     try { btn.click(); } catch (e) { out.push({rotulo, mudou: 0, erro: String(e).slice(0, 80)}); continue; }
+    await espera(900);   // transicao de CSS: ver o comentario acima do JS
     const depois = assinatura();
     const els = [...document.querySelectorAll('*')];
     let mudou = 0;
@@ -151,17 +161,33 @@ OK_CLASSE = """<!doctype html><html><head><style>
 </body></html>"""
 
 
+OK_TRANSICAO = """<!doctype html><html><head><style>
+.grammar-table-wrap{overflow:hidden;max-height:0;transition:max-height .6s ease}
+.grammar-table-wrap.show{max-height:500px}
+</style></head><body>
+<button onclick="document.getElementById('g1').classList.add('show')">Reveal the Rule</button>
+<div class="grammar-table-wrap" id="g1"><table><tr><td>regra</td></tr></table></div>
+</body></html>"""
+
+
 def selftest():
     """Prova, em arquivos temporarios, que o gate REPROVA o quebrado e ACEITA os certos.
 
     O terceiro caso e o que nenhuma checagem estatica acerta sem um navegador: o
     alvo nasce display:none INLINE e mesmo assim aparece, porque a regra da classe
     tem !important. Se o gate reprovar esse, ele esta chutando pela aparencia.
+
+    O QUARTO e o defeito do proprio gate, achado em 28/08/2026: o alvo abre por
+    `max-height` com `transition: .6s`. Medido no instante seguinte ao clique, o
+    computed style ainda le 0px -- a classe entrou, a regra casa, e o valor so
+    chega em ~600 ms. O gate reprovava botao que funciona. Se este caso voltar a
+    falhar, alguem tirou a espera.
     """
     casos = [
         ('QUEBRADO: reveal por classe sem regra CSS que case o alvo', QUEBRADO, True),
         ('OK: handler mexe no style.display (forma do modelo)', OK_STYLE, False),
         ('OK: reveal por classe COM regra !important que vence o inline', OK_CLASSE, False),
+        ('OK: reveal por max-height COM transicao de .6s (o falso positivo de 28/08)', OK_TRANSICAO, False),
     ]
     erros = 0
     with tempfile.TemporaryDirectory() as d:
@@ -176,7 +202,7 @@ def selftest():
     if erros:
         print('SELFTEST FALHOU: o gate parou de morder.', file=sys.stderr)
         return 1
-    print('SELFTEST OK — o gate reprova o quebrado e aceita os dois certos.')
+    print('SELFTEST OK — o gate reprova o quebrado e aceita os tres certos.')
     return 0
 
 
