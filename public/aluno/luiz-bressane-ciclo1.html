@@ -241,14 +241,13 @@ body.slide-mode .logo-bar .slide-counter{display:block}
 #tab-preclass[data-consulta="1"] .quiz-option,
 #tab-preclass[data-consulta="1"] .pair-opt,
 #tab-preclass[data-consulta="1"] [data-k]{cursor:default}
-/* O Check e o placar sao da aluna. Na visao do professor o gabarito ja esta a um clique
-   no Answer Key de cada exercicio, e o comentario acima ja dizia que botao ativo que nao
-   deve ser usado e um convite -- faltava a regra que o tira da tela (FB28).
+/* O Check e o placar sao da aluna. Na visao do professor o gabarito ja esta a um clique no
+   Answer Key de cada exercicio -- e o comentario acima ja dizia que botao ativo que nao deve
+   ser usado e um convite. Faltava a regra que o tira da tela.
 
-   A regra pende do PAPEL (`body[data-view]`), nunca de `data-consulta`: aquele atributo
-   nasce cravado com "1" no HTML da aba e so o boot o corrige. Escrita sobre ele, esta regra
-   escondia o Check da ALUNA na janela entre o byte servido e o boot -- e escondia de vez
-   onde o boot nao o corrigisse. Papel se le no papel. */
+   Ela pende do PAPEL (`body[data-view]`), nunca de `data-consulta`: aquele atributo nasce
+   cravado com "1" no HTML da aba e so o boot o corrige. Escrita sobre ele, a regra escondia
+   o Check da ALUNA na janela entre o byte servido e o boot. Papel se le no papel. */
 body[data-view="professor"] #tab-preclass .verify-all-btn,
 body[data-view="professor"] #tab-preclass .score-out{display:none}
 @media (max-width:900px){.ciclo-mapa{grid-template-columns:repeat(5,minmax(0,1fr))}}
@@ -785,36 +784,34 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
    do prompt, e so quando o prompt sozinho deixaria a operacao ambigua. */
 .subprompt{font-size:.87rem;opacity:.62;line-height:var(--lh-corpo);max-width:72ch;margin-top:calc(-1 * var(--space-3h));margin-bottom:var(--space-4h)}
 
-/* Banco de palavras do gap-fill (FB28). Antes ele saia como `.subprompt` DEPOIS das frases,
-   e o `.subprompt` nasce com margem de topo NEGATIVA -- ela existe para colar o subprompt no
-   prompt que vem acima. Posto no fim do exercicio, o mesmo -0.875rem puxava o banco para
-   cima da ultima linha do texto: as palavras ficavam sobrepostas e quase ilegiveis, que foi
-   o que a revisao viu na atividade 6 da aula 9. Aqui ele tem caixa propria, e vem ANTES das
-   frases -- que e onde um banco serve para alguma coisa: quem le a frase ja tem as
-   candidatas na tela. */
+/* Banco de palavras do gap-fill. Ele saia como `.subprompt` DEPOIS das frases, e essa classe
+   nasce com margem de topo NEGATIVA -- existe para colar o subprompt no prompt de cima. No
+   fim do exercicio, o mesmo -0.875rem puxava o banco para cima da ultima linha: as palavras
+   ficavam sobrepostas. Aqui ele tem caixa propria, e o emissor o poe ANTES das frases, que e
+   onde um banco serve para alguma coisa. */
 .word-bank{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-2) var(--space-3);
   margin:0 0 var(--space-4h);padding:var(--space-3) var(--space-3h);
   border:1px solid var(--border);border-radius:8px;background:var(--bg-elevated)}
 .word-bank .wb-rot{font-size:.72rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-largo);text-transform:uppercase;opacity:.62}
+.word-bank em{font-style:normal;font-weight:var(--peso-medio);color:var(--accent)}
+.slide-dark .word-bank,.slide-open .word-bank{background:rgba(255,255,255,.06);border-color:var(--d-border)}
+.slide-dark .word-bank em,.slide-open .word-bank em{color:var(--d-accent)}
 
-/* A resposta certa, ao lado do item errado (FB28). Marca vermelha diz que errou; isto diz
-   o que era. Fica discreto de proposito: e correcao, nao veredito. */
+/* A resposta certa, ao lado do item errado. A marca vermelha diz que errou; isto diz o que
+   era. Discreto de proposito: e correcao, nao veredito. */
 .row-fix{margin-left:var(--space-2h);font-size:.8rem;font-weight:var(--peso-medio);color:var(--accent);white-space:nowrap}
 .slide-dark .row-fix,.slide-open .row-fix{color:var(--d-accent)}
 
-/* E o PORQUE daquele item, que e outra coisa: a cor diz que errou, o `row-fix` diz o que
-   era, e so isto diz por que. Nasce fechado e abre ao conferir -- nunca antes, que seria
-   gabarito aberto. `flex-basis:100%` porque a linha e flex: assim ele cai embaixo, com a
-   largura toda, em vez de disputar espaco com a resposta. */
+/* E o PORQUE daquele item, que e outra coisa ainda: a cor diz que errou, o `row-fix` diz o
+   que era, e so isto diz por que. Nasce FECHADO e abre ao conferir -- gabarito visivel antes
+   da decisao continua sendo defeito. `flex-basis:100%` porque a linha e flex: assim ele cai
+   embaixo, com a largura toda, em vez de disputar espaco com a resposta. */
 .item-why{display:none;flex-basis:100%;margin-top:var(--space-2);padding-top:var(--space-2);border-top:1px solid rgba(201,211,228,.55);font-size:.8rem;line-height:var(--lh-corpo);color:var(--text-mid)}
 .item-why.show{display:block;animation:fadeIn .25s ease}
 .item-why em,.item-why strong{color:var(--accent)}
 .quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
 .slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
 .slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
-.word-bank em{font-style:normal;font-weight:var(--peso-medio);color:var(--accent)}
-.slide-dark .word-bank,.slide-open .word-bank{background:rgba(255,255,255,.06);border-color:var(--d-border)}
-.slide-dark .word-bank em,.slide-open .word-bank em{color:var(--d-accent)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -3594,25 +3591,24 @@ function tReset(id,total){if(_t[id]){clearInterval(_t[id].h);_t[id]=null;}tRende
 
 /* ---------------- multiple choice ---------------- */
 /* matching com gabarito por linha - usado no pre-class */
-/* CORRIGIR E DIZER O QUE ERA, NAO SO QUE ERROU (FB28).
-   Duas coisas que faltavam nas tres checagens abaixo:
+/* CONFERIR TEM DE EXPLICAR, NAO SO PINTAR.
+   Duas coisas faltavam nas tres checagens abaixo:
 
-   1. A EXPLICACAO so abria com a pontuacao CHEIA (`n===rows.length`). Quem errou um item --
-      exatamente quem precisa dela -- via vermelho e mais nada, e a nota que existe para
-      explicar o item dificil ficava fechada para sempre. A nota nao e gabarito: e a razao.
-      Abre ao conferir, sempre.
-   2. O item errado nao dizia qual era a resposta. Marca vermelha sozinha ensina que errou,
-      nao o que era -- e no in-class, onde a atividade e fechada e o professor conduz, isso
-      obriga a voltar de slide para conferir. */
+   1. A EXPLICACAO da atividade so abria com a pontuacao CHEIA (`n===rows.length`). Quem
+      errou um item -- exatamente quem precisa dela -- via vermelho e mais nada, e a nota
+      escrita para explicar o item dificil ficava fechada para sempre.
+   2. O item errado nao dizia QUAL era a resposta. Marca vermelha sozinha ensina que errou,
+      nao o que era. */
 function fixRotulo(alvo,texto){
   if(!alvo)return;
   var el=alvo.querySelector('.row-fix');
   if(!el){ el=document.createElement('span'); el.className='row-fix'; alvo.appendChild(el); }
-  el.textContent=texto?('→ '+texto):'';
+  el.textContent=texto?('\u2192 '+texto):'';
   el.style.display=texto?'':'none';
 }
-/* A explicacao DAQUELE item. Abre ao conferir, para acerto e para erro: quem acertou
-   confirma o porque, quem errou descobre. Sem ela, conferir devolve so uma cor. */
+/* A explicacao DAQUELE item (`.item-why`, emitida pelo builder a partir do campo `porque`).
+   Abre ao conferir, para acerto e para erro: quem acertou confirma o porque, quem errou
+   descobre. Sem ela, conferir devolve so uma cor. */
 function porqueAbre(host){
   if(!host)return;
   var w=host.querySelectorAll('.item-why'),i;
@@ -3648,7 +3644,7 @@ function czCheck(btn,id){
     dica=f[i].nextSibling&&f[i].nextSibling.className==='row-fix'?f[i].nextSibling:null;
     if(!dica){ dica=document.createElement('span'); dica.className='row-fix';
                f[i].parentNode.insertBefore(dica,f[i].nextSibling); }
-    dica.textContent=ok?'':('→ '+f[i].getAttribute('data-ok'));
+    dica.textContent=ok?'':('\u2192 '+f[i].getAttribute('data-ok'));
     dica.style.display=ok?'none':'';
     if(ok)n++;
   }
@@ -3721,8 +3717,8 @@ function pick(el,ok){
   var box=el.parentNode, opts=box.children, i;
   for(i=0;i<opts.length;i++){opts[i].classList.remove('correct','wrong');}
   el.classList.add(ok?'correct':'wrong');
-  /* A razao abre com QUALQUER escolha (FB28): reserva-la ao acerto e dar a explicacao a
-     quem ja nao precisava dela. */
+  /* A razao abre com QUALQUER escolha: reserva-la ao acerto e dar a explicacao a quem
+     ja nao precisava dela. */
   var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
 }
 function revealRationales(btn){
