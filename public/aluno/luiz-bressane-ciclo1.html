@@ -243,9 +243,14 @@ body.slide-mode .logo-bar .slide-counter{display:block}
 #tab-preclass[data-consulta="1"] [data-k]{cursor:default}
 /* O Check e o placar sao da aluna. Na visao do professor o gabarito ja esta a um clique
    no Answer Key de cada exercicio, e o comentario acima ja dizia que botao ativo que nao
-   deve ser usado e um convite -- faltava a regra que o tira da tela (FB28). */
-#tab-preclass[data-consulta="1"] .verify-all-btn,
-#tab-preclass[data-consulta="1"] .score-out{display:none}
+   deve ser usado e um convite -- faltava a regra que o tira da tela (FB28).
+
+   A regra pende do PAPEL (`body[data-view]`), nunca de `data-consulta`: aquele atributo
+   nasce cravado com "1" no HTML da aba e so o boot o corrige. Escrita sobre ele, esta regra
+   escondia o Check da ALUNA na janela entre o byte servido e o boot -- e escondia de vez
+   onde o boot nao o corrigisse. Papel se le no papel. */
+body[data-view="professor"] #tab-preclass .verify-all-btn,
+body[data-view="professor"] #tab-preclass .score-out{display:none}
 @media (max-width:900px){.ciclo-mapa{grid-template-columns:repeat(5,minmax(0,1fr))}}
 
 .container{max-width:920px;margin:0 auto;padding:var(--space-6) var(--space-5) 5rem}
@@ -4775,11 +4780,18 @@ document.addEventListener('DOMContentLoaded',function(){
   persInit();
   tabFromHash();
   window.addEventListener('hashchange',tabFromHash);
-  pwRestore([['pw19-subject',null,'post_l19_subject'],['pw19-body','pw19-count','post_l19_writing'],
-             ['pw20-subject',null,'post_l20_subject'],['pw20-body','pw20-count','post_l20_writing']]);
+  pwRestore([['pw9-subject',null,'post_l9_subject'],['pw9-body','pw9-count','post_l9_writing'],['pw10-subject',null,'post_l10_subject'],['pw10-body','pw10-count','post_l10_writing'],['pw11-subject',null,'post_l11_subject'],['pw11-body','pw11-count','post_l11_writing'],['pw12-subject',null,'post_l12_subject'],['pw12-body','pw12-count','post_l12_writing']]);
   preKeys();
   hubPaint();
   preInit();
+  /* O PRE-CLASS DELA NASCE EM MODO DE RESPOSTA. O atributo `data-consulta="1"` vem CRAVADO
+     no HTML da aba -- e o modo de leitura do professor, e ele desliga o ponteiro das opcoes
+     (`pointer-events:none`). No build do professor quem o desfaz e o setView do boot; aqui
+     nao havia ninguem, e a aluna abria o material dela sem conseguir clicar em exercicio
+     nenhum. Medido no navegador em 28/08/2026, no arquivo publicado. */
+  preModo();
+  /* Uma aula por vez, no pre-class e no post-class -- como no build do professor. */
+  preSel(CICLO.primeira); postSel(CICLO.primeira);
   sfBuild();
   audBuild();
 });

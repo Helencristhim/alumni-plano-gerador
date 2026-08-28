@@ -518,6 +518,14 @@ document.addEventListener('DOMContentLoaded',function(){
   preKeys();
   hubPaint();
   preInit();
+  /* O PRE-CLASS DELA NASCE EM MODO DE RESPOSTA. O atributo `data-consulta="1"` vem CRAVADO
+     no HTML da aba -- e o modo de leitura do professor, e ele desliga o ponteiro das opcoes
+     (`pointer-events:none`). No build do professor quem o desfaz e o setView do boot; aqui
+     nao havia ninguem, e a aluna abria o material dela sem conseguir clicar em exercicio
+     nenhum. Medido no navegador em 28/08/2026, no arquivo publicado. */
+  preModo();
+  /* Uma aula por vez, no pre-class e no post-class -- como no build do professor. */
+  preSel(CICLO.primeira); postSel(CICLO.primeira);
   sfBuild();
   audBuild();
 });"""
@@ -569,7 +577,20 @@ def deriva_aluno(html_prof):
     # alguma delas -- e o corte cairia no lugar errado, em silencio.
     i = js.index("document.addEventListener('DOMContentLoaded',function(){\n  deckInit(")
     j = js.index("\n});", i) + len("\n});")
-    js = js[:i] + BOOT_ALUNO + js[j:]
+    # O `pwRestore` do boot do aluno E O DO MATERIAL, nao o do modelo.
+    #
+    # O builder reescreve a lista de campos do post-class DENTRO do boot do professor, a
+    # partir das aulas do config. Este boot, escrito aqui, e estatico -- e trazia os ids
+    # `pw19-*`/`pw20-*` do artefato do Marcos. Substituindo o boot depois da reescrita, os
+    # numeros do modelo VOLTAVAM, e so no arquivo da aluna: o que ela tinha escrito no
+    # post-class nunca era restaurado, sem erro nenhum no console.
+    boot_prof = js[i:j]
+    m_pw = re.search(r"pwRestore\(\[.*?\]\);", boot_prof, re.S)
+    boot_aluno = BOOT_ALUNO
+    if m_pw:
+        boot_aluno = re.sub(r"pwRestore\(\[.*?\]\);", lambda _: m_pw.group(0), boot_aluno,
+                            count=1, flags=re.S)
+    js = js[:i] + boot_aluno + js[j:]
     rel["js/boot"] = 1
 
     # O ouvinte de teclado do DECK. Ele so age em slide-mode ou no modo guia -- nenhum dos

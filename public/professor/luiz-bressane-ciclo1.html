@@ -243,9 +243,14 @@ body.slide-mode .logo-bar .slide-counter{display:block}
 #tab-preclass[data-consulta="1"] [data-k]{cursor:default}
 /* O Check e o placar sao da aluna. Na visao do professor o gabarito ja esta a um clique
    no Answer Key de cada exercicio, e o comentario acima ja dizia que botao ativo que nao
-   deve ser usado e um convite -- faltava a regra que o tira da tela (FB28). */
-#tab-preclass[data-consulta="1"] .verify-all-btn,
-#tab-preclass[data-consulta="1"] .score-out{display:none}
+   deve ser usado e um convite -- faltava a regra que o tira da tela (FB28).
+
+   A regra pende do PAPEL (`body[data-view]`), nunca de `data-consulta`: aquele atributo
+   nasce cravado com "1" no HTML da aba e so o boot o corrige. Escrita sobre ele, esta regra
+   escondia o Check da ALUNA na janela entre o byte servido e o boot -- e escondia de vez
+   onde o boot nao o corrigisse. Papel se le no papel. */
+body[data-view="professor"] #tab-preclass .verify-all-btn,
+body[data-view="professor"] #tab-preclass .score-out{display:none}
 @media (max-width:900px){.ciclo-mapa{grid-template-columns:repeat(5,minmax(0,1fr))}}
 
 .container{max-width:920px;margin:0 auto;padding:var(--space-6) var(--space-5) 5rem}
