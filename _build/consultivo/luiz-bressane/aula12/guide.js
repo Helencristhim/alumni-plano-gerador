@@ -1,5 +1,5 @@
 {
-  identity:'Lesson 12 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; fourth and last lesson of the block, and <strong>the checkpoint lesson</strong>. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test; it feeds the checkpoint, which reads the four lessons together.',
+  identity:'Lesson 12 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; fourth and last lesson of the block, and <strong>the checkpoint lesson</strong>. Assessment model in force: <strong>continuous teacher-led assessment</strong>. It feeds the checkpoint, which reads the four lessons together.',
   goals:'<strong>To hold a position for three minutes in front of someone who does not share your frame, and absorb one objection of substance without starting again.</strong><ul>'+
         '<li>To explain only what changes the meaning of the argument.</li>'+
         '<li>To chain consequences instead of listing facts.</li>'+
@@ -24,8 +24,8 @@
   evidence:'<ul>'+
     '<li><strong>The checkpoint of the block.</strong> Reads lessons 9&ndash;12 together and decides lessons 13&ndash;28.</li>'+
     '<li><strong>What he cuts in round two.</strong> Cutting the explanation means he read her; cutting the argument to keep the explanation means he did not. This is the heart of it.</li>'+
-    '<li><strong>H1</strong> &mdash; whether the hypothetical form appeared inside the argument, unprompted. Write down the exact sentence.</li>'+
-    '<li><strong>H2</strong> &mdash; whether the B1+ held with a subject and an interlocutor he did not choose.</li>'+
+    '<li><strong>Open point 1</strong> &mdash; whether the hypothetical form appeared inside the argument, unprompted. Write down the exact sentence.</li>'+
+    '<li><strong>Open point 2</strong> &mdash; whether the B1+ held with a subject and an interlocutor he did not choose.</li>'+
     '<li><strong>Writing</strong> &mdash; the opening sentence at stage 5 is the first sample of the cycle. The profile records the skill as indeterminate.</li></ul>',
   prepost:'The pre-class has six activities and the last writes the opening as a paragraph. The post-class carries the longest recording of the block &mdash; ninety seconds, the July conference &mdash; and the longest writing, plus Melissa Marshall on explaining technical work to people outside it.',
   key:'She is a lawyer. She is not slow, and she does not need the system explained twice &mdash; she needs the one piece that is missing, and then she does the rest herself. Almost everything that goes wrong in these three minutes comes from forgetting that.'
