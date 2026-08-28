@@ -23,6 +23,11 @@ ROOT = Path(__file__).resolve().parent.parent
 
 ALLOWED_GLOBAL = (
     'public/data/lesson-counts.json',
+    # Indice DERIVADO do disco, como o lesson-counts. O CI exige que ele esteja em dia
+    # (`build_anatomias.py --check`), entao todo PR que publica material do consultivo
+    # precisa toca-lo -- e sem esta linha os dois gates se contradizem: um exige a
+    # atualizacao e o outro a chama de fora de escopo.
+    'public/data/anatomias.json',
 )
 ALLOWED_PREFIXES = ('_build/', 'scripts/')
 
@@ -65,7 +70,10 @@ def main():
         ok = (
             path in ALLOWED_GLOBAL
             or path.startswith(ALLOWED_PREFIXES)
-            or re.match(rf'public/(professor|aluno)/{re.escape(slug)}(-aula\d+)?(\.html)', path)
+            # `-c{N}` e o arquivo do ciclo consultivo (fase piloto): nasce ao lado do
+            # material antigo do aluno, que continua intocado. Sem ele aqui, o PR do
+            # primeiro bloco de qualquer aluno do consultivo e acusado de fora de escopo.
+            or re.match(rf'public/(professor|aluno)/{re.escape(slug)}(-aula\d+|-c\d+)?(\.html)', path)
             or path.startswith(f'public/audio/{slug}/')
         )
         if not ok:
