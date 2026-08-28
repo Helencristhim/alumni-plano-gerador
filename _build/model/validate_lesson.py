@@ -103,6 +103,40 @@ SUFIXO_RE = re.compile(r'\b\w+(?:mente|acao|acoes|avel)\b', re.I)
 # TODA aula correta — e gate que grita em material certo é gate que a equipe desliga.
 SUFIXO_EN_OK = {'travel', 'gravel', 'ravel', 'unravel'}
 
+# PALAVRA-FUNCAO PT QUE NAO EXISTE EM INGLES MINUSCULO — o furo que a lista curada nao via.
+#
+# 28/08/2026: a aula 4 da jessica-aparecida-de-godoi-piffer (B1) foi ao ar com duas frases
+# em portugues citadas dentro da prosa inglesa do Grammar in Context ("Portuguese has a tense
+# for exactly this job -- *se chover*, *se a auditoria encontrar*"). As tres heuristicas acima
+# passaram por ela: nenhuma das palavras esta em PT_MARCADORES, NENHUMA TEM ACENTO, e nenhum
+# sufixo casa. So foi pega por acaso, porque a aula 5 usou "mais tempo" — e "mais" esta na
+# lista. Gate que depende de o erro SEGUINTE ser mais grosseiro nao esta gateando.
+#
+# POR QUE ISTO NAO E "AUMENTAR O PT_MARCADORES": a lista de cima e curada para evitar
+# homografo, e ampliar troca falso-negativo por falso-positivo. Aqui a selecao e por CRITERIO,
+# nao por gosto: cada palavra foi conferida contra /usr/share/dict/american-english e so ficou
+# a que NAO existe em ingles minusculo. Cairam por colisao real: 'ate' (passado de eat),
+# 'antes' (plural de ante), 'saber' (a espada), 'fez' (o chapeu), 'podia', 'com' (risco de
+# dominio), 'dos'/'das'/'nas'/'aos' (toponimo: "Sao Jose DOS Campos" reprovava aula correta).
+# 'se' e 'durante' FICAM: o dicionario so tem "SE"/"Se" e "Durante" MAIUSCULOS.
+#
+# O CASING E PARTE DA REGRA. Casa-se MINUSCULO, sem re.I — portugues em prosa e minusculo, e
+# maiuscula e nome proprio legitimo em texto ingles (a mesma logica do ACENTO_RE).
+#
+# MEDIDO antes de entrar (2080 blocos ex-lesson do repo): pega o vazamento conhecido da
+# Jessica ('se' x2) e acusa 11 blocos A2+ de geracao nova, todos ja publicados — que ficam
+# no baseline do GATE 8 por REGRA 30. O material gerado depois disto nasce sob a regra.
+PT_SO_PT = """se que ao pelos pelas nem ele ela eles elas isto aquilo aquele aquela
+nosso nossa nossos nossas meu minha meus minhas teu tua seu sua dele dela deles delas
+foi fui fomos sao eram ser sendo ter tendo tem temos havia haver houve
+esta estao estava estavam estar estou estamos vai vao vou vamos faz fazem fazer
+pode podem poder deve devem dever quer querem quero queria sabe sabem sabia
+diz dizem disse dizer muito muita muitos muitas pouco pouca todo toda tudo
+nada ninguem alguem algo tambem entao porem contudo embora enquanto quanto quantos
+qualquer depois agora hoje ontem amanha sempre nunca talvez
+para por sobre entre desde apos contra durante""".split()
+PT_SO_PT_RE = re.compile(r'\b(?:' + '|'.join(PT_SO_PT) + r')\b')  # sem re.I DE PROPOSITO
+
 
 def nivel_do_html(c):
     """Nível CEFR lido do header (student-info) — funciona sem config de build."""
@@ -139,7 +173,15 @@ def pt_na_tela(html):
     achados = {t for t in ACENTO_RE.findall(alvo_txt) if t[:1].islower()}
     achados |= {w.lower() for w in PT_RE.findall(alvo_txt)}
     achados |= {w.lower() for w in SUFIXO_RE.findall(alvo_txt)} - SUFIXO_EN_OK
-    return sorted(achados)
+    # ORDEM IMPORTA, e nao e estetica: o GATE 8 usa o TEXTO DO ERRO como chave do baseline,
+    # e a mensagem cita `pt[:8]`. Se as palavras novas entrassem no MESMO sorted(), elas se
+    # intercalariam na amostra e mudariam a chave de todo arquivo que JA falhava — 267 deles
+    # apareceriam como defeito NOVO sem ter mudado uma linha. E o mesmo acidente que o
+    # comentario do sufixo "[framework]" registra mais abaixo neste arquivo.
+    # Entao: as tres heuristicas antigas primeiro, na ordem de sempre; as novas DEPOIS.
+    # Arquivo que ja falhava mantem a mensagem byte-a-byte; arquivo que passava e so agora e
+    # pego (o caso da Jessica) recebe a mensagem nova, que e o ponto.
+    return sorted(achados) + sorted(set(PT_SO_PT_RE.findall(alvo_txt)) - achados)
 
 
 def matching_nao_ingles(blk):
