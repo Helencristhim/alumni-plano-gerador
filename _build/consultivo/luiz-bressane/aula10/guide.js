@@ -1,5 +1,5 @@
 {
-  identity:'Lesson 10 &middot; Block 1 (Build) &middot; Listening into Interaction &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; second lesson of the first consultivo cycle (lessons 9&ndash;28). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
+  identity:'Lesson 10 &middot; Block 1 (Build) &middot; Listening into Interaction &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; second lesson of the first consultivo cycle (lessons 9&ndash;28). Assessment model in force: <strong>continuous teacher-led assessment</strong>.',
   goals:'<strong>To follow a technical talk in real time, with no transcript, and ask one question out loud that gets answered.</strong><ul>'+
         '<li>To separate what a number says from what it is offered as evidence of.</li>'+
         '<li>To quote the speaker back to herself before asking.</li>'+
@@ -25,7 +25,7 @@
     '<li><strong>Listening, isolated from speaking</strong> &mdash; the second measure of the cycle. The pedagogical state records the skill as indeterminate.</li>'+
     '<li>Whether he asked to write first, and whether he insisted after the sideways answer.</li>'+
     '<li>Whether the second version of the question is shorter.</li>'+
-    '<li><strong>H2</strong>: whether the B1+ holds with a subject he did not choose.</li></ul>',
+    '<li><strong>Open point 2</strong>: whether the B1+ holds with a subject he did not choose.</li></ul>',
   prepost:'The pre-class has six activities on the same audio, and the last one writes one question as a paragraph &mdash; which he will <em>not</em> read in class. The post-class carries Mona Chalabi on where a figure comes from, and Julian Treasure on listening; both have transcripts.',
   key:'The move this lesson teaches costs three words. <em>Does that hold for&hellip;?</em> takes any claim at all and asks where its limit is, without suggesting the claim is false. Nobody has to defend anything, and the question gets answered.'
 }

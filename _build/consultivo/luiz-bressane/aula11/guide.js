@@ -1,5 +1,5 @@
 {
-  identity:'Lesson 11 &middot; Block 1 (Build) &middot; Grammar for Communication &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; third lesson of the first consultivo cycle (lessons 9&ndash;28), and the axis of the block. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
+  identity:'Lesson 11 &middot; Block 1 (Build) &middot; Grammar for Communication &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; third lesson of the first consultivo cycle (lessons 9&ndash;28), and the axis of the block. Assessment model in force: <strong>continuous teacher-led assessment</strong>.',
   goals:'<strong>To sustain three hypothetical claims about a case, in conversation and under contradiction, with no written support.</strong><ul>'+
         '<li>To put the consequence in the present, where the decision is.</li>'+
         '<li>To concede a point and turn, in one breath.</li>'+
@@ -23,7 +23,7 @@
   feedback:'Two points at stage 9, then the retask: <strong>the same claim, one sentence, knowing the objection that is coming.</strong><br><br>'+
     'Do not correct during stage 7. Object in one sentence and be quiet &mdash; the turn is his. The Zoom analysis of lesson 8 recorded the teacher at 63% of speaking time; in this lesson that number is the difference between measuring something and measuring nothing.',
   evidence:'<ul>'+
-    '<li><strong>H1 is decided here and in lesson 12.</strong> If the form came out in the first turn and not the second, the difficulty is retrieval under real time. If it came out in neither, the rule is not available yet. The two send block 2 in opposite directions.</li>'+
+    '<li><strong>Open point 1 is decided here and in lesson 12.</strong> If the form came out in the first turn and not the second, the difficulty is retrieval under real time. If it came out in neither, the rule is not available yet. The two send block 2 in opposite directions.</li>'+
     '<li>Whether the concession arrives with its turn, or the sentence stops.</li>'+
     '<li>What he does when the form does not come &mdash; which compensation strategy.</li>'+
     '<li>Whether he adjusts the claim when the new fact lands, or repeats it.</li></ul>',

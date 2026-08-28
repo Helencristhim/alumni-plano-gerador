@@ -284,6 +284,194 @@ def monta_documento(corpo, lang="pt-BR", view="professor"):
     )
 
 
+# ---------------------------------------------------------------------------
+# CORRECOES AO ARTEFATO — revisao de 28/08/2026 (material do Luiz Bressane)
+#
+# Cada entrada e (rotulo, ancora, substituicao). A ancora e um trecho do ARTEFATO e tem de
+# casar exatamente uma vez: se o artefato mudar embaixo, a extracao PARA e diz qual correcao
+# perdeu o pe -- em vez de aplicar no lugar errado ou sumir em silencio.
+CORRECOES = [
+ ("check-so-da-aluna",
+  """#tab-preclass[data-consulta="1"] [data-k]{cursor:default}""",
+  """#tab-preclass[data-consulta="1"] [data-k]{cursor:default}
+/* O Check e o placar sao da aluna. Na visao do professor o gabarito ja esta a um clique no
+   Answer Key de cada exercicio -- e o comentario acima ja dizia que botao ativo que nao deve
+   ser usado e um convite. Faltava a regra que o tira da tela.
+
+   Ela pende do PAPEL (`body[data-view]`), nunca de `data-consulta`: aquele atributo nasce
+   cravado com "1" no HTML da aba e so o boot o corrige. Escrita sobre ele, a regra escondia
+   o Check da ALUNA na janela entre o byte servido e o boot. Papel se le no papel. */
+body[data-view="professor"] #tab-preclass .verify-all-btn,
+body[data-view="professor"] #tab-preclass .score-out{display:none}"""),
+
+ ("banco-correcao-e-porque",
+  """.subprompt{font-size:.87rem;opacity:.62;line-height:var(--lh-corpo);max-width:72ch;margin-top:calc(-1 * var(--space-3h));margin-bottom:var(--space-4h)}""",
+  """.subprompt{font-size:.87rem;opacity:.62;line-height:var(--lh-corpo);max-width:72ch;margin-top:calc(-1 * var(--space-3h));margin-bottom:var(--space-4h)}
+
+/* Banco de palavras do gap-fill. Ele saia como `.subprompt` DEPOIS das frases, e essa classe
+   nasce com margem de topo NEGATIVA -- existe para colar o subprompt no prompt de cima. No
+   fim do exercicio, o mesmo -0.875rem puxava o banco para cima da ultima linha: as palavras
+   ficavam sobrepostas. Aqui ele tem caixa propria, e o emissor o poe ANTES das frases, que e
+   onde um banco serve para alguma coisa. */
+.word-bank{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-2) var(--space-3);
+  margin:0 0 var(--space-4h);padding:var(--space-3) var(--space-3h);
+  border:1px solid var(--border);border-radius:8px;background:var(--bg-elevated)}
+.word-bank .wb-rot{font-size:.72rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-largo);text-transform:uppercase;opacity:.62}
+.word-bank em{font-style:normal;font-weight:var(--peso-medio);color:var(--accent)}
+.slide-dark .word-bank,.slide-open .word-bank{background:rgba(255,255,255,.06);border-color:var(--d-border)}
+.slide-dark .word-bank em,.slide-open .word-bank em{color:var(--d-accent)}
+
+/* A resposta certa, ao lado do item errado. A marca vermelha diz que errou; isto diz o que
+   era. Discreto de proposito: e correcao, nao veredito. */
+.row-fix{margin-left:var(--space-2h);font-size:.8rem;font-weight:var(--peso-medio);color:var(--accent);white-space:nowrap}
+.slide-dark .row-fix,.slide-open .row-fix{color:var(--d-accent)}
+
+/* E o PORQUE daquele item, que e outra coisa ainda: a cor diz que errou, o `row-fix` diz o
+   que era, e so isto diz por que. Nasce FECHADO e abre ao conferir -- gabarito visivel antes
+   da decisao continua sendo defeito. `flex-basis:100%` porque a linha e flex: assim ele cai
+   embaixo, com a largura toda, em vez de disputar espaco com a resposta. */
+.item-why{display:none;flex-basis:100%;margin-top:var(--space-2);padding-top:var(--space-2);border-top:1px solid rgba(201,211,228,.55);font-size:.8rem;line-height:var(--lh-corpo);color:var(--text-mid)}
+.item-why.show{display:block;animation:fadeIn .25s ease}
+.item-why em,.item-why strong{color:var(--accent)}
+.quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
+.slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
+.slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}"""),
+
+ ("conferir-explica-mcheck",
+  """function mCheck(btn,id){
+  if(preConsulta(btn))return;
+  var host=document.getElementById(id); if(!host)return;
+  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok;
+  for(i=0;i<rows.length;i++){
+    sel=rows[i].querySelector('select'); if(!sel)continue;
+    ok=(sel.value===sel.getAttribute('data-ok'));
+    rows[i].classList.toggle('correct',ok);
+    rows[i].classList.toggle('wrong',!ok&&sel.value!=='');
+    if(ok)n++;
+  }
+  var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
+  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';
+}""",
+  """/* CONFERIR TEM DE EXPLICAR, NAO SO PINTAR.
+   Duas coisas faltavam nas tres checagens abaixo:
+
+   1. A EXPLICACAO da atividade so abria com a pontuacao CHEIA (`n===rows.length`). Quem
+      errou um item -- exatamente quem precisa dela -- via vermelho e mais nada, e a nota
+      escrita para explicar o item dificil ficava fechada para sempre.
+   2. O item errado nao dizia QUAL era a resposta. Marca vermelha sozinha ensina que errou,
+      nao o que era. */
+function fixRotulo(alvo,texto){
+  if(!alvo)return;
+  var el=alvo.querySelector('.row-fix');
+  if(!el){ el=document.createElement('span'); el.className='row-fix'; alvo.appendChild(el); }
+  el.textContent=texto?('\\u2192 '+texto):'';
+  el.style.display=texto?'':'none';
+}
+/* A explicacao DAQUELE item (`.item-why`, emitida pelo builder a partir do campo `porque`).
+   Abre ao conferir, para acerto e para erro: quem acertou confirma o porque, quem errou
+   descobre. Sem ela, conferir devolve so uma cor. */
+function porqueAbre(host){
+  if(!host)return;
+  var w=host.querySelectorAll('.item-why'),i;
+  for(i=0;i<w.length;i++)w[i].classList.add('show');
+}
+function mCheck(btn,id){
+  if(preConsulta(btn))return;
+  var host=document.getElementById(id); if(!host)return;
+  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;
+  for(i=0;i<rows.length;i++){
+    sel=rows[i].querySelector('select'); if(!sel)continue;
+    ok=(sel.value===sel.getAttribute('data-ok'));
+    rows[i].classList.toggle('correct',ok);
+    rows[i].classList.toggle('wrong',!ok&&sel.value!=='');
+    certa=sel.querySelector('option[value="'+sel.getAttribute('data-ok')+'"]');
+    fixRotulo(rows[i],(!ok&&certa)?certa.textContent:'');
+    if(ok)n++;
+  }
+  var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
+}"""),
+
+ ("conferir-explica-czcheck",
+  """  var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok;
+  for(i=0;i<f.length;i++){
+    v=(f[i].value||'').trim().toLowerCase().replace(/[.,]/g,'');
+    ok=(v===(f[i].getAttribute('data-ok')||'').toLowerCase());
+    f[i].classList.toggle('correct',ok);
+    f[i].classList.toggle('wrong',!ok&&v!=='');
+    if(ok)n++;
+  }
+  var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
+  var key=document.getElementById(id+'-key'); if(key&&n===f.length)key.style.display='block';""",
+  """  var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok,dica;
+  for(i=0;i<f.length;i++){
+    v=(f[i].value||'').trim().toLowerCase().replace(/[.,]/g,'');
+    ok=(v===(f[i].getAttribute('data-ok')||'').toLowerCase());
+    f[i].classList.toggle('correct',ok);
+    f[i].classList.toggle('wrong',!ok&&v!=='');
+    dica=f[i].nextSibling&&f[i].nextSibling.className==='row-fix'?f[i].nextSibling:null;
+    if(!dica){ dica=document.createElement('span'); dica.className='row-fix';
+               f[i].parentNode.insertBefore(dica,f[i].nextSibling); }
+    dica.textContent=ok?'':('\\u2192 '+f[i].getAttribute('data-ok'));
+    dica.style.display=ok?'none':'';
+    if(ok)n++;
+  }
+  var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);"""),
+
+ ("conferir-explica-ppcheck",
+  """  var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok;
+  for(i=0;i<rows.length;i++){
+    sel=rows[i].querySelector('.pair-opt.sel'); if(!sel)continue;
+    ok=(sel.getAttribute('data-v')===rows[i].getAttribute('data-ok'));
+    rows[i].classList.toggle('correct',ok);
+    rows[i].classList.toggle('wrong',!ok);
+    if(ok)n++;
+  }
+  var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
+  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';""",
+  """  var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok,certa;
+  for(i=0;i<rows.length;i++){
+    sel=rows[i].querySelector('.pair-opt.sel'); if(!sel)continue;
+    ok=(sel.getAttribute('data-v')===rows[i].getAttribute('data-ok'));
+    rows[i].classList.toggle('correct',ok);
+    rows[i].classList.toggle('wrong',!ok);
+    certa=rows[i].querySelector('.pair-opt[data-v="'+rows[i].getAttribute('data-ok')+'"]');
+    fixRotulo(rows[i],(!ok&&certa)?certa.textContent:'');
+    if(ok)n++;
+  }
+  var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);"""),
+
+ ("conferir-explica-selcheck",
+  """  var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
+  var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
+}""",
+  """  var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
+  var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
+  porqueAbre(host.parentNode);
+}"""),
+
+ ("razao-abre-com-qualquer-escolha",
+  """  if(ok){var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');}""",
+  """  /* A razao abre com QUALQUER escolha: reserva-la ao acerto e dar a explicacao a quem
+     ja nao precisava dela. */
+  var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');"""),
+
+ ("uma-aula-por-vez",
+  """  _preAtual=CICLO.primeira;""",
+  """  _preAtual=CICLO.primeira;
+  /* Uma aula por vez, no pre-class e no post-class. Os blocos das outras aulas nascem no
+     HTML e ninguem os fechava: a aba abria com as quatro empilhadas, e a barra de selecao
+     so passava a valer depois do primeiro clique. Fechar aqui, e nao no fragmento, e o que
+     impede a proxima aula de nascer aberta de novo. */
+  preSel(CICLO.primeira); postSel(CICLO.primeira);"""),
+]
+
+
 def deriva_professor():
     rel = {}
     corpo = corpo_do_artefato()
@@ -380,6 +568,21 @@ def deriva_professor():
     if sobrou:
         raise SystemExit(f"o motor de audio ainda usa {sobrou} depois da troca. O Anexo P-A "
                          f"proibe no build oficial -- a troca esta incompleta.")
+
+    # ---- CORRECOES DA REVISAO DE 28/08/2026
+    #
+    # O shell NAO se edita a mao: ele e derivado do artefato, e o gate de extracao compara
+    # o disco com o que sairia daqui hoje. Correcao que nasce no arquivo derivado dura ate
+    # a proxima extracao e some sem aviso -- por isso ela mora AQUI, como troca declarada,
+    # com ancora que tem de casar exatamente uma vez.
+    for rotulo, velho, novo in CORRECOES:
+        if corpo.count(velho) != 1:
+            raise SystemExit(
+                f"correcao {rotulo!r}: a ancora casou {corpo.count(velho)}x no artefato "
+                f"(o esperado e 1). O artefato mudou embaixo da correcao -- releia o trecho "
+                f"antes de reescrever a ancora.")
+        corpo = corpo.replace(velho, novo, 1)
+        rel[f"correcao/{rotulo}"] = 1
 
     return monta_documento(corpo), rel
 
@@ -518,6 +721,14 @@ document.addEventListener('DOMContentLoaded',function(){
   preKeys();
   hubPaint();
   preInit();
+  /* O PRE-CLASS DELA NASCE EM MODO DE RESPOSTA. O atributo `data-consulta="1"` vem CRAVADO
+     no HTML da aba -- e o modo de leitura do professor, e ele desliga o ponteiro das opcoes
+     (`pointer-events:none`). No build do professor quem o desfaz e o setView do boot; aqui
+     nao havia ninguem, e a aluna abria o material dela sem conseguir clicar em exercicio
+     nenhum. Medido no navegador em 28/08/2026, no arquivo publicado. */
+  preModo();
+  /* Uma aula por vez, no pre-class e no post-class -- como no build do professor. */
+  preSel(CICLO.primeira); postSel(CICLO.primeira);
   sfBuild();
   audBuild();
 });"""
@@ -569,7 +780,20 @@ def deriva_aluno(html_prof):
     # alguma delas -- e o corte cairia no lugar errado, em silencio.
     i = js.index("document.addEventListener('DOMContentLoaded',function(){\n  deckInit(")
     j = js.index("\n});", i) + len("\n});")
-    js = js[:i] + BOOT_ALUNO + js[j:]
+    # O `pwRestore` do boot do aluno E O DO MATERIAL, nao o do modelo.
+    #
+    # O builder reescreve a lista de campos do post-class DENTRO do boot do professor, a
+    # partir das aulas do config. Este boot, escrito aqui, e estatico -- e trazia os ids
+    # `pw19-*`/`pw20-*` do artefato do Marcos. Substituindo o boot depois da reescrita, os
+    # numeros do modelo VOLTAVAM, e so no arquivo da aluna: o que ela tinha escrito no
+    # post-class nunca era restaurado, sem erro nenhum no console.
+    boot_prof = js[i:j]
+    m_pw = re.search(r"pwRestore\(\[.*?\]\);", boot_prof, re.S)
+    boot_aluno = BOOT_ALUNO
+    if m_pw:
+        boot_aluno = re.sub(r"pwRestore\(\[.*?\]\);", lambda _: m_pw.group(0), boot_aluno,
+                            count=1, flags=re.S)
+    js = js[:i] + boot_aluno + js[j:]
     rel["js/boot"] = 1
 
     # O ouvinte de teclado do DECK. Ele so age em slide-mode ou no modo guia -- nenhum dos

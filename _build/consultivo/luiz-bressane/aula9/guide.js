@@ -1,5 +1,5 @@
 {
-  identity:'Lesson 09 &middot; Block 1 (Build) &middot; Reading into Speaking &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; first lesson of the first consultivo cycle (lessons 9&ndash;28), and lesson 9 of his course. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
+  identity:'Lesson 09 &middot; Block 1 (Build) &middot; Reading into Speaking &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; first lesson of the first consultivo cycle (lessons 9&ndash;28), and lesson 9 of his course. Assessment model in force: <strong>continuous teacher-led assessment</strong>.',
   goals:'<strong>To read two accounts of the same incident against each other and report where they stop agreeing, saying which account each claim comes from.</strong><ul>'+
         '<li>To read each text for what it is before comparing them.</li>'+
         '<li>To separate what a text states from what the reader concluded.</li>'+

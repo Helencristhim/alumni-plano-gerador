@@ -128,7 +128,6 @@ CARTAO = """<div class="lesson-card" id="lc{n}">
         </div>
         <h3 class="lc-title">{tema}</h3>
         <p class="lc-desc">{objetivo}</p>
-        <p class="lc-meta">{telas} telas &middot; {minutos} min de percurso essencial</p>
         <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
           <button class="btn-ghost" data-painel="lcprep{n}" aria-expanded="false" onclick="cartaoPainel('lcprep{n}',this)">Estrutura e prepara&ccedil;&atilde;o</button>
           <button class="btn-primary" onclick="openLesson({n})">Abrir a aula</button>
@@ -145,6 +144,10 @@ CARTAO = """<div class="lesson-card" id="lc{n}">
           <p class="prep-p" data-lf="etapas"></p>
           <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
           <ul class="prep-list">{preparar}</ul>
+          <h5 class="prep-h">D &middot; Na condu&ccedil;&atilde;o</h5>
+          <ul class="prep-list">{conduzir}</ul>
+          <h5 class="prep-h">E &middot; O que observar na produ&ccedil;&atilde;o</h5>
+          <ul class="prep-list">{observar}</ul>
         </div>
         <div id="lcfb{n}" style="display:none;margin-top:var(--space-4)">
           <div class="fb-grid">
@@ -200,7 +203,14 @@ def cartao_de_aula(n, reg, dados, telas, minutos):
         mod=campo("mod"), cod=campo("cod"), tema=campo("tema"),
         objetivo=dados.get("objetivo", ""), produto=dados.get("produto", ""),
         telas=telas, minutos=minutos,
+        # `conduzir` e `observar` ERAM DECLARADOS E JOGADOS FORA (FB28). O cartao.json de
+        # cada aula sempre trouxe os tres campos; o cartao so imprimia `preparar`, e por isso
+        # a revisao encontrou o cartao da aula 9 sem uma linha sobre o que observar na
+        # producao do aluno -- que e o que o professor vai ali procurar. Campo declarado que
+        # o emissor ignora e pior do que campo ausente: quem escreveu acha que entregou.
         preparar="".join("<li>%s</li>" % x for x in dados.get("preparar", [])),
+        conduzir="".join("<li>%s</li>" % x for x in dados.get("conduzir", [])),
+        observar="".join("<li>%s</li>" % x for x in dados.get("observar", [])),
         aval=aval)
 
 
@@ -492,6 +502,16 @@ def monta(cfg, base_frag):
         post.append(expande_blocos(
             open(os.path.join(pasta, "postclass.html"), encoding="utf-8").read().strip(),
             declarado[n], usado[n], f"aula {n} post-class"))
+        # O CONTROLE DE ROLAGEM E DA ABA, NAO DA AULA (FB28).
+        #
+        # A aba ja termina com a sua barra `ao-topo`, fora dos blocos por aula, como no
+        # artefato. Um botao igual no fim do fragmento aparece colado no outro -- dois
+        # controles com o mesmo destino, um em ingles e outro em portugues, foi o que a
+        # revisao viu no post-class do Luiz. O fragmento nao e o lugar dele.
+        if "btn-bar ao-topo" in post[-1]:
+            raise SystemExit(f"aula {n} post-class: o bloco da aula traz uma barra "
+                             f"'ao-topo'. Esse controle e da ABA e ja existe uma vez, no "
+                             f"fim dela -- tire a do fragmento.")
         fb.append(FEEDBACK_BLOCO.format(
             n=n, tema=tema, oculto="" if i == 0 else ' style="display:none"'))
         erros += confere_aula(n, open(os.path.join(pasta, "registro.js"), encoding="utf-8").read().strip(),
@@ -514,6 +534,19 @@ def monta(cfg, base_frag):
                          f"artefato -- residuo de outro perfil.")
             continue
         dados = json.load(open(cj, encoding="utf-8"))
+        # O cartao tem TRES listas, e nenhuma delas e decorativa: preparacao (o que fazer
+        # antes), conducao (o que fazer durante) e observacao (o que procurar na producao).
+        # Faltando a ultima, o professor abre a aula sem saber o que esta medindo.
+        #
+        # A exigencia e sobre material AUTORAL. O `--round-trip` monta o artefato do Marcos a
+        # partir dos fragmentos extraidos dele, e o cartao de la tem so a preparacao: exigir
+        # as tres ali seria cobrar do artefato uma coisa que ele nao tem, e o circulo que
+        # prova que o builder reproduz pararia de fechar por um motivo que nao e reproducao.
+        for campo in ([] if cfg.get("_artefato") else ("preparar", "conduzir", "observar")):
+            if not dados.get(campo):
+                erros.append(f"aula {n}: cartao.json sem `{campo}`. O cartao da aba In-class "
+                             f"imprime as tres listas, e a de `observar` e o que diz ao "
+                             f"professor o que procurar na producao do aluno.")
         etapas = re.findall(r"\{n:'[^']+',min:(\d+)\}", reg)
         telas = len(re.findall(r'data-slide="',
                                open(os.path.join(pasta, "slides.html"),
@@ -812,6 +845,9 @@ def round_trip():
         return 1
     cfg = {
         "slug": "_round-trip",
+        # Este build NAO e material de aluno: e o artefato voltando por dentro do builder.
+        # Os asserts que cobram o que o AUTOR tem de escrever ficam de fora aqui.
+        "_artefato": True,
         "artefato_id": "consultivo-c02-19-38",
         "aluno": {"nome": "Marcos", "sobrenome": "Mansour"},
         "ciclo": {"numero": 2, "aulas": 20, "primeira": 19, "porBloco": 4, "nivel": "B1"},
@@ -993,7 +1029,12 @@ def main():
     aluno, _ = extrai_shell.deriva_aluno(prof)
     # ---- ONDE ESCREVER: a URL do aluno nao se toca enquanto ele tem aula no material velho
     #
-    # `fase: "piloto"` escreve em `{slug}-c{N}.html`, ao lado do material atual, sem
+    # O SUFIXO E `-cicloN`, POR EXTENSO, e isso nao e estetica (FB28): `luiz-bressane-c1`
+    # se le como o NIVEL C1 do CEFR, e o aluno e B1+. A URL e a primeira coisa que alguem
+    # ve do material, e nela `c1` nao tem como significar "ciclo" -- todo o resto do sistema
+    # usa aquela letra e aquele numero para nivel.
+    #
+    # `fase: "piloto"` escreve em `{slug}-ciclo{N}.html`, ao lado do material atual, sem
     # encostar nele. E a fase de transicao: o aluno continua tendo aula no antigo pelo link
     # de sempre, e o novo existe em paralelo para ser testado. Quem mostra os dois no painel
     # e o `materiais-extra.json`, que confere cada caminho por HTTP antes de virar botao.
@@ -1010,7 +1051,7 @@ def main():
     if fase not in ("canonica", "piloto"):
         print(f"  RECUSADO: fase {fase!r} nao existe. Use 'piloto' ou 'canonica'.")
         return 1
-    nome = f"{slug}-c{cfg['ciclo']['numero']}" if fase == "piloto" else slug
+    nome = f"{slug}-ciclo{cfg['ciclo']['numero']}" if fase == "piloto" else slug
     p1 = os.path.join(RAIZ, "public", "professor", f"{nome}.html")
     p2 = os.path.join(RAIZ, "public", "aluno", f"{nome}.html")
     for caminho, conteudo in ((p1, prof), (p2, aluno)):

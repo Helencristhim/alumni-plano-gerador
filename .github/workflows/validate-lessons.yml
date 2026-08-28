@@ -185,15 +185,26 @@ jobs:
             exit 1
           fi
 
-          ADDED=$(git diff --name-only --diff-filter=A "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
-          MODIFIED=$(git diff --name-only --diff-filter=M "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
-          TOCADOS=$(git diff --name-only "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | wc -l)
+          # `--no-renames` EM TODAS AS TRES CONTAGENS, e por isto:
+          #
+          # Com deteccao de rename ligada (o padrao), renomear uma pagina publicada nao cai
+          # em A, nem em M, nem em D -- cai em R, que nenhum filtro aqui pede. A contagem sem
+          # filtro (TOCADOS) continua vendo os dois arquivos, e o anti-skip abaixo concluia
+          # "classificacao vazia = bug" e reprovava um PR correto. Foi o que aconteceu ao
+          # renomear `luiz-bressane-c1` para `-ciclo1` (28/08/2026).
+          #
+          # Desligando a deteccao, o rename volta a ser o que ele e para os gates: um arquivo
+          # NOVO (que precisa passar pelos gates 1-7, porque e uma URL nova) e um arquivo
+          # APAGADO (defendido pelo merge_aula.py, que exige o redirect no vercel.json).
+          ADDED=$(git diff --no-renames --name-only --diff-filter=A "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
+          MODIFIED=$(git diff --no-renames --name-only --diff-filter=M "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
+          TOCADOS=$(git diff --no-renames --name-only "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | wc -l)
           # DELETADO e a terceira categoria, e ela existe. Um PR que so APAGA pagina nao tem
           # nada em A nem em M — e o anti-skip abaixo lia isso como "classificacao vazia = bug"
           # e reprovava. Deletado E classificado; o que ele nao tem e gate por-arquivo pra
           # rodar (o arquivo nao existe mais). Quem defende a delecao e o merge_aula.py, que
           # so libera se o vercel.json ja servir aquela URL por redirect.
-          DELETADO=$(git diff --name-only --diff-filter=D "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
+          DELETADO=$(git diff --no-renames --name-only --diff-filter=D "$BASE"...HEAD -- 'public/professor/*.html' 'public/aluno/*.html' | tr '\n' ' ')
 
           # Anti-skip-silencioso: HTML de aula no diff, mas classificacao vazia = bug aqui.
           if [ "$TOCADOS" -gt 0 ] && [ -z "${ADDED// }${MODIFIED// }${DELETADO// }" ]; then
