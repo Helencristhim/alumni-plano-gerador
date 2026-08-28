@@ -20,7 +20,7 @@ disser `[cutover]` numa mensagem de commit. E a mesma forma do `[remove-ok]` da 
 main: a marca nao existe para liberar burocracia, existe para que a troca seja um ATO --
 alguem digitou aquilo sabendo o que significa.
 
-Durante o piloto nao ha o que marcar: `fase: "piloto"` escreve em `{slug}-c{N}.html`, que e
+Durante o piloto nao ha o que marcar: `fase: "piloto"` escreve em `{slug}-ciclo{N}.html`, que e
 arquivo NOVO. Arquivo novo nao muda anatomia de ninguem e nao precisa de marca.
 
     python3 scripts/consultivo/check_cutover_explicito.py [--base origin/main]
@@ -84,7 +84,7 @@ def main():
     print(f"\nO aluno abre o link de sempre e encontra outro material. Se ele ainda tem "
           f"aula no antigo, perdeu o material no meio do contrato.")
     print(f"\n  Era para ser PILOTO?  ponha \"fase\": \"piloto\" no config — o builder "
-          f"escreve em {{slug}}-c{{N}}.html, ao lado, sem encostar no atual.")
+          f"escreve em {{slug}}-ciclo{{N}}.html, ao lado, sem encostar no atual.")
     print(f"  Era MESMO o cutover?  ponha {AUTORIZA} na mensagem do commit, e copie o hub "
           f"antigo para {{slug}}-anterior.html no MESMO PR, senao ele deixa de existir.")
     return 1

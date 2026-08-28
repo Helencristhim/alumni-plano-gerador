@@ -59,7 +59,7 @@ def levanta():
             if re.search(r"-aula\d|-anterior$", arquivo):
                 continue
             # `{slug}-c1` conta PARA `{slug}`: e o mesmo aluno, no ciclo dele.
-            slug = re.sub(r"-c\d+$", "", arquivo)
+            slug = re.sub(r"-(?:c|ciclo)\d+$", "", arquivo)
             with open(p, encoding="utf-8", errors="ignore") as fh:
                 cabeca = fh.read(6000)
             if MARCA not in cabeca:

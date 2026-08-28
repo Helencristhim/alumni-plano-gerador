@@ -241,6 +241,11 @@ body.slide-mode .logo-bar .slide-counter{display:block}
 #tab-preclass[data-consulta="1"] .quiz-option,
 #tab-preclass[data-consulta="1"] .pair-opt,
 #tab-preclass[data-consulta="1"] [data-k]{cursor:default}
+/* O Check e o placar sao da aluna. Na visao do professor o gabarito ja esta a um clique
+   no Answer Key de cada exercicio, e o comentario acima ja dizia que botao ativo que nao
+   deve ser usado e um convite -- faltava a regra que o tira da tela (FB28). */
+#tab-preclass[data-consulta="1"] .verify-all-btn,
+#tab-preclass[data-consulta="1"] .score-out{display:none}
 @media (max-width:900px){.ciclo-mapa{grid-template-columns:repeat(5,minmax(0,1fr))}}
 
 .container{max-width:920px;margin:0 auto;padding:var(--space-6) var(--space-5) 5rem}
@@ -774,6 +779,26 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
 /* subprompt: informa o foco essencial sem substituir o professor. Vem sempre depois
    do prompt, e so quando o prompt sozinho deixaria a operacao ambigua. */
 .subprompt{font-size:.87rem;opacity:.62;line-height:var(--lh-corpo);max-width:72ch;margin-top:calc(-1 * var(--space-3h));margin-bottom:var(--space-4h)}
+
+/* Banco de palavras do gap-fill (FB28). Antes ele saia como `.subprompt` DEPOIS das frases,
+   e o `.subprompt` nasce com margem de topo NEGATIVA -- ela existe para colar o subprompt no
+   prompt que vem acima. Posto no fim do exercicio, o mesmo -0.875rem puxava o banco para
+   cima da ultima linha do texto: as palavras ficavam sobrepostas e quase ilegiveis, que foi
+   o que a revisao viu na atividade 6 da aula 9. Aqui ele tem caixa propria, e vem ANTES das
+   frases -- que e onde um banco serve para alguma coisa: quem le a frase ja tem as
+   candidatas na tela. */
+.word-bank{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-2) var(--space-3);
+  margin:0 0 var(--space-4h);padding:var(--space-3) var(--space-3h);
+  border:1px solid var(--border);border-radius:8px;background:var(--bg-elevated)}
+.word-bank .wb-rot{font-size:.72rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-largo);text-transform:uppercase;opacity:.62}
+
+/* A resposta certa, ao lado do item errado (FB28). Marca vermelha diz que errou; isto diz
+   o que era. Fica discreto de proposito: e correcao, nao veredito. */
+.row-fix{margin-left:var(--space-2h);font-size:.8rem;font-weight:var(--peso-medio);color:var(--accent);white-space:nowrap}
+.slide-dark .row-fix,.slide-open .row-fix{color:var(--d-accent)}
+.word-bank em{font-style:normal;font-weight:var(--peso-medio);color:var(--accent)}
+.slide-dark .word-bank,.slide-open .word-bank{background:rgba(255,255,255,.06);border-color:var(--d-border)}
+.slide-dark .word-bank em,.slide-open .word-bank em{color:var(--d-accent)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1344,7 +1369,7 @@ document.body.setAttribute('data-view','aluno');
     <div class="score-out" id="kl9-out"></div>
     <div class="callout" id="kl9-key" style="display:none">
       <div class="callout-title">Two of these do the work</div>
-      Two of these do the work of the whole lesson: <strong>claim</strong> and <strong>state</strong>. What a text *states* you can point to. What someone *claims* you can only attribute -- and that is a different sentence.
+      Two of these do the work of the whole lesson: <strong>claim</strong> and <strong>state</strong>. What a text <em>states</em> you can point to. What someone <em>claims</em> you can only attribute -- and that is a different sentence.
     </div>
   </div>
 
@@ -1353,7 +1378,7 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Six statements. Say which text supports each one &mdash; and notice that one of them is supported by neither.</p>
     <div class="callout rule-box doc-block">
       <strong>Witness account &middot; Ms. Ferraz &middot; Incident report &middot; Officer on duty</strong><br>
-      **Ferraz:** I got home a little before eleven. There were four of them on the corner, and one of them called out to me first -- I did not speak until he did. I did not see anyone leave.<br><br>**Report:** Attendance recorded at 23:40. Three individuals present at the location. The complainant states that she addressed the group. No mention of any individual leaving the scene.
+      <strong>Ferraz:</strong> I got home a little before eleven. There were four of them on the corner, and one of them called out to me first -- I did not speak until he did. I did not see anyone leave.<br><br><strong>Report:</strong> Attendance recorded at 23:40. Three individuals present at the location. The complainant states that she addressed the group. No mention of any individual leaving the scene.
     </div>
     <div class="match-grid" id="src9">
       <div class="match-row"><span class="match-word">Someone in the group spoke before she did.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the incident report</option><option value="B">the witness account</option><option value="C">neither of them</option><option value="D">both of them</option></select></div>
@@ -1405,13 +1430,14 @@ document.body.setAttribute('data-view','aluno');
     <div class="score-out" id="att9-out"></div>
     <div class="callout" id="att9-key" style="display:none">
       <div class="callout-title">Reporting is not deciding</div>
-      Notice what the rejected endings do: they turn a report into a verdict. *Four is the correct number* is not reading -- it is deciding, and nobody asked you to decide yet.
+      Notice what the rejected endings do: they turn a report into a verdict. <em>Four is the correct number</em> is not reading -- it is deciding, and nobody asked you to decide yet.
     </div>
   </div>
 
   <div class="exercise-section">
     <div class="section-header-row"><h4>6 &middot; One paragraph, with its sources</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the paragraph. Every gap is one of the six expressions from activity 2.</p>
+    <div class="word-bank"><span class="wb-rot">Use</span> <em>account</em> &middot; <em>states</em> &middot; <em>claims</em> &middot; <em>leave out</em> &middot; <em>consistent with</em> &middot; <em>as far as I can tell</em></div>
     <div class="fill-list">
       <p class="chunk-line">The witness <input class="blank-input" data-ok="account" style="min-width:150px" placeholder="..."> says four people were on the corner; the report <input class="blank-input" data-ok="states" style="min-width:150px" placeholder="..."> three.</p>
       <p class="chunk-line">She <input class="blank-input" data-ok="claims" style="min-width:140px" placeholder="..."> that one of them spoke first, and the report says the opposite.</p>
@@ -1419,7 +1445,6 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line">On the hour, the two are broadly <input class="blank-input" data-ok="consistent with" style="min-width:180px" placeholder="..."> each other.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="As far as I can tell" style="min-width:190px" placeholder="...">, the difference that matters is who spoke first.</p>
     </div>
-    <p class="subprompt">Use: <em>account</em> &middot; <em>states</em> &middot; <em>claims</em> &middot; <em>leave out</em> &middot; <em>consistent with</em> &middot; <em>as far as I can tell</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz9-out"></div>
     <div class="callout" id="cz9-key" style="display:none">
@@ -1581,13 +1606,13 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>6 &middot; One question, written out</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the question. Every gap is one of the six expressions from activity 2.</p>
+    <div class="word-bank"><span class="wb-rot">Use</span> <em>pre-selected</em> &middot; <em>opened up</em> &middot; <em>hold</em> &middot; <em>figure</em> &middot; <em>worth having</em> &middot; <em>a different claim</em></div>
     <div class="fill-list">
       <p class="chunk-line">You said the cases were <input class="blank-input" data-ok="pre-selected" style="min-width:170px" placeholder="...">, and that the second year <input class="blank-input" data-ok="opened up" style="min-width:160px" placeholder="..."> the pool.</p>
       <p class="chunk-line">Does that <input class="blank-input" data-ok="hold" style="min-width:130px" placeholder="..."> for the definition of a resolved case as well?</p>
       <p class="chunk-line">I ask because the <input class="blank-input" data-ok="figure" style="min-width:140px" placeholder="..."> for the second year is sixty-one.</p>
       <p class="chunk-line">That is still <input class="blank-input" data-ok="worth having" style="min-width:170px" placeholder="...">, but it may be <input class="blank-input" data-ok="a different claim" style="min-width:180px" placeholder="...">.</p>
     </div>
-    <p class="subprompt">Use: <em>pre-selected</em> &middot; <em>opened up</em> &middot; <em>hold</em> &middot; <em>figure</em> &middot; <em>worth having</em> &middot; <em>a different claim</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz10-out"></div>
     <div class="callout" id="cz10-key" style="display:none">
@@ -1874,13 +1899,13 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>6 &middot; The opening, written once</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the opening. Every gap is one of the six expressions from activity 2.</p>
+    <div class="word-bank"><span class="wb-rot">Use</span> <em>In our system</em> &middot; <em>assigned to</em> &middot; <em>which means that</em> &middot; <em>cuts both ways</em> &middot; <em>that is fair</em> &middot; <em>the burden of proof</em></div>
     <div class="fill-list">
       <p class="chunk-line"><input class="blank-input" data-ok="In our system" style="min-width:170px" placeholder="...">, the defence is a public body and we are <input class="blank-input" data-ok="assigned to" style="min-width:150px" placeholder="..."> the case.</p>
       <p class="chunk-line">The jury decides guilt but not the sentence, <input class="blank-input" data-ok="which means that" style="min-width:180px" placeholder="..."> the question you asked does not arise in the same way.</p>
       <p class="chunk-line">You are right that the delay <input class="blank-input" data-ok="cuts both ways" style="min-width:170px" placeholder="..."> &mdash; <input class="blank-input" data-ok="that is fair" style="min-width:150px" placeholder="...">.</p>
       <p class="chunk-line">The difference is where <input class="blank-input" data-ok="the burden of proof" style="min-width:190px" placeholder="..."> sat on the night.</p>
     </div>
-    <p class="subprompt">Use: <em>In our system</em> &middot; <em>assigned to</em> &middot; <em>which means that</em> &middot; <em>cuts both ways</em> &middot; <em>that is fair</em> &middot; <em>the burden of proof</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz12-out"></div>
     <div class="callout" id="cz12-key" style="display:none">
@@ -2088,10 +2113,6 @@ document.body.setAttribute('data-view','aluno');
       The mistake is not saying something false &mdash; it is saying something true in the sentence that belongs to a document. <em>She was frightened</em> may well be right. Neither text says it, and in a briefing that difference is the whole of your credibility.
     </div>
   </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
-  </div>
 </div>
 <div id="ps10" style="display:none">
   <h3 class="sub"><span data-view="aluno">Lesson 10 &mdash; </span><em>The question you did not ask</em></h3>
@@ -2202,10 +2223,6 @@ document.body.setAttribute('data-view','aluno');
       <span class="callout-title">The three words that carry it</span>
       <em>Does that hold&hellip;</em> takes any claim at all and asks where its limit is, without implying the claim is false. It is the most portable question in a conference room, and it costs three words.
     </div>
-  </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
   </div>
 </div>
 <div id="ps11" style="display:none">
@@ -2318,10 +2335,6 @@ document.body.setAttribute('data-view','aluno');
       <em>And what does that buy us?</em> is a fair question, and the answer is never &ldquo;because it is true&rdquo;. It is always what it changes about the decision in front of you &mdash; which is why the consequence goes in the present: <em>we would not be arguing about it now</em>.
     </div>
   </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
-  </div>
 </div>
 <div id="ps12" style="display:none">
   <h3 class="sub"><span data-view="aluno">Lesson 12 &mdash; </span><em>Three minutes, one objection</em></h3>
@@ -2432,10 +2445,6 @@ document.body.setAttribute('data-view','aluno');
       <span class="callout-title">The move that costs you the three minutes</span>
       <em>Let me go back to the beginning so the sequence is clear.</em> It feels like clarity and it is a restart &mdash; three minutes become six, and she stops listening somewhere in the second one. She is a lawyer: give her the missing piece and she will do the rest herself.
     </div>
-  </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
   </div>
 </div>
 
@@ -3565,34 +3574,58 @@ function tReset(id,total){if(_t[id]){clearInterval(_t[id].h);_t[id]=null;}tRende
 
 /* ---------------- multiple choice ---------------- */
 /* matching com gabarito por linha - usado no pre-class */
+/* CORRIGIR E DIZER O QUE ERA, NAO SO QUE ERROU (FB28).
+   Duas coisas que faltavam nas tres checagens abaixo:
+
+   1. A EXPLICACAO so abria com a pontuacao CHEIA (`n===rows.length`). Quem errou um item --
+      exatamente quem precisa dela -- via vermelho e mais nada, e a nota que existe para
+      explicar o item dificil ficava fechada para sempre. A nota nao e gabarito: e a razao.
+      Abre ao conferir, sempre.
+   2. O item errado nao dizia qual era a resposta. Marca vermelha sozinha ensina que errou,
+      nao o que era -- e no in-class, onde a atividade e fechada e o professor conduz, isso
+      obriga a voltar de slide para conferir. */
+function fixRotulo(alvo,texto){
+  if(!alvo)return;
+  var el=alvo.querySelector('.row-fix');
+  if(!el){ el=document.createElement('span'); el.className='row-fix'; alvo.appendChild(el); }
+  el.textContent=texto?('→ '+texto):'';
+  el.style.display=texto?'':'none';
+}
 function mCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok;
+  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('select'); if(!sel)continue;
     ok=(sel.value===sel.getAttribute('data-ok'));
     rows[i].classList.toggle('correct',ok);
     rows[i].classList.toggle('wrong',!ok&&sel.value!=='');
+    certa=sel.querySelector('option[value="'+sel.getAttribute('data-ok')+'"]');
+    fixRotulo(rows[i],(!ok&&certa)?certa.textContent:'');
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
 }
 /* cloze com gabarito por campo */
 function czCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok;
+  var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok,dica;
   for(i=0;i<f.length;i++){
     v=(f[i].value||'').trim().toLowerCase().replace(/[.,]/g,'');
     ok=(v===(f[i].getAttribute('data-ok')||'').toLowerCase());
     f[i].classList.toggle('correct',ok);
     f[i].classList.toggle('wrong',!ok&&v!=='');
+    dica=f[i].nextSibling&&f[i].nextSibling.className==='row-fix'?f[i].nextSibling:null;
+    if(!dica){ dica=document.createElement('span'); dica.className='row-fix';
+               f[i].parentNode.insertBefore(dica,f[i].nextSibling); }
+    dica.textContent=ok?'':('→ '+f[i].getAttribute('data-ok'));
+    dica.style.display=ok?'none':'';
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===f.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
 }
 /* selecao multipla: marcar e conferir contra data-ok */
 /* escolha entre duas formulacoes, uma linha por item. Existe para variar a mecanica
@@ -3608,16 +3641,18 @@ function ppPick(btn){
 function ppCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok;
+  var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('.pair-opt.sel'); if(!sel)continue;
     ok=(sel.getAttribute('data-v')===rows[i].getAttribute('data-ok'));
     rows[i].classList.toggle('correct',ok);
     rows[i].classList.toggle('wrong',!ok);
+    certa=rows[i].querySelector('.pair-opt[data-v="'+rows[i].getAttribute('data-ok')+'"]');
+    fixRotulo(rows[i],(!ok&&certa)?certa.textContent:'');
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
 }
 
 /* ---------------- guarda de papel no pre-class ----------------
@@ -3655,7 +3690,9 @@ function pick(el,ok){
   var box=el.parentNode, opts=box.children, i;
   for(i=0;i<opts.length;i++){opts[i].classList.remove('correct','wrong');}
   el.classList.add(ok?'correct':'wrong');
-  if(ok){var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');}
+  /* A razao abre com QUALQUER escolha (FB28): reserva-la ao acerto e dar a explicacao a
+     quem ja nao precisava dela. */
+  var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
 }
 function revealRationales(btn){
   if(preConsulta(btn))return;

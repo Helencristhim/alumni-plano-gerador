@@ -492,6 +492,16 @@ def monta(cfg, base_frag):
         post.append(expande_blocos(
             open(os.path.join(pasta, "postclass.html"), encoding="utf-8").read().strip(),
             declarado[n], usado[n], f"aula {n} post-class"))
+        # O CONTROLE DE ROLAGEM E DA ABA, NAO DA AULA (FB28).
+        #
+        # A aba ja termina com a sua barra `ao-topo`, fora dos blocos por aula, como no
+        # artefato. Um botao igual no fim do fragmento aparece colado no outro -- dois
+        # controles com o mesmo destino, um em ingles e outro em portugues, foi o que a
+        # revisao viu no post-class do Luiz. O fragmento nao e o lugar dele.
+        if "btn-bar ao-topo" in post[-1]:
+            raise SystemExit(f"aula {n} post-class: o bloco da aula traz uma barra "
+                             f"'ao-topo'. Esse controle e da ABA e ja existe uma vez, no "
+                             f"fim dela -- tire a do fragmento.")
         fb.append(FEEDBACK_BLOCO.format(
             n=n, tema=tema, oculto="" if i == 0 else ' style="display:none"'))
         erros += confere_aula(n, open(os.path.join(pasta, "registro.js"), encoding="utf-8").read().strip(),
@@ -993,7 +1003,12 @@ def main():
     aluno, _ = extrai_shell.deriva_aluno(prof)
     # ---- ONDE ESCREVER: a URL do aluno nao se toca enquanto ele tem aula no material velho
     #
-    # `fase: "piloto"` escreve em `{slug}-c{N}.html`, ao lado do material atual, sem
+    # O SUFIXO E `-cicloN`, POR EXTENSO, e isso nao e estetica (FB28): `luiz-bressane-c1`
+    # se le como o NIVEL C1 do CEFR, e o aluno e B1+. A URL e a primeira coisa que alguem
+    # ve do material, e nela `c1` nao tem como significar "ciclo" -- todo o resto do sistema
+    # usa aquela letra e aquele numero para nivel.
+    #
+    # `fase: "piloto"` escreve em `{slug}-ciclo{N}.html`, ao lado do material atual, sem
     # encostar nele. E a fase de transicao: o aluno continua tendo aula no antigo pelo link
     # de sempre, e o novo existe em paralelo para ser testado. Quem mostra os dois no painel
     # e o `materiais-extra.json`, que confere cada caminho por HTTP antes de virar botao.
@@ -1010,7 +1025,7 @@ def main():
     if fase not in ("canonica", "piloto"):
         print(f"  RECUSADO: fase {fase!r} nao existe. Use 'piloto' ou 'canonica'.")
         return 1
-    nome = f"{slug}-c{cfg['ciclo']['numero']}" if fase == "piloto" else slug
+    nome = f"{slug}-ciclo{cfg['ciclo']['numero']}" if fase == "piloto" else slug
     p1 = os.path.join(RAIZ, "public", "professor", f"{nome}.html")
     p2 = os.path.join(RAIZ, "public", "aluno", f"{nome}.html")
     for caminho, conteudo in ((p1, prof), (p2, aluno)):

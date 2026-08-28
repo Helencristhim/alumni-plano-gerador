@@ -72,6 +72,19 @@ def esc(t):
     return t
 
 
+def crua(t):
+    """Campo de PROSA que sai CRU (o autor escreve `<br>`, `<em>`, entidade) -- mas a
+    marcacao curta continua valendo nele.
+
+    O `esc()` converte `**assim**` em <strong>; estes campos nao passam por ele, e foi por
+    isso que `**Ferraz:**` chegou LITERAL a tela do pre-class da aula 9 do Luiz. Quem
+    escreve a aula nao tem como saber, campo a campo, qual passa pelo escape e qual nao
+    passa: a marcacao vale em todos, e a diferenca entre eles e so o HTML permitido."""
+    t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+    t = re.sub(r"(?<!\*)\*([^*\n]+?)\*(?!\*)", r"<em>\1</em>", t)
+    return t
+
+
 def _ident(bloco, i):
     """O id do exercicio. Vem do proprio bloco quando declarado; senao, e derivado."""
     return bloco.get("id") or f"ex{i}"
@@ -274,15 +287,21 @@ def r_lacuna(b, ident, vocab=None):
                          f'style="min-width:{larg or b.get("largura", "170px")}" '
                          f'placeholder="...">', 1)
         linhas.append(f'      <p class="chunk-line">{montado}</p>')
-    # O de GRAMATICA sai sem a linha do banco -- e nao com um banco vazio, que ocuparia
-    # espaco anunciando ajuda que nao existe.
-    linha_banco = ""
+    # O de GRAMATICA sai sem o banco -- e nao com um banco vazio, que ocuparia espaco
+    # anunciando ajuda que nao existe.
+    #
+    # O banco vem ANTES das frases, em caixa propria (FB28). Depois delas, num `.subprompt`,
+    # ele herdava a margem de topo NEGATIVA dessa classe e subia por cima da ultima linha do
+    # exercicio: era o que a revisao viu na atividade 6 da aula 9 do Luiz. E, mesmo sem a
+    # sobreposicao, banco que aparece depois nao ajuda a fazer -- ajuda a conferir.
+    banco_box = ""
     if b.get("banco"):
-        banco = " &middot; ".join(f"<em>{esc(x)}</em>" for x in b["banco"])
-        linha_banco = (f'    <p class="subprompt">'
-                       f'{esc(b.get("rotulo_banco", "Openings you can use:"))} {banco}</p>\n')
-    return (f'    <div class="fill-list">\n' + "\n".join(linhas) + "\n    </div>\n"
-            + linha_banco
+        palavras = " &middot; ".join(f"<em>{esc(x)}</em>" for x in b["banco"])
+        rot = esc(b.get("rotulo_banco", "Use:")).rstrip(":")
+        banco_box = (f'    <div class="word-bank">'
+                     f'<span class="wb-rot">{rot}</span> {palavras}</div>\n')
+    return (banco_box
+            + f'    <div class="fill-list">\n' + "\n".join(linhas) + "\n    </div>\n"
             + f'    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
@@ -302,7 +321,7 @@ def r_recursos(b, ident):
             f'    <div class="res-card">\n'
             f'      <h5>{esc(r["titulo"])}</h5>\n'
             f'      <span class="res-src">{esc(r["fonte"])}</span>\n'
-            f'      <p>{r["texto"]}</p>\n'
+            f'      <p>{crua(r["texto"])}</p>\n'
             f'      <a class="res-link" href="{r["url"]}" target="_blank" rel="noopener">'
             f'{esc(r["cta"])} &rarr;</a>\n'
             f'    </div>')
@@ -319,7 +338,7 @@ def r_nota(b, ident):
             # CRU, como no `callout` e no `doc`. Escapando aqui, um texto que ja traz
             # `&mdash;` vira `&amp;mdash;` e a entidade aparece literal na tela. A nota e
             # prosa longa com marcacao propria -- o mesmo tratamento dos outros dois.
-            f'      {b["texto"]}\n    </div>')
+            f'      {crua(b["texto"])}\n    </div>')
 
 
 RENDER = {"classificar": r_classificar, "completar": r_completar,
@@ -404,12 +423,12 @@ def seccao(b, i, vocab=None):
             cab0 = (f'      <strong>{esc(d0["titulo"])}</strong><br>\n'
                     if d0.get("titulo") else "")
             partes.append(f'    <div class="callout rule-box doc-block">\n' + cab0 +
-                          f'      {d0["texto"]}\n    </div>')
+                          f'      {crua(d0["texto"])}\n    </div>')
         elif "callout" in item:
             c0 = item["callout"]
             partes.append(f'    <div class="callout rule-box">\n'
                           f'      <span class="callout-title">{esc(c0["titulo"])}</span>\n'
-                          f'      {c0["texto"]}\n    </div>')
+                          f'      {crua(c0["texto"])}\n    </div>')
         elif "tabela" in item:
             # N COLUNAS, com ou sem cabecalho. A primeira celula de cada linha e o rotulo e
             # vai em negrito -- e assim no recap de duas colunas e na referencia de tres.
@@ -511,7 +530,7 @@ def seccao(b, i, vocab=None):
             partes.append(
                 f'    <div class="res-card">\n      <h5>{esc(r0["titulo"])}</h5>\n'
                 f'      <span class="res-src">{esc(r0["fonte"])}</span>\n'
-                f'      <p>{r0["texto"]}</p>\n'
+                f'      <p>{crua(r0["texto"])}</p>\n'
                 f'      <a class="res-link" href="{r0["url"]}" target="_blank" '
                 f'rel="noopener">{esc(r0["cta"])} &rarr;</a>\n    </div>')
         elif "escrita" in item:
@@ -544,7 +563,7 @@ def seccao(b, i, vocab=None):
             # parar no meio.
             partes.append(f'    <div class="callout rule-box doc-block">\n'
                           f'      <strong>{esc(item["titulo"])}</strong><br>\n'
-                          f'      {item["texto"]}\n    </div>')
+                          f'      {crua(item["texto"])}\n    </div>')
         else:
             raise SystemExit(f"{ident}: item de abertura sem tipo conhecido: "
                              f"{sorted(item)}")
