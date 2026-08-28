@@ -161,7 +161,8 @@ def slugs_do_pr(arquivos):
     Duas coisas que nao contam como "outro aluno", e as duas apareceram no primeiro PR de
     aluno real no consultivo (Luiz, 27/08/2026), que este guarda bloqueou por engano:
 
-    - `{slug}-c{N}` e o MESMO aluno. Enquanto ele tem aula no material antigo, o ciclo novo
+    - `{slug}-ciclo{N}` (e o antigo `{slug}-c{N}`) e o MESMO aluno. Enquanto ele tem aula no
+      material antigo, o ciclo novo
       nasce ao lado em `{slug}-c1.html`; contar os dois como pessoas diferentes fazia o
       guarda ver dois alunos onde ha um.
     - o MOLDE nao e aluno.
@@ -170,7 +171,7 @@ def slugs_do_pr(arquivos):
     segue bloqueado, que e o acidente que ele existe para impedir."""
     achados = set()
     for p in arquivos:
-        for rx in (r"^public/(?:professor|aluno)/([a-z0-9-]+?)(?:-aula\d+|-c\d+)?\.html$",
+        for rx in (r"^public/(?:professor|aluno)/([a-z0-9-]+?)(?:-aula\d+|-c(?:iclo)?\d+)?\.html$",
                    r"^public/audio/([a-z0-9-]+)/",
                    r"^_build/([a-z0-9-]+)-aula\d+/",
                    r"^_build/consultivo/([a-z0-9-]+)/"):
