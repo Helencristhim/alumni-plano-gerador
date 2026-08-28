@@ -435,6 +435,15 @@ jobs:
       - name: "GATE 48 — o arquivo do aluno não aponta para o do professor"
         run: python3 scripts/consultivo/check_link_namespace.py
 
+      # O molde é por onde toda correção entra no sistema. Quando ele deixa de reconstruir,
+      # o material publicado continua no ar funcionando e o CAMINHO até ele morre em
+      # silêncio — foi o que aconteceu por dias em agosto/2026, e o custo é a próxima aula
+      # nascer com o defeito que acabou de ser corrigido no aluno real.
+      - name: "GATE 49 — o molde reconstrói, e o publicado é o que o builder devolve"
+        run: |
+          python3 scripts/consultivo/check_molde_reconstroi.py --selftest
+          python3 scripts/consultivo/check_molde_reconstroi.py
+
       - name: "GATE 46 — o áudio tem as falas que a tela promete"
         run: python3 scripts/consultivo/check_contagem_declarada.py
 

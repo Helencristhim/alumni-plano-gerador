@@ -242,6 +242,15 @@ body.slide-mode .logo-bar .slide-counter{display:block}
 #tab-preclass[data-consulta="1"] .quiz-option,
 #tab-preclass[data-consulta="1"] .pair-opt,
 #tab-preclass[data-consulta="1"] [data-k]{cursor:default}
+/* O Check e o placar sao da aluna. Na visao do professor o gabarito ja esta a um clique no
+   Answer Key de cada exercicio -- e o comentario acima ja dizia que botao ativo que nao deve
+   ser usado e um convite. Faltava a regra que o tira da tela.
+
+   Ela pende do PAPEL (`body[data-view]`), nunca de `data-consulta`: aquele atributo nasce
+   cravado com "1" no HTML da aba e so o boot o corrige. Escrita sobre ele, a regra escondia
+   o Check da ALUNA na janela entre o byte servido e o boot. Papel se le no papel. */
+body[data-view="professor"] #tab-preclass .verify-all-btn,
+body[data-view="professor"] #tab-preclass .score-out{display:none}
 @media (max-width:900px){.ciclo-mapa{grid-template-columns:repeat(5,minmax(0,1fr))}}
 
 .container{max-width:920px;margin:0 auto;padding:var(--space-6) var(--space-5) 5rem}
@@ -775,6 +784,35 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
 /* subprompt: informa o foco essencial sem substituir o professor. Vem sempre depois
    do prompt, e so quando o prompt sozinho deixaria a operacao ambigua. */
 .subprompt{font-size:.87rem;opacity:.62;line-height:var(--lh-corpo);max-width:72ch;margin-top:calc(-1 * var(--space-3h));margin-bottom:var(--space-4h)}
+
+/* Banco de palavras do gap-fill. Ele saia como `.subprompt` DEPOIS das frases, e essa classe
+   nasce com margem de topo NEGATIVA -- existe para colar o subprompt no prompt de cima. No
+   fim do exercicio, o mesmo -0.875rem puxava o banco para cima da ultima linha: as palavras
+   ficavam sobrepostas. Aqui ele tem caixa propria, e o emissor o poe ANTES das frases, que e
+   onde um banco serve para alguma coisa. */
+.word-bank{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-2) var(--space-3);
+  margin:0 0 var(--space-4h);padding:var(--space-3) var(--space-3h);
+  border:1px solid var(--border);border-radius:8px;background:var(--bg-elevated)}
+.word-bank .wb-rot{font-size:.72rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-largo);text-transform:uppercase;opacity:.62}
+.word-bank em{font-style:normal;font-weight:var(--peso-medio);color:var(--accent)}
+.slide-dark .word-bank,.slide-open .word-bank{background:rgba(255,255,255,.06);border-color:var(--d-border)}
+.slide-dark .word-bank em,.slide-open .word-bank em{color:var(--d-accent)}
+
+/* A resposta certa, ao lado do item errado. A marca vermelha diz que errou; isto diz o que
+   era. Discreto de proposito: e correcao, nao veredito. */
+.row-fix{margin-left:var(--space-2h);font-size:.8rem;font-weight:var(--peso-medio);color:var(--accent);white-space:nowrap}
+.slide-dark .row-fix,.slide-open .row-fix{color:var(--d-accent)}
+
+/* E o PORQUE daquele item, que e outra coisa ainda: a cor diz que errou, o `row-fix` diz o
+   que era, e so isto diz por que. Nasce FECHADO e abre ao conferir -- gabarito visivel antes
+   da decisao continua sendo defeito. `flex-basis:100%` porque a linha e flex: assim ele cai
+   embaixo, com a largura toda, em vez de disputar espaco com a resposta. */
+.item-why{display:none;flex-basis:100%;margin-top:var(--space-2);padding-top:var(--space-2);border-top:1px solid rgba(201,211,228,.55);font-size:.8rem;line-height:var(--lh-corpo);color:var(--text-mid)}
+.item-why.show{display:block;animation:fadeIn .25s ease}
+.item-why em,.item-why strong{color:var(--accent)}
+.quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
+.slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
+.slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1490,12 +1528,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the <strong>two</strong> statements that are true of a course syllabus and not of a lesson plan.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="who1">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is written by a teacher</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>People outside the classroom rely on it</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It says what will happen in one session</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Changing it needs someone else to agree</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It can be adjusted while the course runs</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It lists every task the students will do</span></div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is written by a teacher</span></div><div class="item-why">Both are. Who wrote it does not separate them &mdash; what they are FOR does.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>People outside the classroom rely on it</span></div><div class="item-why">The syllabus. Coordination, the next teacher and the student read it, which is why it cannot be changed alone.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It says what will happen in one session</span></div><div class="item-why">That is the lesson plan. The syllabus covers the course.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Changing it needs someone else to agree</span></div><div class="item-why">The syllabus, again for the same reason: other people depend on it.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It can be adjusted while the course runs</span></div><div class="item-why">The plan. Adjusting it is normal work; adjusting the syllabus is a decision.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It lists every task the students will do</span></div><div class="item-why">Neither, and the syllabus says so explicitly. That line is what makes the missing listening task NOT a divergence.</div>
       </div>
       <div class="rationale">A syllabus is a commitment: it is read by people who were not in the room, and it is not the teacher&rsquo;s to change alone. A plan is an instrument for one lesson.</div>
     </div>
@@ -1546,12 +1584,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="section-header-row"><h4>3 &middot; What the sentence is doing</h4></div>
     <p class="task-instr">Six sentences from a meeting about a course. Match each one to what the speaker is doing.</p>
     <div class="match-grid" id="m1">
-      <div class="match-row"><span class="match-word">&ldquo;The document allocates twenty hours to the unit.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;So somebody changed it after it was approved.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Who signs this off &mdash; you or the head of studies?&rdquo;</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;I would leave the assessment where the syllabus has it.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Sorry &mdash; is that week seven or week eight?&rdquo;</span><select data-ok="F"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;That is in the plan, not in the syllabus.&rdquo;</span><select data-ok="E"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select></div>
+      <div class="match-row"><span class="match-word">&ldquo;The document allocates twenty hours to the unit.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select><div class="item-why">Quoting: you can point at the line. Everything else in this list adds something the document does not contain.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;So somebody changed it after it was approved.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select><div class="item-why">A conclusion, and a reasonable one &mdash; but neither document says it. Say it in the same tone as the line above and the coordinator cannot tell them apart.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Who signs this off &mdash; you or the head of studies?&rdquo;</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select><div class="item-why">Asking for a decision. Not a finding: the finding is that a decision is missing.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;I would leave the assessment where the syllabus has it.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select><div class="item-why">A recommendation. It belongs at the END of the briefing, after the divergences &mdash; put first, it turns a report into an argument.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Sorry &mdash; is that week seven or week eight?&rdquo;</span><select data-ok="F"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select><div class="item-why">Checking a fact. It costs three seconds and prevents the rest of the briefing from resting on the wrong number.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;That is in the plan, not in the syllabus.&rdquo;</span><select data-ok="E"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select><div class="item-why">Correcting &mdash; and this is the sentence the whole lesson is built on: the claim arrives with its source attached.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'m1')">Check</button>
     <div class="score-out" id="m1-out"></div>
@@ -1576,12 +1614,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the <strong>two</strong> things the plan does <strong>not</strong> tell you.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="pl1">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the unit runs</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Why the report is corrected by a classmate</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>When the assessment happens</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the written report is</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether anyone approved these choices</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>What the listening task is built on</span></div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the unit runs</span></div><div class="item-why">Both say it, and they disagree: eighteen against twenty. A divergence, not a gap.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Why the report is corrected by a classmate</span></div><div class="item-why">Neither says why. The plan says it happens; nobody explains the choice &mdash; and that is what you ask for.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>When the assessment happens</span></div><div class="item-why">Both say it, and they disagree (week seven against week eight).</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the written report is</span></div><div class="item-why">It is in the documents. Not a gap.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether anyone approved these choices</span></div><div class="item-why">A real gap, and the most important one: without it, nobody knows whether these are decisions or drift.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>What the listening task is built on</span></div><div class="item-why">The plan describes the task. What is missing is the SOURCE it is built on &mdash; but that is detail, not the gap that changes the decision.</div>
       </div>
       <div class="rationale">The plan says what will happen. It never says why, and it never says who agreed to it &mdash; and that is normal for a plan.</div>
     </div>
@@ -1602,9 +1640,9 @@ body.tg-guia > #tgGuia{display:block!important}
       teacher may use.
     </div>
     <div class="match-grid" id="sy1">
-      <div class="match-row"><span class="match-word">A unit that needs more hours than it was given</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">is not allowed at all</option><option value="B">needs approval from the coordination</option><option value="C">is decided by the teacher</option></select></div>
-      <div class="match-row"><span class="match-word">The end-of-unit written work</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">is corrected by a classmate</option><option value="B">is not corrected</option><option value="C">is corrected by the teacher</option></select></div>
-      <div class="match-row"><span class="match-word">A task that this document does not mention</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">may still be used in class</option><option value="B">is forbidden</option><option value="C">has to be approved first</option></select></div>
+      <div class="match-row"><span class="match-word">A unit that needs more hours than it was given</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">is not allowed at all</option><option value="B">needs approval from the coordination</option><option value="C">is decided by the teacher</option></select><div class="item-why">Approval from coordination. This is the line that turns the eighteen-against-twenty difference into something someone has to decide.</div></div>
+      <div class="match-row"><span class="match-word">The end-of-unit written work</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">is corrected by a classmate</option><option value="B">is not corrected</option><option value="C">is corrected by the teacher</option></select><div class="item-why">The syllabus says the teacher corrects it. The plan gives it to a classmate &mdash; the second divergence, in one sentence.</div></div>
+      <div class="match-row"><span class="match-word">A task that this document does not mention</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">may still be used in class</option><option value="B">is forbidden</option><option value="C">has to be approved first</option></select><div class="item-why">May still be used. This is the trap defused: the listening task in the plan is not a divergence, because the syllabus never claimed to list everything.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'sy1')">Check</button>
     <div class="score-out" id="sy1-out"></div>
@@ -1618,13 +1656,13 @@ body.tg-guia > #tgGuia{display:block!important}
   <div class="exercise-section">
     <div class="section-header-row"><h4>6 &middot; Saying where it came from</h4></div>
     <p class="task-instr">Complete each sentence so that the source arrives <strong>with</strong> the claim, not after it.</p>
+    <div class="word-bank"><span class="wb-rot">Use</span> <em>According to&hellip;</em> &middot; <em>The syllabus says&hellip;</em> &middot; <em>My reading is&hellip;</em> &middot; <em>do not line up</em></div>
     <div class="fill-list">
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="The syllabus says" style="min-width:170px" placeholder="..."> twenty hours, and the plan has eighteen.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="According to the plan" style="min-width:170px" placeholder="..."> , the assessment is in week seven.&rdquo;</p>
       <p class="chunk-line">&ldquo;These two <input class="blank-input" data-ok="do not line up" style="min-width:170px" placeholder="..."> on who corrects the writing.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="My reading is" style="min-width:170px" placeholder="..."> that nobody reread the syllabus.&rdquo;</p>
     </div>
-    <p class="subprompt">Openings you can use: <em>According to&hellip;</em> &middot; <em>The syllabus says&hellip;</em> &middot; <em>My reading is&hellip;</em> &middot; <em>do not line up</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz1-out"></div>
   </div>
@@ -1646,12 +1684,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the <strong>two</strong> things this entry does <strong>not</strong> tell you.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="cal2">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the call is</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether anything will be decided</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Who is chairing</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether you are expected to speak</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Which unit is being discussed</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many people are on it</span></div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How long the call is</span></div><div class="item-why">Useful, and it does not change what you do in it.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether anything will be decided</span></div><div class="item-why">It changes everything: in a call that decides, silence is a position.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Who is chairing</span></div><div class="item-why">Worth knowing, but it does not tell you whether to speak.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Whether you are expected to speak</span></div><div class="item-why">The second thing that changes your behaviour &mdash; and the one people assume instead of checking.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Which unit is being discussed</span></div><div class="item-why">Context, not a rule for how to take part.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>How many people are on it</span></div><div class="item-why">It affects the room, not whether your point has to be made.</div>
       </div>
       <div class="rationale">&ldquo;Open items&rdquo; is exactly as far as the entry commits. Nothing in it says a decision will be reached, and nothing in it says anything about you.</div>
     </div>
@@ -1702,12 +1740,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="section-header-row"><h4>3 &middot; What the speaker is doing</h4></div>
     <p class="task-instr">Six sentences from meetings. Match each one to what the speaker is doing with it.</p>
     <div class="match-grid" id="mo2">
-      <div class="match-row"><span class="match-word">&ldquo;My view has not changed.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;What if we moved it to the start?&rdquo;</span><select data-ok="F"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;So you would keep it, but not where it is.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;You are right about the hours. Not about the text.&rdquo;</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Sorry &mdash; is that decided or not?&rdquo;</span><select data-ok="E"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Let us take it as a proposal and move on.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select></div>
+      <div class="match-row"><span class="match-word">&ldquo;My view has not changed.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select><div class="item-why">Holding a position &mdash; and holding is legitimate. What it does not do is move the item forward.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;What if we moved it to the start?&rdquo;</span><select data-ok="F"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select><div class="item-why">A proposal: it gives the group something to accept or refuse.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;So you would keep it, but not where it is.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select><div class="item-why">Restating what someone else said. The most useful move in a three-voice call: it proves you followed, and it lets the other person correct you cheaply.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;You are right about the hours. Not about the text.&rdquo;</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select><div class="item-why">Agreeing with part of it. Splitting the point is what keeps the disagreement about the text alive.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Sorry &mdash; is that decided or not?&rdquo;</span><select data-ok="E"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select><div class="item-why">Asking to be told. Short, and it prevents the whole call from being read wrong afterwards.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Let us take it as a proposal and move on.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select><div class="item-why">Closing the item. It is the chair&rsquo;s move &mdash; done by anyone else, it can read as cutting the discussion off.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'mo2')">Check</button>
     <div class="score-out" id="mo2-out"></div>
@@ -1730,9 +1768,9 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="quiz-item">
       <p class="task-instr">What is the speaker doing?</p>
       <div class="quiz-options" id="l1a2">
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Giving her own opinion on the coursebook</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Opening the item and handing the turn to someone</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Asking Peter to change his view</span></div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Giving her own opinion on the coursebook</span></div><div class="item-why">She does not do this. Hearing an opinion where there is none is what makes people answer the wrong thing.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Opening the item and handing the turn to someone</span></div><div class="item-why">That is what she is doing &mdash; and it is the moment where entering costs nothing, because the floor is open.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Asking Peter to change his view</span></div><div class="item-why">She asks him to explain it, which is a different request.</div>
       </div>
       <div class="rationale">She names the item, names the person and gives the turn away. That is chairing, and it is the whole of what she does.</div>
     </div>
@@ -1751,9 +1789,9 @@ body.tg-guia > #tgGuia{display:block!important}
       <span class="aud-estado" role="status" aria-live="polite"></span>
     </div>
     <div class="match-grid" id="num2">
-      <div class="match-row"><span class="match-word">eighteen</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the hours the document promises</option><option value="B">the hours the unit really gets</option><option value="C">the number of the unit</option></select></div>
-      <div class="match-row"><span class="match-word">twenty</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the hours the document promises</option><option value="B">the hours the unit really gets</option><option value="C">the number of the unit</option></select></div>
-      <div class="match-row"><span class="match-word">seven</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the hours the document promises</option><option value="B">the hours the unit really gets</option><option value="C">the number of the unit</option></select></div>
+      <div class="match-row"><span class="match-word">eighteen</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the hours the document promises</option><option value="B">the hours the unit really gets</option><option value="C">the number of the unit</option></select><div class="item-why">The hours the unit really gets. It is the number in the plan.</div></div>
+      <div class="match-row"><span class="match-word">twenty</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the hours the document promises</option><option value="B">the hours the unit really gets</option><option value="C">the number of the unit</option></select><div class="item-why">The hours the document promises. Written in the syllabus, and the reason the difference matters.</div></div>
+      <div class="match-row"><span class="match-word">seven</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the hours the document promises</option><option value="B">the hours the unit really gets</option><option value="C">the number of the unit</option></select><div class="item-why">The unit number. It sounds like the third figure in the same series and it is not a quantity at all &mdash; which is exactly how a briefing picks up a fourth divergence that does not exist.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'num2')">Check</button>
     <div class="score-out" id="num2-out"></div>
@@ -1767,13 +1805,13 @@ body.tg-guia > #tgGuia{display:block!important}
   <div class="exercise-section">
     <div class="section-header-row"><h4>6 &middot; Coming in</h4></div>
     <p class="task-instr">Complete each opening so that it refers to something that was said <strong>before</strong> you ask.</p>
+    <div class="word-bank"><span class="wb-rot">Openings you can use</span> <em>Can I check</em> &middot; <em>jump in</em> &middot; <em>Just to be clear</em> &middot; <em>were saying</em></div>
     <div class="fill-list">
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="Can I check" style="min-width:150px" placeholder="..."> one thing before we move on?&rdquo;</p>
       <p class="chunk-line">&ldquo;Sorry to <input class="blank-input" data-ok="jump in" style="min-width:150px" placeholder="..."> &mdash; I heard you say the text might move.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="Just to be clear" style="min-width:150px" placeholder="..."> , is that decided, or is it a proposal?&rdquo;</p>
       <p class="chunk-line">&ldquo;That was all I needed &mdash; sorry, you <input class="blank-input" data-ok="were saying" style="min-width:150px" placeholder="...">?&rdquo;</p>
     </div>
-    <p class="subprompt">Openings you can use: <em>Can I check</em> &middot; <em>jump in</em> &middot; <em>Just to be clear</em> &middot; <em>were saying</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz2-out"></div>
   </div>
@@ -1795,12 +1833,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the <strong>two</strong> statements that follow from that note.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="ob3">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Section A has to be something both people saw</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Section B is the more important one</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Putting an opinion in Section A takes away the teacher&rsquo;s right to reply</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The observer should avoid concluding anything</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Section A is written after the class</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Both sections say the same thing in different words</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Section A has to be something both people saw</span></div><div class="item-why">Yes. If only one of you can see it, it is not description &mdash; it is already a reading.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Section B is the more important one</span></div><div class="item-why">No. B without A is an opinion with nothing under it.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Putting an opinion in Section A takes away the teacher&rsquo;s right to reply</span></div><div class="item-why">Yes, and it is the whole reason for the two sections: he cannot argue with something presented as what happened.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The observer should avoid concluding anything</span></div><div class="item-why">No &mdash; the conclusion is what the observation is for. It just goes in B, marked as yours.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Section A is written after the class</span></div><div class="item-why">When it is written is not what makes it Section A.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Both sections say the same thing in different words</span></div><div class="item-why">If they did, one of them would be unnecessary.</div>
       </div>
       <div class="rationale">The two sections exist because they have different statuses. What is in A is shared ground; what is in B is the observer&rsquo;s, and can be argued with. Mixing them removes the argument without winning it.</div>
     </div>
@@ -1851,12 +1889,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="section-header-row"><h4>3 &middot; Which section would it go in</h4></div>
     <p class="task-instr">Six sentences from observation notes. Which section of the form does each one belong to?</p>
     <div class="match-grid" id="se3">
-      <div class="match-row"><span class="match-word">&ldquo;Three students had their hands up when he moved on.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;The pace was too fast for this group.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;They were still writing when he collected the papers.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;The instruction came before they were ready for it.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;The group was not following by the third example.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;He asked a checking question and took the first answer.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select></div>
+      <div class="match-row"><span class="match-word">&ldquo;Three students had their hands up when he moved on.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select><div class="item-why">What happened: countable, visible, and he saw it too.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;The pace was too fast for this group.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select><div class="item-why">A conclusion. It may be right, and it is yours &mdash; in Section A it would be unarguable.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;They were still writing when he collected the papers.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select><div class="item-why">What happened. Note the shape: something ongoing interrupted by something else, which is the grammar this lesson teaches.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;The instruction came before they were ready for it.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select><div class="item-why">&lsquo;Ready&rsquo; is a judgement about their state. Section B.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;The group was not following by the third example.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select><div class="item-why">&lsquo;Not following&rsquo; is read from behaviour, not seen directly. Section B.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;He asked a checking question and took the first answer.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select><div class="item-why">Two events, both visible. Section A &mdash; and it is the sentence he will most want to reply to.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'se3')">Check</button>
     <div class="score-out" id="se3-out"></div>
@@ -1876,10 +1914,10 @@ body.tg-guia > #tgGuia{display:block!important}
       went quiet as soon as he got to the third example.
     </div>
     <div class="match-grid" id="ce3">
-      <div class="match-row"><span class="match-word">gave the next instruction</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">was already going on</option><option value="B">happened at that point</option></select></div>
-      <div class="match-row"><span class="match-word">went quiet</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">was already going on</option><option value="B">happened at that point</option></select></div>
-      <div class="match-row"><span class="match-word">working in pairs</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">was already going on</option><option value="B">happened at that point</option></select></div>
-      <div class="match-row"><span class="match-word">still finishing the previous one</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">was already going on</option><option value="B">happened at that point</option></select></div>
+      <div class="match-row"><span class="match-word">gave the next instruction</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">was already going on</option><option value="B">happened at that point</option></select><div class="item-why">The event: it happens at a point in time, and it interrupts.</div></div>
+      <div class="match-row"><span class="match-word">went quiet</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">was already going on</option><option value="B">happened at that point</option></select><div class="item-why">Also an event, and the one that is easiest to describe as a state. What you saw was the moment it changed.</div></div>
+      <div class="match-row"><span class="match-word">working in pairs</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">was already going on</option><option value="B">happened at that point</option></select><div class="item-why">Already going on when the event landed. The continuous is what puts the event inside a scene.</div></div>
+      <div class="match-row"><span class="match-word">still finishing the previous one</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">was already going on</option><option value="B">happened at that point</option></select><div class="item-why">Already going on &mdash; and &lsquo;still&rsquo; is the word that makes the overlap audible.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'ce3')">Check</button>
     <div class="score-out" id="ce3-out"></div>
@@ -1917,12 +1955,12 @@ body.tg-guia > #tgGuia{display:block!important}
   <div class="exercise-section">
     <div class="section-header-row"><h4>6 &middot; Marking it as yours</h4></div>
     <p class="task-instr">Complete each sentence so that the reading is clearly the writer&rsquo;s, not the room&rsquo;s.</p>
+    <div class="word-bank"><span class="wb-rot">Openings you can use</span> <em>What I noticed was</em> &middot; <em>The way I read it</em> &middot; <em>I might be wrong</em></div>
     <div class="fill-list">
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="What I noticed was" style="min-width:180px" placeholder="..."> that the instruction came early.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="The way I read it" style="min-width:170px" placeholder="..."> , they had not finished.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="I might be wrong" style="min-width:160px" placeholder="..."> about this, but the pattern happened three times.&rdquo;</p>
     </div>
-    <p class="subprompt">Openings you can use: <em>What I noticed was</em> &middot; <em>The way I read it</em> &middot; <em>I might be wrong</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz3b-out"></div>
   </div>
@@ -1944,12 +1982,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Mark the <strong>two</strong> things that follow from that.</p>
     <div class="quiz-item">
       <div class="quiz-options" id="mt4">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The teacher can decline a suggestion</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The observer should avoid saying anything critical</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The observer has to give reasons, not instructions</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The meeting has no consequences at all</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The teacher has to agree by the end</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The observer decides what changes</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The teacher can decline a suggestion</span></div><div class="item-why">Yes. If he cannot, it was never a suggestion &mdash; and everything you said before it reads as an instruction.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The observer should avoid saying anything critical</span></div><div class="item-why">No. Feedback with nothing to act on wastes the observation.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The observer has to give reasons, not instructions</span></div><div class="item-why">Yes: the reason is what he can argue with, and arguing with it is how it becomes his.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The meeting has no consequences at all</span></div><div class="item-why">It has consequences &mdash; which is why the difference between a reason and an order matters.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The teacher has to agree by the end</span></div><div class="item-why">No. Agreement that is required is not agreement.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The observer decides what changes</span></div><div class="item-why">In this format, no. He does, with your evidence in front of him.</div>
       </div>
       <div class="rationale">If the decision is his, then what you bring has to be arguable. That is not softness &mdash; it is what makes the meeting worth having.</div>
     </div>
@@ -2000,12 +2038,12 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="section-header-row"><h4>3 &middot; Who decides</h4></div>
     <p class="task-instr">Six sentences from feedback meetings. In each one, who is left deciding what happens next?</p>
     <div class="match-grid" id="dc4">
-      <div class="match-row"><span class="match-word">&ldquo;You need to change the order of those two stages.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Have you thought about changing the order?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Something to think about for next time.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;One thing you might try is giving it earlier.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Please make sure the instruction comes first.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;We could look at that again after the next class.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select></div>
+      <div class="match-row"><span class="match-word">&ldquo;You need to change the order of those two stages.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select><div class="item-why">The decision is yours: it is an instruction with no room in it.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Have you thought about changing the order?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select><div class="item-why">His. It puts the same content in a form he can accept, refuse or improve.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Something to think about for next time.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select><div class="item-why">Nobody decides. Softest of the three, and the one most likely to change nothing.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;One thing you might try is giving it earlier.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select><div class="item-why">His &mdash; and the most useful shape: concrete enough to act on, open enough to decline.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Please make sure the instruction comes first.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select><div class="item-why">Yours, however politely it is phrased. &lsquo;Please&rsquo; does not move the decision.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;We could look at that again after the next class.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select><div class="item-why">Left open, deliberately. It is the right move when you are not sure yet &mdash; and the wrong one when you are.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'dc4')">Check</button>
     <div class="score-out" id="dc4-out"></div>
@@ -2029,9 +2067,9 @@ body.tg-guia > #tgGuia{display:block!important}
       Teacher is new to the school. Group is warm, engaged, and slow to finish.
     </div>
     <div class="match-grid" id="nt4">
-      <div class="match-row"><span class="match-word">Happened three times</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">a checking question</option><option value="B">the group finishing early</option><option value="C">the instruction arriving while they worked</option></select></div>
-      <div class="match-row"><span class="match-word">Happened once, and you saw it</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">a checking question</option><option value="B">the group finishing early</option><option value="C">the instruction arriving while they worked</option></select></div>
-      <div class="match-row"><span class="match-word">Is not in your notes at all</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">a checking question</option><option value="B">the group finishing early</option><option value="C">the instruction arriving while they worked</option></select></div>
+      <div class="match-row"><span class="match-word">Happened three times</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">a checking question</option><option value="B">the group finishing early</option><option value="C">the instruction arriving while they worked</option></select><div class="item-why">The instruction arriving while they worked. Frequency is evidence: three times is a pattern, once is an accident.</div></div>
+      <div class="match-row"><span class="match-word">Happened once, and you saw it</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">a checking question</option><option value="B">the group finishing early</option><option value="C">the instruction arriving while they worked</option></select><div class="item-why">The checking question. He did ask it &mdash; and that is why his objection in round two is partly right.</div></div>
+      <div class="match-row"><span class="match-word">Is not in your notes at all</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">a checking question</option><option value="B">the group finishing early</option><option value="C">the instruction arriving while they worked</option></select><div class="item-why">The group finishing early. If it is not in your notes, it cannot go in the feedback: what you do not have, you do not claim.</div></div>
     </div>
     <button class="verify-all-btn ghost" onclick="mCheck(this,'nt4')">Check</button>
     <div class="score-out" id="nt4-out"></div>
@@ -2074,13 +2112,13 @@ body.tg-guia > #tgGuia{display:block!important}
   <div class="exercise-section">
     <div class="section-header-row"><h4>6 &middot; Leaving the decision with him</h4></div>
     <p class="task-instr">Complete each sentence so that he is the one who decides what happens next.</p>
+    <div class="word-bank"><span class="wb-rot">Openings you can use</span> <em>might try</em> &middot; <em>Have you thought about</em> &middot; <em>might be worth</em> &middot; <em>That is fair</em></div>
     <div class="fill-list">
       <p class="chunk-line">&ldquo;One thing you <input class="blank-input" data-ok="might try" style="min-width:140px" placeholder="..."> is giving it before they start.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="Have you thought about" style="min-width:190px" placeholder="..."> repeating it once they begin?&rdquo;</p>
       <p class="chunk-line">&ldquo;It <input class="blank-input" data-ok="might be worth" style="min-width:150px" placeholder="..."> checking with the slower pairs.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="That is fair" style="min-width:140px" placeholder="..."> &mdash; and the part I would still look at is the timing.&rdquo;</p>
     </div>
-    <p class="subprompt">Openings you can use: <em>might try</em> &middot; <em>Have you thought about</em> &middot; <em>might be worth</em> &middot; <em>That is fair</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz4b-out"></div>
   </div>
@@ -2113,7 +2151,6 @@ body.tg-guia > #tgGuia{display:block!important}
         </div>
         <h3 class="lc-title">Two documents, one course</h3>
         <p class="lc-desc">Localizar as três divergências entre o plano de aula e o syllabus do curso e atribuir cada afirmação à sua fonte, num briefing para a coordenadora — que não leu nenhum dos dois.</p>
-        <p class="lc-meta">10 telas &middot; 55 min de percurso essencial</p>
         <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
           <button class="btn-ghost" data-painel="lcprep1" aria-expanded="false" onclick="cartaoPainel('lcprep1',this)">Estrutura e prepara&ccedil;&atilde;o</button>
           <button class="btn-primary" onclick="openLesson(1)">Abrir a aula</button>
@@ -2130,6 +2167,10 @@ body.tg-guia > #tgGuia{display:block!important}
           <p class="prep-p" data-lf="etapas"></p>
           <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
           <ul class="prep-list"><li>Leia os dois documentos antes da aula. As três divergências são: as horas (18 × 20), quem corrige a produção escrita (colega × professor) e a semana da avaliação (7 × 8).</li><li><strong>A quarta diferença é armadilha, e é deliberada:</strong> o plano tem uma tarefa de listening que o syllabus não menciona. Não é divergência — o syllabus diz que não lista todas as tarefas. Se ela trouxer como quarta, aceite: é a descoberta da etapa 5 chegando cedo.</li><li>Escolha ANTES da aula qual das duas interrupções vai usar. As duas estão escritas na nota da tela 8, e nenhuma pede informação que os documentos não contenham.</li><li>Os documentos ficam visíveis durante o briefing. Isto é atribuição, não memória.</li><li><strong>Ritmo.</strong> A etapa 4 é o bloco longo de leitura. Mantenha as etapas 1–3 curtas: o registro mostra o desempenho dela caindo quando um único modo se estende.</li></ul>
+          <h5 class="prep-h">D &middot; Na condu&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>Os documentos ficam VISÍVEIS durante o briefing da etapa 7. Isto é atribuição, não memória.</li><li>Interrompa <strong>uma vez só</strong>, no meio, com a pergunta que você escolheu antes — e deixe-a voltar sozinha.</li><li>Não corrija durante a produção. Anote e devolva na etapa 8: corrigir no meio transforma o briefing em diálogo.</li><li>Se ela trouxer a tarefa de listening como quarta divergência, aceite e siga — é a descoberta da etapa 5 chegando cedo.</li></ul>
+          <h5 class="prep-h">E &middot; O que observar na produ&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>Se a fonte vem colada à afirmação sem que ninguém peça — é o critério que a aula inteira mede.</li><li>Se ela separa o que os documentos <em>contradizem</em> do que eles apenas <em>não dizem</em>.</li><li>Se a inferência dela aparece marcada como inferência, e não na mesma frase que um fato do documento.</li><li>Como ela lê: ao que volta, o que pula, se lê a linha de origem de cada documento. É a primeira amostra isolada de reading do ciclo.</li></ul>
         </div>
         <div id="lcfb1" style="display:none;margin-top:var(--space-4)">
           <div class="fb-grid">
@@ -2161,7 +2202,6 @@ body.tg-guia > #tgGuia{display:block!important}
         </div>
         <h3 class="lc-title">Three people, one material</h3>
         <p class="lc-desc">Acompanhar uma call de três vozes sem transcript, identificar quem defende o quê, e entrar na conversa para checar um ponto — sem esperar ser convidada.</p>
-        <p class="lc-meta">10 telas &middot; 55 min de percurso essencial</p>
         <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
           <button class="btn-ghost" data-painel="lcprep2" aria-expanded="false" onclick="cartaoPainel('lcprep2',this)">Estrutura e prepara&ccedil;&atilde;o</button>
           <button class="btn-primary" onclick="openLesson(2)">Abrir a aula</button>
@@ -2178,6 +2218,10 @@ body.tg-guia > #tgGuia{display:block!important}
           <p class="prep-p" data-lf="etapas"></p>
           <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
           <ul class="prep-list"><li>Ouça a call inteira antes da aula. O momento que abre a porta é quando a Rachel diz <em>I am not sure we agree it is too long</em> — é ali que uma posição vira outra, e é o alvo da etapa 5.</li><li><strong>O terceiro falante existe e quase não fala.</strong> A Marta preside: ela pergunta, resume e fecha. Se a Stephanie a descrever como “a que concorda”, volte à fala em que a Marta reformula o desacordo — presidir não é concordar.</li><li>Escolha antes qual pergunta de volta você vai usar na etapa 7. As duas estão escritas na nota da tela 8, e nenhuma exige informação que a call não contenha.</li><li>O transcript existe a partir da tela 5 e <strong>não</strong> antes: a primeira escuta é o único lugar onde a evidência é só auditiva.</li><li><strong>Ritmo.</strong> A etapa 5 é a mais longa e a mais analítica. Se ela travar, corte um dos três trechos em vez de estender — a produção da etapa 7 não pode encolher.</li></ul>
+          <h5 class="prep-h">D &middot; Na condu&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>Leia as perguntas COM ela antes de tocar. A pergunta é a tarefa da escuta, não um teste de memória.</li><li>Toque uma vez antes de abrir o transcript. Se precisar, repita o trecho — repetir vem antes de desacelerar.</li><li>Na etapa 7 você preside: responda com a pergunta de volta que escolheu, e espere. O silêncio dela é trabalho.</li><li>Se ela esperar ser convidada a falar, deixe o silêncio durar. Entrar sem convite é o produto da aula.</li></ul>
+          <h5 class="prep-h">E &middot; O que observar na produ&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>Se ela nomeia o que ouviu ao entrar, em vez de começar pela própria posição.</li><li>Onde ela escolhe entrar — e se é o momento em que uma posição vira outra.</li><li>Se ela distingue quem preside de quem concorda: presidir não é concordar.</li><li>Se a checagem sai como pergunta ou como correção. É a primeira amostra isolada de listening do ciclo.</li></ul>
         </div>
         <div id="lcfb2" style="display:none;margin-top:var(--space-4)">
           <div class="fb-grid">
@@ -2209,7 +2253,6 @@ body.tg-guia > #tgGuia{display:block!important}
         </div>
         <h3 class="lc-title">The scene and the verdict</h3>
         <p class="lc-desc">Separar o que estava acontecendo do que aconteceu, e a descrição da cena do veredito sobre ela, ao relatar cinco momentos de uma aula observada.</p>
-        <p class="lc-meta">10 telas &middot; 55 min de percurso essencial</p>
         <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
           <button class="btn-ghost" data-painel="lcprep3" aria-expanded="false" onclick="cartaoPainel('lcprep3',this)">Estrutura e prepara&ccedil;&atilde;o</button>
           <button class="btn-primary" onclick="openLesson(3)">Abrir a aula</button>
@@ -2225,7 +2268,11 @@ body.tg-guia > #tgGuia{display:block!important}
           <p class="prep-p" data-lf="percurso"></p>
           <p class="prep-p" data-lf="etapas"></p>
           <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
-          <ul class="prep-list"><li>A etapa 1 é DIAGNÓSTICO: ela descreve um momento sem apoio nenhum, e você não corrige. O que ela produz ali é o que a aula vai trabalhar — corrigir cedo apaga a evidência.</li><li><strong>H3 do perfil se mede aqui.</strong> A hipótese é que o contínuo não some por falta de forma, e sim sob carga — quando ela narra e avalia ao mesmo tempo. A etapa 1 narra; a etapa 7 narra e avalia. Compare as duas.</li><li>A clarificação da etapa 4 cobre significado, forma e pronúncia <strong>na proporção que a aula precisa</strong>. Não apresente o sistema inteiro dos quatro passados: a aula precisa de dois.</li><li>Se ela já produzir os dois passados corretamente na etapa 1, a aula não perde o objeto: o eixo passa a ser a segunda metade — cena contra veredito —, que é o que a devolutiva da aula 4 vai exigir.</li><li><strong>Ritmo.</strong> As etapas 5 e 6 são curtas de propósito. A produção da etapa 7 é o que não pode encolher.</li></ul>
+          <ul class="prep-list"><li>A etapa 1 é DIAGNÓSTICO: ela descreve um momento sem apoio nenhum, e você não corrige. O que ela produz ali é o que a aula vai trabalhar — corrigir cedo apaga a evidência.</li><li><strong>O ponto 3 do acompanhamento se mede aqui.</strong> O que está em aberto é se o contínuo não some por falta de forma, e sim sob carga — quando ela narra e avalia ao mesmo tempo. A etapa 1 narra; a etapa 7 narra e avalia. Compare as duas.</li><li>A clarificação da etapa 4 cobre significado, forma e pronúncia <strong>na proporção que a aula precisa</strong>. Não apresente o sistema inteiro dos quatro passados: a aula precisa de dois.</li><li>Se ela já produzir os dois passados corretamente na etapa 1, a aula não perde o objeto: o eixo passa a ser a segunda metade — cena contra veredito —, que é o que a devolutiva da aula 4 vai exigir.</li><li><strong>Ritmo.</strong> As etapas 5 e 6 são curtas de propósito. A produção da etapa 7 é o que não pode encolher.</li></ul>
+          <h5 class="prep-h">D &middot; Na condu&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>A etapa 1 é diagnóstica: ela produz sem apoio e você NÃO corrige. Corrigir cedo apaga a evidência do dia.</li><li>Na prática controlada, ritmo antes de precisão: se ela parar mais de três segundos, dê a frase e siga.</li><li>Na etapa 7 peça detalhe duas vezes, como colega que não estava na sala — nunca como quem já sabe a resposta.</li><li>Devolva no máximo duas coisas na etapa 8: uma que funcionou e uma em que a forma não saiu.</li></ul>
+          <h5 class="prep-h">E &middot; O que observar na produ&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>Se o contínuo aparece quando ela NARRA e some quando ela narra e avalia ao mesmo tempo — é o ponto 3 do acompanhamento.</li><li>Se a cena e o evento saem separados sem que você peça a distinção.</li><li>Se a leitura dela vem marcada como leitura, e não como parte da cena.</li><li>O que ela corta quando repete o relato mais curto: o que sai primeiro é o que ainda não é automático.</li></ul>
         </div>
         <div id="lcfb3" style="display:none;margin-top:var(--space-4)">
           <div class="fb-grid">
@@ -2257,7 +2304,6 @@ body.tg-guia > #tgGuia{display:block!important}
         </div>
         <h3 class="lc-title">The feedback you have to give</h3>
         <p class="lc-desc">Dar a devolutiva de uma observação de aula a um professor estrangeiro, de modo que ele possa discordar — e sustentá-la quando ele discorda.</p>
-        <p class="lc-meta">10 telas &middot; 55 min de percurso essencial</p>
         <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
           <button class="btn-ghost" data-painel="lcprep4" aria-expanded="false" onclick="cartaoPainel('lcprep4',this)">Estrutura e prepara&ccedil;&atilde;o</button>
           <button class="btn-primary" onclick="openLesson(4)">Abrir a aula</button>
@@ -2273,7 +2319,11 @@ body.tg-guia > #tgGuia{display:block!important}
           <p class="prep-p" data-lf="percurso"></p>
           <p class="prep-p" data-lf="etapas"></p>
           <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
-          <ul class="prep-list"><li>A etapa 2 é a PRIMEIRA TENTATIVA e acontece antes de qualquer modelo. Ela dá a devolutiva agora, como daria hoje. Você observa e não corrige — é a linha de base contra a qual a etapa 6 vai ser lida.</li><li><strong>H1 do perfil se decide aqui, cruzada com a aula 3.</strong> A hipótese é que a recomendação sai como ordem por falta de repertório de mitigação, não por escolha de registro. Se na etapa 5 o repertório aparecer e a etapa 6 mudar, H1 se confirma.</li><li>Escolha antes as DUAS falas do professor observado: a da rodada 1 (concordar e pedir detalhe) e a da rodada 2 (discordar de frente). As duas estão escritas nas notas das telas 7 e 9.</li><li><strong>A pressão vem da situação, nunca do tom.</strong> O professor discorda com argumento, não com hostilidade — e ele tem razão parcial: ele fez a pergunta de checagem, e ela não viu.</li><li>Nenhum dado real de escola entra na aula. O caso é fictício e o material declara isso.</li></ul>
+          <ul class="prep-list"><li>A etapa 2 é a PRIMEIRA TENTATIVA e acontece antes de qualquer modelo. Ela dá a devolutiva agora, como daria hoje. Você observa e não corrige — é a linha de base contra a qual a etapa 6 vai ser lida.</li><li><strong>O ponto 1 do acompanhamento se decide aqui, cruzada com a aula 3.</strong> O que está em aberto é se a recomendação sai como ordem por falta de repertório de mitigação, não por escolha de registro. Se na etapa 5 o repertório aparecer e a etapa 6 mudar, o ponto 1 se resolve.</li><li>Escolha antes as DUAS falas do professor observado: a da rodada 1 (concordar e pedir detalhe) e a da rodada 2 (discordar de frente). As duas estão escritas nas notas das telas 7 e 9.</li><li><strong>A pressão vem da situação, nunca do tom.</strong> O professor discorda com argumento, não com hostilidade — e ele tem razão parcial: ele fez a pergunta de checagem, e ela não viu.</li><li>Nenhum dado real de escola entra na aula. O caso é fictício e o material declara isso.</li></ul>
+          <h5 class="prep-h">D &middot; Na condu&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>A etapa 2 é a primeira tentativa e vem antes de qualquer modelo: ela dá a devolutiva como daria hoje, e você observa sem corrigir.</li><li>Rodada 1: concorde e peça detalhe. Rodada 2: discorde de frente, com argumento — e você tem razão parcial.</li><li>A pressão vem da situação, nunca do tom. Discordar com hostilidade troca o objeto da aula.</li><li>Entre as rodadas, devolva TRÊS coisas: o que ele precisava e não recebeu, o que custou tempo, e o que aconteceu quando ele discordou.</li></ul>
+          <h5 class="prep-h">E &middot; O que observar na produ&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>Se a recomendação sai como recomendação ou como ordem — e se muda depois do repertório da etapa 5. É o ponto 1 do acompanhamento, lido junto com a aula 3.</li><li>Se ela deixa espaço para ele discordar, ou fecha a devolutiva antes de ele responder.</li><li>O que ela concede quando ele discorda com razão, e se concede sem abandonar a posição.</li><li>Se a evidência que ela dá é observável — o que aconteceu na sala — em vez de julgamento sobre ele.</li></ul>
         </div>
         <div id="lcfb4" style="display:none;margin-top:var(--space-4)">
           <div class="fb-grid">
@@ -2558,9 +2608,10 @@ superior não compensa lacuna nas habilidades prioritárias.
   <h3 class="sub"><span data-view="professor">Aula 01 &middot; Reading / R1 &mdash; </span><span data-view="aluno">Lesson 01 &mdash; </span><em>Two documents, one course</em></h3>
 
   <div class="callout ok">
-    <span class="callout-title">Optional</span>
-    Everything here is optional. Nothing on this page is marked, nothing is checked, and
-    nothing in it is needed for the next lesson. Take what is useful and leave the rest.
+    <span class="callout-title">How to use this page</span>
+    Pick one thing to do: the writing task or the recording. Then open the resources below
+    when you want more of the same. Nothing here is marked or checked, and none of it is
+    needed for the next lesson.
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5)">Review the lesson</p>
@@ -2694,10 +2745,6 @@ superior não compensa lacuna nas habilidades prioritárias.
       <p>The expression you used most in class, with its two meanings and example sentences.</p>
       <a class="res-link" href="https://dictionary.cambridge.org/dictionary/english/according-to" target="_blank" rel="noopener">Open the entry &rarr;</a>
     </div>
-  </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
   </div>
 </div>
 <div id="ps2" style="display:none">
@@ -2836,10 +2883,6 @@ superior não compensa lacuna nas habilidades prioritárias.
       <a class="res-link" href="https://dictionary.cambridge.org/dictionary/english/jump-in" target="_blank" rel="noopener">Open the entry &rarr;</a>
     </div>
   </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
-  </div>
 </div>
 <div id="ps3" style="display:none">
   <h3 class="sub"><span data-view="professor">Aula 03 &middot; Grammar / G1 &mdash; </span><span data-view="aluno">Lesson 03 &mdash; </span><em>The scene and the verdict</em></h3>
@@ -2972,10 +3015,6 @@ superior não compensa lacuna nas habilidades prioritárias.
       <p>The form you used most today, with its uses and example sentences.</p>
       <a class="res-link" href="https://dictionary.cambridge.org/grammar/british-grammar/past-continuous-i-was-working" target="_blank" rel="noopener">Open the entry &rarr;</a>
     </div>
-  </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
   </div>
 </div>
 <div id="ps4" style="display:none">
@@ -3115,10 +3154,6 @@ superior não compensa lacuna nas habilidades prioritárias.
       <a class="res-link" href="https://dictionary.cambridge.org/dictionary/english/might" target="_blank" rel="noopener">Open the entry &rarr;</a>
     </div>
   </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
-  </div>
 </div>
 
   <!-- Fim da area. O botao volta ao inicio da ABA, nao ao topo do documento. -->
@@ -3205,7 +3240,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <h2 class="slide-heading">Read both, <span class="accent">for what they are</span></h2>
     <div class="doc-brief" id="doc1a">
       <p class="doc-tit">Lesson plan &mdash; Unit 7, <em>Reporting what happened</em></p>
-      <p class="doc-fonte">Sample document, written for this lesson. Not a document of any real school.</p>
+      <p class="doc-fonte">Sample document.</p>
       <p class="doc-para">Unit 7 runs over <strong>18 teaching hours</strong>, from week 5 to week 7. The unit closes with a written report of 180&ndash;220 words.</p>
       <p class="doc-para">The written report is <strong>corrected by a classmate</strong> against the checklist on page 4, and then rewritten once. The teacher reads the rewritten version.</p>
       <p class="doc-para">The unit assessment is in <strong>week 7</strong>, in the last session, and covers the reporting language of the unit.</p>
@@ -3213,7 +3248,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     </div>
     <div class="doc-brief" id="doc1b">
       <p class="doc-tit">Course syllabus &mdash; General English B1, second semester</p>
-      <p class="doc-fonte">Sample document, written for this lesson. Not a document of any real school.</p>
+      <p class="doc-fonte">Sample document.</p>
       <p class="doc-para">The semester is divided into four units. <strong>Unit 7 is allocated 20 teaching hours</strong>, and no unit may run beyond its allocation without approval from the coordination.</p>
       <p class="doc-para">Written work produced at the end of a unit is <strong>corrected by the teacher</strong>, with written feedback returned to the student within one week.</p>
       <p class="doc-para">Each unit is assessed in <strong>the week after it ends</strong>. For Unit 7 this is week 8.</p>
@@ -3380,7 +3415,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="close-flow">
       <div class="close-block">
         <h5>What we worked on today</h5>
-        <p class="cb-sub">Tick what you recognise.</p>
+        <p class="cb-sub">Review what you worked on today.</p>
         <div id="recapList1"></div>
       </div>
       <div class="close-block">
@@ -3594,7 +3629,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="close-flow">
       <div class="close-block">
         <h5>What we worked on today</h5>
-        <p class="cb-sub">Tick what you recognise.</p>
+        <p class="cb-sub">Review what you worked on today.</p>
         <div id="recapList2"></div>
       </div>
       <div class="close-block">
@@ -3634,7 +3669,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <h2 class="slide-heading">The same fifty minutes, <span class="accent">written by someone else</span></h2>
     <div class="doc-brief" id="doc3a">
       <p class="doc-tit">Observation note &mdash; B1 group, Tuesday</p>
-      <p class="doc-fonte">Sample document, written for this lesson. Not a note about any real class.</p>
+      <p class="doc-fonte">Sample document.</p>
       <p class="doc-para">The students <strong>were working</strong> in pairs on the error-correction task when the teacher <strong>gave</strong> the next instruction. Two of them <strong>were still finishing</strong> the previous one.</p>
       <p class="doc-para">The back table <strong>went</strong> quiet as soon as he <strong>got</strong> to the third example. They <strong>were copying</strong> it down while he <strong>was explaining</strong> it.</p>
       <p class="doc-para">He <strong>asked</strong> a checking question and <strong>took</strong> the first answer. Four hands <strong>were still up</strong> when he <strong>moved on</strong>.</p>
@@ -3806,7 +3841,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="close-flow">
       <div class="close-block">
         <h5>What we worked on today</h5>
-        <p class="cb-sub">Tick what you recognise.</p>
+        <p class="cb-sub">Review what you worked on today.</p>
         <div id="recapList3"></div>
       </div>
       <div class="close-block">
@@ -3992,7 +4027,7 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="close-flow">
       <div class="close-block">
         <h5>What we worked on today</h5>
-        <p class="cb-sub">Tick what you recognise.</p>
+        <p class="cb-sub">Review what you worked on today.</p>
         <div id="recapList4"></div>
       </div>
       <div class="close-block">
@@ -5180,34 +5215,66 @@ function tReset(id,total){if(_t[id]){clearInterval(_t[id].h);_t[id]=null;}tRende
 
 /* ---------------- multiple choice ---------------- */
 /* matching com gabarito por linha - usado no pre-class */
+/* CONFERIR TEM DE EXPLICAR, NAO SO PINTAR.
+   Duas coisas faltavam nas tres checagens abaixo:
+
+   1. A EXPLICACAO da atividade so abria com a pontuacao CHEIA (`n===rows.length`). Quem
+      errou um item -- exatamente quem precisa dela -- via vermelho e mais nada, e a nota
+      escrita para explicar o item dificil ficava fechada para sempre.
+   2. O item errado nao dizia QUAL era a resposta. Marca vermelha sozinha ensina que errou,
+      nao o que era. */
+function fixRotulo(alvo,texto){
+  if(!alvo)return;
+  var el=alvo.querySelector('.row-fix');
+  if(!el){ el=document.createElement('span'); el.className='row-fix'; alvo.appendChild(el); }
+  el.textContent=texto?('\u2192 '+texto):'';
+  el.style.display=texto?'':'none';
+}
+/* A explicacao DAQUELE item (`.item-why`, emitida pelo builder a partir do campo `porque`).
+   Abre ao conferir, para acerto e para erro: quem acertou confirma o porque, quem errou
+   descobre. Sem ela, conferir devolve so uma cor. */
+function porqueAbre(host){
+  if(!host)return;
+  var w=host.querySelectorAll('.item-why'),i;
+  for(i=0;i<w.length;i++)w[i].classList.add('show');
+}
 function mCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok;
+  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('select'); if(!sel)continue;
     ok=(sel.value===sel.getAttribute('data-ok'));
     rows[i].classList.toggle('correct',ok);
     rows[i].classList.toggle('wrong',!ok&&sel.value!=='');
+    certa=sel.querySelector('option[value="'+sel.getAttribute('data-ok')+'"]');
+    fixRotulo(rows[i],(!ok&&certa)?certa.textContent:'');
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 /* cloze com gabarito por campo */
 function czCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok;
+  var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok,dica;
   for(i=0;i<f.length;i++){
     v=(f[i].value||'').trim().toLowerCase().replace(/[.,]/g,'');
     ok=(v===(f[i].getAttribute('data-ok')||'').toLowerCase());
     f[i].classList.toggle('correct',ok);
     f[i].classList.toggle('wrong',!ok&&v!=='');
+    dica=f[i].nextSibling&&f[i].nextSibling.className==='row-fix'?f[i].nextSibling:null;
+    if(!dica){ dica=document.createElement('span'); dica.className='row-fix';
+               f[i].parentNode.insertBefore(dica,f[i].nextSibling); }
+    dica.textContent=ok?'':('\u2192 '+f[i].getAttribute('data-ok'));
+    dica.style.display=ok?'none':'';
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===f.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 /* selecao multipla: marcar e conferir contra data-ok */
 /* escolha entre duas formulacoes, uma linha por item. Existe para variar a mecanica
@@ -5223,16 +5290,19 @@ function ppPick(btn){
 function ppCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok;
+  var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('.pair-opt.sel'); if(!sel)continue;
     ok=(sel.getAttribute('data-v')===rows[i].getAttribute('data-ok'));
     rows[i].classList.toggle('correct',ok);
     rows[i].classList.toggle('wrong',!ok);
+    certa=rows[i].querySelector('.pair-opt[data-v="'+rows[i].getAttribute('data-ok')+'"]');
+    fixRotulo(rows[i],(!ok&&certa)?certa.textContent:'');
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 
 /* ---------------- guarda de papel no pre-class ----------------
@@ -5264,13 +5334,16 @@ function selCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
   var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
+  porqueAbre(host.parentNode);
 }
 function pick(el,ok){
   if(preConsulta(el))return;
   var box=el.parentNode, opts=box.children, i;
   for(i=0;i<opts.length;i++){opts[i].classList.remove('correct','wrong');}
   el.classList.add(ok?'correct':'wrong');
-  if(ok){var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');}
+  /* A razao abre com QUALQUER escolha: reserva-la ao acerto e dar a explicacao a quem
+     ja nao precisava dela. */
+  var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
 }
 function revealRationales(btn){
   if(preConsulta(btn))return;
@@ -6634,6 +6707,11 @@ var CONF4=["Giving feedback that leaves room for an answer", "Holding a recommen
 document.addEventListener('DOMContentLoaded',function(){
   deckInit(CICLO.primeira); gdBuild(); gdvBuild(); tsBuild(); briefBuild(); cpBuild();
   _preAtual=CICLO.primeira;
+  /* Uma aula por vez, no pre-class e no post-class. Os blocos das outras aulas nascem no
+     HTML e ninguem os fechava: a aba abria com as quatro empilhadas, e a barra de selecao
+     so passava a valer depois do primeiro clique. Fechar aqui, e nao no fragmento, e o que
+     impede a proxima aula de nascer aberta de novo. */
+  preSel(CICLO.primeira); postSel(CICLO.primeira);
   /* ANTES do persInit: migrada depois, a textarea ja teria sido preenchida com o valor
      anterior e mostraria o texto sem a parte incorporada - o armazenamento certo e a tela
      desatualizada, que e pior do que os dois errados. */
