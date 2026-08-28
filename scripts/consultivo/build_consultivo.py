@@ -128,7 +128,6 @@ CARTAO = """<div class="lesson-card" id="lc{n}">
         </div>
         <h3 class="lc-title">{tema}</h3>
         <p class="lc-desc">{objetivo}</p>
-        <p class="lc-meta">{telas} telas &middot; {minutos} min de percurso essencial</p>
         <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
           <button class="btn-ghost" data-painel="lcprep{n}" aria-expanded="false" onclick="cartaoPainel('lcprep{n}',this)">Estrutura e prepara&ccedil;&atilde;o</button>
           <button class="btn-primary" onclick="openLesson({n})">Abrir a aula</button>
@@ -145,6 +144,10 @@ CARTAO = """<div class="lesson-card" id="lc{n}">
           <p class="prep-p" data-lf="etapas"></p>
           <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
           <ul class="prep-list">{preparar}</ul>
+          <h5 class="prep-h">D &middot; Na condu&ccedil;&atilde;o</h5>
+          <ul class="prep-list">{conduzir}</ul>
+          <h5 class="prep-h">E &middot; O que observar na produ&ccedil;&atilde;o</h5>
+          <ul class="prep-list">{observar}</ul>
         </div>
         <div id="lcfb{n}" style="display:none;margin-top:var(--space-4)">
           <div class="fb-grid">
@@ -200,7 +203,14 @@ def cartao_de_aula(n, reg, dados, telas, minutos):
         mod=campo("mod"), cod=campo("cod"), tema=campo("tema"),
         objetivo=dados.get("objetivo", ""), produto=dados.get("produto", ""),
         telas=telas, minutos=minutos,
+        # `conduzir` e `observar` ERAM DECLARADOS E JOGADOS FORA (FB28). O cartao.json de
+        # cada aula sempre trouxe os tres campos; o cartao so imprimia `preparar`, e por isso
+        # a revisao encontrou o cartao da aula 9 sem uma linha sobre o que observar na
+        # producao do aluno -- que e o que o professor vai ali procurar. Campo declarado que
+        # o emissor ignora e pior do que campo ausente: quem escreveu acha que entregou.
         preparar="".join("<li>%s</li>" % x for x in dados.get("preparar", [])),
+        conduzir="".join("<li>%s</li>" % x for x in dados.get("conduzir", [])),
+        observar="".join("<li>%s</li>" % x for x in dados.get("observar", [])),
         aval=aval)
 
 
@@ -524,6 +534,14 @@ def monta(cfg, base_frag):
                          f"artefato -- residuo de outro perfil.")
             continue
         dados = json.load(open(cj, encoding="utf-8"))
+        # O cartao tem TRES listas, e nenhuma delas e decorativa: preparacao (o que fazer
+        # antes), conducao (o que fazer durante) e observacao (o que procurar na producao).
+        # Faltando a ultima, o professor abre a aula sem saber o que esta medindo.
+        for campo in ("preparar", "conduzir", "observar"):
+            if not dados.get(campo):
+                erros.append(f"aula {n}: cartao.json sem `{campo}`. O cartao da aba In-class "
+                             f"imprime as tres listas, e a de `observar` e o que diz ao "
+                             f"professor o que procurar na producao do aluno.")
         etapas = re.findall(r"\{n:'[^']+',min:(\d+)\}", reg)
         telas = len(re.findall(r'data-slide="',
                                open(os.path.join(pasta, "slides.html"),
