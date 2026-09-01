@@ -30,6 +30,11 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SAIDA = os.path.join(RAIZ, "public", "data", "anatomias.json")
 MARCA = 'name="alumni-anatomia" content="consultivo"'
 MOLDE = 'name="alumni-molde"'
+# O status do MATERIAL do consultivo, carimbado pelo builder. Ele existe porque
+# `perfis.status` e um campo por ALUNO, e quem esta em transicao tem DOIS materiais: o
+# imersivo, pronto, e o consultivo, em escrita. Um campo so nao consegue dizer as duas
+# coisas -- e ate 01/09/2026 dizia a mesma nas duas abas.
+RX_STATUS = re.compile(r'name="alumni-anatomia-status" content="([a-z_]+)"')
 
 
 def slug_de(caminho):
@@ -75,6 +80,9 @@ def levanta():
             # aba Alunos Consultivo levava ao arquivo errado -- o link existia e o botao
             # apontava para outro lugar.
             achado.setdefault(slug, {})[papel] = arquivo
+            m = RX_STATUS.search(cabeca)
+            if m:
+                achado[slug]["status"] = m.group(1)
     return achado
 
 

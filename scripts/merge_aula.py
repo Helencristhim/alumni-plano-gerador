@@ -239,19 +239,23 @@ def promover_status(slug):
     Agora toda saida IMPRIME o que aconteceu, e o PATCH e RECONFERIDO na origem:
     dizer "promovi" sem reler e so repetir o que a gente pediu, nao o que ficou.
     """
-    # O CONSULTIVO NAO E PROMOVIDO PELO MERGE (ordem do Dan, 01/09/2026: "coloque TODOS os
-    # materiais do consultivo como rascunho").
+    # MERGE DE AULA DO CONSULTIVO NAO MEXE NO `perfis.status`.
     #
-    # A anatomia esta em revisao ativa -- o Dan revisou a mesma aula tres vezes em dois dias.
-    # Mergear ali publica o ARQUIVO, que e o que a revisao precisa para ser lida na tela; nao
-    # significa que o material esta pronto para o aluno. Promover no merge desfazia o rascunho
-    # a cada correcao, sem ninguem pedir.
+    # `perfis.status` descreve o material IMERSIVO, que e o que esses alunos usam hoje e que
+    # ja esta aprovado. O material do consultivo tem status PROPRIO, carimbado no head pelo
+    # builder (`alumni-anatomia-status`) e lido pelo indice que a aba do dashboard consome --
+    # e comeca em `rascunho`, porque esta em escrita.
     #
-    # A lista sai do carimbo no disco (`anatomias.json`), a mesma que a aba do dashboard le --
-    # nao ha segunda lista para alguem esquecer de atualizar.
+    # Promover aqui significaria mexer na etiqueta do imersivo por causa de uma aula do
+    # consultivo: dois materiais, um campo, a informacao errada nos dois lugares. Foi o que
+    # aconteceu em 01/09/2026, quando segurar o consultivo apagou o "Aprovado" do imersivo.
+    #
+    # A lista sai do carimbo no disco (`anatomias.json`) -- nao ha segunda lista para alguem
+    # esquecer de atualizar. Para promover o material do consultivo, muda-se o `status` no
+    # config e regera: a etiqueta e derivada do arquivo, como todo o resto da aba.
     if _e_do_consultivo(slug):
-        print(f"  perfil: '{slug}' e da anatomia consultivo — status NAO promovido "
-              f"(a anatomia esta em revisao; a promocao e manual)")
+        print(f"  perfil: '{slug}' tem material do consultivo — `perfis.status` NAO tocado "
+              f"(ele descreve o imersivo; o consultivo tem status proprio, no config)")
         return
 
     url, key = _supabase()

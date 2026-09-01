@@ -904,6 +904,21 @@
 
     function setFilter(filter,btn) { currentFilter=filter; document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); filterAlunos(); }
 
+    /* O STATUS DEPENDE DA ABA, PORQUE SAO DOIS MATERIAIS.
+       `perfis.status` e um campo por ALUNO. Quem esta em transicao tem o material imersivo,
+       que ele usa hoje, e o consultivo, que esta sendo escrito -- e um campo so nao diz as
+       duas coisas. Em 01/09/2026 segurar o consultivo em rascunho apagou a etiqueta do
+       imersivo, que estava aprovado ("no imersivo e pra ser aprovado").
+       Na aba consultivo vale o status do MATERIAL, carimbado no head e lido pelo indice.
+       Sem carimbo, cai no do perfil -- material antigo, gerado antes do carimbo, nao muda
+       de etiqueta sozinho. */
+    function statusNaVista(a) {
+        if (anatVista === 'consultivo' && ANAT && ANAT[a.id] && ANAT[a.id].status) {
+            return ANAT[a.id].status;
+        }
+        return a.perfilStatus;
+    }
+
     function getBadge(st) { return {rascunho:{l:'Rascunho',c:'s-badge--draft'},em_revisao:{l:'Em Revisão',c:'s-badge--review'},aprovado:{l:'Aprovado',c:'s-badge--approved'},material_publicado:{l:'Publicado',c:'s-badge--published'},sem_perfil:{l:'Sem Perfil',c:'s-badge--none'}}[st]||{l:'Sem Perfil',c:'s-badge--none'}; }
 
     // ══════════════════════════════════════
@@ -1110,7 +1125,7 @@
         countEl.textContent=alunos.length+' aluno'+(alunos.length!==1?'s':'');
 
         container.innerHTML=alunos.map(function(a) {
-            var badge=getBadge(a.perfilStatus), deact=isDeactivated(a.id);
+            var badge=getBadge(statusNaVista(a)), deact=isDeactivated(a.id);
             var prog=getProgress(a.id), cd=getCountdown(a.id);
             var total=parseInt(a.numAulas)||0, done=prog?prog.concluidas:0;
             var hasPerfil=a.perfilStatus!=='sem_perfil';
