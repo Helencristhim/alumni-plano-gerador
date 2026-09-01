@@ -124,6 +124,80 @@ def alunos_da_anatomia():
     return saida
 
 
+
+# ---------------------------------------------------------------------------
+# O PORTUGUES DO PROFESSOR SE ESCREVE COM ACENTO
+#
+# A nota de tela e o unico texto em portugues que o professor LE durante a aula, ao vivo,
+# na frente do aluno. Escrever "nao", "voce", "tres" ali nao e economia de digitacao: e o
+# material da escola de idiomas errando a propria lingua na tela de quem ensina.
+#
+# Aqui so entra palavra cuja forma SEM acento nao existe em portugues E nao existe em
+# ingles (as notas misturam as duas linguas: "video", "area", "audio" sao ingles legitimo
+# e ficam de fora de proposito). Ambiguidade real ("analise" o verbo, "valido" o verbo,
+# "faca" a faca) tambem fica de fora: um gate que erra e um gate que se aprende a ignorar.
+ACENTO = {
+    "nao": "não", "atencao": "atenção", "tres": "três", "voce": "você", "voces": "vocês",
+    "sao": "são", "conteudo": "conteúdo", "ingles": "inglês", "portugues": "português",
+    "proxima": "próxima", "proximo": "próximo", "producao": "produção", "relogio": "relógio",
+    "ninguem": "ninguém", "alguem": "alguém", "silencio": "silêncio", "numero": "número",
+    "entao": "então", "ultima": "última", "ultimo": "último", "tambem": "também",
+    "maximo": "máximo", "minimo": "mínimo", "estao": "estão", "traducao": "tradução",
+    "proposito": "propósito", "propria": "própria", "proprio": "próprio", "facil": "fácil",
+    "nivel": "nível", "repeticao": "repetição", "exercicio": "exercício", "unica": "única",
+    "unico": "único", "dificil": "difícil", "confirmacao": "confirmação",
+    "instrucao": "instrução", "compreensao": "compreensão", "duvida": "dúvida",
+    "memoria": "memória", "historia": "história", "porem": "porém", "criterio": "critério",
+    "referencia": "referência", "pagina": "página", "publico": "público",
+    "tecnica": "técnica", "logica": "lógica", "varias": "várias", "varios": "vários",
+    "apos": "após", "obvio": "óbvio", "possivel": "possível", "impossivel": "impossível",
+    "pratica": "prática", "gramatica": "gramática", "especifica": "específica",
+    "especifico": "específico", "estrategia": "estratégia", "experiencia": "experiência",
+    "evidencia": "evidência", "consequencia": "consequência", "frequencia": "frequência",
+    "sequencia": "sequência", "emergencia": "emergência", "apresentacao": "apresentação",
+    "apresentacoes": "apresentações", "informacao": "informação", "situacao": "situação",
+    "explicacao": "explicação", "correcao": "correção", "observacao": "observação",
+    "anotacao": "anotação", "avaliacao": "avaliação", "interacao": "interação",
+    "reuniao": "reunião", "decisao": "decisão", "versao": "versão", "expressao": "expressão",
+    "questao": "questão", "razao": "razão", "opiniao": "opinião", "comeca": "começa",
+    "comecar": "começar", "comeco": "começo", "cabeca": "cabeça", "licao": "lição",
+    "transicao": "transição", "posicao": "posição", "hipotese": "hipótese",
+    "transcricao": "transcrição", "transcricoes": "transcrições", "cartao": "cartão",
+    "cartoes": "cartões", "padrao": "padrão", "padroes": "padrões", "opcao": "opção",
+    "opcoes": "opções", "balcao": "balcão", "diagnostico": "diagnóstico",
+    "ofereca": "ofereça", "saudacao": "saudação", "negacao": "negação", "duracao": "duração",
+    "gravacao": "gravação", "condicao": "condição", "classificacao": "classificação",
+    "objecao": "objeção", "argumentacao": "argumentação",
+    "rapido": "rápido", "rapida": "rápida", "musica": "música", "serie": "série",
+}
+
+assert not [k for k, v in ACENTO.items() if k == v], (
+    "ACENTO: chave e valor iguais — a palavra entraria como erro de si mesma")
+
+_RX_ACENTO = re.compile(r"\b(" + "|".join(sorted(ACENTO, key=len, reverse=True)) + r")\b", re.I)
+
+
+def notas_de_tela(c):
+    """So o portugues do professor: as notas do icone T e o apoio em PT do pre/pos-aula.
+
+    O texto visivel dos slides fica de fora porque e INGLES, e metade destas palavras
+    ("area", "audio", "series") sao ingles legitimo."""
+    teacher = " ".join(_html.unescape(m) for m in re.findall(r'data-teacher="([^"]*)"', c))
+    apoio = " ".join(_html.unescape(re.sub(r"<[^>]+>", " ", m))
+                     for m in re.findall(r'<div class="apoio-pt"[^>]*>(.*?)</div>', c, re.S))
+    return teacher + "\n" + apoio
+
+
+def acentos(c):
+    """As palavras em portugues escritas sem acento nas notas do professor."""
+    texto = notas_de_tela(c)
+    achados = {}
+    for m in _RX_ACENTO.finditer(texto):
+        p = m.group(1)
+        achados.setdefault(p.lower(), ACENTO[p.lower()])
+    return achados
+
+
 def confere(html_do_material, slug=None, tratamento=""):
     """As tres familias, sobre o material ja montado. Devolve lista de mensagens.
 
@@ -163,4 +237,12 @@ def confere(html_do_material, slug=None, tratamento=""):
             f"GENERO DO DOCENTE: o config declara o tratamento no feminino e o material usa "
             f"a forma masculina {len(masc)}x. Numa mesma pagina, as duas formas fazem "
             f"parecer que sao duas pessoas.")
+    falta = acentos(html_do_material)
+    if falta:
+        amostra = ", ".join(f"“{k}” → “{v}”" for k, v in list(falta.items())[:6])
+        fora.append(
+            f"PORTUGUES SEM ACENTO nas notas de tela ({len(falta)} palavra(s)): {amostra}"
+            f"{' ...' if len(falta) > 6 else ''}. A nota do icone T e lida ao vivo, na "
+            f"frente do aluno: escreva o portugues com acento.")
+
     return fora

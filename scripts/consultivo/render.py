@@ -398,9 +398,71 @@ def r_nota(b, ident):
             f'      {crua(b["texto"])}\n    </div>')
 
 
+
+def r_gravar(b, ident):
+    """O GRAVADOR do post-class: barra, cronometro, player e apagar.
+
+    Ate 01/09/2026 o "Speak More" pedia "record a short voice message" e nao havia onde
+    gravar. O molde SEMPRE teve o componente (`rec-bar` + `rcStart`/`rcStop`/`rcApaga`); o
+    que faltava era o emissor saber emiti-lo, e por isso toda aula gerada pedia uma coisa
+    que a pagina nao fazia.
+
+    O id vem do bloco e amarra os cinco elementos: sem isso, dois gravadores na mesma aba
+    comandam um ao outro."""
+    return (f'    <div class="rec-bar">\n'
+            f'      <button class="audio-btn-sm" id="{ident}-start" '
+            f'onclick="rcStart(\'{ident}\')">&#9679; Start recording</button>\n'
+            f'      <button class="audio-btn-sm" id="{ident}-stop" style="display:none;'
+            f'background:var(--danger);border-color:var(--danger)" '
+            f'onclick="rcStop(\'{ident}\')">&#9632; Stop</button>\n'
+            f'      <span class="rec-time" id="{ident}-time">00:00</span>\n'
+            f'    </div>\n'
+            f'    <audio id="{ident}-player" controls="controls" style="display:none;'
+            f'width:100%;margin-top:var(--space-3)"></audio>\n'
+            f'    <div id="{ident}-done" style="display:none;gap:var(--space-2h);'
+            f'margin-top:var(--space-2h);flex-wrap:wrap">\n'
+            f'      <button class="audio-btn-sm ghost" onclick="rcApaga(\'{ident}\')">'
+            f'Delete recording</button>\n'
+            f'    </div>\n'
+            f'    <div class="callout warn" id="{ident}-msg" style="display:none"></div>')
+
+
+def r_escrever(b, ident):
+    """O CAMPO DE ESCRITA do post-class: rotulo, caixa, contador e limpar.
+
+    Mesmo caso do gravador: o "Write More" pedia para escrever e nao havia onde. O
+    `chave` e o que faz o texto sobreviver ao refresh -- sem ele a aluna escreve, sai da
+    aba e perde."""
+    chave = b.get("chave") or f"post_{ident}_writing"
+    rot = esc(b.get("rotulo") or "Your note")
+    return (f'    <label class="mail-label" for="{ident}-body">{rot}</label>\n'
+            f'    <textarea class="writebox" id="{ident}-body" style="min-height:170px" '
+            f'placeholder="" oninput="pwCount(\'{ident}-body\',\'{ident}-count\','
+            f'\'{chave}\')"></textarea>\n'
+            f'    <div class="wc"><span id="{ident}-count">0 words</span></div>\n'
+            f'    <button class="verify-all-btn ghost" onclick="pwClear('
+            f'[[\'{ident}-body\',\'{chave}\']],\'{ident}-count\')">'
+            f'Clear and start again</button>')
+
+
+def apoio_pt(texto, ident):
+    """O apoio em portugues, RECOLHIDO atras de um botao.
+
+    Em A1 o apoio em portugues nao e um extra: e o que torna a instrucao legivel. Mas ele
+    nao pode competir com o ingles na tela -- se estiver sempre aberto, a aluna le so ele.
+    Entao vem fechado, e quem decide abrir e ela.
+
+    Usa o `toggleEl` que o shell ja tem; nada de mecanismo novo."""
+    return (f'    <button class="verify-all-btn ghost" style="margin-top:var(--space-2)" '
+            f'onclick="toggleEl(\'{ident}\',this,\'Ver em português\','
+            f'\'Ocultar português\')">Ver em português</button>\n'
+            f'    <div id="{ident}" class="callout" style="display:none">{texto}</div>')
+
+
 RENDER = {"classificar": r_classificar, "completar": r_completar,
           "escolha": r_escolha, "par": r_par,
-          "frases": r_frases, "lacuna": r_lacuna, "recursos": r_recursos}
+          "frases": r_frases, "lacuna": r_lacuna, "recursos": r_recursos,
+          "gravar": r_gravar, "escrever": r_escrever}
 
 
 def seccao(b, i, vocab=None):
@@ -411,7 +473,8 @@ def seccao(b, i, vocab=None):
     # acervo nao vira exercicio (ANA-013).
     if kind is not None and kind not in RENDER:
         raise SystemExit(f"kind {kind!r} nao existe. Disponiveis: {sorted(RENDER)}")
-    if kind not in (None, "frases", "recursos") and not b.get("itens"):
+    if kind not in (None, "frases", "recursos", "gravar", "escrever") \
+            and not b.get("itens"):
         raise SystemExit(f"{ident}: exercicio sem itens.")
 
     # `nu: true` -- o bloco sai SEM a moldura `exercise-section`.
@@ -432,7 +495,7 @@ def seccao(b, i, vocab=None):
     # ninguem vai procurar.
     CONHECIDOS = {"kind", "id", "n", "nu", "titulo", "badge", "abertura", "instr", "itens",
                   "opcoes", "nota", "rationale", "prompt", "largura", "rotulo_banco",
-                  "banco", "barra"}
+                  "banco", "barra", "pt", "chave", "rotulo"}
     desconhecidos = set(b) - CONHECIDOS - {k for k in b if k.startswith("_")}
     if desconhecidos:
         raise SystemExit(f"{ident}: campo(s) que o emissor nao conhece e nao emitiria: "
@@ -470,6 +533,13 @@ def seccao(b, i, vocab=None):
     # (o artefato que a aluna le), o `rule-box` visivel (a sintese) e o `id="X-key"`
     # escondido (a nota, que so abre depois). Distinguir por formato do dicionario seria
     # adivinhacao.
+    # O APOIO EM PORTUGUES, uma vez por atividade, logo depois das instrucoes.
+    #
+    # Ele nao entra como mais um paragrafo da abertura: solto no meio ficaria sempre aberto,
+    # e em A1 a aluna leria so ele. Vem RECOLHIDO atras de "Ver em portugues", e quem decide
+    # abrir e ela. Usa o `toggleEl` que o shell ja tem.
+    pt_texto = b.get("pt")
+
     for item in b.get("abertura", b.get("instr", [])):
         if isinstance(item, str):
             partes.append(f'    <p class="task-instr">{esc(item)}</p>')
@@ -624,6 +694,8 @@ def seccao(b, i, vocab=None):
         else:
             raise SystemExit(f"{ident}: item de abertura sem tipo conhecido: "
                              f"{sorted(item)}")
+    if pt_texto:
+        partes.append(apoio_pt(crua(pt_texto), f"{ident}-pt"))
     if kind is not None:
         if kind == "lacuna":
             partes.append(RENDER[kind](b, ident, vocab))
