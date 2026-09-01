@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 05 &middot; Block 1 (Build) &middot; Grammar for Communication &middot; receptive level B1, productive level B1 &middot; online, 60 minutes &middot; third lesson of the first consultivo cycle. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To produce, under time, the three structures that put new information where English expects it &mdash; at the end of the sentence.</strong><ul>'+
         '<li>Cleft: <em>What we cannot do is&hellip;</em> &middot; <em>It is X that&hellip;</em></li>'+
         '<li>Fronting: <em>As for the budget, &hellip;</em></li>'+
@@ -26,6 +25,6 @@
     '<li>Which of the three structures she produces without the frames.</li>'+
     '<li>Whether she concedes or hardens under two objections.</li>'+
     '<li>Whether the level she produces at matches the B1 on record.</li></ul>',
-  prepost:'The pre-class ends by asking her to write six sentences about a decision she is actually carrying &mdash; those six are stage 6. If she did not do it, build them in the lesson; it costs three minutes and the alternative is practising on invented content. The post-class asks her to rewrite two sentences of her own English writing from this month, which is where the structure transfers.',
+  prepost:'The pre-class ends by asking her to write six sentences about a decision she is actually carrying &mdash; those six are stage 6. If she did not do it, build them in the lesson; it costs three minutes and the alternative is practicing on invented content. The post-class asks her to rewrite two sentences of her own English writing from this month, which is where the structure transfers.',
   key:'None of the rejected alternatives in this lesson is wrong English. They are all correct, and they all leave the new information in the middle, where the listener has stopped waiting for it. In writing that costs nothing. Out loud, in a room, it is the difference between being followed and being read back.'
 }

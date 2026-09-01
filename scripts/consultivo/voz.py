@@ -198,7 +198,61 @@ def acentos(c):
     return achados
 
 
-def confere(html_do_material, slug=None, tratamento=""):
+
+# ---------------------------------------------------------------------------
+# O INGLES DO MATERIAL E AMERICANO
+#
+# REGRA 21 do CLAUDE.md, e ordem do Dan na revisao de 31/08/2026 ("outras ocorrencias de
+# escrita de ingles britanico devem ser corrigidas para ingles americano"). O convite da
+# aula 9 da Joice era assinado pela "organising team" -- uma escola que ensina ingles
+# americano entregando ingles britanico na tela.
+#
+# So entram pares em que a palavra e A MESMA, escrita de outro jeito. Escolha de vocabulario
+# ("flat"/"apartment", "lift"/"elevator") fica de fora: pode estar num dialogo de proposito.
+BRITANICO = {
+    "organise": "organize", "organises": "organizes", "organised": "organized",
+    "organising": "organizing", "organisation": "organization",
+    "organisations": "organizations", "organisational": "organizational",
+    "realise": "realize", "realises": "realizes", "realised": "realized",
+    "realising": "realizing", "recognise": "recognize", "recognises": "recognizes",
+    "recognised": "recognized", "recognising": "recognizing", "apologise": "apologize",
+    "apologises": "apologizes", "apologised": "apologized", "apologising": "apologizing",
+    "summarise": "summarize", "summarised": "summarized", "summarising": "summarizing",
+    "prioritise": "prioritize", "specialise": "specialize", "emphasise": "emphasize",
+    "criticise": "criticize", "analyse": "analyze", "analysed": "analyzed",
+    "analysing": "analyzing", "colour": "color", "colours": "colors",
+    "coloured": "colored", "colourful": "colorful", "favour": "favor",
+    "favours": "favors", "favourite": "favorite", "favourites": "favorites",
+    "behaviour": "behavior", "behaviours": "behaviors", "honour": "honor",
+    "centre": "center", "centres": "centers", "theatre": "theater",
+    "programme": "program", "programmes": "programs", "travelling": "traveling",
+    "travelled": "traveled", "traveller": "traveler", "cancelled": "canceled",
+    "cancelling": "canceling", "modelling": "modeling", "labelled": "labeled",
+    "practise": "practice", "practises": "practices", "practised": "practiced",
+    "practising": "practicing", "whilst": "while", "amongst": "among",
+    "learnt": "learned", "spelt": "spelled", "dreamt": "dreamed", "burnt": "burned",
+    "maths": "math", "licence": "license", "defence": "defense", "offence": "offense",
+    "offences": "offenses", "pretence": "pretense", "fulfil": "fulfill",
+    "enrol": "enroll", "judgement": "judgment", "judgements": "judgments",
+    "towards": "toward", "grey": "gray",
+}
+
+_RX_BRIT = re.compile(r"\b(" + "|".join(sorted(BRITANICO, key=len, reverse=True)) + r")\b",
+                      re.I)
+
+
+def britanismos(c):
+    """As palavras escritas em ingles britanico na superficie do material.
+
+    Le a superficie inteira -- o ingles esta na tela do aluno, no gabarito do professor e no
+    guia. O `data-teacher` entra junto: e o guia de uma escola de ingles americano."""
+    achados = {}
+    for m in _RX_BRIT.finditer(superficie(c)):
+        achados.setdefault(m.group(1).lower(), BRITANICO[m.group(1).lower()])
+    return achados
+
+
+def confere(html_do_material, slug=None, tratamento="", de_artefato=False):
     """As tres familias, sobre o material ja montado. Devolve lista de mensagens.
 
     `slug` e `tratamento` vem do config: sem eles, a regra de aluno e a de genero nao tem
@@ -237,6 +291,17 @@ def confere(html_do_material, slug=None, tratamento=""):
             f"GENERO DO DOCENTE: o config declara o tratamento no feminino e o material usa "
             f"a forma masculina {len(masc)}x. Numa mesma pagina, as duas formas fazem "
             f"parecer que sao duas pessoas.")
+    # No round-trip o material E o artefato, escrito antes desta regra. Cobrar dele o ingles
+    # americano seria cobrar que ele nao seja ele mesmo -- o mesmo criterio que o builder ja
+    # aplica ao residuo de identidade. Material de ALUNO nao tem essa saida.
+    brit = {} if de_artefato else britanismos(html_do_material)
+    if brit:
+        amostra = ", ".join(f"“{k}” → “{v}”" for k, v in list(brit.items())[:6])
+        fora.append(
+            f"INGLES BRITANICO ({len(brit)} palavra(s)): {amostra}"
+            f"{' ...' if len(brit) > 6 else ''}. O material e em ingles americano "
+            f"(REGRA 21).")
+
     falta = acentos(html_do_material)
     if falta:
         amostra = ", ".join(f"“{k}” → “{v}”" for k, v in list(falta.items())[:6])

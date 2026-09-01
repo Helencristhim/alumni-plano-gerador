@@ -2,8 +2,8 @@
     tema:'The invitation',  temaPre:'Before you read the invitation',
     canonico:'invite', statusKey:'af_l9_status',
     nav:['Lesson opening','The invitation','Before you read','Read it once',
-         'What it asks you','Four things, not forty','Say it back','Your one minute',
-         'Thirty seconds','Today and next'],
+         'What it asks you','What the other person needs','Say it back',
+         'Tell a colleague','What just happened','Today and next'],
     stages:[
       {n:'Personalized lead-in',min:5},
       {n:'Prediction',min:4},

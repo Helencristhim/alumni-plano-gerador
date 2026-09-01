@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 03 &middot; Block 1 (Build) &middot; Grammar for Communication &middot; receptive level A1, productive level A1 &middot; online, 60 minutes &middot; third lesson of the cycle. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To say six sentences about herself and her trip with the verb to be holding &mdash; positive, negative and a short question.</strong><ul>'+
         '<li>To see that she has already been using the form since lesson 1.</li>'+
         '<li>To say what something is not.</li>'+

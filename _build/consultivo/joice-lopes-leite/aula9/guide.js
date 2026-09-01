@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 09 &middot; Block 1 (Build) &middot; Reading into Speaking &middot; receptive level A1, productive level A1 &middot; online, 60 minutes &middot; first lesson of the first consultivo cycle (lessons 9&ndash;28), and lesson 9 of her course. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To read the invitation to an international education meeting and say out loud, in one minute, what the event is, when it is, and what she will do there &mdash; with the text off the screen.</strong><ul>'+
         '<li>To find four things in a text instead of translating all of it.</li>'+
         '<li>To say a date and a place out loud, without checking.</li>'+

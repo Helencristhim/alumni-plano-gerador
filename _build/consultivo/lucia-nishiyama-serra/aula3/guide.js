@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 03 &middot; Block 1 (Build) &middot; Reading into Speaking &middot; receptive level B1, productive level B1 &middot; online, 60 minutes &middot; first lesson of the first consultivo cycle (lessons 3&ndash;22), and lesson 3 of her course. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To read the same executive argument in two versions &mdash; one signposted, one not &mdash; and re-present it in three minutes, signalling every move out loud.</strong><ul>'+
         '<li>To hear a discourse marker as a move, not as filler.</li>'+
         '<li>To tell a signal from a fact and from an opinion.</li>'+

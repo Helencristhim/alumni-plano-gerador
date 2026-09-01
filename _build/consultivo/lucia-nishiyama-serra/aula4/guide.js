@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 04 &middot; Block 1 (Build) &middot; Listening into Interaction &middot; receptive level B1, productive level B1 &middot; online, 60 minutes &middot; second lesson of the first consultivo cycle. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To hear three questions asked after a presentation &mdash; one asking for a fact, one vague, one hostile &mdash; and answer each one live, checking before answering.</strong><ul>'+
         '<li>To tell what a question wants from what it appears to want.</li>'+
         '<li>To buy four seconds without sounding hesitant.</li>'+

@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 11 &middot; Block 1 (Build) &middot; Grammar for Communication &middot; receptive level A1, productive level A1 &middot; online, 60 minutes &middot; third lesson of the first consultivo cycle (lessons 9&ndash;28). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To ask six questions in a row to someone she has just met, with the question form holding &mdash; and to build each one from the answer she just heard.</strong><ul>'+
         '<li>To tell <em>do you</em> from <em>are you</em>, and to know when a question word goes in front.</li>'+
         '<li>To make a question sound like a question &mdash; word order first, intonation second.</li>'+

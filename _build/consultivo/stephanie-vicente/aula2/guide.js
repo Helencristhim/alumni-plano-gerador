@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 02 &middot; Block 1 (Build) &middot; Listening into Interaction &middot; receptive level B1, productive level B1 &middot; online, 60 minutes &middot; second lesson of the first cycle. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To follow a three-way call about teaching material and come into it to check one point.</strong><ul>'+
         '<li>To keep track of who is arguing for what, without a transcript.</li>'+
         '<li>To tell a position from a proposal, and both from a question.</li>'+

@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 02 &middot; Block 1 (Build) &middot; Listening into Interaction &middot; receptive level B1, productive level A2+ &middot; online, 45 minutes &middot; second lesson of the first consultivo cycle (lessons 1&ndash;20). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To hear ninety seconds of two buyers talking to each other and, at the point where the thread breaks, to interrupt and ask &mdash; instead of waiting for the end.</strong><ul>'+
         '<li>To catch a number said in passing, and to ask for it again when it is missed.</li>'+
         '<li>To hear a condition that was never announced as a condition.</li>'+

@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 03 &middot; Block 1 (Build) &middot; Grammar for Communication &middot; receptive level B1, productive level A2+ &middot; online, 45 minutes &middot; third lesson of the first consultivo cycle (lessons 1&ndash;20). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To describe who does what on both sides of the table &mdash; his team and the buyer&rsquo;s &mdash; in ninety seconds, with third-person agreement holding while the attention is on the content.</strong><ul>'+
         '<li>To hear the missing <em>-s</em> in his own sentence, without being told which sentence.</li>'+
         '<li>To recover the form fast, under a clock, twelve times in a row.</li>'+

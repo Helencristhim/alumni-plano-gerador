@@ -291,6 +291,16 @@ def monta_documento(corpo, lang="pt-BR", view="professor"):
 # casar exatamente uma vez: se o artefato mudar embaixo, a extracao PARA e diz qual correcao
 # perdeu o pe -- em vez de aplicar no lugar errado ou sumir em silencio.
 CORRECOES = [
+ ("guia-sem-lesson-identity",
+  """  h+=tgLinha('Lesson identity',G.identity);
+  h+=tgLinha('Goals',G.goals);""",
+  """  /* `Lesson identity` saiu na revisao de 31/08/2026. A linha abria o guia com bloco,
+     faixas de CEFR, duracao, posicao no ciclo e o "assessment model in force" -- metadado de
+     PRODUCAO, escrito para quem monta o material, no alto da pagina que a professora abre
+     para dar a aula. O que ela precisa da aula esta nos campos abaixo, e o resto do
+     cabecalho continua. */
+  h+=tgLinha('Goals',G.goals);"""),
+
  ("answer-key-sem-no-in-class",
   """      if(nota.duvida)h+=akLinha('Pode gerar dúvida',nota.duvida);
       if(nota.inclass)h+=akLinha('No in-class',nota.inclass);""",

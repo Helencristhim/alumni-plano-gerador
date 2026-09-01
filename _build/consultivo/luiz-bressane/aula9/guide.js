@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 09 &middot; Block 1 (Build) &middot; Reading into Speaking &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; first lesson of the first consultivo cycle (lessons 9&ndash;28), and lesson 9 of his course. Assessment model in force: <strong>continuous teacher-led assessment</strong>.',
   goals:'<strong>To read two accounts of the same incident against each other and report where they stop agreeing, saying which account each claim comes from.</strong><ul>'+
         '<li>To read each text for what it is before comparing them.</li>'+
         '<li>To separate what a text states from what the reader concluded.</li>'+
@@ -17,7 +16,7 @@
        'And the item that decides the lesson is &ldquo;She was frightened by the group&rdquo;, which is in neither.',
   language:'Attribution and divergence: <em>According to&hellip;</em> &middot; <em>The report states&hellip;</em> &middot; <em>She claims that&hellip;</em> &middot; <em>Both of them&hellip; / Neither of them mentions&hellip;</em> &middot; <em>As far as I can tell&hellip;</em> &middot; <em>consistent with</em> &middot; <em>to leave something out</em>.',
   transcript:'No recording in this lesson. The two documents are read, not heard. Listening enters in lesson 10.',
-  difficulties:'<strong>He will want to compare immediately.</strong> That is his professional reflex and it is a strength, but comparing before understanding each piece produces a list of differences without the judgement of which ones matter. Hold him at stage 3.<br><br>'+
+  difficulties:'<strong>He will want to compare immediately.</strong> That is his professional reflex and it is a strength, but comparing before understanding each piece produces a list of differences without the judgment of which ones matter. Hold him at stage 3.<br><br>'+
     '<strong>He may list the hour as a divergence.</strong> It is the most common error with these two texts, and the pre-class already charged it. If it happens, do not correct in the middle of the briefing &mdash; note it and return at stage 8.<br><br>'+
     '<strong>He may explain a legal concept in Portuguese.</strong> Agree with the content, then ask for it in English. Do not stop the idea to fix the language.',
   scaffolding:'The texts stay on screen through stages 3 to 6. <strong>Close them before stage 7</strong> &mdash; with the texts in front of him he reads instead of reporting, and reading aloud is not the operation this lesson measures. The phrase list of stage 6 stays visible during the briefing; it is support for the form, not for the content.',

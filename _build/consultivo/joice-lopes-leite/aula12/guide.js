@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 12 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level A1, productive level A1 &middot; online, 60 minutes &middot; fourth and last lesson of block 1, and the lesson that <strong>closes the block</strong> (lessons 9&ndash;28). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To come into an international online meeting: say who she is in one minute, ask two questions, and answer one she did not expect.</strong><ul>'+
         '<li>To choose who to ask what, from a room of four.</li>'+
         '<li>To ask without being invited to speak.</li>'+

@@ -1,7 +1,6 @@
 {
-  identity:'Lesson 02 &middot; Block 1 (Build) &middot; Listening into Interaction &middot; receptive level A1, productive level A1 &middot; online, 60 minutes &middot; second lesson of the cycle. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To hear three short desk questions, answer each with a sentence, and ask for a repeat when she does not understand.</strong><ul>'+
-        '<li>To recognise which of three questions was asked.</li>'+
+        '<li>To recognize which of three questions was asked.</li>'+
         '<li>To answer with a sentence instead of a gesture.</li>'+
         '<li>To ask for something to be said again, and more slowly.</li>'+
         '<li>To say how many nights, and to say yes and no politely.</li></ul>',

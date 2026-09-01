@@ -91,7 +91,16 @@ def registro_da_aula(h, n):
     return None
 
 
+RX_IDENTITY = re.compile(r"^\s*identity:'(?:[^'\\\\]|\\\\.)*',\n", re.M)
+
+
 def guide_da_aula(h, n):
+    """O guia da aula, SEM `identity`.
+
+    O campo saiu do guia na revisao de 31/08/2026 e o shell nao o imprime mais.
+    Extrai-lo do artefato o traria de volta como texto declarado que nao chega a
+    tela nenhuma -- e o round-trip, que monta o artefato a partir daqui, passaria a
+    escrever de novo o que a revisao mandou tirar."""
     m = re.search(r"var GUIDE=\{", h)
     if not m:
         return None
@@ -107,7 +116,7 @@ def guide_da_aula(h, n):
         elif h[k] == "}":
             prof -= 1
             if prof == 0:
-                return h[i:k + 1]
+                return RX_IDENTITY.sub("", h[i:k + 1], count=1)
         k += 1
     return None
 

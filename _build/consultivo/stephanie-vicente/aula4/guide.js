@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 04 &middot; Block 1 (Build) &middot; Personalized Real-World English (ESP) &middot; receptive level B1, productive level B1 &middot; online, 60 minutes &middot; fourth and last lesson of block 1. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson feeds the lesson that closes the block; it does not create, prepare or presuppose a test.',
   goals:'<strong>To give observation feedback to a teacher from another country, in a way he can disagree with &mdash; and to hold it when he does.</strong><ul>'+
         '<li>To open with what was seen, before any evaluation of it.</li>'+
         '<li>To make a recommendation that leaves room for an answer.</li>'+
@@ -7,7 +6,7 @@
         '<li>To ask what he was trying to do, and to use the answer.</li>'+
         '<li>To close with one thing he can act on this week.</li></ul>',
   product:'The feedback conversation, twice. In round one the teacher accepts and asks for detail. In round two he disagrees head on &mdash; and he is partly right, which is the point. She holds the recommendation without hardening it and without dropping it.',
-  criteria:'<ol><li>Opens with an observation, not with a judgement.</li>'+
+  criteria:'<ol><li>Opens with an observation, not with a judgment.</li>'+
            '<li>Makes at least one recommendation in a form he could refuse.</li>'+
            '<li>Answers the disagreement by using what he says, not by repeating herself.</li>'+
            '<li>Ends with something concrete, agreed or explicitly left open.</li></ol>'+

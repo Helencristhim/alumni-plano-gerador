@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 12 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; fourth and last lesson of the block, and <strong>the lesson that closes the block lesson</strong>. Assessment model in force: <strong>continuous teacher-led assessment</strong>. It feeds the lesson that closes the block, which reads the four lessons together.',
   goals:'<strong>To hold a position for three minutes in front of someone who does not share your frame, and absorb one objection of substance without starting again.</strong><ul>'+
         '<li>To explain only what changes the meaning of the argument.</li>'+
         '<li>To chain consequences instead of listing facts.</li>'+
@@ -11,7 +10,7 @@
     '<li>Answers the objection without going back to the beginning.</li>'+
     '<li>Uses the hypothetical from lesson 11 <strong>inside</strong> the argument, not as an exercise.</li>'+
     '<li>In round two, cuts the explanation rather than the argument.</li></ul>',
-  prep:'One voice: <strong>Claire</strong>, a defence lawyer from another jurisdiction. Her three interruptions are the audio at stage 2 &mdash; two are her catching up, and the third is the objection the whole lesson prepares.<br><br>'+
+  prep:'One voice: <strong>Claire</strong>, a defense lawyer from another jurisdiction. Her three interruptions are the audio at stage 2 &mdash; two are her catching up, and the third is the objection the whole lesson prepares.<br><br>'+
        '<strong>The objection is correct</strong>, which is why denying it costs more than granting it: if the delay explains the inconsistencies, it explains them for both sides. What answers it is the asymmetry she does not have yet &mdash; who carried the burden on the night.<br><br>'+
        'The expensive mistake is <strong>going back to the beginning</strong>. It feels like care and it is a restart.',
   language:'Explaining a system and holding it: <em>In our system&hellip;, which means that&hellip;</em> &middot; <em>We are assigned to the case</em> &middot; <em>the burden of proof</em> &middot; <em>That is fair &mdash; it does cut both ways. The difference is&hellip;</em> &middot; <em>Where I was going with that is&hellip;</em>',
