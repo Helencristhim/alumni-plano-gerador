@@ -590,11 +590,48 @@ def monta(cfg, base_frag):
     html = cabeca + js
 
     # ---- regioes de conteudo
-    for ident, arq in (("tab-planning", "perfil.html"), ("tab-syllabus", "syllabus.html")):
-        caminho = os.path.join(base_frag, arq)
-        if os.path.exists(caminho):
-            html = troca_bloco_por_id(html, ident,
-                                      open(caminho, encoding="utf-8").read().strip())
+    # A ABA PLANNING TEM DUAS METADES, E A DO ALUNO NAO PODE FALTAR.
+    #
+    # No artefato, `tab-planning` guarda `data-view="professor"` (o perfil, que e leitura
+    # docente) E `data-view="aluno"` ("Your planning": as aulas do bloco, em ingles, dirigidas
+    # a quem vai fazer). O material declarava so a primeira e o builder trocava a REGIAO
+    # INTEIRA -- entao na URL do aluno a primeira aba que ele abre nascia VAZIA, com o botao
+    # funcionando e nada embaixo. Estava assim nos seis materiais (visto em 01/09/2026).
+    #
+    # Agora as duas metades sao declaradas, e a do aluno e obrigatoria: sem ela o material nao
+    # e escrito. Aba vazia nao da erro em lugar nenhum -- so o aluno ve.
+    caminho = os.path.join(base_frag, "perfil.html")
+    if os.path.exists(caminho):
+        do_professor = open(caminho, encoding="utf-8").read().strip()
+        do_aluno = os.path.join(base_frag, "planning-aluno.html")
+        if not os.path.exists(do_aluno):
+            erros.append("falta `planning-aluno.html`: a aba Planning tem duas metades, e a "
+                         "do aluno (`data-view=\"aluno\"`) e o que ele ve ao abrir o "
+                         "material. Sem ela a primeira aba dele nasce vazia.")
+        else:
+            # A metade do aluno entra DENTRO do `tab-content`, e nao depois dele: o
+            # `perfil.html` traz a regiao inteira (com o `<div id="tab-planning">`), entao
+            # concatenar joga o bloco do aluno para FORA da aba. Solto ali ele aparecia no
+            # meio da pagina, e a aba continuava vazia -- que foi o que a revisao viu.
+            miolo = open(do_aluno, encoding="utf-8").read().strip()
+            regiao = do_professor
+            if "<!--PLANNING-ALUNO-->" in regiao:
+                regiao = regiao.replace("<!--PLANNING-ALUNO-->", miolo, 1)
+            elif regiao.rstrip().endswith("</div>"):
+                # sem marcador, entra antes do fechamento da aba -- que e o certo quando o
+                # perfil nao tem nada depois dele
+                corpo = regiao.rstrip()[:-len("</div>")].rstrip()
+                regiao = corpo + "\n" + miolo + "\n</div>"
+            else:
+                erros.append("perfil.html nao fecha a regiao `tab-planning` e nao traz "
+                             "`<!--PLANNING-ALUNO-->`: nao ha onde encaixar a metade do "
+                             "aluno.")
+            html = troca_bloco_por_id(html, "tab-planning", regiao)
+
+    caminho = os.path.join(base_frag, "syllabus.html")
+    if os.path.exists(caminho):
+        html = troca_bloco_por_id(html, "tab-syllabus",
+                                  open(caminho, encoding="utf-8").read().strip())
     rotulos, pre, post, fb = {}, [], [], []
     for i, n in enumerate(aulas):
         pasta = os.path.join(base_frag, f"aula{n}")

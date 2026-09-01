@@ -261,8 +261,27 @@ def main():
         resumo[n]["telas"] = len(re.findall(r'data-lesson="' + str(n) + r'"', pecas["slides.html"]))
 
     # as regioes que NAO sao por aula, mas sao do aluno: perfil e syllabus
+    # A ABA PLANNING SAI EM DUAS METADES.
+    #
+    # Ela guarda `data-view="professor"` (o perfil, leitura docente) e `data-view="aluno"`
+    # ("Your planning", que e o que o aluno le ao abrir o material). Extraidas juntas, a
+    # segunda ficava dentro de `perfil.html` e o builder a tratava como conteudo do
+    # professor -- e o derivador do aluno, que apaga o bloco docente, levava as duas.
+    planning = bloco_por_id(h, hm, "tab-planning")
+    corte = re.search(r'<div data-view="aluno">', planning)
+    if corte:
+        fim = fecha_tag(mascara_script_style(planning), corte.start())
+        do_aluno = planning[corte.start():fim]
+        # O MARCADOR guarda a POSICAO. A barra "ao topo" fica depois do bloco do aluno no
+        # artefato; sem marcar o ponto, o builder so saberia encaixar antes do ultimo
+        # `</div>` -- e a barra subiria, trocando a ordem da aba.
+        do_prof = (planning[:corte.start()] + "<!--PLANNING-ALUNO-->" +
+                   planning[fim:])
+    else:
+        do_aluno, do_prof = "", planning
     comuns = {
-        "perfil.html": bloco_por_id(h, hm, "tab-planning"),
+        "perfil.html": do_prof,
+        "planning-aluno.html": do_aluno,
         "syllabus.html": bloco_por_id(h, hm, "tab-syllabus"),
     }
     for arq, conteudo in comuns.items():
