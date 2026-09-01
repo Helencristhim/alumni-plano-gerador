@@ -50,6 +50,7 @@ _spec.loader.exec_module(extrai_shell)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import audio_surface  # noqa: E402  a MESMA lista que o gerador usa
+import voz  # noqa: E402  a MESMA lista que o GATE 51 usa
 import render  # noqa: E402  o builder EMITE o exercicio -- ver o cabecalho de render.py
 
 CAMPOS_GUIA = ["identity", "goals", "product", "criteria", "prep", "language", "transcript",
@@ -858,6 +859,19 @@ def monta(cfg, base_frag):
     # material E. Feito depois, `monta()` devolvia um documento e o disco recebia outro --
     # e o GATE 49, que compara os dois, acusava 39 bytes de diferenca sem que houvesse
     # defeito nenhum. Passo que muda o conteudo pertence a montagem.
+    # ---- A VOZ, ANTES DE ESCREVER
+    #
+    # Ate 01/09/2026 isto era so um gate: o material nascia com o vocabulario de producao
+    # dentro, ia para o disco, entrava no commit e subia no PR, e o CI pegava no fim. O Dan
+    # foi direto ao ponto: "preciso que nao aparecam". Entao a mesma lista que o GATE 51 le
+    # passa a recusar a GERACAO -- o defeito nao chega a existir.
+    #
+    # A lista mora em voz.py, uma so, pelo mesmo motivo de audio_surface.py: duas copias
+    # divergem na primeira edicao, e a divergencia aparece como material que passa num lado
+    # e falha no outro.
+    erros += voz.confere(html, slug=cfg.get("slug"),
+                         tratamento=(cfg.get("professor") or {}).get("tratamento", ""))
+
     if cfg.get("molde"):
         marca = '<meta name="alumni-molde" content="1">'
         if marca not in html:
