@@ -43,6 +43,7 @@ USO:
     python3 scripts/consultivo/check_molde_reconstroi.py --selftest
 """
 import importlib.util
+import glob
 import io
 import json
 import os
@@ -79,8 +80,13 @@ def confere(config=MOLDE):
 
     aluno, _ = build.extrai_shell.deriva_aluno(prof)
     slug = cfg["slug"]
-    nome = (f"{slug}-ciclo{cfg['ciclo']['numero']}"
-            if cfg.get("fase") == "piloto" else slug)
+    # O NOME VEM DO CONFIG, pelo mesmo caminho do builder. Ter a regra escrita duas vezes
+    # e o que fazia este gate conferir um arquivo e o builder escrever OUTRO: a Lucia foi
+    # publicada como `-c1`, antes de o sufixo virar `-cicloN`, e um rebuild criava o
+    # segundo arquivo deixando o primeiro no ar, desatualizado, que e o link que a
+    # professora tem.
+    nome = cfg.get("arquivo") or (f"{slug}-ciclo{cfg['ciclo']['numero']}"
+                                  if cfg.get("fase") == "piloto" else slug)
     ok = True
     for papel, gerado in (("professor", prof), ("aluno", aluno)):
         caminho = os.path.join(RAIZ, "public", papel, f"{nome}.html")
@@ -132,18 +138,38 @@ def selftest():
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def configs():
+    """Todo material da anatomia, com o molde primeiro.
+
+    O gate nasceu medindo so o molde, porque a pergunta era "a correcao chega ao molde?".
+    Ela vale para TODOS: um material de aluno que nao reconstroi tambem esta fora do
+    alcance de qualquer correcao futura, e ninguem descobre ate tentar rebuildar. Medido
+    em 01/09/2026: rebuildar material publicado antes desta data expos DOIS defeitos que
+    so aparecem assim — um fragmento que o builder recusa (a barra `ao-topo` da Lucia) e
+    um nome de arquivo divergente (o `-c1` dela)."""
+    todos = sorted(glob.glob(os.path.join(RAIZ, "_build", "consultivo", "*", "config.json")))
+    return [MOLDE] + [c for c in todos if c != MOLDE]
+
+
 def main():
     if "--selftest" in sys.argv:
         return selftest()
-    print("=== GATE 50 — o molde reconstroi dos proprios fragmentos ===")
-    ok, msgs = confere()
-    for m in msgs:
-        print(("  " + VERDE + "ok" + ZERO + "    ") if ok else ("  " + VERMELHO + "FAIL" +
-                                                                ZERO + "  "), m)
-    if ok:
-        print("\nGATE 50 OK — o molde reconstroi, e o publicado e o que o builder devolve.")
+    print("=== GATE 50 — todo material reconstroi dos proprios fragmentos ===")
+    ok_geral = True
+    for cfg_path in configs():
+        rotulo = os.path.basename(os.path.dirname(cfg_path))
+        if cfg_path == MOLDE:
+            rotulo += " (molde)"
+        ok, msgs = confere(cfg_path)
+        ok_geral = ok_geral and ok
+        for m in msgs:
+            print(("  " + VERDE + "ok" + ZERO + "    ") if ok else
+                  ("  " + VERMELHO + "FAIL" + ZERO + "  "), f"{rotulo} · {m}")
+    if ok_geral:
+        print("\nGATE 50 OK — todo material da anatomia reconstroi, e o publicado e o que o "
+              "builder devolve.")
         return 0
-    print(f"\n{VERMELHO}GATE 50 — o molde nao reproduz.{ZERO} Enquanto isto durar, correcao "
+    print(f"\n{VERMELHO}GATE 50 — ha material que nao reproduz.{ZERO} Enquanto isto durar, correcao "
           f"de plataforma NAO chega ao molde, e a proxima aula nasce com o defeito que ja "
           f"foi consertado no aluno.")
     return 1

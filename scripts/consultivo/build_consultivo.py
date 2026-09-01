@@ -752,6 +752,33 @@ def monta(cfg, base_frag):
     # a profissao do Marcos, no cabecalho dela. Isto e o "residuo de outro perfil" que o
     # Doc 04 §12.1 proibe, e quem o encontrou foi o catalogo de modelos, que le o cabecalho
     # para descrever a persona: ele descreveu a Stephanie com o perfil do Marcos.
+    # O NOME E O CICLO TAMBEM SAO ENTREGUES PINTADOS.
+    #
+    # O comentario do shell diz que "o texto aqui e so o estado inicial: quem pinta e
+    # hubPaint()". E verdade, e nao basta: ate o boot rodar -- e se ele nao rodar -- o que
+    # esta na tela e o `<h1>` com "Stephanie Vicente" e o badge "Ciclo 2 · 20 aulas · B1".
+    # Medido em 01/09/2026 nos CINCO materiais de aluno, nos dois lados: todo material do
+    # consultivo era entregue com o nome de outra pessoa e o nivel errado no cabecalho,
+    # esperando o JS consertar.
+    #
+    # E o mesmo raciocinio que ja levou o mapa do ciclo a ser esvaziado dez linhas abaixo:
+    # o que se ENTREGA e o que a tela mostra no primeiro instante.
+    al = cfg["aluno"]
+    nome_cheio = (al["nome"] + " " + al.get("sobrenome", "")).strip()
+    c_ = cfg["ciclo"]
+    html = re.sub(r'(<h1 data-lf="aluno-nome">).*?(</h1>)',
+                  lambda m: m.group(1) + nome_cheio + m.group(2), html, count=1, flags=re.S)
+    html = re.sub(r'(<span class="passport-badge"(?: data-view="professor")? '
+                  r'data-lf="ciclo">).*?(</span>)',
+                  lambda m: (m.group(1) + "Ciclo %d · %d aulas · %s"
+                             % (c_["numero"], c_["aulas"], c_["nivel"]) + m.group(2)),
+                  html, count=1, flags=re.S)
+    html = re.sub(r'(<span class="passport-badge" data-view="aluno" data-lf="ciclo-aluno">)'
+                  r'.*?(</span>)',
+                  lambda m: (m.group(1) + "Cycle %d · %d lessons" % (c_["numero"], c_["aulas"])
+                             + m.group(2)),
+                  html, count=1, flags=re.S)
+
     cab = cfg.get("header") or {}
     if cab.get("subtitulo"):
         html = re.sub(r'<p class="subtitle">.*?</p>',
