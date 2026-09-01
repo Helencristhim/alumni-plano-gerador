@@ -12,7 +12,7 @@
     '<li>Asks one question to the speaker, not to the teacher.</li>'+
     '<li>Uses the answer in the sentence that follows.</li></ul>',
   prep:'Two thirty-second introductions: Marta, a teacher from Chile, and Paulo, a coordinator from Portugal. Each carries <strong>four pieces of information</strong> &mdash; name, city and country, job, and what they are doing this year. That is what she has to catch, not the whole text.<br><br>'+
-       '<strong>She has never asked a question in English</strong> in any of the seven recorded lessons. That is the axis of this block and hypothesis H1, and this is the first lesson that measures it.<br><br>'+
+       '<strong>She has never asked a question in English</strong> in any of the seven recorded lessons. That is the central priority of this block, and this is the first lesson where it can be observed.<br><br>'+
        'Thirty seconds per audio, and never longer. Fatigue is declared (ADHD) and the teacher has already recorded difficulty with longer listening.',
   language:'Repair and question: <em>Sorry, can you repeat that?</em> &middot; <em>How do you spell that?</em> &middot; <em>Where are you from?</em> &middot; <em>What do you do?</em> &middot; <em>Can you say that again, please?</em>',
   transcript:'The transcript exists and stays closed until stage 5. Opening it earlier turns a listening lesson into a reading lesson &mdash; and reading is already her strongest skill.',
@@ -25,9 +25,9 @@
   feedback:'Two points at stage 8, and then the replay a little faster, with one repair allowed.<br><br>'+
     '<strong>Count the questions out loud with her.</strong> If she asked one, that is the first one on record in seven lessons of teaching &mdash; and she should hear it said as a result, because it is one.',
   evidence:'<ul>'+
-    '<li><strong>Does she ask?</strong> First measure of H1 &mdash; the whole reason this block exists.</li>'+
+    '<li><strong>Does she ask a question at all?</strong> The first record of it in this cycle.</li>'+
     '<li>First isolated measure of listening in the cycle.</li>'+
-    '<li>What she understands <em>without</em> the transcript against what she understands with it (H2).</li>'+
+    '<li>What she understands <em>without</em> the transcript against what she understands with it.</li>'+
     '<li>Whether the repair names the missing piece.</li>'+
     '<li>Whether she uses the answer she receives, or the exchange stops there.</li></ul>',
   prepost:'The pre-class is six short activities on the transcript of these same two introductions, with the audio available. The post-class carries the same two at full speed with no transcript, and two short subtitled videos from her own field.',
