@@ -25,11 +25,11 @@
   feedback:'Two points at stage 8, straight and short. Then the retask: same eight roles, forty-five seconds, focus moved to what each one decides.<br><br>'+
     '<strong>Give him the two numbers.</strong> The drill rate and the free-production rate, out loud. The gap between them is the thing he has been asking someone to show him for thirty years, and it is the first time it exists as a measurement.',
   evidence:'<ul>'+
-    '<li>Error rate in the drill against error rate in free production &mdash; the first hard evidence for H2.</li>'+
+    '<li>Error rate in the drill against error rate in free production &mdash; the clearest record this lesson produces.</li>'+
     '<li>Whether he self-corrects in flight, or stops the sentence to repair.</li>'+
     '<li>Whether agreement survives sentence length.</li>'+
     '<li>Whether Portuguese syntax appears, and where &mdash; for block 2, not for today.</li>'+
     '<li>Comparison against the free production of lesson 1, two days earlier, with no form work in between.</li></ul>',
-  prepost:'The pre-class is six short activities on the same two teams, and the last one writes four of the eight sentences. <strong>Check whether he did it</strong> &mdash; H3 is decided at the checkpoint in lesson 4. The post-class has one optional recording about his own team, and a short reference page on the form for when it slips.',
+  prepost:'The pre-class is six short activities on the same two teams, and the last one writes four of the eight sentences. <strong>Check whether he did it</strong> &mdash; lesson 4 settles whether the pre-class is happening. The post-class has one optional recording about his own team, and a short reference page on the form for when it slips.',
   key:'The mistake this lesson exists to catch is not the missing <em>-s</em>. It is what the missing <em>-s</em> does in front of a buyer who is deciding whether to hand him a nine-figure conversation: nothing on its own, and a great deal when it happens in every second sentence. He knows the rule. Today it has to survive not thinking about it.'
 }

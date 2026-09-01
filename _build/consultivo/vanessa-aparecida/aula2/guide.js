@@ -25,7 +25,7 @@
   feedback:'One point at stage 8. Then the replay a little faster, with one repair allowed.<br><br>'+
     '<strong>Count the repairs with her.</strong> Asking for a repeat is the thing that turns a trip from surviving into speaking, and she has never done it in English.',
   evidence:'<ul>'+
-    '<li><strong>Does she ask, or does she guess?</strong> Criterion 2 of the cycle, measured for the first time.</li>'+
+    '<li><strong>Does she ask, or does she guess?</strong> Recorded here for the first time.</li>'+
     '<li>First isolated measure of listening.</li>'+
     '<li>Whether the answer comes out as a sentence or a single word.</li>'+
     '<li>Whether the four sentences from lesson 1 return unprompted &mdash; the first sign of retention.</li></ul>',
