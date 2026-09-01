@@ -1149,14 +1149,14 @@ def _slide_de_tarefa(kind, perguntas, phase, ancora=None):
     de distância). Sem onclick: não há o que revelar aqui."""
     if kind == 'reading':
         label, head, acc = 'Before you read', 'Read', 'for this'
-        t = ('<strong>Antes do texto (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA '
-             'ANTES de mostrar o texto. É isto que ela vai procurar enquanto lê — sem a tarefa antes, '
+        t = ('<strong>Antes do texto (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA '
+             'ANTES de mostrar o texto. É isto que se procura durante a leitura — sem a tarefa antes, '
              'compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide '
              'de checagem, depois.')
     else:
         label, head, acc = 'Before you listen', 'Listen', 'for this'
-        t = ('<strong>Antes do diálogo (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA COM A ALUNA '
-             'ANTES de abrir o diálogo. É isto que ela vai procurar enquanto ouve — sem a tarefa antes, '
+        t = ('<strong>Antes do diálogo (1 min):</strong> LEIA ESTAS PERGUNTAS EM VOZ ALTA '
+             'ANTES de abrir o diálogo. É isto que se procura durante a escuta — sem a tarefa antes, '
              'compreensão vira teste de MEMÓRIA. NÃO revele as respostas aqui: elas saem no slide '
              'de checagem, depois.')
     qs = '\n      '.join(
@@ -1212,14 +1212,14 @@ def _predict_html(kind, ancora=None):
             f'{alvo} is going to be about?</div></div>')
 
 
-_PREDICT_T = ('<strong>Predição (2 min):</strong> leia a frase da tela com a aluna e faça a '
-              'pergunta. Aceite QUALQUER palpite, não confirme nem corrija — ela serve para '
-              'ativar o que a aluna já sabe, não para acertar. Depois toque o áudio UMA vez, '
-              'inteiro e sem pausa: a única tarefa aqui é ver se o palpite dela bateu. As '
+_PREDICT_T = ('<strong>Predição (2 min):</strong> leia a frase da tela em voz alta e faça a '
+              'pergunta. Aceite QUALQUER palpite, não confirme nem corrija — a predição serve para '
+              'ativar o que já se sabe, não para acertar. Depois toque o áudio UMA vez, '
+              'inteiro e sem pausa: a única tarefa aqui é ver se o palpite bateu. As '
               'perguntas de compreensão só aparecem no PRÓXIMO slide.')
 
-_SEGUNDA_ESCUTA_T = (' Esta é a SEGUNDA escuta: leia as perguntas em voz alta COM a aluna '
-                     'ANTES de tocar de novo — agora ela ouve procurando as respostas, não '
+_SEGUNDA_ESCUTA_T = (' Esta é a SEGUNDA escuta: leia as perguntas em voz alta '
+                     'ANTES de tocar de novo — agora a escuta é para procurar as respostas, não '
                      'mais para descobrir o assunto.')
 
 
