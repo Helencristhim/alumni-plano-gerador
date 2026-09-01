@@ -31,7 +31,7 @@
     '<li>Whether he reformulates or translates (the pattern he named himself).</li>'+
     '<li>Third-person agreement rate in free production &mdash; the baseline for lesson 3.</li>'+
     '<li>What he cuts at forty-five seconds. It shows what he ranks as essential when the clock takes over.</li>'+
-    '<li>Whether the level he produces at matches the B1 on record (H2).</li></ul>',
-  prepost:'The pre-class is six short activities on this same email, and the last one writes the skeleton of the two minutes as a short paragraph. <strong>Check whether he did it</strong> &mdash; he said he has no time outside class at all, and whether the pre-class happens is hypothesis H3, decided at the checkpoint in lesson 4. If he did it, stage 7 runs faster and the margin goes to the retask. The post-class carries one short read on how buyers open a first approach, and two listening pieces from founders describing their own sale &mdash; his stated interest, not generic content.',
+    '<li>Whether the level he produces at matches the B1 on record.</li></ul>',
+  prepost:'The pre-class is six short activities on this same email, and the last one writes the skeleton of the two minutes as a short paragraph. <strong>Check whether he did it</strong> &mdash; he said he has no time outside class at all, and whether the pre-class happens at all is one of the things lesson 4 will settle. If he did it, stage 7 runs faster and the margin goes to the retask. The post-class carries one short read on how buyers open a first approach, and two listening pieces from founders describing their own sale &mdash; his stated interest, not generic content.',
   key:'The mistake this lesson exists to catch is not misunderstanding the email. He understands it. It is going quiet after understanding it &mdash; which is what a buyer reads as <em>he cannot follow us</em>. Saying it back is the cheapest, most repeatable move he has against that, and it costs nothing but the habit.'
 }

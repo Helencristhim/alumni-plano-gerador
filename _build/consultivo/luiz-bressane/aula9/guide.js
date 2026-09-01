@@ -24,8 +24,8 @@
   feedback:'Two points at stage 8, no more: one that worked and one where the form did not come out. Then the retask. Do not correct during the briefing &mdash; the turn is his, and interrupting for language is what turns a three-minute production into a dialogue.<br><br>'+
     '<strong>The turn is the point.</strong> The Zoom analysis of lesson 8 (19/08) recorded the teacher at 63% of speaking time against 37% for the student, and noted that 30&ndash;50% is what the level asks for. After you ask the question at stage 7, wait. His silence is work.',
   evidence:'<ul>'+
-    '<li><strong>Reading, isolated from speaking</strong> &mdash; the first measure of the cycle. The pedagogical state records that none exists.</li>'+
-    '<li>Whether source attribution survives when the text leaves the screen (criterion 2 of the cycle).</li>'+
+    '<li><strong>Reading, isolated from speaking</strong> &mdash; the first measure of the cycle. No earlier record exists.</li>'+
+    '<li>Whether source attribution survives when the text leaves the screen.</li>'+
     '<li>What he <em>cuts</em> in the ninety-second retask. If he cuts the source, it is not automatic yet.</li>'+
     '<li>Whether he names the agreement, or only the divergences.</li></ul>',
   prepost:'The pre-class is six short activities on the same two texts, and the last one writes the skeleton of the briefing as a paragraph. If he did it, stage 7 will be faster and you can spend the margin on the retask. The post-class carries two TED talks on why two honest witnesses diverge &mdash; the second, by a forensic expert, is this lesson done at full length by someone who does it for a living.',

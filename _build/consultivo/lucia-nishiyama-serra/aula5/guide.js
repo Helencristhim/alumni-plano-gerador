@@ -25,7 +25,7 @@
     '<li>Her stage-1 sentence, verbatim &mdash; it is the baseline for the whole cycle and there is no other record of her unprompted production.</li>'+
     '<li>Which of the three structures she produces without the frames.</li>'+
     '<li>Whether she concedes or hardens under two objections.</li>'+
-    '<li>Whether the level she produces at matches the B1 on record (H2).</li></ul>',
+    '<li>Whether the level she produces at matches the B1 on record.</li></ul>',
   prepost:'The pre-class ends by asking her to write six sentences about a decision she is actually carrying &mdash; those six are stage 6. If she did not do it, build them in the lesson; it costs three minutes and the alternative is practising on invented content. The post-class asks her to rewrite two sentences of her own English writing from this month, which is where the structure transfers.',
   key:'None of the rejected alternatives in this lesson is wrong English. They are all correct, and they all leave the new information in the middle, where the listener has stopped waiting for it. In writing that costs nothing. Out loud, in a room, it is the difference between being followed and being read back.'
 }

@@ -22,7 +22,7 @@
   feedback:'Two points at stage 8, then play the audience question once more and ask for his question again. <strong>The measure is whether the second version is shorter.</strong> If it is longer, the form has not landed; if it is shorter and still asks the same thing, it has.<br><br>'+
     'Do not correct during the role-play. After you answer sideways, be quiet &mdash; his silence is the work.',
   evidence:'<ul>'+
-    '<li><strong>Listening, isolated from speaking</strong> &mdash; the second measure of the cycle. The pedagogical state records the skill as indeterminate.</li>'+
+    '<li><strong>Listening, isolated from speaking</strong> &mdash; the second measure of the cycle. The skill has no earlier record.</li>'+
     '<li>Whether he asked to write first, and whether he insisted after the sideways answer.</li>'+
     '<li>Whether the second version of the question is shorter.</li>'+
     '<li><strong>Open point 2</strong>: whether the B1+ holds with a subject he did not choose.</li></ul>',

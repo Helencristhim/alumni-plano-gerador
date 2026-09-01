@@ -22,7 +22,7 @@
     '<strong>Do not name any grammar today.</strong> She said herself that she does not know the verb <em>to be</em>. She will use it four times in this lesson without being told what it is called &mdash; and lesson 3 will name it afterwards.',
   scaffolding:'The booking stays on screen through stages 3 to 6 and <strong>closes before stage 7</strong>. The four frames stay visible during the speaking task.<br><br>'+
     'Support here is maximal, and it is on the form: the frame, the word when she is stuck, the model before every attempt. <strong>What is not supported is the decision</strong> &mdash; which four things to say is hers, from lesson one.<br><br>'+
-    '<strong>Portuguese is a complement, never the task</strong> (04 §4.2). It unlocks a word or confirms an instruction; it never carries the exercise.',
+    '<strong>Portuguese is a complement, never the task.</strong> It unlocks a word or confirms an instruction; it never carries the exercise.',
   feedback:'One point at stage 8, not two. Then the retask.<br><br>'+
     '<strong>Praise the whole sentence, not the correct word.</strong> The criterion of this cycle is the sentence, and that is what she needs to hear being valued.<br><br>'+
     'End by telling her what she did: she read a document in English and said four sentences without it. On the first day.',
@@ -32,6 +32,6 @@
     '<li>Whether she translates before speaking.</li>'+
     '<li>How she reacts to her own first mistake &mdash; it is the thing that stopped her last time.</li>'+
     '<li>First isolated measure of reading.</li></ul>',
-  prepost:'The pre-class is six short activities on this same booking, and none of them asks for anything the lesson has not given. <strong>That matters here</strong>: her hardest criticism of the previous course was that its pre-class asked things she had no way of knowing. Whether it works for a complete beginner is hypothesis H2. The post-class has one optional recording and two free resources at beginner level.',
+  prepost:'The pre-class is six short activities on this same booking, and none of them asks for anything the lesson has not given. <strong>That matters here</strong>: her hardest criticism of the previous course was that its pre-class asked things she had no way of knowing. Whether it works for a complete beginner is one of the things this block will show. The post-class has one optional recording and two free resources at beginner level.',
   key:'The mistake this lesson exists to prevent is not linguistic. It is the one that already happened to her once: being asked for something she has no way of having, and concluding that the problem is her. Everything today is inside the paper in her hand, and by the end of the hour she will have said four sentences in English out loud.'
 }

@@ -25,11 +25,11 @@
   feedback:'Two points at stage 8, no more, and straight &mdash; he asked for hard correction and reads cushioning as tolerance. Then replay the same extract at 1.25x with a single repair allowed: he chooses which one.<br><br>'+
     '<strong>Count the repairs out loud with him.</strong> He asked for evidence of progress; four repairs on a call he could not follow two weeks ago is evidence he can hold.',
   evidence:'<ul>'+
-    '<li><strong>Whether he interrupts or waits</strong> &mdash; the first measure of H1, and the reason this block exists.</li>'+
-    '<li>First isolated measure of listening in the cycle. The pedagogical state records that none exists.</li>'+
+    '<li><strong>Whether he interrupts or waits</strong> &mdash; the central priority of this block, recorded for the first time.</li>'+
+    '<li>First record of listening isolated from speaking in this cycle.</li>'+
     '<li>How many of the two figures he catches on the first pass, and how many on the second.</li>'+
     '<li>Whether the repair names what was missing or is generic.</li>'+
-    '<li>Whether he comes into the live call unprompted (criterion 1 of the cycle).</li></ul>',
-  prepost:'The pre-class is six short activities built on the transcript of this same call, with the audio available. <strong>Check whether he did it</strong> &mdash; whether the pre-class happens at all is hypothesis H3, decided at the checkpoint in lesson 4. The post-class carries the same call at full speed with no transcript, and two founder interviews where the interviewer repairs constantly and visibly.',
+    '<li>Whether he comes into the live call unprompted.</li></ul>',
+  prepost:'The pre-class is six short activities built on the transcript of this same call, with the audio available. <strong>Check whether he did it</strong> &mdash; whether the pre-class happens at all is one of the things lesson 4 will settle. The post-class carries the same call at full speed with no transcript, and two founder interviews where the interviewer repairs constantly and visibly.',
   key:'The mistake this lesson exists to catch is not missing the number. Everyone misses numbers in a second language. It is going silent after missing it &mdash; and then answering as if nothing was missed, which is how a buyer ends a call thinking he did not follow. One sentence, asked at the right second, is the entire difference.'
 }

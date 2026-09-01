@@ -1,5 +1,5 @@
 {
-  identity:'Lesson 12 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; fourth and last lesson of the block, and <strong>the checkpoint lesson</strong>. Assessment model in force: <strong>continuous teacher-led assessment</strong>. It feeds the checkpoint, which reads the four lessons together.',
+  identity:'Lesson 12 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1+, productive level B1+ &middot; online, 60 minutes &middot; fourth and last lesson of the block, and <strong>the lesson that closes the block lesson</strong>. Assessment model in force: <strong>continuous teacher-led assessment</strong>. It feeds the lesson that closes the block, which reads the four lessons together.',
   goals:'<strong>To hold a position for three minutes in front of someone who does not share your frame, and absorb one objection of substance without starting again.</strong><ul>'+
         '<li>To explain only what changes the meaning of the argument.</li>'+
         '<li>To chain consequences instead of listing facts.</li>'+
@@ -20,9 +20,9 @@
     '<strong>Explaining too much, too early.</strong> His register is thorough, and thoroughness is what eats three minutes. The test at stage 3 is the one to keep repeating: does the argument mean something different if she does not know this?<br><br>'+
     '<strong>Denying the objection.</strong> It is correct. Granting it in four words is cheaper than fighting it, and it buys the sentence that actually answers.',
   scaffolding:'Stage 1 has nothing at all. Stage 5 has the phrase list, and one written sentence &mdash; which he reads aloud once and then <strong>puts away</strong>. Round one has the phrase list only; round two has nothing. The support is removed in that order on purpose, and the last removal is where the block is measured.',
-  feedback:'<strong>Three points at stage 6, not two</strong>, because this feedback feeds the checkpoint: what she needed and did not get; what cost time and was not needed yet; and what happened at the objection &mdash; granted, denied, or restarted. Teach nothing new here.',
+  feedback:'<strong>Three points at stage 6, not two</strong>, because this feedback feeds the lesson that closes the block: what she needed and did not get; what cost time and was not needed yet; and what happened at the objection &mdash; granted, denied, or restarted. Teach nothing new here.',
   evidence:'<ul>'+
-    '<li><strong>The checkpoint of the block.</strong> Reads lessons 9&ndash;12 together and decides lessons 13&ndash;28.</li>'+
+    '<li><strong>The lesson that closes the block.</strong> Reads lessons 9&ndash;12 together and guides the planning of lessons 13&ndash;28.</li>'+
     '<li><strong>What he cuts in round two.</strong> Cutting the explanation means he read her; cutting the argument to keep the explanation means he did not. This is the heart of it.</li>'+
     '<li><strong>Open point 1</strong> &mdash; whether the hypothetical form appeared inside the argument, unprompted. Write down the exact sentence.</li>'+
     '<li><strong>Open point 2</strong> &mdash; whether the B1+ held with a subject and an interlocutor he did not choose.</li>'+

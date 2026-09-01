@@ -1,5 +1,5 @@
 {
-  identity:'Lesson 04 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1, productive level A2+ &middot; online, 45 minutes &middot; fourth and last lesson of block 1, and <strong>the checkpoint</strong> of the block (lessons 1&ndash;20). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
+  identity:'Lesson 04 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1, productive level A2+ &middot; online, 45 minutes &middot; fourth and last lesson of block 1, and the lesson that <strong>closes the block</strong> (lessons 1&ndash;20). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To present the company in three minutes to a buyer who has never heard of it, and to hold two questions he did not see coming.</strong><ul>'+
         '<li>To decide what is left out when three minutes is all there is.</li>'+
         '<li>To take a question that was not prepared for, without handing the turn back.</li>'+
@@ -11,7 +11,7 @@
     '<li>Answers both questions without handing the turn back to the teacher.</li>'+
     '<li>Uses at least one repair from lesson 2 when something is missed.</li>'+
     '<li>Third-person agreement from lesson 3 survives the improvisation.</li></ul>',
-  prep:'<strong>This lesson is the checkpoint.</strong> It reads the three previous ones together and decides H1, H2 and H3. Read the pedagogical state before you teach it.<br><br>'+
+  prep:'<strong>This lesson closes the block.</strong> It brings the three previous ones together and guides the planning of what comes next. Read the records of the block before you teach it.<br><br>'+
        'The two Q&amp;A questions are recorded and <strong>he has not seen them</strong>. The first &mdash; how many of the delivery team have delivered in English, not attended calls &mdash; is the one the call in lesson 2 announced. The second &mdash; whether he would still be running the company in three years under a minority position &mdash; is the one the lesson turns on: it has no technical answer, it is about intention, and nobody in his company could answer it for him.<br><br>'+
        '<strong>You are Diane, and you do not leave the role.</strong> Not to help, not to explain.',
   language:'Holding under question: <em>That is a fair question &mdash; the way we handle it is&hellip;</em> &middot; <em>Before I answer, can I check what you mean by&hellip;?</em> &middot; <em>Let me come back to your first point&hellip;</em> &middot; <em>We do not have that today. What we do have is&hellip;</em>',
@@ -25,12 +25,12 @@
   feedback:'Three points at stage 7, straight: one that worked, one that did not, and one measurement read out loud. Then round 2 &mdash; the opening only, sixty seconds, for someone who has already said they are in a hurry.<br><br>'+
     '<strong>Then close the block with him.</strong> Four lessons, four recordings, and a baseline that did not exist on Monday. He asked for exactly this and has never had it.',
   evidence:'<ul>'+
-    '<li><strong>H1 decided:</strong> does he repair, or does he answer over what he missed?</li>'+
-    '<li><strong>H2 decided:</strong> the level he produces under improvisation, against the B1 on record.</li>'+
-    '<li><strong>H3 decided:</strong> whether the four pre-class sets of the block were done at all.</li>'+
+    '<li><strong>Intervention:</strong> does he repair, or does he answer over what he missed?</li>'+
+    '<li><strong>Level:</strong> what he produces under improvisation, against the B1 on record.</li>'+
+    '<li><strong>Pre-class:</strong> whether the four sets of the block were done at all.</li>'+
     '<li>Whether agreement from lesson 3 survives when the attention is entirely on content.</li>'+
     '<li>What he cuts when three minutes becomes sixty seconds.</li>'+
     '<li>The full recording &mdash; the piece of evidence the next block is planned against.</li></ul>',
-  prepost:'The pre-class is six short activities on the buyer&rsquo;s brief, and the last one writes the three-minute skeleton. The post-class is the closing set of the block: one optional recording of the same pitch about his real company, and two founder interviews on the same conversation. <strong>Fill in the post-lesson record before you close</strong> &mdash; this one feeds the checkpoint, and the checkpoint plans lessons 5 to 8.',
+  prepost:'The pre-class is six short activities on the buyer&rsquo;s brief, and the last one writes the three-minute skeleton. The post-class is the closing set of the block: one optional recording of the same pitch about his real company, and two founder interviews on the same conversation. <strong>Fill in the post-lesson record before you close</strong> &mdash; this one closes the block, and it is what lessons 5 to 8 are planned against.',
   key:'The mistake this lesson exists to catch is the one that already cost him a nine-figure deal: going quiet when the question is not the one he prepared for. The buyer on the other side reads that silence as <em>he cannot follow us</em>. Three minutes and two questions is the smallest complete version of that meeting &mdash; and this time the silence has somewhere to go.'
 }

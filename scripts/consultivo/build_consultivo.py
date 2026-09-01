@@ -1083,7 +1083,17 @@ def main():
     if fase not in ("canonica", "piloto"):
         print(f"  RECUSADO: fase {fase!r} nao existe. Use 'piloto' ou 'canonica'.")
         return 1
-    nome = f"{slug}-ciclo{cfg['ciclo']['numero']}" if fase == "piloto" else slug
+    # `arquivo` fixa o nome quando o material JA ESTA PUBLICADO com outro.
+    #
+    # A Lucia foi publicada em 28/08/2026, antes de o sufixo virar `-cicloN`: o arquivo
+    # dela e `lucia-nishiyama-serra-c1.html`, e esse e o link que a professora tem. Sem
+    # este campo, rebuildar o material dela CRIA um segundo arquivo e deixa o primeiro no
+    # ar, desatualizado — foi exatamente o que aconteceu ao limpar a voz do material em
+    # 01/09/2026, e so nao ficou publicado porque o arquivo novo foi apagado a tempo.
+    #
+    # Renomear a URL de quem ja tem aula nela e o que o campo existe para evitar.
+    nome = cfg.get("arquivo") or (
+        f"{slug}-ciclo{cfg['ciclo']['numero']}" if fase == "piloto" else slug)
     p1 = os.path.join(RAIZ, "public", "professor", f"{nome}.html")
     p2 = os.path.join(RAIZ, "public", "aluno", f"{nome}.html")
     for caminho, conteudo in ((p1, prof), (p2, aluno)):
