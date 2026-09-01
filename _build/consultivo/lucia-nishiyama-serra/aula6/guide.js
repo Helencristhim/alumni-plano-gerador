@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 06 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1, productive level B1 &middot; online, 60 minutes &middot; fourth lesson of the first consultivo cycle and <strong>the lesson that closes the block of block 1</strong>. Assessment model in force: <strong>continuous teacher-led assessment</strong>. The exam format is used as a genre of short presentation; this lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To answer an opinion prompt in forty-five timed seconds, with a position, two reasons, one example, a concession and a close.</strong><ul>'+
         '<li>To take a position inside the first eight seconds, rather than the best position.</li>'+
         '<li>To announce the shape before delivering it.</li>'+

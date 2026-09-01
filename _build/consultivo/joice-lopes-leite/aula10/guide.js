@@ -1,8 +1,7 @@
 {
-  identity:'Lesson 10 &middot; Block 1 (Build) &middot; Listening into Interaction &middot; receptive level A1, productive level A1 &middot; online, 60 minutes &middot; second lesson of the first consultivo cycle (lessons 9&ndash;28). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To hear two people introduce themselves in an online meeting and react: ask for the part she missed, and ask them one question.</strong><ul>'+
         '<li>To catch four things &mdash; name, country, job, and what they do this year.</li>'+
-        '<li>To ask for a repeat without apologising twice.</li>'+
+        '<li>To ask for a repeat without apologizing twice.</li>'+
         '<li>To ask how a name is spelled.</li>'+
         '<li>To use the answer she gets in her next sentence.</li></ul>',
   product:'The recorded interaction: one request to repeat, and one question asked to the person who spoke &mdash; the first question of hers in English that exists on record.',

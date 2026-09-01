@@ -369,6 +369,56 @@ _RX_ACERVO = re.compile(
     r"|\bmade for\b", re.I)
 
 
+# ---------------------------------------------------------------------------
+# A NOTA DE TELA DO PROFESSOR
+#
+# Ela era prosa livre em portugues, escrita direto no atributo `data-teacher` de cada slide,
+# com os campos que cada aula inventava para si ("Objetivo / Conduza / Atencao / Siga
+# quando"). Duas consequencias:
+#
+#  - o professor nao sabia o que esperar: uma tela avisava o que observar, a seguinte nao,
+#    e nada dizia se a informacao faltava ou se aquela tela simplesmente nao precisava dela;
+#  - a revisao de 31/08/2026 nao pode avaliar a linguagem didatica das notas, porque o guia
+#    de uma escola de ingles estava escrito em portugues.
+#
+# Agora a nota e DECLARADA (`guia_telas.json`) e EMITIDA aqui, nos dez campos do guia, em
+# ingles. O autor da aula preenche campos; o formato nao depende de ele lembrar dele.
+CAMPOS_TELA = [
+    ("goal", "Goal"),
+    ("interaction", "Interaction"),
+    ("run", "Run it"),
+    ("expected", "Expected"),
+    ("support", "Conditional support"),
+    ("challenge", "Challenge"),
+    ("monitoring", "Monitoring"),
+    ("evidence", "Evidence to record"),
+    ("transition", "Transition"),
+]
+
+
+def nota_de_tela(dados, titulo):
+    """Os dez campos do guia, para o atributo `data-teacher` de uma tela.
+
+    Devolve HTML com aspas SIMPLES em volta de nada: o texto inteiro vai dentro de um
+    atributo delimitado por aspas duplas, entao aspa dupla no conteudo e escapada aqui e o
+    resto (apostrofo incluido) passa direto -- e a REGRA 7.1 continua valendo, porque isto
+    e atributo, nao string de JS."""
+    faltam = [k for k, _ in CAMPOS_TELA if not str(dados.get(k, "")).strip()]
+    if faltam:
+        raise SystemExit(f"guia da tela {titulo!r}: falta(m) {faltam}. O guia tem dez campos "
+                         f"e a tela que nao precisa de um ainda precisa dizer isso.")
+    cab = titulo + (f" ({dados['min']})" if dados.get("min") else "")
+    partes = [f"<strong>{esc(cab)}</strong>"]
+    for chave, rotulo in CAMPOS_TELA:
+        valor = dados[chave]
+        if isinstance(valor, list):
+            valor = "<br>".join("&bull; " + crua(x) for x in valor)
+        else:
+            valor = crua(valor)
+        partes.append(f"<strong>{rotulo}:</strong> {valor}")
+    return "<br><br>".join(partes)
+
+
 def r_recursos(b, ident):
     """O acervo do post-class: leitura, escuta, referencia. NAO e exercicio.
 

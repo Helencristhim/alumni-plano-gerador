@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 04 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level A1, productive level A1 &middot; online, 60 minutes &middot; fourth and last lesson of block 1, and the lesson that <strong>closes the block</strong>. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To check into a hotel from beginning to end: say who she is, confirm the dates, ask for one thing, and answer a question she did not expect.</strong><ul>'+
         '<li>To open and close the conversation herself.</li>'+
         '<li>To ask for something she chose to ask for.</li>'+

@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 01 &middot; Block 1 (Build) &middot; Reading into Speaking &middot; receptive level A1, productive level A1 &middot; online, 60 minutes &middot; <strong>the first English lesson of her adult life</strong>, and the first of a twenty-lesson cycle that is her whole contract. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To read a hotel booking and say out loud, in four sentences, her name, the city, the dates and what is included &mdash; with the paper off the screen.</strong><ul>'+
         '<li>To find four things in a short document without reading all of it.</li>'+
         '<li>To say a whole sentence rather than one word.</li>'+

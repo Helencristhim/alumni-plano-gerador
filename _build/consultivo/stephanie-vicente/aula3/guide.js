@@ -1,6 +1,5 @@
 {
-  identity:'Lesson 03 &middot; Block 1 (Build) &middot; Grammar for Communication &middot; receptive level B1, productive level B1 &middot; online, 60 minutes &middot; third lesson of the first cycle. Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
-  goals:'<strong>To report what happened in a class you observed, keeping the scene apart from the event and the description apart from the judgement.</strong><ul>'+
+  goals:'<strong>To report what happened in a class you observed, keeping the scene apart from the event and the description apart from the judgment.</strong><ul>'+
         '<li>To say what was already going on when something else happened.</li>'+
         '<li>To hold both past forms in the same sentence, under the load of narrating and evaluating at once.</li>'+
         '<li>To mark an evaluation as an evaluation, so the teacher can disagree with it.</li>'+

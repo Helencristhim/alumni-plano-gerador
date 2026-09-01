@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 01 &middot; Block 1 (Build) &middot; Reading into Speaking &middot; receptive level B1, productive level A2+ &middot; online, 45 minutes &middot; the first lesson of his course and of the first consultivo cycle (lessons 1&ndash;20). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To read the first email from a foreign buyer and say back, in two minutes, what they asked, when they need it, and what he answers &mdash; with the text off the screen.</strong><ul>'+
         '<li>To tell a request apart from a courtesy, and a deadline from a suggestion.</li>'+
         '<li>To say something back in his own words instead of translating it sentence by sentence.</li>'+

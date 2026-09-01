@@ -85,7 +85,7 @@ PRECLASS_ATIVIDADES = 6
 # falta mesmo e chamada pedagogica, nao medicao. Enquanto nao for decidido, o gate cobra o
 # que o artefato de fato promete -- cobrar um campo que nunca existiu reprovaria o proprio
 # molde e ensinaria a ignorar o gate.
-CAMPOS_GUIA = ["identity", "goals", "product", "criteria", "prep", "language", "transcript",
+CAMPOS_GUIA = ["goals", "product", "criteria", "prep", "language", "transcript",
                "difficulties", "scaffolding", "feedback", "evidence", "prepost", "key"]
 
 VERDE, VERMELHO, ZERA = "\033[32m", "\033[31m", "\033[0m"

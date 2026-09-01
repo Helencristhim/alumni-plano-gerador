@@ -1,5 +1,4 @@
 {
-  identity:'Lesson 04 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1, productive level A2+ &middot; online, 45 minutes &middot; fourth and last lesson of block 1, and the lesson that <strong>closes the block</strong> (lessons 1&ndash;20). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To present the company in three minutes to a buyer who has never heard of it, and to hold two questions he did not see coming.</strong><ul>'+
         '<li>To decide what is left out when three minutes is all there is.</li>'+
         '<li>To take a question that was not prepared for, without handing the turn back.</li>'+

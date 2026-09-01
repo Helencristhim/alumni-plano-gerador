@@ -53,7 +53,7 @@ import audio_surface  # noqa: E402  a MESMA lista que o gerador usa
 import voz  # noqa: E402  a MESMA lista que o GATE 51 usa
 import render  # noqa: E402  o builder EMITE o exercicio -- ver o cabecalho de render.py
 
-CAMPOS_GUIA = ["identity", "goals", "product", "criteria", "prep", "language", "transcript",
+CAMPOS_GUIA = ["goals", "product", "criteria", "prep", "language", "transcript",
                "difficulties", "scaffolding", "feedback", "evidence", "prepost", "key"]
 ETAPAS = 8
 # O PERCURSO E DO CONTRATO DO ALUNO, NAO DO MOLDE.
@@ -122,12 +122,21 @@ def troca_var(js, nome, valor):
 
 
 CRITERIOS_AVAL = [
-    ("fala", "Fala e interacao",
-     "Capacidade de manter e desenvolver a interacao oral com autonomia crescente."),
-    ("escuta", "Compreensao auditiva",
-     "Capacidade de compreender informacao oral e reagir de forma pertinente."),
-    ("precisao", "Precisao estrutural",
-     "Estabilidade de forma quando a atencao esta na mensagem."),
+    ("fala", "Fala e interação",
+     "Capacidade de manter e desenvolver a interação oral com coerência, clareza e "
+     "participação ativa."),
+    ("escuta", "Compreensão auditiva",
+     "Capacidade de compreender informação oral, reagir de forma adequada e acompanhar "
+     "diferentes níveis de complexidade."),
+    ("precisao", "Precisão estrutural",
+     "Controle gramatical e lexical na produção oral — correção, variedade e impacto dos "
+     "erros sobre a comunicação."),
+    # Engajamento e o QUARTO item, na mesma grade. Ele tinha heading proprio ("Engajamento")
+    # seguido de um item chamado "Engajamento" -- a palavra duas vezes, uma embaixo da outra.
+    # Ficar fora da MEDIA e propriedade da conta (`data-esc="engaj"`, escala de 4), nao um
+    # motivo para sair da lista: o professor preenche os quatro no mesmo lugar.
+    ("engaj", "Engajamento",
+     "Nível de participação e envolvimento durante as atividades."),
 ]
 
 # O cartao da aula na aba In-class. Ele vinha do artefato com o conteudo do MARCOS --
@@ -170,21 +179,26 @@ CARTAO = """<div class="lesson-card" id="lc{n}">
             <div class="fb-item"><label for="af{n}-data">Data de realiza&ccedil;&atilde;o</label><input type="date" id="af{n}-data" class="blank-input" data-k="af_l{n}_data" oninput="persSave(this)"></div>
             <div class="fb-item"><label for="af{n}-status">Status</label><select id="af{n}-status" data-k="af_l{n}_status" onchange="persSave(this)"><option value="" selected="selected">N&atilde;o iniciada</option><option value="Em andamento">Em andamento</option><option value="Realizada">Realizada</option></select></div>
           </div>
-          <h5 class="prep-h">Desempenho &mdash; mesma escala nas aulas do bloco</h5>
+          <h5 class="prep-h">Desempenho</h5>
           <div class="aval-grid">{aval}</div>
-          <h5 class="prep-h">Engajamento</h5>
-          <div class="aval-item"><p class="aval-crit">Engajamento</p><p class="aval-desc">Participa&ccedil;&atilde;o e envolvimento. Fica FORA da m&eacute;dia de desempenho lingu&iacute;stico.</p><div class="aval-escala" data-esc="engaj" data-aval="af_l{n}_engaj" role="radiogroup" aria-label="Engajamento"></div></div>
-          <div class="fb-grid">
-            <div class="fb-item"><label for="af{n}-evidencia">Evid&ecirc;ncia observ&aacute;vel</label><textarea id="af{n}-evidencia" class="writebox" data-k="af_l{n}_evidencia" oninput="persSave(this)"></textarea></div>
-            <div class="fb-item"><label for="af{n}-dificuldade">Ponto priorit&aacute;rio de desenvolvimento</label><textarea id="af{n}-dificuldade" class="writebox" data-k="af_l{n}_dificuldade" oninput="persSave(this)"></textarea></div>
-            <div class="fb-item"><label for="af{n}-acao">Pr&oacute;xima a&ccedil;&atilde;o</label><textarea id="af{n}-acao" class="writebox" data-k="af_l{n}_acao" oninput="persSave(this)"></textarea></div>
+          <div class="fb-grid fb-reg" style="margin-top:var(--space-4)">
+            <div class="fb-item"><label for="af{n}-evidencia">Evid&ecirc;ncia observ&aacute;vel</label><p class="task-instr" style="margin:0 0 var(--space-1h)">O que o aluno efetivamente fez ou disse durante a aula.</p><textarea id="af{n}-evidencia" class="writebox" rows="4" style="min-height:110px" data-k="af_l{n}_evidencia" oninput="persSave(this);autoCresce(this)"></textarea></div>
+            <div class="fb-item"><label for="af{n}-dificuldade">Ponto priorit&aacute;rio de desenvolvimento</label><p class="task-instr" style="margin:0 0 var(--space-1h)">Principal dificuldade observada, seu impacto na comunica&ccedil;&atilde;o e, quando pertinente, a linguagem que precisou ser retomada, introduzida ou apoiada.</p><textarea id="af{n}-dificuldade" class="writebox" rows="4" style="min-height:110px" data-k="af_l{n}_dificuldade" oninput="persSave(this);autoCresce(this)"></textarea></div>
+            <div class="fb-item"><label for="af{n}-acao">Pr&oacute;xima a&ccedil;&atilde;o</label><p class="task-instr" style="margin:0 0 var(--space-1h)">Ajuste, apoio, retomada ou retask indicado para a aula seguinte.</p><textarea id="af{n}-acao" class="writebox" rows="4" style="min-height:110px" data-k="af_l{n}_acao" oninput="persSave(this);autoCresce(this)"></textarea></div>
           </div>
-          <h5 class="prep-h">O que chega ao aluno</h5>
-          <div class="fb-grid">
-            <div class="fb-item"><label for="sf{n}-worked-in">What worked</label><textarea id="sf{n}-worked-in" class="writebox" data-k="sfb_l{n}_worked" oninput="persSave(this)"></textarea></div>
-            <div class="fb-item"><label for="sf{n}-develop-in">Keep developing</label><textarea id="sf{n}-develop-in" class="writebox" data-k="sfb_l{n}_develop" oninput="persSave(this)"></textarea></div>
+          <div class="callout ok" style="margin-top:var(--space-4)">
+            <span class="callout-title">Observa&ccedil;&atilde;o compartilh&aacute;vel</span>
+            <p class="task-instr" style="margin:var(--space-1) 0 var(--space-3)">Os dois campos que chegam &agrave; aba Feedback da vis&atilde;o do aluno.</p>
+            <div class="fb-grid">
+              <div class="fb-item"><label for="sf{n}-worked-in">What worked</label><textarea id="sf{n}-worked-in" class="writebox" rows="4" style="min-height:110px" data-k="sfb_l{n}_worked" oninput="persSave(this);autoCresce(this)" lang="en"></textarea></div>
+              <div class="fb-item"><label for="sf{n}-develop-in">Keep developing</label><textarea id="sf{n}-develop-in" class="writebox" rows="4" style="min-height:110px" data-k="sfb_l{n}_develop" oninput="persSave(this);autoCresce(this)" lang="en"></textarea></div>
+            </div>
           </div>
-          <p class="aval-desc" id="avalSalvo{n}"></p>
+          <div class="btn-bar" style="justify-content:flex-end;margin-top:var(--space-4);gap:var(--space-3)">
+            <span class="aval-salvo" id="avalSalvo{n}">Registro confirmado</span>
+            <button class="btn-ghost" onclick="avalResetAsk({n})">Limpar registro</button>
+            <button class="btn-primary" onclick="avalSave({n})">Confirmar registro</button>
+          </div>
         </div>
       </div>"""
 
@@ -210,8 +224,8 @@ def cartao_de_aula(n, reg, dados, telas, minutos):
         return m.group(1) if m else padrao
     aval = "".join(
         '<div class="aval-item"><p class="aval-crit">%s</p><p class="aval-desc">%s</p>'
-        '<div class="aval-escala" data-aval="af_l%d_%s" role="radiogroup" aria-label="%s">'
-        '</div></div>' % (rot, desc, n, k, rot)
+        '<div class="aval-escala" data-aval="af_l%d_%s"%s role="radiogroup" aria-label="%s">'
+        '</div></div>' % (rot, desc, n, k, ' data-esc="engaj"' if k == "engaj" else "", rot)
         for k, rot, desc in CRITERIOS_AVAL)
     return CARTAO.format(
         n=n, nn="%02d" % n,
@@ -337,6 +351,41 @@ def blocos_da_aula(pasta):
     return json.load(open(caminho, encoding="utf-8")) if os.path.exists(caminho) else {}
 
 
+def aplica_guia_de_tela(telas, pasta, reg, n):
+    """Troca o `data-teacher` de cada tela pelo guia DECLARADO em `guia_telas.json`.
+
+    Sem o arquivo, nada muda: a aula que ainda tem a nota escrita a mao continua como esta,
+    e a migracao pode ser feita uma aula por vez. Com ele, a nota deixa de ser prosa livre e
+    passa a ser os dez campos do guia, em ingles, iguais em todas as telas.
+
+    O NOME da tela nao entra no JSON: ele ja existe em `nav` do registro.js, e uma segunda
+    copia divergiria da primeira no dia em que alguem renomeasse uma tela."""
+    caminho = os.path.join(pasta, "guia_telas.json")
+    if not os.path.exists(caminho):
+        return telas, []
+    guia = json.load(open(caminho, encoding="utf-8"))
+    nav = re.search(r"nav:\[(.*?)\]", reg, re.S)
+    nomes = re.findall(r"'([^']*)'", nav.group(1)) if nav else []
+    achadas = list(re.finditer(r'\sdata-teacher="[^"]*"', telas))
+    erros = []
+    if len(achadas) != len(guia):
+        erros.append(f"aula {n}: o guia_telas.json declara {len(guia)} tela(s) e a aula tem "
+                     f"{len(achadas)} com nota. O guia e por TELA — uma entrada para cada.")
+        return telas, erros
+    saida, fim = [], 0
+    for i, m in enumerate(achadas, 1):
+        dados = guia.get(str(i))
+        if dados is None:
+            erros.append(f"aula {n}: o guia_telas.json nao tem a tela {i}.")
+            return telas, erros
+        titulo = nomes[i - 1] if i <= len(nomes) else f"Slide {i}"
+        saida.append(telas[fim:m.start()])
+        saida.append(' data-teacher="' + render.nota_de_tela(dados, titulo) + '"')
+        fim = m.end()
+    saida.append(telas[fim:])
+    return "".join(saida), erros
+
+
 def troca_slides(html, por_aula):
     """Substitui TODAS as telas do deck pelas das aulas pedidas, na ordem, e renumera
     data-slide -- o numero e posicao no deck, nao identidade da tela."""
@@ -400,9 +449,12 @@ def monta(cfg, base_frag):
         gui = open(os.path.join(pasta, "guide.js"), encoding="utf-8").read().strip()
         lessons.append(f" {n}:{reg}")
         guides.append(f" {n}:{gui}")
-        slides.append(expande_blocos(
+        telas = expande_blocos(
             open(os.path.join(pasta, "slides.html"), encoding="utf-8").read().strip(),
-            declarado[n], usado[n], f"aula {n} slides"))
+            declarado[n], usado[n], f"aula {n} slides")
+        telas, erros_guia = aplica_guia_de_tela(telas, pasta, reg, n)
+        erros += erros_guia
+        slides.append(telas)
 
     ini = html.rfind("<script>")
     cabeca, js = html[:ini], html[ini:]
@@ -920,7 +972,8 @@ def monta(cfg, base_frag):
     # divergem na primeira edicao, e a divergencia aparece como material que passa num lado
     # e falha no outro.
     erros += voz.confere(html, slug=cfg.get("slug"),
-                         tratamento=(cfg.get("professor") or {}).get("tratamento", ""))
+                         tratamento=(cfg.get("professor") or {}).get("tratamento", ""),
+                         de_artefato=bool(cfg.get("_artefato")))
 
     if cfg.get("molde"):
         marca = '<meta name="alumni-molde" content="1">'
