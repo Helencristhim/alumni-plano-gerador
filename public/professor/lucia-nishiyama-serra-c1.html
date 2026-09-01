@@ -241,6 +241,15 @@ body.slide-mode .logo-bar .slide-counter{display:block}
 #tab-preclass[data-consulta="1"] .quiz-option,
 #tab-preclass[data-consulta="1"] .pair-opt,
 #tab-preclass[data-consulta="1"] [data-k]{cursor:default}
+/* O Check e o placar sao da aluna. Na visao do professor o gabarito ja esta a um clique no
+   Answer Key de cada exercicio -- e o comentario acima ja dizia que botao ativo que nao deve
+   ser usado e um convite. Faltava a regra que o tira da tela.
+
+   Ela pende do PAPEL (`body[data-view]`), nunca de `data-consulta`: aquele atributo nasce
+   cravado com "1" no HTML da aba e so o boot o corrige. Escrita sobre ele, a regra escondia
+   o Check da ALUNA na janela entre o byte servido e o boot. Papel se le no papel. */
+body[data-view="professor"] #tab-preclass .verify-all-btn,
+body[data-view="professor"] #tab-preclass .score-out{display:none}
 @media (max-width:900px){.ciclo-mapa{grid-template-columns:repeat(5,minmax(0,1fr))}}
 
 .container{max-width:920px;margin:0 auto;padding:var(--space-6) var(--space-5) 5rem}
@@ -774,6 +783,35 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
 /* subprompt: informa o foco essencial sem substituir o professor. Vem sempre depois
    do prompt, e so quando o prompt sozinho deixaria a operacao ambigua. */
 .subprompt{font-size:.87rem;opacity:.62;line-height:var(--lh-corpo);max-width:72ch;margin-top:calc(-1 * var(--space-3h));margin-bottom:var(--space-4h)}
+
+/* Banco de palavras do gap-fill. Ele saia como `.subprompt` DEPOIS das frases, e essa classe
+   nasce com margem de topo NEGATIVA -- existe para colar o subprompt no prompt de cima. No
+   fim do exercicio, o mesmo -0.875rem puxava o banco para cima da ultima linha: as palavras
+   ficavam sobrepostas. Aqui ele tem caixa propria, e o emissor o poe ANTES das frases, que e
+   onde um banco serve para alguma coisa. */
+.word-bank{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-2) var(--space-3);
+  margin:0 0 var(--space-4h);padding:var(--space-3) var(--space-3h);
+  border:1px solid var(--border);border-radius:8px;background:var(--bg-elevated)}
+.word-bank .wb-rot{font-size:.72rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-largo);text-transform:uppercase;opacity:.62}
+.word-bank em{font-style:normal;font-weight:var(--peso-medio);color:var(--accent)}
+.slide-dark .word-bank,.slide-open .word-bank{background:rgba(255,255,255,.06);border-color:var(--d-border)}
+.slide-dark .word-bank em,.slide-open .word-bank em{color:var(--d-accent)}
+
+/* A resposta certa, ao lado do item errado. A marca vermelha diz que errou; isto diz o que
+   era. Discreto de proposito: e correcao, nao veredito. */
+.row-fix{margin-left:var(--space-2h);font-size:.8rem;font-weight:var(--peso-medio);color:var(--accent);white-space:nowrap}
+.slide-dark .row-fix,.slide-open .row-fix{color:var(--d-accent)}
+
+/* E o PORQUE daquele item, que e outra coisa ainda: a cor diz que errou, o `row-fix` diz o
+   que era, e so isto diz por que. Nasce FECHADO e abre ao conferir -- gabarito visivel antes
+   da decisao continua sendo defeito. `flex-basis:100%` porque a linha e flex: assim ele cai
+   embaixo, com a largura toda, em vez de disputar espaco com a resposta. */
+.item-why{display:none;flex-basis:100%;margin-top:var(--space-2);padding-top:var(--space-2);border-top:1px solid rgba(201,211,228,.55);font-size:.8rem;line-height:var(--lh-corpo);color:var(--text-mid)}
+.item-why.show{display:block;animation:fadeIn .25s ease}
+.item-why em,.item-why strong{color:var(--accent)}
+.quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
+.slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
+.slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1290,14 +1328,14 @@ body.tg-guia > #tgGuia{display:block!important}
         <tr><td>Interaction</td><td>indeterminado</td><td>Nenhum registro de interação sob interlocutor que não seja a professora. A aula 4 produz a primeira</td></tr>
         <tr><td>Reading</td><td>indeterminado</td><td>Sem amostra isolada. O Perfil 360 declara leitura forte, mas isso é da entrevista de intake. A aula 3 produz a primeira</td></tr>
         <tr><td>Listening</td><td>indeterminado</td><td>Sem amostra isolada. A aula 4 produz a primeira</td></tr>
-        <tr><td>Writing</td><td>indeterminado</td><td>Sem amostra. Não entra neste bloco — o bloco mede fala</td></tr>
+        <tr><td>Writing</td><td>indeterminado</td><td>Sem amostra isolada suficiente para estimativa</td></tr>
       </tbody>
     </table>
   </div>
-  <div class="callout rule-box"><div class="callout-title">Sobre o nível registrado</div>O cadastro traz <strong>B1</strong> e este ciclo é produzido em B1, por decisão explícita de 28/08/2026. A evidência disponível aponta acima — a professora registrou domínio de present perfect com <em>since/for</em> no encontro 4 e escreveu, em 28/08, que a aluna “está acima do nível proposto no material visto até agora”. <strong>Não há nivelamento formal.</strong> A divergência fica declarada como <strong>H2</strong> e se decide no checkpoint da aula 6, com a amostra gravada de produção livre.</div>
+  <div class="callout rule-box"><div class="callout-title">Sobre o nível registrado</div>O cadastro traz <strong>B1</strong> e este ciclo é produzido em B1, por decisão explícita de 28/08/2026. A evidência disponível aponta acima — a professora registrou domínio de present perfect com <em>since/for</em> no encontro 4 e escreveu, em 28/08, que a aluna “está acima do nível proposto no material visto até agora”. <strong>Não há nivelamento formal.</strong> A divergência fica declarada como <strong>H2</strong> e se decide na aula 6, que fecha o bloco, com a amostra gravada de produção livre.</div>
 
   <h2 class="sec">Objetivos e prioridades</h2>
-  <p class="lead">O eixo do bloco é <strong>marcadores de discurso do reconhecimento para a produção ao vivo</strong>. Não é escolha temática: é o que a própria aluna pediu duas vezes, com um mês de distância, e o que o material atual entregava só na aula 17 de 20.</p>
+  <p class="lead">O eixo do bloco é <strong>marcadores de discurso do reconhecimento para a produção ao vivo</strong>. É o que a própria aluna pediu duas vezes, com um mês de distância, e que no material anterior aparecia apenas na aula 17 de 20.</p>
   <div class="tbl-wrap">
     <table class="data" style="min-width:520px">
       <thead><tr><th style="width:110px">Encontro</th><th>O que ficou registrado</th></tr></thead>
@@ -1310,16 +1348,16 @@ body.tg-guia > #tgGuia{display:block!important}
       </tbody>
     </table>
   </div>
-  <p class="lead">O defeito tem forma precisa: <strong>não é de qualidade da aula, é de eixo</strong>. Ela pediu apresentação e recebeu revisão do que já domina. Não há revisão de present perfect neste bloco.</p>
+  <p class="lead">O ponto a trabalhar tem forma precisa: <strong>não é de qualidade da aula, é de eixo</strong>. Ela pediu apresentação e recebeu revisão do que já domina. Não há revisão de present perfect neste bloco.</p>
 
   <h2 class="sec">Pontos de acompanhamento</h2>
   <div class="tbl-wrap">
     <table class="data" style="min-width:540px">
-      <thead><tr><th style="width:70px">Hipótese</th><th>O que está em aberto</th><th style="width:110px">Decide em</th></tr></thead>
+      <thead><tr><th style="width:170px">O que acompanhar</th><th>Como observar</th><th style="width:110px">Revisto em</th></tr></thead>
       <tbody>
-        <tr><td>H1</td><td>O que trava não é forma gramatical, é <strong>sinalização</strong>: ela tem o argumento e o repertório, e falta a língua que diz ao ouvinte onde ela está no raciocínio</td><td>aula 6</td></tr>
-        <tr><td>H2</td><td>O <strong>B1 do cadastro subestima</strong> a produção dela</td><td>aula 6</td></tr>
-        <tr><td>H3</td><td>Qual exame Cambridge — <strong>B2 First ou C1 Advanced</strong>. Ela trouxe o assunto em 28/08 e não há exame escolhido; a escolha muda o bloco 3 em diante</td><td>aula 6</td></tr>
+        <tr><td>Sinalização do raciocínio</td><td>Observar se a dificuldade está na <strong>sinalização</strong> e não na forma gramatical: ela tem o argumento e o repertório, e o que falta é a língua que indica ao ouvinte onde ela está no raciocínio</td><td>aula 6</td></tr>
+        <tr><td>Faixa de produção</td><td>Observar se o B1 do cadastro corresponde à produção dela, com base na amostra gravada</td><td>aula 6</td></tr>
+        <tr><td>Exame de destino</td><td>Confirmar com ela qual exame Cambridge — <strong>B2 First ou C1 Advanced</strong> —, já que a escolha muda o desenho dos blocos seguintes</td><td>aula 6</td></tr>
       </tbody>
     </table>
   </div>
@@ -1355,7 +1393,7 @@ body.tg-guia > #tgGuia{display:block!important}
 <div class="tab-content" data-view="professor" id="tab-syllabus">
   <p class="eyebrow">Planejamento do ciclo</p>
   <h2 class="sec">Ciclo 1 — aulas 3 a 22, cinco blocos</h2>
-  <p class="lead">O horizonte pedagógico é de vinte aulas. O mapa inteiro está aqui; <strong>só o bloco vigente é produzido</strong>, e a distribuição das aulas 7–22 é revista no checkpoint da aula 6, com base nas evidências. As aulas 3–6 cobrem os quatro frameworks, na ordem do normativo: Reading, Listening, Grammar, ESP.</p>
+  <p class="lead">O horizonte pedagógico é de vinte aulas. O mapa inteiro está aqui; <strong>só o bloco vigente é produzido</strong>, e a distribuição das aulas 7–22 é revista na aula 6, que fecha o bloco, com base nas evidências. As aulas 3–6 cobrem os quatro frameworks, na ordem prevista: Reading, Listening, Grammar, ESP.</p>
 
   <div class="callout rule-box"><div class="callout-title">A numeração continua</div>A Lucia fez as <strong>aulas 1 e 2</strong> no material anterior, entre 28/07 e 06/08 de 2026, e a aula 3 chegou a começar (até o slide 6). Este é o ciclo 1 do framework novo e começa na <strong>aula 3</strong>: novo ciclo não transforma aluna vigente em aluna nova. O material antigo continua no lugar dele, no endereço de sempre — nada dele foi tocado.</div>
 
@@ -1370,22 +1408,22 @@ body.tg-guia > #tgGuia{display:block!important}
         <tr><td>03</td><td>Reading into Speaking</td><td><strong>The Shape of a Talk</strong> — a transcrição de uma palestra executiva sobre governança de IA. Reapresentar o argumento em 3 min, sinalizando cada virada, sem o texto à vista. <em>Primeira medida de reading do ciclo.</em></td></tr>
         <tr><td>04</td><td>Listening into Interaction</td><td><strong>The Question After the Talk</strong> — o Q&amp;A depois da apresentação: uma pergunta clara, uma vaga e uma hostil, respondidas ao vivo. <em>Primeira medida de listening e de interação.</em></td></tr>
         <tr><td>05</td><td>Grammar for Communication</td><td><strong>What This Means Is</strong> — a sintaxe que sustenta o marcador: clivada, topicalização e concessiva. O eixo do bloco, na forma. <em>Não há revisão de tempo verbal.</em></td></tr>
-        <tr><td>06</td><td>ESP · Real World</td><td><strong>Forty-Five Seconds</strong> — a tarefa independente de speaking do TOEFL como gênero: posição, duas razões e fecho, sob relógio. <em>Checkpoint do bloco.</em></td></tr>
+        <tr><td>06</td><td>ESP · Real World</td><td><strong>Forty-Five Seconds</strong> — a tarefa independente de speaking do TOEFL como gênero: posição, duas razões e fecho, sob relógio. <em>Fecha o bloco.</em></td></tr>
       </tbody>
     </table>
   </div>
 
-  <h2 class="sec">O que o checkpoint da aula 6 decide</h2>
-  <p class="lead">Ele lê as quatro aulas juntas e resolve três hipóteses declaradas:</p>
+  <h2 class="sec">O que a aula que fecha o bloco da aula 6 decide</h2>
+  <p class="lead">Ela lê as quatro aulas juntas e orienta três decisões:</p>
   <ul class="bullets">
-    <li><strong>H1</strong> — se o que trava é sinalização, e não forma gramatical. Se confirmada, o bloco 2 sobe para argumentação sob contestação em vez de voltar à forma.</li>
-    <li><strong>H2</strong> — se o B1 do cadastro subestima a produção dela. A amostra gravada da aula 6 é o que decide; o nível declarado só muda por decisão registrada.</li>
-    <li><strong>H3</strong> — <strong>qual exame Cambridge</strong>. B2 First e C1 Advanced medem coisas diferentes, e a escolha muda o desenho do bloco 3 em diante. Isto se resolve perguntando a ela, não deduzindo.</li>
+    <li><strong>Sinalização</strong> — se o que dificulta é a sinalização do raciocínio, e não a forma gramatical. Confirmando-se, o bloco 2 avança para argumentação sob contestação em vez de voltar à forma.</li>
+    <li><strong>Faixa de produção</strong> — se o B1 do cadastro corresponde à produção dela. A amostra gravada da aula 6 é a base; o nível declarado só muda por decisão registrada.</li>
+    <li><strong>Exame de destino</strong> — <strong>qual exame Cambridge</strong>. B2 First e C1 Advanced avaliam coisas diferentes, e a escolha muda o desenho do bloco 3 em diante. Confirma-se perguntando a ela.</li>
   </ul>
   <p class="lead">Ele também recebe as duas primeiras medidas isoladas de reading e listening — hoje o perfil por habilidade está em branco em quatro das cinco.</p>
 
   <h2 class="sec">Blocos 2 a 5 — projeção</h2>
-  <p class="lead"><strong>Projeção, não compromisso.</strong> A distribuição abaixo pode mudar no checkpoint, e mudança sem justificativa registrada não é permitida.</p>
+  <p class="lead"><strong>Projeção, não compromisso.</strong> A distribuição abaixo pode mudar na aula que fecha o bloco, e mudança sem justificativa registrada não é permitida.</p>
   <div class="tbl-wrap">
     <table class="data" style="min-width:560px">
       <thead><tr><th style="width:96px">Aulas</th><th style="width:130px">Bloco</th><th>Direção</th></tr></thead>
@@ -1393,7 +1431,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <tr><td>07–10</td><td>2 · Explore</td><td>A evidência que sustenta a afirmação: duas fontes que divergem, a nota que serve para falar, o briefing real dela, e a resposta de entrevista que não vira currículo</td></tr>
         <tr><td>11–14</td><td>3 · Organize</td><td>Estrutura longa e transição: o argumento que não cabe em três minutos, o painel com várias vozes, e a escrita executiva. O exame escolhido em H3 entra aqui</td></tr>
         <tr><td>15–18</td><td>4 · Challenge</td><td>Contestação: o interlocutor que discorda, a objeção dentro do texto, e a sala que empurra de volta</td></tr>
-        <tr><td>19–22</td><td>5 · Transfer</td><td>A apresentação real dela, sem apoio, e o checkpoint que decide a rota depois do ciclo</td></tr>
+        <tr><td>19–22</td><td>5 · Transfer</td><td>A apresentação real dela, sem apoio, e a aula que fecha o bloco que decide a rota depois do ciclo</td></tr>
       </tbody>
     </table>
   </div>
@@ -1561,6 +1599,7 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="section-header-row"><h4>6 &middot; One paragraph, with its signals</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the paragraph. Every gap is one of the six expressions from activity 2.</p>
     <p class="task-instr">Write it about something of your own — a decision you are carrying at work right now — if you prefer. The words are the same.</p>
+    <div class="word-bank"><span class="wb-rot">Use</span> <em>Let me start with</em> &middot; <em>Now, here is the problem</em> &middot; <em>What this means is</em> &middot; <em>Having said that</em> &middot; <em>So where does that leave us</em> &middot; <em>My recommendation is</em></div>
     <div class="fill-list">
       <p class="chunk-line"><input class="blank-input" data-ok="Let me start with" style="min-width:170px" placeholder="..."> where the project stands today.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Now, here is the problem" style="min-width:200px" placeholder="...">: the part that works is not the part they will ask about.</p>
@@ -1568,7 +1607,6 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line"><input class="blank-input" data-ok="Having said that" style="min-width:160px" placeholder="...">, the correction is small and we have the time.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="So where does that leave us" style="min-width:210px" placeholder="...">? <input class="blank-input" data-ok="My recommendation is" style="min-width:180px" placeholder="..."> that we move the review to December.</p>
     </div>
-    <p class="subprompt">Use: <em>Let me start with</em> &middot; <em>Now, here is the problem</em> &middot; <em>What this means is</em> &middot; <em>Having said that</em> &middot; <em>So where does that leave us</em> &middot; <em>My recommendation is</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz3-out"></div>
     <div class="callout" id="cz3-key" style="display:none">
@@ -1715,6 +1753,7 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="section-header-row"><h4>6 &middot; One answer, written out</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the answer. Every gap is one of the six expressions from activity 2.</p>
     <p class="task-instr">This is Nadia&rsquo;s question, the hostile one. Write it once here and you will have it in the room.</p>
+    <div class="word-bank"><span class="wb-rot">Use</span> <em>That is a fair question</em> &middot; <em>Let me take that in two parts</em> &middot; <em>If I understand you correctly</em> &middot; <em>I would push back on that</em> &middot; <em>Short answer</em> &middot; <em>I do not have that with me</em></div>
     <div class="fill-list">
       <p class="chunk-line"><input class="blank-input" data-ok="That is a fair question" style="min-width:180px" placeholder="...">, and I want to answer it properly.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Let me take that in two parts" style="min-width:220px" placeholder="...">: what the requirement is, and why six weeks.</p>
@@ -1722,7 +1761,6 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line"><input class="blank-input" data-ok="I would push back on that" style="min-width:190px" placeholder="...">, because a draft that three regulators are consulting on is not nothing.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Short answer" style="min-width:140px" placeholder="...">: I am not building for a rumor. And on the exact wording, <input class="blank-input" data-ok="I do not have that with me" style="min-width:200px" placeholder="..."> — I will send it today.</p>
     </div>
-    <p class="subprompt">Use: <em>That is a fair question</em> &middot; <em>Let me take that in two parts</em> &middot; <em>If I understand you correctly</em> &middot; <em>I would push back on that</em> &middot; <em>Short answer</em> &middot; <em>I do not have that with me</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz4-out"></div>
     <div class="callout" id="cz4-key" style="display:none">
@@ -2014,6 +2052,7 @@ body.tg-guia > #tgGuia{display:block!important}
     <div class="section-header-row"><h4>6 &middot; Your forty-five seconds, written</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the answer. Every gap is one of the six expressions from activity 2.</p>
     <p class="task-instr">Then say it out loud once, with a clock. It should land between forty and forty-five seconds.</p>
+    <div class="word-bank"><span class="wb-rot">Use</span> <em>I would say</em> &middot; <em>mainly for two reasons</em> &middot; <em>which is why</em> &middot; <em>To take one example</em> &middot; <em>That said</em> &middot; <em>So on balance</em></div>
     <div class="fill-list">
       <p class="chunk-line"><input class="blank-input" data-ok="I would say" style="min-width:130px" placeholder="..."> we should hold the launch, <input class="blank-input" data-ok="mainly for two reasons" style="min-width:200px" placeholder="...">.</p>
       <p class="chunk-line">First, an unexplainable decision is a decision we cannot defend, <input class="blank-input" data-ok="which is why" style="min-width:140px" placeholder="..."> the regulator asked for it.</p>
@@ -2021,7 +2060,6 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line"><input class="blank-input" data-ok="That said" style="min-width:110px" placeholder="...">, a delay has its own cost and I am not pretending otherwise.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="So on balance" style="min-width:140px" placeholder="...">, six weeks now is cheaper than a license review later.</p>
     </div>
-    <p class="subprompt">Use: <em>I would say</em> &middot; <em>mainly for two reasons</em> &middot; <em>which is why</em> &middot; <em>To take one example</em> &middot; <em>That said</em> &middot; <em>So on balance</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz6-out"></div>
     <div class="callout" id="cz6-key" style="display:none">
@@ -2058,7 +2096,6 @@ body.tg-guia > #tgGuia{display:block!important}
         </div>
         <h3 class="lc-title">The shape of a talk</h3>
         <p class="lc-desc">Ler o mesmo argumento executivo em duas versões — uma sinalizada, uma não — e reapresentá-lo em três minutos para um conselho que não leu o memorando, sinalizando cada movimento em voz alta.</p>
-        <p class="lc-meta">10 telas &middot; 55 min de percurso essencial</p>
         <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
           <button class="btn-ghost" data-painel="lcprep3" aria-expanded="false" onclick="cartaoPainel('lcprep3',this)">Estrutura e prepara&ccedil;&atilde;o</button>
           <button class="btn-primary" onclick="openLesson(3)">Abrir a aula</button>
@@ -2075,6 +2112,10 @@ body.tg-guia > #tgGuia{display:block!important}
           <p class="prep-p" data-lf="etapas"></p>
           <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
           <ul class="prep-list"><li>Leia as duas versões antes da aula. Elas têm <strong>os mesmos fatos, na mesma ordem</strong>: 94% de acurácia, outubro, sem explicabilidade, três mercados, seis semanas, segurar o lançamento.</li><li>A única diferença é a sinalização — e o ponto da etapa 3 é que <strong>ela</strong> diga isso, não você.</li><li><strong>O item que decide a aula</strong> é &ldquo;which regulator&rdquo;: não está em nenhuma das duas versões, é a primeira coisa que um conselho real pergunta, e é por onde ela deve fechar.</li><li>As duas versões terminam com o mesmo pedido. Se ela disser que a B é mais longa, conte as palavras com ela.</li></ul>
+          <h5 class="prep-h">D &middot; Na condu&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li><strong>O turno é dela na etapa 7.</strong> Depois de fazer a pergunta, espere. Ela é apresentadora experiente; o que falta não é coragem de falar, é a língua que marca o caminho.</li><li>Feche os dois textos na tela antes dos três minutos. Com eles à vista, ela lê em vez de apresentar.</li><li>Interrompa uma vez só, e com pergunta de fundo — não com correção de língua.</li><li><strong>Se ela quiser usar o próprio caso</strong> em vez do inventado, aceite. A atividade 6 do pre-class já abria essa porta, e o argumento real dela vale mais.</li><li>Ela reclamou de falta de desafio. Se a aula estiver fácil, corte apoio antes de acrescentar conteúdo: tire a lista de frases da tela na etapa 7.</li></ul>
+          <h5 class="prep-h">E &middot; O que observar na produ&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>Quais dos seis marcadores saem sem apoio  — é o que este ciclo cobra.</li><li>O que ela CORTA no retask de 90 segundos. Se cortar a sinalização, ela ainda não é automática, e isso se decide na aula 6, que fecha o bloco.</li><li>Leitura isolada de fala: é a primeira medida de reading do ciclo. Não há registro anterior.</li><li>O nível em que ela de fato produz — isso está em aberto e o cadastro diz B1.</li></ul>
         </div>
         <div id="lcfb3" style="display:none;margin-top:var(--space-4)">
           <div class="fb-grid">
@@ -2106,7 +2147,6 @@ body.tg-guia > #tgGuia{display:block!important}
         </div>
         <h3 class="lc-title">The question after the talk</h3>
         <p class="lc-desc">Ouvir três perguntas feitas depois de uma apresentação — uma que pede um fato, uma vaga e uma hostil — e responder cada uma ao vivo, checando antes de responder.</p>
-        <p class="lc-meta">10 telas &middot; 55 min de percurso essencial</p>
         <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
           <button class="btn-ghost" data-painel="lcprep4" aria-expanded="false" onclick="cartaoPainel('lcprep4',this)">Estrutura e prepara&ccedil;&atilde;o</button>
           <button class="btn-primary" onclick="openLesson(4)">Abrir a aula</button>
@@ -2123,6 +2163,10 @@ body.tg-guia > #tgGuia{display:block!important}
           <p class="prep-p" data-lf="etapas"></p>
           <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
           <ul class="prep-list"><li>Ouça as três antes da aula. <strong>Diane</strong> pede o fato que a apresentação dela não trouxe — é exatamente o que a aula 3 fechou, e vale dizer isso em voz alta.</li><li><strong>Ray é o perigoso.</strong> Ele não é hostil: a pergunta real está na última frase (&ldquo;we have said December before&rdquo;), não no par hard date / direction que ele oferece.</li><li><strong>Nadia é o desafio.</strong> &ldquo;Gold-plating&rdquo; carrega uma premissa — que exigência não publicada não é exigência. Nomear essa premissa <em>é</em> a resposta.</li><li>Nenhuma das três pede que ela confirme a recomendação. Repetir o pedido desperdiça a primeira frase, e é o erro mais provável.</li></ul>
+          <h5 class="prep-h">D &middot; Na condu&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li><strong>Faça as perguntas EM VOZ, não pela tela.</strong> A cena é essa: alguém pergunta e todo mundo olha para ela.</li><li><strong>O turno é dela na etapa 7.</strong> Não complete a frase, não ofereça a palavra. O silêncio é trabalho.</li><li>Na hostil, mantenha a pressão: se ela recuar, repita a objeção uma vez. Recuar da objeção é o ponto que esta aula existe para trabalhar.</li><li>Segure a transcrição até a etapa 5. Pergunta em reunião real chega uma vez só.</li><li>Se a aula estiver fácil, tire a lista de frases da tela antes da terceira pergunta — corte apoio, não acrescente conteúdo.</li></ul>
+          <h5 class="prep-h">E &middot; O que observar na produ&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>Se ela CHECA a pergunta vaga ou responde a que imaginou — é o desvio mais provável da aula.</li><li>O que ela corta no replay de vinte segundos. Se cortar a checagem, ela ainda não é automática, e isso se decide na aula 6, que fecha o bloco.</li><li>Listening e interação isolados de fala preparada: é a primeira medida dos dois no ciclo.</li><li>O nível em que ela produz sob pergunta que não previu — isso está em aberto.</li></ul>
         </div>
         <div id="lcfb4" style="display:none;margin-top:var(--space-4)">
           <div class="fb-grid">
@@ -2154,7 +2198,6 @@ body.tg-guia > #tgGuia{display:block!important}
         </div>
         <h3 class="lc-title">What this means is</h3>
         <p class="lc-desc">Produzir, sob tempo, as três estruturas que põem a informação nova onde o inglês a espera — no fim da frase: clivada, topicalização e concessiva.</p>
-        <p class="lc-meta">10 telas &middot; 55 min de percurso essencial</p>
         <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
           <button class="btn-ghost" data-painel="lcprep5" aria-expanded="false" onclick="cartaoPainel('lcprep5',this)">Estrutura e prepara&ccedil;&atilde;o</button>
           <button class="btn-primary" onclick="openLesson(5)">Abrir a aula</button>
@@ -2171,6 +2214,10 @@ body.tg-guia > #tgGuia{display:block!important}
           <p class="prep-p" data-lf="etapas"></p>
           <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
           <ul class="prep-list"><li><strong>Esta aula NÃO é revisão, e isso se diz em voz alta na etapa 1.</strong> A professora registrou que ela domina present perfect e mal comete erro gramatical — revisar isso de novo é o que a fez parar de vir.</li><li>A lacuna defensável é outra: a ordem que põe a informação nova onde o ouvinte espera. É o que faz a fala espontânea voltar à estrutura do português.</li><li><strong>Anote a frase da etapa 1 exatamente como ela disser.</strong> A etapa 2 inteira é a frase dela ao lado da versão marcada, e só funciona com a frase literal.</li><li>Os dois erros de forma: <em>what the board wants <strong>is</strong></em> (concorda com a oração, não com &ldquo;board&rdquo;) e <em>it is</em> fixo, que não vira <em>they are</em>.</li></ul>
+          <h5 class="prep-h">D &middot; Na condu&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>Na etapa 4 corrija na hora — é a única etapa em que a correção imediata é apropriada, porque o objeto é a forma.</li><li>Da etapa 6 em diante, anote e devolva na 8. Duas coisas, no máximo.</li><li><strong>Na etapa 7, discorde de verdade.</strong> O movimento certo dela é conceder e segurar; endurecer é o ponto a trabalhar que a aula existe para pegar.</li><li>Tire as molduras da tela na etapa 7. Se a aula estiver fácil, tire antes — corte apoio, não acrescente conteúdo.</li></ul>
+          <h5 class="prep-h">E &middot; O que observar na produ&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>A frase da etapa 1, literal — é a linha de base de produção espontânea do ciclo, e não existe outra.</li><li>Quais das três estruturas saem sem a moldura na tela.</li><li>Se ela concede ou endurece sob duas objeções.</li><li>O nível em que ela de fato produz — H2 continua aberta.</li></ul>
         </div>
         <div id="lcfb5" style="display:none;margin-top:var(--space-4)">
           <div class="fb-grid">
@@ -2202,7 +2249,6 @@ body.tg-guia > #tgGuia{display:block!important}
         </div>
         <h3 class="lc-title">Forty-five seconds</h3>
         <p class="lc-desc">Responder a um prompt de opinião em 45 segundos cronometrados, com posição, duas razões, um exemplo, uma concessão e um fecho — no formato da tarefa independente de speaking do TOEFL, usado como gênero, não como simulado.</p>
-        <p class="lc-meta">10 telas &middot; 55 min de percurso essencial</p>
         <div class="btn-bar" style="justify-content:flex-start;margin-top:var(--space-3)">
           <button class="btn-ghost" data-painel="lcprep6" aria-expanded="false" onclick="cartaoPainel('lcprep6',this)">Estrutura e prepara&ccedil;&atilde;o</button>
           <button class="btn-primary" onclick="openLesson(6)">Abrir a aula</button>
@@ -2218,7 +2264,11 @@ body.tg-guia > #tgGuia{display:block!important}
           <p class="prep-p" data-lf="percurso"></p>
           <p class="prep-p" data-lf="etapas"></p>
           <h5 class="prep-h">C &middot; Antes de abrir a aula</h5>
-          <ul class="prep-list"><li><strong>Esta aula é o CHECKPOINT do bloco 1.</strong> Reserve os dois minutos finais para o registro pós-aula e vá sabendo o que ele decide: H1, H2 e H3.</li><li><strong>H3 se resolve PERGUNTANDO a ela.</strong> Ela trouxe Cambridge em 28/08 e não há exame escolhido. B2 First e C1 Advanced medem coisas diferentes e mudam o bloco 3 em diante. Pergunte hoje e anote.</li><li>Cronometre de verdade. Os números — em que segundo a posição apareceu, se o fecho chegou — são a evidência; impressão não é.</li><li>O modelo só toca na etapa 3, DEPOIS da tentativa dela. Tocar antes troca o diagnóstico por imitação.</li></ul>
+          <ul class="prep-list"><li><strong>Esta aula fecha o bloco 1.</strong> Reserve os dois minutos finais para o registro pós-aula, sabendo o que ele orienta: se o que trava é sinalização e não forma, em que faixa ela produz, e qual exame Cambridge.</li><li><strong>O exame se resolve perguntando a ela.</strong> Ela trouxe Cambridge em 28/08 e não há exame escolhido. B2 First e C1 Advanced medem coisas diferentes e mudam o bloco 3 em diante. Pergunte hoje e anote.</li><li>Cronometre de verdade. Os números — em que segundo a posição apareceu, se o fecho chegou — são a evidência; impressão não é.</li><li>O modelo só toca na etapa 3, DEPOIS da tentativa dela. Tocar antes troca o diagnóstico por imitação.</li></ul>
+          <h5 class="prep-h">D &middot; Na condu&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li><strong>Não comente entre as quatro respostas da rodada 1.</strong> O valor da rodada é ter quatro amostras comparáveis.</li><li>Na devolutiva, dê NÚMEROS. E escolha UMA coisa para a rodada 2 — uma, não duas.</li><li>Se ela explicar os dois lados antes de escolher, deixe acontecer na etapa 2. A aula inteira depende de ela ouvir a si mesma fazendo isso.</li><li>As molduras saem da tela nas duas rodadas. Se ela pedir de volta, diga que voltam na próxima aula.</li></ul>
+          <h5 class="prep-h">E &middot; O que observar na produ&ccedil;&atilde;o</h5>
+          <ul class="prep-list"><li>As seis gravações cronometradas — é o primeiro registro de produção livre dela, e é o que mostra em que faixa ela produz.</li><li>Se a sinalização sobrevive ao relógio. Se sobreviver, o bloco 2 muda de eixo.</li><li>Se o único ajuste sobreviveu à rodada 2. Ajuste que só aparece quando ela pensa nele ainda não é ajuste.</li><li>A resposta dela sobre qual exame Cambridge, perguntada em voz alta e escrita.</li></ul>
         </div>
         <div id="lcfb6" style="display:none;margin-top:var(--space-4)">
           <div class="fb-grid">
@@ -2597,10 +2647,6 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="section-header-row"><h4>Where these came from</h4></div>
     <p class="task-instr">The two versions of the argument were written for this lesson. The situation is realistic for your field and the numbers are invented; no real product, no real regulator, no real decision.</p>
   </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
-  </div>
 </div>
 <div id="ps4" style="display:none">
   <h3 class="sub"><span data-view="professor">Aula 04 &middot; Listening / L1 &mdash; </span><span data-view="aluno">Lesson 04 &mdash; </span><em>The question after the talk</em></h3>
@@ -2699,10 +2745,6 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="section-header-row"><h4>Where these came from</h4></div>
     <p class="task-instr">The three questions were written for this lesson and recorded for it. The meeting is realistic for your field; no real board, no real product, no real regulator.</p>
   </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
-  </div>
 </div>
 <div id="ps5" style="display:none">
   <h3 class="sub"><span data-view="professor">Aula 05 &middot; Grammar / G1 &mdash; </span><span data-view="aluno">Lesson 05 &mdash; </span><em>What this means is</em></h3>
@@ -2788,10 +2830,6 @@ superior não compensa lacuna nas habilidades prioritárias.
     <div class="section-header-row"><h4>Where these came from</h4></div>
     <p class="task-instr">The sentences were written for this lesson, in the situation of lessons 3 and 4. The Cambridge entry is the public grammar reference.</p>
   </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
-  </div>
 </div>
 <div id="ps6" style="display:none">
   <h3 class="sub"><span data-view="professor">Aula 06 &middot; ESP / E1 &mdash; </span><span data-view="aluno">Lesson 06 &mdash; </span><em>Forty-five seconds</em></h3>
@@ -2875,10 +2913,6 @@ superior não compensa lacuna nas habilidades prioritárias.
   <div class="exercise-section">
     <div class="section-header-row"><h4>Where these came from</h4></div>
     <p class="task-instr">The prompt and the model answer were written for this lesson in the public format of the task; they are not real exam items. The ETS page is the official description.</p>
-  </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
   </div>
 </div>
 
@@ -3057,7 +3091,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="9" data-stage="8" data-lesson="3" data-teacher="<strong>Devolutiva + retask (4 min dos 6)</strong><br><br><strong>Objetivo:</strong> devolver o que voce anotou e cobrar de novo, em metade do tempo.<br><br><strong>Conduza:</strong> duas coisas, no maximo &mdash; uma que funcionou e uma em que o sinal nao saiu. Depois: &lsquo;same argument, ninety seconds, and this board already disagrees with you&rsquo;.<br><br><strong>O que observar no retask:</strong> o que ela CORTA quando o tempo cai pela metade. Se cortar os sinais, e ai que eles ainda nao sao automaticos &mdash; e isso vai para o registro pos-aula, e e o que decide H1 no checkpoint da aula 6.<br><br><strong>Atencao:</strong> nao acrescente conteudo novo aqui. O retask e a mesma tarefa sob outra restricao." data-snap="8">
+<div class="slide slide-light" data-slide="9" data-stage="8" data-lesson="3" data-teacher="<strong>Devolutiva + retask (4 min dos 6)</strong><br><br><strong>Objetivo:</strong> devolver o que voce anotou e cobrar de novo, em metade do tempo.<br><br><strong>Conduza:</strong> duas coisas, no maximo &mdash; uma que funcionou e uma em que o sinal nao saiu. Depois: &lsquo;same argument, ninety seconds, and this board already disagrees with you&rsquo;.<br><br><strong>O que observar no retask:</strong> o que ela CORTA quando o tempo cai pela metade. Se cortar os sinais, e ai que eles ainda nao sao automaticos &mdash; e isso vai para o registro pos-aula, e e o que se decide na aula 6, que fecha o bloco.<br><br><strong>Atencao:</strong> nao acrescente conteudo novo aqui. O retask e a mesma tarefa sob outra restricao." data-snap="8">
   <div class="slide-inner">
     <span class="stage-pill">8 &middot; Ninety seconds</span>
     <h2 class="slide-heading">Again, <span class="accent">to a board that disagrees</span></h2>
@@ -3072,7 +3106,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="10" data-stage="8" data-lesson="3" data-teacher="<strong>Fecho (2 min dos 6)</strong><br><br><strong>Conduza:</strong> ela marca o que reconhece. Nao discuta as marcacoes &mdash; sao dela.<br><br><strong>Homework (oralmente, NAO na tela):</strong> o post-class tem uma gravacao opcional sobre uma decisao real dela e dois TED em que a sinalizacao esta fazendo trabalho visivel. Diga que o da Cathy O'Neil e literalmente esta aula feita por alguem que argumenta sobre algoritmos para leigos.<br><br><strong>Proxima aula:</strong> a 4 e de escuta &mdash; o Q&amp;A DEPOIS da apresentacao, com uma pergunta clara, uma vaga e uma hostil, respondidas na hora. Diga isso: ela vai reconhecer a cena.<br><br><strong>Registro pos-aula:</strong> preencha ANTES de fechar. Esta e a aula 3 de 6 do bloco; o checkpoint da 6 le as quatro juntas e decide H1, H2 e H3." data-snap="9">
+<div class="slide slide-dark" data-slide="10" data-stage="8" data-lesson="3" data-teacher="<strong>Fecho (2 min dos 6)</strong><br><br><strong>Conduza:</strong> ela marca o que reconhece. Nao discuta as marcacoes &mdash; sao dela.<br><br><strong>Homework (oralmente, NAO na tela):</strong> o post-class tem uma gravacao opcional sobre uma decisao real dela e dois TED em que a sinalizacao esta fazendo trabalho visivel. Diga que o da Cathy O'Neil e literalmente esta aula feita por alguem que argumenta sobre algoritmos para leigos.<br><br><strong>Proxima aula:</strong> a 4 e de escuta &mdash; o Q&amp;A DEPOIS da apresentacao, com uma pergunta clara, uma vaga e uma hostil, respondidas na hora. Diga isso: ela vai reconhecer a cena.<br><br><strong>Registro pos-aula:</strong> preencha ANTES de fechar. Esta e a aula 3 de 6 do bloco; a aula 6 reune as quatro e orienta o planejamento seguinte." data-snap="9">
   <div class="slide-inner">
     <p class="chapter-label" style="text-align:center">8 &middot; Feedback &amp; close</p>
     <h2 class="slide-title" style="text-align:center">Today, and <span class="accent">where it goes</span></h2>
@@ -3220,7 +3254,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="18" data-stage="7" data-lesson="4" data-teacher="<strong>Role-play personalizado (14 min)</strong><br><br><strong>Objetivo:</strong> o produto da aula &mdash; responder as tres, ao vivo, uma de cada vez.<br><br><strong>Conduza:</strong> voce e os tres. Faca a pergunta EM VOZ, nao pela tela. Espere a resposta inteira antes de passar a proxima.<br><br><strong>ISTO E O QUE MAIS IMPORTA NA AULA:</strong> o turno e dela. Nao complete a frase dela, nao sugira a palavra. O silencio e trabalho.<br><br><strong>Na hostil</strong>, mantenha a pressao: se ela recuar, repita a objecao uma vez. Recuar da objecao e o defeito que esta aula existe para pegar.<br><br><strong>Nao corrija durante.</strong> Anote e devolva na etapa 8.<br><br><strong>Siga quando:</strong> as tres tiverem resposta, ou aos 12 minutos." data-snap="7">
+<div class="slide slide-dark" data-slide="18" data-stage="7" data-lesson="4" data-teacher="<strong>Role-play personalizado (14 min)</strong><br><br><strong>Objetivo:</strong> o produto da aula &mdash; responder as tres, ao vivo, uma de cada vez.<br><br><strong>Conduza:</strong> voce e os tres. Faca a pergunta EM VOZ, nao pela tela. Espere a resposta inteira antes de passar a proxima.<br><br><strong>ISTO E O QUE MAIS IMPORTA NA AULA:</strong> o turno e dela. Nao complete a frase dela, nao sugira a palavra. O silencio e trabalho.<br><br><strong>Na hostil</strong>, mantenha a pressao: se ela recuar, repita a objecao uma vez. Recuar da objecao e o ponto que esta aula existe para trabalhar.<br><br><strong>Nao corrija durante.</strong> Anote e devolva na etapa 8.<br><br><strong>Siga quando:</strong> as tres tiverem resposta, ou aos 12 minutos." data-snap="7">
   <div class="slide-inner">
     <span class="stage-pill">7 &middot; Your answers</span>
     <h2 class="slide-heading">Three questions, <span class="accent">one at a time</span></h2>
@@ -3241,7 +3275,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="19" data-stage="8" data-lesson="4" data-teacher="<strong>Devolutiva + replay (5 min dos 7)</strong><br><br><strong>Objetivo:</strong> devolver duas coisas e cobrar a hostil de novo, com menos tempo.<br><br><strong>Conduza:</strong> duas coisas, no maximo. Depois: &lsquo;Nadia again &mdash; and this time you have twenty seconds&rsquo;.<br><br><strong>O que observar:</strong> se, com menos tempo, ela corta a CHECAGEM. Se cortar, a checagem ainda nao e automatica &mdash; e isso vai para o registro pos-aula e decide H1 no checkpoint da aula 6.<br><br><strong>Atencao:</strong> nao acrescente conteudo novo. O replay e a mesma tarefa sob outra restricao." data-snap="8">
+<div class="slide slide-light" data-slide="19" data-stage="8" data-lesson="4" data-teacher="<strong>Devolutiva + replay (5 min dos 7)</strong><br><br><strong>Objetivo:</strong> devolver duas coisas e cobrar a hostil de novo, com menos tempo.<br><br><strong>Conduza:</strong> duas coisas, no maximo. Depois: &lsquo;Nadia again &mdash; and this time you have twenty seconds&rsquo;.<br><br><strong>O que observar:</strong> se, com menos tempo, ela corta a CHECAGEM. Se cortar, a checagem ainda nao e automatica &mdash; e isso vai para o registro pos-aula e se decide na aula 6, que fecha o bloco.<br><br><strong>Atencao:</strong> nao acrescente conteudo novo. O replay e a mesma tarefa sob outra restricao." data-snap="8">
   <div class="slide-inner">
     <span class="stage-pill">8 &middot; Twenty seconds less</span>
     <h2 class="slide-heading">Nadia again, <span class="accent">in twenty seconds</span></h2>
@@ -3391,7 +3425,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="29" data-stage="8" data-lesson="5" data-teacher="<strong>Devolutiva + retask (2 min dos 4)</strong><br><br><strong>Objetivo:</strong> devolver duas coisas e cobrar a concessiva de novo.<br><br><strong>Conduza:</strong> duas coisas, no maximo. Depois: &lsquo;the same argument, but I disagree twice&rsquo;.<br><br><strong>O que observar:</strong> se, com duas objecoes, ela concede as duas ou endurece. Endurecer e o defeito &mdash; e vai para o registro pos-aula.<br><br><strong>Atencao:</strong> nao acrescente conteudo novo." data-snap="8">
+<div class="slide slide-light" data-slide="29" data-stage="8" data-lesson="5" data-teacher="<strong>Devolutiva + retask (2 min dos 4)</strong><br><br><strong>Objetivo:</strong> devolver duas coisas e cobrar a concessiva de novo.<br><br><strong>Conduza:</strong> duas coisas, no maximo. Depois: &lsquo;the same argument, but I disagree twice&rsquo;.<br><br><strong>O que observar:</strong> se, com duas objecoes, ela concede as duas ou endurece. Endurecer e o desvio a observar &mdash; e vai para o registro pos-aula.<br><br><strong>Atencao:</strong> nao acrescente conteudo novo." data-snap="8">
   <div class="slide-inner">
     <span class="stage-pill">8 &middot; One more</span>
     <h2 class="slide-heading">Again, <span class="accent">and I disagree twice</span></h2>
@@ -3404,7 +3438,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="30" data-stage="8" data-lesson="5" data-teacher="<strong>Fecho (2 min dos 4)</strong><br><br><strong>Conduza:</strong> ela marca o que reconhece.<br><br><strong>Homework (oralmente, NAO na tela):</strong> o post-class pede que ela reescreva duas frases de um texto proprio deste mes. Diga que e ai que a estrutura transfere &mdash; no exercicio ela sai facil, no texto dela e que e dificil.<br><br><strong>Proxima aula:</strong> a 6 fecha o bloco e e cronometrada &mdash; 45 segundos, no formato da tarefa de speaking do TOEFL. E o checkpoint: as quatro aulas sao lidas juntas.<br><br><strong>Registro pos-aula:</strong> preencha ANTES de fechar." data-snap="9">
+<div class="slide slide-dark" data-slide="30" data-stage="8" data-lesson="5" data-teacher="<strong>Fecho (2 min dos 4)</strong><br><br><strong>Conduza:</strong> ela marca o que reconhece.<br><br><strong>Homework (oralmente, NAO na tela):</strong> o post-class pede que ela reescreva duas frases de um texto proprio deste mes. Diga que e ai que a estrutura transfere &mdash; no exercicio ela sai facil, no texto dela e que e dificil.<br><br><strong>Proxima aula:</strong> a 6 fecha o bloco e e cronometrada &mdash; 45 segundos, no formato da tarefa de speaking do TOEFL. E a aula que fecha o bloco: as quatro sao lidas juntas.<br><br><strong>Registro pos-aula:</strong> preencha ANTES de fechar." data-snap="9">
   <div class="slide-inner">
     <p class="chapter-label" style="text-align:center">8 &middot; Feedback &amp; close</p>
     <h2 class="slide-title" style="text-align:center">Today, and <span class="accent">where it goes</span></h2>
@@ -3422,7 +3456,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-open active" data-slide="31" data-stage="1" data-lesson="6" data-teacher="<strong>Objetivo real (2 min dos 4)</strong><br><br><strong>Objetivo:</strong> abrir dizendo por que o formato de exame esta aqui.<br><br><strong>Conduza:</strong> diga em voz alta que isto NAO e simulado. Ela pediu o TOEFL na primeira aula; o formato entra porque e o genero de apresentacao curta mais exigente que existe, e porque cobra tudo do bloco de uma vez.<br><br><strong>Atencao:</strong> esta e a quarta aula do bloco e o CHECKPOINT. O registro pos-aula de hoje decide H1, H2 e H3 &mdash; reserve os dois minutos finais para ele.<br><br><strong>Siga quando:</strong> ela entender que e apresentacao sob relogio, nao prova." data-snap="0">
+<div class="slide slide-open active" data-slide="31" data-stage="1" data-lesson="6" data-teacher="<strong>Objetivo real (2 min dos 4)</strong><br><br><strong>Objetivo:</strong> abrir dizendo por que o formato de exame esta aqui.<br><br><strong>Conduza:</strong> diga em voz alta que isto NAO e simulado. Ela pediu o TOEFL na primeira aula; o formato entra porque e o genero de apresentacao curta mais exigente que existe, e porque cobra tudo do bloco de uma vez.<br><br><strong>Atencao:</strong> esta e a quarta aula do bloco e a que o fecha. O registro pos-aula de hoje orienta o planejamento seguinte &mdash; reserve os dois minutos finais para ele.<br><br><strong>Siga quando:</strong> ela entender que e apresentacao sob relogio, nao prova." data-snap="0">
   <div class="open-field open-2" aria-hidden="true"></div>
   <div class="slide-inner">
     <p class="chapter-label">Lesson 06</p>
@@ -3445,7 +3479,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="33" data-stage="2" data-lesson="6" data-teacher="<strong>Tentativa inicial (7 min)</strong><br><br><strong>Objetivo:</strong> ver o que ela produz ANTES de qualquer modelo. Isto e diagnostico.<br><br><strong>Conduza:</strong> leia o prompt em voz alta, marque 15 segundos, depois 45. Cronometre de verdade. NAO ajude, nao complete, nao sugira.<br><br><strong>ANOTE:</strong> em que segundo a posicao aparece, e se ela chegou ao fecho. Sao os dois numeros que o checkpoint usa.<br><br><strong>Atencao:</strong> se ela explicar os dois lados antes de escolher, deixe acontecer. E o defeito mais provavel e a aula inteira depende de ela ouvir a si mesma fazendo isso.<br><br><strong>Siga quando:</strong> a tentativa e a auto-marcacao estiverem feitas." data-snap="2">
+<div class="slide slide-dark" data-slide="33" data-stage="2" data-lesson="6" data-teacher="<strong>Tentativa inicial (7 min)</strong><br><br><strong>Objetivo:</strong> ver o que ela produz ANTES de qualquer modelo. Isto e diagnostico.<br><br><strong>Conduza:</strong> leia o prompt em voz alta, marque 15 segundos, depois 45. Cronometre de verdade. NAO ajude, nao complete, nao sugira.<br><br><strong>ANOTE:</strong> em que segundo a posicao aparece, e se ela chegou ao fecho. Sao os dois numeros que a aula que fecha o bloco usa.<br><br><strong>Atencao:</strong> se ela explicar os dois lados antes de escolher, deixe acontecer. E o ponto a trabalhar mais provavel e a aula inteira depende de ela ouvir a si mesma fazendo isso.<br><br><strong>Siga quando:</strong> a tentativa e a auto-marcacao estiverem feitas." data-snap="2">
   <div class="slide-inner">
     <span class="stage-pill">2 &middot; Try it once</span>
     <h2 class="slide-heading">Before any model, <span class="accent">just try it</span></h2>
@@ -3522,7 +3556,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="37" data-stage="6" data-lesson="6" data-teacher="<strong>Simulacao completa &mdash; rodada 1 (10 min)</strong><br><br><strong>Objetivo:</strong> quatro respostas cronometradas, prompts novos.<br><br><strong>Conduza:</strong> leia o prompt, marque 15s, marque 45s. Sem ajuda, sem segunda chance, sem comentario entre uma e outra. As quatro seguidas.<br><br><strong>ANOTE por resposta:</strong> segundo em que a posicao apareceu, numero de razoes, se houve concessao, se fechou dentro do tempo.<br><br><strong>ISTO E O QUE MAIS IMPORTA:</strong> nao comente entre as respostas. O valor da rodada 1 e ela ouvir a propria constancia &mdash; e voce ter quatro amostras comparaveis para o checkpoint.<br><br><strong>Siga quando:</strong> as quatro estiverem feitas." data-snap="6">
+<div class="slide slide-dark" data-slide="37" data-stage="6" data-lesson="6" data-teacher="<strong>Simulacao completa &mdash; rodada 1 (10 min)</strong><br><br><strong>Objetivo:</strong> quatro respostas cronometradas, prompts novos.<br><br><strong>Conduza:</strong> leia o prompt, marque 15s, marque 45s. Sem ajuda, sem segunda chance, sem comentario entre uma e outra. As quatro seguidas.<br><br><strong>ANOTE por resposta:</strong> segundo em que a posicao apareceu, numero de razoes, se houve concessao, se fechou dentro do tempo.<br><br><strong>ISTO E O QUE MAIS IMPORTA:</strong> nao comente entre as respostas. O valor da rodada 1 e ela ouvir a propria constancia &mdash; e voce ter quatro amostras comparaveis para a aula que fecha o bloco.<br><br><strong>Siga quando:</strong> as quatro estiverem feitas." data-snap="6">
   <div class="slide-inner">
     <span class="stage-pill">6 &middot; Round one</span>
     <h2 class="slide-heading">Four prompts, <span class="accent">no comments in between</span></h2>
@@ -3554,7 +3588,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="39" data-stage="8" data-lesson="6" data-teacher="<strong>Simulacao completa &mdash; rodada 2 (6 min dos 8)</strong><br><br><strong>Objetivo:</strong> duas respostas novas com o unico ajuste aplicado.<br><br><strong>Conduza:</strong> dois prompts novos, mesmo cronometro. Depois compare os numeros com a rodada 1, em voz alta.<br><br><strong>O que observar:</strong> se o ajuste sobreviveu ao relogio. Ajuste que so aparece quando ela pensa nele nao e ajuste ainda &mdash; e isso vai para o registro.<br><br><strong>Atencao:</strong> pare aos 6 minutos. Os dois ultimos sao do fecho e do registro do checkpoint." data-snap="8">
+<div class="slide slide-dark" data-slide="39" data-stage="8" data-lesson="6" data-teacher="<strong>Simulacao completa &mdash; rodada 2 (6 min dos 8)</strong><br><br><strong>Objetivo:</strong> duas respostas novas com o unico ajuste aplicado.<br><br><strong>Conduza:</strong> dois prompts novos, mesmo cronometro. Depois compare os numeros com a rodada 1, em voz alta.<br><br><strong>O que observar:</strong> se o ajuste sobreviveu ao relogio. Ajuste que so aparece quando ela pensa nele nao e ajuste ainda &mdash; e isso vai para o registro.<br><br><strong>Atencao:</strong> pare aos 6 minutos. Os dois ultimos sao do fecho e do registro da aula que fecha o bloco." data-snap="8">
   <div class="slide-inner">
     <span class="stage-pill">8 &middot; Round two</span>
     <h2 class="slide-heading">Two more, <span class="accent">with the one change</span></h2>
@@ -3568,7 +3602,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="40" data-stage="8" data-lesson="6" data-teacher="<strong>Fecho + CHECKPOINT (2 min dos 8)</strong><br><br><strong>Conduza:</strong> ela marca o que reconhece.<br><br><strong>ESTE E O CHECKPOINT DO BLOCO 1.</strong> O registro pos-aula de hoje e lido junto com as aulas 3, 4 e 5 e decide tres coisas:<br>&bull; <strong>H1</strong> &mdash; se o que travava era sinalizacao e nao forma. Se as seis gravacoes mostram sinalizacao sob relogio, confirma-se, e o bloco 2 sobe para argumentacao sob contestacao.<br>&bull; <strong>H2</strong> &mdash; o nivel. As amostras de hoje sao a primeira producao livre gravada dela; o cadastro diz B1 e a evidencia aponta acima.<br>&bull; <strong>H3</strong> &mdash; QUAL EXAME CAMBRIDGE. <strong>Pergunte a ela, hoje.</strong> B2 First e C1 Advanced medem coisas diferentes e mudam o bloco 3 em diante. Isto se resolve perguntando, nao deduzindo.<br><br><strong>Proxima aula:</strong> comeca o bloco 2, e o desenho dele sai deste registro." data-snap="9">
+<div class="slide slide-dark" data-slide="40" data-stage="8" data-lesson="6" data-teacher="<strong>Fecho do bloco (2 min dos 8)</strong><br><br><strong>Conduza:</strong> ela marca o que reconhece.<br><br><strong>ESTA AULA FECHA O BLOCO 1.</strong> O registro pos-aula de hoje e lido junto com as aulas 3, 4 e 5 e orienta tres coisas:<br>&bull; <strong>Sinalizacao</strong> &mdash; se o que dificultava era sinalizar o raciocinio, e nao a forma. Se as seis gravacoes mostram sinalizacao sob relogio, confirma-se, e o bloco 2 sobe para argumentacao sob contestacao.<br>&bull; <strong>Faixa de producao</strong> &mdash; o nivel. As amostras de hoje sao a primeira producao livre gravada dela; o cadastro diz B1 e a evidencia aponta acima.<br>&bull; <strong>Exame de destino</strong> &mdash; QUAL EXAME CAMBRIDGE. <strong>Pergunte a ela, hoje.</strong> B2 First e C1 Advanced medem coisas diferentes e mudam o bloco 3 em diante. Isto se resolve perguntando, nao deduzindo.<br><br><strong>Proxima aula:</strong> comeca o bloco 2, e o desenho dele sai deste registro." data-snap="9">
   <div class="slide-inner">
     <p class="chapter-label" style="text-align:center">8 &middot; Feedback &amp; close</p>
     <h2 class="slide-title" style="text-align:center">Block one, <span class="accent">and where it goes</span></h2>
@@ -4763,34 +4797,66 @@ function tReset(id,total){if(_t[id]){clearInterval(_t[id].h);_t[id]=null;}tRende
 
 /* ---------------- multiple choice ---------------- */
 /* matching com gabarito por linha - usado no pre-class */
+/* CONFERIR TEM DE EXPLICAR, NAO SO PINTAR.
+   Duas coisas faltavam nas tres checagens abaixo:
+
+   1. A EXPLICACAO da atividade so abria com a pontuacao CHEIA (`n===rows.length`). Quem
+      errou um item -- exatamente quem precisa dela -- via vermelho e mais nada, e a nota
+      escrita para explicar o item dificil ficava fechada para sempre.
+   2. O item errado nao dizia QUAL era a resposta. Marca vermelha sozinha ensina que errou,
+      nao o que era. */
+function fixRotulo(alvo,texto){
+  if(!alvo)return;
+  var el=alvo.querySelector('.row-fix');
+  if(!el){ el=document.createElement('span'); el.className='row-fix'; alvo.appendChild(el); }
+  el.textContent=texto?('\u2192 '+texto):'';
+  el.style.display=texto?'':'none';
+}
+/* A explicacao DAQUELE item (`.item-why`, emitida pelo builder a partir do campo `porque`).
+   Abre ao conferir, para acerto e para erro: quem acertou confirma o porque, quem errou
+   descobre. Sem ela, conferir devolve so uma cor. */
+function porqueAbre(host){
+  if(!host)return;
+  var w=host.querySelectorAll('.item-why'),i;
+  for(i=0;i<w.length;i++)w[i].classList.add('show');
+}
 function mCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok;
+  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('select'); if(!sel)continue;
     ok=(sel.value===sel.getAttribute('data-ok'));
     rows[i].classList.toggle('correct',ok);
     rows[i].classList.toggle('wrong',!ok&&sel.value!=='');
+    certa=sel.querySelector('option[value="'+sel.getAttribute('data-ok')+'"]');
+    fixRotulo(rows[i],(!ok&&certa)?certa.textContent:'');
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 /* cloze com gabarito por campo */
 function czCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok;
+  var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok,dica;
   for(i=0;i<f.length;i++){
     v=(f[i].value||'').trim().toLowerCase().replace(/[.,]/g,'');
     ok=(v===(f[i].getAttribute('data-ok')||'').toLowerCase());
     f[i].classList.toggle('correct',ok);
     f[i].classList.toggle('wrong',!ok&&v!=='');
+    dica=f[i].nextSibling&&f[i].nextSibling.className==='row-fix'?f[i].nextSibling:null;
+    if(!dica){ dica=document.createElement('span'); dica.className='row-fix';
+               f[i].parentNode.insertBefore(dica,f[i].nextSibling); }
+    dica.textContent=ok?'':('\u2192 '+f[i].getAttribute('data-ok'));
+    dica.style.display=ok?'none':'';
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===f.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 /* selecao multipla: marcar e conferir contra data-ok */
 /* escolha entre duas formulacoes, uma linha por item. Existe para variar a mecanica
@@ -4806,16 +4872,19 @@ function ppPick(btn){
 function ppCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok;
+  var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('.pair-opt.sel'); if(!sel)continue;
     ok=(sel.getAttribute('data-v')===rows[i].getAttribute('data-ok'));
     rows[i].classList.toggle('correct',ok);
     rows[i].classList.toggle('wrong',!ok);
+    certa=rows[i].querySelector('.pair-opt[data-v="'+rows[i].getAttribute('data-ok')+'"]');
+    fixRotulo(rows[i],(!ok&&certa)?certa.textContent:'');
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 
 /* ---------------- guarda de papel no pre-class ----------------
@@ -4847,13 +4916,16 @@ function selCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
   var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
+  porqueAbre(host.parentNode);
 }
 function pick(el,ok){
   if(preConsulta(el))return;
   var box=el.parentNode, opts=box.children, i;
   for(i=0;i<opts.length;i++){opts[i].classList.remove('correct','wrong');}
   el.classList.add(ok?'correct':'wrong');
-  if(ok){var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');}
+  /* A razao abre com QUALQUER escolha: reserva-la ao acerto e dar a explicacao a quem
+     ja nao precisava dela. */
+  var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
 }
 function revealRationales(btn){
   if(preConsulta(btn))return;
@@ -6218,6 +6290,11 @@ var CONF6=["Deciding a position in fifteen seconds", "Finishing the argument ins
 document.addEventListener('DOMContentLoaded',function(){
   deckInit(CICLO.primeira); gdBuild(); gdvBuild(); tsBuild(); briefBuild(); cpBuild();
   _preAtual=CICLO.primeira;
+  /* Uma aula por vez, no pre-class e no post-class. Os blocos das outras aulas nascem no
+     HTML e ninguem os fechava: a aba abria com as quatro empilhadas, e a barra de selecao
+     so passava a valer depois do primeiro clique. Fechar aqui, e nao no fragmento, e o que
+     impede a proxima aula de nascer aberta de novo. */
+  preSel(CICLO.primeira); postSel(CICLO.primeira);
   /* ANTES do persInit: migrada depois, a textarea ja teria sido preenchida com o valor
      anterior e mostraria o texto sem a parte incorporada - o armazenamento certo e a tela
      desatualizada, que e pior do que os dois errados. */
@@ -6381,10 +6458,10 @@ var GUIDE={
   feedback:'Two points at stage 8, no more: one that worked and one where the signal did not come out. Then the retask. Do not correct during the three minutes &mdash; the turn is hers, and interrupting for language is what turns a presentation into a dialogue.<br><br>'+
     '<strong>The turn is the point.</strong> After you ask the question at stage 7, wait. Her silence is work.',
   evidence:'<ul>'+
-    '<li><strong>Reading, isolated from speaking</strong> &mdash; the first measure of the cycle. The pedagogical state records that none exists.</li>'+
-    '<li>Which of the six markers she produces without support (criterion 1 of the cycle).</li>'+
-    '<li>What she <em>cuts</em> in the ninety-second retask. If she cuts the signalling, it is not automatic yet &mdash; and that is what decides H1 at the checkpoint.</li>'+
-    '<li>Whether the level she produces at matches the B1 on record (H2).</li></ul>',
+    '<li><strong>Reading, isolated from speaking</strong> &mdash; the first measure of the cycle. No earlier record exists.</li>'+
+    '<li>Which of the six markers she produces without support.</li>'+
+    '<li>What she <em>cuts</em> in the ninety-second retask. If she cuts the signalling, it is not automatic yet &mdash; and that is what the closing lesson of the block settles.</li>'+
+    '<li>Whether the level she produces at matches the B1 on record.</li></ul>',
   prepost:'The pre-class is six short activities on the same two versions, and the last one writes the skeleton of the three minutes as a paragraph &mdash; about a decision of her own, if she prefers. If she did it, stage 7 will be faster and you can spend the margin on the retask. The post-class carries two TED talks where the signalling is doing visible work; the second, by Cathy O&rsquo;Neil, is this lesson done at full length by someone who argues about algorithms for a living.',
   key:'The mistake this lesson exists to catch is not saying something wrong. It is saying something right in a sentence the room cannot place. <em>The fix is six weeks</em> is true in both versions; in one of them it reads as a concession that strengthens her, and in the other as one more obstacle &mdash; and she said nothing different.'
 },
@@ -6414,10 +6491,10 @@ var GUIDE={
   feedback:'Two points at stage 8, no more, then the replay. Do not correct during an answer &mdash; the turn is hers, and interrupting for language is what turns an answer into a lesson.<br><br>'+
     '<strong>Ask the question and wait.</strong> Do not fill the pause, and do not offer the word. Her silence is where the retrieval happens.',
   evidence:'<ul>'+
-    '<li><strong>Listening and interaction, isolated</strong> &mdash; the first measure of both in the cycle. The pedagogical state records that none exists.</li>'+
+    '<li><strong>Listening and interaction, isolated</strong> &mdash; the first measure of both in the cycle. No earlier record exists.</li>'+
     '<li>Whether she checks the vague question, or answers the one she imagined.</li>'+
-    '<li>What she <em>cuts</em> in the twenty-second replay. If she cuts the check, it is not automatic yet &mdash; and that decides H1 at the checkpoint.</li>'+
-    '<li>Whether the level she produces at under an unscripted question matches the B1 on record (H2).</li></ul>',
+    '<li>What she <em>cuts</em> in the twenty-second replay. If she cuts the check, it is not automatic yet &mdash; and that is what the closing lesson of the block settles.</li>'+
+    '<li>Whether the level she produces at under an unscripted question matches the B1 on record.</li></ul>',
   prepost:'The pre-class is six short activities, and activity 4 studies Ray&rsquo;s question in writing &mdash; the only one she sees cold. Activity 6 writes the answer to Nadia in five sentences; if she did it, the hardest question of stage 7 will already have a shape. The post-class carries two TED talks where the speaker takes an objection on stage; the second, by Joy Buolamwini, is in her own field.',
   key:'The mistake this lesson exists to catch is answering well. Ray&rsquo;s question can be answered completely, in good English, with a real date &mdash; and still leave the room thinking she did not hear the complaint. Eight seconds of checking is the difference, and it is the eight seconds that never come out unless they have been said before.'
 },
@@ -6448,12 +6525,12 @@ var GUIDE={
     '<li>Her stage-1 sentence, verbatim &mdash; it is the baseline for the whole cycle and there is no other record of her unprompted production.</li>'+
     '<li>Which of the three structures she produces without the frames.</li>'+
     '<li>Whether she concedes or hardens under two objections.</li>'+
-    '<li>Whether the level she produces at matches the B1 on record (H2).</li></ul>',
+    '<li>Whether the level she produces at matches the B1 on record.</li></ul>',
   prepost:'The pre-class ends by asking her to write six sentences about a decision she is actually carrying &mdash; those six are stage 6. If she did not do it, build them in the lesson; it costs three minutes and the alternative is practising on invented content. The post-class asks her to rewrite two sentences of her own English writing from this month, which is where the structure transfers.',
   key:'None of the rejected alternatives in this lesson is wrong English. They are all correct, and they all leave the new information in the middle, where the listener has stopped waiting for it. In writing that costs nothing. Out loud, in a room, it is the difference between being followed and being read back.'
 },
  6:{
-  identity:'Lesson 06 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1, productive level B1 &middot; online, 60 minutes &middot; fourth lesson of the first consultivo cycle and <strong>the checkpoint of block 1</strong>. Assessment model in force: <strong>continuous teacher-led assessment</strong>. The exam format is used as a genre of short presentation; this lesson does not create, prepare or presuppose a test.',
+  identity:'Lesson 06 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level B1, productive level B1 &middot; online, 60 minutes &middot; fourth lesson of the first consultivo cycle and <strong>the lesson that closes the block of block 1</strong>. Assessment model in force: <strong>continuous teacher-led assessment</strong>. The exam format is used as a genre of short presentation; this lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To answer an opinion prompt in forty-five timed seconds, with a position, two reasons, one example, a concession and a close.</strong><ul>'+
         '<li>To take a position inside the first eight seconds, rather than the best position.</li>'+
         '<li>To announce the shape before delivering it.</li>'+
@@ -6465,8 +6542,8 @@ var GUIDE={
     '<li>Two reasons, not four, and one of them made concrete.</li>'+
     '<li>The close lands before forty-five seconds, in at least four of the six.</li>'+
     '<li>No answer explains both sides before choosing.</li></ul>',
-  prep:'<strong>This is the checkpoint.</strong> Reserve the last two minutes for the post-lesson record, and go in knowing what it decides &mdash; H1 (signalling, not form), H2 (the level on record), H3 (which Cambridge exam).<br><br>'+
-       '<strong>H3 is answered by asking her.</strong> She raised Cambridge on 28/08 and no exam has been chosen. B2 First and C1 Advanced measure different things and change block 3 onwards. Ask, today, and write the answer down.<br><br>'+
+  prep:'<strong>This is the lesson that closes the block.</strong> Reserve the last two minutes for the post-lesson record, and go in knowing what it settles &mdash; whether what holds her back is signalling rather than form, the level she actually produces at, and which Cambridge exam.<br><br>'+
+       '<strong>The exam question is answered by asking her.</strong> She raised Cambridge on 28/08 and no exam has been chosen. B2 First and C1 Advanced measure different things and change block 3 onwards. Ask, today, and write the answer down.<br><br>'+
        'Time the attempts with a real clock. The numbers &mdash; which second the position arrived, whether the close landed &mdash; are the evidence, and impressions are not.',
   language:'The five moves: <em>I would say&hellip; , mainly for two reasons.</em> &middot; <em>First, &hellip; , which is why&hellip;</em> &middot; <em>Second, &hellip; To take one example, &hellip;</em> &middot; <em>That said, &hellip;</em> &middot; <em>So on balance, &hellip;</em>',
   transcript:'Two recordings: the prompt, and one model answer of forty-five seconds. <strong>The model is played only at stage 3</strong> &mdash; after her own attempt. Playing it first replaces the diagnostic with imitation.',
@@ -6477,10 +6554,10 @@ var GUIDE={
   feedback:'<strong>Numbers, not impressions.</strong> At stage 7 give her the four seconds in which the position arrived and how many answers closed in time. Then choose <em>one</em> thing for round two. One, not two.<br><br>'+
     'No comments between the four answers of round one. The value of the round is the comparability of the four samples.',
   evidence:'<ul>'+
-    '<li><strong>Six timed samples of free production</strong> &mdash; the first recorded evidence of her unprompted speaking, and the material that decides H2.</li>'+
-    '<li>Whether signalling survives the clock (H1). If she signals under time pressure, the axis of block 2 changes.</li>'+
+    '<li><strong>Six timed samples of free production</strong> &mdash; the first recorded evidence of her unprompted speaking, and what shows the level she produces at.</li>'+
+    '<li>Whether signalling survives the clock. If she signals under time pressure, the axis of block 2 changes.</li>'+
     '<li>Whether the single adjustment survived round two. An adjustment that appears only when she thinks about it is not one yet.</li>'+
-    '<li><strong>Her answer on which Cambridge exam</strong> (H3) &mdash; asked out loud and written down.</li></ul>',
+    '<li><strong>Her answer on which Cambridge exam</strong> &mdash; asked out loud and written down.</li></ul>',
   prepost:'The pre-class ends by writing her own forty-five seconds on the case from lessons 3 to 5 &mdash; if she did it, stage 2 is about delivery rather than about deciding, and the diagnostic is cleaner. The post-class carries three more prompts to record on her own, and the official ETS description of the task.',
   key:'The mistake this lesson exists to catch is fairness. Explaining both sides before choosing is what a thoughtful person does, and in forty-five seconds it is fatal: the prompt already explained both sides, and the time is for the choice. Every rejected option in activity 5 is polite, true, and a way of not answering.'
 }

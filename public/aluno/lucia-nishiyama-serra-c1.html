@@ -241,6 +241,15 @@ body.slide-mode .logo-bar .slide-counter{display:block}
 #tab-preclass[data-consulta="1"] .quiz-option,
 #tab-preclass[data-consulta="1"] .pair-opt,
 #tab-preclass[data-consulta="1"] [data-k]{cursor:default}
+/* O Check e o placar sao da aluna. Na visao do professor o gabarito ja esta a um clique no
+   Answer Key de cada exercicio -- e o comentario acima ja dizia que botao ativo que nao deve
+   ser usado e um convite. Faltava a regra que o tira da tela.
+
+   Ela pende do PAPEL (`body[data-view]`), nunca de `data-consulta`: aquele atributo nasce
+   cravado com "1" no HTML da aba e so o boot o corrige. Escrita sobre ele, a regra escondia
+   o Check da ALUNA na janela entre o byte servido e o boot. Papel se le no papel. */
+body[data-view="professor"] #tab-preclass .verify-all-btn,
+body[data-view="professor"] #tab-preclass .score-out{display:none}
 @media (max-width:900px){.ciclo-mapa{grid-template-columns:repeat(5,minmax(0,1fr))}}
 
 .container{max-width:920px;margin:0 auto;padding:var(--space-6) var(--space-5) 5rem}
@@ -774,6 +783,35 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
 /* subprompt: informa o foco essencial sem substituir o professor. Vem sempre depois
    do prompt, e so quando o prompt sozinho deixaria a operacao ambigua. */
 .subprompt{font-size:.87rem;opacity:.62;line-height:var(--lh-corpo);max-width:72ch;margin-top:calc(-1 * var(--space-3h));margin-bottom:var(--space-4h)}
+
+/* Banco de palavras do gap-fill. Ele saia como `.subprompt` DEPOIS das frases, e essa classe
+   nasce com margem de topo NEGATIVA -- existe para colar o subprompt no prompt de cima. No
+   fim do exercicio, o mesmo -0.875rem puxava o banco para cima da ultima linha: as palavras
+   ficavam sobrepostas. Aqui ele tem caixa propria, e o emissor o poe ANTES das frases, que e
+   onde um banco serve para alguma coisa. */
+.word-bank{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-2) var(--space-3);
+  margin:0 0 var(--space-4h);padding:var(--space-3) var(--space-3h);
+  border:1px solid var(--border);border-radius:8px;background:var(--bg-elevated)}
+.word-bank .wb-rot{font-size:.72rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-largo);text-transform:uppercase;opacity:.62}
+.word-bank em{font-style:normal;font-weight:var(--peso-medio);color:var(--accent)}
+.slide-dark .word-bank,.slide-open .word-bank{background:rgba(255,255,255,.06);border-color:var(--d-border)}
+.slide-dark .word-bank em,.slide-open .word-bank em{color:var(--d-accent)}
+
+/* A resposta certa, ao lado do item errado. A marca vermelha diz que errou; isto diz o que
+   era. Discreto de proposito: e correcao, nao veredito. */
+.row-fix{margin-left:var(--space-2h);font-size:.8rem;font-weight:var(--peso-medio);color:var(--accent);white-space:nowrap}
+.slide-dark .row-fix,.slide-open .row-fix{color:var(--d-accent)}
+
+/* E o PORQUE daquele item, que e outra coisa ainda: a cor diz que errou, o `row-fix` diz o
+   que era, e so isto diz por que. Nasce FECHADO e abre ao conferir -- gabarito visivel antes
+   da decisao continua sendo defeito. `flex-basis:100%` porque a linha e flex: assim ele cai
+   embaixo, com a largura toda, em vez de disputar espaco com a resposta. */
+.item-why{display:none;flex-basis:100%;margin-top:var(--space-2);padding-top:var(--space-2);border-top:1px solid rgba(201,211,228,.55);font-size:.8rem;line-height:var(--lh-corpo);color:var(--text-mid)}
+.item-why.show{display:block;animation:fadeIn .25s ease}
+.item-why em,.item-why strong{color:var(--accent)}
+.quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
+.slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
+.slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1420,6 +1458,7 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>6 &middot; One paragraph, with its signals</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the paragraph. Every gap is one of the six expressions from activity 2.</p>
     <p class="task-instr">Write it about something of your own — a decision you are carrying at work right now — if you prefer. The words are the same.</p>
+    <div class="word-bank"><span class="wb-rot">Use</span> <em>Let me start with</em> &middot; <em>Now, here is the problem</em> &middot; <em>What this means is</em> &middot; <em>Having said that</em> &middot; <em>So where does that leave us</em> &middot; <em>My recommendation is</em></div>
     <div class="fill-list">
       <p class="chunk-line"><input class="blank-input" data-ok="Let me start with" style="min-width:170px" placeholder="..."> where the project stands today.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Now, here is the problem" style="min-width:200px" placeholder="...">: the part that works is not the part they will ask about.</p>
@@ -1427,7 +1466,6 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line"><input class="blank-input" data-ok="Having said that" style="min-width:160px" placeholder="...">, the correction is small and we have the time.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="So where does that leave us" style="min-width:210px" placeholder="...">? <input class="blank-input" data-ok="My recommendation is" style="min-width:180px" placeholder="..."> that we move the review to December.</p>
     </div>
-    <p class="subprompt">Use: <em>Let me start with</em> &middot; <em>Now, here is the problem</em> &middot; <em>What this means is</em> &middot; <em>Having said that</em> &middot; <em>So where does that leave us</em> &middot; <em>My recommendation is</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz3-out"></div>
     <div class="callout" id="cz3-key" style="display:none">
@@ -1574,6 +1612,7 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>6 &middot; One answer, written out</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the answer. Every gap is one of the six expressions from activity 2.</p>
     <p class="task-instr">This is Nadia&rsquo;s question, the hostile one. Write it once here and you will have it in the room.</p>
+    <div class="word-bank"><span class="wb-rot">Use</span> <em>That is a fair question</em> &middot; <em>Let me take that in two parts</em> &middot; <em>If I understand you correctly</em> &middot; <em>I would push back on that</em> &middot; <em>Short answer</em> &middot; <em>I do not have that with me</em></div>
     <div class="fill-list">
       <p class="chunk-line"><input class="blank-input" data-ok="That is a fair question" style="min-width:180px" placeholder="...">, and I want to answer it properly.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Let me take that in two parts" style="min-width:220px" placeholder="...">: what the requirement is, and why six weeks.</p>
@@ -1581,7 +1620,6 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line"><input class="blank-input" data-ok="I would push back on that" style="min-width:190px" placeholder="...">, because a draft that three regulators are consulting on is not nothing.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Short answer" style="min-width:140px" placeholder="...">: I am not building for a rumor. And on the exact wording, <input class="blank-input" data-ok="I do not have that with me" style="min-width:200px" placeholder="..."> — I will send it today.</p>
     </div>
-    <p class="subprompt">Use: <em>That is a fair question</em> &middot; <em>Let me take that in two parts</em> &middot; <em>If I understand you correctly</em> &middot; <em>I would push back on that</em> &middot; <em>Short answer</em> &middot; <em>I do not have that with me</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz4-out"></div>
     <div class="callout" id="cz4-key" style="display:none">
@@ -1873,6 +1911,7 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>6 &middot; Your forty-five seconds, written</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the answer. Every gap is one of the six expressions from activity 2.</p>
     <p class="task-instr">Then say it out loud once, with a clock. It should land between forty and forty-five seconds.</p>
+    <div class="word-bank"><span class="wb-rot">Use</span> <em>I would say</em> &middot; <em>mainly for two reasons</em> &middot; <em>which is why</em> &middot; <em>To take one example</em> &middot; <em>That said</em> &middot; <em>So on balance</em></div>
     <div class="fill-list">
       <p class="chunk-line"><input class="blank-input" data-ok="I would say" style="min-width:130px" placeholder="..."> we should hold the launch, <input class="blank-input" data-ok="mainly for two reasons" style="min-width:200px" placeholder="...">.</p>
       <p class="chunk-line">First, an unexplainable decision is a decision we cannot defend, <input class="blank-input" data-ok="which is why" style="min-width:140px" placeholder="..."> the regulator asked for it.</p>
@@ -1880,7 +1919,6 @@ document.body.setAttribute('data-view','aluno');
       <p class="chunk-line"><input class="blank-input" data-ok="That said" style="min-width:110px" placeholder="...">, a delay has its own cost and I am not pretending otherwise.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="So on balance" style="min-width:140px" placeholder="...">, six weeks now is cheaper than a license review later.</p>
     </div>
-    <p class="subprompt">Use: <em>I would say</em> &middot; <em>mainly for two reasons</em> &middot; <em>which is why</em> &middot; <em>To take one example</em> &middot; <em>That said</em> &middot; <em>So on balance</em></p>
     <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
     <div class="score-out" id="cz6-out"></div>
     <div class="callout" id="cz6-key" style="display:none">
@@ -2071,10 +2109,6 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>Where these came from</h4></div>
     <p class="task-instr">The two versions of the argument were written for this lesson. The situation is realistic for your field and the numbers are invented; no real product, no real regulator, no real decision.</p>
   </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
-  </div>
 </div>
 <div id="ps4" style="display:none">
   <h3 class="sub"><span data-view="aluno">Lesson 04 &mdash; </span><em>The question after the talk</em></h3>
@@ -2173,10 +2207,6 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>Where these came from</h4></div>
     <p class="task-instr">The three questions were written for this lesson and recorded for it. The meeting is realistic for your field; no real board, no real product, no real regulator.</p>
   </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
-  </div>
 </div>
 <div id="ps5" style="display:none">
   <h3 class="sub"><span data-view="aluno">Lesson 05 &mdash; </span><em>What this means is</em></h3>
@@ -2262,10 +2292,6 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>Where these came from</h4></div>
     <p class="task-instr">The sentences were written for this lesson, in the situation of lessons 3 and 4. The Cambridge entry is the public grammar reference.</p>
   </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
-  </div>
 </div>
 <div id="ps6" style="display:none">
   <h3 class="sub"><span data-view="aluno">Lesson 06 &mdash; </span><em>Forty-five seconds</em></h3>
@@ -2349,10 +2375,6 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>Where these came from</h4></div>
     <p class="task-instr">The prompt and the model answer were written for this lesson in the public format of the task; they are not real exam items. The ETS page is the official description.</p>
-  </div>
-
-  <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
   </div>
 </div>
 
@@ -3482,34 +3504,66 @@ function tReset(id,total){if(_t[id]){clearInterval(_t[id].h);_t[id]=null;}tRende
 
 /* ---------------- multiple choice ---------------- */
 /* matching com gabarito por linha - usado no pre-class */
+/* CONFERIR TEM DE EXPLICAR, NAO SO PINTAR.
+   Duas coisas faltavam nas tres checagens abaixo:
+
+   1. A EXPLICACAO da atividade so abria com a pontuacao CHEIA (`n===rows.length`). Quem
+      errou um item -- exatamente quem precisa dela -- via vermelho e mais nada, e a nota
+      escrita para explicar o item dificil ficava fechada para sempre.
+   2. O item errado nao dizia QUAL era a resposta. Marca vermelha sozinha ensina que errou,
+      nao o que era. */
+function fixRotulo(alvo,texto){
+  if(!alvo)return;
+  var el=alvo.querySelector('.row-fix');
+  if(!el){ el=document.createElement('span'); el.className='row-fix'; alvo.appendChild(el); }
+  el.textContent=texto?('\u2192 '+texto):'';
+  el.style.display=texto?'':'none';
+}
+/* A explicacao DAQUELE item (`.item-why`, emitida pelo builder a partir do campo `porque`).
+   Abre ao conferir, para acerto e para erro: quem acertou confirma o porque, quem errou
+   descobre. Sem ela, conferir devolve so uma cor. */
+function porqueAbre(host){
+  if(!host)return;
+  var w=host.querySelectorAll('.item-why'),i;
+  for(i=0;i<w.length;i++)w[i].classList.add('show');
+}
 function mCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok;
+  var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('select'); if(!sel)continue;
     ok=(sel.value===sel.getAttribute('data-ok'));
     rows[i].classList.toggle('correct',ok);
     rows[i].classList.toggle('wrong',!ok&&sel.value!=='');
+    certa=sel.querySelector('option[value="'+sel.getAttribute('data-ok')+'"]');
+    fixRotulo(rows[i],(!ok&&certa)?certa.textContent:'');
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 /* cloze com gabarito por campo */
 function czCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok;
+  var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok,dica;
   for(i=0;i<f.length;i++){
     v=(f[i].value||'').trim().toLowerCase().replace(/[.,]/g,'');
     ok=(v===(f[i].getAttribute('data-ok')||'').toLowerCase());
     f[i].classList.toggle('correct',ok);
     f[i].classList.toggle('wrong',!ok&&v!=='');
+    dica=f[i].nextSibling&&f[i].nextSibling.className==='row-fix'?f[i].nextSibling:null;
+    if(!dica){ dica=document.createElement('span'); dica.className='row-fix';
+               f[i].parentNode.insertBefore(dica,f[i].nextSibling); }
+    dica.textContent=ok?'':('\u2192 '+f[i].getAttribute('data-ok'));
+    dica.style.display=ok?'none':'';
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===f.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 /* selecao multipla: marcar e conferir contra data-ok */
 /* escolha entre duas formulacoes, uma linha por item. Existe para variar a mecanica
@@ -3525,16 +3579,19 @@ function ppPick(btn){
 function ppCheck(btn,id){
   if(preConsulta(btn))return;
   var host=document.getElementById(id); if(!host)return;
-  var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok;
+  var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('.pair-opt.sel'); if(!sel)continue;
     ok=(sel.getAttribute('data-v')===rows[i].getAttribute('data-ok'));
     rows[i].classList.toggle('correct',ok);
     rows[i].classList.toggle('wrong',!ok);
+    certa=rows[i].querySelector('.pair-opt[data-v="'+rows[i].getAttribute('data-ok')+'"]');
+    fixRotulo(rows[i],(!ok&&certa)?certa.textContent:'');
     if(ok)n++;
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
-  var key=document.getElementById(id+'-key'); if(key&&n===rows.length)key.style.display='block';
+  var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
+  porqueAbre(host);
 }
 
 /* ---------------- guarda de papel no pre-class ----------------
@@ -3566,13 +3623,16 @@ function selCheck(btn,id){
   }
   var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
   var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
+  porqueAbre(host.parentNode);
 }
 function pick(el,ok){
   if(preConsulta(el))return;
   var box=el.parentNode, opts=box.children, i;
   for(i=0;i<opts.length;i++){opts[i].classList.remove('correct','wrong');}
   el.classList.add(ok?'correct':'wrong');
-  if(ok){var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');}
+  /* A razao abre com QUALQUER escolha: reserva-la ao acerto e dar a explicacao a quem
+     ja nao precisava dela. */
+  var r=box.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
 }
 function revealRationales(btn){
   if(preConsulta(btn))return;
@@ -4648,11 +4708,18 @@ document.addEventListener('DOMContentLoaded',function(){
   persInit();
   tabFromHash();
   window.addEventListener('hashchange',tabFromHash);
-  pwRestore([['pw19-subject',null,'post_l19_subject'],['pw19-body','pw19-count','post_l19_writing'],
-             ['pw20-subject',null,'post_l20_subject'],['pw20-body','pw20-count','post_l20_writing']]);
+  pwRestore([['pw3-subject',null,'post_l3_subject'],['pw3-body','pw3-count','post_l3_writing'],['pw4-subject',null,'post_l4_subject'],['pw4-body','pw4-count','post_l4_writing'],['pw5-subject',null,'post_l5_subject'],['pw5-body','pw5-count','post_l5_writing'],['pw6-subject',null,'post_l6_subject'],['pw6-body','pw6-count','post_l6_writing']]);
   preKeys();
   hubPaint();
   preInit();
+  /* O PRE-CLASS DELA NASCE EM MODO DE RESPOSTA. O atributo `data-consulta="1"` vem CRAVADO
+     no HTML da aba -- e o modo de leitura do professor, e ele desliga o ponteiro das opcoes
+     (`pointer-events:none`). No build do professor quem o desfaz e o setView do boot; aqui
+     nao havia ninguem, e a aluna abria o material dela sem conseguir clicar em exercicio
+     nenhum. Medido no navegador em 28/08/2026, no arquivo publicado. */
+  preModo();
+  /* Uma aula por vez, no pre-class e no post-class -- como no build do professor. */
+  preSel(CICLO.primeira); postSel(CICLO.primeira);
   sfBuild();
   audBuild();
 });

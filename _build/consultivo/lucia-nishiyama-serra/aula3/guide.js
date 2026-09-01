@@ -24,10 +24,10 @@
   feedback:'Two points at stage 8, no more: one that worked and one where the signal did not come out. Then the retask. Do not correct during the three minutes &mdash; the turn is hers, and interrupting for language is what turns a presentation into a dialogue.<br><br>'+
     '<strong>The turn is the point.</strong> After you ask the question at stage 7, wait. Her silence is work.',
   evidence:'<ul>'+
-    '<li><strong>Reading, isolated from speaking</strong> &mdash; the first measure of the cycle. The pedagogical state records that none exists.</li>'+
-    '<li>Which of the six markers she produces without support (criterion 1 of the cycle).</li>'+
-    '<li>What she <em>cuts</em> in the ninety-second retask. If she cuts the signalling, it is not automatic yet &mdash; and that is what decides H1 at the checkpoint.</li>'+
-    '<li>Whether the level she produces at matches the B1 on record (H2).</li></ul>',
+    '<li><strong>Reading, isolated from speaking</strong> &mdash; the first measure of the cycle. No earlier record exists.</li>'+
+    '<li>Which of the six markers she produces without support.</li>'+
+    '<li>What she <em>cuts</em> in the ninety-second retask. If she cuts the signalling, it is not automatic yet &mdash; and that is what the closing lesson of the block settles.</li>'+
+    '<li>Whether the level she produces at matches the B1 on record.</li></ul>',
   prepost:'The pre-class is six short activities on the same two versions, and the last one writes the skeleton of the three minutes as a paragraph &mdash; about a decision of her own, if she prefers. If she did it, stage 7 will be faster and you can spend the margin on the retask. The post-class carries two TED talks where the signalling is doing visible work; the second, by Cathy O&rsquo;Neil, is this lesson done at full length by someone who argues about algorithms for a living.',
   key:'The mistake this lesson exists to catch is not saying something wrong. It is saying something right in a sentence the room cannot place. <em>The fix is six weeks</em> is true in both versions; in one of them it reads as a concession that strengthens her, and in the other as one more obstacle &mdash; and she said nothing different.'
 }

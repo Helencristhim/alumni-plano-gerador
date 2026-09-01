@@ -24,10 +24,10 @@
   feedback:'Two points at stage 8, no more, then the replay. Do not correct during an answer &mdash; the turn is hers, and interrupting for language is what turns an answer into a lesson.<br><br>'+
     '<strong>Ask the question and wait.</strong> Do not fill the pause, and do not offer the word. Her silence is where the retrieval happens.',
   evidence:'<ul>'+
-    '<li><strong>Listening and interaction, isolated</strong> &mdash; the first measure of both in the cycle. The pedagogical state records that none exists.</li>'+
+    '<li><strong>Listening and interaction, isolated</strong> &mdash; the first measure of both in the cycle. No earlier record exists.</li>'+
     '<li>Whether she checks the vague question, or answers the one she imagined.</li>'+
-    '<li>What she <em>cuts</em> in the twenty-second replay. If she cuts the check, it is not automatic yet &mdash; and that decides H1 at the checkpoint.</li>'+
-    '<li>Whether the level she produces at under an unscripted question matches the B1 on record (H2).</li></ul>',
+    '<li>What she <em>cuts</em> in the twenty-second replay. If she cuts the check, it is not automatic yet &mdash; and that is what the closing lesson of the block settles.</li>'+
+    '<li>Whether the level she produces at under an unscripted question matches the B1 on record.</li></ul>',
   prepost:'The pre-class is six short activities, and activity 4 studies Ray&rsquo;s question in writing &mdash; the only one she sees cold. Activity 6 writes the answer to Nadia in five sentences; if she did it, the hardest question of stage 7 will already have a shape. The post-class carries two TED talks where the speaker takes an objection on stage; the second, by Joy Buolamwini, is in her own field.',
   key:'The mistake this lesson exists to catch is answering well. Ray&rsquo;s question can be answered completely, in good English, with a real date &mdash; and still leave the room thinking she did not hear the complaint. Eight seconds of checking is the difference, and it is the eight seconds that never come out unless they have been said before.'
 }
