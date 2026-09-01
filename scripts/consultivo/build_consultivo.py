@@ -1012,6 +1012,26 @@ def monta(cfg, base_frag):
                          tratamento=(cfg.get("professor") or {}).get("tratamento", ""),
                          de_artefato=bool(cfg.get("_artefato")))
 
+    # O STATUS E DO MATERIAL, NAO DO ALUNO.
+    #
+    # `perfis.status` e UM campo por aluno, e quem esta em transicao tem DOIS materiais: o
+    # imersivo, que ele usa hoje, e o consultivo, que esta sendo escrito. Marcar o perfil
+    # como rascunho para segurar o consultivo apagava a etiqueta do imersivo -- que esta
+    # pronto e entregue (revisao do Dan, 01/09/2026: "no imersivo e pra ser aprovado").
+    #
+    # Entao o material do consultivo carrega o PROPRIO status, carimbado no head e lido pelo
+    # indice que a aba do dashboard consome. Declarado no config, versionado em git, e
+    # `rascunho` por omissao: material novo nasce em revisao, nao aprovado.
+    estado = (cfg.get("status") or "rascunho").strip()
+    if estado not in ("rascunho", "em_revisao", "aprovado", "material_publicado"):
+        erros.append(f"config: status {estado!r} nao existe. Use rascunho, em_revisao, "
+                     f"aprovado ou material_publicado.")
+    else:
+        html = html.replace(
+            '<meta name="alumni-anatomia" content="consultivo">',
+            '<meta name="alumni-anatomia" content="consultivo">\n'
+            f'<meta name="alumni-anatomia-status" content="{estado}">', 1)
+
     if cfg.get("molde"):
         marca = '<meta name="alumni-molde" content="1">'
         if marca not in html:
