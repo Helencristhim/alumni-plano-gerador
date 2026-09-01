@@ -26,9 +26,9 @@
   feedback:'Two points at stage 9, and then the retask: the same six to a different person, in half the time.<br><br>'+
     '<strong>Count the questions out loud with her.</strong> Six questions in a row, in English, is a thing she has never done in this course &mdash; and she should hear it named as a result.',
   evidence:'<ul>'+
-    '<li><strong>How many questions she asks without written support</strong>, and how many come from the previous answer &mdash; the central evidence for H1, measured one lesson before the checkpoint.</li>'+
+    '<li><strong>How many questions she asks without written support</strong>, and how many come from the previous answer &mdash; the most important record of this lesson, taken one lesson before the block closes.</li>'+
     '<li>Whether <em>do</em> and <em>are</em> land correctly while the attention is on the topic.</li>'+
-    '<li>Whether she stops to translate (H2).</li>'+
+    '<li>Whether she stops the exchange to translate.</li>'+
     '<li>Whether the question survives as a question &mdash; word order, not only intonation.</li></ul>',
   prepost:'The pre-class is six short activities on the same six exchanges, and the last one writes four questions of her own. The post-class has one optional recording &mdash; six questions to someone she actually works with &mdash; and a short reference page on the form.',
   key:'The mistake this lesson exists to catch is not a wrong auxiliary. It is the thing she described about herself: in a group, her exchanges are always fewer, because she cannot develop a conversation. A person who only answers speaks once. The question is what buys the second turn.'

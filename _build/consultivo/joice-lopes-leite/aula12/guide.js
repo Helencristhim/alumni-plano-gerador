@@ -1,5 +1,5 @@
 {
-  identity:'Lesson 12 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level A1, productive level A1 &middot; online, 60 minutes &middot; fourth and last lesson of block 1, and <strong>the checkpoint</strong> of the block (lessons 9&ndash;28). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
+  identity:'Lesson 12 &middot; Block 1 (Build) &middot; ESP &mdash; Real World &middot; receptive level A1, productive level A1 &middot; online, 60 minutes &middot; fourth and last lesson of block 1, and the lesson that <strong>closes the block</strong> (lessons 9&ndash;28). Assessment model in force: <strong>continuous teacher-led assessment</strong>. This lesson does not create, prepare or presuppose a test.',
   goals:'<strong>To come into an international online meeting: say who she is in one minute, ask two questions, and answer one she did not expect.</strong><ul>'+
         '<li>To choose who to ask what, from a room of four.</li>'+
         '<li>To ask without being invited to speak.</li>'+
@@ -11,7 +11,7 @@
     '<li>Asks both questions without waiting to be called.</li>'+
     '<li>Uses a repair from lesson 10 when she misses something.</li>'+
     '<li>Answers the unexpected question without asking for a translation.</li></ul>',
-  prep:'<strong>This lesson is the checkpoint.</strong> It reads the three previous ones together and decides H1 and H2. Read the pedagogical state before you teach it.<br><br>'+
+  prep:'<strong>This lesson closes the block.</strong> It brings the three previous ones together and guides the planning of what comes next. Read the records of the block before you teach it.<br><br>'+
        'The Q&amp;A question is recorded and <strong>she has not seen it</strong>: who decides which technology the teachers use &mdash; her, or the government. It has no technical answer. It is about her own work, and it is the kind of question she will actually get in Bel&eacute;m.<br><br>'+
        'You play the four people on the card. <strong>Do not leave the roles</strong> &mdash; not to help, not to translate.',
   language:'Coming in and staying: <em>Hi, my name is&hellip; I work with&hellip;</em> &middot; <em>Can I ask you something?</em> &middot; <em>Sorry, I did not understand. Can you say it again?</em> &middot; <em>That is interesting. And do you&hellip;?</em>',
@@ -25,11 +25,11 @@
   feedback:'Three points at stage 8: one that worked, one that did not, and one measurement said out loud.<br><br>'+
     '<strong>Then close the block with her.</strong> Four lessons, four recordings, and the first question of hers in English that exists on record in this course. She has abandoned eight courses; naming what changed is not a nicety with her, it is the thing that makes the ninth different.',
   evidence:'<ul>'+
-    '<li><strong>H1 decided:</strong> does she ask without being invited?</li>'+
-    '<li><strong>H2 decided:</strong> how much she understands and answers without asking for a translation, compared with lesson 10.</li>'+
+    '<li><strong>Initiative:</strong> does she ask without being invited?</li>'+
+    '<li><strong>Autonomy:</strong> how much she understands and answers without asking for a translation, compared with lesson 10.</li>'+
     '<li>Whether the question form from lesson 11 survives improvisation.</li>'+
-    '<li>Whether she speaks again after answering &mdash; criterion 4, and the thing she said she cannot do.</li>'+
+    '<li>Whether she speaks again after answering &mdash; the thing she said she cannot do.</li>'+
     '<li>The full recording &mdash; the evidence the next block is planned against.</li></ul>',
-  prepost:'The pre-class is six short activities on the meeting card, and the last one writes her own four-sentence introduction. The post-class closes the block: one optional recording of the same introduction, and two short subtitled resources from her field. <strong>Fill in the post-lesson record before you close</strong> &mdash; this one feeds the checkpoint, and the checkpoint plans lessons 13 to 16.',
+  prepost:'The pre-class is six short activities on the meeting card, and the last one writes her own four-sentence introduction. The post-class closes the block: one optional recording of the same introduction, and two short subtitled resources from her field. <strong>Fill in the post-lesson record before you close</strong> &mdash; this one closes the block, and it is what lessons 13 to 16 are planned against.',
   key:'The mistake this lesson exists to catch is the one she named herself: her exchanges in a group are always fewer, because she cannot develop a conversation. Two questions and one unprepared answer is the smallest complete version of the meeting in Bel&eacute;m &mdash; and this time there is somewhere for the silence to go.'
 }

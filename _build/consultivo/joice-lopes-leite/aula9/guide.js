@@ -11,7 +11,7 @@
     '<li>Says what is expected of her, not only what the event is.</li>'+
     '<li>Speaks in sentences &mdash; the thing the teacher asked for on 24/08.</li>'+
     '<li>The thirty-second version keeps the date and the ask.</li></ul>',
-  prep:'<strong>Ask her the date of the Bel&eacute;m meeting, and write the answer down.</strong> The intake profile recorded &ldquo;November&rdquo; with no year and said to confirm it before lesson 1. Nobody did. It is hypothesis H3 and it takes one question.<br><br>'+
+  prep:'<strong>Ask her the date of the Bel&eacute;m meeting, and write the answer down.</strong> The sources give only &ldquo;November&rdquo;, with no year, and it has not been confirmed. One question settles it.<br><br>'+
        'The invitation carries <strong>four pieces of information and one ask</strong>, none of them highlighted: what it is, when, where, who is coming, and what is expected of the person invited.<br><br>'+
        '<strong>She reads well</strong> &mdash; it is on record from the teacher. The difficulty here is not the text: it is leaving it.',
   language:'Saying what and when: <em>It is a meeting about&hellip;</em> &middot; <em>It is in November, in Bel&eacute;m.</em> &middot; <em>I am going to&hellip;</em> &middot; <em>They want us to&hellip;</em> &middot; <em>My part is&hellip;</em>',
@@ -21,15 +21,15 @@
     '<strong>She may go quiet if she feels behind.</strong> Her own words: when she senses a level gap, she closes. There is nobody else in this room, and it is worth saying so once.<br><br>'+
     '<strong>Fatigue is real</strong> (declared ADHD). No stretch of the same task type longer than fifteen minutes &mdash; the stage plan already respects that.',
   scaffolding:'The invitation stays on screen through stages 3 to 6. <strong>Close it before stage 7.</strong> The sentence frames of stage 6 stay visible during the one minute: they support the form, not the content.<br><br>'+
-    '<strong>Portuguese is a complement, never the task.</strong> It may appear to unlock a word or confirm an instruction, and it never carries the exercise. That is the licence the normative package gives at A1, and it is the whole extent of it.',
+    '<strong>Portuguese is a complement, never the task.</strong> It may appear to unlock a word or confirm an instruction, and it never carries the exercise. That is the extent of it at this level.',
   feedback:'Two points at stage 8, no more: one that worked and one that did not come out. Then the retask.<br><br>'+
     '<strong>She is a doctor of Education</strong> and knows more about how learning works than most language teachers. Saying <em>why</em> a stage exists is not over-explaining with her &mdash; it is what holds her, and it is what was missing in the eight courses she abandoned.',
   evidence:'<ul>'+
     '<li><strong>Reading, isolated from speaking</strong> &mdash; the first measure of the cycle. There is teacher commentary but no separate measure.</li>'+
     '<li>Whether she speaks in sentences or in single words (criterion 3).</li>'+
     '<li>Whether the date survives when the text leaves the screen.</li>'+
-    '<li>How many times she asks for translation, and what happens when you answer in simple English instead (H2).</li>'+
-    '<li><strong>The date of the Bel&eacute;m meeting</strong> (H3) &mdash; ask, and record it.</li></ul>',
+    '<li>How many times she asks for translation, and what happens when you answer in simple English instead.</li>'+
+    '<li><strong>The date of the Bel&eacute;m meeting</strong> &mdash; ask, and record it.</li></ul>',
   prepost:'The pre-class is six short activities on this same invitation, and the last one writes the skeleton of the one minute. The post-class carries one optional recording about a real invitation of hers and two short videos with subtitles, on education and technology &mdash; her field, not generic content.',
   key:'The mistake this lesson exists to catch is not misreading the invitation. She reads better than she thinks. It is what happens next: she reads it, understands it, and says nothing &mdash; which is exactly what she described about the meetings she already attends.'
 }
