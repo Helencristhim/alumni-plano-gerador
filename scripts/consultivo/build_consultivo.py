@@ -317,6 +317,21 @@ def expande_blocos(fragmento, decl, usadas, rotulo):
     return re.sub(r"[ \t]*<!--\s*BLOCOS:([^>]+?)\s*-->", sub, fragmento)
 
 
+def chaves_dos_fragmentos(pasta):
+    """As chaves de `blocos.json` que o pre e o pos-aula realmente consomem.
+
+    Ler os placeholders e mais honesto do que listar `sec1..sec6` por convencao: a aula que
+    tem cinco seccoes, ou que chama a mesma chave de outro lugar, continua sendo medida pelo
+    que ESTA no fragmento."""
+    chaves = set()
+    for arq in ("preclass.html", "postclass.html"):
+        caminho = os.path.join(pasta, arq)
+        if os.path.exists(caminho):
+            texto = open(caminho, encoding="utf-8").read()
+            chaves |= set(re.findall(r"<!--\s*BLOCOS:([^>]+?)\s*-->", texto))
+    return sorted(chaves)
+
+
 def blocos_da_aula(pasta):
     caminho = os.path.join(pasta, "blocos.json")
     return json.load(open(caminho, encoding="utf-8")) if os.path.exists(caminho) else {}
@@ -444,11 +459,24 @@ def monta(cfg, base_frag):
     # porque, o que costuma travar, a ligacao com a aula. O gabarito em si NAO entra aqui: ele
     # e derivado do `data-ok` da propria atividade, para nao existir uma segunda versao da
     # mesma informacao, livre para divergir da primeira.
+    # `inclass` foi um campo daqui: dizia a professora, dentro do gabarito, em que etapa o
+    # conteudo voltaria na aula. Saiu na revisao de 31/08/2026 -- o pre-aula PREPARA a aula,
+    # de outra forma, e nao a ensaia. Escrever a linha obrigava o autor a saber a etapa, e o
+    # exercicio do pre-aula passava a existir em funcao dela. O campo agora e erro duro,
+    # senao ele volta pelo copia-e-cola do fragmento anterior.
+    CAMPOS_NOTA = {"pq", "duvida", "alt"}
     notas = {}
     for n in aulas:
         nj = os.path.join(base_frag, f"aula{n}", "notas.json")
         if os.path.exists(nj):
-            notas.update(json.load(open(nj, encoding="utf-8")))
+            bloco = json.load(open(nj, encoding="utf-8"))
+            for chave, nota in bloco.items():
+                sobra = sorted(set(nota) - CAMPOS_NOTA) if isinstance(nota, dict) else []
+                if sobra:
+                    erros.append(f"notas.json da aula {n}, registro {chave}: campo(s) que o "
+                                 f"painel nao mostra mais: {sobra}. O painel emite `pq`, "
+                                 f"`duvida` e `alt`; `inclass` saiu na revisao de 31/08.")
+            notas.update(bloco)
     if notas:
         js = troca_var(js, "PC_NOTAS", json.dumps(notas, ensure_ascii=False, indent=1))
 
@@ -534,6 +562,28 @@ def monta(cfg, base_frag):
         # artefato. Um botao igual no fim do fragmento aparece colado no outro -- dois
         # controles com o mesmo destino, um em ingles e outro em portugues, foi o que a
         # revisao viu no post-class do Luiz. O fragmento nao e o lugar dele.
+        # ---- O APOIO EM PORTUGUES, EM A0/A1/A2
+        #
+        # No A1 o portugues nao e um extra do enunciado: e o que torna o enunciado legivel.
+        # Sem ele a aluna adivinha a tarefa pelo formato do exercicio, e o que se mede deixa
+        # de ser o ingles e passa a ser a leitura da instrucao. O apoio nasce RECOLHIDO
+        # (`render.apoio_pt`), para nao competir com o ingles na tela -- quem abre e ela.
+        #
+        # A cobranca e por ATIVIDADE, nao por aula: a revisao de 31/08 pegou a aula 9 da
+        # Joice com PT em duas das seis, e as quatro sem apoio eram justamente as que
+        # pediam decisao. Acervo (`recursos`) fica de fora: ali nao ha tarefa a entender.
+        nivel = (cfg["aluno"].get("nivel") or "").upper()
+        if nivel[:2] in ("A0", "A1", "A2"):
+            for chave in chaves_dos_fragmentos(pasta):
+                for b in declarado[n].get(chave, []):
+                    if not isinstance(b, dict) or b.get("kind") in (None, "recursos"):
+                        continue
+                    if not (b.get("pt") or "").strip():
+                        erros.append(
+                            f"aula {n}, atividade {b.get('id') or chave}: material {nivel} "
+                            f"sem apoio em portugues. Declare `pt` no bloco -- ele sai "
+                            f"recolhido atras do botao 'Ver em português'.")
+
         if "btn-bar ao-topo" in post[-1]:
             raise SystemExit(f"aula {n} post-class: o bloco da aula traz uma barra "
                              f"'ao-topo'. Esse controle e da ABA e ja existe uma vez, no "

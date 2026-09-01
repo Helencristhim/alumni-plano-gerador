@@ -227,8 +227,12 @@ def main():
             # fragmento, nao shell. Sem ele o builder nao teria o que passar ao closeBuild e
             # a ultima tela nasceria vazia, sem erro nenhum no console.
             # A camada do professor no pre-class, so das atividades DESTA aula.
+            # `inclass` sai na extracao: o campo deixou de existir no painel em 31/08/2026
+            # (o pre-aula PREPARA a aula, nao a ensaia) e o builder o recusa. Sem esta linha
+            # o round-trip reprova o proprio artefato, que ainda o carrega.
             "notas.json": json.dumps(
-                {k: v for k, v in notas_pc(h).items() if k.startswith(f"{n}-")},
+                {k: {c: t for c, t in v.items() if c != "inclass"}
+                 for k, v in notas_pc(h).items() if k.startswith(f"{n}-")},
                 ensure_ascii=False, indent=1),
             # O dialogo da aula, quando ela tem um. Sai de TALKS[n] no shell (TALK_19 no
             # artefato). Aula sem dialogo devolve [] e o builder nao emite nada.

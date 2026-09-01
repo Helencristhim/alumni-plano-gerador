@@ -291,6 +291,17 @@ def monta_documento(corpo, lang="pt-BR", view="professor"):
 # casar exatamente uma vez: se o artefato mudar embaixo, a extracao PARA e diz qual correcao
 # perdeu o pe -- em vez de aplicar no lugar errado ou sumir em silencio.
 CORRECOES = [
+ ("answer-key-sem-no-in-class",
+  """      if(nota.duvida)h+=akLinha('Pode gerar dúvida',nota.duvida);
+      if(nota.inclass)h+=akLinha('No in-class',nota.inclass);""",
+  """/* O pre-aula NAO antecipa a aula. A linha "No in-class" dizia a professora, dentro do
+     gabarito de cada exercicio, em que etapa aquele conteudo voltaria -- e com isso ensinava
+     o material a se escrever como ensaio do que vem: o autor precisava saber a etapa para
+     preencher a linha, e o exercicio passava a existir em funcao dela. O pre-aula prepara,
+     e prepara de OUTRA forma; a aula e o primeiro encontro com aquilo, nao o segundo.
+     (Revisao da Joice, 31/08/2026.) */
+      if(nota.duvida)h+=akLinha('Pode gerar dúvida',nota.duvida);"""),
+
  ("check-so-da-aluna",
   """#tab-preclass[data-consulta="1"] [data-k]{cursor:default}""",
   """#tab-preclass[data-consulta="1"] [data-k]{cursor:default}
@@ -583,6 +594,21 @@ def deriva_professor():
                 f"antes de reescrever a ancora.")
         corpo = corpo.replace(velho, novo, 1)
         rel[f"correcao/{rotulo}"] = 1
+
+    # A mesma linha "No in-class", ja RENDERIZADA no pre-aula do artefato. A troca acima
+    # tira quem a EMITE; estas sao as que ja estavam escritas no HTML. Sao muitas e cada
+    # uma com texto proprio, entao a ancora nao pode ser literal -- mas a contagem esperada
+    # e declarada, e uma divergencia para a extracao em vez de limpar o que nao devia.
+    ESPERADO_NO_IN_CLASS = 9
+    rx_ak = re.compile(r'<div class="ak-linha"><b>No in-class</b>.*?</div>(?=</div>|<div class="ak-linha")',
+                       re.S)
+    achadas = len(rx_ak.findall(corpo))
+    if achadas != ESPERADO_NO_IN_CLASS:
+        raise SystemExit(
+            f"'No in-class' renderizado: achei {achadas} no artefato e o declarado e "
+            f"{ESPERADO_NO_IN_CLASS}. O artefato mudou -- confira antes de ajustar o numero.")
+    corpo = rx_ak.sub("", corpo)
+    rel["correcao/no-in-class-renderizado"] = achadas
 
     return monta_documento(corpo), rel
 
