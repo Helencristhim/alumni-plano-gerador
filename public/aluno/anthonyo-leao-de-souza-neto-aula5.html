@@ -9,7 +9,7 @@
     <meta name="alumni-gen" content="2">
     <meta name="alumni-contrato" content="imersivo-prototipo@1">
 <meta name="robots" content="noindex, nofollow">
-<title>Aluno -- Anthonyo Le&atilde;o de Souza neto | Lesson 5 -- How Much Is It?</title>
+<title>Aluno -- Le&atilde;o | Lesson 5 -- How Much Is It?</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <script>
 var audioMap = {
@@ -717,6 +717,16 @@ body.slide-mode .nav-bar { display:flex; }
 .slide-dark .ic-tag { color: #fff !important; }
 .slide-dark .ic-mod, .slide-dark .ic-modal-c .ic-m, .slide-dark .ic-rtitle, .slide-dark .ic-card-h3 { color: var(--accent) !important; }
 .slide-dark .ic-lf .ic-mod.ic-strong { color: var(--danger) !important; }
+/* ===== Transcript accordion: o script do listening, escondido ate o clique ===== */
+.ts-box { border:1px solid rgba(255,255,255,.18);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.05);max-width:500px;margin:1rem auto 0;text-align:left; }
+.ts-head { width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;background:transparent;border:none;color:#fff;font:600 .82rem/1.4 'Inter',-apple-system,sans-serif;cursor:pointer;letter-spacing:.4px; }
+.ts-head:hover { background:rgba(255,255,255,.06); }
+.ts-head:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+.ts-chev { font-size:.7rem;color:rgba(255,255,255,.65);transition:transform .25s ease; }
+.ts-box.open .ts-chev { transform:rotate(180deg); }
+.ts-body { display:none;padding:0 .9rem .9rem;font-size:.86rem;line-height:1.75;color:rgba(255,255,255,.88); }
+.ts-box.open .ts-body { display:block; }
+@media (prefers-reduced-motion:reduce) { .ts-chev { transition:none; } }
 .teacher-t{display:none !important}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -736,7 +746,7 @@ body.slide-mode .nav-bar { display:flex; }
 <div class="header">
   <div class="header-content">
     <div class="passport-badge">Everyday English &mdash; Small Talk &amp; Travel (A1 &rarr; A2) -- 72 Aulas</div>
-    <h1>Anthonyo Le&atilde;o de Souza neto</h1>
+    <h1>Le&atilde;o</h1>
     <p class="subtitle">Lesson 5 -- How Much Is It?: Money, Numbers and Shopping</p>
     <div class="student-info">
       <span>A1 &middot; Iniciante</span>
@@ -1167,6 +1177,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. A jacket costs two hundred. How much is it in the sale?</div><div class="q-answer">One hundred and forty. It is thirty percent off.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. What are the two warnings?</div><div class="q-answer">Many small shops take only cash, so ask first; and you need the receipt to change anything.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen1"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen1" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen1"><p>Good afternoon, and welcome to the market. Here is the information for today, Saturday. We are open until six o'clock, and after five o'clock everything in the fruit section is half price. The shop on the corner has a sale this week: all the winter jackets are thirty percent off, so a jacket that is two hundred is one hundred and forty today. Two things, please. First, many of our small shops do not take cards, only cash, so please ask before you choose. Second, if you buy something and you want to change it later, you need the receipt. No receipt, no change. Thank you, and have a good afternoon.</p></div></div>
   </div>
 </div>
 
@@ -1206,6 +1217,7 @@ body.slide-mode .nav-bar { display:flex; }
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">2. How much did she pay for the jacket, and why is it not two hundred and twenty?</div><div class="q-answer">One hundred and fifty-four, because it was thirty percent off.</div></div>
       <div class="comp-q" onclick="revealComp(this)"><div class="q-text">3. Why did the man give her the receipt for everything?</div><div class="q-answer">Because she told him she is not sure about the scarf.</div></div>
     </div>
+    <div class="ts-box" id="ts-mp-listen2"><button class="ts-head" type="button" aria-expanded="false" aria-controls="ts-body-mp-listen2" onclick="tsToggle(this)"><span>Transcript</span><span class="ts-chev">&#9660;</span></button><div class="ts-body" id="ts-body-mp-listen2"><p>Hi, it's me. You are going to laugh. I went to that shop you told me about, the one on Market Street. I wanted one thing, only one, and I came home with three. So, the jacket. It was two hundred and twenty, which is too expensive for a jacket, but it was thirty percent off, so I paid one hundred and fifty four. That is not bad. Then I saw a small bag for forty, and a scarf for eighteen. The man at the counter was very nice and he gave me the receipt for everything, because I told him I am not sure about the scarf. Anyway. I have no money now, and it is Tuesday. Call me later.</p></div></div>
   </div>
 </div>
 
@@ -1942,6 +1954,13 @@ function stopFreeRecording(stopBtn) {
   var recordBtn = stopBtn.parentElement.querySelector('.btn-record');
   recordBtn.classList.remove('hidden');
   stopBtn.classList.remove('visible');
+}
+// ===== Transcript accordion: abre/fecha o script do listening (REGRA 27-E: toggle) =====
+function tsToggle(btn) {
+  var box = btn.closest('.ts-box');
+  if (!box) return;
+  var open = box.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>
