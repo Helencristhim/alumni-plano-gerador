@@ -68,6 +68,10 @@ ANATOMIA = "consultivo"
 
 # O contrato normativo desta anatomia (Doc 03 §6.1; Doc 04 §8.1).
 ETAPAS = 8
+# O PADRAO e 60 min de aula: 55 de percurso + 5 de margem (Doc 03 §2). Quando o CONTRATO do
+# aluno tem outra duracao, o material publicado declara a sua em `CICLO.percurso` e o gate
+# mede contra ela -- foi o caso do Caio, com aula de 45. O default so vale para arquivo que
+# nao declara (os quatro anteriores a 31/08/2026).
 PERCURSO_MIN = 55
 PRECLASS_ATIVIDADES = 6
 
@@ -129,7 +133,10 @@ def recorta_var(c, nome):
 
 
 SONDA = """
-const out = {lessons: null, guide: null};
+const out = {lessons: null, guide: null, ciclo: null};
+if (typeof CICLO !== 'undefined' && CICLO) {
+  out.ciclo = {percurso: Number(CICLO.percurso) || null, nominal: Number(CICLO.nominal) || null};
+}
 if (typeof LESSONS !== 'undefined' && LESSONS) {
   out.lessons = {};
   for (const k of Object.keys(LESSONS)) {
@@ -155,7 +162,7 @@ def avalia(c):
     """Avalia `var LESSONS` e `var GUIDE` no node e devolve o resumo. node ausente = ERRO,
     nunca "pulei": o gate que pula sozinho e o gate que mente."""
     partes = []
-    for nome in ("LESSONS", "GUIDE"):
+    for nome in ("LESSONS", "GUIDE", "CICLO"):
         src = recorta_var(c, nome)
         if src is not None:
             partes.append(f"const {nome} = {src};")
@@ -228,10 +235,11 @@ def confere(caminho):
             erros.append(f"aula {n}: {L['etapas']} etapas declaradas, e a arquitetura tem "
                          f"{ETAPAS}. (Telas podem ser quantas o conteudo pedir; ETAPAS, nao.)")
 
-        # R3 · os minutos fecham o percurso essencial
-        if L["min"] != PERCURSO_MIN:
+        # R3 · os minutos fecham o percurso essencial DECLARADO por este material
+        percurso = ((dados or {}).get("ciclo") or {}).get("percurso") or PERCURSO_MIN
+        if L["min"] != percurso:
             erros.append(f"aula {n}: os minutos das etapas somam {L['min']}, e o percurso "
-                         f"essencial e {PERCURSO_MIN} (+5 de margem).")
+                         f"essencial declarado e {percurso} (+5 de margem).")
         if L["semMin"]:
             erros.append(f"aula {n}: {L['semMin']} etapa(s) sem orcamento de minutos.")
         if L["semNome"]:

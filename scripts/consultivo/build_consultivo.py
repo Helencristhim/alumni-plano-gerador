@@ -55,6 +55,21 @@ import render  # noqa: E402  o builder EMITE o exercicio -- ver o cabecalho de r
 CAMPOS_GUIA = ["identity", "goals", "product", "criteria", "prep", "language", "transcript",
                "difficulties", "scaffolding", "feedback", "evidence", "prepost", "key"]
 ETAPAS = 8
+# O PERCURSO E DO CONTRATO DO ALUNO, NAO DO MOLDE.
+#
+# O Doc 03 §2 crava a aula nominal em 60 min -- 55 de percurso essencial + 5 de margem -- e
+# esse continua sendo o default: todo aluno do consultivo ate 31/08/2026 tem aula de 60.
+#
+# O Caio tem aula de 45 (aba PRIVATE: "aulas de 45 minutos"; Attendance: 93 horas-aula, 5x
+# por semana). Com 55 cravado aqui, gerar para ele era impossivel sem mentir na declaracao
+# das etapas -- e mentir ali quebra o unico lugar onde a minutagem existe para o professor.
+#
+# Pela precedencia do 00 §4, "perfil e restricoes do aluno" (2) vence "estrutura dos
+# frameworks" (5). As OITO etapas continuam todas, na ordem: o que varia e a distribuicao.
+# E o proprio 03 §7 define a falha como "ultrapassa 55 minutos, OU a soma interna e
+# incompativel com o TEMPO DECLARADO" -- o tempo declarado dele e 45.
+#
+# O config declara `ciclo.percurso_min`; quem nao declara continua em 55.
 PERCURSO_MIN = 55
 
 
@@ -379,10 +394,20 @@ def monta(cfg, base_frag):
     js = troca_var(js, "ALUNO", "{nome:%r,sobrenome:%r}" % (cfg["aluno"]["nome"],
                                                             cfg["aluno"]["sobrenome"]))
     c = cfg["ciclo"]
+    # `percurso` e `nominal` vao para o ARQUIVO porque e la que o GATE 37 mede. O percurso e
+    # do contrato do aluno (45 min no Caio, 60 no resto) e nao existe em lugar nenhum do HTML
+    # sem isto -- o gate teria de ir ler o config, que e a fonte que ele existe para nao ter
+    # de acreditar. Quem declara e o config; quem emite e o builder; o autor da aula nao toca.
+    # O campo so aparece para quem DECLARA percurso proprio. Emiti-lo sempre acrescentava 23
+    # bytes a todo material da anatomia -- inclusive ao molde -- e o GATE 50, que exige que o
+    # publicado seja byte a byte o que o builder devolve, reprovou na hora. Ele estava certo:
+    # uma mudanca feita para UM aluno nao tem por que reescrever os arquivos dos outros.
+    percurso = c.get("percurso_min")
+    extra = (f"percurso:{int(percurso)},nominal:{int(percurso) + 5}," if percurso else "")
     js = troca_var(js, "CICLO",
-                   "{numero:%d,aulas:%d,primeira:%d,porBloco:%d,nivel:%r,"
+                   "{numero:%d,aulas:%d,primeira:%d,porBloco:%d,nivel:%r,%s"
                    "rotulo:'Aulas neste ciclo',rotuloAluno:'Lessons in this cycle'}"
-                   % (c["numero"], c["aulas"], c["primeira"], c["porBloco"], c["nivel"]))
+                   % (c["numero"], c["aulas"], c["primeira"], c["porBloco"], c["nivel"], extra))
     js = troca_var(js, "LESSONS", "{\n" + ",\n".join(lessons) + "\n}")
     js = troca_var(js, "GUIDE", "{\n" + ",\n".join(guides) + "\n}")
     # ---- a chave de progresso tem de ter O ALUNO dentro
@@ -516,7 +541,8 @@ def monta(cfg, base_frag):
             n=n, tema=tema, oculto="" if i == 0 else ' style="display:none"'))
         erros += confere_aula(n, open(os.path.join(pasta, "registro.js"), encoding="utf-8").read().strip(),
                               open(os.path.join(pasta, "guide.js"), encoding="utf-8").read().strip(),
-                              pasta, slides[aulas.index(n)], pre[-1])
+                              pasta, slides[aulas.index(n)], pre[-1],
+                              percurso_min=int(cfg["ciclo"].get("percurso_min", PERCURSO_MIN)))
         sobrando = set(declarado[n]) - usado[n]
         if sobrando:
             raise SystemExit(f"aula {n}: blocos declarados e sem placeholder em nenhum "
@@ -814,7 +840,8 @@ def monta(cfg, base_frag):
     return html, n_telas, erros
 
 
-def confere_aula(n, registro_js, guide_js, pasta, slides_txt=None, pre_txt=None):
+def confere_aula(n, registro_js, guide_js, pasta, slides_txt=None, pre_txt=None,
+                 percurso_min=PERCURSO_MIN):
     """Os asserts que a norma permite provar por construcao.
 
     `slides_txt` e `pre_txt` sao os fragmentos JA EXPANDIDOS. Medir o arquivo cru contaria o
@@ -828,9 +855,9 @@ def confere_aula(n, registro_js, guide_js, pasta, slides_txt=None, pre_txt=None)
                      f"Documento 03 tem {ETAPAS}. (Telas podem ser quantas o conteudo pedir; "
                      f"ETAPAS, nao.)")
     soma = sum(int(m) for _, m in etapas)
-    if etapas and soma != PERCURSO_MIN:
+    if etapas and soma != percurso_min:
         erros.append(f"aula {n}: os minutos das etapas somam {soma}, e o percurso essencial "
-                     f"e {PERCURSO_MIN} (+5 de margem).")
+                     f"e {percurso_min} (+5 de margem).")
     slides = (slides_txt if slides_txt is not None
               else open(os.path.join(pasta, "slides.html"), encoding="utf-8").read())
     fases = [int(x) for x in re.findall(r'data-stage="(\d+)"', slides)]
