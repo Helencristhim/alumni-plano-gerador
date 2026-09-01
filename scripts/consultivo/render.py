@@ -363,6 +363,12 @@ def r_lacuna(b, ident, vocab=None):
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
+_RX_ACERVO = re.compile(
+    r"\bfree\b|no account|subscription|\bpaid\b|sign ?up|\btrial\b|\bpremium\b"
+    r"|\bA1\b|\bA2\b|\bB1\b|\bB2\b|\bbeginner\b|at your level|for this level"
+    r"|\bmade for\b", re.I)
+
+
 def r_recursos(b, ident):
     """O acervo do post-class: leitura, escuta, referencia. NAO e exercicio.
 
@@ -374,6 +380,23 @@ def r_recursos(b, ident):
         if not r.get("url", "").startswith("http"):
             raise SystemExit(f"{ident}: o recurso {r.get('titulo', '?')!r} nao tem link. "
                              f"Acervo sem link e acervo que ninguem abre.")
+        # O cartao descreve O MATERIAL, e mais nada. Duas coisas ficavam sobrando:
+        #
+        # ACESSO ("free", "no account", "subscription"). Dizer que e gratuito supoe que
+        # pudesse nao ser -- e o acervo inteiro tem de ser acessivel, entao a informacao ou e
+        # obvia ou e a confissao de que alguem cogitou indicar conteudo pago.
+        #
+        # NIVEL ("made for A1", "at your level", "beginner"). O nivel e uma leitura do ALUNO,
+        # nao um atributo do video; escrita no cartao, ela vira rotulo colado nele, e um
+        # rotulo que sempre chega no pior momento -- o de quem esta indo bem.
+        for campo in ("titulo", "texto"):
+            achado = _RX_ACERVO.search(r.get(campo, ""))
+            if achado:
+                raise SystemExit(
+                    f"{ident}: o recurso {r.get('titulo', '?')!r} fala de "
+                    f"{achado.group(0)!r} no campo {campo!r}. O cartao descreve o material: "
+                    f"nem acesso (free/conta/assinatura), nem nivel (A1/beginner/'at your "
+                    f"level').")
         cartoes.append(
             f'    <div class="res-card">\n'
             f'      <h5>{esc(r["titulo"])}</h5>\n'
