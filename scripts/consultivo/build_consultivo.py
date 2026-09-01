@@ -398,13 +398,16 @@ def monta(cfg, base_frag):
     # do contrato do aluno (45 min no Caio, 60 no resto) e nao existe em lugar nenhum do HTML
     # sem isto -- o gate teria de ir ler o config, que e a fonte que ele existe para nao ter
     # de acreditar. Quem declara e o config; quem emite e o builder; o autor da aula nao toca.
-    percurso = int(c.get("percurso_min", PERCURSO_MIN))
+    # O campo so aparece para quem DECLARA percurso proprio. Emiti-lo sempre acrescentava 23
+    # bytes a todo material da anatomia -- inclusive ao molde -- e o GATE 50, que exige que o
+    # publicado seja byte a byte o que o builder devolve, reprovou na hora. Ele estava certo:
+    # uma mudanca feita para UM aluno nao tem por que reescrever os arquivos dos outros.
+    percurso = c.get("percurso_min")
+    extra = (f"percurso:{int(percurso)},nominal:{int(percurso) + 5}," if percurso else "")
     js = troca_var(js, "CICLO",
-                   "{numero:%d,aulas:%d,primeira:%d,porBloco:%d,nivel:%r,"
-                   "percurso:%d,nominal:%d,"
+                   "{numero:%d,aulas:%d,primeira:%d,porBloco:%d,nivel:%r,%s"
                    "rotulo:'Aulas neste ciclo',rotuloAluno:'Lessons in this cycle'}"
-                   % (c["numero"], c["aulas"], c["primeira"], c["porBloco"], c["nivel"],
-                      percurso, percurso + 5))
+                   % (c["numero"], c["aulas"], c["primeira"], c["porBloco"], c["nivel"], extra))
     js = troca_var(js, "LESSONS", "{\n" + ",\n".join(lessons) + "\n}")
     js = troca_var(js, "GUIDE", "{\n" + ",\n".join(guides) + "\n}")
     # ---- a chave de progresso tem de ter O ALUNO dentro
