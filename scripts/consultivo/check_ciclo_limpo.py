@@ -49,6 +49,9 @@ USO:
     python3 scripts/consultivo/check_ciclo_limpo.py --selftest
 """
 import glob
+import json
+import html
+import io
 import os
 import re
 import sys
@@ -191,7 +194,59 @@ def confere(caminho):
         erros.append(
             f'CONTAMINACAO DE CICLO (INT-002): uma tela do ALUNO fala em "Lesson {n}", e '
             f'este material tem as aulas {feitas}. Contexto: "...{fora[n]}..."')
+
+    # ---- CONTAMINACAO DE ALUNO: o material de um aluno citando OUTRO
+    #
+    # Em 01/09/2026, o cartao da aula 12 da Joice dizia "e a hipotese H3 do bloco do Caio".
+    # A frase estava bem formada, o cartao valido, e nenhum gate via: o INT-002 acima mede
+    # NUMERO de aula fora do ciclo, e o nome de outra pessoa nao e um numero.
+    #
+    # O material de um aluno nao tem por que nomear outro. Personagem inventado nao entra na
+    # lista — ela vem dos configs, e sao os nomes dos ALUNOS REAIS da anatomia.
+    erros += _contaminacao_de_aluno(caminho, c)
     return True, erros
+
+
+def _alunos_da_anatomia():
+    """Primeiro nome de cada aluno com material nesta anatomia, tirado dos configs.
+
+    O primeiro nome basta e e o que aparece em prosa ("do Caio"). Sobrenome raramente
+    aparece solto, e usar o nome inteiro deixaria passar exatamente o caso que originou
+    esta regra."""
+    saida = {}
+    for cfg in sorted(glob.glob(os.path.join(RAIZ, "_build", "consultivo", "*",
+                                             "config.json"))):
+        try:
+            with open(cfg, encoding="utf-8") as f:
+                d = json.load(f)
+        except Exception:
+            continue
+        slug = d.get("slug")
+        nome = (d.get("aluno") or {}).get("nome", "").strip()
+        if slug and nome:
+            saida[slug] = nome
+    return saida
+
+
+def _contaminacao_de_aluno(caminho, c):
+    """O nome de proprio de OUTRO aluno da anatomia, na superficie deste material."""
+    alunos = _alunos_da_anatomia()
+    arq = os.path.basename(caminho)
+    meu = next((slug for slug in alunos if arq.startswith(slug)), None)
+    tela = na_tela(c) + " " + " ".join(
+        html.unescape(m) for m in re.findall(r'data-teacher="([^"]*)"', c))
+    fora = []
+    for slug, nome in alunos.items():
+        if slug == meu:
+            continue
+        for m in re.finditer(r"\b" + re.escape(nome) + r"\b", tela):
+            ctx = re.sub(r"\s+", " ", tela[max(0, m.start() - 70):m.end() + 50])
+            fora.append(
+                f'CONTAMINACAO DE ALUNO: este material nomeia "{nome}", que e outro aluno '
+                f'desta anatomia ({slug}). Contexto: "...{ctx}...". Se e personagem, '
+                f'escolha outro nome; se e observacao interna, ela nao vai para a tela.')
+            break
+    return fora
 
 
 def alvos_padrao():
@@ -207,14 +262,19 @@ def alvos_padrao():
     return fora
 
 
-def _confere_texto(t):
-    with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
+def _confere_texto(t, como="stephanie-vicente"):
+    """O arquivo temporario nao carrega o nome do aluno, e e o nome que diz de quem e o
+    material. Sem isto, o proprio molde reprova na regra de contaminacao de aluno: ele
+    nomeia a Stephanie porque ele E o material dela."""
+    d = tempfile.mkdtemp()
+    p = os.path.join(d, f"{como}.html")
+    with io.open(p, "w", encoding="utf-8") as f:
         f.write(t)
-        p = f.name
     try:
         return confere(p)
     finally:
         os.unlink(p)
+        os.rmdir(os.path.dirname(p))
 
 
 def _selftest():
@@ -246,6 +306,15 @@ def _selftest():
          lambda s: s.replace("</body>",
                              '<div data-teacher="retomar o que ficou da Lesson 19"></div>\n</body>', 1),
          None),
+        # o defeito real de 01/09: um cartao da Joice citava "o bloco do Caio"
+        ("nome de OUTRO aluno na tela",
+         lambda s: s.replace("<h2 class=\"sec\">Feedback</h2>",
+                             "<h2 class=\"sec\">Feedback</h2><p>e a mesma leitura do bloco do Caio</p>", 1),
+         "CONTAMINACAO DE ALUNO"),
+        ("nome de outro aluno no data-teacher — tambem reprova, e o professor le",
+         lambda s: s.replace("</body>",
+                             '<div data-teacher="compare com o material do Caio"></div>\n</body>', 1),
+         "CONTAMINACAO DE ALUNO"),
     ]
     falhou = False
     for nome, muta, esperado in casos:

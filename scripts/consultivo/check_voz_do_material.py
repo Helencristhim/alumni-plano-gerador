@@ -155,6 +155,65 @@ def mede(caminho):
     return fora
 
 
+def tratamento_declarado(caminho):
+    """Como o config manda tratar quem da a aula: 'a professora', 'o professor', ou nada.
+
+    O genero de quem ensina NAO se deduz do nome — e a regra que ja custou um erro no
+    material da Joice, cujo professor e homem e que dizia "a professora". O cadastro guarda
+    o NOME, e nome nao e genero.
+
+    Entao: ou o config declara `professor.tratamento`, e o material pode usar a forma
+    marcada que ele declara, ou nao declara, e o material usa a forma nao marcada
+    ('quem da a aula', 'o docente'). O que nao pode e o material escolher sozinho."""
+    arq = os.path.basename(caminho)
+    for cfg in sorted(glob.glob(os.path.join(RAIZ, "_build", "consultivo", "*",
+                                             "config.json"))):
+        try:
+            with open(cfg, encoding="utf-8") as f:
+                d = json.load(f)
+        except Exception:
+            continue
+        if d.get("slug") and arq.startswith(d["slug"]):
+            return ((d.get("professor") or {}).get("tratamento") or "").strip().lower()
+    return ""
+
+
+MARCADO_F = r"\b(?:a|à|da|pela|nossa|sua)\s+professora\b"
+MARCADO_M = r"\b(?:o|ao|do|pelo|nosso|seu)\s+professor\b"
+
+
+def genero_do_docente(caminho, s):
+    """A forma de tratar quem da a aula bate com o que o config declara.
+
+    A assimetria e da lingua, e nao um descuido da regra: em portugues *o professor* e a
+    forma padrao de quem escreve um documento sem saber quem vai le-lo, e passa sem
+    declaracao. *A professora* e escolha especifica — e foi exatamente ela, escrita sem
+    base, que pos o material da Joice tratando por "a professora" um professor homem.
+
+    Quem DECLARA `professor.tratamento` tem de ser consistente: o material da Lucia, cuja
+    professora e mulher, dizia "a professora" nove vezes e "o professor" oito, na mesma
+    pagina."""
+    decl = tratamento_declarado(caminho)
+    # o delta contra o shell, como nas outras regras: "Sintese do professor" e "Checklist do
+    # professor" sao rotulos da aba de Evidencias, e aparecem uma vez por linha da tabela.
+    shell = shell_superficie()
+    fem = [j for j in _janelas(s, MARCADO_F) if j not in set(_janelas(shell, MARCADO_F))]
+    masc = [j for j in _janelas(s, MARCADO_M) if j not in set(_janelas(shell, MARCADO_M))]
+    fora = []
+    if fem and "professora" not in decl:
+        fora.append(
+            f"GENERO DO DOCENTE: o material trata quem da a aula por "
+            f"'a professora' ({len(fem)}x) e o config nao declara "
+            f"`professor.tratamento` no feminino. Genero nao se deduz do nome: declare no "
+            f"config, ou use a forma padrao ('o professor').")
+    if masc and "professora" in decl:
+        fora.append(
+            f"GENERO DO DOCENTE: o config declara `professor.tratamento` no feminino e o "
+            f"material usa a forma masculina {len(masc)}x. Numa mesma pagina, as duas "
+            f"formas fazem parecer que sao duas pessoas.")
+    return fora
+
+
 def alvos():
     for lado in ("professor", "aluno"):
         for p in sorted(glob.glob(os.path.join(RAIZ, "public", lado, "*.html"))):
@@ -172,12 +231,18 @@ def main():
     if "--selftest" in sys.argv:
         return selftest()
     base = carrega()
-    atual, fails, limpos = {}, [], 0
+    atual, fails, limpos, textos_extra = {}, [], 0, {}
     for p in alvos():
         m = mede(p)
         if m is None:
             continue
         rel = os.path.relpath(p, RAIZ)
+        gen = genero_do_docente(p, superficie(open(p, encoding="utf-8",
+                                                   errors="replace").read()))
+        if gen:
+            m = dict(m)
+            m["genero-do-docente"] = len(gen)
+            textos_extra[rel] = gen
         atual[rel] = {k: v for k, v in m.items() if v}
         antes = base.get(rel, {})
         piorou = {k: (antes.get(k, 0), v) for k, v in m.items() if v > antes.get(k, 0)}
@@ -207,7 +272,11 @@ def main():
     for rel, piorou in fails:
         print(f"{VERM}FAIL{ZERA}  {rel}")
         for rid, (antes, agora) in sorted(piorou.items()):
-            print(f"        {rid}: {antes} -> {agora}. {textos[rid]}")
+            if rid == "genero-do-docente":
+                for t in textos_extra.get(rel, []):
+                    print(f"        {t}")
+            else:
+                print(f"        {rid}: {antes} -> {agora}. {textos[rid]}")
     if fails:
         print(f"\n{VERM}GATE 51 — {len(fails)} arquivo(s) com voz de producao NOVA.{ZERA}")
         print("A pagina descreve o aluno. O vocabulario de quem produziu o material fica "
@@ -246,12 +315,19 @@ def selftest():
     # e um arquivo sem o carimbo nao e medido
     if mede.__doc__ is None:
         pass
+    # a regra do genero: a forma feminina sem declaracao reprova; a masculina, nao
+    fem = superficie('<p>a producao e sempre com a professora</p>')
+    masc = superficie('<p>o professor conduz a etapa</p>')
+    if not genero_do_docente("/tmp/nao-declarado.html", fem):
+        falhas.append("genero: NAO viu a forma feminina sem declaracao")
+    if genero_do_docente("/tmp/nao-declarado.html", masc):
+        falhas.append("genero: reprovou a forma padrao ('o professor') sem declaracao")
     for f in falhas:
         print(f"{VERM}selftest FAIL{ZERA}  {f}")
     if falhas:
         return 1
     print(f"{VERDE}selftest OK{ZERA} — as {len(REGRAS)} regras veem o texto visivel e "
-          f"ignoram o codigo.")
+          f"ignoram o codigo, e a do genero distingue forma marcada de forma padrao.")
     return 0
 
 
