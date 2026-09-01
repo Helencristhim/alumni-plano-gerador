@@ -195,6 +195,17 @@ def _supabase():
     return (url.group(1), key.group(1)) if url and key else (None, None)
 
 
+def _e_do_consultivo(slug):
+    """O aluno tem material da anatomia consultivo? Le o carimbo, nunca uma lista a mao."""
+    raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    caminho = os.path.join(raiz, "public", "data", "anatomias.json")
+    try:
+        with open(caminho, encoding="utf-8") as fh:
+            return slug in (json.load(fh).get("consultivo") or {})
+    except Exception:
+        return False
+
+
 def promover_status(slug):
     """Aluno que APARECE NO DASHBOARD COM MATERIAL e ativo E aprovado.
 
@@ -228,6 +239,21 @@ def promover_status(slug):
     Agora toda saida IMPRIME o que aconteceu, e o PATCH e RECONFERIDO na origem:
     dizer "promovi" sem reler e so repetir o que a gente pediu, nao o que ficou.
     """
+    # O CONSULTIVO NAO E PROMOVIDO PELO MERGE (ordem do Dan, 01/09/2026: "coloque TODOS os
+    # materiais do consultivo como rascunho").
+    #
+    # A anatomia esta em revisao ativa -- o Dan revisou a mesma aula tres vezes em dois dias.
+    # Mergear ali publica o ARQUIVO, que e o que a revisao precisa para ser lida na tela; nao
+    # significa que o material esta pronto para o aluno. Promover no merge desfazia o rascunho
+    # a cada correcao, sem ninguem pedir.
+    #
+    # A lista sai do carimbo no disco (`anatomias.json`), a mesma que a aba do dashboard le --
+    # nao ha segunda lista para alguem esquecer de atualizar.
+    if _e_do_consultivo(slug):
+        print(f"  perfil: '{slug}' e da anatomia consultivo — status NAO promovido "
+              f"(a anatomia esta em revisao; a promocao e manual)")
+        return
+
     url, key = _supabase()
     if not (url and key):
         print("  (status: nao achei a config do Supabase — perfil NAO promovido)")

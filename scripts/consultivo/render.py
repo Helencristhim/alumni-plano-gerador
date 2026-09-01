@@ -526,10 +526,18 @@ def apoio_pt(texto, ident):
     Entao vem fechado, e quem decide abrir e ela.
 
     Usa o `toggleEl` que o shell ja tem; nada de mecanismo novo."""
-    return (f'    <button class="verify-all-btn ghost" style="margin-top:var(--space-2)" '
+    # A MARGEM DE BAIXO E DO BOTAO, NAO DO QUE VEM DEPOIS.
+    #
+    # Ele saia com margem so no topo: colava no titulo ou na primeira frase do exercicio
+    # seguinte, e a tela ficava com o apoio grudado no conteudo de baixo (revisao de
+    # 01/09/2026). O bloco aberto tambem precisa da sua, senao o texto em portugues encosta
+    # no exercicio quando a aluna o abre.
+    return (f'    <button class="verify-all-btn ghost" '
+            f'style="margin:var(--space-2) 0 var(--space-4)" '
             f'onclick="toggleEl(\'{ident}\',this,\'Ver em português\','
             f'\'Ocultar português\')">Ver em português</button>\n'
-            f'    <div id="{ident}" class="callout" style="display:none">{texto}</div>')
+            f'    <div id="{ident}" class="callout" '
+            f'style="display:none;margin:0 0 var(--space-4h)">{texto}</div>')
 
 
 RENDER = {"classificar": r_classificar, "completar": r_completar,
