@@ -1112,6 +1112,11 @@ body.tg-guia > #tgGuia{display:block!important}
    --d-accent sobre esse azul - 2,32:1, medido em seis botoes. O ghost so e ghost se o fundo
    dele tambem for. */
 .slide-dark .audio-btn-sm.ghost,.slide-open .audio-btn-sm.ghost{color:var(--d-accent);border-color:var(--d-accent);background:transparent}
+/* Ver a correcao `contraste-no-escuro-do-check-e-da-instrucao`: as duas regras abaixo
+   faltavam, e no escuro davam 1.49:1 e 1.75:1. */
+.slide-dark .verify-all-btn.ghost,.slide-open .verify-all-btn.ghost{color:var(--d-accent);border-color:var(--d-accent)}
+.slide-dark .verify-all-btn.ghost:hover,.slide-open .verify-all-btn.ghost:hover{background:var(--d-accent);color:var(--dark)}
+.slide-dark .task-instr,.slide-open .task-instr{color:var(--d-text-mid)}
 .slide-dark .audio-btn-sm.ghost:hover,.slide-open .audio-btn-sm.ghost:hover{background:var(--d-accent);color:var(--dark)}
 .slide-dark .audio-btn-sm,.slide-open .audio-btn-sm{border-color:var(--accent-light);background:var(--accent-light);color:#fff}
 .slide-dark .audio-btn-sm:hover,.slide-open .audio-btn-sm:hover{background:var(--accent)}
@@ -1156,25 +1161,10 @@ body.tg-guia > #tgGuia{display:block!important}
 .lesson-card.lc-pendente .lc-desc{color:var(--text-dim)}
 .lesson-card.lc-pendente .lc-status{color:var(--text-dim);border-color:var(--border)}
 
-/* --- cabecalho do Teacher's Guide, na janela separada ---
-   O painel dentro do deck mostra a NOTA da tela. A janela mostra o GUIA: os catorze campos
-   primeiro, e o procedimento tela a tela depois, navegavel. Duas pecas, um lugar cada. */
-.tg-guia-cabeca{margin-bottom:var(--space-6);padding-bottom:var(--space-5);
-  border-bottom:1px solid rgba(255,255,255,.22)}
-.tg-campo{margin-bottom:var(--space-4h)}
-.tg-campo>b{display:block;font-family:var(--font-interface);font-size:.72rem;
-  font-weight:var(--peso-forte);letter-spacing:var(--ls-rotulo);text-transform:uppercase;
-  color:var(--d-accent);margin-bottom:var(--space-2)}
-.tg-campo>div{font-size:.95rem;line-height:var(--lh-corpo);color:var(--d-text-mid)}
-.tg-campo strong{color:var(--d-text)}
-.tg-campo em{color:var(--d-text-dim);font-style:italic}
-.tg-campo ul,.tg-campo ol{margin:var(--space-2) 0 0;padding-left:var(--space-4h)}
-.tg-campo li{margin-bottom:var(--space-2)}
-.tg-ov{list-style:none;margin:var(--space-2) 0 0;padding:0}
-.tg-ov li{display:flex;justify-content:space-between;gap:var(--space-4);
-  padding:var(--space-2) 0;border-bottom:1px solid rgba(255,255,255,.14);margin:0}
-.tg-ov li em{font-style:normal;font-variant-numeric:tabular-nums;color:var(--d-text-dim)}
-.tg-ov-tot{margin:var(--space-3) 0 0;font-size:.86rem;color:var(--d-text-dim)}
+/* --- o Teacher's Guide, na janela separada ---
+   A janela mostra o PROCEDIMENTO da tela corrente, e so ele. As regras do cabecalho
+   (.tg-guia-cabeca, .tg-campo, .tg-ov) sairam junto com ele em 02/09/2026: CSS de peca que
+   nao existe mais e um convite a que a peca volte sem que ninguem decida isso. */
 .tg-guia-proc{font-family:var(--font-interface);font-size:.72rem;
   font-weight:var(--peso-forte);letter-spacing:var(--ls-rotulo);text-transform:uppercase;
   color:var(--d-accent);margin:0 0 var(--space-3)}
@@ -1183,8 +1173,12 @@ body.tg-guia > #tgGuia{display:block!important}
    Vive numa tela clara do deck. Texto corrido na familia de interface: transcricao e
    registro do que foi dito, nao destaque editorial. O nome do falante ganha coluna propria
    e largura fixa, para as falas alinharem entre si. */
-.transcript-box{margin-top:var(--space-3h);padding:var(--space-4) var(--space-4h);
+.transcript-box{margin:var(--space-3h) 0 var(--space-4h);padding:var(--space-4) var(--space-4h);
   background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:10px}
+
+/* Todo card expandivel tem folga DEPOIS do gatilho -- ver o comentario da correcao
+   `card-expandivel-tem-folga` em scripts/consultivo/extrai_shell.py. */
+.slide-inner > [onclick^="toggleEl("]{margin-bottom:var(--space-4)}
 .ts-linha{display:grid;grid-template-columns:88px 1fr;gap:var(--space-3);
   font-size:.86rem;line-height:var(--lh-corpo);color:var(--text-mid);
   padding:var(--space-2) 0;border-bottom:1px solid rgba(201,211,228,.5)}
@@ -3174,7 +3168,7 @@ superior não compensa lacuna nas habilidades prioritárias.
 <!-- Toda atividade com prompt operacional e, quando util, subprompt curto. -->
 
 <!-- ========== AULA 19 - ETAPA 1: CONTEXT + LEAD-IN (4 min) ========== -->
-<div class="slide slide-open active" data-slide="1" data-stage="1" data-lesson="9" data-teacher="<strong>Lesson opening (2 of 5)</strong><br><br><strong>Goal:</strong> To open the lesson on the event that is hers, and to find out what she already knows about it.<br><br><strong>Interaction:</strong> T–S, open questions.<br><br><strong>Run it:</strong> &bull; Ask what she knows about the meeting in Belém, and what she would want to ask about it.<br>&bull; Let her answer in Portuguese if she needs to, and give the same idea back in simple English for her to repeat.<br>&bull; Ask her for the date of the meeting and write the answer down: the sources give only <em>November</em>, with no year.<br><br><strong>Expected:</strong> Two or three pieces of information about the event, and at least one question of her own.<br><br><strong>Conditional support:</strong> If nothing comes, offer two options and let her choose one — choosing is also answering.<br><br><strong>Challenge:</strong> If she answers easily, ask what she would like to get out of the three days.<br><br><strong>Monitoring:</strong> Whether she answers in sentences or in single words. This is the third criterion of the cycle.<br><br><strong>Evidence to record:</strong> The date of the meeting, and whether she asked anything without being prompted.<br><br><strong>Transition:</strong> Move on when the date is written down and she has said something about the event." data-snap="0">
+<div class="slide slide-open active" data-slide="1" data-stage="1" data-lesson="9" data-teacher="<strong>Lesson opening (2 of 5)</strong><br><br><strong>Goal:</strong> To open the lesson on the event that is hers, and to find out what she already knows about it.<br><br><strong>Interaction:</strong> T–S, open questions.<br><br><strong>Run it:</strong> &bull; Ask what she knows about the meeting in Belém, and what she would want to ask about it.<br>&bull; Let her answer in Portuguese if she needs to, and give the same idea back in simple English for her to repeat.<br>&bull; Ask her for the date of the meeting and write the answer down: the sources give only <em>November</em>, with no year.<br><br><strong>Exact prompt:</strong> &bull; Opening, after the greeting: &ldquo;You have an invitation. What do you already know about this meeting in Belém?&rdquo;<br>&bull; Giving her answer back, in simple English, for her to repeat: &ldquo;So: it is a meeting for teachers, in November. Say it with me — it is a meeting for teachers, in November.&rdquo;<br>&bull; The two options, if nothing comes: &ldquo;Is it a meeting for teachers, or a meeting for students?&rdquo;<br>&bull; Asking for the date: &ldquo;Which days in November? Do you know yet?&rdquo;<br><br><strong>Expected:</strong> Two or three pieces of information about the event, and at least one question of her own.<br><br><strong>Conditional support:</strong> If nothing comes, offer two options and let her choose one — choosing is also answering.<br><br><strong>Challenge:</strong> If she answers easily, ask what she would like to get out of the three days.<br><br><strong>Monitoring:</strong> Whether she answers in sentences or in single words. This is the third criterion of the cycle.<br><br><strong>Evidence to record:</strong> The date of the meeting, and whether she asked anything without being prompted.<br><br><strong>Transition:</strong> Move on when the date is written down and she has said something about the event." data-snap="0">
   <div class="open-field open-2" aria-hidden="true"></div>
   <div class="slide-inner">
     <p class="chapter-label">Lesson 09</p>
@@ -3183,7 +3177,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="2" data-stage="1" data-lesson="9" data-teacher="<strong>The invitation (3 of 5)</strong><br><br><strong>Goal:</strong> To set the situation the whole lesson turns on: someone asks her what this meeting is.<br><br><strong>Interaction:</strong> T–S, reading the brief together.<br><br><strong>Run it:</strong> &bull; Read the brief on screen with her.<br>&bull; Confirm two things out loud: everything at the meeting happens in English, and she has a part in it.<br>&bull; Ask the two questions on screen, one at a time.<br><br><strong>Expected:</strong> One sentence saying what the meeting is, in her own words.<br><br><strong>Conditional support:</strong> If she reads the brief out loud instead of answering, ask the question again with the brief covered.<br><br><strong>Challenge:</strong> Ask what she would say second, after the first sentence.<br><br><strong>Monitoring:</strong> Whether the first sentence carries information or only feeling (<em>it is very nice</em>).<br><br><strong>Evidence to record:</strong> The first unprepared sentence of the lesson.<br><br><strong>Transition:</strong> Move on when she has said, in one sentence, what the meeting is." data-snap="1">
+<div class="slide slide-light" data-slide="2" data-stage="1" data-lesson="9" data-teacher="<strong>The invitation (3 of 5)</strong><br><br><strong>Goal:</strong> To set the situation the whole lesson turns on: someone asks her what this meeting is.<br><br><strong>Interaction:</strong> T–S, reading the brief together.<br><br><strong>Run it:</strong> &bull; Read the brief on screen with her.<br>&bull; Confirm two things out loud: everything at the meeting happens in English, and she has a part in it.<br>&bull; Ask the two questions on screen, one at a time.<br><br><strong>Exact prompt:</strong> &bull; The two things to confirm out loud: &ldquo;Everything at this meeting happens in English — the talks, the small groups, and your part too.&rdquo; and &ldquo;They want something from you. You have a part in it.&rdquo;<br>&bull; Handing her the colleague's question: &ldquo;So a colleague asks you: what is this meeting? What do you say first?&rdquo;<br><br><strong>Expected:</strong> One sentence saying what the meeting is, in her own words.<br><br><strong>Conditional support:</strong> If she reads the brief out loud instead of answering, ask the question again with the brief covered.<br><br><strong>Challenge:</strong> Ask what she would say second, after the first sentence.<br><br><strong>Monitoring:</strong> Whether the first sentence carries information or only feeling (<em>it is very nice</em>).<br><br><strong>Evidence to record:</strong> The first unprepared sentence of the lesson.<br><br><strong>Transition:</strong> Move on when she has said, in one sentence, what the meeting is." data-snap="1">
   <div class="slide-inner">
     <span class="stage-pill">1 &middot; The invitation</span>
     <h2 class="slide-heading">Three days, <span class="accent">all in English</span></h2>
@@ -3196,7 +3190,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="3" data-stage="2" data-lesson="9" data-teacher="<strong>Before you read (4)</strong><br><br><strong>Goal:</strong> To predict what the invitation will say, before reading it.<br><br><strong>Interaction:</strong> T–S, three prediction questions.<br><br><strong>Run it:</strong> &bull; Read the three questions out loud with her and ask for a guess on each.<br>&bull; Do not correct: these are hypotheses, and being wrong here costs nothing.<br>&bull; Do not confirm what the letter asks for — screen 5 depends on that being open.<br><br><strong>Expected:</strong> A guess for each of the three questions, even a short one.<br><br><strong>Conditional support:</strong> If she says she does not know, offer two options and ask her to pick one.<br><br><strong>Challenge:</strong> Ask her which of her three guesses she is most sure about, and why.<br><br><strong>Monitoring:</strong> Whether she can talk about a text she has not read yet.<br><br><strong>Evidence to record:</strong> Whether prediction is available to her, or she needs the text first.<br><br><strong>Transition:</strong> Move on when she has committed to all three guesses." data-snap="2">
+<div class="slide slide-dark" data-slide="3" data-stage="2" data-lesson="9" data-teacher="<strong>Before you read (4)</strong><br><br><strong>Goal:</strong> To predict what the invitation will say, before reading it.<br><br><strong>Interaction:</strong> T–S, three prediction questions.<br><br><strong>Run it:</strong> &bull; Read the three questions out loud with her and ask for a guess on each.<br>&bull; Do not correct: these are hypotheses, and being wrong here costs nothing.<br>&bull; Do not confirm what the letter asks for — screen 5 depends on that being open.<br><br><strong>Exact prompt:</strong> &bull; Framing the guessing, so that being wrong costs nothing: &ldquo;You have not read the letter yet. Guess — you cannot be wrong here.&rdquo;<br>&bull; The two options, if she says she does not know: &ldquo;Does an invitation only give you information, or does it also ask you for something?&rdquo;<br>&bull; After each guess, without confirming: &ldquo;Good. That is your guess. Let us see what the letter says.&rdquo;<br><br><strong>Expected:</strong> A guess for each of the three questions, even a short one.<br><br><strong>Conditional support:</strong> If she says she does not know, offer two options and ask her to pick one.<br><br><strong>Challenge:</strong> Ask her which of her three guesses she is most sure about, and why.<br><br><strong>Monitoring:</strong> Whether she can talk about a text she has not read yet.<br><br><strong>Evidence to record:</strong> Whether prediction is available to her, or she needs the text first.<br><br><strong>Transition:</strong> Move on when she has committed to all three guesses." data-snap="2">
   <div class="slide-inner">
     <span class="stage-pill">2 &middot; Before you read</span>
     <h2 class="slide-heading">What is <span class="accent">in a letter like this</span></h2>
@@ -3208,7 +3202,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="4" data-stage="3" data-lesson="9" data-teacher="<strong>Read it once (7)</strong><br><br><strong>Goal:</strong> To read the invitation once, for the main idea and the ask.<br><br><strong>Interaction:</strong> S alone, then T–S.<br><br><strong>Run it:</strong> &bull; Give her time to read the letter once, silently.<br>&bull; Ask the two questions under the letter: what the meeting is about, and what they want from her.<br>&bull; Do not translate. If she asks for a translation, give the English sentence she needs and let her repeat it.<br><br><strong>Expected:</strong> The subject of the meeting, and the request to bring one experience.<br><br><strong>Conditional support:</strong> If the ask does not come, point to the paragraph and ask what the sentence wants her to do.<br><br><strong>Challenge:</strong> Ask which single sentence she would keep if the letter had to fit in one line.<br><br><strong>Monitoring:</strong> Whether she reads for information or translates sentence by sentence.<br><br><strong>Evidence to record:</strong> First isolated measure of reading in the cycle: how much she gets from one reading.<br><br><strong>Transition:</strong> Move on when she has named the subject and the request." data-snap="3">
+<div class="slide slide-light" data-slide="4" data-stage="3" data-lesson="9" data-teacher="<strong>Read it once (7)</strong><br><br><strong>Goal:</strong> To read the invitation once, for the main idea and the ask.<br><br><strong>Interaction:</strong> S alone, then T–S.<br><br><strong>Run it:</strong> &bull; Give her time to read the letter once, silently.<br>&bull; Ask the two questions under the letter: what the meeting is about, and what they want from her.<br>&bull; Do not translate. If she asks for a translation, give the English sentence she needs and let her repeat it.<br><br><strong>Exact prompt:</strong> &bull; Instead of translating, when she asks: &ldquo;In English it is — they want you to bring one experience from your school. Say it with me.&rdquo;<br>&bull; Pointing, if the ask does not come: &ldquo;Look at this paragraph. What does this sentence want you to do?&rdquo;<br><br><strong>Expected:</strong> The subject of the meeting, and the request to bring one experience.<br><br><strong>Conditional support:</strong> If the ask does not come, point to the paragraph and ask what the sentence wants her to do.<br><br><strong>Challenge:</strong> Ask which single sentence she would keep if the letter had to fit in one line.<br><br><strong>Monitoring:</strong> Whether she reads for information or translates sentence by sentence.<br><br><strong>Evidence to record:</strong> First isolated measure of reading in the cycle: how much she gets from one reading.<br><br><strong>Transition:</strong> Move on when she has named the subject and the request." data-snap="3">
   <div class="slide-inner">
     <span class="stage-pill">3 &middot; Read it once</span>
     <h2 class="slide-heading">Four things, <span class="accent">and one date</span></h2>
@@ -3254,7 +3248,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="6" data-stage="5" data-lesson="9" data-teacher="<strong>What the other person needs (8)</strong><br><br><strong>Goal:</strong> To notice what another person actually needs to hear about the invitation.<br><br><strong>Interaction:</strong> S alone, then T–S on the reason.<br><br><strong>Run it:</strong> &bull; Ask her to choose the two answers that give another person the essential information.<br>&bull; Ask her why the other two do not, before you open the explanation.<br>&bull; Keep the explanation short: she is a doctor of Education, and the reason matters more to her than the rule.<br><br><strong>Expected:</strong> The two short summaries, not the quotation from the letter.<br><br><strong>Conditional support:</strong> If she chooses the quotation, ask what the other person would learn from it that they could not read themselves.<br><br><strong>Challenge:</strong> Ask her to say one of the two chosen answers in her own words.<br><br><strong>Monitoring:</strong> Whether she can tell summarizing from reading out.<br><br><strong>Evidence to record:</strong> Whether the idea of selecting information is available to her before the speaking task.<br><br><strong>Transition:</strong> Move on when the two are chosen and she has said why." data-snap="5">
+<div class="slide slide-dark" data-slide="6" data-stage="5" data-lesson="9" data-teacher="<strong>What the other person needs (8)</strong><br><br><strong>Goal:</strong> To notice what another person actually needs to hear about the invitation.<br><br><strong>Interaction:</strong> S alone, then T–S on the reason.<br><br><strong>Run it:</strong> &bull; Ask her to choose the two answers that give another person the essential information.<br>&bull; Ask her why the other two do not, before you open the explanation.<br>&bull; Keep the explanation short: she is a doctor of Education, and the reason matters more to her than the rule.<br><br><strong>Exact prompt:</strong> &bull; Asking for the reason before opening the explanation: &ldquo;Why do the other two not work? What would the other person not learn?&rdquo;<br>&bull; If she chooses the quotation from the letter: &ldquo;If you read that to your colleague, what do they learn that they could not read themselves?&rdquo;<br><br><strong>Expected:</strong> The two short summaries, not the quotation from the letter.<br><br><strong>Conditional support:</strong> If she chooses the quotation, ask what the other person would learn from it that they could not read themselves.<br><br><strong>Challenge:</strong> Ask her to say one of the two chosen answers in her own words.<br><br><strong>Monitoring:</strong> Whether she can tell summarizing from reading out.<br><br><strong>Evidence to record:</strong> Whether the idea of selecting information is available to her before the speaking task.<br><br><strong>Transition:</strong> Move on when the two are chosen and she has said why." data-snap="5">
   <div class="slide-inner">
     <span class="stage-pill">5 &middot; What the other person needs</span>
     <h2 class="slide-heading">Saying it back <span class="accent">in your own words</span></h2>
@@ -3273,7 +3267,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="7" data-stage="6" data-lesson="9" data-teacher="<strong>Say it back (9)</strong><br><br><strong>Goal:</strong> To produce whole sentences from the five beginnings, with the information given to her.<br><br><strong>Interaction:</strong> T gives the information, S produces the sentence.<br><br><strong>Run it:</strong> &bull; Say one piece of information (<em>November</em>, <em>ten minutes</em>, <em>one experience</em>) and let her build the sentence.<br>&bull; Go through the five beginnings at least twice, in a different order the second time.<br>&bull; Do not correct mid-sentence: note it and give it back at stage 8.<br><br><strong>Expected:</strong> Five whole sentences, said out loud, without reading them.<br><br><strong>Conditional support:</strong> If only a word comes, give the first two words of the sentence and ask again.<br><br><strong>Challenge:</strong> Take one beginning away and ask her to say the same idea without it.<br><br><strong>Monitoring:</strong> Which beginnings come out whole and which still need the frame on screen.<br><br><strong>Evidence to record:</strong> How much support the sentence still needs at this point.<br><br><strong>Transition:</strong> Move on when the five have been said as sentences." data-snap="6">
+<div class="slide slide-light" data-slide="7" data-stage="6" data-lesson="9" data-teacher="<strong>Say it back (9)</strong><br><br><strong>Goal:</strong> To produce whole sentences from the five beginnings, with the information given to her.<br><br><strong>Interaction:</strong> T gives the information, S produces the sentence.<br><br><strong>Run it:</strong> &bull; Say one piece of information (<em>November</em>, <em>ten minutes</em>, <em>one experience</em>) and let her build the sentence.<br>&bull; Go through the five beginnings at least twice, in a different order the second time.<br>&bull; Do not correct mid-sentence: note it and give it back at stage 8.<br><br><strong>Exact prompt:</strong> &bull; The information, one piece at a time, and nothing else: &ldquo;November.&rdquo; · &ldquo;Ten minutes.&rdquo; · &ldquo;One experience.&rdquo; · &ldquo;Eight countries.&rdquo; · &ldquo;Belém.&rdquo;<br>&bull; If only a word comes back, give the first two words and stop: &ldquo;It is…&rdquo; / &ldquo;They want…&rdquo; / &ldquo;My part…&rdquo;<br>&bull; Second round, before changing the order: &ldquo;Again, and this time in a different order.&rdquo;<br><br><strong>Expected:</strong> Five whole sentences, said out loud, without reading them.<br><br><strong>Conditional support:</strong> If only a word comes, give the first two words of the sentence and ask again.<br><br><strong>Challenge:</strong> Take one beginning away and ask her to say the same idea without it.<br><br><strong>Monitoring:</strong> Which beginnings come out whole and which still need the frame on screen.<br><br><strong>Evidence to record:</strong> How much support the sentence still needs at this point.<br><br><strong>Transition:</strong> Move on when the five have been said as sentences." data-snap="6">
   <div class="slide-inner">
     <span class="stage-pill">6 &middot; Say it back</span>
     <h2 class="slide-heading">Five beginnings, <span class="accent">out loud</span></h2>
@@ -3288,7 +3282,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="8" data-stage="7" data-lesson="9" data-teacher="<strong>Tell a colleague (9)</strong><br><br><strong>Goal:</strong> To tell a colleague about the invitation, without the letter in front of her.<br><br><strong>Interaction:</strong> Role-play, T as the colleague.<br><br><strong>Run it:</strong> &bull; Take the part of a colleague who knows nothing about the meeting, and let her start.<br>&bull; The invitation is behind the button: open it only if she stops and cannot restart.<br>&bull; Do not correct during the production. Record it, and note what to give back at stage 8.<br><br><strong>Expected:</strong> What the meeting is, when and where it is, and what she will do there.<br><br><strong>Conditional support:</strong> If she stops, give the first word of the next sentence and nothing more.<br><br><strong>Challenge:</strong> Ask her one question at the end, as the colleague would: <em>and what will you talk about?</em><br><br><strong>Monitoring:</strong> Whether the date survives without the text, and whether she says what is expected of her.<br><br><strong>Evidence to record:</strong> The recording: the first extended production of the cycle.<br><br><strong>Transition:</strong> Move on when she has covered the four points, or has clearly finished." data-snap="7">
+<div class="slide slide-dark" data-slide="8" data-stage="7" data-lesson="9" data-teacher="<strong>Tell a colleague (9)</strong><br><br><strong>Goal:</strong> To tell a colleague about the invitation, without the letter in front of her.<br><br><strong>Interaction:</strong> Role-play, T as the colleague.<br><br><strong>Run it:</strong> &bull; Take the part of a colleague who knows nothing about the meeting, and let her start.<br>&bull; The invitation is behind the button: open it only if she stops and cannot restart.<br>&bull; Do not correct during the production. Record it, and note what to give back at stage 8.<br><br><strong>Exact prompt:</strong> &bull; Opening as the colleague, so she starts: &ldquo;Hi, Joice. Someone told me you are going to Belém in November. What is this meeting?&rdquo;<br>&bull; The one question at the end, still as the colleague: &ldquo;And what will you talk about?&rdquo;<br>&bull; If she stops, the first word and nothing more: &ldquo;They…&rdquo; / &ldquo;My…&rdquo; / &ldquo;It is…&rdquo;<br><br><strong>Expected:</strong> What the meeting is, when and where it is, and what she will do there.<br><br><strong>Conditional support:</strong> If she stops, give the first word of the next sentence and nothing more.<br><br><strong>Challenge:</strong> Ask her one question at the end, as the colleague would: <em>and what will you talk about?</em><br><br><strong>Monitoring:</strong> Whether the date survives without the text, and whether she says what is expected of her.<br><br><strong>Evidence to record:</strong> The recording: the first extended production of the cycle.<br><br><strong>Transition:</strong> Move on when she has covered the four points, or has clearly finished." data-snap="7">
   <div class="slide-inner">
     <span class="stage-pill">7 &middot; Tell a colleague about the invitation</span>
     <h2 class="slide-heading">A colleague asks you <span class="accent">what you were invited to</span></h2>
@@ -3316,7 +3310,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="9" data-stage="8" data-lesson="9" data-teacher="<strong>What just happened (3 of 5)</strong><br><br><strong>Goal:</strong> To give back two points — one that worked, one to build on — and to run the part again.<br><br><strong>Interaction:</strong> T–S, then S alone on the replay.<br><br><strong>Run it:</strong> &bull; Write one thing that worked and one thing to build on, in the fields on screen.<br>&bull; Write the sentence as she said it, and then a clearer version, side by side.<br>&bull; Open <em>Replay</em> and let her tell the same thing to someone who only needs the essentials.<br><br><strong>Expected:</strong> A shorter version that keeps the subject, the date and the ask.<br><br><strong>Conditional support:</strong> If she repeats the long version, ask which single piece of information the other person cannot do without.<br><br><strong>Challenge:</strong> Ask what she would leave out if the person were already walking away.<br><br><strong>Monitoring:</strong> What she cuts first, and whether what stays is what matters.<br><br><strong>Evidence to record:</strong> The difference between the first version and the replay.<br><br><strong>Transition:</strong> Move on when the shorter version has been said once." data-snap="8">
+<div class="slide slide-light" data-slide="9" data-stage="8" data-lesson="9" data-teacher="<strong>What just happened (3 of 5)</strong><br><br><strong>Goal:</strong> To give back two points — one that worked, one to build on — and to run the part again.<br><br><strong>Interaction:</strong> T–S, then S alone on the replay.<br><br><strong>Run it:</strong> &bull; Write one thing that worked and one thing to build on, in the fields on screen.<br>&bull; Write the sentence as she said it, and then a clearer version, side by side.<br>&bull; Open <em>Replay</em> and let her tell the same thing to someone who only needs the essentials.<br><br><strong>Exact prompt:</strong> &bull; Naming what worked, with the evidence: &ldquo;This worked: you said what the meeting is and when it is, without looking at the letter.&rdquo;<br>&bull; The two versions, side by side, out loud: &ldquo;You said: … A clearer way to say it is: …&rdquo;<br>&bull; Handing over the replay: &ldquo;Now the same thing, for a colleague who is already walking away. Only what they cannot do without.&rdquo;<br><br><strong>Expected:</strong> A shorter version that keeps the subject, the date and the ask.<br><br><strong>Conditional support:</strong> If she repeats the long version, ask which single piece of information the other person cannot do without.<br><br><strong>Challenge:</strong> Ask what she would leave out if the person were already walking away.<br><br><strong>Monitoring:</strong> What she cuts first, and whether what stays is what matters.<br><br><strong>Evidence to record:</strong> The difference between the first version and the replay.<br><br><strong>Transition:</strong> Move on when the shorter version has been said once." data-snap="8">
   <div class="slide-inner">
     <span class="stage-pill">8 &middot; Feedback &amp; close</span>
     <h2 class="slide-heading">What just <span class="accent">happened</span></h2>
@@ -3344,7 +3338,7 @@ superior não compensa lacuna nas habilidades prioritárias.
 </div>
 
 
-<div class="slide slide-dark" data-slide="10" data-stage="8" data-lesson="9" data-teacher="<strong>Today and next (2 of 5)</strong><br><br><strong>Goal:</strong> To close the lesson and connect it to where she will use it.<br><br><strong>Interaction:</strong> T–S, checklist and confidence scale.<br><br><strong>Run it:</strong> &bull; Go through the list with her and let her tick what she recognizes.<br>&bull; Ask for the confidence scale honestly: it guides the next lesson, and it is not a test.<br>&bull; Read <em>Where you would use it</em> with her and ask for one real occasion.<br><br><strong>Expected:</strong> One concrete situation of her own, and roughly when it will happen.<br><br><strong>Conditional support:</strong> If nothing comes, offer the meeting in November itself as the occasion.<br><br><strong>Challenge:</strong> Ask which phrase from today she would take to that situation.<br><br><strong>Monitoring:</strong> Whether the confidence she reports matches what you saw in stage 7.<br><br><strong>Evidence to record:</strong> The confidence scale, and the situation she names.<br><br><strong>Transition:</strong> Close the lesson and say what lesson 10 will be: two people introducing themselves, and asking them a question." data-snap="9">
+<div class="slide slide-dark" data-slide="10" data-stage="8" data-lesson="9" data-teacher="<strong>Today and next (2 of 5)</strong><br><br><strong>Goal:</strong> To close the lesson and connect it to where she will use it.<br><br><strong>Interaction:</strong> T–S, checklist and confidence scale.<br><br><strong>Run it:</strong> &bull; Go through the list with her and let her tick what she recognizes.<br>&bull; Ask for the confidence scale honestly: it guides the next lesson, and it is not a test.<br>&bull; Read <em>Where you would use it</em> with her and ask for one real occasion.<br><br><strong>Exact prompt:</strong> &bull; Asking for a real occasion: &ldquo;Where will you use this? A call, a meeting, someone asking you what you are going to do?&rdquo;<br>&bull; The occasion to offer, if nothing comes: &ldquo;The meeting in Belém itself, in November. Someone there will ask you what you do.&rdquo;<br>&bull; Closing, and naming the next lesson: &ldquo;Next time: two people introduce themselves to you, and you ask them a question.&rdquo;<br><br><strong>Expected:</strong> One concrete situation of her own, and roughly when it will happen.<br><br><strong>Conditional support:</strong> If nothing comes, offer the meeting in November itself as the occasion.<br><br><strong>Challenge:</strong> Ask which phrase from today she would take to that situation.<br><br><strong>Monitoring:</strong> Whether the confidence she reports matches what you saw in stage 7.<br><br><strong>Evidence to record:</strong> The confidence scale, and the situation she names.<br><br><strong>Transition:</strong> Close the lesson and say what lesson 10 will be: two people introducing themselves, and asking them a question." data-snap="9">
   <div class="slide-inner">
     <p class="chapter-label" style="text-align:center">8 &middot; Feedback &amp; close</p>
     <h2 class="slide-title" style="text-align:center">Today, and <span class="accent">where it goes</span></h2>
@@ -3371,7 +3365,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-open active" data-slide="11" data-stage="1" data-lesson="10" data-teacher="<strong>Abertura (2 min dos 5)</strong><br><br><strong>Objetivo:</strong> nomear a cena: é a reunião do Meteoro, com a tradução automatica ligada.<br><br><strong>Conduza:</strong> pergunte quando foi a última reunião e o que ela fez lá. Uma resposta e siga.<br><br><strong>Diga isto uma vez:</strong> hoje não se trata de entender tudo. Trata-se de PERGUNTAR uma vez.<br><br><strong>Siga quando:</strong> ela der um exemplo concreto." data-snap="0">
+<div class="slide slide-open active" data-slide="11" data-stage="1" data-lesson="10" data-teacher="<strong>Abertura (2 min dos 5)</strong><br><br><strong>Objetivo:</strong> nomear a cena: é a reunião do Meteoro, com a tradução automatica ligada.<br><br><strong>Conduza:</strong> pergunte quando foi a última reunião e o que ela fez lá. Uma resposta e siga.<br><br><strong>Diga isto uma vez:</strong> hoje não se trata de entender tudo. Trata-se de PERGUNTAR uma vez.<br><br><strong>Diga assim:</strong> &ldquo;Today is not about understanding everything. It is about asking, one time.&rdquo;<br><br><strong>Siga quando:</strong> ela der um exemplo concreto." data-snap="0">
   <div class="open-field open-2" aria-hidden="true"></div>
   <div class="slide-inner">
     <p class="chapter-label">Lesson 10</p>
@@ -3393,7 +3387,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="13" data-stage="2" data-lesson="10" data-teacher="<strong>Predicao (4 min)</strong><br><br><strong>Objetivo:</strong> arriscar o que uma apresentação traz, antes de ouvir.<br><br><strong>Conduza:</strong> leia as três perguntas EM VOZ ALTA COM ela. Aceite qualquer palpite; não confirme nem corrija.<br><br><strong>Atenção:</strong> se ela não arriscar, ofereça duas opções e peça que escolha.<br><br><strong>Siga quando:</strong> ela tiver arriscado as três." data-snap="2">
+<div class="slide slide-dark" data-slide="13" data-stage="2" data-lesson="10" data-teacher="<strong>Predicao (4 min)</strong><br><br><strong>Objetivo:</strong> arriscar o que uma apresentação traz, antes de ouvir.<br><br><strong>Conduza:</strong> leia as três perguntas EM VOZ ALTA COM ela. Aceite qualquer palpite; não confirme nem corrija.<br><br><strong>Atenção:</strong> se ela não arriscar, ofereça duas opções e peça que escolha.<br><br><strong>Diga assim:</strong> as duas opções &mdash; &ldquo;Do they always say their name, or only what they do?&rdquo; E depois do palpite, sem confirmar: &ldquo;Good. That is your guess. Let us listen.&rdquo;<br><br><strong>Siga quando:</strong> ela tiver arriscado as três." data-snap="2">
   <div class="slide-inner">
     <span class="stage-pill">2 &middot; Before you listen</span>
     <h2 class="slide-heading">Four things, <span class="accent">every time</span></h2>
@@ -3513,7 +3507,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="19" data-stage="8" data-lesson="10" data-teacher="<strong>Devolutiva + replay (3 min dos 5)</strong><br><br><strong>Conduza:</strong> duas coisas, curtas. <strong>Conte as perguntas em voz alta com ela</strong> &mdash; se saiu uma, diga que é a primeira em sete aulas de registro. Isso é resultado, e ela precisa ouvir como resultado.<br><br><strong>Depois:</strong> mesmo áudio um pouco mais rápido, um pedido só, escolhido por ela.<br><br><strong>Atenção:</strong> não acrescente conteúdo novo." data-snap="8">
+<div class="slide slide-light" data-slide="19" data-stage="8" data-lesson="10" data-teacher="<strong>Devolutiva + replay (3 min dos 5)</strong><br><br><strong>Conduza:</strong> duas coisas, curtas. <strong>Conte as perguntas em voz alta com ela</strong> &mdash; se saiu uma, diga que é a primeira em sete aulas de registro. Isso é resultado, e ela precisa ouvir como resultado.<br><br><strong>Depois:</strong> mesmo áudio um pouco mais rápido, um pedido só, escolhido por ela.<br><br><strong>Atenção:</strong> não acrescente conteúdo novo.<br><br><strong>Diga assim:</strong> &ldquo;You asked one question. That is the first one in seven lessons. That is the result of today.&rdquo;" data-snap="8">
   <div class="slide-inner">
     <span class="stage-pill">8 &middot; A little faster</span>
     <h2 class="slide-heading">Same two, <span class="accent">one question only</span></h2>
@@ -3534,7 +3528,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="20" data-stage="8" data-lesson="10" data-teacher="<strong>Fecho (2 min dos 5)</strong><br><br><strong>Conduza:</strong> ela marca o que reconhece.<br><br><strong>Homework (oralmente, Não na tela):</strong> o post-class tem as duas apresentações em velocidade cheia sem transcrição, e a apresentação dela escrita em quatro frases &mdash; que é o que ela vai dizer na aula 12.<br><br><strong>Próxima aula:</strong> a 11 e sobre a forma da pergunta &mdash; seis perguntas seguidas, cada uma nascendo da resposta anterior. Diga isso: é o que faltava nas oito aulas anteriores, que ensinaram a responder.<br><br><strong>Registro pós-aula:</strong> preencha ANTES de fechar. Anote se ela formulou alguma pergunta e o quanto entendeu sem a transcrição." data-snap="9">
+<div class="slide slide-dark" data-slide="20" data-stage="8" data-lesson="10" data-teacher="<strong>Fecho (2 min dos 5)</strong><br><br><strong>Conduza:</strong> ela marca o que reconhece.<br><br><strong>Homework (oralmente, Não na tela):</strong> o post-class tem as duas apresentações em velocidade cheia sem transcrição, e a apresentação dela escrita em quatro frases &mdash; que é o que ela vai dizer na aula 12.<br><br><strong>Próxima aula:</strong> a 11 e sobre a forma da pergunta &mdash; seis perguntas seguidas, cada uma nascendo da resposta anterior. Diga isso: é o que faltava nas oito aulas anteriores, que ensinaram a responder.<br><br><strong>Registro pós-aula:</strong> preencha ANTES de fechar. Anote se ela formulou alguma pergunta e o quanto entendeu sem a transcrição.<br><br><strong>Diga assim:</strong> &ldquo;Next lesson is the question itself &mdash; six of them, one after another. That is the part the first eight lessons never asked of you.&rdquo;" data-snap="9">
   <div class="slide-inner">
     <p class="chapter-label" style="text-align:center">8 &middot; Feedback &amp; close</p>
     <h2 class="slide-title" style="text-align:center">Today, and <span class="accent">where it goes</span></h2>
@@ -3617,7 +3611,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="25" data-stage="4" data-lesson="11" data-teacher="<strong>Clarificacao MPF (7 min)</strong><br><br><strong>Objetivo:</strong> a forma inteira, uma vez, em uma linha &mdash; DEPOIS da tentativa.<br><br><strong>Conduza:</strong> mostre, leia com ela, e siga. Dois minutos, não sete.<br><br><strong>CCQ:</strong> <em>Do you like your school?</em> ou <em>Are you like your school?</em> (Do &mdash; e ação.) E <em>___ you tired?</em>? (Are &mdash; e estado.)<br><br><strong>Atenção:</strong> ela é doutora em Educacao. Diga POR QUE a regra veio depois da tentativa &mdash; isso a ela interessa, e é o que sustenta a adesao.<br><br><strong>Siga quando:</strong> as duas CCQs estiverem respondidas." data-snap="4">
+<div class="slide slide-light" data-slide="25" data-stage="4" data-lesson="11" data-teacher="<strong>Clarificacao MPF (7 min)</strong><br><br><strong>Objetivo:</strong> a forma inteira, uma vez, em uma linha &mdash; DEPOIS da tentativa.<br><br><strong>Conduza:</strong> mostre, leia com ela, e siga. Dois minutos, não sete.<br><br><strong>CCQ:</strong> <em>Do you like your school?</em> ou <em>Are you like your school?</em> (Do &mdash; e ação.) E <em>___ you tired?</em>? (Are &mdash; e estado.)<br><br><strong>Atenção:</strong> ela é doutora em Educacao. Diga POR QUE a regra veio depois da tentativa &mdash; isso a ela interessa, e é o que sustenta a adesao.<br><br><strong>Diga assim:</strong> &ldquo;You tried first, and then you saw the form. That order is on purpose: the rule stays because you already needed it.&rdquo;<br><br><strong>Siga quando:</strong> as duas CCQs estiverem respondidas." data-snap="4">
   <div class="slide-inner">
     <span class="stage-pill">4 &middot; The form under it</span>
     <h2 class="slide-heading">One line, <span class="accent">after you tried</span></h2>
@@ -3696,7 +3690,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="30" data-stage="8" data-lesson="11" data-teacher="<strong>Fecho (1 min dos 4)</strong><br><br><strong>Conduza:</strong> ela marca o que reconhece.<br><br><strong>Homework (oralmente, Não na tela):</strong> o post-class tem uma gravação opcional de seis perguntas a alguém real, e as seis perguntas do encontro de novembro escritas.<br><br><strong>Próxima aula:</strong> a 12 fecha o bloco &mdash; ela entra numa reunião, diz quem e, faz duas perguntas e responde uma que não previu. Diga que é a reunião do Meteoro em escala pequena.<br><br><strong>A próxima fecha o bloco:</strong> preencha o registro de hoje ANTES de fechar. As quatro aulas são lidas juntas lá." data-snap="9">
+<div class="slide slide-dark" data-slide="30" data-stage="8" data-lesson="11" data-teacher="<strong>Fecho (1 min dos 4)</strong><br><br><strong>Conduza:</strong> ela marca o que reconhece.<br><br><strong>Homework (oralmente, Não na tela):</strong> o post-class tem uma gravação opcional de seis perguntas a alguém real, e as seis perguntas do encontro de novembro escritas.<br><br><strong>Próxima aula:</strong> a 12 fecha o bloco &mdash; ela entra numa reunião, diz quem e, faz duas perguntas e responde uma que não previu. Diga que é a reunião do Meteoro em escala pequena.<br><br><strong>A próxima fecha o bloco:</strong> preencha o registro de hoje ANTES de fechar. As quatro aulas são lidas juntas lá.<br><br><strong>Diga assim:</strong> &ldquo;Next time: four people on a call, and nobody says your name. It is the Meteoro meeting, made small.&rdquo;" data-snap="9">
   <div class="slide-inner">
     <p class="chapter-label" style="text-align:center">8 &middot; Feedback &amp; close</p>
     <h2 class="slide-title" style="text-align:center">Today, and <span class="accent">where it goes</span></h2>
@@ -3723,7 +3717,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-open active" data-slide="31" data-stage="1" data-lesson="12" data-teacher="<strong>Abertura (2 min dos 5)</strong><br><br><strong>Objetivo:</strong> dizer, em uma frase, que hoje as três aulas anteriores chegam juntas.<br><br><strong>ESTA AULA FECHA O BLOCO.</strong> Releia os registros das três anteriores antes de começar: é o que orienta o planejamento das proximas.<br><br><strong>Diga uma vez, e só uma:</strong> a sala é simulada, não há ninguém com nível mais alto aqui. A vergonha em grupo e o obstaculo real dela, e nomear isso uma vez ajuda; repetir, não.<br><br><strong>Siga quando:</strong> ela estiver na tela seguinte." data-snap="0">
+<div class="slide slide-open active" data-slide="31" data-stage="1" data-lesson="12" data-teacher="<strong>Abertura (2 min dos 5)</strong><br><br><strong>Objetivo:</strong> dizer, em uma frase, que hoje as três aulas anteriores chegam juntas.<br><br><strong>ESTA AULA FECHA O BLOCO.</strong> Releia os registros das três anteriores antes de começar: é o que orienta o planejamento das proximas.<br><br><strong>Diga uma vez, e só uma:</strong> a sala é simulada, não há ninguém com nível mais alto aqui. A vergonha em grupo e o obstaculo real dela, e nomear isso uma vez ajuda; repetir, não.<br><br><strong>Diga assim:</strong> &ldquo;This room is a simulation. Nobody here has better English than you. Today you go in.&rdquo;<br><br><strong>Siga quando:</strong> ela estiver na tela seguinte." data-snap="0">
   <div class="open-field open-2" aria-hidden="true"></div>
   <div class="slide-inner">
     <p class="chapter-label">Lesson 12</p>
@@ -3841,7 +3835,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="38" data-stage="7" data-lesson="12" data-teacher="<strong>Devolutiva + upgrade (5 min)</strong><br><br><strong>Conduza:</strong> três pontos: um que funcionou, um que não, e UMA medida em voz alta (quantas perguntas ela fez, ou quanto durou a apresentação).<br><br><strong>Se ela entrou sem ser chamada</strong>, diga isso com todas as letras. E a coisa que ela disse que não consegue fazer.<br><br><strong>Atenção:</strong> não acrescente conteúdo novo. O round 2 e a mesma apresentação, mais curta." data-snap="7">
+<div class="slide slide-light" data-slide="38" data-stage="7" data-lesson="12" data-teacher="<strong>Devolutiva + upgrade (5 min)</strong><br><br><strong>Conduza:</strong> três pontos: um que funcionou, um que não, e UMA medida em voz alta (quantas perguntas ela fez, ou quanto durou a apresentação).<br><br><strong>Se ela entrou sem ser chamada</strong>, diga isso com todas as letras. E a coisa que ela disse que não consegue fazer.<br><br><strong>Atenção:</strong> não acrescente conteúdo novo. O round 2 e a mesma apresentação, mais curta.<br><br><strong>Diga assim:</strong> &ldquo;Nobody called your name, and you came in anyway. That is the thing you told me you cannot do.&rdquo;" data-snap="7">
   <div class="slide-inner">
     <span class="stage-pill">7 &middot; Feedback</span>
     <h2 class="slide-heading">Two things, <span class="accent">and one number</span></h2>
@@ -3931,7 +3925,9 @@ superior não compensa lacuna nas habilidades prioritárias.
 <h1 id="tgGuiaTitulo">Teacher’s Guide</h1>
 <p class="tg-guia-pos" id="tgGuiaPos"></p>
 </div>
-<div class="tg-guia-cabeca" id="tgGuiaCabeca"></div>
+<!-- O cabecalho de treze campos saiu em 02/09/2026: ele nao mudava de tela em tela e
+     empurrava o procedimento para baixo em todas elas. A preparacao da aula vive no cartao
+     da aula ("Estrutura e preparacao"), que e onde se prepara. Aqui e a hora da aula. -->
 <p class="tg-guia-proc">Stage-by-stage procedure</p>
 <div class="tg-guia-nota" id="tgGuiaNota"></div>
 <div class="tg-guia-nav">
@@ -6393,48 +6389,14 @@ function tgModoIr(d){
    procedimento. Sao duas pecas diferentes, e confundi-las e o que faz uma delas nao existir.
    A nota local acompanha a atividade; o guia e o que permite a um professor que nao produziu
    a aula prepara-la e conduzi-la inteira. */
-function tgLinha(rot,txt){
-  if(!txt)return '';
-  return '<div class="tg-campo"><b>'+rot+'</b><div>'+txt+'</div></div>';
-}
-function tgCabecaHTML(n){
-  var G=GUIDE[n]; if(!G)return '';
-  var L=LESSONS[n]||{},h='',i,s=stagesOf(n)||[];
-  /* `Lesson identity` saiu na revisao de 31/08/2026. A linha abria o guia com bloco,
-     faixas de CEFR, duracao, posicao no ciclo e o "assessment model in force" -- metadado de
-     PRODUCAO, escrito para quem monta o material, no alto da pagina que a professora abre
-     para dar a aula. O que ela precisa da aula esta nos campos abaixo, e o resto do
-     cabecalho continua. */
-  h+=tgLinha('Goals',G.goals);
-  h+=tgLinha('Communicative product',G.product);
-  h+=tgLinha('Success criteria',G.criteria);
-  h+=tgLinha('Teacher preparation',G.prep);
-  var ov='<ul class="tg-ov">';
-  for(i=0;i<s.length;i++)ov+='<li><span>'+(i+1)+' &middot; '+s[i].n+'</span><em>'+s[i].min+' min</em></li>';
-  ov+='</ul><p class="tg-ov-tot">'+somaEtapas(n)+' minutes of essential path, plus 5 minutes of operational margin.</p>';
-  h+=tgLinha('Lesson overview',ov);
-  h+=tgLinha('Language focus',G.language);
-  /* Campo proprio, e nao uma linha perdida na preparacao: o adendo normativo exige que o
-     guia declare QUANDO abrir o transcript, e uma regra que vive dentro de outro campo e uma
-     regra que ninguem acha na hora da aula. */
-  h+=tgLinha('Transcript',G.transcript);
-  h+=tgLinha('Anticipated difficulties',G.difficulties);
-  h+=tgLinha('Scaffolding and challenge',G.scaffolding);
-  h+=tgLinha('Feedback and retask',G.feedback);
-  h+=tgLinha('Evidence to record',G.evidence);
-  h+=tgLinha('Pre/post-class connection',G.prepost);
-  h+=tgLinha('Answer key / possible answers',G.key);
-  return h;
-}
+/* `tgLinha` e `tgCabecaHTML` sairam com o cabecalho, em 02/09/2026. Funcao que ninguem
+   chama e a forma mais silenciosa de um pedaco removido voltar: basta alguem reintroduzir a
+   chamada sem reabrir a decisao. `GUIDE` continua no arquivo -- ele e a fonte declarada da
+   aula e outros gates o leem -- mas ja nao pinta nada nesta janela. */
 function tgModoPinta(){
   var s=_tgSlides[_tgI],L=LESSONS[_tgN]||{};
   var el=document.getElementById('tgGuiaTitulo');
   if(el)el.innerHTML='Lesson '+(_tgN<10?'0'+_tgN:_tgN)+' &middot; '+(L.tema||'');
-  el=document.getElementById('tgGuiaCabeca');
-  if(el&&!el.getAttribute('data-pronto')){
-    el.innerHTML=tgCabecaHTML(_tgN);
-    el.setAttribute('data-pronto','1');
-  }
   el=document.getElementById('tgGuiaPos');
   if(el){
     var nome=(L.nav&&L.nav[_tgI])?L.nav[_tgI]:'';
