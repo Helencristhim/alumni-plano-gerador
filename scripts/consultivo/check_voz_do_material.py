@@ -186,6 +186,7 @@ def selftest():
         "estado-pedagogico": "leia o estado pedagogico antes",
         "documento-normativo": "o pacote normativo cobre A1",
         "criterio-numerado": "e o criterio 2 do ciclo",
+        "prototipo": "Prototype audio: the voices in this version are temporary.",
         "defeito": "o defeito tem forma precisa",
         "material-falando-de-si": "nao e escolha tematica",
     }

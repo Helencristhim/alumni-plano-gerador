@@ -291,6 +291,22 @@ def monta_documento(corpo, lang="pt-BR", view="professor"):
 # casar exatamente uma vez: se o artefato mudar embaixo, a extracao PARA e diz qual correcao
 # perdeu o pe -- em vez de aplicar no lugar errado ou sumir em silencio.
 CORRECOES = [
+
+ # ---- O MATERIAL NAO E MAIS PROTOTIPO (revisao de 02/09/2026)
+ #
+ # O pre-class abria com "Prototype audio: the voices in this version are temporary." Era
+ # verdade quando o artefato foi escrito e deixou de ser: o audio do consultivo e gerado pelo
+ # `gen_audio_consultivo.py`, sai do ElevenLabs com Voice ID por PAPEL (Anexo P-A §4) e passa
+ # pelo GATE 40, que reprova sintese de navegador. As vozes que a aluna ouve sao as vozes.
+ #
+ # E a linha nao e neutra: ela e a primeira coisa que o aluno le na aba que ele mais usa, e
+ # diz que o que ele tem na mao e um rascunho. Aviso de provisoriedade que sobrevive ao
+ # provisorio ensina a nao acreditar no material.
+ ("sem-aviso-de-prototipo",
+  """<p class="nota-sigla" id="avisoAudioProto" lang="en">Prototype audio: the voices in this version are temporary.</p>
+""",
+  """"""),
+
  # ---- O TEACHER'S GUIDE EXTERNO PERDE O CABECALHO DE AULA (revisao de 02/09/2026)
  #
  # A janela do guia tinha duas pecas empilhadas: um CABECALHO com treze campos da aula
@@ -505,7 +521,25 @@ body[data-view="professor"] #tab-preclass .score-out{display:none}"""),
 .item-why em,.item-why strong{color:var(--accent)}
 .quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
 .slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
-.slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}"""),
+.slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
+
+/* E a TRADUCAO daquele item -- outra coisa ainda que o porque. No material real-beginner o
+   que falta a aluna sozinha no pre-class nao e mais uma explicacao em ingles: e saber o que
+   a frase dizia. Mesma caixa, mesma abertura ao conferir; muda a barra na lateral e o
+   italico, para ela distinguir num relance a traducao da explicacao. */
+.item-pt{font-style:italic;border-top:none;margin-top:var(--space-1h);padding:var(--space-1h) 0 var(--space-1h) var(--space-3);border-left:2px solid var(--accent);color:var(--text-mid)}
+.quiz-option + .item-pt{margin:calc(-1 * var(--space-1)) 0 var(--space-2h);padding:0 var(--space-3h) 0 var(--space-3)}
+.chunk-line + .item-pt{font-family:var(--font-corpo);font-size:.82rem;margin:calc(-1 * var(--space-2)) 0 var(--space-3)}
+.slide-dark .item-pt,.slide-open .item-pt{border-left-color:var(--d-accent);color:var(--d-text-mid)}
+
+/* O APOIO EM PORTUGUES NA TELA DO DECK, e a diferenca dele para o `.item-pt`.
+   O `.item-pt` traduz o exercicio e so abre quando a aluna confere -- no pre-class ela esta
+   sozinha e a traducao antes da tentativa mataria a tentativa. Aqui ha uma professora na
+   frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
+   conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
+   linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
+.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
+.slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}"""),
 
  ("conferir-explica-mcheck",
   """function mCheck(btn,id){

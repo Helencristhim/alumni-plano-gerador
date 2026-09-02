@@ -4,7 +4,7 @@
         '<li>To say what something is not.</li>'+
         '<li>To ask a short question with <em>are you&hellip;?</em></li>'+
         '<li>To keep the form when the subject changes.</li></ul>',
-  product:'A recording of six sentences: three positive, two negative, one question.',
+  product:'Six sentences said live: three positive, two negative, one question &mdash; with the form under observation.',
   criteria:'<ul>'+
     '<li>The form is right in the three positive sentences.</li>'+
     '<li>The negative comes out without support on screen.</li>'+

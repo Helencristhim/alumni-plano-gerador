@@ -813,6 +813,24 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
 .quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
 .slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
 .slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
+
+/* E a TRADUCAO daquele item -- outra coisa ainda que o porque. No material real-beginner o
+   que falta a aluna sozinha no pre-class nao e mais uma explicacao em ingles: e saber o que
+   a frase dizia. Mesma caixa, mesma abertura ao conferir; muda a barra na lateral e o
+   italico, para ela distinguir num relance a traducao da explicacao. */
+.item-pt{font-style:italic;border-top:none;margin-top:var(--space-1h);padding:var(--space-1h) 0 var(--space-1h) var(--space-3);border-left:2px solid var(--accent);color:var(--text-mid)}
+.quiz-option + .item-pt{margin:calc(-1 * var(--space-1)) 0 var(--space-2h);padding:0 var(--space-3h) 0 var(--space-3)}
+.chunk-line + .item-pt{font-family:var(--font-corpo);font-size:.82rem;margin:calc(-1 * var(--space-2)) 0 var(--space-3)}
+.slide-dark .item-pt,.slide-open .item-pt{border-left-color:var(--d-accent);color:var(--d-text-mid)}
+
+/* O APOIO EM PORTUGUES NA TELA DO DECK, e a diferenca dele para o `.item-pt`.
+   O `.item-pt` traduz o exercicio e so abre quando a aluna confere -- no pre-class ela esta
+   sozinha e a traducao antes da tentativa mataria a tentativa. Aqui ha uma professora na
+   frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
+   conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
+   linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
+.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
+.slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1321,7 +1339,6 @@ document.body.setAttribute('data-view','aluno');
   <p class="eyebrow" data-view="aluno">Before class</p>
   <h2 class="sec">Pre-class</h2>
 
-<p class="nota-sigla" id="avisoAudioProto" lang="en">Prototype audio: the voices in this version are temporary.</p>
   <div class="btn-bar" style="justify-content:flex-start;margin-bottom:var(--space-4)">
     <button class="btn-primary" id="pcb9" onclick="preSel(9)"><span data-view="aluno">Lesson 09</span></button>
     <button class="btn-ghost" id="pcb10" onclick="preSel(10)"><span data-view="aluno">Lesson 10</span></button>
@@ -1480,14 +1497,14 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cz9-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cz9-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Complete as frases. Cada lacuna é uma das expressões da atividade 2. Se preferir, escreva sobre um convite de verdade que você recebeu — as frases são as mesmas.</div>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>It is a meeting about</em> &middot; <em>It is in</em> &middot; <em>They want us to</em> &middot; <em>My part is</em> &middot; <em>I am going to</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz9">
       <p class="chunk-line"><input class="blank-input" data-ok="It is a meeting about" style="min-width:170px" placeholder="..."> technology in schools.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="It is in" style="min-width:80px" placeholder="..."> November, in Belém, and it is three days.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="They want us to" style="min-width:130px" placeholder="..."> bring one experience from our own school.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="My part is" style="min-width:100px" placeholder="..."> ten minutes with a small group.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="I am going to" style="min-width:120px" placeholder="..."> talk about the teachers in my school.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz9')">Check</button>
     <div class="score-out" id="cz9-out"></div>
     <div class="callout" id="cz9-key" style="display:none">
       <div class="callout-title">Este é o seu minuto na aula</div>
@@ -1646,14 +1663,14 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cz10-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cz10-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Complete as perguntas. Cada lacuna é uma expressão da atividade 2. Se preferir, escreva pensando numa reunião de verdade sua.</div>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>Sorry, I did not catch</em> &middot; <em>How do you spell</em> &middot; <em>Where are you</em> &middot; <em>What do you</em> &middot; <em>Can you say that again</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz10">
       <p class="chunk-line"><input class="blank-input" data-ok="Sorry, I did not catch" style="min-width:170px" placeholder="..."> your name. <input class="blank-input" data-ok="How do you spell" style="min-width:140px" placeholder="..."> it?</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Where are you" style="min-width:110px" placeholder="..."> from?</p>
       <p class="chunk-line"><input class="blank-input" data-ok="What do you" style="min-width:100px" placeholder="..."> do in your school?</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Can you say that again" style="min-width:180px" placeholder="...">, please? The part about the teachers.</p>
       <p class="chunk-line">It is my first time here too. <input class="blank-input" data-ok="Where are you" style="min-width:110px" placeholder="..."> from, exactly?</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz10')">Check</button>
     <div class="score-out" id="cz10-out"></div>
     <div class="callout" id="cz10-key" style="display:none">
       <div class="callout-title">Três perguntas bastam</div>
@@ -1788,14 +1805,14 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cz11-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cz11-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Complete as perguntas. Cada lacuna é <em>Do</em>, <em>Are</em>, ou uma palavra de pergunta. Se preferir, escreva pensando em alguém que você vai encontrar de verdade.</div>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>Where</em> &middot; <em>What</em> &middot; <em>Are</em> &middot; <em>Do</em> &middot; <em>How</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz11">
       <p class="chunk-line"><input class="blank-input" data-ok="Where" style="min-width:80px" placeholder="..."> do you work?</p>
       <p class="chunk-line"><input class="blank-input" data-ok="What" style="min-width:80px" placeholder="..."> do you teach?</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Are" style="min-width:70px" placeholder="..."> you here for the first time?</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Do" style="min-width:70px" placeholder="..."> you use technology with your students?</p>
       <p class="chunk-line"><input class="blank-input" data-ok="How" style="min-width:80px" placeholder="..."> many teachers are there in your school?</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz11')">Check</button>
     <div class="score-out" id="cz11-out"></div>
     <div class="callout" id="cz11-key" style="display:none">
       <div class="callout-title">Quatro bastam</div>
@@ -1958,14 +1975,14 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cz12-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cz12-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Complete a sua apresentação. Quatro frases — e a última, sobre este ano, é a que dá a eles o que perguntar.</div>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>is</em> &middot; <em>am</em> &middot; <em>work</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz12">
       <p class="chunk-line">Hi, my name <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> Joice.</p>
       <p class="chunk-line">I <input class="blank-input" data-ok="am" style="min-width:60px" placeholder="..."> from São Paulo, in Brazil.</p>
       <p class="chunk-line">I <input class="blank-input" data-ok="work" style="min-width:70px" placeholder="..."> with teacher training, and I am also a school director.</p>
       <p class="chunk-line">This year I <input class="blank-input" data-ok="am" style="min-width:60px" placeholder="..."> working with AI in schools.</p>
       <p class="chunk-line">It <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> my first time in this group.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz12')">Check</button>
     <div class="score-out" id="cz12-out"></div>
     <div class="callout" id="cz12-key" style="display:none">
       <div class="callout-title">Este e o seu minuto na aula</div>

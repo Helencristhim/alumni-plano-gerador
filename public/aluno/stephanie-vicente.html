@@ -814,6 +814,24 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
 .quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
 .slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
 .slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
+
+/* E a TRADUCAO daquele item -- outra coisa ainda que o porque. No material real-beginner o
+   que falta a aluna sozinha no pre-class nao e mais uma explicacao em ingles: e saber o que
+   a frase dizia. Mesma caixa, mesma abertura ao conferir; muda a barra na lateral e o
+   italico, para ela distinguir num relance a traducao da explicacao. */
+.item-pt{font-style:italic;border-top:none;margin-top:var(--space-1h);padding:var(--space-1h) 0 var(--space-1h) var(--space-3);border-left:2px solid var(--accent);color:var(--text-mid)}
+.quiz-option + .item-pt{margin:calc(-1 * var(--space-1)) 0 var(--space-2h);padding:0 var(--space-3h) 0 var(--space-3)}
+.chunk-line + .item-pt{font-family:var(--font-corpo);font-size:.82rem;margin:calc(-1 * var(--space-2)) 0 var(--space-3)}
+.slide-dark .item-pt,.slide-open .item-pt{border-left-color:var(--d-accent);color:var(--d-text-mid)}
+
+/* O APOIO EM PORTUGUES NA TELA DO DECK, e a diferenca dele para o `.item-pt`.
+   O `.item-pt` traduz o exercicio e so abre quando a aluna confere -- no pre-class ela esta
+   sozinha e a traducao antes da tentativa mataria a tentativa. Aqui ha uma professora na
+   frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
+   conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
+   linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
+.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
+.slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1360,7 +1378,6 @@ document.body.setAttribute('data-view','aluno');
   <p class="eyebrow" data-view="aluno">Before class</p>
   <h2 class="sec">Pre-class</h2>
 
-<p class="nota-sigla" id="avisoAudioProto" lang="en">Prototype audio: the voices in this version are temporary.</p>
   <div class="btn-bar" style="justify-content:flex-start;margin-bottom:var(--space-4)">
     <button class="btn-primary" id="pcb1" onclick="preSel(1)"><span data-view="aluno">Lesson 01</span></button>
     <button class="btn-ghost" id="pcb2" onclick="preSel(2)"><span data-view="aluno">Lesson 02</span></button>
@@ -1507,13 +1524,13 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>6 &middot; Saying where it came from</h4></div>
     <p class="task-instr">Complete each sentence so that the source arrives <strong>with</strong> the claim, not after it.</p>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>According to&hellip;</em> &middot; <em>The syllabus says&hellip;</em> &middot; <em>My reading is&hellip;</em> &middot; <em>do not line up</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz1">
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="The syllabus says" style="min-width:170px" placeholder="..."> twenty hours, and the plan has eighteen.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="According to the plan" style="min-width:170px" placeholder="..."> , the assessment is in week seven.&rdquo;</p>
       <p class="chunk-line">&ldquo;These two <input class="blank-input" data-ok="do not line up" style="min-width:170px" placeholder="..."> on who corrects the writing.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="My reading is" style="min-width:170px" placeholder="..."> that nobody reread the syllabus.&rdquo;</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz1')">Check</button>
     <div class="score-out" id="cz1-out"></div>
   </div>
 </div>
@@ -1656,13 +1673,13 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>6 &middot; Coming in</h4></div>
     <p class="task-instr">Complete each opening so that it refers to something that was said <strong>before</strong> you ask.</p>
     <div class="word-bank"><span class="wb-rot">Openings you can use</span> <em>Can I check</em> &middot; <em>jump in</em> &middot; <em>Just to be clear</em> &middot; <em>were saying</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz2">
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="Can I check" style="min-width:150px" placeholder="..."> one thing before we move on?&rdquo;</p>
       <p class="chunk-line">&ldquo;Sorry to <input class="blank-input" data-ok="jump in" style="min-width:150px" placeholder="..."> &mdash; I heard you say the text might move.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="Just to be clear" style="min-width:150px" placeholder="..."> , is that decided, or is it a proposal?&rdquo;</p>
       <p class="chunk-line">&ldquo;That was all I needed &mdash; sorry, you <input class="blank-input" data-ok="were saying" style="min-width:150px" placeholder="...">?&rdquo;</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz2')">Check</button>
     <div class="score-out" id="cz2-out"></div>
   </div>
 </div>
@@ -1806,12 +1823,12 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>6 &middot; Marking it as yours</h4></div>
     <p class="task-instr">Complete each sentence so that the reading is clearly the writer&rsquo;s, not the room&rsquo;s.</p>
     <div class="word-bank"><span class="wb-rot">Openings you can use</span> <em>What I noticed was</em> &middot; <em>The way I read it</em> &middot; <em>I might be wrong</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz3b">
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="What I noticed was" style="min-width:180px" placeholder="..."> that the instruction came early.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="The way I read it" style="min-width:170px" placeholder="..."> , they had not finished.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="I might be wrong" style="min-width:160px" placeholder="..."> about this, but the pattern happened three times.&rdquo;</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz3b')">Check</button>
     <div class="score-out" id="cz3b-out"></div>
   </div>
 </div>
@@ -1963,13 +1980,13 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>6 &middot; Leaving the decision with him</h4></div>
     <p class="task-instr">Complete each sentence so that he is the one who decides what happens next.</p>
     <div class="word-bank"><span class="wb-rot">Openings you can use</span> <em>might try</em> &middot; <em>Have you thought about</em> &middot; <em>might be worth</em> &middot; <em>That is fair</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz4b">
       <p class="chunk-line">&ldquo;One thing you <input class="blank-input" data-ok="might try" style="min-width:140px" placeholder="..."> is giving it before they start.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="Have you thought about" style="min-width:190px" placeholder="..."> repeating it once they begin?&rdquo;</p>
       <p class="chunk-line">&ldquo;It <input class="blank-input" data-ok="might be worth" style="min-width:150px" placeholder="..."> checking with the slower pairs.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="That is fair" style="min-width:140px" placeholder="..."> &mdash; and the part I would still look at is the timing.&rdquo;</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz4b')">Check</button>
     <div class="score-out" id="cz4b-out"></div>
   </div>
 </div>

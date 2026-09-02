@@ -813,6 +813,24 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
 .quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
 .slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
 .slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
+
+/* E a TRADUCAO daquele item -- outra coisa ainda que o porque. No material real-beginner o
+   que falta a aluna sozinha no pre-class nao e mais uma explicacao em ingles: e saber o que
+   a frase dizia. Mesma caixa, mesma abertura ao conferir; muda a barra na lateral e o
+   italico, para ela distinguir num relance a traducao da explicacao. */
+.item-pt{font-style:italic;border-top:none;margin-top:var(--space-1h);padding:var(--space-1h) 0 var(--space-1h) var(--space-3);border-left:2px solid var(--accent);color:var(--text-mid)}
+.quiz-option + .item-pt{margin:calc(-1 * var(--space-1)) 0 var(--space-2h);padding:0 var(--space-3h) 0 var(--space-3)}
+.chunk-line + .item-pt{font-family:var(--font-corpo);font-size:.82rem;margin:calc(-1 * var(--space-2)) 0 var(--space-3)}
+.slide-dark .item-pt,.slide-open .item-pt{border-left-color:var(--d-accent);color:var(--d-text-mid)}
+
+/* O APOIO EM PORTUGUES NA TELA DO DECK, e a diferenca dele para o `.item-pt`.
+   O `.item-pt` traduz o exercicio e so abre quando a aluna confere -- no pre-class ela esta
+   sozinha e a traducao antes da tentativa mataria a tentativa. Aqui ha uma professora na
+   frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
+   conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
+   linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
+.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
+.slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1462,7 +1480,6 @@ body.tg-guia > #tgGuia{display:block!important}
      vez. Linguagem de consequencia, nao de implementacao - diz que as vozes sao provisorias,
      nunca qual mecanismo as produz. Fica no pre-class porque e ali que o aluno encontra o
      audio; no deck projetado seria ruido durante a aula. -->
-<p class="nota-sigla" id="avisoAudioProto" lang="en">Prototype audio: the voices in this version are temporary.</p>
   <div class="btn-bar" style="justify-content:flex-start;margin-bottom:var(--space-4)">
     <button class="btn-primary" id="pcb3" onclick="preSel(3)"><span data-view="professor">Aula 03 &middot; Reading</span><span data-view="aluno">Lesson 03</span></button>
     <button class="btn-ghost" id="pcb4" onclick="preSel(4)"><span data-view="professor">Aula 04 &middot; Listening</span><span data-view="aluno">Lesson 04</span></button>
@@ -1612,14 +1629,14 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Complete the paragraph. Every gap is one of the six expressions from activity 2.</p>
     <p class="task-instr">Write it about something of your own — a decision you are carrying at work right now — if you prefer. The words are the same.</p>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>Let me start with</em> &middot; <em>Now, here is the problem</em> &middot; <em>What this means is</em> &middot; <em>Having said that</em> &middot; <em>So where does that leave us</em> &middot; <em>My recommendation is</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz3">
       <p class="chunk-line"><input class="blank-input" data-ok="Let me start with" style="min-width:170px" placeholder="..."> where the project stands today.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Now, here is the problem" style="min-width:200px" placeholder="...">: the part that works is not the part they will ask about.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="What this means is" style="min-width:170px" placeholder="..."> that we would be answering the wrong question in the room.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Having said that" style="min-width:160px" placeholder="...">, the correction is small and we have the time.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="So where does that leave us" style="min-width:210px" placeholder="...">? <input class="blank-input" data-ok="My recommendation is" style="min-width:180px" placeholder="..."> that we move the review to December.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz3')">Check</button>
     <div class="score-out" id="cz3-out"></div>
     <div class="callout" id="cz3-key" style="display:none">
       <div class="callout-title">This is the skeleton of what you will say in class</div>
@@ -1766,14 +1783,14 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Complete the answer. Every gap is one of the six expressions from activity 2.</p>
     <p class="task-instr">This is Nadia&rsquo;s question, the hostile one. Write it once here and you will have it in the room.</p>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>That is a fair question</em> &middot; <em>Let me take that in two parts</em> &middot; <em>If I understand you correctly</em> &middot; <em>I would push back on that</em> &middot; <em>Short answer</em> &middot; <em>I do not have that with me</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz4">
       <p class="chunk-line"><input class="blank-input" data-ok="That is a fair question" style="min-width:180px" placeholder="...">, and I want to answer it properly.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Let me take that in two parts" style="min-width:220px" placeholder="...">: what the requirement is, and why six weeks.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="If I understand you correctly" style="min-width:210px" placeholder="...">, the objection is that nothing has been published yet.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="I would push back on that" style="min-width:190px" placeholder="...">, because a draft that three regulators are consulting on is not nothing.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="Short answer" style="min-width:140px" placeholder="...">: I am not building for a rumor. And on the exact wording, <input class="blank-input" data-ok="I do not have that with me" style="min-width:200px" placeholder="..."> — I will send it today.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz4')">Check</button>
     <div class="score-out" id="cz4-out"></div>
     <div class="callout" id="cz4-key" style="display:none">
       <div class="callout-title">This is the answer you will give in class</div>
@@ -1895,7 +1912,7 @@ body.tg-guia > #tgGuia{display:block!important}
   <div class="exercise-section">
     <div class="section-header-row"><h4>5 &middot; Build the form</h4><span class="badge badge-open">Form</span></div>
     <p class="task-instr">Complete each sentence with the right form. No word bank — the point is the structure, not the word.</p>
-    <div class="fill-list">
+    <div class="fill-list" id="gp5">
       <p class="chunk-line">What the board <input class="blank-input" data-ok="wants" style="min-width:110px" placeholder="..."> is a date they can hold us to.</p>
       <p class="chunk-line">It <input class="blank-input" data-ok="is" style="min-width:70px" placeholder="..."> the explainability that fails, not the accuracy.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="While" style="min-width:90px" placeholder="..."> I take the point about cost, the number does not move.</p>
@@ -1903,7 +1920,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line">As <input class="blank-input" data-ok="for" style="min-width:70px" placeholder="..."> the October date, it was never a commitment.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="What" style="min-width:90px" placeholder="..."> worries me most is the gap between the two markets.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'gp5')">Check</button>
     <div class="score-out" id="gp5-out"></div>
     <div class="callout" id="gp5-key" style="display:none">
       <div class="callout-title">Two of these catch everyone</div>
@@ -2065,14 +2082,14 @@ body.tg-guia > #tgGuia{display:block!important}
     <p class="task-instr">Complete the answer. Every gap is one of the six expressions from activity 2.</p>
     <p class="task-instr">Then say it out loud once, with a clock. It should land between forty and forty-five seconds.</p>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>I would say</em> &middot; <em>mainly for two reasons</em> &middot; <em>which is why</em> &middot; <em>To take one example</em> &middot; <em>That said</em> &middot; <em>So on balance</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz6">
       <p class="chunk-line"><input class="blank-input" data-ok="I would say" style="min-width:130px" placeholder="..."> we should hold the launch, <input class="blank-input" data-ok="mainly for two reasons" style="min-width:200px" placeholder="...">.</p>
       <p class="chunk-line">First, an unexplainable decision is a decision we cannot defend, <input class="blank-input" data-ok="which is why" style="min-width:140px" placeholder="..."> the regulator asked for it.</p>
       <p class="chunk-line">Second, the fix is six weeks. <input class="blank-input" data-ok="To take one example" style="min-width:180px" placeholder="...">, the last pipeline rebuild took five.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="That said" style="min-width:110px" placeholder="...">, a delay has its own cost and I am not pretending otherwise.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="So on balance" style="min-width:140px" placeholder="...">, six weeks now is cheaper than a license review later.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz6')">Check</button>
     <div class="score-out" id="cz6-out"></div>
     <div class="callout" id="cz6-key" style="display:none">
       <div class="callout-title">This is round one</div>
