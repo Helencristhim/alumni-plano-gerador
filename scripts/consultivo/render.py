@@ -381,12 +381,36 @@ _RX_ACERVO = re.compile(
 #  - a revisao de 31/08/2026 nao pode avaliar a linguagem didatica das notas, porque o guia
 #    de uma escola de ingles estava escrito em portugues.
 #
-# Agora a nota e DECLARADA (`guia_telas.json`) e EMITIDA aqui, nos dez campos do guia, em
+# Agora a nota e DECLARADA (`guia_telas.json`) e EMITIDA aqui, nos campos do guia, em
 # ingles. O autor da aula preenche campos; o formato nao depende de ele lembrar dele.
 CAMPOS_TELA = [
     ("goal", "Goal"),
     ("interaction", "Interaction"),
     ("run", "Run it"),
+    # ---- O CAMPO QUE FALTAVA (02/09/2026)
+    #
+    # O normativo (04 §8.2) lista DEZ campos por etapa, e este e o quarto deles:
+    #
+    #     "Exact prompt -- Formulacao literal somente quando o professor precisa dizer algo
+    #      que nao esta integralmente projetado ou quando alteracoes na formulacao mudariam
+    #      a tarefa, a evidencia esperada ou o papel do professor. Se o prompt operacional
+    #      completo ja estiver na tela, nao o repetir no guia."
+    #
+    # O porte para ca trouxe nove e deixou este de fora -- e o texto acima continuou dizendo
+    # "os dez campos", entao a contagem batia e a falta nao aparecia (o mesmo modo de falha
+    # que o inventario do molde ja custou uma vez: o comentario que cita a peca nao e a peca).
+    #
+    # O efeito na aula: onde o guia manda o professor DEVOLVER a fala da aluna em ingles
+    # simples ("give the same idea back for her to repeat") ou OFERECER duas opcoes quando
+    # ela trava, ele diz o que fazer e nao da UMA frase pronta. Quem escreveu a aula sabe
+    # como aquilo soa; quem vai dar a aula as 8h da manha esta inventando na hora. A revisao
+    # do Dan de 02/09/2026 pediu exatamente isto: "providenciar modelos/exemplos do que dizer".
+    #
+    # CONDICIONAL, e nao opcional. O normativo e explicito: "Campos condicionais nao aparecem
+    # vazios, com 'N/A' nem preenchidos por repeticao do conteudo projetado". Entao a tela em
+    # que o professor nao precisa dizer nada que ja nao esteja na tela OMITE a chave -- ela
+    # nao escreve um travessao. Ver `nota_de_tela`, que recusa o preenchimento de fachada.
+    ("exact", "Exact prompt"),
     ("expected", "Expected"),
     ("support", "Conditional support"),
     ("challenge", "Challenge"),
@@ -395,26 +419,125 @@ CAMPOS_TELA = [
     ("transition", "Transition"),
 ]
 
+# Os campos condicionais: ausentes quando nao se aplicam, nunca vazios ou com "N/A".
+CAMPOS_CONDICIONAIS = {"exact"}
+
+# O que NAO conta como conteudo num campo condicional. Preenchimento de fachada e pior que a
+# ausencia: a ausencia diz "esta tela nao precisa", e o travessao diz "alguem preencheu".
+_FACHADA = {"", "-", "--", "\u2014", "\u2013", "n/a", "na", "n.a.", "none", "nao se aplica",
+            "not applicable", "nenhum", "nenhuma", "\u2014\u2014"}
+
+
+# ---- QUANDO O `Exact prompt` DEIXA DE SER OPCIONAL
+#
+# Um campo condicional que ninguem e obrigado a escrever volta a nao existir na terceira
+# aula. A trava e esta: se o guia manda o professor PRODUZIR lingua que nao esta na tela,
+# ele tem de dizer COMO aquilo soa.
+#
+# A lista e curta e de proposito. Nao entram "ask", "read" nem "confirm": o normativo diz
+# que prompt ja projetado na tela NAO se repete no guia, e a maior parte dos "ask" do guia
+# aponta para a pergunta que a aluna esta lendo. O que entra sao os verbos em que a fala do
+# professor e a propria atividade -- devolver a frase reformulada, oferecer as duas opcoes,
+# modelar, sugerir a palavra que nao veio. Nesses, a frase existe so na cabeca de quem
+# escreveu a aula.
+#
+# Falso positivo aqui e barato: o autor escreve uma frase-modelo que nao era estritamente
+# necessaria. Falso negativo e o defeito de 02/09/2026 de volta.
+_PEDE_FALA = (
+    "give the same idea back", "give the english sentence", "give her the", "give him the",
+    "give the first word", "give the first two words", "give the opening",
+    "offer two", "offer her", "offer him", "offer the",
+    "model ", "modeling ", "rephrase", "reformulate", "recast",
+    "say it back to her", "say it back to him", "suggest the", "supply the",
+    "feed her", "feed him", "prompt her with", "prompt him with",
+)
+# NAO entra "give it back": no guia isso quer dizer DEVOLVER a correcao mais tarde, na etapa
+# de feedback -- nao dizer uma frase agora. Gatilho que casa pelo motivo errado faz a
+# mensagem de erro apontar para o lugar errado, e ai o autor conserta a linha que estava boa.
+
+
+def _pede_fala_do_professor(dados):
+    """Os campos em que o guia manda o professor dizer algo que nao esta na tela."""
+    achados = []
+    for chave in ("run", "support", "challenge"):
+        valor = dados.get(chave, "")
+        texto = " ".join(str(x) for x in valor) if isinstance(valor, list) else str(valor)
+        alvo = texto.lower()
+        for gatilho in _PEDE_FALA:
+            if gatilho in alvo:
+                achados.append((chave, gatilho.strip()))
+    return achados
+
+
+def _vazio(valor):
+    """Um campo esta vazio se nao tem texto -- ou se o texto e so fachada ("--", "N/A")."""
+    if isinstance(valor, list):
+        itens = [str(x).strip() for x in valor if str(x).strip()]
+        return not itens or all(x.strip().lower() in _FACHADA for x in itens)
+    return str(valor or "").strip().lower() in _FACHADA
+
+
+def _campo(texto, chave, titulo):
+    """Um campo do guia, pronto para caber DENTRO de `data-teacher="..."`.
+
+    Aspa dupla crua aqui e defeito silencioso: ela FECHA o atributo. O resto da nota vira
+    atributo solto na tag da tela, o guia aparece cortado no meio e nada acusa -- o HTML
+    continua valido. Custou achar isto porque o campo so ganhou aspas quando o `Exact
+    prompt` entrou: ate 02/09/2026 nenhum campo do guia citava fala, entao a armadilha
+    existia e nunca era pisada.
+
+    A conversao e a MESMA que `esc()` faz nos outros campos ("assim" -> curly quotes do
+    molde). O autor escreve aspas normais e recebe a tipografia do material; se sobrar
+    alguma sem par, a emissao para em vez de entregar um atributo quebrado."""
+    saida = crua(str(texto))
+    saida = re.sub(r'"([^"]*)"', lambda m: "&ldquo;" + m.group(1) + "&rdquo;", saida)
+    if '"' in saida:
+        raise SystemExit(
+            f"guia da tela {titulo!r}, campo {chave!r}: sobrou uma aspa dupla sem par. Ela "
+            f"fecharia o `data-teacher=\"...\"` e cortaria o guia no meio, sem erro nenhum. "
+            f"Feche o par, ou escreva &ldquo; e &rdquo;.")
+    return saida
+
 
 def nota_de_tela(dados, titulo):
-    """Os dez campos do guia, para o atributo `data-teacher` de uma tela.
+    """Os campos do guia (04 §8.2), para o atributo `data-teacher` de uma tela.
 
     Devolve HTML com aspas SIMPLES em volta de nada: o texto inteiro vai dentro de um
     atributo delimitado por aspas duplas, entao aspa dupla no conteudo e escapada aqui e o
     resto (apostrofo incluido) passa direto -- e a REGRA 7.1 continua valendo, porque isto
-    e atributo, nao string de JS."""
-    faltam = [k for k, _ in CAMPOS_TELA if not str(dados.get(k, "")).strip()]
+    e atributo, nao string de JS.
+
+    Os campos OBRIGATORIOS tem de estar todos la. Os CONDICIONAIS (`CAMPOS_CONDICIONAIS`)
+    podem faltar -- e essa e a unica forma correta de dizer que nao se aplicam: o normativo
+    proibe que apare\u00e7am vazios ou com "N/A"."""
+    faltam = [k for k, _ in CAMPOS_TELA
+              if k not in CAMPOS_CONDICIONAIS and not str(dados.get(k, "")).strip()]
     if faltam:
-        raise SystemExit(f"guia da tela {titulo!r}: falta(m) {faltam}. O guia tem dez campos "
+        raise SystemExit(f"guia da tela {titulo!r}: falta(m) {faltam}. Sao campos obrigatorios "
                          f"e a tela que nao precisa de um ainda precisa dizer isso.")
+    fachada = [k for k in CAMPOS_CONDICIONAIS if k in dados and _vazio(dados[k])]
+    if fachada:
+        raise SystemExit(
+            f"guia da tela {titulo!r}: o(s) campo(s) condicional(is) {fachada} esta(o) vazio(s) "
+            f"ou preenchido(s) com fachada ('--', 'N/A'). O normativo (04 \u00a78.2) manda OMITIR "
+            f"a chave quando o campo nao se aplica -- o travessao afirma que alguem preencheu.")
+    pede = _pede_fala_do_professor(dados)
+    if pede and "exact" not in dados:
+        onde = ", ".join(f"{c} (\u201c{g}\u201d)" for c, g in pede)
+        raise SystemExit(
+            f"guia da tela {titulo!r}: {onde} manda o professor dizer algo que nao esta na "
+            f"tela, e nao ha `exact`. Escreva a frase -- quem da a aula nao pode ter de "
+            f"inventar na hora a formulacao que voce ja tinha na cabeca (04 \u00a78.2).")
     cab = titulo + (f" ({dados['min']})" if dados.get("min") else "")
     partes = [f"<strong>{esc(cab)}</strong>"]
     for chave, rotulo in CAMPOS_TELA:
+        if chave in CAMPOS_CONDICIONAIS and chave not in dados:
+            continue
         valor = dados[chave]
         if isinstance(valor, list):
-            valor = "<br>".join("&bull; " + crua(x) for x in valor)
+            valor = "<br>".join("&bull; " + _campo(x, chave, titulo) for x in valor)
         else:
-            valor = crua(valor)
+            valor = _campo(valor, chave, titulo)
         partes.append(f"<strong>{rotulo}:</strong> {valor}")
     return "<br><br>".join(partes)
 

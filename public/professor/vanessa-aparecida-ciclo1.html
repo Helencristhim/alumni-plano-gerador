@@ -1112,6 +1112,11 @@ body.tg-guia > #tgGuia{display:block!important}
    --d-accent sobre esse azul - 2,32:1, medido em seis botoes. O ghost so e ghost se o fundo
    dele tambem for. */
 .slide-dark .audio-btn-sm.ghost,.slide-open .audio-btn-sm.ghost{color:var(--d-accent);border-color:var(--d-accent);background:transparent}
+/* Ver a correcao `contraste-no-escuro-do-check-e-da-instrucao`: as duas regras abaixo
+   faltavam, e no escuro davam 1.49:1 e 1.75:1. */
+.slide-dark .verify-all-btn.ghost,.slide-open .verify-all-btn.ghost{color:var(--d-accent);border-color:var(--d-accent)}
+.slide-dark .verify-all-btn.ghost:hover,.slide-open .verify-all-btn.ghost:hover{background:var(--d-accent);color:var(--dark)}
+.slide-dark .task-instr,.slide-open .task-instr{color:var(--d-text-mid)}
 .slide-dark .audio-btn-sm.ghost:hover,.slide-open .audio-btn-sm.ghost:hover{background:var(--d-accent);color:var(--dark)}
 .slide-dark .audio-btn-sm,.slide-open .audio-btn-sm{border-color:var(--accent-light);background:var(--accent-light);color:#fff}
 .slide-dark .audio-btn-sm:hover,.slide-open .audio-btn-sm:hover{background:var(--accent)}
@@ -1156,25 +1161,10 @@ body.tg-guia > #tgGuia{display:block!important}
 .lesson-card.lc-pendente .lc-desc{color:var(--text-dim)}
 .lesson-card.lc-pendente .lc-status{color:var(--text-dim);border-color:var(--border)}
 
-/* --- cabecalho do Teacher's Guide, na janela separada ---
-   O painel dentro do deck mostra a NOTA da tela. A janela mostra o GUIA: os catorze campos
-   primeiro, e o procedimento tela a tela depois, navegavel. Duas pecas, um lugar cada. */
-.tg-guia-cabeca{margin-bottom:var(--space-6);padding-bottom:var(--space-5);
-  border-bottom:1px solid rgba(255,255,255,.22)}
-.tg-campo{margin-bottom:var(--space-4h)}
-.tg-campo>b{display:block;font-family:var(--font-interface);font-size:.72rem;
-  font-weight:var(--peso-forte);letter-spacing:var(--ls-rotulo);text-transform:uppercase;
-  color:var(--d-accent);margin-bottom:var(--space-2)}
-.tg-campo>div{font-size:.95rem;line-height:var(--lh-corpo);color:var(--d-text-mid)}
-.tg-campo strong{color:var(--d-text)}
-.tg-campo em{color:var(--d-text-dim);font-style:italic}
-.tg-campo ul,.tg-campo ol{margin:var(--space-2) 0 0;padding-left:var(--space-4h)}
-.tg-campo li{margin-bottom:var(--space-2)}
-.tg-ov{list-style:none;margin:var(--space-2) 0 0;padding:0}
-.tg-ov li{display:flex;justify-content:space-between;gap:var(--space-4);
-  padding:var(--space-2) 0;border-bottom:1px solid rgba(255,255,255,.14);margin:0}
-.tg-ov li em{font-style:normal;font-variant-numeric:tabular-nums;color:var(--d-text-dim)}
-.tg-ov-tot{margin:var(--space-3) 0 0;font-size:.86rem;color:var(--d-text-dim)}
+/* --- o Teacher's Guide, na janela separada ---
+   A janela mostra o PROCEDIMENTO da tela corrente, e so ele. As regras do cabecalho
+   (.tg-guia-cabeca, .tg-campo, .tg-ov) sairam junto com ele em 02/09/2026: CSS de peca que
+   nao existe mais e um convite a que a peca volte sem que ninguem decida isso. */
 .tg-guia-proc{font-family:var(--font-interface);font-size:.72rem;
   font-weight:var(--peso-forte);letter-spacing:var(--ls-rotulo);text-transform:uppercase;
   color:var(--d-accent);margin:0 0 var(--space-3)}
@@ -1183,8 +1173,12 @@ body.tg-guia > #tgGuia{display:block!important}
    Vive numa tela clara do deck. Texto corrido na familia de interface: transcricao e
    registro do que foi dito, nao destaque editorial. O nome do falante ganha coluna propria
    e largura fixa, para as falas alinharem entre si. */
-.transcript-box{margin-top:var(--space-3h);padding:var(--space-4) var(--space-4h);
+.transcript-box{margin:var(--space-3h) 0 var(--space-4h);padding:var(--space-4) var(--space-4h);
   background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:10px}
+
+/* Todo card expandivel tem folga DEPOIS do gatilho -- ver o comentario da correcao
+   `card-expandivel-tem-folga` em scripts/consultivo/extrai_shell.py. */
+.slide-inner > [onclick^="toggleEl("]{margin-bottom:var(--space-4)}
 .ts-linha{display:grid;grid-template-columns:88px 1fr;gap:var(--space-3);
   font-size:.86rem;line-height:var(--lh-corpo);color:var(--text-mid);
   padding:var(--space-2) 0;border-bottom:1px solid rgba(201,211,228,.5)}
@@ -3113,7 +3107,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="3" data-stage="2" data-lesson="1" data-teacher="<strong>Predicao (4 min)</strong><br><br><strong>Objetivo:</strong> arriscar o que tem numa reserva, antes de ver.<br><br><strong>Conduza:</strong> leia as três perguntas EM VOZ ALTA COM ela. Aceite palpite em português.<br><br><strong>Atenção:</strong> se ela não arriscar, ofereça duas opções e peça que escolha. Escolher também e arriscar &mdash; e no ponto de partida dela, escolher e mais fácil que produzir.<br><br><strong>Siga quando:</strong> ela tiver arriscado as três." data-snap="2">
+<div class="slide slide-dark" data-slide="3" data-stage="2" data-lesson="1" data-teacher="<strong>Predicao (4 min)</strong><br><br><strong>Objetivo:</strong> arriscar o que tem numa reserva, antes de ver.<br><br><strong>Conduza:</strong> leia as três perguntas EM VOZ ALTA COM ela. Aceite palpite em português.<br><br><strong>Atenção:</strong> se ela não arriscar, ofereça duas opções e peça que escolha. Escolher também e arriscar &mdash; e no ponto de partida dela, escolher e mais fácil que produzir.<br><br><strong>Diga assim:</strong> as duas opções &mdash; &ldquo;A name and a date, or a name and a price?&rdquo; E depois do palpite: &ldquo;Good. That is your guess. Now we look.&rdquo;<br><br><strong>Siga quando:</strong> ela tiver arriscado as três." data-snap="2">
   <div class="slide-inner">
     <span class="stage-pill">2 &middot; Before you read</span>
     <h2 class="slide-heading">What is <span class="accent">in a booking</span></h2>
@@ -3188,7 +3182,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="8" data-stage="7" data-lesson="1" data-teacher="<strong>Produção (8 min)</strong><br><br><strong>FECHE O PAPEL NA TELA ANTES DE COMEÇAR.</strong><br><br><strong>Conduza:</strong> você e a recepcionista. Ela diz as quatro frases. Se travar, de a primeira palavra da frase e espere.<br><br><strong>Não corrija durante.</strong><br><br><strong>GRAVE.</strong> é a primeira produção dela em inglês em qualquer fonte &mdash; e o começo da comparacao do ciclo inteiro. Diga isso a ela depois de gravar.<br><br><strong>Siga quando:</strong> as quatro tiverem saido." data-snap="7">
+<div class="slide slide-dark" data-slide="8" data-stage="7" data-lesson="1" data-teacher="<strong>Produção (8 min)</strong><br><br><strong>FECHE O PAPEL NA TELA ANTES DE COMEÇAR.</strong><br><br><strong>Conduza:</strong> você e a recepcionista. Ela diz as quatro frases. Se travar, de a primeira palavra da frase e espere.<br><br><strong>Não corrija durante.</strong><br><br><strong>GRAVE.</strong> é a primeira produção dela em inglês em qualquer fonte &mdash; e o começo da comparacao do ciclo inteiro. Diga isso a ela depois de gravar.<br><br><strong>Diga assim:</strong> se ela travar, a primeira palavra e nada mais &mdash; &ldquo;My…&rdquo; / &ldquo;I am…&rdquo;. E depois de gravar: &ldquo;This is the first time you have spoken English here. We keep it, and at the end of the cycle you listen to it again.&rdquo;<br><br><strong>Siga quando:</strong> as quatro tiverem saido." data-snap="7">
   <div class="slide-inner">
     <span class="stage-pill">7 &middot; Your four sentences</span>
     <h2 class="slide-heading">Nothing on the screen, <span class="accent">and it is your turn</span></h2>
@@ -3246,7 +3240,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-open active" data-slide="11" data-stage="1" data-lesson="2" data-teacher="<strong>Abertura (3 min dos 5)</strong><br><br><strong>Objetivo:</strong> nomear a cena: o balcão do hotel, que ela já conhece.<br><br><strong>Conduza:</strong> pergunte o que ela costuma fazer hoje quando o recepcionista pergunta alguma coisa. Em português esta bem.<br><br><strong>Diga uma vez:</strong> hoje ela vai aprender a pedir para repetirem &mdash; e que todo mundo faz isso, em qualquer lingua.<br><br><strong>Siga quando:</strong> ela contar como se vira hoje." data-snap="0">
+<div class="slide slide-open active" data-slide="11" data-stage="1" data-lesson="2" data-teacher="<strong>Abertura (3 min dos 5)</strong><br><br><strong>Objetivo:</strong> nomear a cena: o balcão do hotel, que ela já conhece.<br><br><strong>Conduza:</strong> pergunte o que ela costuma fazer hoje quando o recepcionista pergunta alguma coisa. Em português esta bem.<br><br><strong>Diga uma vez:</strong> hoje ela vai aprender a pedir para repetirem &mdash; e que todo mundo faz isso, em qualquer lingua.<br><br><strong>Diga assim:</strong> &ldquo;Today you learn to ask people to say it again. Everybody does this &mdash; in every language.&rdquo;<br><br><strong>Siga quando:</strong> ela contar como se vira hoje." data-snap="0">
   <div class="open-field open-2" aria-hidden="true"></div>
   <div class="slide-inner">
     <p class="chapter-label">Lesson 02</p>
@@ -3461,7 +3455,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="24" data-stage="3" data-lesson="3" data-teacher="<strong>Descoberta guiada (9 min)</strong><br><br><strong>Objetivo:</strong> que ELA ache o que muda.<br><br><strong>Conduza:</strong> ela marca as três corretas. Depois pergunte, em português se precisar: o que esta diferente nas três erradas?<br><br><strong>A resposta que você quer ouvir</strong> (dela): a forma não combina com quem está na frente.<br><br><strong>NÃO DÊ A REGRA.</strong> Ela vem na etapa 5.<br><br><strong>Siga quando:</strong> ela tiver dito o que muda." data-snap="3">
+<div class="slide slide-dark" data-slide="24" data-stage="3" data-lesson="3" data-teacher="<strong>Descoberta guiada (9 min)</strong><br><br><strong>Objetivo:</strong> que ELA ache o que muda.<br><br><strong>Conduza:</strong> ela marca as três corretas. Depois pergunte, em português se precisar: o que esta diferente nas três erradas?<br><br><strong>A resposta que você quer ouvir</strong> (dela): a forma não combina com quem está na frente.<br><br><strong>NÃO DÊ A REGRA.</strong> Ela vem na etapa 5.<br><br><strong>Diga assim:</strong> devolvendo a formulação dela sem virar regra &mdash; &ldquo;Yes &mdash; the form changes with the person in front of it. Say that back to me in English.&rdquo;<br><br><strong>Siga quando:</strong> ela tiver dito o que muda." data-snap="3">
   <div class="slide-inner">
     <span class="stage-pill">3 &middot; What changed</span>
     <h2 class="slide-heading">Three of these <span class="accent">are right</span></h2>
@@ -3607,7 +3601,7 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="33" data-stage="2" data-lesson="4" data-teacher="<strong>Tentativa inicial (8 min)</strong><br><br><strong>Objetivo:</strong> o check-in inteiro SEM modelo. Esta tentativa é metade da evidência do dia.<br><br><strong>Conduza:</strong> você e a Emma. 'Good afternoon!' e espere.<br><br><strong>NÃO CORRIJA E NÃO SUGIRA.</strong> Se ela travar por mais de dez segundos, dê a PRIMEIRA PALAVRA da frase e só ela.<br><br><strong>Anote:</strong> ela cumprimentou? disse o nome? confirmou as datas? pediu alguma coisa?<br><br><strong>Siga quando:</strong> ela terminar &mdash; mesmo que faltando metade." data-snap="2">
+<div class="slide slide-dark" data-slide="33" data-stage="2" data-lesson="4" data-teacher="<strong>Tentativa inicial (8 min)</strong><br><br><strong>Objetivo:</strong> o check-in inteiro SEM modelo. Esta tentativa é metade da evidência do dia.<br><br><strong>Conduza:</strong> você e a Emma. 'Good afternoon!' e espere.<br><br><strong>NÃO CORRIJA E NÃO SUGIRA.</strong> Se ela travar por mais de dez segundos, dê a PRIMEIRA PALAVRA da frase e só ela.<br><br><strong>Anote:</strong> ela cumprimentou? disse o nome? confirmou as datas? pediu alguma coisa?<br><br><strong>Diga assim:</strong> a abertura, como a Emma &mdash; &ldquo;Good afternoon! Checking in?&rdquo; E, se ela travar por mais de dez segundos, a primeira palavra e só ela: &ldquo;My…&rdquo; / &ldquo;I have…&rdquo; / &ldquo;Two…&rdquo;.<br><br><strong>Siga quando:</strong> ela terminar &mdash; mesmo que faltando metade." data-snap="2">
   <div class="slide-inner">
     <span class="stage-pill">2 &middot; Try it once</span>
     <h2 class="slide-heading">The whole thing, <span class="accent">starting now</span></h2>
@@ -3774,7 +3768,9 @@ superior não compensa lacuna nas habilidades prioritárias.
 <h1 id="tgGuiaTitulo">Teacher’s Guide</h1>
 <p class="tg-guia-pos" id="tgGuiaPos"></p>
 </div>
-<div class="tg-guia-cabeca" id="tgGuiaCabeca"></div>
+<!-- O cabecalho de treze campos saiu em 02/09/2026: ele nao mudava de tela em tela e
+     empurrava o procedimento para baixo em todas elas. A preparacao da aula vive no cartao
+     da aula ("Estrutura e preparacao"), que e onde se prepara. Aqui e a hora da aula. -->
 <p class="tg-guia-proc">Stage-by-stage procedure</p>
 <div class="tg-guia-nota" id="tgGuiaNota"></div>
 <div class="tg-guia-nav">
@@ -6236,48 +6232,14 @@ function tgModoIr(d){
    procedimento. Sao duas pecas diferentes, e confundi-las e o que faz uma delas nao existir.
    A nota local acompanha a atividade; o guia e o que permite a um professor que nao produziu
    a aula prepara-la e conduzi-la inteira. */
-function tgLinha(rot,txt){
-  if(!txt)return '';
-  return '<div class="tg-campo"><b>'+rot+'</b><div>'+txt+'</div></div>';
-}
-function tgCabecaHTML(n){
-  var G=GUIDE[n]; if(!G)return '';
-  var L=LESSONS[n]||{},h='',i,s=stagesOf(n)||[];
-  /* `Lesson identity` saiu na revisao de 31/08/2026. A linha abria o guia com bloco,
-     faixas de CEFR, duracao, posicao no ciclo e o "assessment model in force" -- metadado de
-     PRODUCAO, escrito para quem monta o material, no alto da pagina que a professora abre
-     para dar a aula. O que ela precisa da aula esta nos campos abaixo, e o resto do
-     cabecalho continua. */
-  h+=tgLinha('Goals',G.goals);
-  h+=tgLinha('Communicative product',G.product);
-  h+=tgLinha('Success criteria',G.criteria);
-  h+=tgLinha('Teacher preparation',G.prep);
-  var ov='<ul class="tg-ov">';
-  for(i=0;i<s.length;i++)ov+='<li><span>'+(i+1)+' &middot; '+s[i].n+'</span><em>'+s[i].min+' min</em></li>';
-  ov+='</ul><p class="tg-ov-tot">'+somaEtapas(n)+' minutes of essential path, plus 5 minutes of operational margin.</p>';
-  h+=tgLinha('Lesson overview',ov);
-  h+=tgLinha('Language focus',G.language);
-  /* Campo proprio, e nao uma linha perdida na preparacao: o adendo normativo exige que o
-     guia declare QUANDO abrir o transcript, e uma regra que vive dentro de outro campo e uma
-     regra que ninguem acha na hora da aula. */
-  h+=tgLinha('Transcript',G.transcript);
-  h+=tgLinha('Anticipated difficulties',G.difficulties);
-  h+=tgLinha('Scaffolding and challenge',G.scaffolding);
-  h+=tgLinha('Feedback and retask',G.feedback);
-  h+=tgLinha('Evidence to record',G.evidence);
-  h+=tgLinha('Pre/post-class connection',G.prepost);
-  h+=tgLinha('Answer key / possible answers',G.key);
-  return h;
-}
+/* `tgLinha` e `tgCabecaHTML` sairam com o cabecalho, em 02/09/2026. Funcao que ninguem
+   chama e a forma mais silenciosa de um pedaco removido voltar: basta alguem reintroduzir a
+   chamada sem reabrir a decisao. `GUIDE` continua no arquivo -- ele e a fonte declarada da
+   aula e outros gates o leem -- mas ja nao pinta nada nesta janela. */
 function tgModoPinta(){
   var s=_tgSlides[_tgI],L=LESSONS[_tgN]||{};
   var el=document.getElementById('tgGuiaTitulo');
   if(el)el.innerHTML='Lesson '+(_tgN<10?'0'+_tgN:_tgN)+' &middot; '+(L.tema||'');
-  el=document.getElementById('tgGuiaCabeca');
-  if(el&&!el.getAttribute('data-pronto')){
-    el.innerHTML=tgCabecaHTML(_tgN);
-    el.setAttribute('data-pronto','1');
-  }
   el=document.getElementById('tgGuiaPos');
   if(el){
     var nome=(L.nav&&L.nav[_tgI])?L.nav[_tgI]:'';

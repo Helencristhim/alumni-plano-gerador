@@ -291,15 +291,164 @@ def monta_documento(corpo, lang="pt-BR", view="professor"):
 # casar exatamente uma vez: se o artefato mudar embaixo, a extracao PARA e diz qual correcao
 # perdeu o pe -- em vez de aplicar no lugar errado ou sumir em silencio.
 CORRECOES = [
- ("guia-sem-lesson-identity",
-  """  h+=tgLinha('Lesson identity',G.identity);
-  h+=tgLinha('Goals',G.goals);""",
-  """  /* `Lesson identity` saiu na revisao de 31/08/2026. A linha abria o guia com bloco,
-     faixas de CEFR, duracao, posicao no ciclo e o "assessment model in force" -- metadado de
-     PRODUCAO, escrito para quem monta o material, no alto da pagina que a professora abre
-     para dar a aula. O que ela precisa da aula esta nos campos abaixo, e o resto do
-     cabecalho continua. */
-  h+=tgLinha('Goals',G.goals);"""),
+ # ---- O TEACHER'S GUIDE EXTERNO PERDE O CABECALHO DE AULA (revisao de 02/09/2026)
+ #
+ # A janela do guia tinha duas pecas empilhadas: um CABECALHO com treze campos da aula
+ # (Goals, Communicative product, Teacher preparation, Lesson overview, Answer key...) e,
+ # embaixo, o PROCEDIMENTO da tela corrente, que muda a cada Previous/Next.
+ #
+ # O cabecalho era escrito uma vez e ficava. Como so o procedimento troca, a professora
+ # atravessava os treze campos DE NOVO a cada tela para chegar na unica parte que tinha
+ # mudado -- dez vezes por aula. O guia que existe para ser lido DURANTE a aula estava
+ # organizado como documento de preparacao.
+ #
+ # E ele ja e documento de preparacao em outro lugar: o cartao da aula, na aba Aulas, tem
+ # "Estrutura e preparacao" (`lcprep{N}`) com objetivo, produto, percurso, o que ler antes e
+ # como conduzir -- em portugues, que e a lingua do professor brasileiro. O cabecalho do guia
+ # era a mesma coisa em ingles, no lugar errado.
+ #
+ # Isto continua a decisao de 31/08/2026, que ja havia tirado `Lesson identity` dali pelo
+ # mesmo argumento (metadado de producao no alto da pagina que se abre para dar aula). O que
+ # muda agora e o alcance: sai o cabecalho inteiro, e a janela passa a ser o que o titulo
+ # dela sempre prometeu -- "Stage-by-stage procedure".
+ #
+ # Sao tres ancoras porque a peca tem tres partes: o no do DOM, as funcoes que o montam e a
+ # linha que o preenche. Tirar so uma deixaria codigo morto ou um buraco na tela.
+ ("guia-sem-cabecalho/dom",
+  """<div class="tg-guia-cabeca" id="tgGuiaCabeca"></div>
+<p class="tg-guia-proc">Stage-by-stage procedure</p>""",
+  """<!-- O cabecalho de treze campos saiu em 02/09/2026: ele nao mudava de tela em tela e
+     empurrava o procedimento para baixo em todas elas. A preparacao da aula vive no cartao
+     da aula ("Estrutura e preparacao"), que e onde se prepara. Aqui e a hora da aula. -->
+<p class="tg-guia-proc">Stage-by-stage procedure</p>"""),
+
+ ("guia-sem-cabecalho/funcoes",
+  """function tgLinha(rot,txt){
+  if(!txt)return '';
+  return '<div class="tg-campo"><b>'+rot+'</b><div>'+txt+'</div></div>';
+}
+function tgCabecaHTML(n){
+  var G=GUIDE[n]; if(!G)return '';
+  var L=LESSONS[n]||{},h='',i,s=stagesOf(n)||[];
+  h+=tgLinha('Lesson identity',G.identity);
+  h+=tgLinha('Goals',G.goals);
+  h+=tgLinha('Communicative product',G.product);
+  h+=tgLinha('Success criteria',G.criteria);
+  h+=tgLinha('Teacher preparation',G.prep);
+  var ov='<ul class="tg-ov">';
+  for(i=0;i<s.length;i++)ov+='<li><span>'+(i+1)+' &middot; '+s[i].n+'</span><em>'+s[i].min+' min</em></li>';
+  ov+='</ul><p class="tg-ov-tot">'+somaEtapas(n)+' minutes of essential path, plus 5 minutes of operational margin.</p>';
+  h+=tgLinha('Lesson overview',ov);
+  h+=tgLinha('Language focus',G.language);
+  /* Campo proprio, e nao uma linha perdida na preparacao: o adendo normativo exige que o
+     guia declare QUANDO abrir o transcript, e uma regra que vive dentro de outro campo e uma
+     regra que ninguem acha na hora da aula. */
+  h+=tgLinha('Transcript',G.transcript);
+  h+=tgLinha('Anticipated difficulties',G.difficulties);
+  h+=tgLinha('Scaffolding and challenge',G.scaffolding);
+  h+=tgLinha('Feedback and retask',G.feedback);
+  h+=tgLinha('Evidence to record',G.evidence);
+  h+=tgLinha('Pre/post-class connection',G.prepost);
+  h+=tgLinha('Answer key / possible answers',G.key);
+  return h;
+}
+""",
+  """/* `tgLinha` e `tgCabecaHTML` sairam com o cabecalho, em 02/09/2026. Funcao que ninguem
+   chama e a forma mais silenciosa de um pedaco removido voltar: basta alguem reintroduzir a
+   chamada sem reabrir a decisao. `GUIDE` continua no arquivo -- ele e a fonte declarada da
+   aula e outros gates o leem -- mas ja nao pinta nada nesta janela. */
+"""),
+
+ ("guia-sem-cabecalho/css",
+  """/* --- cabecalho do Teacher's Guide, na janela separada ---
+   O painel dentro do deck mostra a NOTA da tela. A janela mostra o GUIA: os catorze campos
+   primeiro, e o procedimento tela a tela depois, navegavel. Duas pecas, um lugar cada. */
+.tg-guia-cabeca{margin-bottom:var(--space-6);padding-bottom:var(--space-5);
+  border-bottom:1px solid rgba(255,255,255,.22)}
+.tg-campo{margin-bottom:var(--space-4h)}
+.tg-campo>b{display:block;font-family:var(--font-interface);font-size:.72rem;
+  font-weight:var(--peso-forte);letter-spacing:var(--ls-rotulo);text-transform:uppercase;
+  color:var(--d-accent);margin-bottom:var(--space-2)}
+.tg-campo>div{font-size:.95rem;line-height:var(--lh-corpo);color:var(--d-text-mid)}
+.tg-campo strong{color:var(--d-text)}
+.tg-campo em{color:var(--d-text-dim);font-style:italic}
+.tg-campo ul,.tg-campo ol{margin:var(--space-2) 0 0;padding-left:var(--space-4h)}
+.tg-campo li{margin-bottom:var(--space-2)}
+.tg-ov{list-style:none;margin:var(--space-2) 0 0;padding:0}
+.tg-ov li{display:flex;justify-content:space-between;gap:var(--space-4);
+  padding:var(--space-2) 0;border-bottom:1px solid rgba(255,255,255,.14);margin:0}
+.tg-ov li em{font-style:normal;font-variant-numeric:tabular-nums;color:var(--d-text-dim)}
+.tg-ov-tot{margin:var(--space-3) 0 0;font-size:.86rem;color:var(--d-text-dim)}
+.tg-guia-proc{""",
+  """/* --- o Teacher's Guide, na janela separada ---
+   A janela mostra o PROCEDIMENTO da tela corrente, e so ele. As regras do cabecalho
+   (.tg-guia-cabeca, .tg-campo, .tg-ov) sairam junto com ele em 02/09/2026: CSS de peca que
+   nao existe mais e um convite a que a peca volte sem que ninguem decida isso. */
+.tg-guia-proc{"""),
+
+ ("guia-sem-cabecalho/pintura",
+  """  el=document.getElementById('tgGuiaCabeca');
+  if(el&&!el.getAttribute('data-pronto')){
+    el.innerHTML=tgCabecaHTML(_tgN);
+    el.setAttribute('data-pronto','1');
+  }
+  el=document.getElementById('tgGuiaPos');""",
+  """  el=document.getElementById('tgGuiaPos');"""),
+
+ # ---- O CARD EXPANDIVEL CARREGA A FOLGA DEPOIS DELE (revisao de 02/09/2026)
+ #
+ # Mesma correcao que o apoio em portugues ja recebeu em 01/09 (`render.apoio_pt`), agora
+ # como REGRA da forma em vez de um estilo inline num emissor. O gatilho de um card
+ # expandivel saia com margem so no topo: fechado -- que e como ele nasce -- o proximo
+ # elemento encostava nele. Na tela 5 da aula 9 da Joice, o botao "The invitation" ficava
+ # colado no primeiro item do exercicio, sem um pixel entre os dois.
+ #
+ # A MARGEM DE BAIXO E DO GATILHO, NAO DO QUE VEM DEPOIS. Se ela vivesse no exercicio, cada
+ # peca que algum dia venha depois de um card teria de lembrar de trazer a sua.
+ #
+ # A regra pega o gatilho pelo COMPORTAMENTO (`onclick` que chama `toggleEl`) e so quando ele
+ # e filho direto de `.slide-inner`, isto e, um controle que ocupa a linha inteira. O gatilho
+ # que vive dentro de uma barra flex -- os "Show transcript" ao lado dos controles de audio --
+ # fica de fora de proposito: ali a folga ja e da barra, e margem inferior num item de flex
+ # com `align-items:center` desalinha a linha em vez de espacar.
+ #
+ # O painel `.transcript-box` ganha a sua pelo mesmo motivo do `.callout` do apoio em PT:
+ # aberto, ele encostava na lista de perguntas logo abaixo.
+ ("card-expandivel-tem-folga",
+  """.transcript-box{margin-top:var(--space-3h);padding:var(--space-4) var(--space-4h);
+  background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:10px}""",
+  """.transcript-box{margin:var(--space-3h) 0 var(--space-4h);padding:var(--space-4) var(--space-4h);
+  background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:10px}
+
+/* Todo card expandivel tem folga DEPOIS do gatilho -- ver o comentario da correcao
+   `card-expandivel-tem-folga` em scripts/consultivo/extrai_shell.py. */
+.slide-inner > [onclick^="toggleEl("]{margin-bottom:var(--space-4)}"""),
+
+ # ---- O QUE E AZUL-MARINHO NAO SE LE NO ESCURO (revisao de 02/09/2026)
+ #
+ # `.task-instr` e `.verify-all-btn.ghost` nasceram com as cores do fundo CLARO
+ # (`--text-mid` #33405E e `--accent` #003080) e nunca ganharam a variante escura que os
+ # vizinhos tem (`.btn-ghost`, `.audio-btn-sm.ghost`, `.aud-estado` -- todos com regra
+ # `.slide-dark`/`.slide-open` logo acima). Numa tela escura o resultado, medido no
+ # navegador com a razao WCAG computada:
+ #
+ #     .verify-all-btn.ghost   1.49 : 1   (minimo 4.5)   -- o botao "Check" some
+ #     .task-instr             1.75 : 1   (minimo 4.5)   -- a pergunta do exercicio some
+ #
+ # Sao 28 ocorrencias em 4 dos 6 materiais. A pergunta apagada e a pior das duas: o
+ # enunciado de `escolha` sai como `.task-instr`, entao a tela mostra as alternativas e
+ # esconde o que esta sendo perguntado.
+ #
+ # As cores nao sao novas -- sao as mesmas `--d-accent` e `--d-text-mid` que as regras
+ # vizinhas ja usam, e que medem 6.58 e 12.01 sobre `--dark`. Faltava so escrever a regra.
+ ("contraste-no-escuro-do-check-e-da-instrucao",
+  """.slide-dark .audio-btn-sm.ghost,.slide-open .audio-btn-sm.ghost{color:var(--d-accent);border-color:var(--d-accent);background:transparent}""",
+  """.slide-dark .audio-btn-sm.ghost,.slide-open .audio-btn-sm.ghost{color:var(--d-accent);border-color:var(--d-accent);background:transparent}
+/* Ver a correcao `contraste-no-escuro-do-check-e-da-instrucao`: as duas regras abaixo
+   faltavam, e no escuro davam 1.49:1 e 1.75:1. */
+.slide-dark .verify-all-btn.ghost,.slide-open .verify-all-btn.ghost{color:var(--d-accent);border-color:var(--d-accent)}
+.slide-dark .verify-all-btn.ghost:hover,.slide-open .verify-all-btn.ghost:hover{background:var(--d-accent);color:var(--dark)}
+.slide-dark .task-instr,.slide-open .task-instr{color:var(--d-text-mid)}"""),
 
  ("answer-key-sem-no-in-class",
   """      if(nota.duvida)h+=akLinha('Pode gerar dúvida',nota.duvida);
@@ -714,7 +863,11 @@ FUNCOES_DOCENTES = [
     # O Teacher's Guide e a ROTA que o abre. O P3 §3 nomeia exatamente isto: "a URL do aluno
     # nao possui alternador, rota de professor ou elevacao de papel por query, hash,
     # armazenamento, atributo ou chamada direta".
-    "tgAberto", "tgClose", "tgToggle", "tgURL", "tgAbrir", "tgLinha", "tgCabecaHTML",
+    # `tgLinha` e `tgCabecaHTML` sairam desta lista em 02/09/2026: a correcao
+    # `guia-sem-cabecalho/funcoes` ja as remove do artefato, entao pedi-las aqui era pedir a
+    # remocao de algo que nao existe mais -- e o relatorio passava a dizer "nao achou" para
+    # sempre, que e como um nome errado nesta lista se esconde.
+    "tgAberto", "tgClose", "tgToggle", "tgURL", "tgAbrir",
     "tgModoPedido", "tgModoAplica", "tgModoIr", "tgModoPinta",
     # o alternador de visao
     "setView",
