@@ -137,7 +137,7 @@ SONDA = r"""() => {
 #
 # Entao a tela e medida com tudo o que ela pode mostrar aberto. E o mesmo criterio do resto:
 # medir o que a professora VE, e nao o que o arquivo tem.
-ABRE_RECOLHIDOS = """() => {
+ABRE_RECOLHIDOS = r"""() => {
   const t = document.querySelector('.slide.active');
   if (!t) return 0;
   let n = 0;
@@ -278,8 +278,21 @@ def _selftest():
     # escuro. Entao o selftest as PLANTA na primeira tela escura, junto com a cor errada.
     # Sem isso os dois casos passariam por nao haver o que medir, que e o modo mais comum de
     # um selftest ficar verde sem provar nada.
-    RX_ESCURA = re.compile(r'(<div class="slide slide-dark"[^>]*>\s*(?:<div class="[^"]*"'
-                           r'[^>]*></div>\s*)?<div class="slide-inner">)')
+    # O FIM DA TAG NAO E O PRIMEIRO ">" (03/09/2026).
+    #
+    # Este regex fechava a tag de abertura em `[^>]*>`, e isso valia enquanto a nota do
+    # professor chegava ESCAPADA no atributo (`&lt;strong&gt;`). O guia declarado
+    # (`guia_telas.json` -> `render.nota_de_tela`) emite o HTML CRU dentro do `data-teacher`
+    # — que e valido, porque o atributo so termina na aspa — e a partir daí o primeiro ">"
+    # do arquivo esta DENTRO do atributo. O regex parava ali, o `<div class="slide-inner">`
+    # seguinte nao casava, e o selftest morria dizendo "a forma da tela mudou".
+    #
+    # A forma da tela nao mudou: mudou de quem era a nota. O selftest dependia, sem dizer,
+    # de o molde ainda ter o guia em prosa — e migrar o molde e exatamente o trabalho em
+    # curso. Agora o regex pula atributo entre aspas, que e como um parser de HTML lê.
+    RX_ESCURA = re.compile(r'(<div class="slide slide-dark"(?:[^>"]|"[^"]*")*>\s*'
+                           r'(?:<div class="[^"]*"(?:[^>"]|"[^"]*")*></div>\s*)?'
+                           r'<div class="slide-inner">)')
 
     def planta(marcacao, regra):
         def muta(s):
