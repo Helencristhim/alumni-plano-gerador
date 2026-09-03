@@ -829,8 +829,27 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
    frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
    conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
    linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
-.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
+.slide-pt{display:block;font-family:var(--font-corpo);font-style:italic;font-weight:var(--peso-leve);font-size:.82rem;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h);max-width:60ch}
 .slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}
+/* O TAMANHO E O PESO SAO ABSOLUTOS, e por que isso importa (revisao de 03/09/2026).
+   A regra acima dizia `font-size:.86em` e nao dizia peso nenhum -- as duas coisas herdadas
+   do elemento que hospeda o apoio. Dentro de `.slide-question` (clamp ate 1.9rem, peso 600)
+   o portugues saia com 26px e NEGRITO ao lado de um ingles de 30px: medido no navegador em
+   03/09/2026, na aula 1 da Vanessa. O apoio competia de igual para igual com a frase que
+   ele deveria apenas situar, e o olho ia nele primeiro -- exatamente o que o paragrafo
+   acima diz que ele NAO pode fazer.
+   `em` herda o corpo; `rem` nao. E o peso vai declarado, e nao deixado ao host. */
+.slide-question .slide-pt,.q-item .slide-pt,.slide-subtitle .slide-pt,.slide-lead .slide-pt{
+  font-size:.82rem;font-weight:var(--peso-leve);font-style:italic}
+
+/* A PERGUNTA CENTRALIZADA TEM DE FICAR CENTRADA (revisao de 03/09/2026).
+   `.slide-question` tem `max-width:38ch`. Num slide de abertura -- `.slide-open`, cujo
+   `.slide-inner` e `text-align:center` -- o TEXTO se centraliza dentro da caixa, mas a
+   CAIXA continua encostada a esquerda: 577px de pergunta num inner de 940px deixavam 363px
+   de sobra so do lado direito. O texto parecia centralizado e nao estava. Medido na tela 1
+   da aula 1 da Vanessa. Centrar a caixa e o que faltava; nas telas alinhadas a esquerda
+   nada muda, porque a regra so vale onde o inner ja centraliza. */
+.slide-open .slide-question{margin-left:auto;margin-right:auto}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1500,7 +1519,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">A booking is short on purpose. Four things &mdash; who, where, when, what is included &mdash; and you can use it anywhere in the world.<div class="item-pt" lang="pt-BR">A reserva é curta de propósito. Quatro informações — quem, onde, quando e o que está incluído — e ela serve em qualquer lugar do mundo.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'kd1')">Check / Checar</button>
     <div class="score-out" id="kd1-out"></div>
     <div class="callout" id="kd1-key" style="display:none">
       <div class="callout-title">Por que a aula 1 comeca aqui</div>
@@ -1545,7 +1564,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">reserva</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="ppCheck(this,'kl1')">Check / Checar</button>
     <div class="score-out" id="kl1-out"></div>
     <div class="callout" id="kl1-key" style="display:none">
       <div class="callout-title">Seis palavras, e voce ja conhece quatro</div>
@@ -1571,7 +1590,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">Hotel Marina</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select><div class="item-why item-pt" lang="pt-BR">Hotel Marina — o nome do hotel.</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>a place</em> = um lugar &middot; <em>a number</em> = um número &middot; <em>a date</em> = uma data &middot; <em>a name</em> = um nome</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl1p')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cl1p')">Check / Checar</button>
     <div class="score-out" id="cl1p-out"></div>
     <div class="callout" id="cl1p-key" style="display:none">
       <div class="callout-title">A data em ingles vem em outra ordem</div>
@@ -1595,7 +1614,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">Check-in on the 14th and check-out on the 18th is four nights. It is the one thing the paper does not say in words &mdash; and the one the hotel will ask you.<div class="item-pt" lang="pt-BR">Check-in no dia 14 e check-out no dia 18 dá quatro noites. É a única informação que o papel não diz com palavras — e é justamente a que o hotel vai perguntar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'fl1')">Check / Checar</button>
     <div class="score-out" id="fl1-out"></div>
     <div class="callout" id="fl1-key" style="display:none">
       <div class="callout-title">Quatro noites, e o papel nao diz isso</div>
@@ -1615,7 +1634,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">Breakfast is</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">including</option><option value="B">included</option><option value="C">include</option></select><div class="item-why item-pt" lang="pt-BR"><em>Breakfast is included.</em> — O café da manhã está incluído.</div></div>
       <div class="match-row"><span class="match-word">It is a room</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">with two people</option><option value="B">for two people</option><option value="C">of two people</option></select><div class="item-why item-pt" lang="pt-BR"><em>It is a room for two people.</em> — É um quarto para duas pessoas.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cn1')">Check / Checar</button>
     <div class="score-out" id="cn1-out"></div>
     <div class="callout" id="cn1-key" style="display:none">
       <div class="callout-title">Quatro frases, e a viagem inteira cabe nelas</div>
@@ -1638,10 +1657,8 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="item-why item-pt" lang="pt-BR">É de 14 de outubro a 18 de outubro.</div>
       <p class="chunk-line">Breakfast <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> included.</p>
       <div class="item-why item-pt" lang="pt-BR">O café da manhã está incluído.</div>
-      <p class="chunk-line">It <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> a room for two people.</p>
-      <div class="item-why item-pt" lang="pt-BR">É um quarto para duas pessoas.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="czCheck(this,'cz1')">Check / Checar</button>
     <div class="score-out" id="cz1-out"></div>
     <div class="callout" id="cz1-key" style="display:none">
       <div class="callout-title">Este e o seu texto na aula</div>
@@ -1671,7 +1688,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">Three questions, five words each, and the same ones every time. Asking for a repeat is normal &mdash; people do it in their own language, at every desk.<div class="item-pt" lang="pt-BR">Três perguntas, cinco palavras cada, e sempre as mesmas. Pedir para repetir é normal — as pessoas fazem isso na própria língua, em qualquer balcão.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'kd2')">Check / Checar</button>
     <div class="score-out" id="kd2-out"></div>
     <div class="callout" id="kd2-key" style="display:none">
       <div class="callout-title">Esta e a cena que voce ja viveu</div>
@@ -1716,7 +1733,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">quantas noites?</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="ppCheck(this,'kl2')">Check / Checar</button>
     <div class="score-out" id="kl2-out"></div>
     <div class="callout" id="kl2-key" style="display:none">
       <div class="callout-title">Duas frases resolvem qualquer aperto</div>
@@ -1742,7 +1759,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">&ldquo;Breakfast is from seven to ten.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;O café da manhã é das sete às dez.&rdquo;</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>the number of nights</em> = quantas noites &middot; <em>your name</em> = o seu nome &middot; <em>breakfast</em> = o café da manhã</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl2p')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cl2p')">Check / Checar</button>
     <div class="score-out" id="cl2p-out"></div>
     <div class="callout" id="cl2p-key" style="display:none">
       <div class="callout-title">Sempre as mesmas tres</div>
@@ -1762,7 +1779,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">You did not understand the question.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">Thank you.</option><option value="B">Yes, please.</option><option value="C">Sorry, again please?</option></select><div class="item-why item-pt" lang="pt-BR">Você não entendeu a pergunta — <em>Sorry, again please?</em> (Desculpe, de novo, por favor?)</div></div>
       <div class="match-row"><span class="match-word">They are speaking very fast.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">More slowly, please.</option><option value="B">No, thank you.</option><option value="C">I am sorry.</option></select><div class="item-why item-pt" lang="pt-BR">Estão falando muito rápido — <em>More slowly, please.</em> (Mais devagar, por favor.)</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cn2')">Check / Checar</button>
     <div class="score-out" id="cn2-out"></div>
     <div class="callout" id="cn2-key" style="display:none">
       <div class="callout-title">Respostas curtas sao respostas</div>
@@ -1786,7 +1803,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">Two voices, three questions, said slowly. Nothing about a passport and nothing about the trip &mdash; those are other conversations, in other lessons.<div class="item-pt" lang="pt-BR">Duas vozes, três perguntas, ditas devagar. Nada sobre passaporte e nada sobre a viagem — isso é outra conversa, em outra aula.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'fl2')">Check / Checar</button>
     <div class="score-out" id="fl2-out"></div>
     <div class="callout" id="fl2-key" style="display:none">
       <div class="callout-title">Duas vozes, e isso importa</div>
@@ -1813,7 +1830,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line"><input class="blank-input" data-ok="More" style="min-width:70px" placeholder="..."> slowly, please.</p>
       <div class="item-why item-pt" lang="pt-BR">Mais devagar, por favor.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="czCheck(this,'cz2')">Check / Checar</button>
     <div class="score-out" id="cz2-out"></div>
     <div class="callout" id="cz2-key" style="display:none">
       <div class="callout-title">Cinco frases, e o balcão inteiro</div>
@@ -1843,7 +1860,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">You have been using this verb since the first lesson. Today it gets a name &mdash; and a name for something you can already do is easy to keep.<div class="item-pt" lang="pt-BR">Você usa este verbo desde a primeira aula. Hoje ele ganha um nome — e nome para uma coisa que você já faz é fácil de guardar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'kd3')">Check / Checar</button>
     <div class="score-out" id="kd3-out"></div>
     <div class="callout" id="kd3-key" style="display:none">
       <div class="callout-title">Este e o verbo que voce citou</div>
@@ -1869,7 +1886,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">I ___ here for four nights.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select><div class="item-why item-pt" lang="pt-BR">Eu ___ aqui por quatro noites.</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>am</em> = <em>am</em> — vai com <em>I</em> (eu) &middot; <em>is</em> = <em>is</em> — vai com <em>he</em>, <em>she</em>, <em>it</em> e com um nome &middot; <em>are</em> = <em>are</em> — vai com <em>you</em>, <em>we</em>, <em>they</em></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'kl3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'kl3')">Check / Checar</button>
     <div class="score-out" id="kl3-out"></div>
     <div class="callout" id="kl3-key" style="display:none">
       <div class="callout-title">Tres formas, e so tres</div>
@@ -1893,7 +1910,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">The three that are wrong all use the form of another person. Nothing else changes in the sentence &mdash; and that is the only thing to get right.<div class="item-pt" lang="pt-BR">As três erradas usam a forma de outra pessoa. Nada mais muda na frase — e é só isso que você precisa acertar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'nt3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'nt3')">Check / Checar</button>
     <div class="score-out" id="nt3-out"></div>
     <div class="callout" id="nt3-key" style="display:none">
       <div class="callout-title">O que olhar</div>
@@ -1914,7 +1931,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">___ you from Brazil?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Are</option><option value="B">Am</option><option value="C">Is</option></select><div class="item-why item-pt" lang="pt-BR"><em>Are you from Brazil?</em> — Você é do Brasil?</div></div>
       <div class="match-row"><span class="match-word">It ___ not a big hotel.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">are</option><option value="C">am</option></select><div class="item-why item-pt" lang="pt-BR"><em>It is not a big hotel.</em> — Não é um hotel grande.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cn3')">Check / Checar</button>
     <div class="score-out" id="cn3-out"></div>
     <div class="callout" id="cn3-key" style="display:none">
       <div class="callout-title">A forma inteira, em uma linha</div>
@@ -1934,7 +1951,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">It is a double room. &amp;rarr; question</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Is it a double room?</option><option value="B">It is a double room?</option><option value="C">Does it a double room?</option></select><div class="item-why item-pt" lang="pt-BR">Pergunta: <em>Is it a double room?</em> — É um quarto de casal?</div></div>
       <div class="match-row"><span class="match-word">I am Vanessa. &amp;rarr; about your daughter</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">She am Vanessa.</option><option value="B">She are Vanessa.</option><option value="C">She is Vanessa.</option></select><div class="item-why item-pt" lang="pt-BR">Sobre a sua filha: <em>She is Vanessa.</em> — Ela é a Vanessa. Muda a pessoa, muda a forma.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'dr3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'dr3')">Check / Checar</button>
     <div class="score-out" id="dr3-out"></div>
     <div class="callout" id="dr3-key" style="display:none">
       <div class="callout-title">Onde escorrega de verdade</div>
@@ -1960,7 +1977,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line"><input class="blank-input" data-ok="Are" style="min-width:60px" placeholder="..."> you here for four nights?</p>
       <div class="item-why item-pt" lang="pt-BR">Você está aqui por quatro noites?</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="czCheck(this,'cz3')">Check / Checar</button>
     <div class="score-out" id="cz3-out"></div>
     <div class="callout" id="cz3-key" style="display:none">
       <div class="callout-title">Estas seis sao a sua producao na aula</div>
@@ -1990,7 +2007,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">Four short moments: hello, your name, the dates, one request. Everything else is the desk&rsquo;s job.<div class="item-pt" lang="pt-BR">Quatro momentos curtos: o cumprimento, o seu nome, as datas e um pedido. Todo o resto é trabalho de quem está no balcão.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'kd4')">Check / Checar</button>
     <div class="score-out" id="kd4-out"></div>
     <div class="callout" id="kd4-key" style="display:none">
       <div class="callout-title">A aula que fecha o bloco</div>
@@ -2035,7 +2052,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">por favor</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="ppCheck(this,'kl4')">Check / Checar</button>
     <div class="score-out" id="kl4-out"></div>
     <div class="callout" id="kl4-key" style="display:none">
       <div class="callout-title">Tres palavras, e nenhuma outra</div>
@@ -2057,7 +2074,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">&ldquo;Have a good day.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Tenha um bom dia.&rdquo;</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>in the middle</em> = no meio &middot; <em>at the end</em> = no fim &middot; <em>at the beginning</em> = no começo</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl4p')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cl4p')">Check / Checar</button>
     <div class="score-out" id="cl4p-out"></div>
     <div class="callout" id="cl4p-key" style="display:none">
       <div class="callout-title">O comeco e o fim custam duas palavras</div>
@@ -2077,7 +2094,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">___ a taxi on Saturday?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Can I have</option><option value="B">Is it</option><option value="C">Are you</option></select><div class="item-why item-pt" lang="pt-BR"><em>Can I have a taxi on Saturday?</em> — Posso ter um táxi no sábado?</div></div>
       <div class="match-row"><span class="match-word">___ a late check-out?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Can I have</option><option value="B">Is there</option><option value="C">Do you</option></select><div class="item-why item-pt" lang="pt-BR"><em>Can I have a late check-out?</em> — Posso sair mais tarde no último dia?</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cn4')">Check / Checar</button>
     <div class="score-out" id="cn4-out"></div>
     <div class="callout" id="cn4-key" style="display:none">
       <div class="callout-title">Um comeco, cinco pedidos</div>
@@ -2102,7 +2119,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">Three moves, and you already have all three from lesson 2. A question you did not expect is not a problem &mdash; it is the normal shape of a real conversation.<div class="item-pt" lang="pt-BR">São três saídas, e você já tem as três desde a aula 2. Uma pergunta que você não esperava não é problema — é o formato normal de uma conversa de verdade.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'fl4')">Check / Checar</button>
     <div class="score-out" id="fl4-out"></div>
     <div class="callout" id="fl4-key" style="display:none">
       <div class="callout-title">Voce ja tem as tres</div>
@@ -2129,7 +2146,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line"><input class="blank-input" data-ok="Thank you" style="min-width:100px" placeholder="...">. Have a good day.</p>
       <div class="item-why item-pt" lang="pt-BR">Obrigada. Tenha um bom dia.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="czCheck(this,'cz4')">Check / Checar</button>
     <div class="score-out" id="cz4-out"></div>
     <div class="callout" id="cz4-key" style="display:none">
       <div class="callout-title">Cinco frases, e o check-in inteiro</div>
@@ -2142,7 +2159,7 @@ body.tg-guia > #tgGuia{display:block!important}
        controle apareceria antes de o aluno comecar e antes de existir qualquer gabarito
        aberto - daria destaque de acao destrutiva a quem ainda nao fez nada. -->
   <div class="btn-bar pre-acoes" style="justify-content:flex-end;margin-top:var(--space-6);padding-top:var(--space-4);border-top:1px solid var(--border)">
-    <button class="btn-ghost" id="preResetBtn" onclick="preResetAsk()"><span data-view="professor">Fechar todos os gabaritos desta aula</span><span data-view="aluno">Reset my answers</span></button>
+    <button class="btn-ghost" id="preResetBtn" onclick="preResetAsk()"><span data-view="professor">Fechar todos os gabaritos desta aula</span><span data-view="aluno">Reset my answers &middot; Limpar minhas respostas</span></button>
   </div>
 
   <!-- Fim da area. O botao volta ao inicio da ABA, nao ao topo do documento. -->
@@ -2658,7 +2675,6 @@ superior não compensa lacuna nas habilidades prioritárias.
           <tr><td><strong>The city</strong></td><td><em>I am in Lisbon.</em></td></tr>
           <tr><td><strong>The dates</strong></td><td><em>It is from 14 October to 18 October.</em></td></tr>
           <tr><td><strong>What is included</strong></td><td><em>Breakfast is included.</em></td></tr>
-          <tr><td><strong>The room</strong></td><td><em>It is a room for two people.</em></td></tr>
         </tbody>
       </table>
     </div>
@@ -2667,7 +2683,7 @@ superior não compensa lacuna nas habilidades prioritárias.
       Leu um documento inteiro em ingles e disse quatro frases sem ele. <strong>No primeiro dia.</strong> Isso fica anotado &mdash; e daqui a vinte aulas vai ser o comeco da sua comparacao.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('conteudo-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>As suas quatro frases, em um lugar só.</strong><br><br>O seu nome — <em>My name is Vanessa.</em><br>A cidade — <em>I am in Lisbon.</em> (Eu estou em Lisboa.)<br>As datas — <em>It is from 14 October to 18 October.</em> (É de 14 a 18 de outubro.)<br>O que está incluído — <em>Breakfast is included.</em> (O café da manhã está incluído.)<br>O quarto — <em>It is a room for two people.</em> (É um quarto para duas pessoas.)<br><br><strong>O que você fez hoje:</strong> leu um documento inteiro em inglês e disse quatro frases sem ele. No primeiro dia.</div>
+    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>As suas quatro frases, em um lugar só.</strong><br><br>O seu nome — <em>My name is Vanessa.</em><br>A cidade — <em>I am in Lisbon.</em> (Eu estou em Lisboa.)<br>As datas — <em>It is from 14 October to 18 October.</em> (É de 14 a 18 de outubro.)<br>O que está incluído — <em>Breakfast is included.</em> (O café da manhã está incluído.)<br><br><strong>O que você fez hoje:</strong> leu um documento inteiro em inglês e disse quatro frases sem ele. No primeiro dia.</div>
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5h)">Optional practice</p>
@@ -2701,13 +2717,13 @@ superior não compensa lacuna nas habilidades prioritárias.
 
   <div class="exercise-section">
     <div class="section-header-row"><h4>Write More</h4><span class="badge badge-open">Optional</span></div>
-    <p class="task-instr">Write the same four sentences about someone else in your family.</p>
+    <p class="task-instr">Write the same four sentences about another booking.</p>
     <div class="callout rule-box">
-      <span class="callout-title">Why someone else</span>
-      Because <em>my name is</em> becomes <em>her name is</em>, and that small change is the whole of lesson 3. You will do it before anyone explains it to you.
+      <span class="callout-title">Why another booking</span>
+      The sentences do not change &mdash; only the name of the city, the dates and what is included.<br><br><strong>That is what makes them sentences and not lines you memorized:</strong> new details go in, and the frame still holds.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('pw1-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="pw1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Escreva as mesmas quatro frases sobre outra pessoa da sua família.</strong><br><br><strong>Por que outra pessoa:</strong> porque <em>my name is</em> vira <em>her name is</em>, e essa mudança pequena é a aula 3 inteira. Você vai fazer isso antes de alguém ter explicado.</div>
+    <div id="pw1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Escreva as mesmas quatro frases sobre outra reserva.</strong><br><br><strong>Por que outra reserva:</strong> as frases n&atilde;o mudam &mdash; muda s&oacute; a cidade, as datas e o que est&aacute; inclu&iacute;do. &Eacute; isso que faz delas frases, e n&atilde;o linhas decoradas: entram informa&ccedil;&otilde;es novas e a estrutura continua de p&eacute;.</div>
     <label class="mail-label" for="pw1-body">Your note</label>
     <textarea class="writebox" id="pw1-body" style="min-height:170px" placeholder="" oninput="pwCount('pw1-body','pw1-count','post_pw1_writing')"></textarea>
     <div class="wc"><span id="pw1-count">0 words</span></div>
@@ -3142,7 +3158,7 @@ superior não compensa lacuna nas habilidades prioritárias.
 <!-- Toda atividade com prompt operacional e, quando util, subprompt curto. -->
 
 <!-- ========== AULA 19 - ETAPA 1: CONTEXT + LEAD-IN (4 min) ========== -->
-<div class="slide slide-open active" data-slide="1" data-stage="1" data-lesson="1" data-teacher="<strong>Lesson opening (3 of 5)</strong><br><br><strong>Goal:</strong> To open the first English lesson of her adult life on something she already has — her own last trip — and to say once where the hour ends.<br><br><strong>Interaction:</strong> T–S, open questions. She may answer in Portuguese.<br><br><strong>Run it:</strong> &bull; Ask whether she managed to open the pre-class, and whether anything in it was unclear. Take the answer as information: nothing there was compulsory.<br>&bull; Say, once, what today is: she reads one hotel booking and then says four sentences in English, out loud, to you.<br>&bull; Ask the question on screen — where she went on her last trip. One answer is enough.<br>&bull; Say the name of the place back in English so she hears it once, and move on.<br><br><strong>Exact prompt:</strong> &bull; About the pre-class: &ldquo;Did you open the pre-class? Was anything hard?&rdquo;<br>&bull; What today is: &ldquo;Today you read one hotel booking. Then you say four sentences in English, out loud.&rdquo;<br>&bull; If nothing comes, the two options: &ldquo;Inside Brazil, or outside Brazil?&rdquo;<br><br><strong>Expected:</strong> One place, and a sentence or two about it. Portuguese is fine at this point.<br><br><strong>Conditional support:</strong> If nothing comes, offer two options and let her choose one. Choosing is also answering, and at her starting point choosing is easier than producing.<br><br><strong>Challenge:</strong> If she answers easily, ask who she traveled with and take that answer too.<br><br><strong>Monitoring:</strong> Whether she starts talking at all, and in which language. This is the baseline of the cycle.<br><br><strong>Evidence to record:</strong> Where she went last, and whether the pre-class reached her. Her hardest criticism of the previous course was a pre-class that asked for what she had no way of knowing.<br><br><strong>Transition:</strong> Move on when she has named a place and heard what today is." data-snap="0">
+<div class="slide slide-open active" data-slide="1" data-stage="1" data-lesson="1" data-teacher="<strong>Lesson opening (3 of 5)</strong><br><br><strong>Goal:</strong> To open the lesson on something she already has — her own last trip — and to say once where the hour ends.<br><br><strong>Interaction:</strong> T–S, open questions. She may answer in Portuguese.<br><br><strong>Run it:</strong> &bull; Ask whether she managed to open the pre-class, and whether anything in it was unclear.<br>&bull; Say, once, what today is: she reads one hotel booking and then says four sentences in English, out loud, to you.<br>&bull; Ask the question on screen — where she went on her last trip. One answer is enough.<br>&bull; Say the name of the place back in English so she hears it once, and move on.<br><br><strong>Exact prompt:</strong> &bull; About the pre-class: &ldquo;Did you open the pre-class? Was anything hard?&rdquo;<br>&bull; What today is: &ldquo;Today you read one hotel booking. Then you say four sentences in English, out loud.&rdquo;<br>&bull; If nothing comes, the two options: &ldquo;Inside Brazil, or outside Brazil?&rdquo;<br><br><strong>Expected:</strong> One place, and a sentence or two about it. Portuguese is fine at this point.<br><br><strong>Conditional support:</strong> If nothing comes, offer two options and let her choose one. Choosing is also answering.<br><br><strong>Challenge:</strong> If she answers easily, ask who she traveled with and take that answer too.<br><br><strong>Monitoring:</strong> Whether she starts talking at all, and in which language. This is the baseline of the cycle.<br><br><strong>Evidence to record:</strong> Where she went last, and whether the pre-class reached her.<br><br><strong>Transition:</strong> Move on when she has named a place and heard what today is." data-snap="0">
   <div class="open-field open-2" aria-hidden="true"></div>
   <div class="slide-inner">
     <p class="chapter-label">Lesson 01</p>
@@ -3154,68 +3170,70 @@ superior não compensa lacuna nas habilidades prioritárias.
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="2" data-stage="1" data-lesson="1" data-teacher="<strong>The paper in your hand (2 of 5)</strong><br><br><strong>Goal:</strong> To set the scene the whole lesson turns on: someone at a desk asks her who she is.<br><br><strong>Interaction:</strong> T–S, reading the brief on screen together.<br><br><strong>Run it:</strong> &bull; Read the brief with her, slowly.<br>&bull; Confirm one thing only: the paper carries four pieces of information.<br>&bull; Read the four items under the question with her, and ask which of them the desk needs to hear.<br><br><strong>Expected:</strong> She points at the four items on screen, or says two or three of them out loud.<br><br><strong>Conditional support:</strong> The four items are on screen for exactly this: she chooses instead of remembering. If she saw them in the pre-class, say so — they are the same four.<br><br><strong>Challenge:</strong> Ask which of the four the desk asks for first.<br><br><strong>Monitoring:</strong> Whether she recognizes the four from the pre-class, or is meeting them here for the first time.<br><br><strong>Evidence to record:</strong> Recognition here is the cheapest measure of whether the pre-class was opened and understood.<br><br><strong>Transition:</strong> Move on when she knows what she is about to read." data-snap="1">
+<div class="slide slide-light" data-slide="2" data-stage="1" data-lesson="1" data-teacher="<strong>The paper in your hand (2 of 5)</strong><br><br><strong>Goal:</strong> To set the scene the lesson turns on, and to separate what the desk needs to hear from what it does not.<br><br><strong>Interaction:</strong> T–S, reading the brief and choosing from the list on screen.<br><br><strong>Run it:</strong> &bull; Read the brief with her, slowly.<br>&bull; Read the seven items under the question with her and ask which ones the person at the desk needs to hear. Three of them do not belong to a booking.<br>&bull; Take her choices without correcting one by one; confirm the four at the end.<br><br><strong>Exact prompt:</strong> &bull; The question, item by item: &ldquo;Your job — does the desk need that?&rdquo;<br>&bull; Closing the four: &ldquo;So: your name, the city, the dates, and what is included.&rdquo;<br><br><strong>Expected:</strong> Your name, the city, the dates, what is included. Your job, the weather today and your favorite food are the three that do not belong.<br><br><strong>Conditional support:</strong> If she is unsure about an item, ask whether that information would be written on the paper itself.<br><br><strong>Challenge:</strong> Ask which of the four the desk asks for first.<br><br><strong>Monitoring:</strong> Whether she rejects the three that do not belong, or accepts the whole list.<br><br><strong>Evidence to record:</strong> How many of the four she already recognizes before reading anything.<br><br><strong>Transition:</strong> Move on when the four are named and she knows what she is about to read." data-snap="1">
   <div class="slide-inner">
     <span class="stage-pill">1 &middot; The paper in your hand</span>
-    <h2 class="slide-heading">A booking, <span class="accent">and a desk</span></h2>
+    <h2 class="slide-heading">A booking <span class="accent">and a desk</span></h2>
     <div class="doc-brief" id="brief1">
       <p class="doc-tit">The situation</p>
-      <p class="doc-para">You arrive at a hotel. The person at the desk asks who you are. You have this paper on your phone &mdash; and everything you need to say is in it.</p>
+      <p class="doc-para">You arrive at a hotel. The person at the desk asks who you are. You have this paper on your phone &mdash; and everything you need to say is in it.
+        <span class="slide-pt">Voc&ecirc; chega a um hotel. A pessoa no balc&atilde;o pergunta quem voc&ecirc; &eacute;. Voc&ecirc; tem este papel no celular &mdash; e tudo o que precisa dizer est&aacute; nele.</span></p>
     </div>
-    <p class="slide-question">What does the person at the desk need to hear from you?
-      <span class="slide-pt">O que a pessoa no balc&atilde;o precisa ouvir de voc&ecirc;?</span></p>
+    <p class="slide-question">Which of these does the person at the desk need to hear?
+      <span class="slide-pt">Quais destas a pessoa no balc&atilde;o precisa ouvir de voc&ecirc;?</span></p>
     <div class="roleplay-card">
       <div class="qlist" style="margin-top:var(--space-1h)">
-        <div class="q-item">Your name <span class="slide-pt">o seu nome</span></div>
-        <div class="q-item">The city <span class="slide-pt">a cidade</span></div>
         <div class="q-item">The dates <span class="slide-pt">as datas</span></div>
+        <div class="q-item">Your job <span class="slide-pt">a sua profiss&atilde;o</span></div>
+        <div class="q-item">Your name <span class="slide-pt">o seu nome</span></div>
+        <div class="q-item">The weather today <span class="slide-pt">o tempo hoje</span></div>
         <div class="q-item">What is included <span class="slide-pt">o que est&aacute; inclu&iacute;do</span></div>
+        <div class="q-item">Your favorite food <span class="slide-pt">a sua comida preferida</span></div>
+        <div class="q-item">The city <span class="slide-pt">a cidade</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="3" data-stage="2" data-lesson="1" data-teacher="<strong>Before you read (4)</strong><br><br><strong>Goal:</strong> To have her risk a guess about what is in a booking, before she sees one.<br><br><strong>Interaction:</strong> T–S, guessing out loud. Portuguese accepted.<br><br><strong>Run it:</strong> &bull; Read the three questions on screen out loud with her.<br>&bull; Take one guess on each. Do not confirm and do not correct — these are hypotheses.<br>&bull; If she risks nothing, offer two options and ask her to choose.<br><br><strong>Exact prompt:</strong> &bull; The two options: &ldquo;A name and a date, or a name and a price?&rdquo;<br>&bull; After the guess: &ldquo;Good. That is your guess. Now we look.&rdquo;<br><br><strong>Expected:</strong> Three guesses, however rough. Name and dates usually come up; the fourth thing usually does not.<br><br><strong>Conditional support:</strong> Offer two and let her choose. At her starting point choosing is easier than producing, and choosing is still risking.<br><br><strong>Challenge:</strong> Ask which of the four she thinks the hotel checks first, and why.<br><br><strong>Monitoring:</strong> Whether she risks a guess at all, or waits to be told the right answer. The first lesson decides how the next nineteen go.<br><br><strong>Evidence to record:</strong> Whether she guesses without being sure. She left a course after concluding the problem was her.<br><br><strong>Transition:</strong> Move on when she has answered all three, right or wrong." data-snap="2">
+<div class="slide slide-dark" data-slide="3" data-stage="2" data-lesson="1" data-teacher="<strong>Before you read (4)</strong><br><br><strong>Goal:</strong> To have her risk a guess about what is in a booking, before she sees one.<br><br><strong>Interaction:</strong> T–S, guessing out loud. Portuguese accepted.<br><br><strong>Run it:</strong> &bull; Read the three questions on screen out loud with her.<br>&bull; Take one guess on each. Do not confirm and do not correct — these are hypotheses.<br>&bull; If she risks nothing, offer two options and ask her to choose.<br><br><strong>Exact prompt:</strong> &bull; The two options: &ldquo;A name and a date, or a name and a price?&rdquo;<br>&bull; After the guess: &ldquo;Good. That is your guess. Now we look.&rdquo;<br><br><strong>Expected:</strong> Three guesses, however rough. Name and dates usually come up; the fourth thing usually does not.<br><br><strong>Conditional support:</strong> Offer two and let her choose. Choosing is still risking.<br><br><strong>Challenge:</strong> Ask which of the four she thinks the hotel checks first, and why.<br><br><strong>Monitoring:</strong> Whether she risks a guess at all, or waits to be told the right answer.<br><br><strong>Evidence to record:</strong> Whether she guesses without being sure.<br><br><strong>Transition:</strong> Move on when she has answered all three, right or wrong." data-snap="2">
   <div class="slide-inner">
     <span class="stage-pill">2 &middot; Before you read</span>
     <h2 class="slide-heading">What is <span class="accent">in a booking</span></h2>
-    <div class="comp-questions" style="max-width:620px">
-      <div class="comp-q comp-q-task">What are the four things a hotel booking always has?
+    <div class="qlist">
+      <div class="q-item">What are the four things a hotel booking always has?
         <span class="slide-pt">Quais s&atilde;o as quatro informa&ccedil;&otilde;es que toda reserva de hotel tem?</span></div>
-      <div class="comp-q comp-q-task">Which one does the hotel check first?
+      <div class="q-item">Which one does the hotel check first?
         <span class="slide-pt">Qual delas o hotel confere primeiro?</span></div>
-      <div class="comp-q comp-q-task">Do you need to understand every word to use it?
+      <div class="q-item">Do you need to understand every word to use it?
         <span class="slide-pt">Voc&ecirc; precisa entender todas as palavras para usar a reserva?</span></div>
     </div>
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="4" data-stage="3" data-lesson="1" data-teacher="<strong>Read it once (7)</strong><br><br><strong>Goal:</strong> To read a whole document once, without a dictionary, for one general question: what this paper is and who it is for.<br><br><strong>Interaction:</strong> S alone for two minutes, then T–S.<br><br><strong>Run it:</strong> &bull; Two minutes in silence. No dictionary, and no stopping on a word.<br>&bull; Then ask the question on screen: what this paper is, and who it is for.<br>&bull; If she stops on a word, give her the word. There is no time to be won by letting her search — this hour is for speaking.<br><br><strong>Exact prompt:</strong> &bull; If she is stuck on a word, give it plainly: &ldquo;That word is <em>guest</em> — it is hóspede. Keep going.&rdquo;<br><br><strong>Expected:</strong> It is a hotel booking, and it is hers — her name is on it. Two facts, not a summary.<br><br><strong>Conditional support:</strong> If she starts translating line by line, cover everything except the first two lines and ask again.<br><br><strong>Challenge:</strong> Ask which line she would look at first if she were standing at the desk.<br><br><strong>Monitoring:</strong> Whether she reads the whole thing, or stops at the first word she does not know.<br><br><strong>Evidence to record:</strong> First isolated measure of reading.<br><br><strong>Transition:</strong> Move on when she has said what the paper is and who it is for." data-snap="3">
+<div class="slide slide-light" data-slide="4" data-stage="3" data-lesson="1" data-teacher="<strong>Read it once (7)</strong><br><br><strong>Goal:</strong> To read a whole document once, without a dictionary, and say what it is and who it is for.<br><br><strong>Interaction:</strong> S alone for two minutes, then T–S.<br><br><strong>Run it:</strong> &bull; Read the question at the top with her first, so she reads with something to look for.<br>&bull; Two minutes in silence. No dictionary, and no stopping on a word.<br>&bull; Then take the answer: what this paper is, and who it is for. The paper does not name itself — saying what it is IS the task.<br>&bull; If she stops on a word, give her the word and let her keep going.<br><br><strong>Exact prompt:</strong> &bull; If she is stuck on a word, give it plainly: &ldquo;That word is <em>guest</em> — it is hóspede. Keep going.&rdquo;<br><br><strong>Expected:</strong> It is a hotel booking, and it is hers — her name is on it. Two facts, not a summary.<br><br><strong>Conditional support:</strong> If she starts translating line by line, cover everything except the first two lines and ask again.<br><br><strong>Challenge:</strong> Ask which line she would look at first if she were standing at the desk.<br><br><strong>Monitoring:</strong> Whether she reads the whole thing, or stops at the first word she does not know.<br><br><strong>Evidence to record:</strong> First isolated measure of reading.<br><br><strong>Transition:</strong> Move on when she has said what the paper is and who it is for." data-snap="3">
   <div class="slide-inner">
     <span class="stage-pill">3 &middot; Read it once</span>
-    <h2 class="slide-heading">What is <span class="accent">this paper</span></h2>
+    <h2 class="slide-heading">What is <span class="accent">this paper?</span></h2>
+    <p class="slide-question">Read it once and say: what is this paper, and who is it for?
+      <span class="slide-pt">Leia uma vez e responda: que papel &eacute; este, e para quem ele &eacute;? N&atilde;o pare em nenhuma palavra.</span></p>
     <div class="doc-brief" id="booking1">
       <p class="doc-tit">Hotel Marina &middot; Lisbon, Portugal</p>
-      <p class="doc-fonte">Booking confirmation</p>
       <p class="doc-para">Guest: Vanessa Aparecida<br>Check-in: 14 October<br>Check-out: 18 October<br>Room: one double room<br>Breakfast: included<br>Booking number: 4471-A</p>
     </div>
-    <p class="slide-question">What is this paper, and who is it for?
-      <span class="slide-pt">Que papel &eacute; este, e para quem ele &eacute;? Leia uma vez, sem parar em nenhuma palavra.</span></p>
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="5" data-stage="4" data-lesson="1" data-teacher="<strong>Four things (8)</strong><br><br><strong>Goal:</strong> To separate what the paper says from what she assumed it said.<br><br><strong>Interaction:</strong> S answers on screen, T checks with her.<br><br><strong>Run it:</strong> &bull; The booking is on this screen too — she does not have to hold it in her head.<br>&bull; She answers yes or no for each of the six sentences, then you check together.<br>&bull; Discuss only the ones she got wrong.<br><br><strong>Expected:</strong> Four yes and two no. The two that are not in the paper are the pool and the price — they are the two things everyone believes they read in a booking.<br><br><strong>Conditional support:</strong> If she hesitates, ask her to point at the line that says it. If she cannot point at it, the answer is no.<br><br><strong>Challenge:</strong> Ask how many nights the booking is for. It is the one thing the paper does not say in words, and the one the hotel will ask.<br><br><strong>Monitoring:</strong> This is where her first mistake of the lesson is most likely. Take it as normal, out loud, in one sentence, and carry on. No speech about it.<br><br><strong>Evidence to record:</strong> How she reacts to her own first mistake — it is the thing that stopped her last time.<br><br><strong>Transition:</strong> Move on when the six are checked." data-snap="4">
+<div class="slide slide-light" data-slide="5" data-stage="4" data-lesson="1" data-teacher="<strong>Four things (8)</strong><br><br><strong>Goal:</strong> To separate what the paper says from what she assumed it said.<br><br><strong>Interaction:</strong> S answers on screen, T checks with her.<br><br><strong>Run it:</strong> &bull; The instruction and the booking are both on this screen — she does not have to hold anything in her head.<br>&bull; She answers yes or no for each of the six sentences, then presses Check and you go through it together.<br>&bull; Discuss only the ones she got wrong. The button becomes Redo if she wants to run it again.<br><br><strong>Expected:</strong> Four yes and two no. The two that are not in the paper are the pool and the price.<br><br><strong>Conditional support:</strong> If she hesitates, ask her to point at the line that says it. If she cannot point at it, the answer is no.<br><br><strong>Challenge:</strong> Ask how many nights the booking is for. It is the one thing the paper does not say in words, and the one the hotel will ask.<br><br><strong>Monitoring:</strong> This is where her first mistake of the lesson is most likely. Take it as normal, out loud, in one sentence, and carry on.<br><br><strong>Evidence to record:</strong> Which of the six she missed, and whether she could point at the line afterwards.<br><br><strong>Transition:</strong> Move on when the six are checked." data-snap="4">
   <div class="slide-inner">
     <span class="stage-pill">4 &middot; Four things</span>
     <h2 class="slide-heading">Is it <span class="accent">in the paper?</span></h2>
+    <p class="slide-question">Read the booking again and say if the information below is in the paper. Answer yes or no.
+      <span class="slide-pt">Leia a reserva de novo e diga se a informa&ccedil;&atilde;o abaixo est&aacute; no papel. Responda <em>yes</em> (sim) ou <em>no</em> (n&atilde;o).</span></p>
     <div class="doc-brief" id="booking1b">
       <p class="doc-tit">Hotel Marina &middot; Lisbon, Portugal</p>
       <p class="doc-fonte">Booking confirmation</p>
       <p class="doc-para">Guest: Vanessa Aparecida<br>Check-in: 14 October<br>Check-out: 18 October<br>Room: one double room<br>Breakfast: included<br>Booking number: 4471-A</p>
     </div>
-    <p class="task-instr">Is each sentence in the paper? Answer yes or no.</p>
-    <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('ev1-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="ev1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Cada frase est&aacute; no papel? Responda <em>yes</em> (sim) ou <em>no</em> (n&atilde;o). <em>Yes</em> = o papel diz isso. <em>No</em> = o papel n&atilde;o diz.</div>
     <div class="match-grid" id="ev1">
       <div class="match-row"><span class="match-word">The hotel is in Lisbon.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">✓ yes</option><option value="B">✗ no</option></select><div class="item-why item-pt" lang="pt-BR">O hotel fica em Lisboa.</div></div>
       <div class="match-row"><span class="match-word">Breakfast is included.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">✓ yes</option><option value="B">✗ no</option></select><div class="item-why item-pt" lang="pt-BR">O caf&eacute; da manh&atilde; est&aacute; inclu&iacute;do.</div></div>
@@ -3225,68 +3243,60 @@ superior não compensa lacuna nas habilidades prioritárias.
       <div class="match-row"><span class="match-word">The price is 400 euros.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">✓ yes</option><option value="B">✗ no</option></select><div class="item-why item-pt" lang="pt-BR">O pre&ccedil;o &eacute; 400 euros.</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>✓ yes</em> = <em>yes</em> &mdash; sim, o papel diz isso &middot; <em>✗ no</em> = <em>no</em> &mdash; n&atilde;o, o papel n&atilde;o diz</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'ev1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'ev1')">Check / Checar</button>
     <div class="score-out" id="ev1-out"></div>
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="6" data-stage="5" data-lesson="1" data-teacher="<strong>Say the four (8)</strong><br><br><strong>Goal:</strong> For her to see, herself, the difference between one word and a whole sentence.<br><br><strong>Interaction:</strong> S marks on screen, then T–S discussion.<br><br><strong>Run it:</strong> &bull; Four lines on screen; she marks the two that are whole sentences.<br>&bull; Then ask, in Portuguese if you need to: which of them does a person at a desk understand better?<br>&bull; Do not name any grammar rule today. The verb <em>to be</em> belongs to lesson 3, and it arrives after she has already used it.<br><br><strong>Expected:</strong> In her own words: the whole sentence says who does what; the single word makes the other person guess.<br><br><strong>Conditional support:</strong> If she cannot say why, read both versions out loud yourself and ask which one sounds like an answer.<br><br><strong>Challenge:</strong> Ask her to turn the other two into whole sentences.<br><br><strong>Monitoring:</strong> Whether she names the difference herself, or waits for you to name it.<br><br><strong>Evidence to record:</strong> Whether the criterion of this cycle — the whole sentence — is already something she can see.<br><br><strong>Transition:</strong> Move on when she has said the difference." data-snap="5">
+<div class="slide slide-dark" data-slide="6" data-stage="5" data-lesson="1" data-teacher="<strong>Say the four (8)</strong><br><br><strong>Goal:</strong> For her to see, herself, the difference between one word and a whole sentence.<br><br><strong>Interaction:</strong> S marks on screen, then T–S discussion.<br><br><strong>Run it:</strong> &bull; Four lines on screen; she marks the two that are whole sentences and presses Check.<br>&bull; Then ask, in Portuguese if you need to: which of them does a person at a desk understand better?<br>&bull; Do not name any grammar rule today. The verb <em>to be</em> belongs to lesson 3, and it arrives after she has already used it.<br><br><strong>Expected:</strong> <em>I am in Lisbon.</em> and <em>It is from 14 October to 18 October.</em> are the two whole sentences.<br><br><strong>Conditional support:</strong> If she cannot say why, read both versions out loud yourself and ask which one sounds like an answer.<br><br><strong>Challenge:</strong> Ask her to turn the other two into whole sentences.<br><br><strong>Monitoring:</strong> Whether she names the difference herself, or waits for you to name it.<br><br><strong>Evidence to record:</strong> Whether she can state the difference between a word and a sentence in her own words.<br><br><strong>Transition:</strong> Move on when she has said the difference." data-snap="5">
   <div class="slide-inner">
-    <span class="stage-pill">5 &middot; Say the four</span>
-    <h2 class="slide-heading">One word, <span class="accent">or a whole sentence</span></h2>
-    <p class="task-instr">Two of these are whole sentences. Two are only one word.</p>
-    <p class="task-instr">Mark the two whole sentences.</p>
-    <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cl1-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="cl1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Duas destas s&atilde;o frases inteiras. Duas s&atilde;o s&oacute; uma palavra. Marque as duas frases inteiras.</div>
+    <span class="stage-pill">5 &middot; One word, or a sentence</span>
+    <h2 class="slide-heading">One word, <span class="accent">or a whole sentence?</span></h2>
+    <p class="slide-question">Two of these are whole sentences. Two are only one word. Mark the two whole sentences.
+      <span class="slide-pt">Duas destas s&atilde;o frases inteiras. Duas s&atilde;o s&oacute; uma palavra. Marque as duas frases inteiras.</span></p>
     <div class="quiz-item">
-      <p class="task-instr">Two of these are whole sentences. Which two?</p>
       <div class="quiz-options" id="cl1">
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Lisbon.</span></div><div class="item-why item-pt" lang="pt-BR">Lisboa.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>I am in Lisbon.</span></div><div class="item-why item-pt" lang="pt-BR">Eu estou em Lisboa.</div>
         <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>October, October.</span></div><div class="item-why item-pt" lang="pt-BR">Outubro, outubro.</div>
         <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>It is from 14 October to 18 October.</span></div><div class="item-why item-pt" lang="pt-BR">&Eacute; de 14 de outubro a 18 de outubro.</div>
       </div>
-      <div class="rationale">One word is an answer. A sentence is a conversation &mdash; and a sentence of four words is already a sentence.<div class="item-pt" lang="pt-BR">Uma palavra &eacute; uma resposta. Uma frase &eacute; uma conversa &mdash; e uma frase de quatro palavras j&aacute; &eacute; uma frase.</div></div>
+      <div class="rationale">One word = a short answer. A short sentence = more information. Even four words can help continue the conversation.<div class="item-pt" lang="pt-BR">Uma palavra = uma resposta curta. Uma frase curta = mais informa&ccedil;&atilde;o. At&eacute; quatro palavras j&aacute; ajudam a conversa a continuar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'cl1')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'cl1')">Check / Checar</button>
     <div class="score-out" id="cl1-out"></div>
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="7" data-stage="6" data-lesson="1" data-teacher="<strong>Say it without the paper (10)</strong><br><br><strong>Goal:</strong> To get the four sentences said out loud, many times, until they come out whole.<br><br><strong>Interaction:</strong> T says the cue word, S gives back the whole sentence. In rounds, fast.<br><br><strong>Run it:</strong> &bull; The cue words are on screen beside each frame: Vanessa, Lisbon, 14–18 October, breakfast.<br>&bull; Say one cue; she gives back the whole sentence. The four in order, then again out of order, then again faster.<br>&bull; Correct gently and immediately, with no explanation.<br>&bull; This is the longest stage of the lesson, and that is deliberate: the repetition here is what makes the sentence exist in stage 7.<br><br><strong>Exact prompt:</strong> &bull; The cues, one at a time: &ldquo;Vanessa.&rdquo; / &ldquo;Lisbon.&rdquo; / &ldquo;Fourteen to eighteen October.&rdquo; / &ldquo;Breakfast.&rdquo;<br>&bull; If only one word comes back, give the opening and nothing more: &ldquo;My…&rdquo; / &ldquo;I am…&rdquo; / &ldquo;It is…&rdquo; / &ldquo;Breakfast…&rdquo;<br><br><strong>Expected:</strong> <em>My name is Vanessa.</em> · <em>I am in Lisbon.</em> · <em>It is from 14 October to 18 October.</em> · <em>Breakfast is included.</em><br><br><strong>Conditional support:</strong> If only one word comes back, give the first word of the frame and wait. Do not finish the sentence for her.<br><br><strong>Challenge:</strong> Give two cues at once and ask for both sentences in a row.<br><br><strong>Monitoring:</strong> Whether the sentence comes out whole or in single words, and whether she translates before speaking.<br><br><strong>Evidence to record:</strong> How many rounds it took until the four came out whole twice in a row.<br><br><strong>Transition:</strong> Move on when the four have come out whole twice in a row." data-snap="6">
+<div class="slide slide-light" data-slide="7" data-stage="6" data-lesson="1" data-teacher="<strong>Say it without the paper (10)</strong><br><br><strong>Goal:</strong> To get the four sentences said out loud, many times, until they come out whole.<br><br><strong>Interaction:</strong> T says the cue word, S gives back the whole sentence. In rounds, fast.<br><br><strong>Run it:</strong> &bull; The four cue words are in the box at the top, out of order; the four openings are listed below it.<br>&bull; Say one cue; she finds the opening that fits and gives back the whole sentence. Then again out of order, then again faster.<br>&bull; Correct gently and immediately, with no explanation.<br>&bull; This is the longest stage of the lesson: the repetition here is what makes the sentence exist in stage 7.<br><br><strong>Exact prompt:</strong> &bull; The cues, one at a time: &ldquo;Breakfast.&rdquo; / &ldquo;Fourteen to eighteen October.&rdquo; / &ldquo;Vanessa.&rdquo; / &ldquo;Lisbon.&rdquo;<br>&bull; If only one word comes back, give the opening and nothing more: &ldquo;My…&rdquo; / &ldquo;I am…&rdquo; / &ldquo;It is…&rdquo; / &ldquo;Breakfast…&rdquo;<br><br><strong>Expected:</strong> <em>My name is Vanessa.</em> · <em>I am in Lisbon.</em> · <em>It is from 14 October to 18 October.</em> · <em>Breakfast is included.</em><br><br><strong>Conditional support:</strong> If only one word comes back, give the first word of the opening and wait. Do not finish the sentence for her.<br><br><strong>Challenge:</strong> Give two cues at once and ask for both sentences in a row.<br><br><strong>Monitoring:</strong> Whether the sentence comes out whole or in single words, and whether she translates before speaking.<br><br><strong>Evidence to record:</strong> How many rounds it took until the four came out whole twice in a row.<br><br><strong>Transition:</strong> Move on when the four have come out whole twice in a row." data-snap="6">
   <div class="slide-inner">
     <span class="stage-pill">6 &middot; Say it without the paper</span>
     <h2 class="slide-heading">Four sentences, <span class="accent">out loud</span></h2>
     <p class="slide-question">Your teacher says one word. You say the whole sentence.
       <span class="slide-pt">O professor diz uma palavra. Voc&ecirc; diz a frase inteira.</span></p>
+    <div class="word-bank">
+      <p class="wb-rot">The words your teacher will say</p>
+      <p><em>Breakfast</em> &middot; <em>14 &ndash; 18 October</em> &middot; <em>Vanessa</em> &middot; <em>Lisbon</em></p>
+    </div>
     <div class="phrase-list">
-      <div class="phrase-row"><span class="phrase-en"><strong>Vanessa</strong> &rarr; My name is&hellip;</span></div>
-      <div class="phrase-row"><span class="phrase-en"><strong>Lisbon</strong> &rarr; I am in&hellip;</span></div>
-      <div class="phrase-row"><span class="phrase-en"><strong>14 &ndash; 18 October</strong> &rarr; It is from&hellip; to&hellip;</span></div>
-      <div class="phrase-row"><span class="phrase-en"><strong>Breakfast</strong> &rarr; Breakfast is included.</span></div>
+      <div class="phrase-row"><span class="phrase-en">My name is&hellip;</span></div>
+      <div class="phrase-row"><span class="phrase-en">I am in&hellip;</span></div>
+      <div class="phrase-row"><span class="phrase-en">It is from&hellip; to&hellip;</span></div>
+      <div class="phrase-row"><span class="phrase-en">&hellip; is included.</span></div>
     </div>
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="8" data-stage="7" data-lesson="1" data-teacher="<strong>Your four sentences (8)</strong><br><br><strong>Goal:</strong> For her to say the four sentences to another person, live, with nothing to read.<br><br><strong>Interaction:</strong> Role-play. You are at the hotel desk; she has just arrived.<br><br><strong>Run it:</strong> &bull; Close the booking on the earlier screens before you start. With it in sight she reads, and reading is not what this stage measures.<br>&bull; Open the desk yourself and wait: greet her and ask for her name.<br>&bull; Let her say the four. Do not correct anything during the role-play.<br>&bull; If she stops, give the first word of the sentence and nothing more.<br><br><strong>Exact prompt:</strong> &bull; Opening the desk: &ldquo;Good afternoon. Welcome to Hotel Marina. What is your name, please?&rdquo;<br>&bull; Then one at a time: &ldquo;And where are you now?&rdquo; / &ldquo;And when is your booking?&rdquo; / &ldquo;And what is included?&rdquo;<br>&bull; If she stops, the first word and nothing else: &ldquo;My…&rdquo; / &ldquo;I am…&rdquo; / &ldquo;It is…&rdquo;<br>&bull; At the end: &ldquo;That is the first time you have spoken English here. Four sentences, on day one.&rdquo;<br><br><strong>Expected:</strong> The four sentences, out loud, in any order. Whole sentences count; single words do not.<br><br><strong>Conditional support:</strong> Give the first word of the frame and wait. Do not finish the sentence for her.<br><br><strong>Challenge:</strong> Ask one extra question she has the language for: &ldquo;And the room?&rdquo;<br><br><strong>Monitoring:</strong> How many of the four survive once the paper leaves the screen.<br><br><strong>Evidence to record:</strong> The first sample of her production in English from any source. Everything in this cycle compares against it — write down what she actually said, as she said it.<br><br><strong>Transition:</strong> Move on when the four have been said." data-snap="7">
+<div class="slide slide-dark" data-slide="8" data-stage="7" data-lesson="1" data-teacher="<strong>Your four sentences (8)</strong><br><br><strong>Goal:</strong> For her to say the four sentences to another person, live, with nothing to read.<br><br><strong>Interaction:</strong> Role-play. You are at the hotel desk; she has just arrived.<br><br><strong>Run it:</strong> &bull; Close the booking on the earlier screens before you start. With it in sight she reads, and reading is not what this stage measures.<br>&bull; Nothing is listed on this screen on purpose: the four come from you, one question at a time.<br>&bull; Open the desk yourself and wait: greet her and ask for her name.<br>&bull; Let her say the four. Do not correct anything during the role-play.<br>&bull; If she stops, give the first word of the sentence and nothing more.<br><br><strong>Exact prompt:</strong> &bull; Opening the desk: &ldquo;Good afternoon. Welcome to Hotel Marina. What is your name, please?&rdquo;<br>&bull; Then one at a time: &ldquo;And where are you now?&rdquo; / &ldquo;And when is your booking?&rdquo; / &ldquo;And what is included?&rdquo;<br>&bull; If she stops, the first word and nothing else: &ldquo;My…&rdquo; / &ldquo;I am…&rdquo; / &ldquo;It is…&rdquo;<br>&bull; At the end: &ldquo;That is the first time you have spoken English here. Four sentences, on day one.&rdquo;<br><br><strong>Expected:</strong> The four sentences, out loud, in any order. Whole sentences count; single words do not.<br><br><strong>Conditional support:</strong> Give the first word of the opening and wait. Do not finish the sentence for her.<br><br><strong>Challenge:</strong> Ask one extra question she has the language for: &ldquo;And the room?&rdquo;<br><br><strong>Monitoring:</strong> How many of the four survive once the paper leaves the screen.<br><br><strong>Evidence to record:</strong> The first sample of her production in English — write down what she actually said, as she said it.<br><br><strong>Transition:</strong> Move on when the four have been said." data-snap="7">
   <div class="slide-inner">
     <span class="stage-pill">7 &middot; Your four sentences</span>
     <h2 class="slide-heading">Your turn <span class="accent">at the desk</span></h2>
-    <p class="slide-lead">Your teacher is at the hotel desk. You have just arrived.</p>
-    <p class="slide-question">Say your four sentences, one after the other.
-      <span class="slide-pt">O professor faz o papel da recep&ccedil;&atilde;o. Diga as suas quatro frases, uma depois da outra.</span></p>
-    <div class="roleplay-card">
-      <div class="qlist" style="margin-top:var(--space-1h)">
-        <div class="q-item">Say your name. <span class="slide-pt">Diga o seu nome.</span></div>
-        <div class="q-item">Say the city. <span class="slide-pt">Diga a cidade.</span></div>
-        <div class="q-item">Say the two dates. <span class="slide-pt">Diga as duas datas.</span></div>
-        <div class="q-item">Say what is included. <span class="slide-pt">Diga o que est&aacute; inclu&iacute;do.</span></div>
-      </div>
-    </div>
+    <p class="slide-question">Your teacher is at the hotel desk. You have just arrived. Say the information about your reservation.
+      <span class="slide-pt">O professor est&aacute; no balc&atilde;o do hotel. Voc&ecirc; acabou de chegar. Diga as informa&ccedil;&otilde;es da sua reserva.</span></p>
   </div>
 </div>
 
-<div class="slide slide-light" data-slide="9" data-stage="8" data-lesson="1" data-teacher="<strong>What just happened (3 of 5)</strong><br><br><strong>Goal:</strong> To give back one thing that worked and one to build on, and then to ask for the same four sentences about a different booking.<br><br><strong>Interaction:</strong> T–S, filling the four fields on screen together, then a short retask.<br><br><strong>Run it:</strong> &bull; Fill the four fields with her, not about her: what worked, one point to improve, one sentence as she said it, and the same sentence made clearer.<br>&bull; One point, not two. Praise the whole sentence and not the correct word — the criterion of this cycle is the sentence, and that is what she needs to hear being valued.<br>&bull; Then open the second booking and ask for the same four sentences with the new details.<br><br><strong>Exact prompt:</strong> &bull; Opening the retask: &ldquo;Same four sentences. New hotel, new city, new dates. Ready?&rdquo;<br>&bull; If the new dates block her, say them once for her to repeat: &ldquo;Third of March to fifth of March.&rdquo;<br><br><strong>Expected:</strong> The same four sentences with Porto, 3 March and 5 March in place of Lisbon and October.<br><br><strong>Conditional support:</strong> If the new dates block her, say them out loud once and let her repeat before she builds the sentence around them.<br><br><strong>Challenge:</strong> Ask for the four without looking at the second booking either.<br><br><strong>Monitoring:</strong> Whether changing the values breaks the sentence, or only slows it down.<br><br><strong>Evidence to record:</strong> Whether the sentence survives new content. That is what tells you it is a sentence and not a memorized line.<br><br><strong>Transition:</strong> Move on when the four have come out with the new details." data-snap="8">
+<div class="slide slide-light" data-slide="9" data-stage="8" data-lesson="1" data-teacher="<strong>What just happened (3 of 5)</strong><br><br><strong>Goal:</strong> To give back one thing that worked and one to build on, and then to ask for the same four sentences about a different booking.<br><br><strong>Interaction:</strong> T–S, filling the four fields on screen together, then a short retask.<br><br><strong>Run it:</strong> &bull; Fill the four fields with her, not about her: what worked, one point to improve, one sentence as she said it, and the same sentence made clearer.<br>&bull; One point, not two. Praise the whole sentence and not the correct word.<br>&bull; Then press Replay: the instruction and the second booking open below it. Ask for the same four sentences with the new details.<br><br><strong>Exact prompt:</strong> &bull; Opening the retask: &ldquo;Same four sentences. New hotel, new city, new dates. Ready?&rdquo;<br>&bull; If the new dates block her, say them once for her to repeat: &ldquo;Third of March to fifth of March.&rdquo;<br><br><strong>Expected:</strong> The same four sentences with Porto, 3 March and 5 March in place of Lisbon and October.<br><br><strong>Conditional support:</strong> If the new dates block her, say them out loud once and let her repeat before she builds the sentence around them.<br><br><strong>Challenge:</strong> Ask for the four without looking at the second booking either.<br><br><strong>Monitoring:</strong> Whether changing the values breaks the sentence, or only slows it down.<br><br><strong>Evidence to record:</strong> Whether the sentence survives new content. That is what tells you it is a sentence and not a memorized line.<br><br><strong>Transition:</strong> Move on when the four have come out with the new details." data-snap="8">
   <div class="slide-inner">
     <span class="stage-pill">8 &middot; What just happened</span>
     <h2 class="slide-heading">What worked, <span class="accent">and once more</span></h2>
@@ -3299,22 +3309,22 @@ superior não compensa lacuna nas habilidades prioritárias.
       <div class="fb-field"><label for="l1fb4">Clearer version</label><textarea id="l1fb4" class="writebox" placeholder=""></textarea></div>
     </div>
     <div class="btn-bar" style="margin-top:var(--space-4h);justify-content:flex-start">
-      <button class="verify-all-btn" onclick="abrirBloco('rt1',this)">The same four, another booking</button>
+      <button class="verify-all-btn" onclick="abrirBloco('rt1',this)">Replay</button>
     </div>
     <div class="slide-split" id="rt1" style="display:none">
       <h3>Again, <span class="accent">with another booking</span></h3>
+      <p class="slide-question">Now, try with another booking. Say the same information. What changed this time?
+        <span class="slide-pt">Agora tente com outra reserva. Diga as mesmas informa&ccedil;&otilde;es. O que mudou desta vez?</span></p>
       <div class="doc-brief" id="booking1c">
         <p class="doc-tit">Hotel Alfama &middot; Porto, Portugal</p>
         <p class="doc-fonte">Booking confirmation</p>
         <p class="doc-para">Guest: Vanessa Aparecida<br>Check-in: 3 March<br>Check-out: 5 March<br>Room: one double room<br>Breakfast: included<br>Booking number: 8820-B</p>
       </div>
-      <p class="slide-question">The same four sentences. What changes?
-        <span class="slide-pt">As mesmas quatro frases. O que muda?</span></p>
     </div>
   </div>
 </div>
 
-<div class="slide slide-dark" data-slide="10" data-stage="8" data-lesson="1" data-teacher="<strong>Today and next (2 of 5)</strong><br><br><strong>Goal:</strong> To name what she did today, and to leave the next lesson already announced.<br><br><strong>Interaction:</strong> T–S. She ticks what she recognizes; the confidence row is hers.<br><br><strong>Run it:</strong> &bull; She marks what she recognizes on screen. Do not argue with the confidence row.<br>&bull; Say what she did today, in full: she read a whole document in English and said four sentences without it, on the first day. She came from an experience in which she concluded the problem was her.<br>&bull; Say the homework out loud, and do not put it on screen: the post-class has one optional recording about a real booking of hers, and two free beginner resources.<br>&bull; Announce lesson 2 — the hotel desk: three short questions, and what to say when she does not understand.<br><br><strong>Exact prompt:</strong> &bull; Saying what she did: &ldquo;Today you read a document in English, and you said four sentences without it. On your first day.&rdquo;<br><br><strong>Expected:</strong> Some of the six items ticked, and one honest answer on the confidence row.<br><br><strong>Conditional support:</strong> If she ticks nothing, read the list with her and ask which one she could do at a desk tomorrow.<br><br><strong>Challenge:</strong> Ask which of today's phrases she would use first on her next trip.<br><br><strong>Monitoring:</strong> Where she puts herself on the confidence row, against what she actually did in stage 7.<br><br><strong>Evidence to record:</strong> Her own confidence reading, and whether it matches what you saw. Fill in the post-lesson record before you close.<br><br><strong>Transition:</strong> Close the lesson." data-snap="9">
+<div class="slide slide-dark" data-slide="10" data-stage="8" data-lesson="1" data-teacher="<strong>Today and next (2 of 5)</strong><br><br><strong>Goal:</strong> To name what she did today, and to leave the next lesson already announced.<br><br><strong>Interaction:</strong> T–S. She ticks what she recognizes; the confidence row is hers.<br><br><strong>Run it:</strong> &bull; She marks what she recognizes on screen. Each line and each point of the scale carries the Portuguese beside it, so read them in English and let her use the Portuguese only to confirm.<br>&bull; Do not argue with the confidence row.<br>&bull; Say what she did today, in full: she read a whole document in English and said four sentences without it, on the first day.<br>&bull; Say the homework out loud, and do not put it on screen: the post-class has one optional recording about a real booking of hers, one optional writing about another booking, and two free beginner resources.<br>&bull; Announce lesson 2 — the hotel desk: three short questions, and what to say when she does not understand.<br><br><strong>Exact prompt:</strong> &bull; Saying what she did: &ldquo;Today you read a document in English, and you said four sentences without it. On your first day.&rdquo;<br><br><strong>Expected:</strong> Some of the six items ticked, and one honest answer on the confidence row.<br><br><strong>Conditional support:</strong> If she ticks nothing, read the list with her and ask which one she could do at a desk tomorrow.<br><br><strong>Challenge:</strong> Ask which of today's phrases she would use first on her next trip.<br><br><strong>Monitoring:</strong> Where she puts herself on the confidence row, against what she actually did in stage 7.<br><br><strong>Evidence to record:</strong> Her own confidence reading, and whether it matches what you saw. Fill in the post-lesson record before you close.<br><br><strong>Transition:</strong> Close the lesson." data-snap="9">
   <div class="slide-inner">
     <p class="chapter-label" style="text-align:center">8 &middot; Feedback &amp; close</p>
     <h2 class="slide-title" style="text-align:center">Today, and <span class="accent">where it goes</span></h2>
@@ -3426,7 +3436,7 @@ superior não compensa lacuna nas habilidades prioritárias.
       <div class="match-row"><span class="match-word">&ldquo;Breakfast is from seven to ten.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">breakfast</option><option value="B">your name</option><option value="C">the number of nights</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;O caf&eacute; da manh&atilde; &eacute; das sete &agrave;s dez.&rdquo;</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>breakfast</em> = o caf&eacute; da manh&atilde; &middot; <em>your name</em> = o seu nome &middot; <em>the number of nights</em> = quantas noites</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'ev2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'ev2')">Check / Checar</button>
     <div class="score-out" id="ev2-out"></div>
   </div>
 </div>
@@ -3447,7 +3457,7 @@ superior não compensa lacuna nas habilidades prioritárias.
       </div>
       <div class="rationale">The two that work ask for something and keep you in the conversation. The two that do not end it &mdash; and then the desk resolves everything by gesture, which is what already happens on your trips.<div class="item-pt" lang="pt-BR">As duas que funcionam pedem alguma coisa e mant&ecirc;m voc&ecirc; na conversa. As duas que n&atilde;o funcionam encerram &mdash; e a&iacute; o balc&atilde;o resolve tudo por gesto, que &eacute; o que j&aacute; acontece nas suas viagens.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'cl2')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'cl2')">Check / Checar</button>
     <div class="score-out" id="cl2-out"></div>
   </div>
 </div>
@@ -3598,7 +3608,7 @@ superior não compensa lacuna nas habilidades prioritárias.
       </div>
       <div class="rationale">The wrong ones use the form of another person. Nothing else in the sentence changes &mdash; and that is the only thing to get right.<div class="item-pt" lang="pt-BR">As erradas usam a forma de outra pessoa. Nada mais muda na frase &mdash; e &eacute; s&oacute; isso que voc&ecirc; precisa acertar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'ev3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'ev3')">Check / Checar</button>
     <div class="score-out" id="ev3-out"></div>
   </div>
 </div>
@@ -3633,7 +3643,7 @@ superior não compensa lacuna nas habilidades prioritárias.
       <div class="match-row"><span class="match-word">My children ___ at home.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">are</option></select><div class="item-why item-pt" lang="pt-BR">Os meus filhos est&atilde;o em casa.</div></div>
       <div class="match-row"><span class="match-word">___ you from Brazil?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Are</option><option value="B">Is</option></select><div class="item-why item-pt" lang="pt-BR">Voc&ecirc; &eacute; do Brasil?</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl3')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'cl3')">Check / Checar</button>
     <div class="score-out" id="cl3-out"></div>
     <p class="subprompt">Your teacher gives you the subject. You finish the sentence, immediately.</p>
   </div>
@@ -3769,7 +3779,7 @@ superior não compensa lacuna nas habilidades prioritárias.
       <div class="match-row"><span class="match-word">&ldquo;Have a good day.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">at the beginning</option><option value="B">at the end</option><option value="C">in the middle</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Tenha um bom dia.&rdquo;</div></div>
       <div class="item-why item-pt" lang="pt-BR"><em>at the beginning</em> = no come&ccedil;o &middot; <em>at the end</em> = no fim &middot; <em>in the middle</em> = no meio</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'ev4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="mCheck(this,'ev4')">Check / Checar</button>
     <div class="score-out" id="ev4-out"></div>
   </div>
 </div>
@@ -3791,7 +3801,7 @@ superior não compensa lacuna nas habilidades prioritárias.
       </div>
       <div class="rationale">You already have all three, from lesson 2. A question you did not expect is the normal shape of a real conversation, not a problem with your English.<div class="item-pt" lang="pt-BR">Voc&ecirc; j&aacute; tem as tr&ecirc;s desde a aula 2. Uma pergunta que voc&ecirc; n&atilde;o esperava &eacute; o formato normal de uma conversa de verdade, e n&atilde;o um problema com o seu ingl&ecirc;s.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'cl4')">Check / Checar</button>
+    <button class="verify-all-btn ghost" data-redo="Redo / Refazer" onclick="selCheck(this,'cl4')">Check / Checar</button>
     <div class="score-out" id="cl4-out"></div>
   </div>
 </div>
@@ -4838,10 +4848,10 @@ function preSnap(){
 function preResetAsk(){
   var n=_preAtual,aluno=ehAluno();
   if(aluno){
-    askOpen('Reset Lesson '+('0'+n).slice(-2)+' answers?',
-      '<p>This clears <b>your answers</b> in the Lesson '+('0'+n).slice(-2)+' pre-class only.</p>'+
-      '<div class="ask-keep">Nothing your teacher wrote is affected, and the other lessons stay as they are.</div>',
-      'Clear my answers',true,preResetGo);
+    askOpen('Reset Lesson '+('0'+n).slice(-2)+' answers? &middot; Limpar as respostas da aula '+('0'+n).slice(-2)+'?',
+      '<p>This clears <b>your answers</b> in the Lesson '+('0'+n).slice(-2)+' pre-class only.</p>'+'<p lang="pt-BR">Isto apaga <b>as suas respostas</b> do pre-class da aula '+('0'+n).slice(-2)+', e so dela.</p>'+
+      '<div class="ask-keep">Nothing your teacher wrote is affected, and the other lessons stay as they are.<br><span lang="pt-BR">Nada do que a professora escreveu e afetado, e as outras aulas ficam como estao.</span></div>',
+      'Clear my answers &middot; Limpar',true,preResetGo);
   }else{
     askOpen('Fechar todos os gabaritos da Aula '+('0'+n).slice(-2)+'?',
       '<p>Fecha <b>tudo o que você abriu nesta tela</b> no pre-class da aula '+('0'+n).slice(-2)+': painéis de answer key, transcripts, racionais e correções exibidas.</p>'+
@@ -5090,9 +5100,67 @@ function porqueAbre(host){
   var w=host.querySelectorAll('.item-why'),i;
   for(i=0;i<w.length;i++)w[i].classList.add('show');
 }
+/* ---------------- REFAZER: o botao que confere vira o botao que limpa ----------------
+   O rotulo de ida sai do `data-redo` que o EMISSOR escreve (so ele sabe se o material e
+   bilingue); o de volta sai do proprio botao, guardado em `data-check` na primeira vez. */
+var _exSnap={};
+function exGuarda(id,host){
+  if(!id||!host||_exSnap[id]!==undefined)return;
+  /* A COPIA SAI LIMPA, e nao como a tela estava. Ela e tirada na primeira conferida --
+     quando as escolhas da aluna JA estao marcadas --, entao guardar `innerHTML` cru fazia
+     o "Refazer" devolver o exercicio com as mesmas alternativas ainda selecionadas: com
+     cara de respondido, sem estar conferido. Refazer e comecar de novo.
+     Nao ha o que limpar em <select> nem em <input>: a escolha do usuario vive na
+     PROPRIEDADE, e `innerHTML` serializa o atributo -- eles ja voltam vazios. */
+  var d=document.createElement('div'); d.innerHTML=host.innerHTML;
+  var el=d.querySelectorAll('.sel,.correct,.wrong'),i;
+  for(i=0;i<el.length;i++)el[i].classList.remove('sel','correct','wrong');
+  _exSnap[id]=d.innerHTML;
+}
+function exFeito(btn,id){
+  if(!btn||_exSnap[id]===undefined)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function exRefaz(btn,id){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var host=document.getElementById(id),i,el;
+  if(host&&_exSnap[id]!==undefined)host.innerHTML=_exSnap[id];
+  el=document.getElementById(id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(id+'-key'); if(el)el.style.display='none';
+  /* A explicacao da atividade e a traducao sao IRMAS do host, dentro do quiz-item:
+     restaurar o host nao as fecha, e elas ficariam abertas sobre um exercicio em branco. */
+  if(host&&host.parentNode){
+    el=host.parentNode.querySelectorAll('.rationale.show,.item-why.show');
+    for(i=0;i<el.length;i++)el[i].classList.remove('show');
+  }
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  /* O REGISTRO ACOMPANHA A TELA, ou a limpeza dura ate o F5: `preInit` devolveria o valor
+     digitado (pelos campos) e `preMecRestaura` as marcas (pelas classes), e a aluna veria
+     de volta exatamente o que acabou de refazer. Vale so no pre-class -- no deck nao ha
+     bloco `pc*` nem persistencia. */
+  var bl=btn.closest?btn.closest('[id^="pc"]'):null;
+  if(bl&&typeof preMecSalva==='function'){
+    var mortas=[];
+    if(host){ el=host.querySelectorAll('[data-k]');
+              for(i=0;i<el.length;i++)mortas.push(el[i].getAttribute('data-k')); }
+    if(mortas.length&&typeof drop==='function')drop(mortas);
+    preMecSalva(bl);
+    /* Os campos restaurados sao NOVOS: sem tirar a marca de ligado, `preInit` os pularia e
+       eles ficariam sem ouvinte -- digitar deixaria de gravar, sem erro nenhum. */
+    if(host){ el=host.querySelectorAll('[data-lig]');
+              for(i=0;i<el.length;i++)el[i].removeAttribute('data-lig'); }
+    if(typeof preKeys==='function'){ preKeys(); preInit(); preModo(); }
+  }
+  return true;
+}
 function mCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('select'); if(!sel)continue;
@@ -5106,11 +5174,14 @@ function mCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 /* cloze com gabarito por campo */
 function czCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok,dica;
   for(i=0;i<f.length;i++){
     v=(f[i].value||'').trim().toLowerCase().replace(/[.,]/g,'');
@@ -5127,6 +5198,7 @@ function czCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 /* selecao multipla: marcar e conferir contra data-ok */
 /* escolha entre duas formulacoes, uma linha por item. Existe para variar a mecanica
@@ -5141,7 +5213,9 @@ function ppPick(btn){
 }
 function ppCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('.pair-opt.sel'); if(!sel)continue;
@@ -5155,6 +5229,7 @@ function ppCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 
 /* ---------------- guarda de papel no pre-class ----------------
@@ -5174,7 +5249,9 @@ function preConsulta(el){
 function tog(el){ if(preConsulta(el))return; el.classList.toggle('sel'); }
 function selCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var o=host.querySelectorAll('.quiz-option'),i,sel,ok,acertos=0,alvo=0;
   for(i=0;i<o.length;i++){
     sel=o[i].classList.contains('sel'); ok=(o[i].getAttribute('data-ok')==='1');
@@ -5187,6 +5264,7 @@ function selCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
   var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
   porqueAbre(host.parentNode);
+  exFeito(btn,id);
 }
 function pick(el,ok){
   if(preConsulta(el))return;
@@ -5474,7 +5552,7 @@ function cpScore(){
 }
 
 /* ---------------- fechamento: recapitulacao + confianca ---------------- */
-var CONF_LB=['Not yet','Getting there','Comfortable','Confident'];
+var CONF_LB=['Not yet &middot; Ainda não','Getting there &middot; Chegando lá','Comfortable &middot; À vontade','Confident &middot; Seguro'];
 /* Fechamento: uma funcao para qualquer aula, com os ids e as chaves derivados do numero. */
 function closeBuild(n,recap,conf){
   var host=document.getElementById('recapList'+n); if(!host)return;
@@ -5689,28 +5767,28 @@ function finishGo(){
    que costuma travar) e inclass (a ligacao com a aula, quando ela existe de fato). */
 var PC_NOTAS={
  "1-1": {
-  "pq": "Toda confirmação de hotel tem as mesmas quatro informações. Saber que são quatro já é meia leitura — antes mesmo de ler.",
-  "duvida": "Você não precisa entender todas as palavras do papel. Precisa achar quatro coisas."
+  "pq": "Toda confirmação de hotel traz as mesmas quatro informações. Saber que são quatro já é meia leitura — e é o que sustenta a etapa 3, em que ela lê o documento inteiro sem dicionário.",
+  "duvida": "Ela tende a achar que precisa entender todas as palavras antes de responder. Se travar, retome a tarefa: localizar quatro coisas, não traduzir o papel."
  },
  "1-2": {
-  "pq": "Quatro começos de frase. Com eles você diz o essencial sobre qualquer reserva, em qualquer viagem.",
-  "duvida": "<em>My name is</em> é a primeira frase que qualquer pessoa aprende — e é a que mais se usa numa viagem."
+  "pq": "Quatro das seis palavras já circulam em português — <em>hotel</em>, <em>check-in</em>, <em>check-out</em>, <em>booking</em>. Começar por elas mostra que ela não parte do zero, e ela vem de um curso que abandonou concluindo que o problema era ela.",
+  "duvida": "<em>Booking</em> costuma ser lido como “livro”, por associação com <em>book</em>. É o único par em que o erro é previsível; os outros cinco saem direto."
  },
  "1-3": {
-  "pq": "Achar a informação no papel é diferente de entender o papel inteiro. É a habilidade que serve numa fila de check-in.",
-  "duvida": "As datas em inglês vêm em outra ordem que em português. Ver isso agora evita confusão no balcão."
+  "pq": "Classificar a linha antes de entender o texto inteiro é o que permite achar informação sem ler tudo — a habilidade que serve numa fila de check-in.",
+  "duvida": "A data em inglês vem em outra ordem que em português (<em>14 October</em>, e não 14/10). Se houver hesitação, é entre data e número: o código da reserva (4471-A) é o que mais se confunde com data."
  },
  "1-4": {
-  "pq": "Café da manhã incluído é a informação que quase todo mundo esquece de conferir — e a que mais aparece nas reservas.",
-  "duvida": "<em>Included</em> parece difícil e é uma palavra só, quase igual ao português."
+  "pq": "Separa o que o papel DIZ do que ela supõe que ele diz. As duas frases falsas — a piscina e o preço — são as que quase todo mundo jura ter lido numa reserva.",
+  "duvida": "“Quatro noites” não está escrito em lugar nenhum: sai da conta entre 14 e 18. É o item de erro mais provável, e é justamente o que o hotel pergunta no balcão. A forma <em>how many nights</em> é da aula 2 — aqui basta o número."
  },
  "1-5": {
-  "pq": "Dizer a frase inteira é o objetivo, e não dizer a palavra certa. Uma frase de quatro palavras já é uma frase.",
-  "duvida": "Se você travar numa palavra, o professor dá a palavra. O tempo da aula é para falar."
+  "pq": "São os quatro começos de frase que ela vai dizer na aula. Aqui ela escolhe o final; na etapa 6 produz a frase inteira sem o papel.",
+  "duvida": "<em>Breakfast is including / include / included</em> é o item que mais custa: as três formas parecem igualmente plausíveis para quem ainda não viu particípio. Não nomeie a regra — o verbo <em>to be</em> é da aula 3 e chega depois de ela já ter usado."
  },
  "1-6": {
-  "pq": "Escrever as quatro frases antes é o que faz elas saírem na hora. E é o que você vai dizer na aula.",
-  "duvida": "Use uma reserva sua, de verdade, se preferir. As frases são as mesmas."
+  "pq": "É o texto que ela vai dizer na aula, escrito antes. Escrever primeiro é o que faz a frase sair na hora.",
+  "duvida": "As quatro lacunas pedem <em>is</em>, exceto a segunda, que pede <em>am</em>. Se ela repetir <em>is</em> nas quatro, é erro de padrão e não de compreensão — e a correção é oral, não gramatical."
  },
  "2-1": {
   "pq": "No balcão de qualquer hotel do mundo, as perguntas são as mesmas três. Saber que são três já tira metade do medo.",
@@ -6498,8 +6576,8 @@ document.addEventListener('keydown',function(e){
   else if(e.key==='t'||e.key==='T'){tgToggle();}
 });
 
-var RECAP1=["Reading a hotel booking in English", "Finding four things in a paper without reading all of it", "Saying my name in English", "Saying a city and two dates", "Saying a whole sentence, not one word", "Saying the same four things about a different booking"];
-var CONF1=["Saying my name and my city in English", "Saying the dates of my trip", "Reading a booking on my own"];
+var RECAP1=["Reading a hotel booking in English<span class=\"slide-pt\">Ler uma reserva de hotel em inglês</span>", "Finding four things in a paper without reading all of it<span class=\"slide-pt\">Achar quatro informações no papel sem ler tudo</span>", "Saying my name in English<span class=\"slide-pt\">Dizer o meu nome em inglês</span>", "Saying a city and two dates<span class=\"slide-pt\">Dizer uma cidade e duas datas</span>", "Saying a whole sentence, not one word<span class=\"slide-pt\">Dizer uma frase inteira, e não uma palavra só</span>", "Saying the same four things about a different booking<span class=\"slide-pt\">Dizer as mesmas quatro informações sobre outra reserva</span>"];
+var CONF1=["Saying my name and my city in English<span class=\"slide-pt\">Dizer o meu nome e a minha cidade em inglês</span>", "Saying the dates of my trip<span class=\"slide-pt\">Dizer as datas da minha viagem</span>", "Reading a booking on my own<span class=\"slide-pt\">Ler uma reserva sozinha</span>"];
 var RECAP2=["Understanding three questions at a hotel desk", "Answering with a sentence, not with a gesture", "Asking someone to say it again", "Asking someone to speak more slowly", "Saying how many nights", "Saying yes and no politely"];
 var CONF2=["Understanding a short question in English", "Asking for something to be repeated", "Answering at a hotel desk on my own"];
 var RECAP3=["The verb I said I did not know -- and I had already used it", "I am, you are, it is, they are", "Saying what I am not", "Asking a short question: are you...?", "Six sentences about me and my trip", "The same six about someone else"];

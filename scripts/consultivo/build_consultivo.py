@@ -290,6 +290,40 @@ TRADUZ_REGISTRO = [
 ]
 
 
+# O QUE A ALUNA LE NO PRE-CLASS QUANDO O MATERIAL E BILINGUE.
+#
+# O botao que limpa as respostas e a unica acao DESTRUTIVA da aba dela, e estava so em
+# ingles -- junto com a caixa que pede a confirmacao. Para uma aluna real-beginner isso e
+# um botao que ela nao pode usar com seguranca: ou ela nao clica, ou clica sem saber o que
+# perde. Pedido da professora em 03/09/2026 ("o botao Reset my answers no final deve ter a
+# versao em portugues tambem"), estendido a caixa de confirmacao pelo mesmo motivo -- o
+# rotulo traduzido que abre um dialogo em ingles nao resolve nada.
+TRADUZ_PRECLASS = [
+    ('<span data-view="aluno">Reset my answers</span>',
+     '<span data-view="aluno">Reset my answers &middot; Limpar minhas respostas</span>', 1),
+    ("askOpen('Reset Lesson '+('0'+n).slice(-2)+' answers?',",
+     "askOpen('Reset Lesson '+('0'+n).slice(-2)+' answers? "
+     "&middot; Limpar as respostas da aula '+('0'+n).slice(-2)+'?',", 1),
+    ("'<p>This clears <b>your answers</b> in the Lesson '+('0'+n).slice(-2)+' pre-class only.</p>'+",
+     "'<p>This clears <b>your answers</b> in the Lesson '+('0'+n).slice(-2)+' pre-class only.</p>'+"
+     "'<p lang=\"pt-BR\">Isto apaga <b>as suas respostas</b> do pre-class da aula '"
+     "+('0'+n).slice(-2)+', e so dela.</p>'+", 1),
+    ("'<div class=\"ask-keep\">Nothing your teacher wrote is affected, and the other "
+     "lessons stay as they are.</div>',",
+     "'<div class=\"ask-keep\">Nothing your teacher wrote is affected, and the other "
+     "lessons stay as they are.<br><span lang=\"pt-BR\">Nada do que a professora "
+     "escreveu e afetado, e as outras aulas ficam como estao.</span></div>',", 1),
+    ("'Clear my answers',true,preResetGo);",
+     "'Clear my answers &middot; Limpar',true,preResetGo);", 1),
+    # A ESCALA DE CONFIANCA da tela de fecho. Os itens medidos vem do `close.json` (o autor
+    # escreve o apoio junto); os quatro ROTULOS da escala sao do shell, e sem isto a unica
+    # pergunta da aula que e da ALUNA -- como ela se sente -- so tinha resposta em ingles.
+    ("var CONF_LB=['Not yet','Getting there','Comfortable','Confident'];",
+     "var CONF_LB=['Not yet &middot; Ainda n\u00e3o','Getting there &middot; Chegando l\u00e1',"
+     "'Comfortable &middot; \u00c0 vontade','Confident &middot; Seguro'];", 1),
+]
+
+
 def _aplica_pares(texto, pares, rotulo, **fmt):
     """Troca cada par UMA quantidade declarada de vezes, e reprova se a conta nao bate."""
     for velho, novo, quantas in pares:
@@ -948,6 +982,10 @@ def monta(cfg, base_frag):
         html = (html[:ini]
                 + _aplica_pares(html[ini:fim], TRADUZ_FEEDBACK, "aba Feedback")
                 + html[fim:])
+        # O botao de limpar e a caixa de confirmacao dele. Fora da aba Feedback, entao
+        # aplicados no documento inteiro -- cada ancora com contagem 1, que e o que impede
+        # a troca de pegar um "Reset" parecido em outro lugar.
+        html = _aplica_pares(html, TRADUZ_PRECLASS, "pre-class da aluna")
     html, n_telas = troca_slides(html, slides)
 
     # O TITULO DO MENU DE SLIDES NASCE COM O NUMERO DA AULA DO ARTEFATO.

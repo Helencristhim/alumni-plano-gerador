@@ -830,8 +830,27 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
    frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
    conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
    linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
-.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
+.slide-pt{display:block;font-family:var(--font-corpo);font-style:italic;font-weight:var(--peso-leve);font-size:.82rem;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h);max-width:60ch}
 .slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}
+/* O TAMANHO E O PESO SAO ABSOLUTOS, e por que isso importa (revisao de 03/09/2026).
+   A regra acima dizia `font-size:.86em` e nao dizia peso nenhum -- as duas coisas herdadas
+   do elemento que hospeda o apoio. Dentro de `.slide-question` (clamp ate 1.9rem, peso 600)
+   o portugues saia com 26px e NEGRITO ao lado de um ingles de 30px: medido no navegador em
+   03/09/2026, na aula 1 da Vanessa. O apoio competia de igual para igual com a frase que
+   ele deveria apenas situar, e o olho ia nele primeiro -- exatamente o que o paragrafo
+   acima diz que ele NAO pode fazer.
+   `em` herda o corpo; `rem` nao. E o peso vai declarado, e nao deixado ao host. */
+.slide-question .slide-pt,.q-item .slide-pt,.slide-subtitle .slide-pt,.slide-lead .slide-pt{
+  font-size:.82rem;font-weight:var(--peso-leve);font-style:italic}
+
+/* A PERGUNTA CENTRALIZADA TEM DE FICAR CENTRADA (revisao de 03/09/2026).
+   `.slide-question` tem `max-width:38ch`. Num slide de abertura -- `.slide-open`, cujo
+   `.slide-inner` e `text-align:center` -- o TEXTO se centraliza dentro da caixa, mas a
+   CAIXA continua encostada a esquerda: 577px de pergunta num inner de 940px deixavam 363px
+   de sobra so do lado direito. O texto parecia centralizado e nao estava. Medido na tela 1
+   da aula 1 da Vanessa. Centrar a caixa e o que faltava; nas telas alinhadas a esquerda
+   nada muda, porque a regra so vale onde o inner ja centraliza. */
+.slide-open .slide-question{margin-left:auto;margin-right:auto}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1565,7 +1584,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">A syllabus is a commitment: it is read by people who were not in the room, and it is not the teacher&rsquo;s to change alone. A plan is an instrument for one lesson.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'who1')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'who1')">Check</button>
     <div class="score-out" id="who1-out"></div>
   </div>
 
@@ -1604,7 +1623,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">to say it clearly and on the record</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'pp1')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="ppCheck(this,'pp1')">Check</button>
     <div class="score-out" id="pp1-out"></div>
   </div>
 
@@ -1619,7 +1638,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">&ldquo;Sorry &mdash; is that week seven or week eight?&rdquo;</span><select data-ok="F"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select><div class="item-why">Checking a fact. It costs three seconds and prevents the rest of the briefing from resting on the wrong number.</div></div>
       <div class="match-row"><span class="match-word">&ldquo;That is in the plan, not in the syllabus.&rdquo;</span><select data-ok="E"><option value="" selected="selected">&mdash;</option><option value="A">drawing a conclusion</option><option value="B">quoting the document</option><option value="C">recommending something</option><option value="D">asking for a decision</option><option value="E">correcting someone</option><option value="F">checking a fact</option></select><div class="item-why">Correcting &mdash; and this is the sentence the whole lesson is built on: the claim arrives with its source attached.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'m1')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'m1')">Check</button>
     <div class="score-out" id="m1-out"></div>
     <div class="callout" id="m1-key" style="display:none">
       <div class="callout-title">Why these six</div>
@@ -1651,7 +1670,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">The plan says what will happen. It never says why, and it never says who agreed to it &mdash; and that is normal for a plan.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'pl1')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'pl1')">Check</button>
     <div class="score-out" id="pl1-out"></div>
   </div>
 
@@ -1672,7 +1691,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">The end-of-unit written work</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">is corrected by a classmate</option><option value="B">is not corrected</option><option value="C">is corrected by the teacher</option></select><div class="item-why">The syllabus says the teacher corrects it. The plan gives it to a classmate &mdash; the second divergence, in one sentence.</div></div>
       <div class="match-row"><span class="match-word">A task that this document does not mention</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">may still be used in class</option><option value="B">is forbidden</option><option value="C">has to be approved first</option></select><div class="item-why">May still be used. This is the trap defused: the listening task in the plan is not a divergence, because the syllabus never claimed to list everything.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'sy1')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'sy1')">Check</button>
     <div class="score-out" id="sy1-out"></div>
     <div class="callout" id="sy1-key" style="display:none">
       <div class="callout-title">“It does not list every task” is the line to hold on to</div>
@@ -1691,7 +1710,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line">&ldquo;These two <input class="blank-input" data-ok="do not line up" style="min-width:170px" placeholder="..."> on who corrects the writing.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="My reading is" style="min-width:170px" placeholder="..."> that nobody reread the syllabus.&rdquo;</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz1')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="czCheck(this,'cz1')">Check</button>
     <div class="score-out" id="cz1-out"></div>
   </div>
 </div>
@@ -1721,7 +1740,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">&ldquo;Open items&rdquo; is exactly as far as the entry commits. Nothing in it says a decision will be reached, and nothing in it says anything about you.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'cal2')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'cal2')">Check</button>
     <div class="score-out" id="cal2-out"></div>
   </div>
 
@@ -1760,7 +1779,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">to take time from one part and add it to another</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'pp2')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="ppCheck(this,'pp2')">Check</button>
     <div class="score-out" id="pp2-out"></div>
   </div>
 
@@ -1775,7 +1794,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">&ldquo;Sorry &mdash; is that decided or not?&rdquo;</span><select data-ok="E"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select><div class="item-why">Asking to be told. Short, and it prevents the whole call from being read wrong afterwards.</div></div>
       <div class="match-row"><span class="match-word">&ldquo;Let us take it as a proposal and move on.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">restating what someone else said</option><option value="B">closing the item</option><option value="C">holding a position</option><option value="D">agreeing with part of it</option><option value="E">asking to be told</option><option value="F">putting a proposal</option></select><div class="item-why">Closing the item. It is the chair&rsquo;s move &mdash; done by anyone else, it can read as cutting the discussion off.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'mo2')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'mo2')">Check</button>
     <div class="score-out" id="mo2-out"></div>
     <div class="callout" id="mo2-key" style="display:none">
       <div class="callout-title">Why these six</div>
@@ -1802,7 +1821,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">She names the item, names the person and gives the turn away. That is chairing, and it is the whole of what she does.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'l1a2')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'l1a2')">Check</button>
     <div class="score-out" id="l1a2-out"></div>
   </div>
 
@@ -1821,7 +1840,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">twenty</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the hours the document promises</option><option value="B">the hours the unit really gets</option><option value="C">the number of the unit</option></select><div class="item-why">The hours the document promises. Written in the syllabus, and the reason the difference matters.</div></div>
       <div class="match-row"><span class="match-word">seven</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the hours the document promises</option><option value="B">the hours the unit really gets</option><option value="C">the number of the unit</option></select><div class="item-why">The unit number. It sounds like the third figure in the same series and it is not a quantity at all &mdash; which is exactly how a briefing picks up a fourth divergence that does not exist.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'num2')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'num2')">Check</button>
     <div class="score-out" id="num2-out"></div>
     <div class="callout" id="num2-key" style="display:none">
       <div class="callout-title">Two numbers for the same thing</div>
@@ -1840,7 +1859,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="Just to be clear" style="min-width:150px" placeholder="..."> , is that decided, or is it a proposal?&rdquo;</p>
       <p class="chunk-line">&ldquo;That was all I needed &mdash; sorry, you <input class="blank-input" data-ok="were saying" style="min-width:150px" placeholder="...">?&rdquo;</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz2')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="czCheck(this,'cz2')">Check</button>
     <div class="score-out" id="cz2-out"></div>
   </div>
 </div>
@@ -1870,7 +1889,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">The two sections exist because they have different statuses. What is in A is shared ground; what is in B is the observer&rsquo;s, and can be argued with. Mixing them removes the argument without winning it.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'ob3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'ob3')">Check</button>
     <div class="score-out" id="ob3-out"></div>
   </div>
 
@@ -1909,7 +1928,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">how fast it moves from one thing to the next</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'pp3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="ppCheck(this,'pp3')">Check</button>
     <div class="score-out" id="pp3-out"></div>
   </div>
 
@@ -1924,7 +1943,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">&ldquo;The group was not following by the third example.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select><div class="item-why">&lsquo;Not following&rsquo; is read from behavior, not seen directly. Section B.</div></div>
       <div class="match-row"><span class="match-word">&ldquo;He asked a checking question and took the first answer.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Section A &mdash; what happened</option><option value="B">Section B &mdash; what I concluded</option></select><div class="item-why">Two events, both visible. Section A &mdash; and it is the sentence he will most want to reply to.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'se3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'se3')">Check</button>
     <div class="score-out" id="se3-out"></div>
     <div class="callout" id="se3-key" style="display:none">
       <div class="callout-title">The test</div>
@@ -1947,7 +1966,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">working in pairs</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">was already going on</option><option value="B">happened at that point</option></select><div class="item-why">Already going on when the event landed. The continuous is what puts the event inside a scene.</div></div>
       <div class="match-row"><span class="match-word">still finishing the previous one</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">was already going on</option><option value="B">happened at that point</option></select><div class="item-why">Already going on &mdash; and &lsquo;still&rsquo; is the word that makes the overlap audible.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'ce3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'ce3')">Check</button>
     <div class="score-out" id="ce3-out"></div>
   </div>
 
@@ -1971,7 +1990,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">&ldquo;She was explaining the rule when someone asked a question.&rdquo;</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'pr3')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="ppCheck(this,'pr3')">Check</button>
     <div class="score-out" id="pr3-out"></div>
     <div class="callout" id="pr3-key" style="display:none">
       <div class="callout-title">Both are correct English</div>
@@ -1989,7 +2008,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="The way I read it" style="min-width:170px" placeholder="..."> , they had not finished.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="I might be wrong" style="min-width:160px" placeholder="..."> about this, but the pattern happened three times.&rdquo;</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz3b')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="czCheck(this,'cz3b')">Check</button>
     <div class="score-out" id="cz3b-out"></div>
   </div>
 </div>
@@ -2019,7 +2038,7 @@ body.tg-guia > #tgGuia{display:block!important}
       </div>
       <div class="rationale">If the decision is his, then what you bring has to be arguable. That is not softness &mdash; it is what makes the meeting worth having.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'mt4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="selCheck(this,'mt4')">Check</button>
     <div class="score-out" id="mt4-out"></div>
   </div>
 
@@ -2058,7 +2077,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">to pretend to accept it</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'pp4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="ppCheck(this,'pp4')">Check</button>
     <div class="score-out" id="pp4-out"></div>
   </div>
 
@@ -2073,7 +2092,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">&ldquo;Please make sure the instruction comes first.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select><div class="item-why">Yours, however politely it is phrased. &lsquo;Please&rsquo; does not move the decision.</div></div>
       <div class="match-row"><span class="match-word">&ldquo;We could look at that again after the next class.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the observer</option><option value="B">the teacher</option><option value="C">nobody &mdash; it is left open</option></select><div class="item-why">Left open, deliberately. It is the right move when you are not sure yet &mdash; and the wrong one when you are.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'dc4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'dc4')">Check</button>
     <div class="score-out" id="dc4-out"></div>
     <div class="callout" id="dc4-key" style="display:none">
       <div class="callout-title">Politeness is not the same as room</div>
@@ -2099,7 +2118,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <div class="match-row"><span class="match-word">Happened once, and you saw it</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">a checking question</option><option value="B">the group finishing early</option><option value="C">the instruction arriving while they worked</option></select><div class="item-why">The checking question. He did ask it &mdash; and that is why his objection in round two is partly right.</div></div>
       <div class="match-row"><span class="match-word">Is not in your notes at all</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">a checking question</option><option value="B">the group finishing early</option><option value="C">the instruction arriving while they worked</option></select><div class="item-why">The group finishing early. If it is not in your notes, it cannot go in the feedback: what you do not have, you do not claim.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'nt4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="mCheck(this,'nt4')">Check</button>
     <div class="score-out" id="nt4-out"></div>
     <div class="callout" id="nt4-key" style="display:none">
       <div class="callout-title">The checking question matters</div>
@@ -2128,7 +2147,7 @@ body.tg-guia > #tgGuia{display:block!important}
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">&ldquo;The group is slower than the level suggests.&rdquo;</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'bk4')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="ppCheck(this,'bk4')">Check</button>
     <div class="score-out" id="bk4-out"></div>
     <div class="callout" id="bk4-key" style="display:none">
       <div class="callout-title">He is allowed to disagree with your reading</div>
@@ -2147,7 +2166,7 @@ body.tg-guia > #tgGuia{display:block!important}
       <p class="chunk-line">&ldquo;It <input class="blank-input" data-ok="might be worth" style="min-width:150px" placeholder="..."> checking with the slower pairs.&rdquo;</p>
       <p class="chunk-line">&ldquo;<input class="blank-input" data-ok="That is fair" style="min-width:140px" placeholder="..."> &mdash; and the part I would still look at is the timing.&rdquo;</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz4b')">Check</button>
+    <button class="verify-all-btn ghost" data-redo="Redo" onclick="czCheck(this,'cz4b')">Check</button>
     <div class="score-out" id="cz4b-out"></div>
   </div>
 </div>
@@ -5374,9 +5393,67 @@ function porqueAbre(host){
   var w=host.querySelectorAll('.item-why'),i;
   for(i=0;i<w.length;i++)w[i].classList.add('show');
 }
+/* ---------------- REFAZER: o botao que confere vira o botao que limpa ----------------
+   O rotulo de ida sai do `data-redo` que o EMISSOR escreve (so ele sabe se o material e
+   bilingue); o de volta sai do proprio botao, guardado em `data-check` na primeira vez. */
+var _exSnap={};
+function exGuarda(id,host){
+  if(!id||!host||_exSnap[id]!==undefined)return;
+  /* A COPIA SAI LIMPA, e nao como a tela estava. Ela e tirada na primeira conferida --
+     quando as escolhas da aluna JA estao marcadas --, entao guardar `innerHTML` cru fazia
+     o "Refazer" devolver o exercicio com as mesmas alternativas ainda selecionadas: com
+     cara de respondido, sem estar conferido. Refazer e comecar de novo.
+     Nao ha o que limpar em <select> nem em <input>: a escolha do usuario vive na
+     PROPRIEDADE, e `innerHTML` serializa o atributo -- eles ja voltam vazios. */
+  var d=document.createElement('div'); d.innerHTML=host.innerHTML;
+  var el=d.querySelectorAll('.sel,.correct,.wrong'),i;
+  for(i=0;i<el.length;i++)el[i].classList.remove('sel','correct','wrong');
+  _exSnap[id]=d.innerHTML;
+}
+function exFeito(btn,id){
+  if(!btn||_exSnap[id]===undefined)return;
+  if(!btn.getAttribute('data-check'))btn.setAttribute('data-check',btn.textContent);
+  btn.setAttribute('data-estado','feito');
+  btn.textContent=btn.getAttribute('data-redo')||'Redo';
+}
+function exRefaz(btn,id){
+  if(!btn||btn.getAttribute('data-estado')!=='feito')return false;
+  var host=document.getElementById(id),i,el;
+  if(host&&_exSnap[id]!==undefined)host.innerHTML=_exSnap[id];
+  el=document.getElementById(id+'-out'); if(el)el.textContent='';
+  el=document.getElementById(id+'-key'); if(el)el.style.display='none';
+  /* A explicacao da atividade e a traducao sao IRMAS do host, dentro do quiz-item:
+     restaurar o host nao as fecha, e elas ficariam abertas sobre um exercicio em branco. */
+  if(host&&host.parentNode){
+    el=host.parentNode.querySelectorAll('.rationale.show,.item-why.show');
+    for(i=0;i<el.length;i++)el[i].classList.remove('show');
+  }
+  btn.setAttribute('data-estado','');
+  btn.textContent=btn.getAttribute('data-check')||'Check';
+  /* O REGISTRO ACOMPANHA A TELA, ou a limpeza dura ate o F5: `preInit` devolveria o valor
+     digitado (pelos campos) e `preMecRestaura` as marcas (pelas classes), e a aluna veria
+     de volta exatamente o que acabou de refazer. Vale so no pre-class -- no deck nao ha
+     bloco `pc*` nem persistencia. */
+  var bl=btn.closest?btn.closest('[id^="pc"]'):null;
+  if(bl&&typeof preMecSalva==='function'){
+    var mortas=[];
+    if(host){ el=host.querySelectorAll('[data-k]');
+              for(i=0;i<el.length;i++)mortas.push(el[i].getAttribute('data-k')); }
+    if(mortas.length&&typeof drop==='function')drop(mortas);
+    preMecSalva(bl);
+    /* Os campos restaurados sao NOVOS: sem tirar a marca de ligado, `preInit` os pularia e
+       eles ficariam sem ouvinte -- digitar deixaria de gravar, sem erro nenhum. */
+    if(host){ el=host.querySelectorAll('[data-lig]');
+              for(i=0;i<el.length;i++)el[i].removeAttribute('data-lig'); }
+    if(typeof preKeys==='function'){ preKeys(); preInit(); preModo(); }
+  }
+  return true;
+}
 function mCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var rows=host.querySelectorAll('.match-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('select'); if(!sel)continue;
@@ -5390,11 +5467,14 @@ function mCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 /* cloze com gabarito por campo */
 function czCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var f=host.querySelectorAll('.blank-input'),n=0,i,v,ok,dica;
   for(i=0;i<f.length;i++){
     v=(f[i].value||'').trim().toLowerCase().replace(/[.,]/g,'');
@@ -5411,6 +5491,7 @@ function czCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+f.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 /* selecao multipla: marcar e conferir contra data-ok */
 /* escolha entre duas formulacoes, uma linha por item. Existe para variar a mecanica
@@ -5425,7 +5506,9 @@ function ppPick(btn){
 }
 function ppCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var rows=host.querySelectorAll('.pair-row'),n=0,i,sel,ok,certa;
   for(i=0;i<rows.length;i++){
     sel=rows[i].querySelector('.pair-opt.sel'); if(!sel)continue;
@@ -5439,6 +5522,7 @@ function ppCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=n+' / '+rows.length;
   var key=document.getElementById(id+'-key'); if(key)key.style.display='block';
   porqueAbre(host);
+  exFeito(btn,id);
 }
 
 /* ---------------- guarda de papel no pre-class ----------------
@@ -5458,7 +5542,9 @@ function preConsulta(el){
 function tog(el){ if(preConsulta(el))return; el.classList.toggle('sel'); }
 function selCheck(btn,id){
   if(preConsulta(btn))return;
+  if(exRefaz(btn,id))return;
   var host=document.getElementById(id); if(!host)return;
+  exGuarda(id,host);
   var o=host.querySelectorAll('.quiz-option'),i,sel,ok,acertos=0,alvo=0;
   for(i=0;i<o.length;i++){
     sel=o[i].classList.contains('sel'); ok=(o[i].getAttribute('data-ok')==='1');
@@ -5471,6 +5557,7 @@ function selCheck(btn,id){
   var out=document.getElementById(id+'-out'); if(out)out.textContent=acertos+' / '+alvo;
   var r=host.parentNode.querySelector('.rationale'); if(r)r.classList.add('show');
   porqueAbre(host.parentNode);
+  exFeito(btn,id);
 }
 function pick(el,ok){
   if(preConsulta(el))return;
