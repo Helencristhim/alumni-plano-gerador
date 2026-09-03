@@ -73,6 +73,23 @@ ETAPAS = 8
 # O config declara `ciclo.percurso_min`; quem nao declara continua em 55.
 PERCURSO_MIN = 55
 
+# ---- O APOIO BILINGUE E DECLARADO PELO ALUNO, e nunca deduzido do nivel
+#
+# `nivel: "A1"` ja liga o apoio de INSTRUCAO (`pt` por atividade). O que a Vanessa precisa e
+# maior: o portugues acompanha o CONTEUDO -- cada alternativa, cada frase, cada opcao. Ela e
+# A1 declarada e A0 real, e a diferenca entre as duas coisas nao cabe num campo de nivel.
+#
+# Entao o modo e declarado: `"apoio": {"bilingue": true}` no config do aluno. Deduzir de
+# "A1" ligaria isto para todo A1 futuro sem ninguem ter decidido -- e a REGRA 13 diz que de
+# A2 em diante e ZERO portugues, entao um default errado aqui vira violacao de norma no
+# proximo aluno.
+def apoio_de(cfg):
+    return cfg.get("apoio") or {}
+
+
+def bilingue(cfg):
+    return bool(apoio_de(cfg).get("bilingue"))
+
 
 def mascara(s):
     return extrai_shell.mascara_script_style(s)
@@ -207,7 +224,7 @@ CARTAO = """<div class="lesson-card" id="lc{n}">
 # travessao LITERAL, nao `&mdash;`: a diferenca de 18 bytes por bloco foi o que o
 # `--round-trip` acusou na primeira versao, e e exatamente para isso que ele existe.
 FEEDBACK_BLOCO = """<div id="sf{n}"{oculto}>
-    <h3 class="sub">Lesson {n:02d} — <em>{tema}</em></h3>
+    <h3 class="sub">{rot} {n:02d} — <em>{tema}</em></h3>
     <div class="brief" id="sf{n}-box" style="display:none">
       <dl>
         <dt>What worked</dt><dd id="sf{n}-worked">—</dd>
@@ -218,7 +235,79 @@ FEEDBACK_BLOCO = """<div id="sf{n}"{oculto}>
   </div>"""
 
 
-def cartao_de_aula(n, reg, dados, telas, minutos):
+# ---------------------------------------------------------------------------
+# A SUPERFICIE DO ALUNO EM PORTUGUES (modo bilingue)
+#
+# A aba Feedback e a UNICA superficie do aluno que nao e exercicio: e o professor falando com
+# ele. Em ingles, para uma aluna que ainda nao le ingles, ela e uma caixa bonita que nunca vai
+# ser lida -- e o feedback e justamente a parte do ciclo que precisa chegar.
+#
+# TRES coisas mudam juntas, e as tres tem de mudar juntas ou o par nao fecha:
+#   1. os rotulos da aba do ALUNO (o que ele le);
+#   2. os rotulos dos campos no Registro pos-aula do PROFESSOR (onde ele escreve);
+#   3. a INSTRUCAO de que o texto vai em portugues -- sem ela o professor escreve em ingles
+#      num campo rotulado em portugues, e a aba do aluno fica bilingue pela metade.
+#
+# PARES EXATOS, e a conta e conferida. Substituicao por substring que nao acha o alvo
+# devolve o HTML intacto e o build segue verde: seria uma traducao que nao aconteceu, com
+# cara de que aconteceu. Cada par declara quantas vezes tem de casar.
+#
+# O QUE NAO SE TRADUZ: o TEMA da aula (`Your name on the booking`) continua em ingles. Ele e
+# o nome da aula em todo o material -- no deck, no cartao, no menu -- e traduzir so aqui
+# faria a aluna procurar no material uma aula que nao existe com esse nome.
+TRADUZ_FEEDBACK = [
+    ('<p class="eyebrow">After each lesson</p>',
+     '<p class="eyebrow">Depois de cada aula</p>', 1),
+    ('<dt>What worked</dt>', '<dt>O que funcionou bem</dt>', None),
+    ('<dt>Keep developing</dt>', '<dt>Um ponto para desenvolver</dt>', None),
+    ('>Feedback will be available after the lesson.<',
+     '>O feedback aparece aqui depois da aula.<', None),
+    ('<button class="btn-ghost" onclick="aoTopo()">Back to top</button>',
+     '<button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button>', 1),
+]
+
+# O rotulo do campo no REGISTRO do professor, e a instrucao que diz em que lingua escrever.
+TRADUZ_REGISTRO = [
+    ('<label for="sf{n}-worked-in">What worked</label>',
+     '<label for="sf{n}-worked-in">O que funcionou bem</label>', 1),
+    ('<label for="sf{n}-develop-in">Keep developing</label>',
+     '<label for="sf{n}-develop-in">Um ponto para desenvolver</label>', 1),
+    # `lang` e o que o leitor de tela usa para escolher a pronuncia. Campo rotulado em
+    # portugues, preenchido em portugues e anunciado como ingles le a frase errada em voz
+    # alta -- e o aluno que mais depende do apoio e o que mais usa o leitor.
+    ('data-k="sfb_l{n}_worked" oninput="persSave(this);autoCresce(this)" lang="en"',
+     'data-k="sfb_l{n}_worked" oninput="persSave(this);autoCresce(this)" lang="pt-BR"', 1),
+    ('data-k="sfb_l{n}_develop" oninput="persSave(this);autoCresce(this)" lang="en"',
+     'data-k="sfb_l{n}_develop" oninput="persSave(this);autoCresce(this)" lang="pt-BR"', 1),
+    ('<p class="task-instr" style="margin:var(--space-1) 0 var(--space-3)">Os dois campos '
+     'que chegam &agrave; aba Feedback da vis&atilde;o do aluno.</p>',
+     '<p class="task-instr" style="margin:var(--space-1) 0 var(--space-3)">Os dois campos '
+     'que chegam &agrave; aba Feedback da vis&atilde;o do aluno. '
+     '<strong>Escreva em portugu&ecirc;s.</strong> Esta aluna ainda n&atilde;o l&ecirc; '
+     'ingl&ecirc;s sem apoio, e feedback que ela n&atilde;o entende n&atilde;o &eacute; '
+     'feedback. Diga o que ela conseguiu fazer e UMA coisa a desenvolver &mdash; '
+     'concreto, sem termo t&eacute;cnico.</p>', 1),
+]
+
+
+def _aplica_pares(texto, pares, rotulo, **fmt):
+    """Troca cada par UMA quantidade declarada de vezes, e reprova se a conta nao bate."""
+    for velho, novo, quantas in pares:
+        if fmt:
+            velho, novo = velho.format(**fmt), novo.format(**fmt)
+        achou = texto.count(velho)
+        if quantas is not None and achou != quantas:
+            raise SystemExit(
+                f"{rotulo}: o trecho a traduzir aparece {achou}x e deveria aparecer "
+                f"{quantas}x -- {velho[:70]!r}. O shell mudou embaixo da traducao; "
+                f"corrija a ancora em vez de deixar a superficie do aluno pela metade.")
+        if achou == 0:
+            raise SystemExit(f"{rotulo}: nao achei o trecho a traduzir {velho[:70]!r}.")
+        texto = texto.replace(velho, novo)
+    return texto
+
+
+def cartao_de_aula(n, reg, dados, telas, minutos, bi=False):
     def campo(nome, padrao=""):
         m = re.search(nome + r":'([^']*)'", reg)
         return m.group(1) if m else padrao
@@ -227,7 +316,9 @@ def cartao_de_aula(n, reg, dados, telas, minutos):
         '<div class="aval-escala" data-aval="af_l%d_%s"%s role="radiogroup" aria-label="%s">'
         '</div></div>' % (rot, desc, n, k, ' data-esc="engaj"' if k == "engaj" else "", rot)
         for k, rot, desc in CRITERIOS_AVAL)
-    return CARTAO.format(
+    # A traducao e do MOLDE (com os `{n}` ainda por preencher), e nao do cartao pronto.
+    molde = _aplica_pares(CARTAO, TRADUZ_REGISTRO, "registro pos-aula") if bi else CARTAO
+    return molde.format(
         n=n, nn="%02d" % n,
         bloco=(re.search(r"bloco:(\d+)", reg) or [None, "1"])[1],
         mod=campo("mod"), cod=campo("cod"), tema=campo("tema"),
@@ -331,6 +422,49 @@ def expande_blocos(fragmento, decl, usadas, rotulo):
     return re.sub(r"[ \t]*<!--\s*BLOCOS:([^>]+?)\s*-->", sub, fragmento)
 
 
+# ---- O APOIO POR ITEM, E POR QUE ELE E COBRADO E NAO CONFIADO
+#
+# O `pt` da seccao cobre a INSTRUCAO. Ele nao cobre a alternativa que a aluna tem de ler para
+# decidir, nem a frase que ela acabou de marcar sem saber o que dizia. Num material
+# real-beginner isso e a diferenca entre um exercicio e uma linha que se pula.
+#
+# Cobrar aqui, e nao no gate, porque o defeito nasce em SILENCIO: o item sem `ptt` sai
+# perfeitamente formado, so nao tem a traducao. E foi exatamente assim que a REGRA 2.1 do
+# imersivo produziu 224 arquivos com a tarefa escondida -- ninguem estava mentindo, o campo
+# so nao existia e nada perguntava por ele.
+#
+# O VOCABULARIO (`par`) FICA DE FORA, e nao por esquecimento: ali as duas alternativas SAO a
+# traducao ("guest -> hospede / hotel"). Uma segunda traducao por baixo entregaria a resposta
+# antes da escolha, que e o oposto do que o modo existe para fazer.
+_PEDEM_ITEM = {"escolha", "completar", "lacuna", "classificar"}
+
+
+def falta_apoio_por_item(n, chave, b):
+    rot = f"aula {n}, atividade {b.get('id') or chave}"
+    kind = b.get("kind")
+    if kind not in _PEDEM_ITEM:
+        return []
+    erros = []
+    for i, it in enumerate(b.get("itens", []), 1):
+        # o item da lacuna e string quando nao tem traducao, e par quando tem
+        tem = isinstance(it, dict) and str(it.get("ptt", "")).strip()
+        if not tem:
+            texto = it if isinstance(it, str) else str(it.get("t", ""))
+            erros.append(f"{rot}, item {i} ({texto[:44]!r}): sem `ptt`. Material bilingue "
+                         f"traduz o CONTEUDO, nao so a instrucao -- e a traducao abre "
+                         f"quando a aluna confere, nunca antes.")
+    if kind == "classificar":
+        pts = b.get("opcoes_pt") or []
+        if len(pts) != len(b.get("opcoes", [])):
+            erros.append(f"{rot}: `opcoes_pt` tem {len(pts)} entrada(s) e `opcoes` tem "
+                         f"{len(b.get('opcoes', []))}. A opcao e o que a aluna le para "
+                         f"decidir; sem a lista inteira a traducao mente por omissao.")
+    if b.get("rationale") and not str(b.get("rationale_pt", "")).strip():
+        erros.append(f"{rot}: tem `rationale` e nao tem `rationale_pt`. A explicacao abre "
+                     f"junto com a correcao, e em ingles ela nao chega a esta aluna.")
+    return erros
+
+
 def chaves_dos_fragmentos(pasta):
     """As chaves de `blocos.json` que o pre e o pos-aula realmente consomem.
 
@@ -362,6 +496,16 @@ def aplica_guia_de_tela(telas, pasta, reg, n):
     copia divergiria da primeira no dia em que alguem renomeasse uma tela."""
     caminho = os.path.join(pasta, "guia_telas.json")
     if not os.path.exists(caminho):
+        # ---- NOTA VAZIA SEM GUIA DECLARADO E TELA SEM PROFESSOR
+        #
+        # A aula que ainda escreve a nota a mao continua valendo (a migracao e uma aula por
+        # vez). O que nao pode passar e a aula que ESVAZIOU o `data-teacher` porque o guia ia
+        # vir do JSON -- e o JSON nao veio. Nao da erro em lugar nenhum: o icone abre e nao
+        # ha nada dentro, e quem descobre e quem esta dando a aula.
+        vazias = len(re.findall(r'\sdata-teacher=""', telas))
+        if vazias:
+            return telas, [f"aula {n}: {vazias} tela(s) com `data-teacher` vazio e sem "
+                           f"guia_telas.json. A nota some da tela do professor sem aviso."]
         return telas, []
     guia = json.load(open(caminho, encoding="utf-8"))
     nav = re.search(r"nav:\[(.*?)\]", reg, re.S)
@@ -414,6 +558,9 @@ def troca_slides(html, por_aula):
 def monta(cfg, base_frag):
     html = open(SHELL, encoding="utf-8").read()
     aulas = cfg["aulas"]
+    # O modo de apoio vale para TODA a emissao deste material -- e por isso e configurado
+    # aqui, uma vez, antes de a primeira atividade ser emitida.
+    render.configura(apoio_de(cfg))
 
     # ---- registro
     lessons, guides, slides, erros = [], [], [], []
@@ -638,7 +785,10 @@ def monta(cfg, base_frag):
         reg = open(os.path.join(pasta, "registro.js"), encoding="utf-8").read()
         mod = (re.search(r"mod:'([^']+)'", reg) or [None, "—"])[1]
         tema = (re.search(r"tema:'([^']*)'", reg) or [None, ""])[1]
-        rotulos[n] = (f"Aula {n:02d} &middot; {mod}", f"Lesson {n:02d}")
+        # Na visao do aluno o rotulo e "Lesson 01" -- em material bilingue vira "Aula 01",
+        # que e como ele chama a aula em todo o resto da superficie dele.
+        rotulos[n] = (f"Aula {n:02d} &middot; {mod}",
+                      f"{'Aula' if bilingue(cfg) else 'Lesson'} {n:02d}")
         pre.append(expande_blocos(
             open(os.path.join(pasta, "preclass.html"), encoding="utf-8").read().strip(),
             declarado[n], usado[n], f"aula {n} pre-class"))
@@ -672,13 +822,16 @@ def monta(cfg, base_frag):
                             f"aula {n}, atividade {b.get('id') or chave}: material {nivel} "
                             f"sem apoio em portugues. Declare `pt` no bloco -- ele sai "
                             f"recolhido atras do botao 'Ver em português'.")
+                    if bilingue(cfg):
+                        erros += falta_apoio_por_item(n, chave, b)
 
         if "btn-bar ao-topo" in post[-1]:
             raise SystemExit(f"aula {n} post-class: o bloco da aula traz uma barra "
                              f"'ao-topo'. Esse controle e da ABA e ja existe uma vez, no "
                              f"fim dela -- tire a do fragmento.")
         fb.append(FEEDBACK_BLOCO.format(
-            n=n, tema=tema, oculto="" if i == 0 else ' style="display:none"'))
+            n=n, tema=tema, rot="Aula" if bilingue(cfg) else "Lesson",
+            oculto="" if i == 0 else ' style="display:none"'))
         erros += confere_aula(n, open(os.path.join(pasta, "registro.js"), encoding="utf-8").read().strip(),
                               open(os.path.join(pasta, "guide.js"), encoding="utf-8").read().strip(),
                               pasta, slides[aulas.index(n)], pre[-1],
@@ -717,7 +870,8 @@ def monta(cfg, base_frag):
         telas = len(re.findall(r'data-slide="',
                                open(os.path.join(pasta, "slides.html"),
                                     encoding="utf-8").read()))
-        cartoes.append(cartao_de_aula(n, reg, dados, telas, sum(int(x) for x in etapas)))
+        cartoes.append(cartao_de_aula(n, reg, dados, telas,
+                                      sum(int(x) for x in etapas), bilingue(cfg)))
     # Os cartoes PENDENTES: as aulas do bloco vigente que ainda nao foram produzidas.
     # O artefato traz os dele (21 e 22, com titulo e objetivo do Marcos) e eles sobreviviam
     # ao lado dos da Stephanie -- com numeros que nem existem no ciclo dela. Aqui saem do
@@ -783,6 +937,17 @@ def monta(cfg, base_frag):
     # agora e o GATE 39 (check_ciclo_limpo.py), que le o intervalo do ciclo e reprova
     # referencia a aula fora dele.
     html = troca_blocos_de_aula(html, "tab-feedback", "sf", "fbSel", aulas, rotulos, fb)
+    # A ABA FEEDBACK EM PORTUGUES (modo bilingue). Depois da reconstrucao, e so nela: o
+    # mesmo "What worked" existe no Registro pos-aula do PROFESSOR, que ja foi traduzido no
+    # cartao com a instrucao junto. Traduzir a pagina inteira por substring pegaria os dois
+    # e mais o que aparecesse depois.
+    if bilingue(cfg):
+        hm = mascara(html)
+        m = re.search(r'<div[^>]*id="tab-feedback"[^>]*>', hm)
+        ini, fim = m.start(), fecha(hm, m.start())
+        html = (html[:ini]
+                + _aplica_pares(html[ini:fim], TRADUZ_FEEDBACK, "aba Feedback")
+                + html[fim:])
     html, n_telas = troca_slides(html, slides)
 
     # O TITULO DO MENU DE SLIDES NASCE COM O NUMERO DA AULA DO ARTEFATO.
@@ -1079,7 +1244,47 @@ def confere_aula(n, registro_js, guide_js, pasta, slides_txt=None, pre_txt=None,
     faltam = [c for c in CAMPOS_GUIA if not re.search(r"\b" + c + r"\s*:", guide_js)]
     if faltam:
         erros.append(f"aula {n}: o Teacher's Guide nao tem os campos {faltam} (Doc 04 §8.1).")
+    erros += produto_confere_com_a_aula(n, pasta, guide_js, slides)
     return erros
+
+
+# ---- O PRODUTO DA AULA E O QUE A AULA PRODUZ, e nada mais
+#
+# Os quatro cartoes da Vanessa anunciavam "Gravacao com as quatro frases" como produto
+# principal. Nao ha gravador no in-class: o deck nao tem `rec-bar` nem `rcStart` em tela
+# nenhuma. A fala acontece AO VIVO, com o professor, e o que fica e o que ele anota no
+# registro pos-aula.
+#
+# Nao e detalhe de redacao. O produto e o que o professor vai buscar na hora e o que ele
+# escreve no registro depois; anunciar um artefato que a aula nao produz manda procurar uma
+# coisa que nao existe -- e deixa a producao de verdade (a fala, e o registro dela) sem nome.
+# A nota de tela chegava a mandar "GRAVE", numa tela sem nada para gravar.
+#
+# O gravador do POST-CLASS nao conta: ali a aluna grava sozinha, depois, e e opcional. O que
+# se mede e o deck.
+_RX_PRODUTO_GRAVACAO = re.compile(
+    r"\bgrava[cç][aã]o\b|\bgrava[cç][oõ]es\b|\ba recording\b|\brecordings\b", re.I)
+
+
+def produto_confere_com_a_aula(n, pasta, guide_js, slides):
+    """O produto declarado existe na aula? (cartao.json `produto` e guide.js `product`)"""
+    tem_gravador = bool(re.search(r"rcStart\(|class=\"rec-bar\"", slides))
+    if tem_gravador:
+        return []
+    fora = []
+    prod_guia = re.search(r"product\s*:\s*'((?:[^'\\]|\\.)*)'", guide_js)
+    alvos = [("guide.js `product`", prod_guia.group(1) if prod_guia else "")]
+    caminho = os.path.join(pasta, "cartao.json")
+    if os.path.exists(caminho):
+        alvos.append(("cartao.json `produto`",
+                      json.load(open(caminho, encoding="utf-8")).get("produto", "")))
+    for onde, texto in alvos:
+        if _RX_PRODUTO_GRAVACAO.search(texto or ""):
+            fora.append(
+                f"aula {n}: {onde} anuncia uma GRAVACAO como produto principal, e o deck "
+                f"desta aula nao tem gravador em tela nenhuma. A fala acontece ao vivo com "
+                f"o professor; o que fica e o registro pos-aula. Diga o que a aula produz.")
+    return fora
 
 
 def round_trip():

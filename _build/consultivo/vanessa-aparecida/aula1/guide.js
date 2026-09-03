@@ -3,13 +3,13 @@
         '<li>To find four things in a short document without reading all of it.</li>'+
         '<li>To say a whole sentence rather than one word.</li>'+
         '<li>To say two dates in English without translating them first.</li>'+
-        '<li>To finish the lesson with something recorded that did not exist before it.</li></ul>',
-  product:'A recording of four sentences about her own booking &mdash; the first production of hers in English that exists anywhere.',
+        '<li>To finish the lesson having said out loud four sentences that did not exist before it.</li></ul>',
+  product:'Four sentences about her own booking, said out loud to you, live, with the paper off the screen &mdash; her first production in English from any source. There is no recorder in the lesson: what is kept is what you write down in the post-lesson record, in her words.',
   criteria:'<ul>'+
     '<li>Says her name and the city without looking.</li>'+
     '<li>The sentences come out whole, not as single words.</li>'+
     '<li>Says the dates without translating from Portuguese first.</li>'+
-    '<li>Repeats the same four about a different person in the retask.</li></ul>',
+    '<li>Repeats the same four about a different booking in the retask.</li></ul>',
   prep:'<strong>This is the first English lesson of her adult life.</strong> She has never taken a course, and her last attempt &mdash; in this school&rsquo;s own group course &mdash; ended with her stuck in a class that was above her level. She said, in the consultation, that she had been clear about being a complete beginner and was placed there anyway.<br><br>'+
        '<strong>Nothing in this lesson may presuppose prior knowledge.</strong> Not one word. The new vocabulary is six items and all six are on the paper.<br><br>'+
        'The booking carries four pieces of information: name, city, two dates, breakfast. There is nothing else to extract from it, and that is deliberate.',

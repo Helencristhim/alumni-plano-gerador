@@ -3,7 +3,7 @@
     canonico:'booking', statusKey:'af_l1_status',
     nav:['Lesson opening','The paper in your hand','Before you read','Read it once',
          'Four things','Say the four','Say it without the paper','Your four sentences',
-         'Someone else','Today and next'],
+         'What just happened','Today and next'],
     stages:[
       {n:'Personalized lead-in',min:5},
       {n:'Prediction',min:4},

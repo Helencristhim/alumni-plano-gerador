@@ -813,6 +813,24 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
 .quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
 .slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
 .slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
+
+/* E a TRADUCAO daquele item -- outra coisa ainda que o porque. No material real-beginner o
+   que falta a aluna sozinha no pre-class nao e mais uma explicacao em ingles: e saber o que
+   a frase dizia. Mesma caixa, mesma abertura ao conferir; muda a barra na lateral e o
+   italico, para ela distinguir num relance a traducao da explicacao. */
+.item-pt{font-style:italic;border-top:none;margin-top:var(--space-1h);padding:var(--space-1h) 0 var(--space-1h) var(--space-3);border-left:2px solid var(--accent);color:var(--text-mid)}
+.quiz-option + .item-pt{margin:calc(-1 * var(--space-1)) 0 var(--space-2h);padding:0 var(--space-3h) 0 var(--space-3)}
+.chunk-line + .item-pt{font-family:var(--font-corpo);font-size:.82rem;margin:calc(-1 * var(--space-2)) 0 var(--space-3)}
+.slide-dark .item-pt,.slide-open .item-pt{border-left-color:var(--d-accent);color:var(--d-text-mid)}
+
+/* O APOIO EM PORTUGUES NA TELA DO DECK, e a diferenca dele para o `.item-pt`.
+   O `.item-pt` traduz o exercicio e so abre quando a aluna confere -- no pre-class ela esta
+   sozinha e a traducao antes da tentativa mataria a tentativa. Aqui ha uma professora na
+   frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
+   conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
+   linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
+.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
+.slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1321,7 +1339,6 @@ document.body.setAttribute('data-view','aluno');
   <p class="eyebrow" data-view="aluno">Before class</p>
   <h2 class="sec">Pre-class</h2>
 
-<p class="nota-sigla" id="avisoAudioProto" lang="en">Prototype audio: the voices in this version are temporary.</p>
   <div class="btn-bar" style="justify-content:flex-start;margin-bottom:var(--space-4)">
     <button class="btn-primary" id="pcb9" onclick="preSel(9)"><span data-view="aluno">Lesson 09</span></button>
     <button class="btn-ghost" id="pcb10" onclick="preSel(10)"><span data-view="aluno">Lesson 10</span></button>
@@ -1463,14 +1480,14 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>6 &middot; One paragraph, with its sources</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the paragraph. Every gap is one of the six expressions from activity 2.</p>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>account</em> &middot; <em>states</em> &middot; <em>claims</em> &middot; <em>leave out</em> &middot; <em>consistent with</em> &middot; <em>as far as I can tell</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz9">
       <p class="chunk-line">The witness <input class="blank-input" data-ok="account" style="min-width:150px" placeholder="..."> says four people were on the corner; the report <input class="blank-input" data-ok="states" style="min-width:150px" placeholder="..."> three.</p>
       <p class="chunk-line">She <input class="blank-input" data-ok="claims" style="min-width:140px" placeholder="..."> that one of them spoke first, and the report says the opposite.</p>
       <p class="chunk-line">Both texts <input class="blank-input" data-ok="leave out" style="min-width:150px" placeholder="..."> the reason the group was there.</p>
       <p class="chunk-line">On the hour, the two are broadly <input class="blank-input" data-ok="consistent with" style="min-width:180px" placeholder="..."> each other.</p>
       <p class="chunk-line"><input class="blank-input" data-ok="As far as I can tell" style="min-width:190px" placeholder="...">, the difference that matters is who spoke first.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz9')">Check</button>
     <div class="score-out" id="cz9-out"></div>
     <div class="callout" id="cz9-key" style="display:none">
       <div class="callout-title">The skeleton of your briefing</div>
@@ -1632,13 +1649,13 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>6 &middot; One question, written out</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the question. Every gap is one of the six expressions from activity 2.</p>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>pre-selected</em> &middot; <em>opened up</em> &middot; <em>hold</em> &middot; <em>figure</em> &middot; <em>worth having</em> &middot; <em>a different claim</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz10">
       <p class="chunk-line">You said the cases were <input class="blank-input" data-ok="pre-selected" style="min-width:170px" placeholder="...">, and that the second year <input class="blank-input" data-ok="opened up" style="min-width:160px" placeholder="..."> the pool.</p>
       <p class="chunk-line">Does that <input class="blank-input" data-ok="hold" style="min-width:130px" placeholder="..."> for the definition of a resolved case as well?</p>
       <p class="chunk-line">I ask because the <input class="blank-input" data-ok="figure" style="min-width:140px" placeholder="..."> for the second year is sixty-one.</p>
       <p class="chunk-line">That is still <input class="blank-input" data-ok="worth having" style="min-width:170px" placeholder="...">, but it may be <input class="blank-input" data-ok="a different claim" style="min-width:180px" placeholder="...">.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz10')">Check</button>
     <div class="score-out" id="cz10-out"></div>
     <div class="callout" id="cz10-key" style="display:none">
       <div class="callout-title">You will not read this in class</div>
@@ -1780,12 +1797,12 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>6 &middot; Three sentences, written out</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the paragraph. Watch the verb forms &mdash; there is no word bank here on purpose.</p>
-    <div class="fill-list">
+    <div class="fill-list" id="cz11">
       <p class="chunk-line">If the statement <input class="blank-input" data-ok="had been" style="min-width:150px" placeholder="..."> taken on the night, we <input class="blank-input" data-ok="would not be" style="min-width:170px" placeholder="..."> discussing three versions now.</p>
       <p class="chunk-line">Even if the delay <input class="blank-input" data-ok="explains" style="min-width:150px" placeholder="..."> part of it, it does not explain why the third account appeared.</p>
       <p class="chunk-line">Had she <input class="blank-input" data-ok="been" style="min-width:110px" placeholder="..."> asked before she spoke to the others, we <input class="blank-input" data-ok="would have" style="min-width:150px" placeholder="..."> one version.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz11')">Check</button>
     <div class="score-out" id="cz11-out"></div>
     <div class="callout" id="cz11-key" style="display:none">
       <div class="callout-title">Why there is no word bank in this one</div>
@@ -1925,13 +1942,13 @@ document.body.setAttribute('data-view','aluno');
     <div class="section-header-row"><h4>6 &middot; The opening, written once</h4><span class="badge badge-open">Writing</span></div>
     <p class="task-instr">Complete the opening. Every gap is one of the six expressions from activity 2.</p>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>In our system</em> &middot; <em>assigned to</em> &middot; <em>which means that</em> &middot; <em>cuts both ways</em> &middot; <em>that is fair</em> &middot; <em>the burden of proof</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz12">
       <p class="chunk-line"><input class="blank-input" data-ok="In our system" style="min-width:170px" placeholder="...">, the defense is a public body and we are <input class="blank-input" data-ok="assigned to" style="min-width:150px" placeholder="..."> the case.</p>
       <p class="chunk-line">The jury decides guilt but not the sentence, <input class="blank-input" data-ok="which means that" style="min-width:180px" placeholder="..."> the question you asked does not arise in the same way.</p>
       <p class="chunk-line">You are right that the delay <input class="blank-input" data-ok="cuts both ways" style="min-width:170px" placeholder="..."> &mdash; <input class="blank-input" data-ok="that is fair" style="min-width:150px" placeholder="...">.</p>
       <p class="chunk-line">The difference is where <input class="blank-input" data-ok="the burden of proof" style="min-width:190px" placeholder="..."> sat on the night.</p>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz12')">Check</button>
     <div class="score-out" id="cz12-out"></div>
     <div class="callout" id="cz12-key" style="display:none">
       <div class="callout-title">This is the only thing you will write in class</div>

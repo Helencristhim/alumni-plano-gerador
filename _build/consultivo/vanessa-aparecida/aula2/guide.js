@@ -4,7 +4,7 @@
         '<li>To answer with a sentence instead of a gesture.</li>'+
         '<li>To ask for something to be said again, and more slowly.</li>'+
         '<li>To say how many nights, and to say yes and no politely.</li></ul>',
-  product:'A recording of the desk: three answers and at least one request to repeat, in English.',
+  product:'The whole desk exchange, live: three answers and at least one request to repeat, in English, said to you.',
   criteria:'<ul>'+
     '<li>Answers all three with a sentence, not a gesture.</li>'+
     '<li>Asks for a repeat at least once, in English.</li>'+

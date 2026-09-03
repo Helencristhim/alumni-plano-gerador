@@ -54,6 +54,21 @@ REGRAS = [
     ("criterio-numerado",
      "'criterio N do ciclo' e numeracao interna. Diga o criterio.",
      r"crit[ée]rio\s+\d+\s+do\s+ciclo|criterion\s+\d+\s+of\s+the\s+cycle"),
+    # ---- O AVISO DE PROVISORIEDADE QUE SOBREVIVEU AO PROVISORIO (revisao de 02/09/2026)
+    #
+    # O pre-class abria com "Prototype audio: the voices in this version are temporary." Era
+    # verdade quando o artefato foi escrito; deixou de ser quando o audio passou a sair do
+    # ElevenLabs com Voice ID por PAPEL e a passar pelo GATE 40. E era a primeira coisa que o
+    # aluno lia na aba que ele mais usa: um aviso de que o que ele tem na mao e rascunho.
+    #
+    # Entra AQUI e nao num gate proprio porque e exatamente o assunto deste: metadado de
+    # PRODUCAO na tela de quem estuda. Mesmo criterio que ja barra "checkpoint" e "H1".
+    ("prototipo",
+     "aviso de que o material e prototipo/provisorio na tela do aluno. O audio e arquivo "
+     "aprovado (o GATE 40 mede isso) e o material esta no ar: se algo de fato for "
+     "provisorio, isso e conversa de producao, nao linha de tela.",
+     r"\bprot[oó]tipo\b|\bprototype\b|voices?[^.<]{0,30}\btemporary\b"
+     r"|\btempor[aá]ri[ao]s?\b(?=[^.<]{0,40}\bvoz(?:es)?\b)"),
     ("defeito",
      "'defeito' nao e termo pedagogico, e o sujeito da frase costuma ser o aluno. Use "
      "'ponto de desenvolvimento', 'dificuldade', 'o que ainda nao aparece'.",

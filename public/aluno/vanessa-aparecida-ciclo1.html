@@ -813,6 +813,24 @@ body[data-view="professor"] [data-view="aluno"]{display:none!important}
 .quiz-option + .item-why{margin:calc(-1 * var(--space-1)) 0 var(--space-2);padding:0 var(--space-3h);border-top:none}
 .slide-dark .item-why,.slide-open .item-why{color:var(--d-text-mid);border-top-color:var(--d-border)}
 .slide-dark .item-why em,.slide-dark .item-why strong,.slide-open .item-why em,.slide-open .item-why strong{color:var(--d-accent)}
+
+/* E a TRADUCAO daquele item -- outra coisa ainda que o porque. No material real-beginner o
+   que falta a aluna sozinha no pre-class nao e mais uma explicacao em ingles: e saber o que
+   a frase dizia. Mesma caixa, mesma abertura ao conferir; muda a barra na lateral e o
+   italico, para ela distinguir num relance a traducao da explicacao. */
+.item-pt{font-style:italic;border-top:none;margin-top:var(--space-1h);padding:var(--space-1h) 0 var(--space-1h) var(--space-3);border-left:2px solid var(--accent);color:var(--text-mid)}
+.quiz-option + .item-pt{margin:calc(-1 * var(--space-1)) 0 var(--space-2h);padding:0 var(--space-3h) 0 var(--space-3)}
+.chunk-line + .item-pt{font-family:var(--font-corpo);font-size:.82rem;margin:calc(-1 * var(--space-2)) 0 var(--space-3)}
+.slide-dark .item-pt,.slide-open .item-pt{border-left-color:var(--d-accent);color:var(--d-text-mid)}
+
+/* O APOIO EM PORTUGUES NA TELA DO DECK, e a diferenca dele para o `.item-pt`.
+   O `.item-pt` traduz o exercicio e so abre quando a aluna confere -- no pre-class ela esta
+   sozinha e a traducao antes da tentativa mataria a tentativa. Aqui ha uma professora na
+   frente: o portugues nao substitui a instrucao, ele SITUA a aluna enquanto a professora
+   conduz em ingles. Por isso e visivel desde a entrada na tela, e por isso e curto: uma
+   linha por instrucao, menor e mais clara que o ingles acima dela, nunca um paragrafo. */
+.slide-pt{display:block;font-style:italic;font-size:.86em;line-height:var(--lh-corpo);color:var(--text-mid);margin-top:var(--space-1h)}
+.slide-dark .slide-pt,.slide-open .slide-pt{color:var(--d-text-mid)}
 .accent{color:var(--accent)}
 .stage-pill{display:inline-flex;align-items:center;gap:var(--space-2);font-size:.62rem;font-weight:var(--peso-forte);letter-spacing:var(--ls-pill);text-transform:uppercase;padding:var(--space-1h) var(--space-3);border-radius:20px;background:rgba(0,48,128,.14);color:var(--accent);border:1px solid rgba(0,48,128,.3);margin-bottom:var(--space-3)}
 .slide-dark .stage-pill,.slide-open .stage-pill{background:rgba(125,157,215,.12);color:var(--d-accent);border-color:rgba(125,157,215,.3)}
@@ -1321,15 +1339,14 @@ document.body.setAttribute('data-view','aluno');
   <p class="eyebrow" data-view="aluno">Before class</p>
   <h2 class="sec">Pre-class</h2>
 
-<p class="nota-sigla" id="avisoAudioProto" lang="en">Prototype audio: the voices in this version are temporary.</p>
   <div class="btn-bar" style="justify-content:flex-start;margin-bottom:var(--space-4)">
-    <button class="btn-primary" id="pcb1" onclick="preSel(1)"><span data-view="aluno">Lesson 01</span></button>
-    <button class="btn-ghost" id="pcb2" onclick="preSel(2)"><span data-view="aluno">Lesson 02</span></button>
-    <button class="btn-ghost" id="pcb3" onclick="preSel(3)"><span data-view="aluno">Lesson 03</span></button>
-    <button class="btn-ghost" id="pcb4" onclick="preSel(4)"><span data-view="aluno">Lesson 04</span></button>
+    <button class="btn-primary" id="pcb1" onclick="preSel(1)"><span data-view="aluno">Aula 01</span></button>
+    <button class="btn-ghost" id="pcb2" onclick="preSel(2)"><span data-view="aluno">Aula 02</span></button>
+    <button class="btn-ghost" id="pcb3" onclick="preSel(3)"><span data-view="aluno">Aula 03</span></button>
+    <button class="btn-ghost" id="pcb4" onclick="preSel(4)"><span data-view="aluno">Aula 04</span></button>
   </div>
     <div id="pc1">
-  <h3 class="sub"><span data-view="aluno">Lesson 01 &mdash; </span><em>Before you read the booking</em></h3>
+  <h3 class="sub"><span data-view="aluno">Aula 01 &mdash; </span><em>Before you read the booking</em></h3>
 
   <hr class="rule">
 
@@ -1341,20 +1358,20 @@ document.body.setAttribute('data-view','aluno');
     <div id="kd1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Você vai ler uma reserva de hotel em inglês. É um texto curto. Três das frases abaixo são verdadeiras — marque essas três. Não precisa entender todas as palavras.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="kd1">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A hotel booking always has a name and dates.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need to understand every word to use it.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The dates are the most important part.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to answer the hotel in English.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Four things are enough: name, city, dates, breakfast.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need a dictionary to read it.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A hotel booking always has a name and dates.</span></div><div class="item-why item-pt" lang="pt-BR">Uma reserva de hotel sempre tem um nome e datas.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need to understand every word to use it.</span></div><div class="item-why item-pt" lang="pt-BR">Você precisa entender todas as palavras para usar a reserva.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The dates are the most important part.</span></div><div class="item-why item-pt" lang="pt-BR">As datas são a parte mais importante.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to answer the hotel in English.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de responder ao hotel em inglês.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Four things are enough: name, city, dates, breakfast.</span></div><div class="item-why item-pt" lang="pt-BR">Quatro informações bastam: nome, cidade, datas e café da manhã.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need a dictionary to read it.</span></div><div class="item-why item-pt" lang="pt-BR">Você precisa de um dicionário para ler a reserva.</div>
       </div>
-      <div class="rationale">A booking is short on purpose. Four things &mdash; who, where, when, what is included &mdash; and you can use it anywhere in the world.</div>
+      <div class="rationale">A booking is short on purpose. Four things &mdash; who, where, when, what is included &mdash; and you can use it anywhere in the world.<div class="item-pt" lang="pt-BR">A reserva é curta de propósito. Quatro informações — quem, onde, quando e o que está incluído — e ela serve em qualquer lugar do mundo.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd1')">Check</button>
+    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd1')">Check / Checar</button>
     <div class="score-out" id="kd1-out"></div>
     <div class="callout" id="kd1-key" style="display:none">
       <div class="callout-title">Por que a aula 1 comeca aqui</div>
-      Voce ja recebe este papel hoje, toda vez que viaja. O curso comeca no que voce ja tem na mão &mdash; e nao numa regra de gramatica. <em>Hoje voce vai dizer quatro frases em ingles, e elas vão ficar gravadas.</em>
+      Voce ja recebe este papel hoje, toda vez que viaja. O curso comeca no que voce ja tem na mão &mdash; e nao numa regra de gramatica. <em>Hoje voce vai dizer quatro frases em ingles, em voz alta, na aula.</em>
     </div>
   </div>
 
@@ -1395,7 +1412,7 @@ document.body.setAttribute('data-view','aluno');
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">reserva</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl1')">Check</button>
+    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl1')">Check / Checar</button>
     <div class="score-out" id="kl1-out"></div>
     <div class="callout" id="kl1-key" style="display:none">
       <div class="callout-title">Seis palavras, e voce ja conhece quatro</div>
@@ -1413,14 +1430,15 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cl1p-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cl1p-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Cada linha da reserva é um tipo de informação: nome, data, lugar. Diga qual é qual.</div>
     <div class="match-grid" id="cl1p">
-      <div class="match-row"><span class="match-word">Vanessa Aparecida</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select></div>
-      <div class="match-row"><span class="match-word">Lisbon, Portugal</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select></div>
-      <div class="match-row"><span class="match-word">14 October</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select></div>
-      <div class="match-row"><span class="match-word">18 October</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select></div>
-      <div class="match-row"><span class="match-word">4471-A</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select></div>
-      <div class="match-row"><span class="match-word">Hotel Marina</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select></div>
+      <div class="match-row"><span class="match-word">Vanessa Aparecida</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select><div class="item-why item-pt" lang="pt-BR">Vanessa Aparecida — o nome de quem vai se hospedar.</div></div>
+      <div class="match-row"><span class="match-word">Lisbon, Portugal</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select><div class="item-why item-pt" lang="pt-BR">Lisboa, Portugal — a cidade e o país.</div></div>
+      <div class="match-row"><span class="match-word">14 October</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select><div class="item-why item-pt" lang="pt-BR">14 de outubro — o dia da chegada.</div></div>
+      <div class="match-row"><span class="match-word">18 October</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select><div class="item-why item-pt" lang="pt-BR">18 de outubro — o dia da saída.</div></div>
+      <div class="match-row"><span class="match-word">4471-A</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select><div class="item-why item-pt" lang="pt-BR">4471-A — o número da reserva.</div></div>
+      <div class="match-row"><span class="match-word">Hotel Marina</span><select data-ok="D"><option value="" selected="selected">&mdash;</option><option value="A">a place</option><option value="B">a number</option><option value="C">a date</option><option value="D">a name</option></select><div class="item-why item-pt" lang="pt-BR">Hotel Marina — o nome do hotel.</div></div>
+      <div class="item-why item-pt" lang="pt-BR"><em>a place</em> = um lugar &middot; <em>a number</em> = um número &middot; <em>a date</em> = uma data &middot; <em>a name</em> = um nome</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl1p')">Check</button>
+    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl1p')">Check / Checar</button>
     <div class="score-out" id="cl1p-out"></div>
     <div class="callout" id="cl1p-key" style="display:none">
       <div class="callout-title">A data em ingles vem em outra ordem</div>
@@ -1435,16 +1453,16 @@ document.body.setAttribute('data-view','aluno');
     <div id="fl1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Leia a reserva mais uma vez. Três frases são verdadeiras — marque as três.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="fl1">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The hotel is in Portugal.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The guest arrives on 18 October.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Breakfast is included.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is a room for one person.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The guest stays four nights.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The booking number is 4718.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The hotel is in Portugal.</span></div><div class="item-why item-pt" lang="pt-BR">O hotel fica em Portugal.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The guest arrives on 18 October.</span></div><div class="item-why item-pt" lang="pt-BR">O hóspede chega no dia 18 de outubro.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Breakfast is included.</span></div><div class="item-why item-pt" lang="pt-BR">O café da manhã está incluído.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is a room for one person.</span></div><div class="item-why item-pt" lang="pt-BR">É um quarto para uma pessoa.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The guest stays four nights.</span></div><div class="item-why item-pt" lang="pt-BR">O hóspede fica quatro noites.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The booking number is 4718.</span></div><div class="item-why item-pt" lang="pt-BR">O número da reserva é 4718.</div>
       </div>
-      <div class="rationale">Check-in on the 14th and check-out on the 18th is four nights. It is the one thing the paper does not say in words &mdash; and the one the hotel will ask you.</div>
+      <div class="rationale">Check-in on the 14th and check-out on the 18th is four nights. It is the one thing the paper does not say in words &mdash; and the one the hotel will ask you.<div class="item-pt" lang="pt-BR">Check-in no dia 14 e check-out no dia 18 dá quatro noites. É a única informação que o papel não diz com palavras — e é justamente a que o hotel vai perguntar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl1')">Check</button>
+    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl1')">Check / Checar</button>
     <div class="score-out" id="fl1-out"></div>
     <div class="callout" id="fl1-key" style="display:none">
       <div class="callout-title">Quatro noites, e o papel nao diz isso</div>
@@ -1458,13 +1476,13 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cn1-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cn1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Cada frase começa de um jeito. Escolha o final que combina com o começo.</div>
     <div class="match-grid" id="cn1">
-      <div class="match-row"><span class="match-word">My name</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">am Vanessa</option><option value="B">is Vanessa</option><option value="C">are Vanessa</option></select></div>
-      <div class="match-row"><span class="match-word">I am in</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Lisbon</option><option value="B">breakfast</option><option value="C">October</option></select></div>
-      <div class="match-row"><span class="match-word">It is from 14 October</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">to 18 October</option><option value="B">at 18 October</option><option value="C">in 18 October</option></select></div>
-      <div class="match-row"><span class="match-word">Breakfast is</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">including</option><option value="B">included</option><option value="C">include</option></select></div>
-      <div class="match-row"><span class="match-word">It is a room</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">with two people</option><option value="B">for two people</option><option value="C">of two people</option></select></div>
+      <div class="match-row"><span class="match-word">My name</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">am Vanessa</option><option value="B">is Vanessa</option><option value="C">are Vanessa</option></select><div class="item-why item-pt" lang="pt-BR"><em>My name is Vanessa.</em> — Meu nome é Vanessa.</div></div>
+      <div class="match-row"><span class="match-word">I am in</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Lisbon</option><option value="B">breakfast</option><option value="C">October</option></select><div class="item-why item-pt" lang="pt-BR"><em>I am in Lisbon.</em> — Eu estou em Lisboa.</div></div>
+      <div class="match-row"><span class="match-word">It is from 14 October</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">to 18 October</option><option value="B">at 18 October</option><option value="C">in 18 October</option></select><div class="item-why item-pt" lang="pt-BR"><em>It is from 14 October to 18 October.</em> — É de 14 de outubro a 18 de outubro.</div></div>
+      <div class="match-row"><span class="match-word">Breakfast is</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">including</option><option value="B">included</option><option value="C">include</option></select><div class="item-why item-pt" lang="pt-BR"><em>Breakfast is included.</em> — O café da manhã está incluído.</div></div>
+      <div class="match-row"><span class="match-word">It is a room</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">with two people</option><option value="B">for two people</option><option value="C">of two people</option></select><div class="item-why item-pt" lang="pt-BR"><em>It is a room for two people.</em> — É um quarto para duas pessoas.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn1')">Check</button>
+    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn1')">Check / Checar</button>
     <div class="score-out" id="cn1-out"></div>
     <div class="callout" id="cn1-key" style="display:none">
       <div class="callout-title">Quatro frases, e a viagem inteira cabe nelas</div>
@@ -1478,23 +1496,28 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Write them about a real trip of yours, if you prefer.</p>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cz1-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cz1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Complete as quatro frases. Se preferir, escreva sobre uma viagem de verdade sua.</div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz1">
       <p class="chunk-line">My name <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> Vanessa.</p>
+      <div class="item-why item-pt" lang="pt-BR">Meu nome é Vanessa.</div>
       <p class="chunk-line">I <input class="blank-input" data-ok="am" style="min-width:60px" placeholder="..."> in Lisbon.</p>
+      <div class="item-why item-pt" lang="pt-BR">Eu estou em Lisboa.</div>
       <p class="chunk-line">It <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> from 14 October to 18 October.</p>
+      <div class="item-why item-pt" lang="pt-BR">É de 14 de outubro a 18 de outubro.</div>
       <p class="chunk-line">Breakfast <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> included.</p>
+      <div class="item-why item-pt" lang="pt-BR">O café da manhã está incluído.</div>
       <p class="chunk-line">It <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> a room for two people.</p>
+      <div class="item-why item-pt" lang="pt-BR">É um quarto para duas pessoas.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz1')">Check / Checar</button>
     <div class="score-out" id="cz1-out"></div>
     <div class="callout" id="cz1-key" style="display:none">
       <div class="callout-title">Este e o seu texto na aula</div>
-      Quatro frases curtas. Na aula voce vai dize-las <strong>sem o papel na tela</strong> &mdash; e essa gravacao e o comeco do seu curso.
+      Quatro frases curtas. Na aula voce vai dize-las <strong>sem o papel na tela</strong> &mdash; e essa e a primeira vez que voce fala ingles em voz alta neste curso.
     </div>
   </div>
 </div>
 <div id="pc2">
-  <h3 class="sub"><span data-view="aluno">Lesson 02 &mdash; </span><em>Before you hear any of it</em></h3>
+  <h3 class="sub"><span data-view="aluno">Aula 02 &mdash; </span><em>Before you hear any of it</em></h3>
 
   <hr class="rule">
 
@@ -1506,16 +1529,16 @@ document.body.setAttribute('data-view','aluno');
     <div id="kd2-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Num balcão de hotel, em qualquer lugar do mundo, perguntam a você as mesmas três coisas. Marque as três frases verdadeiras.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="kd2">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The questions are short &mdash; about five words.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to understand every word to answer.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>You can ask them to say it again.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Asking again is impolite.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>One sentence is enough for each answer.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You must answer very fast.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The questions are short &mdash; about five words.</span></div><div class="item-why item-pt" lang="pt-BR">As perguntas são curtas — mais ou menos cinco palavras.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You have to understand every word to answer.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de entender todas as palavras para responder.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>You can ask them to say it again.</span></div><div class="item-why item-pt" lang="pt-BR">Você pode pedir para repetirem.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Asking again is impolite.</span></div><div class="item-why item-pt" lang="pt-BR">Pedir para repetir é falta de educação.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>One sentence is enough for each answer.</span></div><div class="item-why item-pt" lang="pt-BR">Uma frase basta para cada resposta.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You must answer very fast.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de responder muito rápido.</div>
       </div>
-      <div class="rationale">Three questions, five words each, and the same ones every time. Asking for a repeat is normal &mdash; people do it in their own language, at every desk.</div>
+      <div class="rationale">Three questions, five words each, and the same ones every time. Asking for a repeat is normal &mdash; people do it in their own language, at every desk.<div class="item-pt" lang="pt-BR">Três perguntas, cinco palavras cada, e sempre as mesmas. Pedir para repetir é normal — as pessoas fazem isso na própria língua, em qualquer balcão.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd2')">Check</button>
+    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd2')">Check / Checar</button>
     <div class="score-out" id="kd2-out"></div>
     <div class="callout" id="kd2-key" style="display:none">
       <div class="callout-title">Esta e a cena que voce ja viveu</div>
@@ -1560,7 +1583,7 @@ document.body.setAttribute('data-view','aluno');
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">quantas noites?</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl2')">Check</button>
+    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl2')">Check / Checar</button>
     <div class="score-out" id="kl2-out"></div>
     <div class="callout" id="kl2-key" style="display:none">
       <div class="callout-title">Duas frases resolvem qualquer aperto</div>
@@ -1578,14 +1601,15 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cl2p-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cl2p-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Cada pergunta pede uma informação diferente. Diga o que cada uma está pedindo.</div>
     <div class="match-grid" id="cl2p">
-      <div class="match-row"><span class="match-word">&ldquo;What is your name, please?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;And how many nights?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Would you like breakfast in the morning?&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;How do you spell that?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Four nights, is that right?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Breakfast is from seven to ten.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select></div>
+      <div class="match-row"><span class="match-word">&ldquo;What is your name, please?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Qual é o seu nome, por favor?&rdquo;</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;And how many nights?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;E quantas noites?&rdquo;</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Would you like breakfast in the morning?&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Você quer café da manhã de manhã?&rdquo;</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;How do you spell that?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Como se escreve?&rdquo; — ela quer as letras do seu nome.</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Four nights, is that right?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Quatro noites, é isso?&rdquo;</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Breakfast is from seven to ten.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">the number of nights</option><option value="B">your name</option><option value="C">breakfast</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;O café da manhã é das sete às dez.&rdquo;</div></div>
+      <div class="item-why item-pt" lang="pt-BR"><em>the number of nights</em> = quantas noites &middot; <em>your name</em> = o seu nome &middot; <em>breakfast</em> = o café da manhã</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl2p')">Check</button>
+    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl2p')">Check / Checar</button>
     <div class="score-out" id="cl2p-out"></div>
     <div class="callout" id="cl2p-key" style="display:none">
       <div class="callout-title">Sempre as mesmas tres</div>
@@ -1599,13 +1623,13 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cn2-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cn2-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Escolha a resposta que combina com a pergunta.</div>
     <div class="match-grid" id="cn2">
-      <div class="match-row"><span class="match-word">&ldquo;What is your name, please?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">My name is Vanessa.</option><option value="B">Two nights.</option><option value="C">I am in Lisbon.</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;How many nights?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Four nights.</option><option value="B">Yes, please.</option><option value="C">My name is Vanessa.</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Would you like breakfast?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">In Lisbon.</option><option value="B">Yes, please.</option><option value="C">Four nights.</option></select></div>
-      <div class="match-row"><span class="match-word">You did not understand the question.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">Thank you.</option><option value="B">Yes, please.</option><option value="C">Sorry, again please?</option></select></div>
-      <div class="match-row"><span class="match-word">They are speaking very fast.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">More slowly, please.</option><option value="B">No, thank you.</option><option value="C">I am sorry.</option></select></div>
+      <div class="match-row"><span class="match-word">&ldquo;What is your name, please?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">My name is Vanessa.</option><option value="B">Two nights.</option><option value="C">I am in Lisbon.</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Qual é o seu nome, por favor?&rdquo; — <em>My name is Vanessa.</em> (Meu nome é Vanessa.)</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;How many nights?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Four nights.</option><option value="B">Yes, please.</option><option value="C">My name is Vanessa.</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Quantas noites?&rdquo; — <em>Four nights.</em> (Quatro noites.)</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Would you like breakfast?&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">In Lisbon.</option><option value="B">Yes, please.</option><option value="C">Four nights.</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Você quer café da manhã?&rdquo; — <em>Yes, please.</em> (Sim, por favor.)</div></div>
+      <div class="match-row"><span class="match-word">You did not understand the question.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">Thank you.</option><option value="B">Yes, please.</option><option value="C">Sorry, again please?</option></select><div class="item-why item-pt" lang="pt-BR">Você não entendeu a pergunta — <em>Sorry, again please?</em> (Desculpe, de novo, por favor?)</div></div>
+      <div class="match-row"><span class="match-word">They are speaking very fast.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">More slowly, please.</option><option value="B">No, thank you.</option><option value="C">I am sorry.</option></select><div class="item-why item-pt" lang="pt-BR">Estão falando muito rápido — <em>More slowly, please.</em> (Mais devagar, por favor.)</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn2')">Check</button>
+    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn2')">Check / Checar</button>
     <div class="score-out" id="cn2-out"></div>
     <div class="callout" id="cn2-key" style="display:none">
       <div class="callout-title">Respostas curtas sao respostas</div>
@@ -1620,16 +1644,16 @@ document.body.setAttribute('data-view','aluno');
     <div id="fl2-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Sobre as três perguntas: marque as três frases verdadeiras.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="fl2">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The first question asks for a name.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They ask for your passport.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>One question is about breakfast.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They ask how you are traveling.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Two different people speak.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They speak very fast.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The first question asks for a name.</span></div><div class="item-why item-pt" lang="pt-BR">A primeira pergunta pede um nome.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They ask for your passport.</span></div><div class="item-why item-pt" lang="pt-BR">Eles pedem o seu passaporte.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>One question is about breakfast.</span></div><div class="item-why item-pt" lang="pt-BR">Uma das perguntas é sobre o café da manhã.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They ask how you are traveling.</span></div><div class="item-why item-pt" lang="pt-BR">Eles perguntam como você está viajando.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Two different people speak.</span></div><div class="item-why item-pt" lang="pt-BR">Duas pessoas diferentes falam.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They speak very fast.</span></div><div class="item-why item-pt" lang="pt-BR">Eles falam muito rápido.</div>
       </div>
-      <div class="rationale">Two voices, three questions, said slowly. Nothing about a passport and nothing about the trip &mdash; those are other conversations, in other lessons.</div>
+      <div class="rationale">Two voices, three questions, said slowly. Nothing about a passport and nothing about the trip &mdash; those are other conversations, in other lessons.<div class="item-pt" lang="pt-BR">Duas vozes, três perguntas, ditas devagar. Nada sobre passaporte e nada sobre a viagem — isso é outra conversa, em outra aula.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl2')">Check</button>
+    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl2')">Check / Checar</button>
     <div class="score-out" id="fl2-out"></div>
     <div class="callout" id="fl2-key" style="display:none">
       <div class="callout-title">Duas vozes, e isso importa</div>
@@ -1644,14 +1668,19 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cz2-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cz2-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Complete as suas respostas. Use as datas da sua próxima viagem, se você já souber.</div>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>is</em> &middot; <em>Four</em> &middot; <em>Yes</em> &middot; <em>again</em> &middot; <em>More</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz2">
       <p class="chunk-line">My name <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> Vanessa.</p>
+      <div class="item-why item-pt" lang="pt-BR">Meu nome é Vanessa.</div>
       <p class="chunk-line"><input class="blank-input" data-ok="Four" style="min-width:70px" placeholder="..."> nights.</p>
+      <div class="item-why item-pt" lang="pt-BR">Quatro noites.</div>
       <p class="chunk-line"><input class="blank-input" data-ok="Yes" style="min-width:60px" placeholder="...">, please.</p>
+      <div class="item-why item-pt" lang="pt-BR">Sim, por favor.</div>
       <p class="chunk-line">Sorry, <input class="blank-input" data-ok="again" style="min-width:70px" placeholder="..."> please?</p>
+      <div class="item-why item-pt" lang="pt-BR">Desculpe, de novo, por favor?</div>
       <p class="chunk-line"><input class="blank-input" data-ok="More" style="min-width:70px" placeholder="..."> slowly, please.</p>
+      <div class="item-why item-pt" lang="pt-BR">Mais devagar, por favor.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz2')">Check / Checar</button>
     <div class="score-out" id="cz2-out"></div>
     <div class="callout" id="cz2-key" style="display:none">
       <div class="callout-title">Cinco frases, e o balcão inteiro</div>
@@ -1660,7 +1689,7 @@ document.body.setAttribute('data-view','aluno');
   </div>
 </div>
 <div id="pc3">
-  <h3 class="sub"><span data-view="aluno">Lesson 03 &mdash; </span><em>Before you build any of it</em></h3>
+  <h3 class="sub"><span data-view="aluno">Aula 03 &mdash; </span><em>Before you build any of it</em></h3>
 
   <hr class="rule">
 
@@ -1672,16 +1701,16 @@ document.body.setAttribute('data-view','aluno');
     <div id="kd3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Nas aulas 1 e 2 você disse nove frases com o mesmo verbo, sem saber o nome dele. Marque as três frases verdadeiras.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="kd3">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>You can use a verb without knowing its name.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need the rule before you can speak.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The verb changes with the person: I am, you are.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is a difficult verb.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The negative only adds one word.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Questions need a new word.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>You can use a verb without knowing its name.</span></div><div class="item-why item-pt" lang="pt-BR">Dá para usar um verbo sem saber o nome dele.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need the rule before you can speak.</span></div><div class="item-why item-pt" lang="pt-BR">Você precisa da regra antes de conseguir falar.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The verb changes with the person: I am, you are.</span></div><div class="item-why item-pt" lang="pt-BR">O verbo muda com a pessoa: <em>I am</em>, <em>you are</em>.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>It is a difficult verb.</span></div><div class="item-why item-pt" lang="pt-BR">É um verbo difícil.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The negative only adds one word.</span></div><div class="item-why item-pt" lang="pt-BR">A negativa só acrescenta uma palavra.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Questions need a new word.</span></div><div class="item-why item-pt" lang="pt-BR">As perguntas precisam de uma palavra nova.</div>
       </div>
-      <div class="rationale">You have been using this verb since the first lesson. Today it gets a name &mdash; and a name for something you can already do is easy to keep.</div>
+      <div class="rationale">You have been using this verb since the first lesson. Today it gets a name &mdash; and a name for something you can already do is easy to keep.<div class="item-pt" lang="pt-BR">Você usa este verbo desde a primeira aula. Hoje ele ganha um nome — e nome para uma coisa que você já faz é fácil de guardar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd3')">Check</button>
+    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd3')">Check / Checar</button>
     <div class="score-out" id="kd3-out"></div>
     <div class="callout" id="kd3-key" style="display:none">
       <div class="callout-title">Este e o verbo que voce citou</div>
@@ -1699,14 +1728,15 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('kl3-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="kl3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Estas são as frases que VOCÊ disse. Diga qual forma do verbo cada uma usa.</div>
     <div class="match-grid" id="kl3">
-      <div class="match-row"><span class="match-word">My name ___ Vanessa.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select></div>
-      <div class="match-row"><span class="match-word">I ___ in Lisbon.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select></div>
-      <div class="match-row"><span class="match-word">It ___ from 14 to 18 October.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select></div>
-      <div class="match-row"><span class="match-word">Breakfast ___ included.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select></div>
-      <div class="match-row"><span class="match-word">They ___ paid.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select></div>
-      <div class="match-row"><span class="match-word">I ___ here for four nights.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select></div>
+      <div class="match-row"><span class="match-word">My name ___ Vanessa.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select><div class="item-why item-pt" lang="pt-BR">Meu nome ___ Vanessa.</div></div>
+      <div class="match-row"><span class="match-word">I ___ in Lisbon.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select><div class="item-why item-pt" lang="pt-BR">Eu ___ em Lisboa.</div></div>
+      <div class="match-row"><span class="match-word">It ___ from 14 to 18 October.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select><div class="item-why item-pt" lang="pt-BR">A reserva ___ de 14 a 18 de outubro.</div></div>
+      <div class="match-row"><span class="match-word">Breakfast ___ included.</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select><div class="item-why item-pt" lang="pt-BR">O café da manhã ___ incluído.</div></div>
+      <div class="match-row"><span class="match-word">They ___ paid.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select><div class="item-why item-pt" lang="pt-BR">Elas (as noites) ___ pagas.</div></div>
+      <div class="match-row"><span class="match-word">I ___ here for four nights.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">is</option><option value="C">are</option></select><div class="item-why item-pt" lang="pt-BR">Eu ___ aqui por quatro noites.</div></div>
+      <div class="item-why item-pt" lang="pt-BR"><em>am</em> = <em>am</em> — vai com <em>I</em> (eu) &middot; <em>is</em> = <em>is</em> — vai com <em>he</em>, <em>she</em>, <em>it</em> e com um nome &middot; <em>are</em> = <em>are</em> — vai com <em>you</em>, <em>we</em>, <em>they</em></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'kl3')">Check</button>
+    <button class="verify-all-btn ghost" onclick="mCheck(this,'kl3')">Check / Checar</button>
     <div class="score-out" id="kl3-out"></div>
     <div class="callout" id="kl3-key" style="display:none">
       <div class="callout-title">Tres formas, e so tres</div>
@@ -1721,16 +1751,16 @@ document.body.setAttribute('data-view','aluno');
     <div id="nt3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Três das seis frases estão certas e três não estão. Marque as três certas.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="nt3">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>I am from Brazil.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>I is from Brazil.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The room is for two people.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The room are for two people.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>They are in the hotel.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They is in the hotel.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>I am from Brazil.</span></div><div class="item-why item-pt" lang="pt-BR">Eu sou do Brasil.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>I is from Brazil.</span></div><div class="item-why item-pt" lang="pt-BR">Eu sou do Brasil — mas com <em>is</em>, que é a forma de outra pessoa. Com <em>I</em> vai <em>am</em>.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>The room is for two people.</span></div><div class="item-why item-pt" lang="pt-BR">O quarto é para duas pessoas.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>The room are for two people.</span></div><div class="item-why item-pt" lang="pt-BR">O quarto é para duas pessoas — mas com <em>are</em>, que é a forma do plural. <em>The room</em> é uma coisa só: vai <em>is</em>.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>They are in the hotel.</span></div><div class="item-why item-pt" lang="pt-BR">Eles estão no hotel.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>They is in the hotel.</span></div><div class="item-why item-pt" lang="pt-BR">Eles estão no hotel — mas com <em>is</em>. <em>They</em> é plural: vai <em>are</em>.</div>
       </div>
-      <div class="rationale">The three that are wrong all use the form of another person. Nothing else changes in the sentence &mdash; and that is the only thing to get right.</div>
+      <div class="rationale">The three that are wrong all use the form of another person. Nothing else changes in the sentence &mdash; and that is the only thing to get right.<div class="item-pt" lang="pt-BR">As três erradas usam a forma de outra pessoa. Nada mais muda na frase — e é só isso que você precisa acertar.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'nt3')">Check</button>
+    <button class="verify-all-btn ghost" onclick="selCheck(this,'nt3')">Check / Checar</button>
     <div class="score-out" id="nt3-out"></div>
     <div class="callout" id="nt3-key" style="display:none">
       <div class="callout-title">O que olhar</div>
@@ -1744,14 +1774,14 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cn3-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cn3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Escolha a forma que cabe ali: <em>am</em>, <em>is</em> ou <em>are</em>.</div>
     <div class="match-grid" id="cn3">
-      <div class="match-row"><span class="match-word">I ___ a lawyer.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">are</option><option value="C">am</option></select></div>
-      <div class="match-row"><span class="match-word">My hotel ___ in Lisbon.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">am</option><option value="C">are</option></select></div>
-      <div class="match-row"><span class="match-word">My children ___ at home.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">am</option><option value="C">are</option></select></div>
-      <div class="match-row"><span class="match-word">Breakfast ___ not included.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">are</option><option value="C">is</option></select></div>
-      <div class="match-row"><span class="match-word">___ you from Brazil?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Are</option><option value="B">Am</option><option value="C">Is</option></select></div>
-      <div class="match-row"><span class="match-word">It ___ not a big hotel.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">are</option><option value="C">am</option></select></div>
+      <div class="match-row"><span class="match-word">I ___ a lawyer.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">are</option><option value="C">am</option></select><div class="item-why item-pt" lang="pt-BR"><em>I am a lawyer.</em> — Eu sou advogada.</div></div>
+      <div class="match-row"><span class="match-word">My hotel ___ in Lisbon.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">am</option><option value="C">are</option></select><div class="item-why item-pt" lang="pt-BR"><em>My hotel is in Lisbon.</em> — O meu hotel fica em Lisboa.</div></div>
+      <div class="match-row"><span class="match-word">My children ___ at home.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">am</option><option value="C">are</option></select><div class="item-why item-pt" lang="pt-BR"><em>My children are at home.</em> — Os meus filhos estão em casa.</div></div>
+      <div class="match-row"><span class="match-word">Breakfast ___ not included.</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">am</option><option value="B">are</option><option value="C">is</option></select><div class="item-why item-pt" lang="pt-BR"><em>Breakfast is not included.</em> — O café da manhã não está incluído.</div></div>
+      <div class="match-row"><span class="match-word">___ you from Brazil?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Are</option><option value="B">Am</option><option value="C">Is</option></select><div class="item-why item-pt" lang="pt-BR"><em>Are you from Brazil?</em> — Você é do Brasil?</div></div>
+      <div class="match-row"><span class="match-word">It ___ not a big hotel.</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">is</option><option value="B">are</option><option value="C">am</option></select><div class="item-why item-pt" lang="pt-BR"><em>It is not a big hotel.</em> — Não é um hotel grande.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn3')">Check</button>
+    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn3')">Check / Checar</button>
     <div class="score-out" id="cn3-out"></div>
     <div class="callout" id="cn3-key" style="display:none">
       <div class="callout-title">A forma inteira, em uma linha</div>
@@ -1765,13 +1795,13 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('dr3-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="dr3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">A informação é a mesma nas três. Só muda a forma: afirmativa, negativa e pergunta.</div>
     <div class="match-grid" id="dr3">
-      <div class="match-row"><span class="match-word">I am in Lisbon. &amp;rarr; negative</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">I do not in Lisbon.</option><option value="B">I am not in Lisbon.</option><option value="C">I not am in Lisbon.</option></select></div>
-      <div class="match-row"><span class="match-word">Breakfast is included. &amp;rarr; negative</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Breakfast is not included.</option><option value="B">Breakfast do not included.</option><option value="C">Breakfast not is included.</option></select></div>
-      <div class="match-row"><span class="match-word">You are from Brazil. &amp;rarr; question</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">Do you are from Brazil?</option><option value="B">You are from Brazil?</option><option value="C">Are you from Brazil?</option></select></div>
-      <div class="match-row"><span class="match-word">It is a double room. &amp;rarr; question</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Is it a double room?</option><option value="B">It is a double room?</option><option value="C">Does it a double room?</option></select></div>
-      <div class="match-row"><span class="match-word">I am Vanessa. &amp;rarr; about your daughter</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">She am Vanessa.</option><option value="B">She are Vanessa.</option><option value="C">She is Vanessa.</option></select></div>
+      <div class="match-row"><span class="match-word">I am in Lisbon. &amp;rarr; negative</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">I do not in Lisbon.</option><option value="B">I am not in Lisbon.</option><option value="C">I not am in Lisbon.</option></select><div class="item-why item-pt" lang="pt-BR">Negativa: <em>I am not in Lisbon.</em> — Eu não estou em Lisboa. O <em>not</em> entra depois do verbo.</div></div>
+      <div class="match-row"><span class="match-word">Breakfast is included. &amp;rarr; negative</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Breakfast is not included.</option><option value="B">Breakfast do not included.</option><option value="C">Breakfast not is included.</option></select><div class="item-why item-pt" lang="pt-BR">Negativa: <em>Breakfast is not included.</em> — O café da manhã não está incluído.</div></div>
+      <div class="match-row"><span class="match-word">You are from Brazil. &amp;rarr; question</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">Do you are from Brazil?</option><option value="B">You are from Brazil?</option><option value="C">Are you from Brazil?</option></select><div class="item-why item-pt" lang="pt-BR">Pergunta: <em>Are you from Brazil?</em> — Você é do Brasil? O verbo vem primeiro.</div></div>
+      <div class="match-row"><span class="match-word">It is a double room. &amp;rarr; question</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Is it a double room?</option><option value="B">It is a double room?</option><option value="C">Does it a double room?</option></select><div class="item-why item-pt" lang="pt-BR">Pergunta: <em>Is it a double room?</em> — É um quarto de casal?</div></div>
+      <div class="match-row"><span class="match-word">I am Vanessa. &amp;rarr; about your daughter</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">She am Vanessa.</option><option value="B">She are Vanessa.</option><option value="C">She is Vanessa.</option></select><div class="item-why item-pt" lang="pt-BR">Sobre a sua filha: <em>She is Vanessa.</em> — Ela é a Vanessa. Muda a pessoa, muda a forma.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'dr3')">Check</button>
+    <button class="verify-all-btn ghost" onclick="mCheck(this,'dr3')">Check / Checar</button>
     <div class="score-out" id="dr3-out"></div>
     <div class="callout" id="dr3-key" style="display:none">
       <div class="callout-title">Onde escorrega de verdade</div>
@@ -1785,14 +1815,19 @@ document.body.setAttribute('data-view','aluno');
     <p class="task-instr">Write about you and your next trip.</p>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cz3-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cz3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Complete com <em>am</em>, <em>is</em> ou <em>are</em>. Escreva sobre você e sobre a sua próxima viagem.</div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz3">
       <p class="chunk-line">I <input class="blank-input" data-ok="am" style="min-width:60px" placeholder="..."> a lawyer.</p>
+      <div class="item-why item-pt" lang="pt-BR">Eu sou advogada.</div>
       <p class="chunk-line">My name <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> Vanessa.</p>
+      <div class="item-why item-pt" lang="pt-BR">Meu nome é Vanessa.</div>
       <p class="chunk-line">My children <input class="blank-input" data-ok="are" style="min-width:60px" placeholder="..."> at home.</p>
+      <div class="item-why item-pt" lang="pt-BR">Os meus filhos estão em casa.</div>
       <p class="chunk-line">The hotel <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> not far from the center.</p>
+      <div class="item-why item-pt" lang="pt-BR">O hotel não fica longe do centro.</div>
       <p class="chunk-line"><input class="blank-input" data-ok="Are" style="min-width:60px" placeholder="..."> you here for four nights?</p>
+      <div class="item-why item-pt" lang="pt-BR">Você está aqui por quatro noites?</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz3')">Check / Checar</button>
     <div class="score-out" id="cz3-out"></div>
     <div class="callout" id="cz3-key" style="display:none">
       <div class="callout-title">Estas seis sao a sua producao na aula</div>
@@ -1801,7 +1836,7 @@ document.body.setAttribute('data-view','aluno');
   </div>
 </div>
 <div id="pc4">
-  <h3 class="sub"><span data-view="aluno">Lesson 04 &mdash; </span><em>Before you time any of it</em></h3>
+  <h3 class="sub"><span data-view="aluno">Aula 04 &mdash; </span><em>Before you time any of it</em></h3>
 
   <hr class="rule">
 
@@ -1813,16 +1848,16 @@ document.body.setAttribute('data-view','aluno');
     <div id="kd4-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Um check-in de hotel tem começo, meio e fim, e é igual em todo lugar. Marque as três frases verdadeiras.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="kd4">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Saying good morning first changes how they speak to you.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You must show your passport before you speak.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Asking for one thing is part of a check-in.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need long sentences.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A yes or no answer can be a complete answer.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If they ask something new, the conversation is over.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Saying good morning first changes how they speak to you.</span></div><div class="item-why item-pt" lang="pt-BR">Dizer bom dia primeiro muda o jeito como falam com você.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You must show your passport before you speak.</span></div><div class="item-why item-pt" lang="pt-BR">Você tem de mostrar o passaporte antes de falar.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Asking for one thing is part of a check-in.</span></div><div class="item-why item-pt" lang="pt-BR">Pedir uma coisa faz parte de um check-in.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>You need long sentences.</span></div><div class="item-why item-pt" lang="pt-BR">Você precisa de frases longas.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>A yes or no answer can be a complete answer.</span></div><div class="item-why item-pt" lang="pt-BR">Um sim ou um não já pode ser uma resposta completa.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>If they ask something new, the conversation is over.</span></div><div class="item-why item-pt" lang="pt-BR">Se perguntarem uma coisa nova, a conversa acabou.</div>
       </div>
-      <div class="rationale">Four short moments: hello, your name, the dates, one request. Everything else is the desk&rsquo;s job.</div>
+      <div class="rationale">Four short moments: hello, your name, the dates, one request. Everything else is the desk&rsquo;s job.<div class="item-pt" lang="pt-BR">Quatro momentos curtos: o cumprimento, o seu nome, as datas e um pedido. Todo o resto é trabalho de quem está no balcão.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd4')">Check</button>
+    <button class="verify-all-btn ghost" onclick="selCheck(this,'kd4')">Check / Checar</button>
     <div class="score-out" id="kd4-out"></div>
     <div class="callout" id="kd4-key" style="display:none">
       <div class="callout-title">A aula que fecha o bloco</div>
@@ -1867,7 +1902,7 @@ document.body.setAttribute('data-view','aluno');
         <button class="pair-opt" data-v="b" onclick="ppPick(this)">por favor</button>
       </div>
     </div>
-    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl4')">Check</button>
+    <button class="verify-all-btn ghost" onclick="ppCheck(this,'kl4')">Check / Checar</button>
     <div class="score-out" id="kl4-out"></div>
     <div class="callout" id="kl4-key" style="display:none">
       <div class="callout-title">Tres palavras, e nenhuma outra</div>
@@ -1881,14 +1916,15 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cl4p-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cl4p-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Cada frase pertence a um momento do check-in. Coloque cada uma no seu momento.</div>
     <div class="match-grid" id="cl4p">
-      <div class="match-row"><span class="match-word">&ldquo;Good morning.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;My name is Vanessa.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;It is from 14 to 18 October.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Can I have a room with a window?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Thank you.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select></div>
-      <div class="match-row"><span class="match-word">&ldquo;Have a good day.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select></div>
+      <div class="match-row"><span class="match-word">&ldquo;Good morning.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Bom dia.&rdquo;</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;My name is Vanessa.&rdquo;</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Meu nome é Vanessa.&rdquo;</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;It is from 14 to 18 October.&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;É de 14 a 18 de outubro.&rdquo;</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Can I have a room with a window?&rdquo;</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Posso ter um quarto com janela?&rdquo;</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Thank you.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Obrigada.&rdquo;</div></div>
+      <div class="match-row"><span class="match-word">&ldquo;Have a good day.&rdquo;</span><select data-ok="B"><option value="" selected="selected">&mdash;</option><option value="A">in the middle</option><option value="B">at the end</option><option value="C">at the beginning</option></select><div class="item-why item-pt" lang="pt-BR">&ldquo;Tenha um bom dia.&rdquo;</div></div>
+      <div class="item-why item-pt" lang="pt-BR"><em>in the middle</em> = no meio &middot; <em>at the end</em> = no fim &middot; <em>at the beginning</em> = no começo</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl4p')">Check</button>
+    <button class="verify-all-btn ghost" onclick="mCheck(this,'cl4p')">Check / Checar</button>
     <div class="score-out" id="cl4p-out"></div>
     <div class="callout" id="cl4p-key" style="display:none">
       <div class="callout-title">O comeco e o fim custam duas palavras</div>
@@ -1902,13 +1938,13 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cn4-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cn4-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Complete cada pedido com o começo certo.</div>
     <div class="match-grid" id="cn4">
-      <div class="match-row"><span class="match-word">___ a room with a window?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Can I have</option><option value="B">Give me</option><option value="C">I want</option></select></div>
-      <div class="match-row"><span class="match-word">___ the wifi password?</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">Where is</option><option value="B">I need</option><option value="C">Can I have</option></select></div>
-      <div class="match-row"><span class="match-word">___ breakfast at seven?</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">It is</option><option value="B">I am</option><option value="C">Can I have</option></select></div>
-      <div class="match-row"><span class="match-word">___ a taxi on Saturday?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Can I have</option><option value="B">Is it</option><option value="C">Are you</option></select></div>
-      <div class="match-row"><span class="match-word">___ a late check-out?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Can I have</option><option value="B">Is there</option><option value="C">Do you</option></select></div>
+      <div class="match-row"><span class="match-word">___ a room with a window?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Can I have</option><option value="B">Give me</option><option value="C">I want</option></select><div class="item-why item-pt" lang="pt-BR"><em>Can I have a room with a window?</em> — Posso ter um quarto com janela?</div></div>
+      <div class="match-row"><span class="match-word">___ the wifi password?</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">Where is</option><option value="B">I need</option><option value="C">Can I have</option></select><div class="item-why item-pt" lang="pt-BR"><em>Can I have the wifi password?</em> — Posso ter a senha do wi-fi?</div></div>
+      <div class="match-row"><span class="match-word">___ breakfast at seven?</span><select data-ok="C"><option value="" selected="selected">&mdash;</option><option value="A">It is</option><option value="B">I am</option><option value="C">Can I have</option></select><div class="item-why item-pt" lang="pt-BR"><em>Can I have breakfast at seven?</em> — Posso tomar café da manhã às sete?</div></div>
+      <div class="match-row"><span class="match-word">___ a taxi on Saturday?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Can I have</option><option value="B">Is it</option><option value="C">Are you</option></select><div class="item-why item-pt" lang="pt-BR"><em>Can I have a taxi on Saturday?</em> — Posso ter um táxi no sábado?</div></div>
+      <div class="match-row"><span class="match-word">___ a late check-out?</span><select data-ok="A"><option value="" selected="selected">&mdash;</option><option value="A">Can I have</option><option value="B">Is there</option><option value="C">Do you</option></select><div class="item-why item-pt" lang="pt-BR"><em>Can I have a late check-out?</em> — Posso sair mais tarde no último dia?</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn4')">Check</button>
+    <button class="verify-all-btn ghost" onclick="mCheck(this,'cn4')">Check / Checar</button>
     <div class="score-out" id="cn4-out"></div>
     <div class="callout" id="cn4-key" style="display:none">
       <div class="callout-title">Um comeco, cinco pedidos</div>
@@ -1924,16 +1960,16 @@ document.body.setAttribute('data-view','aluno');
     <div id="fl4-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Na aula, alguém no balcão vai perguntar uma coisa que não está neste material. Marque as três coisas que você pode fazer.</div>
     <div class="quiz-item">
       <div class="quiz-options" id="fl4">
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Ask them to say it again.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Ask them to speak more slowly.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Say nothing and wait.</span></div>
-        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Answer yes or no if it is a yes-or-no question.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Say that you do not speak English.</span></div>
-        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Leave the desk.</span></div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Ask them to say it again.</span></div><div class="item-why item-pt" lang="pt-BR">Pedir para repetirem.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Ask them to speak more slowly.</span></div><div class="item-why item-pt" lang="pt-BR">Pedir para falarem mais devagar.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Say nothing and wait.</span></div><div class="item-why item-pt" lang="pt-BR">Não dizer nada e esperar.</div>
+        <div class="quiz-option" data-ok="1" onclick="tog(this)"><span>Answer yes or no if it is a yes-or-no question.</span></div><div class="item-why item-pt" lang="pt-BR">Responder sim ou não, se a pergunta for de sim ou não.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Say that you do not speak English.</span></div><div class="item-why item-pt" lang="pt-BR">Dizer que você não fala inglês.</div>
+        <div class="quiz-option" data-ok="0" onclick="tog(this)"><span>Leave the desk.</span></div><div class="item-why item-pt" lang="pt-BR">Sair do balcão.</div>
       </div>
-      <div class="rationale">Three moves, and you already have all three from lesson 2. A question you did not expect is not a problem &mdash; it is the normal shape of a real conversation.</div>
+      <div class="rationale">Three moves, and you already have all three from lesson 2. A question you did not expect is not a problem &mdash; it is the normal shape of a real conversation.<div class="item-pt" lang="pt-BR">São três saídas, e você já tem as três desde a aula 2. Uma pergunta que você não esperava não é problema — é o formato normal de uma conversa de verdade.</div></div>
     </div>
-    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl4')">Check</button>
+    <button class="verify-all-btn ghost" onclick="selCheck(this,'fl4')">Check / Checar</button>
     <div class="score-out" id="fl4-out"></div>
     <div class="callout" id="fl4-key" style="display:none">
       <div class="callout-title">Voce ja tem as tres</div>
@@ -1948,14 +1984,19 @@ document.body.setAttribute('data-view','aluno');
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('cz4-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
     <div id="cz4-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Complete o seu check-in, do começo ao fim. Use os dados da sua próxima viagem.</div>
     <div class="word-bank"><span class="wb-rot">Use</span> <em>Good morning</em> &middot; <em>have</em> &middot; <em>is</em> &middot; <em>Can I have</em> &middot; <em>Thank you</em></div>
-    <div class="fill-list">
+    <div class="fill-list" id="cz4">
       <p class="chunk-line"><input class="blank-input" data-ok="Good morning" style="min-width:130px" placeholder="...">. My name is Vanessa.</p>
+      <div class="item-why item-pt" lang="pt-BR">Bom dia. Meu nome é Vanessa.</div>
       <p class="chunk-line">I <input class="blank-input" data-ok="have" style="min-width:80px" placeholder="..."> a reservation.</p>
+      <div class="item-why item-pt" lang="pt-BR">Eu tenho uma reserva.</div>
       <p class="chunk-line">It <input class="blank-input" data-ok="is" style="min-width:60px" placeholder="..."> from 14 to 18 October.</p>
+      <div class="item-why item-pt" lang="pt-BR">É de 14 a 18 de outubro.</div>
       <p class="chunk-line"><input class="blank-input" data-ok="Can I have" style="min-width:110px" placeholder="..."> a room with a window?</p>
+      <div class="item-why item-pt" lang="pt-BR">Posso ter um quarto com janela?</div>
       <p class="chunk-line"><input class="blank-input" data-ok="Thank you" style="min-width:100px" placeholder="...">. Have a good day.</p>
+      <div class="item-why item-pt" lang="pt-BR">Obrigada. Tenha um bom dia.</div>
     </div>
-    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>
+    <button class="verify-all-btn ghost" onclick="czCheck(this,'cz4')">Check / Checar</button>
     <div class="score-out" id="cz4-out"></div>
     <div class="callout" id="cz4-key" style="display:none">
       <div class="callout-title">Cinco frases, e o check-in inteiro</div>
@@ -1980,58 +2021,58 @@ document.body.setAttribute('data-view','aluno');
 
 
 <div class="tab-content" data-view="aluno" id="tab-feedback">
-  <p class="eyebrow">After each lesson</p>
+  <p class="eyebrow">Depois de cada aula</p>
   <h2 class="sec">Feedback</h2>
   <div class="btn-bar" style="justify-content:flex-start;margin-bottom:var(--space-4)">
-    <button class="btn-primary" id="sfb1" onclick="fbSel(1)"><span data-view="aluno">Lesson 01</span></button>
-    <button class="btn-ghost" id="sfb2" onclick="fbSel(2)"><span data-view="aluno">Lesson 02</span></button>
-    <button class="btn-ghost" id="sfb3" onclick="fbSel(3)"><span data-view="aluno">Lesson 03</span></button>
-    <button class="btn-ghost" id="sfb4" onclick="fbSel(4)"><span data-view="aluno">Lesson 04</span></button>
+    <button class="btn-primary" id="sfb1" onclick="fbSel(1)"><span data-view="aluno">Aula 01</span></button>
+    <button class="btn-ghost" id="sfb2" onclick="fbSel(2)"><span data-view="aluno">Aula 02</span></button>
+    <button class="btn-ghost" id="sfb3" onclick="fbSel(3)"><span data-view="aluno">Aula 03</span></button>
+    <button class="btn-ghost" id="sfb4" onclick="fbSel(4)"><span data-view="aluno">Aula 04</span></button>
   </div>
   <div id="sf1">
-    <h3 class="sub">Lesson 01 — <em>Your name on the booking</em></h3>
+    <h3 class="sub">Aula 01 — <em>Your name on the booking</em></h3>
     <div class="brief" id="sf1-box" style="display:none">
       <dl>
-        <dt>What worked</dt><dd id="sf1-worked">—</dd>
-        <dt>Keep developing</dt><dd id="sf1-develop">—</dd>
+        <dt>O que funcionou bem</dt><dd id="sf1-worked">—</dd>
+        <dt>Um ponto para desenvolver</dt><dd id="sf1-develop">—</dd>
       </dl>
     </div>
-    <p class="subprompt" id="sf1-empty" style="display: block;">Feedback will be available after the lesson.</p>
+    <p class="subprompt" id="sf1-empty" style="display: block;">O feedback aparece aqui depois da aula.</p>
   </div>
 <div id="sf2" style="display:none">
-    <h3 class="sub">Lesson 02 — <em>Three questions at the desk</em></h3>
+    <h3 class="sub">Aula 02 — <em>Three questions at the desk</em></h3>
     <div class="brief" id="sf2-box" style="display:none">
       <dl>
-        <dt>What worked</dt><dd id="sf2-worked">—</dd>
-        <dt>Keep developing</dt><dd id="sf2-develop">—</dd>
+        <dt>O que funcionou bem</dt><dd id="sf2-worked">—</dd>
+        <dt>Um ponto para desenvolver</dt><dd id="sf2-develop">—</dd>
       </dl>
     </div>
-    <p class="subprompt" id="sf2-empty" style="display: block;">Feedback will be available after the lesson.</p>
+    <p class="subprompt" id="sf2-empty" style="display: block;">O feedback aparece aqui depois da aula.</p>
   </div>
 <div id="sf3" style="display:none">
-    <h3 class="sub">Lesson 03 — <em>I am, you are</em></h3>
+    <h3 class="sub">Aula 03 — <em>I am, you are</em></h3>
     <div class="brief" id="sf3-box" style="display:none">
       <dl>
-        <dt>What worked</dt><dd id="sf3-worked">—</dd>
-        <dt>Keep developing</dt><dd id="sf3-develop">—</dd>
+        <dt>O que funcionou bem</dt><dd id="sf3-worked">—</dd>
+        <dt>Um ponto para desenvolver</dt><dd id="sf3-develop">—</dd>
       </dl>
     </div>
-    <p class="subprompt" id="sf3-empty" style="display: block;">Feedback will be available after the lesson.</p>
+    <p class="subprompt" id="sf3-empty" style="display: block;">O feedback aparece aqui depois da aula.</p>
   </div>
 <div id="sf4" style="display:none">
-    <h3 class="sub">Lesson 04 — <em>At the front desk</em></h3>
+    <h3 class="sub">Aula 04 — <em>At the front desk</em></h3>
     <div class="brief" id="sf4-box" style="display:none">
       <dl>
-        <dt>What worked</dt><dd id="sf4-worked">—</dd>
-        <dt>Keep developing</dt><dd id="sf4-develop">—</dd>
+        <dt>O que funcionou bem</dt><dd id="sf4-worked">—</dd>
+        <dt>Um ponto para desenvolver</dt><dd id="sf4-develop">—</dd>
       </dl>
     </div>
-    <p class="subprompt" id="sf4-empty" style="display: block;">Feedback will be available after the lesson.</p>
+    <p class="subprompt" id="sf4-empty" style="display: block;">O feedback aparece aqui depois da aula.</p>
   </div>
 
   
   <div class="btn-bar ao-topo">
-    <button class="btn-ghost" onclick="aoTopo()">Back to top</button>
+    <button class="btn-ghost" onclick="aoTopo()">Voltar ao topo</button>
   </div>
 </div>
 
@@ -2042,13 +2083,13 @@ document.body.setAttribute('data-view','aluno');
   <p class="eyebrow" data-view="aluno">After class</p>
   <h2 class="sec">Post-class</h2>
   <div class="btn-bar" style="justify-content:flex-start;margin-bottom:var(--space-4)">
-    <button class="btn-primary" id="psb1" onclick="postSel(1)"><span data-view="aluno">Lesson 01</span></button>
-    <button class="btn-ghost" id="psb2" onclick="postSel(2)"><span data-view="aluno">Lesson 02</span></button>
-    <button class="btn-ghost" id="psb3" onclick="postSel(3)"><span data-view="aluno">Lesson 03</span></button>
-    <button class="btn-ghost" id="psb4" onclick="postSel(4)"><span data-view="aluno">Lesson 04</span></button>
+    <button class="btn-primary" id="psb1" onclick="postSel(1)"><span data-view="aluno">Aula 01</span></button>
+    <button class="btn-ghost" id="psb2" onclick="postSel(2)"><span data-view="aluno">Aula 02</span></button>
+    <button class="btn-ghost" id="psb3" onclick="postSel(3)"><span data-view="aluno">Aula 03</span></button>
+    <button class="btn-ghost" id="psb4" onclick="postSel(4)"><span data-view="aluno">Aula 04</span></button>
   </div>
   <div id="ps1" style="display:none">
-  <h3 class="sub"><span data-view="aluno">Lesson 01 &mdash; </span><em>Your name on the booking</em></h3>
+  <h3 class="sub"><span data-view="aluno">Aula 01 &mdash; </span><em>Your name on the booking</em></h3>
 
   <div class="callout ok">
     <span class="callout-title">Optional</span>
@@ -2073,10 +2114,10 @@ document.body.setAttribute('data-view','aluno');
     </div>
     <div class="callout rule-box">
       <span class="callout-title">O que voce fez hoje</span>
-      Leu um documento inteiro em ingles e disse quatro frases sem ele. <strong>No primeiro dia.</strong> A gravacao fica &mdash; e daqui a vinte aulas ela vai ser o comeco da sua comparacao.
+      Leu um documento inteiro em ingles e disse quatro frases sem ele. <strong>No primeiro dia.</strong> Isso fica anotado &mdash; e daqui a vinte aulas vai ser o comeco da sua comparacao.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('conteudo-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">As suas quatro frases em um lugar só: o seu nome, a cidade, as datas e o café da manhã.</div>
+    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>As suas quatro frases, em um lugar só.</strong><br><br>O seu nome — <em>My name is Vanessa.</em><br>A cidade — <em>I am in Lisbon.</em> (Eu estou em Lisboa.)<br>As datas — <em>It is from 14 October to 18 October.</em> (É de 14 a 18 de outubro.)<br>O que está incluído — <em>Breakfast is included.</em> (O café da manhã está incluído.)<br>O quarto — <em>It is a room for two people.</em> (É um quarto para duas pessoas.)<br><br><strong>O que você fez hoje:</strong> leu um documento inteiro em inglês e disse quatro frases sem ele. No primeiro dia.</div>
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5h)">Optional practice</p>
@@ -2095,7 +2136,7 @@ document.body.setAttribute('data-view','aluno');
       <li>what is included</li>
     </ul>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('rec1-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="rec1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Grave um recado curto de voz, se quiser. Pegue uma reserva de verdade sua — hotel, voo, qualquer coisa com o seu nome e uma data — e diga quatro frases sobre ela em voz alta, sem ler.</div>
+    <div id="rec1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Grave um recado curto de voz, se quiser.</strong> É opcional: nada aqui é corrigido nem cobrado na próxima aula.<br><br><strong>A situação:</strong> pegue uma reserva de verdade sua — um hotel, um voo, qualquer coisa com o seu nome e uma data.<br><br><strong>O que você vai tentar fazer:</strong> dizer quatro frases sobre ela, em voz alta, sem ler.<br><br>Você pode falar sobre: o seu nome · a cidade · as datas · o que está incluído.</div>
     <div class="rec-bar">
       <button class="audio-btn-sm" id="rec1-start" onclick="rcStart('rec1')">&#9679; Start recording</button>
       <button class="audio-btn-sm" id="rec1-stop" style="display:none;background:var(--danger);border-color:var(--danger)" onclick="rcStop('rec1')">&#9632; Stop</button>
@@ -2116,7 +2157,7 @@ document.body.setAttribute('data-view','aluno');
       Because <em>my name is</em> becomes <em>her name is</em>, and that small change is the whole of lesson 3. You will do it before anyone explains it to you.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('pw1-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="pw1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Escreva as mesmas quatro frases sobre outra pessoa da sua família.</div>
+    <div id="pw1-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Escreva as mesmas quatro frases sobre outra pessoa da sua família.</strong><br><br><strong>Por que outra pessoa:</strong> porque <em>my name is</em> vira <em>her name is</em>, e essa mudança pequena é a aula 3 inteira. Você vai fazer isso antes de alguém ter explicado.</div>
     <label class="mail-label" for="pw1-body">Your note</label>
     <textarea class="writebox" id="pw1-body" style="min-height:170px" placeholder="" oninput="pwCount('pw1-body','pw1-count','post_pw1_writing')"></textarea>
     <div class="wc"><span id="pw1-count">0 words</span></div>
@@ -2127,6 +2168,8 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>Reading</h4></div>
     <p class="task-instr">Two places to read short texts with the audio beside them.</p>
+    <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('res1r-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
+    <div id="res1r-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Dois lugares para ler textos curtos com o áudio ao lado.</strong><br><br><strong>Short news stories</strong> (VOA Learning English)<br>Histórias muito curtas em inglês simples, lidas devagar, com o texto ao lado.<br><br><strong>Basic vocabulary</strong> (BBC Learning English)<br>Lições curtas sobre as primeiras palavras: números, datas, lugares. Áudio e texto na mesma página, cinco minutos cada.</div>
     <div class="res-card">
       <h5>Short news stories</h5>
       <span class="res-src">VOA Learning English</span>
@@ -2144,6 +2187,8 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>Listen &amp; Watch</h4></div>
     <p class="task-instr">Two places to hear English spoken slowly.</p>
+    <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('res1l-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
+    <div id="res1l-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Dois lugares para ouvir inglês falado devagar.</strong><br><br><strong>Let's Learn English</strong> (VOA Learning English)<br>Vídeo-aulas em velocidade lenta com o texto na tela, começando pelas primeiras palavras.<br><br><strong>BBC Learning English</strong> (YouTube)<br>Vídeos curtos legendados. Comece por qualquer um com menos de três minutos: terminar importa mais do que entender tudo.</div>
     <div class="res-card">
       <h5>Let&rsquo;s Learn English</h5>
       <span class="res-src">VOA Learning English</span>
@@ -2159,7 +2204,7 @@ document.body.setAttribute('data-view','aluno');
   </div>
 </div>
 <div id="ps2" style="display:none">
-  <h3 class="sub"><span data-view="aluno">Lesson 02 &mdash; </span><em>Three questions at the desk</em></h3>
+  <h3 class="sub"><span data-view="aluno">Aula 02 &mdash; </span><em>Three questions at the desk</em></h3>
 
   <div class="callout ok">
     <span class="callout-title">Optional</span>
@@ -2187,7 +2232,7 @@ document.body.setAttribute('data-view','aluno');
       <em>More slowly, please.</em> Ela nao diz que voce nao sabe ingles: diz que voce quer ouvir de novo. E qualquer pessoa num balcão atende a esse pedido sem pensar duas vezes.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('conteudo-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">As suas cinco frases no balcão do hotel, prontas para usar.</div>
+    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>As suas cinco frases no balcão do hotel.</strong><br><br>O seu nome — <em>My name is&hellip;</em><br>Quantas noites — <em>Four nights.</em> (Quatro noites.)<br>Café da manhã — <em>Yes, please.</em> · <em>No, thank you.</em> (Sim, por favor. · Não, obrigada.)<br>Você não ouviu — <em>Sorry, again please?</em> (Desculpe, de novo, por favor?)<br>Estão falando rápido — <em>More slowly, please.</em> (Mais devagar, por favor.)<br><br><strong>A frase mais útil das cinco</strong> é <em>More slowly, please.</em> Ela não diz que você não sabe inglês: diz que você quer ouvir de novo.</div>
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5h)">Optional practice</p>
@@ -2206,7 +2251,7 @@ document.body.setAttribute('data-view','aluno');
       <li>one sentence for when you do not understand</li>
     </ul>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('rec2-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="rec2-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Grave um recado curto de voz, se quiser. Responda em voz alta às três perguntas do balcão, como se você estivesse chegando ao hotel.</div>
+    <div id="rec2-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Grave um recado curto de voz, se quiser.</strong> É opcional.<br><br><strong>A situação:</strong> você está no balcão do hotel.<br><br><strong>O que você vai tentar fazer:</strong> responder às três perguntas em voz alta, uma depois da outra, sem ler.<br><br>Você pode falar sobre: o seu nome · quantas noites · café da manhã, sim ou não · uma frase para quando você não entender.</div>
     <div class="rec-bar">
       <button class="audio-btn-sm" id="rec2-start" onclick="rcStart('rec2')">&#9679; Start recording</button>
       <button class="audio-btn-sm" id="rec2-stop" style="display:none;background:var(--danger);border-color:var(--danger)" onclick="rcStop('rec2')">&#9632; Stop</button>
@@ -2227,7 +2272,7 @@ document.body.setAttribute('data-view','aluno');
       Because two is what you can remember under pressure, and two is enough. Everything else you can point at.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('pw2-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="pw2-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Escreva as suas três respostas, uma linha cada.</div>
+    <div id="pw2-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Escreva as duas frases que você usaria quando não entender.</strong><br><br><strong>Por que só duas:</strong> porque duas é o que se lembra sob pressão, e duas bastam. Todo o resto dá para apontar.</div>
     <label class="mail-label" for="pw2-body">Your note</label>
     <textarea class="writebox" id="pw2-body" style="min-height:170px" placeholder="" oninput="pwCount('pw2-body','pw2-count','post_pw2_writing')"></textarea>
     <div class="wc"><span id="pw2-count">0 words</span></div>
@@ -2238,6 +2283,8 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>Reading</h4></div>
     <p class="task-instr">Two places to read short conversations with the audio beside them.</p>
+    <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('res2r-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
+    <div id="res2r-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Dois lugares para ler conversas curtas com o áudio ao lado.</strong><br><br><strong>The English We Speak</strong> (BBC Learning English)<br>Episódios de três minutos sobre expressões que as pessoas usam de verdade, com o texto na página.<br><br><strong>Easy conversations</strong> (ESL Fast)<br>Centenas de diálogos bem curtos com áudio. Procure os de hotel e de viagem.</div>
     <div class="res-card">
       <h5>The English We Speak</h5>
       <span class="res-src">BBC Learning English</span>
@@ -2255,6 +2302,8 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>Listen &amp; Watch</h4></div>
     <p class="task-instr">Two places to hear short questions and answers.</p>
+    <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('res2l-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
+    <div id="res2l-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Dois lugares para ouvir perguntas e respostas curtas.</strong><br><br><strong>Pronunciation</strong> (BBC Learning English)<br>Vídeos curtos sobre um som de cada vez, com a boca na tela. Úteis quando uma palavra não sai do jeito que você ouve.<br><br><strong>VOA Learning English</strong> (YouTube)<br>Inglês lento e claro, com legenda. Um minuto de cada vez já basta.</div>
     <div class="res-card">
       <h5>Pronunciation</h5>
       <span class="res-src">BBC Learning English</span>
@@ -2270,7 +2319,7 @@ document.body.setAttribute('data-view','aluno');
   </div>
 </div>
 <div id="ps3" style="display:none">
-  <h3 class="sub"><span data-view="aluno">Lesson 03 &mdash; </span><em>I am, you are</em></h3>
+  <h3 class="sub"><span data-view="aluno">Aula 03 &mdash; </span><em>I am, you are</em></h3>
 
   <div class="callout ok">
     <span class="callout-title">Optional</span>
@@ -2298,7 +2347,7 @@ document.body.setAttribute('data-view','aluno');
       Voce ja usava este verbo desde a primeira aula. O que faltava era o nome dele &mdash; e nao a capacidade de usa-lo. Isso vale mais que a tabela.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('conteudo-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">A forma inteira em um lugar só: <em>am</em>, <em>is</em> e <em>are</em>, com quem vai cada uma.</div>
+    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>A forma inteira, em um lugar só.</strong><br><br><em>I</em> (eu) — <em>I am</em><br><em>you</em> / <em>we</em> / <em>they</em> (você / nós / eles) — <em>you are</em> · <em>we are</em> · <em>they are</em><br><em>he</em> / <em>she</em> / <em>it</em> (ele / ela / isso) — <em>he is</em> · <em>she is</em> · <em>it is</em><br><br><strong>Negativa:</strong> acrescente <em>not</em> depois do verbo — <em>I am not</em>, <em>it is not</em>.<br><strong>Pergunta:</strong> troque a ordem — <em>are you&hellip;?</em>, <em>is it&hellip;?</em><br><br><strong>O que hoje mostrou:</strong> você já usava este verbo desde a primeira aula. O que faltava era o nome dele — e não a capacidade de usá-lo.</div>
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5h)">Optional practice</p>
@@ -2317,7 +2366,7 @@ document.body.setAttribute('data-view','aluno');
       <li>one question you would ask someone about their family</li>
     </ul>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('rec3-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="rec3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Grave um recado curto de voz, se quiser. Fale sobre você e sobre a sua próxima viagem, usando <em>am</em>, <em>is</em> e <em>are</em>.</div>
+    <div id="rec3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Grave um recado curto de voz, se quiser.</strong> É opcional.<br><br><strong>A situação:</strong> diga seis frases sobre a sua família.<br><br><strong>O que você vai tentar fazer:</strong> três afirmativas, duas negativas e uma pergunta — sobre outras pessoas, não sobre você.<br><br>Você pode falar sobre: quem elas são · onde elas estão · o que elas não são · uma pergunta que você faria a alguém sobre a família dele.</div>
     <div class="rec-bar">
       <button class="audio-btn-sm" id="rec3-start" onclick="rcStart('rec3')">&#9679; Start recording</button>
       <button class="audio-btn-sm" id="rec3-stop" style="display:none;background:var(--danger);border-color:var(--danger)" onclick="rcStop('rec3')">&#9632; Stop</button>
@@ -2338,7 +2387,7 @@ document.body.setAttribute('data-view','aluno');
       Because <em>I am</em> becomes <em>she is</em>, and that is where the form slips for everybody. Doing it on paper first is what makes it survive out loud.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('pw3-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="pw3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Escreva seis frases suas: duas afirmativas, duas negativas e duas perguntas.</div>
+    <div id="pw3-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Escreva as mesmas seis frases sobre a sua filha ou o seu filho.</strong><br><br><strong>Por que sobre outra pessoa:</strong> porque <em>I am</em> vira <em>she is</em>, e é aí que a forma escapa para todo mundo. Fazer no papel primeiro é o que faz aguentar em voz alta.</div>
     <label class="mail-label" for="pw3-body">Your note</label>
     <textarea class="writebox" id="pw3-body" style="min-height:170px" placeholder="" oninput="pwCount('pw3-body','pw3-count','post_pw3_writing')"></textarea>
     <div class="wc"><span id="pw3-count">0 words</span></div>
@@ -2349,6 +2398,8 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>Reading</h4></div>
     <p class="task-instr">One page to check the form.</p>
+    <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('res3r-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
+    <div id="res3r-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Uma página para conferir a forma.</strong><br><br><strong>The verb 'be'</strong> (Cambridge Dictionary -- Grammar)<br>A forma inteira em uma página, com exemplos. Use para conferir, não para estudar.<br><br><strong>Everyday Grammar</strong> (VOA Learning English)<br>Um ponto de gramática por artigo curto, em inglês simples e com áudio.</div>
     <div class="res-card">
       <h5>The verb &rsquo;be&rsquo;</h5>
       <span class="res-src">Cambridge Dictionary &mdash; Grammar</span>
@@ -2366,6 +2417,8 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>Listen &amp; Watch</h4></div>
     <p class="task-instr">Two places to hear the form in normal speech.</p>
+    <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('res3l-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
+    <div id="res3l-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Dois lugares para ouvir a forma na fala normal.</strong><br><br><strong>Everyday Grammar TV</strong> (VOA Learning English)<br>Vídeos curtos sobre um ponto de gramática cada, em velocidade lenta e com o texto.<br><br><strong>6 Minute English</strong> (BBC Learning English)<br>Duas pessoas, seis minutos, com a transcrição inteira. Repare em quantas vezes elas dizem <em>is</em> e <em>are</em> sem pensar.</div>
     <div class="res-card">
       <h5>Everyday Grammar TV</h5>
       <span class="res-src">VOA Learning English</span>
@@ -2381,7 +2434,7 @@ document.body.setAttribute('data-view','aluno');
   </div>
 </div>
 <div id="ps4" style="display:none">
-  <h3 class="sub"><span data-view="aluno">Lesson 04 &mdash; </span><em>At the front desk</em></h3>
+  <h3 class="sub"><span data-view="aluno">Aula 04 &mdash; </span><em>At the front desk</em></h3>
 
   <div class="callout ok">
     <span class="callout-title">Optional</span>
@@ -2410,10 +2463,10 @@ document.body.setAttribute('data-view','aluno');
     </div>
     <div class="callout rule-box">
       <span class="callout-title">O que existe agora e nao existia ha duas semanas</span>
-      Quatro gravacoes da sua voz falando ingles &mdash; e um check-in inteiro, com uma pergunta que voce nao esperava. Voce comecou este bloco sem ter dito uma frase.
+      Um check-in inteiro em ingles, com uma pergunta que voce nao esperava. Voce comecou este bloco sem ter dito uma frase.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('conteudo-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">O bloco inteiro em uma página: o que cada uma das quatro aulas trabalhou, e as frases que ficam.</div>
+    <div id="conteudo-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>O bloco inteiro, em uma página.</strong><br><br>Aula 1 — quatro frases tiradas de uma reserva: nome, cidade, datas e café da manhã.<br>Aula 2 — três perguntas no balcão, e como pedir para repetirem.<br>Aula 3 — o verbo que você já sabia: <em>I am</em>, <em>you are</em>, <em>it is</em>.<br>Aula 4 — o check-in inteiro, com uma surpresa dentro.<br><br>Abertura — <em>Good morning. My name is&hellip;</em> (Bom dia. Meu nome é&hellip;)<br>Confirmando — <em>I have a reservation.</em> (Eu tenho uma reserva.)<br>Pedindo — <em>Can I have&hellip;?</em> (Posso ter&hellip;?)<br>Fechando — <em>Thank you. Have a good day.</em> (Obrigada. Tenha um bom dia.)<br><br><strong>O que existe agora e não existia há duas semanas:</strong> a sua voz falando inglês, e um check-in inteiro — com uma pergunta que você não esperava.</div>
   </div>
 
   <p class="eyebrow" style="margin-top:var(--space-5h)">Optional practice</p>
@@ -2432,7 +2485,7 @@ document.body.setAttribute('data-view','aluno');
       <li>thank you</li>
     </ul>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('rec4-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="rec4-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Grave um recado curto de voz, se quiser: o seu check-in inteiro, do começo ao fim, sem ler.</div>
+    <div id="rec4-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Grave mais uma vez, sozinha, se quiser.</strong> É opcional.<br><br><strong>A situação:</strong> o check-in inteiro, para a sua próxima viagem de verdade.<br><br><strong>O que você vai tentar fazer:</strong> de <em>good morning</em> a <em>thank you</em>, sem ler.<br><br>Você pode falar sobre: bom dia e o seu nome · a sua reserva e as datas · uma coisa que você quer pedir · obrigada.</div>
     <div class="rec-bar">
       <button class="audio-btn-sm" id="rec4-start" onclick="rcStart('rec4')">&#9679; Start recording</button>
       <button class="audio-btn-sm" id="rec4-stop" style="display:none;background:var(--danger);border-color:var(--danger)" onclick="rcStop('rec4')">&#9632; Stop</button>
@@ -2453,7 +2506,7 @@ document.body.setAttribute('data-view','aluno');
       Because they all start the same way: <em>Can I have&hellip;?</em> Three written now means three you will not have to invent at the desk.
     </div>
     <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('pw4-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
-    <div id="pw4-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)">Escreva o seu check-in completo, do começo ao fim.</div>
+    <div id="pw4-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Escreva três coisas que você pediria num hotel — uma linha cada.</strong><br><br><strong>Por que três:</strong> porque todas começam do mesmo jeito — <em>Can I have&hellip;?</em> Três escritas agora são três que você não vai ter de inventar no balcão.</div>
     <label class="mail-label" for="pw4-body">Your note</label>
     <textarea class="writebox" id="pw4-body" style="min-height:170px" placeholder="" oninput="pwCount('pw4-body','pw4-count','post_pw4_writing')"></textarea>
     <div class="wc"><span id="pw4-count">0 words</span></div>
@@ -2464,6 +2517,8 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>Reading</h4></div>
     <p class="task-instr">Two places to read short pieces with the audio beside them.</p>
+    <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('res4r-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
+    <div id="res4r-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Dois lugares para ler textos curtos com o áudio ao lado.</strong><br><br><strong>English at Work</strong> (BBC Learning English)<br>Episódios curtos sobre situações do dia a dia, com o texto na mesma página do áudio.<br><br><strong>News Words</strong> (VOA Learning English)<br>Uma palavra por texto curto, dita devagar e usada numa frase. Cerca de um minuto cada.</div>
     <div class="res-card">
       <h5>English at Work</h5>
       <span class="res-src">BBC Learning English</span>
@@ -2481,6 +2536,8 @@ document.body.setAttribute('data-view','aluno');
   <div class="exercise-section">
     <div class="section-header-row"><h4>Listen &amp; Watch</h4></div>
     <p class="task-instr">Two places to hear real conversations, slowly.</p>
+    <button class="verify-all-btn ghost" style="margin:var(--space-2) 0 var(--space-4)" onclick="toggleEl('res4l-pt',this,'Ver em português','Ocultar português')">Ver em português</button>
+    <div id="res4l-pt" class="callout" style="display:none;margin:0 0 var(--space-4h)"><strong>Dois lugares para ouvir conversas de verdade, devagar.</strong><br><br><strong>Course units with audio and text</strong> (BBC Learning English)<br>Um curso, unidade por unidade, com áudio e texto. Um lugar para onde ir quando este material começar a parecer fácil.<br><br><strong>TED-Ed</strong> (YouTube -- TED-Ed)<br>Aulas animadas de cinco minutos com legenda em inglês. Escolha uma sobre algo que você já conhece: conhecer o assunto é o que deixa você ouvir a língua.</div>
     <div class="res-card">
       <h5>Course units with audio and text</h5>
       <span class="res-src">BBC Learning English</span>
@@ -4368,7 +4425,7 @@ var LESSONS={
     canonico:'booking', statusKey:'af_l1_status',
     nav:['Lesson opening','The paper in your hand','Before you read','Read it once',
          'Four things','Say the four','Say it without the paper','Your four sentences',
-         'Someone else','Today and next'],
+         'What just happened','Today and next'],
     stages:[
       {n:'Personalized lead-in',min:5},
       {n:'Prediction',min:4},
@@ -4816,7 +4873,7 @@ function paint(){
 }
 
 
-var RECAP1=["Reading a hotel booking in English", "Finding four things in a paper without reading all of it", "Saying my name in English", "Saying a city and two dates", "Saying a whole sentence, not one word", "Saying the same four things about another person"];
+var RECAP1=["Reading a hotel booking in English", "Finding four things in a paper without reading all of it", "Saying my name in English", "Saying a city and two dates", "Saying a whole sentence, not one word", "Saying the same four things about a different booking"];
 var CONF1=["Saying my name and my city in English", "Saying the dates of my trip", "Reading a booking on my own"];
 var RECAP2=["Understanding three questions at a hotel desk", "Answering with a sentence, not with a gesture", "Asking someone to say it again", "Asking someone to speak more slowly", "Saying how many nights", "Saying yes and no politely"];
 var CONF2=["Understanding a short question in English", "Asking for something to be repeated", "Answering at a hotel desk on my own"];

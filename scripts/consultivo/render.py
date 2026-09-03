@@ -51,6 +51,43 @@ import re
 
 LETRAS = "ABCDEFGHIJ"
 
+# ---------------------------------------------------------------------------
+# O APOIO EM PORTUGUES, E POR QUE ELE E UM MODO E NAO UM DEFAULT
+#
+# O consultivo nasceu para aluno que ja fala alguma coisa: A2 para cima, tela em ingles, o
+# portugues so no que e do professor. A Vanessa e a primeira aluna REAL-BEGINNER do produto
+# -- A1 declarado, A0 real -- e a producao nunca tinha previsto isso.
+#
+# O pre-class e o unico momento em que ela esta SOZINHA com o material. Na aula o professor
+# traduz, reformula, da a palavra; no pre-class nao ha ninguem. Uma alternativa em ingles que
+# ela nao le nao e exercicio: e uma linha que ela pula. Entao aqui, e so aqui, o portugues
+# deixa de ser complemento da INSTRUCAO e passa a acompanhar o CONTEUDO -- item a item,
+# revelado quando ela confere, para nao competir com o ingles antes de ela tentar.
+#
+# E MODO, e nao default, por duas razoes:
+#   - o resto do consultivo (Caio, Joice, Luiz, Lucia, Stephanie) e A2+ e a REGRA 13 vale la:
+#     de A2 em diante, ZERO portugues na tela do aluno. Ligar isto para todos seria trocar
+#     uma regra da chefe por uma conveniencia;
+#   - o proprio caminho da Vanessa e para SAIR daqui. O modo tem de poder ser desligado.
+#
+# Quem liga e o `config.json` do aluno (`"apoio": {"bilingue": true}`); o builder chama
+# `configura()` antes de emitir qualquer coisa.
+APOIO = {"bilingue": False}
+
+
+def configura(apoio):
+    """O modo de apoio deste material. Chamado pelo builder, uma vez, antes de emitir."""
+    APOIO["bilingue"] = bool((apoio or {}).get("bilingue"))
+
+
+def rot_check():
+    """O rotulo do botao de conferir.
+
+    Em material bilingue ele vai nas DUAS linguas. Nao e enfeite: `Check` e a primeira
+    palavra em ingles que a aluna precisa entender para o pre-class inteiro funcionar, e ela
+    esta no ponto de partida em que nao a entende ainda."""
+    return "Check / Checar" if APOIO["bilingue"] else "Check"
+
 
 def esc(t):
     """Texto do autor -> HTML. As aspas e o travessao viram entidade, como no molde.
@@ -132,6 +169,43 @@ def porque(it):
     return f'<div class="item-why">{crua(it["porque"])}</div>'
 
 
+def traducao(it):
+    """A versao em portugues DAQUELE item, revelada quando a aluna confere.
+
+    Mesmo mecanismo do `porque` (`.item-why`, aberto pelo `porqueAbre`) e proposito
+    diferente, e por isso a classe extra: `porque` explica a resposta, isto TRADUZ o
+    enunciado. A aluna real-beginner nao precisa de mais uma explicacao em ingles -- precisa
+    saber o que a frase dizia.
+
+    VEM DEPOIS DA TENTATIVA, e nao antes. Com a traducao na tela desde o inicio, o olho vai
+    nela e o ingles ao lado vira decoracao -- e a mesma razao pela qual o apoio da seccao
+    (`pt`) nasce recolhido atras de um botao. Aqui a aluna le em ingles, arrisca, confere; e
+    e no conferir que ela descobre se leu certo.
+
+    Opcional no emissor porque nem todo material e bilingue; onde o modo esta ligado, quem
+    cobra e o `exige_apoio_bilingue()`, que fala ANTES do build sair."""
+    if not it.get("ptt"):
+        return ""
+    return f'<div class="item-why item-pt" lang="pt-BR">{crua(it["ptt"])}</div>'
+
+
+def opcoes_traduzidas(b):
+    """A lista FIXA de opcoes, em portugues, aberta junto com o resto ao conferir.
+
+    A opcao e o unico pedaco do exercicio que a aluna precisa LER PARA DECIDIR -- e a
+    traducao dela, se aparecesse ao lado desde o inicio, tiraria a decisao. Entra no fim do
+    grid, como mais um `.item-why`, e por isso abre pelo mesmo `porqueAbre` sem uma linha de
+    JS nova.
+
+    Uma linha so, e nao uma traducao por linha do exercicio: as opcoes sao as MESMAS em
+    todas as linhas -- e o que faz o exercicio ser classificacao."""
+    if not b.get("opcoes_pt"):
+        return ""
+    pares = " &middot; ".join(f"<em>{esc(en)}</em> = {crua(pt)}"
+                             for en, pt in zip(b["opcoes"], b["opcoes_pt"]))
+    return (f'      <div class="item-why item-pt" lang="pt-BR">{pares}</div>\n')
+
+
 def r_classificar(b, ident):
     """Cada item recebe UMA classificacao, de uma lista fixa de opcoes.
 
@@ -151,10 +225,11 @@ def r_classificar(b, ident):
             f'      <div class="match-row"><span class="match-word">{esc(it["t"])}</span>'
             f'<select data-ok="{idx[it["ok"]]}">'
             f'<option value="" selected="selected">&mdash;</option>{alts}</select>'
-            + porque(it) + '</div>')
-    return (f'    <div class="match-grid" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
+            + porque(it) + traducao(it) + '</div>')
+    return (f'    <div class="match-grid" id="{ident}">\n' + "\n".join(linhas) + "\n"
+            + opcoes_traduzidas(b) + "    </div>\n"
             f'    <button class="verify-all-btn ghost" onclick="mCheck(this,\'{ident}\')">'
-            f'Check</button>\n'
+            f'{rot_check()}</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
@@ -179,22 +254,27 @@ def r_completar(b, ident):
             f'      <div class="match-row"><span class="match-word">{esc(it["t"])}</span>'
             f'<select data-ok="{LETRAS[alts.index(it["ok"])]}">'
             f'<option value="" selected="selected">&mdash;</option>{ops}</select>'
-            + porque(it) + '</div>')
+            + porque(it) + traducao(it) + '</div>')
     return (f'    <div class="match-grid" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
             f'    <button class="verify-all-btn ghost" onclick="mCheck(this,\'{ident}\')">'
-            f'Check</button>\n'
+            f'{rot_check()}</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
 def r_escolha(b, ident):
     """Marque as que sao verdadeiras. `ok: true` no item; o resto e 0."""
     linhas = [f'        <div class="quiz-option" data-ok="{1 if it.get("ok") else 0}" '
-              f'onclick="tog(this)"><span>{esc(it["t"])}</span></div>' + porque(it)
+              f'onclick="tog(this)"><span>{esc(it["t"])}</span></div>' + porque(it) + traducao(it)
               for it in b["itens"]]
     # O `rationale` vive DENTRO do quiz-item, depois das opcoes. E a explicacao da
     # atividade -- diferente da `nota`, que fecha a seccao. Nasce escondido pelo CSS
     # (`.rationale{display:none}`), e por isso nao carrega style aqui.
-    rat = (f'\n      <div class="rationale">{esc(b["rationale"])}</div>'
+    # A traducao vai DENTRO do mesmo `.rationale`, e nao numa caixa irma: o `selCheck`
+    # abre `parentNode.querySelector('.rationale')` -- o PRIMEIRO que encontrar. Uma segunda
+    # caixa com a mesma classe nunca abriria, e a traducao ficaria escrita e invisivel.
+    rat_pt = (f'<div class="item-pt" lang="pt-BR">{crua(b["rationale_pt"])}</div>'
+              if b.get("rationale_pt") else "")
+    rat = (f'\n      <div class="rationale">{esc(b["rationale"])}{rat_pt}</div>'
            if b.get("rationale") else "")
     # O PROMPT pode viver DENTRO do quiz-item, colado nas opcoes, em vez de na abertura.
     # E outra coisa: a instrucao da seccao ("Mark the two that...") descreve a TAREFA; esta
@@ -204,7 +284,7 @@ def r_escolha(b, ident):
     return (f'    <div class="quiz-item">\n' + pr + f'      <div class="quiz-options" id="{ident}">\n'
             + "\n".join(linhas) + f"\n      </div>{rat}\n    </div>\n"
             f'    <button class="verify-all-btn ghost" onclick="selCheck(this,\'{ident}\')">'
-            f'Check</button>\n'
+            f'{rot_check()}</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
@@ -228,7 +308,7 @@ def r_par(b, ident):
                       f'      </div>')
     return (f'    <div class="pair-grid" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
             f'    <button class="verify-all-btn ghost" onclick="ppCheck(this,\'{ident}\')">'
-            f'Check</button>\n'
+            f'{rot_check()}</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
@@ -301,8 +381,13 @@ def r_lacuna(b, ident, vocab=None):
         x, y = sorted((pa[0], pc[0]), key=len)
         return y in (x + "s", x + "es", x + "d", x + "ed", x + "ing", x[:-1] + "ies")
 
+    # O ITEM DA LACUNA E STRING -- ou o par {frase, traducao}, quando o material e
+    # bilingue. Aceitar as duas formas aqui, e nao criar um `kind` novo, e o que mantem o
+    # exercicio o MESMO exercicio: muda o que vai dentro, nunca a mecanica (REGRA 13).
+    itens = [(x, "") if isinstance(x, str) else (x["t"], x.get("ptt", ""))
+             for x in b["itens"]]
     respostas = [r.partition("|")[0].strip().lower()
-                 for frase in b["itens"] for r in re.findall(r"\{([^}]+)\}", frase)]
+                 for frase, _ in itens for r in re.findall(r"\{([^}]+)\}", frase)]
     de_vocab = bool(vocab) and all(
         any(mesma(r, v) for v in vocab) for r in respostas)
     de_forma = bool(respostas) and all(forma_verbal(r) for r in respostas)
@@ -315,7 +400,7 @@ def r_lacuna(b, ident, vocab=None):
                          f"lacuna cobra a forma ({', '.join(respostas[:3])}...), e o banco "
                          f"entrega a resposta. Tire o `banco`.")
     linhas = []
-    for frase in b["itens"]:
+    for frase, ptt in itens:
         if "{" not in frase:
             raise SystemExit(f"{ident}: a frase {frase[:40]!r} nao tem lacuna. Marque o "
                              f"trecho que sai entre chaves.")
@@ -343,7 +428,9 @@ def r_lacuna(b, ident, vocab=None):
                 "\x00", f'<input class="blank-input" data-ok="{resp}" '
                          f'style="min-width:{larg or b.get("largura", "170px")}" '
                          f'placeholder="...">', 1)
-        linhas.append(f'      <p class="chunk-line">{montado}</p>')
+        linhas.append(f'      <p class="chunk-line">{montado}</p>'
+                      + (f'\n      <div class="item-why item-pt" lang="pt-BR">'
+                         f'{crua(ptt)}</div>' if ptt else ""))
     # O de GRAMATICA sai sem o banco -- e nao com um banco vazio, que ocuparia espaco
     # anunciando ajuda que nao existe.
     #
@@ -358,8 +445,24 @@ def r_lacuna(b, ident, vocab=None):
         banco_box = (f'    <div class="word-bank">'
                      f'<span class="wb-rot">{rot}</span> {palavras}</div>\n')
     return (banco_box
-            + f'    <div class="fill-list">\n' + "\n".join(linhas) + "\n    </div>\n"
-            + f'    <button class="verify-all-btn ghost" onclick="czCheck(this)">Check</button>\n'
+            # O `id` no container e o outro elo que faltava: e nele que o `czCheck`
+            # procura os `.blank-input`.
+            + f'    <div class="fill-list" id="{ident}">\n' + "\n".join(linhas) + "\n    </div>\n"
+            # ---- O `id` NAO E OPCIONAL, E A FALTA DELE NAO DAVA ERRO NENHUM
+            #
+            # O emissor escrevia `czCheck(this)`; a funcao e `czCheck(btn,id)` e a primeira
+            # coisa que ela faz e `document.getElementById(id)`. Com `id` indefinido isso
+            # devolve null, o guard `if(!host)return` dispara, e o Check do gap-fill nao
+            # confere NADA -- sem erro no console, sem marca vermelha, sem 0/5. A aluna
+            # digita, clica, e a tela nao responde.
+            #
+            # E a mesma familia de "handler escreve num id que nao existe" que o cabecalho
+            # deste arquivo diz ter eliminado: o id e gerado uma vez e distribuido. So que
+            # aqui ele nao chegava a ser distribuido -- o unico `Check` do arquivo que nao
+            # recebia `ident`. Estava assim nos QUATRO materiais do consultivo, 4 botoes
+            # cada, desde que o `lacuna` existe.
+            + f'    <button class="verify-all-btn ghost" onclick="czCheck(this,'
+            + f"'{ident}'" + f')">{rot_check()}</button>\n'
             f'    <div class="score-out" id="{ident}-out"></div>')
 
 
@@ -699,7 +802,9 @@ def seccao(b, i, vocab=None):
     # ninguem vai procurar.
     CONHECIDOS = {"kind", "id", "n", "nu", "titulo", "badge", "abertura", "instr", "itens",
                   "opcoes", "nota", "rationale", "prompt", "largura", "rotulo_banco",
-                  "banco", "barra", "pt", "chave", "rotulo"}
+                  "banco", "barra", "pt", "chave", "rotulo",
+                  # o apoio em portugues do material real-beginner
+                  "opcoes_pt", "rationale_pt"}
     desconhecidos = set(b) - CONHECIDOS - {k for k in b if k.startswith("_")}
     if desconhecidos:
         raise SystemExit(f"{ident}: campo(s) que o emissor nao conhece e nao emitiria: "

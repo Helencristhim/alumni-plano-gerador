@@ -4,7 +4,7 @@
         '<li>To make a question sound like a question &mdash; word order first, intonation second.</li>'+
         '<li>To keep an exchange going for six turns.</li>'+
         '<li>To ask without being invited to.</li></ul>',
-  product:'A recording of six questions in a row &mdash; the first time she runs the conversation instead of answering it.',
+  product:'Six questions in a row, asked live &mdash; the first time she runs the conversation instead of answering it.',
   criteria:'<ul>'+
     '<li>All six are real questions, with the form right.</li>'+
     '<li>At least two come from the previous answer, not from a list.</li>'+
