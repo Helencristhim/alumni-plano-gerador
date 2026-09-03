@@ -26,31 +26,37 @@ telas legitimas cujo pill traz o nome da ETAPA, nao o da tela, porque a etapa oc
 telas. Derivar apagaria esses nomes proprios. Entao o gate cobra o que de fato importa:
 onde os dois existem, eles dizem a mesma coisa.
 
-O ALVARA (`nome-da-tela-baseline.json`)
----------------------------------------
-Medido o repo inteiro, seis materiais ja divergem -- inclusive um com o `nav` DESLOCADO uma
-posicao da tela 3 em diante (`luiz-bressane` aula 12), que e o mesmo defeito em serie. Sao
-aulas ja dadas, e a REGRA 30 vale: nao se conserta o passado por conta propria. O alvara
-congela o que existe hoje, e a divergencia so pode CAIR: qualquer par novo reprova na hora.
+NO BLACK NAO HA ALVARA, E ISSO E UMA DECISAO (03/09/2026)
+---------------------------------------------------------
+Este gate nasceu com um baseline de 16 divergencias -- quatro materiais, incluindo um com o
+`nav` DESLOCADO uma posicao da tela 3 em diante (`luiz-bressane` aula 12), que e o mesmo
+defeito em serie. O Dan cortou:
+
+    "se estamos no alumni-black, nao existe legado, tudo e corrigivel e PRECISA ser
+     corrigido, nada vai ser entregue e ficar como esta simplesmente por darmos o nome
+     de legado"
+
+As 16 foram corrigidas no mesmo dia e o arquivo de alvara foi apagado. A REGRA 30 continua
+valendo para o IMERSIVO -- 2.115 arquivos publicados, 13.564 defeitos congelados no
+`scripts/legacy-baseline.json`, nenhum deles da anatomia consultivo. O Black e outra coisa:
+seis materiais, todos reconstruidos do shell a cada correcao (GATE 50), e por isso nao ha
+divida que valha a pena carregar. Se um dia esta lista precisar de excecao, ela se escreve
+aqui em codigo, com o caso e a razao -- nunca num JSON que ninguem le.
 
 ESCOPO: o carimbo `alumni-anatomia=consultivo`. Gate novo nasce escopado.
 
 USO:
     python3 scripts/consultivo/check_nome_da_tela.py [arquivo.html ...]
     python3 scripts/consultivo/check_nome_da_tela.py --selftest
-    python3 scripts/consultivo/check_nome_da_tela.py --update   # so quando a lista CAIU
 """
 import glob
 import html as _html
-import json
 import os
 import re
 import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ANATOMIA = "consultivo"
-BASELINE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                        "nome-da-tela-baseline.json")
 VERDE, VERMELHO, ZERA = "\033[32m", "\033[31m", "\033[0m"
 
 
@@ -112,22 +118,13 @@ def confere(caminho):
     return fora
 
 
-def chave(rel, onde, pill, nav):
-    return f"{rel}|{onde}|{pill}|{nav}"
-
-
 def main(argv):
-    atualiza = "--update" in argv
     alvos = [a for a in argv if not a.startswith("--")]
     if not alvos:
         alvos = sorted(glob.glob(os.path.join(RAIZ, "public", "professor", "*.html")) +
                        glob.glob(os.path.join(RAIZ, "public", "aluno", "*.html")))
-    velho = set()
-    if os.path.exists(BASELINE):
-        velho = set(json.load(open(BASELINE, encoding="utf-8"))["toleradas"])
     print(f"=== GATE 56 — o menu chama a tela pelo nome dela (anatomia {ANATOMIA}) ===")
-    achado, vistos = set(), 0
-    detalhe = {}
+    total, vistos = 0, 0
     for f in alvos:
         r = confere(f)
         if r is None:
@@ -135,33 +132,14 @@ def main(argv):
         vistos += 1
         rel = os.path.relpath(f, RAIZ)
         for onde, pill, nav in r:
-            k = chave(rel, onde, pill, nav)
-            achado.add(k)
-            detalhe[k] = (rel, onde, pill, nav)
-    if atualiza:
-        json.dump({"_o_que_e": "GATE 56: divergencias entre a `.stage-pill` da tela e o "
-                               "`nav` do menu que ja existiam. E ALVARA, nao tarefa: so "
-                               "pode CAIR (REGRA 30).",
-                   "toleradas": sorted(achado)},
-                  open(BASELINE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-        print(f"{VERDE}baseline atualizado{ZERA} — {len(achado)} divergencia(s) toleradas.")
-        return 0
-    novas = achado - velho
-    for k in sorted(novas):
-        rel, onde, pill, nav = detalhe[k]
-        print(f"  {VERMELHO}FAIL{ZERA}   {rel}: {onde} se chama {pill!r} na tela e "
-              f"{nav!r} no menu. O nome esta em dois lugares — mude nos dois.")
-    curadas = velho - achado
-    if novas:
-        print(f"\n{VERMELHO}GATE 56 — {len(novas)} divergencia(s) NOVA(S) em {vistos} "
-              f"arquivo(s).{ZERA}")
+            total += 1
+            print(f"  {VERMELHO}FAIL{ZERA}   {rel}: {onde} se chama {pill!r} na tela e "
+                  f"{nav!r} no menu. O nome esta em dois lugares — mude nos dois.")
+    if total:
+        print(f"\n{VERMELHO}GATE 56 — {total} divergencia(s) em {vistos} arquivo(s).{ZERA}")
         return 1
-    if curadas:
-        print(f"  {len(curadas)} divergencia(s) do alvara sumiram. Rode --update para "
-              f"recongelar a base — ela so pode cair.")
-        return 1
-    print(f"\n{VERDE}GATE 56 OK{ZERA} — {vistos} arquivo(s); "
-          f"{len(velho)} divergencia(s) antigas toleradas, nenhuma nova.")
+    print(f"\n{VERDE}GATE 56 OK{ZERA} — {vistos} arquivo(s), e em todos o menu chama a "
+          f"tela pelo nome que a tela usa.")
     return 0
 
 
@@ -191,8 +169,6 @@ def selftest():
             falhas.append("cobrou a tela de abertura, que nao tem pill")
     finally:
         os.remove(tmp)
-    if not os.path.exists(BASELINE):
-        falhas.append("o alvara nao existe — rode --update uma vez")
     if falhas:
         print(VERMELHO + "selftest FALHOU" + ZERA)
         for f in falhas:

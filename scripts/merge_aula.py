@@ -354,7 +354,20 @@ def conferir(pr, retrofit=False, apaga_ok=False):
             f"(o GitHub reaponta esta pro main ao deletar a branch base)")
 
     caminhos = [f["path"] for f in d["files"]]
-    delecoes = arquivos_removidos(pr, d["files"])
+    # A TRAVA E SOBRE LINK QUE MORRE, ENTAO ELA OLHA O QUE VIRA LINK (03/09/2026).
+    #
+    # Ela dizia "apagar pagina de aluno e o erro mais caro" e media QUALQUER arquivo do
+    # repo. Um JSON dentro de `scripts/` nao e servido pela Vercel, nao tem URL e nao tem
+    # link no WhatsApp de ninguem — mas barrava o merge igual, e a saida sugerida
+    # (`--apaga-arquivo`) tambem nao passa, porque ela exige um redirect no vercel.json
+    # para uma URL que nunca existiu. O PR ficava sem caminho nenhum.
+    #
+    # Aconteceu ao apagar `scripts/consultivo/nome-da-tela-baseline.json` (PR #2518), o
+    # alvara que o Dan mandou nao existir. Isto NAO afrouxa a protecao: tudo que a Vercel
+    # serve continua barrado do mesmo jeito, com ou sem flag. O que muda e o gate deixar de
+    # nomear uma regiao ("pagina") e medir outra ("arquivo").
+    SERVIDO = ("public/",)
+    delecoes = [c for c in arquivos_removidos(pr, d["files"]) if c.startswith(SERVIDO)]
     if delecoes:
         # Apagar pagina de aluno e o erro mais caro que este script pode deixar passar:
         # um link que a aluna tem no WhatsApp vira 404 sem aviso e sem ninguem saber.

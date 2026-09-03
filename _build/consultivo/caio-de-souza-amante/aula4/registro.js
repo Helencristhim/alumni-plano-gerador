@@ -2,7 +2,7 @@
     tema:'Three minutes with the buyer',  temaPre:'Before you time any of it',
     canonico:'brief', statusKey:'af_l4_status',
     nav:['Lesson opening','The meeting','Try it once','What they came for',
-         'The four moves','Micropractice','Round one','Feedback',
+         'The honest no','The four moves','Round one','Feedback',
          'Round two','Today and next'],
     stages:[
       {n:'Real-world objective',min:3},
