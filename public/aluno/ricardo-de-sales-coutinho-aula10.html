@@ -1525,10 +1525,16 @@ document.addEventListener('keydown', function(e) {
 function revealVocab(card) {
   card.classList.toggle('revealed');
   var grid = card.closest('.vocab-grid');
+  if (!grid) return;
   var count = grid.querySelectorAll('.vocab-card.revealed').length;
   var total = grid.querySelectorAll('.vocab-card').length;
-  var counterId = grid.id === 'vocabGrid1' ? 'vocabCount1' : 'vocabCount2';
-  document.getElementById(counterId).textContent = count + ' / ' + total + ' words revealed';
+  // O contador SAI DO ID DO GRID. O ternario antigo tinha dois ramos: um terceiro grid
+  // caia no else e escrevia no contador do SEGUNDO — mostrando o total do grid errado e
+  // deixando o terceiro parado em 0 para sempre (798 arquivos, 37 alunos).
+  var el = document.getElementById(grid.id.replace('vocabGrid', 'vocabCount'));
+  // E a GUARDA: sem o <span> no HTML, isto lancava TypeError e o card parava de abrir.
+  // O contador e enfeite; o reveal e a aula. Enfeite ausente nao derruba a aula.
+  if (el) el.textContent = count + ' / ' + total + ' words revealed';
 }
 
 function revealGrammar() { document.getElementById('grammarTable').classList.add('show'); }
@@ -1617,21 +1623,33 @@ function revealError(card) {
   var scope = card.closest('.error-grid') || document;
   var n = scope.querySelectorAll('.error-card.revealed').length;
   var total = scope.querySelectorAll('.error-card').length;
-  document.getElementById('errorScore').textContent = n + ' / ' + total + ' errors found';
+  // Mesma guarda do revealVocab: o placar e enfeite, o reveal e a aula.
+  var el = document.getElementById('errorScore');
+  if (el) el.textContent = n + ' / ' + total + ' errors found';
 }
 
 // ===== DIALOGUE LINE-BY-LINE =====
-var dialogueLine = 0;
-function nextDialogueLine() {
-  dialogueLine++;
-  var line = document.querySelector('.dialogue-line[data-line="' + dialogueLine + '"]');
-  if (line) {
-    line.classList.add('visible');
-    if (dialogueLine >= 10) {
-      document.getElementById('nextLineBtn').textContent = 'Dialogue Complete';
-      document.getElementById('nextLineBtn').disabled = true;
-      document.getElementById('nextLineBtn').style.opacity = '0.5';
-    }
+// O LIMITE NUNCA E UM NUMERO CRAVADO. Sai do total real de falas da caixa DESTE slide.
+// Por que: o modelo tem 10 falas, entao o antigo limite fixo de 10 falas funcionava
+// AQUI e desligava o botao na fala 10 em toda aula com mais de 10 falas. As ultimas
+// nunca apareciam, e sao justamente as que o slide de Comprehension seguinte cobra
+// (incidente patricia-yamaguti-shimada aula 2, slide 19: 13 falas, 3 perdidas, e as 3
+// perguntas eram sobre elas). Contar o DOM torna o defeito impossivel de nascer.
+function nextDialogueLine(btn) {
+  btn = btn || document.getElementById('nextLineBtn');
+  var scope = (btn && btn.closest('.slide')) || document;
+  var box = scope.querySelector('.dialogue-box') || scope;
+  var lines = box.querySelectorAll('.dialogue-line');
+  var next = null, shown = 0;
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].classList.contains('visible')) shown++;
+    else if (!next) next = lines[i];
+  }
+  if (next) { next.classList.add('visible'); shown++; }
+  if (btn && shown >= lines.length) {
+    btn.textContent = 'Dialogue Complete';
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
   }
 }
 
